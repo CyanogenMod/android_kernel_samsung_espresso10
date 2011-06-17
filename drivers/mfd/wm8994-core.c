@@ -486,7 +486,7 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
 		break;
 	default:
 		BUG();
-		return -EINVAL;
+		goto err;
 	}
 
 	wm8994->supplies = kzalloc(sizeof(struct regulator_bulk_data) *
@@ -512,7 +512,7 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
 		break;
 	default:
 		BUG();
-		return -EINVAL;
+		goto err;
 	}
 		
 	ret = regulator_bulk_get(wm8994->dev, wm8994->num_supplies,
