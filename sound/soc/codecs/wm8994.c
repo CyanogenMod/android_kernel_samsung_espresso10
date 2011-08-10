@@ -2930,6 +2930,7 @@ static int wm8994_codec_probe(struct snd_soc_codec *codec)
 			wm8994->hubs.dcs_readback_mode = 2;
 			break;
 		}
+		break;
 
 	case WM8958:
 		wm8994->hubs.dcs_readback_mode = 1;
