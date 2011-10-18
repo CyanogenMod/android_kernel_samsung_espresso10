@@ -407,6 +407,10 @@ static int mmc_read_ext_csd(struct mmc_card *card, u8 *ext_csd)
 	if (card->ext_csd.rev >= 5)
 		card->ext_csd.rel_param = ext_csd[EXT_CSD_WR_REL_PARAM];
 
+	/* eMMC v4.5 or later */
+	if (card->ext_csd.rev >= 6)
+		card->ext_csd.feature_support |= MMC_DISCARD_FEATURE;
+
 	/* moviNAND VHX 4.41 device supports a discard*/
 	if (card->cid.movi_pnm == 0x47324741 ||
 		card->cid.movi_pnm == 0x47344741 ||
