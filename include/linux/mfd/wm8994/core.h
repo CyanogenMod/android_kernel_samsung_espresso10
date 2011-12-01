@@ -55,6 +55,7 @@ struct wm8994 {
 	struct mutex irq_lock;
 
 	enum wm8994_type type;
+	int revision;
 
 	struct device *dev;
 	int (*read_dev)(struct wm8994 *wm8994, unsigned short reg,
