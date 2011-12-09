@@ -1546,7 +1546,7 @@ int file_update_time(struct file *file)
 		return 0;
 
 	ret = update_time(inode, &now, sync_it);
-	mnt_drop_write(file->f_path.mnt);
+	mnt_drop_write_file(file);
 
 	return ret;
 }
