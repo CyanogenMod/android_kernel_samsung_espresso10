@@ -962,6 +962,8 @@ static int wm8993_set_bias_level(struct snd_soc_codec *codec,
 	struct wm8993_priv *wm8993 = snd_soc_codec_get_drvdata(codec);
 	int ret;
 
+	wm_hubs_set_bias_level(codec, level);
+
 	switch (level) {
 	case SND_SOC_BIAS_ON:
 	case SND_SOC_BIAS_PREPARE:
@@ -985,6 +987,8 @@ static int wm8993_set_bias_level(struct snd_soc_codec *codec,
 			snd_soc_write(codec, 0x44, 3);
 			snd_soc_write(codec, 0x56, 3);
 			snd_soc_write(codec, 0x44, 0);
+
+			wm_hubs_vmid_ena(codec);
 
 			/* Bring up VMID with fast soft start */
 			snd_soc_update_bits(codec, WM8993_ANTIPOP2,

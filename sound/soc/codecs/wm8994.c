@@ -886,6 +886,8 @@ static void vmid_reference(struct snd_soc_codec *codec)
 				    WM8994_VMID_BUF_ENA |
 				    (0x3 << WM8994_VMID_RAMP_SHIFT));
 
+		wm_hubs_vmid_ena(codec);
+
 		/* Main bias enable, VMID=2x40k */
 		snd_soc_update_bits(codec, WM8994_POWER_MANAGEMENT_1,
 				    WM8994_BIAS_ENA |
@@ -2168,6 +2170,8 @@ static int wm8994_set_bias_level(struct snd_soc_codec *codec,
 	struct wm8994 *control = codec->control_data;
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 
+	wm_hubs_set_bias_level(codec, level);
+
 	switch (level) {
 	case SND_SOC_BIAS_ON:
 		break;
@@ -2267,6 +2271,7 @@ static int wm8994_set_bias_level(struct snd_soc_codec *codec,
 		}
 		break;
 	}
+
 	codec->dapm.bias_level = level;
 
 	return 0;
