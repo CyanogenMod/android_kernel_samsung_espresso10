@@ -3192,9 +3192,6 @@ static void wm8958_default_micdet(u16 status, void *data)
 			snd_soc_update_bits(codec, WM8958_MIC_DETECT_1,
 					    WM8958_MICD_ENA, 0);
 
-			wm1811_jackdet_set_mode(codec,
-						WM1811_JACKDET_MODE_JACK);
-
 			if (wm8994->pdata->jd_ext_cap) {
 				mutex_lock(&codec->mutex);
 				snd_soc_dapm_disable_pin(&codec->dapm,
@@ -3202,6 +3199,9 @@ static void wm8958_default_micdet(u16 status, void *data)
 				snd_soc_dapm_sync(&codec->dapm);
 				mutex_unlock(&codec->mutex);
 			}
+
+			wm1811_jackdet_set_mode(codec,
+						WM1811_JACKDET_MODE_JACK);
 		}
 	}
 
@@ -3257,6 +3257,16 @@ static irqreturn_t wm1811_jackdet_irq(int irq, void *data)
 		snd_soc_update_bits(codec, WM8958_MICBIAS2,
 				    WM8958_MICB2_DISCH, 0);
 
+		/*
+		 * Start off measument of microphone impedence to find
+		 * out what's actually there.
+		 */
+		wm8994->mic_detecting = true;
+		wm1811_jackdet_set_mode(codec, WM1811_JACKDET_MODE_MIC);
+
+		snd_soc_update_bits(codec, WM8958_MIC_DETECT_1,
+				    WM8958_MICD_ENA, WM8958_MICD_ENA);
+
 		/* If required for an external cap force MICBIAS on */
 		if (wm8994->pdata->jd_ext_cap) {
 			mutex_lock(&codec->mutex);
@@ -3265,15 +3275,6 @@ static irqreturn_t wm1811_jackdet_irq(int irq, void *data)
 			snd_soc_dapm_sync(&codec->dapm);
 			mutex_unlock(&codec->mutex);
 		}
-
-		/*
-		 * Start off measument of microphone impedence to find
-		 * out what's actually there.
-		 */
-		wm8994->mic_detecting = true;
-		wm1811_jackdet_set_mode(codec, WM1811_JACKDET_MODE_MIC);
-		snd_soc_update_bits(codec, WM8958_MIC_DETECT_1,
-				    WM8958_MICD_ENA, WM8958_MICD_ENA);
 	} else {
 		dev_dbg(codec->dev, "Jack not detected\n");
 
