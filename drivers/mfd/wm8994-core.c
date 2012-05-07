@@ -569,7 +569,8 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
 			ret);
 		goto err_enable;
 	}
-	wm8994->revision = ret;
+	wm8994->revision = ret & WM8994_CHIP_REV_MASK;
+	wm8994->cust_id = (ret & WM8994_CUST_ID_MASK) >> WM8994_CUST_ID_SHIFT;
 
 	switch (wm8994->type) {
 	case WM8994:
@@ -593,8 +594,8 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
 		break;
 	}
 
-	dev_info(wm8994->dev, "%s revision %c\n", devname,
-		 'A' + wm8994->revision);
+	dev_info(wm8994->dev, "%s revision %c CUST_ID %02x\n", devname,
+		 'A' + wm8994->revision, wm8994->cust_id);
 
 	if (pdata) {
 		wm8994->irq_base = pdata->irq_base;
