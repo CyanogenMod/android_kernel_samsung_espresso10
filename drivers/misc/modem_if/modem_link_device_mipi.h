@@ -28,8 +28,8 @@
 #define HSI_WRITE_DONE_TIMEOUT	(HZ)
 #define HSI_READ_DONE_TIMEOUT	(HZ)
 #define HSI_ACK_DONE_TIMEOUT	(HZ / 2)
-#define HSI_CLOSE_CONN_DONE_TIMEOUT	(HZ / 10)
-#define HSI_ACWAKE_DOWN_TIMEOUT	(HZ / 2)
+#define HSI_CLOSE_CONN_DONE_TIMEOUT	(HZ / 2)
+#define HSI_ACWAKE_DOWN_TIMEOUT	(HZ)
 
 #define HSI_CONTROL_CHANNEL	0
 #define HSI_FLASHLESS_CHANNEL	0
@@ -42,7 +42,7 @@
 
 #define HSI_LL_INVALID_CHANNEL	0xFF
 
-#define DUMP_PACKET_SIZE	12289 /* 48K + 4 length, word unit */
+#define DUMP_PACKET_SIZE	4097 /* (16K + 4 ) / 4 length, word unit */
 #define DUMP_ERR_INFO_SIZE	39 /* 150 bytes + 4 length , word unit */
 
 #define MIPI_BULK_TX_SIZE	(8 * 1024)
@@ -146,6 +146,10 @@ struct mipi_link_device {
 
 	void *bulk_tx_buf;
 	struct sk_buff_head bulk_txq;
+
+	/* for mipi-link's first initialization
+	 * link has to be initialized right after modem power on */
+	bool modem_power_on;
 };
 /* converts from struct link_device* to struct xxx_link_device* */
 #define to_mipi_link_device(linkdev) \

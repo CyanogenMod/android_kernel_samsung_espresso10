@@ -33,6 +33,7 @@
 #include <plat/dmtimer.h>
 #include "../../arch/arm/mach-omap2/dvfs.h"
 #include "../../arch/arm/mach-omap2/clockdomain.h"
+#include "../gpu/pvr/omap4/sysconfig.h"
 
 #define PM_SUSPEND_MBOX		0xffffff07
 #define PM_SUSPEND_TIMEOUT	300

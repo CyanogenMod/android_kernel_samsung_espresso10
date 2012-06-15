@@ -16,6 +16,8 @@ struct max17040_platform_data {
 	int (*charger_enable)(void);
 	bool(*is_full_charge)(void);
 	int (*get_bat_temp)(int *);
+	int (*get_charging_source)(void);
+	int bootmode;
 	bool skip_reset;
 	int min_capacity; /* minimum allowable capacity. The reported capacity
 			     will be scaled from [<min_capacity>,100] to
@@ -30,6 +32,7 @@ struct max17040_platform_data {
 	int limit_charging_time;
 	int limit_recharging_time;
 	bool use_fuel_alert;
+	int (*full_charge_irq)(void);
 };
 
 #endif

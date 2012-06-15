@@ -29,6 +29,7 @@
 #include <asm/page.h>
 
 #include "../ion_priv.h"
+#include <asm/cacheflush.h>
 
 static int omap_tiler_heap_allocate(struct ion_heap *heap,
 				    struct ion_buffer *buffer,
@@ -136,7 +137,7 @@ int omap_tiler_alloc(struct ion_heap *heap,
 	data->stride = tiler_block_vstride(info->tiler_handle);
 
 	/* create an ion handle  for the allocation */
-	handle = ion_alloc(client, 0, 0, 1 << OMAP_ION_HEAP_TILER);
+	handle = ion_alloc(client, 0, 0, 1 << heap->id);
 	if (IS_ERR_OR_NULL(handle)) {
 		ret = PTR_ERR(handle);
 		pr_err("%s: failure to allocate handle to manage tiler"
@@ -226,18 +227,59 @@ int omap_tiler_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
 		ret = remap_pfn_range(vma, addr,
 				      __phys_to_pfn(info->tiler_addrs[i]),
 				      PAGE_SIZE,
-				      pgprot_noncached(vma->vm_page_prot));
+				      (buffer->map_cacheable ? (vma->vm_page_prot)
+				      : pgprot_noncached(vma->vm_page_prot)));
 		if (ret)
 			return ret;
 	}
 	return 0;
 }
 
+int omap_tiler_heap_flush_user(struct ion_buffer *buffer, size_t len,
+			unsigned long vaddr)
+{
+	struct omap_tiler_info *info = buffer->priv_virt;
+	int n_pages = info->n_tiler_pages;
+	int i, ret;
+	size_t size_flush;
+	if(!buffer->map_cacheable) {
+		pr_err("%s(): buffer not mapped as cacheable\n",
+	       __func__);
+		return 0;
+	}
+
+	if(len > (n_pages * PAGE_SIZE)) {
+		pr_err("%s(): size to flush is greater than allocated size\n",
+	       __func__);
+		return -EINVAL;
+	}
+
+	for (i = 0; (i < n_pages) && (len > 0); i++, vaddr += PAGE_SIZE) {
+		if(len >= PAGE_SIZE) {
+			size_flush = PAGE_SIZE;
+		} else {
+			size_flush = len;
+		}
+		len -= size_flush;
+		dmac_flush_range((void *)vaddr, (void *)vaddr + size_flush);
+		outer_flush_range(info->tiler_addrs[i], info->tiler_addrs[i]+size_flush);
+	}
+
+	return 0;
+}
+int omap_tiler_heap_inval_user(struct ion_buffer *buffer, size_t len,
+			unsigned long vaddr)
+{
+	/* Empty for Now */
+	return omap_tiler_heap_flush_user(buffer, len, vaddr);
+}
 static struct ion_heap_ops omap_tiler_ops = {
 	.allocate = omap_tiler_heap_allocate,
 	.free = omap_tiler_heap_free,
 	.phys = omap_tiler_phys,
 	.map_user = omap_tiler_heap_map_user,
+	.flush_user = omap_tiler_heap_flush_user,
+	.inval_user = omap_tiler_heap_inval_user,
 };
 
 struct ion_heap *omap_tiler_heap_create(struct ion_platform_heap *data)

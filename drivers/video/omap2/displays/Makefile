@@ -7,3 +7,6 @@ obj-$(CONFIG_PANEL_S6E8AA0) += panel-s6e8aa0.o
 obj-$(CONFIG_PANEL_TAAL) += panel-taal.o
 obj-$(CONFIG_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
 obj-$(CONFIG_PANEL_ACX565AKM) += panel-acx565akm.o
+obj-$(CONFIG_PANEL_LD9040) += panel-ld9040.o
+obj-$(CONFIG_PANEL_LTN070NL01) += panel-ltn070nl01.o
+obj-$(CONFIG_PANEL_LTN101AL03) += panel-ltn101al03.o

@@ -31,7 +31,8 @@
 #include "clockdomain.h"
 
 #ifdef CONFIG_CACHE_L2X0
-#define L2X0_POR_OFFSET_VALUE		0x7
+#define L2X0_POR_OFFSET_VALUE	0x5
+#define L2X0_POR_OFFSET_MASK	0x1f
 static void __iomem *l2cache_base;
 #endif
 
@@ -159,34 +160,41 @@ static int __init omap_l2_cache_init(void)
 	u32 lockdown = 0;
 	bool mpu_prefetch_disable_errata = false;
 
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
+
 	/*
 	 * To avoid code running on other OMAPs in
 	 * multi-omap builds
 	 */
 	if (!cpu_is_omap44xx())
 		return -ENODEV;
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 #ifdef CONFIG_OMAP_ALLOW_OSWR
 	if (omap_rev() == OMAP4460_REV_ES1_0)
 		mpu_prefetch_disable_errata = true;
 #endif
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	/* Static mapping, never released */
 	l2cache_base = ioremap(OMAP44XX_L2CACHE_BASE, SZ_4K);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 	if (WARN_ON(!l2cache_base))
 		return -ENODEV;
-
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 	/*
 	 * 16-way associativity, parity disabled
 	 * Way size - 32KB (es1.0)
 	 * Way size - 64KB (es2.0 +)
 	 */
 	aux_ctrl = readl_relaxed(l2cache_base + L2X0_AUX_CTRL);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	if (omap_rev() == OMAP4430_REV_ES1_0) {
 		aux_ctrl |= 0x2 << L2X0_AUX_CTRL_WAY_SIZE_SHIFT;
 		goto skip_aux_por_api;
 	}
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	/*
 	 * Drop instruction prefetch hint since it degrades the
@@ -195,14 +203,18 @@ static int __init omap_l2_cache_init(void)
 	aux_ctrl |= ((0x3 << L2X0_AUX_CTRL_WAY_SIZE_SHIFT) |
 		(1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT) |
 		(1 << L2X0_AUX_CTRL_EARLY_BRESP_SHIFT));
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	if (!mpu_prefetch_disable_errata)
 		aux_ctrl |= (1 << L2X0_AUX_CTRL_DATA_PREFETCH_SHIFT);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	omap_smc1(0x109, aux_ctrl);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	/* Setup POR Control register */
 	por_ctrl = readl_relaxed(l2cache_base + L2X0_PREFETCH_CTRL);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	/*
 	 * Double linefill is available only on OMAP4460 L2X0.
@@ -210,10 +222,12 @@ static int __init omap_l2_cache_init(void)
 	 * on all devices
 	 */
 	por_ctrl &= ~(1 << L2X0_PREFETCH_DOUBLE_LINEFILL_SHIFT);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 	if (!mpu_prefetch_disable_errata) {
-		por_ctrl |= 1 << L2X0_PREFETCH_DATA_PREFETCH_SHIFT;
+		por_ctrl &= ~L2X0_POR_OFFSET_MASK;
 		por_ctrl |= L2X0_POR_OFFSET_VALUE;
 	}
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	/* Set POR through PPA service only in EMU/HS devices */
 	if (omap_type() != OMAP2_DEVICE_TYPE_GP)
@@ -221,6 +235,7 @@ static int __init omap_l2_cache_init(void)
 				por_ctrl, 0, 0, 0);
 	else if (omap_rev() >= OMAP4430_REV_ES2_1)
 		omap_smc1(0x113, por_ctrl);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 
 	/*
@@ -231,16 +246,22 @@ static int __init omap_l2_cache_init(void)
 	if (omap_rev() == OMAP4460_REV_ES1_0) {
 		lockdown = 0xa5a5;
 		writel_relaxed(lockdown, l2cache_base + L2X0_LOCKDOWN_WAY_D0);
+		printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 		writel_relaxed(lockdown, l2cache_base + L2X0_LOCKDOWN_WAY_D1);
+		printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 		writel_relaxed(lockdown, l2cache_base + L2X0_LOCKDOWN_WAY_I0);
+		printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 		writel_relaxed(lockdown, l2cache_base + L2X0_LOCKDOWN_WAY_I1);
 	}
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 skip_aux_por_api:
 	/* Enable PL310 L2 Cache controller */
 	omap_smc1(0x102, 0x1);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	l2x0_init(l2cache_base, aux_ctrl, L2X0_AUX_CTRL_MASK);
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	/*
 	 * Override default outer_cache.disable with a OMAP4
@@ -248,6 +269,7 @@ skip_aux_por_api:
 	*/
 	outer_cache.disable = omap4_l2x0_disable;
 	outer_cache.set_debug = omap4_l2x0_set_debug;
+	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 
 	return 0;
 }

@@ -314,6 +314,11 @@ static int __init omap_hsmmc_pdata_init(struct omap2_hsmmc_info *c,
 	mmc->slots[0].remux = c->remux;
 	mmc->slots[0].init_card = c->init_card;
 
+	if (c->external_ldo) {
+		mmc->slots[0].external_ldo = true;
+		mmc->slots[0].gpio_for_ldo = c->gpio_for_ldo;
+	}
+
 	if (c->cover_only)
 		mmc->slots[0].cover = 1;
 

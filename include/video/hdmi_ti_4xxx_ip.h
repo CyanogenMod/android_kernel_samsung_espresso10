@@ -355,6 +355,11 @@ enum hdmi_core_infoframe {
 	HDMI_INFOFRAME_AUDIO_DB5_DM_INH_PROHIBITED = 1
 };
 
+enum hdmi_aksv_err {
+	HDMI_AKSV_ZERO = 0,
+	HDMI_AKSV_ERROR = 1,
+	HDMI_AKSV_VALID = 2
+};
 
 int hdmi_ti_4xxx_phy_init(struct hdmi_ip_data *ip_data);
 void hdmi_ti_4xxx_phy_off(struct hdmi_ip_data *ip_data, bool set_mode);
@@ -362,7 +367,8 @@ int read_ti_4xxx_edid(struct hdmi_ip_data *ip_data, u8 *pedid, u16 max_length);
 void hdmi_ti_4xxx_wp_video_start(struct hdmi_ip_data *ip_data, bool start);
 int hdmi_ti_4xxx_pll_program(struct hdmi_ip_data *ip_data,
 			struct hdmi_pll_info *fmt);
-int hdmi_ti_4xxx_set_pll_pwr(struct hdmi_ip_data *ip_data, enum hdmi_pll_pwr val);
+int hdmi_ti_4xxx_set_pll_pwr(struct hdmi_ip_data *ip_data,
+					enum hdmi_pll_pwr val);
 void hdmi_ti_4xxx_basic_configure(struct hdmi_ip_data *ip_data,
 			struct hdmi_config *cfg);
 int hdmi_ti_4xxx_rxdet(struct hdmi_ip_data *ip_data);
@@ -380,7 +386,10 @@ void hdmi_ti_4xxx_core_audio_config(struct hdmi_ip_data *ip_data,
 					struct hdmi_core_audio_config *cfg);
 void hdmi_ti_4xxx_core_audio_infoframe_config(struct hdmi_ip_data *ip_data,
 		struct hdmi_core_infoframe_audio *info_aud);
-void hdmi_ti_4xxx_audio_enable(struct hdmi_ip_data *ip_data, bool idle);
+void hdmi_ti_4xxx_audio_transfer_en(struct hdmi_ip_data *ip_data,
+						bool idle);
+void hdmi_ti_4xxx_wp_audio_enable(struct hdmi_ip_data *ip_data, bool idle);
+
 int hdmi_ti_4xxx_set_wait_soft_reset(struct hdmi_ip_data *ip_data);
-bool hdmi_ti_4xx_check_aksv_data(struct hdmi_ip_data *ip_data);
+int hdmi_ti_4xx_check_aksv_data(struct hdmi_ip_data *ip_data);
 #endif

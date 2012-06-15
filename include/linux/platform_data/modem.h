@@ -74,6 +74,8 @@ struct modem_data {
 	unsigned gpio_cp_dump_int;
 	unsigned gpio_flm_uart_sel;
 	unsigned gpio_cp_warm_reset;
+	unsigned gpio_sim_detect;
+
 #ifdef CONFIG_LTE_MODEM_CMC221
 	unsigned gpio_slave_wakeup;
 	unsigned gpio_host_wakeup;

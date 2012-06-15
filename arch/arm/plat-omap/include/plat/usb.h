@@ -115,6 +115,7 @@ extern int omap4430_phy_set_clk(struct device *dev, int on);
 extern int omap4430_phy_init(struct device *dev);
 extern int omap4430_phy_exit(struct device *dev);
 extern int omap4430_phy_suspend(struct device *dev, int suspend);
+extern int omap4430_phy_is_active(struct device *dev);
 #endif
 
 extern void am35x_musb_reset(void);

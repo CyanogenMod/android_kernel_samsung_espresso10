@@ -39,6 +39,7 @@
 #include <plat/common.h>
 
 #include <mach/hardware.h>
+#include <mach/cpufreq_limits.h>
 
 #include "dvfs.h"
 
@@ -67,6 +68,212 @@ static unsigned int screen_off_max_freq;
 static bool omap_cpufreq_ready;
 static bool omap_cpufreq_suspended;
 
+static unsigned int omap_getspeed(unsigned int cpu);
+static int omap_target(struct cpufreq_policy *policy,
+		       unsigned int target_freq,
+		       unsigned int relation);
+#ifdef CONFIG_DVFS_LIMIT
+static DEFINE_MUTEX(omap_cpufreq_alloc_lock);
+struct freq_lock_info {
+	unsigned int dev_id;
+	unsigned int cur_lock_freq;
+	unsigned int value[DVFS_LOCK_ID_END];
+	unsigned int init_level;
+	unsigned int max_level;
+	bool disable_lock;
+	unsigned int freq_table_min;
+	unsigned int freq_table_max;
+	bool is_ceil;
+};
+
+/* CPU & BUS freq lock information */
+#define MIN_LIMIT		0
+#define MAX_LIMIT		1
+static struct freq_lock_info cpufreq_lock_type[2] = {
+	{
+		.disable_lock	= false,
+		.is_ceil = true,
+	},
+	{
+		.disable_lock	= false,
+		.is_ceil = false,
+	}
+};
+bool cpufreq_compare(bool is_bigger, int reg, int level)
+{
+	if (is_bigger && reg > level)
+		return true;
+	else if (is_bigger && reg <= level)
+		return false;
+
+	if (!is_bigger && reg < level)
+		return true;
+	else if (!is_bigger && reg >= level)
+		return false;
+
+	return false;
+}
+static int omap_cpufreq_policy_notifier_call(struct notifier_block *this,
+				unsigned long code, void *data)
+{
+	struct cpufreq_policy *policy = data;
+
+	switch (code) {
+	case CPUFREQ_ADJUST:
+		if ((!strnicmp(policy->governor->name,
+					"powersave", CPUFREQ_NAME_LEN))
+				|| (!strnicmp(policy->governor->name,
+					"performance", CPUFREQ_NAME_LEN))
+				|| (!strnicmp(policy->governor->name,
+					"userspace", CPUFREQ_NAME_LEN))) {
+
+			pr_debug("cpufreq governor is changed to %s\n",
+					policy->governor->name);
+
+			cpufreq_lock_type[MIN_LIMIT].disable_lock = true;
+			cpufreq_lock_type[MAX_LIMIT].disable_lock = true;
+		} else {
+			cpufreq_lock_type[MAX_LIMIT].disable_lock = false;
+			cpufreq_lock_type[MIN_LIMIT].disable_lock = false;
+		}
+	case CPUFREQ_INCOMPATIBLE:
+	case CPUFREQ_NOTIFY:
+	default:
+		break;
+	}
+
+	return NOTIFY_DONE;
+}
+
+static struct notifier_block omap_cpufreq_policy_notifier = {
+	.notifier_call = omap_cpufreq_policy_notifier_call,
+};
+
+
+int omap_cpufreq_alloc(unsigned int nId, unsigned long req_freq, int type)
+{
+	unsigned int cur_freq;
+	unsigned long omap_freq;
+	struct freq_lock_info *cpufreq_lock = &cpufreq_lock_type[type];
+
+	mutex_lock(&omap_cpufreq_alloc_lock);
+
+	if (cpufreq_lock->dev_id & (1 << nId)) {
+		pr_err(
+		"[CPUFREQ]This device [%d] already locked cpufreq\n", nId);
+		mutex_unlock(&omap_cpufreq_alloc_lock);
+		return 0;
+	}
+
+	if (cpufreq_lock_type[MAX_LIMIT].init_level < req_freq) {
+
+		pr_err("[CPUFREQ] Wrong request cpufreq %lu (MAX level is %u)\n",
+			req_freq, cpufreq_lock_type[MAX_LIMIT].init_level);
+
+		req_freq = cpufreq_lock_type[MAX_LIMIT].init_level;
+	}
+	if (cpufreq_lock_type[MIN_LIMIT].init_level > req_freq) {
+		pr_err("[CPUFREQ] Wrong request cpufreq %lu (MIN level is %u)\n",
+			req_freq, cpufreq_lock_type[MIN_LIMIT].init_level);
+
+		req_freq = cpufreq_lock_type[MIN_LIMIT].init_level;
+	}
+
+	cpufreq_lock->dev_id |= (1 << nId);
+	cpufreq_lock->value[nId] = req_freq;
+
+	/* If the requested cpufreq is higher than current min frequency */
+	if (cpufreq_compare(cpufreq_lock->is_ceil,
+				req_freq, cpufreq_lock->cur_lock_freq)) {
+
+		struct device *mpu_dev = omap2_get_mpuss_device();
+
+		omap_freq = req_freq * 1000;
+
+		/* Find out near frequency*/
+		if (cpufreq_lock->is_ceil)
+			opp_find_freq_ceil(mpu_dev, &omap_freq);
+		else
+			opp_find_freq_floor(mpu_dev, &omap_freq);
+
+		cpufreq_lock->cur_lock_freq = omap_freq/1000;
+
+	}
+	/* If current frequency is lower than requested freq,
+	 * it needs to update
+	 */
+	cur_freq = omap_getspeed(0);
+
+
+	printk(KERN_DEBUG"[CPUFREQ] curr freq=%d KHz cur_lock_freq=%d KHz\n",
+				cur_freq, cpufreq_lock->cur_lock_freq);
+
+	if (cpufreq_compare(cpufreq_lock->is_ceil,
+				cpufreq_lock->cur_lock_freq, cur_freq)) {
+
+		struct cpufreq_policy *policy = cpufreq_cpu_get(0);
+		omap_target(policy,
+					cpufreq_lock->cur_lock_freq,
+					CPUFREQ_RELATION_H);
+
+		printk(KERN_INFO"[CPUFREQ] Need to update current target(%d KHz)\n",
+			cpufreq_lock->cur_lock_freq);
+	}
+
+	mutex_unlock(&omap_cpufreq_alloc_lock);
+
+	return 0;
+}
+
+int omap_cpufreq_max_limit(unsigned int nId, unsigned long req_freq)
+{
+	return omap_cpufreq_alloc(nId, req_freq, MAX_LIMIT);
+}
+
+int omap_cpufreq_min_limit(unsigned int nId, unsigned long req_freq)
+{
+	return omap_cpufreq_alloc(nId, req_freq, MIN_LIMIT);
+}
+void omap_cpufreq_lock_free(unsigned int nId, int type)
+
+{
+	unsigned int i;
+
+	struct freq_lock_info *cpufreq_lock = &cpufreq_lock_type[type];
+
+	mutex_lock(&omap_cpufreq_alloc_lock);
+
+	cpufreq_lock->dev_id &= ~(1 << nId);
+	cpufreq_lock->value[nId] = cpufreq_lock->init_level;
+	cpufreq_lock->cur_lock_freq = cpufreq_lock->init_level;
+	if (cpufreq_lock->dev_id) {
+		for (i = 0; i < DVFS_LOCK_ID_END; i++) {
+			if (cpufreq_compare(cpufreq_lock->is_ceil ,
+					cpufreq_lock->value[i] ,
+					cpufreq_lock->cur_lock_freq))
+				cpufreq_lock->cur_lock_freq =
+					cpufreq_lock->value[i];
+		}
+	}
+	printk(KERN_DEBUG"[CPUFREQ] cur_lock_freq=%d KHz\n",
+				cpufreq_lock->cur_lock_freq);
+	mutex_unlock(&omap_cpufreq_alloc_lock);
+
+
+	return;
+}
+void omap_cpufreq_min_limit_free(unsigned int nId)
+{
+	return omap_cpufreq_lock_free(nId, MIN_LIMIT);
+}
+void omap_cpufreq_max_limit_free(unsigned int nId)
+{
+
+	return omap_cpufreq_lock_free(nId, MAX_LIMIT);
+}
+#endif
+
+
 static unsigned int omap_getspeed(unsigned int cpu)
 {
 	unsigned long rate;
@@ -87,6 +294,18 @@ static int omap_cpufreq_scale(unsigned int target_freq, unsigned int cur_freq)
 	freqs.new = target_freq;
 	freqs.old = omap_getspeed(0);
 
+
+
+#ifdef CONFIG_DVFS_LIMIT
+	if (!max_capped && cpufreq_lock_type[MIN_LIMIT].disable_lock == false) {
+
+		if (target_freq < cpufreq_lock_type[MIN_LIMIT].cur_lock_freq)
+			freqs.new = cpufreq_lock_type[MIN_LIMIT].cur_lock_freq;
+
+		if (target_freq > cpufreq_lock_type[MAX_LIMIT].cur_lock_freq)
+			freqs.new = cpufreq_lock_type[MAX_LIMIT].cur_lock_freq;
+	}
+#endif
 	/*
 	 * If the new frequency is more than the thermal max allowed
 	 * frequency, go ahead and scale the mpu device to proper frequency.
@@ -97,7 +316,8 @@ static int omap_cpufreq_scale(unsigned int target_freq, unsigned int cur_freq)
 	if (max_capped && freqs.new > max_capped)
 		freqs.new = max_capped;
 
-	if ((freqs.old == freqs.new) && (cur_freq = freqs.new))
+
+	if ((freqs.old == freqs.new) && (cur_freq == freqs.new))
 		return 0;
 
 	get_online_cpus();
@@ -297,7 +517,7 @@ static void omap_cpu_late_resume(struct early_suspend *h)
 }
 
 static struct early_suspend omap_cpu_early_suspend_handler = {
-	.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN,
+	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 50,
 	.suspend = omap_cpu_early_suspend,
 	.resume = omap_cpu_late_resume,
 };
@@ -361,6 +581,21 @@ static int __cpuinit omap_cpu_init(struct cpufreq_policy *policy)
 
 	/* FIXME: what's the actual transition time? */
 	policy->cpuinfo.transition_latency = 300 * 1000;
+
+#ifdef CONFIG_DVFS_LIMIT
+	if (policy->cpu == 0) {
+		cpufreq_lock_type[MIN_LIMIT].cur_lock_freq =
+				policy->cpuinfo.min_freq;
+		cpufreq_lock_type[MIN_LIMIT].init_level =
+				policy->cpuinfo.min_freq;
+
+		cpufreq_lock_type[MAX_LIMIT].cur_lock_freq =
+				policy->cpuinfo.max_freq;
+		cpufreq_lock_type[MAX_LIMIT].init_level =
+				policy->cpuinfo.max_freq;
+	}
+#endif
+
 
 	return 0;
 
@@ -514,6 +749,11 @@ static int __init omap_cpufreq_init(void)
 			pr_warn("%s_init: platform_driver_register failed\n",
 				__func__);
 	}
+
+#ifdef CONFIG_DVFS_LIMIT
+	cpufreq_register_notifier(&omap_cpufreq_policy_notifier,
+						CPUFREQ_POLICY_NOTIFIER);
+#endif
 
 	return ret;
 }

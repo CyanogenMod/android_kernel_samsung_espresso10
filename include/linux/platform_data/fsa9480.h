@@ -62,12 +62,17 @@ struct fsa9480_platform_data {
 
 	struct fsa9480_detect_set	*detect_sets;
 	int				num_sets;
-
-	void				(*mask_vbus_irq)(void);
-	void				(*unmask_vbus_irq)(void);
-	bool				(*vbus_present)(void);
-	int				external_vbus_irq;
-	unsigned long			external_vbus_flags;
+	void                            (*mask_vbus_irq)(void);
+	void                            (*unmask_vbus_irq)(void);
+	bool                            (*vbus_present)(void);
+	void                            (*set_usbsw)(void *);
+	void				(*desk_dock_charger_connected)(u32);
+	void				(*desk_dock_charger_removal)(u8);
+	int                             external_vbus_irq;
+	unsigned long                   external_vbus_flags;
 };
 
+extern struct class *sec_class;
+
+int fsa9480_set_switch(void *usbsw, const char *buf);
 #endif

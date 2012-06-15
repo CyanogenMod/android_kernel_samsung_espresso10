@@ -50,12 +50,12 @@
 
 /* Off mode states */
 #define OMAP_PIN_OFF_NONE		0
-#define OMAP_PIN_OFF_OUTPUT_HIGH	(OMAP_OFF_EN | OMAP_OFFOUT_EN \
-						| OMAP_OFFOUT_VAL)
-#define OMAP_PIN_OFF_OUTPUT_LOW		(OMAP_OFF_EN | OMAP_OFFOUT_EN)
-#define OMAP_PIN_OFF_INPUT_PULLUP	(OMAP_OFF_EN | OMAP_OFF_PULL_EN \
-						| OMAP_OFF_PULL_UP)
-#define OMAP_PIN_OFF_INPUT_PULLDOWN	(OMAP_OFF_EN | OMAP_OFF_PULL_EN)
+#define OMAP_PIN_OFF_OUTPUT_HIGH	(OMAP_OFF_EN | OMAP_OFFOUT_VAL)
+#define OMAP_PIN_OFF_OUTPUT_LOW		OMAP_OFF_EN
+#define OMAP_PIN_OFF_INPUT_PULLUP	(OMAP_OFF_EN | OMAP_OFFOUT_EN \
+					| OMAP_OFF_PULL_EN | OMAP_OFF_PULL_UP)
+#define OMAP_PIN_OFF_INPUT_PULLDOWN	(OMAP_OFF_EN | OMAP_OFFOUT_EN \
+					| OMAP_OFF_PULL_EN)
 #define OMAP_PIN_OFF_WAKEUPENABLE	OMAP_WAKEUP_EN
 
 #define OMAP_MODE_GPIO(x)	(((x) & OMAP_MUX_MODE7) == OMAP_MUX_MODE4)
@@ -208,6 +208,11 @@ int omap_mux_init_gpio(int gpio, int val);
  * @val:		Options for the mux register value
  */
 int omap_mux_init_signal(const char *muxname, int val);
+
+/**
+ * omap_mux_enable_wkup - set/clear the pad wakup bit.
+ * @muxname:		Mux name in mode0_name.signal_name format
+ */
 
 /**
  * omap_hwmod_mux_init - initialize hwmod specific mux data

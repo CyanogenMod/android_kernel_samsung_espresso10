@@ -556,12 +556,26 @@ config USB_SWITCH_FSA9480
 	  stereo and mono audio, video, microphone and UART data to use
 	  a common connector port.
 
+config SEC_30PIN_CON
+	bool "Samsung 30-pin connector support for tablet devices"
+	help
+	  This feature add an infratructure to control and detecting 30-pin
+	  connector for Samsung Tablet devices. Many optional devices can be
+	  connected throu out this connector for example TA/USB/DOCK etc. to
+	  support accessary devices for Samsunt Tablet device this feature
+	  must be enabled.
+
 config OMAP_DIE_TEMP_SENSOR
         bool "OMAP On-Die temp sensor support"
         depends on OMAP_TEMP_SENSOR
         help
           Enabling this config will give support for the on-die
           temp sensor for the OMAP platform.
+
+config OMAP_4430_TEMP_SENSOR
+	bool "OMAP On-Die Bandgap temp sensor support"
+	depends on OMAP_TEMP_SENSOR
+	default n
 
 config LEDS_AN30259A
         tristate "LED driver for panasonic AN30259A RGB LED"
@@ -572,6 +586,23 @@ config LEDS_AN30259A
           AN30259A has three channel LED driver. By synchronous clock
           function, combined operation is possible.
 
+config OMAP4_DUTY_CYCLE
+	tristate "Control OPP_NITRO usage based on duty cycle strategy"
+	depends on ARCH_OMAP4
+	default n
+	---help---
+	If you are going to use OPP_NITRO with high level of leakage which.
+	could pontentially sustain a thermal runaway, say Y here.
+
+config MPU_333_ENABLE
+	bool "mpu gyro sensor MPL 4.1.1"
+	depends on I2C
+	default n
+
+config FACTORY_PBA_JACK_TEST_SUPPORT
+	bool "For samsung factory pba jack test"
+	default n
+
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
@@ -581,5 +612,6 @@ source "drivers/misc/ti-st/Kconfig"
 source "drivers/misc/lis3lv02d/Kconfig"
 source "drivers/misc/carma/Kconfig"
 source "drivers/misc/modem_if/Kconfig"
+source "drivers/misc/mpu3050/Kconfig"
 
 endif # MISC_DEVICES

@@ -542,6 +542,7 @@ CONFIG_RFKILL=y
 # CONFIG_RFKILL_INPUT is not set
 # CONFIG_NET_9P is not set
 # CONFIG_CAIF is not set
+CONFIG_BT_MGMT=y
 
 #
 # Device Drivers

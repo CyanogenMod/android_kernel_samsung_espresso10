@@ -41,6 +41,9 @@ enum usb_xceiv_events {
 	USB_EVENT_ID,           /* id was grounded */
 	USB_EVENT_CHARGER,      /* usb dedicated charger */
 	USB_EVENT_ENUMERATED,   /* gadget driver enumerated */
+	USB_EVENT_HOST_NONE,	/* usb host disconnected */
+	USB_EVENT_VBUS_CHARGER,	/* ta/usb event */
+	USB_EVENT_CHARGER_NONE,	/* TA disconnected */
 };
 
 struct otg_transceiver;
@@ -111,6 +114,9 @@ struct otg_transceiver {
 	/* start or continue HNP role switch */
 	int	(*start_hnp)(struct otg_transceiver *otg);
 
+	/* return phy is active or not */
+	int	(*is_active)(struct otg_transceiver *otg);
+
 };
 
 
@@ -162,6 +168,15 @@ otg_shutdown(struct otg_transceiver *otg)
 {
 	if (otg->shutdown)
 		otg->shutdown(otg);
+}
+
+static inline int
+otg_is_active(struct otg_transceiver *otg)
+{
+	if (otg->is_active)
+		return otg->is_active(otg);
+
+	return 0;
 }
 
 /* for usb host and peripheral controller drivers */

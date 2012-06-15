@@ -18,6 +18,16 @@ config OMAP2_VRAM_SIZE
 	  You can also set this with "vram=<bytes>" kernel argument, or
 	  in the board file.
 
+config OMAP2_FIFO_LOW_THRESHOLD
+	int "FIFO threshold"
+	range 1 10
+	default 1
+	help
+	  FIFO threshold value
+	  for resolution lesser than 1280 * 720 = 1,
+	  for resolution greater than 720P it is 2.
+	  (CSR: OMAPS00260116)
+
 config OMAP2_DSS_DEBUG_SUPPORT
         bool "Debug support"
 	default y
@@ -129,4 +139,19 @@ config OMAP2_DSS_SLEEP_AFTER_VENC_RESET
 	  This option enables the sleep, and is enabled by default. You can
 	  disable the sleep if it doesn't cause problems on your platform.
 
+config OMAP_HDMI_AUDIO_CH_EVENT
+	bool "Sending audio channel event to platform"
+	depends on OMAP4_DSS_HDMI
+	default n
+	help
+	  There is edid information from sink. Hdmi source can read edid and parse,
+	  hdmi checks number of audio supporting channel (2-ch, 5-1ch).
+
+
+config OMAP2_HDMI_FORCED_TIMING
+	bool "sysfs for forced hdmi timing"
+	depends on OMAP4_DSS_HDMI
+	default n
+	help
+	  This is for forced hdmi timing and will be used for factory test.
 endif

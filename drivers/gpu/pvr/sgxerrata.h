@@ -199,6 +199,7 @@
 	#if SGX_CORE_REV == 120
 		#define FIX_HW_BRN_26620
 		#define FIX_HW_BRN_28011
+		#define FIX_HW_BRN_28889
 		#define FIX_HW_BRN_34028
 	#else
 	#if SGX_CORE_REV == 121

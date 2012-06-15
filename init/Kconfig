@@ -1288,6 +1288,20 @@ config PROFILING
 config TRACEPOINTS
 	bool
 
+config DEFERRED_INITCALLS
+	bool "Deferred initcalls"
+	default n
+	help
+	  An "initcall" is the initialization function for a module which is
+	  statically linked into the Linux kernel. Running of initcalls can
+	  consume a large amount of time during bootup. However, some
+	  modules do not need to be initialized so early, in order for the
+	  embedded device to become usable for its primary purpose. These
+	  initcalls can be run later, after first boot (and possibly first
+	  use) has completed.
+	  See more detail http://elinux.org/Deferred_Initcalls
+	  If in doubt, say "N".
+
 source "arch/Kconfig"
 
 endmenu		# General setup

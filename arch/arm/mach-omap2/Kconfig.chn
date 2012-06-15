@@ -1,0 +1,30 @@
+config RTC_CHN_ALARM_BOOT
+	bool "Alarm Boot"
+	default n
+	select SEC_RTC_ALARM_BOOT
+
+config MACH_SAMSUNG_ESPRESSO_CHN_CMCC
+        bool "Samsung Espresso CHINA CMCC (GT-P3108) Board"
+        default n
+        select MACH_OMAP4_SAMSUNG
+
+config MACH_SAMSUNG_ESPRESSO_CHN_OPEN
+        bool "Samsung Espresso CHINA OPEN (GT-P3100) Board"
+        default n
+        select MACH_OMAP4_SAMSUNG
+
+config TARGET_LOCALE_CHN
+	bool "Samsung Espresso CHINA LOCALE"
+	default n
+	select MACH_OMAP4_SAMSUNG
+
+config MACH_SAMSUNG_T1_CHN_CMCC
+	bool "Samsung T1 CHINA CMCC Board"
+	default n
+	select MACH_OMAP4_SAMSUNG
+
+config MACH_SAMSUNG_T1_CHN_OPEN
+	bool "Samsung T1 CHINA OPEN Board"
+	default n
+	select MACH_OMAP4_SAMSUNG
+

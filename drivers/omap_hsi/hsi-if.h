@@ -46,13 +46,15 @@ int if_hsi_start(int ch);
 void if_hsi_stop(int ch);
 
 void if_hsi_send_break(int ch);
-void if_hsi_flush_rx(int ch);
-void if_hsi_flush_tx(int ch);
+void if_hsi_flush_rx(int ch, size_t *nb_flushed_frames);
+void if_hsi_flush_tx(int ch, size_t *nb_flushed_frames);
 void if_hsi_bootstrap(int ch);
 void if_hsi_set_acwakeline(int ch, unsigned int state);
 void if_hsi_get_acwakeline(int ch, unsigned int *state);
 void if_hsi_get_cawakeline(int ch, unsigned int *state);
 void if_hsi_set_wake_rx_3wires_mode(int ch, unsigned int state);
+void if_hsi_set_hi_speed(int ch, unsigned int state);
+void if_hsi_get_speed(int ch, unsigned long *fclock);
 int if_hsi_set_rx(int ch, struct hsi_rx_config *cfg);
 void if_hsi_get_rx(int ch, struct hsi_rx_config *cfg);
 int if_hsi_set_tx(int ch, struct hsi_tx_config *cfg);

@@ -25,6 +25,7 @@
 #include <linux/io.h>
 
 #include <linux/usb/musb.h>
+#include <linux/usb/android_composite.h>
 
 #include <mach/hardware.h>
 #include <mach/irqs.h>
@@ -59,6 +60,17 @@ static struct musb_hdrc_platform_data musb_plat = {
 	 */
 	.power		= 50,			/* up to 100 mA */
 };
+
+#ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
+static struct android_usb_platform_data android_usb_pdata = {
+	.nluns = 2,
+};
+
+struct platform_device android_usb_device = {
+	.name = "android_usb",
+	.dev.platform_data = &android_usb_pdata,
+};
+#endif
 
 static u64 musb_dmamask = DMA_BIT_MASK(32);
 
@@ -174,6 +186,10 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
 
 	if (cpu_is_omap44xx())
 		omap4430_phy_init(dev);
+
+#ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
+	platform_device_register(&android_usb_device);
+#endif
 }
 
 #else

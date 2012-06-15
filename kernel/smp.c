@@ -175,7 +175,7 @@ void generic_smp_call_function_interrupt(void)
 	/*
 	 * Shouldn't receive this interrupt on a cpu that is not yet online.
 	 */
-	WARN_ON_ONCE(!cpu_online(cpu));
+	WARN_ON_ONCE(!cpu_online(cpu) || !cpu_active(cpu));
 
 	/*
 	 * Ensure entry is visible on call_function_queue after we have
@@ -255,7 +255,8 @@ void generic_smp_call_function_single_interrupt(void)
 	/*
 	 * Shouldn't receive this interrupt on a cpu that is not yet online.
 	 */
-	WARN_ON_ONCE(!cpu_online(smp_processor_id()));
+	WARN_ON_ONCE(!cpu_online(smp_processor_id()) ||
+		     !cpu_active(smp_processor_id()));
 
 	raw_spin_lock(&q->lock);
 	list_replace_init(&q->list, &list);
@@ -324,7 +325,8 @@ int smp_call_function_single(int cpu, smp_call_func_t func, void *info,
 		func(info);
 		local_irq_restore(flags);
 	} else {
-		if ((unsigned)cpu < nr_cpu_ids && cpu_online(cpu)) {
+		if ((unsigned)cpu < nr_cpu_ids &&
+				cpu_online(cpu) && cpu_active(cpu)) {
 			struct call_single_data *data = &d;
 
 			if (!wait)
@@ -336,7 +338,7 @@ int smp_call_function_single(int cpu, smp_call_func_t func, void *info,
 			data->info = info;
 			generic_exec_single(cpu, data, wait);
 		} else {
-			err = -ENXIO;	/* CPU not online */
+			err = -ENXIO;	/* CPU not online or active */
 		}
 	}
 
@@ -367,6 +369,7 @@ int smp_call_function_any(const struct cpumask *mask,
 {
 	unsigned int cpu;
 	const struct cpumask *nodemask;
+	struct cpumask online_and_active;
 	int ret;
 
 	/* Try for same CPU (cheapest) */
@@ -378,12 +381,18 @@ int smp_call_function_any(const struct cpumask *mask,
 	nodemask = cpumask_of_node(cpu_to_node(cpu));
 	for (cpu = cpumask_first_and(nodemask, mask); cpu < nr_cpu_ids;
 	     cpu = cpumask_next_and(cpu, nodemask, mask)) {
-		if (cpu_online(cpu))
+		if (cpu_online(cpu) && cpu_active(cpu))
 			goto call;
 	}
 
-	/* Any online will do: smp_call_function_single handles nr_cpu_ids. */
-	cpu = cpumask_any_and(mask, cpu_online_mask);
+	/*
+	 * Any online and active will do: smp_call_function_single handles
+	 * nr_cpu_ids.
+	 */
+
+	cpumask_and(&online_and_active, cpu_online_mask, cpu_active_mask);
+
+	cpu = cpumask_any_and(mask, &online_and_active);
 call:
 	ret = smp_call_function_single(cpu, func, info, wait);
 	put_cpu();
@@ -430,7 +439,7 @@ void __smp_call_function_single(int cpu, struct call_single_data *data,
 
 /**
  * smp_call_function_many(): Run a function on a set of other CPUs.
- * @mask: The set of cpus to run on (only runs on online subset).
+ * @mask: The set of cpus to run on (only runs on online and active subset).
  * @func: The function to run. This must be fast and non-blocking.
  * @info: An arbitrary pointer to pass to the function.
  * @wait: If true, wait (atomically) until function has completed
@@ -515,6 +524,10 @@ void smp_call_function_many(const struct cpumask *mask,
 
 	/* We rely on the "and" being processed before the store */
 	cpumask_and(data->cpumask, mask, cpu_online_mask);
+
+	/* Remove any non-active cpus */
+	cpumask_and(data->cpumask, data->cpumask, cpu_active_mask);
+
 	cpumask_clear_cpu(this_cpu, data->cpumask);
 	refs = cpumask_weight(data->cpumask);
 

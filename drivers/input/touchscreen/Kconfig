@@ -744,4 +744,34 @@ config TOUCHSCREEN_TPS6507X
 	  To compile this driver as a module, choose M here: the
 	  module will be called tps6507x_ts.
 
+config TOUCHSCREEN_ATMEL_MXT224E
+	tristate "Atmel MXT224E Touchscreen Interface"
+	depends on I2C
+	default n
+	help
+		Say Y here if you want support for atmel_MXT224E
+		(with legacy  MXT224) touchscreen controllers.
+
+		To compile this driver as a module, choose M here: the
+		module will be called mxt224_t1.
+
+config TOUCHSCREEN_MELFAS
+	tristate "MELFAS Touchscreen Interface"
+	depends on I2C
+	help
+		Say Y here if you want support for MELFAS
+		(with legacy  MELFAS) touchscreen controllers.
+
+		To compile this driver as a module, choose M here: the
+		module will be called melfas_ts.
+
+config TOUCHSCREEN_SYNAPTICS_S7301
+	tristate "SYNAPTICS S7301 Touchscreen Interface"
+	depends on I2C
+	help
+		Say Y here if you want support for SYNAPTICS S7301
+		touchscreen controllers.
+
+		To compile this driver as a module, choose M here: the
+		module will be called melfas_ts.
 endif

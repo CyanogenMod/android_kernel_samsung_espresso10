@@ -345,12 +345,30 @@ ENTRY(omap4_cpu_resume)
 	and	r0, #0x0f
 	cmp	r0, #1				@ is CPU0 already UP?
 	beq	ppa_cp15_cpu1_configure		@ CPU1 HS go to next stage
+
+	ldr	r0, [r8, #L2X0_SAVE_OFFSET0]
+	cmp	r0, #3				@ Is this OFF mode transition?
+	bne	omap4_cpu_resume		@ respond faster by looping
+
 	/*
 	 * CPU0 and CPU1 are release together from OFF mode, however,
 	 * CPU0 can be busy doing restore operations while waking
 	 * from OFF mode, However, for many PPA services we need
 	 * CPU0, so, we ask CPU1 to loop back to stagger CPU1 behind CPU0
 	 */
+	ldrne	r0, [r8, #SCU_OFFSET1]
+	mov     r1, #0x00               @ Secure L1 is already clean
+	ldr     r12, =SCU_POWER_SECURE_INDEX
+	dsb
+	smc     #0
+	dsb                             @ Necessary barriers before wfi
+	dmb
+	isb
+	wfi                             @ wait for interrupt
+	nop
+	nop
+
+	/* If we entered here, we did not do a clean WFI? Loopback for safety */
 	b omap4_cpu_resume
 
 ppa_cp15_cpu1_configure:

@@ -1,0 +1,162 @@
+
+menu "Motion Sensors Support"
+
+choice
+    bool "Motion Processing Unit"
+    depends on I2C
+    default MPU_SENSORS_MPU3050_V333
+
+config MPU_NONE
+    bool "None"
+
+
+config MPU_SENSORS_MPU3050_V333
+    tristate "MPU3050"
+    depends on I2C
+
+
+config MPU_SENSORS_MPU6000_V333
+    tristate "MPU6000"
+    depends on I2C
+
+
+endchoice
+
+choice
+    prompt "Accelerometer Type"
+    depends on MPU_SENSORS_MPU3050_V333
+    default MPU_SENSORS_KXTF9
+
+config MPU_SENSORS_ACCELEROMETER_NONE_V333
+    bool "NONE"
+    depends on MPU_SENSORS_MPU3050_V333 || MPU_SENSORS_MPU6000_V333
+
+config MPU_SENSORS_ADXL346_V333
+    bool "ADI adxl346"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_BMA150_V333
+    bool "Bosch BMA150"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_BMA222_V333
+    bool "Bosch BMA222"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_BMA250_V333
+    bool "Bosch BMA250"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_KXSD9_V333
+    bool "Kionix KXSD9"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_KXTF9_V333
+    bool "Kionix KXTF9"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_LIS331DLH_V333
+    bool "ST lis331dlh"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_LIS3DH_V333
+    bool "ST lis3dh"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_LSM303DLHA_V333
+    bool "ST lsm303dlh"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_MMA8450_V333
+    bool "Freescale mma8450"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_MMA845X_V333
+    bool "Freescale mma8451/8452/8453"
+    depends on MPU_SENSORS_MPU3050_V333
+
+endchoice
+
+choice
+    prompt "Compass Type"
+    depends on MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_MPU3050_V333
+    default MPU_SENSORS_YAS530
+
+config MPU_SENSORS_COMPASS_NONE_V333
+    bool "NONE"
+    depends on MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_AK8975_V333
+    bool "AKM ak8975"
+    depends on MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_MMC314X_V333
+    bool "MEMSIC mmc314x"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_MMC328X_V333
+    bool "MEMSIC mmc328x"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_AMI30X_V333
+    bool "Aichi Steel ami30X"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_HMC5883_V333
+    bool "Honeywell hmc5883"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_LSM303DLHM_V333
+    bool "ST lsm303dlh"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_MMC314X_V333
+    bool "MEMSIC mmc314xMS"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_YAS529_V333
+    bool "Yamaha yas529"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_YAS530_V333
+    bool "Yamaha yas530"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_HSCDTD002B_V333
+    bool "Alps hscdtd002b"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_HSCDTD004A_V333
+    bool "Alps hscdtd004a"
+    depends on MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_AMS0303_V333
+    bool "Amotech ams0303"
+    depends on MPU_SENSORS_MPU3050_V333
+
+endchoice
+
+choice
+    prompt "Pressure Type"
+    depends on MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_MPU3050_V333
+    default MPU_SENSORS_BMA085_V333
+
+config MPU_SENSORS_PRESSURE_NONE_V333
+    bool "NONE"
+    depends on MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_MPU3050_V333
+
+config MPU_SENSORS_BMA085_V333
+    bool "Bosch BMA085"
+    depends on MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_MPU3050_V333
+
+endchoice
+
+config MPU_SENSORS_TIMERIRQ_V333
+    tristate "Timer IRQ"
+
+config MPU_SENSORS_DEBUG_V333
+    bool "MPU debug"
+    depends on MPU_SENSORS_MPU3050_V333 || MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_TIMERIRQ_V333
+
+endmenu
+

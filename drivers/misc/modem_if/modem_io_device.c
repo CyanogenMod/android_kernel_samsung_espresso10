@@ -25,6 +25,7 @@
 #include <linux/if_ether.h>
 #include <linux/etherdevice.h>
 #include <linux/ratelimit.h>
+#include <linux/device.h>
 
 #include <linux/platform_data/modem.h>
 #include "modem_prj.h"
@@ -35,6 +36,7 @@
 #define SIZE_OF_HDLC_START	1
 #define SIZE_OF_HDLC_END	1
 #define MAX_RXDATA_SIZE		(4096 - 512)
+#define MAX_MTU_TX_DATA_SIZE	1550
 
 static const char hdlc_start[1] = { HDLC_START };
 static const char hdlc_end[1] = { HDLC_END };
@@ -42,22 +44,23 @@ static const char hdlc_end[1] = { HDLC_END };
 struct fmt_hdr {
 	u16 len;
 	u8 control;
-} __attribute__ ((packed));
+} __packed;
 
 struct raw_hdr {
 	u32 len;
 	u8 channel;
 	u8 control;
-} __attribute__ ((packed));
+} __packed;
 
 struct rfs_hdr {
 	u32 len;
 	u8 cmd;
 	u8 id;
-} __attribute__ ((packed));
+} __packed;
 
 static const char const *modem_state_name[] = {
 	[STATE_OFFLINE]		= "OFFLINE",
+	[STATE_CRASH_RESET]	= "CRASH_RESET",
 	[STATE_CRASH_EXIT]	= "CRASH_EXIT",
 	[STATE_BOOTING]		= "BOOTING",
 	[STATE_ONLINE]		= "ONLINE",
@@ -65,6 +68,43 @@ static const char const *modem_state_name[] = {
 };
 
 static int rx_iodev_skb(struct io_device *iod);
+
+static ssize_t show_waketime(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	unsigned int msec;
+	char *p = buf;
+	struct miscdevice *miscdev = dev_get_drvdata(dev);
+	struct io_device *iod = container_of(miscdev, struct io_device,
+			miscdev);
+
+	msec = jiffies_to_msecs(iod->waketime);
+
+	p += sprintf(buf, "raw waketime : %ums\n", msec);
+
+	return p - buf;
+}
+
+static ssize_t store_waketime(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	unsigned long msec;
+	int ret;
+	struct miscdevice *miscdev = dev_get_drvdata(dev);
+	struct io_device *iod = container_of(miscdev, struct io_device,
+			miscdev);
+
+	ret = strict_strtoul(buf, 10, &msec);
+	if (ret)
+		return count;
+
+	iod->waketime = msecs_to_jiffies(msec);
+
+	return count;
+}
+
+static struct device_attribute attr_waketime =
+	__ATTR(waketime, S_IRUGO | S_IWUSR, show_waketime, store_waketime);
 
 static int get_header_size(struct io_device *iod)
 {
@@ -227,7 +267,8 @@ static int rx_hdlc_data_check(struct io_device *iod, char *buf, unsigned rest)
 	if (!skb) {
 		switch (iod->format) {
 		case IPC_RFS:
-			alloc_size = min(data_size + head_size, MAX_RXDATA_SIZE);
+			alloc_size = min(data_size + head_size,
+					MAX_RXDATA_SIZE);
 			skb = alloc_skb(alloc_size, GFP_ATOMIC);
 			if (unlikely(!skb))
 				return -ENOMEM;
@@ -236,7 +277,7 @@ static int rx_hdlc_data_check(struct io_device *iod, char *buf, unsigned rest)
 			break;
 
 		case IPC_MULTI_RAW:
-                        if (data_size > MAX_RXDATA_SIZE) {
+			if (data_size > MAX_RXDATA_SIZE) {
 				pr_err("%s: %s: packet size too large (%d)\n",
 						__func__, iod->name, data_size);
 				return -EINVAL;
@@ -365,11 +406,53 @@ static void rx_iodev_work(struct work_struct *work)
 			schedule_delayed_work(&iod->rx_work,
 						msecs_to_jiffies(20));
 			break;
-		} else if (ret < 0)
+		} else if (ret < 0 && skb)
 			dev_kfree_skb_any(skb);
 
 		skb = skb_dequeue(&iod->sk_rx_q);
 	}
+}
+
+/* hadling modem initiated loopback packet
+ * packet path : Modem -> LINK -> IOD -> LINK -> MODEM
+ */
+static int rx_loopback(struct sk_buff *skb, struct io_device *iod)
+{
+	int headroom, tailroom;
+	struct sk_buff *skb_new;
+	struct raw_hdr raw_header;
+
+	pr_debug("[MODEM_IF] %s: CP LB DATA RECEIVED: size=%d\n",
+					__func__, skb->len);
+
+	headroom = sizeof(raw_header) + sizeof(hdlc_start);
+	tailroom = sizeof(hdlc_end);
+	if (unlikely(skb_headroom(skb) < headroom) ||
+			unlikely(skb_tailroom(skb) < tailroom)) {
+		skb_new = skb_copy_expand(skb, headroom, tailroom, GFP_ATOMIC);
+		/* skb_copy_expand success or not, free old skb from caller */
+		dev_kfree_skb_any(skb);
+		if (!skb_new)
+			return -1;
+	} else
+		skb_new = skb;
+
+	/* mark loopback header */
+	raw_header.len = skb_new->len + sizeof(raw_header);
+	raw_header.channel = CP_LOOPBACK_CHANNEL;
+	raw_header.control = 0x03;
+
+	/* fill header data and HDLC framing */
+	memcpy(skb_push(skb_new, sizeof(raw_header)), &raw_header,
+						sizeof(raw_header));
+	memcpy(skb_push(skb_new, sizeof(hdlc_start)), hdlc_start,
+						sizeof(hdlc_start));
+	memcpy(skb_put(skb_new, sizeof(hdlc_end)), hdlc_end, sizeof(hdlc_end));
+
+	pr_debug("[MODEM_IF] %s: CP LB DATA SEND WITH HDLC: size=%d\n",
+					__func__, skb_new->len);
+	iod->link->send(iod->link, iod, skb_new);
+	return 0;
 }
 
 static int rx_multipdp(struct io_device *iod)
@@ -381,6 +464,10 @@ static int rx_multipdp(struct io_device *iod)
 	struct io_device *real_iod;
 
 	ch = raw_header->channel;
+
+	if (ch == CP_LOOPBACK_CHANNEL)
+		return rx_loopback(iod->skb_recv, iod);
+
 	real_iod = io_raw_devs->raw_devices[ch];
 	if (!real_iod) {
 		pr_err("[MODEM_IF] %s: wrong channel %d\n", __func__, ch);
@@ -458,8 +545,8 @@ data_check:
 
 	err = len = rx_hdlc_tail_check(buf);
 	if (err < 0) {
-		pr_err("[MODEM_IF] Wrong HDLC end: 0x%x(%s)\n",
-					*buf, iod->name);
+		pr_err("[MODEM_IF] Wrong HDLC end: 0x%x(%s), rest: %d,"
+			" recv_size:%d\n", *buf, iod->name, rest, recv_size);
 		goto exit;
 	}
 	pr_debug("[MODEM_IF] check len : %d, rest : %d (%d)\n", len, rest,
@@ -511,6 +598,8 @@ static int io_dev_recv_data_from_link_dev(struct io_device *iod,
 	case IPC_RAW:
 	case IPC_RFS:
 	case IPC_MULTI_RAW:
+		if (iod->waketime)
+			wake_lock_timeout(&iod->wakelock, iod->waketime);
 		err = rx_hdlc_packet(iod, data, len);
 		if (err < 0)
 			pr_err("[MODEM_IF] fail process hdlc fram\n");
@@ -550,10 +639,35 @@ static void io_dev_modem_state_changed(struct io_device *iod,
 			enum modem_state state)
 {
 	iod->mc->phone_state = state;
-	pr_info("[MODEM_IF] %s state changed: %s\n", iod->name, modem_state_name[state]);
+	pr_info("[MODEM_IF] %s state changed: %s\n", iod->name,
+				modem_state_name[state]);
 
-	if (state == STATE_CRASH_EXIT)
+	if ((state == STATE_CRASH_RESET) || (state == STATE_CRASH_EXIT))
 		wake_up(&iod->wq);
+}
+
+/**
+ * io_dev_sim_state_changed
+ * @iod: IPC's io_device
+ * @sim_online: SIM is online?
+ */
+static void io_dev_sim_state_changed(struct io_device *iod, bool sim_online)
+{
+	if (atomic_read(&iod->opened) == 0)
+		pr_err("[MODEM_IF] %s iod is not opened: %s\n", __func__,
+				iod->name);
+	else if (iod->mc->sim_state.online == sim_online)
+		pr_info("[MODEM_IF] %s sim state not changed.\n", __func__);
+	else {
+		iod->mc->sim_state.online = sim_online;
+		iod->mc->sim_state.changed = true;
+
+		pr_info("[MODEM_IF] %s sim state changed. (iod: %s, state: "
+				"[online=%d, changed=%d])\n", __func__,
+				iod->name, iod->mc->sim_state.online,
+				iod->mc->sim_state.changed);
+		wake_up(&iod->wq);
+	}
 }
 
 static int misc_open(struct inode *inode, struct file *filp)
@@ -562,6 +676,7 @@ static int misc_open(struct inode *inode, struct file *filp)
 	filp->private_data = (void *)iod;
 
 	pr_info("[MODEM_IF] misc_open : %s\n", iod->name);
+	atomic_inc(&iod->opened);
 
 	if (iod->link->init_comm)
 		return iod->link->init_comm(iod->link, iod);
@@ -573,6 +688,7 @@ static int misc_release(struct inode *inode, struct file *filp)
 	struct io_device *iod = (struct io_device *)filp->private_data;
 
 	pr_info("[MODEM_IF] misc_release : %s\n", iod->name);
+	atomic_dec(&iod->opened);
 
 	if (iod->link->terminate_comm)
 		iod->link->terminate_comm(iod->link, iod);
@@ -590,7 +706,9 @@ static unsigned int misc_poll(struct file *filp, struct poll_table_struct *wait)
 	if ((!skb_queue_empty(&iod->sk_rx_q))
 				&& (iod->mc->phone_state != STATE_OFFLINE))
 		return POLLIN | POLLRDNORM;
-	else if (iod->mc->phone_state == STATE_CRASH_EXIT)
+	else if ((iod->mc->phone_state == STATE_CRASH_RESET) ||
+			(iod->mc->phone_state == STATE_CRASH_EXIT) ||
+			iod->mc->sim_state.changed)
 		return POLLHUP;
 	else
 		return 0;
@@ -599,6 +717,7 @@ static unsigned int misc_poll(struct file *filp, struct poll_table_struct *wait)
 static long misc_ioctl(struct file *filp, unsigned int cmd, unsigned long _arg)
 {
 	struct io_device *iod = (struct io_device *)filp->private_data;
+	int s_state;
 
 	pr_debug("[MODEM_IF] misc_ioctl : 0x%x\n", cmd);
 
@@ -617,7 +736,9 @@ static long misc_ioctl(struct file *filp, unsigned int cmd, unsigned long _arg)
 
 	case IOCTL_MODEM_FORCE_CRASH_EXIT:
 		pr_debug("[MODEM_IF] misc_ioctl : IOCTL_MODEM_FORCE_CRASH_EXIT\n");
-		return iod->mc->ops.modem_force_crash_exit(iod->mc);
+		if (iod->mc->ops.modem_force_crash_exit)
+			return iod->mc->ops.modem_force_crash_exit(iod->mc);
+		return 0;
 
 	case IOCTL_MODEM_DUMP_RESET:
 		pr_debug("[MODEM_IF] misc_ioctl : IOCTL_MODEM_FORCE_CRASH_EXIT\n");
@@ -638,6 +759,14 @@ static long misc_ioctl(struct file *filp, unsigned int cmd, unsigned long _arg)
 
 	case IOCTL_MODEM_STATUS:
 		pr_debug("[MODEM_IF] misc_ioctl : IOCTL_MODEM_STATUS\n");
+
+		if (iod->mc->sim_state.changed) {
+			s_state = iod->mc->sim_state.online ?
+					STATE_SIM_ATTACH : STATE_SIM_DETACH;
+			iod->mc->sim_state.changed = false;
+			return s_state;
+		}
+
 		return iod->mc->phone_state;
 
 	case IOCTL_MODEM_DUMP_START:
@@ -656,6 +785,11 @@ static long misc_ioctl(struct file *filp, unsigned int cmd, unsigned long _arg)
 		pr_debug("[GOTA] misc_ioctl : IOCTL_MODEM_FW_UPDATE\n");
 		return iod->link->modem_update(iod->link, iod, _arg);
 
+	case IOCTL_MODEM_CP_UPLOAD:
+		pr_err("[MODEM_IF] misc_ioctl : IOCTL_MODEM_CP_UPLOAD\n");
+		panic("CP Crash");
+		return 0;
+
 	default:
 		return -EINVAL;
 	}
@@ -668,14 +802,30 @@ static ssize_t misc_write(struct file *filp, const char __user * buf,
 	int frame_len = 0;
 	char frame_header_buf[sizeof(struct raw_hdr)];
 	struct sk_buff *skb;
+	int err;
+	size_t tx_size;
+	size_t data_size = count;
+	size_t tx_done_len = 0;
 
-	/* TODO - check here flow control for only raw data */
+send_remain_data:
 
-	if (iod->format == IPC_BOOT || iod->format == IPC_RAMDUMP)
-		frame_len = count + get_header_size(iod);
-	else
-		frame_len = count + SIZE_OF_HDLC_START + get_header_size(iod)
-					+ SIZE_OF_HDLC_END;
+	switch (iod->format) {
+	case IPC_BOOT:
+	case IPC_RAMDUMP:
+		frame_len = data_size + get_header_size(iod);
+		break;
+
+	case IPC_RAW:
+		if (data_size > MAX_MTU_TX_DATA_SIZE) {
+			pr_debug("[MODEM_IF] TX size is over than MTU. "
+				"data_size : %d\n", data_size);
+			data_size = MAX_MTU_TX_DATA_SIZE;
+		}
+	default:
+		frame_len = data_size + SIZE_OF_HDLC_START
+				+ get_header_size(iod) + SIZE_OF_HDLC_END;
+		break;
+	}
 
 	skb = alloc_skb(frame_len, GFP_KERNEL);
 	if (!skb) {
@@ -686,7 +836,8 @@ static ssize_t misc_write(struct file *filp, const char __user * buf,
 	switch (iod->format) {
 	case IPC_BOOT:
 	case IPC_RAMDUMP:
-		if (copy_from_user(skb_put(skb, count), buf, count) != 0) {
+		if (copy_from_user(skb_put(skb, data_size), buf,
+						data_size) != 0) {
 			dev_kfree_skb_any(skb);
 			return -EFAULT;
 		}
@@ -695,7 +846,8 @@ static ssize_t misc_write(struct file *filp, const char __user * buf,
 	case IPC_RFS:
 		memcpy(skb_put(skb, SIZE_OF_HDLC_START), hdlc_start,
 				SIZE_OF_HDLC_START);
-		if (copy_from_user(skb_put(skb, count), buf, count) != 0) {
+		if (copy_from_user(skb_put(skb, data_size), buf,
+						data_size) != 0) {
 			dev_kfree_skb_any(skb);
 			return -EFAULT;
 		}
@@ -707,9 +859,10 @@ static ssize_t misc_write(struct file *filp, const char __user * buf,
 		memcpy(skb_put(skb, SIZE_OF_HDLC_START), hdlc_start,
 				SIZE_OF_HDLC_START);
 		memcpy(skb_put(skb, get_header_size(iod)),
-			get_header(iod, count, frame_header_buf),
+			get_header(iod, data_size, frame_header_buf),
 			get_header_size(iod));
-		if (copy_from_user(skb_put(skb, count), buf, count) != 0) {
+		if (copy_from_user(skb_put(skb, data_size), buf + tx_done_len,
+						data_size) != 0) {
 			dev_kfree_skb_any(skb);
 			return -EFAULT;
 		}
@@ -717,11 +870,31 @@ static ssize_t misc_write(struct file *filp, const char __user * buf,
 					SIZE_OF_HDLC_END);
 		break;
 	}
+	tx_done_len += data_size;
+
 
 	/* send data with sk_buff, link device will put sk_buff
 	 * into the specific sk_buff_q and run work-q to send data
 	 */
-	return iod->link->send(iod->link, iod, skb);
+	tx_size = skb->len;
+	err = iod->link->send(iod->link, iod, skb);
+	if (err < 0)
+		return err;
+
+	if (err != tx_size)
+		pr_err("[MODEM_IF] %s: WARNNING: wrong tx size: %s, format=%d "
+			"count=%d, tx_size=%d, return_size=%d, data_size=%d\n",
+			__func__, iod->name, iod->format, count, tx_size,
+			err, data_size);
+
+	if (tx_done_len < count) {
+		pr_debug("[MODEM_IF] Send remain data. tx_done_len=%d, count=%d, "
+			"data_size : %d\n", tx_done_len, count, data_size);
+		data_size = count - tx_done_len;
+		goto send_remain_data;
+	}
+
+	return count;
 }
 
 static ssize_t misc_read(struct file *filp, char *buf, size_t count,
@@ -748,8 +921,10 @@ static ssize_t misc_read(struct file *filp, char *buf, size_t count,
 	pr_debug("[MODEM_IF] skb len : %d\n", skb->len);
 
 	pktsize = skb->len;
-	if (copy_to_user(buf, skb->data, pktsize) != 0)
+	if (copy_to_user(buf, skb->data, pktsize) != 0) {
+		dev_kfree_skb_any(skb);
 		return -EIO;
+	}
 	dev_kfree_skb_any(skb);
 
 	pr_debug("[MODEM_IF] copy to user : %d\n", pktsize);
@@ -769,12 +944,16 @@ static const struct file_operations misc_io_fops = {
 
 static int vnet_open(struct net_device *ndev)
 {
+	struct vnet *vnet = netdev_priv(ndev);
 	netif_start_queue(ndev);
+	atomic_inc(&vnet->iod->opened);
 	return 0;
 }
 
 static int vnet_stop(struct net_device *ndev)
 {
+	struct vnet *vnet = netdev_priv(ndev);
+	atomic_dec(&vnet->iod->opened);
 	netif_stop_queue(ndev);
 	return 0;
 }
@@ -863,6 +1042,8 @@ int init_io_device(struct io_device *iod)
 	iod->modem_state_changed = io_dev_modem_state_changed;
 	/* get data from link device */
 	iod->recv = io_dev_recv_data_from_link_dev;
+	/* to send SIM change event */
+	iod->sim_state_changed = io_dev_sim_state_changed;
 
 	INIT_LIST_HEAD(&iod->list);
 
@@ -909,6 +1090,19 @@ int init_io_device(struct io_device *iod)
 	case IODEV_DUMMY:
 		skb_queue_head_init(&iod->sk_rx_q);
 		INIT_DELAYED_WORK(&iod->rx_work, rx_iodev_work);
+
+		iod->miscdev.minor = MISC_DYNAMIC_MINOR;
+		iod->miscdev.name = iod->name;
+		iod->miscdev.fops = &misc_io_fops;
+
+		ret = misc_register(&iod->miscdev);
+		if (ret)
+			pr_err("failed to register misc io device : %s\n",
+						iod->name);
+		ret = device_create_file(iod->miscdev.this_device,
+				&attr_waketime);
+		if (ret)
+			pr_err("failed to create sysfs file : %s\n", iod->name);
 
 		break;
 

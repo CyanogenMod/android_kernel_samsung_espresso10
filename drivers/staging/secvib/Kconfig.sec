@@ -1,0 +1,8 @@
+config SAMSUNG_VIBETONZ
+	tristate "Samsung Haptic touch sense driver(vibetonz)"
+	default n
+	help
+		This driver is based on refernce
+		driver provided by
+		Immersion Corp.
+		touch sense driver(vibetonz)

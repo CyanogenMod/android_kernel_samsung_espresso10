@@ -28,7 +28,11 @@
 #include <linux/init.h>
 
 #define DYNAMIC_PORT_MIN	0x40
+#if defined(CONFIG_SAMSUNG_PHONE_SVNET)
+#define DYNAMIC_PORT_MAX	0xff
+#else
 #define DYNAMIC_PORT_MAX	0x7f
+#endif
 
 static DEFINE_SEQLOCK(local_port_range_lock);
 static int local_port_range_min[2] = {0, 0};

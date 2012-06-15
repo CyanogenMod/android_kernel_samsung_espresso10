@@ -38,6 +38,7 @@ struct emif_instance {
 	void __iomem *base;
 	u16 irq;
 	struct platform_device *pdev;
+	bool ddr_refresh_disabled;
 };
 static struct emif_instance emif[EMIF_NUM_INSTANCES];
 static struct emif_regs *emif_curr_regs[EMIF_NUM_INSTANCES];
@@ -73,6 +74,20 @@ void emif_dump(int emif_nr)
 	       __raw_readl(base + OMAP44XX_EMIF_IRQSTATUS_LL),
 	       get_temperature_level(emif_nr));
 }
+
+/*
+ * EMIF Power Management timer for Self Refresh will put the external SDRAM
+ * in Self Refresh mode after the EMIF is idle for number of DDR clock cycles
+ * set with REG_SR_TIM. The minimal value starts at 16 cycles mapped to 1 in
+ * REG_SR_TIM.
+ * However due to Errata i735, the minimal value of REG_SR_TIM is 6. That
+ * corresponds to 512 DDR cycles required for OPP100
+*/
+#define EMIF_ERRATUM_SR_TIMER_i735	BIT(0)
+#define EMIF_ERRATUM_SR_TIMER_MIN	6
+
+static u32 emif_errata;
+#define is_emif_erratum(erratum) (emif_errata & EMIF_ERRATUM_##erratum)
 
 static void do_cancel_out(u32 *num, u32 *den, u32 factor)
 {
@@ -451,11 +466,20 @@ static u32 get_zq_config_reg(const struct lpddr2_device_info *cs1_device,
 	mask_n_set(zq, OMAP44XX_REG_ZQ_DUALCALEN_SHIFT,
 		   OMAP44XX_REG_ZQ_DUALCALEN_MASK, REG_ZQ_DUALCALEN_DISABLE);
 
+#if defined(CONFIG_MACH_OMAP4_SAMSUNG)
+	mask_n_set(zq, OMAP44XX_REG_ZQ_CS0EN_SHIFT,
+		   OMAP44XX_REG_ZQ_CS0EN_MASK, 0);
+
+	mask_n_set(zq, OMAP44XX_REG_ZQ_CS1EN_SHIFT,
+		   OMAP44XX_REG_ZQ_CS1EN_MASK, 0);
+
+#else
 	mask_n_set(zq, OMAP44XX_REG_ZQ_CS0EN_SHIFT,
 		   OMAP44XX_REG_ZQ_CS0EN_MASK, REG_ZQ_CS0EN_ENABLE);
 
 	mask_n_set(zq, OMAP44XX_REG_ZQ_CS1EN_SHIFT,
 		   OMAP44XX_REG_ZQ_CS1EN_MASK, (cs1_device ? 1 : 0));
+#endif
 
 	return zq;
 }
@@ -534,6 +558,47 @@ static u32 get_ddr_phy_ctrl_1(u32 freq, u8 RL)
 }
 
 /*
+ * get_lp_mode - Get the LP Mode of a EMIF instance.
+ *
+ * It returns the REG_LP_MODE of EMIF_PWR_MGMT_CTRL[10:8]
+ * for a EMIF.
+ *
+ */
+static u32 get_lp_mode(u32 emif_nr)
+{
+	u32 temp, lpmode;
+	void __iomem *base = emif[emif_nr].base;
+
+	temp = readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL);
+	lpmode = (temp & OMAP44XX_REG_LP_MODE_MASK) >>
+			OMAP44XX_REG_LP_MODE_SHIFT;
+
+	return lpmode;
+}
+
+/*
+ * set_lp_mode - Set the LP Mode of a EMIF instance.
+ *
+ * It replaces the REG_LP_MODE of EMIF_PWR_MGMT_CTRL[10:8]
+ * with the new value for a EMIF.
+ *
+ */
+static void set_lp_mode(u32 emif_nr, u32 lpmode)
+{
+	u32 temp;
+	void __iomem *base = emif[emif_nr].base;
+
+	/* Extract current lp mode value */
+	temp = readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL);
+
+	/* Write out the new lp mode value */
+	temp &= ~OMAP44XX_REG_LP_MODE_MASK;
+	temp |= lpmode << OMAP44XX_REG_LP_MODE_SHIFT;
+	writel(temp, base + OMAP44XX_EMIF_PWR_MGMT_CTRL);
+
+}
+
+/*
  * Get the temperature level of the EMIF instance:
  * Reads the MR4 register of attached SDRAM parts to find out the temperature
  * level. If there are two parts attached(one on each CS), then the temperature
@@ -588,7 +653,7 @@ static u32 get_temperature_level(u32 emif_nr)
  */
 static void setup_registers(u32 emif_nr, struct emif_regs *regs, u32 volt_state)
 {
-	u32 temp,read_idle;
+	u32 temp, read_idle;
 	void __iomem *base = emif[emif_nr].base;
 
 	__raw_writel(regs->ref_ctrl, base + OMAP44XX_EMIF_SDRAM_REF_CTRL_SHDW);
@@ -875,6 +940,8 @@ static int __devinit omap_emif_probe(struct platform_device *pdev)
 
 	pr_info("EMIF%d is enabled with IRQ%d\n", id, emif[id].irq);
 
+	emif[id].ddr_refresh_disabled = false;
+
 	return 0;
 }
 
@@ -1127,6 +1194,12 @@ static void init_temperature(u32 emif_nr)
 			 "limit.. Needs shut down!!!", emif_nr + 1);
 }
 
+static void __init emif_setup_errata(void)
+{
+	if (cpu_is_omap44xx())
+		emif_errata |= EMIF_ERRATUM_SR_TIMER_i735;
+}
+
 /*
  * omap_emif_device_init needs to be done before
  * ddr reconfigure function call.
@@ -1134,6 +1207,8 @@ static void init_temperature(u32 emif_nr)
  */
 static int __init omap_emif_device_init(void)
 {
+	/* setup the erratas */
+	emif_setup_errata();
 	/*
 	 * To avoid code running on other OMAPs in
 	 * multi-omap builds
@@ -1189,6 +1264,59 @@ void emif_driver_shutdown(struct platform_device *pdev)
 	emif_clear_irq(pdev->id);
 }
 
+int emif_driver_suspend(struct platform_device *pdev, pm_message_t state)
+{
+	u32 temp;
+	u32 base;
+	int id = pdev->id;
+	if (id == 0)
+		base = OMAP44XX_EMIF1_VIRT;
+	else
+		base = OMAP44XX_EMIF2_VIRT;
+
+	temp = OMAP44XX_REG_EN_TA_SYS_MASK;
+
+	/* Disable the relevant interrupts for both LL and SYS*/
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQENABLE_CLR_SYS);
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQENABLE_CLR_LL);
+
+	/* Dummy read to make sure writes are complete */
+	__raw_readl(base + OMAP44XX_EMIF_IRQENABLE_CLR_LL);
+
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQSTATUS_SYS);
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQSTATUS_LL);
+
+
+
+	return 0;
+}
+int emif_driver_resume(struct platform_device *pdev)
+{
+
+	u32 temp;
+	int id = pdev->id;
+	u32 base;
+	if (id == 0)
+		base = OMAP44XX_EMIF1_VIRT;
+	else
+		base = OMAP44XX_EMIF2_VIRT;
+
+	temp = OMAP44XX_REG_EN_TA_SYS_MASK;
+
+	/* Clear any pendining interrupts */
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQSTATUS_SYS);
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQSTATUS_LL);
+
+	/* Enable the relevant interrupts for both LL and SYS*/
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQENABLE_SET_SYS);
+	__raw_writel(temp, base + OMAP44XX_EMIF_IRQENABLE_SET_LL);
+
+	/* Dummy read to make sure writes are complete */
+	__raw_readl(base + OMAP44XX_EMIF_IRQENABLE_SET_LL);
+
+	return 0;
+}
+
 static struct platform_driver omap_emif_driver = {
 	.probe = omap_emif_probe,
 	.driver = {
@@ -1196,6 +1324,8 @@ static struct platform_driver omap_emif_driver = {
 		   },
 
 	.shutdown = emif_driver_shutdown,
+	.suspend = emif_driver_suspend,
+	.resume = emif_driver_resume,
 };
 
 static int __init omap_emif_register(void)
@@ -1271,11 +1401,72 @@ late_initcall(omap_emif_late_init);
 int omap_emif_setup_registers(u32 freq, u32 volt_state)
 {
 	int err = 0;
+
 	if (likely(emif_devices[EMIF1]))
 		err = do_emif_setup_registers(EMIF1, freq, volt_state);
 	if (likely(!err && emif_devices[EMIF2]))
 		err = do_emif_setup_registers(EMIF2, freq, volt_state);
 	return err;
+}
+
+
+/*
+ * omap_emif_frequency_pre_notify - Disable DDR self refresh of both EMIFs
+ *
+ * It disables the LP mode if the LP mode of EMIFs was LP_MODE_SELF_REFRESH.
+ *
+ * It should be called before any PRCM frequency update sequence.
+ * After the frequency update sequence, omap_emif_frequency_post_notify
+ * should be called to restore the original LP MODE setting of the EMIFs.
+ *
+ */
+void omap_emif_frequency_pre_notify(void)
+{
+
+	/* Only disable ddr self-refresh if ddr self-refresh was enabled */
+	if (likely(LP_MODE_SELF_REFRESH == get_lp_mode(EMIF1) &&
+		emif_devices[EMIF1])) {
+
+		set_lp_mode(EMIF1, LP_MODE_DISABLE);
+		emif[EMIF1].ddr_refresh_disabled = true;
+	}
+
+	if (likely(LP_MODE_SELF_REFRESH == get_lp_mode(EMIF2) &&
+		emif_devices[EMIF2])) {
+
+		set_lp_mode(EMIF2, LP_MODE_DISABLE);
+		emif[EMIF2].ddr_refresh_disabled = true;
+
+	}
+
+}
+
+/*
+ * omap_emif_frequency_post_notify - Enable DDR self refresh of both EMIFs
+ *
+ * It restores the LP mode of the EMIFs back to LP_MODE_SELF_REFRESH if it
+ * was previously disabled by omap_emif_frequency_pre_notify()
+ *
+ */
+void omap_emif_frequency_post_notify(void)
+{
+
+	/* Only re-enable ddr self-refresh if ddr self-refresh was disabled */
+	if (likely(emif[EMIF1].ddr_refresh_disabled &&
+		emif_devices[EMIF1])) {
+
+		set_lp_mode(EMIF1, LP_MODE_SELF_REFRESH);
+		emif[EMIF1].ddr_refresh_disabled = false;
+	}
+
+	if (likely(emif[EMIF2].ddr_refresh_disabled &&
+		emif_devices[EMIF2])) {
+
+		set_lp_mode(EMIF2, LP_MODE_SELF_REFRESH);
+		emif[EMIF1].ddr_refresh_disabled = false;
+
+	}
+
 }
 
 /*
@@ -1343,6 +1534,18 @@ static void __init setup_lowpower_regs(u32 emif_nr,
 		else
 			ddr_sr_timer = 0;
 
+		if (is_emif_erratum(SR_TIMER_i735) &&
+				ddr_sr_timer < EMIF_ERRATUM_SR_TIMER_MIN) {
+			/*
+			 * Operating with such SR_TIM value will cause
+			 * instability, so re-adjust to safe value as stated
+			 * by erratum i735
+			 */
+			ddr_sr_timer = EMIF_ERRATUM_SR_TIMER_MIN;
+			pr_warning("%s: PM timer for self refresh is set to %i"
+					" cycles\n", __func__,
+					16 << (EMIF_ERRATUM_SR_TIMER_MIN - 1));
+		}
 		/* Program the idle delay */
 		temp = __raw_readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL_SHDW);
 		mask_n_set(temp, OMAP44XX_REG_SR_TIM_SHDW_SHIFT,

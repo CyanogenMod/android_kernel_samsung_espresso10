@@ -26,6 +26,7 @@
 #include <linux/workqueue.h>
 #include <linux/slab.h>
 #include <linux/opp.h>
+#include <linux/pm_qos_params.h>
 
 #include "smartreflex.h"
 #include "voltage.h"
@@ -53,6 +54,7 @@
  *			case oscillations. filled by the notifier and
  *			consumed by the work item.
  * @work_active:	have we scheduled a work item?
+ * @qos:		pm qos handle
  */
 struct sr_class1p5_work_data {
 	struct delayed_work work;
@@ -62,14 +64,13 @@ struct sr_class1p5_work_data {
 	u8 num_osc_samples;
 	unsigned long u_volt_samples[SR1P5_STABLE_SAMPLES];
 	bool work_active;
+	struct pm_qos_request_list qos;
 };
 
 #if CONFIG_OMAP_SR_CLASS1P5_RECALIBRATION_DELAY
 /* recal_work:	recalibration calibration work */
 static struct delayed_work recal_work;
 #endif
-
-static unsigned long class1p5_margin;
 
 /**
  * sr_class1p5_notify() - isr notifier for status events
@@ -169,6 +170,8 @@ static void sr_class1p5_calib_work(struct work_struct *work)
 	if (unlikely(!work_data->work_active)) {
 		pr_err("%s:%s unplanned work invocation!\n", __func__,
 		       voltdm->name);
+		/* No expectation of calibration, remove qos req */
+		pm_qos_update_request(&work_data->qos, PM_QOS_DEFAULT_VALUE);
 		mutex_unlock(&omap_dvfs_lock);
 		return;
 	}
@@ -274,7 +277,7 @@ done_calib:
 	sr_disable(voltdm);
 
 	/* Add margin if needed */
-	if (class1p5_margin) {
+	if (volt_data->volt_margin) {
 		struct omap_voltdm_pmic *pmic = voltdm->pmic;
 		/* Convert to rounded to PMIC step level if available */
 		if (pmic && pmic->vsel_to_uv && pmic->uv_to_vsel) {
@@ -284,21 +287,21 @@ done_calib:
 			 * then convert it with pmic routine to vsel and back
 			 * to voltage, and finally remove the base voltage
 			 */
-			u_volt_margin = u_volt_current + class1p5_margin;
+			u_volt_margin = u_volt_current + volt_data->volt_margin;
 			u_volt_margin = pmic->uv_to_vsel(u_volt_margin);
 			u_volt_margin = pmic->vsel_to_uv(u_volt_margin);
 			u_volt_margin -= u_volt_current;
 		} else {
-			u_volt_margin = class1p5_margin;
+			u_volt_margin = volt_data->volt_margin;
 		}
 		/* Add margin IF we are lower than nominal */
 		if ((u_volt_safe + u_volt_margin) < volt_data->volt_nominal) {
 			u_volt_safe += u_volt_margin;
 		} else {
-			pr_err("%s: %s could not add %ld[%ld] margin"
+			pr_err("%s: %s could not add %ld[%d] margin"
 				"to vnom %d curr_v=%ld\n",
 				__func__, voltdm->name, u_volt_margin,
-				class1p5_margin, volt_data->volt_nominal,
+				volt_data->volt_margin, volt_data->volt_nominal,
 				u_volt_current);
 		}
 	}
@@ -317,9 +320,10 @@ done_calib:
 		voltdm_scale(voltdm, volt_data);
 	}
 
-	pr_info("%s: %s: Calibration complete: Voltage Nominal=%d Calib=%d\n",
+	pr_info("%s: %s: Calibration complete: Voltage Nominal=%d"
+		"Calib=%d margin=%d\n",
 		 __func__, voltdm->name, volt_data->volt_nominal,
-		 volt_data->volt_calibrated);
+		 volt_data->volt_calibrated, volt_data->volt_margin);
 	/*
 	 * TODO: Setup my wakeup voltage to allow immediate going to OFF and
 	 * on - Pending twl and voltage layer cleanups.
@@ -328,6 +332,8 @@ done_calib:
 	 * vc_setup_on_voltage(voltdm, volt_data->volt_calibrated);
 	 */
 	work_data->work_active = false;
+	/* Calibration done, Remove qos req */
+	pm_qos_update_request(&work_data->qos, PM_QOS_DEFAULT_VALUE);
 	mutex_unlock(&omap_dvfs_lock);
 }
 
@@ -442,6 +448,8 @@ static int sr_class1p5_enable(struct voltagedomain *voltdm,
 	work_data->vdata = volt_data;
 	work_data->work_active = true;
 	work_data->num_calib_triggers = 0;
+	/* Dont interrupt me untill calibration is complete */
+	pm_qos_update_request(&work_data->qos, 1);
 	/* program the workqueue and leave it to calibrate offline.. */
 	schedule_delayed_work(&work_data->work,
 			      msecs_to_jiffies(SR1P5_SAMPLING_DELAY_MS *
@@ -510,6 +518,8 @@ static int sr_class1p5_disable(struct voltagedomain *voltdm,
 		sr_disable_errgen(voltdm);
 		omap_vp_disable(voltdm);
 		sr_disable(voltdm);
+		/* Cancelled SR, so no more need to keep request */
+		pm_qos_update_request(&work_data->qos, PM_QOS_DEFAULT_VALUE);
 	}
 
 	/* If already calibrated, don't need to reset voltage */
@@ -577,6 +587,8 @@ static int sr_class1p5_init(struct voltagedomain *voltdm,
 	work_data->voltdm = voltdm;
 	INIT_DELAYED_WORK_DEFERRABLE(&work_data->work, sr_class1p5_calib_work);
 	*voltdm_cdata = (void *)work_data;
+	pm_qos_add_request(&work_data->qos, PM_QOS_CPU_DMA_LATENCY,
+			  PM_QOS_DEFAULT_VALUE);
 
 	return 0;
 }
@@ -625,6 +637,7 @@ static int sr_class1p5_deinit(struct voltagedomain *voltdm,
 	cancel_delayed_work_sync(&work_data->work);
 	omap_voltage_calib_reset(voltdm);
 	voltdm_reset(voltdm);
+	pm_qos_remove_request(&work_data->qos);
 
 	*voltdm_cdata = NULL;
 	kfree(work_data);
@@ -650,18 +663,6 @@ static struct omap_sr_class_data class1p5_data = {
 };
 
 /**
- * sr_class1p5_margin_set() - add a margin on top of calibrated voltage
- * @margin:	add margin in uVolts
- *
- * Some platforms may need a margin, so provide an api which board files
- * need to call and update internal data structure.
- */
-void __init sr_class1p5_margin_set(unsigned int margin)
-{
-	class1p5_margin = margin;
-}
-
-/**
  * sr_class1p5_driver_init() - register class 1p5 as default
  *
  * board files call this function to use class 1p5, we register with the
@@ -674,13 +675,6 @@ static int __init sr_class1p5_driver_init(void)
 	/* Enable this class only for OMAP3630 and OMAP4 */
 	if (!(cpu_is_omap3630() || cpu_is_omap44xx()))
 		return -EINVAL;
-
-	/* Add 10mV margin as 4460 has Class3 ntarget values */
-	if (!class1p5_margin && cpu_is_omap446x()) {
-		pr_info("%s: OMAP4460: add 10mV margin for class 1.5\n",
-			__func__);
-		class1p5_margin = 10000;
-	}
 
 	r = sr_register_class(&class1p5_data);
 	if (r) {

@@ -117,6 +117,10 @@ extern int omap_uart_wake(u8 id);
 extern int omap_uart_enable(u8 uart_num);
 extern int omap_uart_disable(u8 uart_num);
 
+#ifdef CONFIG_OMAP_PM
+void uart_set_l3_cstr(int state);
+#endif
+
 #define MUX_PULL_UP	((1<<8) | (1<<4) | (1<<3) | (7))
 void omap_rts_mux_write(u16 val, int num);
 

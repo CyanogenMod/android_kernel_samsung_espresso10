@@ -105,6 +105,8 @@ struct twlreg_info {
 #define TWL6030_CFG_STATE_APP(v)	(((v) & TWL6030_CFG_STATE_APP_MASK) >>\
 						TWL6030_CFG_STATE_APP_SHIFT)
 
+#define TWL6032_CFG_STATE(v)	((v) & 0x3)
+
 /* Flags for SMPS Voltage reading */
 #define SMPS_OFFSET_EN		BIT(0)
 #define SMPS_EXTENDED_EN	BIT(1)
@@ -196,7 +198,11 @@ static int twl6030reg_is_enabled(struct regulator_dev *rdev)
 		grp = 1;
 
 	val = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_STATE);
-	val = TWL6030_CFG_STATE_APP(val);
+
+	if (!(twl_class_is_6030() && (info->features & TWL6025_SUBCLASS)))
+		val = TWL6030_CFG_STATE_APP(val);
+	else
+		val = TWL6032_CFG_STATE(val);
 
 	return grp && (val == TWL6030_CFG_STATE_ON);
 }
@@ -419,13 +425,13 @@ static int twl6030reg_set_mode(struct regulator_dev *rdev, unsigned mode)
 	return twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_STATE, val);
 }
 
-static int twl6030ldo_suspend_enable(struct regulator_dev *rdev)
+static int twl6030reg_suspend_enable(struct regulator_dev *rdev)
 {
 	return twl6030reg_set_trans_state(rdev, TWL6030_CFG_TRANS_SLEEP_SHIFT,
 					TWL6030_CFG_TRANS_STATE_AUTO);
 }
 
-static int twl6030ldo_suspend_disable(struct regulator_dev *rdev)
+static int twl6030reg_suspend_disable(struct regulator_dev *rdev)
 {
 	return twl6030reg_set_trans_state(rdev, TWL6030_CFG_TRANS_SLEEP_SHIFT,
 					TWL6030_CFG_TRANS_STATE_OFF);
@@ -645,8 +651,8 @@ static struct regulator_ops twl6030ldo_ops = {
 
 	.get_status	= twl6030reg_get_status,
 
-	.set_suspend_enable	= twl6030ldo_suspend_enable,
-	.set_suspend_disable	= twl6030ldo_suspend_disable,
+	.set_suspend_enable	= twl6030reg_suspend_enable,
+	.set_suspend_disable	= twl6030reg_suspend_disable,
 };
 
 /*----------------------------------------------------------------------*/
@@ -695,8 +701,8 @@ static struct regulator_ops twl6030fixed_ops = {
 
 	.get_status	= twl6030reg_get_status,
 
-	.set_suspend_enable	= twl6030ldo_suspend_enable,
-	.set_suspend_disable	= twl6030ldo_suspend_disable,
+	.set_suspend_enable	= twl6030reg_suspend_enable,
+	.set_suspend_disable	= twl6030reg_suspend_disable,
 };
 
 static struct regulator_ops twl6030_fixed_resource = {
@@ -704,6 +710,9 @@ static struct regulator_ops twl6030_fixed_resource = {
 	.disable	= twl6030reg_disable,
 	.is_enabled	= twl6030reg_is_enabled,
 	.get_status	= twl6030reg_get_status,
+
+	.set_suspend_enable	= twl6030reg_suspend_enable,
+	.set_suspend_disable	= twl6030reg_suspend_disable,
 };
 
 /*
@@ -908,8 +917,8 @@ static struct regulator_ops twlsmps_ops = {
 
 	.get_status		= twl6030reg_get_status,
 
-	.set_suspend_enable	= twl6030ldo_suspend_enable,
-	.set_suspend_disable	= twl6030ldo_suspend_disable,
+	.set_suspend_enable	= twl6030reg_suspend_enable,
+	.set_suspend_disable	= twl6030reg_suspend_disable,
 };
 
 /*----------------------------------------------------------------------*/
@@ -1064,9 +1073,9 @@ static struct twlreg_info twl_regs[] = {
 	TWL6030_FIXED_LDO(VCXIO, 0x60, 1800, 0),
 	TWL6030_FIXED_LDO(VDAC, 0x64, 1800, 0),
 	TWL6030_FIXED_LDO(VUSB, 0x70, 3300, 0),
+	TWL6030_FIXED_RESOURCE(SYSEN, 0x83, 0),
 	TWL6030_FIXED_RESOURCE(CLK32KG, 0x8C, 0),
 	TWL6030_FIXED_RESOURCE(CLK32KAUDIO, 0x8F, 0),
-	TWL6030_ADJUSTABLE_SMPS(VDD3, 0x2e, 600, 4000),
 	TWL6030_ADJUSTABLE_SMPS(VMEM, 0x34, 600, 4000),
 	TWL6030_ADJUSTABLE_SMPS(V2V1, 0x1c, 1800, 2100),
 

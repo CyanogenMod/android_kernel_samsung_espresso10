@@ -38,6 +38,13 @@
 #define OMAP4_VDD_CORE_SR_VOLT_REG	0x61
 #define OMAP4_VDD_CORE_SR_CMD_REG	0x62
 
+#define OMAP4_TWL6025_VDD_CORE_SR_VOLT_REG	0x5B
+#define OMAP4_TWL6025_VDD_CORE_SR_CMD_REG	0x5C
+#define OMAP4_TWL6025_VDD_IVA_SR_VOLT_REG	0x49
+#define OMAP4_TWL6025_VDD_IVA_SR_CMD_REG	0x4A
+
+
+
 static bool is_offset_valid;
 static u8 smps_offset;
 /*
@@ -180,7 +187,7 @@ static struct omap_voltdm_pmic omap443x_mpu_pmic = {
 	.step_size		= 12660,
 	.on_volt		= 1375000,
 	.onlp_volt		= 1375000,
-	.ret_volt		= 830000,
+	.ret_volt		= 860000,
 	.off_volt		= 0,
 	.volt_setup_time	= 0,
 	.switch_on_time		= 549,
@@ -196,7 +203,7 @@ static struct omap_voltdm_pmic omap443x_mpu_pmic = {
 	.i2c_high_speed		= true,
 	.i2c_scll_low		= 0x28,
 	.i2c_scll_high		= 0x2C,
-	.i2c_hscll_low		= 0x0B,
+	.i2c_hscll_low		= 0x11,
 	.i2c_hscll_high		= 0x00,
 	.vsel_to_uv		= twl6030_vsel_to_uv,
 	.uv_to_vsel		= twl6030_uv_to_vsel,
@@ -207,7 +214,7 @@ static struct omap_voltdm_pmic omap4_iva_pmic = {
 	.step_size		= 12660,
 	.on_volt		= 1188000,
 	.onlp_volt		= 1188000,
-	.ret_volt		= 830000,
+	.ret_volt		= 860000,
 	.off_volt		= 0,
 	.volt_setup_time	= 0,
 	.switch_on_time		= 549,
@@ -223,7 +230,7 @@ static struct omap_voltdm_pmic omap4_iva_pmic = {
 	.i2c_high_speed		= true,
 	.i2c_scll_low		= 0x28,
 	.i2c_scll_high		= 0x2C,
-	.i2c_hscll_low		= 0x0B,
+	.i2c_hscll_low		= 0x11,
 	.i2c_hscll_high		= 0x00,
 	.vsel_to_uv		= twl6030_vsel_to_uv,
 	.uv_to_vsel		= twl6030_uv_to_vsel,
@@ -234,7 +241,7 @@ static struct omap_voltdm_pmic omap443x_core_pmic = {
 	.step_size		= 12660,
 	.on_volt		= 1200000,
 	.onlp_volt		= 1200000,
-	.ret_volt		= 830000,
+	.ret_volt		= 860000,
 	.off_volt		= 0,
 	.volt_setup_time	= 0,
 	.switch_on_time		= 549,
@@ -248,7 +255,7 @@ static struct omap_voltdm_pmic omap443x_core_pmic = {
 	.i2c_high_speed		= true,
 	.i2c_scll_low		= 0x28,
 	.i2c_scll_high		= 0x2C,
-	.i2c_hscll_low		= 0x0B,
+	.i2c_hscll_low		= 0x11,
 	.i2c_hscll_high		= 0x00,
 	.volt_reg_addr		= OMAP4_VDD_CORE_SR_VOLT_REG,
 	.cmd_reg_addr		= OMAP4_VDD_CORE_SR_CMD_REG,
@@ -361,6 +368,20 @@ int __init omap_twl_init(void)
 	}
 	if (cpu_is_omap44xx())
 		desc = &twl6030_pmic_desc;
+
+	if (cpu_is_omap44xx() && is_twl6030_lite()) {
+		omap443x_core_pmic.volt_reg_addr
+			= OMAP4_TWL6025_VDD_CORE_SR_VOLT_REG;
+		omap443x_core_pmic.cmd_reg_addr
+			= OMAP4_TWL6025_VDD_CORE_SR_CMD_REG;
+
+		omap4_iva_pmic.volt_reg_addr
+			= OMAP4_TWL6025_VDD_IVA_SR_VOLT_REG;
+		omap4_iva_pmic.cmd_reg_addr
+			= OMAP4_TWL6025_VDD_IVA_SR_CMD_REG;
+		pr_info("%s: TWL6032 PMIC SR Addr Change Success!!\n",
+				__func__);
+	}
 
 	return omap_pmic_register_data(omap_twl_map, desc);
 }

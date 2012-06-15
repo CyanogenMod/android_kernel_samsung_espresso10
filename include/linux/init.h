@@ -222,6 +222,10 @@ extern int initcall_debug;
 	static initcall_t __initcall_##fn \
 	__used __section(.security_initcall.init) = fn
 
+#define deferred_initcall(fn) \
+	static initcall_t __initcall_##fn \
+	__used __section(.deferred_initcall.init) = fn
+
 struct obs_kernel_param {
 	const char *str;
 	int (*setup_func)(char *);
@@ -264,6 +268,12 @@ void __init parse_early_options(char *cmdline);
  * be one per module.
  */
 #define module_init(x)	__initcall(x);
+
+#if defined(CONFIG_DEFERRED_INITCALLS)
+#define deferred_module_init(x)	deferred_initcall(x);
+#else
+#define deferred_module_init(x)	module_init(x)
+#endif
 
 /**
  * module_exit() - driver exit entry point

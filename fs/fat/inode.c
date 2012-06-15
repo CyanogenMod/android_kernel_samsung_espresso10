@@ -451,12 +451,14 @@ static void fat_evict_inode(struct inode *inode)
 	truncate_inode_pages(&inode->i_data, 0);
 	if (!inode->i_nlink) {
 		inode->i_size = 0;
-		fat_truncate_blocks(inode, 0);
+		if (inode->i_sb)
+			fat_truncate_blocks(inode, 0);
 	}
 	invalidate_inode_buffers(inode);
 	end_writeback(inode);
 	fat_cache_inval_inode(inode);
-	fat_detach(inode);
+	if (inode->i_sb)
+		fat_detach(inode);
 }
 
 static void fat_write_super(struct super_block *sb)

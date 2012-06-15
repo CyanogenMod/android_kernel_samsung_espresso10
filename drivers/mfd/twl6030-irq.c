@@ -192,8 +192,17 @@ static int twl6030_irq_thread(void *data)
 			}
 		local_irq_enable();
 		}
-		ret = twl_i2c_write(TWL_MODULE_PIH, sts.bytes,
-				REG_INT_STS_A, 3); /* clear INT_STS_A */
+
+		/* NOTE:
+		* Simulation confirms that documentation is wrong w.r.t the
+		* interrupt status clear operation. A single *byte* write to
+		* any one of STS_A to STS_C register results in all three
+		* STS registers being reset. Since it does not matter which
+		* value is written, all three registers are cleared on a
+		* single byte write, so we just use 0x0 to clear.
+		*/
+		ret = twl_i2c_write_u8(TWL_MODULE_PIH, 0x00,
+				REG_INT_STS_A);
 		if (ret)
 			pr_warning("twl6030: I2C error in clearing PIH ISR\n");
 
@@ -336,6 +345,15 @@ int twl6030_mmc_card_detect_config(void)
 									ret);
 		return ret;
 	}
+
+	ret = twl_i2c_write_u8(TWL6030_MODULE_ID0, MMC_MEXT_DEB_MASK,
+						TWL6030_MMCDEBOUNCING);
+	if (ret < 0) {
+		pr_err("twl16030: Failed to write MMC_MEXT_DEB_MASK %d\n",
+								ret);
+		return ret;
+	}
+
 	return 0;
 }
 EXPORT_SYMBOL(twl6030_mmc_card_detect_config);

@@ -38,6 +38,7 @@ struct twl6030_resource_map {
 	u8 res_id;
 	u8 base_addr;
 	u8 group;
+	u8 offset;
 };
 
 /* list of all s/w modifiable resources in TWL6030 */
@@ -67,6 +68,52 @@ static __initdata struct twl6030_resource_map twl6030_res_map[] = {
 	/* 32KCLKAO cannot be modified */
 	{.res_id = RES_32KCLKG,.name = "32KCLKG",.base_addr = 0xbc,.group = DEV_GRP_P1,},
 	{.res_id = RES_32KCLKAUDIO,.name = "32KCLKAUDIO",.base_addr = 0xbf,.group = DEV_GRP_P1,},
+	/* BIAS cannot be modified */
+	/* VBATMIN_HI cannot be modified */
+	/* RC6MHZ cannot be modified */
+	/* TEMP cannot be modified */
+};
+static __initdata struct twl6030_resource_map twl6025_res_map[] = {
+	{.res_id = RES_LDOUSB, .name = "LDOUSB",
+		.offset = 5, .group = DEV_GRP_P1,},
+	{.res_id = RES_SMPS5, .name = "SMPS5",
+		.offset = 4, .group = DEV_GRP_P1,},
+	{.res_id = RES_SMPS4, .name = "SMPS4",
+		.offset = 3, .group = DEV_GRP_P1,},
+	{.res_id = RES_SMPS3, .name = "SMPS3",
+		.offset = 2, .group = DEV_GRP_P1,},
+	{.res_id = RES_SMPS2, .name = "SMPS2",
+		.offset = 1, .group = DEV_GRP_P1,},
+	{.res_id = RES_SMPS1, .name = "SMPS1",
+		.offset = 0, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDOLN, .name = "LDOLN",
+		.offset = 15, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDO7, .name = "LDO7",
+		.offset = 14, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDO6, .name = "LDO6",
+		.offset = 13, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDO5, .name = "LDO5",
+		.offset = 12, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDO4, .name = "LDO4",
+		.offset = 11, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDO3, .name = "LDO3",
+		.offset = 10, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDO2, .name = "LDO2",
+		.offset = 9, .group = DEV_GRP_P1,},
+	{.res_id = RES_LDO1, .name = "LDO1",
+		.offset = 8, .group = DEV_GRP_P1,},
+	{.res_id = RES_REGEN, .name = "REGEN1",
+		.offset = 16, .group = DEV_GRP_P1,},
+	{.res_id = RES_REGEN2, .name = "REGEN2",
+		.offset = 17, .group = DEV_GRP_P1,},
+	{.res_id = RES_SYSEN, .name = "SYSEN",
+		.offset = 18, .group = DEV_GRP_P1,},
+	/* NRES_PWRON cannot be modified */
+	/* 32KCLKAO cannot be modified */
+	{.res_id = RES_32KCLKG, .name = "32KCLKG",
+		.offset = 20, .group = DEV_GRP_P1,},
+	{.res_id = RES_32KCLKAUDIO, .name = "32KCLKAUDIO",
+		.offset = 19, .group = DEV_GRP_P1,},
 	/* BIAS cannot be modified */
 	/* VBATMIN_HI cannot be modified */
 	/* RC6MHZ cannot be modified */
@@ -104,7 +151,7 @@ static __init void twl6030_process_system_config(void)
 			" MOD & CON group would be kept active.\n", __func__);
 
 	if (dev_on_group) {
-		r = twl_i2c_read_u8(TWL_MODULE_PM_MASTER, &grp,
+		r = twl_i2c_read_u8(TWL6030_MODULE_ID0, &grp,
 				TWL6030_PHOENIX_DEV_ON);
 		if (r) {
 			pr_err("%s: Error(%d) reading  {addr=0x%02x}",
@@ -148,6 +195,40 @@ static __init void twl6030_program_map(void)
 			       res->base_addr, res->group);
 		res++;
 	}
+
+	return;
+}
+static __init void twl6025_program_map(void)
+{
+	struct twl6030_resource_map *res = twl6025_res_map;
+	u8 preq1_res_ass[3] = { 0, };
+	int r, i, offset;
+
+	for (i = 0; i < ARRAY_SIZE(twl6025_res_map); i++) {
+		int reg = 0;
+
+		offset = res->offset;
+		while ((offset - 8) >= 0) {
+			reg++;
+			offset -= 8;
+		}
+
+		if (res->group & DEV_GRP_P1)
+			preq1_res_ass[reg] |= 1<<(res->offset - reg*8);
+
+		res++;
+	}
+
+	r = twl_i2c_write_u8(TWL6030_MODULE_ID0, preq1_res_ass[0],
+			0xD7);
+	r |= twl_i2c_write_u8(TWL6030_MODULE_ID0, preq1_res_ass[1],
+			0xD8);
+	r |= twl_i2c_write_u8(TWL6030_MODULE_ID0, preq1_res_ass[2],
+			0xD9);
+	if (r)
+		pr_err("%s: Error(%d) programming twl6025 map\n", __func__, r);
+
+	return;
 }
 
 static __init void twl6030_update_system_map
@@ -170,12 +251,19 @@ static __init void twl6030_update_system_map
 
 static __init void twl6030_update_map(struct twl4030_resconfig *res_list)
 {
-	int i, res_idx = 0;
+	int i, size, res_idx = 0;
 	struct twl6030_resource_map *res;
 
 	while (res_list->resource != TWL4030_RESCONFIG_UNDEF) {
-		res = twl6030_res_map;
-		for (i = 0; i < ARRAY_SIZE(twl6030_res_map); i++) {
+		if (is_twl6030_lite()) {
+			res = twl6025_res_map;
+			size = ARRAY_SIZE(twl6025_res_map);
+		} else {
+			res = twl6030_res_map;
+			size = ARRAY_SIZE(twl6030_res_map);
+		}
+
+		for (i = 0; i < size; i++) {
 			if (res->res_id == res_list->resource) {
 				res->group = res_list->devgroup &
 				    (DEV_GRP_P1 | DEV_GRP_P2 | DEV_GRP_P3);
@@ -184,7 +272,7 @@ static __init void twl6030_update_map(struct twl4030_resconfig *res_list)
 			res++;
 		}
 
-		if (i == ARRAY_SIZE(twl6030_res_map)) {
+		if (i == size) {
 			pr_err("%s: in platform_data resource index %d, cannot"
 			       " find match for resource 0x%02x. NO Update!\n",
 			       __func__, res_idx, res_list->resource);
@@ -202,7 +290,7 @@ static int twl6030_power_notifier_cb(struct notifier_block *notifier,
 
 	switch (pm_event) {
 	case PM_SUSPEND_PREPARE:
-		r = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, dev_on_group,
+		r = twl_i2c_write_u8(TWL6030_MODULE_ID0, dev_on_group,
 				TWL6030_PHOENIX_DEV_ON);
 		if (r)
 			pr_err("%s: Error(%d) programming {addr=0x%02x}",
@@ -226,22 +314,23 @@ void __init twl6030_power_init(struct twl4030_power_data *power_data)
 {
 	int r;
 
-	if (power_data && (!power_data->resource_config &&
-					!power_data->sys_config)) {
-		pr_err("%s: power data from platform without configuration!\n",
-		       __func__);
-		return;
+	if (power_data) {
+		if (power_data->resource_config)
+			twl6030_update_map(power_data->resource_config);
+
+		if (power_data->sys_config)
+			twl6030_update_system_map(power_data->sys_config);
+
+		if (power_data->twl4030_board_init)
+			power_data->twl4030_board_init();
 	}
-
-	if (power_data && power_data->resource_config)
-		twl6030_update_map(power_data->resource_config);
-
-	if (power_data && power_data->sys_config)
-		twl6030_update_system_map(power_data->sys_config);
 
 	twl6030_process_system_config();
 
-	twl6030_program_map();
+	if (!is_twl6030_lite())
+		twl6030_program_map();
+	else
+		twl6025_program_map();
 
 	r = register_pm_notifier(&twl6030_power_pm_notifier);
 	if (r)

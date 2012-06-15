@@ -367,8 +367,9 @@ static void sa_calc(struct dispc_config *dispc_reg_config, u32 channel_no,
 		 * When MemoryLineBufferSize > LineSize >
 		 * (MemoryLineBufferSize/2)
 		 */
-		sa_info->min_sa = pict_16word + C2 * (Tot_mem -
-						pict_16word_ceil - 8);
+		sa_info->min_sa = CONFIG_OMAP2_FIFO_LOW_THRESHOLD *
+					pict_16word +	C2 *
+					(Tot_mem - pict_16word_ceil - 8);
 	} else {
 		/* All other cases */
 		sa_info->min_sa = i * pict_16word + C1 * pict_16word + C2 *

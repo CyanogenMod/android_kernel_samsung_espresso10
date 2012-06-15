@@ -46,7 +46,9 @@ u8 cpu_mask;
 
 static void _omap4_module_wait_ready(struct clk *clk)
 {
-	omap4_cm_wait_module_ready(clk->enable_reg);
+	if (omap4_cm_wait_module_ready(clk->enable_reg) < 0)
+		pr_err("%s: Timeout waiting for module enable (%s: clkctrl = 0x%x)\n",
+		       __func__, clk->name, __raw_readl(clk->enable_reg));
 }
 
 /**
@@ -370,6 +372,28 @@ long omap2_clk_round_rate(struct clk *clk, unsigned long rate)
 	return clk->rate;
 }
 
+/* given a clock and its new parent, predict the new rate for clock */
+long omap2_clk_round_rate_parent(struct clk *clk, struct clk *new_parent)
+{
+	u32 field_val;
+	u8 parent_div;
+	long rate;
+
+	if (!clk->clksel || !new_parent)
+		return -EINVAL;
+
+	parent_div = _get_div_and_fieldval(new_parent, clk, &field_val);
+	if (!parent_div)
+		return -EINVAL;
+
+	/* CLKSEL clocks follow their parents' rates, divided by a divisor */
+	rate = new_parent->rate;
+	if (parent_div > 0)
+		rate /= parent_div;
+
+	return rate;
+}
+
 /* Set the clock rate for a clock source */
 int omap2_clk_set_rate(struct clk *clk, unsigned long rate)
 {
@@ -531,6 +555,7 @@ struct clk_functions omap2_clk_functions = {
 	.clk_enable		= omap2_clk_enable,
 	.clk_disable		= omap2_clk_disable,
 	.clk_round_rate		= omap2_clk_round_rate,
+	.clk_round_rate_parent	= omap2_clk_round_rate_parent,
 	.clk_set_rate		= omap2_clk_set_rate,
 	.clk_set_parent		= omap2_clk_set_parent,
 	.clk_disable_unused	= omap2_clk_disable_unused,

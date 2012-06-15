@@ -1,6 +1,8 @@
 snd-soc-core-objs := soc-core.o soc-dapm.o soc-jack.o soc-cache.o soc-utils.o soc-dsp.o
+snd-soc-core-open-objs := soc-core-open.o soc-dapm-open.o soc-jack.o soc-cache.o soc-utils-open.o
 
-obj-$(CONFIG_SND_SOC)	+= snd-soc-core.o
+obj-$(CONFIG_SND_OPEN_SOC_SOURCE)	+= snd-soc-core-open.o
+obj-$(CONFIG_SND_TI_SOC_SOURCE)	+= snd-soc-core.o
 obj-$(CONFIG_SND_SOC)	+= codecs/
 obj-$(CONFIG_SND_SOC)	+= atmel/
 obj-$(CONFIG_SND_SOC)	+= au1x/

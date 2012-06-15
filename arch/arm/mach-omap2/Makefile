@@ -2,6 +2,21 @@
 # Makefile for the linux kernel.
 #
 
+# FIXME: For OMAP4 target - the sequence of Obj-files inclusion in
+# 	Makefile is strictly related to sequence of the Kernel xxx_initcall
+# 	functions calls. Any changes in the sequence of Obj-files inclusion
+# 	in this file should be done carefully and can cause unpredictable
+# 	system behaviour - especially it can have impact on OMAP4 PM
+# 	initialization procedure.
+#
+# Known valid sequence:
+# 	- pm.o
+# 	- sr_device.o
+# 	- smartreflex.o
+# 	- smartreflex-class3.o
+# 	- smartreflex-class1p5.o
+# 	- pm44xx.o
+
 # Common support
 obj-y := id.o io.o control.o mux.o devices.o serial.o gpmc.o timer-gp.o pm.o \
 	 common.o gpio.o dma.o wd_timer.o omap_pmic.o dmtimer.o
@@ -60,6 +75,11 @@ obj-$(CONFIG_ARCH_OMAP3)		+= opp3xxx_data.o
 obj-$(CONFIG_ARCH_OMAP4)		+= opp4xxx_data.o
 endif
 
+# Smartreflex AVS initialization
+obj-$(CONFIG_OMAP_SMARTREFLEX)          += sr_device.o smartreflex.o
+obj-$(CONFIG_OMAP_SMARTREFLEX_CLASS3)	+= smartreflex-class3.o
+obj-$(CONFIG_OMAP_SMARTREFLEX_CLASS1P5)	+= smartreflex-class1p5.o
+
 # CPUFREQ driver
 obj-$(CONFIG_CPU_FREQ)			+= omap2plus-cpufreq.o
 
@@ -76,9 +96,6 @@ obj-$(CONFIG_PM_DEBUG)			+= pm-debug.o
 ifeq ($(CONFIG_PM_DEBUG),y)
 obj-$(CONFIG_ARCH_OMAP4)		+= prcm-debug.o
 endif
-obj-$(CONFIG_OMAP_SMARTREFLEX)          += sr_device.o smartreflex.o
-obj-$(CONFIG_OMAP_SMARTREFLEX_CLASS3)	+= smartreflex-class3.o
-obj-$(CONFIG_OMAP_SMARTREFLEX_CLASS1P5)	+= smartreflex-class1p5.o
 
 AFLAGS_sleep24xx.o			:=-Wa,-march=armv6
 AFLAGS_sleep34xx.o			:=-Wa,-march=armv7-a$(plus_sec)
@@ -308,6 +325,12 @@ obj-y					+= common-board-devices.o
 
 obj-$(CONFIG_OMAP_REMOTE_PROC)		+= remoteproc.o
 obj-$(CONFIG_OMAP_HSI_DEVICE)		+= omap_hsi.o
-obj-$(CONFIG_SEC_MODEM)			+= board-tuna-modems.o
+ifeq ($(CONFIG_MACH_TUNA),y)
+obj-$(CONFIG_SEC_MODEM)                 += board-tuna-modems.o
+endif
 obj-$(CONFIG_ARCH_OMAP4)		+= omap_dmm.o
 obj-$(CONFIG_OMAP_FIQ_DEBUGGER)		+= omap_fiq_debugger.o
+
+include arch/arm/mach-omap2/Makefile.sec
+include arch/arm/mach-omap2/Makefile.chn
+

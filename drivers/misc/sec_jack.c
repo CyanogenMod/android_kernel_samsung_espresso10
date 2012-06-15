@@ -232,9 +232,17 @@ static void determine_jack_type(struct sec_jack_info *hi)
 	int i;
 	unsigned npolarity = !hi->pdata->det_active_high;
 
+	/* Set mic bias to enable adc
+	 *
+	 * NOTE: It needs to be enabled after de-bounce
+	 * time of headset jack to avoid pop noise while
+	 * inserting.
+	 */
+	hi->pdata->set_micbias_state(true);
+
 	while (gpio_get_value(hi->pdata->det_gpio) ^ npolarity) {
 		adc = hi->pdata->get_adc_value();
-		pr_debug("%s: adc = %d\n", __func__, adc);
+		pr_debug("%s: %d(mV)\n", __func__, adc);
 
 		/* determine the type of headset based on the
 		 * adc value.  An adc value can fall in various
@@ -277,12 +285,8 @@ void sec_jack_detect_work(struct work_struct *work)
 {
 	struct sec_jack_info *hi =
 		container_of(work, struct sec_jack_info, detect_work);
-	struct sec_jack_platform_data *pdata = hi->pdata;
 	int time_left_ms = DET_CHECK_TIME_MS;
 	unsigned npolarity = !hi->pdata->det_active_high;
-
-	/* set mic bias to enable adc */
-	pdata->set_micbias_state(true);
 
 	/* debounce headset jack.  don't try to determine the type of
 	 * headset until the detect state is true for a while.
@@ -296,6 +300,7 @@ void sec_jack_detect_work(struct work_struct *work)
 		msleep(10);
 		time_left_ms -= 10;
 	}
+
 	/* jack presence was detected the whole time, figure out which type */
 	determine_jack_type(hi);
 }
@@ -328,13 +333,125 @@ void sec_jack_buttons_work(struct work_struct *work)
 			hi->pressed_code = btn_zones[i].code;
 			input_report_key(hi->input_dev, btn_zones[i].code, 1);
 			input_sync(hi->input_dev);
-			pr_debug("%s: keycode=%d, is pressed\n", __func__,
-				btn_zones[i].code);
+			pr_info("%s: %d(mV) keycode=%d, is pressed\n", __func__,
+				adc, btn_zones[i].code);
 			return;
 		}
 
 	pr_warn("%s: key is skipped. ADC value is %d\n", __func__, adc);
 }
+
+/* To support PBA function test */
+#ifdef CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT
+static struct class *jack_class;
+static struct device *jack_dev;
+
+static ssize_t earjack_state_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	struct sec_jack_info *hi = dev_get_drvdata(dev);
+	int report = 0;
+
+	if (hi->cur_jack_type > 0)
+		report = 1;
+
+	return sprintf(buf, "%d\n", report);
+}
+
+static ssize_t earjack_state_store(struct device *dev,
+	struct device_attribute *attr, const char *buf, size_t size)
+{
+	pr_info("%s : operate nothing\n", __func__);
+
+	return size;
+}
+
+static DEVICE_ATTR(state, S_IRUGO | S_IWUSR,
+		   earjack_state_show, earjack_state_store);
+
+static ssize_t earjack_key_state_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	struct sec_jack_info *hi = dev_get_drvdata(dev);
+
+	return sprintf(buf, "%d\n", hi->pressed);
+}
+
+static ssize_t earjack_key_state_store(struct device *dev,
+	struct device_attribute *attr, const char *buf, size_t size)
+{
+	pr_info("%s : operate nothing\n", __func__);
+
+	return size;
+}
+
+static DEVICE_ATTR(key_state, S_IRUGO | S_IWUSR,
+		   earjack_key_state_show, earjack_key_state_store);
+
+static ssize_t earjack_select_jack_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	pr_info("%s : operate nothing\n", __func__);
+
+	return 0;
+}
+
+static ssize_t earjack_select_jack_store(struct device *dev,
+	struct device_attribute *attr, const char *buf, size_t size)
+{
+	pr_info("%s : Forced detect microphone\n", __func__);
+
+	return size;
+}
+
+static DEVICE_ATTR(select_jack, S_IRUGO | S_IWUSR,
+		   earjack_select_jack_show, earjack_select_jack_store);
+
+static int create_audio_class(struct sec_jack_info *hi)
+{
+	jack_class = class_create(THIS_MODULE, "audio");
+	if (IS_ERR(jack_class)) {
+		pr_err("Failed to create class\n");
+		goto err_class_create;
+	}
+
+	jack_dev = device_create(jack_class, NULL, 0, hi, "earjack");
+	if (IS_ERR(jack_dev)) {
+		pr_err("Failed to device class\n");
+		goto err_dev_create;
+	}
+
+	if (device_create_file(jack_dev, &dev_attr_select_jack) < 0) {
+		pr_err("Failed to create device file (%s)!\n",
+			dev_attr_select_jack.attr.name);
+		goto err_create_file_1;
+	}
+
+	if (device_create_file(jack_dev, &dev_attr_key_state) < 0) {
+		pr_err("Failed to create device file (%s)!\n",
+			dev_attr_key_state.attr.name);
+		goto err_create_file_2;
+	}
+
+	if (device_create_file(jack_dev, &dev_attr_state) < 0) {
+		pr_err("Failed to create device file (%s)!\n",
+			dev_attr_state.attr.name);
+		goto err_create_file_3;
+	}
+
+	return 0;
+
+err_create_file_3:
+	device_remove_file(jack_dev, &dev_attr_key_state);
+err_create_file_2:
+	device_remove_file(jack_dev, &dev_attr_select_jack);
+err_create_file_1:
+err_dev_create:
+	device_destroy(jack_class, 0);
+err_class_create:
+	return -ENODEV;
+}
+#endif
 
 static int sec_jack_probe(struct platform_device *pdev)
 {
@@ -435,6 +552,15 @@ static int sec_jack_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(&pdev->dev, hi);
 
+	/* To support PBA function test */
+#ifdef CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT
+	if (!jack_class) {
+		ret = create_audio_class(hi);
+		if (ret < 0)
+			pr_err("%s : Failed to jack_class.\n", __func__);
+	}
+#endif
+
 	return 0;
 
 err_enable_irq_wake:
@@ -475,6 +601,14 @@ static int sec_jack_remove(struct platform_device *pdev)
 	gpio_free(hi->pdata->det_gpio);
 	kfree(hi);
 	atomic_set(&instantiated, 0);
+
+	/* To support PBA function test */
+#ifdef CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT
+	device_remove_file(jack_dev, &dev_attr_select_jack);
+	device_remove_file(jack_dev, &dev_attr_key_state);
+	device_remove_file(jack_dev, &dev_attr_state);
+	device_destroy(jack_class, 0);
+#endif
 
 	return 0;
 }

@@ -143,9 +143,9 @@ int hsi_driver_write_dma(struct hsi_channel *hsi_channel, u32 * data,
 		return -ENOMEM;
 	}
 
-	tmp = HSI_SRC_SINGLE_ACCESS0 |
+	tmp = HSI_SRC_BURST_4x32_BIT|
 	    HSI_SRC_MEMORY_PORT |
-	    HSI_DST_SINGLE_ACCESS0 |
+	    HSI_DST_BURST_4x32_BIT |
 	    HSI_DST_PERIPHERAL_PORT | HSI_DATA_TYPE_S32;
 	hsi_outw(tmp, base, HSI_GDD_CSDP_REG(lch));
 
@@ -223,13 +223,6 @@ int hsi_driver_read_dma(struct hsi_channel *hsi_channel, u32 * data,
 	 * received data word)
 	 * (Rx interrupt might be active for polling feature)
 	 */
-#if 0
-	if (omap_readl(0x4A05A810)) {
-		dev_err(hsi_ctrl->dev,
-			"READ INTERRUPT IS PENDING DMA() but still disabling %0x\n",
-			omap_readl(0x4A05A810));
-	}
-#endif
 	hsi_driver_disable_read_interrupt(hsi_channel);
 
 	/*
@@ -248,9 +241,9 @@ int hsi_driver_read_dma(struct hsi_channel *hsi_channel, u32 * data,
 		return -ENOMEM;
 	}
 
-	tmp = HSI_DST_SINGLE_ACCESS0 |
+	tmp = HSI_DST_BURST_4x32_BIT |
 	    HSI_DST_MEMORY_PORT |
-	    HSI_SRC_SINGLE_ACCESS0 |
+	    HSI_SRC_BURST_4x32_BIT |
 	    HSI_SRC_PERIPHERAL_PORT | HSI_DATA_TYPE_S32;
 	hsi_outw(tmp, base, HSI_GDD_CSDP_REG(lch));
 
@@ -314,9 +307,6 @@ int hsi_driver_cancel_write_dma(struct hsi_channel *hsi_ch)
 	dma_addr_t dma_h;
 	size_t size;
 
-	dev_err(&hsi_ch->dev->device, "hsi_driver_cancel_write_dma( "
-				"channel %d\n", hsi_ch->channel_number);
-
 	if (lch < 0) {
 		dev_err(&hsi_ch->dev->device, "No DMA channel found for HSI "
 				"channel %d\n", hsi_ch->channel_number);
@@ -377,9 +367,6 @@ int hsi_driver_cancel_read_dma(struct hsi_channel *hsi_ch)
 	u32 status_reg;
 	dma_addr_t dma_h;
 	size_t size;
-
-	dev_err(&hsi_ch->dev->device, "hsi_driver_cancel_read_dma "
-				"channel %d\n", hsi_ch->channel_number);
 
 	/* Re-enable interrupts for polling if needed */
 	if (hsi_ch->flags & HSI_CH_RX_POLL)
@@ -520,7 +507,7 @@ static void do_hsi_gdd_lch(struct hsi_dev *hsi_ctrl, unsigned int gdd_lch)
 								fifo);
 				if (fifo_words_avail)
 					dev_dbg(hsi_ctrl->dev,
-						"WARNING: FIFO %d not empty "
+						"FIFO %d not empty "
 						"after DMA copy, remaining "
 						"%d/%d frames\n",
 						fifo, fifo_words_avail,

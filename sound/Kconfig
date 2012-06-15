@@ -135,3 +135,13 @@ config AC97_BUS
 	  sound subsystem and other function drivers completely unrelated to
 	  sound although they're sharing the AC97 bus. Concerned drivers
 	  should "select" this.
+
+config SND_TI_SOC_SOURCE
+	tristate "TI modified Sound System"
+	help
+		Say 'Y' or 'M' to enable TI modified Sound System drivers.
+
+config SND_OPEN_SOC_SOURCE
+	tristate "Open Sound System"
+	help
+		Say 'Y' or 'M' to enable Open Sound System drivers.

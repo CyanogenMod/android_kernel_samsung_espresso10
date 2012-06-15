@@ -36,6 +36,7 @@
 #include <linux/usb/otg_id.h>
 #include <linux/seq_file.h>
 #include <linux/debugfs.h>
+#include <linux/input.h>
 
 #define DEBUG_DUMP_REGISTERS
 
@@ -104,6 +105,7 @@
 #define DEV_JIG_MASK		(DEV_JIG_USB_OFF | DEV_JIG_USB_ON | \
 				 DEV_JIG_UART_OFF | DEV_JIG_UART_ON)
 #define DEV_CHARGER_MASK	(DEV_DEDICATED_CHG | DEV_USB_CHG | DEV_CAR_KIT)
+#define DEV_AUDIO_MASK          (DEV_AUDIO_1 | DEV_AUDIO_2)
 
 /*
  * Manual Switch
@@ -115,6 +117,8 @@
 #define SW_AUDIO		((2 << 5) | (2 << 2))
 #define SW_DHOST		((1 << 5) | (1 << 2))
 #define SW_AUTO			((0 << 5) | (0 << 2))
+#define SW_AUDIO_9485           ((2 << 5) | (2 << 2) | (3 << 0))
+#define SW_VAUDIO_9485          ((4 << 5) | (4 << 2) | (3 << 0))
 
 /* Interrupt Mask */
 #define INT_STUCK_KEY_RCV	(1 << 12)
@@ -131,6 +135,16 @@
 #define INT_DETACH		(1 << 1)
 #define INT_ATTACH		(1 << 0)
 
+/* Deskdock key */
+#define FSA9480_KEY_VOL_UP              0x0B
+#define FSA9480_KEY_VOL_DN              0x0A
+#define FSA9480_KEY_VOL_BOTH            0x07
+#define FSA9480_KEY_RELEASE             0x1A
+#define FSA9480_KEY_DETACHED            0x1F
+
+#define DOCK_VOL_UP_KEY_PRESSED         (1<<0)
+#define DOCK_VOL_DN_KEY_PRESSED         (1<<1)
+
 static const unsigned int adc_timing[] = {
 	50, /* ms */
 	100,
@@ -146,7 +160,7 @@ static const unsigned int adc_timing[] = {
 	1000
 };
 
-static const char *device_names[] = {
+static const char const *device_names[] = {
 	[FSA9480_DETECT_NONE]			= "unknown/none",
 	[FSA9480_DETECT_USB]			= "usb-peripheral",
 	[FSA9480_DETECT_USB_HOST]		= "usb-host",
@@ -180,7 +194,10 @@ struct fsa9480_usbsw {
 
 	int				num_notifiers;
 	struct usbsw_nb_info		notifiers[0];
+	u8                              id;
+	u16				key_press_state;
 };
+static struct input_dev			*input;
 #define xceiv_to_fsa(x)		container_of((x), struct fsa9480_usbsw, otg)
 
 #if defined(CONFIG_DEBUG_FS) && defined(DEBUG_DUMP_REGISTERS)
@@ -244,6 +261,59 @@ static const struct file_operations fsa9480_regs_fops = {
 	.release = single_release,
 };
 #endif
+/* Function to handle deskdock key.
+ * (Volume up and Volume down)
+ */
+static void fsa9480_handle_deskdock_key
+	(struct fsa9480_usbsw *usbsw, u8 adc_data)
+{
+	switch (adc_data) {
+	case FSA9480_KEY_VOL_UP:
+		if (usbsw->key_press_state & DOCK_VOL_DN_KEY_PRESSED) {
+			usbsw->key_press_state &= ~DOCK_VOL_DN_KEY_PRESSED;
+			input_event(input, EV_KEY, KEY_VOLUMEDOWN, 0);
+		}
+		if (usbsw->key_press_state & DOCK_VOL_UP_KEY_PRESSED)
+			break;
+		usbsw->key_press_state |= DOCK_VOL_UP_KEY_PRESSED;
+		input_event(input, EV_KEY, KEY_VOLUMEUP, 1);
+		break;
+	case FSA9480_KEY_VOL_DN:
+		if (usbsw->key_press_state & DOCK_VOL_UP_KEY_PRESSED) {
+			usbsw->key_press_state &= ~DOCK_VOL_UP_KEY_PRESSED;
+			input_event(input, EV_KEY, KEY_VOLUMEUP, 0);
+		}
+		if (usbsw->key_press_state & DOCK_VOL_DN_KEY_PRESSED)
+			break;
+		usbsw->key_press_state |= DOCK_VOL_DN_KEY_PRESSED;
+		input_event(input, EV_KEY, KEY_VOLUMEDOWN, 1);
+		break;
+	case FSA9480_KEY_VOL_BOTH:
+		if (!(usbsw->key_press_state & DOCK_VOL_UP_KEY_PRESSED)) {
+			usbsw->key_press_state |= DOCK_VOL_UP_KEY_PRESSED;
+			input_event(input, EV_KEY, KEY_VOLUMEUP, 1);
+		}
+		if (!(usbsw->key_press_state & DOCK_VOL_DN_KEY_PRESSED)) {
+			usbsw->key_press_state |= DOCK_VOL_DN_KEY_PRESSED;
+			input_event(input, EV_KEY, KEY_VOLUMEDOWN, 1);
+		}
+		break;
+	case FSA9480_KEY_RELEASE:
+	case FSA9480_KEY_DETACHED:
+		if (usbsw->key_press_state & DOCK_VOL_UP_KEY_PRESSED) {
+			usbsw->key_press_state &= ~DOCK_VOL_UP_KEY_PRESSED;
+			input_event(input, EV_KEY, KEY_VOLUMEUP, 0);
+		}
+		if (usbsw->key_press_state & DOCK_VOL_DN_KEY_PRESSED) {
+			usbsw->key_press_state &= ~DOCK_VOL_DN_KEY_PRESSED;
+			input_event(input, EV_KEY, KEY_VOLUMEDOWN, 0);
+		}
+		break;
+	default:
+		return;
+	}
+	input_sync(input);
+}
 
 static ssize_t fsa9480_show_control(struct device *dev,
 				   struct device_attribute *attr,
@@ -311,6 +381,13 @@ static ssize_t fsa9480_set_manualsw(struct device *dev,
 				    const char *buf, size_t count)
 {
 	struct fsa9480_usbsw *usbsw = dev_get_drvdata(dev);
+	fsa9480_set_switch(usbsw, buf);
+	return count;
+}
+
+int fsa9480_set_switch(void *ptr, const char *buf)
+{
+	struct fsa9480_usbsw *usbsw = (struct fsa9480_usbsw *) ptr;
 	struct i2c_client *client = usbsw->client;
 	s32 value;
 	unsigned int path = 0;
@@ -327,13 +404,19 @@ static ssize_t fsa9480_set_manualsw(struct device *dev,
 		return -EINVAL;
 
 	if (!strncmp(buf, "VAUDIO", 6)) {
-		path = SW_VAUDIO;
+		if (usbsw->id == 0)
+			path = SW_VAUDIO_9485;
+		else
+			path = SW_VAUDIO;
 		value &= ~CON_MANUAL_SW;
 	} else if (!strncmp(buf, "UART", 4)) {
 		path = SW_UART;
 		value &= ~CON_MANUAL_SW;
 	} else if (!strncmp(buf, "AUDIO", 5)) {
-		path = SW_AUDIO;
+		if (usbsw->id == 0)
+			path = SW_AUDIO_9485;
+		else
+			path = SW_AUDIO;
 		value &= ~CON_MANUAL_SW;
 	} else if (!strncmp(buf, "DHOST", 5)) {
 		path = SW_DHOST;
@@ -342,7 +425,7 @@ static ssize_t fsa9480_set_manualsw(struct device *dev,
 		path = SW_AUTO;
 		value |= CON_MANUAL_SW;
 	} else {
-		dev_err(dev, "Wrong command\n");
+		dev_err(&client->dev, "Wrong command\n");
 		return -EINVAL;
 	}
 
@@ -360,8 +443,9 @@ static ssize_t fsa9480_set_manualsw(struct device *dev,
 		return (ssize_t)value;
 	}
 
-	return count;
+	return 0;
 }
+EXPORT_SYMBOL_GPL(fsa9480_set_switch);
 
 static DEVICE_ATTR(control, S_IRUGO, fsa9480_show_control, NULL);
 static DEVICE_ATTR(device_type, S_IRUGO, fsa9480_show_device_type, NULL);
@@ -378,6 +462,47 @@ static struct attribute *fsa9480_attributes[] = {
 static const struct attribute_group fsa9480_group = {
 	.attrs = fsa9480_attributes,
 };
+
+ssize_t usb_id_adc_show(struct device *dev,
+			struct device_attribute *attr, char *buf)
+{
+	struct fsa9480_usbsw *usbsw = dev_get_drvdata(dev);
+	struct i2c_client *client = usbsw->client;
+	u8 adc_val;
+
+	adc_val = i2c_smbus_read_byte_data(client, FSA9480_REG_ADC);
+
+	return sprintf(buf, "%x\n", adc_val);
+}
+
+static DEVICE_ATTR(adc, S_IRUSR | S_IRGRP, usb_id_adc_show, NULL);
+
+/* Function to enable reporting of RAW data
+ * status. Make sure that ADC_change is not masked.
+ * This function is used in case of desk dock so
+ * than vol up and vol down keys can be handled.
+ */
+static void fsa9480_set_raw_data_status(struct fsa9480_usbsw *usbsw)
+{
+	s32 value;
+	value = i2c_smbus_read_byte_data(usbsw->client, FSA9480_REG_CTRL);
+	value &= ~CON_RAW_DATA;
+	i2c_smbus_write_byte_data(usbsw->client, FSA9480_REG_CTRL, value);
+	/*Load FSA9480_REG_TIMING1 with 0x0
+	 *so that ADC detection time duration is 50ms.
+	 */
+	i2c_smbus_write_byte_data(usbsw->client, FSA9480_REG_TIMING1, 0);
+}
+
+static void fsa9480_reset_raw_data_status(struct fsa9480_usbsw *usbsw)
+{
+	s32 value;
+	value = i2c_smbus_read_byte_data(usbsw->client, FSA9480_REG_CTRL);
+	value |= CON_RAW_DATA;
+	i2c_smbus_write_byte_data(usbsw->client, FSA9480_REG_CTRL, value);
+	i2c_smbus_write_byte_data(usbsw->client, FSA9480_REG_TIMING1,
+		usbsw->timing);
+}
 
 static int fsa9480_reg_init(struct fsa9480_usbsw *usbsw)
 {
@@ -423,8 +548,16 @@ static int fsa9480_reg_init(struct fsa9480_usbsw *usbsw)
 		return ret;
 	}
 
+	ret = i2c_smbus_read_byte_data(client, FSA9480_REG_DEVID);
+	if (ret < 0) {
+		dev_err(&client->dev, "%s: err %d\n", __func__, ret);
+		return ret;
+	} else
+		usbsw->id = (u8) ret;
+
 	return 0;
 }
+
 
 static int fsa9480_reset(struct fsa9480_usbsw *usbsw)
 {
@@ -528,7 +661,7 @@ static int fsa9480_detect_callback(struct otg_id_notifier_block *nb)
 			goto unhandled;
 		_detected(usbsw, FSA9480_DETECT_CHARGER);
 		goto handled;
-	} else if (dev_type & DEV_JIG_MASK) {
+	} else if (dev_type & DEV_AUDIO_MASK || dev_type & DEV_JIG_MASK) {
 		if (!(nb_info->detect_set->mask & FSA9480_DETECT_JIG))
 			goto unhandled;
 		_detected(usbsw, FSA9480_DETECT_JIG);
@@ -549,20 +682,29 @@ static int fsa9480_detect_callback(struct otg_id_notifier_block *nb)
 		enable_irq(usbsw->external_id_irq);
 		return OTG_ID_HANDLED;
 	} else if (dev_type & DEV_AV) {
-		/* There are two ID resistances, 1K and 365K that the FSA9480
+		/*
+		 * There are two ID resistances, 1K and 365K that the FSA9480
 		 * will resolve to the A/V Cable device type.  The ADC value can
 		 * be used to tell the difference between the two.
 		 */
 		if (adc_val == 0x1a) {
-			/* Delay to allow VBUS to be seen, if present. There's
+			/* Before entering desk dock mode,
+			 * enable raw data status reporting.
+			 */
+			fsa9480_set_raw_data_status(usbsw);
+			/*
+			 * Delay to allow VBUS to be seen, if present. There's
 			 * a possibility that we won't charge if it takes
-			 * longer than this for VBUS to be present. */
-			msleep(10);
+			 * longer than this for VBUS to be present.
+			 */
+			msleep(20);
+			pr_info("vbus present:%d\n",
+					usbsw->pdata->vbus_present());
 			if ((nb_info->detect_set->mask &
 					FSA9480_DETECT_AV_365K_CHARGER) &&
 					usbsw->pdata->vbus_present()) {
 				_detected(usbsw,
-					FSA9480_DETECT_AV_365K_CHARGER);
+						FSA9480_DETECT_AV_365K_CHARGER);
 				/* The FSA9480 will not interrupt when a USB or
 				 * charger cable is disconnected from the dock
 				 * so we must detect loss of VBUS via an
@@ -645,7 +787,6 @@ static irqreturn_t fsa9480_irq_thread(int irq, void *data)
 	struct fsa9480_usbsw *usbsw = data;
 	struct i2c_client *client = usbsw->client;
 	s32 intr;
-
 	/* read and clear interrupt status bits */
 	intr = i2c_smbus_read_word_data(client, FSA9480_REG_INT1);
 	if (intr < 0) {
@@ -671,11 +812,29 @@ static irqreturn_t fsa9480_irq_thread(int irq, void *data)
 	if (intr & INT_OVP_OCP_DIS)
 		dev_err(&client->dev, "exiting protection mode\n");
 
+	/* Handle ADC change interrupt in
+	 * fsa9480_handle_deskdock_key and return.
+	 */
+	if (intr & INT_ADC_CHANGE) {
+		u8 adc_val = i2c_smbus_read_byte_data(client, FSA9480_REG_ADC);
+		fsa9480_handle_deskdock_key(usbsw, adc_val);
+		return IRQ_HANDLED;
+	}
 	disable_irq_nosync(client->irq);
 	disable_irq_wake(client->irq);
 
 	mutex_lock(&usbsw->lock);
 	if (usbsw->curr_dev != FSA9480_DETECT_NONE) {
+		/* If Deskdock removal then dont report
+		 * RAW data status report from here onwards.
+		 */
+		if (usbsw->curr_dev == FSA9480_DETECT_AV_365K ||
+			usbsw->curr_dev == FSA9480_DETECT_AV_365K_CHARGER){
+			fsa9480_reset_raw_data_status(usbsw);
+			if (usbsw->pdata->desk_dock_charger_connected)
+				usbsw->pdata->desk_dock_charger_connected
+					(usbsw->curr_dev);
+		}
 		_detected(usbsw, FSA9480_DETECT_NONE);
 
 		/* undo whatever else we did */
@@ -737,24 +896,33 @@ static irqreturn_t usb_id_irq_thread(int irq, void *data)
 
 	return IRQ_HANDLED;
 }
-
 static irqreturn_t vbus_irq_thread(int irq, void *data)
 {
 	struct fsa9480_usbsw *usbsw = data;
-
+	u8 adc_val;
 	disable_irq_nosync(usbsw->pdata->external_vbus_irq);
-
+	pr_info("vbus_irq_thread\n");
 	mutex_lock(&usbsw->lock);
 	if (usbsw->curr_dev != FSA9480_DETECT_AV_365K_CHARGER) {
 		mutex_unlock(&usbsw->lock);
 		return IRQ_HANDLED;
 	}
-
 	/* VBUS has gone away when docked, so reset the state to
 	 * FSA_DETECT_NONE and reset the FSA9480, because it cannot
 	 * detect ID pin changes correctly after dock detach. */
+	adc_val = i2c_smbus_read_byte_data(usbsw->client, FSA9480_REG_ADC);
+	if (usbsw->pdata->desk_dock_charger_removal)
+		usbsw->pdata->desk_dock_charger_removal(adc_val);
 	_detected(usbsw, FSA9480_DETECT_NONE);
+	/* Earlier client IRQ was disabled in detect_callback.
+	 * Due to that, desk dock vol up and vol down
+	 * ADC change interuppt was not triggered.
+	 */
+	disable_irq(usbsw->client->irq);
+	disable_irq_wake(usbsw->client->irq);
 	fsa9480_reset(usbsw);
+	enable_irq_wake(usbsw->client->irq);
+	enable_irq(usbsw->client->irq);
 	mutex_unlock(&usbsw->lock);
 
 	return IRQ_HANDLED;
@@ -766,6 +934,7 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
 	struct fsa9480_platform_data *pdata = client->dev.platform_data;
 	struct fsa9480_usbsw *usbsw;
+	struct device *sec_switch_dev;
 	int ret = 0;
 	int i;
 
@@ -792,7 +961,8 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 
 	i2c_set_clientdata(client, usbsw);
 	mutex_init(&usbsw->lock);
-
+	if (usbsw->pdata->set_usbsw)
+		usbsw->pdata->set_usbsw(usbsw);
 	if (usbsw->pdata->external_id >= 0) {
 		gpio_request(usbsw->pdata->external_id, "fsa9840_external_id");
 
@@ -812,8 +982,8 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 
 	pdata->mask_vbus_irq();
 	ret = request_threaded_irq(pdata->external_vbus_irq, NULL,
-			vbus_irq_thread, pdata->external_vbus_flags,
-			"external_vbus", usbsw);
+				vbus_irq_thread, pdata->external_vbus_flags,
+				"external_vbus", usbsw);
 	if (ret) {
 		dev_err(&client->dev,
 				"failed to request vbus IRQ err %d\n",
@@ -822,6 +992,21 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 	}
 	disable_irq(pdata->external_vbus_irq);
 	pdata->unmask_vbus_irq();
+
+	/* adc sysfs file to get usb_id adc value */
+	sec_switch_dev = device_create(sec_class, NULL, 0, NULL, "switch");
+	if (IS_ERR(sec_switch_dev)) {
+		dev_err(&client->dev, "failed to created switch_dev\n");
+		goto err_create_switch_dev;
+	}
+
+	dev_set_drvdata(sec_switch_dev, usbsw);
+
+	ret = sysfs_create_file(&sec_switch_dev->kobj, &dev_attr_adc);
+	if (ret) {
+		dev_err(&client->dev, "failed to create adc attribute file\n");
+		goto err_create_adc;
+	}
 
 	/* mask all irqs to prevent event processing between
 	 * request_irq and disable_irq
@@ -864,7 +1049,7 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 
 	/* mask interrupts (unmask attach/detach only) */
 	usbsw->intr_mask = ~(INT_ATTACH | INT_DETACH | INT_OCP_EN | INT_OVP_EN |
-			INT_OVP_OCP_DIS | INT_AV_CHARGING);
+			INT_OVP_OCP_DIS | INT_AV_CHARGING | INT_ADC_CHANGE);
 	ret = fsa9480_reset(usbsw);
 	if (ret < 0)
 		goto err_reset;
@@ -881,6 +1066,28 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 	}
 
 	usbsw->num_notifiers = pdata->num_sets;
+	/*
+	 * Allocate input device to report
+	 * desk dock vol up and vol down.
+	 */
+	input = input_allocate_device();
+	if (!input) {
+		dev_err(&client->dev, "failed to allocate input device\n");
+		goto err_input_allocate;
+	}
+	input->name = "sec_deskdock";
+	input->phys = "sec_deskdock/input0";
+	input->id.bustype = BUS_HOST;
+	input->id.vendor = 0x0001;
+	input->id.product = 0x0001;
+	input->id.version = 0x0001;
+	input_set_capability(input, EV_KEY, KEY_VOLUMEUP);
+	input_set_capability(input, EV_KEY, KEY_VOLUMEDOWN);
+	ret = input_register_device(input);
+	if (ret) {
+		dev_err(&client->dev, "failed to register input device\n");
+		goto err_input_register;
+	}
 	for (i = 0; i < usbsw->num_notifiers; i++) {
 		struct usbsw_nb_info *info = &usbsw->notifiers[i];
 
@@ -897,6 +1104,7 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 			goto err_reg_notifiers;
 		}
 	}
+
 #if defined(CONFIG_DEBUG_FS) && defined(DEBUG_DUMP_REGISTERS)
 	usbsw->debug_dir = debugfs_create_dir("fsa9480", NULL);
 
@@ -911,6 +1119,9 @@ err_reg_notifiers:
 	for (i--; i >= 0; i--)
 		otg_id_unregister_notifier(&usbsw->notifiers[i].otg_id_nb);
 	sysfs_remove_group(&client->dev.kobj, &fsa9480_group);
+err_input_register:
+	input_free_device(input);
+err_input_allocate:
 err_sys_create:
 err_reset:
 err_timing:
@@ -920,6 +1131,8 @@ err_en_wake:
 		free_irq(client->irq, usbsw);
 err_req_irq:
 	free_irq(usbsw->pdata->external_vbus_irq, usbsw);
+err_create_adc:
+err_create_switch_dev:
 err_req_vbus_irq:
 	if (usbsw->pdata->external_id >= 0)
 		free_irq(usbsw->external_id_irq, usbsw);
@@ -963,6 +1176,9 @@ static int __devexit fsa9480_remove(struct i2c_client *client)
 	free_irq(usbsw->pdata->external_vbus_irq, usbsw);
 
 	i2c_set_clientdata(client, NULL);
+
+	if (input)
+		input_unregister_device(input);
 
 	sysfs_remove_group(&client->dev.kobj, &fsa9480_group);
 	mutex_destroy(&usbsw->lock);

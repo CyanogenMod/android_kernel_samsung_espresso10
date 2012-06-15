@@ -27,6 +27,9 @@
 
 #include <linux/types.h>
 #include <linux/input/matrix_keypad.h>
+#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
+#include <linux/rtc.h>
+#endif
 
 /*
  * Using the twl4030 core we address registers using a pair
@@ -150,6 +153,11 @@
 #define SW_FC				(0x1 << 2)
 #define STS_MMC			0x1
 
+#define TWL6030_MMCDEBOUNCING	0xED
+#define MMC_DEB_BYPASS			(0x1 << 7)
+#define MMC_MINS_DEB_MASK		(0xF << 3)
+#define MMC_MEXT_DEB_MASK		(0x7 << 0)
+
 #define TWL6030_CFG_INPUT_PUPD3	0xF2
 #define MMC_PU				(0x1 << 3)
 #define MMC_PD				(0x1 << 2)
@@ -176,8 +184,10 @@ static inline int twl_class_is_ ##class(void)	\
 TWL_CLASS_IS(4030, TWL4030_CLASS_ID)
 TWL_CLASS_IS(6030, TWL6030_CLASS_ID)
 
+
 #define TWL6025_SUBCLASS	BIT(4)  /* TWL6025 has changed registers */
 
+bool is_twl6030_lite(void);
 /*
  * Read and write single 8-bit registers
  */
@@ -455,7 +465,9 @@ static inline int twl6030_mmc_card_detect(struct device *dev, int slot)
 
 #define TWL4030_PM_MASTER_GLOBAL_TST		0xb6
 
-#define TWL6030_PHOENIX_DEV_ON			0x06
+#define TWL6030_PHOENIX_MSK_TRANSITION		0x20
+#define TWL6030_PHOENIX_DEV_ON			0x25
+#define TWL6030_BBSPOR_CFG				0xE6
 
 /*
  * TWL6030 PM Master module register offsets (use TWL_MODULE_PM_MASTER)
@@ -562,6 +574,22 @@ static inline int twl6030_mmc_card_detect(struct device *dev, int slot)
 #define RES_VBATMIN_HI		44
 #define RES_RC6MHZ		45
 #define RES_TEMP		46
+
+/*6025 resource*/
+#define RES_LDOUSB		47
+#define RES_SMPS5		48
+#define RES_SMPS4		49
+#define RES_SMPS3		50
+#define RES_SMPS2		51
+#define RES_SMPS1		52
+#define RES_LDOLN		53
+#define RES_LDO7		54
+#define RES_LDO6		55
+#define RES_LDO5		56
+#define RES_LDO4		57
+#define RES_LDO3		58
+#define RES_LDO2		59
+#define RES_LDO1		60
 
 /*
  * Power Bus Message Format ... these can be sent individually by Linux,
@@ -699,6 +727,7 @@ struct twl4030_power_data {
 	unsigned num;				/* used in TWL4030 only */
 	struct twl4030_resconfig *resource_config;
 	struct twl4030_system_config *sys_config; /*system resources*/
+	void (*twl4030_board_init)(void); /* pmic init function */
 #define TWL4030_RESCONFIG_UNDEF	((u8)-1)
 };
 
@@ -749,6 +778,11 @@ struct twl4030_codec_data {
 	int (*set_ext_clk32k)(bool on);
 };
 
+struct twl4030_rtc_data {
+	unsigned int	auto_comp;
+	s16	comp_value;
+};
+
 struct twl4030_platform_data {
 	unsigned				irq_base, irq_end;
 	struct twl4030_clock_init_data		*clock;
@@ -758,6 +792,8 @@ struct twl4030_platform_data {
 	struct twl4030_keypad_data		*keypad;
 	struct twl4030_usb_data			*usb;
 	struct twl4030_power_data		*power;
+
+	struct twl4030_rtc_data			*rtc;
 	struct twl4030_codec_data		*codec;
 
 	/* Common LDO regulators for TWL4030/TWL6030 */
@@ -779,7 +815,6 @@ struct twl4030_platform_data {
 	struct regulator_init_data		*vintana2;
 	struct regulator_init_data		*vintdig;
 	/* TWL6030 DCDC regulators */
-	struct regulator_init_data		*vdd3;
 	struct regulator_init_data		*vmem;
 	struct regulator_init_data		*v2v1;
 	/* TWL6030 LDO regulators */
@@ -789,6 +824,7 @@ struct twl4030_platform_data {
 	struct regulator_init_data              *vana;
 	struct regulator_init_data              *vcxio;
 	struct regulator_init_data              *vusb;
+	struct regulator_init_data		*sysen;
 	struct regulator_init_data		*clk32kg;
 	struct regulator_init_data              *clk32kaudio;
 	/* TWL6025 LDO regulators */
@@ -882,6 +918,21 @@ static inline int twl4030charger_usb_en(int enable) { return 0; }
 #define TWL6030_REG_VDAC	45
 #define TWL6030_REG_VUSB	46
 
+/* PMC Pull-Up/Pull-Down/High-Z */
+#define TWL6030_REG_CFG_INPUT_PUPD1		0xF0
+#define TWL6030_REG_CFG_INPUT_PUPD2		0xF1
+#define TWL6030_REG_CFG_INPUT_PUPD3		0xF2
+#define TWL6030_REG_CFG_INPUT_PUPD4		0xF3
+#define TWL6030_REG_CFG_LDO_PD1			0xF4
+#define TWL6030_REG_CFG_LDO_PD2			0xF5
+#define TWL6030_REG_CFG_SMPS_PD			0xF6
+#define TWL6030_REG_TOGGLE1				0x90
+#define TWL6030_REG_TOGGLE2				0x91
+#define TWL6030_REG_TOGGLE3				0x92
+#define TWL6030_REG_MISC1				0xE4
+#define TWL6030_REG_MISC2				0xE5
+#define TWL6030_REG_CHARGERUSB_CTRL3	0xEA
+
 /* INTERNAL LDOs */
 #define TWL6030_REG_VRTC	47
 #define TWL6030_REG_CLK32KG	48
@@ -903,5 +954,7 @@ static inline int twl4030charger_usb_en(int enable) { return 0; }
 #define TWL6025_REG_VIO		60
 
 #define TWL6030_REG_CLK32KAUDIO	61
+#define TWL6030_REG_SYSEN	62
+
 
 #endif /* End of __TWL4030_H */

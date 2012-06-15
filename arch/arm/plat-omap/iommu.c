@@ -30,6 +30,9 @@
 	     (__i < (n)) && (cr = __iotlb_read_cr((obj), __i), true);	\
 	     __i++)
 
+#define SET_MPU_CORE_CONSTRAINT 400
+#define CLEAR_MPU_CORE_CONSTRAINT -1
+
 /* accommodate the difference between omap1 and omap2/3 */
 static const struct iommu_functions *arch_iommu;
 
@@ -862,10 +865,12 @@ struct iommu *iommu_get(const char *name)
 
 	if (obj->refcount++ == 0) {
 		dev_info(obj->dev, "%s: %s qos_request\n", __func__, obj->name);
-		pm_qos_update_request(obj->qos_request, 10);
+		pm_qos_update_request(obj->qos_request,
+				SET_MPU_CORE_CONSTRAINT);
 		err = iommu_enable(obj);
 		if (err) {
-			pm_qos_update_request(obj->qos_request, -1);
+			pm_qos_update_request(obj->qos_request,
+					CLEAR_MPU_CORE_CONSTRAINT);
 			goto err_enable;
 		}
 		flush_iotlb_all(obj);
@@ -908,7 +913,8 @@ void iommu_put(struct iommu *obj)
 
 	if (--obj->refcount == 0) {
 		iommu_disable(obj);
-		pm_qos_update_request(obj->qos_request, -1);
+		pm_qos_update_request(obj->qos_request,
+				CLEAR_MPU_CORE_CONSTRAINT);
 	}
 
 	module_put(obj->owner);

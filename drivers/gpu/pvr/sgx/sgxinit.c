@@ -1050,6 +1050,26 @@ IMG_VOID SGXDumpDebugInfo (PVRSRV_SGXDEV_INFO	*psDevInfo,
 		}
 	}
 
+#if !defined(SGX_FEATURE_MULTIPLE_MEM_CONTEXTS)
+	{
+		IMG_UINT32 ui32RegVal;
+		IMG_UINT32 ui32PDDevPAddr;
+
+
+
+
+
+		ui32RegVal = OSReadHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_BIF_INT_STAT);
+		if (ui32RegVal & EUR_CR_BIF_INT_STAT_PF_N_RW_MASK)
+		{
+			ui32RegVal = OSReadHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_BIF_FAULT);
+			ui32RegVal &= EUR_CR_BIF_FAULT_ADDR_MASK;
+			ui32PDDevPAddr = OSReadHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_BIF_DIR_LIST_BASE0);
+			ui32PDDevPAddr &= EUR_CR_BIF_DIR_LIST_BASE0_ADDR_MASK;
+			MMU_CheckFaultAddr(psDevInfo, ui32PDDevPAddr, ui32RegVal);
+		}
+	}
+#endif
 	
 
 	QueueDumpDebugInfo();
@@ -1172,6 +1192,10 @@ IMG_VOID HWRecoveryResetSGX (PVRSRV_DEVICE_NODE *psDeviceNode,
 	PVRSRV_ERROR		eError;
 	PVRSRV_SGXDEV_INFO	*psDevInfo = (PVRSRV_SGXDEV_INFO*)psDeviceNode->pvDevice;
 	SGXMKIF_HOST_CTL	*psSGXHostCtl = (SGXMKIF_HOST_CTL *)psDevInfo->psSGXHostCtl;
+	static IMG_UINT32	ui32Clockinus = 0;
+	static IMG_UINT32	ui32HWRecoveryCount = 0;
+	IMG_UINT32		ui32TempClockinus = 0;
+	IMG_UINT32		ui32PassedTimeinus = 0;
 
 	PVR_UNREFERENCED_PARAMETER(ui32Component);
 
@@ -1191,9 +1215,28 @@ IMG_VOID HWRecoveryResetSGX (PVRSRV_DEVICE_NODE *psDeviceNode,
 
 	PVR_LOG(("HWRecoveryResetSGX: SGX Hardware Recovery triggered"));
 
-	SGXDumpDebugInfo(psDeviceNode->pvDevice, IMG_TRUE);
 
-	
+	ui32TempClockinus = OSClockus();
+
+	if (ui32TempClockinus < ui32Clockinus)	 ui32PassedTimeinus = (IMG_UINT32_MAX - ui32Clockinus) + ui32TempClockinus;
+	else ui32PassedTimeinus = ui32TempClockinus - ui32Clockinus;
+
+	if ( ui32PassedTimeinus < SYS_SGX_HWRECOVERY_TRACE_RESET_TIME_PERIOD )
+	{
+		ui32HWRecoveryCount++;
+		if(SYS_SGX_MAX_HWRECOVERY_OCCURANCE_COUNT <= ui32HWRecoveryCount)
+		{
+			OSPanic();
+		}
+	}
+	else
+	{
+		ui32Clockinus = ui32TempClockinus;
+	SGXDumpDebugInfo(psDeviceNode->pvDevice, IMG_TRUE);
+		ui32HWRecoveryCount = 0;
+	}
+
+
 	PDUMPSUSPEND();
 
 	

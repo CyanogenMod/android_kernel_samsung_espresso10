@@ -547,6 +547,9 @@ int omapdss_hdmi_get_deepcolor(void);
 void omapdss_hdmi_set_deepcolor(int val);
 int hdmi_get_current_hpd(void);
 void hdmi_get_monspecs(struct fb_monspecs *specs);
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+void hdmi_send_audio_info(int onoff);
+#endif
 u8 *hdmi_read_edid(struct omap_video_timings *);
 
 int hdmi_panel_init(void);
@@ -584,6 +587,11 @@ static inline void dss_collect_irq_stats(u32 irqstatus, unsigned *irq_arr)
 			irq_arr[b]++;
 	}
 }
+#endif
+
+#ifdef CONFIG_OMAP2_HDMI_FORCED_TIMING
+void hdmi_set_forced_timing(int timing);
+int hdmi_get_forced_timing(void);
 #endif
 
 #endif

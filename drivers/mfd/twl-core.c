@@ -242,6 +242,13 @@ unsigned int twl_rev(void)
 }
 EXPORT_SYMBOL(twl_rev);
 
+static bool twl_6030_lite;
+bool is_twl6030_lite(void)
+{
+	return twl_6030_lite;
+}
+EXPORT_SYMBOL(is_twl6030_lite);
+
 /* Structure for each TWL4030/TWL6030 Slave */
 struct twl_client {
 	struct i2c_client *client;
@@ -684,7 +691,7 @@ add_children(struct twl4030_platform_data *pdata, unsigned long features)
 		 */
 		sub_chip_id = twl_map[TWL_MODULE_RTC].sid;
 		child = add_child(sub_chip_id, "twl_rtc",
-				NULL, 0,
+				pdata->rtc, sizeof(*pdata->rtc),
 				true, pdata->irq_base + RTC_INTR_OFFSET, 0);
 		if (IS_ERR(child))
 			return PTR_ERR(child);
@@ -971,20 +978,6 @@ add_children(struct twl4030_platform_data *pdata, unsigned long features)
 		if (IS_ERR(child))
 			return PTR_ERR(child);
 
-		child = add_regulator(TWL6030_REG_CLK32KG, pdata->clk32kg,
-					features);
-		if (IS_ERR(child))
-			return PTR_ERR(child);
-
-		child = add_regulator(TWL6030_REG_CLK32KAUDIO,
-				pdata->clk32kaudio, features);
-		if (IS_ERR(child))
-			return PTR_ERR(child);
-
-		child = add_regulator(TWL6030_REG_VDD3, pdata->vdd3,
-					features);
-		if (IS_ERR(child))
-			return PTR_ERR(child);
 
 		child = add_regulator(TWL6030_REG_VMEM, pdata->vmem,
 					features);
@@ -1001,6 +994,21 @@ add_children(struct twl4030_platform_data *pdata, unsigned long features)
 	if (twl_has_regulator() && twl_class_is_6030()) {
 		child = add_regulator(TWL6030_REG_VANA, pdata->vana,
 					features);
+		if (IS_ERR(child))
+			return PTR_ERR(child);
+
+		child = add_regulator(TWL6030_REG_SYSEN, pdata->sysen,
+					features);
+		if (IS_ERR(child))
+			return PTR_ERR(child);
+
+		child = add_regulator(TWL6030_REG_CLK32KG, pdata->clk32kg,
+					features);
+		if (IS_ERR(child))
+			return PTR_ERR(child);
+
+		child = add_regulator(TWL6030_REG_CLK32KAUDIO,
+				pdata->clk32kaudio, features);
 		if (IS_ERR(child))
 			return PTR_ERR(child);
 	}
@@ -1252,6 +1260,13 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		twl_id = TWL4030_CLASS_ID;
 		twl_map = &twl4030_map[0];
 	}
+
+	if (((id->driver_data) & TWL6030_CLASS) &&
+			(id->driver_data & TWL6025_SUBCLASS)) {
+		twl_6030_lite = true;
+		dev_info(&client->dev, "Board PMIC is TWL6032\n");
+	}
+
 
 	/* setup clock framework */
 	clocks_init(&client->dev, pdata->clock);

@@ -5,10 +5,11 @@
  * interface.
  *
  * Copyright (C) 2009 Nokia Corporation. All rights reserved.
- * Copyright (C) 2009 Texas Instruments, Inc.
+ * Copyright (C) 2011 Texas Instruments, Inc.
  *
  * Author: Andras Domokos <andras.domokos@nokia.com>
  * Author: Sebastien JAN <s-jan@ti.com>
+ * Author: Djamil ELAIDI <d-elaidi@ti.com>
  *
  * This package is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -44,19 +45,21 @@
 
 #include "hsi-char.h"
 
-#define DRIVER_VERSION  "0.2.1"
+#define DRIVER_VERSION  "0.2.4"
 #define HSI_CHAR_DEVICE_NAME  "hsi_char"
 
 static unsigned int port = 1;
-module_param(port, uint, 1);
+module_param(port, uint, S_IRUGO);
 MODULE_PARM_DESC(port, "HSI port to be probed");
 
-static unsigned int num_channels;
-static unsigned int channels_map[HSI_MAX_CHAR_DEVS] = { 0 };
-module_param_array(channels_map, uint, &num_channels, 0);
+static unsigned int num_channels = 1;
+static unsigned int channels_map[HSI_MAX_CHAR_DEVS] = { 1 };
+module_param_array(channels_map, uint, &num_channels, S_IRUGO);
 MODULE_PARM_DESC(channels_map, "HSI channels to be probed");
 
-dev_t hsi_char_dev;
+static int hsi_char_major;	     /* HSI char major number */
+static struct class *hsi_char_class; /* HSI char class during class_create */
+static dev_t hsi_char_dev;	     /* HSI char dev with first minor number */
 
 struct char_queue {
 	struct list_head list;
@@ -347,7 +350,8 @@ static long  hsi_char_ioctl(struct file *file,
 {
 	int ch = (int)file->private_data;
 	unsigned int state;
-	size_t occ;
+	size_t size;
+	unsigned long fclock;
 	struct hsi_rx_config rx_cfg;
 	struct hsi_tx_config tx_cfg;
 	int ret = 0;
@@ -359,10 +363,14 @@ static long  hsi_char_ioctl(struct file *file,
 		if_hsi_send_break(ch);
 		break;
 	case CS_FLUSH_RX:
-		if_hsi_flush_rx(ch);
+		if_hsi_flush_rx(ch, &size);
+		if (copy_to_user((void __user *)arg, &size, sizeof(size)))
+			ret = -EFAULT;
 		break;
 	case CS_FLUSH_TX:
-		if_hsi_flush_tx(ch);
+		if_hsi_flush_tx(ch, &size);
+		if (copy_to_user((void __user *)arg, &size, sizeof(size)))
+			ret = -EFAULT;
 		break;
 	case CS_SET_ACWAKELINE:
 		if (copy_from_user(&state, (void __user *)arg, sizeof(state)))
@@ -412,8 +420,19 @@ static long  hsi_char_ioctl(struct file *file,
 		if_hsi_sw_reset(ch);
 		break;
 	case CS_GET_FIFO_OCCUPANCY:
-		if_hsi_get_fifo_occupancy(ch, &occ);
-		if (copy_to_user((void __user *)arg, &occ, sizeof(occ)))
+		if_hsi_get_fifo_occupancy(ch, &size);
+		if (copy_to_user((void __user *)arg, &size, sizeof(size)))
+			ret = -EFAULT;
+		break;
+	case CS_SET_HI_SPEED:
+		if (copy_from_user(&state, (void __user *)arg, sizeof(state)))
+			ret = -EFAULT;
+		else
+			if_hsi_set_hi_speed(ch, state);
+		break;
+	case CS_GET_SPEED:
+		if_hsi_get_speed(ch, &fclock);
+		if (copy_to_user((void __user *)arg, &fclock, sizeof(fclock)))
 			ret = -EFAULT;
 		break;
 	default:
@@ -506,10 +525,10 @@ static struct cdev hsi_char_cdev;
 
 static int __init hsi_char_init(void)
 {
-	int ret, i;
+	int ret, i, i_dev_create = 0;
 
 	pr_info("HSI character device version " DRIVER_VERSION "\n");
-	pr_info("HSI char driver: %d channels mapped\n", num_channels);
+	pr_info(HSI_CHAR_DEVICE_NAME ": %d channels mapped\n", num_channels);
 
 	for (i = 0; i < HSI_MAX_CHAR_DEVS; i++) {
 		init_waitqueue_head(&hsi_char_data[i].rx_wait);
@@ -521,39 +540,87 @@ static int __init hsi_char_init(void)
 		INIT_LIST_HEAD(&hsi_char_data[i].tx_queue);
 	}
 
-	/*printk(KERN_DEBUG "%s, devname = %s\n", __func__, devname); */
-
 	ret = if_hsi_init(port, channels_map, num_channels);
-	if (ret)
-		return ret;
-
-	ret =
-	    alloc_chrdev_region(&hsi_char_dev, 0, HSI_MAX_CHAR_DEVS,
-				HSI_CHAR_DEVICE_NAME);
 	if (ret < 0) {
-		pr_err("HSI character driver: Failed to register\n");
+		pr_err(HSI_CHAR_DEVICE_NAME ": Failed to init HSI driver\n");
 		return ret;
 	}
+
+	/* Allocate the range of minor numbers */
+	ret = alloc_chrdev_region(&hsi_char_dev, 0, num_channels,
+				  HSI_CHAR_DEVICE_NAME);
+	if (ret < 0) {
+		pr_err(HSI_CHAR_DEVICE_NAME": Failed to register char device "
+					   "numbers\n");
+		goto out_hsi_exit;
+	}
+	pr_debug(HSI_CHAR_DEVICE_NAME ": Allocated major %d, minor 0 to %d\n",
+		 MAJOR(hsi_char_dev), num_channels);
 
 	cdev_init(&hsi_char_cdev, &hsi_char_fops);
 	ret = cdev_add(&hsi_char_cdev, hsi_char_dev, HSI_MAX_CHAR_DEVS);
 	if (ret < 0) {
-		pr_err("HSI character device: Failed to add char device\n");
-		return ret;
+		pr_err(HSI_CHAR_DEVICE_NAME ": Failed to add char devices\n");
+		goto out_unregister_chrdev;
+	}
+
+	/* Expose the hsi_char device to user space*/
+	hsi_char_major = MAJOR(hsi_char_dev);
+	hsi_char_class = class_create(THIS_MODULE, HSI_CHAR_DEVICE_NAME);
+	if (IS_ERR(hsi_char_class)) {
+		pr_err(HSI_CHAR_DEVICE_NAME ": Failed to create class\n");
+		goto out_cdev_del;
+	}
+
+	for (i = 0; (i < num_channels) && channels_map[i]; i++) {
+		struct device *dev;
+		dev = device_create(hsi_char_class, NULL,
+				MKDEV(hsi_char_major, channels_map[i] - 1),
+				NULL, "hsi%d", channels_map[i] - 1);
+		if (IS_ERR(dev)) {
+			pr_err("Error in device_create hsi%d\n",
+				channels_map[i] - 1);
+			i_dev_create = i;
+			goto out_device_destroy;
+		}
+		pr_info("HSI device_created /dev/hsi%d\n", channels_map[i] - 1);
 	}
 
 	return 0;
+
+out_device_destroy:
+	for (i = 0; (i < i_dev_create) && channels_map[i]; i++)
+		device_destroy(hsi_char_class,
+			       MKDEV(hsi_char_major, channels_map[i] - 1));
+out_class_destroy:
+	class_destroy(hsi_char_class);
+out_cdev_del:
+	cdev_del(&hsi_char_cdev);
+out_unregister_chrdev:
+	unregister_chrdev_region(hsi_char_dev, num_channels);
+out_hsi_exit:
+	if_hsi_exit();
+out:
+	return ret;
 }
 
 static void __exit hsi_char_exit(void)
 {
+	int i;
+
 	cdev_del(&hsi_char_cdev);
-	unregister_chrdev_region(hsi_char_dev, HSI_MAX_CHAR_DEVS);
+	for (i = 0; (i < num_channels) && channels_map[i]; i++)
+		device_destroy(hsi_char_class,
+			       MKDEV(hsi_char_major, channels_map[i] - 1));
+
+	class_destroy(hsi_char_class);
+	unregister_chrdev_region(hsi_char_dev, num_channels);
 	if_hsi_exit();
 }
 
 MODULE_AUTHOR("Andras Domokos <andras.domokos@nokia.com>");
 MODULE_AUTHOR("Sebatien Jan <s-jan@ti.com> / Texas Instruments");
+MODULE_AUTHOR("Djamil Elaidi <d-elaidi@ti.com> / Texas Instruments");
 MODULE_DESCRIPTION("HSI character device");
 MODULE_LICENSE("GPL");
 MODULE_VERSION(DRIVER_VERSION);

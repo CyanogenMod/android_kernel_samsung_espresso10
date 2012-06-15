@@ -173,6 +173,11 @@ static inline void __arch_decomp_setup(unsigned long arch_id)
 		/* TI8168 base boards using UART3 */
 		DEBUG_LL_TI816X(3, ti8168evm);
 
+#if defined(CONFIG_MACH_OMAP4_SAMSUNG)
+#define SEC_DEBUG_LL_OMAP4(p, mach)	DEBUG_LL_OMAP4(p, mach)
+		SEC_DEBUG_LL_OMAP4(CONFIG_SAMSUNG_CONSOLE_UART, omap4_samsung);
+#endif /* CONFIG_MACH_OMAP4_SAMSUNG */
+
 	} while (0);
 }
 

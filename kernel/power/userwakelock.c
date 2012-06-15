@@ -217,3 +217,16 @@ not_found:
 	return n;
 }
 
+ssize_t wake_lock_dbg_show(
+	struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+{
+	char *s = buf;
+	debug_print_active_locks(0, &s);
+	return s-buf;
+}
+ssize_t wake_lock_dbg_store(
+	struct kobject *kobj, struct kobj_attribute *attr,
+	const char *buf, size_t n)
+{
+	return n;
+}

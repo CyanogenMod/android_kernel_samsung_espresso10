@@ -472,7 +472,7 @@ struct hci_dev *hci_get_route(bdaddr_t *dst, bdaddr_t *src)
 	list_for_each(p, &hci_dev_list) {
 		struct hci_dev *d = list_entry(p, struct hci_dev, list);
 
-		if (!test_bit(HCI_UP, &d->flags) || test_bit(HCI_RAW, &d->flags))
+	if (!test_bit(HCI_UP, &d->flags) || test_bit(HCI_RAW, &d->flags))
 			continue;
 
 		/* Simple routing:
@@ -545,6 +545,13 @@ struct hci_conn *hci_connect(struct hci_dev *hdev, int type,
 	hci_conn_hold(acl);
 
 	if (acl->state == BT_OPEN || acl->state == BT_CLOSED) {
+		struct inquiry_entry *ie;
+		ie = hci_inquiry_cache_lookup(acl->hdev, &acl->dst);
+		if (ie && (!ie->data.ssp_mode || !acl->hdev->ssp_mode) &&
+				((ie->data.dev_class[1] & 0x1f) != 0x05)) {
+			__u8 auth = AUTH_ENABLED;
+			hci_send_cmd(hdev, HCI_OP_WRITE_AUTH_ENABLE, 1, &auth);
+		}
 		acl->sec_level = BT_SECURITY_LOW;
 		acl->pending_sec_level = sec_level;
 		acl->auth_type = auth_type;
@@ -752,6 +759,34 @@ int hci_conn_switch_role(struct hci_conn *conn, __u8 role)
 	return 0;
 }
 EXPORT_SYMBOL(hci_conn_switch_role);
+
+/* BEGIN SS_BLUEZ_BT +kjh 2011.06.23 : */
+/* workaround for a2dp chopping in multi connection. */
+/* Change Policy */
+int hci_conn_change_policy(struct hci_conn *conn, __u8 policy)
+{
+	struct hci_cp_write_link_policy cp;
+	cp.handle = cpu_to_le16(conn->handle);
+	cp.policy = policy;
+	hci_send_cmd(conn->hdev, HCI_OP_WRITE_LINK_POLICY, sizeof(cp), &cp);
+
+	return 0;
+}
+EXPORT_SYMBOL(hci_conn_change_policy);
+
+/* Set Encrypt*/
+int hci_conn_set_encrypt(struct hci_conn *conn, __u8 enable)
+{
+	struct hci_cp_set_conn_encrypt cp;
+	cp.handle  = cpu_to_le16(conn->handle);
+	cp.encrypt = enable;
+	hci_send_cmd(conn->hdev, HCI_OP_SET_CONN_ENCRYPT, sizeof(cp), &cp);
+
+	return 0;
+}
+EXPORT_SYMBOL(hci_conn_set_encrypt);
+/* END SS_BLUEZ_BT */
+
 
 /* Enter active mode */
 void hci_conn_enter_active_mode(struct hci_conn *conn, __u8 force_active)

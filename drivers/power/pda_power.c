@@ -283,7 +283,6 @@ static int pda_power_probe(struct platform_device *pdev)
 	}
 
 	update_status();
-	update_charger();
 
 	if (!pdata->wait_for_status)
 		pdata->wait_for_status = 500;

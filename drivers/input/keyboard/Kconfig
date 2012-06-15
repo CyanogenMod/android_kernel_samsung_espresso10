@@ -563,4 +563,22 @@ config KEYBOARD_W90P910
 	  To compile this driver as a module, choose M here: the
 	  module will be called w90p910_keypad.
 
+config KEYPAD_CYPRESS_TOUCH
+	tristate "Cypress touch keypad support"
+	default n
+	help
+		Say Y here if you want to use the Cypress
+		touch keypad.
+		To compile this driver as a module, choose M here: the
+		module will be called cypress-touchkey.
+
+config KEYBOARD_SEC_DOCK
+	tristate "SEC P series dock keyboard support"
+	default n
+	select SERIO
+	help
+	  Say Y here if you want to use the SEC P series dock keyboard.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called sec_dock_keyboard.
 endif

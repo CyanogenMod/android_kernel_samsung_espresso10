@@ -223,6 +223,16 @@ config MMC_OMAP
 
 	  If unsure, say N.
 
+config MMC_SOFTWARE_TIMEOUT
+	bool "Software timeout for OMAP platform"
+	depends on ARCH_OMAP4
+	help
+	  This enable a software timer with every mmc requeset.
+	  If mmc doesn't generate interrupt,timer will expire,
+	  to complete the user request with timeout error.
+
+	  If unsure, say N.
+
 config MMC_OMAP_HS
 	tristate "TI OMAP High Speed Multimedia Card Interface support"
 	depends on SOC_OMAP2430 || ARCH_OMAP3 || ARCH_OMAP4

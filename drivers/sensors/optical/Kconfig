@@ -1,0 +1,12 @@
+config OPTICAL_BH1721
+         tristate "Rohm bh1721 Optical Sensor"
+         depends on I2C
+config INPUT_CM3663
+	depends on I2C && GENERIC_GPIO
+	tristate "Capella CM3663 ambient light and proximity sensor"
+	default n
+	help
+	  This option enables proximity & light sensors using CM3663 driver.
+config OPTICAL_AL3201
+         tristate "Rohm bh1721 Optical Sensor"
+         depends on I2C

@@ -35,11 +35,17 @@
 #include <linux/version.h>
 #include <linux/videodev2.h>
 #include <linux/mutex.h>
+#ifdef CONFIG_VIDEO_V4L2
 #include <media/v4l2-common.h>
 #include <media/v4l2-ioctl.h>
+#endif
 #include <asm/unaligned.h>
+#include <linux/ioctl.h>
 
-
+#ifdef CONFIG_DEV_SI470X
+#include <linux/miscdevice.h>
+#include <linux/platform_data/fm-si470x.h>
+#endif
 
 /**************************************************************************
  * Register Definitions
@@ -142,8 +148,14 @@
  * si470x_device - private data
  */
 struct si470x_device {
+#ifdef CONFIG_VIDEO_V4L2
 	struct video_device *videodev;
-
+#else
+	struct miscdevice miscdev;
+	struct si470x_platform_data *pdata;
+	unsigned int si470x_irq;
+	unsigned short *rds_data_buff;
+#endif
 	/* driver management */
 	unsigned int users;
 
@@ -180,7 +192,8 @@ struct si470x_device {
 	unsigned char disconnected;
 #endif
 
-#if defined(CONFIG_I2C_SI470X) || defined(CONFIG_I2C_SI470X_MODULE)
+#if defined(CONFIG_I2C_SI470X) || defined(CONFIG_I2C_SI470X_MODULE) || \
+	defined(CONFIG_DEV_SI470X)
 	struct i2c_client *client;
 #endif
 };
@@ -224,3 +237,7 @@ int si470x_fops_open(struct file *file);
 int si470x_fops_release(struct file *file);
 int si470x_vidioc_querycap(struct file *file, void *priv,
 		struct v4l2_capability *capability);
+/****************************************************************************
+ * Global Function
+ ***************************************************************************/
+int si470x_get_freq(struct si470x_device *radio, unsigned int *freq);

@@ -383,6 +383,9 @@ struct musb {
 	/* device lock */
 	spinlock_t		lock;
 
+	/* mutex for synchronization */
+	struct mutex		musb_lock;
+
 	const struct musb_platform_ops *ops;
 	struct musb_context_registers context;
 

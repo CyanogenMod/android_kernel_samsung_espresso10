@@ -82,5 +82,10 @@
 #define TWL6030_MADC_RTCH0_LSB		0x07
 #define TWL6030_MADC_GPCH0_LSB		0x29
 
+#define TWL6032_GPADC_GPSELECT_ISB	0x07
+#define TWL6032_GPADC_CTRL_P1		0x08
+#define TWL6032_GPCH0_LSB			0x0d
+#define TWL6032_GPCH0_MSB			0x0e
+
 int twl6030_get_madc_conversion(int channel_no);
 #endif

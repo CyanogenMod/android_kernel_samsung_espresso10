@@ -16,6 +16,7 @@ obj-$(CONFIG_SND_OMAP_SOC_ABE_DSP) += snd-soc-omap-abe-dsp.o abe/
 obj-$(CONFIG_SND_OMAP_SOC_HDMI) += snd-soc-omap-hdmi.o
 
 # OMAP Machine Support
+snd-soc-omap-wm8994-objs := omap_wm8994.o
 snd-soc-n810-objs := n810.o
 snd-soc-rx51-objs := rx51.o
 snd-soc-ams-delta-objs := ams-delta.o
@@ -45,4 +46,5 @@ obj-$(CONFIG_SND_OMAP_SOC_OMAP3_PANDORA) += snd-soc-omap3pandora.o
 obj-$(CONFIG_SND_OMAP_SOC_OMAP3_BEAGLE) += snd-soc-omap3beagle.o
 obj-$(CONFIG_SND_OMAP_SOC_ZOOM2) += snd-soc-zoom2.o
 obj-$(CONFIG_SND_OMAP_SOC_IGEP0020) += snd-soc-igep0020.o
+obj-$(CONFIG_SND_SOC_WM8994) += snd-soc-omap-wm8994.o
 obj-$(CONFIG_SND_OMAP_SOC_OMAP4_HDMI) += snd-soc-omap4-hdmi.o

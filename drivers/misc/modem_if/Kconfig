@@ -7,6 +7,7 @@ menuconfig SEC_MODEM
 config UMTS_LINK_MIPI
 	bool "modem driver link device MIPI-HSI"
 	depends on SEC_MODEM
+	depends on OMAP_HSI
 	default n
 
 config UMTS_LINK_HSIC

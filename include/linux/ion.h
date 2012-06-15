@@ -285,6 +285,48 @@ struct ion_custom_data {
 	unsigned long arg;
 };
 
+/**
+ * struct ion_map_data - metadata passed to/from userspace for mapping handle
+ * @handle:	a handle
+ * @map_cacheable: if the handle should be mapped cachable
+ * @fd: a file descriptor representing that handle
+ *
+ * For ION_IOC_MAP_CACHEABLE, userspace populates the handle field with
+ * the handle returned from ion alloc and passes the caching attribute.
+ * The kernel returns the file descriptor to share or map in the fd field
+ */
+struct ion_map_data {
+	struct ion_handle *handle;
+	unsigned char map_cacheable;
+	int fd;
+};
+
+/**
+ * struct ion_cached_user_buf_data - metadata passed from userspace for
+ * flushing or invalidating the ion handle which was mapped cachable.
+ * @handle:	a handle
+ * @vaddr: virtual address corresponding to the handle after mapping
+ * @size: size of the buffer which should be flushed or invalidated
+ *
+ * For ION_IOC_FLUSH_CACHED & ION_IOC_INVAL_CACHED, userspace populates
+ * the handle field with the ion handle and vaddr with the virtual address
+ * corresponding to the handle along with size to be flushed/invalidated.
+ */
+struct ion_cached_user_buf_data {
+	struct ion_handle *handle;
+	unsigned long vaddr;
+	size_t size;
+};
+
+/**
+ * struct ion_map_gralloc_to_ionhandle_data
+ */
+struct ion_map_gralloc_to_ionhandle_data {
+	void *gralloc_handle;
+	struct ion_handle *handleY;
+	struct ion_handle *handleUV;
+};
+
 #define ION_IOC_MAGIC		'I'
 
 /**
@@ -341,4 +383,9 @@ struct ion_custom_data {
  */
 #define ION_IOC_CUSTOM		_IOWR(ION_IOC_MAGIC, 6, struct ion_custom_data)
 
+#define ION_IOC_MAP_CACHEABLE		_IOWR(ION_IOC_MAGIC, 7, struct ion_fd_data)
+#define ION_IOC_FLUSH_CACHED		_IOWR(ION_IOC_MAGIC, 8, struct ion_cached_user_buf_data)
+#define ION_IOC_INVAL_CACHED		_IOWR(ION_IOC_MAGIC, 9, struct ion_cached_user_buf_data)
+#define ION_IOC_MAP_GRALLOC	        _IOWR(ION_IOC_MAGIC, 10, \
+				struct ion_map_gralloc_to_ionhandle_data)
 #endif /* _LINUX_ION_H */

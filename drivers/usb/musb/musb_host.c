@@ -120,10 +120,22 @@ static void musb_h_tx_flush_fifo(struct musb_hw_ep *ep)
 		csr |= MUSB_TXCSR_FLUSHFIFO;
 		musb_writew(epio, MUSB_TXCSR, csr);
 		csr = musb_readw(epio, MUSB_TXCSR);
+
+		/* To avoid watchdog reset, WARN() macro is removed.
+		 * When scsi error handler detects  error,
+		 * WARN() prints many logs */
+#if 0
 		if (WARN(retries-- < 1,
 				"Could not flush host TX%d fifo: csr: %04x\n",
 				ep->epnum, csr))
 			return;
+#else
+		if (retries-- < 1) {
+			dev_info(musb->controller, "Could not flush host TX%d fifo: csr: %04x\n",
+				ep->epnum, csr);
+			return;
+		}
+#endif
 		mdelay(1);
 	}
 }

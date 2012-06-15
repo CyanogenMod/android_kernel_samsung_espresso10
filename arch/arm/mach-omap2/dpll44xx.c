@@ -75,6 +75,35 @@ int omap4_core_dpll_m2_set_rate(struct clk *clk, unsigned long rate)
 
 	spin_lock_irqsave(&l3_emif_lock, flags);
 
+	/*
+	 * Errata ID: i728
+	 *
+	 * DESCRIPTION:
+	 *
+	 * If during a small window the following three events occur:
+	 *
+	 * 1) The EMIF_PWR_MGMT_CTRL[7:4] REG_SR_TIM SR_TIMING counter expires
+	 * 2) Frequency change update is requested CM_SHADOW_FREQ_CONFIG1
+	 *    FREQ_UPDATE set to 1
+	 * 3) OCP access is requested
+	 *
+	 * There will be instable clock on the DDR interface.
+	 *
+	 * WORKAROUND:
+	 *
+	 * Prevent event 1) while event 2) is happening.
+	 *
+	 * Disable the self-refresh when requesting a frequency change.
+	 * Before requesting a frequency change, program
+	 * EMIF_PWR_MGMT_CTRL[10:8] REG_LP_MODE to 0x0
+	 * (omap_emif_frequency_pre_notify)
+	 *
+	 * When the frequency change is completed, reprogram
+	 * EMIF_PWR_MGMT_CTRL[10:8] REG_LP_MODE to 0x2.
+	 * (omap_emif_frequency_post_notify)
+	 */
+	omap_emif_frequency_pre_notify();
+
 	/* Configures MEMIF domain in SW_WKUP */
 	clkdm_wakeup(l3_emif_clkdm);
 
@@ -109,6 +138,9 @@ int omap4_core_dpll_m2_set_rate(struct clk *clk, unsigned long rate)
 
 	/* Configures MEMIF domain back to HW_WKUP */
 	clkdm_allow_idle(l3_emif_clkdm);
+
+	/* Re-enable DDR self refresh */
+	omap_emif_frequency_post_notify();
 
 	spin_unlock_irqrestore(&l3_emif_lock, flags);
 
@@ -147,6 +179,36 @@ int omap4_prcm_freq_update(void)
 	}
 
 	spin_lock_irqsave(&l3_emif_lock, flags);
+
+	/*
+	 * Errata ID: i728
+	 *
+	 * DESCRIPTION:
+	 *
+	 * If during a small window the following three events occur:
+	 *
+	 * 1) The EMIF_PWR_MGMT_CTRL[7:4] REG_SR_TIM SR_TIMING counter expires
+	 * 2) Frequency change update is requested CM_SHADOW_FREQ_CONFIG1
+	 *    FREQ_UPDATE set to 1
+	 * 3) OCP access is requested
+	 *
+	 * There will be instable clock on the DDR interface.
+	 *
+	 * WORKAROUND:
+	 *
+	 * Prevent event 1) while event 2) is happening.
+	 *
+	 * Disable the self-refresh when requesting a frequency change.
+	 * Before requesting a frequency change, program
+	 * EMIF_PWR_MGMT_CTRL[10:8] REG_LP_MODE to 0x0
+	 * (omap_emif_frequency_pre_notify)
+	 *
+	 * When the frequency change is completed, reprogram
+	 * EMIF_PWR_MGMT_CTRL[10:8] REG_LP_MODE to 0x2.
+	 * (omap_emif_frequency_post_notify)
+	 */
+	omap_emif_frequency_pre_notify();
+
 	/* Configures MEMIF domain in SW_WKUP */
 	clkdm_wakeup(l3_emif_clkdm);
 
@@ -169,6 +231,9 @@ int omap4_prcm_freq_update(void)
 
 	/* Configures MEMIF domain back to HW_WKUP */
 	clkdm_allow_idle(l3_emif_clkdm);
+
+	/* Re-enable DDR self refresh */
+	omap_emif_frequency_post_notify();
 
 	spin_unlock_irqrestore(&l3_emif_lock, flags);
 

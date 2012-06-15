@@ -2089,8 +2089,13 @@ static void abe_dsp_init_gains(struct abe_data *abe)
 	abe_mute_gain(GAINS_DL1, GAIN_LEFT_OFFSET);
 	abe_mute_gain(GAINS_DL1, GAIN_RIGHT_OFFSET);
 
+#ifdef CONFIG_SND_OMAP_SOC_PDM_GAIN_COMPENSATION
 	abe_write_gain(GAINS_DL2, GAIN_M7dB, RAMP_2MS, GAIN_LEFT_OFFSET);
 	abe_write_gain(GAINS_DL2, GAIN_M7dB, RAMP_2MS, GAIN_RIGHT_OFFSET);
+#else
+	abe_write_gain(GAINS_DL2, GAIN_0dB, RAMP_2MS, GAIN_LEFT_OFFSET);
+	abe_write_gain(GAINS_DL2, GAIN_0dB, RAMP_2MS, GAIN_RIGHT_OFFSET);
+#endif
 	abe_mute_gain(GAINS_DL2, GAIN_LEFT_OFFSET);
 	abe_mute_gain(GAINS_DL2, GAIN_RIGHT_OFFSET);
 
@@ -2224,10 +2229,12 @@ static int aess_hw_params(struct snd_pcm_substream *substream,
 	size_t period_size;
 	u32 dst;
 
+	mutex_lock(&abe->mutex);
+
 	dev_dbg(dai->dev, "%s: %s\n", __func__, dai->name);
 
 	if (dai->id != ABE_FRONTEND_DAI_LP_MEDIA)
-		return 0;
+		goto out;
 
 	/*Storing substream pointer for irq*/
 	abe->ping_pong_substream = substream;
@@ -2237,9 +2244,6 @@ static int aess_hw_params(struct snd_pcm_substream *substream,
 		format.samp_format = STEREO_MSB;
 	else
 		format.samp_format = STEREO_16_16;
-
-	if (format.f == 44100)
-		abe_write_event_generator(EVENT_44100);
 
 	period_size = params_period_bytes(params);
 
@@ -2263,6 +2267,8 @@ static int aess_hw_params(struct snd_pcm_substream *substream,
 	abe_set_ping_pong_buffer(MM_DL_PORT, period_size);
 	abe->first_irq = 1;
 
+out:
+	mutex_unlock(&abe->mutex);
 	return 0;
 }
 

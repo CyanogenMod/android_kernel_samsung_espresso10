@@ -191,23 +191,23 @@ int omapdss_dpi_display_enable(struct omap_dss_device *dssdev)
 	r = dss_runtime_get();
 	if (r)
 		goto err_get_dss;
-
-	r = dispc_runtime_get();
-	if (r)
-		goto err_get_dispc;
-
+	if (!dssdev->skip_init) {
+		r = dispc_runtime_get();
+		if (r)
+			goto err_get_dispc;
+	}
 	dpi_basic_init(dssdev);
 
 	if (dpi_use_dsi_pll(dssdev)) {
 		r = dsi_runtime_get(dpi.dsidev);
 		if (r)
 			goto err_get_dsi;
-
+	if (!dssdev->skip_init) {
 		r = dsi_pll_init(dpi.dsidev, 0, 1);
 		if (r)
 			goto err_dsi_pll_init;
+		}
 	}
-
 	r = dpi_set_mode(dssdev);
 	if (r)
 		goto err_set_mode;
@@ -215,7 +215,8 @@ int omapdss_dpi_display_enable(struct omap_dss_device *dssdev)
 	mdelay(2);
 
 	dssdev->manager->enable(dssdev->manager);
-
+	if (dssdev->skip_init)
+		dssdev->skip_init = false;
 	return 0;
 
 err_set_mode:

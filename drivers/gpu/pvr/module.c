@@ -79,6 +79,10 @@
 #include <asm/uaccess.h>
 #endif
 
+#if defined(PVR_LDM_MODULE) || defined(PVR_DRI_DRM_PLATFORM_DEV)
+#include <asm/atomic.h>
+#endif
+
 #include "img_defs.h"
 #include "services.h"
 #include "kerneldisplay.h"
@@ -142,6 +146,18 @@ module_param(sgx_idle_timeout, uint, 0644);
 
 uint sgx_apm_latency = SYS_SGX_ACTIVE_POWER_LATENCY_MS;
 module_param(sgx_apm_latency, uint, 0644);
+
+void set_sgx_apm_latency(uint new_sgx_apm_latency)
+{
+	sgx_apm_latency =  new_sgx_apm_latency;
+}
+EXPORT_SYMBOL(set_sgx_apm_latency);
+
+uint get_sgx_apm_latency(void)
+{
+	return sgx_apm_latency;
+}
+EXPORT_SYMBOL(get_sgx_apm_latency);
 
 #if defined(CONFIG_ION_OMAP)
 #include <linux/ion.h>
@@ -367,9 +383,17 @@ void PVRSRVDriverShutdown(struct drm_device *pDevice)
 PVR_MOD_STATIC void PVRSRVDriverShutdown(LDM_DEV *pDevice)
 #endif
 {
+	static atomic_t sDriverIsShutdown = ATOMIC_INIT(1);
+
 	PVR_TRACE(("PVRSRVDriverShutdown(pDevice=%p)", pDevice));
 
-	(void) PVRSRVSetPowerStateKM(PVRSRV_SYS_POWER_STATE_D3);
+	if (atomic_dec_and_test(&sDriverIsShutdown))
+	{
+
+		LinuxLockMutex(&gPVRSRVLock);
+
+		(void) PVRSRVSetPowerStateKM(PVRSRV_SYS_POWER_STATE_D3);
+	}
 }
 
 #endif 

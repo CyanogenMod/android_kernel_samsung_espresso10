@@ -45,6 +45,7 @@
 static struct clk *phyclk, *clk48m, *clk32k;
 static void __iomem *ctrl_base;
 static int usbotghs_control;
+static int clk_state;
 
 int omap4430_phy_init(struct device *dev)
 {
@@ -89,26 +90,34 @@ int omap4430_phy_init(struct device *dev)
 
 int omap4430_phy_set_clk(struct device *dev, int on)
 {
-	static int state;
+	pr_info("%s: clock (%d --> %d)\n", __func__, clk_state, on);
 
-	if (on && !state) {
+	if (on && !clk_state) {
 		/* Enable the phy clocks */
 		clk_enable(phyclk);
 		clk_enable(clk48m);
 		clk_enable(clk32k);
-		state = 1;
-	} else if (state) {
+		clk_state = 1;
+	} else if (!on && clk_state) {
 		/* Disable the phy clocks */
 		clk_disable(phyclk);
 		clk_disable(clk48m);
 		clk_disable(clk32k);
-		state = 0;
+		clk_state = 0;
 	}
 	return 0;
 }
 
+int omap4430_phy_is_active(struct device *dev)
+{
+	pr_info("omap4430_phy is : %s\n", clk_state ? "ON" : "OFF");
+	return clk_state;
+}
+
 int omap4430_phy_power(struct device *dev, int ID, int on)
 {
+	pr_info("omap4430_phy_power : clock %d, power %s\n",
+			clk_state, on ? "ON" : "OFF");
 	if (on) {
 		if (ID)
 			/* enable VBUS valid, IDDIG groung */

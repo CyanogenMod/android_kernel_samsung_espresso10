@@ -453,4 +453,12 @@ config GPIO_TPS65910
 	help
 	  Select this option to enable GPIO driver for the TPS65910
 	  chip family.
+
+config ENABLE_GPIO_TO_ALLOW_C2_IN_CAMERA
+	bool "Camera GPIO"
+	depends on ARCH_OMAP4
+	help
+	  Enable GPIO clocks for camera usecase (for power savings)
+	  This feature added by CSR (OMAPS00264021)
+	  It only applied to P5XXX, P3XXX
 endif

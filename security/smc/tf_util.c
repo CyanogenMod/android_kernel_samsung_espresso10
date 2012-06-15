@@ -25,6 +25,19 @@
  *----------------------------------------------------------------------------*/
 #ifdef CONFIG_TF_DRIVER_DEBUG_SUPPORT
 
+void tf_trace_array(const char *fun, const char *msg,
+		    const void *ptr, size_t len)
+{
+	char hex[511];
+	bool ell = (len > sizeof(hex)/2);
+	unsigned lim = (len > sizeof(hex)/2 ? sizeof(hex)/2 : len);
+	unsigned i;
+	for (i = 0; i < lim; i++)
+		sprintf(hex + 2 * i, "%02x", ((unsigned char *)ptr)[i]);
+	pr_info("%s: %s[%u] = %s%s\n",
+		fun, msg, len, hex, ell ? "..." : "");
+}
+
 void address_cache_property(unsigned long va)
 {
 	unsigned long pa;
@@ -96,27 +109,6 @@ void address_cache_property(unsigned long va)
 		dprintk(KERN_INFO "Non-secure.\n");
 }
 
-#ifdef CONFIG_BENCH_SECURE_CYCLE
-
-#define LOOP_SIZE (100000)
-
-void run_bogo_mips(void)
-{
-	uint32_t cycles;
-	void *address = &run_bogo_mips;
-
-	dprintk(KERN_INFO "BogoMIPS:\n");
-
-	setup_counters();
-	cycles = run_code_speed(LOOP_SIZE);
-	dprintk(KERN_INFO "%u cycles with code access\n", cycles);
-	cycles = run_data_speed(LOOP_SIZE, (unsigned long)address);
-	dprintk(KERN_INFO "%u cycles to access %x\n", cycles,
-		(unsigned int) address);
-}
-
-#endif /* CONFIG_BENCH_SECURE_CYCLE */
-
 /*
  * Dump the L1 shared buffer.
  */
@@ -124,7 +116,9 @@ void tf_dump_l1_shared_buffer(struct tf_l1_shared_buffer *buffer)
 {
 	dprintk(KERN_INFO
 		"buffer@%p:\n"
+		#ifndef CONFIG_TF_ZEBRA
 		"  config_flag_s=%08X\n"
+		#endif
 		"  version_description=%64s\n"
 		"  status_s=%08X\n"
 		"  sync_serial_n=%08X\n"
@@ -138,7 +132,9 @@ void tf_dump_l1_shared_buffer(struct tf_l1_shared_buffer *buffer)
 		"  first_answer=%08X\n"
 		"  first_free_answer=%08X\n\n",
 		buffer,
+		#ifndef CONFIG_TF_ZEBRA
 		buffer->config_flag_s,
+		#endif
 		buffer->version_description,
 		buffer->status_s,
 		buffer->sync_serial_n,
@@ -942,12 +938,12 @@ int tf_hash_application_path_and_data(char *buffer, void *data,
 	u32 data_len)
 {
 	int result = -ENOENT;
-	char *buffer = NULL;
+	char *tmp = NULL;
 	struct mm_struct *mm;
 	struct vm_area_struct *vma;
 
-	buffer = internal_kmalloc(PAGE_SIZE, GFP_KERNEL);
-	if (buffer == NULL) {
+	tmp = internal_kmalloc(PAGE_SIZE, GFP_KERNEL);
+	if (tmp == NULL) {
 		result = -ENOMEM;
 		goto end;
 	}
@@ -966,20 +962,20 @@ int tf_hash_application_path_and_data(char *buffer, void *data,
 
 			path = &vma->vm_file->f_path;
 
-			endpath = d_path(path, buffer, PAGE_SIZE);
+			endpath = d_path(path, tmp, PAGE_SIZE);
 			if (IS_ERR(path)) {
 				result = PTR_ERR(endpath);
 				up_read(&(mm->mmap_sem));
 				goto end;
 			}
-			pathlen = (buffer + PAGE_SIZE) - endpath;
+			pathlen = (tmp + PAGE_SIZE) - endpath;
 
 #ifdef CONFIG_TF_DRIVER_DEBUG_SUPPORT
 			{
 				char *c;
 				dprintk(KERN_DEBUG "current process path = ");
 				for (c = endpath;
-				     c < buffer + PAGE_SIZE;
+				     c < tmp + PAGE_SIZE;
 				     c++)
 					dprintk("%c", *c);
 
@@ -1006,8 +1002,8 @@ int tf_hash_application_path_and_data(char *buffer, void *data,
 	up_read(&(mm->mmap_sem));
 
 end:
-	if (buffer != NULL)
-		internal_kfree(buffer);
+	if (tmp != NULL)
+		internal_kfree(tmp);
 
 	return result;
 }

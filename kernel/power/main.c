@@ -13,6 +13,12 @@
 #include <linux/resume-trace.h>
 #include <linux/workqueue.h>
 
+
+#include <mach/cpufreq_limits.h>
+#ifdef CONFIG_DVFS_LIMIT
+#include <linux/cpufreq.h>
+#endif
+
 #include "power.h"
 
 DEFINE_MUTEX(pm_mutex);
@@ -311,7 +317,172 @@ power_attr(pm_trace_dev_match);
 #ifdef CONFIG_USER_WAKELOCK
 power_attr(wake_lock);
 power_attr(wake_unlock);
+power_attr(wake_lock_dbg);
 #endif
+
+#ifdef CONFIG_DVFS_LIMIT
+static int cpufreq_min_limit_val = -1;
+static int cpufreq_min_locked;
+DEFINE_MUTEX(cpufreq_min_mutex);
+
+static int cpufreq_max_limit_val = -1;
+static int cpufreq_max_locked;
+DEFINE_MUTEX(cpufreq_max_mutex);
+
+static void cpufreq_min_limit(const char *buf, size_t count)
+{
+	int ret, temp;
+
+	mutex_lock(&cpufreq_min_mutex);
+
+	temp = cpufreq_min_limit_val;
+	ret = sscanf(buf, "%d", &cpufreq_min_limit_val);
+	if (ret != 1) {
+		pr_warn("%s: invalid format(%d)\n", __func__, ret);
+		ret = -EINVAL;
+		goto out;
+	}
+
+	if (cpufreq_min_limit_val == -1) {
+		if (cpufreq_min_locked) {
+			omap_cpufreq_min_limit_free(DVFS_LOCK_ID_USER);
+			cpufreq_min_locked = 0;
+			ret = 0;
+		} else {
+			pr_warn("%s: there is no min limit!\n", __func__);
+			ret = -EINVAL;
+		}
+		goto out;
+	}
+
+	pr_debug("%s: current max freq=%d req max freq=%d\n",
+		__func__, cpufreq_max_limit_val, cpufreq_min_limit_val);
+
+	if (cpufreq_min_locked)
+		omap_cpufreq_min_limit_free(DVFS_LOCK_ID_USER);
+
+	omap_cpufreq_min_limit(DVFS_LOCK_ID_USER, cpufreq_min_limit_val);
+	cpufreq_min_locked = 1;
+
+out:
+	if (ret < 0)
+		cpufreq_min_limit_val = temp;
+
+	mutex_unlock(&cpufreq_min_mutex);
+	return;
+}
+
+static ssize_t cpufreq_min_limit_show(struct kobject *kobj,
+		struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%d\n", cpufreq_min_limit_val);
+}
+
+static ssize_t cpufreq_min_limit_store(struct kobject *kobj,
+					struct kobj_attribute *attr,
+					const char *buf, size_t n)
+{
+	cpufreq_min_limit(buf, 0);
+	return n;
+}
+
+
+static void cpufreq_max_limit(const char *buf)
+{
+	int ret, temp;
+
+	mutex_lock(&cpufreq_max_mutex);
+
+	temp = cpufreq_max_limit_val;
+	ret = sscanf(buf, "%d", &cpufreq_max_limit_val);
+	if (ret != 1) {
+		pr_warn("%s: invalid format(%d)\n", __func__, ret);
+		ret = -EINVAL;
+		goto out;
+	}
+
+	if (cpufreq_max_limit_val == -1) {
+		if (cpufreq_max_locked) {
+			omap_cpufreq_max_limit_free(DVFS_LOCK_ID_USER);
+			cpufreq_max_locked = 0;
+			ret = 0;
+		} else {
+			pr_warn("%s: there is no max limit!\n", __func__);
+			ret = -EINVAL;
+		}
+		goto out;
+	}
+
+	pr_debug("%s: current min freq=%d req max freq=%d\n",
+		__func__, cpufreq_min_limit_val, cpufreq_max_limit_val);
+
+	if (cpufreq_max_locked)
+		omap_cpufreq_max_limit_free(DVFS_LOCK_ID_USER);
+
+	omap_cpufreq_max_limit(DVFS_LOCK_ID_USER, cpufreq_max_limit_val);
+	cpufreq_max_locked = 1;
+
+out:
+	if (ret < 0)
+		cpufreq_max_limit_val = temp;
+
+	mutex_unlock(&cpufreq_max_mutex);
+	return;
+}
+
+static ssize_t cpufreq_max_limit_show(struct kobject *kobj,
+		struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "%d\n", cpufreq_max_limit_val);
+}
+
+static ssize_t cpufreq_max_limit_store(struct kobject *kobj,
+					struct kobj_attribute *attr,
+					const char *buf, size_t n)
+{
+	cpufreq_max_limit(buf);
+	return n;
+}
+
+static ssize_t cpufreq_table_show(struct kobject *kobj,
+			struct kobj_attribute *attr, char *buf)
+{
+	ssize_t len = 0;
+	int i;
+	struct cpufreq_frequency_table *table;
+
+	table = cpufreq_frequency_get_table(0);
+
+	for (i = 0; table[i].frequency != CPUFREQ_TABLE_END; i++)
+			;
+
+	i--;
+	for (; i >= 0; i--) {
+		unsigned int freq = table[i].frequency;
+		len += sprintf(buf + len, "%u ", freq);
+	}
+
+	if (len)
+		len--;
+
+	len += sprintf(buf + len, "\n");
+
+	return len;
+}
+
+static ssize_t cpufreq_table_store(struct kobject *kobj,
+					struct kobj_attribute *attr,
+					const char *buf, size_t n)
+{
+	pr_warn("%s: Not supported\n", __func__);
+	return n;
+}
+
+power_attr(cpufreq_max_limit);
+power_attr(cpufreq_min_limit);
+power_attr(cpufreq_table);
+#endif
+
 
 static struct attribute * g[] = {
 	&state_attr.attr,
@@ -328,8 +499,16 @@ static struct attribute * g[] = {
 #ifdef CONFIG_USER_WAKELOCK
 	&wake_lock_attr.attr,
 	&wake_unlock_attr.attr,
+	&wake_lock_dbg_attr.attr,
 #endif
 #endif
+
+#ifdef CONFIG_DVFS_LIMIT
+	&cpufreq_min_limit_attr.attr,
+	&cpufreq_max_limit_attr.attr,
+	&cpufreq_table_attr.attr,
+#endif
+
 	NULL,
 };
 

@@ -500,5 +500,9 @@ config OPTICAL_GP2A
 	default n
 	help
 	  This option enables proximity & light sensors using gp2a driver.
-
+config GP2A_MODE_B
+	bool "GP2A MODE B"
+	default n
+	help
+	  This option enables proximity mode B
 endif

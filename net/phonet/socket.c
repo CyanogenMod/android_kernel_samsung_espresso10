@@ -506,7 +506,11 @@ int pn_sock_get_port(struct sock *sk, unsigned short sport)
 
 		phonet_get_local_port_range(&pmin, &pmax);
 		for (port = pmin; port <= pmax; port++) {
+#if defined(CONFIG_SAMSUNG_PHONE_SVNET)
+			port_cur += PN_HASHSIZE;
+#else
 			port_cur++;
+#endif
 			if (port_cur < pmin || port_cur > pmax)
 				port_cur = pmin;
 

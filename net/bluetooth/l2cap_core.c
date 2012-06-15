@@ -74,6 +74,14 @@ static void l2cap_send_disconn_req(struct l2cap_conn *conn,
 
 static int l2cap_ertm_data_rcv(struct sock *sk, struct sk_buff *skb);
 
+/* BEGIN SS_BLUEZ_BT +kjh 2011.06.23 : */
+/* workaround for a2dp chopping in multi connection. */
+static struct l2cap_conn *av_conn ;
+static struct l2cap_conn *hid_conn ;
+static struct l2cap_conn *rfc_conn ;
+/* END SS_BLUEZ_BT */
+
+
 /* ---- L2CAP channels ---- */
 
 static inline void chan_hold(struct l2cap_chan *c)
@@ -310,6 +318,37 @@ static void __l2cap_chan_add(struct l2cap_conn *conn, struct l2cap_chan *chan)
 	BT_DBG("conn %p, psm 0x%2.2x, dcid 0x%4.4x", conn,
 			chan->psm, chan->dcid);
 
+/* BEGIN SS_BLUEZ_BT +kjh 2011.06.23 : */
+/* workaround for a2dp chopping in multi connection.*/
+/* todo : now, we can't check obex properly.*/
+	switch (chan->psm) {
+	case 0x03:
+		rfc_conn = conn;
+
+		if (av_conn != NULL && rfc_conn == av_conn)
+			rfc_conn = NULL;
+		break;
+	case 0x11:
+		hid_conn = conn;
+		break;
+	case 0x17:
+		av_conn = conn;
+		if (rfc_conn != NULL && rfc_conn == av_conn)
+			rfc_conn = NULL;
+		break;
+	default:
+	break;
+	}
+
+	if (av_conn != NULL && (hid_conn != NULL || rfc_conn != NULL)) {
+		hci_conn_set_encrypt(av_conn->hcon, 0x00);
+		hci_conn_switch_role(av_conn->hcon, 0x00);
+		hci_conn_set_encrypt(av_conn->hcon, 0x01);
+		hci_conn_change_policy(av_conn->hcon, 0x04);
+		av_conn = NULL;
+	}
+/* END SS_BLUEZ_BT */
+
 	conn->disc_reason = 0x13;
 
 	chan->conn = conn;
@@ -362,6 +401,26 @@ static void l2cap_chan_del(struct l2cap_chan *chan, int err)
 		chan_put(chan);
 
 		chan->conn = NULL;
+
+/* BEGIN SS_BLUEZ_BT +kjh 2011.06.23 : */
+/* workaround for a2dp chopping in multi connection.*/
+	switch (chan->psm) {
+	case 0x03:
+		rfc_conn = NULL;
+		break;
+	case 0x11:
+		hid_conn = NULL;
+		break;
+	case 0x17:
+		av_conn = NULL;
+		break;
+	default:
+		break;
+	}
+		/* END SS_BLUEZ_BT */
+
+		if (conn->hcon)
+			conn->hcon->out = 1;
 		hci_conn_put(conn->hcon);
 	}
 
@@ -908,6 +967,24 @@ static void l2cap_conn_ready(struct l2cap_conn *conn)
 		l2cap_le_conn_ready(conn);
 
 	read_lock(&conn->chan_lock);
+
+/* This is SBH650 issue. and this is only workaround */
+/* We don not send info request at this time */
+/* somtimes SBH650 will send disconnect */
+	if (!conn->hcon->out
+		&& !(conn->info_state & L2CAP_INFO_FEAT_MASK_REQ_DONE)) {
+		struct l2cap_info_req req;
+		req.type = cpu_to_le16(L2CAP_IT_FEAT_MASK);
+
+		conn->info_state |= L2CAP_INFO_FEAT_MASK_REQ_SENT;
+		conn->info_ident = l2cap_get_ident(conn);
+
+		mod_timer(&conn->info_timer, jiffies +
+				msecs_to_jiffies(L2CAP_INFO_TIMEOUT));
+
+		l2cap_send_cmd(conn, conn->info_ident,
+				L2CAP_INFO_REQ, sizeof(req), &req);
+	}
 
 	list_for_each_entry(chan, &conn->chan_l, list) {
 		struct sock *sk = chan->sk;
@@ -2418,6 +2495,13 @@ sendresp:
 					L2CAP_INFO_REQ, sizeof(info), &info);
 	}
 
+/* this is workaround for windows mobile phone. */
+/* maybe, conf negotiation has some problem in wm phone. */
+/* wm phone send first pdu over max size. (we expect 1013, but recved 1014) */
+/* this code is mandatory for SIG CERTI 3.0 */
+/* this code is only for Honeycomb and ICS. */
+/* Gingerbread doesn't have this part. */
+/*
 	if (chan && !test_bit(CONF_REQ_SENT, &chan->conf_state) &&
 				result == L2CAP_CR_SUCCESS) {
 		u8 buf[128];
@@ -2426,6 +2510,7 @@ sendresp:
 					l2cap_build_conf_req(chan, buf), buf);
 		chan->num_conf_req++;
 	}
+*/
 
 	return 0;
 }

@@ -71,6 +71,7 @@ struct ion_buffer {
 	void *vaddr;
 	int dmap_cnt;
 	struct scatterlist *sglist;
+	bool map_cacheable;
 };
 
 /**
@@ -84,6 +85,8 @@ struct ion_buffer {
  * @map_kernel		map memory to the kernel
  * @unmap_kernel	unmap memory to the kernel
  * @map_user		map memory to userspace
+ * @flush_user		flush memory if mapped as cacheable
+ * @inval_user		invalidate memory if mapped as cacheable
  */
 struct ion_heap_ops {
 	int (*allocate) (struct ion_heap *heap,
@@ -99,6 +102,10 @@ struct ion_heap_ops {
 	void (*unmap_kernel) (struct ion_heap *heap, struct ion_buffer *buffer);
 	int (*map_user) (struct ion_heap *mapper, struct ion_buffer *buffer,
 			 struct vm_area_struct *vma);
+	int (*flush_user) (struct ion_buffer *buffer, size_t len,
+			unsigned long vaddr);
+	int (*inval_user) (struct ion_buffer *buffer, size_t len,
+			unsigned long vaddr);
 };
 
 /**

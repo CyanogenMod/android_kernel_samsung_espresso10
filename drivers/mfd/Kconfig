@@ -267,7 +267,7 @@ config TWL6040_CODEC
 
 config MFD_STMPE
 	bool "Support STMicroelectronics STMPE"
-	depends on I2C=y && GENERIC_HARDIRQS
+	depends on (I2C=y || SPI_MASTER=y) && GENERIC_HARDIRQS
 	select MFD_CORE
 	help
 	  Support for the STMPE family of I/O Expanders from
@@ -287,6 +287,32 @@ config MFD_STMPE
 		GPIO: stmpe-gpio
 		Keypad: stmpe-keypad
 		Touchscreen: stmpe-ts
+
+menu "STMPE Interface Drivers"
+depends on MFD_STMPE
+
+config STMPE_I2C
+	bool "STMPE I2C Inteface"
+	depends on I2C
+	default y
+	help
+	  This is used to enable I2C interface of STMPE
+
+config STMPE_SPI
+	bool "STMPE SPI Inteface"
+	depends on SPI_MASTER
+	help
+	  This is used to enable SPI interface of STMPE
+endmenu
+
+config SEC_STMPE811_ADC
+	bool "Support STE STMPE written by Samsung"
+	help
+	  Support for the STMPE811 MFD just to use ADC function only for
+	  SEC-30PIN connector. This feature must be removed in the future
+	  and adc function must be replaced by MFD_STMPE feature.
+	  This function must be re-written in board files to support more
+	  generatl interface for 30-pin connector.
 
 config MFD_TC3589X
 	bool "Support Toshiba TC35892 and variants"

@@ -35,8 +35,8 @@ static void hdcp_lib_toggle_repeater_bit_in_tx(void);
 static int hdcp_lib_initiate_step1(void);
 static int hdcp_lib_check_ksv(uint8_t ksv[5]);
 
-#define PPA_SERVICE_HDCP_READ_M0	0x30
-#define PPA_SERVICE_HDCP_CHECK_V	0x31
+#define PPA_SERVICE_HDCP_READ_M0	0x34
+#define PPA_SERVICE_HDCP_CHECK_V	0x35
 /*-----------------------------------------------------------------------------
  * Function: hdcp_lib_read_an
  *-----------------------------------------------------------------------------

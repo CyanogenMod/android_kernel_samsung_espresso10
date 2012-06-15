@@ -112,7 +112,7 @@
 
 /* kernel includes */
 #include "radio-si470x.h"
-
+#include "radio-si470x-dev.h"
 
 
 /**************************************************************************
@@ -196,10 +196,9 @@ static int si470x_set_chan(struct si470x_device *radio, unsigned short chan)
 	}
 
 	if ((radio->registers[STATUSRSSI] & STATUSRSSI_STC) == 0)
-		dev_warn(&radio->videodev->dev, "tune does not complete\n");
+		pr_warn("tune does not complete\n");
 	if (timed_out)
-		dev_warn(&radio->videodev->dev,
-			"tune timed out after %u ms\n", tune_timeout);
+		pr_warn("tune timed out after %u ms\n", tune_timeout);
 
 stop:
 	/* stop tuning */
@@ -214,7 +213,7 @@ done:
 /*
  * si470x_get_freq - get the frequency
  */
-static int si470x_get_freq(struct si470x_device *radio, unsigned int *freq)
+int si470x_get_freq(struct si470x_device *radio, unsigned int *freq)
 {
 	unsigned int spacing, band_bottom;
 	unsigned short chan;
@@ -224,26 +223,26 @@ static int si470x_get_freq(struct si470x_device *radio, unsigned int *freq)
 	switch ((radio->registers[SYSCONFIG2] & SYSCONFIG2_SPACE) >> 4) {
 	/* 0: 200 kHz (USA, Australia) */
 	case 0:
-		spacing = 0.200 * FREQ_MUL; break;
+		spacing = CHAN_SPACING_200_kHz; break;
 	/* 1: 100 kHz (Europe, Japan) */
 	case 1:
-		spacing = 0.100 * FREQ_MUL; break;
+		spacing = CHAN_SPACING_100_kHz; break;
 	/* 2:  50 kHz */
 	default:
-		spacing = 0.050 * FREQ_MUL; break;
+		spacing = CHAN_SPACING_50_kHz; break;
 	};
 
 	/* Bottom of Band (MHz) */
 	switch ((radio->registers[SYSCONFIG2] & SYSCONFIG2_BAND) >> 6) {
 	/* 0: 87.5 - 108 MHz (USA, Europe) */
 	case 0:
-		band_bottom = 87.5 * FREQ_MUL; break;
+		band_bottom = FREQ_87500_kHz; break;
 	/* 1: 76   - 108 MHz (Japan wide band) */
 	default:
-		band_bottom = 76   * FREQ_MUL; break;
+		band_bottom = FREQ_76000_kHz; break;
 	/* 2: 76   -  90 MHz (Japan) */
 	case 2:
-		band_bottom = 76   * FREQ_MUL; break;
+		band_bottom = FREQ_76000_kHz; break;
 	};
 
 	/* read channel */
@@ -269,26 +268,26 @@ int si470x_set_freq(struct si470x_device *radio, unsigned int freq)
 	switch ((radio->registers[SYSCONFIG2] & SYSCONFIG2_SPACE) >> 4) {
 	/* 0: 200 kHz (USA, Australia) */
 	case 0:
-		spacing = 0.200 * FREQ_MUL; break;
+		spacing = CHAN_SPACING_200_kHz; break;
 	/* 1: 100 kHz (Europe, Japan) */
 	case 1:
-		spacing = 0.100 * FREQ_MUL; break;
+		spacing = CHAN_SPACING_100_kHz; break;
 	/* 2:  50 kHz */
 	default:
-		spacing = 0.050 * FREQ_MUL; break;
+		spacing = CHAN_SPACING_50_kHz; break;
 	};
 
 	/* Bottom of Band (MHz) */
 	switch ((radio->registers[SYSCONFIG2] & SYSCONFIG2_BAND) >> 6) {
 	/* 0: 87.5 - 108 MHz (USA, Europe) */
 	case 0:
-		band_bottom = 87.5 * FREQ_MUL; break;
+		band_bottom = FREQ_87500_kHz; break;
 	/* 1: 76   - 108 MHz (Japan wide band) */
 	default:
-		band_bottom = 76   * FREQ_MUL; break;
+		band_bottom = FREQ_76000_kHz; break;
 	/* 2: 76   -  90 MHz (Japan) */
 	case 2:
-		band_bottom = 76   * FREQ_MUL; break;
+		band_bottom = FREQ_76000_kHz; break;
 	};
 
 	/* Chan = [ Freq (Mhz) - Bottom of Band (MHz) ] / Spacing (kHz) */
@@ -342,7 +341,7 @@ static int si470x_set_seek(struct si470x_device *radio,
 		} while (((radio->registers[STATUSRSSI] & STATUSRSSI_STC) == 0)
 				&& (!timed_out));
 	}
-
+#ifdef CONFIG_VIDEO_V4L2
 	if ((radio->registers[STATUSRSSI] & STATUSRSSI_STC) == 0)
 		dev_warn(&radio->videodev->dev, "seek does not complete\n");
 	if (radio->registers[STATUSRSSI] & STATUSRSSI_SF)
@@ -351,6 +350,7 @@ static int si470x_set_seek(struct si470x_device *radio,
 	if (timed_out)
 		dev_warn(&radio->videodev->dev,
 			"seek timed out after %u ms\n", seek_timeout);
+#endif
 
 stop:
 	/* stop seeking */
@@ -447,7 +447,7 @@ static int si470x_rds_on(struct si470x_device *radio)
 }
 
 
-
+#ifdef CONFIG_VIDEO_V4L2
 /**************************************************************************
  * File Operations Interface
  **************************************************************************/
@@ -929,3 +929,4 @@ struct video_device si470x_viddev_template = {
 	.release		= video_device_release,
 	.ioctl_ops		= &si470x_ioctl_ops,
 };
+#endif

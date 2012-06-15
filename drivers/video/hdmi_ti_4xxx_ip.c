@@ -29,8 +29,129 @@
 #include <linux/delay.h>
 #include <linux/string.h>
 #include <linux/omapfb.h>
+#ifdef CONFIG_OMAP_HDMI_AUDIO_WA
+#include <linux/rpmsg.h>
+#include <linux/remoteproc.h>
+#include <linux/pm_runtime.h>
+#endif
 
 #include "hdmi_ti_4xxx_ip.h"
+
+#ifdef CONFIG_OMAP_HDMI_AUDIO_WA
+static bool hdmiwa_notregistered = true;
+static u32 cts_interval, sample_rate;
+struct omap_chip_id audio_must_use_tclk;
+#endif
+
+#ifdef CONFIG_OMAP_HDMI_AUDIO_WA
+static void hdmiwa_cb(struct rpmsg_channel *rpdev, void *data, int len,
+			void *priv, u32 src)
+{
+	struct rproc *rproc;
+	int err;
+
+	if (*((u32 *)data) == sample_rate) {
+		pr_info("SampleRate callback recieved %d (src: 0x%x)\n",
+							*((u32 *)data), src);
+
+		err = rpmsg_send(rpdev, &cts_interval, sizeof(cts_interval));
+		if (err) {
+			pr_err("rpmsg cts interval send failed: %d\n", err);
+			return;
+		}
+
+		/* Disable hibernation before Start HDMI WA */
+		rproc = rproc_get("ipu");
+		pm_runtime_disable(rproc->dev);
+		rproc_put(rproc);
+	} else if (*((u32 *)data) == cts_interval)
+		pr_info("Payload Callback recieved %d (src: 0x%x)\n",
+							*((u32 *)data), src);
+	else
+		pr_info("Wrong callback recieved:%d\n", *((u32 *)data));
+
+	return;
+}
+
+static int hdmiwa_probe(struct rpmsg_channel *rpdev)
+{
+	int err;
+
+	/* send a message to our remote processor */
+	pr_info("Send hdmiwa START msg from:0x%x to:0x%x\n",
+					rpdev->src, rpdev->dst);
+
+	err = rpmsg_send(rpdev, &sample_rate, sizeof(sample_rate));
+	if (err) {
+		pr_err("rpmsg sample rate send failed: %d\n", err);
+		return err;
+	}
+
+	return 0;
+}
+
+static void __devexit hdmi_remove(struct rpmsg_channel *rpdev)
+{
+	struct rproc *rproc;
+
+	cts_interval = 0;
+	sample_rate = 0;
+	/* send a message to our remote processor */
+	pr_info("Send hdmiwa STOP msg from:0x%x to:0x%x\n",
+			rpdev->src, rpdev->dst);
+
+	rpmsg_send(rpdev, &cts_interval, sizeof(cts_interval));
+
+	/* Reenable hibernation after HDMI WA stopped*/
+	rproc = rproc_get("ipu");
+	pm_runtime_enable(rproc->dev);
+	rproc_put(rproc);
+}
+
+static struct rpmsg_device_id hdmiwa_id_table[] = {
+	{
+		.name = "rpmsg-hdmiwa"
+	},
+	{ },
+};
+MODULE_DEVICE_TABLE(platform, hdmiwa_id_table);
+
+static struct rpmsg_driver hdmiwa_driver = {
+	.drv.name       = KBUILD_MODNAME,
+	.drv.owner      = THIS_MODULE,
+	.id_table = hdmiwa_id_table,
+	.probe    = hdmiwa_probe,
+	.callback = hdmiwa_cb,
+	.remove   = __devexit_p(hdmi_remove),
+};
+
+int hdmi_lib_start_acr_wa(int sample_freq)
+{
+	int ret = 0;
+	if (omap_chip_is(audio_must_use_tclk)) {
+		if (hdmiwa_notregistered) {
+			hdmiwa_notregistered = false;
+			sample_rate = sample_freq;
+			ret = register_rpmsg_driver(&hdmiwa_driver);
+			if (ret)
+				pr_err("Error creating hdmiwa driver\n");
+		}
+	}
+	return ret;
+}
+int hdmi_lib_stop_acr_wa(void)
+{
+	if (omap_chip_is(audio_must_use_tclk)) {
+		if (!hdmiwa_notregistered) {
+			hdmiwa_notregistered = true;
+			unregister_rpmsg_driver(&hdmiwa_driver);
+		}
+	}
+	return 0;
+}
+
+#endif
+
 
 static inline void hdmi_write_reg(void __iomem *base_addr,
 				const struct hdmi_reg idx, u32 val)
@@ -124,9 +245,9 @@ static int hdmi_pll_init(struct hdmi_ip_data *ip_data,
 	/* go now */
 	REG_FLD_MOD(hdmi_pll_base(ip_data), PLLCTRL_PLL_GO, 0x1, 0, 0);
 
-	/* wait for bit change */
+	/* wait for PLL opertation to be over */
 	if (hdmi_wait_for_bit_change(hdmi_pll_base(ip_data), PLLCTRL_PLL_GO,
-							0, 0, 1) != 1) {
+							0, 0, 0)) {
 		pr_err("PLL GO bit not set\n");
 		return -ETIMEDOUT;
 	}
@@ -155,7 +276,7 @@ static int hdmi_wait_for_audio_stop(struct hdmi_ip_data *ip_data)
 	while (REG_GET(hdmi_wp_base(ip_data),
 		       HDMI_WP_AUDIO_CTRL, 31, 31) != 0) {
 		msleep(100);
-		if (count++ > 100) {
+		if (count++ > 15) {
 			pr_err("Audio is not turned off "
 			       "even after 10 seconds\n");
 			return -ETIMEDOUT;
@@ -278,12 +399,16 @@ int hdmi_ti_4xxx_phy_init(struct hdmi_ip_data *ip_data)
 
 	return 0;
 }
+EXPORT_SYMBOL(hdmi_ti_4xxx_phy_init);
 
 void hdmi_ti_4xxx_phy_off(struct hdmi_ip_data *ip_data, bool set_mode)
 {
+#ifdef CONFIG_OMAP_HDMI_AUDIO_WA
+	if (hdmi_lib_stop_acr_wa())
+		pr_err("HDMI WA may be in bad state\n");
+#endif
 	hdmi_set_phy_pwr(ip_data, HDMI_PHYPWRCMD_OFF, set_mode);
 }
-EXPORT_SYMBOL(hdmi_ti_4xxx_phy_init);
 EXPORT_SYMBOL(hdmi_ti_4xxx_phy_off);
 
 static int hdmi_core_ddc_edid(struct hdmi_ip_data *ip_data,
@@ -712,6 +837,8 @@ static void hdmi_wp_video_init_format(struct hdmi_video_format *video_fmt,
 	pr_debug("Enter hdmi_wp_video_init_format\n");
 
 	video_fmt->y_res = param->timings.yres;
+	if (param->timings.vmode & FB_VMODE_INTERLACED)
+		video_fmt->y_res /= 2;
 	video_fmt->x_res = param->timings.xres;
 
 	omapfb_fb2dss_timings(&param->timings, timings);
@@ -792,7 +919,8 @@ void hdmi_ti_4xxx_basic_configure(struct hdmi_ip_data *ip_data,
 		&avi_cfg,
 		&repeat_cfg);
 
-	hdmi_wp_core_interrupt_set(ip_data, HDMI_WP_IRQENABLE_CORE);
+	hdmi_wp_core_interrupt_set(ip_data, HDMI_WP_IRQENABLE_CORE |
+				HDMI_WP_AUDIO_FIFO_UNDERFLOW);
 
 	hdmi_wp_video_init_format(&video_format, &video_timing, cfg);
 
@@ -847,7 +975,22 @@ void hdmi_ti_4xxx_basic_configure(struct hdmi_ip_data *ip_data,
 	avi_cfg.db2_active_fmt_ar = HDMI_INFOFRAME_AVI_DB2R_SAME;
 	avi_cfg.db3_itc = HDMI_INFOFRAME_AVI_DB3ITC_NO;
 	avi_cfg.db3_ec = HDMI_INFOFRAME_AVI_DB3EC_XVYUV601;
-	avi_cfg.db3_q_range = HDMI_INFOFRAME_AVI_DB3Q_DEFAULT;
+
+	if (cfg->cm.mode == HDMI_DVI ||
+	(cfg->cm.code == 1 && cfg->cm.mode == HDMI_HDMI)) {
+		/* setting for FULL RANGE MODE */
+		pr_debug("infoframe avi full range\n");
+		REG_FLD_MOD(hdmi_core_sys_base(ip_data),
+				HDMI_CORE_SYS_VID_MODE, 1, 4, 4);
+		avi_cfg.db3_q_range = HDMI_INFOFRAME_AVI_DB3Q_FR;
+	} else {
+		/* setting for LIMITED RANGE MODE */
+		pr_debug("infoframe avi limited range\n");
+		REG_FLD_MOD(hdmi_core_sys_base(ip_data),
+				HDMI_CORE_SYS_VID_ACEN, 1, 1, 1);
+		avi_cfg.db3_q_range = HDMI_INFOFRAME_AVI_DB3Q_LR;
+	}
+
 	avi_cfg.db3_nup_scaling = HDMI_INFOFRAME_AVI_DB3SC_NO;
 	avi_cfg.db4_videocode = cfg->cm.code;
 	avi_cfg.db5_pixel_repeat = HDMI_INFOFRAME_AVI_DB5PR_NO;
@@ -897,6 +1040,9 @@ u32 hdmi_ti_4xxx_irq_handler(struct hdmi_ip_data *ip_data)
 			hdmi_read_reg(core_base, HDMI_CORE_SYS_INTR3);
 		}
 	}
+
+	if (val & HDMI_WP_AUDIO_FIFO_UNDERFLOW)
+		pr_err("HDMI_WP_AUDIO_FIFO_UNDERFLOW\n");
 
 	pr_debug("HDMI_WP_IRQSTATUS = 0x%x\n", val);
 	pr_debug("HDMI_CORE_SYS_INTR_STATE = 0x%x\n", core_state);
@@ -1055,7 +1201,9 @@ int hdmi_ti_4xxx_config_audio_acr(struct hdmi_ip_data *ip_data,
 {
 	u32 r;
 	u32 deep_color = 0;
-
+#ifdef CONFIG_OMAP_HDMI_AUDIO_WA
+	u32 cts_interval_qtt, cts_interval_res, n_val;
+#endif
 
 	if (n == NULL || cts == NULL)
 		return -EINVAL;
@@ -1105,6 +1253,22 @@ int hdmi_ti_4xxx_config_audio_acr(struct hdmi_ip_data *ip_data,
 
 	/* Calculate CTS. See HDMI 1.3a or 1.4a specifications */
 	*cts = pclk * (*n / 128) * deep_color / (sample_freq / 10);
+#ifdef CONFIG_OMAP_HDMI_AUDIO_WA
+	if (omap_chip_is(audio_must_use_tclk)) {
+		n_val = *n;
+		if (pclk && deep_color) {
+			cts_interval_qtt = 1000000 /
+				((pclk * deep_color) / 100);
+			cts_interval_res = 1000000 %
+				((pclk * deep_color) / 100);
+			cts_interval = (cts_interval_res*n_val)/
+				((pclk * deep_color) / 100);
+			cts_interval += (cts_interval_qtt*n_val);
+		} else
+			cts_interval = 0;
+		pr_debug("hdmi payload sent:%d\n", cts_interval);
+	}
+#endif
 
 	return 0;
 }
@@ -1230,6 +1394,8 @@ void hdmi_ti_4xxx_core_audio_config(struct hdmi_ip_data *ip_data,
 	r = FLD_MOD(r, cfg->i2s_cfg.shift, 0, 0);
 	hdmi_write_reg(hdmi_av_base(ip_data), HDMI_CORE_AV_I2S_IN_CTRL, r);
 
+	hdmi_write_reg(hdmi_av_base(ip_data), HDMI_CORE_AV_SWAP_I2S, 0x29);
+
 	r = hdmi_read_reg(hdmi_av_base(ip_data), HDMI_CORE_AV_I2S_CHST5);
 	r = FLD_MOD(r, cfg->freq_sample, 7, 4);
 	r = FLD_MOD(r, cfg->i2s_cfg.word_length, 3, 1);
@@ -1303,23 +1469,27 @@ void hdmi_ti_4xxx_core_audio_infoframe_config(struct hdmi_ip_data *ip_data,
 }
 EXPORT_SYMBOL(hdmi_ti_4xxx_core_audio_infoframe_config);
 
-
-void hdmi_ti_4xxx_audio_enable(struct hdmi_ip_data *ip_data, bool enable)
+void hdmi_ti_4xxx_audio_transfer_en(struct hdmi_ip_data *ip_data,
+						bool enable)
 {
-
-	REG_FLD_MOD(hdmi_av_base(ip_data),
-			HDMI_CORE_AV_AUD_MODE, enable, 0, 0);
-	REG_FLD_MOD(hdmi_wp_base(ip_data),
-			HDMI_WP_AUDIO_CTRL, enable, 31, 31);
 	REG_FLD_MOD(hdmi_wp_base(ip_data),
 			HDMI_WP_AUDIO_CTRL, enable, 30, 30);
+	REG_FLD_MOD(hdmi_av_base(ip_data),
+			HDMI_CORE_AV_AUD_MODE, enable, 0, 0);
 }
-EXPORT_SYMBOL(hdmi_ti_4xxx_audio_enable);
+EXPORT_SYMBOL(hdmi_ti_4xxx_audio_transfer_en);
 
-bool hdmi_ti_4xx_check_aksv_data(struct hdmi_ip_data *ip_data)
+void hdmi_ti_4xxx_wp_audio_enable(struct hdmi_ip_data *ip_data, bool enable)
+{
+	REG_FLD_MOD(hdmi_wp_base(ip_data),
+			HDMI_WP_AUDIO_CTRL, enable, 31, 31);
+}
+EXPORT_SYMBOL(hdmi_ti_4xxx_wp_audio_enable);
+
+int hdmi_ti_4xx_check_aksv_data(struct hdmi_ip_data *ip_data)
 {
 	u32 aksv_data[5];
-	int i, j;
+	int i, j, ret;
 	int one = 0, zero = 0;
 	/* check if HDCP AKSV registers are populated.
 	 * If not load the keys and reset the wrapper.
@@ -1330,22 +1500,19 @@ bool hdmi_ti_4xx_check_aksv_data(struct hdmi_ip_data *ip_data)
 		/* Count number of zero / one */
 		for (j = 0; j < 8; j++)
 			(aksv_data[i] & (0x01 << j)) ? one++ : zero++;
-		pr_debug("%x ", aksv_data[i] & 0xFF);
+		pr_info("%x ", aksv_data[i] & 0xFF);
 	}
+	ret = (one == zero) ? HDMI_AKSV_VALID :
+		(one == 0) ? HDMI_AKSV_ZERO : HDMI_AKSV_ERROR;
 
-	if (one != zero)
-		pr_warn("HDCP: invalid AKSV\n");
-
-	if (one == zero)
-		return true;
-	else
-		return false;
-
+	return ret;
 }
 EXPORT_SYMBOL(hdmi_ti_4xx_check_aksv_data);
 
 static int __init hdmi_ti_4xxx_init(void)
 {
+	audio_must_use_tclk.oc = CHIP_IS_OMAP4430ES2 |
+			CHIP_IS_OMAP4430ES2_1 | CHIP_IS_OMAP4430ES2_2;
 	return 0;
 }
 

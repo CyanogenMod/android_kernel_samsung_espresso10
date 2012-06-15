@@ -26,6 +26,7 @@
 #include "ion_priv.h"
 
 #include <asm/mach/map.h>
+#include <asm/cacheflush.h>
 
 struct ion_carveout_heap {
 	struct ion_heap heap;
@@ -117,14 +118,38 @@ int ion_carveout_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
 	return remap_pfn_range(vma, vma->vm_start,
 			       __phys_to_pfn(buffer->priv_phys) + vma->vm_pgoff,
 			       buffer->size,
-			       pgprot_noncached(vma->vm_page_prot));
+			       (buffer->map_cacheable ? (vma->vm_page_prot)
+			       : pgprot_noncached(vma->vm_page_prot)));
 }
 
+int ion_carveout_heap_flush_user(struct ion_buffer *buffer, size_t len,
+			unsigned long vaddr)
+{
+	if(!buffer->map_cacheable) {
+		pr_err("%s(): buffer not mapped as cacheable\n",
+	       __func__);
+		return 0;
+	}
+
+	dmac_flush_range((void *)vaddr, (void *)(vaddr + len));
+//	outer_flush_range(virt_to_phys((void *)vaddr), virt_to_phys((void *)(vaddr + len)));
+	outer_flush_range(buffer->priv_phys, buffer->priv_phys+len);
+
+	return 0;
+}
+
+int ion_carveout_heap_inval_user(struct ion_buffer *buffer, size_t len,
+			unsigned long vaddr)
+{
+	return 0;
+}
 static struct ion_heap_ops carveout_heap_ops = {
 	.allocate = ion_carveout_heap_allocate,
 	.free = ion_carveout_heap_free,
 	.phys = ion_carveout_heap_phys,
 	.map_user = ion_carveout_heap_map_user,
+	.flush_user = ion_carveout_heap_flush_user,
+	.inval_user = ion_carveout_heap_inval_user,
 	.map_kernel = ion_carveout_heap_map_kernel,
 	.unmap_kernel = ion_carveout_heap_unmap_kernel,
 };

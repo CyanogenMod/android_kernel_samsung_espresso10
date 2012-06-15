@@ -23,6 +23,10 @@ config SND_OMAP_SOC_ABE
 config SND_OMAP_SOC_HDMI
 	tristate
 
+config OMAP_HDMI_AUDIO_WA
+	bool
+	default y
+
 config SND_OMAP_SOC_N810
 	tristate "SoC Audio support for Nokia N810"
 	depends on SND_OMAP_SOC && MACH_NOKIA_N810 && I2C
@@ -107,7 +111,7 @@ config SND_OMAP_SOC_SDP3430
 
 config SND_OMAP_SOC_SDP4430
 	tristate "SoC Audio support for Texas Instruments SDP4430 or PandaBoard"
-	depends on TWL4030_CORE && (MACH_OMAP_4430SDP || MACH_OMAP4_PANDA)
+	depends on TWL4030_CORE && (MACH_OMAP_4430SDP || MACH_OMAP4_PANDA || MACH_OMAP4_SAMSUNG)
 	select SND_OMAP_SOC_MCPDM
 	select SND_SOC_TWL6040
 	select SND_OMAP_SOC_ABE
@@ -120,6 +124,26 @@ config SND_OMAP_SOC_SDP4430
 	help
 	  Say Y if you want to add support for SoC audio on Texas Instruments
 	  SDP4430 or PandaBoard.
+
+config SND_OMAP_SOC_PDM_GAIN_COMPENSATION
+	tristate "SoC Audio PDM gain compensation for SDP4430"
+	depends on SND_OMAP_SOC_SDP4430
+	help
+	  Say Y if you want to add support for SoC Audio PDM gain compensation
+	  on Texas Instruments SDP4430.
+
+	  Note that the ABE is not taking care of the PDM level gains in order
+	  to fit with Phoenix Audio spec.
+
+config SND_OMAP_SOC_WM8994
+	tristate "SoC Audio support for WolfSon WM1811 Codec"
+	depends on MACH_OMAP4_SAMSUNG
+	depends on SND_OMAP_SOC
+	select SND_OMAP_SOC_MCBSP
+	select SND_SOC_WM8994
+	select SND_SOC_WM_HUBS
+	help
+	  Say Y if you want to add support for SoC audio on omap4 + wm1811 board
 
 config SND_OMAP_SOC_OMAP4_HDMI
 	tristate "SoC Audio support for Texas Instruments OMAP4 HDMI"

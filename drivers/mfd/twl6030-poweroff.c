@@ -25,7 +25,6 @@
 #include <linux/pm.h>
 #include <linux/i2c/twl.h>
 
-#define TWL6030_PHOENIX_DEV_ON	0x25
 #define APP_DEVOFF	(1<<0)
 #define CON_DEVOFF	(1<<1)
 #define MOD_DEVOFF	(1<<2)

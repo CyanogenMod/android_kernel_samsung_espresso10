@@ -140,13 +140,19 @@
 
 /* HSLCTL (0x10) fields */
 
+#define TWL6040_HSDACENAL		0x01
 #define TWL6040_HSDACMODEL		0x02
 #define TWL6040_HSDRVMODEL		0x08
 
 /* HSRCTL (0x11) fields */
 
+#define TWL6040_HSDACENAR		0x01
 #define TWL6040_HSDACMODER		0x02
 #define TWL6040_HSDRVMODER		0x08
+
+/* EARCTL (0x13) fields */
+
+#define TWL6040_EARENA			0x01
 
 /* VIBCTLL (0x18) fields */
 
@@ -195,6 +201,8 @@
 #define TWL6040_PLUGCOMP		0x02
 
 #define TWL6040_CELLS			2
+
+#define TWL6040_POWER_UP_TIME		16 /* ms */
 
 #define TWL6040_IRQ_TH			0
 #define TWL6040_IRQ_PLUG		1

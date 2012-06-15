@@ -28,8 +28,8 @@
 #define CS_IO(num)		_IO(HSI_CHAR_BASE, num)
 
 #define CS_SEND_BREAK		CS_IO(1)
-#define CS_FLUSH_RX		CS_IO(2)
-#define CS_FLUSH_TX		CS_IO(3)
+#define CS_FLUSH_RX		CS_IOR(2, size_t)
+#define CS_FLUSH_TX		CS_IOR(3, size_t)
 #define CS_BOOTSTRAP		CS_IO(4)
 #define CS_SET_ACWAKELINE	CS_IOW(5, unsigned int)
 #define CS_GET_ACWAKELINE	CS_IOR(6, unsigned int)
@@ -41,6 +41,8 @@
 #define CS_GET_FIFO_OCCUPANCY	CS_IOR(12, size_t)
 #define CS_GET_CAWAKELINE	CS_IOR(13, unsigned int)
 #define CS_SET_WAKE_RX_3WIRES_MODE	CS_IOR(14, unsigned int)
+#define CS_SET_HI_SPEED		CS_IOR(15, unsigned int)
+#define CS_GET_SPEED		CS_IOW(16, unsigned long)
 
 #define HSI_MODE_SLEEP		0
 #define HSI_MODE_STREAM		1

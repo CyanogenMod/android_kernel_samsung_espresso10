@@ -298,11 +298,6 @@ void clkdm_init(struct clockdomain **clkdms,
 		else if (clkdm->flags & CLKDM_CAN_DISABLE_AUTO)
 			clkdm_deny_idle(clkdm);
 
-		_resolve_clkdm_deps(clkdm, clkdm->wkdep_srcs);
-		clkdm_clear_all_wkdeps(clkdm);
-
-		_resolve_clkdm_deps(clkdm, clkdm->sleepdep_srcs);
-		clkdm_clear_all_sleepdeps(clkdm);
 	}
 }
 

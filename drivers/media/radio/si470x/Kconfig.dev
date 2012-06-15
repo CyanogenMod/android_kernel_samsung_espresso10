@@ -1,0 +1,8 @@
+config DEV_SI470X
+	bool "Silicon Labs Si470x FM Radio Receiver support without V4L2"
+	depends on I2C && !USB_SI470X && !I2C_SI470X
+	---help---
+	  This is a driver for I2C devices with the Silicon Labs SI470x
+	  chip.
+	  Say Y here if you want to connect this type of radio to your
+	  computer's I2C port.

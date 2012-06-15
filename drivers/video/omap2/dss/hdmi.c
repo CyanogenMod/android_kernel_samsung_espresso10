@@ -40,6 +40,12 @@
 #include <linux/fb.h>
 #include <linux/omapfb.h>
 
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+#include <linux/switch.h>
+#endif
+
+#include <linux/sii9234.h>
+
 #include "dss.h"
 #include "dss_features.h"
 
@@ -58,6 +64,14 @@
 #define EDID_SIZE_BLOCK1_TIMING_DESCRIPTOR	4
 
 #define OMAP_HDMI_TIMINGS_NB			34
+
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+/* HDMI EDID Extension Data Block Tags  */
+#define HDMI_EDID_EX_DATABLOCK_TAG_MASK		0xE0
+#define HDMI_EDID_EX_DATABLOCK_LEN_MASK		0x1F
+#define HDMI_EDID_EX_SUPPORTS_AI_MASK		0x80
+#define HDMI_AUDIO_FORMAT_MAX_LENGTH		10
+#endif
 
 static struct {
 	struct mutex lock;
@@ -88,7 +102,22 @@ static struct {
 	void (*hdmi_start_frame_cb)(void);
 	void (*hdmi_irq_cb)(int);
 	bool (*hdmi_power_on_cb)(void);
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+	struct switch_dev audio_ch_switch;
+#endif
+#ifdef CONFIG_OMAP2_HDMI_FORCED_TIMING
+	int forced_timing;
+#endif
 } hdmi;
+
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+enum extension_edid_db {
+	DATABLOCK_AUDIO = 1,
+	DATABLOCK_VIDEO,
+	DATABLOCK_VENDOR,
+	DATABLOCK_SPEAKERS,
+};
+#endif
 
 static const u8 edid_header[8] = {0x0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x0};
 
@@ -238,6 +267,14 @@ void hdmi_get_monspecs(struct fb_monspecs *specs)
 
 	hdmi.can_do_hdmi = specs->misc & FB_MISC_HDMI;
 
+#ifdef CONFIG_OMAP2_HDMI_FORCED_TIMING
+	if (hdmi.forced_timing) {
+		specs->modedb[0] = cea_modes[hdmi.forced_timing];
+		specs->modedb_len = 1;
+		return;
+	}
+#endif
+
 	/* filter out resolutions we don't support */
 	for (i = j = 0; i < specs->modedb_len; i++) {
 		u32 max_pclk = hdmi.dssdev->clocks.hdmi.max_pixclk_khz;
@@ -255,6 +292,81 @@ void hdmi_get_monspecs(struct fb_monspecs *specs)
 	}
 	specs->modedb_len = j;
 }
+
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+int hdmi_get_datablock_offset(u8 *edid, enum extension_edid_db datablock,
+							int *offset)
+{
+	int i = 0, length = 0;
+	u8 current_byte, disp;
+
+	if (edid[0x7e] == 0x00)
+		return 1;
+
+	disp = edid[(0x80) + 2];
+	pr_info("Extension block present db %d %x\n", datablock, disp);
+	if (disp == 0x4)
+		return 1;
+
+	i = 0x80 + 0x4;
+	while (i < (0x80 + disp)) {
+		current_byte = edid[i];
+		if ((current_byte >> 5) == datablock) {
+			*offset = i;
+			pr_info("datablock %d %d\n", datablock, *offset);
+			return 0;
+		} else {
+			length = (current_byte &
+				HDMI_EDID_EX_DATABLOCK_LEN_MASK) + 1;
+			i += length;
+		}
+	}
+	return 1;
+}
+
+void hdmi_send_audio_info(int onoff)
+{
+	int offset, j = 0, length = 0;
+	enum extension_edid_db vsdb;
+	u16 audio_info = 0, data_byte = 0;
+	char *edid = (char *) hdmi.edid;
+
+	if (onoff) {
+		/* get audio channel info */
+		vsdb = DATABLOCK_AUDIO;
+		if (!hdmi_get_datablock_offset(edid, vsdb, &offset)) {
+			data_byte = edid[offset];
+			length = data_byte & HDMI_EDID_EX_DATABLOCK_LEN_MASK;
+
+			if (length >= HDMI_AUDIO_FORMAT_MAX_LENGTH)
+				length = HDMI_AUDIO_FORMAT_MAX_LENGTH;
+
+			for (j = 1 ; j < length ; j++) {
+				if (j%3 == 1) {
+					data_byte = edid[offset + j];
+					audio_info |= 1 << (data_byte & 0x07);
+				}
+			}
+			pr_debug("HDMI Audio supported ch = %d\n", audio_info);
+		}
+
+		/* get speaker info */
+		vsdb = DATABLOCK_SPEAKERS;
+		if (!hdmi_get_datablock_offset(edid, vsdb, &offset)) {
+			data_byte = edid[offset + 1];
+			pr_debug("HDMI speaker alloc = %d\n",
+						(data_byte & 0x7F));
+			audio_info |= (data_byte & 0x7F) << 8;
+		}
+
+		pr_info("HDMI Audio info = %d\n", audio_info);
+		switch_set_state(&hdmi.audio_ch_switch, (int)audio_info);
+	} else {
+		pr_info("HDMI Audio supported ch : off ");
+		switch_set_state(&hdmi.audio_ch_switch, -1);
+	}
+}
+#endif
 
 u8 *hdmi_read_edid(struct omap_video_timings *dp)
 {
@@ -332,16 +444,30 @@ static void hdmi_compute_pll(struct omap_dss_device *dssdev, int phy,
 
 static void hdmi_load_hdcp_keys(struct omap_dss_device *dssdev)
 {
+	int aksv;
+
 	DSSDBG("hdmi_load_hdcp_keys\n");
+
 	/* load the keys and reset the wrapper to populate the AKSV registers*/
 	if (hdmi.hdmi_power_on_cb) {
-		if (!hdmi_ti_4xx_check_aksv_data(&hdmi.hdmi_data) &&
+		aksv = hdmi_ti_4xx_check_aksv_data(&hdmi.hdmi_data);
+		if ((aksv == HDMI_AKSV_ZERO) &&
 		    hdmi.custom_set &&
 		    hdmi.hdmi_power_on_cb()) {
 			hdmi_ti_4xxx_set_wait_soft_reset(&hdmi.hdmi_data);
+			msleep(20);
+			aksv = hdmi_ti_4xx_check_aksv_data(&hdmi.hdmi_data);
+			hdmi.wp_reset_done = (aksv == HDMI_AKSV_VALID) ?
+				true : false;
+			DSSDBG("HDMI_WRAPPER RESET DONE\n");
+		} else if (aksv == HDMI_AKSV_VALID)
 			hdmi.wp_reset_done = true;
-			DSSINFO("HDMI_WRAPPER RESET DONE\n");
-		}
+		else if (aksv == HDMI_AKSV_ERROR)
+			hdmi.wp_reset_done = false;
+
+		if (!hdmi.wp_reset_done)
+			DSSERR("*** INVALID AKSV: "
+				"Do not perform HDCP AUTHENTICATION\n");
 	}
 }
 
@@ -479,6 +605,11 @@ int omapdss_hdmi_register_hdcp_callbacks(void (*hdmi_start_frame_cb)(void),
 					 void (*hdmi_irq_cb)(int status),
 					 bool (*hdmi_power_on_cb)(void))
 {
+	if (!hdmi.dssdev) {
+		DSSERR("HDMI is not active\n");
+		return 0;
+	}
+
 	hdmi.hdmi_start_frame_cb = hdmi_start_frame_cb;
 	hdmi.hdmi_irq_cb = hdmi_irq_cb;
 	hdmi.hdmi_power_on_cb = hdmi_power_on_cb;
@@ -702,6 +833,18 @@ static void hdmi_put_clocks(void)
 		clk_put(hdmi.hdmi_clk);
 }
 
+#ifdef CONFIG_OMAP2_HDMI_FORCED_TIMING
+void hdmi_set_forced_timing(int timing)
+{
+	hdmi.forced_timing = timing;
+}
+
+int hdmi_get_forced_timing()
+{
+	return hdmi.forced_timing;
+}
+#endif
+
 /* HDMI HW IP initialisation */
 static int omapdss_hdmihw_probe(struct platform_device *pdev)
 {
@@ -748,7 +891,7 @@ static int omapdss_hdmihw_probe(struct platform_device *pdev)
 	pm_runtime_enable(&pdev->dev);
 
 	r = request_irq(gpio_to_irq(hdmi.dssdev->hpd_gpio), hpd_irq_handler,
-			IRQF_DISABLED | IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+		IRQF_DISABLED | IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
 			"hpd", NULL);
 	if (r < 0) {
 		pr_err("hdmi: request_irq %d failed\n",
@@ -771,6 +914,12 @@ static int omapdss_hdmihw_probe(struct platform_device *pdev)
 	hdmi.hdmi_data.hdmi_phy_offset = HDMI_PHY;
 	hdmi.wp_reset_done = false;
 
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+	hdmi.audio_ch_switch.name = "ch_hdmi_audio";
+	switch_dev_register(&hdmi.audio_ch_switch);
+	hdmi.audio_ch_switch.state = -1;
+#endif
+
 	hdmi_panel_init();
 
 	return 0;
@@ -790,6 +939,9 @@ static int omapdss_hdmihw_remove(struct platform_device *pdev)
 
 	iounmap(hdmi.hdmi_data.base_wp);
 
+#ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
+	switch_dev_unregister(&hdmi.audio_ch_switch);
+#endif
 	return 0;
 }
 

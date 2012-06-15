@@ -444,3 +444,4 @@ config RADIO_WL1273
 source "drivers/media/radio/wl128x/Kconfig"
 
 endif # RADIO_ADAPTERS
+source "drivers/media/radio/si470x/Kconfig.dev"

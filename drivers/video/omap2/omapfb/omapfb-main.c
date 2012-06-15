@@ -36,6 +36,8 @@
 
 #include "omapfb.h"
 
+#include <mach/sec_addon.h>
+
 #define MODULE_NAME     "omapfb"
 
 #define OMAPFB_PLANE_XRES_MIN		8
@@ -2383,6 +2385,8 @@ static int omapfb_probe(struct platform_device *pdev)
 			goto cleanup;
 		}
 	}
+
+	sec_getlog_supply_fbinfo(fbdev->fbs[0]);
 
 	DBG("create sysfs for fbs\n");
 	r = omapfb_create_sysfs(fbdev);

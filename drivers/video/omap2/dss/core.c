@@ -32,6 +32,9 @@
 #include <linux/io.h>
 #include <linux/device.h>
 #include <linux/regulator/consumer.h>
+#ifdef CONFIG_HAS_EARLYSUSPEND
+#include <linux/earlysuspend.h>
+#endif
 
 #include <video/omapdss.h>
 
@@ -43,6 +46,10 @@ static struct {
 
 	struct regulator *vdds_dsi_reg;
 	struct regulator *vdds_sdi_reg;
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	struct early_suspend dss_early_suspend_info;
+#endif
 } core;
 
 static char *def_disp_name;
@@ -145,8 +152,10 @@ static int dss_initialize_debugfs(void)
 	debugfs_create_file("venc", S_IRUGO, dss_debugfs_dir,
 			&venc_dump_regs, &dss_debug_fops);
 #endif
+#ifdef CONFIG_OMAP4_DSS_HDMI
 	debugfs_create_file("hdmi", S_IRUGO, dss_debugfs_dir,
 			&hdmi_dump_regs, &dss_debug_fops);
+#endif
 	return 0;
 }
 
@@ -301,12 +310,31 @@ static int omap_dss_resume(struct platform_device *pdev)
 	return dss_resume_all_devices();
 }
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
+static void dss_early_suspend(struct early_suspend *h)
+{
+	DSSDBG("%s\n", __func__);
+	omap_dss_suspend(core.pdev, PMSG_SUSPEND);
+}
+
+static void dss_late_resume(struct early_suspend *h)
+{
+	DSSDBG("%s\n", __func__);
+	omap_dss_resume(core.pdev);
+}
+#endif
+
 static struct platform_driver omap_dss_driver = {
 	.probe          = omap_dss_probe,
 	.remove         = omap_dss_remove,
 	.shutdown	= omap_dss_shutdown,
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	.suspend	= NULL,
+	.resume		= NULL,
+#else
 	.suspend	= omap_dss_suspend,
 	.resume		= omap_dss_resume,
+#endif
 	.driver         = {
 		.name   = "omapdss",
 		.owner  = THIS_MODULE,
@@ -539,6 +567,13 @@ static int omap_dss_bus_register(void)
 		return r;
 	}
 
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	core.dss_early_suspend_info.suspend = dss_early_suspend;
+	core.dss_early_suspend_info.resume = dss_late_resume;
+	core.dss_early_suspend_info.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 2;
+	register_early_suspend(&core.dss_early_suspend_info);
+#endif
+
 	return 0;
 }
 
@@ -547,6 +582,9 @@ static int omap_dss_bus_register(void)
 #ifdef CONFIG_OMAP2_DSS_MODULE
 static void omap_dss_bus_unregister(void)
 {
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	unregister_early_suspend(&core.dss_early_suspend_info);
+#endif
 	device_unregister(&dss_bus);
 
 	bus_unregister(&dss_bus_type);

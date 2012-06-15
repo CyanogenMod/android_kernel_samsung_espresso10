@@ -145,6 +145,10 @@ struct omap_mmc_platform_data {
 		int card_detect_irq;
 		int (*card_detect)(struct device *dev, int slot);
 
+		/* External LDO using GPIO */
+		bool external_ldo;
+		int gpio_for_ldo;
+
 		/* Additional mmc configuration */
 		struct mmc_platform_data mmc_data;
 

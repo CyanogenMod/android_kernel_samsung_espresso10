@@ -62,6 +62,16 @@ static void omap_pcm_dma_irq(int ch, u16 stat, void *data)
 	struct omap_runtime_data *prtd = runtime->private_data;
 	unsigned long flags;
 
+	if (!runtime) {
+		pr_warn("%s: Ignore DMA interrupt (runtime is NULL)\n",
+			__func__);
+		return;
+	}
+	if (prtd->period_index == -1) {
+		pr_warn("%s: Ignore DMA interrupt (stream has been stopped)\n",
+			__func__);
+		return;
+	}
 	if ((cpu_is_omap1510())) {
 		/*
 		 * OMAP1510 doesn't fully support DMA progress counter
@@ -297,8 +307,13 @@ static int omap_pcm_open(struct snd_pcm_substream *substream)
 		/* ABE needs a step of 24 * 4 data bits, and HDMI 32 * 4
 		 * Ensure buffer size satisfies both constraints.
 		 */
+#ifdef CONFIG_SND_OMAP_SOC_SDP4430
 		ret = snd_pcm_hw_constraint_step(runtime, 0,
 					 SNDRV_PCM_HW_PARAM_BUFFER_BYTES, 384);
+#else
+		ret = snd_pcm_hw_constraint_step(runtime, 0,
+					 SNDRV_PCM_HW_PARAM_BUFFER_BYTES, 256);
+#endif
 		if (ret < 0)
 			goto out;
 	}
