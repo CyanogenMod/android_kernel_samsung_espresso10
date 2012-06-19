@@ -350,6 +350,7 @@ static char __sec_common_convert_reboot_mode(char mode,  const char *cmd)
 		{"arm11_fota", 'f'},
 		{"arm9_fota", 'f'},
 		{"recovery", 'r'},
+        {"bootloader", 'b'},
 		{"download", 'd'},
 		{"cp_crash", 'C'}
 	};
@@ -405,6 +406,9 @@ static int sec_common_update_reboot_reason(char mode, const char *cmd)
 	case 'j':		/* reboot mode = shutdown with JIG */
 		reason = REBOOTMODE_SHUTDOWN;
 		rebootflag = "POFF";
+		break;
+	case 'b':		/* reboot mode = bootloader = download */
+		reason = REBOOTMODE_DOWNLOAD;
 		break;
 	case 'd':		/* reboot mode = download */
 		reason = REBOOTMODE_DOWNLOAD;
