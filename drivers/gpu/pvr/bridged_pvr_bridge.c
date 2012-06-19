@@ -863,18 +863,7 @@ PVRSRVMapDeviceMemoryBW(IMG_UINT32 ui32BridgeID,
 	{
 		PVR_DPF((PVR_DBG_MESSAGE, "using the mem wrap workaround."));
 
-		/* Check the XPROC mapping count -if it is "0",
-		 * then the object is about to go away - do not allow mapping */
-		if(BM_XProcGetShareDataRefCount(psSrcKernelMemInfo->sShareMemWorkaround.ui32ShareIndex) < 1)
-		{
-			psMapDevMemOUT->eError = PVRSRV_ERROR_MAPPING_NOT_FOUND;
-			PVR_DPF((PVR_DBG_WARNING, "%s: Can't map buffer with slot %d, size %d "
-					"and refcount %d\n\t Invalid XPROC refcount of %d",
-				__FUNCTION__, psSrcKernelMemInfo->sShareMemWorkaround.ui32ShareIndex,
-				psSrcKernelMemInfo->uAllocSize, psSrcKernelMemInfo->ui32RefCount,
-				BM_XProcGetShareDataRefCount(psSrcKernelMemInfo->sShareMemWorkaround.ui32ShareIndex)));
-			return 0;
-		}
+		
 
 
 

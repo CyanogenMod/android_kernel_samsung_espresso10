@@ -441,7 +441,7 @@ typedef struct _SGX_CCB_KICK_KM_
 #else
 	
 	IMG_UINT32	ui32NumSrcSyncs;
-	IMG_HANDLE	ahSrcKernelSyncInfo[SGX_MAX_SRC_SYNCS_TA];
+	IMG_HANDLE	ahSrcKernelSyncInfo[SGX_MAX_SRC_SYNCS];
 #endif
 
 	

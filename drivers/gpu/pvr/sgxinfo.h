@@ -315,9 +315,9 @@ typedef struct _SGX_CCB_KICK_
 	
 	IMG_UINT32	ui32NumSrcSyncs;
 #if defined (SUPPORT_SID_INTERFACE)
-	IMG_SID		ahSrcKernelSyncInfo[SGX_MAX_SRC_SYNCS_TA];
+	IMG_SID		ahSrcKernelSyncInfo[SGX_MAX_SRC_SYNCS];
 #else
-	IMG_HANDLE	ahSrcKernelSyncInfo[SGX_MAX_SRC_SYNCS_TA];
+	IMG_HANDLE	ahSrcKernelSyncInfo[SGX_MAX_SRC_SYNCS];
 #endif
 #endif
 

@@ -377,7 +377,7 @@ SGXDoKickBW(IMG_UINT32 ui32BridgeID,
 	}
 #else
 	
-	if (psDoKickIN->sCCBKick.ui32NumSrcSyncs > SGX_MAX_SRC_SYNCS_TA)
+	if (psDoKickIN->sCCBKick.ui32NumSrcSyncs > SGX_MAX_SRC_SYNCS)
 	{
 		psRetOUT->eError = PVRSRV_ERROR_INVALID_PARAMS;
 		return 0;

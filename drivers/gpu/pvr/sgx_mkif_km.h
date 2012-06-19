@@ -131,9 +131,6 @@ typedef struct _SGXMKIF_CMDTA_SHARED_
 	IMG_UINT32			ui323DTQSyncReadOpsPendingVal;
 	IMG_DEV_VIRTADDR	s3DTQSyncReadOpsCompleteDevVAddr;
 
-/* sync criteria used for TA/3D dependency synchronisation */
-	PVRSRV_DEVICE_SYNC_OBJECT	sTA3DDependency;
-
 
 #if defined(SUPPORT_SGX_GENERALISED_SYNCOBJECTS)
 	
@@ -146,10 +143,11 @@ typedef struct _SGXMKIF_CMDTA_SHARED_
 #else
 	
 	IMG_UINT32			ui32NumSrcSyncs;
-	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS_TA];
+	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS];
 #endif
 
 	
+	PVRSRV_DEVICE_SYNC_OBJECT	sTA3DDependency;
 
 	CTL_STATUS			sCtlTAStatusInfo[SGX_MAX_TA_STATUS_VALS];
 	CTL_STATUS			sCtl3DStatusInfo[SGX_MAX_3D_STATUS_VALS];
@@ -171,12 +169,14 @@ typedef struct _SGXMKIF_TRANSFERCMD_SHARED_
 {
 	
 
-	IMG_UINT32			ui32NumSrcSyncs;
-	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS_TQ];
+ 	IMG_UINT32			ui32NumSrcSyncs;
+ 	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS];
+	
 
-	IMG_UINT32			ui32NumDstSyncs;
-	PVRSRV_DEVICE_SYNC_OBJECT	asDstSyncs[SGX_MAX_DST_SYNCS_TQ];
-	IMG_UINT32			ui32TASyncWriteOpsPendingVal;
+ 	IMG_UINT32			ui32NumDstSyncs;
+ 	PVRSRV_DEVICE_SYNC_OBJECT	asDstSyncs[SGX_MAX_DST_SYNCS];	
+	
+	IMG_UINT32		ui32TASyncWriteOpsPendingVal;
 	IMG_DEV_VIRTADDR	sTASyncWriteOpsCompleteDevVAddr;
 	IMG_UINT32		ui32TASyncReadOpsPendingVal;
 	IMG_DEV_VIRTADDR	sTASyncReadOpsCompleteDevVAddr;

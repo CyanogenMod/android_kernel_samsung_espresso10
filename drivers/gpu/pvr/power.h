@@ -75,7 +75,9 @@ IMG_VOID PVRSRVPowerUnlock(IMG_UINT32	ui32CallerID);
 
 IMG_IMPORT
 PVRSRV_ERROR PVRSRVSetDevicePowerStateKM(IMG_UINT32				ui32DeviceIndex,
-										 PVRSRV_DEV_POWER_STATE	eNewPowerState);
+										 PVRSRV_DEV_POWER_STATE	eNewPowerState,
+										 IMG_UINT32				ui32CallerID,
+										 IMG_BOOL				bRetainMutex);
 
 IMG_IMPORT
 PVRSRV_ERROR PVRSRVSystemPrePowerStateKM(PVRSRV_SYS_POWER_STATE eNewPowerState);
