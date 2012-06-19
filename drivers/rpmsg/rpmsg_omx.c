@@ -38,7 +38,6 @@
 
 #include <mach/tiler.h>
 
-#include "../gpu/pvr/omap4/sysconfig.h"
 #ifdef CONFIG_ION_OMAP
 #include <linux/ion.h>
 #include <linux/omap_ion.h>
@@ -247,7 +246,7 @@ static void rpmsg_omx_cb(struct rpmsg_channel *rpdev, void *data, int len,
 			break;
 		}
 		rsp = (struct omx_conn_rsp *) hdr->data;
-		dev_info(&rpdev->dev, "conn rsp: status %d addr %d\n",
+		dev_dbg(&rpdev->dev, "conn rsp: status %d addr %d\n",
 			       rsp->status, rsp->addr);
 		omx->dst = rsp->addr;
 		if (rsp->status)
@@ -394,36 +393,6 @@ long rpmsg_omx_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		break;
 	}
 #endif
-	case OMX_IOCSGXLATENCY:
-	{
-		bool val;
-		static uint sgx_latency_default;
-		static bool is_sgx_latency_reset = true;
-		if (get_user(val, (char __user *) arg)) {
-			dev_err(omxserv->dev,
-				"%s: %d: get_user fail: %d\n", __func__,
-				_IOC_NR(cmd), ret);
-			return -EFAULT;
-		}
-
-		if (is_sgx_latency_reset)
-			sgx_latency_default = get_sgx_apm_latency();
-
-		if (!val) {
-			/* Set APM latency default value */
-			set_sgx_apm_latency(sgx_latency_default);
-			is_sgx_latency_reset = true;
-		}
-
-		if ((val > 0) && is_sgx_latency_reset) {
-			/* Set APM latency value for MM use case */
-			set_sgx_apm_latency(SGX_ACTIVE_POWER_LATENCY_MS);
-			is_sgx_latency_reset = false;
-		}
-		break;
-
-	}
-
 	default:
 		dev_warn(omxserv->dev, "unhandled ioctl cmd: %d\n", cmd);
 		break;
@@ -475,7 +444,7 @@ static int rpmsg_omx_open(struct inode *inode, struct file *filp)
 	list_add(&omx->next, &omxserv->list);
 	mutex_unlock(&omxserv->lock);
 
-	dev_info(omxserv->dev, "local addr assigned: 0x%x\n", omx->ept->addr);
+	dev_dbg(omxserv->dev, "local addr assigned: 0x%x\n", omx->ept->addr);
 
 	return 0;
 }
@@ -504,7 +473,7 @@ static int rpmsg_omx_release(struct inode *inode, struct file *filp)
 	disc_req->addr = omx->dst;
 	use = sizeof(*hdr) + hdr->len;
 
-	dev_info(omxserv->dev, "Disconnecting from OMX service at %d\n",
+	dev_dbg(omxserv->dev, "Disconnecting from OMX service at %d\n",
 		omx->dst);
 
 	/* send the msg to the remote OMX connection service */
