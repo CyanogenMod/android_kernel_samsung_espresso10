@@ -175,7 +175,7 @@ static inline void __arch_decomp_setup(unsigned long arch_id)
 
 #if defined(CONFIG_MACH_OMAP4_SAMSUNG)
 #define SEC_DEBUG_LL_OMAP4(p, mach)	DEBUG_LL_OMAP4(p, mach)
-		SEC_DEBUG_LL_OMAP4(CONFIG_SAMSUNG_CONSOLE_UART, omap4_samsung);
+		SEC_DEBUG_LL_OMAP4(CONFIG_SAMSUNG_CONSOLE_UART, espresso10);
 #endif /* CONFIG_MACH_OMAP4_SAMSUNG */
 
 	} while (0);
