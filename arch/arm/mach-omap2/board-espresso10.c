@@ -346,7 +346,7 @@ static void __init espresso10_reserve(void)
 	omap_reserve();
 }
 
-MACHINE_START(OMAP4_SAMSUNG, "Espresso10")
+MACHINE_START(OMAP4_SAMSUNG, "espresso10")
 	/* Maintainer: Samsung Electronics Co, Ltd. */
 	.boot_params	= 0x80000100,
 	.reserve	= espresso10_reserve,
