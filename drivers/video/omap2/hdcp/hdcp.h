@@ -352,8 +352,8 @@ extern struct hdcp_sha_in sha_input;
 	((RD_REG_32(base, offset) & FLD_MASK(start, end)) >> (end))
 
 
+#undef HDCP_DEBUG
 #undef DBG
-#define HDCP_DEBUG
 #ifdef HDCP_DEBUG
 #define DBG(format, ...) \
 		printk(KERN_INFO "HDCP: " format "\n", ## __VA_ARGS__)

@@ -557,9 +557,6 @@ int dispc_runtime_get(void)
 			clkdm_deny_idle(l3_2_clkdm);
 		}
 
-		/* Removes latency constraint */
-		 omap_pm_set_max_dev_wakeup_lat(&dispc.pdev->dev,
-						&dispc.pdev->dev, -1);
 		r = dss_runtime_get();
 		if (r)
 			goto err_dss_get;
@@ -590,7 +587,6 @@ err_dss_get:
 
 void dispc_runtime_put(void)
 {
-	 struct powerdomain *dss_powerdomain = pwrdm_lookup("dss_pwrdm");
 	mutex_lock(&dispc.runtime_lock);
 
 	if (--dispc.runtime_count == 0) {
@@ -599,13 +595,6 @@ void dispc_runtime_put(void)
 		DSSDBG("dispc_runtime_put\n");
 
 		dispc_save_context();
-		/* Sets DSS max latency constraint
-		* * (allowing for deeper power state)
-		* */
-		 omap_pm_set_max_dev_wakeup_lat(
-			 &dispc.pdev->dev,
-			&dispc.pdev->dev,
-			dss_powerdomain->wakeup_lat[PWRDM_FUNC_PWRST_OFF]);
 
 		r = pm_runtime_put_sync(&dispc.pdev->dev);
 		WARN_ON(r);
@@ -885,7 +874,6 @@ dispc_get_scaling_coef(u32 inc, bool five_taps)
 	};
 
 	inc >>= 7;	/* /= 128 */
-
 	if (five_taps) {
 		if (inc > 26)
 			return coef_M32;
@@ -1469,11 +1457,16 @@ static void _dispc_set_scale_param(enum omap_plane plane,
 		enum omap_color_component color_comp)
 {
 	int fir_hinc, fir_vinc;
+	int hscaleup, vscaleup;
+
+	hscaleup = orig_width <= out_width;
+	vscaleup = orig_height <= out_height;
+
+	_dispc_set_scale_coef(plane, hscaleup, vscaleup, five_taps, color_comp);
 
 	fir_hinc = 1024 * orig_width / out_width;
 	fir_vinc = 1024 * orig_height / out_height;
 
-	_dispc_set_scale_coef(plane, fir_hinc, fir_vinc, five_taps, color_comp);
 	_dispc_set_fir(plane, fir_hinc, fir_vinc, color_comp);
 }
 
@@ -1487,8 +1480,9 @@ static void _dispc_set_scaling_common(enum omap_plane plane,
 	int accu0 = 0;
 	int accu1 = 0;
 	u32 l;
+	u16 y_adjust = color_mode == OMAP_DSS_COLOR_NV12 ? 2 : 0;
 
-	_dispc_set_scale_param(plane, orig_width, orig_height,
+	_dispc_set_scale_param(plane, orig_width, orig_height - y_adjust,
 				out_width, out_height, five_taps,
 				rotation, DISPC_COLOR_COMPONENT_RGB_Y);
 	l = dispc_read_reg(DISPC_OVL_ATTRIBUTES(plane));
@@ -1540,6 +1534,7 @@ static void _dispc_set_scaling_uv(enum omap_plane plane,
 {
 	int scale_x = out_width != orig_width;
 	int scale_y = out_height != orig_height;
+	u16 y_adjust = 0;
 
 	if (!dss_has_feature(FEAT_HANDLE_UV_SEPARATE))
 		return;
@@ -1556,6 +1551,7 @@ static void _dispc_set_scaling_uv(enum omap_plane plane,
 		orig_height >>= 1;
 		/* UV is subsampled by 2 horz.*/
 		orig_width >>= 1;
+		y_adjust = 1;
 		break;
 	case OMAP_DSS_COLOR_YUV2:
 	case OMAP_DSS_COLOR_UYVY:
@@ -1579,7 +1575,7 @@ static void _dispc_set_scaling_uv(enum omap_plane plane,
 	if (out_height != orig_height)
 		scale_y = true;
 
-	_dispc_set_scale_param(plane, orig_width, orig_height,
+	_dispc_set_scale_param(plane, orig_width, orig_height - y_adjust,
 			out_width, out_height, five_taps,
 				rotation, DISPC_COLOR_COMPONENT_UV);
 
@@ -2166,8 +2162,8 @@ int dispc_scaling_decision(u16 width, u16 height,
 		if (!can_scale)
 			goto loop;
 
-		if (out_width < in_width / maxdownscale ||
-			out_height < in_height / maxdownscale)
+		if (out_width * maxdownscale < in_width ||
+			out_height * maxdownscale < in_height)
 			goto loop;
 
 		/* Use 5-tap filter unless must use 3-tap */
@@ -2525,7 +2521,6 @@ static void dispc_enable_lcd_out(enum omap_channel channel, bool enable)
 
 		r = omap_dispc_unregister_isr(dispc_disable_isr,
 				&frame_done_completion, irq);
-		synchronize_irq(dispc.irq);
 
 		if (r)
 			DSSERR("failed to unregister FRAMEDONE isr\n");
@@ -2587,8 +2582,6 @@ static void dispc_enable_digit_out(enum omap_display_type type, bool enable)
 			&frame_done_completion,
 			DISPC_IRQ_EVSYNC_EVEN | DISPC_IRQ_EVSYNC_ODD
 						| DISPC_IRQ_FRAMEDONETV);
-	synchronize_irq(dispc.irq);
-
 	if (r)
 		DSSERR("failed to unregister EVSYNC isr\n");
 
@@ -3741,8 +3734,8 @@ static void dispc_error_worker(struct work_struct *work)
 			mgr = omap_dss_get_overlay_manager(i);
 
 			if (mgr->id == OMAP_DSS_CHANNEL_LCD) {
-				if (!mgr->device->first_vsync) {
-					DSSERR("First SYNC_LOST.. ignoring\n");
+				if(!mgr->device->first_vsync){
+					DSSERR("First SYNC_LOST.. ignoring \n");
 					break;
 				}
 
@@ -3785,8 +3778,9 @@ static void dispc_error_worker(struct work_struct *work)
 			mgr = omap_dss_get_overlay_manager(i);
 
 			if (mgr->id == OMAP_DSS_CHANNEL_DIGIT) {
-				if (!mgr->device->first_vsync)
+				if(!mgr->device->first_vsync){
 					DSSERR("First SYNC_LOST..TV ignoring\n");
+				}
 
 				manager = mgr;
 				enable = mgr->device->state ==
@@ -3829,14 +3823,15 @@ static void dispc_error_worker(struct work_struct *work)
 			mgr = omap_dss_get_overlay_manager(i);
 
 			if (mgr->id == OMAP_DSS_CHANNEL_LCD2) {
-				if (!mgr->device->first_vsync)
-					DSSERR("First SYNC_LOST.. ignoring\n");
+				if(!mgr->device->first_vsync){
+					DSSERR("First SYNC_LOST.. ignoring \n");
+					break;
+				}
+
 				manager = mgr;
 				enable = mgr->device->state ==
 						OMAP_DSS_DISPLAY_ACTIVE;
-				mgr->device->sync_lost_error = 1;
 				mgr->device->driver->disable(mgr->device);
-				mgr->device->sync_lost_error = 0;
 				break;
 			}
 		}
@@ -3900,8 +3895,6 @@ int omap_dispc_wait_for_irq_timeout(u32 irqmask, unsigned long timeout)
 
 	omap_dispc_unregister_isr(dispc_irq_wait_handler, &completion, irqmask);
 
-	synchronize_irq(dispc.irq);
-
 	if (timeout == 0)
 		return -ETIMEDOUT;
 
@@ -3936,8 +3929,6 @@ int omap_dispc_wait_for_irq_interruptible_timeout(u32 irqmask,
 			timeout);
 
 	omap_dispc_unregister_isr(dispc_irq_wait_handler, &completion, irqmask);
-
-	synchronize_irq(dispc.irq);
 
 	if (timeout == 0)
 		r = -ETIMEDOUT;
