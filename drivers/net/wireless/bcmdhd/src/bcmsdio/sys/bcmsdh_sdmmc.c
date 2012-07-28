@@ -63,11 +63,8 @@ extern int sdio_reset_comm(struct mmc_card *card);
 extern PBCMSDH_SDMMC_INSTANCE gInstance;
 
 uint sd_sdmode = SDIOH_MODE_SD4;	/* Use SD4 mode by default */
-#if defined(SDIO_F2_BLKSIZE)
-uint sd_f2_blocksize = SDIO_F2_BLKSIZE;
-#else
 uint sd_f2_blocksize = 512;		/* Default blocksize */
-#endif
+
 uint sd_divisor = 2;			/* Default 48MHz/2 = 24MHz */
 
 uint sd_power = 1;		/* Default to SD Slot powered ON */
@@ -157,22 +154,16 @@ sdioh_attach(osl_t *osh, void *bar0, uint irq)
 	gInstance->sd = sd;
 
 	/* Claim host controller */
-	if (gInstance->func[1]) {
-		sdio_claim_host(gInstance->func[1]);
+	sdio_claim_host(gInstance->func[1]);
 
-		sd->client_block_size[1] = 64;
-		err_ret = sdio_set_block_size(gInstance->func[1], 64);
-		if (err_ret) {
-			sd_err(("bcmsdh_sdmmc: Failed to set F1 blocksize\n"));
-		}
-
-		/* Release host controller F1 */
-		sdio_release_host(gInstance->func[1]);
-	}else {
-		sd_err(("%s:gInstance->func[1] is null\n", __FUNCTION__));
-		MFREE(sd->osh, sd, sizeof(sdioh_info_t));
-		return NULL;
+	sd->client_block_size[1] = 64;
+	err_ret = sdio_set_block_size(gInstance->func[1], 64);
+	if (err_ret) {
+		sd_err(("bcmsdh_sdmmc: Failed to set F1 blocksize\n"));
 	}
+
+	/* Release host controller F1 */
+	sdio_release_host(gInstance->func[1]);
 
 	if (gInstance->func[2]) {
 		/* Claim host controller F2 */
@@ -187,10 +178,6 @@ sdioh_attach(osl_t *osh, void *bar0, uint irq)
 
 		/* Release host controller F2 */
 		sdio_release_host(gInstance->func[2]);
-	}else {
-		sd_err(("%s:gInstance->func[2] is null\n", __FUNCTION__));
-		MFREE(sd->osh, sd, sizeof(sdioh_info_t));
-		return NULL;
 	}
 
 	sdioh_sdmmc_card_enablefuncs(sd);
@@ -816,49 +803,41 @@ sdioh_request_byte(sdioh_info_t *sd, uint rw, uint func, uint regaddr, uint8 *by
 #if defined(MMC_SDIO_ABORT)
 			/* to allow abort command through F1 */
 			else if (regaddr == SDIOD_CCCR_IOABORT) {
-				if (gInstance->func[func]){
-					sdio_claim_host(gInstance->func[func]);
-					/*
-					* this sdio_f0_writeb() can be replaced with another api
-					* depending upon MMC driver change.
-					* As of this time, this is temporaray one
-					*/
-					sdio_writeb(gInstance->func[func], *byte, regaddr, &err_ret);
-					sdio_release_host(gInstance->func[func]);
-				}
+				sdio_claim_host(gInstance->func[func]);
+				/*
+				* this sdio_f0_writeb() can be replaced with another api
+				* depending upon MMC driver change.
+				* As of this time, this is temporaray one
+				*/
+				sdio_writeb(gInstance->func[func], *byte, regaddr, &err_ret);
+				sdio_release_host(gInstance->func[func]);
 			}
 #endif /* MMC_SDIO_ABORT */
 			else if (regaddr < 0xF0) {
 				sd_err(("bcmsdh_sdmmc: F0 Wr:0x%02x: write disallowed\n", regaddr));
 			} else {
 				/* Claim host controller, perform F0 write, and release */
-				if (gInstance->func[func]){
-					sdio_claim_host(gInstance->func[func]);
-					sdio_f0_writeb(gInstance->func[func], *byte, regaddr, &err_ret);
-					sdio_release_host(gInstance->func[func]);
-				}
+				sdio_claim_host(gInstance->func[func]);
+				sdio_f0_writeb(gInstance->func[func], *byte, regaddr, &err_ret);
+				sdio_release_host(gInstance->func[func]);
 			}
 		} else {
 			/* Claim host controller, perform Fn write, and release */
-			if (gInstance->func[func]){
-				sdio_claim_host(gInstance->func[func]);
-				sdio_writeb(gInstance->func[func], *byte, regaddr, &err_ret);
-				sdio_release_host(gInstance->func[func]);
-			}
+			sdio_claim_host(gInstance->func[func]);
+			sdio_writeb(gInstance->func[func], *byte, regaddr, &err_ret);
+			sdio_release_host(gInstance->func[func]);
 		}
 	} else { /* CMD52 Read */
 		/* Claim host controller, perform Fn read, and release */
-		if (gInstance->func[func]){
-			sdio_claim_host(gInstance->func[func]);
+		sdio_claim_host(gInstance->func[func]);
 
-			if (func == 0) {
-				*byte = sdio_f0_readb(gInstance->func[func], regaddr, &err_ret);
-			} else {
-				*byte = sdio_readb(gInstance->func[func], regaddr, &err_ret);
-			}
-
-			sdio_release_host(gInstance->func[func]);
+		if (func == 0) {
+			*byte = sdio_f0_readb(gInstance->func[func], regaddr, &err_ret);
+		} else {
+			*byte = sdio_readb(gInstance->func[func], regaddr, &err_ret);
 		}
+
+		sdio_release_host(gInstance->func[func]);
 	}
 
 	if (err_ret) {
@@ -1037,13 +1016,7 @@ sdioh_request_packet(sdioh_info_t *sd, uint fix_inc, uint write, uint func,
 				pkt_len -= xfred_len;
 				xfred_len = 0;
 			}
-
-			/* Align Patch */
-			if (write == 0 || pkt_len < 32) // read or small packet(ex-BDC header) skip 32 byte align
-				pkt_len = (pkt_len + 3) & 0xFFFFFFFC;
-			else if(pkt_len % DHD_SDALIGN) // write
-				pkt_len += DHD_SDALIGN - (pkt_len % DHD_SDALIGN);
-
+			pkt_len = (pkt_len + 3) & 0xFFFFFFFC;
 #ifdef CONFIG_MMC_MSM7X00A
 			if ((pkt_len % 64) == 32) {
 				sd_trace(("%s: Rounding up TX packet +=32\n", __FUNCTION__));
@@ -1330,14 +1303,12 @@ sdioh_start(sdioh_info_t *si, int stage)
 	int ret;
 	sdioh_info_t *sd = gInstance->sd;
 
-	if (!sd) return (0);
-
 	/* Need to do this stages as we can't enable the interrupt till
 		downloading of the firmware is complete, other wise polling
 		sdio access will come in way
 	*/
 	if (gInstance->func[0]) {
-		if (stage == 0) {
+			if (stage == 0) {
 		/* Since the power to the chip is killed, we will have
 			re enumerate the device again. Set the block size
 			and enable the fucntion 1 for in preparation for
@@ -1357,17 +1328,16 @@ sdioh_start(sdioh_info_t *si, int stage)
 			sd->use_client_ints = TRUE;
 			sd->client_block_size[0] = 64;
 
-			if(gInstance->func[1]) {
-				/* Claim host controller */
-				sdio_claim_host(gInstance->func[1]);
+			/* Claim host controller */
+			sdio_claim_host(gInstance->func[1]);
 
-				sd->client_block_size[1] = 64;
-				if (sdio_set_block_size(gInstance->func[1], 64)) {
-					sd_err(("bcmsdh_sdmmc: Failed to set F1 blocksize\n"));
-				}
-				/* Release host controller F1 */
-				sdio_release_host(gInstance->func[1]);
+			sd->client_block_size[1] = 64;
+			if (sdio_set_block_size(gInstance->func[1], 64)) {
+				sd_err(("bcmsdh_sdmmc: Failed to set F1 blocksize\n"));
 			}
+
+			/* Release host controller F1 */
+			sdio_release_host(gInstance->func[1]);
 
 			if (gInstance->func[2]) {
 				/* Claim host controller F2 */
@@ -1389,10 +1359,8 @@ sdioh_start(sdioh_info_t *si, int stage)
 		} else {
 #if !defined(OOB_INTR_ONLY)
 			sdio_claim_host(gInstance->func[0]);
-			if (gInstance->func[2])
-				sdio_claim_irq(gInstance->func[2], IRQHandlerF2);
-			if (gInstance->func[1])
-				sdio_claim_irq(gInstance->func[1], IRQHandler);
+			sdio_claim_irq(gInstance->func[2], IRQHandlerF2);
+			sdio_claim_irq(gInstance->func[1], IRQHandler);
 			sdio_release_host(gInstance->func[0]);
 #else /* defined(OOB_INTR_ONLY) */
 #if defined(HW_OOB)
@@ -1420,10 +1388,8 @@ sdioh_stop(sdioh_info_t *si)
 	if (gInstance->func[0]) {
 #if !defined(OOB_INTR_ONLY)
 		sdio_claim_host(gInstance->func[0]);
-		if (gInstance->func[1])
-			sdio_release_irq(gInstance->func[1]);
-		if (gInstance->func[2])
-			sdio_release_irq(gInstance->func[2]);
+		sdio_release_irq(gInstance->func[1]);
+		sdio_release_irq(gInstance->func[2]);
 		sdio_release_host(gInstance->func[0]);
 #else /* defined(OOB_INTR_ONLY) */
 #if defined(HW_OOB)

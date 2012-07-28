@@ -267,36 +267,13 @@ int
 dhd_wl_ioctl_cmd(dhd_pub_t *dhd_pub, int cmd, void *arg, int len, uint8 set, int ifindex)
 {
 	wl_ioctl_t ioc;
-#ifdef CUSTOMER_HW_SAMSUNG
-	int ret;
-#endif /* CUSTOMER_HW_SAMSUNG */
 
 	ioc.cmd = cmd;
 	ioc.buf = arg;
 	ioc.len = len;
 	ioc.set = set;
 
-#ifdef CUSTOMER_HW_SAMSUNG
-	ret = dhd_wl_ioctl(dhd_pub, ifindex, &ioc, arg, len);
-	if (ret < 0) {
-		if (ioc.cmd == WLC_GET_VAR) {
-			DHD_ERROR(("%s: WLC_GET_VAR: %s, error = %d\n",
-					__FUNCTION__, (char *)ioc.buf, ret));
-		} else if (ioc.cmd == WLC_SET_VAR) {
-			char pkt_filter[] = "pkt_filter_add";
-			if (strncmp(pkt_filter, ioc.buf, sizeof(pkt_filter)) != 0) {
-				DHD_ERROR(("%s: WLC_SET_VAR: %s, error = %d\n",
-						__FUNCTION__, (char *)ioc.buf, ret));
-			}
-		} else {
-			DHD_ERROR(("%s: WLC_IOCTL: cmd:%d, error = %d\n",
-					__FUNCTION__, ioc.cmd, ret));
-		}
-	}
-	return ret;
-#else
 	return dhd_wl_ioctl(dhd_pub, ifindex, &ioc, arg, len);
-#endif /* CUSTOMER_HW_SAMSUNG */
 }
 
 
@@ -308,7 +285,7 @@ dhd_wl_ioctl(dhd_pub_t *dhd_pub, int ifindex, wl_ioctl_t *ioc, void *buf, int le
 	dhd_os_proto_block(dhd_pub);
 
 	ret = dhd_prot_ioctl(dhd_pub, ifindex, ioc, buf, len);
-	if (!ret || ret == -ETIMEDOUT)
+	if (!ret)
 		dhd_os_check_hang(dhd_pub, ifindex, ret);
 
 	dhd_os_proto_unblock(dhd_pub);
@@ -956,7 +933,7 @@ wl_show_host_event(wl_event_msg_t *event, void *event_data)
 		p = (char *)&buf[MSGTRACE_HDRLEN];
 		while ((s = strstr(p, "\n")) != NULL) {
 			*s = '\0';
-			printf("FW: %s\n", p);
+			printf("%s\n", p);
 			p = s+1;
 		}
 		printf("%s\n", p);
@@ -1765,7 +1742,7 @@ fail:
 /*
  * returns = TRUE if associated, FALSE if not associated
  */
-bool dhd_is_associated(dhd_pub_t *dhd, void *bss_buf, int *retval)
+bool dhd_is_associated(dhd_pub_t *dhd, void *bss_buf)
 {
 	char bssid[6], zbuf[6];
 	int ret = -1;
@@ -1779,9 +1756,6 @@ bool dhd_is_associated(dhd_pub_t *dhd, void *bss_buf, int *retval)
 	if (ret == BCME_NOTASSOCIATED) {
 		DHD_TRACE(("%s: not associated! res:%d\n", __FUNCTION__, ret));
 	}
-
-	if (retval)
-		*retval = ret;
 
 	if (ret < 0)
 		return FALSE;
@@ -1815,7 +1789,7 @@ dhd_get_dtim_skip(dhd_pub_t *dhd)
 		bcn_li_dtim = dhd->dtim_skip;
 
 	/* Check if associated */
-	if (dhd_is_associated(dhd, NULL, NULL) == FALSE) {
+	if (dhd_is_associated(dhd, NULL) == FALSE) {
 		DHD_TRACE(("%s NOT assoc ret %d\n", __FUNCTION__, ret));
 		goto exit;
 	}
@@ -1915,7 +1889,7 @@ dhd_pno_enable(dhd_pub_t *dhd, int pfn_enabled)
 
 	memset(iovbuf, 0, sizeof(iovbuf));
 
-	if ((pfn_enabled) && (dhd_is_associated(dhd, NULL, NULL) == TRUE)) {
+	if ((pfn_enabled) && (dhd_is_associated(dhd, NULL) == TRUE)) {
 		DHD_ERROR(("%s pno is NOT enable : called in assoc mode , ignore\n", __FUNCTION__));
 		return ret;
 	}
