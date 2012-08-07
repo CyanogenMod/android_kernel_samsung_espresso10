@@ -3640,7 +3640,7 @@ static int dsi_cmd_proto_config(struct omap_dss_device *dssdev)
 
 static int dispc_to_dsi_clock(int val, int bytes_per_pixel, int lanes)
 {
-	return (val * bytes_per_pixel) / lanes;
+	return (val * bytes_per_pixel + lanes / 2) / lanes;
 }
 
 static int dsi_video_proto_config(struct omap_dss_device *dssdev)
@@ -3650,8 +3650,7 @@ static int dsi_video_proto_config(struct omap_dss_device *dssdev)
 	int buswidth = 0;
 	u32 r;
 	int bytes_per_pixel;
-	int hbp, hfp, hsa, tl, line;
-	int lanes;
+	int hbp, hfp, hsa, tl;
 
 	dsi_config_tx_fifo(dsidev, DSI_FIFO_SIZE_32,
 			DSI_FIFO_SIZE_32,
@@ -3711,23 +3710,16 @@ static int dsi_video_proto_config(struct omap_dss_device *dssdev)
 		dsi_vc_initial_config(dsidev, 3);
 	}
 
-	lanes = dsi_get_num_data_lanes_dssdev(dssdev);
-
-	hbp = dispc_to_dsi_clock((timings->hsw - 1) + (timings->hbp - 1),
-				bytes_per_pixel, lanes);
-	hfp = dispc_to_dsi_clock(timings->hfp - 1, bytes_per_pixel, lanes);
-	hsa = 0;
-
-	line = timings->hbp + timings->hfp + timings->hsw + timings->x_res;
-	WARN((line * bytes_per_pixel) % lanes != 0, "TL should be an exact "
-			"integer, try changing DISPC horizontal blanking parameters");
-
-	tl =  dispc_to_dsi_clock(line, bytes_per_pixel, lanes);
+	hbp = dispc_to_dsi_clock(timings->hbp, bytes_per_pixel, 4);
+	hfp = dispc_to_dsi_clock(timings->hfp, bytes_per_pixel, 4);
+	hsa = dispc_to_dsi_clock(timings->hsw, bytes_per_pixel, 4);
+	tl = hbp + hfp + hsa +
+		dispc_to_dsi_clock(timings->x_res, bytes_per_pixel, 4);
 
 	r = dsi_read_reg(dsidev, DSI_VM_TIMING1);
-	r = FLD_MOD(r, hbp, 11, 0);   /* HBP */
-	r = FLD_MOD(r, hfp, 23, 12);  /* HFP */
-	r = FLD_MOD(r, hsa, 31, 24);  /* HSA */
+	r = FLD_MOD(r, hbp - 1, 11, 0);   /* HBP */
+	r = FLD_MOD(r, hfp - 1, 23, 12);  /* HFP */
+	r = FLD_MOD(r, hsa - 1, 31, 24);  /* HSA */
 	dsi_write_reg(dsidev, DSI_VM_TIMING1, r);
 
 	r = dsi_read_reg(dsidev, DSI_VM_TIMING2);
@@ -3739,7 +3731,7 @@ static int dsi_video_proto_config(struct omap_dss_device *dssdev)
 
 	r = dsi_read_reg(dsidev, DSI_VM_TIMING3);
 	r = FLD_MOD(r, timings->y_res, 14, 0);
-	r = FLD_MOD(r, tl, 31, 16);
+	r = FLD_MOD(r, tl - 1, 31, 16);
 	dsi_write_reg(dsidev, DSI_VM_TIMING3, r);
 
 	/* TODO: either calculate these values or make them configurable */

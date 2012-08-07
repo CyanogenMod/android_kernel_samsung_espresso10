@@ -208,6 +208,7 @@ int omapdss_dpi_display_enable(struct omap_dss_device *dssdev)
 			goto err_dsi_pll_init;
 		}
 	}
+
 	r = dpi_set_mode(dssdev);
 	if (r)
 		goto err_set_mode;

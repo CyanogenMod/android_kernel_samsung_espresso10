@@ -433,7 +433,6 @@ static u32 dsscomp_mgr_callback(void *data, int id, int status)
 		wk->comp = comp;
 		wk->status = status;
 		INIT_WORK(&wk->work, dsscomp_mgr_delayed_cb);
-		BUG_ON((unsigned long *)&wk->work.data == NULL);
 		queue_work(cb_wkq, &wk->work);
 	}
 
