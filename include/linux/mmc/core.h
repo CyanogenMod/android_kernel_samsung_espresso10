@@ -149,7 +149,7 @@ extern int mmc_send_ext_csd(struct mmc_card *card, u8 *ext_csd);
 #define MMC_ERASE_ARG		0x00000000
 #define MMC_SECURE_ERASE_ARG	0x80000000
 #define MMC_TRIM_ARG		0x00000001
-#define MMC_DISCARD_ARG                0x00000003
+#define MMC_DISCARD_ARG		0x00000003
 #define MMC_SECURE_TRIM1_ARG	0x80000001
 #define MMC_SECURE_TRIM2_ARG	0x80008000
 
