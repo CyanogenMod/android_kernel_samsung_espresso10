@@ -180,8 +180,9 @@ static int hdmi_panel_suspend(struct omap_dss_device *dssdev)
 
 	dssdev->state = OMAP_DSS_DISPLAY_SUSPENDED;
 
+/* Do not send HPD uevent when sleep and wakeup
 	hdmi_panel_hpd_handler(0);
-
+*/
 	omapdss_hdmi_display_disable(dssdev);
 err:
 	mutex_unlock(&hdmi.hdmi_lock);
@@ -273,12 +274,14 @@ static void hdmi_hotplug_detect_worker(struct work_struct *work)
 			hdmi_send_audio_info(1);
 #endif
 			goto done;
-		} else if (state == HPD_STATE_EDID_TRYLAST){
-			pr_info("Failed to read EDID after %d times. Giving up.", state - HPD_STATE_START);
+		} else if (state == HPD_STATE_EDID_TRYLAST) {
+			pr_info("EDID read fail after %d times. Giving up",
+						state - HPD_STATE_START);
 			goto done;
 		}
 		if (atomic_add_unless(&d->state, 1, HPD_STATE_OFF))
-			queue_delayed_work(my_workq, &d->dwork, msecs_to_jiffies(60));
+			queue_delayed_work(my_workq, &d->dwork,
+							msecs_to_jiffies(60));
 	}
 done:
 	mutex_unlock(&hdmi.hdmi_lock);
@@ -288,7 +291,8 @@ int hdmi_panel_hpd_handler(int hpd)
 {
 	__cancel_delayed_work(&hpd_work.dwork);
 	atomic_set(&hpd_work.state, hpd ? HPD_STATE_START : HPD_STATE_OFF);
-	queue_delayed_work(my_workq, &hpd_work.dwork, msecs_to_jiffies(hpd ? 40 : 30));
+	queue_delayed_work(my_workq, &hpd_work.dwork,
+					msecs_to_jiffies(hpd ? 40 : 30));
 	return 0;
 }
 

@@ -194,7 +194,7 @@ extern int dhd_check_module_mac(dhd_pub_t *dhd);
 #endif
 #endif /* CUSTOMER_HW_SAMSUNG */
 
-#ifdef CUSTOMER_SET_COUNTRY
+#ifdef GLOBALCONFIG_WLAN_COUNTRY_CODE
 int dhd_customer_set_country(dhd_pub_t *dhd);
 #endif
 
@@ -213,6 +213,7 @@ typedef struct dhd_if {
 	char			name[IFNAMSIZ+1]; /* linux interface name */
 	uint8			bssidx;			/* bsscfg index for the interface */
 	bool			set_multicast;
+	bool			event2cfg80211;	/* To determine if pass event to cfg80211 */
 } dhd_if_t;
 
 #ifdef WLMEDIA_HTSF
@@ -336,6 +337,7 @@ char firmware_path[MOD_PARAM_PATHLEN];
 char nvram_path[MOD_PARAM_PATHLEN];
 
 int op_mode = 0;
+int disable_proptx = 0;
 module_param(op_mode, int, 0644);
 extern int wl_control_wl_start(struct net_device *dev);
 extern int net_os_send_hang_message(struct net_device *dev);
@@ -354,12 +356,15 @@ module_param(dhd_sysioc, uint, 0);
 /* Error bits */
 module_param(dhd_msg_level, int, 0);
 
+/* Disable Prop tx */
+module_param(disable_proptx, int, 0);
+
 /* load firmware and/or nvram values from the filesystem */
 module_param_string(firmware_path, firmware_path, MOD_PARAM_PATHLEN, 0660);
 module_param_string(nvram_path, nvram_path, MOD_PARAM_PATHLEN, 0);
 
 /* Watchdog interval */
-uint dhd_watchdog_ms = 100;
+uint dhd_watchdog_ms = 10;
 module_param(dhd_watchdog_ms, uint, 0);
 
 #if defined(DHD_DEBUG)
@@ -549,7 +554,7 @@ static int dhd_wl_host_event(dhd_info_t *dhd, int *ifidx, void *pktdata,
 static int dhd_sleep_pm_callback(struct notifier_block *nfb, unsigned long action, void *ignored)
 {
 	int ret = NOTIFY_DONE;
-
+#if (LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 39))
 	switch (action) {
 	case PM_HIBERNATION_PREPARE:
 	case PM_SUSPEND_PREPARE:
@@ -563,7 +568,7 @@ static int dhd_sleep_pm_callback(struct notifier_block *nfb, unsigned long actio
 		break;
 	}
 	smp_mb();
-
+#endif
 	return ret;
 }
 
@@ -922,7 +927,10 @@ _dhd_set_multicast_list(dhd_info_t *dhd, int ifidx)
 #endif /* MCAST_LIST_ACCUMULATION */
 
 #ifdef PASS_ALL_MCAST_PKTS
-	allmulti = TRUE;
+#ifdef PKT_FILTER_SUPPORT
+	if (!dhd->pub.early_suspended)
+		allmulti = TRUE;
+#endif
 #endif /* PASS_ALL_MCAST_PKTS */
 
 	/* Send down the multicast list first. */
@@ -1156,6 +1164,7 @@ dhd_op_if(dhd_if_t *ifp)
 				if (!wl_cfg80211_notify_ifadd(ifp->net, ifp->idx, ifp->bssidx,
 					(void*)dhd_net_attach)) {
 					ifp->state = DHD_IF_NONE;
+					ifp->event2cfg80211 = TRUE;
 					return;
 				}
 #endif
@@ -1502,7 +1511,7 @@ dhd_start_xmit(struct sk_buff *skb, struct net_device *net)
 		DHD_OS_WAKE_UNLOCK(&dhd->pub);
 		return -ENODEV;
 	}
-#endif
+#endif /* CUSTOMER_HW_SAMSUNG */
 
 	ifidx = dhd_net2idx(dhd, net);
 	if (ifidx == DHD_BAD_IF) {
@@ -2312,8 +2321,8 @@ static bool dhd_check_hang(struct net_device *net, dhd_pub_t *dhdp, int error)
 {
 	if (!dhdp)
 		return FALSE;
-	if ((error == -ETIMEDOUT) || ((dhdp->busstate == DHD_BUS_DOWN) &&
-		(!dhdp->dongle_reset))) {
+	if ((error == -ETIMEDOUT) || (error == -EREMOTEIO)
+		|| ((dhdp->busstate == DHD_BUS_DOWN)&&(!dhdp->dongle_reset))) {
 		DHD_ERROR(("%s: Event HANG send up due to  re=%d te=%d e=%d s=%d\n", __FUNCTION__,
 			dhdp->rxcnt_timeout, dhdp->txcnt_timeout, error, dhdp->busstate));
 		net_os_send_hang_message(net);
@@ -2631,8 +2640,9 @@ dhd_stop(struct net_device *net)
 			wl_android_wifi_off(net);
 #ifdef CUSTOMER_HW_SAMSUNG
 		else {
-			/* CSP#505233: Flags to indicate if we distingish power off policy when
-			 * user set the memu "Keep Wi-Fi on during sleep" to "Never"
+			/* CSP#505233: Flags to indicate if we distingish
+			 * power off policy when user set the memu
+			 * "Keep Wi-Fi on during sleep" to "Never"
 			 */
 			if (sleep_never) {
 				dhd_deepsleep(net, 1);
@@ -2642,6 +2652,7 @@ dhd_stop(struct net_device *net)
 #endif /* CUSTOMER_HW_SAMSUNG */
 	}
 #endif /* WL_CFG80211 */
+	dhd->pub.dongle_trap_occured = 0;
 	dhd->pub.hang_was_sent = 0;
 	dhd->pub.rxcnt_timeout = 0;
 	dhd->pub.txcnt_timeout = 0;
@@ -2655,9 +2666,6 @@ static int
 dhd_open(struct net_device *net)
 {
 	dhd_info_t *dhd = *(dhd_info_t **)netdev_priv(net);
-#ifdef PROP_TXSTATUS
-	uint up = 0;
-#endif
 #ifdef TOE
 	uint32 toe_ol;
 #endif
@@ -2668,22 +2676,22 @@ dhd_open(struct net_device *net)
 #endif
 	DHD_OS_WAKE_LOCK(&dhd->pub);
 	/* Update FW path if it was changed */
-	if ((firmware_path != NULL) && (firmware_path[0] != '\0')) {
+	if ((strlen(firmware_path) != 0) && (firmware_path[0] != '\0')) {
 		if (firmware_path[strlen(firmware_path)-1] == '\n')
 			firmware_path[strlen(firmware_path)-1] = '\0';
 #ifdef WL_CFG80211
-		if (dhd_download_fw_on_driverload &&
+				if (dhd_download_fw_on_driverload &&
 					strcmp(fw_path, firmware_path))
 				{
-			DHD_ERROR(("firmware path changed:%s --> %s\n",
-				fw_path, firmware_path));
-			fw_changed = TRUE;
-		}
-#endif
-		strcpy(fw_path, firmware_path);
+					DHD_ERROR(("firmware path changed:%s --> %s\n",
+						fw_path, firmware_path));
+					fw_changed = TRUE;
+				}
+#endif /* WL_CFG80211 */
+			strcpy(fw_path, firmware_path);
 #if defined(BCM4334_CHECK_CHIP_REV)
-		strcpy(fw_down_path, fw_path);
-		strcat(fw_down_path, chipver_tag);
+			strcpy(fw_down_path, fw_path);
+			strcat(fw_down_path, chipver_tag);
 #endif
 		firmware_path[0] = '\0';
 	}
@@ -2724,8 +2732,9 @@ dhd_open(struct net_device *net)
 				}
 		} else {
 #ifdef CUSTOMER_HW_SAMSUNG
-			/* CSP#505233: Flags to indicate if we distingish power off policy when
-			 * user set the memu "Keep Wi-Fi on during sleep" to "Never"
+			/* CSP#505233: Flags to indicate if we distingish
+			 * power off policy when user set the memu
+			 * "Keep Wi-Fi on during sleep" to "Never"
 			 */
 			if (sleep_never) {
 				dhd_deepsleep(net, 0);
@@ -2733,12 +2742,12 @@ dhd_open(struct net_device *net)
 			} else {
 #endif /* CUSTOMER_HW_SAMSUNG */
 				if (fw_changed) {
-				wl_android_wifi_off(net);
-				msleep(300);
-				ret = wl_android_wifi_on(net);
-				if (ret != 0) {
-					DHD_ERROR(("wl_android_wifi_on failed (%d)\n", ret));
-					goto exit;
+					wl_android_wifi_off(net);
+					msleep(300);
+					ret = wl_android_wifi_on(net);
+					if (ret != 0) {
+						DHD_ERROR(("wl_android_wifi_on failed (%d)\n", ret));
+						goto exit;
 					}
 				}
 #ifdef CUSTOMER_HW_SAMSUNG
@@ -2781,7 +2790,6 @@ dhd_open(struct net_device *net)
 	/* Allow transmit calls */
 	netif_start_queue(net);
 	dhd->pub.up = 1;
-
 #ifdef BCMDBGFS
 	dhd_dbg_init(&dhd->pub);
 #endif
@@ -2862,6 +2870,7 @@ dhd_add_if(dhd_info_t *dhd, int ifidx, void *handle, char *name,
 		}
 
 	memset(ifp, 0, sizeof(dhd_if_t));
+	ifp->event2cfg80211 = FALSE;
 	ifp->info = dhd;
 	dhd->iflist[ifidx] = ifp;
 	strncpy(ifp->name, name, IFNAMSIZ);
@@ -2877,6 +2886,9 @@ dhd_add_if(dhd_info_t *dhd, int ifidx, void *handle, char *name,
 		up(&dhd->thr_sysioc_ctl.sema);
 	} else
 		ifp->net = (struct net_device *)handle;
+	if (ifidx == 0) {
+		ifp->event2cfg80211 = TRUE;
+	}
 
 	return 0;
 }
@@ -2931,27 +2943,27 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 	DHD_TRACE(("%s: Enter\n", __FUNCTION__));
 
 #ifdef BCM4334_CHECK_CHIP_REV
-	DHD_ERROR(("CHIP VER = [0x%x]\n", g_chipver));
-	if (g_chipver == 1) {
-		DHD_ERROR(("----- CHIP bcm4334_B0 -----\n"));
-		strcpy(chipver_tag, "_b0");
-	} else if (g_chipver == 2) {
-		DHD_ERROR(("----- CHIP bcm4334_B1 -----\n"));
-		strcpy(chipver_tag, "_b1");
-	} else if (g_chipver == 3) {
-		DHD_ERROR(("----- CHIP bcm4334_B2 -----\n"));
-		strcpy(chipver_tag, "_b2");
+		DHD_ERROR(("CHIP VER = [0x%x]\n", g_chipver));
+		if (g_chipver == 1) {
+			DHD_ERROR(("----- CHIP bcm4334_B0 -----\n"));
+			strcpy(chipver_tag, "_b0");
+		} else if (g_chipver == 2) {
+			DHD_ERROR(("----- CHIP bcm4334_B1 -----\n"));
+			strcpy(chipver_tag, "_b1");
+		} else if (g_chipver == 3) {
+			DHD_ERROR(("----- CHIP bcm4334_B2 -----\n"));
+			strcpy(chipver_tag, "_b2");
 		}
 		else {
-		DHD_ERROR(("----- Invalid chip version -----\n"));
-		goto fail;
-	}
+			DHD_ERROR(("----- Invalid chip version -----\n"));
+			goto fail;
+		}
 #endif /* BCM4334_CHECK_CHIP_REV */
 
 	/* updates firmware nvram path if it was provided as module parameters */
-	if ((firmware_path != NULL) && (firmware_path[0] != '\0'))
+	if ((strlen(firmware_path) != 0) && (firmware_path[0] != '\0'))
 		strcpy(fw_path, firmware_path);
-	if ((nvram_path != NULL) && (nvram_path[0] != '\0'))
+	if ((strlen(nvram_path) != 0) && (nvram_path[0] != '\0'))
 		strcpy(nv_path, nvram_path);
 
 	/* Allocate etherdev, including space for private structure */
@@ -3033,6 +3045,9 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 #ifdef CONFIG_HAS_WAKELOCK
 	wake_lock_init(&dhd->wl_wifi, WAKE_LOCK_SUSPEND, "wlan_wake");
 	wake_lock_init(&dhd->wl_rxwake, WAKE_LOCK_SUSPEND, "wlan_rx_wake");
+#ifdef PNO_SUPPORT
+	wake_lock_init(&dhd->pub.pno_wakelock, WAKE_LOCK_SUSPEND, "pno_wake_lock");
+#endif
 #endif
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 25)) && 1
 	mutex_init(&dhd->dhd_net_if_mutex);
@@ -3174,15 +3189,15 @@ dhd_bus_start(dhd_pub_t *dhdp)
 	if  ((dhd->pub.busstate == DHD_BUS_DOWN) &&
 		(fw_path[0] != '\0') &&
 		(nv_path[0] != '\0')) {
-		down_path = fw_path;
+				down_path = fw_path;
 #if defined(BCM4334_CHECK_CHIP_REV)
-		strcpy(fw_down_path, fw_path);
-		strcat(fw_down_path, chipver_tag);
-		down_path = fw_down_path;
+				strcpy(fw_down_path, fw_path);
+				strcat(fw_down_path, chipver_tag);
+				down_path = fw_down_path;
 #endif
 		/* wake lock moved to dhdsdio_download_firmware */
 		if (!(dhd_bus_download_firmware(dhd->pub.bus, dhd->pub.osh,
-			down_path, nv_path))) {
+		                                down_path, nv_path))) {
 			DHD_ERROR(("%s: dhdsdio_probe_download failed. firmware = %s nvram = %s\n",
 			           __FUNCTION__, down_path, nv_path));
 #ifdef DHDTHREAD
@@ -3285,7 +3300,7 @@ dhd_bus_start(dhd_pub_t *dhdp)
 
 #ifdef RDWR_KORICS_MACADDR
 dhd_write_rdwr_korics_macaddr(dhd, &dhd->pub.mac);
-#endif
+#endif /* CUSTOMER_HW_SAMSUNG */
 
 #ifdef ARP_OFFLOAD_SUPPORT
 	if (dhd->pend_ipaddr) {
@@ -3352,7 +3367,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 #else
 	uint32 glom = 0;
 #endif
-#ifdef VSDB
+#if defined(VSDB) || defined(ROAM_ENABLE)
 	uint bcn_timeout = 8;
 #else
 	uint bcn_timeout = 4;
@@ -3410,13 +3425,16 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	int vlanmode = 0;
 #endif /* VLAN_MODE_OFF */
 #ifdef BCM43241_CHIP
-	int mimo_bw_cap = 1;
+	int mimo_bw_cap = 2;
 #endif /* BCM43241_CHIP */
-
+#ifdef AUTOCOUNTRY
+	int autocountry = 1;
+#endif
 #ifdef PROP_TXSTATUS
 	dhd->wlfc_enabled = FALSE;
 	/* enable WLFC only if the firmware is VSDB */
 #endif /* PROP_TXSTATUS */
+
 	DHD_TRACE(("Enter %s\n", __FUNCTION__));
 	dhd->op_mode = 0;
 #ifdef GET_CUSTOM_MAC_ENABLE
@@ -3544,10 +3562,6 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 		dhd_pkt_filter_enable = TRUE;
 		if (dhd_concurrent_fw(dhd)) {
 			dhd->op_mode |= WFD_MASK;
-#ifdef PROP_TXSTATUS
-			dhd->wlfc_enabled = TRUE;
-			/* enable WLFC only if the firmware is VSDB */
-#endif /* PROP_TXSTATUS */
 		}
 	}
 
@@ -3582,6 +3596,11 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 
 #ifdef OKC_SUPPORT
 	bcm_mkiovar("okc_enable", (char *)&okc, 4, iovbuf, sizeof(iovbuf));
+	dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
+#endif
+
+#ifdef AUTOCOUNTRY
+	bcm_mkiovar("autocountry", (char *)&autocountry, 4, iovbuf, sizeof(iovbuf));
 	dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
 #endif
 
@@ -3679,6 +3698,9 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 #ifdef PNO_SUPPORT
 	setbit(eventmask, WLC_E_PFN_NET_FOUND);
 #endif /* PNO_SUPPORT */
+#ifdef USE_FW_TRACE
+	setbit(eventmask, WLC_E_TRACE);
+#endif
 	/* enable dongle roaming event */
 	setbit(eventmask, WLC_E_ROAM);
 #ifdef WL_CFG80211
@@ -3736,10 +3758,13 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 #else
 	/* Setup filter to allow only unicast */
 #if defined(CUSTOMER_HW_SAMSUNG)
+	dhd->pktfilter_count = 5;
 	dhd->pktfilter[0] = "100 0 0 0 "
 		HEX_PREF_STR UNI_FILTER_STR ZERO_ADDR_STR ETHER_TYPE_STR IPV6_FILTER_STR
 		" "
 		HEX_PREF_STR ZERO_ADDR_STR ZERO_ADDR_STR ETHER_TYPE_STR ZERO_TYPE_STR;
+		dhd->pktfilter[4] = "104 0 0 0 0xFFFFFF 0x01005E";
+		/* customer want to get IPV4 multicast packets */
 #else
 #error Customer want to filter out all IPV6 packets
 	dhd->pktfilter[0] = "100 0 0 0 0x01 0x00";
@@ -3763,7 +3788,7 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 	bcm_mkiovar("vlan_mode", (char *)&vlanmode, 4, iovbuf, sizeof(iovbuf));
 	dhd_wl_ioctl_cmd(dhd, WLC_SET_VAR, iovbuf, sizeof(iovbuf), TRUE, 0);
 #endif /* VLAN_MODE_OFF */
-#ifdef CUSTOMER_SET_COUNTRY
+#ifdef GLOBALCONFIG_WLAN_COUNTRY_CODE
 	if (dhd_customer_set_country(dhd) < 0)
 		DHD_ERROR(("%s: can't set country \n", __FUNCTION__));
 #endif
@@ -3930,13 +3955,16 @@ static int dhd_device_event(struct notifier_block *this,
 			}
 
 #ifdef AOE_IP_ALIAS_SUPPORT
-			if (ifa->ifa_label[strlen(ifa->ifa_label)-2] == 0x3a) {
-				DHD_ARPOE(("%s:add aliased IP to AOE hostip cache\n",
-					__FUNCTION__));
-				aoe_update_host_ipv4_table(dhd_pub, ifa->ifa_address, TRUE);
+			if ((dhd_pub->op_mode & HOSTAPD_MASK) != HOSTAPD_MASK) {
+				if (ifa->ifa_label[strlen(ifa->ifa_label)-2] == 0x3a) {
+					/* 0x3a = ':' */
+					DHD_ARPOE(("%s:add aliased IP to AOE hostip cache\n",
+						__FUNCTION__));
+					aoe_update_host_ipv4_table(dhd_pub, ifa->ifa_address, TRUE);
+				}
+				else
+					aoe_update_host_ipv4_table(dhd_pub, ifa->ifa_address, TRUE);
 			}
-			else
-				aoe_update_host_ipv4_table(dhd_pub, ifa->ifa_address, TRUE);
 #endif
 			break;
 
@@ -3945,13 +3973,16 @@ static int dhd_device_event(struct notifier_block *this,
 				__FUNCTION__, ifa->ifa_label, ifa->ifa_address));
 			dhd->pend_ipaddr = 0;
 #ifdef AOE_IP_ALIAS_SUPPORT
-		if (!(ifa->ifa_label[strlen(ifa->ifa_label)-2] == 0x3a)) {
-				DHD_ARPOE(("%s: primary interface is down, AOE clr all\n",
+		if ((dhd_pub->op_mode & HOSTAPD_MASK) != HOSTAPD_MASK) {
+			if (!(ifa->ifa_label[strlen(ifa->ifa_label)-2] == 0x3a)) {
+					/* 0x3a = ':' */
+					DHD_ARPOE(("%s: primary interface is down, AOE clr all\n",
 				           __FUNCTION__));
-				dhd_aoe_hostip_clr(&dhd->pub);
-				dhd_aoe_arp_clr(&dhd->pub);
-		} else
-			aoe_update_host_ipv4_table(dhd_pub, ifa->ifa_address, FALSE);
+					dhd_aoe_hostip_clr(&dhd->pub);
+					dhd_aoe_arp_clr(&dhd->pub);
+			} else
+				aoe_update_host_ipv4_table(dhd_pub, ifa->ifa_address, FALSE);
+		}
 #else
 			dhd_aoe_hostip_clr(&dhd->pub);
 			dhd_aoe_arp_clr(&dhd->pub);
@@ -3967,7 +3998,6 @@ static int dhd_device_event(struct notifier_block *this,
 	return NOTIFY_DONE;
 }
 #endif /* ARP_OFFLOAD_SUPPORT */
-
 int
 dhd_net_attach(dhd_pub_t *dhdp, int ifidx)
 {
@@ -4007,6 +4037,7 @@ dhd_net_attach(dhd_pub_t *dhdp, int ifidx)
 #else
 		net->netdev_ops = &dhd_ops_pri;
 #endif /* LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 31) */
+		memcpy(temp_addr, dhd->pub.mac.octet, ETHER_ADDR_LEN);
 	} else {
 		/*
 		 * We have to use the primary MAC for virtual interfaces
@@ -4251,6 +4282,9 @@ void dhd_detach(dhd_pub_t *dhdp)
 		dhd->wakelock_timeout_enable = 0;
 		wake_lock_destroy(&dhd->wl_wifi);
 		wake_lock_destroy(&dhd->wl_rxwake);
+#ifdef PNO_SUPPORT
+	wake_lock_destroy(&dhdp->pno_wakelock);
+#endif
 #endif
 	}
 }
@@ -4338,8 +4372,10 @@ dhd_module_init(void)
 		dhd_bus_reg_sdio_notify(&dhd_chipup_sem);
 		dhd_customer_gpio_wlan_ctrl(WLAN_POWER_ON);
 #if defined(CONFIG_WIFI_CONTROL_FUNC)
-		if (wl_android_wifictrl_func_add() < 0)
+		if (wl_android_wifictrl_func_add() < 0) {
+			dhd_bus_unreg_sdio_notify();
 			goto fail_1;
+		}
 #endif /* defined(CONFIG_WIFI_CONTROL_FUNC) */
 		if (down_timeout(&dhd_chipup_sem,
 			msecs_to_jiffies(POWERUP_WAIT_MS)) == 0) {
@@ -4374,7 +4410,7 @@ dhd_module_init(void)
 	error = dhd_bus_register();
 
 	if (!error)
-		printf("\n%s\n", dhd_version);
+		DHD_TRACE(("%s: \n%s\n", __FUNCTION__, dhd_version));
 	else {
 		DHD_ERROR(("%s: sdio_register_driver failed\n", __FUNCTION__));
 		goto fail_1;
@@ -4540,6 +4576,7 @@ dhd_os_wd_timer(void *bus, uint wdtick)
 	if (!wdtick && dhd->wd_timer_valid == TRUE) {
 		dhd->wd_timer_valid = FALSE;
 		dhd_os_spin_unlock(pub, flags);
+		if (dhd)
 #ifdef DHDTHREAD
 		del_timer_sync(&dhd->timer);
 #else
@@ -4745,7 +4782,7 @@ dhd_wl_host_event(dhd_info_t *dhd, int *ifidx, void *pktdata,
 
 	ASSERT(dhd->iflist[*ifidx] != NULL);
 	ASSERT(dhd->iflist[*ifidx]->net != NULL);
-	if (dhd->iflist[*ifidx]->net) {
+	if (dhd->iflist[*ifidx]->event2cfg80211 && dhd->iflist[*ifidx]->net) {
 		wl_cfg80211_event(dhd->iflist[*ifidx]->net, event, *data);
 	}
 #endif /* defined(WL_CFG80211) */
@@ -5055,9 +5092,12 @@ int net_os_send_hang_message(struct net_device *dev)
 #endif
 #if defined(WL_CFG80211)
 			ret = wl_cfg80211_hang(dev, WLAN_REASON_UNSPECIFIED);
-			//dev_close(dev);
-			//dev_open(dev);
+#if !defined(CUSTOMER_HW_SAMSUNG)
+#error do not use these it cause kernel panic
+			dev_close(dev);
+			dev_open(dev);
 #endif
+#endif /* WL_CFG80211 */
 		}
 	}
 	return ret;
@@ -5212,6 +5252,21 @@ int net_os_wake_lock_timeout(struct net_device *dev)
 		ret = dhd_os_wake_lock_timeout(&dhd->pub);
 	return ret;
 }
+#if defined(PNO_SUPPORT) && defined(CONFIG_HAS_WAKELOCK)
+int net_os_wake_lock_timeout_for_pno(struct net_device *dev, int sec)
+{
+	dhd_info_t *dhd = *(dhd_info_t **)netdev_priv(dev);
+	int ret = 0;
+	unsigned long flags;
+
+	if (dhd) {
+		spin_lock_irqsave(&dhd->wakelock_spinlock, flags);
+		wake_lock_timeout(&dhd->pub.pno_wakelock, HZ * sec);
+		spin_unlock_irqrestore(&dhd->wakelock_spinlock, flags);
+	}
+	return ret;
+}
+#endif
 
 int dhd_os_wake_lock_timeout_enable(dhd_pub_t *pub, int val)
 {

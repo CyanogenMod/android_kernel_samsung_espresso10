@@ -324,7 +324,7 @@ sensor_delay_store(struct device *dev,
 {
 	struct input_dev *input_data = to_input_dev(dev);
 	struct sensor_data *data = input_get_drvdata(input_data);
-	unsigned long value;
+	long value;
 	int error;
 
 	error = strict_strtoul(buf, 10, &value);

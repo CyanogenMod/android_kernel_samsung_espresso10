@@ -42,14 +42,12 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 	/* [-----] hdmi_ddc_scl - gpio_65 - DDC_SCL_3.3V */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     HDMI_DDC_SCL,
-		     OMAP_MUX_MODE0 | OMAP_PIN_INPUT |
-		     OMAP_PIN_OFF_INPUT_PULLDOWN,
+		     OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLUP,
 		     65, "DDC_SCL_3.3V"),
 	/* [-----] hdmi_ddc_sda - gpio_66 - DDC_SDA_3.3V */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     HDMI_DDC_SDA,
-		     OMAP_MUX_MODE0 | OMAP_PIN_INPUT |
-		     OMAP_PIN_OFF_INPUT_PULLDOWN,
+		     OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLUP,
 		     66, "DDC_SDA_3.3V"),
 	/* [IN---] usbc1_icusb_dp - gpio_98 - MHL_SDA_1.8V */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,

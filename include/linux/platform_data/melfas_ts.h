@@ -48,7 +48,8 @@ enum {
  * @set_i2c_to_gpio : control IO pins using i2c or gpio for melfas fw. update
  */
 struct melfas_platform_data {
-	char *model_name;
+	const char *model_name;
+	const char *panel_name;
 	int tx_channel_no;
 	int rx_channel_no;
 	int x_pixel_size;

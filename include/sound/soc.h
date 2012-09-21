@@ -232,10 +232,10 @@
  * @OFF:     Power Off. No restrictions on transition times.
  */
 enum snd_soc_bias_level {
-	SND_SOC_BIAS_OFF,
-	SND_SOC_BIAS_STANDBY,
-	SND_SOC_BIAS_PREPARE,
-	SND_SOC_BIAS_ON,
+	SND_SOC_BIAS_OFF = 0,
+	SND_SOC_BIAS_STANDBY = 1,
+	SND_SOC_BIAS_PREPARE = 2,
+	SND_SOC_BIAS_ON = 3,
 };
 
 enum snd_soc_dsp_state {
@@ -823,8 +823,14 @@ struct snd_soc_card {
 
 	/* callbacks */
 	int (*set_bias_level)(struct snd_soc_card *,
+#ifdef CONFIG_SND_OPEN_SOC_SOURCE
+			      struct snd_soc_dapm_context *dapm,
+#endif
 			      enum snd_soc_bias_level level);
 	int (*set_bias_level_post)(struct snd_soc_card *,
+#ifdef CONFIG_SND_OPEN_SOC_SOURCE
+				   struct snd_soc_dapm_context *dapm,
+#endif
 				   enum snd_soc_bias_level level);
 
 	long pmdown_time;

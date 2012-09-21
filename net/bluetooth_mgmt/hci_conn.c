@@ -602,16 +602,6 @@ struct hci_conn *hci_connect(struct hci_dev *hdev, int type,
 	hci_conn_hold(acl);
 
 	if (acl->state == BT_OPEN || acl->state == BT_CLOSED) {
-		/* SS_BLUETOOTH(jh113.kim) 2012.03.02
-		MicroSoft BT Mouse 5000 pairing fail issue */
-		struct inquiry_entry *ie;
-		ie = hci_inquiry_cache_lookup(acl->hdev, &acl->dst);
-		if (ie && (!ie->data.ssp_mode || !acl->hdev->ssp_mode)
-			&& ((ie->data.dev_class[1] & 0x1f) != 0x05)) {
-			__u8 auth = AUTH_ENABLED;
-			hci_send_cmd(hdev, HCI_OP_WRITE_AUTH_ENABLE, 1, &auth);
-		}
-		/*  SS_BLUETOOTH(jh113.kim) End */		
 		acl->sec_level = BT_SECURITY_LOW;
 		acl->pending_sec_level = sec_level;
 		acl->auth_type = auth_type;
@@ -748,9 +738,11 @@ int hci_conn_security(struct hci_conn *conn, __u8 sec_level, __u8 auth_type)
 	/* A combination key has always sufficient security for the security
 	   levels 1 or 2. High security level requires the combination key
 	   is generated using maximum PIN code length (16).
-	   For pre 2.1 units. */
+	   For pre 2.1 units.
+	   High security level requires the combination key,
+	   maximum PIN code length (16) is recommended not mandatory */
 	if (conn->key_type == HCI_LK_COMBINATION &&
-			(sec_level != BT_SECURITY_HIGH ||
+			(sec_level > BT_SECURITY_LOW ||
 			conn->pin_length == 16))
 		goto encrypt;
 

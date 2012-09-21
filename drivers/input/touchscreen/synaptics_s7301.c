@@ -121,24 +121,36 @@ struct ts_data {
 };
 
 static int ts_read_reg_data(const struct i2c_client *client, u8 address,
-			u8 *buf, u32 size)
+			u8 *buf, u8 size)
 {
 	int ret = 0;
 
+	if (size > 32) {
+		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.",
+								__func__, size);
+		return -1;
+	}
+
 	ret = i2c_smbus_read_i2c_block_data(client, address, size, buf);
 	if (ret < size)
-		return -1;
+		return ret;
 	return 1;
 }
 
 static int ts_write_reg_data(const struct i2c_client *client, u8 address,
-			u8 *buf, u32 size)
+			u8 *buf, u8 size)
 {
 	int ret = 0;
 
+	if (size > 32) {
+		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.",
+								__func__, size);
+		return -1;
+	}
+
 	ret = i2c_smbus_write_i2c_block_data(client, address, size, buf);
 	if (ret < 0)
-		return -1;
+		return ret;
 	return 1;
 }
 
@@ -159,7 +171,7 @@ static void set_ta_mode(int *ta_state)
 
 static void set_jitter_filter(struct ts_data *ts, bool on)
 {
-	static bool prev_jitter = false;
+	static bool prev_jitter;
 	u8 command;
 
 	if (!ts->enable) {
@@ -173,14 +185,15 @@ static void set_jitter_filter(struct ts_data *ts, bool on)
 	if (on) {
 		command = 0x09;
 		prev_jitter = true;
-		pr_info("tsp: %s: jitter filter on.", __func__);
+		tsp_debug("jitter filter on.");
 	} else {
 		command = 0x01;
 		prev_jitter = false;
-		pr_info("tsp: %s: jitter filter off.", __func__);
+		tsp_debug("jitter filter off.");
 	}
 
-	ts_write_reg_data(ts->client, F11_2D_CTRL, &command, 1);
+	if (ts_write_reg_data(ts->client, F11_2D_CTRL, &command, 1) < 0)
+		pr_err("tsp: %s: i2c failed.", __func__);
 
 	return;
 }
@@ -232,24 +245,25 @@ static bool fw_updater(struct ts_data *ts, char *mode)
 		ret = fw_update_file(ts->client);
 	} else if (!strcmp("normal", mode)) {
 		if (ts_read_reg_data(ts->client,
-			get_reg_address(ts->client, FW_ADDRESS), buf, 4) > 0) {
-			strncpy(FW_IC_VERSION, buf, 5);
-			pr_info("tsp: fw. ver. : IC (%s), Internal (%s)\n",
-				(char *)FW_IC_VERSION,
-				(char *)FW_KERNEL_VERSION);
-		} else {
+			get_reg_address(ts->client, FW_ADDRESS), buf, 4) < 0) {
 			pr_err("tsp: fw. ver. read failed.");
 			return false;
 		}
 
+		strncpy(FW_IC_VERSION, buf, 5);
+		pr_info("tsp: fw. ver. : IC (%s), Internal (%s)\n",
+						(char *)FW_IC_VERSION,
+						(char *)FW_KERNEL_VERSION);
+
 		if (strcmp(FW_KERNEL_VERSION, FW_IC_VERSION) > 0) {
 			pr_info("tsp: fw_updater: FW upgrade enter.\n");
 			ret = fw_update_internal(ts->client);
-		} else
+		} else {
 			pr_info("tsp: fw_updater: No need FW update.\n");
+			ret = true;
+		}
 	}
 
-	pr_info("tsp: fw. update complete.");
 	return ret;
 }
 
@@ -921,21 +935,16 @@ static void reset_points(struct ts_data *ts)
 }
 
 #define REG_INTERRUPT_STATUS		0x14
-#define REG_RESET			0x85
 
-static int init_tsp(struct ts_data *ts)
+static void init_tsp(struct ts_data *ts)
 {
 	u8 buf;
 
 	reset_points(ts);
 
-	buf = 1;
-	ts_write_reg_data(ts->client, REG_RESET, &buf, 1);
-	mdelay(300);
-
 	/* To high interrupt pin */
 	if (ts_read_reg_data(ts->client, REG_INTERRUPT_STATUS, &buf, 1) < 0)
-		pr_err("tsp: init_tsp: read reg_data failed.\n");
+		pr_err("tsp: init_tsp: read reg_data failed.");
 
 	set_ta_mode(&(ts->platform_data->ta_state));
 #if CONTROL_JITTER
@@ -943,7 +952,7 @@ static int init_tsp(struct ts_data *ts)
 	set_jitter_filter(ts, ts->jitter_on);
 #endif
 	tsp_debug("init_tsp done.");
-	return true;
+	return;
 }
 
 static void reset_tsp(struct ts_data *ts)
@@ -1132,7 +1141,7 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 #define TS_MAX_W_TOUCH			100
 
 static int __devinit ts_probe(struct i2c_client *client,
-				const struct i2c_device_id *id)
+						const struct i2c_device_id *id)
 {
 	struct ts_data *ts;
 	int ret = 0;
@@ -1278,9 +1287,6 @@ static int __devinit ts_probe(struct i2c_client *client,
 	ts->jitter_on = true;
 #endif
 	reset_tsp(ts);
-
-	/* To set TA connet mode when boot while keep TA, USB be connected. */
-	set_ta_mode(&(ts->platform_data->ta_state));
 
 	pr_info("tsp: ts_probe: Start touchscreen. name: %s, irq: %d\n",
 					ts->client->name, ts->client->irq);

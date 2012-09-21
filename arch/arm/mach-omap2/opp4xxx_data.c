@@ -431,7 +431,7 @@ int __init omap4_opp_init(void)
 	else if (cpu_is_omap446x())
 		r = omap_init_opp_table(omap446x_opp_def_list,
 			ARRAY_SIZE(omap446x_opp_def_list));
-
+#if 0	
 	if (!r) {
 		if (omap4_has_mpu_1_2ghz())
 			omap4_mpu_opp_enable(1200000000);
@@ -439,6 +439,7 @@ int __init omap4_opp_init(void)
 		/*if (omap4_has_mpu_1_5ghz())
 			omap4_mpu_opp_enable(1500000000);*/
 	}
+#endif
 
 	return r;
 }

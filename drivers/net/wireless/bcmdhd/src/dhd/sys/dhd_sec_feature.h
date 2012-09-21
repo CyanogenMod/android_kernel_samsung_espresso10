@@ -1,4 +1,33 @@
-﻿#ifdef USE_SECFEATURE
+/*
+ * Header file describing the internal (inter-module) DHD interfaces.
+ *
+ * Provides type definitions and function prototypes used to link the
+ * DHD OS, bus, and protocol modules.
+ *
+ * Copyright (C) 1999-2012, Broadcom Corporation
+ *
+ *      Unless you and Broadcom execute a separate written software license
+ * agreement governing use of this software, this software is licensed to you
+ * under the terms of the GNU General Public License version 2 (the "GPL"),
+ * available at http://www.broadcom.com/licenses/GPLv2.php, with the
+ * following added to such license:
+ *
+ *      As a special exception, the copyright holders of this software give you
+ * permission to link this software with independent modules, and to copy and
+ * distribute the resulting executable under terms of your choice, provided that
+ * you also meet, for each linked independent module, the terms and conditions of
+ * the license of that module.  An independent module is a module which is not
+ * derived from this software.  The special exception does not apply to any
+ * modifications of the software.
+ *
+ *      Notwithstanding the above, under no circumstances may you combine this
+ * software in any way with any other Broadcom software provided under a license
+ * other than the GPL, without Broadcom's express prior written consent.
+ *
+ * $Id: dhd_sec_feature.h 309548 2012-01-20 01:13:08Z $
+ */
+
+#ifdef USE_SECFEATURE
 #include <sec_feature/GlobalConfig.h>
 #include <sec_feature/CustFeature.h>
 #endif
@@ -12,15 +41,21 @@
 #define HW_OOB
 #endif
 
-#ifdef CONFIG_MACH_U1
+#ifdef CONFIG_MACH_U1 /* Q1 also uses this feature */
 #define USE_CID_CHECK
-#define U1_MACADDR
 #define WRITE_MACADDR
 #endif
 
 #ifdef CONFIG_MACH_SAMSUNG_T1
 #define USE_CID_CHECK
 #define WRITE_MACADDR
+#endif
+
+/* Temporary roaming undef of D2_ATT models for the ATT hotspot connection problem */
+#if defined (CONFIG_MACH_M2_ATT)
+#undef ROAM_ENABLE
+#undef ROAM_CHANNEL_CACHE
+#undef ROAM_API
 #endif
 
 /* REGION CODE */
@@ -33,7 +68,7 @@
 #endif
 
 #if (WLAN_REGION_CODE >= 200) && (WLAN_REGION_CODE < 300) /* KOR */
-#undef USE_INITIAL_2G_SCAN
+#undef USE_INITIAL_2G_SCAN_ORG
 #ifndef ROAM_ENABLE
 #define ROAM_ENABLE
 #endif

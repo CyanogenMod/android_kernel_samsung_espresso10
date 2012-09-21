@@ -276,7 +276,7 @@ static int sdp4430_mcbsp_hw_params(struct snd_pcm_substream *substream,
         be_id = rtd->dai_link->be_id;
 
 	if (be_id == OMAP_ABE_DAI_BT_VX) {
-		if (machine_is_tuna() || machine_is_espresso10())
+		if (machine_is_tuna() || machine_is_omap4_samsung())
 			fmt = SND_SOC_DAIFMT_I2S |
 				SND_SOC_DAIFMT_NB_NF |
 				SND_SOC_DAIFMT_CBM_CFM;
@@ -541,7 +541,7 @@ static int sdp4430_twl6040_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_add_routes(dapm, audio_map, ARRAY_SIZE(audio_map));
 
 	/* SDP4430 connected pins */
-	if (machine_is_tuna() || machine_is_espresso10()) {
+	if (machine_is_tuna() || machine_is_omap4_samsung()) {
 		snd_soc_dapm_enable_pin(dapm, "Ext Main Mic");
 		snd_soc_dapm_enable_pin(dapm, "Ext Sub Mic");
 	}
@@ -553,7 +553,7 @@ static int sdp4430_twl6040_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_enable_pin(dapm, "Headset Stereophone");
 
 	/* allow audio paths from the audio modem to run during suspend */
-	if (machine_is_tuna() || machine_is_espresso10()) {
+	if (machine_is_tuna() || machine_is_omap4_samsung()) {
 		snd_soc_dapm_ignore_suspend(dapm, "Ext Main Mic");
 		snd_soc_dapm_ignore_suspend(dapm, "Ext Sub Mic");
 	}
@@ -1049,7 +1049,7 @@ static int __init sdp4430_soc_init(void)
 	int ret;
 
 	if (!machine_is_omap_4430sdp() && !machine_is_omap4_panda() &&
-			!machine_is_tuna() && !machine_is_espresso10()) {
+			!machine_is_tuna() && !machine_is_omap4_samsung()) {
 		pr_debug("Not SDP4430, PandaBoard or Tuna!\n");
 		return -ENODEV;
 	}
@@ -1070,7 +1070,7 @@ static int __init sdp4430_soc_init(void)
 	}
 #endif
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
-	if (machine_is_espresso10())
+	if (machine_is_omap4_samsung())
 		sec_omap4_micbias_gpio_init();
 #endif
 
@@ -1080,7 +1080,7 @@ static int __init sdp4430_soc_init(void)
 		snd_soc_sdp4430.name = "Panda";
 	else if (machine_is_tuna())
 		snd_soc_sdp4430.name = "Tuna";
-	else if (machine_is_espresso10())
+	else if (machine_is_omap4_samsung())
 		snd_soc_sdp4430.name = "SEC_OMAP4";
 
 	twl6040_clk32kreg = regulator_get(NULL, "twl6040_clk32k");
@@ -1140,10 +1140,10 @@ submic_gpio_err:
 
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
 clk32kreg_err:
-	if (machine_is_espresso10())
+	if (machine_is_omap4_samsung())
 		gpio_free(micbias_gpios[GPIO_SUB_MICBIAS_EN].gpio);
 submic_gpio_err:
-	if (machine_is_espresso10())
+	if (machine_is_omap4_samsung())
 		gpio_free(micbias_gpios[GPIO_MICBIAS_EN].gpio);
 #endif
 mainmic_gpio_err:
@@ -1161,7 +1161,7 @@ static void __exit sdp4430_soc_exit(void)
 #endif
 
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
-	if (machine_is_espresso10()) {
+	if (machine_is_omap4_samsung()) {
 		gpio_free(micbias_gpios[GPIO_SUB_MICBIAS_EN].gpio);
 		gpio_free(micbias_gpios[GPIO_MICBIAS_EN].gpio);
 	}

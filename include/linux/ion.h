@@ -262,6 +262,7 @@ struct ion_allocation_data {
 struct ion_fd_data {
 	struct ion_handle *handle;
 	int fd;
+	unsigned char cacheable;
 };
 
 /**

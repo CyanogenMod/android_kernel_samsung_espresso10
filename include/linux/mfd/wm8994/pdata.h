@@ -202,6 +202,11 @@ struct wm8994_pdata {
 	bool ldo_ena_always_driven;
 
 	/*
+	 * LDO enable delay time
+	 */
+	int ldo_ena_delay;
+
+	/*
 	 * SPKMODE must be pulled internally by the device on this
 	 * system.
 	 */

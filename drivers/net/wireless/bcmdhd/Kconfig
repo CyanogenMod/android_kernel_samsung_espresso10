@@ -23,6 +23,11 @@ config BROADCOM_WIFI_RESERVED_MEM
 	---help---
 		This is a configuration for broadcom WLAN driver.
 
+config WLAN_COUNTRY_CODE
+	tristate "---Broadcom WiFi Driver for 5GH channel setting"
+	depends on WLAN
+	default	n
+
 config WLAN_REGION_CODE
 	int "---Region codes for Broadcom WiFi Driver"
 	depends on (BCM4330 || BCM4334 || BCM43241)

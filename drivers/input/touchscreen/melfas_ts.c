@@ -17,6 +17,13 @@
 #define FACTORY_TESTING			1
 #define TOUCH_BOOST			1
 
+#if DEBUG_PRINT
+#define	tsp_log(fmt, args...) \
+				pr_info("tsp: %s: " fmt, __func__, ## args)
+#else
+#define tsp_log(fmt, args...)
+#endif
+
 #include <linux/module.h>
 #include <linux/delay.h>
 #include <linux/i2c.h>
@@ -42,13 +49,6 @@ bool boost;
 
 #include "melfas_isp_download.h"
 #include "../../../arch/arm/mach-omap2/sec_common.h"
-
-#if DEBUG_PRINT
-#define	tsp_debug(fmt, args...) \
-				pr_info("tsp: %s: " fmt, __func__, ## args)
-#else
-#define tsp_debug(fmt, args...)
-#endif
 
 #if FACTORY_TESTING
 #define TSP_VENDOR			"MELFAS"
@@ -155,10 +155,10 @@ static void reset_points(struct ts_data *ts)
 		ts->finger_state[i] = 0;
 		input_mt_slot(ts->input_dev, i);
 		input_mt_report_slot_state(ts->input_dev, MT_TOOL_FINGER,
-					false);
+									false);
 	}
 	input_sync(ts->input_dev);
-	tsp_debug("reset_all_fingers.");
+	tsp_log("reset_all_fingers");
 	return;
 }
 
@@ -188,7 +188,7 @@ static void reset_tsp(struct ts_data *ts)
 	mdelay(200);
 	init_tsp(ts);
 
-	tsp_debug("reset tsp ic done.");
+	tsp_log("reset tsp ic done");
 	return;
 }
 
@@ -199,7 +199,7 @@ static bool fw_updater(struct ts_data *ts, char const *mode)
 	u8 buf[4] = {0, };
 	bool ret = true, update = true;
 
-	tsp_debug("Enter the fw_updater.");
+	tsp_log("Enter the fw_updater");
 
 	if (ts_read_reg_data(ts, TS_READ_VERSION_ADDR, 4, buf) > 0) {
 		pr_info("tsp: fw. ver. : new.(%.2x), cur.(%.2x)\n",
@@ -252,16 +252,16 @@ static void set_ta_mode(int *ta_state)
 	switch (*ta_state) {
 	case CABLE_TYPE_USB:
 		buf = 0x00;
-		tsp_debug("USB cable attached.");
+		tsp_log("USB cable attached");
 		break;
 	case CABLE_TYPE_AC:
 		buf = 0x01;
-		tsp_debug("TA attached.");
+		tsp_log("TA attached");
 		break;
 	case CABLE_TYPE_NONE:
 	default:
 		buf = 0x00;
-		tsp_debug("external cable detached.");
+		tsp_log("external cable detached");
 	}
 
 	if (ts) {
@@ -341,7 +341,7 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_debug("cm_delta: rx %d tx %d value %d", x, y,
+			tsp_log("cm_delta: rx %d tx %d value %d", x, y,
 				ts_data->node_data->cm_delta_data[x * tx + y]);
 			break;
 
@@ -351,7 +351,7 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_debug("cm_abs: rx %d tx %d value %d", x, y,
+			tsp_log("cm_abs: rx %d tx %d value %d", x, y,
 				ts_data->node_data->cm_abs_data[x * tx + y]);
 			break;
 
@@ -361,7 +361,7 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_debug("intensity: rx %d tx %d value %d", x, y,
+			tsp_log("intensity: rx %d tx %d value %d", x, y,
 				ts_data->node_data->intensity_data[x * tx + y]);
 			break;
 
@@ -371,7 +371,7 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_debug("reference: rx %d tx %d value %d", x, y,
+			tsp_log("reference: rx %d tx %d value %d", x, y,
 				ts_data->node_data->reference_data[x * tx + y]);
 			break;
 
@@ -537,6 +537,21 @@ static void get_threshold(void *device_data)
 	return;
 }
 
+static void get_panel_vendor(void *device_data)
+{
+	struct ts_data *ts_data = (struct ts_data *)device_data;
+	struct factory_data *data = ts_data->factory_data;
+
+	data->cmd_state = RUNNING;
+
+	set_default_result(data);
+	sprintf(data->cmd_buff, "%s", ts_data->platform_data->panel_name);
+	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
+
+	data->cmd_state = OK;
+	return;
+}
+
 static void module_off_master(void *device_data)
 {
 
@@ -619,8 +634,8 @@ static void get_reference(void *device_data)
 	rx = data->cmd_param[0];
 	tx = data->cmd_param[1];
 
-	if (tx < 0 || tx > ts_data->platform_data->tx_channel_no ||
-	    rx < 0 || rx > ts_data->platform_data->rx_channel_no) {
+	if (tx > ts_data->platform_data->tx_channel_no ||
+	    rx > ts_data->platform_data->rx_channel_no) {
 		pr_err("tsp factory: param data is abnormal.\n");
 		data->cmd_state = FAIL;
 		return;
@@ -647,8 +662,8 @@ static void get_cm_abs(void *device_data)
 	rx = data->cmd_param[0];
 	tx = data->cmd_param[1];
 
-	if (tx < 0 || tx > ts_data->platform_data->tx_channel_no ||
-	    rx < 0 || rx > ts_data->platform_data->rx_channel_no) {
+	if (tx > ts_data->platform_data->tx_channel_no ||
+	    rx > ts_data->platform_data->rx_channel_no) {
 		pr_err("tsp factory: param data is abnormal.\n");
 		data->cmd_state = FAIL;
 		return;
@@ -675,8 +690,8 @@ static void get_cm_delta(void *device_data)
 	rx = data->cmd_param[0];
 	tx = data->cmd_param[1];
 
-	if (tx < 0 || tx > ts_data->platform_data->tx_channel_no ||
-	    rx < 0 || rx > ts_data->platform_data->rx_channel_no) {
+	if (tx > ts_data->platform_data->tx_channel_no ||
+	    rx > ts_data->platform_data->rx_channel_no) {
 		pr_err("tsp factory: param data is abnormal.\n");
 		data->cmd_state = FAIL;
 		return;
@@ -703,8 +718,8 @@ static void get_intensity(void *device_data)
 	rx = data->cmd_param[0];
 	tx = data->cmd_param[1];
 
-	if (tx < 0 || tx > ts_data->platform_data->tx_channel_no ||
-	    rx < 0 || rx > ts_data->platform_data->rx_channel_no) {
+	if (tx > ts_data->platform_data->tx_channel_no ||
+	    rx > ts_data->platform_data->rx_channel_no) {
 		pr_err("tsp factory: param data is abnormal.\n");
 		data->cmd_state = FAIL;
 		return;
@@ -815,7 +830,7 @@ static void run_cm_abs_read(void *device_data)
 
 			max_value = max(max_value, temp);
 			min_value = min(min_value, temp);
-			tsp_debug("cm_abs: rx %d tx %d value %d", x, y, temp);
+			tsp_log("cm_abs: rx %d tx %d value %d", x, y, temp);
 		}
 	}
 out:
@@ -872,6 +887,7 @@ struct tsp_cmd tsp_cmds[] = {
 	{TSP_CMD("get_fw_ver_ic", get_fw_ver_ic),},
 	{TSP_CMD("get_config_ver", get_config_ver),},
 	{TSP_CMD("get_threshold", get_threshold),},
+	{TSP_CMD("get_panel_vendor", get_panel_vendor),},
 	{TSP_CMD("module_off_master", module_off_master),},
 	{TSP_CMD("module_on_master", module_on_master),},
 	{TSP_CMD("module_off_slave", not_support_cmd),},
@@ -1077,6 +1093,7 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 	int ret = 0, i;
 	int event_packet_size, id, x, y;
 	u8 buf[6 * MELFAS_MAX_TOUCH] = {0, };
+	static u32 cnt;
 
 #if TOUCH_BOOST
 	if (false == boost) {
@@ -1097,7 +1114,7 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 #endif
 	if (event_packet_size <= 0 ||
 	    event_packet_size > MELFAS_MAX_TOUCH * 6) {
-		pr_info("tsp: Ghost IRQ.");
+		pr_err("tsp: Ghost IRQ.");
 		return IRQ_HANDLED;
 	}
 	ret = ts_read_reg_data(ts, TS_INPUT_INFOR_REG, event_packet_size, buf);
@@ -1120,15 +1137,21 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 		}
 
 		if ((buf[i] & 0x80) == 0) {
+			cnt--;
 #if TRACKING_COORD
 			pr_info("tsp: finger %d up (%d, %d)\n", id, x, y);
 #else
-			pr_info("tsp: finger %d up\n", id);
+			pr_info("tsp: finger %d up. remain: %d", id, cnt);
 #endif
 			input_mt_slot(ts->input_dev, id);
 			input_mt_report_slot_state(ts->input_dev,
-						MT_TOOL_FINGER, false);
+							MT_TOOL_FINGER, false);
 			ts->finger_state[id] = 0;
+#if TOUCH_BOOST
+			if (!cnt)
+				mod_timer(&ts->timer,
+					jiffies + msecs_to_jiffies(3000));
+#endif
 			continue;
 		}
 
@@ -1141,10 +1164,11 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 
 		if (ts->finger_state[id] == 0) {
 			ts->finger_state[id] = 1;
+			cnt++;
 #if TRACKING_COORD
 			pr_info("tsp: finger %d down (%d, %d)\n", id, x, y);
 #else
-			pr_info("tsp: finger %d down\n", id);
+			pr_info("tsp: finger %d down. remain: %d", id, cnt);
 #endif
 		} else {
 #if TRACKING_COORD
@@ -1152,15 +1176,6 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 #endif
 		}
 	}
-
-#if TOUCH_BOOST
-	for (i = 0; i < MELFAS_MAX_TOUCH; i++) {
-		if (ts->finger_state[i] == 1)
-			break;
-		if (i == MELFAS_MAX_TOUCH - 1)
-			mod_timer(&ts->timer, jiffies + msecs_to_jiffies(3000));
-	}
-#endif
 
 	input_sync(ts->input_dev);
 
@@ -1215,7 +1230,7 @@ static int __devinit ts_probe(struct i2c_client *client,
 	struct node_data *node_data;
 	u32 rx, tx;
 #endif
-	tsp_debug("enter.");
+	tsp_log("enter");
 
 	/* Return 1 if adapter supports everything we need, 0 if not. */
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
@@ -1266,9 +1281,9 @@ static int __devinit ts_probe(struct i2c_client *client,
 		goto err_input_register_device_failed;
 	}
 
-	tsp_debug("succeed to register input device.");
+	tsp_log("succeed to register input device");
 
-#if CONFIG_HAS_EARLYSUSPEND
+#ifdef CONFIG_HAS_EARLYSUSPEND
 	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
 	ts->early_suspend.suspend = ts_early_suspend;
 	ts->early_suspend.resume = ts_late_resume;
@@ -1290,7 +1305,7 @@ static int __devinit ts_probe(struct i2c_client *client,
 	}
 
 	if (ts->client->irq) {
-		tsp_debug("trying to request irq: %s-%d.",
+		tsp_log("trying to request irq: %s-%d",
 			ts->client->name, ts->client->irq);
 		ret = request_threaded_irq(client->irq, NULL,
 					ts_irq_handler,

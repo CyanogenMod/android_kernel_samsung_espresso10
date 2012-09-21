@@ -376,6 +376,15 @@ struct usb_composite_dev {
 
 	/* protects deactivations and delayed_status counts*/
 	spinlock_t			lock;
+
+#ifdef CONFIG_USB_ANDROID_SAMSUNG_COMPOSITE
+	/* states of a real cable connection */
+	bool                            cable_connect;
+	/*Host os check */
+	bool                            host_state_info;
+	bool                            mac_connected;
+#endif
+
 };
 
 extern int usb_string_id(struct usb_composite_dev *c);

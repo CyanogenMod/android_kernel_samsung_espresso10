@@ -34,7 +34,9 @@
 
 #define ESPRESSO10_FB_RAM_SIZE		SZ_16M	/* ~1280*720*4 * 2 */
 
-static struct ltn101al03_panel_data espresso10_panel_data;
+static struct ltn101al03_panel_data espresso10_panel_data = {
+	.panel_id = PANEL_SEC,
+};
 
 static void espresso10_lcd_set_power(bool enable)
 {
@@ -142,11 +144,28 @@ void __init omap4_espresso10_display_early_init(void)
 		gpio5_hwmod->flags = HWMOD_INIT_NO_RESET;
 }
 
+static __init int setup_current_panel(char *opt)
+{
+	return kstrtoint(opt, 0, &espresso10_panel_data.panel_id);
+}
+__setup("lcd_panel_id=", setup_current_panel);
+
 void __init omap4_espresso10_display_init(void)
 {
 	struct ltn101al03_panel_data *panel;
-	int ret;
+	int ret, i;
 	u8 board_type;
+
+	/* Default setting vlaue for SEC panel*/
+	int platform_brightness[] = {
+		BRIGHTNESS_OFF, BRIGHTNESS_DIM, BRIGHTNESS_MIN,
+		BRIGHTNESS_25, BRIGHTNESS_DEFAULT, BRIGHTNESS_MAX};
+	int kernel_brightness[] = {0, 3, 3, 8, 47, 81};
+
+	if (espresso10_panel_data.panel_id == PANEL_BOE) {
+		kernel_brightness[4] = 47;
+		kernel_brightness[5] = 81;
+	}
 
 	espresso10_panel_data.lvds_nshdn_gpio =
 	    omap_muxtbl_get_gpio_by_name("LVDS_nSHDN");
@@ -158,6 +177,13 @@ void __init omap4_espresso10_display_init(void)
 	espresso10_panel_data.set_power = espresso10_lcd_set_power;
 	espresso10_panel_data.set_gptimer_idle =
 		espresso10_lcd_set_gptimer_idle;
+
+	for (i = 0 ; i < NUM_BRIGHTNESS_LEVEL ; i++) {
+		espresso10_panel_data.brightness_table.platform_value[i] =
+			platform_brightness[i];
+		espresso10_panel_data.brightness_table.kernel_value[i] =
+			kernel_brightness[i];
+	}
 
 	ret = gpio_request(espresso10_panel_data.lcd_en_gpio, "lcd_en");
 	if (ret < 0)

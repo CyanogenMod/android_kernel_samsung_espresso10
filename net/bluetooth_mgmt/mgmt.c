@@ -194,10 +194,16 @@ static u8 mgmt_status_table[] = {
 
 static u8 mgmt_status(u8 hci_status)
 {
-	if (hci_status < ARRAY_SIZE(mgmt_status_table))
-		return mgmt_status_table[hci_status];
+	/* bluetoothd is still checking hci status. so no need to check mgmt status
+	 * but this should be checked after bluetoothd update */
+	return hci_status;
 
-	return MGMT_STATUS_FAILED;
+	/*
+	* if (hci_status < ARRAY_SIZE(mgmt_status_table))
+	*		return mgmt_status_table[hci_status];
+	*
+	* return MGMT_STATUS_FAILED;
+	*/
 }
 
 static int cmd_status(struct sock *sk, u16 index, u16 cmd, u8 status)
@@ -1487,7 +1493,7 @@ static int pin_code_reply(struct sock *sk, u16 index, void *data, u16 len)
 						MGMT_STATUS_NOT_CONNECTED);
 		goto failed;
 	}
-
+/*
 	if (conn->pending_sec_level == BT_SECURITY_HIGH && cp->pin_len != 16) {
 		bacpy(&ncp.bdaddr, &cp->bdaddr);
 
@@ -1500,7 +1506,7 @@ static int pin_code_reply(struct sock *sk, u16 index, void *data, u16 len)
 
 		goto failed;
 	}
-
+*/
 	cmd = mgmt_pending_add(sk, MGMT_OP_PIN_CODE_REPLY, hdev, data, len);
 	if (!cmd) {
 		err = -ENOMEM;

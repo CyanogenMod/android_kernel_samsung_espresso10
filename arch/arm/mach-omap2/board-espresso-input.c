@@ -267,11 +267,43 @@ static void __init espresso_tsp_gpio_init(void)
 
 	for (i = 0; i < ARRAY_SIZE(tsp_gpios); i++)
 		tsp_gpios[i].gpio =
-		    omap_muxtbl_get_gpio_by_name(tsp_gpios[i].label);
+			omap_muxtbl_get_gpio_by_name(tsp_gpios[i].label);
 	gpio_request_array(tsp_gpios, ARRAY_SIZE(tsp_gpios));
 
 	espresso_i2c3_boardinfo[0].irq =
-	    gpio_to_irq(tsp_gpios[GPIO_TOUCH_nINT].gpio);
+				gpio_to_irq(tsp_gpios[GPIO_TOUCH_nINT].gpio);
+}
+
+static struct gpio ts_panel_gpios[] = {
+	{
+		.label	= "TSP_VENDOR1",
+		.flags	= GPIOF_IN
+	},
+	{
+		.label	= "TSP_VENDOR2",
+		.flags	= GPIOF_IN
+	},
+	{
+		.label	= "TSP_VENDOR3",
+		.flags	= GPIOF_IN
+	},
+};
+
+static const char *panel_name[8] = {"ILJIN", "DIGITECH", };
+
+static __init void espresso_ts_panel_setup(void)
+{
+	int i, panel_id = 0;
+
+	for (i = 0; i < ARRAY_SIZE(ts_panel_gpios); i++)
+		ts_panel_gpios[i].gpio =
+			omap_muxtbl_get_gpio_by_name(ts_panel_gpios[i].label);
+	gpio_request_array(ts_panel_gpios, ARRAY_SIZE(ts_panel_gpios));
+
+	for (i = 0; i < ARRAY_SIZE(ts_panel_gpios); i++)
+		panel_id |= gpio_get_value(ts_panel_gpios[i].gpio) << i;
+
+	melfas_ts_pdata.panel_name = panel_name[clamp(panel_id, 0, 7)];
 }
 
 void omap4_espresso_tsp_ta_detect(int cable_type)
@@ -298,6 +330,7 @@ void __init omap4_espresso_input_init(void)
 
 	espresso_gpio_keypad_gpio_init();
 	espresso_tsp_gpio_init();
+	espresso_ts_panel_setup();
 
 	i2c_register_board_info(3, espresso_i2c3_boardinfo,
 				ARRAY_SIZE(espresso_i2c3_boardinfo));

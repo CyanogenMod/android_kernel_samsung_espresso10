@@ -147,6 +147,16 @@ static int al3201_get_adc_value(struct i2c_client *client)
 	u32 val;
 	struct al3201_data *data = i2c_get_clientdata(client);
 
+	range = al3201_get_range(client);
+	if (!range) {
+		pr_err("%s: reset! need to re-init...\n", __func__);
+		/* 1 : High resolution range, 0 to 8192 lux*/
+		al3201_set_range(client, 1);
+		/* 0x02 : Response time 200ms low pass fillter */
+		al3201_set_response_time(client, 0x02);
+		usleep_range(10000, 11000);
+	}
+
 	mutex_lock(&data->lock);
 	lsb = i2c_smbus_read_byte_data(client, AL3201_ADC_LSB);
 	if (lsb < 0) {
@@ -158,7 +168,6 @@ static int al3201_get_adc_value(struct i2c_client *client)
 	if (msb < 0)
 		return msb;
 
-	range = al3201_get_range(client);
 	val = (u32) (msb << 8 | lsb);
 	if (val < 7)
 		val = 0;

@@ -191,8 +191,11 @@ void notify_dock_status(int status)
 	if (!the_codec)
 		return;
 
-	pr_info("%s: status=%d", __func__, status);
 	dock_status = status;
+	pr_info("%s: status=%d", __func__, dock_status);
+
+	if (the_codec->suspended)
+		return;
 
 	if (status)
 		wm8994_vmid_mode(the_codec, WM8994_VMID_FORCE);
@@ -430,6 +433,12 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	if (ret != 0)
 		dev_err(codec->dev, "Failed to add DAPM routes: %d\n", ret);
 
+	/* Force AIF1CLK on */
+	ret = snd_soc_dapm_force_enable_pin(&codec->dapm, "AIF1CLK");
+	if (ret < 0)
+		dev_err(codec->dev, "Failed to enable AIF1CLK: %d\n",
+				ret);
+
 	/* set up NC codec pins */
 	snd_soc_dapm_nc_pin(dapm, "IN2LP:VXRN");
 	snd_soc_dapm_nc_pin(dapm, "IN2LN");
@@ -454,6 +463,9 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_ignore_suspend(dapm, "AIF1ADCDAT");
 	snd_soc_dapm_ignore_suspend(dapm, "AIF2ADCDAT");
 	snd_soc_dapm_ignore_suspend(dapm, "AIF3ADCDAT");
+
+	/* By default use idle_bias_off, will override for WM8994 */
+	codec->dapm.idle_bias_off = 0;
 
 	ret = snd_soc_dai_set_sysclk(aif1_dai, WM8994_SYSCLK_MCLK2,
 				     32768, SND_SOC_CLOCK_IN);
@@ -548,6 +560,9 @@ static int wm8994_suspend_pre(struct snd_soc_card *card)
 		pr_info("%s: entering force vmid mode\n", __func__);
 		wm8994_vmid_mode(the_codec, WM8994_VMID_NORMAL);
 	}
+	
+	snd_soc_dapm_disable_pin(&the_codec->dapm, "AIF1CLK");
+	
 	return 0;
 }
 
@@ -559,6 +574,9 @@ static int wm8994_resume_post(struct snd_soc_card *card)
 		pr_info("%s: entering normal vmid mode\n", __func__);
 		wm8994_vmid_mode(the_codec, WM8994_VMID_FORCE);
 	}
+
+	snd_soc_dapm_force_enable_pin(&the_codec->dapm, "AIF1CLK");
+
 	return 0;
 }
 #else

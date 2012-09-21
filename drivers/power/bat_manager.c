@@ -64,6 +64,7 @@ struct charger_device_info {
 	struct alarm		alarm;
 	struct workqueue_struct *monitor_wqueue;
 	struct wake_lock	work_wake_lock;
+	struct wake_lock	cable_wake_lock;
 
 	enum cable_type_t	cable_status;
 	int			present;
@@ -531,9 +532,11 @@ static int otg_handle_notification(struct notifier_block *nb,
 	case USB_EVENT_VBUS_CHARGER:
 		pr_info("[BAT_MANAGER] Charger Connected\n");
 		di->is_low_batt_alarm = false;
+		wake_lock(&di->cable_wake_lock);
 		break;
 	case USB_EVENT_CHARGER_NONE:
 		pr_info("[BAT_MANAGER] Charger Disconnect\n");
+		wake_unlock(&di->cable_wake_lock);
 		break;
 	default:
 		return NOTIFY_OK;
@@ -745,6 +748,9 @@ static int __devinit batman_probe(struct platform_device *pdev)
 
 	wake_lock_init(&di->work_wake_lock, WAKE_LOCK_SUSPEND,
 			"wakelock-charger");
+	wake_lock_init(&di->cable_wake_lock, WAKE_LOCK_SUSPEND,
+			"wakelock-cable");
+
 	mutex_init(&di->mutex);
 	mutex_init(&di->cable_mutex);
 
@@ -797,6 +803,7 @@ otg_reg_notifier_failed:
 err_wqueue:
 	mutex_destroy(&di->mutex);
 	mutex_destroy(&di->cable_mutex);
+	wake_lock_destroy(&di->cable_wake_lock);
 	wake_lock_destroy(&di->work_wake_lock);
 	power_supply_unregister(&di->psy_ac);
 err_supply_reg_ac:
@@ -823,6 +830,7 @@ static int __devexit batman_remove(struct platform_device *pdev)
 	if (di->transceiver)
 		otg_put_transceiver(di->transceiver);
 	wake_lock_destroy(&di->work_wake_lock);
+	wake_lock_destroy(&di->cable_wake_lock);
 	mutex_destroy(&di->mutex);
 	mutex_destroy(&di->cable_mutex);
 

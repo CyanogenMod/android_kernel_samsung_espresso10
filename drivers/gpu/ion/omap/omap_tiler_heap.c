@@ -52,6 +52,7 @@ struct omap_tiler_info {
 	u32 *phys_addrs;		/* array addrs of pages */
 	u32 n_tiler_pages;		/* number of tiler pages */
 	u32 *tiler_addrs;		/* array of addrs of tiler pages */
+	int fmt;			/* tiler buffer format */
 	u32 tiler_start;		/* start addr in tiler -- if not page
 					   aligned this may not equal the
 					   first entry onf tiler_addrs */
@@ -97,6 +98,7 @@ int omap_tiler_alloc(struct ion_heap *heap,
 	info->n_tiler_pages = n_tiler_pages;
 	info->phys_addrs = (u32 *)(info + 1);
 	info->tiler_addrs = info->phys_addrs + n_phys_pages;
+	info->fmt = data->fmt;
 
 	info->tiler_handle = tiler_alloc_block_area(data->fmt, data->w, data->h,
 						    &info->tiler_start,
@@ -213,6 +215,7 @@ int omap_tiler_pages(struct ion_client *client, struct ion_handle *handle,
 	*tiler_addrs = info->tiler_addrs;
 	return 0;
 }
+EXPORT_SYMBOL(omap_tiler_pages);
 
 int omap_tiler_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
 			     struct vm_area_struct *vma)
@@ -221,18 +224,27 @@ int omap_tiler_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
 	unsigned long addr = vma->vm_start;
 	u32 vma_pages = (vma->vm_end - vma->vm_start) / PAGE_SIZE;
 	int n_pages = min(vma_pages, info->n_tiler_pages);
-	int i, ret;
+	int i, ret = 0;
 
-	for (i = vma->vm_pgoff; i < n_pages; i++, addr += PAGE_SIZE) {
+	if (TILER_PIXEL_FMT_PAGE == info->fmt) {
+		/* Since 1D buffer is linear, map whole buffer in one shot */
 		ret = remap_pfn_range(vma, addr,
-				      __phys_to_pfn(info->tiler_addrs[i]),
-				      PAGE_SIZE,
-				      (buffer->map_cacheable ? (vma->vm_page_prot)
-				      : pgprot_noncached(vma->vm_page_prot)));
-		if (ret)
-			return ret;
+				 __phys_to_pfn(info->tiler_addrs[0]),
+				(vma->vm_end - vma->vm_start),
+				(buffer->map_cacheable ?
+				(vma->vm_page_prot)
+				: pgprot_noncached(vma->vm_page_prot)));
+	} else {
+		for (i = vma->vm_pgoff; i < n_pages; i++, addr += PAGE_SIZE) {
+			ret = remap_pfn_range(vma, addr,
+				 __phys_to_pfn(info->tiler_addrs[i]),
+				PAGE_SIZE,
+				vma->vm_page_prot);
+			if (ret)
+				return ret;
+		}
 	}
-	return 0;
+	return ret;
 }
 
 int omap_tiler_heap_flush_user(struct ion_buffer *buffer, size_t len,
@@ -240,29 +252,35 @@ int omap_tiler_heap_flush_user(struct ion_buffer *buffer, size_t len,
 {
 	struct omap_tiler_info *info = buffer->priv_virt;
 	int n_pages = info->n_tiler_pages;
-	int i, ret;
+	int i;
 	size_t size_flush;
-	if(!buffer->map_cacheable) {
+	if (!buffer->map_cacheable) {
 		pr_err("%s(): buffer not mapped as cacheable\n",
 	       __func__);
 		return 0;
 	}
 
-	if(len > (n_pages * PAGE_SIZE)) {
+	if (len > (n_pages * PAGE_SIZE)) {
 		pr_err("%s(): size to flush is greater than allocated size\n",
 	       __func__);
 		return -EINVAL;
 	}
 
-	for (i = 0; (i < n_pages) && (len > 0); i++, vaddr += PAGE_SIZE) {
-		if(len >= PAGE_SIZE) {
-			size_flush = PAGE_SIZE;
-		} else {
-			size_flush = len;
+	if (TILER_PIXEL_FMT_PAGE == info->fmt) {
+		flush_cache_user_range(vaddr, vaddr + len);
+		outer_flush_range(info->tiler_addrs[0], len);
+	} else {
+		for (i = 0; (i < n_pages) && (len > 0);
+			i++, vaddr += PAGE_SIZE) {
+			if (len >= PAGE_SIZE)
+				size_flush = PAGE_SIZE;
+			else
+				size_flush = len;
+			len -= size_flush;
+			flush_cache_user_range(vaddr, vaddr + size_flush);
+			outer_flush_range(info->tiler_addrs[i],
+				info->tiler_addrs[i]+size_flush);
 		}
-		len -= size_flush;
-		dmac_flush_range((void *)vaddr, (void *)vaddr + size_flush);
-		outer_flush_range(info->tiler_addrs[i], info->tiler_addrs[i]+size_flush);
 	}
 
 	return 0;
@@ -270,8 +288,41 @@ int omap_tiler_heap_flush_user(struct ion_buffer *buffer, size_t len,
 int omap_tiler_heap_inval_user(struct ion_buffer *buffer, size_t len,
 			unsigned long vaddr)
 {
-	/* Empty for Now */
-	return omap_tiler_heap_flush_user(buffer, len, vaddr);
+	struct omap_tiler_info *info = buffer->priv_virt;
+	int n_pages = info->n_tiler_pages;
+	int i;
+	size_t size_flush;
+	if (!buffer->map_cacheable) {
+		pr_err("%s(): buffer not mapped as cacheable\n",
+	       __func__);
+		return 0;
+	}
+
+	if (len > (n_pages * PAGE_SIZE)) {
+		pr_err("%s(): size to flush is greater than allocated size\n",
+	       __func__);
+		return -EINVAL;
+	}
+
+	if (TILER_PIXEL_FMT_PAGE == info->fmt) {
+		flush_cache_user_range(vaddr, (vaddr+len));
+		outer_inv_range(info->tiler_addrs[0],
+			info->tiler_addrs[0] + len);
+	} else {
+		for (i = 0; (i < n_pages) && (len > 0);
+			i++, vaddr += PAGE_SIZE) {
+			if (len >= PAGE_SIZE)
+				size_flush = PAGE_SIZE;
+			else
+				size_flush = len;
+			len -= size_flush;
+			flush_cache_user_range(vaddr, vaddr + size_flush);
+			outer_inv_range(info->tiler_addrs[i],
+				info->tiler_addrs[i]+size_flush);
+		}
+	}
+
+	return 0;
 }
 static struct ion_heap_ops omap_tiler_ops = {
 	.allocate = omap_tiler_heap_allocate,

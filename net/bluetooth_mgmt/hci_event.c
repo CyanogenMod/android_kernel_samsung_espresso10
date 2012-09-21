@@ -1315,7 +1315,8 @@ static void hci_check_pending_name(struct hci_dev *hdev, struct hci_conn *conn,
 	struct discovery_state *discov = &hdev->discovery;
 	struct inquiry_entry *e;
 
-	if (conn && !test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags))
+	/* this event is for remote name & class update. actual connected event is sent from hci_conn_complete_evt */
+	if (conn /*&& !test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags)*/)
 		mgmt_device_connected(hdev, bdaddr, ACL_LINK, 0x00,
 					name, name_len, conn->dev_class);
 
@@ -1690,14 +1691,6 @@ static inline void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *s
 		conn->type = SCO_LINK;
 	}
 
-	/* SS_BLUETOOTH(jh113.kim) 2012.03.02
-	MicroSoft BT Mouse 5000 pairing fail issue */	
-	if ((!conn->ssp_mode || !conn->hdev->ssp_mode)
-		&& ((conn->dev_class[1] & 0x1f) != 0x05)) {
-		__u8 auth = AUTH_DISABLED;
-		hci_send_cmd(hdev, HCI_OP_WRITE_AUTH_ENABLE, 1, &auth);
-	}
-
 	if (!ev->status) {
 		conn->handle = __le16_to_cpu(ev->handle);
 
@@ -1705,6 +1698,21 @@ static inline void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *s
 			conn->state = BT_CONFIG;
 			hci_conn_hold(conn);
 			conn->disc_timeout = HCI_DISCONN_TIMEOUT;
+
+			/* update mgmt state */
+			if (!test_and_set_bit(HCI_CONN_MGMT_CONNECTED, &conn->flags))
+					mgmt_device_connected(hdev, &conn->dst, conn->type,
+									conn->dst_type, NULL, 0,
+									conn->dev_class);
+
+			/* Encryption implies authentication
+			     - 0x00 Link level encryption disabled.
+			     - 0x01 Link level encryption enabled.
+			*/
+			if (ev->encr_mode == 0x01) {
+				conn->link_mode |= HCI_LM_AUTH;
+				conn->link_mode |= HCI_LM_ENCRYPT;
+			}
 		} else
 			conn->state = BT_CONNECTED;
 
@@ -1964,9 +1972,19 @@ static inline void hci_remote_name_evt(struct hci_dev *hdev, struct sk_buff *skb
 	if (!test_bit(HCI_MGMT, &hdev->dev_flags))
 		goto check_auth;
 
-	if (ev->status == 0)
+	if (ev->status == 0) {
 		hci_check_pending_name(hdev, conn, &ev->bdaddr, ev->name,
 					strnlen(ev->name, HCI_MAX_NAME_LENGTH));
+		/* workaround for HM1800
+		* If HM1800 & incoming connection, change the role as master
+		*/
+		if (conn != NULL && !conn->out
+		&& (!strncmp(ev->name, "HM1800", 6) || !strncmp(ev->name, "HM5000", 6))) {
+			BT_ERR("VPS's device should be change role");
+			hci_conn_switch_role(conn, 0x00);
+		}
+
+	}
 	else
 		hci_check_pending_name(hdev, conn, &ev->bdaddr, NULL, 0);
 
@@ -2284,6 +2302,7 @@ static inline void hci_cmd_complete_evt(struct hci_dev *hdev, struct sk_buff *sk
 
 	case HCI_OP_USER_PASSKEY_NEG_REPLY:
 		hci_cc_user_passkey_neg_reply(hdev, skb);
+		break;
 
 	case HCI_OP_LE_SET_SCAN_PARAM:
 		hci_cc_le_set_scan_param(hdev, skb);
@@ -2584,14 +2603,25 @@ static inline void hci_link_key_request_evt(struct hci_dev *hdev, struct sk_buff
 			BT_DBG("%s ignoring unauthenticated key", hdev->name);
 			goto not_found;
 		}
-
-		if (key->type == HCI_LK_COMBINATION && key->pin_len < 16 &&
-				conn->pending_sec_level == BT_SECURITY_HIGH) {
-			BT_DBG("%s ignoring key unauthenticated for high \
-							security", hdev->name);
-			goto not_found;
-		}
-
+		/* - This is mgmt only. hciops doesn't checking like this. -
+		* If device is pre 2.1 & security level is high, combination key type is required.
+		* (core spec 4.0 GAP 1671p)
+		* And 16 digit PIN is recommended. (but not mandatory)
+		* Now, Google API only support high & low level for outgoing.
+		* So if application use high level security, 16 digit PIN is needed. (mgmt based)
+		* But Google is still using hciops, There is no problem in their platform.
+		* This can make confusion to 3rd party developer.
+		* Disable this part for same action with hciops.
+		* and this should be checked after google's update.
+		*/
+		/*
+		*if (key->type == HCI_LK_COMBINATION && key->pin_len < 16 &&
+		*		conn->pending_sec_level == BT_SECURITY_HIGH) {
+		*	BT_DBG("%s ignoring key unauthenticated for high \
+		*					security", hdev->name);
+		*	goto not_found;
+		*}
+		*/
 		conn->key_type = key->type;
 		conn->pin_length = key->pin_len;
 	}

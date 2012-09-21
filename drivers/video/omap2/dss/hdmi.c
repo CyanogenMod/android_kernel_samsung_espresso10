@@ -547,12 +547,13 @@ static int hdmi_power_on(struct omap_dss_device *dssdev)
 	/* Make selection of HDMI in DSS */
 	dss_select_hdmi_venc_clk_source(DSS_HDMI_M_PCLK);
 
-	/* Select the DISPC clock source as PRCM clock in case when both LCD
-	* panels are disabled and we cannot use DSI PLL for this purpose.*/
-	if (!dispc_is_channel_enabled(OMAP_DSS_CHANNEL_LCD) &&
-		!dispc_is_channel_enabled(OMAP_DSS_CHANNEL_LCD2))
-		dss_select_dispc_clk_source
-		(dssdev->clocks.dispc.dispc_fclk_src);
+	/* Select the dispc clock source as PRCM clock, to ensure that it is not
+	 * DSI PLL source as the clock selected by DSI PLL might not be
+	 * sufficient for the resolution selected / that can be changed
+	 * dynamically by user. This can be moved to single location , say
+	 * Boardfile.
+	 */
+	dss_select_dispc_clk_source(dssdev->clocks.dispc.dispc_fclk_src);
 
 	/* bypass TV gamma table */
 	dispc_enable_gamma_table(0);
@@ -562,9 +563,6 @@ static int hdmi_power_on(struct omap_dss_device *dssdev)
 			dssdev->panel.timings.y_res);
 
 	dispc_enable_channel(OMAP_DSS_CHANNEL_DIGIT, dssdev->type, 1);
-
-	/* Need signal stable time*/
-	msleep(500);
 
 	hdmi_ti_4xxx_wp_video_start(&hdmi.hdmi_data, 1);
 
@@ -581,18 +579,13 @@ err:
 
 static void hdmi_power_off(struct omap_dss_device *dssdev)
 {
-	enum hdmi_pwrchg_reasons reason = HDMI_PWRCHG_DEFAULT;
 	if (hdmi.hdmi_irq_cb)
 		hdmi.hdmi_irq_cb(HDMI_HPD_LOW);
 
 	hdmi_ti_4xxx_wp_video_start(&hdmi.hdmi_data, 0);
 
 	dispc_enable_channel(OMAP_DSS_CHANNEL_DIGIT, dssdev->type, 0);
-	if (hdmi.set_mode)
-		reason = reason | HDMI_PWRCHG_MODE_CHANGE;
-	if (dssdev->sync_lost_error)
-		reason = reason | HDMI_PWRCHG_RESYNC;
-	hdmi_ti_4xxx_phy_off(&hdmi.hdmi_data, reason);
+	hdmi_ti_4xxx_phy_off(&hdmi.hdmi_data, hdmi.set_mode);
 	hdmi_ti_4xxx_set_pll_pwr(&hdmi.hdmi_data, HDMI_PLLPWRCMD_ALLOFF);
 	hdmi_runtime_put();
 	hdmi.deep_color = HDMI_DEEP_COLOR_24BIT;

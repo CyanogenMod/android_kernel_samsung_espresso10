@@ -59,7 +59,6 @@
 
 bool disable_ertm;
 
-/* SSBT :: KJH * */
 static u32 l2cap_feat_mask = 0x00000000;
 static u8 l2cap_fixed_chan[8] = { 0x02, };
 
@@ -2486,6 +2485,25 @@ static inline int l2cap_connect_req(struct l2cap_conn *conn, struct l2cap_cmd_hd
 		l2cap_state_change(chan, BT_CONNECT2);
 		result = L2CAP_CR_PEND;
 		status = L2CAP_CS_NO_INFO;
+
+		/* if lm encryption enabled, send authorization pending.
+		 * this workaround is for ford carkit. (incoming avdtp connection failed)
+		 */
+		if ((conn->hcon->link_mode & HCI_LM_AUTH) && (conn->hcon->link_mode & HCI_LM_ENCRYPT) &&
+				!(conn->hcon->ssp_mode > 0) &&
+				psm == cpu_to_le16(0x0019) &&
+				bt_sk(sk)->defer_setup) {
+			BT_DBG("psm is 0x0019, info req was not sent before");
+
+			/* Address Filer
+			 * 00-1e-a4 : Ford carkit, oui (Nokia Danmark A/S)
+			 */
+			if (conn->dst->b[5] == 0x00 && conn->dst->b[4] == 0x1e && conn->dst->b[3] == 0xa4) {
+				BT_DBG("send L2CAP_CS_AUTHOR_PEND");
+				status = L2CAP_CS_AUTHOR_PEND;
+				parent->sk_data_ready(parent, 0);
+			}
+		}
 	}
 
 	write_unlock_bh(&conn->chan_lock);

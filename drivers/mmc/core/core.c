@@ -1943,6 +1943,9 @@ int mmc_pm_notify(struct notifier_block *notify_block,
 {
 	struct mmc_host *host = container_of(
 		notify_block, struct mmc_host, pm_notify);
+#if defined(CONFIG_BCM4330) || defined(CONFIG_BCM4330_MODULE)
+	struct omapsdcc_host *omaphost = mmc_priv(host);
+#endif
 	unsigned long flags;
 
 
@@ -1984,7 +1987,13 @@ int mmc_pm_notify(struct notifier_block *notify_block,
 		}
 		host->rescan_disable = 0;
 		spin_unlock_irqrestore(&host->lock, flags);
-		mmc_detect_change(host, 0);
+		/* for BCM WIFI */
+#if defined(CONFIG_BCM4330) || defined(CONFIG_BCM4330_MODULE)
+		if (host->card && omaphost)
+			printk(KERN_WARNING"%s(): WIFI SKIP DETECT CHANGE\n",__func__);
+		else
+#endif
+			mmc_detect_change(host, 0);
 
 	}
 

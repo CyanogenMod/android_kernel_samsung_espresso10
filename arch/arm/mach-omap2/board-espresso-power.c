@@ -219,9 +219,9 @@ static void max17042_fuelgauge_register_callbacks(
 static struct max17042_platform_data max17042_pdata = {
 	.register_callbacks = &max17042_fuelgauge_register_callbacks,
 	.enable_current_sense = true,
-	.capacity = 0x1F40,
-	.vfcapacity = 0x29AB,
-	.low_bat_comp_start_vol = 3550,
+	.sdi_capacity = 0x1F40,
+	.sdi_vfcapacity = 0x29AB,
+	.sdi_low_bat_comp_start_vol = 3550,
 };
 
 static const __initdata struct i2c_board_info max17042_i2c[] = {

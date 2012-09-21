@@ -69,6 +69,20 @@ long omap_ion_ioctl(struct ion_client *client, unsigned int cmd,
 			return -EFAULT;
 		break;
 	}
+	case OMAP_ION_PHYS_ADDR:
+	{
+		struct omap_ion_phys_addr_data data;
+		int ret;
+		if (copy_from_user(&data, (void __user *)arg, sizeof(data)))
+			return -EFAULT;
+		ret = ion_phys(client, data.handle, &data.phys_addr, &data.size);
+		if (ret)
+			return ret;
+		if (copy_to_user((void __user *)arg, &data,
+				 sizeof(data)))
+			return -EFAULT;
+		break;
+	}
 	default:
 		pr_err("%s: Unknown custom ioctl\n", __func__);
 		return -ENOTTY;
