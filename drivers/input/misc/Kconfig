@@ -286,6 +286,16 @@ config INPUT_TWL4030_VIBRA
 	  To compile this driver as a module, choose M here. The module will
 	  be called twl4030_vibra.
 
+config INPUT_TWL6030_PWRBUTTON
+	tristate "TWL6030 Power button Driver"
+	depends on TWL4030_CORE
+	help
+	  Say Y here if you want to enable power key reporting via the
+	  TWL6030 family of chips.
+
+	  To compile this driver as a module, choose M here. The module will
+	  be called twl6030_pwrbutton.
+
 config INPUT_UINPUT
 	tristate "User level driver support"
 	help
@@ -494,6 +504,13 @@ config INPUT_XEN_KBDDEV_FRONTEND
 	  To compile this driver as a module, choose M here: the
 	  module will be called xen-kbdfront.
 
+config INPUT_BMA180
+       bool "BMA-180 Tri-axis accelerometer"
+       depends on I2C && SYSFS
+       help
+         Say Y here if you want to use BMA-180 Tri-axis accelerometer
+         through I2C interface.
+
 config OPTICAL_GP2A
 	depends on I2C && GENERIC_GPIO
 	tristate "GP2A ambient light and proximity input device"
@@ -505,4 +522,10 @@ config GP2A_MODE_B
 	default n
 	help
 	  This option enables proximity mode B
+config INPUT_MPU6050
+	bool "Invensense MPU-6050 sensor"
+	default n
+config INPUT_MPU6050_POLLING
+	bool "MPU-6050 polling mode"
+	default n
 endif

@@ -32,6 +32,7 @@
 #include <linux/clk.h>
 
 #include <mach/irqs.h>
+#include "../../../../arch/arm/mach-omap2/control.h"
 #include <plat/mux.h>
 #include <plat/i2c.h>
 #include <plat/omap-pm.h>
@@ -269,3 +270,107 @@ int __init omap_register_i2c_bus(int bus_id, u32 clkrate,
 
 	return omap_i2c_add_bus(bus_id);
 }
+
+/**
+ * omap_register_i2c_bus_board_data - register hwspinlock data
+ * @bus_id: bus id counting from number 1
+ * @pdata: pointer to the I2C bus board data
+ */
+void omap_register_i2c_bus_board_data(int bus_id,
+				struct omap_i2c_bus_board_data *pdata)
+{
+	BUG_ON(bus_id < 1 || bus_id > omap_i2c_nr_ports());
+
+	if ((pdata != NULL) && (pdata->handle != NULL)) {
+		i2c_pdata[bus_id - 1].handle = pdata->handle;
+		i2c_pdata[bus_id - 1].hwspin_lock_timeout =
+					pdata->hwspin_lock_timeout;
+		i2c_pdata[bus_id - 1].hwspin_unlock = pdata->hwspin_unlock;
+	}
+}
+
+/**
+ * omap2_i2c_pullup - setup pull-up resistors for I2C bus
+ * @bus_id: bus id counting from number 1
+ * @sda_pullup: Pull-up resistor for SDA and SCL pins
+ *
+ */
+void omap2_i2c_pullup(int bus_id, enum omap_i2c_pullup_values pullup)
+{
+	u32 val = 0;
+
+
+	if (bus_id < 1 || bus_id > omap_i2c_nr_ports() ||
+			pullup > I2C_PULLUP_STD_NA_FAST_300_OM) {
+		pr_err("%s:Wrong pullup (%d) or use wrong I2C port (%d)\n",
+			__func__, pullup, bus_id);
+		return;
+	}
+
+	val = omap4_ctrl_pad_readl(OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_I2C_0);
+	switch (bus_id) {
+	case 1:
+		/* Setup PULL-UP resistor for I2C-1 */
+		val &= ~(OMAP4_I2C1_SDA_LOAD_BITS_MASK  |
+			OMAP4_I2C1_SCL_LOAD_BITS_MASK  |
+			OMAP4_I2C1_SDA_PULLUPRESX_MASK |
+			OMAP4_I2C1_SCL_PULLUPRESX_MASK);
+		val |= ((pullup << OMAP4_I2C1_SDA_LOAD_BITS_SHIFT) |
+			(pullup << OMAP4_I2C1_SCL_LOAD_BITS_SHIFT));
+		break;
+	case 2:
+		/* Setup PULL-UP resistor for I2C-2 */
+		val &= ~(OMAP4_I2C2_SDA_LOAD_BITS_MASK  |
+			OMAP4_I2C2_SCL_LOAD_BITS_MASK  |
+			OMAP4_I2C2_SDA_PULLUPRESX_MASK |
+			OMAP4_I2C2_SCL_PULLUPRESX_MASK);
+		val |= ((pullup << OMAP4_I2C2_SDA_LOAD_BITS_SHIFT) |
+			(pullup << OMAP4_I2C2_SCL_LOAD_BITS_SHIFT));
+		break;
+	case 3:
+		/* Setup PULL-UP resistor for I2C-3 */
+		val &= ~(OMAP4_I2C3_SDA_LOAD_BITS_MASK  |
+			OMAP4_I2C3_SCL_LOAD_BITS_MASK  |
+			OMAP4_I2C3_SDA_PULLUPRESX_MASK |
+			OMAP4_I2C3_SCL_PULLUPRESX_MASK);
+		val |= ((pullup << OMAP4_I2C3_SDA_LOAD_BITS_SHIFT) |
+			(pullup << OMAP4_I2C3_SCL_LOAD_BITS_SHIFT));
+		break;
+	case 4:
+		/* Setup PULL-UP resistor for I2C-4 */
+		val &= ~(OMAP4_I2C4_SDA_LOAD_BITS_MASK  |
+			OMAP4_I2C4_SCL_LOAD_BITS_MASK  |
+			OMAP4_I2C4_SDA_PULLUPRESX_MASK |
+			OMAP4_I2C4_SCL_PULLUPRESX_MASK);
+		val |= ((pullup << OMAP4_I2C4_SDA_LOAD_BITS_SHIFT) |
+			(pullup << OMAP4_I2C4_SCL_LOAD_BITS_SHIFT));
+		break;
+	default:
+		return;
+	}
+
+	omap4_ctrl_pad_writel(val, OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_I2C_0);
+}
+
+/**
+ * omap_i2c_get_hwspinlockid - Get HWSPINLOCK ID for I2C device
+ * @dev: I2C device
+ *
+ * returns the hwspinlock id or -1 if does not exist
+ */
+int omap_i2c_get_hwspinlockid(struct device *dev)
+{
+	struct omap_i2c_bus_platform_data *pdata;
+
+	pdata = dev_get_platdata(dev);
+	if (!pdata) {
+		dev_err(dev, "%s: platform data is missing\n", __func__);
+		return -EINVAL;
+	}
+
+	if (pdata->handle != NULL)
+		return hwspin_lock_get_id(pdata->handle);
+	else
+		return -1;
+}
+EXPORT_SYMBOL_GPL(omap_i2c_get_hwspinlockid);

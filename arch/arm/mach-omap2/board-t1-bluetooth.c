@@ -212,6 +212,11 @@ static int bcm_bt_lpm_init(struct platform_device *pdev)
 
 	bt_lpm.host_wake = 0;
 
+	snprintf(bt_lpm.wake_lock_name, sizeof(bt_lpm.wake_lock_name),
+			"BTLowPower");
+	wake_lock_init(&bt_lpm.wake_lock, WAKE_LOCK_SUSPEND,
+			 bt_lpm.wake_lock_name);
+
 	irq = gpio_to_irq(bt_gpios[GPIO_BT_HOST_WAKE].gpio);
 	ret = request_irq(irq, host_wake_isr, IRQF_TRIGGER_HIGH,
 		"bt host_wake", NULL);
@@ -231,10 +236,6 @@ static int bcm_bt_lpm_init(struct platform_device *pdev)
 	gpio_direction_output(bt_gpios[GPIO_BT_WAKE].gpio, 0);
 	gpio_direction_input(bt_gpios[GPIO_BT_HOST_WAKE].gpio);
 
-	snprintf(bt_lpm.wake_lock_name, sizeof(bt_lpm.wake_lock_name),
-			"BTLowPower");
-	wake_lock_init(&bt_lpm.wake_lock, WAKE_LOCK_SUSPEND,
-			 bt_lpm.wake_lock_name);
 	return 0;
 }
 

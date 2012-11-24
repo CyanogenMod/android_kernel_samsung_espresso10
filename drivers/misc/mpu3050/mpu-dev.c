@@ -1065,16 +1065,11 @@ int mpu_suspend(struct i2c_client *client, pm_message_t mesg)
 	compass_adapter = i2c_get_adapter(mldl_cfg->pdata->compass.adapt_num);
 	pressure_adapter = i2c_get_adapter(mldl_cfg->pdata->pressure.adapt_num);
 
-	if (!mpu->mldl_cfg.gyro_is_suspended) {
-		dev_dbg(&mpu->this_client->adapter->dev,
-			"%s: suspending on event %d\n", __func__, mesg.event);
-		(void)mpu3050_suspend(mldl_cfg, mpu->this_client->adapter,
-				      accel_adapter, compass_adapter,
-				      pressure_adapter, TRUE, TRUE, TRUE, TRUE);
-	} else {
-		dev_dbg(&mpu->this_client->adapter->dev,
-			"%s: Already suspended %d\n", __func__, mesg.event);
-	}
+	dev_dbg(&mpu->this_client->adapter->dev,
+		"%s: suspending on event %d\n", __func__, mesg.event);
+	(void)mpu3050_suspend(mldl_cfg, mpu->this_client->adapter,
+			      accel_adapter, compass_adapter,
+			      pressure_adapter, TRUE, TRUE, TRUE, TRUE);
 	return 0;
 }
 

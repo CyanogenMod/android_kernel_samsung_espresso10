@@ -77,6 +77,41 @@ void omap_mcbsp_register_board_cfg(struct resource *res, int res_count,
 #endif
 
 /*-------------------------------------------------------------------------*/
+#if defined(CONFIG_SND_OMAP_SOC_DMIC) || \
+    defined(CONFIG_SND_OMAP_SOC_DMIC_MODULE)
+
+static struct omap_device_pm_latency omap_dmic_latency[] = {
+       {
+               .deactivate_func = omap_device_idle_hwmods,
+               .activate_func = omap_device_enable_hwmods,
+               .flags = OMAP_DEVICE_LATENCY_AUTO_ADJUST,
+       },
+};
+
+static void omap_init_dmic(void)
+{
+       struct omap_hwmod *oh;
+       struct omap_device *od;
+
+       oh = omap_hwmod_lookup("dmic");
+       if (!oh) {
+               printk(KERN_ERR "Could not look up dmic hw_mod\n");
+               return;
+       }
+
+       od = omap_device_build("omap-dmic-dai", -1, oh, NULL, 0,
+                               omap_dmic_latency,
+                               ARRAY_SIZE(omap_dmic_latency), 0);
+       if (IS_ERR(od))
+               printk(KERN_ERR "Could not build omap_device for omap-dmic-dai\n");
+}
+#else
+static inline void omap_init_dmic(void) {}
+#endif
+
+/*-------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------*/
 
 #if defined(CONFIG_MMC_OMAP) || defined(CONFIG_MMC_OMAP_MODULE) || \
 	defined(CONFIG_MMC_OMAP_HS) || defined(CONFIG_MMC_OMAP_HS_MODULE)
@@ -201,14 +236,19 @@ static void omap_init_uwire(void)
 static inline void omap_init_uwire(void) {}
 #endif
 
-#if defined(CONFIG_TIDSPBRIDGE) || defined(CONFIG_TIDSPBRIDGE_MODULE)
+#if defined(CONFIG_TIDSPBRIDGE) || defined(CONFIG_TIDSPBRIDGE_MODULE) \
+				|| defined(CONFIG_OMAP_REMOTE_PROC_DSP)
 
 static phys_addr_t omap_dsp_phys_mempool_base;
 static phys_addr_t omap_dsp_phys_mempool_size;
 
 void __init omap_dsp_reserve_sdram_memblock(void)
 {
+#if defined(CONFIG_OMAP_REMOTE_PROC_DSP)
+	phys_addr_t size = CONFIG_OMAP_REMOTEPROC_MEMPOOL_SIZE_DSP;
+#else
 	phys_addr_t size = CONFIG_TIDSPBRIDGE_MEMPOOL_SIZE;
+#endif
 	phys_addr_t paddr;
 
 	if (!size)
@@ -226,7 +266,9 @@ void __init omap_dsp_reserve_sdram_memblock(void)
 	omap_dsp_phys_mempool_base = paddr;
 	omap_dsp_phys_mempool_size = size;
 }
+#endif
 
+#if defined(CONFIG_TIDSPBRIDGE) || defined(CONFIG_TIDSPBRIDGE_MODULE)
 phys_addr_t omap_dsp_get_mempool_base(void)
 {
 	return omap_dsp_phys_mempool_base;
@@ -240,7 +282,44 @@ phys_addr_t omap_dsp_get_mempool_size(void)
 EXPORT_SYMBOL(omap_dsp_get_mempool_size);
 #endif
 
-#if defined(CONFIG_OMAP_REMOTE_PROC)
+#if defined(CONFIG_OMAP_REMOTE_PROC_DSP)
+static phys_addr_t omap_dsp_phys_st_mempool_base;
+static phys_addr_t omap_dsp_phys_st_mempool_size;
+
+void __init omap_dsp_set_static_mempool(u32 start, u32 size)
+{
+	omap_dsp_phys_st_mempool_base = start;
+	omap_dsp_phys_st_mempool_size = size;
+}
+
+phys_addr_t omap_dsp_get_mempool_tbase(enum omap_rproc_mempool_type type)
+{
+	switch (type) {
+	case OMAP_RPROC_MEMPOOL_STATIC:
+		return omap_dsp_phys_st_mempool_base;
+	case OMAP_RPROC_MEMPOOL_DYNAMIC:
+		return omap_dsp_phys_mempool_base;
+	default:
+		return 0;
+	}
+}
+EXPORT_SYMBOL(omap_dsp_get_mempool_tbase);
+
+phys_addr_t omap_dsp_get_mempool_tsize(enum omap_rproc_mempool_type type)
+{
+	switch (type) {
+	case OMAP_RPROC_MEMPOOL_STATIC:
+		return omap_dsp_phys_st_mempool_size;
+	case OMAP_RPROC_MEMPOOL_DYNAMIC:
+		return omap_dsp_phys_mempool_size;
+	default:
+		return 0;
+	}
+}
+EXPORT_SYMBOL(omap_dsp_get_mempool_tsize);
+#endif
+
+#if defined(CONFIG_OMAP_REMOTE_PROC_IPU)
 static phys_addr_t omap_ipu_phys_mempool_base;
 static u32 omap_ipu_phys_mempool_size;
 static phys_addr_t omap_ipu_phys_st_mempool_base;
@@ -327,6 +406,7 @@ static int __init omap_init_devices(void)
 	 * in alphabetical order so they're easier to sort through.
 	 */
 	omap_init_rng();
+	omap_init_dmic();
 	omap_init_uwire();
 	return 0;
 }

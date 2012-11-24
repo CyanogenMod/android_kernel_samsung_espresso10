@@ -508,7 +508,6 @@ static void bh1721fvc_work_func_light(struct work_struct *work)
 	int err;
 	u16 lux;
 	u32 result;
-	static int wake_adc = 1;
 	struct bh1721fvc_data *bh1721fvc = container_of(work,
 							struct bh1721fvc_data,
 							work_light);
@@ -520,11 +519,9 @@ static void bh1721fvc_work_func_light(struct work_struct *work)
 		if (result > 60000)
 			result = 60000;
 		if (!result)
-			result += wake_adc++;
-		input_report_abs(bh1721fvc->input_dev, ABS_MISC, result);
+			result = 1;
+		input_report_rel(bh1721fvc->input_dev, REL_MISC, result);
 		input_sync(bh1721fvc->input_dev);
-		if (wake_adc > 2)
-			wake_adc = 0;
 	} else {
 		pr_err("%s: read word failed! (errno=%d)\n", __func__, err);
 	}
@@ -725,10 +722,7 @@ static int __devinit bh1721fvc_probe(struct i2c_client *client,
 
 	input_dev->name = "light_sensor";
 
-	input_set_capability(input_dev, EV_ABS, ABS_MISC);
-
-	input_set_abs_params(input_dev, ABS_MISC,
-			     LUX_MIN_VALUE, LUX_MAX_VALUE, 0, 0);
+	input_set_capability(input_dev, EV_REL, REL_MISC);
 
 	bh1721fvc_dbmsg("registering lightsensor-level input device\n");
 

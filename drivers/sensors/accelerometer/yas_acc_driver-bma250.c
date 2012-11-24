@@ -19,7 +19,12 @@
  */
 
 #include <linux/yas.h>
-
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+#include <linux/yas_accel.h>
+#else
+#define CHIP_NAME	"BMA254"
+#define VENDOR_NAME	"BOSCH"
+#endif
 #define YAS_BMA250_RESOLUTION	256
 
 /* Axes data range  [um/s^2] */
@@ -99,6 +104,29 @@
 #define YAS_BMA250_BANDWIDTH_8HZ	8
 #define YAS_BMA250_ACC_REG	0x02
 
+#define YAS_BMA250_ACC_INT_STATUS0	0x09
+#define YAS_BMA250_ACC_INT_STATUS2	0x0B
+
+#define YAS_BMA250_ACC_INT_EN_0_REG	0x16
+#define YAS_BMA250_ACC_INT_EN_0_MASK	0x7
+#define YAS_BMA250_ACC_INT_EN_0_SHIFT	0
+#define YAS_BMA250_ACC_INT_EN_0_EN 7
+#define YAS_BMA250_ACC_INT_EN_0_DN	0
+
+#define YAS_BMA250_ACC_INT_MAP_1_REG	0x19
+#define YAS_BMA250_ACC_INT_MAP_1_MASK	0x4
+#define YAS_BMA250_ACC_INT_MAP_1_SHIFT	2
+#define YAS_BMA250_ACC_INT_MAP_1_EN	1
+#define YAS_BMA250_ACC_INT_MAP_1_DN	0
+
+#define YAS_BMA250_ACC_INT_DUR_REG	0x27
+#define YAS_BMA250_ACC_INT_DUR_MASK	0x3
+#define YAS_BMA250_ACC_INT_DUR_SHIFT	0
+
+#define YAS_BMA250_ACC_INT_THR_REG	0x28
+#define YAS_BMA250_ACC_INT_THR_MASK	0xff
+#define YAS_BMA250_ACC_INT_THR_SHIFT	0
+
 /* -------------------------------------------- */
 /*  Structure definition     */
 /* -------------------------------------------- */
@@ -177,6 +205,8 @@ static int yas_bma250_set_filter_enable(int);
 static int yas_bma250_get_position(void);
 static int yas_bma250_set_position(int);
 static int yas_bma250_measure(int *, int *);
+static int yas_get_motion_interrupt(void);
+static void yas_set_motion_interrupt(bool enable, bool factorytest);
 #if DEBUG
 static int yas_get_register(uint8_t, uint8_t *);
 #endif
@@ -407,7 +437,7 @@ static int yas_bma250_init(void)
 	/* Reset chip */
 	yas_bma250_write_reg_byte(YAS_BMA250_SOFT_RESET_REG,
 		YAS_BMA250_SOFT_RESET_VAL);
-	yas_bma250_msleep(1);
+	yas_bma250_msleep(5);
 	/* Set axes range*/
 	yas_bma250_update_bits(YAS_BMA250_RANGE, YAS_BMA250_RANGE_2G);
 	acc_data.initialize = 1;
@@ -535,7 +565,7 @@ static int yas_bma250_set_enable(int enable)
 			/* Reset chip */
 			yas_bma250_write_reg_byte(YAS_BMA250_SOFT_RESET_REG,
 				YAS_BMA250_SOFT_RESET_VAL);
-			yas_bma250_msleep(2);
+			yas_bma250_msleep(5);
 			/* Set axes range*/
 			yas_bma250_update_bits(YAS_BMA250_RANGE,
 				YAS_BMA250_RANGE_2G);
@@ -989,6 +1019,75 @@ static int yas_measure(struct yas_acc_data *data)
 
 	return err;
 }
+
+static int yas_get_motion_interrupt(void)
+{
+	unsigned char reg;
+	int result = 0;
+	if (acc_data.chip_id == YAS_BMA254_CHIP_ID) {
+		reg = yas_bma250_read_reg_byte(
+			YAS_BMA250_ACC_INT_STATUS0);
+		pr_info("%s: ACC_INT_STATUS %x\n", __func__, reg);
+		if (reg & 0x04)
+			result = 1;
+	}
+	return result;
+}
+
+static void yas_power_mode_set(int enable)
+{
+	if (!acc_data.enable) {
+		if (enable) {
+			/* Open i2c */
+			yas_bma250_i2c_open();
+			/* Reset chip */
+			yas_bma250_write_reg_byte(YAS_BMA250_SOFT_RESET_REG,
+				YAS_BMA250_SOFT_RESET_VAL);
+			yas_bma250_msleep(5);
+			/* Set axes range*/
+			yas_bma250_update_bits(YAS_BMA250_RANGE,
+				YAS_BMA250_RANGE_2G);
+			yas_bma250_set_delay(acc_data.delay);
+			yas_bma250_power_up();
+		} else {
+			yas_bma250_power_down();
+			yas_bma250_i2c_close();
+		}
+	}
+}
+
+static void yas_set_motion_interrupt(bool enable, bool factorytest)
+{
+	if (enable) {
+		yas_power_mode_set(1);
+		usleep_range(5000, 6000);
+		if (acc_data.chip_id == YAS_BMA254_CHIP_ID) {
+			yas_bma250_update_bits(YAS_BMA250_ACC_INT_MAP_1,
+				YAS_BMA250_ACC_INT_MAP_1_EN);
+			yas_bma250_update_bits(YAS_BMA250_ACC_INT_DUR, 0x00);
+			if (factorytest)
+				yas_bma250_update_bits(
+					YAS_BMA250_ACC_INT_THR, 0x00);
+			else
+				yas_bma250_update_bits(
+					YAS_BMA250_ACC_INT_THR, 0x12);
+			yas_bma250_update_bits(YAS_BMA250_ACC_INT_EN_0,
+				YAS_BMA250_ACC_INT_EN_0_EN);
+		}
+	} else {
+		if (acc_data.chip_id == YAS_BMA254_CHIP_ID) {
+			yas_bma250_update_bits(YAS_BMA250_ACC_INT_MAP_1,
+				YAS_BMA250_ACC_INT_MAP_1_DN);
+			yas_bma250_update_bits(YAS_BMA250_ACC_INT_DUR, 0x03);
+			yas_bma250_update_bits(YAS_BMA250_ACC_INT_EN_0,
+				YAS_BMA250_ACC_INT_EN_0_DN);
+			yas_bma250_update_bits(YAS_BMA250_ACC_INT_THR, 0xff);
+		}
+		yas_power_mode_set(0);
+		usleep_range(5000, 6000);
+	}
+}
+
 #if DEBUG
 static int yas_get_register(uint8_t adr, uint8_t *val)
 {
@@ -1046,6 +1145,8 @@ int yas_acc_driver_init(struct yas_acc_driver *f)
 	f->get_position = yas_get_position;
 	f->set_position = yas_set_position;
 	f->measure = yas_measure;
+	f->set_motion_interrupt = yas_set_motion_interrupt;
+	f->get_motion_interrupt = yas_get_motion_interrupt;
 #if DEBUG
 	f->get_register = yas_get_register;
 #endif

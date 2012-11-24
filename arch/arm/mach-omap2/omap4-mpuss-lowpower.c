@@ -56,7 +56,7 @@
 #include <plat/omap44xx.h>
 #include <mach/omap4-common.h>
 #include <mach/omap-wakeupgen.h>
-
+#include <linux/clk.h>
 #include "omap4-sar-layout.h"
 #include "pm.h"
 #include "prcm_mpu44xx.h"
@@ -68,6 +68,7 @@
 #include "prm.h"
 #include "cm44xx.h"
 #include "prcm-common.h"
+#include "clockdomain.h"
 
 #ifdef CONFIG_SMP
 
@@ -90,6 +91,7 @@ static struct powerdomain *mpuss_pd;
  */
 dma_addr_t omap4_secure_ram_phys;
 static void *secure_ram;
+struct clk *l3_main_3_ick;
 
 /* Variables to store maximum spi(Shared Peripheral Interrupts) registers. */
 static u32 max_spi_irq, max_spi_reg;
@@ -496,6 +498,7 @@ int omap4_enter_lowpower(unsigned int cpu, unsigned int power_state)
 {
 	unsigned int save_state = 0;
 	unsigned int wakeup_cpu;
+	unsigned int inst_clk_enab = 0;
 
 	if ((cpu >= NR_CPUS) || (omap_rev() == OMAP4430_REV_ES1_0))
 		goto ret;
@@ -540,7 +543,18 @@ int omap4_enter_lowpower(unsigned int cpu, unsigned int power_state)
 			omap_wakeupgen_save();
 			gic_save_context();
 		} else {
+			/* FIXME: Check if this can be optimised */
+			/* l3_main inst clock must be enabled for
+			* a save ram operation
+			*/
+			if (!l3_main_3_ick->usecount) {
+				inst_clk_enab = 1;
+				clk_enable(l3_main_3_ick);
+			}
 			save_secure_all();
+
+			if (inst_clk_enab == 1)
+				clk_disable(l3_main_3_ick);
 			save_ivahd_tesla_regs();
 			save_l3instr_regs();
 		}
@@ -572,10 +586,19 @@ int omap4_enter_lowpower(unsigned int cpu, unsigned int power_state)
 			omap_wakeupgen_save();
 			gic_save_context();
 		} else {
+			/* l3_main inst clock must be enabled for
+			* a save ram operation
+			*/
+			if (!l3_main_3_ick->usecount) {
+				inst_clk_enab = 1;
+				clk_enable(l3_main_3_ick);
+			}
 			save_gic_wakeupgen_secure();
 			save_ivahd_tesla_regs();
 			save_l3instr_regs();
 			save_secure_ram();
+			if (inst_clk_enab == 1)
+				clk_disable(l3_main_3_ick);
 		}
 		save_state = 3;
 		break;
@@ -657,20 +680,28 @@ cpu_prepare:
 		/* Clear SAR BACKUP status on GP devices */
 		if (omap_type() == OMAP2_DEVICE_TYPE_GP)
 			__raw_writel(0x0, sar_base + SAR_BACKUP_STATUS_OFFSET);
-		/* Enable GIC distributor and inteface on CPU0*/
+		/* Enable GIC distributor and interface on CPU0*/
 		gic_cpu_enable();
 		gic_dist_enable();
 
-		/*
-		 * Dummy dispatcher call after OSWR and OFF
-		 * Restore the right return Kernel address (with MMU on) for
-		 * subsequent calls to secure ROM. Otherwise the return address
-		 * will be to a PA return address and the system will hang.
-		 */
 		if (omap_type() != OMAP2_DEVICE_TYPE_GP) {
+			/*
+			 * Dummy dispatcher call after OSWR and OFF
+			 * Restore the right return Kernel address (with MMU on)
+			 * for subsequent calls to secure ROM. Otherwise the
+			 * return address will be to a PA return address and
+			 * the system will hang.
+			 */
 			omap4_secure_dispatcher(PPA_SERVICE_0,
 						FLAG_START_CRITICAL,
 						0, 0, 0, 0, 0);
+
+			/* Due to ROM BUG at wake up from MPU OSWR/OFF
+			 * on HS/EMU device only (not GP device),
+			 * the ROM Code reconfigures some of
+			 * IVAHD/TESLA/L3INSTR registers.
+			 * So these IVAHD/TESLA and L3INSTR registers
+			 * need to be restored.*/
 			restore_ivahd_tesla_regs();
 			restore_l3instr_regs();
 		}
@@ -765,6 +796,12 @@ int __init omap4_mpuss_init(void)
 		writel(0x0, sar_base + OMAP_TYPE_OFFSET);
 	}
 
+	/*
+	 * Store OMAP revision to scratchpad.
+	 * ATM required for POR restore on GP devices.
+	 */
+	writel(omap_rev(), sar_base + OMAP_REV_OFFSET);
+
 	/* Clear CPU previous power domain state */
 	pwrdm_clear_all_prev_pwrst(pm_info->pwrdm);
 	cpu_clear_prev_logic_pwrst(1);
@@ -787,6 +824,8 @@ int __init omap4_mpuss_init(void)
 		pr_err("Failed to get lookup for MPUSS pwrdm\n");
 		return -ENODEV;
 	}
+
+	l3_main_3_ick = clk_get(NULL, "l3_main_3_ick");
 
 	/* Clear CPU previous power domain state */
 	pwrdm_clear_all_prev_pwrst(mpuss_pd);

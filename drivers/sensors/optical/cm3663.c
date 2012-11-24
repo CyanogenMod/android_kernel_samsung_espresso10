@@ -65,17 +65,15 @@ struct cm3663_data {
 	u8 power_state;
 	int last_brightness_step;
 	u8 prox_val;
-	int n_drv_is;
 	struct device *light_sensor_device;
 	struct device *proximity_sensor_device;
 };
 
-static struct cm3663_data *cm3663_data;
+static struct cm3663_data *cm3663_gdata;
 
 static int cm3663_i2c_read(struct cm3663_data *cm3663, u8 addr, u8 *val)
 {
 	int err = 0;
-	int retry = 10;
 	struct i2c_msg msg[1];
 	struct i2c_client *client = cm3663->i2c_client;
 
@@ -105,7 +103,6 @@ static int cm3663_i2c_write(struct cm3663_data *cm3663, u8 addr, u8 val)
 {
 	u8 data = val;
 	int err = 0;
-	int retry = 10;
 	struct i2c_msg msg[1];
 	struct i2c_client *client = cm3663->i2c_client;
 
@@ -130,6 +127,7 @@ static int cm3663_i2c_write(struct cm3663_data *cm3663, u8 addr, u8 val)
 static void cm3663_light_enable(struct cm3663_data *cm3663)
 {
 	u8 tmp;
+	int64_t temp_time = 0;
 	cm3663->light_count = 0;
 	cm3663->light_buffer = 0;
 	cm3663_i2c_read(cm3663, REGS_ARA, &tmp);
@@ -137,7 +135,8 @@ static void cm3663_light_enable(struct cm3663_data *cm3663)
 	cm3663_i2c_read(cm3663, REGS_ARA, &tmp);
 	cm3663_i2c_write(cm3663, REGS_INIT, reg_defaults[3]);
 	cm3663_i2c_write(cm3663, REGS_ALS_CMD, reg_defaults[1]);
-	hrtimer_start(&cm3663->light_timer, cm3663->light_poll_delay,
+	temp_time = ktime_to_ns(cm3663->light_poll_delay) + 100000000;
+	hrtimer_start(&cm3663->light_timer, ns_to_ktime(temp_time),
 						HRTIMER_MODE_REL);
 }
 
@@ -575,22 +574,9 @@ static void cm3663_work_func_light(struct work_struct *work)
 
 	als = lightsensor_get_alsvalue(cm3663);
 
-	for (i = 0; ARRAY_SIZE(adc_table); i++)
-		if (als <= adc_table[i])
-			break;
-
-	if (cm3663->light_buffer == i) {
-		if (cm3663->light_count++ == LIGHT_BUFFER_NUM) {
-			input_report_abs(cm3663->light_input_dev,
-							ABS_MISC, als+1);
-			input_sync(cm3663->light_input_dev);
-			cm3663->light_count = 0;
-		}
-	} else {
-		cm3663->light_buffer = i;
-		cm3663->light_count = 0;
-	}
-
+	input_report_abs(cm3663->light_input_dev,
+			ABS_MISC, als+1);
+	input_sync(cm3663->light_input_dev);
 }
 static void cm3663_work_func_prox(struct work_struct *work)
 {
@@ -627,12 +613,15 @@ irqreturn_t cm3663_irq_thread_fn(int irq, void *data)
 {
 	struct cm3663_data *ip = data;
 	u8 val = 1;
-
 	val = gpio_get_value(ip->pdata->irq);
 	if (val < 0) {
 		pr_err("%s: gpio_get_value error %d\n", __func__, val);
 		return IRQ_HANDLED;
 	}
+	if (val)
+		irq_set_irq_type(irq, IRQF_TRIGGER_LOW);
+	else
+		irq_set_irq_type(irq, IRQF_TRIGGER_HIGH);
 
 	/* 0 is close, 1 is far */
 	input_report_abs(ip->proximity_input_dev, ABS_DISTANCE, val);
@@ -664,7 +653,7 @@ static int cm3663_setup_irq(struct cm3663_data *cm3663)
 
 	irq = gpio_to_irq(cm3663->pdata->irq);
 	rc = request_threaded_irq(irq, NULL, cm3663_irq_thread_fn,
-			 IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+			 IRQF_TRIGGER_LOW | IRQF_ONESHOT,
 			 "proximity_int", cm3663);
 	if (rc < 0) {
 		pr_err("%s: request_irq(%d) failed for gpio %d (%d)\n",
@@ -707,8 +696,7 @@ static int cm3663_i2c_probe(struct i2c_client *client,
 	struct input_dev *input_dev;
 	struct cm3663_data *cm3663;
 	u8 tmp;
-	int rt = 0;
-	int cnt = 5;
+	int cnt = 3;
 	int i = 0;
 	int adc = sizeof(adc_step_table)/sizeof(int);
 
@@ -726,8 +714,8 @@ static int cm3663_i2c_probe(struct i2c_client *client,
 
 	cm3663->pdata = client->dev.platform_data;
 	cm3663->i2c_client = client;
-	cm3663_data = cm3663;
 	i2c_set_clientdata(client, cm3663);
+	cm3663_gdata = cm3663;
 
 	/* wake lock init */
 	wake_lock_init(&cm3663->prx_wake_lock,
@@ -841,22 +829,19 @@ static int cm3663_i2c_probe(struct i2c_client *client,
 	cm3663_i2c_read(cm3663, REGS_ARA, &tmp);
 
 	do {
-		rt = cm3663_i2c_write(cm3663, REGS_INIT, reg_defaults[3]);
+		ret = cm3663_i2c_write(cm3663, REGS_INIT, reg_defaults[3]);
 		cnt--;
-		pr_info("cm3663_i2c_write cnt =%d ret = %d\n", cnt, rt);
-		if ((!cnt) && (rt < 0)) {
-			cm3663_data->n_drv_is = 1;
+		if ((!cnt) && (ret < 0))
 			goto err_i2c_failed;
-		}
-	} while (rt < 0);
-	cm3663_data->n_drv_is = 0;
+	} while (ret < 0);
+	ret = 0;
 
 	cm3663_i2c_write(cm3663, REGS_PS_THD, reg_defaults[7]);
 	cm3663_i2c_write(cm3663, REGS_PS_CMD, reg_defaults[5]);
 	msleep(100);
 
 	cm3663_i2c_read(cm3663, REGS_PS_DATA, &tmp);
-	pr_err("%s: initial proximity value = %d\n", __func__, tmp);
+	pr_info("%s: initial proximity value = %d\n", __func__, tmp);
 
 	cm3663_i2c_write(cm3663, REGS_PS_CMD, 0x01);
 	mutex_unlock(&cm3663->power_lock);
@@ -865,7 +850,7 @@ static int cm3663_i2c_probe(struct i2c_client *client,
 	input_report_abs(cm3663->proximity_input_dev, ABS_DISTANCE, 1);
 	input_sync(cm3663->proximity_input_dev);
 
-	pr_info("CM3663 probe ok!!!n");
+	pr_info("CM3663 probe ok!!!\n");
 	goto done;
 
 /* error, unwind it all */
@@ -905,14 +890,12 @@ static int cm3663_suspend(struct device *dev)
 	*/
 	int ret;
 	pr_info("cm3663_suspend+\n");
-	if (!cm3663_data->n_drv_is) {
-		if (!(cm3663_data->power_state & PROXIMITY_ENABLED)) {
-			pr_info("cm3663_suspend proximity_power false\n ");
-			ret = cm3663_i2c_write(cm3663_data, REGS_PS_CMD, 0x01);
-			if (ret < 0)
-				return ret;
-			cm3663_data->pdata->proximity_power(false);
-		}
+	if (!(cm3663_gdata->power_state & PROXIMITY_ENABLED)) {
+		pr_info("cm3663_suspend proximity_power false\n ");
+		ret = cm3663_i2c_write(cm3663_gdata, REGS_PS_CMD, 0x01);
+		if (ret < 0)
+			return ret;
+		cm3663_gdata->pdata->proximity_power(false);
 	}
 	pr_info("cm3663_suspend-\n");
 	return 0;
@@ -923,13 +906,11 @@ static int cm3663_resume(struct device *dev)
 	/* Turn power back on if we were before suspend. */
 
 	pr_info("cm3663_resume+\n");
-	if (!cm3663_data->n_drv_is) {
-		if (!(cm3663_data->power_state & PROXIMITY_ENABLED)) {
-			pr_info("cm3663_resume proximity_power ture\n");
-			cm3663_data->pdata->proximity_power(true);
-		} else {
-			wake_lock_timeout(&cm3663_data->prx_wake_lock, 3*HZ);
-		}
+	if (!(cm3663_gdata->power_state & PROXIMITY_ENABLED)) {
+		pr_info("cm3663_resume proximity_power ture\n");
+		cm3663_gdata->pdata->proximity_power(true);
+	} else {
+		wake_lock_timeout(&cm3663_gdata->prx_wake_lock, 3*HZ);
 	}
 	pr_info("cm3663_resume-\n");
 	return 0;

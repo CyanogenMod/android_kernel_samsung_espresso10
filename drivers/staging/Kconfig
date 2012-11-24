@@ -164,4 +164,10 @@ source "drivers/staging/nvec/Kconfig"
 
 source "drivers/staging/secvib/Kconfig.sec"
 
+source "drivers/staging/thermal_framework/Kconfig"
+
+source "drivers/staging/omaprpc/Kconfig"
+
+source "drivers/staging/sec_irled/Kconfig"
+
 endif # STAGING

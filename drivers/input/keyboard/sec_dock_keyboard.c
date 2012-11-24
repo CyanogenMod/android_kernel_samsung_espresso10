@@ -211,7 +211,7 @@ static struct key_table dock_keycodes[KEYBOARD_SIZE] = {
 	{KEY_F17, false},	/* 127  7F */
 };
 
-void remapkey_timer(unsigned long arg)
+static void remapkey_timer(unsigned long arg)
 {
 	struct dock_keyboard_data *data = (struct dock_keyboard_data *)arg;
 	unsigned int keycode;
@@ -236,7 +236,7 @@ void remapkey_timer(unsigned long arg)
 	}
 }
 
-void release_all_keys(struct dock_keyboard_data *data)
+static void release_all_keys(struct dock_keyboard_data *data)
 {
 	int i;
 	for (i = 0; i < KBD_MAX; i++) {
@@ -246,11 +246,13 @@ void release_all_keys(struct dock_keyboard_data *data)
 			dock_keycodes[i].pressed = false;
 		}
 	}
+	input_sync(data->input_dev);
 }
 
-void power_off_timer(unsigned long arg)
+static void dock_keyboard_off_work(struct work_struct *work)
 {
-	struct dock_keyboard_data *data = (struct dock_keyboard_data *)arg;
+	struct dock_keyboard_data *data =
+		container_of(work, struct dock_keyboard_data, dwork_off.work);
 
 	data->keyboard_enable = false;
 	if (data->power)
@@ -261,7 +263,7 @@ void power_off_timer(unsigned long arg)
 	release_all_keys(data);
 }
 
-void dock_keyboard_process_scancode(struct dock_keyboard_data *data,
+static void dock_keyboard_process_scancode(struct dock_keyboard_data *data,
 				    unsigned char scancode)
 {
 	bool press;
@@ -395,7 +397,7 @@ static int dock_keyboard_event(struct input_dev *dev,
 	return -EPERM;
 }
 
-int dock_keyboard_cb(struct input_dev *dev, bool connected)
+static int dock_keyboard_cb(struct input_dev *dev, bool connected)
 {
 	struct dock_keyboard_data *data = input_get_drvdata(dev);
 	int try_cnt = 0;
@@ -405,7 +407,7 @@ int dock_keyboard_cb(struct input_dev *dev, bool connected)
 		data->dockconnected = false;
 	else {
 		/* for wakeup case */
-		del_timer_sync(&data->off_timer);
+		cancel_delayed_work_sync(&data->dwork_off);
 		if (data->handshaking) {
 			pr_info("kbd: keyboard is reattached\n");
 			data->dockconnected = true;
@@ -444,7 +446,8 @@ int dock_keyboard_cb(struct input_dev *dev, bool connected)
 	if (data->dockconnected)
 		return 1;
 	else {
-		mod_timer(&data->off_timer, jiffies + HZ * 2 / 3);
+		cancel_delayed_work_sync(&data->dwork_off);
+		schedule_delayed_work(&data->dwork_off, HZ * 2 / 3);
 		return 0;
 	}
 }
@@ -479,6 +482,11 @@ static int __devinit dock_keyboard_probe(struct platform_device *pdev)
 
 	pr_debug("kbd: probe\n");
 
+	if (!pdata) {
+		pr_err("kbd: invalid platform_data.\n");
+		return -ENODEV;
+	}
+
 	data = kzalloc(sizeof(struct dock_keyboard_data), GFP_KERNEL);
 	if (unlikely(IS_ERR(data))) {
 		ret = -ENOMEM;
@@ -488,6 +496,7 @@ static int __devinit dock_keyboard_probe(struct platform_device *pdev)
 	sec_dock_kbd_driver.private_data = data;
 
 	INIT_WORK(&data->work_msg, key_event_work);
+	INIT_DELAYED_WORK(&data->dwork_off, dock_keyboard_off_work);
 	platform_set_drvdata(pdev, data);
 
 	input = input_allocate_device();
@@ -548,11 +557,6 @@ static int __devinit dock_keyboard_probe(struct platform_device *pdev)
 	data->key_timer.data = (unsigned long)data;
 	data->key_timer.expires = jiffies + HZ / 3;
 	data->key_timer.function = remapkey_timer;
-
-	init_timer(&data->off_timer);
-	data->off_timer.data = (unsigned long)data;
-	data->off_timer.expires = jiffies + HZ * 2 / 3;
-	data->off_timer.function = power_off_timer;
 
 	ret = serio_register_driver(&sec_dock_kbd_driver.serio_drv);
 	if (unlikely(ret)) {

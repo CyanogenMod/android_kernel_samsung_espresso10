@@ -74,12 +74,6 @@ struct discovery_state {
 	__u32			timestamp;
 };
 
-//struct inquiry_cache {
-//	spinlock_t		lock;
-//	__u32			timestamp;
-//	struct inquiry_entry	*list;
-//};
-
 struct hci_conn_hash {
 	struct list_head list;
 	spinlock_t       lock;
@@ -195,6 +189,9 @@ struct hci_dev {
 
 	unsigned int	auto_accept_delay;
 
+	/* wbs flag */
+	__s8		is_wbs;
+
 	unsigned long	quirks;
 
 	atomic_t	cmd_cnt;
@@ -246,7 +243,7 @@ struct hci_dev {
 
 	struct crypto_blkcipher	*tfm;
 
-        struct discovery_state	discovery;
+	struct discovery_state	discovery;
 	struct hci_conn_hash	conn_hash;
 	struct list_head	blacklist;
 
@@ -259,9 +256,8 @@ struct hci_dev {
 	struct list_head	remote_oob_data;
 
 	struct list_head	adv_entries;
-	// SSBT :: NEO (0207)
 	struct timer_list	adv_timer;
-	//struct delayed_work	adv_work;
+/* struct delayed_work	adv_work; */
 
 	struct hci_dev_stats	stat;
 
@@ -283,7 +279,6 @@ struct hci_dev {
 
 	unsigned long		dev_flags;
 
-// SSBT :: NEO (0207)
 	struct delayed_work	le_scan_disable;
 
 	struct work_struct	le_scan;
@@ -331,7 +326,7 @@ struct hci_conn {
 	__u8		io_capability;
 	__u8		power_save;
 	__u16		disc_timeout;
-        unsigned long	flags;
+	unsigned long	flags;
 
 	__u8		remote_cap;
 	__u8		remote_oob;
@@ -344,6 +339,7 @@ struct hci_conn {
 	struct timer_list disc_timer;
 	struct timer_list idle_timer;
 	struct timer_list auto_accept_timer;
+	struct timer_list encrypt_timer;
 
 	struct work_struct work_add;
 	struct work_struct work_del;
@@ -387,15 +383,12 @@ void hci_discovery_set_state(struct hci_dev *hdev, int state);
 
 static inline int inquiry_cache_empty(struct hci_dev *hdev)
 {
-	//struct inquiry_cache *c = &hdev->inq_cache;
-	//return c->list == NULL;
-        return list_empty(&hdev->discovery.all);
+	return list_empty(&hdev->discovery.all);
 }
 
 static inline long inquiry_cache_age(struct hci_dev *hdev)
 {
-	//struct inquiry_cache *c = &hdev->inq_cache;
-        struct discovery_state *c = &hdev->discovery;
+	struct discovery_state *c = &hdev->discovery;
 	return jiffies - c->timestamp;
 }
 
@@ -641,8 +634,10 @@ int hci_inquiry(void __user *arg);
 
 struct bdaddr_list *hci_blacklist_lookup(struct hci_dev *hdev, bdaddr_t *bdaddr);
 int hci_blacklist_clear(struct hci_dev *hdev);
-int hci_blacklist_add(struct hci_dev *hdev, bdaddr_t *bdaddr);
-int hci_blacklist_del(struct hci_dev *hdev, bdaddr_t *bdaddr);
+
+/* sync from bluez git */
+int hci_blacklist_add(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 type);
+int hci_blacklist_del(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 type);
 
 int hci_uuids_clear(struct hci_dev *hdev);
 
@@ -702,8 +697,7 @@ void hci_conn_del_sysfs(struct hci_conn *conn);
 #define lmp_le_capable(dev)        ((dev)->features[4] & LMP_LE)
 
 /* ----- Extended LMP capabilities ----- */
-// SSBT :: KJH * temp
-#define lmp_host_le_capable(dev)   1 //((dev)->extfeatures[0] & LMP_HOST_LE)
+#define lmp_host_le_capable(dev)   ((dev)->extfeatures[0] & LMP_HOST_LE)
 
 /* ----- HCI protocols ----- */
 struct hci_proto {
@@ -795,7 +789,7 @@ static inline void hci_proto_auth_cfm(struct hci_conn *conn, __u8 status)
 	register struct hci_proto *hp;
 	__u8 encrypt;
 
-        if (test_bit(HCI_CONN_ENCRYPT_PEND, &conn->flags))
+	if (test_bit(HCI_CONN_ENCRYPT_PEND, &conn->flags))
 		return;
 
 	encrypt = (conn->link_mode & HCI_LM_ENCRYPT) ? 0x01 : 0x00;
@@ -914,19 +908,20 @@ static inline void hci_role_switch_cfm(struct hci_conn *conn, __u8 status,
 	read_unlock_bh(&hci_cb_list_lock);
 }
 
-// SSBT :: NEO (0207)
 static inline bool eir_has_data_type(u8 *data, size_t data_len, u8 type)
 {
 	u8 field_len;
 	size_t parsed;
 
-// SSBT :: NEO (0214) +
-	//for (parsed = 0; parsed < data_len - 1; parsed += field_len) {
-	for (parsed = 0; parsed < data_len - 1;) {		
+	/*
+	* for (parsed = 0; parsed < data_len - 1; parsed += field_len) {
+	*/
+	for (parsed = 0; parsed < data_len - 1;) {
 		field_len = data[0];
 
-// SSBT :: NEO (0214) +
-		//if (field_len == 0)
+		/*
+		* if (field_len == 0)
+		*/
 		if (field_len == 0 && data[1] == 0)
 			break;
 
@@ -934,12 +929,11 @@ static inline bool eir_has_data_type(u8 *data, size_t data_len, u8 type)
 
 		if (parsed > data_len)
 			break;
-// SSBT :: NEO (0214) +
 		if (data[1] == type) {
 			if (field_len == 0)
 				return false;
-			else 
-			return true;
+			else
+				return true;
 		}
 
 		data += field_len + 1;
@@ -959,18 +953,19 @@ static inline u16 eir_append_data(u8 *eir, u16 eir_len, u8 type, u8 *data,
 	return eir_len;
 }
 
-// SSBT :: NEO (0213) + for eir length
+/* for eir length */
 static inline size_t eir_length(u8 *eir, size_t maxlen)
 {
 	u8 field_len;
-	size_t parsed; 
+	size_t parsed;
 	size_t length;
 
 	for (parsed = 0, length = 0; parsed < maxlen - 1; ) {
 		field_len = eir[0];
 
-		// SSBT :: NEO (0207)
-		//if (field_len == 0)
+		/*
+		* if (field_len == 0)
+		*/
 		if (field_len == 0 && eir[1] == 0)
 			break;
 
@@ -1029,9 +1024,9 @@ int mgmt_pin_code_reply_complete(struct hci_dev *hdev, bdaddr_t *bdaddr,
 								u8 status);
 int mgmt_pin_code_neg_reply_complete(struct hci_dev *hdev, bdaddr_t *bdaddr,
 								u8 status);
-//// SSBT :: LJH(bluez0220) + passkey notification
+/* for passkey notification */
 int mgmt_user_passkey_notification(struct hci_dev *hdev, bdaddr_t *bdaddr, __le32 value);
-//// SSBT :: LJH(bluez0220) + passkey notification end
+
 int mgmt_user_confirm_request(struct hci_dev *hdev, bdaddr_t *bdaddr,
 				u8 link_type, u8 addr_type, __le32 value,
 				u8 confirm_hint);
@@ -1061,9 +1056,19 @@ int mgmt_discovering(struct hci_dev *hdev, u8 discovering);
 int mgmt_device_blocked(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 type);
 int mgmt_device_unblocked(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 type);
 int mgmt_new_ltk(struct hci_dev *hdev, struct smp_ltk *key, u8 persistent);
-// SSBT :: KJH +
+
 int mgmt_encrypt_change(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 status);
 int mgmt_le_enable_complete(struct hci_dev *hdev, u8 enable, u8 status);
+int mgmt_remote_version(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 ver, u16 mnf,
+							u16 sub_ver);
+int mgmt_remote_features(struct hci_dev *hdev, bdaddr_t *bdaddr,
+							u8 features[8]);
+/* monitoring of the RSSI of the link between two Bluetooth devices */
+int mgmt_read_rssi_complete(struct hci_dev *hdev, bdaddr_t *bdaddr, s8 rssi,
+							u8 status);
+int mgmt_read_rssi_failed(struct hci_dev *hdev);
+int mgmt_le_test_end_complete(struct hci_dev *hdev, u8 status,
+							__u16 num_pkts);
 
 /* HCI info for socket */
 #define hci_pi(sk) ((struct hci_pinfo *) sk)
@@ -1109,7 +1114,7 @@ int hci_do_inquiry(struct hci_dev *hdev, u8 length);
 int hci_cancel_inquiry(struct hci_dev *hdev);
 int hci_le_scan(struct hci_dev *hdev, u8 type, u16 interval, u16 window,
 								int timeout);
-// SSBT :: NEO (0213) + : for stop le scan
+/* for stop le scan */
 int hci_cancel_le_scan(struct hci_dev *hdev);
 
 #endif /* __HCI_CORE_H */

@@ -27,6 +27,7 @@
 #define _TWL6030_MADC_H
 
 #define TWL6030_MADC_MAX_CHANNELS 17
+#define TWL6032_MADC_MAX_CHANNELS 19
 /*
  * twl6030 madc occupies the same offset in the twl6030 map that
  * twl4030 madc does in the twl4030 map.
@@ -79,7 +80,17 @@
 #define    TWL6030_MADC_EOCP2		(1 << 1)
 #define    TWL6030_MADC_SP2		(1 << 2)
 
+#define TWL6032_MADC_GPSELECT_ISB	0x07
+
+#define TWL6032_MADC_CTRL_P1		0x08
+#define    TWL6032_MADC_BUSY		(1 << 0)
+#define    TWL6032_MADC_EOC		(1 << 1)
+#define    TWL6032_MADC_SP		(1 << 3)
+
 #define TWL6030_MADC_RTCH0_LSB		0x07
+
+#define TWL6032_MADC_GPCH0_LSB		0x0D
+
 #define TWL6030_MADC_GPCH0_LSB		0x29
 
 #define TWL6032_GPADC_GPSELECT_ISB	0x07

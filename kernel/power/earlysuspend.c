@@ -148,7 +148,7 @@ static void late_resume(struct work_struct *work)
 		if (pos->resume != NULL) {
 			if (debug_mask & DEBUG_VERBOSE) {
 				lookup_symbol_name(
-					(unsigned long)pos->suspend, symname);
+					(unsigned long)pos->resume, symname);
 				pr_info("late_resume: %s\n", symname);
 			}
 

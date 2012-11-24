@@ -121,9 +121,10 @@ static int _pwrdm_register(struct powerdomain *pwrdm)
 	/* Initialize the powerdomain's state counter */
 	memset(&pwrdm->count, 0, sizeof(pwrdm->count));
 	memset(&pwrdm->last_count, 0, sizeof(pwrdm->last_count));
+#ifdef CONFIG_PM_DEBUG
 	memset(&pwrdm->time, 0, sizeof(pwrdm->time));
 	memset(&pwrdm->last_time, 0, sizeof(pwrdm->last_time));
-
+#endif
 	pwrdm_wait_transition(pwrdm);
 	pwrdm->state = pwrdm_read_pwrst(pwrdm);
 	pwrdm->count.state[pwrdm->state] = 1;
@@ -554,6 +555,12 @@ int pwrdm_set_logic_retst(struct powerdomain *pwrdm, u8 pwrst)
 
 	if (!pwrdm)
 		return -EINVAL;
+
+	if (PWRDM_POWER_RET < pwrst) {
+		pr_err("%s: unsupported logic ret. state value pwrst=%0x",
+		 __func__, pwrst);
+		return -EINVAL;
+	}
 
 	if (!(pwrdm->pwrsts_logic_ret & (1 << pwrst)))
 		return -EINVAL;

@@ -59,7 +59,6 @@
 
 bool disable_ertm;
 
-/* SSBT :: KJH * */
 static u32 l2cap_feat_mask = 0x00000000;
 static u8 l2cap_fixed_chan[8] = { 0x02, };
 
@@ -76,7 +75,6 @@ static void l2cap_send_disconn_req(struct l2cap_conn *conn,
 
 static int l2cap_ertm_data_rcv(struct sock *sk, struct sk_buff *skb);
 
-/* BEGIN SS_BLUEZ_BT +kjh 2011.06.23 : */
 /* workaround for a2dp chopping in multi connection. */
 static struct l2cap_conn *av_conn;
 static struct l2cap_conn *hid_conn;
@@ -260,7 +258,7 @@ static void l2cap_chan_timeout(unsigned long arg)
 
 	if (sock_owned_by_user(sk)) {
 		/* sk is owned by user. Try again later */
-/* SSBT :: NEO (0213) + change time format */
+		/*change time format */
 		/*__set_chan_timer(chan, HZ / 5);*/
 		__set_chan_timer(chan, 200);
 		bh_unlock_sock(sk);
@@ -321,7 +319,6 @@ static void __l2cap_chan_add(struct l2cap_conn *conn, struct l2cap_chan *chan)
 	BT_DBG("conn %p, psm 0x%2.2x, dcid 0x%4.4x", conn,
 			chan->psm, chan->dcid);
 
-/* BEGIN SS_BLUEZ_BT +kjh 2011.06.23 : */
 /* workaround for a2dp chopping in multi connection.*/
 /* todo : now, we can't check obex properly. */
 	switch (chan->psm) {
@@ -404,8 +401,6 @@ static void l2cap_chan_del(struct l2cap_chan *chan, int err)
 		chan_put(chan);
 
 		chan->conn = NULL;
-
-/* BEGIN SS_BLUEZ_BT +kjh 2011.06.23 : */
 /* workaround for a2dp chopping in multi connection.*/
 	switch (chan->psm) {
 	case 0x03:
@@ -420,16 +415,18 @@ static void l2cap_chan_del(struct l2cap_chan *chan, int err)
 	default:
 		break;
 	}
-/* END SS_BLUEZ_BT */
-
-/* SSBT :: KJH + (0222), to reduce disc_timeout for le (2s->100msec).
- * 2s is too long for FMP */
-		if (conn->hcon->type == LE_LINK)
-			conn->hcon->disc_timeout = HCI_DISCONN_TIMEOUT/20;
-/* Too long to disconnect incoming ACL from local device.(40sec) */
-		if (conn->hcon)
+		/* to reduce disc_timeout for le (2s->100msec)
+		* 2s is too long for FMP
+		*/
+		if (conn->hcon) {
+			if (conn->hcon->type == LE_LINK)
+				conn->hcon->disc_timeout =
+						HCI_DISCONN_TIMEOUT/20;
+			/* Too long to disconnect incoming ACL
+			* from local device.(40sec) */
 			conn->hcon->out = 1;
-		hci_conn_put(conn->hcon);
+			hci_conn_put(conn->hcon);
+		}
 	}
 
 	l2cap_state_change(chan, BT_CLOSED);
@@ -972,24 +969,6 @@ static void l2cap_conn_ready(struct l2cap_conn *conn)
 
 	read_lock(&conn->chan_lock);
 
-/* This is SBH650 issue. and this is only workaround */
-/* We don not send info request at this time */
-/* somtimes SBH650 will send disconnect */
-	if (!conn->hcon->out
-		&& !(conn->info_state & L2CAP_INFO_FEAT_MASK_REQ_DONE)) {
-		struct l2cap_info_req req;
-		req.type = cpu_to_le16(L2CAP_IT_FEAT_MASK);
-
-		conn->info_state |= L2CAP_INFO_FEAT_MASK_REQ_SENT;
-		conn->info_ident = l2cap_get_ident(conn);
-
-		mod_timer(&conn->info_timer, jiffies +
-				msecs_to_jiffies(L2CAP_INFO_TIMEOUT));
-
-		l2cap_send_cmd(conn, conn->info_ident,
-				L2CAP_INFO_REQ, sizeof(req), &req);
-	}
-
 	list_for_each_entry(chan, &conn->chan_l, list) {
 		struct sock *sk = chan->sk;
 
@@ -1068,7 +1047,6 @@ static void l2cap_conn_del(struct hci_conn *hcon, int err)
 		del_timer_sync(&conn->info_timer);
 
 	if (test_and_clear_bit(HCI_CONN_LE_SMP_PEND, &hcon->flags)) {
-/* SSBT :: NEO (0207) */
 		/* del_timer(&conn->security_timer); */
 		del_timer_sync(&conn->security_timer);
 		smp_chan_destroy(conn);
@@ -1218,7 +1196,7 @@ int l2cap_chan_connect(struct l2cap_chan *chan)
 
 	l2cap_state_change(chan, BT_CONNECT);
 
-/* SSBT :: KJH + if connection is for LE, set timeout to 5 seconds. */
+/* if connection is for LE, set timeout to 5 seconds. */
 	if (chan->dcid == L2CAP_CID_LE_DATA) {
 		BT_DBG("L2CAP_CID_LE_DATA. set timeout to 5 seconds");
 		__set_chan_timer(chan, L2CAP_CONN_LE_TIMEOUT);
@@ -1230,7 +1208,7 @@ int l2cap_chan_connect(struct l2cap_chan *chan)
 			__clear_chan_timer(chan);
 			if (l2cap_check_security(chan))
 				l2cap_state_change(chan, BT_CONNECTED);
-/* SSBT :: KJH + temp to check connected le link */
+/*  temp to check connected le link */
 		} else if (chan->dcid == L2CAP_CID_LE_DATA) {
 			__clear_chan_timer(chan);
 			sk->sk_state = BT_CONNECTED;
@@ -1943,9 +1921,9 @@ static void l2cap_ack_timeout(unsigned long arg)
 {
 	struct l2cap_chan *chan = (void *) arg;
 
-	bh_lock_sock(chan->sk);
+	spin_lock_bh(&((chan->sk)->sk_lock.slock));
 	l2cap_send_ack(chan);
-	bh_unlock_sock(chan->sk);
+	spin_unlock_bh(&((chan->sk)->sk_lock.slock));
 }
 
 static inline void l2cap_ertm_init(struct l2cap_chan *chan)
@@ -2486,6 +2464,29 @@ static inline int l2cap_connect_req(struct l2cap_conn *conn, struct l2cap_cmd_hd
 		l2cap_state_change(chan, BT_CONNECT2);
 		result = L2CAP_CR_PEND;
 		status = L2CAP_CS_NO_INFO;
+
+		/* if lm encryption enabled, send authorization pending.
+		* this workaround is for ford carkit.
+		* (incoming avdtp connection failed)
+		*/
+		if ((conn->hcon->link_mode & HCI_LM_AUTH) &&
+				(conn->hcon->link_mode & HCI_LM_ENCRYPT) &&
+				!(conn->hcon->ssp_mode > 0) &&
+				psm == cpu_to_le16(0x0019) &&
+				bt_sk(sk)->defer_setup) {
+			BT_DBG("psm is 0x0019, info req was not sent before");
+
+			/* Address Filer
+			* 00-1e-a4 : Ford carkit, oui (Nokia Danmark A/S)
+			*/
+			if (conn->dst->b[5] == 0x00 &&
+					conn->dst->b[4] == 0x1e &&
+					conn->dst->b[3] == 0xa4) {
+				BT_DBG("send L2CAP_CS_AUTHOR_PEND");
+				status = L2CAP_CS_AUTHOR_PEND;
+				parent->sk_data_ready(parent, 0);
+			}
+		}
 	}
 
 	write_unlock_bh(&conn->chan_lock);
@@ -2585,7 +2586,7 @@ static inline int l2cap_connect_rsp(struct l2cap_conn *conn, struct l2cap_cmd_hd
 		if (sock_owned_by_user(sk)) {
 			l2cap_state_change(chan, BT_DISCONN);
 			__clear_chan_timer(chan);
-/* SSBT :: NEO (0213) + change time format */
+			/* change time format */
 			/* __set_chan_timer(chan, HZ / 5); */
 			__set_chan_timer(chan, 200);
 			break;
@@ -2757,7 +2758,7 @@ static inline int l2cap_config_rsp(struct l2cap_conn *conn, struct l2cap_cmd_hdr
 
 	default:
 		sk->sk_err = ECONNRESET;
-/* SSBT :: NEO (0213) + change time format */
+		/* change time format */
 		/* __set_chan_timer(chan, HZ * 5); */
 		__set_chan_timer(chan, L2CAP_DISC_REJ_TIMEOUT);
 		l2cap_send_disconn_req(conn, chan, ECONNRESET);
@@ -2816,7 +2817,7 @@ static inline int l2cap_disconnect_req(struct l2cap_conn *conn, struct l2cap_cmd
 	if (sock_owned_by_user(sk)) {
 		l2cap_state_change(chan, BT_DISCONN);
 		__clear_chan_timer(chan);
-/* SSBT :: NEO (0213) + change time format */
+		/* change time format */
 		/* __set_chan_timer(chan, HZ / 5); */
 		__set_chan_timer(chan, 200);
 		bh_unlock_sock(sk);
@@ -2852,7 +2853,7 @@ static inline int l2cap_disconnect_rsp(struct l2cap_conn *conn, struct l2cap_cmd
 	if (sock_owned_by_user(sk)) {
 		l2cap_state_change(chan, BT_DISCONN);
 		__clear_chan_timer(chan);
-/* SSBT :: NEO (0213) + change time format */
+		/* change time format */
 		/* __set_chan_timer(chan, HZ / 5); */
 		__set_chan_timer(chan, 200);
 		bh_unlock_sock(sk);
@@ -2882,7 +2883,6 @@ static inline int l2cap_information_req(struct l2cap_conn *conn, struct l2cap_cm
 		rsp->type   = cpu_to_le16(L2CAP_IT_FEAT_MASK);
 		rsp->result = cpu_to_le16(L2CAP_IR_SUCCESS);
 		if (!disable_ertm)
-/* SSBT :: KJH * */
 			feat_mask |= L2CAP_FEAT_ERTM | L2CAP_FEAT_STREAMING;
 		put_unaligned_le32(feat_mask, rsp->data);
 		l2cap_send_cmd(conn, cmd->ident,
@@ -4015,9 +4015,9 @@ static inline int l2cap_conless_channel(struct l2cap_conn *conn, __le16 psm, str
 drop:
 	kfree_skb(skb);
 
-/* done:
-	if (sk)
-		bh_unlock_sock(sk); */
+/* done: */
+	/* if (sk) */
+		/* bh_unlock_sock(sk); */
 	return 0;
 }
 
@@ -4050,9 +4050,9 @@ static inline int l2cap_att_channel(struct l2cap_conn *conn, __le16 cid, struct 
 drop:
 	kfree_skb(skb);
 
-/* done:
-	if (sk)
-		bh_unlock_sock(sk); */
+/* done: */
+	/* if (sk) */
+		/* bh_unlock_sock(sk); */
 	return 0;
 }
 
@@ -4187,7 +4187,7 @@ static inline void l2cap_check_encryption(struct l2cap_chan *chan, u8 encrypt)
 	if (encrypt == 0x00) {
 		if (chan->sec_level == BT_SECURITY_MEDIUM) {
 			__clear_chan_timer(chan);
-/* SSBT :: NEO (0213) + change time format */
+			/* change time format */
 			/* __set_chan_timer(chan, HZ * 5); */
 			__set_chan_timer(chan, L2CAP_ENC_TIMEOUT);
 		} else if (chan->sec_level == BT_SECURITY_HIGH)
@@ -4207,7 +4207,6 @@ static int l2cap_security_cfm(struct hci_conn *hcon, u8 status, u8 encrypt)
 		return 0;
 
 	BT_DBG("conn %p, status %u", conn, status);
-/* SSBT :: NEO (0207) */
 /* to do */
 	if (hcon->type == LE_LINK) {
 		smp_distribute_keys(conn, 0);
@@ -4253,7 +4252,7 @@ static int l2cap_security_cfm(struct hci_conn *hcon, u8 status, u8 encrypt)
 				l2cap_send_conn_req(chan);
 			} else {
 				__clear_chan_timer(chan);
-/* SSBT :: NEO (0213) + change time format */
+				/* change time format */
 				/* __set_chan_timer(chan, HZ / 10); */
 				__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
 			}
@@ -4275,7 +4274,7 @@ static int l2cap_security_cfm(struct hci_conn *hcon, u8 status, u8 encrypt)
 				}
 			} else {
 				l2cap_state_change(chan, BT_DISCONN);
-/* SSBT :: NEO (0213) + change time format */
+				/* change time format */
 				/* __set_chan_timer(chan, HZ / 10); */
 				__set_chan_timer(chan, L2CAP_DISC_TIMEOUT);
 				res = L2CAP_CR_SEC_BLOCK;

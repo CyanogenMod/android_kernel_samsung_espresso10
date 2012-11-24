@@ -127,6 +127,11 @@
 #define ATL_Range1_3_Slope		0
 #endif
 
+enum {
+	UNKNOWN_TYPE = 0,
+	SDI_BATTERY_TYPE,
+	BYD_BATTERY_TYPE,
+};
 
 struct max17042_fuelgauge_callbacks {
 	int (*get_value)(struct max17042_fuelgauge_callbacks *ptr,
@@ -145,14 +150,19 @@ struct max17042_fuelgauge_callbacks {
 	int (*check_cap_corruption)(struct max17042_fuelgauge_callbacks *ptr);
 	void (*update_remcap_to_fullcap)(
 		struct max17042_fuelgauge_callbacks *ptr);
+	int (*get_register_value)(struct max17042_fuelgauge_callbacks *ptr,
+		u8 addr);
 };
 
 struct max17042_platform_data {
 	bool enable_current_sense;
 	void (*register_callbacks)(struct max17042_fuelgauge_callbacks *ptr);
-	int capacity;
-	int vfcapacity;
-	int low_bat_comp_start_vol;
+	int sdi_capacity;
+	int sdi_vfcapacity;
+	int sdi_low_bat_comp_start_vol;
+	int byd_capacity;
+	int byd_vfcapacity;
+	int byd_low_bat_comp_start_vol;
 	int jig_on;
 };
 

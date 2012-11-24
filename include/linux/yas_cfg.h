@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Yamaha Corporation
+ * Copyright (c) 2010-2012 Yamaha Corporation
  *
  * This software is provided 'as-is', without any express or implied
  * warranty.  In no event will the authors be held liable for any damages
@@ -32,16 +32,17 @@
 #define YAS_ACC_DRIVER_BMA150               (2)
 #define YAS_ACC_DRIVER_BMA222               (3)
 #define YAS_ACC_DRIVER_BMA250               (4)
-#define YAS_ACC_DRIVER_KXSD9                (5)
-#define YAS_ACC_DRIVER_KXTE9                (6)
-#define YAS_ACC_DRIVER_KXTF9                (7)
-#define YAS_ACC_DRIVER_KXUD9                (8)
-#define YAS_ACC_DRIVER_LIS331DL             (9)
-#define YAS_ACC_DRIVER_LIS331DLH            (10)
-#define YAS_ACC_DRIVER_LIS331DLM            (11)
-#define YAS_ACC_DRIVER_LIS3DH               (12)
-#define YAS_ACC_DRIVER_MMA8452Q             (13)
-#define YAS_ACC_DRIVER_MMA8453Q             (14)
+#define YAS_ACC_DRIVER_BMA254				(5)
+#define YAS_ACC_DRIVER_KXSD9				(6)
+#define YAS_ACC_DRIVER_KXTE9				(7)
+#define YAS_ACC_DRIVER_KXTF9				(8)
+#define YAS_ACC_DRIVER_KXUD9				(9)
+#define YAS_ACC_DRIVER_LIS331DL				(10)
+#define YAS_ACC_DRIVER_LIS331DLH			(11)
+#define YAS_ACC_DRIVER_LIS331DLM			(12)
+#define YAS_ACC_DRIVER_LIS3DH				(13)
+#define YAS_ACC_DRIVER_MMA8452Q				(14)
+#define YAS_ACC_DRIVER_MMA8453Q				(15)
 
 #define YAS_GYRO_DRIVER_NONE                (-1)
 #define YAS_GYRO_DRIVER_ITG3200             (0)
@@ -52,8 +53,18 @@
 /*                               Configuration                                */
 /*----------------------------------------------------------------------------*/
 
+
+#ifdef CONFIG_ACC_DRIVER_LIS3DH
+#define YAS_ACC_DRIVER                      (YAS_ACC_DRIVER_LIS3DH)
+#else
 #define YAS_ACC_DRIVER                      (YAS_ACC_DRIVER_BMA250)
+#endif
+
+#ifdef CONFIG_MAG_DRIVER_YAS532
+#define YAS_MAG_DRIVER                      (YAS_MAG_DRIVER_YAS532)
+#else
 #define YAS_MAG_DRIVER                      (YAS_MAG_DRIVER_YAS530)
+#endif
 #define YAS_GYRO_DRIVER                     (YAS_GYRO_DRIVER_NONE)
 
 /*----------------------------------------------------------------------------*/
@@ -73,6 +84,8 @@
 #define YAS_DEFAULT_ACCCALIB_DISTORTION     (25000)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250
 #define YAS_DEFAULT_ACCCALIB_DISTORTION     (20000)
+#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA254
+#define YAS_DEFAULT_ACCCALIB_DISTORTION		(4000)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXSD9
 #define YAS_DEFAULT_ACCCALIB_DISTORTION     (80000)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTE9
@@ -111,6 +124,8 @@
 #define YAS_ACC_DEFAULT_FILTER_THRESH       (153227)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250
 #define YAS_ACC_DEFAULT_FILTER_THRESH       (76612)
+#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA254
+#define YAS_ACC_DEFAULT_FILTER_THRESH       (19152)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXSD9
 #define YAS_ACC_DEFAULT_FILTER_THRESH       (239460)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTE9

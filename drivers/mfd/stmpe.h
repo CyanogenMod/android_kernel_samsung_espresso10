@@ -59,6 +59,9 @@ struct stmpe_variant_block {
  * @get_altfunc: callback to get the alternate function number for the
  *		 specific block
  * @enable_autosleep: callback to configure autosleep with specified timeout
+ * @reg_order_gpio: reading order of gpio registers. most of devices are
+ *                  'STMPE_REG_DEC'. some devices are use 'STMPE_REG_INC'
+ *                  (ex, STMP1801)
  */
 struct stmpe_variant_info {
 	const char *name;
@@ -73,6 +76,7 @@ struct stmpe_variant_info {
 	int (*enable)(struct stmpe *stmpe, unsigned int blocks, bool enable);
 	int (*get_altfunc)(struct stmpe *stmpe, enum stmpe_block block);
 	int (*enable_autosleep)(struct stmpe *stmpe, int autosleep_timeout);
+	int reg_order_gpio;
 };
 
 /**
@@ -197,6 +201,33 @@ int stmpe_remove(struct stmpe *stmpe);
 /* The 1601/2403 share the same masks */
 #define STMPE1601_AUTOSLEEP_TIMEOUT_MASK	(0x7)
 #define STPME1601_AUTOSLEEP_ENABLE		(1 << 3)
+
+/*
+ * STMPE1801
+ */
+
+#define STMPE1801_ID			0xC110
+#define STMPE1801_IRQ_COMB_KEY		4
+#define STMPE1801_IRQ_GPIOC		3
+#define STMPE1801_IRQ_KEYPAD_OVER	2
+#define STMPE1801_IRQ_KEYPAD		1
+#define STMPE1801_NR_INTERNAL_IRQS	4
+
+#define STMPE1801_REG_CHIP_ID			0x00
+#define STMPE1801_REG_ICR_LSB			0x04
+#define STMPE1801_REG_IER_LSB			0x06
+#define STMPE1801_REG_ISR_MSB			0x09
+#define STMPE1801_REG_GPIO_MP_LSB		0x16
+#define STMPE1801_REG_GPIO_SET_LSB		0x10
+#define STMPE1801_REG_GPIO_CLR_LSB		0x13
+#define STMPE1801_REG_GPIO_SET_DIR_LSB		0x19
+#define STMPE1801_REG_GPIO_RE_LSB		0x1C
+#define STMPE1801_REG_GPIO_FE_LSB		0x1F
+#define STMPE1801_REG_INT_EN_GPIO_MASK_LSB	0x0A
+#define STMPE1801_REG_INT_STA_GPIO_MSB		0x0F
+
+#define STMPE1801_NR_GPIO		18
+#define STMPE1801_ID_MASK		0xFFFF
 
 /*
  * STMPE24xx

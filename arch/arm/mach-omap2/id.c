@@ -76,6 +76,8 @@ out:
 }
 EXPORT_SYMBOL(omap_type);
 
+#define OMAP4_SILICON_TYPE_STANDARD	0x01
+#define OMAP4_SILICON_TYPE_PERFORMANCE	0x02
 
 /*----------------------------------------------------------------------------*/
 
@@ -231,39 +233,32 @@ static void __init omap4_check_features(void)
 
 	omap4_features = 0;
 
-	if (cpu_is_omap443x()) {
-		si_type =
-			read_tap_reg(OMAP4_CTRL_MODULE_CORE_STD_FUSE_PROD_ID_1);
+	si_type =
+	  (read_tap_reg(OMAP4_CTRL_MODULE_CORE_STD_FUSE_PROD_ID_1) >> 16) & 3;
 
-		switch ((si_type & (3 << 16)) >> 16) {
-		case 2:
-			/* High performance device */
-			omap4_features |= OMAP4_HAS_MPU_1GHZ;
+	switch (si_type) {
+	case OMAP4_SILICON_TYPE_PERFORMANCE:
+		/* High performance device */
+		if (cpu_is_omap443x())
 			omap4_features |= OMAP4_HAS_MPU_1_2GHZ;
-		break;
-		case 1:
-		default:
-			/* Standard device */
-			omap4_features |= OMAP4_HAS_MPU_1GHZ;
-		break;
-		}
-	}
-
-	if (cpu_is_omap446x()) {
-		si_type =
-			read_tap_reg(OMAP4_CTRL_MODULE_CORE_STD_FUSE_PROD_ID_1);
-		switch ((si_type & (3 << 16)) >> 16) {
-		case 2:
-			/* High performance device */
+		else if (cpu_is_omap446x() || cpu_is_omap447x()) {
 			omap4_features |= OMAP4_HAS_MPU_1_5GHZ;
-			omap4_features |= OMAP4_HAS_MPU_1_2GHZ;
-			break;
-		case 1:
-		default:
-			/* Standard device */
-			omap4_features |= OMAP4_HAS_MPU_1_2GHZ;
-			break;
+			omap4_features |= OMAP4_HAS_IVA_500MHZ;
 		}
+		/* Fall through to Standard device features */
+	case OMAP4_SILICON_TYPE_STANDARD:
+	default:
+		/* Standard device */
+		if (cpu_is_omap443x())
+			omap4_features |= OMAP4_HAS_MPU_1GHZ;
+		else if (cpu_is_omap446x()) {
+			omap4_features |= OMAP4_HAS_MPU_1_2GHZ;
+			omap4_features |= OMAP4_HAS_IVA_430MHZ;
+		} else if (cpu_is_omap447x()) {
+			omap4_features |= OMAP4_HAS_MPU_1_3GHZ;
+			omap4_features |= OMAP4_HAS_IVA_430MHZ;
+		}
+		break;
 	}
 }
 
@@ -407,7 +402,7 @@ static void __init omap4_check_revision(void)
 	 * Few initial 4430 ES2.0 samples IDCODE is same as ES1.0
 	 * Use ARM register to detect the correct ES version
 	 */
-	if (!rev && (hawkeye != 0xb94e)) {
+	if (!rev && ((hawkeye == 0xb852) || (hawkeye == 0xb95c))) {
 		idcode = read_cpuid(CPUID_ID);
 		rev = (idcode & 0xf) - 1;
 	}
@@ -451,6 +446,15 @@ static void __init omap4_check_revision(void)
 		default:
 			omap_revision = OMAP4460_REV_ES1_1;
 			omap_chip.oc |= CHIP_IS_OMAP4460ES1_1;
+			break;
+		}
+		break;
+	case 0xb975:
+		switch (rev) {
+		case 0:
+		default:
+			omap_revision = OMAP4470_REV_ES1_0;
+			omap_chip.oc |= CHIP_IS_OMAP4470ES1_0;
 			break;
 		}
 		break;

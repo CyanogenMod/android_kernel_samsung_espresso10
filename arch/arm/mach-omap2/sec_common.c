@@ -19,6 +19,7 @@
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/reboot.h>
+#include <linux/sort.h>
 
 #include <mach/hardware.h>
 #include <mach/id.h>
@@ -29,7 +30,6 @@
 #include "mux.h"
 #include "omap_muxtbl.h"
 #include "sec_common.h"
-#include "sec_param.h"
 
 #if defined(CONFIG_ARCH_OMAP3)
 #define SEC_REBOOT_MODE_ADDR		(OMAP343X_CTRL_BASE + 0x0918)
@@ -82,6 +82,14 @@ struct sec_reboot_code {
 	int mode;
 };
 
+static int __sec_common_cmp_reboot_cmd(const void *code0, const void *code1)
+{
+	struct sec_reboot_code *r_code0 = (struct sec_reboot_code *)code0;
+	struct sec_reboot_code *r_code1 = (struct sec_reboot_code *)code1;
+
+	return (strlen(r_code0->cmd) > strlen(r_code1->cmd)) ? -1 : 1;
+}
+
 static int __sec_common_reboot_call(struct notifier_block *this,
 				    unsigned long code, void *cmd)
 {
@@ -101,6 +109,10 @@ static int __sec_common_reboot_call(struct notifier_block *this,
 		{"sud", REBOOT_SET_PREFIX | REBOOT_SET_SUD},
 	};
 	size_t i, n;
+
+	sort(reboot_tbl, ARRAY_SIZE(reboot_tbl),
+	     sizeof(struct sec_reboot_code),
+	     __sec_common_cmp_reboot_cmd, NULL);
 
 	if ((code == SYS_RESTART) && cmd) {
 		n = ARRAY_SIZE(reboot_tbl);
@@ -147,7 +159,9 @@ static void __init sec_common_set_panic_string(void)
 #if defined(CONFIG_ARCH_OMAP3)
 	cpu_type = cpu_is_omap34xx() ? "OMAP3430" : "OMAP3630";
 #elif defined(CONFIG_ARCH_OMAP4)
-	cpu_type = cpu_is_omap443x() ? "OMAP4430" : "OMAP4460";
+	cpu_type = cpu_is_omap443x() ? "OMAP4430" :
+		   cpu_is_omap446x() ? "OMAP4460" :
+		   cpu_is_omap447x() ? "OMAP4470" : "Unknown";
 #endif /* CONFIG_ARCH_OMAP* */
 
 	snprintf(sec_panic_string, ARRAY_SIZE(sec_panic_string),
@@ -350,7 +364,7 @@ static char __sec_common_convert_reboot_mode(char mode,  const char *cmd)
 		{"arm11_fota", 'f'},
 		{"arm9_fota", 'f'},
 		{"recovery", 'r'},
-        {"bootloader", 'b'},
+		{"bootloader", 'b'},
 		{"download", 'd'},
 		{"cp_crash", 'C'}
 	};
@@ -407,7 +421,7 @@ static int sec_common_update_reboot_reason(char mode, const char *cmd)
 		reason = REBOOTMODE_SHUTDOWN;
 		rebootflag = "POFF";
 		break;
-	case 'b':		/* reboot mode = bootloader = download */
+	case 'b':		/* reboot mode = bootloader */
 		reason = REBOOTMODE_DOWNLOAD;
 		break;
 	case 'd':		/* reboot mode = download */

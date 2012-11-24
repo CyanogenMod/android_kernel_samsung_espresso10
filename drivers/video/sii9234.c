@@ -59,7 +59,7 @@
 #define MHL_CON_PROXY_WAIT		2
 
 #define T_SRC_CBUS_FLOAT		50
-#define T_WAIT_TIMEOUT_RGND_INT		2000
+#define T_WAIT_TIMEOUT_RGND_INT		3000
 #define T_WAIT_TIMEOUT_DISC_INT		1000
 #define T_WAIT_TIMEOUT_RSEN_INT		200
 #define T_HPD_WIDTH			110
@@ -1659,15 +1659,13 @@ unhandled:
 /* this is for MHL 1.1 spec. currently, 30pin model don't use this */
 #ifdef CONFIG_USB_SWITCH_FSA9480
 	/*mhl spec: 8.3.3, if discovery failed, must retry discovering*/
-	if (sii9234->state == STATE_DISCOVERY_FAILED &&
-						 sii9234->rgnd == RGND_1K) {
+	if (sii9234->rgnd == RGND_1K) {
 		schedule_work(&sii9234->redetect_work);
 		handled = MHL_CON_HANDLED;
-	} else {
-		sii9234_power_down(sii9234);
-	}
+	} else
 #endif
 	sii9234_power_down(sii9234);
+
 #ifdef CONFIG_SEC_30PIN_CON
 	sii9234->pdata->dongle = DONGLE_9292;
 #endif
@@ -1675,8 +1673,7 @@ unhandled:
 	mutex_unlock(&sii9234->lock);
 
 #ifdef CONFIG_SII9290_SUPPORT
-	if (sii9234->state == STATE_DISCONNECTED
-		&& sii9234->rgnd != RGND_1K) {
+	if (sii9234->rgnd != RGND_1K) {
 		pr_info("sii9234: init for 9290 dongle");
 		handled = sii9234_30pin_init_for_9290(sii9234);
 		sii9234->pdata->dongle = DONGLE_9290;
@@ -1694,7 +1691,7 @@ static void sii9234_detection_restart(struct work_struct *work)
 
 	sii9234->state = STATE_DISCONNECTED;
 	sii9234->pdata->power(0);
-
+	sii9234->pdata->enable_adc_change();
 	if (sii9234_detection_init(sii9234) == MHL_CON_UNHANDLED) {
 		pr_info("sii9234: redetection failed\n");
 #ifdef CONFIG_USB_SWITCH_FSA9480

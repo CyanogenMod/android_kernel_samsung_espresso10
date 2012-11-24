@@ -119,29 +119,51 @@ int ion_carveout_heap_map_user(struct ion_heap *heap, struct ion_buffer *buffer,
 			       __phys_to_pfn(buffer->priv_phys) + vma->vm_pgoff,
 			       buffer->size,
 			       (buffer->map_cacheable ? (vma->vm_page_prot)
-			       : pgprot_noncached(vma->vm_page_prot)));
+			       : pgprot_writecombine(vma->vm_page_prot)));
+}
+
+static void per_cpu_cache_flush_arm(void *arg)
+{
+	flush_cache_all();
+}
+
+int ion_carveout_heap_cache_operation(struct ion_buffer *buffer, size_t len,
+			unsigned long vaddr, enum cache_operation cacheop)
+{
+	if (!buffer || !buffer->map_cacheable) {
+		pr_err("%s(): buffer not mapped as cacheable\n",
+			__func__);
+		return -EINVAL;
+	}
+
+	if (len > FULL_CACHE_FLUSH_THRESHOLD) {
+		on_each_cpu(per_cpu_cache_flush_arm, NULL, 1);
+		outer_flush_all();
+		return 0;
+	}
+
+	flush_cache_user_range(vaddr, (vaddr+len));
+	
+	if (cacheop == CACHE_FLUSH)
+		outer_flush_range(buffer->priv_phys, buffer->priv_phys+len);
+	else
+		outer_inv_range(buffer->priv_phys, buffer->priv_phys+len);
+	
+	return 0;
 }
 
 int ion_carveout_heap_flush_user(struct ion_buffer *buffer, size_t len,
 			unsigned long vaddr)
 {
-	if(!buffer->map_cacheable) {
-		pr_err("%s(): buffer not mapped as cacheable\n",
-	       __func__);
-		return 0;
-	}
-
-	dmac_flush_range((void *)vaddr, (void *)(vaddr + len));
-//	outer_flush_range(virt_to_phys((void *)vaddr), virt_to_phys((void *)(vaddr + len)));
-	outer_flush_range(buffer->priv_phys, buffer->priv_phys+len);
-
-	return 0;
+	return ion_carveout_heap_cache_operation(buffer, len,
+			vaddr, CACHE_FLUSH);
 }
 
 int ion_carveout_heap_inval_user(struct ion_buffer *buffer, size_t len,
 			unsigned long vaddr)
 {
-	return 0;
+	return ion_carveout_heap_cache_operation(buffer, len,
+			vaddr, CACHE_INVALIDATE);
 }
 static struct ion_heap_ops carveout_heap_ops = {
 	.allocate = ion_carveout_heap_allocate,

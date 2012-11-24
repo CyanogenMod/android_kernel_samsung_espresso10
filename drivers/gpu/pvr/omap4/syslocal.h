@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -41,12 +41,12 @@
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(2,6,26))
 #include <linux/semaphore.h>
 #include <linux/resource.h>
-#else 
+#else
 #include <asm/semaphore.h>
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(2,6,22))
 #include <asm/arch/resource.h>
-#endif 
-#endif 
+#endif
+#endif
 
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35))
@@ -74,7 +74,7 @@
 #if !defined(PVR_NO_OMAP_TIMER)
 #define PVR_OMAP_TIMER_BASE_IN_SYS_SPEC_DATA
 #endif
-#endif 
+#endif
 
 #if !defined(NO_HARDWARE) && \
      defined(SYS_USING_INTERRUPTS)
@@ -82,8 +82,8 @@
 #endif
 
 #if defined(__linux__)
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35)) && defined(SGX_OCP_REGS_ENABLED)
-#if !defined(SGX544)
+#if defined(SGX_OCP_REGS_ENABLED)
+#if !defined(SGX544) /*FIXME: Workaround for OMAP4470 */
 #define SGX_OCP_NO_INT_BYPASS
 #endif
 #endif
@@ -93,8 +93,8 @@
 extern "C" {
 #endif
 
- 
- 
+
+
 IMG_VOID DisableSystemClocks(SYS_DATA *psSysData);
 PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData);
 
@@ -123,7 +123,7 @@ PVRSRV_ERROR EnableSGXClocks(SYS_DATA *psSysData);
 #define	SYS_SPECIFIC_DATA_CLEAR(psSysSpecData, flag) ((IMG_VOID)((psSysSpecData)->ui32SysSpecificData &= ~(flag)))
 
 #define	SYS_SPECIFIC_DATA_TEST(psSysSpecData, flag) (((psSysSpecData)->ui32SysSpecificData & (flag)) != 0)
- 
+
 typedef struct _SYS_SPECIFIC_DATA_TAG_
 {
 	IMG_UINT32	ui32SysSpecificData;
@@ -159,7 +159,7 @@ typedef struct _SYS_SPECIFIC_DATA_TAG_
 	IMG_UINT32 ui32SGXFreqListSize;
 	IMG_UINT32 *pui32SGXFreqList;
 	IMG_UINT32 ui32SGXFreqListIndex;
-#endif	
+#endif
 } SYS_SPECIFIC_DATA;
 
 extern SYS_SPECIFIC_DATA *gpsSysSpecificData;
@@ -185,7 +185,7 @@ PVRSRV_ERROR SysPMRuntimeUnregister(void);
 PVRSRV_ERROR SysDvfsInitialize(SYS_SPECIFIC_DATA *psSysSpecificData);
 PVRSRV_ERROR SysDvfsDeinitialize(SYS_SPECIFIC_DATA *psSysSpecificData);
 
-#else 
+#else
 
 #ifdef INLINE_IS_PRAGMA
 #pragma inline(SysPMRuntimeRegister)
@@ -219,12 +219,10 @@ static INLINE PVRSRV_ERROR SysDvfsDeinitialize(void)
 	return PVRSRV_OK;
 }
 
-#endif 
+#endif
 
 #if defined(__cplusplus)
 }
 #endif
 
-#endif	
-
-
+#endif
