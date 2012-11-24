@@ -48,11 +48,14 @@
 
 #define TWL6030_CFG_LDO_PD2	0xF5
 
-#ifdef CONFIG_SND_SOC_WM8994
-
 static bool enable_sr = true;
 module_param(enable_sr, bool, S_IRUSR | S_IRGRP | S_IROTH);
 
+char *rpmsg_cam_regulator_name[] = {
+	"cam2pwr"
+};
+
+#ifdef CONFIG_SND_SOC_WM8994
 static const struct regulator_consumer_supply vbatt_supplies[] = {
 	REGULATOR_SUPPLY("LDO1VDD", "1-001a"),
 	REGULATOR_SUPPLY("SPKVDD1", "1-001a"),
@@ -398,6 +401,7 @@ static struct twl4030_codec_data espresso10_codec = {
 
 static struct twl4030_madc_platform_data espresso10_madc = {
 	.irq_line	= -1,
+	.features	= TWL6030_CLASS | TWL6032_SUBCLASS,
 };
 
 static struct platform_device espresso10_madc_device = {
@@ -675,7 +679,7 @@ static struct i2c_board_info
 static struct i2c_board_info
 		espresso10_twl6032_i2c1_board_info_rev03[] __initdata = {
 	{
-		I2C_BOARD_INFO("twl6025", 0x48),
+		I2C_BOARD_INFO("twl6032", 0x48),
 		.flags		= I2C_CLIENT_WAKE,
 		.irq		= OMAP44XX_IRQ_SYS_1N,
 		.platform_data	= &espresso10_twl6032_pdata_rev03,
@@ -697,11 +701,6 @@ static void __init espresso10_audio_init(void)
 
 #ifdef CONFIG_SND_SOC_WM8994
 	platform_device_register(&vbatt_device);
-
-	wm1811_pdata.mclk_pin =
-		omap_muxtbl_get_gpio_by_name("26M_EN");
-	gpio_request(wm1811_pdata.mclk_pin, "26M_EN");
-	gpio_direction_output(wm1811_pdata.mclk_pin, 1);
 
 	wm1811_pdata.ldo[0].enable =
 		omap_muxtbl_get_gpio_by_name("CODEC_LDO_EN");

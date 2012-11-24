@@ -1928,15 +1928,21 @@ static int suspend(struct yas_driver *d)
 
 static int check_interval(int ms)
 {
-	int index;
+	int index = -1;
 
 	if (ms <= supported_data_interval[0])
 		ms = supported_data_interval[0];
 	for (index = 0; index < NELEMS(supported_data_interval); index++) {
 		if (ms == supported_data_interval[index])
-			return index;
+			goto done;
+		else if (ms < supported_data_interval[index]) {
+			if (index != 0)
+				index -= 1;
+			goto done;
+		}
 	}
-	return -1;
+done:
+	return index;
 }
 
 static int yas_get_delay_nolock(struct yas_driver *d, int *ms)

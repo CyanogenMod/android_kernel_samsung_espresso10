@@ -44,7 +44,7 @@
 #define L2CAP_ENC_TIMEOUT              (5000)  /*  5 seconds */
 #define L2CAP_CONN_TIMEOUT	(40000) /* 40 seconds */
 #define L2CAP_INFO_TIMEOUT	(4000)  /*  4 seconds */
-// SSBT :: KJH * 15sec -> 5sec
+/* SSBT :: KJH * 15sec -> 5sec */
 #define L2CAP_CONN_LE_TIMEOUT          (5000) /* 5 seconds */
 
 

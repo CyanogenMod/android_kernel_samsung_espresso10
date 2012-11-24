@@ -24,6 +24,7 @@ enum stmpe_partnum {
 	STMPE801,
 	STMPE811,
 	STMPE1601,
+	STMPE1801,
 	STMPE2401,
 	STMPE2403,
 };
@@ -50,6 +51,13 @@ enum {
 	STMPE_IDX_MAX,
 };
 
+/*
+ * Reading order of register.
+ */
+enum {
+	STMPE_REG_DEC = 0,
+	STMPE_REG_INC,
+};
 
 struct stmpe_variant_info;
 struct stmpe_client_info;
@@ -65,6 +73,9 @@ struct stmpe_client_info;
  * @variant: the detected STMPE model number
  * @regs: list of addresses of registers which are at different addresses on
  *	  different variants.  Indexed by one of STMPE_IDX_*.
+ * @reg_order_gpio: reading order of gpio registers. most of devices are
+ *                  'STMPE_REG_DEC'. some devices are use 'STMPE_REG_INC'
+ *                  (ex, STMP1801)
  * @irq: irq number for stmpe
  * @irq_base: starting IRQ number for internal IRQs
  * @num_gpios: number of gpios, differs for variants
@@ -81,6 +92,7 @@ struct stmpe {
 	enum stmpe_partnum partnum;
 	struct stmpe_variant_info *variant;
 	const u8 *regs;
+	int reg_order_gpio;
 
 	int irq;
 	int irq_base;

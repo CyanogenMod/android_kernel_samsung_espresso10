@@ -32,6 +32,7 @@
 #include <plat/usb.h>
 #include <plat/omap_device.h>
 
+#include "control.h"
 #include "mux.h"
 
 #ifdef CONFIG_MFD_OMAP_USB_HOST
@@ -45,6 +46,7 @@
 static struct usbhs_omap_platform_data		usbhs_data;
 static struct ehci_hcd_omap_platform_data	ehci_data;
 static struct ohci_hcd_omap_platform_data	ohci_data;
+static int usbhs_update_sar;
 
 static struct omap_device_pm_latency omap_uhhtll_latency[] = {
 	  {
@@ -596,6 +598,7 @@ setup_4430ehci_io_mux(const enum usbhs_omap_port_mode *port_mode)
 {
 	struct omap_device_pad *pads;
 	int pads_cnt;
+	u32 val = 0;
 
 	switch (port_mode[0]) {
 	case OMAP_EHCI_PORT_MODE_PHY:
@@ -605,6 +608,13 @@ setup_4430ehci_io_mux(const enum usbhs_omap_port_mode *port_mode)
 	case OMAP_EHCI_PORT_MODE_TLL:
 		pads = port1_tll_pads;
 		pads_cnt = ARRAY_SIZE(port1_tll_pads);
+
+		/* Errata i687: set I/O drive strength to 1 */
+		if (cpu_is_omap443x()) {
+			val = omap4_ctrl_pad_readl(OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_SMART2IO_PADCONF_2);
+			val |= OMAP4_USBB1_DR0_DS_MASK;
+			omap4_ctrl_pad_writel(val, OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_SMART2IO_PADCONF_2);
+		}
 			break;
 	case OMAP_USBHS_PORT_MODE_UNUSED:
 	default:
@@ -618,6 +628,13 @@ setup_4430ehci_io_mux(const enum usbhs_omap_port_mode *port_mode)
 	case OMAP_EHCI_PORT_MODE_TLL:
 		pads = port2_tll_pads;
 		pads_cnt = ARRAY_SIZE(port2_tll_pads);
+
+		/* Errata i687: set I/O drive strength to 1 */
+		if (cpu_is_omap443x()) {
+			val = omap4_ctrl_pad_readl(OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_SMART2IO_PADCONF_2);
+			val |= OMAP4_USBB2_DR0_DS_MASK;
+			omap4_ctrl_pad_writel(val, OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_SMART2IO_PADCONF_2);
+		}
 			break;
 	case OMAP_USBHS_PORT_MODE_UNUSED:
 	default:
@@ -789,6 +806,16 @@ setup_4430ohci_io_mux(const enum usbhs_omap_port_mode *port_mode)
 	return omap_hwmod_mux_init(pads, pads_cnt);
 }
 
+int omap4430_usbhs_update_sar(void)
+{
+	if (usbhs_update_sar) {
+		usbhs_update_sar = 0;
+		return 1;
+	}
+
+	return 0;
+}
+
 void usbhs_wakeup()
 {
 	int workq = 0;
@@ -826,8 +853,8 @@ static void usbhs_resume_work(struct work_struct *work)
 		omap_hwmod_disable_ioring_wakeup(usbhs_wake->oh_ohci);
 	}
 
-	pm_runtime_get_sync(usbhs_wake->dev);
-	pm_runtime_put_sync(usbhs_wake->dev);
+	if (pm_runtime_suspended(usbhs_wake->dev))
+		pm_runtime_get_sync(usbhs_wake->dev);
 }
 
 void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
@@ -847,6 +874,8 @@ void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
 	}
 	ehci_data.phy_reset = pdata->phy_reset;
 	ohci_data.es2_compatibility = pdata->es2_compatibility;
+	ehci_data.usbhs_update_sar = &usbhs_update_sar;
+	ohci_data.usbhs_update_sar = &usbhs_update_sar;
 	usbhs_data.ehci_data = &ehci_data;
 	usbhs_data.ohci_data = &ohci_data;
 
@@ -879,7 +908,11 @@ void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
 		setup_ohci_io_mux(pdata->port_mode);
 	} else if (cpu_is_omap44xx()) {
 		oh[2]->mux = setup_4430ehci_io_mux(pdata->port_mode);
+		if (oh[2]->mux)
+			omap_hwmod_mux(oh[2]->mux, _HWMOD_STATE_ENABLED);
 		oh[1]->mux = setup_4430ohci_io_mux(pdata->port_mode);
+		if (oh[1]->mux)
+			omap_hwmod_mux(oh[1]->mux, _HWMOD_STATE_ENABLED);
 	}
 
 	od = omap_device_build_ss(OMAP_USBHS_DEVICE, bus_id, oh, 4,

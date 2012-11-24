@@ -16,9 +16,7 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC) += board-espresso.o \
 						board-espresso-cmcc-modems.o \
 						board-espresso-vibrator.o
 
-obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC) += board-espresso-muxset-r00.o \
-						board-espresso-muxset-r02.o \
-						board-espresso-muxset-r03.o \
+obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC) += board-espresso-muxset-r03.o \
 						board-espresso-cmcc-muxset-r04.o \
 						board-espresso-cmcc-muxset-r09.o \
 						board-espresso-cmcc-muxset-r10.o
@@ -39,10 +37,37 @@ obj-$(CONFIG_MACH_SAMSUNG_T1_CHN_CMCC)  += board-t1.o \
                                            board-t1-vibrator.o \
                                            board-t1-fmradio.o \
 					   board-t1-spi.o \
-					   board-t1-cmcc-modems.o
+					   board-t1-cmcc-modems.o \
+					   board-t1-camera.o
 
 obj-$(CONFIG_MACH_SAMSUNG_T1_CHN_CMCC)   += board-t1-muxset-r02.o \
                                            board-t1-muxset-r03.o \
                                            board-t1-muxset-r04.o \
                                            board-t1-muxset-r05.o \
                                            board-t1-cmcc-muxset-r07.o
+
+obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_CMCC)	+= board-superior.o \
+					   board-superior-emif.o \
+					   board-superior-serial.o \
+					   board-superior-pmic.o \
+					   board-superior-sdio.o \
+					   board-superior-input.o \
+					   board-superior-audio.o \
+					   board-superior-connector.o \
+					   board-superior-display.o \
+					   board-superior-bluetooth.o \
+					   board-superior-wifi.o \
+					   board-superior-power.o \
+					   board-superior-vibrator.o \
+					   board-superior-sensors.o \
+					   board-superior-nfc.o \
+					   board-superior-fmradio.o \
+					   board-superior-camera.o \
+					   board-superior-spiflash.o \
+					   board-superior-spi.o
+
+obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_CMCC) += board-superior-muxset-r00.o \
+					   board-superior-muxset-r02.o \
+					   board-superior-muxset-r04.o \
+					   board-superior-cmcc-muxset-r01.o \
+					   board-superior-cmcc-modems.o

@@ -139,7 +139,7 @@ struct mgmt_cp_set_dev_class {
 #define MGMT_OP_SET_LOCAL_NAME		0x000F
 struct mgmt_cp_set_local_name {
 	__u8 name[MGMT_MAX_NAME_LENGTH];
-// SSBT :: KJH + set local name issue
+/* SSBT :: KJH + set local name issue */
 	__u8 short_name[MGMT_MAX_SHORT_NAME_LENGTH];
 } __packed;
 
@@ -184,15 +184,17 @@ struct mgmt_cp_load_long_term_keys {
 	struct mgmt_ltk_info keys[0];
 } __packed;
 
-//#define MGMT_OP_REMOVE_KEYS		0x0014
-//struct mgmt_cp_remove_keys {
-//	bdaddr_t bdaddr;
-//	__u8 disconnect;
-//} __packed;
-//struct mgmt_rp_remove_keys {
-//	bdaddr_t bdaddr;
-//	__u8 status;
-//};
+/*
+#define MGMT_OP_REMOVE_KEYS		0x0014
+struct mgmt_cp_remove_keys {
+	bdaddr_t bdaddr;
+	__u8 disconnect;
+} __packed;
+struct mgmt_rp_remove_keys {
+	bdaddr_t bdaddr;
+	__u8 status;
+};
+*/
 
 #define MGMT_OP_DISCONNECT		0x0014
 struct mgmt_cp_disconnect {
@@ -326,6 +328,12 @@ struct mgmt_cp_unblock_device {
 	struct mgmt_addr_info addr;
 } __packed;
 
+#define MGMT_OP_LE_TEST_END		0x0028
+struct mgmt_rp_le_test_end {
+	__u8 status;
+	__u16 num_pkts;
+} __packed;
+
 #define MGMT_EV_CMD_COMPLETE		0x0001
 struct mgmt_ev_cmd_complete {
 	__le16 opcode;
@@ -437,30 +445,56 @@ struct mgmt_ev_device_unpaired {
 	struct mgmt_addr_info addr;
 } __packed;
 
-// SSBT :: LJH +
+/* SSBT :: LJH + */
 #define MGMT_OP_ENCRYPT_LINK		0x0101
 struct mgmt_cp_encrypt_link {
 	bdaddr_t bdaddr;
 	__u8 enable;
 } __packed;
 
-// SSBT :: KJH + to check encryption changed status
-#define MGMT_EV_ENCRYPT_CHANGE		0x0100
+/* monitoring of the RSSI of the link between two Bluetooth devices */
+#define MGMT_OP_READ_RSSI		0x0102
+struct mgmt_cp_read_rssi {
+	bdaddr_t bdaddr;
+} __packed;
+
+struct mgmt_rp_read_rssi {
+	__u8 status;
+	bdaddr_t bdaddr;
+	__s8 rssi;
+} __packed;
+
+/* SSBT :: KJH + to check encryption changed status */
+#define MGMT_EV_ENCRYPT_CHANGE		0x0101
 struct mgmt_ev_encrypt_change {
 	bdaddr_t bdaddr;
 	__u8 status;
 } __packed;
 
-//// SSBT :: LJH(bluez0220) + passkey notification
+/* SSBT :: LJH(bluez0220) + passkey notification */
 #define MGMT_EV_USER_PASSKEY_NOTIFICATION	0x0102
 struct mgmt_ev_user_passkey_notificaion {
 	bdaddr_t bdaddr;
 	uint32_t value;
 } __packed;
-//// SSBT :: LJH(bluez0220) + passkey notification end
+/* SSBT :: LJH(bluez0220) + passkey notification end */
 
 #define MGMT_WRITE_LE_HOST_SUPPORTED	0x0103
 struct write_le_host_supported{
 	uint8_t		le;
 	uint8_t		simul;
 }__packed;
+
+#define MGMT_EV_REMOTE_VERSION		0x0104
+struct mgmt_ev_remote_version {
+	bdaddr_t bdaddr;
+	__u8	lmp_ver;
+	__u16	manufacturer;
+	__u16	lmp_subver;
+} __packed;
+
+#define MGMT_EV_REMOTE_FEATURES		0x0105
+struct mgmt_ev_remote_features {
+	bdaddr_t bdaddr;
+	uint8_t features[8];
+} __packed;

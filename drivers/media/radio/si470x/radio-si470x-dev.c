@@ -18,10 +18,15 @@
 #include <linux/miscdevice.h>
 #include <linux/poll.h>
 #include <linux/wakelock.h>
+#ifdef CONFIG_OMAP_PM
+#include <plat/omap-pm.h>
+static struct pm_qos_request_list pm_qos_dpll_handle;
+#endif
 
 #include "radio-si470x.h"
 #include "radio-si470x-dev.h"
 #define SI4709_DRIVER_NAME "fmradio"
+#define RDS_TIMEOUT	1000
 
 struct wake_lock fm_prevent_suspend_lock;
 
@@ -428,7 +433,7 @@ static int si470x_dev_stereo_set(struct si470x_device *radio)
 static int si470x_dev_rds_enable(struct si470x_device *radio)
 {
 	int ret;
-	radio->registers[POWERCFG] = (0x00 << 11) & POWERCFG_RDSM;
+	radio->registers[POWERCFG] |= (0x00 << 11) & POWERCFG_RDSM;
 	ret = si470x_set_register(radio, POWERCFG);
 	if (unlikely(ret < 0)) {
 		pr_err("(%s):err while setting RDS mode\n", __func__);
@@ -476,6 +481,19 @@ static int si470x_dev_set_seek(struct si470x_device *radio,
 	unsigned long timeout;
 	bool timed_out = 0;
 	unsigned int seek_timeout = 5000;
+#ifdef CONFIG_OMAP_PM
+	static bool pm_qos_request_added;
+#endif
+
+#ifdef CONFIG_OMAP_PM
+	if (!pm_qos_request_added) {
+		pm_qos_request_added = true;
+
+	pm_qos_add_request(&pm_qos_dpll_handle,
+			PM_QOS_CPU_DMA_LATENCY, PM_QOS_DEFAULT_VALUE);
+	}
+	pm_qos_update_request(&pm_qos_dpll_handle, 7);
+#endif
 
 	/* start seeking */
 	radio->registers[POWERCFG] |= POWERCFG_SEEK;
@@ -529,7 +547,9 @@ stop:
 	/*stop seeking*/
 	radio->registers[POWERCFG] &= ~POWERCFG_SEEK;
 	ret = si470x_set_register(radio, POWERCFG);
-
+#ifdef CONFIG_OMAP_PM
+	pm_qos_update_request(&pm_qos_dpll_handle, -1);
+#endif
 done:
 	if ((ret == 0) && timed_out)
 		ret = -EAGAIN;
@@ -647,9 +667,11 @@ static int si470x_dev_rds_get(struct si470x_device *radio,
 	int i, ret = 0;
 	mutex_lock(&radio->lock);
 	while (radio->wr_index == radio->rd_index) {
-		if (wait_event_interruptible(radio->read_queue,
+		if (wait_event_interruptible_timeout(radio->read_queue,
 						radio->wr_index !=
-						radio->rd_index) < 0) {
+						radio->rd_index,
+						msecs_to_jiffies(RDS_TIMEOUT)
+						) <= 0) {
 			ret = -EINTR;
 			goto done;
 		}

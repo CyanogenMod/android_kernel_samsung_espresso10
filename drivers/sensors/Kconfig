@@ -1,3 +1,14 @@
+menuconfig ACC_DRIVER_LIS3DH
+	bool "Lis3dh sensor Support"
+	help
+	  Say Y to enable LIS3DH Acceleration Sensor support.
+	  This allows control of supported Acceleration Sensor.
+
+menuconfig MAG_DRIVER_YAS532
+	bool "yas532 Sensor Support"
+	help
+	  Say Y to enable YAS532 Magnetic Sensor support.
+	  This allows control of supported Magnetic Sensor.
 
 menuconfig INPUT_YAS_SENSORS
 	bool "Sensors Support"
@@ -15,4 +26,3 @@ endif # INPUT_YAS_SENSORS
 config SENSORS_CORE
          bool "sensors_core"
          depends on I2C
-

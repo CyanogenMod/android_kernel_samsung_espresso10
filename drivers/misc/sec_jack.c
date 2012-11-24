@@ -56,6 +56,10 @@ struct sec_jack_info {
 	unsigned int cur_jack_type;
 };
 
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+static bool recheck_jack;
+#endif
+
 /* with some modifications like moving all the gpio structs inside
  * the platform data and getting the name for the switch and
  * gpio_event from the platform data, the driver could support more than
@@ -231,6 +235,9 @@ static void determine_jack_type(struct sec_jack_info *hi)
 	int adc;
 	int i;
 	unsigned npolarity = !hi->pdata->det_active_high;
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+	int reselector_zone = hi->pdata->ear_reselector_zone;
+#endif
 
 	/* Set mic bias to enable adc
 	 *
@@ -255,15 +262,32 @@ static void determine_jack_type(struct sec_jack_info *hi)
 		for (i = 0; i < size; i++) {
 			if (adc <= zones[i].adc_high) {
 				if (++count[i] > zones[i].check_count) {
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+					if ((recheck_jack == true) && (i > 2)
+						&& (reselector_zone < adc)) {
+						pr_info("%s : something wrong connection!\n",
+								__func__);
+						handle_jack_not_inserted(hi);
+
+						recheck_jack = false;
+						return;
+					}
+#endif
 					sec_jack_set_type(hi,
 							  zones[i].jack_type);
 					return;
 				}
-				msleep(zones[i].delay_ms);
+				usleep_range(zones[i].delay_ms*1000,
+						zones[i].delay_ms*1100);
 				break;
 			}
 		}
 	}
+
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+	recheck_jack = false;
+#endif
+
 	/* jack removed before detection complete */
 	pr_debug("%s : jack removed before detection complete\n", __func__);
 	handle_jack_not_inserted(hi);
@@ -297,7 +321,7 @@ void sec_jack_detect_work(struct work_struct *work)
 			handle_jack_not_inserted(hi);
 			return;
 		}
-		msleep(10);
+		usleep_range(10000, 11000);
 		time_left_ms -= 10;
 	}
 
@@ -406,7 +430,40 @@ static ssize_t earjack_select_jack_store(struct device *dev,
 
 static DEVICE_ATTR(select_jack, S_IRUGO | S_IWUSR,
 		   earjack_select_jack_show, earjack_select_jack_store);
+#endif
 
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+static ssize_t reselect_jack_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	pr_info("%s : operate nothing\n", __func__);
+
+	return 0;
+}
+
+static ssize_t reselect_jack_store(struct device *dev,
+	struct device_attribute *attr, const char *buf, size_t size)
+{
+	struct sec_jack_info *hi = dev_get_drvdata(dev);
+	int value = 0;
+
+	sscanf(buf, "%d", &value);
+	pr_err("%s: User reselection : 0X%x", __func__, value);
+
+	if (value == 1) {
+		recheck_jack = true;
+		determine_jack_type(hi);
+	}
+
+	return size;
+}
+
+static DEVICE_ATTR(reselect_jack, S_IRUGO | S_IWUSR | S_IWGRP,
+		reselect_jack_show, reselect_jack_store);
+#endif
+
+#if defined(CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT) \
+	|| defined(CONFIG_JACK_RESELECTOR_SUPPORT)
 static int create_audio_class(struct sec_jack_info *hi)
 {
 	jack_class = class_create(THIS_MODULE, "audio");
@@ -417,10 +474,11 @@ static int create_audio_class(struct sec_jack_info *hi)
 
 	jack_dev = device_create(jack_class, NULL, 0, hi, "earjack");
 	if (IS_ERR(jack_dev)) {
-		pr_err("Failed to device class\n");
-		goto err_dev_create;
+		pr_err("Failed to device class(earjack)\n");
+		goto err_dev_create_1;
 	}
 
+#ifdef CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT
 	if (device_create_file(jack_dev, &dev_attr_select_jack) < 0) {
 		pr_err("Failed to create device file (%s)!\n",
 			dev_attr_select_jack.attr.name);
@@ -438,16 +496,31 @@ static int create_audio_class(struct sec_jack_info *hi)
 			dev_attr_state.attr.name);
 		goto err_create_file_3;
 	}
+#endif
+
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+	if (device_create_file(jack_dev, &dev_attr_reselect_jack) < 0) {
+		pr_err("Failed to create device file(%s)!\n",
+			dev_attr_reselect_jack.attr.name);
+		goto err_create_file_4;
+	}
+#endif
 
 	return 0;
 
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+err_create_file_4:
+	device_remove_file(jack_dev, &dev_attr_state);
+#endif
+#ifdef CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT
 err_create_file_3:
 	device_remove_file(jack_dev, &dev_attr_key_state);
 err_create_file_2:
 	device_remove_file(jack_dev, &dev_attr_select_jack);
 err_create_file_1:
-err_dev_create:
+err_dev_create_1:
 	device_destroy(jack_class, 0);
+#endif
 err_class_create:
 	return -ENODEV;
 }
@@ -552,8 +625,9 @@ static int sec_jack_probe(struct platform_device *pdev)
 
 	dev_set_drvdata(&pdev->dev, hi);
 
-	/* To support PBA function test */
-#ifdef CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT
+	/* To support PBA function test or reselect jack*/
+#if defined(CONFIG_FACTORY_PBA_JACK_TEST_SUPPORT) \
+	|| defined(CONFIG_JACK_RESELECTOR_SUPPORT)
 	if (!jack_class) {
 		ret = create_audio_class(hi);
 		if (ret < 0)

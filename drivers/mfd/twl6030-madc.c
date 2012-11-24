@@ -65,13 +65,13 @@ struct twl6030_madc_data {
 	struct mutex lock;
 	struct dentry		*file;
 	struct wake_lock wakelock;
+	unsigned long features;
 };
 
 static struct twl6030_madc_data *twl6030_madc;
 static u8 gpadc_ctrl_reg;
 
-static inline int twl6030_madc_start_conversion(struct twl6030_madc_data *madc,
-							u8 ctrl_reg)
+static inline int twl6030_madc_start_conversion(struct twl6030_madc_data *madc)
 {
 	int ret;
 
@@ -83,12 +83,22 @@ static inline int twl6030_madc_start_conversion(struct twl6030_madc_data *madc,
 	}
 
 	udelay(100);
-	ret = twl_i2c_write_u8(TWL_MODULE_MADC, TWL6030_MADC_SP1,
-				ctrl_reg);
-	if (ret) {
-		dev_err(madc->dev, "unable to write register 0x%X\n",
-			TWL6030_MADC_CTRL_P1);
-		return ret;
+	if (madc->features & TWL6032_SUBCLASS) {
+		ret = twl_i2c_write_u8(TWL_MODULE_MADC, TWL6032_MADC_SP,
+				TWL6032_MADC_CTRL_P1);
+		if (ret) {
+			dev_err(madc->dev, "unable to write register 0x%X\n",
+					TWL6032_MADC_CTRL_P1);
+			return ret;
+		}
+	} else {
+		ret = twl_i2c_write_u8(TWL_MODULE_MADC, TWL6030_MADC_SP1,
+				TWL6030_MADC_CTRL_P1);
+		if (ret) {
+			dev_err(madc->dev, "unable to write register 0x%X\n",
+					TWL6030_MADC_CTRL_P1);
+			return ret;
+		}
 	}
 	return 0;
 }
@@ -154,21 +164,19 @@ static int twl6030_madc_channel_raw_read(struct twl6030_madc_data *madc,
 {
 	u8 msb, lsb;
 	int ret;
-	u8 ctrl_reg;
+	int status_reg;
 
 	mutex_lock(&madc->lock);
 
-	if (is_twl6030_lite())
-		ctrl_reg = TWL6032_GPADC_CTRL_P1;
-	else
-		ctrl_reg = TWL6030_MADC_CTRL_P1;
-
-	ret = twl6030_madc_start_conversion(twl6030_madc, ctrl_reg);
+	ret = twl6030_madc_start_conversion(twl6030_madc);
 	if (ret)
 		goto unlock;
 
-	ret = twl6030_madc_wait_conversion_ready(twl6030_madc, 5,
-						ctrl_reg);
+	if (madc->features & TWL6032_SUBCLASS)
+		status_reg = TWL6032_MADC_CTRL_P1;
+	else
+		status_reg = TWL6030_MADC_CTRL_P1;
+	ret = twl6030_madc_wait_conversion_ready(twl6030_madc, 5, status_reg);
 	if (ret)
 		goto unlock;
 
@@ -204,25 +212,48 @@ int twl6030_get_madc_conversion(int channel_no)
 {
 	u8 reg = 0;
 
-
 	if (!twl6030_madc) {
 		pr_err("%s: No ADC device\n", __func__);
 		return -EINVAL;
 	}
 
-	if (is_twl6030_lite()) {
-		twl_i2c_write_u8(TWL_MODULE_MADC, channel_no,
-					TWL6032_GPADC_GPSELECT_ISB);
-		reg = TWL6032_GPCH0_LSB;
-	} else  {
-		reg = TWL6030_MADC_GPCH0_LSB + (2 * channel_no);
-	}
+	if (twl6030_madc->features & TWL6032_SUBCLASS) {
+		if (channel_no >= TWL6032_MADC_MAX_CHANNELS) {
+			dev_err(twl6030_madc->dev,
+			"%s: Channel number (%d) exceeds max (%d)\n",
+			__func__, channel_no, TWL6032_MADC_MAX_CHANNELS);
+			return -EINVAL;
+		}
 
-	if (channel_no >= TWL6030_MADC_MAX_CHANNELS) {
-		dev_err(twl6030_madc->dev,
+		if (twl6030_madc->features & TWL6034_SUBCLASS) {
+			switch (channel_no) {
+			case 5:
+			case 6:
+			case 9:
+			case 10:
+			case 11:
+			case 14:
+			case 16:
+			case 17:
+			case 18:
+				dev_err(twl6030_madc->dev,
+				"%s: Channel number (%d) not in twl6034 (%d)\n",
+				__func__, channel_no,
+				TWL6032_MADC_MAX_CHANNELS);
+				return -EINVAL;
+			}
+		}
+		twl_i2c_write_u8(TWL_MODULE_MADC, channel_no,
+					TWL6032_MADC_GPSELECT_ISB);
+		reg = TWL6032_MADC_GPCH0_LSB;
+	} else {
+		if (channel_no >= TWL6030_MADC_MAX_CHANNELS) {
+			dev_err(twl6030_madc->dev,
 			"%s: Channel number (%d) exceeds max (%d)\n",
 			__func__, channel_no, TWL6030_MADC_MAX_CHANNELS);
-		return -EINVAL;
+			return -EINVAL;
+		}
+		reg = TWL6030_MADC_GPCH0_LSB + (2 * channel_no);
 	}
 
 	return twl6030_madc_channel_raw_read(twl6030_madc, reg);
@@ -233,8 +264,14 @@ EXPORT_SYMBOL_GPL(twl6030_get_madc_conversion);
 
 static int debug_twl6030_madc_show(struct seq_file *s, void *_)
 {
-	int i, result;
-	for (i = 0; i < TWL6030_MADC_MAX_CHANNELS; i++) {
+	int i, result, channels;
+
+	if (twl6030_madc->features & TWL6032_SUBCLASS)
+		channels = TWL6032_MADC_MAX_CHANNELS;
+	else
+		channels = TWL6030_MADC_MAX_CHANNELS;
+
+	for (i = 0; i < channels; i++) {
 		result = twl6030_get_madc_conversion(i);
 		seq_printf(s, "channel %3d returns result %d\n",
 			i, result);
@@ -278,6 +315,7 @@ static int __devinit twl6030_madc_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, madc);
 	madc->dev = &pdev->dev;
+	madc->features = pdata->features;
 	mutex_init(&madc->lock);
 	madc->file = debugfs_create_file(DRIVER_NAME, S_IRUGO, NULL,
 					madc, DEBUG_FOPS);

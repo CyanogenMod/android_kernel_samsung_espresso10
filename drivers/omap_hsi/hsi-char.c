@@ -288,15 +288,25 @@ static ssize_t hsi_char_write(struct file *file, const char __user *buf,
 		ret = count;
 	}
 
-	ret = if_hsi_write(ch, data, count);
-	if (ret < 0) {
-		kfree(data);
-		goto out2;
-	}
+	/* Write callback can occur very fast in response to hsi_write()    */
+	/* and may cause a race condition between hsi_char_write() and      */
+	/* if_hsi_notify(). This can cause the poll_event flag to be set by */
+	/* if_hsi_notify() then cleared by hsi_char_write(), remaining to 0 */
+	/* forever. Clear the flag ahead of hsi_write to avoid this.        */
 	spin_lock_bh(&hsi_char_data[ch].lock);
 	hsi_char_data[ch].poll_event &= ~(POLLOUT | POLLWRNORM);
 	add_wait_queue(&hsi_char_data[ch].tx_wait, &wait);
 	spin_unlock_bh(&hsi_char_data[ch].lock);
+
+	ret = if_hsi_write(ch, data, count);
+	if (ret < 0) {
+		kfree(data);
+		spin_lock_bh(&hsi_char_data[ch].lock);
+		hsi_char_data[ch].poll_event |= (POLLOUT | POLLWRNORM);
+		spin_unlock_bh(&hsi_char_data[ch].lock);
+		remove_wait_queue(&hsi_char_data[ch].tx_wait, &wait);
+		goto out2;
+	}
 
 	for (;;) {
 		data = NULL;
@@ -592,7 +602,6 @@ out_device_destroy:
 	for (i = 0; (i < i_dev_create) && channels_map[i]; i++)
 		device_destroy(hsi_char_class,
 			       MKDEV(hsi_char_major, channels_map[i] - 1));
-out_class_destroy:
 	class_destroy(hsi_char_class);
 out_cdev_del:
 	cdev_del(&hsi_char_cdev);
@@ -600,7 +609,7 @@ out_unregister_chrdev:
 	unregister_chrdev_region(hsi_char_dev, num_channels);
 out_hsi_exit:
 	if_hsi_exit();
-out:
+
 	return ret;
 }
 

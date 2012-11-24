@@ -38,6 +38,7 @@
 #include <linux/clk.h>
 #include <linux/io.h>
 #include <linux/slab.h>
+#include <linux/hwspinlock.h>
 #include <linux/i2c-omap.h>
 #include <linux/pm_runtime.h>
 #include <linux/pm_qos_params.h>
@@ -159,6 +160,9 @@ enum {
 #define OMAP_I2C_SYSTEST_SDA_I		(1 << 1)	/* SDA line sense in */
 #define OMAP_I2C_SYSTEST_SDA_O		(1 << 0)	/* SDA line drive out */
 
+/* I2C System Status Register */
+#define OMAP_I2C_SYSS_RDONE		BIT(0)		/* Reset done */
+
 /* Errata definitions */
 #define I2C_OMAP_ERRATA_I207		(1 << 0)
 #define I2C_OMAP3_1P153			(1 << 1)
@@ -255,6 +259,31 @@ static inline u16 omap_i2c_read_reg(struct omap_i2c_dev *i2c_dev, int reg)
 				(i2c_dev->regs[reg] << i2c_dev->reg_shift));
 }
 
+static int omap_i2c_hwspinlock_lock(struct omap_i2c_dev *dev)
+{
+	struct platform_device *pdev = to_platform_device(dev->dev);
+	struct omap_i2c_bus_platform_data *pdata = pdev->dev.platform_data;
+	int ret = 0;
+
+	if (pdata->hwspin_lock_timeout) {
+		ret = pdata->hwspin_lock_timeout(pdata->handle, 100);
+		if (ret != 0)
+			dev_err(&pdev->dev, "%s: TIMEDOUT: Failed to acquire "
+						"hwspinlock\n", __func__);
+		return ret;
+	} else
+		return -EINVAL;
+}
+
+static void omap_i2c_hwspinlock_unlock(struct omap_i2c_dev *dev)
+{
+       struct platform_device *pdev = to_platform_device(dev->dev);
+       struct omap_i2c_bus_platform_data *pdata = pdev->dev.platform_data;
+
+       if (pdata->hwspin_unlock)
+               pdata->hwspin_unlock(pdata->handle);
+}
+
 static void omap_i2c_dump(struct omap_i2c_dev *dev)
 {
 	struct clk *fclk;
@@ -312,6 +341,8 @@ static void omap_i2c_unidle(struct omap_i2c_dev *dev)
 	pm_runtime_get_sync(&pdev->dev);
 
 	if (cpu_is_omap34xx() || cpu_is_omap44xx()) {
+		unsigned long delay;
+
 		omap_i2c_write_reg(dev, OMAP_I2C_CON_REG, 0);
 		omap_i2c_write_reg(dev, OMAP_I2C_PSC_REG, dev->pscstate);
 		omap_i2c_write_reg(dev, OMAP_I2C_SCLL_REG, dev->scllstate);
@@ -319,6 +350,16 @@ static void omap_i2c_unidle(struct omap_i2c_dev *dev)
 		omap_i2c_write_reg(dev, OMAP_I2C_BUF_REG, dev->bufstate);
 		omap_i2c_write_reg(dev, OMAP_I2C_WE_REG, dev->westate);
 		omap_i2c_write_reg(dev, OMAP_I2C_CON_REG, OMAP_I2C_CON_EN);
+
+		delay = jiffies + OMAP_I2C_TIMEOUT;
+		while (!(omap_i2c_read_reg(dev, OMAP_I2C_SYSS_REG)
+				& OMAP_I2C_SYSS_RDONE)) {
+			if (time_after(jiffies, delay)) {
+				dev_err(dev->dev, "omap i2c unidle timeout\n");
+				return;
+			}
+			cpu_relax();
+		}
 	}
 	dev->idle = 0;
 
@@ -528,6 +569,8 @@ static int omap_i2c_bus_clear(struct omap_i2c_dev *dev)
 	 * at least 9 clock pulses on SCL. Put the I2C in a test mode so it
 	 * will output a continuous clock on SCL.
 	 */
+	disable_irq(dev->irq);
+
 	w = omap_i2c_read_reg(dev, OMAP_I2C_SYSTEST_REG);
 	omap_i2c_write_reg(dev, OMAP_I2C_CON_REG, OMAP_I2C_CON_EN);
 	omap_i2c_write_reg(dev, OMAP_I2C_SYSTEST_REG,
@@ -537,6 +580,9 @@ static int omap_i2c_bus_clear(struct omap_i2c_dev *dev)
 	omap_i2c_write_reg(dev, OMAP_I2C_CON_REG, 0);
 	omap_i2c_reset(dev);
 	omap_i2c_init(dev);
+
+	enable_irq(dev->irq);
+
 	return omap_i2c_wait_for_bb(dev);
 }
 
@@ -662,6 +708,15 @@ omap_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
 	int i;
 	int r;
 
+	if (dev == NULL)
+		return -EINVAL;
+
+	r = omap_i2c_hwspinlock_lock(dev);
+	/* To-Do: if we are unable to acquire the lock, we must
+	try to recover somehow */
+	if (r != 0)
+		return r;
+
 	/* We have the bus, enable IRQ */
 	enable_irq(dev->irq);
 
@@ -698,6 +753,7 @@ omap_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
 out:
 	disable_irq(dev->irq);
 	omap_i2c_idle(dev);
+	omap_i2c_hwspinlock_unlock(dev);
 	return r;
 }
 

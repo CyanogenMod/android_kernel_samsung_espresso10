@@ -45,6 +45,7 @@
 #include <linux/timer.h>
 #include <linux/crypto.h>
 #include <net/sock.h>
+#include <linux/gpio.h>
 
 #include <asm/system.h>
 #include <linux/uaccess.h>
@@ -218,6 +219,7 @@ static void hci_init_req(struct hci_dev *hdev, unsigned long opt)
 	if (!test_bit(HCI_QUIRK_NO_RESET, &hdev->quirks)) {
 			set_bit(HCI_RESET, &hdev->flags);
 			hci_send_cmd(hdev, HCI_OP_RESET, 0, NULL);
+			memset(hdev->eir, 0, sizeof(hdev->eir));
 	}
 
 	/* Read Local Supported Features */
@@ -645,6 +647,11 @@ int hci_dev_open(__u16 dev)
 
 	hci_req_lock(hdev);
 
+	if (test_bit(HCI_UNREGISTER, &hdev->flags)) {
+		ret = -ENODEV;
+		goto done;
+	}
+
 	if (hdev->rfkill && rfkill_blocked(hdev->rfkill)) {
 		ret = -ERFKILL;
 		goto done;
@@ -686,7 +693,6 @@ int hci_dev_open(__u16 dev)
 		hci_dev_hold(hdev);
 		set_bit(HCI_UP, &hdev->flags);
 		hci_notify(hdev, HCI_DEV_UP);
-		/* SSBT :: Neo */
 		if (!test_bit(HCI_SETUP, &hdev->dev_flags)) {
 			hci_dev_lock_bh(hdev);
 			mgmt_powered(hdev, 1);
@@ -721,11 +727,10 @@ done:
 
 static int hci_dev_do_close(struct hci_dev *hdev)
 {
-	/* SSBT :: KJH + for persist flags */
+	/* for persist flags */
 	unsigned long persistflags = 0;
 
 	BT_DBG("%s %p", hdev->name, hdev);
-	/* SSBT :: NEO (0207) */
 	cancel_work_sync(&hdev->le_scan);
 
 	hci_req_cancel(hdev, ENODEV);
@@ -750,7 +755,6 @@ static int hci_dev_do_close(struct hci_dev *hdev)
 	if (test_and_clear_bit(HCI_SERVICE_CACHE, &hdev->dev_flags))
 		cancel_delayed_work(&hdev->service_cache);
 
-	/* SSBT :: NEO (0207) */
 	cancel_delayed_work_sync(&hdev->le_scan_disable);
 
 	hci_dev_lock_bh(hdev);
@@ -770,6 +774,7 @@ static int hci_dev_do_close(struct hci_dev *hdev)
 		set_bit(HCI_INIT, &hdev->flags);
 		__hci_request(hdev, hci_reset_req, 0,
 					msecs_to_jiffies(250));
+		memset(hdev->eir, 0, sizeof(hdev->eir));
 		clear_bit(HCI_INIT, &hdev->flags);
 	}
 
@@ -792,7 +797,6 @@ static int hci_dev_do_close(struct hci_dev *hdev)
 	 * and no tasks are scheduled. */
 	hdev->close(hdev);
 
-	/* SSBT :: Neo + */
 	hci_dev_lock_bh(hdev);
 	mgmt_powered(hdev, 0);
 	hci_dev_unlock_bh(hdev);
@@ -804,7 +808,6 @@ static int hci_dev_do_close(struct hci_dev *hdev)
 	if (test_bit(HCI_LINK_KEYS, &hdev->dev_flags))
 		set_bit(HCI_LINK_KEYS, &persistflags);
 
-	/* SSBT :: NEO * */
 	hdev->dev_flags = persistflags;
 
 	hci_req_unlock(hdev);
@@ -1099,7 +1102,6 @@ EXPORT_SYMBOL(hci_free_dev);
 static void hci_power_on(struct work_struct *work)
 {
 	struct hci_dev *hdev = container_of(work, struct hci_dev, power_on);
-	/* SSBT :: Neo * */
 	int err;
 
 	BT_DBG("%s", hdev->name);
@@ -1267,7 +1269,7 @@ struct smp_ltk *hci_find_ltk_by_addr(struct hci_dev *hdev, bdaddr_t *bdaddr,
 	list_for_each_entry(k, &hdev->long_term_keys, list)
 		if ((addr_type == k->bdaddr_type &&
 					bacmp(bdaddr, &k->bdaddr) == 0) ||
-					/* SSBT :: KJH + to check ltk without addr_type */
+					/* to check ltk without addr_type */
 					(addr_type == 100 && bacmp(bdaddr, &k->bdaddr) == 0))
 			return k;
 
@@ -1417,7 +1419,18 @@ int hci_remove_ltk(struct hci_dev *hdev, bdaddr_t *bdaddr)
 static void hci_cmd_timer(unsigned long arg)
 {
 	struct hci_dev *hdev = (void *) arg;
+#ifdef CONFIG_MACH_M0
+	int rx_pin = gpio_get_value(GPIO_BT_RXD);
+	int tx_pin = gpio_get_value(GPIO_BT_TXD);
+	int cts_pin = gpio_get_value(GPIO_BT_CTS);
+	int rts_pin = gpio_get_value(GPIO_BT_RTS);
 
+	int bt_host_wake_pin = gpio_get_value(GPIO_BT_HOST_WAKE);
+	int bt_wake_pin = gpio_get_value(GPIO_BT_WAKE);
+	int bt_en = gpio_get_value(GPIO_BT_EN);
+	BT_ERR("rx: %d, tx: %d, cts: %d, rts: %d", rx_pin, tx_pin, cts_pin, rts_pin);
+	BT_ERR("host_wake: %d, bt_wake: %d, en: %d", bt_host_wake_pin, bt_wake_pin, bt_en);
+#endif
 	BT_ERR("%s command tx timeout", hdev->name);
 	atomic_set(&hdev->cmd_cnt, 1);
 	tasklet_schedule(&hdev->cmd_task);
@@ -1520,69 +1533,50 @@ int hci_blacklist_clear(struct hci_dev *hdev)
 	return 0;
 }
 
-int hci_blacklist_add(struct hci_dev *hdev, bdaddr_t *bdaddr)
+/* sync from bluez git */
+int hci_blacklist_add(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 type)
 {
 	struct bdaddr_list *entry;
-	int err;
 
 	if (bacmp(bdaddr, BDADDR_ANY) == 0)
 		return -EBADF;
 
-	hci_dev_lock_bh(hdev);
-
-	if (hci_blacklist_lookup(hdev, bdaddr)) {
-		err = -EEXIST;
-		goto err;
-	}
+	if (hci_blacklist_lookup(hdev, bdaddr))
+		return -EEXIST;
 
 	entry = kzalloc(sizeof(struct bdaddr_list), GFP_KERNEL);
-	if (!entry) {
+	if (!entry)
 		return -ENOMEM;
-		goto err;
-	}
 
 	bacpy(&entry->bdaddr, bdaddr);
 
 	list_add(&entry->list, &hdev->blacklist);
 
-	err = 0;
-
-err:
-	hci_dev_unlock_bh(hdev);
-	return err;
+	return mgmt_device_blocked(hdev, bdaddr, type);
 }
 
-int hci_blacklist_del(struct hci_dev *hdev, bdaddr_t *bdaddr)
+/* sync from bluez git */
+int hci_blacklist_del(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 type)
 {
 	struct bdaddr_list *entry;
-	int err = 0;
 
-	hci_dev_lock_bh(hdev);
-
-	if (bacmp(bdaddr, BDADDR_ANY) == 0) {
-		hci_blacklist_clear(hdev);
-		goto done;
-	}
+	if (bacmp(bdaddr, BDADDR_ANY) == 0)
+		return hci_blacklist_clear(hdev);
 
 	entry = hci_blacklist_lookup(hdev, bdaddr);
-	if (!entry) {
-		err = -ENOENT;
-		goto done;
-	}
+	if (!entry)
+		return -ENOENT;
 
 	list_del(&entry->list);
 	kfree(entry);
 
-done:
-	hci_dev_unlock_bh(hdev);
-	return err;
+	return mgmt_device_unblocked(hdev, bdaddr, type);
 }
 
-/* SSBT :: NEO (0207) */
 static void hci_clear_adv_cache(unsigned long arg)
 {
 	struct hci_dev *hdev = (void *) arg;
-	/* SSBT :: KJH - temp, don't clear adv cache. */
+	/* - temp, don't clear adv cache. */
 	/* to do */
 	BT_DBG("");
 	return;
@@ -1639,7 +1633,6 @@ int hci_add_adv_entry(struct hci_dev *hdev,
 	 * bdaddr was found, don't add it. */
 	if (hci_find_adv_entry(hdev, &ev->bdaddr))
 		return 0;
-	/* SSBT :: NEO (0207) */
 	entry = kzalloc(sizeof(*entry), GFP_ATOMIC);
 	if (!entry)
 		return -ENOMEM;
@@ -1756,7 +1749,7 @@ int hci_le_scan(struct hci_dev *hdev, u8 type, u16 interval, u16 window,
 	return 0;
 }
 
-/* SSBT :: NEO (0213) + : for stop le scan */
+/* for stop le scan */
 int hci_cancel_le_scan(struct hci_dev *hdev)
 {
 	struct hci_cp_le_set_scan_enable cp;
@@ -1888,9 +1881,10 @@ int hci_register_dev(struct hci_dev *hdev)
 	}
 	set_bit(HCI_AUTO_OFF, &hdev->dev_flags);
 	set_bit(HCI_SETUP, &hdev->dev_flags);
-	schedule_work(&hdev->power_on);
 
 	hci_notify(hdev, HCI_DEV_REG);
+	schedule_work(&hdev->power_on);
+
 	hci_dev_hold(hdev);
 
 	return id;
@@ -1911,6 +1905,8 @@ int hci_unregister_dev(struct hci_dev *hdev)
 
 	BT_DBG("%p name %s bus %d", hdev, hdev->name, hdev->bus);
 
+	set_bit(HCI_UNREGISTER, &hdev->flags);
+
 	write_lock_bh(&hci_dev_list_lock);
 	list_del(&hdev->list);
 	write_unlock_bh(&hci_dev_list_lock);
@@ -1920,7 +1916,6 @@ int hci_unregister_dev(struct hci_dev *hdev)
 	for (i = 0; i < NUM_REASSEMBLY; i++)
 		kfree_skb(hdev->reassembly[i]);
 
-/* SSBT :: Neo * */
 	if (!test_bit(HCI_INIT, &hdev->flags) &&
 					!test_bit(HCI_SETUP, &hdev->dev_flags)) {
 		hci_dev_lock_bh(hdev);
@@ -1942,8 +1937,6 @@ int hci_unregister_dev(struct hci_dev *hdev)
 	}
 
 	hci_unregister_sysfs(hdev);
-
-/* SSBT :: NEO (0207) * */
 	del_timer_sync(&hdev->adv_timer);
 
 	destroy_workqueue(hdev->workqueue);
@@ -2303,6 +2296,22 @@ int hci_send_cmd(struct hci_dev *hdev, __u16 opcode, __u32 plen, void *param)
 void *hci_sent_cmd_data(struct hci_dev *hdev, __u16 opcode)
 {
 	struct hci_command_hdr *hdr;
+
+	/* SS_BLUETOOTH(is80.hwang) 2012.05.16 */
+	/*Check null pointer and opcode */
+	#if defined(CONFIG_BT_CSR8811)
+	if (hdev == NULL) {
+		BT_ERR("hci_sent_cmd_opcode:: hdev=NULL, opcode=0x%x", opcode);
+		return NULL;
+	}
+
+	if (hdev->sent_cmd->data == NULL) {
+		BT_ERR("hci_sent_cmd_opcode::");
+		BT_ERR("hdev->sent_cmd->data=NULL opcode=0x%x", opcode);
+		return NULL;
+	}
+	#endif
+	/* SS_BLUEZ_BT(is80.hwang) End */
 
 	if (!hdev->sent_cmd)
 		return NULL;

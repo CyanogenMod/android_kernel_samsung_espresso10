@@ -240,6 +240,9 @@ struct dmm *dmm_pat_init(u32 id)
 	__raw_writel(0x88888888, dmm->base + DMM_TILER_OR__0);
 	__raw_writel(0x88888888, dmm->base + DMM_TILER_OR__1);
 
+	/* Set PEG to zero for ISS */
+	__raw_writel(0x80008, dmm->base + DMM_PEG_PRIO + 0x4 * 2);
+
 	return dmm;
 }
 EXPORT_SYMBOL(dmm_pat_init);

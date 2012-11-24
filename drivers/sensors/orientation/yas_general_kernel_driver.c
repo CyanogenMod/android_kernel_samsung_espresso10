@@ -59,6 +59,10 @@
 #define SENSOR_NAME "linear_acceleration"
 #elif SENSOR_TYPE == 11
 #define SENSOR_NAME "rotation_vector"
+#elif SENSOR_TYPE == 12
+#define SENSOR_NAME "relative_humidity"
+#elif SENSOR_TYPE == 13
+#define SENSOR_NAME "ambient_temperature"
 #endif
 
 #define SENSOR_DEFAULT_DELAY            (200)	/* 200 ms */
@@ -324,7 +328,7 @@ sensor_delay_store(struct device *dev,
 {
 	struct input_dev *input_data = to_input_dev(dev);
 	struct sensor_data *data = input_get_drvdata(input_data);
-	unsigned long value;
+	long value;
 	int error;
 
 	error = strict_strtoul(buf, 10, &value);
@@ -483,7 +487,7 @@ static ssize_t
 sensor_data_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct input_dev *input_data = to_input_dev(dev);
-#if SENSOR_TYPE <= 4 || 9 <= SENSOR_TYPE
+#if SENSOR_TYPE <= 4 || (9 <= SENSOR_TYPE && SENSOR_TYPE <= 11)
 	int x, y, z;
 #else
 	int x;
@@ -491,12 +495,12 @@ sensor_data_show(struct device *dev, struct device_attribute *attr, char *buf)
 
 
 	x = input_abs_get_val(input_data, ABS_X);
-#if SENSOR_TYPE <= 4 || 9 <= SENSOR_TYPE
+#if SENSOR_TYPE <= 4 || (9 <= SENSOR_TYPE && SENSOR_TYPE <= 11)
 	y = input_abs_get_val(input_data, ABS_Y);
 	z = input_abs_get_val(input_data, ABS_Z);
 #endif
 
-#if SENSOR_TYPE <= 4 || 9 <= SENSOR_TYPE
+#if SENSOR_TYPE <= 4 || (9 <= SENSOR_TYPE && SENSOR_TYPE <= 11)
 	return sprintf(buf, "%d %d %d\n", x, y, z);
 #else
 	return sprintf(buf, "%d\n", x);
@@ -728,4 +732,4 @@ module_exit(sensor_exit);
 
 MODULE_AUTHOR("Yamaha Corporation");
 MODULE_LICENSE("GPL");
-MODULE_VERSION("4.2.602");
+MODULE_VERSION("4.4.702a");

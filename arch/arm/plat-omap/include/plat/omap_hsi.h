@@ -32,7 +32,7 @@
 #define HSI_FCLK_HI_SPEED		192000000	/* 192 MHz */
 #define HSI_FCLK_DPLL_CASCADING		98300000        /* 98.3 MHz */
 
-/* Set the HSI Functional Clock to 96MHzi.
+/* Set the HSI Functional Clock to 96MHz.
  * Warning : 192MHz will force OPP100 on VDD_CORE (no OPP50 possible) */
 #define HSI_DEFAULT_FCLK		HSI_FCLK_LOW_SPEED	/* 96 MHz */
 
@@ -143,7 +143,9 @@
 #define HSI_SET_WAKE_3_WIRES_MASK	0xfffcffff /* 3-wires + ACREADY to 1 */
 #define HSI_SET_WAKE_READY_LVL_0	(0 << 17)
 #define HSI_SET_WAKE_READY_LVL_1	(1 << 17)
-#define HSI_SET_WAKE(channel)		(1 << (channel))
+#define HSI_SET_WAKE(channel)		(1 << (channel) |\
+						HSI_SET_WAKE_4_WIRES |\
+						HSI_SET_WAKE_READY_LVL_0)
 #define HSI_CLEAR_WAKE(channel)		(1 << (channel))
 #define HSI_WAKE(channel)		(1 << (channel))
 

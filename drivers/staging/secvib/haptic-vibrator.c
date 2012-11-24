@@ -27,6 +27,7 @@
 #include <linux/miscdevice.h>
 #include <linux/fs.h>
 #include <linux/uaccess.h>
+#include <linux/workqueue.h>
 
 #include <../../../drivers/staging/android/timed_output.h>
 #include <linux/sec-vibrator.h>
@@ -99,6 +100,8 @@ struct secvib_data {
 	 * correct logic in secvib_write
 	 */
 	char *write_buf;
+	struct workqueue_struct *vib_wq;
+	struct work_struct vib_work;
 };
 
 static int secvib_vibrator_enable(struct secvib_data *secvib,
@@ -123,12 +126,20 @@ static int secvib_vibrator_enable(struct secvib_data *secvib,
 	return ret;
 }
 
+static void secvib_timer_worker(struct work_struct *work)
+{
+	struct secvib_data *secvib =
+		container_of(work, struct secvib_data, vib_work);
+
+	secvib_vibrator_enable(secvib, 0, 0);
+}
+
 static enum hrtimer_restart secvib_timer_func(struct hrtimer *timer)
 {
 	struct secvib_data *secvib =
 		container_of(timer, struct secvib_data, timer);
 
-	secvib_vibrator_enable(secvib, 0, 0);
+	queue_work(secvib->vib_wq, &secvib->vib_work);
 	return HRTIMER_NORESTART;
 }
 
@@ -231,6 +242,7 @@ static int secvib_forceout_set_samples(struct secvib_data *secvib,
 		int8_t *buf)
 {
 	int8_t vib_force;
+	static int8_t pre_vib_force;
 
 	switch (bit_depth) {
 	case 8:
@@ -259,10 +271,12 @@ static int secvib_forceout_set_samples(struct secvib_data *secvib,
 	if (vib_force == 0)
 		/* Set 50% duty cycle or disable amp */
 		secvib_vibrator_enable(secvib, actr_index, 0);
-	else {
+	else if (pre_vib_force != vib_force) {
 		secvib->pdata->pwm_set(actr_index, vib_force);
 		secvib_vibrator_enable(secvib, actr_index, 1);
 	}
+
+	pre_vib_force = vib_force;
 
 	return 0;
 
@@ -757,6 +771,14 @@ static int secvib_probe(struct platform_device *pdev)
 		secvib->actr_buf[i].samples_buf[0].bufsize = 0;
 		secvib->actr_buf[i].samples_buf[1].bufsize = 0;
 	}
+
+	secvib->vib_wq = create_workqueue("secvib");
+	if (unlikely(!secvib->vib_wq)) {
+		pr_err("secvib: failed to create workqueue\n");
+		ret = -EINVAL;
+		goto err_to_dev_reg;
+	}
+	INIT_WORK(&secvib->vib_work, secvib_timer_worker);
 
 	platform_set_drvdata(pdev, secvib);
 	return 0;

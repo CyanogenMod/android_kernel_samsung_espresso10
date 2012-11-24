@@ -175,6 +175,7 @@ void alarm_set_alarmboot(char *alarm_data)
 	int ret;
 	struct rtc_wkalrm alm;
 	char buf_ptr[BOOTALM_BIT_TOTAL+1];
+	u8 data;
 
 	if (!alarm_rtc_dev) {
 		pr_alarm(ERROR,
@@ -214,6 +215,17 @@ void alarm_set_alarmboot(char *alarm_data)
 
 	autoboot_alm_exit = alm;
 
+	if (alm.enabled)
+		data = 0x01;
+	else
+		data = 0x00;
+
+	ret = twl_i2c_write_u8(TWL_MODULE_RTC, data, 0x17);
+	if (ret < 0)
+		pr_err("twl_rtc: Could not write TWL"
+		       "register 0x17 - error %d\n", ret);
+
+	rtc_set_alarm(alarm_rtc_dev, &alm);
 }
 #endif
 
@@ -483,6 +495,18 @@ static int alarm_suspend(struct platform_device *pdev, pm_message_t state)
 			rtc_delta).tv_sec;
 
 		rtc_time_to_tm(rtc_alarm_time, &rtc_alarm.time);
+#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
+		rtc_tm_to_time(&rtc_current_rtc_time, &rtc_current_time);
+		if (rtc_alarm_time - rtc_current_time <= 60) {
+			pr_alarm(SUSPEND,
+				"alarm_suspend : power_on_alarm ON\n");
+		} else {
+			rtc_alarm_time -= 60;
+			rtc_time_to_tm(rtc_alarm_time, &rtc_alarm.time);
+			pr_alarm(SUSPEND,
+				"alarm_suspend : power_on_alarm OFF\n");
+		}
+#endif
 		rtc_alarm.enabled = 1;
 		rtc_set_alarm(alarm_rtc_dev, &rtc_alarm);
 		rtc_read_time(alarm_rtc_dev, &rtc_current_rtc_time);

@@ -27,6 +27,7 @@
 struct cptk_platform_data {
 	void (*power)(int on);
 	int gpio;
+	int mod_ver;
 	int firm_ver;
 	const int *keymap;
 	unsigned int keymap_size;

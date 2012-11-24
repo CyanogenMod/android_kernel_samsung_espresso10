@@ -19,6 +19,10 @@
 #include <linux/kernel.h>
 #include <linux/regulator/driver.h>
 #include <linux/regulator/machine.h>
+#ifdef CONFIG_REGULATOR_TPS6130X
+#include <linux/regulator/tps6130x.h>
+#endif
+#include <linux/mfd/twl6040-codec.h>
 #include <plat/usb.h>
 
 #include "board-t1.h"
@@ -36,6 +40,10 @@
 #define TWL_BBSPOR_CFG_VRTC_PWEN	(1 << 4)
 #define TWL_BBSPOR_CFG_VRTC_EN_OFF_STS	(1 << 5)
 #define TWL_BBSPOR_CFG_VRTC_EN_SLP_STS	(1 << 6)
+
+char *rpmsg_cam_regulator_name[] = {
+	"cam2pwr"
+};
 
 static struct regulator_init_data t1_vaux1 = {
 	.constraints = {
@@ -290,6 +298,80 @@ static struct regulator_init_data t1_v2v1 = {
 	},
 };
 
+#ifdef CONFIG_REGULATOR_TPS6130X
+static int tps6130x_enable(int on)
+{
+	u8 val = 0;
+	int ret;
+
+	ret = twl_i2c_read_u8(TWL_MODULE_AUDIO_VOICE, &val, TWL6040_REG_GPOCTL);
+	if (ret < 0) {
+		pr_err("%s: failed to read GPOCTL %d\n", __func__, ret);
+		return ret;
+	}
+
+	/* TWL6040 GPO2 connected to TPS6130X NRESET */
+	if (on)
+		val |= TWL6040_GPO2;
+	else
+		val &= ~TWL6040_GPO2;
+
+	ret = twl_i2c_write_u8(TWL_MODULE_AUDIO_VOICE, val, TWL6040_REG_GPOCTL);
+	if (ret < 0)
+		pr_err("%s: failed to write GPOCTL %d\n", __func__, ret);
+
+	return ret;
+}
+
+static struct tps6130x_platform_data tps6130x_pdata = {
+	.chip_enable	= tps6130x_enable,
+};
+
+static struct regulator_consumer_supply twl6040_vddhf_supply[] = {
+	REGULATOR_SUPPLY("vddhf", "twl6040-codec"),
+};
+
+static struct regulator_init_data twl6040_vddhf = {
+	.constraints = {
+		.min_uV			= 4075000,
+		.max_uV			= 4950000,
+		.apply_uV		= true,
+		.valid_modes_mask	= REGULATOR_MODE_NORMAL
+					| REGULATOR_MODE_STANDBY,
+		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
+					| REGULATOR_CHANGE_MODE
+					| REGULATOR_CHANGE_STATUS,
+	},
+	.num_consumer_supplies	= ARRAY_SIZE(twl6040_vddhf_supply),
+	.consumer_supplies	= twl6040_vddhf_supply,
+	.driver_data		= &tps6130x_pdata,
+};
+#endif
+
+static int twl6040_init(void)
+{
+	u8 rev = 0;
+	int ret;
+
+	ret = twl_i2c_read_u8(TWL_MODULE_AUDIO_VOICE,
+				&rev, TWL6040_REG_ASICREV);
+	if (ret)
+		return ret;
+
+	/*
+	 * ERRATA: Reset value of PDM_UL buffer logic is 1 (VDDVIO)
+	 * when AUDPWRON = 0, which causes current drain on this pin's
+	 * pull-down on OMAP side. The workaround consists of disabling
+	 * pull-down resistor of ABE_PDM_UL_DATA pin
+	 * Impacted revisions: ES1.1 and ES1.2 (both share same ASICREV value)
+	 */
+	if (rev == TWL6040_REV_1_1)
+		omap_mux_init_signal("abe_pdm_ul_data.abe_pdm_ul_data",
+			OMAP_PIN_INPUT);
+
+	return 0;
+}
+
 static struct twl4030_codec_audio_data t1_audio = {
 	/* single-step ramp for headset and handsfree */
 	.hs_left_step		= 0x0f,
@@ -297,12 +379,16 @@ static struct twl4030_codec_audio_data t1_audio = {
 	.hf_left_step		= 0x1d,
 	.hf_right_step		= 0x1d,
 	.ep_step		= 0x0f,
+#ifdef CONFIG_REGULATOR_TPS6130X
+	.vddhf_uV		= 4075000,
+#endif
 };
 
 static struct twl4030_codec_data t1_codec = {
 	.audio		= &t1_audio,
 	.naudint_irq	= OMAP44XX_IRQ_SYS_2N,
 	.irq_base	= TWL6040_CODEC_IRQ_BASE,
+	.init		= twl6040_init,
 };
 
 static struct twl4030_madc_platform_data t1_madc = {

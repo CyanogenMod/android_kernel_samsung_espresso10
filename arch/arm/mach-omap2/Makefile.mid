@@ -1,0 +1,17 @@
+obj-$(CONFIG_MACH_SAMSUNG_GOKEY)	+= board-gokey.o \
+					   board-gokey-emif.o \
+					   board-gokey-serial.o \
+					   board-gokey-pmic.o \
+					   board-gokey-sdio.o \
+					   board-gokey-connector.o \
+					   board-gokey-display.o \
+					   board-gokey-input.o \
+					   board-gokey-wifi.o \
+					   board-gokey-sensors.o \
+					   board-gokey-bluetooth.o \
+					   board-gokey-power.o \
+					   board-gokey-camera.o \
+					   board-gokey-vibrator.o \
+					   board-gokey-audio.o
+
+obj-$(CONFIG_MACH_SAMSUNG_GOKEY)	+= board-gokey-muxset-r00.o
