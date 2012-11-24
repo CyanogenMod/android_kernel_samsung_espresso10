@@ -84,7 +84,8 @@ static int hdmi_audio_set_configuration(struct hdmi_codec_data *priv)
 	u32 pclk = omapdss_hdmi_get_pixel_clock();
 	struct omap_chip_id audio_must_use_mclk;
 
-	audio_must_use_mclk.oc = CHIP_IS_OMAP4430ES2_3 | CHIP_IS_OMAP446X;
+	audio_must_use_mclk.oc = CHIP_IS_OMAP4430ES2_3 | CHIP_IS_OMAP446X |
+				CHIP_IS_OMAP447X;
 
 	switch (priv->params.format) {
 	case SNDRV_PCM_FORMAT_S16_LE:
@@ -190,6 +191,7 @@ static int hdmi_audio_set_configuration(struct hdmi_codec_data *priv)
 	core_cfg->en_parallel_aud_input = true;
 
 	/* Number of channels */
+	aud_if_cfg->db1_channel_count = priv->params.channels_nr;
 
 	switch (priv->params.channels_nr) {
 	case 2:
@@ -202,13 +204,21 @@ static int hdmi_audio_set_configuration(struct hdmi_codec_data *priv)
 		break;
 	case 6:
 		core_cfg->layout = HDMI_AUDIO_LAYOUT_8CH;
-		channel_alloc = 0xB;
+		channel_alloc = 0x13;
 		audio_format->stereo_channels = HDMI_AUDIO_STEREO_FOURCHANNELS;
 		audio_format->active_chnnls_msk = 0x3f;
 		/* Enable all of the four available serial data channels */
 		core_cfg->i2s_cfg.active_sds = HDMI_AUDIO_I2S_SD0_EN |
 				HDMI_AUDIO_I2S_SD1_EN | HDMI_AUDIO_I2S_SD2_EN |
 				HDMI_AUDIO_I2S_SD3_EN;
+		/*
+		 * Overwrite info frame with channel count = 7 (8-1) and
+		 * CA = 0x13 in order to ensure that sample_present bits
+		 * configuration matches the number of channels (2 channels
+		 * are padded with zeroes) that are sent to fullfil
+		 * multichannel certification tests.
+		 */
+		aud_if_cfg->db1_channel_count = 8;
 		break;
 	case 8:
 		core_cfg->layout = HDMI_AUDIO_LAYOUT_8CH;
@@ -233,7 +243,6 @@ static int hdmi_audio_set_configuration(struct hdmi_codec_data *priv)
 	 * info frame audio see doc CEA861-D page 74
 	 */
 	aud_if_cfg->db1_coding_type = HDMI_INFOFRAME_AUDIO_DB1CT_FROM_STREAM;
-	aud_if_cfg->db1_channel_count = priv->params.channels_nr;
 	aud_if_cfg->db2_sample_freq = HDMI_INFOFRAME_AUDIO_DB2SF_FROM_STREAM;
 	aud_if_cfg->db2_sample_size = HDMI_INFOFRAME_AUDIO_DB2SS_FROM_STREAM;
 	aud_if_cfg->db4_channel_alloc = channel_alloc;
@@ -338,7 +347,7 @@ static int hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
 static int hdmi_audio_startup(struct snd_pcm_substream *substream,
 				  struct snd_soc_dai *dai)
 {
-	if (!omapdss_hdmi_get_mode()) {
+	if (!omapdss_hdmi_is_edid_set() && !omapdss_hdmi_get_mode()) {
 		pr_err("Current video settings do not support audio.\n");
 		return -EIO;
 	}

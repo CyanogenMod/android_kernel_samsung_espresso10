@@ -27,8 +27,6 @@
 
 #if defined CONFIG_ARCH_OMAP4
 
-#define OMAP4_MUX_MODE_MSK		0x07
-
 static struct omap_mux_partition *core_part;
 static struct omap_mux_partition *wkup_part;
 
@@ -39,12 +37,14 @@ static int __init omap4_muxtbl_is_pbias_gpio(struct omap_board_mux *mux)
 		OMAP4_MUX(SIM_CLK, OMAP_MUX_MODE3),
 		OMAP4_MUX(SIM_RESET, OMAP_MUX_MODE3),
 	};
-	int i = 0;
+	unsigned int i = ARRAY_SIZE(wkup_mux) - 1;
 
-	for (i = 0; i < ARRAY_SIZE(wkup_mux); i++)
+	do {
 		if (wkup_mux[i].reg_offset == mux->reg_offset &&
 		    (wkup_mux[i].value & mux->value))
 			return 0;
+	} while (i-- != 0);
+
 	return -1;
 }
 
@@ -146,16 +146,16 @@ static void __init omap_muxtbl_set_usbbx_gpio(struct omap_muxtbl *muxtbl)
 
 	switch (muxtbl->gpio.gpio) {
 	case 96:	/* usbb1_hsic_data */
-		shift = 20;
+		shift = OMAP4_USBB1_HSIC_DATA_WD_SHIFT;
 		break;
 	case 97:	/* usbb1_hsic_strobe */
-		shift = 18;
+		shift = OMAP4_USBB1_HSIC_STROBE_WD_SHIFT;
 		break;
 	case 169:	/* usbb2_hsic_data */
-		shift = 16;
+		shift = OMAP4_USBB2_HSIC_DATA_WD_SHIFT;
 		break;
 	case 170:	/* usbb2_hsic_strobe */
-		shift = 14;
+		shift = OMAP4_USBB2_HSIC_STROBE_WD_SHIFT;
 		break;
 	default:
 		return;
@@ -190,11 +190,22 @@ int __init omap4_muxtbl_init(int flags)
 	return 0;
 }
 
+static int __init omap4_muxtbl_in_gpio_expander(struct omap_muxtbl *muxtbl)
+{
+	if (unlikely(muxtbl->gpio.gpio >= OMAP_MAX_GPIO_LINES &&
+		     muxtbl->gpio.gpio != OMAP_MUXTBL_NO_GPIO))
+		return 1;
+	return 0;
+}
+
 int __init omap4_muxtbl_add_mux(struct omap_muxtbl *muxtbl)
 {
 	struct omap_board_mux *mux = &muxtbl->mux;
 	int wk_mux = muxtbl->domain;
 	struct omap_mux_partition *partition;
+
+	if (omap4_muxtbl_in_gpio_expander(muxtbl))
+		return 0;
 
 	if (unlikely(wk_mux))
 		partition = wkup_part;
@@ -214,12 +225,12 @@ int __init omap4_muxtbl_add_mux(struct omap_muxtbl *muxtbl)
 
 #else /* CONFIG_ARCH_OMAP4 */
 
-int __init omap4_muxtbl_init(void)
+int __init omap4_muxtbl_init(int flags)
 {
 	return 0;
 }
 
-int __init omap4_muxtbl_add_mux(sstruct omap_muxtbl * muxtbl)
+int __init omap4_muxtbl_add_mux(struct omap_muxtbl *muxtbl)
 {
 	return 0;
 }

@@ -2087,6 +2087,11 @@ const struct dev_pm_ops snd_soc_pm_ops = {
 	.suspend = snd_soc_suspend,
 	.resume = snd_soc_resume,
 	.poweroff = snd_soc_poweroff,
+#ifdef CONFIG_HIBERNATION
+	.freeze = snd_soc_suspend,
+	.thaw = snd_soc_resume,
+	.restore = snd_soc_resume,
+#endif
 };
 EXPORT_SYMBOL_GPL(snd_soc_pm_ops);
 
@@ -2108,16 +2113,10 @@ static int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 	struct snd_soc_platform *platform = rtd->platform;
 	struct snd_soc_dai *codec_dai = rtd->codec_dai;
 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-	struct snd_pcm_ops *soc_pcm_ops;
+	struct snd_pcm_ops *soc_pcm_ops = &rtd->ops;
 	struct snd_pcm *pcm;
 	char new_name[64];
 	int ret = 0, playback = 0, capture = 0;
-
-	soc_pcm_ops = kzalloc(sizeof(*soc_pcm_ops), GFP_KERNEL);
-	if (soc_pcm_ops == NULL) {
-		snd_printk(KERN_ERR "Cannot allocate PCM OPS\n");
-		return -ENOMEM;
-	}
 
 	soc_pcm_ops->open	= soc_pcm_open;
 	soc_pcm_ops->close	= soc_codec_close;
@@ -2163,7 +2162,12 @@ static int soc_new_pcm(struct snd_soc_pcm_runtime *rtd, int num)
 		snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_CAPTURE, soc_pcm_ops);
 
 	if (platform->driver->pcm_new) {
+#ifdef CONFIG_ARCH_OMAP
 		ret = platform->driver->pcm_new(rtd);
+#else
+		ret = platform->driver->pcm_new(rtd->card->snd_card,
+						codec_dai, pcm);
+#endif
 		if (ret < 0) {
 			pr_err("asoc: platform pcm constructor failed\n");
 			return ret;
@@ -2342,7 +2346,7 @@ int snd_soc_update_bits(struct snd_soc_codec *codec, unsigned short reg,
 		return ret;
 
 	old = ret;
-	new = (old & ~mask) | value;
+	new = (old & ~mask) | (value & mask);
 	change = old != new;
 	if (change) {
 		ret = snd_soc_write(codec, reg, new);
@@ -3398,7 +3402,10 @@ int snd_soc_register_card(struct snd_soc_card *card)
 	INIT_LIST_HEAD(&card->list);
 	card->instantiated = 0;
 	mutex_init(&card->mutex);
+
+#ifdef CONFIG_ARCH_OMAP
 	mutex_init(&card->power_mutex);
+#endif
 
 	mutex_lock(&client_mutex);
 	list_add(&card->list, &card_list);

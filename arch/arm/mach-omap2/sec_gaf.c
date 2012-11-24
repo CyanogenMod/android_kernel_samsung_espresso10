@@ -402,9 +402,9 @@ void sec_gaf_dump_cpu_stat(void)
 	}
 	sum += arch_irq_stat();
 	pr_info("");
-	pr_info(" cpu    user:%-8u nice:%-4llu system:%-4llu"
+	pr_info(" cpu    user:%-8llu nice:%-4llu system:%-4llu"
 		"idle:%-8llu iowait:%-4llu irq:%-8llu"
-		"softirq:%llu %llu %llu %llu\n", i,
+		"softirq:%llu %llu %llu %llu\n",
 		(unsigned long long)cputime64_to_clock_t(user),
 		(unsigned long long)cputime64_to_clock_t(nice),
 		(unsigned long long)cputime64_to_clock_t(system),

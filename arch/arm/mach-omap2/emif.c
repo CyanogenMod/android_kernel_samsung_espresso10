@@ -19,6 +19,7 @@
 #include <linux/err.h>
 #include <linux/interrupt.h>
 #include <linux/platform_device.h>
+#include <linux/reboot.h>
 #include <linux/slab.h>
 
 #include <plat/omap_hwmod.h>
@@ -542,8 +543,10 @@ static u32 get_ddr_phy_ctrl_1(u32 freq, u8 RL)
 		val = EMIF_DLL_SLAVE_DLY_CTRL_100_MHZ_AND_LESS;
 	else if (freq <= 200000000)
 		val = EMIF_DLL_SLAVE_DLY_CTRL_200_MHZ;
-	else
+	else if (freq <= 400000000)
 		val = EMIF_DLL_SLAVE_DLY_CTRL_400_MHZ;
+	else
+		val = EMIF_DLL_SLAVE_DLY_CTRL_466_MHZ;
 	mask_n_set(phy, OMAP44XX_REG_DLL_SLAVE_DLY_CTRL_SHIFT,
 		   OMAP44XX_REG_DLL_SLAVE_DLY_CTRL_MASK, val);
 
@@ -843,6 +846,13 @@ static irqreturn_t emif_threaded_isr(int irq, void *dev_id)
 		kobject_uevent(&(emif[emif_nr].pdev->dev.kobj), KOBJ_CHANGE);
 		/* clear the bit */
 		emif_notify_pending &= ~(1 << emif_nr);
+	}
+
+	if (emif_temperature_level[emif_nr] >= SDRAM_TEMP_VERY_HIGH_SHUTDOWN) {
+		pr_emerg("%s %d: SDRAM temperature exceeds operating"
+			"limit.. Shutdown system...\n", __func__, emif_nr + 1);
+
+		kernel_power_off();
 	}
 
 	return IRQ_HANDLED;
@@ -1189,9 +1199,12 @@ static void init_temperature(u32 emif_nr)
 				   &dev_attr_temperature));
 	kobject_uevent(&(emif[emif_nr].pdev->dev.kobj), KOBJ_ADD);
 
-	if (emif_temperature_level[emif_nr] == SDRAM_TEMP_VERY_HIGH_SHUTDOWN)
+	if (emif_temperature_level[emif_nr] >= SDRAM_TEMP_VERY_HIGH_SHUTDOWN) {
 		pr_emerg("EMIF %d: SDRAM temperature exceeds operating"
-			 "limit.. Needs shut down!!!", emif_nr + 1);
+			 "limit! Powering OFF\n", emif_nr + 1);
+
+		kernel_power_off();
+	}
 }
 
 static void __init emif_setup_errata(void)
@@ -1401,7 +1414,6 @@ late_initcall(omap_emif_late_init);
 int omap_emif_setup_registers(u32 freq, u32 volt_state)
 {
 	int err = 0;
-
 	if (likely(emif_devices[EMIF1]))
 		err = do_emif_setup_registers(EMIF1, freq, volt_state);
 	if (likely(!err && emif_devices[EMIF2]))
@@ -1422,23 +1434,21 @@ int omap_emif_setup_registers(u32 freq, u32 volt_state)
  */
 void omap_emif_frequency_pre_notify(void)
 {
+	int emif_num;
 
-	/* Only disable ddr self-refresh if ddr self-refresh was enabled */
-	if (likely(LP_MODE_SELF_REFRESH == get_lp_mode(EMIF1) &&
-		emif_devices[EMIF1])) {
+	for (emif_num = EMIF1; emif_num < EMIF_NUM_INSTANCES; emif_num++) {
 
-		set_lp_mode(EMIF1, LP_MODE_DISABLE);
-		emif[EMIF1].ddr_refresh_disabled = true;
+		/*
+		 * Only disable ddr self-refresh
+		 * if ddr self-refresh was enabled
+		 */
+		if (likely(LP_MODE_SELF_REFRESH == get_lp_mode(emif_num))) {
+
+			set_lp_mode(emif_num, LP_MODE_DISABLE);
+			emif[emif_num].ddr_refresh_disabled = true;
+		}
+
 	}
-
-	if (likely(LP_MODE_SELF_REFRESH == get_lp_mode(EMIF2) &&
-		emif_devices[EMIF2])) {
-
-		set_lp_mode(EMIF2, LP_MODE_DISABLE);
-		emif[EMIF2].ddr_refresh_disabled = true;
-
-	}
-
 }
 
 /*
@@ -1450,23 +1460,20 @@ void omap_emif_frequency_pre_notify(void)
  */
 void omap_emif_frequency_post_notify(void)
 {
+	int emif_num;
 
-	/* Only re-enable ddr self-refresh if ddr self-refresh was disabled */
-	if (likely(emif[EMIF1].ddr_refresh_disabled &&
-		emif_devices[EMIF1])) {
+	for (emif_num = EMIF1; emif_num < EMIF_NUM_INSTANCES; emif_num++) {
 
-		set_lp_mode(EMIF1, LP_MODE_SELF_REFRESH);
-		emif[EMIF1].ddr_refresh_disabled = false;
+		/*
+		 * Only re-enable ddr self-refresh
+		 * if ddr self-refresh was disabled
+		 */
+		if (likely(emif[emif_num].ddr_refresh_disabled)) {
+
+			set_lp_mode(emif_num, LP_MODE_SELF_REFRESH);
+			emif[emif_num].ddr_refresh_disabled = false;
+		}
 	}
-
-	if (likely(emif[EMIF2].ddr_refresh_disabled &&
-		emif_devices[EMIF2])) {
-
-		set_lp_mode(EMIF2, LP_MODE_SELF_REFRESH);
-		emif[EMIF1].ddr_refresh_disabled = false;
-
-	}
-
 }
 
 /*
@@ -1521,9 +1528,6 @@ static void __init setup_lowpower_regs(u32 emif_nr,
 	if (dev->emif_ddr_selfrefresh_cycles >= 0) {
 		u32 num_cycles, ddr_sr_timer;
 
-		/* Enable self refresh if not already configured */
-		temp = __raw_readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL) &
-			OMAP44XX_REG_LP_MODE_MASK;
 		/*
 		 * Configure the self refresh timing
 		 * base value starts at 16 cycles mapped to 1( __fls(16) = 4)
@@ -1559,24 +1563,18 @@ static void __init setup_lowpower_regs(u32 emif_nr,
 		__raw_writel(temp, base + OMAP44XX_EMIF_PWR_MGMT_CTRL_SHDW);
 
 		/* Enable Self Refresh */
-		temp = __raw_readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL);
-		mask_n_set(temp, OMAP44XX_REG_LP_MODE_SHIFT,
-			   OMAP44XX_REG_LP_MODE_MASK, LP_MODE_SELF_REFRESH);
-		__raw_writel(temp, base + OMAP44XX_EMIF_PWR_MGMT_CTRL);
+		set_lp_mode(emif_nr, LP_MODE_SELF_REFRESH);
 	} else {
-		/* Disable Automatic power management if < 0 and not disabled */
-		temp = __raw_readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL) &
-			OMAP44XX_REG_LP_MODE_MASK;
+		/* Disable Automatic power management if < 0 */
 
+		/* Program the idle delay to 0x0 */
 		temp = __raw_readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL_SHDW);
 		mask_n_set(temp, OMAP44XX_REG_SR_TIM_SHDW_SHIFT,
 			   OMAP44XX_REG_SR_TIM_SHDW_MASK, 0x0);
 		__raw_writel(temp, base + OMAP44XX_EMIF_PWR_MGMT_CTRL_SHDW);
 
-		temp = __raw_readl(base + OMAP44XX_EMIF_PWR_MGMT_CTRL);
-		mask_n_set(temp, OMAP44XX_REG_LP_MODE_SHIFT,
-			   OMAP44XX_REG_LP_MODE_MASK, LP_MODE_DISABLE);
-		__raw_writel(temp, base + OMAP44XX_EMIF_PWR_MGMT_CTRL);
+		/* Disable Automatic power management */
+		set_lp_mode(emif_nr, LP_MODE_DISABLE);
 	}
 }
 

@@ -34,7 +34,8 @@ static struct omap2_hsmmc_info espresso_mmc_info[] = {
 		.mmc		= 2,
 		.nonremovable	= true,
 		.external_ldo	= true,
-		.caps		= MMC_CAP_8_BIT_DATA,
+		.caps		= MMC_CAP_8_BIT_DATA
+				| MMC_CAP_1_8V_DDR | MMC_CAP_UHS_DDR50,
 		.ocr_mask	= MMC_VDD_165_195,
 		.gpio_wp	= -EINVAL,
 		.gpio_cd	= -EINVAL,

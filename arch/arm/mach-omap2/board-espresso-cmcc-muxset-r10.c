@@ -22,7 +22,7 @@
 #include "omap44xx_muxtbl.h"
 #include "sec_muxtbl.h"
 
-/* CMCC board rev0.3 */
+/* CMCC board rev0.3, rev0.4 (HW_REV 1011) */
 static struct omap_muxtbl muxtbl[] __initdata = {
 	/* [-----] gpmc_ad15 - gpio_39 - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -33,25 +33,29 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     SYS_PWRON_RESET_OUT, OMAP_MUX_MODE3 | OMAP_PIN_INPUT |
 		     OMAP_PIN_OFF_WAKEUPENABLE,
 		     29, "ACCESSORY_INT_1.8V"),
-	/* [--OUT] gpmc_ad9 - gpio_33 - ALS_OUT */
+	/* [--OUT] gpmc_ad9 - gpio_33 - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 			GPMC_AD9, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
-			33, "ALS_OUT"),
-	/* [-----] usbb1_ulpitll_stp - gpio_85 - MIPI_HSI_TX_DATA */
+			33, "ALS_OUT.nc"),
+	/* [-----] usbb1_ulpitll_stp - gpio_85 - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 			USBB1_ULPITLL_STP,
 			OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
-			85, "MIPI_HSI_TX_DATA"),
-	/* [-----] usbb1_ulpitll_dir - gpio_86 - MIPI_HSI_TX_FLG */
+			85, "MIPI_HSI_TX_DATA.nc"),
+	/* [-----] usbb1_ulpitll_dir - gpio_86 - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 			USBB1_ULPITLL_DIR,
 			OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
-			86, "MIPI_HSI_TX_FLG"),
-	/* [-----] usbb1_ulpitll_nxt - gpio_87 - MIPI_HSI_TX_RDY */
+			86, "MIPI_HSI_TX_FLG.nc"),
+	/* [-----] usbb1_ulpitll_nxt - gpio_87 - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 			USBB1_ULPITLL_NXT,
 			OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
-			87, "MIPI_HSI_TX_RDY"),
+			87, "MIPI_HSI_TX_RDY.nc"),
+	/* [IN---] gpmc_ncs2 - gpio_52 - NC */
+	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
+		     GPMC_NCS2, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     52, "GPS_CNTL.nc"),
 };
 
 add_sec_muxtbl_to_list(SEC_MACHINE_ESPRESSO, 10, muxtbl);

@@ -619,6 +619,57 @@ static struct stmpe_variant_info stmpe1601 = {
 };
 
 /*
+ * STMPE1801
+ */
+
+static const u8 stmpe1801_regs[] = {
+	[STMPE_IDX_CHIP_ID]	= STMPE1801_REG_CHIP_ID,
+	[STMPE_IDX_ICR_LSB]	= STMPE1801_REG_ICR_LSB,
+	[STMPE_IDX_IER_LSB]	= STMPE1801_REG_IER_LSB,
+	[STMPE_IDX_ISR_MSB]	= STMPE1801_REG_ISR_MSB,
+	[STMPE_IDX_GPMR_LSB]	= STMPE1801_REG_GPIO_MP_LSB,
+	[STMPE_IDX_GPSR_LSB]	= STMPE1801_REG_GPIO_SET_LSB,
+	[STMPE_IDX_GPCR_LSB]	= STMPE1801_REG_GPIO_CLR_LSB,
+	[STMPE_IDX_GPDR_LSB]	= STMPE1801_REG_GPIO_SET_DIR_LSB,
+	[STMPE_IDX_GPRER_LSB]	= STMPE1801_REG_GPIO_RE_LSB,
+	[STMPE_IDX_GPFER_LSB]	= STMPE1801_REG_GPIO_FE_LSB,
+	[STMPE_IDX_IEGPIOR_LSB]	= STMPE1801_REG_INT_EN_GPIO_MASK_LSB,
+	[STMPE_IDX_ISGPIOR_MSB]	= STMPE1801_REG_INT_STA_GPIO_MSB,
+};
+
+static struct stmpe_variant_block stmpe1801_blocks[] = {
+	{
+		.cell	= &stmpe_gpio_cell,
+		.irq	= STMPE1801_IRQ_GPIOC,
+		.block	= STMPE_BLOCK_GPIO,
+	},
+	{
+		.cell	= &stmpe_keypad_cell,
+		.irq	= STMPE1801_IRQ_KEYPAD,
+		.block	= STMPE_BLOCK_KEYPAD,
+	},
+};
+
+static int stmpe1801_enable(struct stmpe *stmpe, unsigned int blocks,
+			    bool enable)
+{
+	return 0;
+}
+
+static struct stmpe_variant_info stmpe1801 = {
+	.name		= "stmpe1801",
+	.id_val		= STMPE1801_ID,
+	.id_mask	= STMPE1801_ID_MASK,
+	.num_gpios	= STMPE1801_NR_GPIO,
+	.regs		= stmpe1801_regs,
+	.blocks		= stmpe1801_blocks,
+	.num_blocks	= ARRAY_SIZE(stmpe1801_blocks),
+	.num_irqs	= STMPE1801_NR_INTERNAL_IRQS,
+	.enable		= stmpe1801_enable,
+	.reg_order_gpio	= STMPE_REG_INC,
+};
+
+/*
  * STMPE24XX
  */
 
@@ -716,6 +767,7 @@ static struct stmpe_variant_info *stmpe_variant_info[] = {
 	[STMPE801]	= &stmpe801,
 	[STMPE811]	= &stmpe811,
 	[STMPE1601]	= &stmpe1601,
+	[STMPE1801]	= &stmpe1801,
 	[STMPE2401]	= &stmpe2401,
 	[STMPE2403]	= &stmpe2403,
 };
@@ -727,6 +779,7 @@ static irqreturn_t stmpe_irq(int irq, void *data)
 	int num = DIV_ROUND_UP(variant->num_irqs, 8);
 	u8 israddr = stmpe->regs[STMPE_IDX_ISR_MSB];
 	u8 isr[num];
+	u8 reg;
 	int ret;
 	int i;
 
@@ -757,7 +810,11 @@ static irqreturn_t stmpe_irq(int irq, void *data)
 			status &= ~(1 << bit);
 		}
 
-		stmpe_reg_write(stmpe, israddr + i, clear);
+		if (stmpe->reg_order_gpio == STMPE_REG_INC)
+			reg = israddr - i;
+		else
+			reg = israddr + i;
+		stmpe_reg_write(stmpe, reg, clear);
 	}
 
 	return IRQ_HANDLED;
@@ -775,6 +832,7 @@ static void stmpe_irq_sync_unlock(struct irq_data *data)
 	struct stmpe *stmpe = irq_data_get_irq_chip_data(data);
 	struct stmpe_variant_info *variant = stmpe->variant;
 	int num = DIV_ROUND_UP(variant->num_irqs, 8);
+	u8 reg;
 	int i;
 
 	for (i = 0; i < num; i++) {
@@ -785,7 +843,11 @@ static void stmpe_irq_sync_unlock(struct irq_data *data)
 			continue;
 
 		stmpe->oldier[i] = new;
-		stmpe_reg_write(stmpe, stmpe->regs[STMPE_IDX_IER_LSB] - i, new);
+		if (stmpe->reg_order_gpio == STMPE_REG_INC)
+			reg = stmpe->regs[STMPE_IDX_IER_LSB] + i;
+		else
+			reg = stmpe->regs[STMPE_IDX_IER_LSB] - i;
+		stmpe_reg_write(stmpe, reg, new);
 	}
 
 	mutex_unlock(&stmpe->irq_lock);
@@ -982,6 +1044,7 @@ int __devinit stmpe_probe(struct stmpe_client_info *ci, int partnum)
 	stmpe->variant = stmpe_variant_info[partnum];
 	stmpe->regs = stmpe->variant->regs;
 	stmpe->num_gpios = stmpe->variant->num_gpios;
+	stmpe->reg_order_gpio = stmpe->variant->reg_order_gpio;
 	dev_set_drvdata(stmpe->dev, stmpe);
 
 	if (ci->init)

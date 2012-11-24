@@ -85,6 +85,7 @@ struct geomagnetic_data {
 #endif
 	struct device *magnetic_sensor_device;
 	struct mag_platform_data *mag_pdata;
+	uint8_t dev_id;
 };
 
 static struct i2c_client *this_client;
@@ -430,7 +431,7 @@ static int geomagnetic_unlock(void)
 
 static void geomagnetic_msleep(int ms)
 {
-	msleep(ms);
+	usleep_range(ms * 999, ms * 1000);
 }
 
 static void geomagnetic_current_time(int32_t *sec, int32_t *msec)
@@ -1371,6 +1372,21 @@ static struct attribute_group geomagnetic_raw_attribute_group = {
 	.attrs = geomagnetic_raw_attributes
 };
 
+static ssize_t yas532_rawdata_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
+
+	usleep_range(3000, 3100);
+
+	return snprintf(buf, PAGE_SIZE, "%d,%d,%d\n",
+			atomic_read(&data->last_data[0]) / 1000,
+			atomic_read(&data->last_data[1]) / 1000,
+			atomic_read(&data->last_data[2]) / 1000);
+}
+static struct device_attribute dev_attr_magnetic_sensor_raw_data =
+	__ATTR(raw_data, S_IRUSR | S_IRGRP, yas532_rawdata_show, NULL);
+
 static ssize_t magnetic_vendor_show(struct device *dev,
 					   struct device_attribute *attr,
 					   char *buf)
@@ -1384,12 +1400,19 @@ static ssize_t magnetic_name_show(struct device *dev,
 					   struct device_attribute *attr,
 					   char *buf)
 {
-	return sprintf(buf, "%s\n", "YAS530C");
+	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
+	int ret;
+	if (data->dev_id == YAS_YAS532_DEVICE_ID)
+		ret = sprintf(buf, "%s\n", "YAS532");
+	else
+		ret = sprintf(buf, "%s\n", "YAS530C");
+	return ret;
 }
 static struct device_attribute dev_attr_magnetic_sensor_name =
 	__ATTR(name, S_IRUSR | S_IRGRP, magnetic_name_show, NULL);
 
 static struct device_attribute *magnetic_sensor_attrs[] = {
+	&dev_attr_magnetic_sensor_raw_data,
 	&dev_attr_magnetic_sensor_vendor,
 	&dev_attr_magnetic_sensor_name,
 	NULL,
@@ -1435,8 +1458,10 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 #endif
 
 #ifdef YAS_MAG_MANUAL_OFFSET
-	if (data->mag_pdata->offset_enable)
-		geomagnetic_manual_offset();
+	if (data->mag_pdata) {
+		if (data->mag_pdata->offset_enable)
+			geomagnetic_manual_offset();
+	}
 #endif
 
 	if (hwdep_driver.measure == NULL || hwdep_driver.get_offset == NULL)
@@ -1560,11 +1585,15 @@ static void geomagnetic_input_work_func(struct work_struct *work)
 
 	time_delay_ms = geomagnetic_work(&magdata);
 
-	if (time_delay_ms > 0)
+	if (time_delay_ms > 60)
 		schedule_delayed_work(&data->work,
-				      msecs_to_jiffies(time_delay_ms) + 1);
-	else
+				      msecs_to_jiffies(time_delay_ms));
+	else {
+		if (time_delay_ms > 0)
+			usleep_range(time_delay_ms * 1000,
+				time_delay_ms * 1100);
 		schedule_delayed_work(&data->work, 0);
+	}
 }
 
 static int geomagnetic_suspend(struct i2c_client *client, pm_message_t mesg)
@@ -1613,6 +1642,10 @@ geomagnetic_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	pdata = (struct mag_platform_data *) client->dev.platform_data;
 	data->mag_pdata = pdata;
 
+	if (pdata) {
+		if (pdata->power_on)
+			pdata->power_on(true);
+	}
 	data->threshold = YAS_DEFAULT_MAGCALIB_THRESHOLD;
 	for (i = 0; i < 3; i++)
 		data->distortion[i] = YAS_DEFAULT_MAGCALIB_DISTORTION;
@@ -1717,11 +1750,36 @@ geomagnetic_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		}
 	}
 	if (hwdep_driver.set_position != NULL) {
-		if (hwdep_driver.
-		    set_position(CONFIG_INPUT_YAS_MAGNETOMETER_POSITION) < 0) {
-			YLOGE(("hwdep_driver.set_position() failed[%d]\n", rt));
-			goto err;
+		if (pdata) {
+			if (pdata->orientation) {
+				pr_info("%s: set from board file.\n", __func__);
+				if (hwdep_driver.
+					set_position(pdata->orientation
+						- YAS532_POSITION_OFFSET) < 0) {
+					pr_err("set_position failed %d\n", rt);
+					goto err;
+				}
+			}  else {
+				pr_info("%s: set from defconfig.\n", __func__);
+				if (hwdep_driver.
+					set_position(
+					CONFIG_INPUT_YAS_MAGNETOMETER_POSITION)
+					< 0) {
+					pr_err("set_position failed %d\n", rt);
+					goto err;
+				}
+			}
+		} else {
+			if (hwdep_driver.
+				set_position(
+					CONFIG_INPUT_YAS_MAGNETOMETER_POSITION)
+						< 0) {
+				pr_err("set_position() failed[%d]\n", rt);
+				goto err;
+			}
 		}
+		pr_info("%s: yas magnetic position is %d\n", __func__,
+			hwdep_driver.get_position());
 	}
 	if (hwdep_driver.get_offset != NULL) {
 		if (hwdep_driver.get_offset(&data->driver_offset) < 0) {
@@ -1762,6 +1820,16 @@ geomagnetic_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	}
 #endif
 
+	rt =
+		geomagnetic_i2c_read(YAS_REGADDR_DEVICE_ID, &data->dev_id, 1);
+	if (rt) {
+		pr_err("%s: cound not read device id(%d).\n",
+					__func__, rt);
+				goto err;
+	} else
+		pr_info("%s: yamaha magnetic sensor id = %x\n",
+			__func__, data->dev_id);
+
 	rt = sensors_register(data->magnetic_sensor_device,
 		NULL, magnetic_sensor_attrs,
 			"magnetic_sensor");
@@ -1795,6 +1863,10 @@ err:
 			else
 				input_free_device(input_data);
 		}
+		if (pdata) {
+			if (pdata->power_on)
+				pdata->power_on(false);
+		}
 		kfree(data);
 	}
 
@@ -1826,6 +1898,19 @@ static int geomagnetic_remove(struct i2c_client *client)
 	return 0;
 }
 
+static void geomagnetic_shutdown(struct i2c_client *client)
+{
+	struct geomagnetic_data *data = i2c_get_clientdata(client);
+
+	if (data != NULL) {
+		geomagnetic_disable(data);
+		if (data->mag_pdata) {
+			if (data->mag_pdata->power_on)
+				data->mag_pdata->power_on(false);
+		}
+	}
+}
+
 /* I2C Device Driver */
 static struct i2c_device_id geomagnetic_idtable[] = {
 	{GEOMAGNETIC_I2C_DEVICE_NAME, 0},
@@ -1845,6 +1930,7 @@ static struct i2c_driver geomagnetic_i2c_driver = {
 	.remove = geomagnetic_remove,
 	.suspend = geomagnetic_suspend,
 	.resume = geomagnetic_resume,
+	.shutdown = geomagnetic_shutdown,
 };
 
 static int __init geomagnetic_init(void)
@@ -1929,4 +2015,4 @@ MODULE_DESCRIPTION("YAS530 Geomagnetic Sensor Driver");
 MODULE_DESCRIPTION("YAS532 Geomagnetic Sensor Driver");
 #endif
 MODULE_LICENSE("GPL");
-MODULE_VERSION("4.2.602");
+MODULE_VERSION("4.4.702a");

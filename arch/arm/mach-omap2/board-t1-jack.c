@@ -39,38 +39,38 @@ static void sec_jack_set_micbias_state(bool on)
 static struct sec_jack_zone sec_jack_zones[] = {
 	{
 		/* adc < 350, unstable zone, default to 3pole if it stays
-		* in this range for a half second (20ms delays, 25 samples)
+		* in this range for a half second (10ms delays, 20 samples)
 		*/
 		.adc_high	= 350,
-		.delay_ms	= 20,
-		.check_count	= 25,
+		.delay_ms	= 10,
+		.check_count	= 20,
 		.jack_type	= SEC_HEADSET_3POLE,
 	},
 	{
 		/* 350 < adc <= 759, unstable zone, default to 3pole if it stays
-		* in this range for a second (10ms delays, 25 samples)
+		* in this range for a second (10ms delays, 20 samples)
 		*/
 		.adc_high	= 759,
 		.delay_ms	= 10,
-		.check_count	= 25,
+		.check_count	= 20,
 		.jack_type	= SEC_HEADSET_3POLE,
 	},
 	{
 		/* 759 < adc <= 950, unstable zone, default to 4pole if it
-		* stays in this range for a second (10ms delays, 25 samples)
+		* stays in this range for a second (10ms delays, 20 samples)
 		*/
 		.adc_high	= 950,
 		.delay_ms	= 10,
-		.check_count	= 25,
+		.check_count	= 20,
 		.jack_type	= SEC_HEADSET_4POLE,
 	},
 	{
 		/* 950 < adc <= 2100, 4 pole zone, default to 4pole if it
-		* stays in this range for 200ms (20ms delays, 10 samples)
+		* stays in this range for 200ms (10ms delays, 20 samples)
 		*/
 		.adc_high	= 2100,
-		.delay_ms	= 20,
-		.check_count	= 10,
+		.delay_ms	= 10,
+		.check_count	= 20,
 		.jack_type	= SEC_HEADSET_4POLE,
 	},
 	{

@@ -896,6 +896,20 @@ static void playback_trigger(struct snd_pcm_substream *substream,
 	}
 }
 
+static int omap_abe_hwrule_period_step(struct snd_pcm_hw_params *params,
+					struct snd_pcm_hw_rule *rule)
+{
+	struct snd_interval *period_size = hw_param_interval(params,
+				     SNDRV_PCM_HW_PARAM_PERIOD_SIZE);
+	unsigned int rate = params_rate(params);
+
+	/* 44.1kHz has the same iteration number as 48kHz */
+	rate = (rate == 44100) ? 48000 : rate;
+
+	/* ABE requires chunks of 250us worth of data */
+	return snd_interval_step(period_size, 0, rate / 4000);
+}
+
 static int omap_abe_dai_startup(struct snd_pcm_substream *substream,
 			struct snd_soc_dai *dai)
 {
@@ -924,6 +938,17 @@ static int omap_abe_dai_startup(struct snd_pcm_substream *substream,
 			dev_err(abe_priv->modem_dai->dev, "failed to open DAI %d\n", ret);
 			return ret;
 		}
+	} else {
+		/*
+		 * Period size must be aligned with the Audio Engine
+		 * processing loop which is 250 us long
+		 */
+		snd_pcm_hw_rule_add(substream->runtime, 0,
+				SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+				omap_abe_hwrule_period_step,
+				NULL,
+				SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+				SNDRV_PCM_HW_PARAM_RATE, -1);
 	}
 
 	return ret;
@@ -944,20 +969,12 @@ static int omap_abe_dai_hw_params(struct snd_pcm_substream *substream,
 
 	dma_data = &omap_abe_dai_dma_params[dai->id][substream->stream];
 
-	/* Reset DMA info that may have been overridden */
-	dma_data->port_addr = 0L;
-	dma_data->set_threshold = NULL;
-	dma_data->data_type = OMAP_DMA_DATA_TYPE_S32;
-	dma_data->packet_size = 0;
-
 	switch (params_channels(params)) {
 	case 1:
-		if (params_format(params) == SNDRV_PCM_FORMAT_S16_LE) {
-			format.samp_format = MONO_RSHIFTED_16;
-			dma_data->data_type = OMAP_DMA_DATA_TYPE_S16;
-		} else {
+		if (params_format(params) == SNDRV_PCM_FORMAT_S16_LE)
+			format.samp_format = MONO_16_16;
+		else
 			format.samp_format = MONO_MSB;
-		}
 		break;
 	case 2:
 		if (params_format(params) == SNDRV_PCM_FORMAT_S16_LE)
@@ -1355,9 +1372,9 @@ static struct snd_soc_dai_driver omap_abe_dai[] = {
 		.capture = {
 			.stream_name = "MultiMedia1 Capture",
 			.channels_min = 2,
-			.channels_max = 8,
+			.channels_max = 6,
 			.rates = SNDRV_PCM_RATE_48000,
-			.formats = OMAP_ABE_FORMATS,
+			.formats = SNDRV_PCM_FMTBIT_S32_LE,
 		},
 		.ops = &omap_abe_dai_ops,
 	},
@@ -1382,14 +1399,16 @@ static struct snd_soc_dai_driver omap_abe_dai[] = {
 			.stream_name = "Voice Playback",
 			.channels_min = 1,
 			.channels_max = 2,
-			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000 |
+				 SNDRV_PCM_RATE_48000,
 			.formats = OMAP_ABE_FORMATS,
 		},
 		.capture = {
 			.stream_name = "Voice Capture",
 			.channels_min = 1,
 			.channels_max = 2,
-			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
+			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000 |
+				 SNDRV_PCM_RATE_48000,
 			.formats = OMAP_ABE_FORMATS,
 		},
 		.ops = &omap_abe_dai_ops,

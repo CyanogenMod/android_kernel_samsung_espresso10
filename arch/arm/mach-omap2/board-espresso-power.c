@@ -219,9 +219,9 @@ static void max17042_fuelgauge_register_callbacks(
 static struct max17042_platform_data max17042_pdata = {
 	.register_callbacks = &max17042_fuelgauge_register_callbacks,
 	.enable_current_sense = true,
-	.capacity = 0x1F40,
-	.vfcapacity = 0x29AB,
-	.low_bat_comp_start_vol = 3550,
+	.sdi_capacity = 0x1F40,
+	.sdi_vfcapacity = 0x29AB,
+	.sdi_low_bat_comp_start_vol = 3550,
 };
 
 static const __initdata struct i2c_board_info max17042_i2c[] = {
@@ -313,6 +313,16 @@ static void fuel_gauge_update_fullcap(void)
 			update_remcap_to_fullcap(fuelgauge_callback);
 }
 
+static int fuelgauge_register_value(u8 addr)
+{
+	if (fuelgauge_callback &&
+			fuelgauge_callback->get_register_value)
+		return fuelgauge_callback->
+			get_register_value(fuelgauge_callback, addr);
+
+	return 0;
+}
+
 static void battery_manager_register_callbacks(
 		struct battery_manager_callbacks *ptr)
 {
@@ -332,6 +342,7 @@ static struct batman_platform_data battery_manager_pdata = {
 	.check_vf_fullcap_range = fuel_gauge_vf_fullcap_range,
 	.check_cap_corruption = fuel_gauge_check_cap_corruption,
 	.register_callbacks = battery_manager_register_callbacks,
+	.get_fg_register = fuelgauge_register_value,
 	.high_block_temp = HIGH_BLOCK_TEMP,
 	.high_recover_temp = HIGH_RECOVER_TEMP,
 	.low_block_temp = LOW_BLOCK_TEMP,

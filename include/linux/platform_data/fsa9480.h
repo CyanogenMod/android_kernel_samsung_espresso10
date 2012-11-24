@@ -75,4 +75,5 @@ struct fsa9480_platform_data {
 extern struct class *sec_class;
 
 int fsa9480_set_switch(void *usbsw, const char *buf);
+void fsa9480_set_raw_data_bit(void *usbsw);
 #endif

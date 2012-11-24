@@ -140,6 +140,16 @@ config USB_MUSB_HDRC_HCD
 	default y
 
 
+config USB_SAMSUNG_OMAP_NORPM
+	bool 'Disable musb omap2430 runtime pm'
+	depends on USB_MUSB_HDRC
+	default n
+
+config USB_SAMSUNG_OMAP_NOSRQ
+	bool 'Disable musb session request interrupt'
+	depends on USB_MUSB_HDRC
+	default n
+
 config MUSB_PIO_ONLY
 	bool 'Disable DMA (always use PIO)'
 	depends on USB_MUSB_HDRC

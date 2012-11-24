@@ -42,12 +42,21 @@ static inline struct stmpe_gpio *to_stmpe_gpio(struct gpio_chip *chip)
 	return container_of(chip, struct stmpe_gpio, chip);
 }
 
+static inline u8 stmpe_get_reg(struct stmpe *stmpe, unsigned offset,
+		unsigned idx)
+{
+	if (stmpe->reg_order_gpio == STMPE_REG_INC)
+		return stmpe->regs[idx] + (offset >> 3);
+	else
+		return stmpe->regs[idx] - (offset >> 3);
+}
+
 static int stmpe_gpio_get(struct gpio_chip *chip, unsigned offset)
 {
 	struct stmpe_gpio *stmpe_gpio = to_stmpe_gpio(chip);
 	struct stmpe *stmpe = stmpe_gpio->stmpe;
-	u8 reg = stmpe->regs[STMPE_IDX_GPMR_LSB] - (offset / 8);
-	u8 mask = 1 << (offset % 8);
+	u8 reg = stmpe_get_reg(stmpe, offset, STMPE_IDX_GPMR_LSB);
+	u8 mask = 1 << (offset & 0x7);
 	int ret;
 
 	ret = stmpe_reg_read(stmpe, reg);
@@ -62,8 +71,8 @@ static void stmpe_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
 	struct stmpe_gpio *stmpe_gpio = to_stmpe_gpio(chip);
 	struct stmpe *stmpe = stmpe_gpio->stmpe;
 	int which = val ? STMPE_IDX_GPSR_LSB : STMPE_IDX_GPCR_LSB;
-	u8 reg = stmpe->regs[which] - (offset / 8);
-	u8 mask = 1 << (offset % 8);
+	u8 reg = stmpe_get_reg(stmpe, offset, which);
+	u8 mask = 1 << (offset & 0x7);
 
 	/*
 	 * Some variants have single register for gpio set/clear functionality.
@@ -80,8 +89,8 @@ static int stmpe_gpio_direction_output(struct gpio_chip *chip,
 {
 	struct stmpe_gpio *stmpe_gpio = to_stmpe_gpio(chip);
 	struct stmpe *stmpe = stmpe_gpio->stmpe;
-	u8 reg = stmpe->regs[STMPE_IDX_GPDR_LSB] - (offset / 8);
-	u8 mask = 1 << (offset % 8);
+	u8 reg = stmpe_get_reg(stmpe, offset, STMPE_IDX_GPDR_LSB);
+	u8 mask = 1 << (offset & 0x7);
 
 	stmpe_gpio_set(chip, offset, val);
 
@@ -93,7 +102,7 @@ static int stmpe_gpio_direction_input(struct gpio_chip *chip,
 {
 	struct stmpe_gpio *stmpe_gpio = to_stmpe_gpio(chip);
 	struct stmpe *stmpe = stmpe_gpio->stmpe;
-	u8 reg = stmpe->regs[STMPE_IDX_GPDR_LSB] - (offset / 8);
+	u8 reg = stmpe_get_reg(stmpe, offset, STMPE_IDX_GPDR_LSB);
 	u8 mask = 1 << (offset % 8);
 
 	return stmpe_set_bits(stmpe, reg, mask, 0);
@@ -133,8 +142,8 @@ static int stmpe_gpio_irq_set_type(struct irq_data *d, unsigned int type)
 {
 	struct stmpe_gpio *stmpe_gpio = irq_data_get_irq_chip_data(d);
 	int offset = d->irq - stmpe_gpio->irq_base;
-	int regoffset = offset / 8;
-	int mask = 1 << (offset % 8);
+	int regoffset = offset >> 3;
+	int mask = 1 << (offset & 0x7);
 
 	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_LEVEL_HIGH)
 		return -EINVAL;
@@ -173,6 +182,7 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
 		[REG_FE]	= STMPE_IDX_GPFER_LSB,
 		[REG_IE]	= STMPE_IDX_IEGPIOR_LSB,
 	};
+	u8 reg;
 	int i, j;
 
 	for (i = 0; i < CACHE_NR_REGS; i++) {
@@ -189,7 +199,11 @@ static void stmpe_gpio_irq_sync_unlock(struct irq_data *d)
 				continue;
 
 			stmpe_gpio->oldregs[i][j] = new;
-			stmpe_reg_write(stmpe, stmpe->regs[regmap[i]] - j, new);
+			if (stmpe->reg_order_gpio == STMPE_REG_INC)
+				reg = stmpe->regs[regmap[i]] - j;
+			else
+				reg = stmpe->regs[regmap[i]] - j;
+			stmpe_reg_write(stmpe, reg, new);
 		}
 	}
 
@@ -200,8 +214,8 @@ static void stmpe_gpio_irq_mask(struct irq_data *d)
 {
 	struct stmpe_gpio *stmpe_gpio = irq_data_get_irq_chip_data(d);
 	int offset = d->irq - stmpe_gpio->irq_base;
-	int regoffset = offset / 8;
-	int mask = 1 << (offset % 8);
+	int regoffset = offset >> 3;
+	int mask = 1 << (offset & 0x7);
 
 	stmpe_gpio->regs[REG_IE][regoffset] &= ~mask;
 }
@@ -210,8 +224,8 @@ static void stmpe_gpio_irq_unmask(struct irq_data *d)
 {
 	struct stmpe_gpio *stmpe_gpio = irq_data_get_irq_chip_data(d);
 	int offset = d->irq - stmpe_gpio->irq_base;
-	int regoffset = offset / 8;
-	int mask = 1 << (offset % 8);
+	int regoffset = offset >> 3;
+	int mask = 1 << (offset & 0x7);
 
 	stmpe_gpio->regs[REG_IE][regoffset] |= mask;
 }
@@ -232,6 +246,7 @@ static irqreturn_t stmpe_gpio_irq(int irq, void *dev)
 	u8 statmsbreg = stmpe->regs[STMPE_IDX_ISGPIOR_MSB];
 	int num_banks = DIV_ROUND_UP(stmpe->num_gpios, 8);
 	u8 status[num_banks];
+	u8 reg;
 	int ret;
 	int i;
 
@@ -250,16 +265,20 @@ static irqreturn_t stmpe_gpio_irq(int irq, void *dev)
 
 		while (stat) {
 			int bit = __ffs(stat);
-			int line = bank * 8 + bit;
+			int line = (bank << 3) + bit;
 
 			handle_nested_irq(stmpe_gpio->irq_base + line);
 			stat &= ~(1 << bit);
 		}
 
-		stmpe_reg_write(stmpe, statmsbreg + i, status[i]);
+		if (stmpe->reg_order_gpio == STMPE_REG_INC)
+			reg = statmsbreg - i;
+		else
+			reg = statmsbreg + i;
+		stmpe_reg_write(stmpe, reg, status[i]);
 
-		/* Edge detect register is not present on 801 */
-		if (stmpe->partnum != STMPE801)
+		/* Edge detect register is not present on 801/1801 */
+		if (stmpe->partnum != STMPE801 || stmpe->partnum != STMPE1801)
 			stmpe_reg_write(stmpe, stmpe->regs[STMPE_IDX_GPEDR_MSB]
 					+ i, status[i]);
 	}
