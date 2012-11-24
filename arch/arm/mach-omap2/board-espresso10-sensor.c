@@ -21,14 +21,13 @@
 #include "mux.h"
 #include "omap_muxtbl.h"
 
-#include <linux/gp2a.h>
 #include <linux/i2c/twl6030-madc.h>
+#include <linux/regulator/consumer.h>
 #include <linux/bh1721fvc.h>
 #include <linux/yas.h>
 
 #include "board-espresso10.h"
 
-#define ACCEL_CAL_PATH	"/efs/calibration_data"
 
 #define YAS_TA_OFFSET {200, -4600, -1100}
 #define YAS_USB_OFFSET {0, -1100, -300}
@@ -98,9 +97,43 @@ void omap4_espresso_set_chager_type(int type)
 	prev = type;
 }
 
+static void omap4_espresso10_sensors_regulator_on(bool on)
+{
+	struct regulator *reg_v28;
+	struct regulator *reg_v18;
+
+	reg_v28 =
+		regulator_get(NULL, "VAP_IO_2.8V");
+	if (IS_ERR(reg_v28)) {
+		pr_err("%s [%d] failed to get v2.8 regulator.\n",
+			__func__, __LINE__);
+		goto done;
+	}
+	reg_v18 =
+		regulator_get(NULL, "VDD_IO_1.8V");
+	if (IS_ERR(reg_v18)) {
+		pr_err("%s [%d] failed to get v1.8 regulator.\n",
+			__func__, __LINE__);
+		goto done;
+	}
+	if (on) {
+		pr_info("sensor ldo on.\n");
+		regulator_enable(reg_v28);
+		regulator_enable(reg_v18);
+	} else {
+		pr_info("sensor ldo off.\n");
+		regulator_disable(reg_v18);
+		regulator_disable(reg_v28);
+	}
+	regulator_put(reg_v28);
+	regulator_put(reg_v18);
+done:
+	return;
+}
+
 struct acc_platform_data accelerometer_pdata = {
-	.cal_path = ACCEL_CAL_PATH,
-	.ldo_ctl = true,
+	.cal_path = "/efs/calibration_data",
+	.ldo_on = omap4_espresso10_sensors_regulator_on,
 };
 
 static struct i2c_board_info __initdata espresso10_sensors_i2c4_boardinfo[] = {

@@ -65,6 +65,13 @@
 #define TWL6040_REG_GPOCTL		0x1E
 #define TWL6040_REG_ALB			0x1F
 #define TWL6040_REG_DLB			0x20
+#define TWL6040_REG_PDMTM1		0x21
+#define TWL6040_REG_PDMTM2		0x22
+#define TWL6040_REG_PDMTM3		0x23
+#define TWL6040_REG_UPCMSK		0x24
+#define TWL6040_REG_DNCMSK		0x25
+#define TWL6040_REG_UPCRES		0x26
+#define TWL6040_REG_DNCRES		0x27
 #define TWL6040_REG_TRIM1		0x28
 #define TWL6040_REG_TRIM2		0x29
 #define TWL6040_REG_TRIM3		0x2A
@@ -83,6 +90,8 @@
 #define TWL6040_REV_1_0			0x00
 #define TWL6040_REV_1_1			0x01
 #define TWL6040_REV_1_3			0x02
+#define TWL6041_REV_2_0			0x10
+#define TWL6041_REV_2_2			0x12
 
 /* INTID (0x03) fields */
 
@@ -154,6 +163,15 @@
 
 #define TWL6040_EARENA			0x01
 
+/* HFLCTL (0x14) fields */
+
+#define TWL6040_HFDRVENAL               0x10
+
+/* HFRCTL (0x16) fields */
+
+#define TWL6040_HFDRVENAR               0x10
+
+
 /* VIBCTLL (0x18) fields */
 
 #define TWL6040_VIBCTRLLN		0x10
@@ -193,12 +211,14 @@
 #define TWL6040_INTCLRMODE		0x08
 #define TWL6040_CLK32KSEL		0x40
 
-#define TWL6040_SYSCLK_SEL_LPPLL	1
-#define TWL6040_SYSCLK_SEL_HPPLL	2
-
 /* STATUS (0x2E) fields */
 
 #define TWL6040_PLUGCOMP		0x02
+#define TWL6040_HFLOCDET                0x04
+#define TWL6040_HFROCDET                0x08
+#define TWL6040_VIBLOCDET		0x10
+#define TWL6040_VIBROCDET		0x20
+#define TWL6040_TSHUTDET		0x40
 
 #define TWL6040_CELLS			2
 
@@ -210,6 +230,12 @@
 #define TWL6040_IRQ_HF			3
 #define TWL6040_IRQ_VIB			4
 #define TWL6040_IRQ_READY		5
+
+/* Event IDs for Android userspace */
+#define TWL6040_THSHUT_EVENT		1
+#define TWL6040_THSHUT_RECOVERY		2
+#define TWL6040_HFOC_EVENT		3
+#define TWL6040_VIBOC_EVENT		4
 
 enum twl6040_pll_id {
 	TWL6040_NOPLL_ID,
@@ -228,10 +254,12 @@ struct twl6040 {
 	int audpwron;
 	int powered;
 	int power_count;
+	int thshut;
 
 	enum twl6040_pll_id pll;
 	unsigned int sysclk;
 	int icrev;
+	u8 cache[TWL6040_CACHEREGNUM];
 
 	unsigned int irq;
 	unsigned int irq_base;
@@ -240,14 +268,15 @@ struct twl6040 {
 };
 
 static inline int twl6040_request_irq(struct twl6040 *twl6040, int irq,
-				      irq_handler_t handler, const char *name,
-				      void *data)
+				      irq_handler_t handler,
+				      unsigned long irqflags,
+				      const char *name, void *data)
 {
 	if (!twl6040->irq_base)
 		return -EINVAL;
 
 	return request_threaded_irq(twl6040->irq_base + irq, NULL, handler,
-				    0, name, data);
+				    irqflags, name, data);
 }
 
 static inline void twl6040_free_irq(struct twl6040 *twl6040, int irq,
@@ -274,6 +303,10 @@ int twl6040_set_pll(struct twl6040 *twl6040, enum twl6040_pll_id id,
 enum twl6040_pll_id twl6040_get_pll(struct twl6040 *twl6040);
 unsigned int twl6040_get_sysclk(struct twl6040 *twl6040);
 int twl6040_get_icrev(struct twl6040 *twl6040);
+void twl6040_report_event(struct twl6040 *twl6040, int event);
+int twl6040_get_reg_supply(unsigned int reg);
+int twl6040_reg_is_vdd(unsigned int reg);
+int twl6040_reg_is_vio(unsigned int reg);
 int twl6040_irq_init(struct twl6040 *twl6040);
 void twl6040_irq_exit(struct twl6040 *twl6040);
 

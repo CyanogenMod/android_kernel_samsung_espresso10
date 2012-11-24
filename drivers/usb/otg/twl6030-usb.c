@@ -208,7 +208,7 @@ static int twl6030_usb_ldo_init(struct twl6030_usb *twl)
 {
 	char *regulator_name;
 
-	if (twl->features & TWL6025_SUBCLASS)
+	if (twl->features & TWL6032_SUBCLASS)
 		regulator_name = "ldousb";
 	else
 		regulator_name = "vusb";
@@ -300,6 +300,8 @@ static irqreturn_t twl6030_usb_irq(int irq, void *_twl)
 
 static irqreturn_t twl6030_usbotg_irq(int irq, void *_twl)
 {
+
+#ifndef CONFIG_USB_MUSB_PERIPHERAL
 	struct twl6030_usb *twl = _twl;
 	int status = USB_EVENT_NONE;
 	u8 hw_state;
@@ -308,11 +310,15 @@ static irqreturn_t twl6030_usbotg_irq(int irq, void *_twl)
 
 	if (hw_state & STS_USB_ID) {
 
+		if (twl->otg.state == OTG_STATE_A_IDLE)
+			return IRQ_HANDLED;
+
 		regulator_enable(twl->usb3v3);
 		twl->asleep = 1;
-		twl6030_writeb(twl, TWL_MODULE_USB, USB_ID_INT_EN_HI_CLR, 0x1);
-		twl6030_writeb(twl, TWL_MODULE_USB, USB_ID_INT_EN_HI_SET,
-								0x10);
+
+		twl6030_writeb(twl, TWL_MODULE_USB, 0x1, USB_ID_INT_EN_HI_CLR);
+		twl6030_writeb(twl, TWL_MODULE_USB, 0x10, USB_ID_INT_EN_HI_SET);
+
 		status = USB_EVENT_ID;
 		twl->otg.default_a = true;
 		twl->otg.state = OTG_STATE_A_IDLE;
@@ -321,12 +327,11 @@ static irqreturn_t twl6030_usbotg_irq(int irq, void *_twl)
 		atomic_notifier_call_chain(&twl->otg.notifier, status,
 							twl->otg.gadget);
 	} else  {
-		twl6030_writeb(twl, TWL_MODULE_USB, USB_ID_INT_EN_HI_CLR,
-								0x10);
-		twl6030_writeb(twl, TWL_MODULE_USB, USB_ID_INT_EN_HI_SET,
-								0x1);
+		twl6030_writeb(twl, TWL_MODULE_USB, 0x10, USB_ID_INT_EN_HI_CLR);
+		twl6030_writeb(twl, TWL_MODULE_USB, 0x1, USB_ID_INT_EN_HI_SET);
 	}
-	twl6030_writeb(twl, TWL_MODULE_USB, USB_ID_INT_LATCH_CLR, status);
+	twl6030_writeb(twl, TWL_MODULE_USB, status, USB_ID_INT_LATCH_CLR);
+#endif
 
 	return IRQ_HANDLED;
 }
@@ -351,7 +356,7 @@ static int twl6030_enable_irq(struct otg_transceiver *x)
 {
 	struct twl6030_usb *twl = xceiv_to_twl(x);
 
-	twl6030_writeb(twl, TWL_MODULE_USB, USB_ID_INT_EN_HI_SET, 0x1);
+	twl6030_writeb(twl, TWL_MODULE_USB, 0x1, USB_ID_INT_EN_HI_SET);
 	twl6030_interrupt_unmask(0x05, REG_INT_MSK_LINE_C);
 	twl6030_interrupt_unmask(0x05, REG_INT_MSK_STS_C);
 
@@ -429,6 +434,7 @@ static int __devinit twl6030_usb_probe(struct platform_device *pdev)
 	twl->otg.shutdown	= twl6030_phy_shutdown;
 	twl->otg.set_suspend	= twl6030_phy_suspend;
 	twl->otg.start_srp	= twl6030_start_srp;
+	twl->otg.state		= OTG_STATE_UNDEFINED;
 
 	/* init spinlock for workqueue */
 	spin_lock_init(&twl->lock);

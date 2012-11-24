@@ -69,18 +69,6 @@ enum {
 static int s6e8aa0_update(struct omap_dss_device *dssdev,
 		      u16 x, u16 y, u16 w, u16 h);
 
-static struct omap_video_timings s6e8aa0_timings = {
-	.x_res = 720,
-	.y_res = 1280,
-	.pixel_clock = 80842,
-	.hfp = 158,
-	.hsw = 2,
-	.hbp = 160,
-	.vfp = 13,
-	.vsw = 1,
-	.vbp = 2,
-};
-
 static const struct s6e8aa0_gamma_adj_points default_gamma_adj_points = {
 	.v1 = BV_1,
 	.v15 = BV_15,
@@ -172,6 +160,8 @@ struct s6e8aa0_data {
 	u8 acl_average;
 	unsigned int elvss_cur_i;
 	u8 panel_id[3];
+
+	int connected;
 };
 
 const u8 s6e8aa0_mtp_unlock[] = {
@@ -1183,6 +1173,9 @@ static int s6e8aa0_set_brightness(struct backlight_device *bd)
 	if (bl == s6->bl)
 		return 0;
 
+	if (!s6->connected)
+		return 0;
+
 	s6->bl = bl;
 	mutex_lock(&s6->lock);
 	if (dssdev->state == OMAP_DSS_DISPLAY_ACTIVE) {
@@ -1427,6 +1420,60 @@ err:
 	return ret;
 }
 
+/******************************
+*** LCD Device Sysfs Entry ****
+*******************************/
+static int s6e8aa0_start(struct omap_dss_device *dssdev);
+static void s6e8aa0_stop(struct omap_dss_device *dssdev);
+
+static ssize_t lcd_type_show(struct device *dev,
+				struct device_attribute *attr, char *buf)
+{
+	char temp[15] = "SMD_AMS465GS01\n";
+	strcpy(buf, temp);
+	return strlen(buf);
+}
+
+static ssize_t s6e8aa0_sysfs_store_lcd_power(struct device *dev,
+				       struct device_attribute *attr,
+				       const char *buf, size_t len)
+{
+	struct omap_dss_device *dssdev = to_dss_device(dev_get_drvdata(dev));
+	struct s6e8aa0_data *s6 = dev_get_drvdata(&dssdev->dev);
+	int ret;
+	int rc;
+	int lcd_enable;
+
+	rc = strict_strtoul(buf, 0, (unsigned long *)&lcd_enable);
+	if (rc < 0)
+		return rc;
+	dev_info(dev, "s6e8aa0_sysfs_store_lcd_power - %d\n", lcd_enable);
+
+	mutex_lock(&s6->lock);
+	if (lcd_enable) {
+		if (dssdev->state != OMAP_DSS_DISPLAY_SUSPENDED) {
+			ret = -EINVAL;
+			goto out;
+		}
+		ret = s6e8aa0_start(dssdev);
+		dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
+	} else {
+		if (dssdev->state != OMAP_DSS_DISPLAY_ACTIVE) {
+			ret = -EINVAL;
+			goto out;
+		}
+		s6e8aa0_stop(dssdev);
+		dssdev->state = OMAP_DSS_DISPLAY_SUSPENDED;
+	}
+
+out:
+	mutex_unlock(&s6->lock);
+	return len;
+}
+
+static DEVICE_ATTR(lcd_type, S_IRUGO, lcd_type_show, NULL);
+static DEVICE_ATTR(lcd_power, S_IWGRP, NULL, s6e8aa0_sysfs_store_lcd_power);
+
 static ssize_t acl_enable_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -1538,8 +1585,10 @@ static const struct file_operations s6e8aa0_gamma_correction_fops = {
 	.release = single_release,
 };
 
+static struct class *lcd_class;
 static int s6e8aa0_probe(struct omap_dss_device *dssdev)
 {
+	struct device *lcd_dev;
 	int ret = 0;
 	struct backlight_properties props = {
 		.brightness = 255,
@@ -1556,9 +1605,7 @@ static int s6e8aa0_probe(struct omap_dss_device *dssdev)
 	}
 
 	dssdev->panel.config = OMAP_DSS_LCD_TFT;
-	dssdev->panel.timings = s6e8aa0_timings;
 
-	dssdev->ctrl.pixel_size = 24;
 	dssdev->panel.acbi = 0;
 	dssdev->panel.acb = 40;
 
@@ -1588,6 +1635,17 @@ static int s6e8aa0_probe(struct omap_dss_device *dssdev)
 	}
 	gpio_direction_output(s6->pdata->reset_gpio, 1);
 
+	ret = gpio_request(s6->pdata->oled_id_gpio, "s6e8aa0_connected");
+	if (ret < 0) {
+		dev_err(&dssdev->dev, "gpio_request %d failed!\n",
+				s6->pdata->oled_id_gpio);
+		goto err;
+	}
+	gpio_direction_input(s6->pdata->oled_id_gpio);
+	s6->connected = gpio_get_value(s6->pdata->oled_id_gpio);
+	if (!s6->connected)
+		dev_info(&dssdev->dev, "*** s6e8aa0 panel is not connected!\n\n");
+
 	mutex_init(&s6->lock);
 
 	atomic_set(&s6->do_update, 0);
@@ -1595,7 +1653,7 @@ static int s6e8aa0_probe(struct omap_dss_device *dssdev)
 	dev_set_drvdata(&dssdev->dev, s6);
 
 	/* Register DSI backlight  control */
-	s6->bldev = backlight_device_register("s6e8aa0", &dssdev->dev, dssdev,
+	s6->bldev = backlight_device_register("panel", &dssdev->dev, dssdev,
 					      &s6e8aa0_backlight_ops, &props);
 	if (IS_ERR(s6->bldev)) {
 		ret = PTR_ERR(s6->bldev);
@@ -1626,12 +1684,44 @@ static int s6e8aa0_probe(struct omap_dss_device *dssdev)
 	if (cpu_is_omap44xx())
 		s6->force_update = true;
 
+	lcd_class = class_create(THIS_MODULE, "lcd");
+	if (IS_ERR(lcd_class)) {
+		pr_err("Failed to create lcd_class!");
+		goto err_backlight_device_register;
+	}
+
+	lcd_dev = device_create(lcd_class, NULL, 0, NULL, "panel");
+	if (IS_ERR(lcd_dev)) {
+		pr_err("Failed to create device(panel)!\n");
+		goto err_lcd_class;
+	}
+
+	dev_set_drvdata(lcd_dev, &dssdev->dev);
+
+	ret = device_create_file(lcd_dev, &dev_attr_lcd_type);
+	if (ret < 0) {
+		dev_err(lcd_dev, "failed to add 'lcd_type' sysfs entries\n");
+		goto err_lcd_device;
+	}
+	ret = device_create_file(lcd_dev, &dev_attr_lcd_power);
+	if (ret < 0) {
+		dev_err(lcd_dev, "failed to add 'lcd_power' sysfs entries\n");
+		goto err_lcd_type;
+	}
+
 	dev_dbg(&dssdev->dev, "s6e8aa0_probe\n");
 	return ret;
 
+err_lcd_type:
+	device_remove_file(lcd_dev, &dev_attr_lcd_type);
+err_lcd_device:
+	device_destroy(lcd_class, 0);
+err_lcd_class:
+	class_destroy(lcd_class);
 err_backlight_device_register:
 	mutex_destroy(&s6->lock);
 	gpio_free(s6->pdata->reset_gpio);
+	gpio_free(s6->pdata->oled_id_gpio);
 err:
 	kfree(s6);
 
@@ -1646,6 +1736,7 @@ static void s6e8aa0_remove(struct omap_dss_device *dssdev)
 	backlight_device_unregister(s6->bldev);
 	mutex_destroy(&s6->lock);
 	gpio_free(s6->pdata->reset_gpio);
+	gpio_free(s6->pdata->oled_id_gpio);
 	kfree(s6);
 }
 
@@ -1658,6 +1749,10 @@ static void s6e8aa0_config(struct omap_dss_device *dssdev)
 {
 	struct s6e8aa0_data *s6 = dev_get_drvdata(&dssdev->dev);
 	struct panel_s6e8aa0_data *pdata = s6->pdata;
+
+	if (!s6->connected)
+		return;
+
 	if (!s6->brightness_table) {
 		s6e8aa0_read_id_info(s6);
 		s6e8aa0_read_mtp_info(s6, 0);
@@ -1681,6 +1776,7 @@ static int s6e8aa0_power_on(struct omap_dss_device *dssdev)
 	struct s6e8aa0_data *s6 = dev_get_drvdata(&dssdev->dev);
 	int ret = 0;
 
+	pr_info(" %s, called + ", __func__);
 	/* At power on the first vsync has not been received yet*/
 	dssdev->first_vsync = false;
 
@@ -1710,7 +1806,7 @@ static int s6e8aa0_power_on(struct omap_dss_device *dssdev)
 
 	if(dssdev->skip_init)
 		dssdev->skip_init = false;
-
+	pr_info(" %s, called - ", __func__);
 err:
 	return ret;
 }
@@ -1719,6 +1815,7 @@ static void s6e8aa0_power_off(struct omap_dss_device *dssdev)
 {
 	struct s6e8aa0_data *s6 = dev_get_drvdata(&dssdev->dev);
 
+	pr_info(" %s, called + ", __func__);
 	gpio_set_value(s6->pdata->reset_gpio, 0);
 	msleep(10);
 
@@ -1727,7 +1824,7 @@ static void s6e8aa0_power_off(struct omap_dss_device *dssdev)
 
 	if (s6->pdata->set_power)
 		s6->pdata->set_power(false);
-
+	pr_info(" %s, called - ", __func__);
 }
 
 static int s6e8aa0_start(struct omap_dss_device *dssdev)
@@ -1963,6 +2060,8 @@ static int __init s6e8aa0_init(void)
 
 static void __exit s6e8aa0_exit(void)
 {
+	device_destroy(lcd_class, 0);
+	class_destroy(lcd_class);
 	omap_dss_unregister_driver(&s6e8aa0_driver);
 }
 

@@ -789,7 +789,6 @@ serial_omap_set_termios(struct uart_port *port, struct ktermios *termios,
 {
 	struct uart_omap_port *up = (struct uart_omap_port *)port;
 	unsigned char cval = 0;
-	unsigned char efr = 0;
 	unsigned long flags = 0;
 	unsigned int baud, quot;
 
@@ -881,9 +880,9 @@ serial_omap_set_termios(struct uart_port *port, struct ktermios *termios,
 	serial_out(up, UART_IER, up->ier);
 	serial_out(up, UART_LCR, cval);		/* reset DLAB */
 	up->lcr = cval;
+	up->scr = OMAP_UART_SCR_TX_EMPTY;
 
 	/* FIFOs and DMA Settings */
-
 	/* FCR can be changed only when the
 	 * baud clock is not running
 	 * DLL_REG and DLH_REG set to 0.
@@ -912,10 +911,10 @@ serial_omap_set_termios(struct uart_port *port, struct ktermios *termios,
 		}
 
 		serial_out(up, UART_TI752_TLR, 0);
-		serial_out(up, UART_OMAP_SCR,
-			(UART_FCR_TRIGGER_4 | UART_FCR_TRIGGER_8));
+		up->scr |= (UART_FCR_TRIGGER_4 | UART_FCR_TRIGGER_8);
 	}
 
+	serial_out(up, UART_OMAP_SCR, up->scr);
 	serial_out(up, UART_EFR, up->efr);
 	serial_out(up, UART_LCR, UART_LCR_CONF_MODE_A);
 	serial_out(up, UART_MCR, up->mcr);
@@ -1691,9 +1690,7 @@ static void omap_uart_restore_context(struct uart_omap_port *up)
 
 		serial_out(up, UART_TI752_TLR, 0);
 	}
-	serial_out(up, UART_OMAP_SCR,
-			(UART_FCR_TRIGGER_4 | UART_FCR_TRIGGER_8));
-
+		serial_out(up, UART_OMAP_SCR, up->scr);
 	/* UART 16x mode */
 	if (up->errata & UART_ERRATA_i202_MDR1_ACCESS)
 		omap_uart_mdr1_errataset(up, up->mdr1);
@@ -1784,7 +1781,7 @@ int omap_serial_ext_uart_enable(u8 port_id)
 	struct uart_omap_port *up;
 	int err = 0;
 
-	if (port_id > OMAP_MAX_HSUART_PORTS) {
+	if (port_id > OMAP_MAX_HSUART_PORTS - 1) {
 		pr_err("Invalid Port_id %d passed to %s\n", port_id, __func__);
 		err = -ENODEV;
 	} else {
@@ -1799,7 +1796,7 @@ int omap_serial_ext_uart_disable(u8 port_id)
 	struct uart_omap_port *up;
 	int err = 0;
 
-	if (port_id > OMAP_MAX_HSUART_PORTS) {
+	if (port_id > OMAP_MAX_HSUART_PORTS - 1) {
 		pr_err("Invalid Port_id %d passed to %s\n", port_id, __func__);
 		err = -ENODEV;
 	} else {

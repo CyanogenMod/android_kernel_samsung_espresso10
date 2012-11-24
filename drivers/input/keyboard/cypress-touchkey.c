@@ -36,18 +36,25 @@
 #include <linux/earlysuspend.h>
 #include <linux/firmware.h>
 
-#include "../../../arch/arm/mach-omap2/board-t1.h"
+#include "../../../arch/arm/mach-omap2/sec_common.h"
 
 #define DEVICE_NAME "sec_touchkey"
 #define I2C_M_WR 0      /* for i2c */
 #define FW_SIZE 8192
 
+#define CYPRESS_GEN		0x00
+#define CYPRESS_DATA_UPDATE	0x40
+
 /*
- * Melfas touchkey register
+ * Cypress touchkey register
  */
 #define KEYCODE_REG	0x00
 #define CMD_REG		0x03
+#define THRESHOLD_REG	0x04
+#define AUTOCAL_REG	0x05
+#define IDAC_REG	0x06
 #define DIFF_DATA_REG	0x0A
+#define RAW_DATA_REG	0x0E
 
 /* Command for 0x00 */
 #define AUTO_CAL_MODE_CMD	0x50
@@ -58,9 +65,10 @@
 #define AUTO_CAL_EN_CMD		0x01
 #define SENS_EN_CMD		0x40
 
-#define UPDOWN_EVENT_BIT 0x08
-#define KEYCODE_BIT 0x07
-#define COMMAND_BIT 0xF0
+#define UPDOWN_EVENT_BIT	0x08
+#define KEYCODE_BIT		0x07
+#define COMMAND_BIT		0xF0
+#define TK_BIT_AUTOCAL		0x80
 
 struct cptk_data {
 	struct cptk_platform_data	*pdata;
@@ -189,8 +197,8 @@ static int cptk_early_suspend(struct early_suspend *h)
 			struct cptk_data,
 			early_suspend);
 
-	mutex_lock(&cptk->lock);
 	disable_irq(cptk->client->irq);
+	mutex_lock(&cptk->lock);
 	if (cptk && cptk->pdata->power)
 		cptk->pdata->power(0);
 	cptk->enable = false;
@@ -213,7 +221,6 @@ static int cptk_late_resume(struct early_suspend *h)
 	if (cptk && cptk->pdata->power)
 		cptk->pdata->power(1);
 	cptk->enable = true;
-	enable_irq(cptk->client->irq);
 
 	cptk_i2c_write(cptk, KEYCODE_REG, AUTO_CAL_MODE_CMD);
 	cptk_i2c_write(cptk, CMD_REG, AUTO_CAL_EN_CMD);
@@ -223,6 +230,7 @@ static int cptk_late_resume(struct early_suspend *h)
 		cptk_i2c_write(cptk, KEYCODE_REG, LED_ON_CMD);
 
 	mutex_unlock(&cptk->lock);
+	enable_irq(cptk->client->irq);
 	return 0;
 }
 #endif
@@ -233,7 +241,7 @@ static void cptk_update_firmware_cb(const struct firmware *fw,
 	int ret;
 	struct cptk_data *cptk = context;
 	struct device *dev = &cptk->input_dev->dev;
-	int retries = 10;
+	int retries = 3;
 
 	pr_info("cptk: firware download start\n");
 
@@ -267,9 +275,12 @@ static void cptk_update_firmware_cb(const struct firmware *fw,
 	release_firmware(fw);
 	mutex_unlock(&cptk->lock);
 
-	cptk_i2c_read(cptk, KEYCODE_REG,
-			cptk->cur_firm_ver,
-			sizeof(cptk->cur_firm_ver));
+	cptk_i2c_read(cptk, KEYCODE_REG, cptk->cur_firm_ver,
+						sizeof(cptk->cur_firm_ver));
+
+	pr_info("cptk: current firm ver = 0x%.2x, latest firm ver = 0x%.2x\n",
+				cptk->cur_firm_ver[1], cptk->pdata->firm_ver);
+
 	return;
 }
 
@@ -286,6 +297,7 @@ static int cptk_update_firmware(struct cptk_data *cptk)
 	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG,
 			cptk->pdata->fw_name, dev, GFP_KERNEL, cptk,
 			cptk_update_firmware_cb);
+
 	if (ret) {
 		dev_err(dev, "%s: Can't open firmware file from %s\n", __func__,
 			cptk->pdata->fw_name);
@@ -336,7 +348,7 @@ static ssize_t set_touchkey_firm_status_show
 	return count;
 }
 static DEVICE_ATTR(touchkey_firm_update_status, S_IRUGO,
-set_touchkey_firm_status_show, NULL);
+					set_touchkey_firm_status_show, NULL);
 
 static ssize_t set_touchkey_firm_version_show
 (struct device *dev, struct device_attribute *attr, char *buf)
@@ -344,8 +356,8 @@ static ssize_t set_touchkey_firm_version_show
 	int count;
 
 	struct cptk_data *cptk = dev_get_drvdata(dev);
-	count = sprintf(buf, "0x%X\n", cptk->cur_firm_ver[1]);
-	pr_debug("cptk: touchkey_firm_version 0x%X\n", cptk->cur_firm_ver[1]);
+	count = sprintf(buf, "0x%.2X\n", cptk->cur_firm_ver[1]);
+	pr_debug("cptk: touchkey_firm_version 0x%.2X\n", cptk->cur_firm_ver[1]);
 
 	return count;
 }
@@ -367,8 +379,8 @@ static ssize_t set_touchkey_firm_version_read_show
 		return ret;
 	}
 	mutex_unlock(&cptk->lock);
-	count = sprintf(buf, "0x%X\n", data[1]);
-	pr_debug("cptk :touch_version_read 0x%X\n", data[1]);
+	count = sprintf(buf, "0x%.2X\n", data[1]);
+	pr_debug("cptk :touch_version_read 0x%.2X\n", data[1]);
 
 	return count;
 }
@@ -460,6 +472,93 @@ static DEVICE_ATTR(touch_sensitivity,
 		S_IRUGO | S_IWUSR | S_IWGRP,
 		NULL, touch_sensitivity_control);
 
+static ssize_t touchkey_raw_data0_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
+	u8 data[2];
+	int ret;
+	u16 raw_data0;
+
+	ret = cptk_i2c_read(tkey_i2c, RAW_DATA_REG, data, sizeof(data));
+	raw_data0 = ((0x00FF & data[0]) << 8) | data[1];
+
+	return sprintf(buf, "%d\n", raw_data0);
+}
+static DEVICE_ATTR(touchkey_raw_data0, S_IRUGO, touchkey_raw_data0_show, NULL);
+
+static ssize_t touchkey_raw_data1_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
+	u8 data[2];
+	int ret;
+	u16 raw_data1;
+
+	ret = cptk_i2c_read(tkey_i2c, RAW_DATA_REG + 2, data, sizeof(data));
+	raw_data1 = ((0x00FF & data[0]) << 8) | data[1];
+
+	return sprintf(buf, "%d\n", raw_data1);
+}
+static DEVICE_ATTR(touchkey_raw_data1, S_IRUGO, touchkey_raw_data1_show, NULL);
+
+static ssize_t touchkey_threshold_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
+	u8 data;
+	int ret;
+
+	ret = cptk_i2c_read(tkey_i2c, THRESHOLD_REG, &data, sizeof(data));
+
+	return sprintf(buf, "%d\n", data);
+
+}
+static DEVICE_ATTR(touchkey_threshold, S_IRUGO, touchkey_threshold_show, NULL);
+
+static ssize_t touchkey_autocal_status_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
+	u8 data;
+	int ret;
+
+	ret = cptk_i2c_read(tkey_i2c, AUTOCAL_REG, &data, sizeof(data));
+	if (data & TK_BIT_AUTOCAL)
+		return sprintf(buf, "Enabled\n");
+
+	return sprintf(buf, "Disabled\n");
+}
+static DEVICE_ATTR(autocal_stat, S_IRUGO, touchkey_autocal_status_show, NULL);
+
+static ssize_t touchkey_idac0_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
+	u8 data;
+	int ret;
+
+	ret = cptk_i2c_read(tkey_i2c, IDAC_REG, &data, sizeof(data));
+
+	return sprintf(buf, "%d\n", data);
+}
+static DEVICE_ATTR(touchkey_idac0, S_IRUGO,
+		touchkey_idac0_show, NULL);
+
+static ssize_t touchkey_idac1_show(struct device *dev,
+		struct device_attribute *attr, char *buf)
+{
+	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
+	u8 data;
+	int ret;
+
+	ret = cptk_i2c_read(tkey_i2c, IDAC_REG+1, &data, sizeof(data));
+
+	return sprintf(buf, "%d\n", data);
+}
+static DEVICE_ATTR(touchkey_idac1, S_IRUGO,
+		touchkey_idac1_show, NULL);
+
 static int cptk_create_sec_touchkey(struct cptk_data *cptk)
 {
 	int ret;
@@ -532,6 +631,57 @@ static int cptk_create_sec_touchkey(struct cptk_data *cptk)
 		goto err;
 	}
 
+	ret = device_create_file(cptk->sec_touchkey,
+			&dev_attr_touchkey_raw_data0);
+	if (ret < 0) {
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_raw_data0.attr.name);
+		goto err;
+	}
+
+	ret = device_create_file(cptk->sec_touchkey,
+			&dev_attr_touchkey_raw_data1);
+	if (ret < 0) {
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_raw_data1.attr.name);
+		goto err;
+	}
+
+	ret = device_create_file(cptk->sec_touchkey,
+			&dev_attr_touchkey_threshold);
+	if (ret < 0) {
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_threshold.attr.name);
+		goto err;
+	}
+
+	ret = device_create_file(cptk->sec_touchkey,
+			&dev_attr_autocal_stat);
+
+	if (ret < 0) {
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_autocal_stat.attr.name);
+		goto err;
+	}
+
+	ret = device_create_file(cptk->sec_touchkey,
+			&dev_attr_touchkey_idac0);
+
+	if (ret < 0) {
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_idac0.attr.name);
+		goto err;
+	}
+
+	ret = device_create_file(cptk->sec_touchkey,
+			&dev_attr_touchkey_idac1);
+
+	if (ret < 0) {
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_idac1.attr.name);
+		goto err;
+	}
+
 	dev_set_drvdata(cptk->sec_touchkey, cptk);
 
 	return 0;
@@ -561,13 +711,12 @@ static int __devinit cptk_i2c_probe(struct i2c_client *client,
 		goto err_exit1;
 	}
 	cptk->client = client;
-	strlcpy(cptk->client->name, "melfas-touchkey",
-			I2C_NAME_SIZE);
+	strlcpy(cptk->client->name, "cypress-touchkey", I2C_NAME_SIZE);
 	cptk->client->dev.init_name = DEVICE_NAME;
 	i2c_set_clientdata(client, cptk);
 
 	cptk->input_dev->name = DEVICE_NAME;
-	cptk->input_dev->phys = "melfas-touchkey/input0";
+	cptk->input_dev->phys = "cypress-touchkey/input0";
 	cptk->input_dev->id.bustype = BUS_HOST;
 
 	set_bit(EV_SYN, cptk->input_dev->evbit);
@@ -591,16 +740,26 @@ static int __devinit cptk_i2c_probe(struct i2c_client *client,
 		cptk->pdata->power(1);
 	cptk->enable = true;
 
-	cptk_i2c_read(cptk, KEYCODE_REG,
-			cptk->cur_firm_ver,
-			sizeof(cptk->cur_firm_ver));
+	/* Check Touch Key IC connect properly && read IC fw. version */
+	ret = cptk_i2c_read(cptk, KEYCODE_REG, cptk->cur_firm_ver,
+						sizeof(cptk->cur_firm_ver));
+	if (ret < 0) {
+		pr_err("cptk: %s: touch key IC is not connected.\n", __func__);
+		goto err_exit1;
+	}
 
-	pr_info("cptk :firm ver = 0x%x, mod ver = 0x%x\n",
-			cptk->cur_firm_ver[1], cptk->cur_firm_ver[2]);
+	pr_info("cptk: module ver = 0x%.2x, IC firm ver = 0x%.2x, binary firm ver = 0x%.2x\n",
+			cptk->cur_firm_ver[2],
+			cptk->cur_firm_ver[1],
+			cptk->pdata->firm_ver);
 
-	if (cptk->cur_firm_ver[1] < cptk->pdata->firm_ver) {
-		pr_info("cptk: force firmware update\n");
-		cptk_update_firmware(cptk);
+	if (cptk->cur_firm_ver[2] == cptk->pdata->mod_ver) {
+		if (cptk->cur_firm_ver[1] < cptk->pdata->firm_ver) {
+			pr_info("cptk: force firmware update\n");
+			ret = cptk_update_firmware(cptk);
+			if (ret)
+				goto err_exit1;
+		}
 	}
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
@@ -637,8 +796,17 @@ static int __devexit cptk_remove(struct i2c_client *client)
 	return 0;
 }
 
+static void cptk_shutdown(struct i2c_client *client)
+{
+	struct cptk_data *cptk = i2c_get_clientdata(client);
+
+	disable_irq(client->irq);
+	if (cptk && cptk->pdata->power)
+		cptk->pdata->power(0);
+}
+
 static const struct i2c_device_id cptk_id[] = {
-	{"melfas_touchkey", 0},
+	{"cypress_touchkey", 0},
 	{}
 };
 MODULE_DEVICE_TABLE(i2c, cptk_id);
@@ -646,11 +814,12 @@ MODULE_DEVICE_TABLE(i2c, cptk_id);
 static struct i2c_driver cptk_i2c_driver = {
 	.driver = {
 		.owner = THIS_MODULE,
-		.name = "melfas_touchkey",
+		.name = "cypress_touchkey",
 	},
 	.id_table = cptk_id,
 	.probe = cptk_i2c_probe,
 	.remove = __devexit_p(cptk_remove),
+	.shutdown = cptk_shutdown,
 	.command = NULL,
 };
 
@@ -674,4 +843,4 @@ module_init(cptk_init);
 module_exit(cptk_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("shankar bandal <shankar.b@samsung.com>");
-MODULE_DESCRIPTION("melfas touch keypad");
+MODULE_DESCRIPTION("cypress touch keypad");

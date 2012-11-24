@@ -236,6 +236,10 @@ struct hci_dev {
 	void (*destruct)(struct hci_dev *hdev);
 	void (*notify)(struct hci_dev *hdev, unsigned int evt);
 	int (*ioctl)(struct hci_dev *hdev, unsigned int cmd, unsigned long arg);
+/* Samsung Bluetooth Feature.2012.01.19
+ * Add wake_peer uart operation which is called before starting UART TX
+ */
+	void (*wake_peer)(struct hci_dev *);
 };
 
 struct hci_conn {
@@ -467,7 +471,6 @@ int hci_conn_switch_role(struct hci_conn *conn, __u8 role);
 int hci_conn_change_policy(struct hci_conn *conn, __u8 policy);
 int hci_conn_set_encrypt(struct hci_conn *conn, __u8 enable);
 /* END SS_BLUEZ_BT */
-
 
 void hci_conn_enter_active_mode(struct hci_conn *conn, __u8 force_active);
 void hci_conn_enter_sniff_mode(struct hci_conn *conn);

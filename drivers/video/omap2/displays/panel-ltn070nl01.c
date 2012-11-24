@@ -325,33 +325,6 @@ out:
 static DEVICE_ATTR(lcd_power, S_IRUGO | S_IWUSR | S_IWGRP
 	, NULL, ltn070nl01_sysfs_store_lcd_power);
 
-#define LCD_XRES			1024
-#define LCD_YRES			600
-#define LCD_HBP				210
-#define LCD_HFP				186
-#define LCD_HSW				50
-#define LCD_VBP				11
-#define LCD_VFP				24
-#define LCD_VSW				10
-
-#define LCD_PIXCLOCK_MAX		56000
-
-/*  Manual
- * defines HFB, HSW, HBP, VFP, VSW, VBP as shown below
- */
-
-static struct omap_video_timings ltn070nl01_panel_timings = {
-	.x_res		= LCD_XRES,
-	.y_res		= LCD_YRES,
-	.pixel_clock	= LCD_PIXCLOCK_MAX,
-	.hfp		= LCD_HFP,
-	.hsw		= LCD_HSW,
-	.hbp		= LCD_HBP,
-	.vfp		= LCD_VFP,
-	.vsw		= LCD_VSW,
-	.vbp		= LCD_VBP,
-};
-
 static int ltn070nl01_panel_probe(struct omap_dss_device *dssdev)
 {
 	int ret = 0;
@@ -383,7 +356,6 @@ static int ltn070nl01_panel_probe(struct omap_dss_device *dssdev)
 			     | OMAP_DSS_LCD_ONOFF;
 
 	dssdev->panel.acb = 0;
-	dssdev->panel.timings = ltn070nl01_panel_timings;
 
 	lcd->dssdev = dssdev;
 	lcd->pdata = dssdev->data;

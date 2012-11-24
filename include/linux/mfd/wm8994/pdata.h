@@ -142,6 +142,7 @@ struct wm8994_pdata {
 	struct wm8994_ldo_pdata ldo[WM8994_NUM_LDO];
 
 	int irq_base;  /** Base IRQ number for WM8994, required for IRQs */
+	unsigned long irq_flags; /** user irq flags */
 
         int num_drc_cfgs;
         struct wm8994_drc_cfg *drc_cfgs;
@@ -202,14 +203,15 @@ struct wm8994_pdata {
 	bool ldo_ena_always_driven;
 
 	/*
+	 * LDO enable delay time
+	 */
+	int ldo_ena_delay;
+
+	/*
 	 * SPKMODE must be pulled internally by the device on this
 	 * system.
 	 */
 	bool spkmode_pu;
-
-	/*
-	 * WM8994 externel MCLK control pin */
-	int mclk_pin;
 };
 
 #endif

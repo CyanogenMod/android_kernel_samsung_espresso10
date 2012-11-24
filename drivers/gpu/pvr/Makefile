@@ -24,11 +24,16 @@ ccflags-y += \
 	-DPVR_NO_OMAP_TIMER \
 	-DSYS_SUPPORTS_SGX_IDLE_CALLBACK \
 	-DPVRSRV_REFCOUNT_DEBUG \
+	-DPVRSRV_RESET_ON_HWTIMEOUT\
 	-Idrivers/gpu/pvr/sgx
 
 ccflags-$(CONFIG_PVR_SGXCORE_540) += \
 	-DSGX540 -DSUPPORT_SGX540 \
 	-DSGX_CORE_REV=120
+
+ccflags-$(CONFIG_PVR_SGXCORE_544) += \
+	-DSGX544 -DSUPPORT_SGX544 \
+	-DSGX_CORE_REV=112
 
 ccflags-$(CONFIG_PVR_BUILD_RELEASE) += \
 	-DPVR_BUILD_TYPE="\"release\"" -DRELEASE
@@ -59,10 +64,6 @@ ccflags-$(CONFIG_PVR_DUMP_MK_TRACE) += -DPVRSRV_DUMP_MK_TRACE
 
 ccflags-$(CONFIG_PVR_PDUMP) += \
 	-DPDUMP -DSUPPORT_DBGDRV_EVENT_OBJECTS -DSUPPORT_PDUMP_MULTI_PROCESS
-
-ccflags-$(CONFIG_PVR_LINUX_MEM_AREA_POOL) += \
-	-DPVR_LINUX_MEM_AREA_POOL_MAX_PAGES=CONFIG_PVR_LINUX_MEM_AREA_POOL_MAX_PAGES \
-	-DPVR_LINUX_MEM_AREA_USE_VMAP -DPVR_LINUX_MEM_AREA_POOL_ALLOW_SHRINK
 
 pvrsrvkm-y := \
 	osfunc.o \
@@ -95,6 +96,7 @@ pvrsrvkm-y := \
 	perproc.o \
 	lists.o \
 	refcount.o \
+	sysfs.o \
 	omap4/sysconfig.o \
 	omap4/sysutils.o \
 	sgx/bridged_sgx_bridge.o \

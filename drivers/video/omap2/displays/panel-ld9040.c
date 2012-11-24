@@ -783,65 +783,6 @@ void ld9040_power_up(struct ld9040 *lcd)
 }
 #endif
 
-/*
- * For Samsung LD9040 OCTA Display timing controller:
- * Signal					Min.	Typ.	Max
- * Frame Frequency(TV)		815      -      850
- * Vertical Active Display Term(TVD)
- *							-       480     -
- * Horizontal Active Display Term(THD)
- *							-       800     -
- * Condition : RGB 24bits, 16M color
- * - Frame rate = 60Hz
- *   - Dotclk = 25.07MHz
- *   - VLW = 2H
- *   - HLW = 2Dotclk
- *   - VBP = 6H
- *   - VFP = 10H
- *   - HBP = 16Dotclk
- *   - HFP = 16Dotclk
- *
- * Total clocks per line (TH) = hsw + hfp + columns (THD) + hbp
- *				834  = 2  + 16  + 800          + 16
- *
- * Total LCD lines (TV)      = vsw + vfp + rows (TVD)  + vbp
- *				498   = 2   + 10   + 480     + 6
- *
- * From this data,
- *  - single line takes (2 + 16 + 800 + 16)clocks = 834 clocks/line
- *  - full frame takes (2 + 10 + 400 + 6) lines = 498 lines/frame
- *  - full frame in clocks = 834 *498 = 415332 clocks/frame
- *  - 24.9MHz, the LCD would refresh at 24.9M/348612 = 60Hz
- */
-
-#define LCD_XRES        480
-#define LCD_YRES        800
-#define LCD_HBP         16
-#define LCD_HFP         16
-#define LCD_HSW			2
-#define LCD_VBP			4
-#define LCD_VFP			10
-#define LCD_VSW			2
-
-#define LCD_PIXCLOCK_MAX          25600
-
-/*  Manual
- * defines HFB, HSW, HBP, VFP, VSW, VBP as shown below
- */
-
-static struct omap_video_timings ld9040_panel_timings = {
-	/* 800 x 480 @ 60 Hz  Reduced blanking VESA CVT 0.31M3-R */
-	.x_res          = LCD_XRES,
-	.y_res          = LCD_YRES,
-	.pixel_clock    = LCD_PIXCLOCK_MAX,
-	.hfp            = LCD_HFP,
-	.hsw            = LCD_HSW,
-	.hbp            = LCD_HBP,
-	.vfp            = LCD_VFP,
-	.vsw            = LCD_VSW,
-	.vbp            = LCD_VBP,
-};
-
 static int ld9040_panel_probe(struct omap_dss_device *dssdev)
 {
 	dssdev->panel.config = OMAP_DSS_LCD_TFT
@@ -850,9 +791,6 @@ static int ld9040_panel_probe(struct omap_dss_device *dssdev)
 		| OMAP_DSS_LCD_IPC
 		| OMAP_DSS_LCD_IHS
 		| OMAP_DSS_LCD_ONOFF;
-
-	dssdev->panel.acb = 0;
-	dssdev->panel.timings = ld9040_panel_timings;
 
 	if (NULL != g_lcd)
 		dev_set_drvdata(&dssdev->dev, g_lcd);
@@ -1038,7 +976,7 @@ static int ld9040_probe(struct spi_device *spi)
 		goto out_free_lcd;
 	}
 
-	lcd->bd = backlight_device_register("pwm-backlight", &spi->dev,
+	lcd->bd = backlight_device_register("panel", &spi->dev,
 		lcd, &ld9040_backlight_ops, NULL);
 	if (IS_ERR(lcd->bd)) {
 		ret = PTR_ERR(lcd->bd);

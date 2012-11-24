@@ -117,5 +117,8 @@ extern void musb_gadget_cleanup(struct musb *);
 extern void musb_g_giveback(struct musb_ep *, struct usb_request *, int);
 
 extern void musb_ep_restart(struct musb *, struct musb_request *);
+#ifdef CONFIG_USB_SAMSUNG_OMAP_NORPM
+extern void musb_platform_pullup(struct musb *musb, int is_on);
+#endif
 
 #endif		/* __MUSB_GADGET_H */

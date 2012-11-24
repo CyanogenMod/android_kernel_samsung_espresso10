@@ -312,6 +312,8 @@ u8 hsi_hsr_fifo_flush_channel(struct hsi_dev *hsi_ctrl, unsigned int port,
 				unsigned int channel);
 u8 hsi_hst_fifo_flush_channel(struct hsi_dev *hsi_ctrl, unsigned int port,
 				unsigned int channel);
+void hsi_hsr_suspend(struct hsi_dev *hsi_ctrl);
+void hsi_hsr_resume(struct hsi_dev *hsi_ctrl);
 void hsi_set_pm_force_hsi_on(struct hsi_dev *hsi_ctrl);
 void hsi_set_pm_default(struct hsi_dev *hsi_ctrl);
 int hsi_softreset(struct hsi_dev *hsi_ctrl);
@@ -429,10 +431,11 @@ static inline int is_hsi_errata(struct hsi_dev *hsi_ctrl, unsigned int id)
 	return IS_HSI_ERRATA(pdata->errata, id);
 }
 
+
 #if defined(CONFIG_PM) && defined(CONFIG_ARCH_OMAP4)
 extern void omap_pm_clear_dsp_wake_up(void);
 #else
-#define static inline void omap_pm_clear_dsp_wake_up(void) { }
+static inline void omap_pm_clear_dsp_wake_up(void) { }
 #endif
 
 #endif /* __HSI_DRIVER_H__ */

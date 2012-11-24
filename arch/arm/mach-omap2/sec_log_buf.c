@@ -25,6 +25,10 @@
 
 #include <mach/hardware.h>
 
+#if defined(CONFIG_ARCH_OMAP)
+#include <plat/omap-serial.h>
+#endif
+
 #include "sec_common.h"
 #include "sec_debug.h"
 #include "sec_getlog.h"
@@ -42,6 +46,11 @@ static void sec_log_buf_write(struct console *console, const char *s,
 {
 	unsigned int i;
 
+	if (unlikely(!s_log_buf.enable)) {
+		pr_info("%s", s);
+		return;
+	}
+
 	for (i = 0; i < count; i++) {
 		*sec_log_buf_get_log_end(*s_log_buf.count) = *s++;
 		(*s_log_buf.count)++;
@@ -51,7 +60,7 @@ static void sec_log_buf_write(struct console *console, const char *s,
 static struct console sec_console = {
 	.name = "sec_log_buf",
 	.write = sec_log_buf_write,
-	.flags = CON_PRINTBUFFER | CON_ENABLED,
+	.flags = CON_PRINTBUFFER | CON_ENABLED | CON_ANYTIME,
 	.index = -1,
 };
 
@@ -205,15 +214,49 @@ static void __init sec_log_buf_create_sysfs(void)
 		pr_err("(%s): failed to create device file(log)!\n", __func__);
 }
 
+#if defined(CONFIG_ARCH_OMAP) && defined(CONFIG_SAMSUNG_SIABLE_SEC_LOG_WHEN_TTY)
+static bool __init sec_log_buf_disable(void)
+{
+	char console_opt[32];
+	int i;
+
+	/* using ttyOx means, developer is watching kernel logs through out
+	 * the uart-serial. at this time, we don't need sec_log_buf to save
+	 * serial log and __log_buf is enough to analyze kernel log.
+	 */
+	for (i = 0; i < OMAP_MAX_HSUART_PORTS; i++) {
+		sprintf(console_opt, "console=%s%d", OMAP_SERIAL_NAME, i);
+		if (cmdline_find_option(console_opt))
+			return true;
+	}
+
+	return false;
+}
+#else
+#define sec_log_buf_disable()	false
+#endif
+
 int __init sec_log_buf_init(void)
 {
 	void *start;
-	int tmp_console_loglevel = console_loglevel;
+	int tmp_console_loglevel =
+		(console_loglevel > CONFIG_DEFAULT_MESSAGE_LOGLEVEL) ?
+			console_loglevel : CONFIG_DEFAULT_MESSAGE_LOGLEVEL;
+
+	if (unlikely(sec_log_buf_disable())) {
+		s_log_buf.enable = false;
+		return 0;
+	} else
+		s_log_buf.enable = true;
 
 	if (unlikely(!sec_log_buf_start || !sec_log_buf_size))
 		return 0;
 
 	start = (void *)ioremap(sec_log_buf_start, sec_log_buf_size);
+	if (unlikely(!start)) {
+		pr_err("(%s): ioremap failed\n", __func__);
+		return -ENOMEM;
+	}
 
 	s_log_buf.flag = (unsigned int *)start;
 	s_log_buf.count = (unsigned int *)(start + 4);
@@ -233,4 +276,4 @@ int __init sec_log_buf_init(void)
 	return 0;
 }
 
-late_initcall(sec_log_buf_init);
+arch_initcall(sec_log_buf_init);

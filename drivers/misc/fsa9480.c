@@ -185,6 +185,8 @@ struct fsa9480_usbsw {
 	u32				curr_dev;
 	struct mutex			lock;
 	u16				intr_mask;
+	bool				adc_chg_intr;
+	bool				raw_data_set;
 	u8				timing;
 	int				external_id_irq;
 	bool				wake_enabled;
@@ -485,6 +487,9 @@ static DEVICE_ATTR(adc, S_IRUSR | S_IRGRP, usb_id_adc_show, NULL);
 static void fsa9480_set_raw_data_status(struct fsa9480_usbsw *usbsw)
 {
 	s32 value;
+
+	dev_info(&usbsw->client->dev, "%s\n", __func__);
+	usbsw->raw_data_set = true;
 	value = i2c_smbus_read_byte_data(usbsw->client, FSA9480_REG_CTRL);
 	value &= ~CON_RAW_DATA;
 	i2c_smbus_write_byte_data(usbsw->client, FSA9480_REG_CTRL, value);
@@ -494,9 +499,17 @@ static void fsa9480_set_raw_data_status(struct fsa9480_usbsw *usbsw)
 	i2c_smbus_write_byte_data(usbsw->client, FSA9480_REG_TIMING1, 0);
 }
 
+void fsa9480_set_raw_data_bit(void *usbsw)
+{
+	fsa9480_set_raw_data_status(usbsw);
+}
+
 static void fsa9480_reset_raw_data_status(struct fsa9480_usbsw *usbsw)
 {
 	s32 value;
+
+	dev_info(&usbsw->client->dev, "%s\n", __func__);
+	usbsw->raw_data_set = false;
 	value = i2c_smbus_read_byte_data(usbsw->client, FSA9480_REG_CTRL);
 	value |= CON_RAW_DATA;
 	i2c_smbus_write_byte_data(usbsw->client, FSA9480_REG_CTRL, value);
@@ -564,6 +577,8 @@ static int fsa9480_reset(struct fsa9480_usbsw *usbsw)
 	struct i2c_client *client = usbsw->client;
 	s32 ret;
 
+	dev_info(&client->dev, "%s\n", __func__);
+	usbsw->raw_data_set = false;
 	/* soft reset to re-initialize the fsa, and re-do detection */
 	ret = i2c_smbus_write_byte_data(client, FSA9480_REG_MANOVERRIDE1, 1);
 	if (ret < 0) {
@@ -623,6 +638,14 @@ static int fsa9480_detect_callback(struct otg_id_notifier_block *nb)
 	dev_dbg(&client->dev, "trying detect (prio=%d): type=%x adc=%x\n",
 		nb_info->detect_set->prio, dev_type, adc_val);
 
+	if (usbsw->adc_chg_intr) {
+		/* adc_val is 0 when MHL(1K) is detected */
+		dev_info(&client->dev, "dev_type:0x%X, adc:0x%X\n",
+						dev_type, adc_val);
+		if (adc_val == 0)
+			goto unhandled;
+	}
+
 	prev_dev = usbsw->curr_dev;
 
 	if (dev_type & DEV_USB_MASK) {
@@ -637,6 +660,7 @@ static int fsa9480_detect_callback(struct otg_id_notifier_block *nb)
 		 * In the event of a cable misidentification the FSA9480 chip
 		 * will be reset to force a new detection cycle.
 		 */
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 		if (usbsw->pdata->external_id >= 0 &&
 				!gpio_get_value(usbsw->pdata->external_id)) {
 			dev_info(&usbsw->client->dev, "Cable misidentified as "
@@ -645,6 +669,7 @@ static int fsa9480_detect_callback(struct otg_id_notifier_block *nb)
 			fsa9480_reset(usbsw);
 			goto handled;
 		}
+#endif
 
 		/* usb peripheral mode */
 		if (!(nb_info->detect_set->mask & FSA9480_DETECT_USB))
@@ -787,6 +812,8 @@ static irqreturn_t fsa9480_irq_thread(int irq, void *data)
 	struct fsa9480_usbsw *usbsw = data;
 	struct i2c_client *client = usbsw->client;
 	s32 intr;
+
+	usbsw->adc_chg_intr = false;
 	/* read and clear interrupt status bits */
 	intr = i2c_smbus_read_word_data(client, FSA9480_REG_INT1);
 	if (intr < 0) {
@@ -815,11 +842,20 @@ static irqreturn_t fsa9480_irq_thread(int irq, void *data)
 	/* Handle ADC change interrupt in
 	 * fsa9480_handle_deskdock_key and return.
 	 */
-	if (intr & INT_ADC_CHANGE) {
+	if ((intr & INT_ADC_CHANGE) && (intr & (INT_ATTACH|INT_DETACH)) == 0) {
 		u8 adc_val = i2c_smbus_read_byte_data(client, FSA9480_REG_ADC);
-		fsa9480_handle_deskdock_key(usbsw, adc_val);
-		return IRQ_HANDLED;
+		dev_info(&client->dev, "ADC change intr\n");
+		if (usbsw->curr_dev == FSA9480_DETECT_AV_365K ||
+			usbsw->curr_dev == FSA9480_DETECT_AV_365K_CHARGER){
+			fsa9480_handle_deskdock_key(usbsw, adc_val);
+			return IRQ_HANDLED;
+		}
+		usbsw->adc_chg_intr = true;
+	} else if (usbsw->raw_data_set) {
+		dev_info(&client->dev, "reset raw and fsa9480\n");
+		fsa9480_reset(usbsw);
 	}
+
 	disable_irq_nosync(client->irq);
 	disable_irq_wake(client->irq);
 
@@ -846,6 +882,7 @@ static irqreturn_t fsa9480_irq_thread(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 static irqreturn_t usb_id_irq_thread(int irq, void *data)
 {
 	struct fsa9480_usbsw *usbsw = data;
@@ -880,7 +917,7 @@ static irqreturn_t usb_id_irq_thread(int irq, void *data)
 		 */
 		_detected(usbsw, FSA9480_DETECT_NONE);
 
-		dev_dbg(&client->dev, "usb host detach workaround, resetting"
+		dev_info(&client->dev, "usb host detach workaround, resetting"
 				" FSA9480 chip\n");
 
 		/* The FSA9480 will not be able to detect a new cable until it
@@ -896,6 +933,7 @@ static irqreturn_t usb_id_irq_thread(int irq, void *data)
 
 	return IRQ_HANDLED;
 }
+#endif
 static irqreturn_t vbus_irq_thread(int irq, void *data)
 {
 	struct fsa9480_usbsw *usbsw = data;
@@ -926,6 +964,11 @@ static irqreturn_t vbus_irq_thread(int irq, void *data)
 	mutex_unlock(&usbsw->lock);
 
 	return IRQ_HANDLED;
+}
+
+static int check_switch_sysfs(struct device *dev, void *data)
+{
+	return !strcmp(dev_name(dev), (char *)data);
 }
 
 static int __devinit fsa9480_probe(struct i2c_client *client,
@@ -963,6 +1006,7 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 	mutex_init(&usbsw->lock);
 	if (usbsw->pdata->set_usbsw)
 		usbsw->pdata->set_usbsw(usbsw);
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	if (usbsw->pdata->external_id >= 0) {
 		gpio_request(usbsw->pdata->external_id, "fsa9840_external_id");
 
@@ -979,6 +1023,7 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 			goto err_req_id_irq;
 		}
 	}
+#endif
 
 	pdata->mask_vbus_irq();
 	ret = request_threaded_irq(pdata->external_vbus_irq, NULL,
@@ -993,11 +1038,19 @@ static int __devinit fsa9480_probe(struct i2c_client *client,
 	disable_irq(pdata->external_vbus_irq);
 	pdata->unmask_vbus_irq();
 
-	/* adc sysfs file to get usb_id adc value */
-	sec_switch_dev = device_create(sec_class, NULL, 0, NULL, "switch");
-	if (IS_ERR(sec_switch_dev)) {
-		dev_err(&client->dev, "failed to created switch_dev\n");
-		goto err_create_switch_dev;
+	/* Create '/sys/class/sec/switch' if it is not yet created.
+	 * It can be created by 'board-xxxx-connector.c' for some models.
+	 */
+	sec_switch_dev = class_find_device(sec_class, NULL, "switch",
+					   check_switch_sysfs);
+	if (!sec_switch_dev) {
+		/* adc sysfs file to get usb_id adc value */
+		sec_switch_dev = device_create(sec_class, NULL, 0, NULL,
+						"switch");
+		if (IS_ERR(sec_switch_dev)) {
+			dev_err(&client->dev, "failed to created switch_dev\n");
+			goto err_create_switch_dev;
+		}
 	}
 
 	dev_set_drvdata(sec_switch_dev, usbsw);
@@ -1134,11 +1187,15 @@ err_req_irq:
 err_create_adc:
 err_create_switch_dev:
 err_req_vbus_irq:
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	if (usbsw->pdata->external_id >= 0)
 		free_irq(usbsw->external_id_irq, usbsw);
+#endif
 err_req_id_irq:
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	if (usbsw->pdata->external_id >= 0)
 		gpio_free(usbsw->pdata->external_id);
+#endif
 	mutex_destroy(&usbsw->lock);
 	i2c_set_clientdata(client, NULL);
 	kfree(usbsw);
@@ -1166,12 +1223,14 @@ static int __devexit fsa9480_remove(struct i2c_client *client)
 		free_irq(client->irq, usbsw);
 	}
 
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	if (usbsw->pdata->external_id >= 0) {
 		if (usbsw->wake_enabled)
 			disable_irq_wake(usbsw->external_id_irq);
 		free_irq(usbsw->external_id_irq, usbsw);
 		gpio_free(usbsw->pdata->external_id);
 	}
+#endif
 
 	free_irq(usbsw->pdata->external_vbus_irq, usbsw);
 
@@ -1195,12 +1254,16 @@ static int fsa9480_resume(struct device *dev)
 	struct fsa9480_usbsw *usbsw = i2c_get_clientdata(client);
 
 	if (usbsw->wake_enabled) {
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 		disable_irq_wake(usbsw->external_id_irq);
+#endif
 		usbsw->wake_enabled = false;
 	}
 
 	otg_id_resume();
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	enable_irq(usbsw->external_id_irq);
+#endif
 	enable_irq(client->irq);
 
 	return 0;
@@ -1213,11 +1276,15 @@ static int fsa9480_suspend(struct device *dev)
 	int ret;
 
 	disable_irq(client->irq);
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	disable_irq(usbsw->external_id_irq);
+#endif
 
 	mutex_lock(&usbsw->lock);
 	if (usbsw->curr_dev == FSA9480_DETECT_USB_HOST) {
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 		enable_irq_wake(usbsw->external_id_irq);
+#endif
 		usbsw->wake_enabled = true;
 	}
 	mutex_unlock(&usbsw->lock);
@@ -1230,10 +1297,14 @@ static int fsa9480_suspend(struct device *dev)
 
 err:
 	if (usbsw->wake_enabled) {
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 		disable_irq_wake(usbsw->external_id_irq);
+#endif
 		usbsw->wake_enabled = false;
 	}
+#if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	enable_irq(usbsw->external_id_irq);
+#endif
 	enable_irq(client->irq);
 	return ret;
 }

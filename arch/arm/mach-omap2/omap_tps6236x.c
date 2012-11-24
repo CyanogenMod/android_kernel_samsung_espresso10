@@ -70,11 +70,9 @@
 #define TWL6030_REG_SYSEN_CFG_TRANS			0xB4
 #define TWL6030_REG_VCORE3_CFG_GRP			0x5E
 #define TWL6030_REG_VMEM_CFG_GRP			0x64
-#define TWL6030_REG_MSK_TRANSITION			0x20
 #define TWL6030_BIT_APE_GRP				BIT(0)
 #define TWL6030_BIT_CON_GRP				BIT(1)
 #define TWL6030_BIT_MOD_GRP				BIT(2)
-#define TWL6030_MSK_PREQ1				BIT(5)
 #define TWL6030_MSK_SYSEN_OFF				(0x3 << 4)
 #define TWL6030_MSK_SYSEN_SLEEP				(0x3 << 2)
 #define TWL6030_MSK_SYSEN_ACTIVE			(0x3 << 0)
@@ -178,19 +176,19 @@ static u8 tps6236x_uv_to_vsel(unsigned long uv)
 }
 
 static struct omap_voltdm_pmic omap4_mpu_pmic = {
-	.slew_rate		= 8000,
+	.slew_rate		= 32000,
 	.step_size		= STEP_SIZE_TPS6236X,
 	.on_volt		= 1375000,
 	.onlp_volt		= 1375000,
-	.ret_volt		= 830000,
+	.ret_volt		= 750000,
 	.off_volt		= 0,
 	.volt_setup_time	= 0,
 	.switch_on_time		= 1000,
 	.vp_erroroffset		= OMAP4_VP_CONFIG_ERROROFFSET,
 	.vp_vstepmin		= OMAP4_VP_VSTEPMIN_VSTEPMIN,
 	.vp_vstepmax		= OMAP4_VP_VSTEPMAX_VSTEPMAX,
-	.vp_vddmin		= OMAP4_VP_MPU_VLIMITTO_VDDMIN,
-	.vp_vddmax		= OMAP4_VP_MPU_VLIMITTO_VDDMAX,
+	.min_volt		= OMAP4_VP_MPU_VLIMITTO_VDDMIN,
+	.max_volt		= OMAP4460_VP_MPU_VLIMITTO_VDDMAX,
 	.vp_timeout_us		= OMAP4_VP_VLIMITTO_TIMEOUT_US,
 	.i2c_slave_addr		= I2C_TPS6236X_SLAVE_ADDR,
 	.volt_reg_addr		= REG_TPS6236X_SET_0,
@@ -248,7 +246,7 @@ static int __init omap4_twl_tps62361_enable(struct voltagedomain *voltdm)
 	u8 val;
 
 	/* Dont trust the bootloader. start with max, pm will set to proper */
-	val = voltdm->pmic->uv_to_vsel(voltdm->pmic->vp_vddmax);
+	val = voltdm->pmic->uv_to_vsel(voltdm->pmic->max_volt);
 	ret = omap_vc_bypass_send_i2c_msg(voltdm, voltdm->pmic->i2c_slave_addr,
 			default_reg, val);
 
@@ -259,6 +257,9 @@ static int __init omap4_twl_tps62361_enable(struct voltagedomain *voltdm)
 
 	/* We would like to ramp the voltage asap */
 	val |= REG_TPS6236X_RAMP_CTRL_RAMP_PFM;
+
+	/* We would like to ramp down the voltage asap as well*/
+	val |= REG_TPS6236X_RAMP_CTRL_EN_DISC;
 
 	ret = omap_vc_bypass_send_i2c_msg(voltdm, voltdm->pmic->i2c_slave_addr,
 			REG_TPS6236X_RAMP_CTRL, val);
@@ -286,35 +287,6 @@ static int __init omap4_twl_tps62361_enable(struct voltagedomain *voltdm)
 
 	/* if we have to work with TWL */
 #ifdef CONFIG_TWL4030_CORE
-
-	/* unmask PREQ transition Executes ACT2SLP and SLP2ACT sleep sequence */
-	ret1 = _twl_i2c_rmw_u8(TWL6030_MODULE_ID0, TWL6030_MSK_PREQ1,
-				0x00, TWL6030_REG_MSK_TRANSITION);
-	if (ret1) {
-		pr_err("%s:Err:TWL6030: map APE PREQ1(%d)\n", __func__, ret1);
-		ret = ret1;
-	}
-
-	/* Setup SYSEN to be 1 on Active and 0 for sleep and OFF states */
-	ret1 = _twl_i2c_rmw_u8(TWL6030_MODULE_ID0, TWL6030_MSK_SYSEN_ACTIVE,
-				0x01, TWL6030_REG_SYSEN_CFG_TRANS);
-	if (ret1) {
-		pr_err("%s:Err:TWL6030: sysen active(%d)\n", __func__, ret1);
-		ret = ret1;
-	}
-	ret1 = _twl_i2c_rmw_u8(TWL6030_MODULE_ID0, TWL6030_MSK_SYSEN_SLEEP,
-				0x00, TWL6030_REG_SYSEN_CFG_TRANS);
-	if (ret1) {
-		pr_err("%s:Err:TWL6030: sysen sleep(%d)\n", __func__, ret1);
-		ret = ret1;
-	}
-	ret1 = _twl_i2c_rmw_u8(TWL6030_MODULE_ID0, TWL6030_MSK_SYSEN_OFF,
-				0x00, TWL6030_REG_SYSEN_CFG_TRANS);
-	if (ret1) {
-		pr_err("%s:Err:TWL6030: sysen off(%d)\n", __func__, ret1);
-		ret = ret1;
-	}
-
 	/* Map up SYSEN on TWL core to control TPS */
 	ret1 = _twl_i2c_rmw_u8(TWL6030_MODULE_ID0, TWL6030_BIT_APE_GRP |
 				TWL6030_BIT_MOD_GRP | TWL6030_BIT_CON_GRP,

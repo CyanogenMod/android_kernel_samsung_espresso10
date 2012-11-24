@@ -40,6 +40,7 @@
 #include <mach/dmm.h>
 #include <mach/omap4-common.h>
 #include <mach/id.h>
+#include <mach/omap4_ion.h>
 
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
@@ -67,6 +68,7 @@
 
 #define UART_NUM_FOR_GPS	0
 
+#if defined(CONFIG_ANDROID_RAM_CONSOLE)
 static struct resource ramconsole_resources[] = {
 	{
 		.flags  = IORESOURCE_MEM,
@@ -86,6 +88,7 @@ static struct platform_device ramconsole_device = {
 		.platform_data = &ramconsole_pdata,
 	},
 };
+#endif /* CONFIG_ANDROID_RAM_CONSOLE */
 
 static struct ramoops_platform_data ramoops_pdata = {
 	.mem_size	= T1_RAMOOPS_SIZE,
@@ -106,56 +109,6 @@ static struct platform_device bcm4330_bluetooth_device = {
 	.id = -1,
 };
 
-#define PHYS_ADDR_SMC_SIZE	(SZ_1M * 3)
-#define PHYS_ADDR_DUCATI_SIZE	(SZ_1M * 105)
-#define OMAP_T1_ION_HEAP_SECURE_INPUT_SIZE	(SZ_1M * 90)
-#define OMAP_T1_ION_HEAP_TILER_SIZE		(SZ_1M * 81)
-#define OMAP_T1_ION_HEAP_NONSECURE_TILER_SIZE	(SZ_1M * 15)
-
-#define PHYS_ADDR_SMC_MEM	(0x80000000 + SZ_1G - PHYS_ADDR_SMC_SIZE)
-#define PHYS_ADDR_DUCATI_MEM	(PHYS_ADDR_SMC_MEM - \
-				 PHYS_ADDR_DUCATI_SIZE - \
-				 OMAP_T1_ION_HEAP_SECURE_INPUT_SIZE)
-
-static struct ion_platform_data t1_ion_data = {
-	.nr	= 3,
-	.heaps = {
-		{
-			.type	= ION_HEAP_TYPE_CARVEOUT,
-			.id	= OMAP_ION_HEAP_SECURE_INPUT,
-			.name	= "secure_input",
-			.base	= PHYS_ADDR_SMC_MEM
-				- OMAP_T1_ION_HEAP_SECURE_INPUT_SIZE,
-			.size	= OMAP_T1_ION_HEAP_SECURE_INPUT_SIZE,
-		},
-		{
-			.type	= OMAP_ION_HEAP_TYPE_TILER,
-			.id	= OMAP_ION_HEAP_TILER,
-			.name	= "tiler",
-			.base	= PHYS_ADDR_DUCATI_MEM
-				- OMAP_T1_ION_HEAP_TILER_SIZE,
-			.size	= OMAP_T1_ION_HEAP_TILER_SIZE,
-		},
-		{
-			.type	= OMAP_ION_HEAP_TYPE_TILER,
-			.id	= OMAP_ION_HEAP_NONSECURE_TILER,
-			.name	= "nonsecure_tiler",
-			.base	= PHYS_ADDR_DUCATI_MEM -
-					OMAP_T1_ION_HEAP_TILER_SIZE -
-					OMAP_T1_ION_HEAP_NONSECURE_TILER_SIZE,
-			.size = OMAP_T1_ION_HEAP_NONSECURE_TILER_SIZE,
-		},
-	},
-};
-
-static struct platform_device t1_ion_device = {
-	.name = "ion-omap4",
-	.id = -1,
-	.dev = {
-		.platform_data = &t1_ion_data,
-	},
-};
-
 static struct platform_device t1_mcasp_device = {
 	.name		= "omap-mcasp-dai",
 	.id		= 0,
@@ -167,13 +120,14 @@ static struct platform_device t1_spdif_dit_device = {
 };
 
 static struct platform_device *t1_dbg_devices[] __initdata = {
+#if defined(CONFIG_ANDROID_RAM_CONSOLE)
 	&ramconsole_device,
+#endif
 	&ramoops_device,
 };
 
 static struct platform_device *t1_devices[] __initdata = {
 	&bcm4330_bluetooth_device,
-	&t1_ion_device,
 	&t1_mcasp_device,
 	&t1_spdif_dit_device,
 };
@@ -252,6 +206,7 @@ static void __init t1_init(void)
 	/* initialize each drivers */
 	omap4_t1_serial_init();
 	omap4_t1_pmic_init();
+	omap4_register_ion();
 	platform_add_devices(t1_devices, ARRAY_SIZE(t1_devices));
 	omap4_t1_sdio_init();
 	usb_musb_init(&musb_board_data);
@@ -266,7 +221,7 @@ static void __init t1_init(void)
 	omap4_t1_vibrator_init();
 	omap4_t1_fmradio_init();
 	omap4_t1_reboot_init();
-
+	omap4_t1_cam_init();
 #ifdef CONFIG_OMAP_HSI_DEVICE
 	/* Allow HSI omap_device to be registered later */
 	omap_hsi_allow_registration();
@@ -287,10 +242,23 @@ static void __init t1_map_io(void)
 				  T1_MEM_BANK_1_SIZE, T1_MEM_BANK_1_ADDR);
 }
 
+static void omap4_t1_init_carveout_sizes(
+		struct omap_ion_platform_data *ion)
+{
+	ion->tiler1d_size = (SZ_1M * 90);
+	/* WFD is not supported in T1 So the size is zero */
+	ion->secure_output_wfdhdcp_size = 0;
+	ion->ducati_heap_size = (SZ_1M * 105);
+	ion->nonsecure_tiler2d_size = (SZ_1M * 15);
+	ion->tiler2d_size = (SZ_1M * 81);
+}
+
 static void __init t1_reserve(void)
 {
-	int i;
-	int ret;
+	omap_init_ram_size();
+	omap4_t1_display_memory_init();
+	omap4_t1_init_carveout_sizes(get_omap_ion_platform_data());
+	omap_ion_init();
 
 	/* do the static reservations first */
 	if (sec_debug_get_level()) {
@@ -304,21 +272,11 @@ static void __init t1_reserve(void)
 	memblock_remove(PHYS_ADDR_SMC_MEM, PHYS_ADDR_SMC_SIZE);
 	memblock_remove(PHYS_ADDR_DUCATI_MEM, PHYS_ADDR_DUCATI_SIZE);
 
-	for (i = 0; i < t1_ion_data.nr; i++)
-		if (t1_ion_data.heaps[i].type == ION_HEAP_TYPE_CARVEOUT ||
-		    t1_ion_data.heaps[i].type == OMAP_ION_HEAP_TYPE_TILER) {
-			ret = memblock_remove(t1_ion_data.heaps[i].base,
-					      t1_ion_data.heaps[i].size);
-			if (ret)
-				pr_err("memblock remove of %x@%lx failed\n",
-				       t1_ion_data.heaps[i].size,
-				       t1_ion_data.heaps[i].base);
-		}
-
 	/* ipu needs to recognize secure input buffer area as well */
 	omap_ipu_set_static_mempool(PHYS_ADDR_DUCATI_MEM,
 			PHYS_ADDR_DUCATI_SIZE +
-			OMAP_T1_ION_HEAP_SECURE_INPUT_SIZE);
+			OMAP4_ION_HEAP_SECURE_INPUT_SIZE +
+			OMAP4_ION_HEAP_SECURE_OUTPUT_WFDHDCP_SIZE);
 	omap_reserve();
 }
 

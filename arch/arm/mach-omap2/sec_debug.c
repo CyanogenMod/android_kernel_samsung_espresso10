@@ -35,9 +35,6 @@
 #include "sec_debug.h"
 #include "sec_gaf.h"
 
-#if defined(CONFIG_ARCH_OMAP3) || (CONFIG_ARCH_OMAP4)
-#define outer_flush_all()
-#endif
 enum sec_debug_upload_cause_t {
 	UPLOAD_CAUSE_INIT = 0xCAFEBABE,
 	UPLOAD_CAUSE_KERNEL_PANIC = 0x000000C8,
@@ -48,24 +45,24 @@ enum sec_debug_upload_cause_t {
 };
 
 struct sec_debug_mmu_reg_t {
-	int SCTLR;
-	int TTBR0;
-	int TTBR1;
-	int TTBCR;
-	int DACR;
-	int DFSR;
-	int DFAR;
-	int IFSR;
-	int IFAR;
-	int DAFSR;
-	int IAFSR;
-	int PMRRR;
-	int NMRRR;
-	int FCSEPID;
-	int CONTEXT;
-	int URWTPID;
-	int UROTPID;
-	int POTPIDR;
+	unsigned int SCTLR;
+	unsigned int TTBR0;
+	unsigned int TTBR1;
+	unsigned int TTBCR;
+	unsigned int DACR;
+	unsigned int DFSR;
+	unsigned int DFAR;
+	unsigned int IFSR;
+	unsigned int IFAR;
+	unsigned int DAFSR;
+	unsigned int IAFSR;
+	unsigned int PMRRR;
+	unsigned int NMRRR;
+	unsigned int FCSEPID;
+	unsigned int CONTEXT;
+	unsigned int URWTPID;
+	unsigned int UROTPID;
+	unsigned int POTPIDR;
 };
 
 /* ARM CORE regs mapping structure */
@@ -138,9 +135,12 @@ struct sec_debug_core_t {
  */
 union sec_debug_level_t sec_debug_level = { .en.kernel_fault = 1, };
 
-module_param_named(enable, sec_debug_level.en.kernel_fault, ushort, 0644);
-module_param_named(enable_user, sec_debug_level.en.user_fault, ushort, 0644);
-module_param_named(level, sec_debug_level.uint_val, uint, 0644);
+module_param_named(enable, sec_debug_level.en.kernel_fault, ushort,
+		S_IRUGO | S_IWUSR | S_IWGRP);
+module_param_named(enable_user, sec_debug_level.en.user_fault, ushort,
+		S_IRUGO | S_IWUSR | S_IWGRP);
+module_param_named(level, sec_debug_level.uint_val, uint,
+		S_IRUGO | S_IWUSR | S_IWGRP);
 
 static int __init sec_debug_parse_enable(char *str)
 {
@@ -175,42 +175,48 @@ static char gkernel_sec_build_info[100];
 
 /* klaatu - schedule log */
 #ifdef CONFIG_SEC_DEBUG_SCHED_LOG
-#define SCHED_LOG_MAX		4096
+#define SCHED_LOG_MAX		2048
 
 struct sched_log {
-	unsigned long long time;
-	union task_log {
-		struct task_info {
-			char comm[TASK_COMM_LEN];
-			pid_t pid;
-		} task;
-		struct irq_log {
-			int irq;
-			void *fn;
-			int en;
-		} irq;
-		struct work_log {
-			struct worker *worker;
-			struct work_struct *work;
-			work_func_t f;
-		} work;
-	} log;
+	struct task_log {
+		unsigned long long time;
+		char comm[TASK_COMM_LEN];
+		pid_t pid;
+	} task[CONFIG_NR_CPUS][SCHED_LOG_MAX];
+	struct irq_log {
+		unsigned long long time;
+		int irq;
+		void *fn;
+		int en;
+	} irq[CONFIG_NR_CPUS][SCHED_LOG_MAX];
+	struct work_log {
+		unsigned long long time;
+		struct worker *worker;
+		struct work_struct *work;
+		work_func_t f;
+	} work[CONFIG_NR_CPUS][SCHED_LOG_MAX];
 };
 
-static struct sched_log excp_task_log[NR_CPUS][SCHED_LOG_MAX]
-	__cacheline_aligned;
-static atomic_t excp_task_log_idx[NR_CPUS] = {
-	ATOMIC_INIT(-1), ATOMIC_INIT(-1) };
-static unsigned long long excp_irq_exit_time[NR_CPUS];
-static struct sched_log (*excp_task_log_ptr)[NR_CPUS][SCHED_LOG_MAX]
-	= (&excp_task_log);
+static struct sched_log sec_debug_log __cacheline_aligned;
+
+static struct sched_log (*psec_debug_log) = (&sec_debug_log);
+
+static atomic_t task_log_idx[NR_CPUS] = {
+	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
+};
+static atomic_t irq_log_idx[NR_CPUS] = {
+	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
+};
+static atomic_t work_log_idx[NR_CPUS] = {
+	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
+};
 
 static int checksum_sched_log(void)
 {
 	int sum = 0, i;
 
-	for (i = 0; i < sizeof(excp_task_log); i++)
-		sum += *((char *)excp_task_log + i);
+	for (i = 0; i < sizeof(sec_debug_log); i++)
+		sum += *((char *)&sec_debug_log + i);
 
 	return sum;
 }
@@ -239,12 +245,12 @@ enum {
 	WRITE_SEM,
 };
 
-struct sem_debug sem_debug_free_head;
-struct sem_debug sem_debug_done_head;
-int sem_debug_free_head_cnt;
-int sem_debug_done_head_cnt;
-int sem_debug_init;
-spinlock_t sem_debug_lock;
+static struct sem_debug sem_debug_free_head;
+static struct sem_debug sem_debug_done_head;
+static int sem_debug_free_head_cnt;
+static int sem_debug_done_head_cnt;
+static int sem_debug_init;
+static spinlock_t sem_debug_lock;
 
 /* rwsemaphore logging */
 #define RWSEMAPHORE_LOG_MAX		100
@@ -259,12 +265,12 @@ struct rwsem_debug {
 	/* char comm[TASK_COMM_LEN]; */
 };
 
-struct rwsem_debug rwsem_debug_free_head;
-struct rwsem_debug rwsem_debug_done_head;
-int rwsem_debug_free_head_cnt;
-int rwsem_debug_done_head_cnt;
-int rwsem_debug_init;
-spinlock_t rwsem_debug_lock;
+static struct rwsem_debug rwsem_debug_free_head;
+static struct rwsem_debug rwsem_debug_done_head;
+static int rwsem_debug_free_head_cnt;
+static int rwsem_debug_done_head_cnt;
+static int rwsem_debug_init;
+static spinlock_t rwsem_debug_lock;
 
 #endif /* CONFIG_SEC_DEBUG_SEMAPHORE_LOG */
 
@@ -410,6 +416,68 @@ static inline void sec_debug_save_mmu_reg(struct sec_debug_mmu_reg_t *mmu_reg)
 	);
 }
 
+#define __sec_debug_dump_1_reg(_container, _reg0)			\
+do {									\
+	pr_emerg(" %-8s: %08x\n", #_reg0, _container->_reg0);		\
+} while (0)
+
+#define __sec_debug_dump_2_reg(_container, _reg0, _reg1)		\
+do {									\
+	pr_emerg(" %-8s: %08x %-8s: %08x\n",				\
+		#_reg0, _container->_reg0, #_reg1, _container->_reg1);	\
+} while (0)
+
+#define __sec_debug_dump_3_reg(_container, _reg0, _reg1, _reg2)		\
+do {									\
+	pr_emerg(" %-8s: %08x %-8s: %08x %-8s: %08x\n",			\
+		#_reg0, _container->_reg0, #_reg1, _container->_reg1,	\
+		#_reg2,	_container->_reg2);				\
+} while (0)
+
+#define __sec_debug_dump_4_reg(_container, _reg0, _reg1, _reg2, _reg3)	\
+do {									\
+	pr_emerg(" %-8s: %08x %-8s: %08x %-8s: %08x %-8s: %08x\n",	\
+		#_reg0, _container->_reg0, #_reg1, _container->_reg1,	\
+		#_reg2,	_container->_reg2, #_reg3, _container->_reg3);	\
+} while (0)
+
+static void sed_debug_dump_core_reg(struct sec_debug_core_t *core_reg)
+{
+	pr_emerg("Sec Core REGs:\n");
+	pr_emerg(" - Common\n");
+	__sec_debug_dump_4_reg(core_reg, r0, r1, r2, r3);
+	__sec_debug_dump_4_reg(core_reg, r4, r5, r6, r7);
+	__sec_debug_dump_4_reg(core_reg, r8, r9, r10, r11);
+	__sec_debug_dump_1_reg(core_reg, r12);
+	pr_emerg(" - SVC\n");
+	__sec_debug_dump_3_reg(core_reg, r13_svc, r14_svc, spsr_svc);
+	pr_emerg(" - PC & CPSR\n");
+	__sec_debug_dump_2_reg(core_reg, pc, cpsr);
+	pr_emerg(" - USR/SYS\n");
+	__sec_debug_dump_2_reg(core_reg, r13_usr, r14_usr);
+	pr_emerg(" - FIQ\n");
+	__sec_debug_dump_4_reg(core_reg, r8_fiq, r9_fiq, r10_fiq, r11_fiq);
+	__sec_debug_dump_4_reg(core_reg, r12_fiq, r13_fiq, r14_fiq, spsr_fiq);
+	pr_emerg(" - IRQ\n");
+	__sec_debug_dump_3_reg(core_reg, r13_irq, r14_irq, spsr_irq);
+	pr_emerg(" - MON\n");
+	__sec_debug_dump_3_reg(core_reg, r13_mon, r14_mon, spsr_mon);
+	pr_emerg(" - ABT\n");
+	__sec_debug_dump_3_reg(core_reg, r13_abt, r14_abt, spsr_abt);
+	pr_emerg(" - UNDEF\n");
+	__sec_debug_dump_3_reg(core_reg, r13_und, r14_und, spsr_und);
+}
+
+static void sec_debug_dump_mmu_reg(struct sec_debug_mmu_reg_t *mmu_reg)
+{
+	pr_emerg("Sec MMU REGs:\n");
+	__sec_debug_dump_3_reg(mmu_reg, SCTLR, TTBR0, TTBR1);
+	__sec_debug_dump_3_reg(mmu_reg, DACR, DFSR, DFAR);
+	__sec_debug_dump_4_reg(mmu_reg, IFSR, IFAR, DAFSR, IAFSR);
+	__sec_debug_dump_4_reg(mmu_reg, PMRRR, NMRRR, FCSEPID, CONTEXT);
+	__sec_debug_dump_3_reg(mmu_reg, URWTPID, UROTPID, POTPIDR);
+}
+
 static void sec_debug_save_context(void)
 {
 	unsigned long flags;
@@ -420,6 +488,9 @@ static void sec_debug_save_context(void)
 				(sec_debug_core_reg, smp_processor_id()));
 
 	pr_emerg("(%s) context saved(CPU:%d)\n", __func__, smp_processor_id());
+	sec_debug_dump_mmu_reg(&per_cpu(sec_debug_mmu_reg, smp_processor_id()));
+	sed_debug_dump_core_reg(&per_cpu
+				(sec_debug_core_reg, smp_processor_id()));
 	local_irq_restore(flags);
 }
 
@@ -512,7 +583,8 @@ static int sec_debug_panic_handler(struct notifier_block *nb,
 		sec_debug_set_upload_cause(UPLOAD_CAUSE_USER_FAULT);
 	else if (!strcmp(buf, "Crash Key"))
 		sec_debug_set_upload_cause(UPLOAD_CAUSE_FORCED_UPLOAD);
-	else if (!strcmp(buf, "CP Crash"))
+	else if (!strncmp(buf, "CP Crash", 8))
+		/* more information will be provided after "CP Crash" string */
 		sec_debug_set_upload_cause(UPLOAD_CAUSE_CP_ERROR_FATAL);
 	else if (!strcmp(buf, "HSIC Disconnected"))
 		sec_debug_set_upload_cause(UPLOAD_CAUSE_HSIC_DISCONNECTED);
@@ -544,15 +616,15 @@ static struct sec_crash_key *__sec_crash_key = &dflt_crash_key;
 static unsigned int sec_debug_unlock_crash_key(unsigned int value,
 					       unsigned int *unlock)
 {
-	unsigned int i;
+	unsigned int i = __sec_crash_key->size - 2;	/* except last one */
 	unsigned int ret = 0;
 
-	for (i = 0; i < __sec_crash_key->size - 1; i++) {
+	do {
 		if (value == __sec_crash_key->keycode[i]) {
 			ret = 1;
 			*unlock |= 1 << i;
 		}
-	}
+	} while (i-- != 0);
 
 	return ret;
 }
@@ -670,7 +742,7 @@ static int __init sec_debug_init(void)
 	return 0;
 }
 
-late_initcall(sec_debug_init);
+arch_initcall(sec_debug_init);
 
 int sec_debug_get_level(void)
 {
@@ -687,14 +759,13 @@ void __sec_debug_task_log(int cpu, struct task_struct *task)
 {
 	unsigned i;
 
-	if (!sec_debug_level.en.kernel_fault)
+	if (likely(!sec_debug_level.en.kernel_fault))
 		return;
 
-	i = atomic_inc_return(&excp_task_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
-
-	(*excp_task_log_ptr)[cpu][i].time = cpu_clock(cpu);
-	strcpy((*excp_task_log_ptr)[cpu][i].log.task.comm, task->comm);
-	(*excp_task_log_ptr)[cpu][i].log.task.pid = task->pid;
+	i = atomic_inc_return(&task_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
+	psec_debug_log->task[cpu][i].time = cpu_clock(cpu);
+	strcpy(psec_debug_log->task[cpu][i].comm, task->comm);
+	psec_debug_log->task[cpu][i].pid = task->pid;
 }
 
 void __sec_debug_irq_log(unsigned int irq, void *fn, int en)
@@ -702,15 +773,14 @@ void __sec_debug_irq_log(unsigned int irq, void *fn, int en)
 	int cpu = raw_smp_processor_id();
 	unsigned i;
 
-	if (!sec_debug_level.en.kernel_fault)
+	if (likely(!sec_debug_level.en.kernel_fault))
 		return;
 
-	i = atomic_inc_return(&excp_task_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
-
-	(*excp_task_log_ptr)[cpu][i].time = cpu_clock(cpu);
-	(*excp_task_log_ptr)[cpu][i].log.irq.irq = irq;
-	(*excp_task_log_ptr)[cpu][i].log.irq.fn = (void *)fn;
-	(*excp_task_log_ptr)[cpu][i].log.irq.en = en;
+	i = atomic_inc_return(&irq_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
+	psec_debug_log->irq[cpu][i].time = cpu_clock(cpu);
+	psec_debug_log->irq[cpu][i].irq = irq;
+	psec_debug_log->irq[cpu][i].fn = (void *)fn;
+	psec_debug_log->irq[cpu][i].en = en;
 }
 
 void __sec_debug_work_log(struct worker *worker,
@@ -719,17 +789,18 @@ void __sec_debug_work_log(struct worker *worker,
 	int cpu = raw_smp_processor_id();
 	unsigned i;
 
-	if (!sec_debug_level.en.kernel_fault)
+	if (likely(!sec_debug_level.en.kernel_fault))
 		return;
 
-	i = atomic_inc_return(&excp_task_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
-
-	(*excp_task_log_ptr)[cpu][i].time = cpu_clock(cpu);
-	(*excp_task_log_ptr)[cpu][i].log.work.worker = worker;
-	(*excp_task_log_ptr)[cpu][i].log.work.work = work;
-	(*excp_task_log_ptr)[cpu][i].log.work.f = f;
+	i = atomic_inc_return(&work_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
+	psec_debug_log->work[cpu][i].time = cpu_clock(cpu);
+	psec_debug_log->work[cpu][i].worker = worker;
+	psec_debug_log->work[cpu][i].work = work;
+	psec_debug_log->work[cpu][i].f = f;
 }
 #ifdef CONFIG_SEC_DEBUG_IRQ_EXIT_LOG
+static unsigned long long excp_irq_exit_time[NR_CPUS];
+
 void sec_debug_irq_last_exit_log(void)
 {
 	int cpu = raw_smp_processor_id();

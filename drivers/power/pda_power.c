@@ -35,7 +35,6 @@ static struct device *dev;
 static struct pda_power_pdata *pdata;
 static struct resource *ac_irq, *usb_irq;
 static struct timer_list charger_timer;
-static struct timer_list supply_timer;
 static struct timer_list polling_timer;
 static int polling;
 
@@ -144,29 +143,27 @@ static void update_charger(void)
 	}
 }
 
-static void supply_timer_func(unsigned long unused)
-{
-	if (ac_status == PDA_PSY_TO_CHANGE) {
-		ac_status = new_ac_status;
-		power_supply_changed(&pda_psy_ac);
-	}
-
-	if (usb_status == PDA_PSY_TO_CHANGE) {
-		usb_status = new_usb_status;
-		power_supply_changed(&pda_psy_usb);
-	}
-}
-
 static void psy_changed(void)
 {
 	update_charger();
 
-	/*
-	 * Okay, charger set. Now wait a bit before notifying supplicants,
-	 * charge power should stabilize.
-	 */
-	mod_timer(&supply_timer,
-		  jiffies + msecs_to_jiffies(pdata->wait_for_charger));
+	if (ac_status == PDA_PSY_TO_CHANGE) {
+		ac_status = new_ac_status;
+
+		if (pdata->get_charger_start_state)
+			pdata->charger_work();
+		else
+			power_supply_changed(&pda_psy_ac);
+	}
+
+	if (usb_status == PDA_PSY_TO_CHANGE) {
+		usb_status = new_usb_status;
+
+		if (pdata->get_charger_start_state)
+			pdata->charger_work();
+		else
+			power_supply_changed(&pda_psy_usb);
+	}
 }
 
 static void charger_timer_func(unsigned long unused)
@@ -297,7 +294,6 @@ static int pda_power_probe(struct platform_device *pdev)
 		pdata->ac_max_uA = 500000;
 
 	setup_timer(&charger_timer, charger_timer_func, 0);
-	setup_timer(&supply_timer, supply_timer_func, 0);
 
 	ac_irq = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "ac");
 	usb_irq = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "usb");
@@ -424,7 +420,6 @@ static int pda_power_remove(struct platform_device *pdev)
 	if (polling)
 		del_timer_sync(&polling_timer);
 	del_timer_sync(&charger_timer);
-	del_timer_sync(&supply_timer);
 
 	if (pdata->is_usb_online)
 		power_supply_unregister(&pda_psy_usb);

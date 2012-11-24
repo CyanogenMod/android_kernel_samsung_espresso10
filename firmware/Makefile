@@ -142,6 +142,36 @@ fw-shipped-$(CONFIG_USB_VICAM) += vicam/firmware.fw
 fw-shipped-$(CONFIG_VIDEO_CPIA2) += cpia2/stv0672_vp4.bin
 fw-shipped-$(CONFIG_YAM) += yam/1200.bin yam/9600.bin
 
+TSPFIRMWARE_DIRECTORY_MELFAS = $(srctree)/firmware/melfas
+ifeq ($(shell test -d $(TSPFIRMWARE_DIRECTORY_MELFAS) && echo yes),yes)
+fw-shipped-$(CONFIG_FW_SAMSUNG_ESPRESSO_TSP) += melfas/p3100.fw
+fw-shipped-$(CONFIG_FW_SAMSUNG_SUPERIOR_TSP) += melfas/i9260.fw
+else
+$(warning '$(TSPFIRMWARE_DIRECTORY)' directory dose not exist)
+endif
+
+TSPFIRMWARE_DIRECTORY_SYNAPTICS = $(srctree)/firmware/synaptics
+ifeq ($(shell test -d $(TSPFIRMWARE_DIRECTORY_SYNAPTICS) && echo yes),yes)
+fw-shipped-$(CONFIG_FW_SAMSUNG_ESPRESSO_10_TSP) += synaptics/p5100.fw
+fw-shipped-$(CONFIG_FW_SAMSUNG_KONA_TSP) += synaptics/n5100.fw
+else
+$(warning '$(TSPFIRMWARE_DIRECTORY)' directory dose not exist)
+endif
+
+TSKEYFIRMWARE_DIRECTORY_CYPRESS = $(srctree)/firmware/cypress
+ifeq ($(shell test -d $(TSKEYFIRMWARE_DIRECTORY_CYPRESS) && echo yes),yes)
+fw-shipped-$(CONFIG_FW_SAMSUNG_SUPERIOR_TOUCH_KEY) += cypress/i9260.fw
+else
+$(warning '$(TSPFIRMWARE_DIRECTORY)' directory dose not exist)
+endif
+
+WACOM_FIRMWARE_DIRECTORY = $(srctree)/firmware/wacom
+ifeq ($(shell test -d $(WACOM_FIRMWARE_DIRECTORY) && echo yes),yes)
+fw-shipped-$(CONFIG_FW_SAMSUNG_KONA_WACOM) += wacom/n5100.fw
+else
+$(warning '$(WACOM_FIRMWARE_DIRECTORY)' directory dose not exist)
+endif
+
 fw-shipped-all := $(fw-shipped-y) $(fw-shipped-m) $(fw-shipped-)
 
 # Directories which we _might_ need to create, so we have a rule for them.

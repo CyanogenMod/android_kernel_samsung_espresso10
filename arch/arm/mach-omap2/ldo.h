@@ -30,18 +30,20 @@ struct omap_ldo_abb_ops {
  */
 #define OMAP_LDO_ABB_SETUP_SR2_WTCNT_VALUE_MASK	(0xFF << 8)
 #define OMAP_LDO_ABB_SETUP_ACTIVE_FBB_SEL_MASK	BIT(2)
+#define OMAP_LDO_ABB_SETUP_ACTIVE_RBB_SEL_MASK	BIT(1)
 #define OMAP_LDO_ABB_SETUP_SR2EN_MASK		BIT(0)
 
 /**
  * struct omap_ldo_abb_setup_bits - setup register bit defns
  * @enable_mask:	SR2EN field
  * @active_fbb_mask:	ACTIVE_FBB_SEL field
+ * @active_rbb_mask:	ACTIVE_RBB_SEL field
  * @wait_count_mask:	SR2_WTCNT_VALUE field
  */
 struct omap_ldo_abb_setup_bits {
 	u32 enable_mask;
 	u32 active_fbb_mask;
-	/* RBB is not recommended to be used and hence not supported */
+	u32 active_rbb_mask;
 	u32 wait_count_mask;
 };
 
@@ -105,9 +107,9 @@ extern struct omap_ldo_abb_instance omap4_ldo_abb_mpu_instance;
 extern struct omap_ldo_abb_instance omap4_ldo_abb_iva_instance;
 
 extern int omap_ldo_abb_pre_scale(struct voltagedomain *voltdm,
-			   unsigned long target_volt);
+			   struct omap_volt_data *target_vdata);
 extern int omap_ldo_abb_post_scale(struct voltagedomain *voltdm,
-			   unsigned long target_volt);
+			   struct omap_volt_data *target_vdata);
 extern void __init omap_ldo_abb_init(struct voltagedomain *voltdm);
 
 #endif				/* __ARCH_ARM_MACH_OMAP2_LDO_H */

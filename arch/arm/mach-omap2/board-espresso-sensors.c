@@ -21,33 +21,32 @@
 
 #include <linux/gp2a.h>
 #include <linux/i2c/twl6030-madc.h>
-#include <linux/bh1721fvc.h>
+#include <linux/regulator/consumer.h>
 #include <linux/yas.h>
+#include <linux/al3201.h>
 
 #include "board-espresso.h"
-
-#define ACCEL_CAL_PATH	"/efs/calibration_data"
 
 #define YAS_TA_OFFSET {0, 0, 0}
 #define YAS_USB_OFFSET {0, 0, 0}
 #define YAS_FULL_OFFSET {0, 0, 0}
 
 enum {
-	GPIO_ALS_INT = 0,
-	GPIO_PS_VOUT,
-	GPIO_MSENSE_IRQ,
+	NUM_ALS_INT = 0,
+	NUM_PS_VOUT,
+	NUM_MSENSE_IRQ,
 };
 
 struct gpio sensors_gpios[] = {
-	[GPIO_ALS_INT] = {
+	[NUM_ALS_INT] = {
 		.flags = GPIOF_IN,
 		.label = "ALS_INT_18",
 	},
-	[GPIO_PS_VOUT] = {
+	[NUM_PS_VOUT] = {
 		.flags = GPIOF_IN,
 		.label = "PS_VOUT",
 	},
-	[GPIO_MSENSE_IRQ] = {
+	[NUM_MSENSE_IRQ] = {
 		.flags = GPIOF_IN,
 		.label = "MSENSE_IRQ",
 	},
@@ -68,39 +67,50 @@ static void gp2a_power(bool on)
 
 }
 
-static struct gp2a_platform_data gp2a_pdata = {
-	.power = gp2a_power,
-	.p_out = NULL,
-	.light_adc_value = gp2a_light_adc_value,
-};
-
-static int bh1721fvc_light_sensor_reset(void)
+static void omap4_espresso_sensors_regulator_on(bool on)
 {
+	struct regulator *reg_v28;
+	struct regulator *reg_v18;
 
-	printk(KERN_INFO " bh1721_light_sensor_reset !!\n");
-
-	omap_mux_init_gpio(sensors_gpios[GPIO_ALS_INT].gpio,
-		OMAP_PIN_OUTPUT);
-
-	gpio_free(sensors_gpios[GPIO_ALS_INT].gpio);
-
-	gpio_request(sensors_gpios[GPIO_ALS_INT].gpio, "LIGHT_SENSOR_RESET");
-
-	gpio_direction_output(sensors_gpios[GPIO_ALS_INT].gpio, 0);
-
-	udelay(2);
-
-	gpio_direction_output(sensors_gpios[GPIO_ALS_INT].gpio, 1);
-
-	return 0;
-
+	reg_v28 =
+		regulator_get(NULL, "VAP_IO_2.8V");
+	if (IS_ERR(reg_v28)) {
+		pr_err("%s [%d] failed to get v2.8 regulator.\n",
+			__func__, __LINE__);
+		goto done;
+	}
+	reg_v18 =
+		regulator_get(NULL, "VDD_IO_1.8V");
+	if (IS_ERR(reg_v18)) {
+		pr_err("%s [%d] failed to get v1.8 regulator.\n",
+			__func__, __LINE__);
+		goto done;
+	}
+	if (on) {
+		pr_info("sensor ldo on.\n");
+		regulator_enable(reg_v28);
+		regulator_enable(reg_v18);
+	} else {
+		pr_info("sensor ldo off.\n");
+		regulator_disable(reg_v18);
+		regulator_disable(reg_v28);
+	}
+	regulator_put(reg_v28);
+	regulator_put(reg_v18);
+	msleep(20);
+done:
+	return;
 }
 
-static struct bh1721fvc_platform_data bh1721fvc_pdata = {
-	.reset = bh1721fvc_light_sensor_reset,
+static struct gp2a_platform_data gp2a_pdata = {
+	.power = gp2a_power,
+	.p_out = 0,
+	.light_adc_value = gp2a_light_adc_value,
+	.ldo_on = omap4_espresso_sensors_regulator_on,
 };
 
 struct mag_platform_data magnetic_pdata = {
+	.power_on = omap4_espresso_sensors_regulator_on,
 	.offset_enable = 0,
 	.chg_status = CABLE_TYPE_NONE,
 	.ta_offset.v = YAS_TA_OFFSET,
@@ -114,7 +124,12 @@ void omap4_espresso_set_chager_type(int type)
 }
 
 struct acc_platform_data accelerometer_pdata = {
-	.cal_path = ACCEL_CAL_PATH,
+	.cal_path = "/efs/calibration_data",
+	.ldo_on = omap4_espresso_sensors_regulator_on,
+};
+
+static struct al3201_platform_data al3201_pdata = {
+	.power_on = omap4_espresso_sensors_regulator_on,
 };
 
 static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo[] = {
@@ -122,21 +137,18 @@ static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo[] = {
 		I2C_BOARD_INFO("accelerometer", 0x18),
 		.platform_data = &accelerometer_pdata,
 	 },
-
 	{
 		I2C_BOARD_INFO("geomagnetic", 0x2e),
 		.platform_data = &magnetic_pdata,
 	 },
-
 	{
 		I2C_BOARD_INFO("gp2a", 0x44),
 		.platform_data = &gp2a_pdata,
 	},
-
 	{
 		I2C_BOARD_INFO("AL3201", 0x1c),
+		.platform_data = &al3201_pdata,
 	},
-
 };
 
 static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo_rf[] = {
@@ -144,12 +156,10 @@ static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo_rf[] = {
 		I2C_BOARD_INFO("accelerometer", 0x18),
 		.platform_data = &accelerometer_pdata,
 	 },
-
 	{
 		I2C_BOARD_INFO("geomagnetic", 0x2e),
 		.platform_data = &magnetic_pdata,
 	 },
-
 	{
 		I2C_BOARD_INFO("gp2a", 0x44),
 		.platform_data = &gp2a_pdata,
@@ -161,16 +171,14 @@ static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo_wf[] = {
 		I2C_BOARD_INFO("accelerometer", 0x18),
 		.platform_data = &accelerometer_pdata,
 	 },
-
 	{
 		I2C_BOARD_INFO("geomagnetic", 0x2e),
 		.platform_data = &magnetic_pdata,
 	 },
-
 	{
 		I2C_BOARD_INFO("AL3201", 0x1c),
+		.platform_data = &al3201_pdata,
 	},
-
 };
 
 
@@ -183,16 +191,16 @@ void __init omap4_espresso_sensors_init(void)
 
 	gpio_request_array(sensors_gpios, ARRAY_SIZE(sensors_gpios));
 
-	omap_mux_init_gpio(sensors_gpios[GPIO_MSENSE_IRQ].gpio,
+	omap_mux_init_gpio(sensors_gpios[NUM_MSENSE_IRQ].gpio,
 		OMAP_PIN_OUTPUT);
 
-	gpio_free(sensors_gpios[GPIO_MSENSE_IRQ].gpio);
+	gpio_free(sensors_gpios[NUM_MSENSE_IRQ].gpio);
 
-	gpio_request(sensors_gpios[GPIO_MSENSE_IRQ].gpio, "MSENSE_IRQ");
+	gpio_request(sensors_gpios[NUM_MSENSE_IRQ].gpio, "MSENSE_IRQ");
 
-	gpio_direction_output(sensors_gpios[GPIO_MSENSE_IRQ].gpio, 1);
+	gpio_direction_output(sensors_gpios[NUM_MSENSE_IRQ].gpio, 1);
 
-	gp2a_pdata.p_out = sensors_gpios[GPIO_PS_VOUT].gpio;
+	gp2a_pdata.p_out = sensors_gpios[NUM_PS_VOUT].gpio;
 
 	pr_info("%s: hw rev = %d, board type = %d\n",
 		__func__, system_rev, omap4_espresso_get_board_type());
@@ -207,12 +215,10 @@ void __init omap4_espresso_sensors_init(void)
 				espresso_sensors_i2c4_boardinfo_rf,
 				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_rf));
 		} else {
-			accelerometer_pdata.ldo_ctl = true;
 			i2c_register_board_info(4,
 				espresso_sensors_i2c4_boardinfo_wf,
 				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_wf));
 		}
 	}
-
 }
 
