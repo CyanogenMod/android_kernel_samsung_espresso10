@@ -18,6 +18,11 @@
 #include <linux/wakelock.h>
 #include <linux/host_notify.h>
 
+struct vbus_gpio_set {
+	spinlock_t lock;
+	int gpio_status;
+};
+
 struct  host_notifier_info {
 	struct host_notifier_platform_data *pdata;
 	struct task_struct *th;
@@ -25,6 +30,7 @@ struct  host_notifier_info {
 	int	thread_remove;
 
 	struct wake_lock	wlock;
+	struct vbus_gpio_set vbus_gpio;
 };
 
 static struct host_notifier_info ninfo;
@@ -81,7 +87,7 @@ static int start_usbhostd_thread(void)
 
 		init_waitqueue_head(&ninfo.delay_wait);
 		ninfo.thread_remove = 0;
-		ninfo.th = kthread_run(currentlimit_thread,
+		ninfo.th = kthread_create(currentlimit_thread,
 				&ninfo, "usbhostd");
 
 		if (IS_ERR(ninfo.th)) {
@@ -116,6 +122,17 @@ static int stop_usbhostd_thread(void)
 	return 0;
 }
 
+static int wakeup_usbhostd_thread(void)
+{
+	if (ninfo.th) {
+		if (!IS_ERR(ninfo.th)) {
+			pr_info("host_notifier: wakeup thread\n");
+			wake_up_process(ninfo.th);
+		}
+	}
+	return 0;
+}
+
 static int start_usbhostd_notify(void)
 {
 	pr_info("host_notifier: start usbhostd notify\n");
@@ -143,16 +160,62 @@ static void host_notifier_booster(int enable)
 	ninfo.pdata->booster(enable);
 
 	if (ninfo.pdata->thread_enable) {
-		if (enable)
+		if (enable) {
 			start_usbhostd_thread();
-		else
+			wakeup_usbhostd_thread();
+		} else
 			stop_usbhostd_thread();
 	}
+}
+
+static irqreturn_t host_notifier_currentlimit_irq_isr(int irq, void *data)
+{
+	unsigned long flags = 0;
+	int gpio_value = 0;
+	irqreturn_t ret = IRQ_NONE;
+	spin_lock_irqsave(&ninfo.vbus_gpio.lock, flags);
+	gpio_value = __gpio_get_value(ninfo.pdata->gpio);
+	if (ninfo.vbus_gpio.gpio_status != gpio_value) {
+		ninfo.vbus_gpio.gpio_status = gpio_value;
+		ret = IRQ_WAKE_THREAD;
+	} else
+		ret = IRQ_HANDLED;
+	spin_unlock_irqrestore(&ninfo.vbus_gpio.lock, flags);
+	return ret;
+}
+
+static irqreturn_t host_notifier_currentlimit_irq_thread
+						(int irq, void *data)
+{
+	unsigned long flags = 0;
+	int gpio_value = 0;
+	spin_lock_irqsave(&ninfo.vbus_gpio.lock, flags);
+	if (ninfo.pdata->inverse_vbus_trigger)
+		gpio_value = !ninfo.vbus_gpio.gpio_status ;
+	else
+		gpio_value = ninfo.vbus_gpio.gpio_status ;
+	spin_unlock_irqrestore(&ninfo.vbus_gpio.lock, flags);
+
+	if (gpio_value) {
+		ninfo.pdata->ndev.booster = NOTIFY_POWER_ON;
+		pr_info("Acc power on detect\n");
+	} else {
+		if ((ninfo.pdata->ndev.mode == NOTIFY_HOST_MODE)
+			&& (ninfo.pdata->ndev.booster == NOTIFY_POWER_ON)) {
+			host_state_notify(&ninfo.pdata->ndev,
+				NOTIFY_HOST_OVERCURRENT);
+			pr_err("OTG overcurrent!!!!!!\n");
+		}
+		ninfo.pdata->ndev.booster = NOTIFY_POWER_OFF;
+	}
+	return IRQ_HANDLED;
 }
 
 static int host_notifier_probe(struct platform_device *pdev)
 {
 	int ret = 0;
+	int err = 0;
+	int current_limit_irq = 0;
 
 	dev_info(&pdev->dev, "notifier_prove\n");
 
@@ -160,20 +223,39 @@ static int host_notifier_probe(struct platform_device *pdev)
 	if (!ninfo.pdata)
 		return -ENODEV;
 
-	if (ninfo.pdata->thread_enable) {
+	if (!(ninfo.pdata->gpio < 0)) {
 		ret = gpio_request(ninfo.pdata->gpio, "host_notifier");
 		if (ret) {
 			dev_err(&pdev->dev, "failed to request %d\n",
 				ninfo.pdata->gpio);
-			return -EPERM;
 		}
 		gpio_direction_input(ninfo.pdata->gpio);
 		dev_info(&pdev->dev, "gpio = %d\n", ninfo.pdata->gpio);
+	}
 
+	spin_lock_init(&ninfo.vbus_gpio.lock);
+
+	if (ninfo.pdata->thread_enable) {
 		ninfo.pdata->ndev.set_booster = host_notifier_booster;
 		ninfo.pdata->usbhostd_start = start_usbhostd_thread;
 		ninfo.pdata->usbhostd_stop = stop_usbhostd_thread;
+		ninfo.pdata->usbhostd_wakeup = wakeup_usbhostd_thread;
 	} else {
+		if (!(ninfo.pdata->gpio < 0)) {
+			ninfo.vbus_gpio.gpio_status
+				= __gpio_get_value(ninfo.pdata->gpio);
+			current_limit_irq = gpio_to_irq(ninfo.pdata->gpio);
+			err = request_threaded_irq(current_limit_irq,
+					host_notifier_currentlimit_irq_isr,
+					host_notifier_currentlimit_irq_thread,
+					(IRQF_TRIGGER_FALLING |
+						IRQF_TRIGGER_RISING |
+							IRQF_ONESHOT),
+					dev_name(&pdev->dev),
+					NULL);
+			if (err)
+				dev_err(&pdev->dev, "Failed to register IRQ\n");
+		}
 		ninfo.pdata->ndev.set_booster = host_notifier_booster;
 		ninfo.pdata->usbhostd_start = start_usbhostd_notify;
 		ninfo.pdata->usbhostd_stop = stop_usbhostd_notify;
@@ -182,6 +264,8 @@ static int host_notifier_probe(struct platform_device *pdev)
 	ret = host_notify_dev_register(&ninfo.pdata->ndev);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "Failed to host_notify_dev_register\n");
+		if (!err && current_limit_irq)
+			free_irq(current_limit_irq, NULL);
 		return ret;
 	}
 	wake_lock_init(&ninfo.wlock, WAKE_LOCK_SUSPEND, "hostd");

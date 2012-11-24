@@ -112,6 +112,7 @@ bool hsi_is_channel_busy(struct hsi_channel *ch)
 }
 
 /* Check if a HSI port is busy :
+ * - ACWAKE is high
  * - data transfer (Write) is ongoing for a given HSI channel
  * - CAWAKE is high
  * - CAWAKE is not used (receiver in 3-wires mode)
@@ -141,7 +142,7 @@ bool hsi_is_hsi_port_busy(struct hsi_port *pport)
 		return true;
 	}
 
-	if (cur_cawake) {
+	if (cur_cawake || pport->acwake_status) {
 		dev_dbg(hsi_ctrl->dev, "Port %d: WAKE status: acwake_status %d,"
 			"cur_cawake %d", pport->port_number,
 			pport->acwake_status, cur_cawake);
@@ -211,7 +212,7 @@ bool hsi_is_hst_controller_busy(struct hsi_dev *hsi_ctrl)
 }
 
 
-/* Enables the CAWAKE, BREAK, or ERROR interrupt for the given port
+/* Enables the CAWAKE, BREAK, or ERROR interrupt for the given port.
  *
  * Since these 3 interrupts ENABLE and STATUS bits are duplicated in both
  * HSI_Pp_M_IRQr_xxx(channels [0..7]) and HSI_Pp_M_IRQrU_xxx(channels [8..15]),
@@ -458,8 +459,7 @@ static void hsi_do_channel_rx(struct hsi_channel *ch)
 		fifo_words_avail = hsi_get_rx_fifo_occupancy(hsi_ctrl, fifo);
 		if (!fifo_words_avail) {
 			dev_dbg(hsi_ctrl->dev,
-				"RX FIFO %d empty before CPU copy\n",
-				fifo);
+				"RX FIFO %d empty before CPU copy\n", fifo);
 
 			/* Do not disable interrupt becaue another interrupt */
 			/* can still come, this time with a real frame. */
@@ -560,6 +560,9 @@ int hsi_do_cawake_process(struct hsi_port *pport)
 		}
 		pport->cawake_status = 1;
 
+		/* Allow data reception */
+		hsi_hsr_resume(hsi_ctrl);
+
 		spin_unlock(&hsi_ctrl->lock);
 		hsi_port_event_handler(pport, HSI_EVENT_CAWAKE_UP, NULL);
 		spin_lock(&hsi_ctrl->lock);
@@ -598,19 +601,12 @@ int hsi_do_cawake_process(struct hsi_port *pport)
 		}
 		pport->cawake_status = 0;
 
+		/* Forbid data reception */
+		hsi_hsr_suspend(hsi_ctrl);
+
 		spin_unlock(&hsi_ctrl->lock);
 		hsi_port_event_handler(pport, HSI_EVENT_CAWAKE_DOWN, NULL);
 		spin_lock(&hsi_ctrl->lock);
-	}
-
-	/* If another CAWAKE event occured while previous is still processed */
-	/* do not clear the status bit */
-	cawake_status = hsi_get_cawake(pport);
-	if (cawake_status != pport->cawake_status) {
-		dev_warn(hsi_ctrl->dev, "CAWAKE line changed to %d while CAWAKE"
-					"event is still being processed\n",
-					cawake_status);
-		return -EAGAIN;
 	}
 
 	return 0;
@@ -652,7 +648,7 @@ static u32 hsi_driver_int_proc(struct hsi_port *pport,
 
 	if (pport->cawake_off_event) {
 		dev_dbg(hsi_ctrl->dev, "CAWAKE detected from IO daisy on port "
-					"%d\n", port);
+				       "%d\n", port);
 	} else if (!status_reg) {
 		dev_dbg(hsi_ctrl->dev, "Channels [%d,%d] : no event, exit.\n",
 			start, stop);

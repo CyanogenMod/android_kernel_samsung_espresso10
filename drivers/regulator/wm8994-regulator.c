@@ -43,7 +43,7 @@ static int wm8994_ldo_enable(struct regulator_dev *rdev)
 	if (!ldo->enable)
 		return 0;
 
-	gpio_set_value_cansleep(ldo->enable, 1);
+	gpio_set_value(ldo->enable, 1);
 	ldo->is_enabled = true;
 
 	return 0;
@@ -57,7 +57,7 @@ static int wm8994_ldo_disable(struct regulator_dev *rdev)
 	if (!ldo->enable)
 		return -EINVAL;
 
-	gpio_set_value_cansleep(ldo->enable, 0);
+	gpio_set_value(ldo->enable, 0);
 	ldo->is_enabled = false;
 
 	return 0;
@@ -72,6 +72,12 @@ static int wm8994_ldo_is_enabled(struct regulator_dev *rdev)
 
 static int wm8994_ldo_enable_time(struct regulator_dev *rdev)
 {
+	struct wm8994_ldo *ldo = rdev_get_drvdata(rdev);
+	struct wm8994_pdata *pdata = ldo->wm8994->dev->platform_data;
+
+	if (pdata->ldo_ena_delay)
+		return pdata->ldo_ena_delay;
+
 	/* 3ms is fairly conservative but this shouldn't be too performance
 	 * critical; can be tweaked per-system if required. */
 	return 3000;

@@ -161,8 +161,8 @@ static struct resource t1_wifi_resources[] = {
 	[0] = {
 		.name	= "bcmdhd_wlan_irq",
 		.flags	= IORESOURCE_IRQ
-			| IORESOURCE_IRQ_HIGHLEVEL
-			| IORESOURCE_IRQ_SHAREABLE,
+                        | IORESOURCE_IRQ_HIGHLEVEL
+                        | IORESOURCE_IRQ_SHAREABLE,
 	},
 };
 

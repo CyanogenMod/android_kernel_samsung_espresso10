@@ -23,7 +23,7 @@
 #include "sec_muxtbl.h"
 
 static struct omap_muxtbl muxtbl[] __initdata = {
-	/* [IN---] gpmc_a18 - gpio_42 - AP_DUMP_INT */
+	/* [IN---] gpmc_a18.gpio_42 - AP_DUMP_INT */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_A18, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
 		     42, "AP_DUMP_INT"),

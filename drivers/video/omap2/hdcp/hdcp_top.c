@@ -611,11 +611,12 @@ static long hdcp_enable_ctl(void __user *argp)
 		return -EFAULT;
 	}
 
+	hdcp.hdcp_keys_loaded = true;
+
 	/* Post event to workqueue */
 	if (hdcp_submit_work(HDCP_ENABLE_CTL, 0) == 0)
 		return -EFAULT;
 
-	hdcp.hdcp_keys_loaded = true;
 
 	return 0;
 }

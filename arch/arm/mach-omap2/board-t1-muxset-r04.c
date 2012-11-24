@@ -23,21 +23,21 @@
 #include "sec_muxtbl.h"
 
 static struct omap_muxtbl muxtbl[] __initdata = {
-	/* [--OUT] gpmc_ncs3 - gpio_53 - SENSOR_EN */
+	/* [--OUT] gpmc_ncs3.gpio_53 - SENSOR_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_NCS3, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     53, "SENSOR_EN"),
-	/* [--OUT] gpmc_nbe0_cle - gpio_59 - MHL_SEL */
+	/* [--OUT] gpmc_nbe0_cle.gpio_59 - MHL_SEL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_NBE0_CLE, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     59, "MHL_SEL"),
-	/* [IN---] mcspi1_cs2 - gpio_139 - 3-TOUCHKEY_SCL */
+	/* [IN---] mcspi1_cs2.gpio_139 - 3-TOUCHKEY_SCL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     MCSPI1_CS2,
 		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLUP |
 		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     139, "3-TOUCHKEY_SCL"),
-	/* [IN---] mcspi1_cs3 - gpio_140 - 3-TOUCHKEY_SDA */
+	/* [IN---] mcspi1_cs3.gpio_140 - 3-TOUCHKEY_SDA */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     MCSPI1_CS3,
 		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLUP |

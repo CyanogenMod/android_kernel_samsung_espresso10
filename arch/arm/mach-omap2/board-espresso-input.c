@@ -18,9 +18,12 @@
 #include <linux/gpio_event.h>
 #include <linux/gpio.h>
 #include <linux/i2c.h>
-#include <linux/platform_data/melfas_ts.h>
+#include <linux/battery.h>
+#include <linux/platform_data/sec_ts.h>
 #include <asm/mach-types.h>
 #include <plat/omap4-keypad.h>
+
+#include <mach/cpufreq_limits.h>
 
 #include "board-espresso.h"
 #include "mux.h"
@@ -105,6 +108,13 @@ static struct platform_device espresso_gpio_keypad_device = {
 	},
 };
 
+enum {
+	GPIO_TOUCH_nINT = 0,
+	GPIO_TOUCH_EN,
+	GPIO_TOUCH_SCL,
+	GPIO_TOUCH_SDA,
+};
+
 static struct gpio tsp_gpios[] = {
 	[GPIO_TOUCH_nINT] = {
 		.flags	= GPIOF_IN,
@@ -121,33 +131,6 @@ static struct gpio tsp_gpios[] = {
 		.label	= "TSP_I2C_SDA_1.8V",
 	},
 };
-
-static int melfas_i2c_set(bool to_gpios)
-{
-	/* TOUCH_EN is always an output */
-	if (to_gpios) {
-		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE3,
-				  tsp_gpios[GPIO_TOUCH_SCL].gpio);
-
-		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE3,
-				  tsp_gpios[GPIO_TOUCH_SDA].gpio);
-	} else {
-		gpio_direction_output(tsp_gpios[GPIO_TOUCH_nINT].gpio, 1);
-		gpio_direction_input(tsp_gpios[GPIO_TOUCH_nINT].gpio);
-
-		gpio_direction_output(tsp_gpios[GPIO_TOUCH_SCL].gpio, 1);
-		gpio_direction_input(tsp_gpios[GPIO_TOUCH_SCL].gpio);
-		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE0,
-					tsp_gpios[GPIO_TOUCH_SCL].gpio);
-
-		gpio_direction_output(tsp_gpios[GPIO_TOUCH_SDA].gpio, 1);
-		gpio_direction_input(tsp_gpios[GPIO_TOUCH_SDA].gpio);
-		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE0,
-					tsp_gpios[GPIO_TOUCH_SDA].gpio);
-	}
-
-	return 0;
-}
 
 static void tsp_set_power(bool on)
 {
@@ -185,23 +168,60 @@ static void tsp_set_power(bool on)
 	return;
 }
 
-static struct melfas_platform_data melfas_ts_pdata = {
-	.rx_channel_no = 13, /* Rx ch. */
-	.tx_channel_no = 22, /* Tx ch. */
-	.x_pixel_size = 1023,
-	.y_pixel_size = 599,
-	.ta_state = CABLE_TYPE_NONE,
-	.gpio_set = tsp_gpios,
-	.set_i2c_to_gpio = melfas_i2c_set,
-	.set_power = tsp_set_power,
+const u32 espresso_tsp_fw_info = 0x17;
+
+static struct sec_ts_platform_data espresso_ts_pdata = {
+	.fw_name	= "melfas/p3100.fw",
+	.fw_info	= &espresso_tsp_fw_info,
+	.rx_channel_no	= 13, /* Rx ch. */
+	.tx_channel_no	= 22, /* Tx ch. */
+	.x_pixel_size	= 1023,
+	.y_pixel_size	= 599,
+	.pivot		= true,
+	.ta_state	= CABLE_TYPE_NONE,
+	.set_power	= tsp_set_power,
 };
 
 static struct i2c_board_info __initdata espresso_i2c3_boardinfo[] = {
 	{
-		I2C_BOARD_INFO("melfas-ts", 0x48),
-		.platform_data	= &melfas_ts_pdata,
+		I2C_BOARD_INFO("melfas_ts", 0x48),
+		.platform_data	= &espresso_ts_pdata,
 	},
 };
+
+void touch_i2c_to_gpio(bool to_gpios)
+{
+	if (to_gpios) {
+		gpio_direction_output(tsp_gpios[GPIO_TOUCH_nINT].gpio, 0);
+		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE3,
+					tsp_gpios[GPIO_TOUCH_nINT].gpio);
+
+		gpio_direction_output(tsp_gpios[GPIO_TOUCH_SCL].gpio, 0);
+		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE3,
+					tsp_gpios[GPIO_TOUCH_SCL].gpio);
+
+		gpio_direction_output(tsp_gpios[GPIO_TOUCH_SDA].gpio, 0);
+		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE3,
+					tsp_gpios[GPIO_TOUCH_SDA].gpio);
+	} else {
+		gpio_direction_output(tsp_gpios[GPIO_TOUCH_nINT].gpio, 1);
+		gpio_direction_input(tsp_gpios[GPIO_TOUCH_nINT].gpio);
+		omap_mux_set_gpio(OMAP_PIN_INPUT_PULLUP | OMAP_MUX_MODE3,
+					tsp_gpios[GPIO_TOUCH_nINT].gpio);
+
+		gpio_direction_output(tsp_gpios[GPIO_TOUCH_SCL].gpio, 1);
+		gpio_direction_input(tsp_gpios[GPIO_TOUCH_SCL].gpio);
+		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE0,
+					tsp_gpios[GPIO_TOUCH_SCL].gpio);
+
+		gpio_direction_output(tsp_gpios[GPIO_TOUCH_SDA].gpio, 1);
+		gpio_direction_input(tsp_gpios[GPIO_TOUCH_SDA].gpio);
+		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE0,
+					tsp_gpios[GPIO_TOUCH_SDA].gpio);
+	}
+
+	return;
+}
 
 ssize_t sec_key_pressed_show(struct device *dev,
 			     struct device_attribute *attr, char *buf)
@@ -267,22 +287,73 @@ static void __init espresso_tsp_gpio_init(void)
 
 	for (i = 0; i < ARRAY_SIZE(tsp_gpios); i++)
 		tsp_gpios[i].gpio =
-		    omap_muxtbl_get_gpio_by_name(tsp_gpios[i].label);
+			omap_muxtbl_get_gpio_by_name(tsp_gpios[i].label);
 	gpio_request_array(tsp_gpios, ARRAY_SIZE(tsp_gpios));
 
 	espresso_i2c3_boardinfo[0].irq =
-	    gpio_to_irq(tsp_gpios[GPIO_TOUCH_nINT].gpio);
+				gpio_to_irq(tsp_gpios[GPIO_TOUCH_nINT].gpio);
+
+	espresso_ts_pdata.gpio_irq = tsp_gpios[GPIO_TOUCH_nINT].gpio;
+	espresso_ts_pdata.gpio_scl = tsp_gpios[GPIO_TOUCH_SCL].gpio;
+	espresso_ts_pdata.gpio_sda = tsp_gpios[GPIO_TOUCH_SDA].gpio;
+}
+
+static struct gpio ts_panel_gpios[] = {
+	{
+		.label	= "TSP_VENDOR1",
+		.flags	= GPIOF_IN
+	},
+	{
+		.label	= "TSP_VENDOR2",
+		.flags	= GPIOF_IN
+	},
+	{
+		.label	= "TSP_VENDOR3",
+		.flags	= GPIOF_IN
+	},
+};
+
+static const char *panel_name[8] = {"ILJIN", "DIGITECH", };
+
+static __init void espresso_ts_panel_setup(void)
+{
+	int i, panel_id = 0;
+
+	for (i = 0; i < ARRAY_SIZE(ts_panel_gpios); i++)
+		ts_panel_gpios[i].gpio =
+			omap_muxtbl_get_gpio_by_name(ts_panel_gpios[i].label);
+	gpio_request_array(ts_panel_gpios, ARRAY_SIZE(ts_panel_gpios));
+
+	for (i = 0; i < ARRAY_SIZE(ts_panel_gpios); i++)
+		panel_id |= gpio_get_value(ts_panel_gpios[i].gpio) << i;
+
+	espresso_ts_pdata.panel_name = panel_name[clamp(panel_id, 0, 7)];
 }
 
 void omap4_espresso_tsp_ta_detect(int cable_type)
 {
-	melfas_ts_pdata.ta_state = cable_type;
+	espresso_ts_pdata.ta_state = cable_type;
 
 	/* Conditions for prevent kernel panic */
-	if (melfas_ts_pdata.set_ta_mode &&
+	if (espresso_ts_pdata.set_ta_mode &&
 				gpio_get_value(tsp_gpios[GPIO_TOUCH_EN].gpio))
-		melfas_ts_pdata.set_ta_mode(&melfas_ts_pdata.ta_state);
+		espresso_ts_pdata.set_ta_mode(&espresso_ts_pdata.ta_state);
 	return;
+}
+
+static void espresso_set_dvfs(bool on)
+{
+#ifdef CONFIG_TOUCH_DVFS
+	static bool is_on;
+
+	if (on && !is_on) {
+		omap_cpufreq_min_limit(DVFS_LOCK_ID_TSP, CONFIG_TOUCH_DVFS);
+		is_on = true;
+	} else if (!on && is_on) {
+		omap_cpufreq_min_limit_free(DVFS_LOCK_ID_TSP);
+		is_on = false;
+	}
+#endif
 }
 
 void __init omap4_espresso_input_init(void)
@@ -290,14 +361,15 @@ void __init omap4_espresso_input_init(void)
 	u32 boardtype = omap4_espresso_get_board_type();
 
 	if (boardtype == SEC_MACHINE_ESPRESSO_WIFI)
-		melfas_ts_pdata.model_name = "P3110";
+		espresso_ts_pdata.model_name = "P3110";
 	else if (boardtype == SEC_MACHINE_ESPRESSO_USA_BBY)
-		melfas_ts_pdata.model_name = "P3113";
+		espresso_ts_pdata.model_name = "P3113";
 	else
-		melfas_ts_pdata.model_name = "P3100";
+		espresso_ts_pdata.model_name = "P3100";
 
 	espresso_gpio_keypad_gpio_init();
 	espresso_tsp_gpio_init();
+	espresso_ts_panel_setup();
 
 	i2c_register_board_info(3, espresso_i2c3_boardinfo,
 				ARRAY_SIZE(espresso_i2c3_boardinfo));
@@ -310,4 +382,6 @@ void __init omap4_espresso_input_init(void)
 	}
 
 	platform_device_register(&espresso_gpio_keypad_device);
+
+	espresso_ts_pdata.set_dvfs = espresso_set_dvfs;
 }

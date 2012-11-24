@@ -54,7 +54,9 @@
  *
  */
 
-static int twl6030_interrupt_mapping[24] = {
+static unsigned long twl603x_features;
+
+static int twl6030_interrupt_mapping_table[24] = {
 	PWR_INTR_OFFSET,	/* Bit 0	PWRON			*/
 	PWR_INTR_OFFSET,	/* Bit 1	RPWRON			*/
 	TWL_VLOW_INTR_OFFSET,	/* Bit 2	BAT_VLOW		*/
@@ -70,7 +72,7 @@ static int twl6030_interrupt_mapping[24] = {
 	MMCDETECT_INTR_OFFSET,	/* Bit 11	MMC			*/
 	RSV_INTR_OFFSET,  	/* Bit 12	Reserved		*/
 	MADC_INTR_OFFSET,	/* Bit 13	GPADC_RT_EOC		*/
-	MADC_INTR_OFFSET,	/* Bit 14	GPADC_SW_EOC		*/
+	GPADCSW_INTR_OFFSET,	/* Bit 14	GPADC_SW_EOC		*/
 	GASGAUGE_INTR_OFFSET,	/* Bit 15	CC_AUTOCAL		*/
 
 	USBOTG_INTR_OFFSET,	/* Bit 16	ID_WKUP			*/
@@ -82,6 +84,37 @@ static int twl6030_interrupt_mapping[24] = {
 	CHARGERFAULT_INTR_OFFSET,	/* Bit 22	INT_CHRG	*/
 	RSV_INTR_OFFSET,	/* Bit 23	Reserved		*/
 };
+
+static int twl6032_interrupt_mapping_table[24] = {
+	PWR_INTR_OFFSET,	/* Bit 0	PWRON			*/
+	PWR_INTR_OFFSET,	/* Bit 1	RPWRON			*/
+	TWL_VLOW_INTR_OFFSET,	/* Bit 2	SYS_VLOW		*/
+	RTC_INTR_OFFSET,	/* Bit 3	RTC_ALARM		*/
+	RTC_INTR_OFFSET,	/* Bit 4	RTC_PERIOD		*/
+	HOTDIE_INTR_OFFSET,	/* Bit 5	HOT_DIE			*/
+	SMPSLDO_INTR_OFFSET,	/* Bit 6	VXXX_SHORT		*/
+	PWR_INTR_OFFSET,	/* Bit 7	SPDURATION		*/
+
+	PWR_INTR_OFFSET,	/* Bit 8	WATCHDOG		*/
+	BATDETECT_INTR_OFFSET,	/* Bit 9	BAT			*/
+	SIMDETECT_INTR_OFFSET,	/* Bit 10	SIM			*/
+	MMCDETECT_INTR_OFFSET,	/* Bit 11	MMC			*/
+	MADC_INTR_OFFSET,	/* Bit 12	GPADC_RT_EOC		*/
+	GPADCSW_INTR_OFFSET,	/* Bit 13	GPADC_SW_EOC		*/
+	GASGAUGE_INTR_OFFSET,	/* Bit 14	CC_EOC		*/
+	GASGAUGE_INTR_OFFSET,	/* Bit 15	CC_AUTOCAL		*/
+
+	USBOTG_INTR_OFFSET,	/* Bit 16	ID_WKUP			*/
+	USBOTG_INTR_OFFSET,	/* Bit 17	VBUS_WKUP		*/
+	USBOTG_INTR_OFFSET,	/* Bit 18	ID			*/
+	USB_PRES_INTR_OFFSET,	/* Bit 19	VBUS			*/
+	CHARGER_INTR_OFFSET,	/* Bit 20	CHRG_CTRL		*/
+	CHARGERFAULT_INTR_OFFSET,	/* Bit 21	EXT_CHRG	*/
+	CHARGERFAULT_INTR_OFFSET,	/* Bit 22	INT_CHRG	*/
+	RSV_INTR_OFFSET,	/* Bit 23	Reserved		*/
+};
+
+static int *twl6030_interrupt_mapping = twl6030_interrupt_mapping_table;
 /*----------------------------------------------------------------------*/
 
 static unsigned twl6030_irq_base, twl6030_irq_end;
@@ -346,8 +379,9 @@ int twl6030_mmc_card_detect_config(void)
 		return ret;
 	}
 
-	ret = twl_i2c_write_u8(TWL6030_MODULE_ID0, MMC_MEXT_DEB_MASK,
-						TWL6030_MMCDEBOUNCING);
+	ret = twl_i2c_write_u8(TWL6030_MODULE_ID0,
+			(MMC_MINS_DEB_MASK | MMC_MEXT_DEB_MASK),
+			TWL6030_MMCDEBOUNCING);
 	if (ret < 0) {
 		pr_err("twl16030: Failed to write MMC_MEXT_DEB_MASK %d\n",
 								ret);
@@ -362,6 +396,8 @@ int twl6030_mmc_card_detect(struct device *dev, int slot)
 {
 	int ret = -EIO;
 	u8 read_reg = 0;
+	u8 read_reg_addr = TWL6030_MMCCTRL;
+
 	struct platform_device *pdev = to_platform_device(dev);
 
 	if (pdev->id) {
@@ -371,12 +407,16 @@ int twl6030_mmc_card_detect(struct device *dev, int slot)
 		pr_err("Unknown MMC controller %d in %s\n", pdev->id, __func__);
 		return ret;
 	}
+
+	if (twl603x_features & TWL6034_SUBCLASS)
+		read_reg_addr = TWL6034_MMCCTRL;
+
 	/*
 	 * BIT0 of MMC_CTRL on TWL6030 provides card status for MMC1
 	 * 0 - Card not present ,1 - Card present
 	 */
 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID0, &read_reg,
-						TWL6030_MMCCTRL);
+						read_reg_addr);
 	if (ret >= 0)
 		ret = read_reg & STS_MMC;
 	return ret;
@@ -450,7 +490,9 @@ int twl6030_vlow_init(int vlow_irq)
 	return 0;
 }
 
-int twl6030_init_irq(int irq_num, unsigned irq_base, unsigned irq_end)
+
+int twl6030_init_irq(int irq_num, unsigned irq_base, unsigned irq_end,
+			unsigned long features)
 {
 
 	int	status = 0;
@@ -459,6 +501,14 @@ int twl6030_init_irq(int irq_num, unsigned irq_base, unsigned irq_end)
 	u8 mask[4];
 
 	static struct irq_chip	twl6030_irq_chip;
+
+	twl603x_features = features;
+
+	if (features & TWL6032_SUBCLASS)
+		twl6030_interrupt_mapping = twl6032_interrupt_mapping_table;
+
+
+
 	mask[1] = 0xFF;
 	mask[2] = 0xFF;
 	mask[3] = 0xFF;

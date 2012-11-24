@@ -173,4 +173,4 @@ static int __init sec_getlog_info_init(void)
 	return 0;
 }
 
-late_initcall(sec_getlog_info_init);
+arch_initcall(sec_getlog_info_init);

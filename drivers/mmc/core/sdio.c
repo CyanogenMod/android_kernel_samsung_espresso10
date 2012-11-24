@@ -115,7 +115,7 @@ static int sdio_read_cccr(struct mmc_card *card)
 
 	cccr_vsn = data & 0x0f;
 
-	if (cccr_vsn > SDIO_CCCR_REV_1_20) {
+	if (cccr_vsn > SDIO_CCCR_REV_2_00) {
 		printk(KERN_ERR "%s: unrecognised CCCR structure version %d\n",
 			mmc_hostname(card->host), cccr_vsn);
 		return -EINVAL;
@@ -617,6 +617,7 @@ out:
 
 		mmc_claim_host(host);
 		mmc_detach_bus(host);
+		mmc_power_off(host);
 		mmc_release_host(host);
 	}
 }
@@ -654,7 +655,7 @@ static int mmc_sdio_suspend(struct mmc_host *host)
 	if (!err && mmc_card_keep_power(host) && mmc_card_wake_sdio_irq(host)) {
 		mmc_claim_host(host);
 		sdio_disable_wide(host->card);
-		mmc_release_host(host);
+		mmc_release_host_sync(host);
 	}
 
 	return err;
@@ -685,7 +686,7 @@ static int mmc_sdio_resume(struct mmc_host *host)
 
 	if (!err && host->sdio_irqs)
 		mmc_signal_sdio_irq(host);
-	mmc_release_host(host);
+	mmc_release_host_sync(host);
 
 	/*
 	 * If the card looked to be the same as before suspending, then

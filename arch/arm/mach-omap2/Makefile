@@ -37,6 +37,7 @@ obj-$(CONFIG_OMAP_MCBSP) += mcbsp.o
 obj-$(CONFIG_TWL4030_CORE) += omap_twl.o
 obj-$(CONFIG_OMAP_TPS6236X) += omap_tps6236x.o
 obj-$(CONFIG_OMAP_TEMP_SENSOR) +=temp_sensor_device.o
+obj-$(CONFIG_OMAP4_PCB_SENSOR) += pcb_temp_sensor_device.o
 
 # SMP support ONLY available for OMAP4
 obj-$(CONFIG_SMP)			+= omap-smp.o omap-headsmp.o
@@ -80,9 +81,6 @@ obj-$(CONFIG_OMAP_SMARTREFLEX)          += sr_device.o smartreflex.o
 obj-$(CONFIG_OMAP_SMARTREFLEX_CLASS3)	+= smartreflex-class3.o
 obj-$(CONFIG_OMAP_SMARTREFLEX_CLASS1P5)	+= smartreflex-class1p5.o
 
-# CPUFREQ driver
-obj-$(CONFIG_CPU_FREQ)			+= omap2plus-cpufreq.o
-
 # Power Management
 ifeq ($(CONFIG_PM),y)
 obj-$(CONFIG_ARCH_OMAP2)		+= pm24xx.o
@@ -92,6 +90,9 @@ obj-$(CONFIG_ARCH_OMAP3)		+= pm34xx.o sleep34xx.o \
 obj-$(CONFIG_ARCH_OMAP4)		+= pm44xx.o		\
 					   omap4-mpuss-lowpower.o sleep44xx.o \
 					   cpuidle44xx.o resetreason.o
+# CPUFREQ driver
+obj-$(CONFIG_CPU_FREQ)			+= omap2plus-cpufreq.o
+
 obj-$(CONFIG_PM_DEBUG)			+= pm-debug.o
 ifeq ($(CONFIG_PM_DEBUG),y)
 obj-$(CONFIG_ARCH_OMAP4)		+= prcm-debug.o
@@ -267,7 +268,8 @@ obj-$(CONFIG_MACH_OMAP3_TOUCHBOOK)	+= board-omap3touchbook.o \
 					   hsmmc.o
 obj-$(CONFIG_MACH_OMAP_4430SDP)		+= board-4430sdp.o \
 					   hsmmc.o \
-					   omap_phy_internal.o
+					   omap_phy_internal.o \
+					   omap4_apps_brd_id.o
 obj-$(CONFIG_MACH_OMAP4_PANDA)		+= board-omap4panda.o \
 					   hsmmc.o \
 					   omap_phy_internal.o
@@ -328,9 +330,12 @@ obj-$(CONFIG_OMAP_HSI_DEVICE)		+= omap_hsi.o
 ifeq ($(CONFIG_MACH_TUNA),y)
 obj-$(CONFIG_SEC_MODEM)                 += board-tuna-modems.o
 endif
+obj-$(CONFIG_ION_OMAP)			+= omap4_ion.o
 obj-$(CONFIG_ARCH_OMAP4)		+= omap_dmm.o
 obj-$(CONFIG_OMAP_FIQ_DEBUGGER)		+= omap_fiq_debugger.o
+obj-$(CONFIG_OMAP_RAM_CONSOLE)         += omap_ram_console.o
+obj-$(CONFIG_ARCH_OMAP4)		+= omap_gcxxx.o
 
 include arch/arm/mach-omap2/Makefile.sec
 include arch/arm/mach-omap2/Makefile.chn
-
+include arch/arm/mach-omap2/Makefile.mid

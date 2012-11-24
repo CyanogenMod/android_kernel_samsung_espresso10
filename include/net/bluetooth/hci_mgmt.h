@@ -92,6 +92,7 @@ enum {
 	HCI_SERVICE_CACHE,
 	HCI_LINK_KEYS,
 	HCI_DEBUG_KEYS,
+	HCI_UNREGISTER,
 	HCI_LE_SCAN,
 	HCI_SSP_ENABLED,
 	HCI_LE_ENABLED,
@@ -168,11 +169,27 @@ enum {
 #define ESCO_3EV3	0x0080
 #define ESCO_2EV5	0x0100
 #define ESCO_3EV5	0x0200
+/* wbs */
+#define ESCO_WBS	(ESCO_EV3 | (EDR_ESCO_MASK ^ ESCO_2EV3))
 
 #define SCO_ESCO_MASK	(ESCO_HV1 | ESCO_HV2 | ESCO_HV3)
 #define EDR_ESCO_MASK	(ESCO_2EV3 | ESCO_3EV3 | ESCO_2EV5 | ESCO_3EV5)
+/* SS_BLUETOOTH(is80.hwang) 2012.03.02 */
+/* change applied EDR ESCO packet */
+#ifdef CONFIG_BT_CSR8811
+#define ALL_ESCO_MASK (SCO_ESCO_MASK | ESCO_EV3 | ESCO_EV4 | ESCO_EV5 | \
+ESCO_2EV3 /*EDR_ESCO_MASK*/)
+#else
 #define ALL_ESCO_MASK	(SCO_ESCO_MASK | ESCO_EV3 | ESCO_EV4 | ESCO_EV5 | \
 			EDR_ESCO_MASK)
+#endif
+/* SS_BLUEZ_BT(is80.hwang) End */
+/* wbs */
+/* Air Coding Format */
+#define ACF_TRANS	0x0003;
+
+/* Retransmission Effort */
+#define RE_LINK_QUALITY		0x02;
 
 /* ACL flags */
 #define ACL_START_NO_FLUSH	0x00
@@ -757,6 +774,18 @@ struct hci_rp_read_bd_addr {
 	bdaddr_t bdaddr;
 } __packed;
 
+/* monitoring of the RSSI of the link between two Bluetooth devices */
+#define HCI_OP_READ_RSSI		0x1405
+struct hci_cp_read_rssi {
+	__le16	handle;
+} __packed;
+
+struct hci_rp_read_rssi {
+	__u8	status;
+	__le16	handle;
+	__s8	rssi;
+} __packed;
+
 #define HCI_OP_WRITE_PAGE_SCAN_ACTIVITY	0x0c1c
 struct hci_cp_write_page_scan_activity {
 	__le16   interval;
@@ -851,6 +880,12 @@ struct hci_cp_le_ltk_neg_reply {
 struct hci_rp_le_ltk_neg_reply {
 	__u8	status;
 	__le16	handle;
+} __packed;
+
+#define HCI_OP_LE_TEST_END		0x201f
+struct hci_rp_le_test_end {
+	__u8	status;
+	__u16	num_pkts;
 } __packed;
 
 /* ---- HCI Events ---- */

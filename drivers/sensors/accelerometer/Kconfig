@@ -35,3 +35,6 @@ config INPUT_YAS_ACCELEROMETER_POSITION
               5: bottom, upper-right
               6: bottom, lower-right
               7: bottom, lower-left
+config INPUT_YAS_ACC_ALERT_INT
+         bool "YAS Acceleration Sensor interrupt enable for alert"
+         default n
