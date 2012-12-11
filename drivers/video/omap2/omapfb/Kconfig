@@ -27,17 +27,3 @@ config FB_OMAP2_NUM_FBS
 	help
 	  Select the number of framebuffers created. OMAP2/3 has 3 overlays
 	  so normally this would be 3.
-
-config FB_OMAP2_VSYNC_SEND_UEVENTS
-    bool "OMAPFB vsync uevents"
-    default y
-	depends on FB_OMAP2
-	help
-	  Pass vsync via uevent to userspace.
-
-config FB_OMAP2_VSYNC_SYSFS
-    bool "OMAPFB vsync sysfs"
-    default n
-	depends on FB_OMAP2
-	help
-	  Pass vsync via sysfs to userspace.

@@ -2291,23 +2291,10 @@ static int omapfb_init_display(struct omapfb2_device *fbdev,
 	return 0;
 }
 
-#ifdef CONFIG_FB_OMAP2_VSYNC_SYSFS
-static ssize_t omapfb_vsync_time(struct device *dev,
-                struct device_attribute *attr, char *buf)
-{
-	struct omapfb2_device *fbdev = dev_get_drvdata(dev);
-
-	return snprintf(buf, PAGE_SIZE, "%llu", ktime_to_ns(fbdev->vsync_timestamp));
-}
-static DEVICE_ATTR(vsync_time, S_IRUGO, omapfb_vsync_time, NULL);
-#endif
-
 static void omapfb_send_vsync_work(struct work_struct *work)
 {
 	struct omapfb2_device *fbdev =
 		container_of(work, typeof(*fbdev), vsync_work);
-
-#ifdef CONFIG_FB_OMAP2_VSYNC_SEND_UEVENTS
 	char buf[64];
 	char *envp[2];
 
@@ -2316,11 +2303,6 @@ static void omapfb_send_vsync_work(struct work_struct *work)
 	envp[0] = buf;
 	envp[1] = NULL;
 	kobject_uevent_env(&fbdev->dev->kobj, KOBJ_CHANGE, envp);
-#endif
-
-#ifdef CONFIG_FB_OMAP2_VSYNC_SYSFS
-	sysfs_notify(&fbdev->dev->kobj, NULL, "vsync_time");
-#endif
 }
 static void omapfb_vsync_isr(void *data, u32 mask)
 {
@@ -2459,14 +2441,6 @@ static int omapfb_probe(struct platform_device *pdev)
 		dev_err(fbdev->dev, "failed to create sysfs entries\n");
 		goto cleanup;
 	}
-
-#ifdef CONFIG_FB_OMAP2_VSYNC_SYSFS
-	r = device_create_file(fbdev->dev, &dev_attr_vsync_time);
-	if (r) {
-		dev_err(fbdev->dev, "failed to add sysfs entries\n");
-		goto cleanup;
-	}
-#endif
 
 	INIT_WORK(&fbdev->vsync_work, omapfb_send_vsync_work);
 	return 0;
