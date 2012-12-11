@@ -1,0 +1,8 @@
+Change-Id: I1b13873f97dd5e0c4510f7060c1ceaaf686744c9
+Code-Review+2: Daniel Hillenbrand <codeworkx@cyanogenmod.org>
+Verified+1: Daniel Hillenbrand <codeworkx@cyanogenmod.org>
+Submitted-by: Daniel Hillenbrand <codeworkx@cyanogenmod.org>
+Submitted-at: Tue, 11 Dec 2012 02:10:41 -0800
+Reviewed-on: http://review.cyanogenmod.org/28059
+Project: CyanogenMod/android_kernel_samsung_espresso10
+Branch: refs/heads/jellybean
