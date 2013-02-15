@@ -66,6 +66,8 @@ struct ltn101al03 {
 	struct class *lcd_class;
 };
 
+static struct brightness_data ltn101al03_brightness_data;
+
 static void backlight_gptimer_update(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
@@ -85,7 +87,10 @@ static void backlight_gptimer_update(struct omap_dss_device *dssdev)
 static void backlight_gptimer_stop(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
-	omap_dm_timer_disable(lcd->gptimer);
+	int ret;
+	ret = omap_dm_timer_stop(lcd->gptimer);
+	if (ret)
+		pr_err("failed to stop pwm timer. ret=%d\n", ret);
 }
 
 static int backlight_gptimer_init(struct omap_dss_device *dssdev)
@@ -125,11 +130,6 @@ static int ltn101al03_hw_reset(struct omap_dss_device *dssdev)
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
 
-	gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 0);
-	mdelay(1);
-	gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 1);
-	msleep(30);
-
 	gpio_set_value(lcd->pdata->lvds_nshdn_gpio, 0);
 	mdelay(1);
 	gpio_set_value(lcd->pdata->lvds_nshdn_gpio, 1);
@@ -141,32 +141,27 @@ static int ltn101al03_hw_reset(struct omap_dss_device *dssdev)
 static int get_gamma_value_from_bl(int bl)
 {
 	int gamma_value = 0;
+	int i;
 
-	if (bl == BRIGHTNESS_OFF)
-		gamma_value = BRIGHTNESS_OFF;
-	else if (bl <= BRIGHTNESS_DIM)
-		gamma_value = bl * PWM_DUTY_MAX * DUTY_DIM
-		/ BRIGHTNESS_DIM;
-	else if (bl <= BRIGHTNESS_MIN)
-		gamma_value = (bl - BRIGHTNESS_DIM)
-		* (PWM_DUTY_MAX * DUTY_MIN - PWM_DUTY_MAX * DUTY_DIM)
-		/ (BRIGHTNESS_MIN - BRIGHTNESS_DIM)
-		+ PWM_DUTY_MAX * DUTY_DIM;
-	else if (bl <= BRIGHTNESS_25)
-		gamma_value = (bl - BRIGHTNESS_MIN)
-		* (PWM_DUTY_MAX * DUTY_25 - PWM_DUTY_MAX * DUTY_MIN)
-		/ (BRIGHTNESS_25 - BRIGHTNESS_MIN)
-		+ PWM_DUTY_MAX * DUTY_MIN;
-	else if (bl <= BRIGHTNESS_DEFAULT)
-		gamma_value = (bl - BRIGHTNESS_25)
-		* (PWM_DUTY_MAX * DUTY_DEFAULT - PWM_DUTY_MAX * DUTY_25)
-		/ (BRIGHTNESS_DEFAULT - BRIGHTNESS_25)
-		+ PWM_DUTY_MAX * DUTY_25;
-	else if (bl <= BRIGHTNESS_MAX)
-		gamma_value = (bl - BRIGHTNESS_DEFAULT)
-		* (PWM_DUTY_MAX * DUTY_MAX - PWM_DUTY_MAX * DUTY_DEFAULT)
-		/ (BRIGHTNESS_MAX - BRIGHTNESS_DEFAULT)
-		+ PWM_DUTY_MAX * DUTY_DEFAULT;
+	if (bl == ltn101al03_brightness_data.platform_value[0])
+		gamma_value = ltn101al03_brightness_data.kernel_value[0];
+	for (i = 1 ; i < NUM_BRIGHTNESS_LEVEL ; i++) {
+		if (bl > ltn101al03_brightness_data.platform_value[i])
+			continue;
+		else {
+			gamma_value =
+			 (bl - ltn101al03_brightness_data.platform_value[i-1])
+			 * ((PWM_DUTY_MAX
+			 * ltn101al03_brightness_data.kernel_value[i])
+			 - (PWM_DUTY_MAX
+			 * ltn101al03_brightness_data.kernel_value[i-1]))
+			 / (ltn101al03_brightness_data.platform_value[i]
+			 - ltn101al03_brightness_data.platform_value[i-1])
+			 + (PWM_DUTY_MAX
+			 * ltn101al03_brightness_data.kernel_value[i-1]);
+			break;
+		}
+	}
 
 	return gamma_value/100;
 }
@@ -194,7 +189,6 @@ static int ltn101al03_power_on(struct omap_dss_device *dssdev)
 	if (lcd->enabled != 1) {
 		if (lcd->pdata->set_power)
 			lcd->pdata->set_power(true);
-		mdelay(10);
 
 		ret = omapdss_dpi_display_enable(dssdev);
 		if (ret) {
@@ -207,6 +201,12 @@ static int ltn101al03_power_on(struct omap_dss_device *dssdev)
 			ltn101al03_hw_reset(dssdev);
 
 			msleep(100);
+
+			gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 1);
+			mdelay(10);
+			omap_dm_timer_start(lcd->gptimer);
+
+			usleep_range(2000, 2100);
 			update_brightness(dssdev);
 		}
 
@@ -226,15 +226,14 @@ static int ltn101al03_power_off(struct omap_dss_device *dssdev)
 
 	lcd->enabled = 0;
 
+	gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 0);
+
 	backlight_gptimer_stop(dssdev);
-	msleep(220);
+	msleep(250);
 
 	gpio_set_value(lcd->pdata->lvds_nshdn_gpio, 0);
-	msleep(20);
 
 	omapdss_dpi_display_disable(dssdev);
-
-	gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 0);
 
 	if (lcd->pdata->set_power)
 		lcd->pdata->set_power(false);
@@ -268,8 +267,8 @@ static int ltn101al03_set_brightness(struct backlight_device *bd)
 		(lcd->enabled) &&
 		(lcd->current_brightness != lcd->bl)) {
 		update_brightness(dssdev);
-		dev_info(&bd->dev, " brightness=%d, bl=%d\n",
-			 bd->props.brightness, lcd->bl);
+		dev_info(&bd->dev, "[%d] brightness=%d, bl=%d\n",
+			 lcd->pdata->panel_id, bd->props.brightness, lcd->bl);
 	}
 	mutex_unlock(&lcd->lock);
 	return ret;
@@ -336,33 +335,6 @@ out:
 static DEVICE_ATTR(lcd_power, S_IRUGO | S_IWUSR | S_IWGRP
 	, NULL, ltn101al03_sysfs_store_lcd_power);
 
-#define LCD_XRES			1280
-#define LCD_YRES			800
-#define LCD_HBP				64
-#define LCD_HFP				16
-#define LCD_HSW				48
-#define LCD_VBP				11
-#define LCD_VFP				16
-#define LCD_VSW				3
-
-#define LCD_PIXCLOCK_MAX		69000
-
-/*  Manual
- * defines HFB, HSW, HBP, VFP, VSW, VBP as shown below
- */
-
-static struct omap_video_timings ltn101al03_panel_timings = {
-	.x_res		= LCD_XRES,
-	.y_res		= LCD_YRES,
-	.pixel_clock	= LCD_PIXCLOCK_MAX,
-	.hfp		= LCD_HFP,
-	.hsw		= LCD_HSW,
-	.hbp		= LCD_HBP,
-	.vfp		= LCD_VFP,
-	.vsw		= LCD_VSW,
-	.vbp		= LCD_VBP,
-};
-
 static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 {
 	int ret = 0;
@@ -394,10 +366,11 @@ static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 			     | OMAP_DSS_LCD_ONOFF;
 
 	dssdev->panel.acb = 0;
-	dssdev->panel.timings = ltn101al03_panel_timings;
 
 	lcd->dssdev = dssdev;
 	lcd->pdata = dssdev->data;
+
+	ltn101al03_brightness_data = lcd->pdata->brightness_table;
 
 	lcd->bl = get_gamma_value_from_bl(props.brightness);
 

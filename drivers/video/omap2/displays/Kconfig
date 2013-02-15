@@ -37,6 +37,26 @@ config PANEL_S6E8AA0
         help
           S6E8AA0 video mode panel.
 
+config PANEL_S6E8AA0A01
+        tristate "S6E8AA0A01 DSI Panel"
+        depends on OMAP2_DSS_DSI
+        select BACKLIGHT_CLASS_DEVICE
+        help
+          S6E8AA0A01 video mode panel.
+
+config AID_DIMMING
+        bool "AID DIMMING"
+        depends on OMAP2_DSS_DSI
+        default n
+        help
+         This enables support for Samsung S6E8AA0 MIPI LCD AID DIMMING
+
+config SMART_DIMMING
+        bool "SMART DIMMING"
+        default n
+        help
+          This enables support for Samsung S6E8AA0 MIPI LCD SMART DIMMING
+
 config PANEL_TAAL
         tristate "Taal DSI Panel"
         depends on OMAP2_DSS_DSI
@@ -55,6 +75,19 @@ config PANEL_ACX565AKM
 	select BACKLIGHT_CLASS_DEVICE
 	help
 	  This is the LCD panel used on Nokia N900
+
+config PANEL_TC358765
+	tristate "Toshiba TC358765 DSI-2-LVDS chip"
+	depends on OMAP2_DSS_DSI && I2C
+	select BACKLIGHT_CLASS_DEVICE
+	help
+	  Toshiba TC358765 DSI-2-LVDS chip with 1024x768 panel
+
+config TC358765_DEBUG
+	bool "Toshiba TC358765 DSI-2-LVDS chip debug"
+	depends on PANEL_TC358765 && DEBUG_FS
+	help
+	  Support of TC358765 DSI-2-LVDS chip register access via debugfs
 
 config PANEL_LD9040
 	tristate "LD9040 Panel"
@@ -76,5 +109,35 @@ config PANEL_LTN101AL03
 	default n
 	help
 		This enables support for Samsung LTN101AL03 LCD panel
+
+config PANEL_HV070WX1
+        tristate "HV070W1 DSI Panel"
+        depends on OMAP2_DSS_DSI
+        select BACKLIGHT_CLASS_DEVICE
+        help
+
+config PANEL_NT71391
+        tristate "NT71391 DSI Panel"
+        depends on OMAP2_DSS_DSI
+        select BACKLIGHT_CLASS_DEVICE
+        help
+
+config IMGSENSOR_CMC624
+	bool "Samsung CMC624"
+	depends on FB_OMAP2
+	default n
+	help
+		This enables support for Samsung CMC624 feature
+
+config PANEL_LMS501KF07
+	tristate "LMS501KF07 DSI Panel"
+	depends on OMAP2_DSS_DSI
+	select BACKLIGHT_CLASS_DEVICE
+	default n
+	help
+		This enables support for SMD LMS501KF07 LCD panel.
+		HX8369 LDI, MIPI DSI, 800x480, 24bit, and mDNIe.
+		Works in Video mode and Initial and DCS commands
+		are sent to LDI through separate channel in LP state.
 
 endmenu

@@ -26,6 +26,9 @@
 #include <linux/moduleparam.h>
 #include <linux/pda_power.h>
 #include <linux/platform_device.h>
+#include <linux/power_supply.h>
+#include <linux/workqueue.h>
+#include <linux/delay.h>
 
 #include <plat/cpu.h>
 #include <plat/omap-pm.h>
@@ -40,13 +43,22 @@
 #define ADC_LIMIT_ERR_COUNT		5
 #define ISET_ADC_CHANNEL		4
 #define TEMP_ADC_CHANNEL		1
+#define VF_ADC_CHANNEL			0
 
-#define CHARGE_FULL_ADC			388
+#define CHARGE_FULL_ADC_PRE	388
+#define CHARGE_FULL_ADC		250 /*188*/
+
+#define CHARGE_FULL_COUNT_PRE	5
+#define CHARGE_FULL_COUNT	5
 
 #define HIGH_BLOCK_TEMP_T1		650
 #define HIGH_RECOVER_TEMP_T1		430
-#define LOW_BLOCK_TEMP_T1		(-3)
+#define LOW_BLOCK_TEMP_T1		(-30)
 #define LOW_RECOVER_TEMP_T1		0
+
+#define TEMP_BLOCK_FOR_CAM_RECORDING_TH	390
+
+#define BAT_REMOVAL_ADC_VALUE 1000
 
 /**
 ** temp_adc_table_data
@@ -61,90 +73,96 @@ struct temp_adc_table_data {
 static DEFINE_SPINLOCK(charge_en_lock);
 static int charger_state;
 static bool is_charging_mode;
+static bool batt_full_pre;
+static bool batt_full;
+static int check_full_pre;
+static int check_full;
+static bool charging_state;
+static bool charger_start_state;
 
 static struct temp_adc_table_data temper_table_t1[] = {
 	/* ADC, Temperature (C/10) */
-	{70, 700},
-	{72, 690},
-	{75, 680},
-	{77, 670},
-	{80, 660},
-	{82, 650},
-	{85, 640},
-	{88, 630},
-	{91, 620},
-	{94, 610},
-	{97, 600},
-	{101, 590},
-	{104, 580},
-	{108, 570},
+	{69, 700},
+	{70, 690},
+	{72, 680},
+	{75, 670},
+	{78, 660},
+	{81, 650},
+	{83, 640},
+	{86, 630},
+	{89, 620},
+	{92, 610},
+	{95, 600},
+	{99, 590},
+	{103, 580},
+	{107, 570},
 	{111, 560},
 	{115, 550},
 	{119, 540},
-	{124, 530},
-	{129, 520},
-	{133, 510},
-	{137, 500},
-	{141, 490},
-	{146, 480},
-	{150, 470},
-	{155, 460},
-	{160, 450},
-	{166, 440},
-	{171, 430},
-	{177, 420},
-	{184, 410},
-	{190, 400},
+	{123, 530},
+	{127, 520},
+	{131, 510},
+	{135, 500},
+	{139, 490},
+	{144, 480},
+	{149, 470},
+	{154, 460},
+	{159, 450},
+	{164, 440},
+	{169, 430},
+	{176, 420},
+	{182, 410},
+	{189, 400},
 	{196, 390},
-	{203, 380},
-	{212, 370},
-	{219, 360},
-	{226, 350},
-	{234, 340},
-	{242, 330},
-	{250, 320},
-	{258, 310},
-	{266, 300},
-	{275, 290},
-	{284, 280},
-	{294, 270},
-	{303, 260},
-	{312, 250},
-	{322, 240},
-	{333, 230},
-	{344, 220},
-	{354, 210},
-	{364, 200},
-	{375, 190},
-	{387, 180},
-	{399, 170},
-	{410, 160},
-	{422, 150},
-	{431, 140},
-	{443, 130},
-	{456, 120},
-	{468, 110},
-	{480, 100},
-	{493, 90},
-	{506, 80},
-	{519, 70},
-	{532, 60},
-	{545, 50},
-	{558, 40},
-	{571, 30},
-	{582, 20},
-	{595, 10},
-	{608, 0},
-	{620, (-10)},
-	{632, (-20)},
-	{645, (-30)},
-	{658, (-40)},
-	{670, (-50)},
-	{681, (-60)},
-	{696, (-70)},
-	{708, (-80)},
-	{720, (-90)},
-	{732, (-100)},
+	{204, 380},
+	{211, 370},
+	{218, 360},
+	{225, 350},
+	{233, 340},
+	{240, 330},
+	{247, 320},
+	{254, 310},
+	{262, 300},
+	{271, 290},
+	{280, 280},
+	{290, 270},
+	{299, 260},
+	{309, 250},
+	{318, 240},
+	{327, 230},
+	{337, 220},
+	{346, 210},
+	{356, 200},
+	{367, 190},
+	{379, 180},
+	{390, 170},
+	{402, 160},
+	{414, 150},
+	{425, 140},
+	{437, 130},
+	{449, 120},
+	{460, 110},
+	{472, 100},
+	{484, 90},
+	{496, 80},
+	{509, 70},
+	{521, 60},
+	{533, 50},
+	{545, 40},
+	{557, 30},
+	{570, 20},
+	{582, 10},
+	{594, 0},
+	{600, (-10)},
+	{607, (-20)},
+	{613, (-30)},
+	{621, (-40)},
+	{629, (-50)},
+	{637, (-60)},
+	{646, (-70)},
+	{654, (-80)},
+	{662, (-90)},
+	{670, (-100)},
 };
 
 static struct temp_adc_table_data *temper_table = temper_table_t1;
@@ -156,7 +174,14 @@ module_param(enable_sr, bool, S_IRUSR | S_IRGRP | S_IROTH);
 enum {
 	GPIO_CHG_ING_N = 0,
 	GPIO_TA_nCONNECTED,
-	GPIO_CHG_EN
+	GPIO_CHG_EN,
+	BAT_REMOVAL
+};
+
+enum {
+	NOT_FULL = 0,
+	FULL_CHARGED_PRE,
+	FULL_CHARGED
 };
 
 static struct gpio charger_gpios[] = {
@@ -171,6 +196,10 @@ static struct gpio charger_gpios[] = {
 	[GPIO_CHG_EN] = {
 		.flags = GPIOF_OUT_INIT_HIGH,
 		.label = "CHG_EN"
+	},
+	[BAT_REMOVAL] = {
+		.flags = GPIOF_IN,
+		.label = "BAT_REMOVAL"
 	},
 };
 
@@ -222,21 +251,82 @@ static int temp_adc_value(void)
 	return twl6030_get_adc_data(TEMP_ADC_CHANNEL);
 }
 
-static bool check_charge_full(void)
+static int get_vf_adc_value(void)
 {
-	int ret;
-
-	ret = iset_adc_value();
-	if (ret < 0) {
-		pr_err("%s: invalid iset adc value [%d]\n", __func__, ret);
-		return false;
-	}
-	pr_debug("%s : iset adc value : %d\n", __func__, ret);
-
-	return ret < CHARGE_FULL_ADC;
+	return twl6030_get_adc_data(VF_ADC_CHANNEL);
 }
 
-static int get_bat_temp_by_adc(int *batt_temp)
+static int check_vf_present(void)
+{
+	int vf_adc = 0;
+	vf_adc = get_vf_adc_value();
+
+	if (vf_adc > BAT_REMOVAL_ADC_VALUE) {
+		pr_info("%s, vf_adc : %d\n", __func__, vf_adc);
+		return 0;
+	}
+
+	return 1;
+}
+
+static int check_charge_full(bool batt_chg)
+{
+	int iset_adc;
+	int ret = 0;
+
+	if (!batt_chg) {
+		batt_full_pre = false;
+		batt_full = false;
+		check_full_pre = 0;
+		check_full = 0;
+
+		return ret;
+	}
+
+	iset_adc = iset_adc_value();
+	if (iset_adc < 0) {
+		pr_err("%s: invalid iset adc value [%d]\n", __func__, iset_adc);
+		return -EINVAL;
+	}
+
+	pr_debug("%s : iset adc value : %d\n", __func__, iset_adc);
+
+	if (batt_chg && charging_state) {
+		if (!batt_full_pre && iset_adc < CHARGE_FULL_ADC_PRE) {
+			if (check_full_pre >= CHARGE_FULL_COUNT_PRE) {
+				pr_info("%s : battery fully charged (pre)\n",
+					__func__);
+				batt_full_pre = true;
+			} else
+				check_full_pre++;
+		} else if (check_full_pre > 0)
+			check_full_pre = 0;
+
+		if (!batt_full && iset_adc < CHARGE_FULL_ADC) {
+			if (check_full >= CHARGE_FULL_COUNT) {
+				pr_info("%s : battery fully charged !!!\n",
+					__func__);
+				batt_full = true;
+			} else
+				check_full++;
+		}
+	} else {
+		batt_full_pre = false;
+		batt_full = false;
+		check_full_pre = 0;
+		check_full = 0;
+	}
+
+	if (batt_full_pre)
+		ret = FULL_CHARGED_PRE;
+
+	if (batt_full)
+		ret = FULL_CHARGED;
+
+	return ret;
+}
+
+static int get_bat_temp_by_adc(int *batt_temp, int *batt_temp_adc)
 {
 	int array_size = temper_table_size;
 	int temp_adc = temp_adc_value();
@@ -244,6 +334,8 @@ static int get_bat_temp_by_adc(int *batt_temp)
 	int left_side = 0;
 	int right_side = array_size - 1;
 	int temp = 0;
+
+	*batt_temp_adc = temp_adc;
 
 	if (temp_adc < 0) {
 		pr_err("%s : Invalid temperature adc value [%d]\n",
@@ -297,6 +389,8 @@ static void charger_exit(struct device *dev)
 
 static void set_charge_en(int state)
 {
+	charging_state = state ? true : false;
+
 	gpio_set_value(charger_gpios[GPIO_CHG_EN].gpio, !state);
 }
 
@@ -309,6 +403,8 @@ static void set_charger_mode(int cable_type)
 {
 	int i;
 	int mode;
+
+	charging_state = cable_type ? true : false;
 
 	if (cable_type == PDA_POWER_CHARGE_AC)
 		mode = ISET;
@@ -354,6 +450,66 @@ static void charger_set_only_charge(int state)
 	msleep(150);
 }
 
+static void adjust_charger_mode(int state)
+{
+	if (charger_state &&
+	    charger_state != state) {
+		set_charger_mode(0);
+		usleep_range(2000, 2100);
+		set_charger_mode(state);
+	}
+	pr_info("%s : Charging current is adjusted : %d\n",
+		__func__, state);
+}
+
+static void restore_charger_mode(void)
+{
+	if (charger_state) {
+		set_charger_mode(0);
+		usleep_range(2000, 2100);
+		set_charger_mode(charger_state);
+	}
+	pr_info("%s : Charging current is restored : %d\n",
+		__func__, charger_state);
+}
+
+static void set_start_state_for_charger(void)
+{
+	charger_start_state = true;
+}
+
+static bool check_charger_start_state(void)
+{
+	return charger_start_state;
+}
+
+static void set_charger_work(void)
+{
+	union power_supply_propval value;
+	struct power_supply *psy = power_supply_get_by_name("battery");
+	int ret = 0;
+
+	if (!psy) {
+		pr_err("%s: fail to get battery ps\n", __func__);
+		return;
+	}
+
+	value.intval = POWER_SUPPLY_TYPE_BATTERY;
+
+	if (psy) {
+		ret = psy->set_property(psy, POWER_SUPPLY_PROP_ONLINE, &value);
+		if (ret) {
+			pr_err("%s: fail to set power_suppy ONLINE property(%d)\n",
+				__func__, ret);
+		}
+	}
+}
+
+static bool check_temp_block_state(int temp)
+{
+	return (temp > TEMP_BLOCK_FOR_CAM_RECORDING_TH);
+}
+
 static int charger_is_online(void)
 {
 	return !gpio_get_value(charger_gpios[GPIO_TA_nCONNECTED].gpio);
@@ -369,9 +525,19 @@ static int get_charging_source(void)
 	return charger_state;
 }
 
+static bool get_charging_state(void)
+{
+	return charging_state;
+}
+
 static int get_full_charge_irq(void)
 {
 	return gpio_to_irq(charger_gpios[GPIO_CHG_ING_N].gpio);
+}
+
+static int get_bat_removal_irq(void)
+{
+	return gpio_to_irq(charger_gpios[BAT_REMOVAL].gpio);
 }
 
 static char *t1_charger_supplied_to[] = {
@@ -384,6 +550,8 @@ static __initdata struct pda_power_pdata charger_pdata = {
 	.set_charge		= charger_set_charge,
 	.wait_for_status	= 500,
 	.wait_for_charger	= 500,
+	.charger_work		= set_charger_work,
+	.get_charger_start_state	= check_charger_start_state,
 	.supplied_to		= t1_charger_supplied_to,
 	.num_supplicants	= ARRAY_SIZE(t1_charger_supplied_to),
 	.use_otg_notifier	= true,
@@ -393,11 +561,16 @@ static struct max17040_platform_data max17043_pdata = {
 	.charger_online		= charger_is_online,
 	.charger_enable		= charger_is_charging,
 	.allow_charging		= charger_set_only_charge,
+	.adjust_charger_mode	= adjust_charger_mode,
+	.restore_charger_mode	= restore_charger_mode,
+	.check_temp_block_state = check_temp_block_state,
+	.set_charger_start_state = set_start_state_for_charger,
 	.skip_reset		= true,
-	.min_capacity		= 3,
+	.min_capacity		= 1,
 	.is_full_charge		= check_charge_full,
 	.get_bat_temp		= get_bat_temp_by_adc,
 	.get_charging_source	= get_charging_source,
+	.get_charging_state	= get_charging_state,
 	.high_block_temp	= HIGH_BLOCK_TEMP_T1,
 	.high_recover_temp	= HIGH_RECOVER_TEMP_T1,
 	.low_block_temp		= LOW_BLOCK_TEMP_T1,
@@ -407,6 +580,9 @@ static struct max17040_platform_data max17043_pdata = {
 	.limit_charging_time	= 21600,	/* 6 hours */
 	.limit_recharging_time	= 5400,	/* 90 min */
 	.full_charge_irq	= get_full_charge_irq,
+	.bat_removal_irq	= get_bat_removal_irq,
+	.vf_adc_value		= get_vf_adc_value,
+	.battery_online		= check_vf_present,
 };
 
 static __initdata struct i2c_board_info max17043_i2c[] = {

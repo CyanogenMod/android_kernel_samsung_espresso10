@@ -33,6 +33,7 @@
 #define STMPE_KPC_CTRL_LSB_DEBOUNCE	(0x7f << 1)
 #define STMPE_KPC_CTRL_MSB_SCAN_COUNT	(0xf << 4)
 
+#define STMPE_KPC_COL_MSB_COLS		0xff
 #define STMPE_KPC_ROW_MSB_ROWS		0xff
 
 #define STMPE_KPC_DATA_UP		(0x1 << 7)
@@ -44,10 +45,81 @@
 #define STMPE_KEYPAD_MAX_SCAN_COUNT	15
 
 #define STMPE_KEYPAD_MAX_ROWS		8
-#define STMPE_KEYPAD_MAX_COLS		8
+#define STMPE_KEYPAD_MAX_COLS		10
 #define STMPE_KEYPAD_ROW_SHIFT		3
 #define STMPE_KEYPAD_KEYMAP_SIZE	\
 	(STMPE_KEYPAD_MAX_ROWS * STMPE_KEYPAD_MAX_COLS)
+
+#define STMPE_KEYPAD_MAX_COMBI_KEY	3
+#define STMPE_KEYPAD_MAX_DATA_BYTE	5
+
+struct stmpe_keypad_reg {
+	unsigned int col_msb;
+	unsigned int col_lsb;
+	unsigned int row_msb;
+	unsigned int row_lsb;
+	unsigned int ctrl_msb;
+	unsigned int ctrl_lsb;
+	unsigned int combi_key[STMPE_KEYPAD_MAX_COMBI_KEY];
+	unsigned int data_byte[STMPE_KEYPAD_MAX_DATA_BYTE];
+};
+
+static struct stmpe_keypad_reg stmpe_kpc = {
+	.col_msb	= STMPE_KPC_COL,
+	.col_lsb	= STMPE_KPC_COL,
+	.row_msb	= STMPE_KPC_ROW_MSB,
+	.row_lsb	= STMPE_KPC_ROW_LSB,
+	.ctrl_msb	= STMPE_KPC_CTRL_MSB,
+	.ctrl_lsb	= STMPE_KPC_CTRL_LSB,
+	.combi_key	= {
+		STMPE_KPC_COMBI_KEY_0,
+		STMPE_KPC_COMBI_KEY_1,
+		STMPE_KPC_COMBI_KEY_2,
+	},
+	.data_byte	= {
+		STMPE_KPC_DATA_BYTE0,
+		STMPE_KPC_DATA_BYTE1,
+		STMPE_KPC_DATA_BYTE2,
+		STMPE_KPC_DATA_BYTE3,
+		STMPE_KPC_DATA_BYTE4,
+	},
+};
+
+/* These are at the different addresses in all STMPE1801 variants */
+#define STMPE1801_KPC_COL_MSB		0x31
+#define STMPE1801_KPC_COL_LSB		0x32
+#define STMPE1801_KPC_ROW		0x30
+#define STMPE1801_KPC_CTRL_MSB		0x33
+#define STMPE1801_KPC_CTRL_LSB		0x35
+#define STMPE1801_KPC_COMBI_KEY_0	0x37
+#define STMPE1801_KPC_COMBI_KEY_1	0x38
+#define STMPE1801_KPC_COMBI_KEY_2	0x39
+#define STMPE1801_KPC_DATA_BYTE0	0x3a
+#define STMPE1801_KPC_DATA_BYTE1	0x3b
+#define STMPE1801_KPC_DATA_BYTE2	0x3c
+#define STMPE1801_KPC_DATA_BYTE3	0x3d
+#define STMPE1801_KPC_DATA_BYTE4	0x3e
+
+static struct stmpe_keypad_reg stmpe1801_kpc = {
+	.col_msb	= STMPE1801_KPC_COL_MSB,
+	.col_lsb	= STMPE1801_KPC_COL_LSB,
+	.row_msb	= STMPE1801_KPC_ROW,
+	.row_lsb	= STMPE1801_KPC_ROW,
+	.ctrl_msb	= STMPE1801_KPC_CTRL_MSB,
+	.ctrl_lsb	= STMPE1801_KPC_CTRL_LSB,
+	.combi_key	= {
+		STMPE1801_KPC_COMBI_KEY_0,
+		STMPE1801_KPC_COMBI_KEY_1,
+		STMPE1801_KPC_COMBI_KEY_2,
+	},
+	.data_byte	= {
+		STMPE1801_KPC_DATA_BYTE0,
+		STMPE1801_KPC_DATA_BYTE1,
+		STMPE1801_KPC_DATA_BYTE2,
+		STMPE1801_KPC_DATA_BYTE3,
+		STMPE1801_KPC_DATA_BYTE4,
+	},
+};
 
 /**
  * struct stmpe_keypad_variant - model-specific attributes
@@ -68,6 +140,7 @@ struct stmpe_keypad_variant {
 	int		max_rows;
 	unsigned int	col_gpios;
 	unsigned int	row_gpios;
+	struct stmpe_keypad_reg *reg;
 };
 
 static const struct stmpe_keypad_variant stmpe_keypad_variants[] = {
@@ -79,6 +152,17 @@ static const struct stmpe_keypad_variant stmpe_keypad_variants[] = {
 		.max_rows		= 8,
 		.col_gpios		= 0x000ff,	/* GPIO 0 - 7 */
 		.row_gpios		= 0x0ff00,	/* GPIO 8 - 15 */
+		.reg			= &stmpe_kpc,
+	},
+	[STMPE1801] = {
+		.auto_increment		= true,
+		.num_data		= 5,
+		.num_normal_data	= 3,
+		.max_cols		= 10,
+		.max_rows		= 8,
+		.col_gpios		= 0x000ff,	/* GPIO 0 - 7 */
+		.row_gpios		= 0x3ff00,	/* GPIO 8 - 17 */
+		.reg			= &stmpe1801_kpc,
 	},
 	[STMPE2401] = {
 		.auto_increment		= false,
@@ -88,6 +172,7 @@ static const struct stmpe_keypad_variant stmpe_keypad_variants[] = {
 		.max_rows		= 12,
 		.col_gpios		= 0x0000ff,	/* GPIO 0 - 7*/
 		.row_gpios		= 0x1fef00,	/* GPIO 8-14, 16-20 */
+		.reg			= &stmpe_kpc,
 	},
 	[STMPE2403] = {
 		.auto_increment		= true,
@@ -97,6 +182,7 @@ static const struct stmpe_keypad_variant stmpe_keypad_variants[] = {
 		.max_rows		= 12,
 		.col_gpios		= 0x0000ff,	/* GPIO 0 - 7*/
 		.row_gpios		= 0x1fef00,	/* GPIO 8-14, 16-20 */
+		.reg			= &stmpe_kpc,
 	},
 };
 
@@ -120,11 +206,11 @@ static int stmpe_keypad_read_data(struct stmpe_keypad *keypad, u8 *data)
 	int i;
 
 	if (variant->auto_increment)
-		return stmpe_block_read(stmpe, STMPE_KPC_DATA_BYTE0,
+		return stmpe_block_read(stmpe, variant->reg->data_byte[0],
 					variant->num_data, data);
 
 	for (i = 0; i < variant->num_data; i++) {
-		ret = stmpe_reg_read(stmpe, STMPE_KPC_DATA_BYTE0 + i);
+		ret = stmpe_reg_read(stmpe, variant->reg->data_byte[i]);
 		if (ret < 0)
 			return ret;
 
@@ -228,29 +314,37 @@ static int __devinit stmpe_keypad_chip_init(struct stmpe_keypad *keypad)
 	if (ret < 0)
 		return ret;
 
-	ret = stmpe_reg_write(stmpe, STMPE_KPC_COL, keypad->cols);
+	ret = stmpe_reg_write(stmpe, variant->reg->col_lsb, keypad->cols);
 	if (ret < 0)
 		return ret;
 
-	ret = stmpe_reg_write(stmpe, STMPE_KPC_ROW_LSB, keypad->rows);
+	if (variant->max_cols > 8) {
+		ret = stmpe_set_bits(stmpe, variant->reg->col_msb,
+				     STMPE_KPC_COL_MSB_COLS,
+				     keypad->cols >> 8);
+		if (ret < 0)
+			return ret;
+	}
+
+	ret = stmpe_reg_write(stmpe, variant->reg->row_lsb, keypad->rows);
 	if (ret < 0)
 		return ret;
 
 	if (variant->max_rows > 8) {
-		ret = stmpe_set_bits(stmpe, STMPE_KPC_ROW_MSB,
+		ret = stmpe_set_bits(stmpe, variant->reg->row_msb,
 				     STMPE_KPC_ROW_MSB_ROWS,
 				     keypad->rows >> 8);
 		if (ret < 0)
 			return ret;
 	}
 
-	ret = stmpe_set_bits(stmpe, STMPE_KPC_CTRL_MSB,
+	ret = stmpe_set_bits(stmpe, variant->reg->ctrl_msb,
 			     STMPE_KPC_CTRL_MSB_SCAN_COUNT,
 			     plat->scan_count << 4);
 	if (ret < 0)
 		return ret;
 
-	return stmpe_set_bits(stmpe, STMPE_KPC_CTRL_LSB,
+	return stmpe_set_bits(stmpe, variant->reg->ctrl_lsb,
 			      STMPE_KPC_CTRL_LSB_SCAN |
 			      STMPE_KPC_CTRL_LSB_DEBOUNCE,
 			      STMPE_KPC_CTRL_LSB_SCAN |

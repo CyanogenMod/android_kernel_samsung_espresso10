@@ -85,7 +85,7 @@ done:
 
 int __init omap_devinit_temp_sensor(void)
 {
-	if (!cpu_is_omap446x() && !cpu_is_omap443x())
+	if (!cpu_is_omap446x() && !cpu_is_omap443x() && !cpu_is_omap447x())
 		return 0;
 	if (cpu_is_omap443x()) {
 		if (omap4_has_mpu_1_2ghz())

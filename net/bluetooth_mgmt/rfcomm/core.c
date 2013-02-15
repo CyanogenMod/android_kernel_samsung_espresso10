@@ -1173,9 +1173,12 @@ static int rfcomm_recv_ua(struct rfcomm_session *s, u8 dlci)
 			/* When socket is closed and we are not RFCOMM
 			* initiator rfcomm_process_rx already calls
 			* rfcomm_session_put() */
-			if (s->sock->sk->sk_state != BT_CLOSED && !s->initiator)
-				if (list_empty(&s->dlcs))
+			if (s->sock->sk->sk_state != BT_CLOSED
+				&& s->acceptor_inc)
+				if (list_empty(&s->dlcs)) {
 					rfcomm_session_put(s);
+					s->acceptor_inc = 0;
+				}
 			break;
 		}
 	}
@@ -1871,9 +1874,10 @@ static inline void rfcomm_process_rx(struct rfcomm_session *s)
 	}
 
 	if (sk->sk_state == BT_CLOSED) {
-		if (!s->initiator)
+		if (s->acceptor_inc) {
 			rfcomm_session_put(s);
-
+			s->acceptor_inc = 0;
+		}
 		rfcomm_session_close(s, sk->sk_err);
 	}
 }
@@ -1901,6 +1905,7 @@ static inline void rfcomm_accept_connection(struct rfcomm_session *s)
 	s = rfcomm_session_add(nsock, BT_OPEN);
 	if (s) {
 		rfcomm_session_hold(s);
+		s->acceptor_inc = 1;
 
 		/* We should adjust MTU on incoming sessions.
 		 * L2CAP MTU minus UIH header and FCS. */
@@ -2240,4 +2245,3 @@ MODULE_DESCRIPTION("Bluetooth RFCOMM ver " VERSION);
 MODULE_VERSION(VERSION);
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("bt-proto-3");
-

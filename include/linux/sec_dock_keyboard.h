@@ -50,9 +50,9 @@ struct dock_keyboard_data {
 	struct serio *serio;
 	struct device *kbd_dev;
 	struct work_struct work_msg;
+	struct delayed_work dwork_off;
 	struct early_suspend early_suspend;
 	struct timer_list key_timer;
-	struct timer_list off_timer;
 	bool led_on;
 	int dock_irq_gpio;
 	unsigned int kl;

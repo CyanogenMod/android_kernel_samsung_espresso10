@@ -215,13 +215,24 @@ void hci_setup_sync(struct hci_conn *conn, __u16 handle)
 	conn->attempt++;
 
 	cp.handle   = cpu_to_le16(handle);
-	cp.pkt_type = cpu_to_le16(conn->pkt_type);
 
+	/* wbs */
 	cp.tx_bandwidth   = cpu_to_le32(0x00001f40);
 	cp.rx_bandwidth   = cpu_to_le32(0x00001f40);
-	cp.max_latency    = cpu_to_le16(0xffff);
-	cp.voice_setting  = cpu_to_le16(hdev->voice_setting);
-	cp.retrans_effort = 0xff;
+	if (conn->hdev->is_wbs) {
+		/* Transparent Data */
+		uint16_t voice_setting = hdev->voice_setting | ACF_TRANS;
+		cp.max_latency    = cpu_to_le16(0x000D);
+		cp.pkt_type = cpu_to_le16(ESCO_WBS);
+		cp.voice_setting  = cpu_to_le16(voice_setting);
+		/* Retransmission Effort */
+		cp.retrans_effort = RE_LINK_QUALITY;
+	} else {
+		cp.max_latency    = cpu_to_le16(0xffff);
+		cp.pkt_type = cpu_to_le16(conn->pkt_type);
+		cp.voice_setting  = cpu_to_le16(hdev->voice_setting);
+		cp.retrans_effort = 0xff;
+	}
 
 	hci_send_cmd(hdev, HCI_OP_SETUP_SYNC_CONN, sizeof(cp), &cp);
 }
@@ -375,6 +386,22 @@ static void hci_conn_auto_accept(unsigned long arg)
 	hci_dev_unlock(hdev);
 }
 
+static void hci_conn_encrypt_set(unsigned long arg)
+{
+	struct hci_conn *conn = (void *) arg;
+	struct hci_dev *hdev = conn->hdev;
+	struct hci_cp_set_conn_encrypt cp;
+
+	cp.handle  = cpu_to_le16(conn->handle);
+	cp.encrypt = 0x01;
+	hci_dev_lock(hdev);
+
+	hci_send_cmd(hdev, HCI_OP_SET_CONN_ENCRYPT, sizeof(cp),
+							&cp);
+
+	hci_dev_unlock(hdev);
+}
+
 struct hci_conn *hci_conn_add(struct hci_dev *hdev, int type,
 					__u16 pkt_type, bdaddr_t *dst)
 {
@@ -429,6 +456,8 @@ struct hci_conn *hci_conn_add(struct hci_dev *hdev, int type,
 	setup_timer(&conn->idle_timer, hci_conn_idle, (unsigned long)conn);
 	setup_timer(&conn->auto_accept_timer, hci_conn_auto_accept,
 							(unsigned long) conn);
+	setup_timer(&conn->encrypt_timer, hci_conn_encrypt_set,
+							(unsigned long) conn);
 
 	atomic_set(&conn->refcnt, 0);
 
@@ -460,6 +489,8 @@ int hci_conn_del(struct hci_conn *conn)
 	del_timer(&conn->disc_timer);
 
 	del_timer(&conn->auto_accept_timer);
+
+	del_timer(&conn->encrypt_timer);
 
 	if (conn->type == ACL_LINK) {
 		struct hci_conn *sco = conn->link;
@@ -514,7 +545,8 @@ struct hci_dev *hci_get_route(bdaddr_t *dst, bdaddr_t *src)
 	list_for_each(p, &hci_dev_list) {
 		struct hci_dev *d = list_entry(p, struct hci_dev, list);
 
-		if (!test_bit(HCI_UP, &d->flags) || test_bit(HCI_RAW, &d->flags))
+		if (!test_bit(HCI_UP, &d->flags)
+				|| test_bit(HCI_RAW, &d->flags))
 			continue;
 
 		/* Simple routing:
@@ -555,7 +587,9 @@ struct hci_conn *hci_connect(struct hci_dev *hdev, int type,
 
 	if (type == LE_LINK) {
 		struct adv_entry *entry;
-/* SSBT :: KJH + * to check le connection & stored key, if there is stored key, use addr_type. */
+/* SSBT :: KJH + * to check le connection & stored key,
+ * if there is stored key, use addr_type.
+ */
 		struct smp_ltk *ltk;
 
 		le = hci_conn_hash_lookup_ba(hdev, LE_LINK, dst);
@@ -602,16 +636,6 @@ struct hci_conn *hci_connect(struct hci_dev *hdev, int type,
 	hci_conn_hold(acl);
 
 	if (acl->state == BT_OPEN || acl->state == BT_CLOSED) {
-		/* SS_BLUETOOTH(jh113.kim) 2012.03.02
-		MicroSoft BT Mouse 5000 pairing fail issue */
-		struct inquiry_entry *ie;
-		ie = hci_inquiry_cache_lookup(acl->hdev, &acl->dst);
-		if (ie && (!ie->data.ssp_mode || !acl->hdev->ssp_mode)
-			&& ((ie->data.dev_class[1] & 0x1f) != 0x05)) {
-			__u8 auth = AUTH_ENABLED;
-			hci_send_cmd(hdev, HCI_OP_WRITE_AUTH_ENABLE, 1, &auth);
-		}
-		/*  SS_BLUETOOTH(jh113.kim) End */		
 		acl->sec_level = BT_SECURITY_LOW;
 		acl->pending_sec_level = sec_level;
 		acl->auth_type = auth_type;
@@ -748,9 +772,11 @@ int hci_conn_security(struct hci_conn *conn, __u8 sec_level, __u8 auth_type)
 	/* A combination key has always sufficient security for the security
 	   levels 1 or 2. High security level requires the combination key
 	   is generated using maximum PIN code length (16).
-	   For pre 2.1 units. */
+	   For pre 2.1 units.
+	   High security level requires the combination key,
+	   maximum PIN code length (16) is recommended not mandatory */
 	if (conn->key_type == HCI_LK_COMBINATION &&
-			(sec_level != BT_SECURITY_HIGH ||
+			(sec_level > BT_SECURITY_LOW ||
 			conn->pin_length == 16))
 		goto encrypt;
 

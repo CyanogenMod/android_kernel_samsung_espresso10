@@ -755,8 +755,8 @@ config TOUCHSCREEN_ATMEL_MXT224E
 		To compile this driver as a module, choose M here: the
 		module will be called mxt224_t1.
 
-config TOUCHSCREEN_MELFAS
-	tristate "MELFAS Touchscreen Interface"
+config TOUCHSCREEN_MELFAS_MMS136
+	tristate "MELFAS MMS136 Touchscreen Interface"
 	depends on I2C
 	help
 		Say Y here if you want support for MELFAS
@@ -773,5 +773,80 @@ config TOUCHSCREEN_SYNAPTICS_S7301
 		touchscreen controllers.
 
 		To compile this driver as a module, choose M here: the
+		module will be called synaptics_ts.
+
+config TOUCHSCREEN_MELFAS_MMS144
+	tristate "MELFAS MMS144 Touchscreen Interface"
+	depends on I2C
+	help
+		Say Y here if you want support for SYNAPTICS S7301
+		touchscreen controllers.
+
+		To compile this driver as a module, choose M here: the
 		module will be called melfas_ts.
+
+config SUPPORT_MELFAS_TOUCH_KEY
+	bool "MELFAS Touch Key solution"
+	depends on TOUCHSCREEN_MELFAS_MMS144
+	help
+		Say Y here if you want to support for Melfas Touch Key
+		at MMS144.
+
+config SEC_TSP_FACTORY_TEST
+	bool "Samsung TSP Factory Test Mode"
+	depends on TOUCHSCREEN_MELFAS_MMS136 || TOUCHSCREEN_SYNAPTICS_S7301 || \
+		TOUCHSCREEN_MELFAS_MMS144 || TOUCHSCREEN_CYTTSP4
+	help
+		Say Y here if you want to support for Samsung Factory Test
+		mode for TSP.
+
+config TOUCH_DVFS
+	int "DVFS control at touch input"
+	depends on TOUCHSCREEN_MELFAS_MMS144 || TOUCHSCREEN_MELFAS_MMS136 || \
+		TOUCHSCREEN_CYTTSP4
+	help
+		Define minimum fixed frequency of AP here if you want to support
+		for DVFS control at touch inputed.
+		It reduces more battery power.
+
+config TOUCH_SCREEN_BOOST_MODE
+	bool "Touch Boost Mode"
+	depends on TOUCHSCREEN_MELFAS_MMS136 || TOUCHSCREEN_MELFAS_MMS144
+	help
+		Say Y here if you want to support for touch boost mode.
+		It boosts AP frequency up to 800 MHz during 1 second at last
+		touch point released.
+
+		If unsure, say N.
+
+config INPUT_WACOM
+	tristate "Wacom penabled i2c touchscreen"
+	depends on I2C
+	help
+	  Say Y here if you have an Wacom penabled i2c touchscreen
+	  connected to your system.
+
+	  If unsure, say N.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called wacom_GXXX.
+
+config TOUCHSCREEN_CYTTSP4
+	tristate "Cypress GEN4 Touchscreen Interface"
+	depends on I2C
+	help
+		Say Y her if you want support for Cypress GEN4
+		touchcreen controllers.
+
+		To compile this driver as a module, shoose M here: the
+		module will be called cyttsp4.
+
+config SUPPORT_CYPRESS_TOUCH_KEY
+	bool "Cypress Touch Key solution"
+	depends on TOUCHSCREEN_CYTTSP4
+	help
+		Say Y here if you want to support for Cypress Touch Key
+		at GEN4.
+
+source "drivers/input/touchscreen/synaptics_rmi4/Kconfig"
 endif

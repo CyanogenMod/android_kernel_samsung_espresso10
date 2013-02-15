@@ -14,9 +14,6 @@
  */
 
 #define DEBUG_PRINT			1
-#define FACTORY_TESTING			1
-#define TOUCH_BOOST			1
-#define CONTROL_JITTER			1
 
 #if DEBUG_PRINT
 #define	tsp_debug(fmt, args...) \
@@ -27,7 +24,6 @@
 
 #include <linux/module.h>
 #include <linux/delay.h>
-#include <linux/gpio.h>
 #include <linux/earlysuspend.h>
 #include <linux/i2c.h>
 #include <linux/input.h>
@@ -35,27 +31,18 @@
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/slab.h>
+#include <linux/firmware.h>
 #include <linux/platform_device.h>
-#include <linux/platform_data/synaptics_s7301.h>
+#include <linux/platform_data/sec_ts.h>
+#include <linux/touchscreen/synaptics.h>
 
-#if TOUCH_BOOST
-#include <linux/workqueue.h>
-#include <linux/timer.h>
-#include <mach/cpufreq_limits.h>
-#ifdef CONFIG_DVFS_LIMIT
-#include <linux/cpufreq.h>
-#endif
-bool boost;
-#endif
+#include <linux/fs.h>
+#include <linux/uaccess.h>
+#include <linux/syscalls.h>
 
 #include "../../../arch/arm/mach-omap2/sec_common.h"
-#include "synaptics_fw_updater.h"
 
-u8 FW_KERNEL_VERSION[5] = {0, };
-u8 FW_IC_VERSION[5] = {0, };
-u8 FW_DATE[5] = {0, };
-
-#if FACTORY_TESTING
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 #define TSP_VENDOR			"SYNAPTICS"
 #define TSP_IC				"S7301"
 
@@ -105,86 +92,79 @@ struct ts_data {
 	struct i2c_client		*client;
 	struct input_dev		*input_dev;
 	struct early_suspend		early_suspend;
-	struct synaptics_platform_data	*platform_data;
+	struct sec_ts_platform_data	*platform_data;
+	struct synaptics_fw_info	*fw_info;
 	int				finger_state[MAX_TOUCH_NUM];
-#if FACTORY_TESTING
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	struct factory_data		*factory_data;
 	struct node_data		*node_data;
-#endif
-#if TOUCH_BOOST
-	struct timer_list		timer;
-#endif
-#if CONTROL_JITTER
-	bool				jitter_on;
-	bool				enable;
 #endif
 };
 
 static int ts_read_reg_data(const struct i2c_client *client, u8 address,
-			u8 *buf, u32 size)
+			u8 *buf, u8 size)
 {
 	int ret = 0;
 
-	ret = i2c_smbus_read_i2c_block_data(client, address, size, buf);
-	if (ret < size)
+	if (size > 32) {
+		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.",
+								__func__, size);
 		return -1;
+	}
+
+	ret = i2c_smbus_read_i2c_block_data(client, address, size, buf);
+	if (ret < size) {
+		pr_err("tsp: %s: i2c read failed. %d", __func__, ret);
+		return ret;
+	}
 	return 1;
 }
 
 static int ts_write_reg_data(const struct i2c_client *client, u8 address,
-			u8 *buf, u32 size)
+			u8 *buf, u8 size)
 {
 	int ret = 0;
 
-	ret = i2c_smbus_write_i2c_block_data(client, address, size, buf);
-	if (ret < 0)
+	if (size > 32) {
+		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.",
+								__func__, size);
 		return -1;
+	}
+
+	ret = i2c_smbus_write_i2c_block_data(client, address, size, buf);
+	if (ret < 0) {
+		pr_err("tsp: %s: i2c write failed. %d", __func__, ret);
+		return ret;
+	}
 	return 1;
 }
 
 static void set_ta_mode(int *ta_state)
 {
-	struct synaptics_platform_data *platform_data =
-	container_of(ta_state, struct synaptics_platform_data, ta_state);
-	struct ts_data *ts = (struct ts_data *) platform_data->link;
+	struct sec_ts_platform_data *platform_data =
+	container_of(ta_state, struct sec_ts_platform_data, ta_state);
+	struct ts_data *ts = (struct ts_data *) platform_data->driver_data;
 
-	if (ts)
-		F01_SetTABit(ts->client, *ta_state);
+	if (ts) {
+		switch (*ta_state) {
+		case CABLE_TA:
+		F01_SetTABit(ts->client, true);
+		pr_info("tsp: TA attached\n");
+		break;
+		case CABLE_USB:
+		F01_SetTABit(ts->client, false);
+		pr_info("tsp: USB attached\n");
+		break;
+		case CABLE_NONE:
+		default:
+		F01_SetTABit(ts->client, false);
+		pr_info("tsp: No attached cable\n");
+		break;
+		}
+	}
 
 	return;
 }
-
-#if CONTROL_JITTER
-#define F11_2D_CTRL			0x56
-
-static void set_jitter_filter(struct ts_data *ts, bool on)
-{
-	static bool prev_jitter = false;
-	u8 command;
-
-	if (!ts->enable) {
-		if (on && prev_jitter == false)
-			ts->jitter_on = prev_jitter = true;
-		else
-			ts->jitter_on = prev_jitter = false;
-		return;
-	}
-
-	if (on) {
-		command = 0x09;
-		prev_jitter = true;
-		pr_info("tsp: %s: jitter filter on.", __func__);
-	} else {
-		command = 0x01;
-		prev_jitter = false;
-		pr_info("tsp: %s: jitter filter off.", __func__);
-	}
-
-	ts_write_reg_data(ts->client, F11_2D_CTRL, &command, 1);
-
-	return;
-}
-#endif
 
 #define FW_ADDRESS			0x34
 
@@ -213,6 +193,7 @@ static bool fw_updater(struct ts_data *ts, char *mode)
 {
 	u8 buf[5] = {0, };
 	bool ret = false;
+	const struct firmware *fw;
 
 	tsp_debug("Enter the fw_updater.");
 
@@ -224,36 +205,96 @@ static bool fw_updater(struct ts_data *ts, char *mode)
 			mode = "force";
 	}
 
-	if (!strcmp("force", mode)) {
-		pr_info("tsp: fw_updater: FW force upload.\n");
-		ret = fw_update_internal(ts->client);
-	} else if (!strcmp("file", mode)) {
-		pr_info("tsp: fw_updater: FW force upload from bin. file.\n");
-		ret = fw_update_file(ts->client);
-	} else if (!strcmp("normal", mode)) {
-		if (ts_read_reg_data(ts->client,
-			get_reg_address(ts->client, FW_ADDRESS), buf, 4) > 0) {
-			strncpy(FW_IC_VERSION, buf, 5);
-			pr_info("tsp: fw. ver. : IC (%s), Internal (%s)\n",
-				(char *)FW_IC_VERSION,
-				(char *)FW_KERNEL_VERSION);
-		} else {
-			pr_err("tsp: fw. ver. read failed.");
-			return false;
-		}
-
-		if (strcmp(FW_KERNEL_VERSION, FW_IC_VERSION) > 0) {
-			pr_info("tsp: fw_updater: FW upgrade enter.\n");
-			ret = fw_update_internal(ts->client);
-		} else
-			pr_info("tsp: fw_updater: No need FW update.\n");
+	if (!ts->platform_data->fw_name) {
+		pr_err("tsp: can't find firmware file name.");
+		return false;
 	}
 
-	pr_info("tsp: fw. update complete.");
+	if (request_firmware(&fw, ts->platform_data->fw_name,
+							&ts->client->dev)) {
+		pr_err("tsp: fail to request built-in firmware\n");
+		goto out;
+	}
+
+	ts->fw_info->version[0] = fw->data[0xb100];
+	ts->fw_info->version[1] = fw->data[0xb101];
+	ts->fw_info->version[2] = fw->data[0xb102];
+	ts->fw_info->version[3] = fw->data[0xb103];
+	ts->fw_info->version[4] = 0;
+
+	if (!strcmp("force", mode)) {
+		pr_info("tsp: fw_updater: force upload.\n");
+		ret = synaptics_fw_update(ts->client, fw->data,
+						ts->platform_data->gpio_irq);
+	} else if (!strcmp("file", mode)) {
+		long fw_size;
+		u8 *fw_data;
+		struct file *filp;
+		mm_segment_t oldfs;
+
+		pr_info("tsp: fw_updater: force upload from external file.");
+
+		oldfs = get_fs();
+		set_fs(KERNEL_DS);
+
+		filp = filp_open(ts->platform_data->ext_fw_name, O_RDONLY, 0);
+		if (IS_ERR_OR_NULL(filp)) {
+			pr_err("tsp: file open error:%d\n", (s32)filp);
+			ret = false;
+			goto out;
+		}
+
+		fw_size = filp->f_path.dentry->d_inode->i_size;
+		fw_data = kzalloc(fw_size, GFP_KERNEL);
+		if (!fw_data) {
+			pr_err("tsp: failed to allocation memory.");
+			filp_close(filp, current->files);
+			ret = false;
+			goto out;
+		}
+
+		if (vfs_read(filp, (char __user *)fw_data, fw_size,
+						&filp->f_pos) != fw_size) {
+			pr_err("tsp: failed to read file (ret = %d).", ret);
+			filp_close(filp, current->files);
+			kfree(fw_data);
+			ret = false;
+			goto out;
+		}
+
+		filp_close(filp, current->files);
+		set_fs(oldfs);
+
+		ret = synaptics_fw_update(ts->client, fw_data,
+						ts->platform_data->gpio_irq);
+		kfree(fw_data);
+
+	} else if (!strcmp("normal", mode)) {
+		if (ts_read_reg_data(ts->client,
+			get_reg_address(ts->client, FW_ADDRESS), buf, 4) < 0) {
+			pr_err("tsp: fw. ver. read failed.");
+			goto out;
+		}
+
+		pr_info("tsp: binary fw. ver: 0x%s, IC fw. ver: 0x%s\n",
+						(char *)ts->fw_info->version,
+						(char *)buf);
+
+		if (strncmp(ts->fw_info->version, buf, 4) > 0) {
+			pr_info("tsp: fw_updater: FW upgrade enter.\n");
+			ret = synaptics_fw_update(ts->client, fw->data,
+						ts->platform_data->gpio_irq);
+		} else {
+			pr_info("tsp: fw_updater: No need FW update.\n");
+			ret = true;
+		}
+	}
+out:
+	release_firmware(fw);
 	return ret;
 }
 
-#if FACTORY_TESTING
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 static void set_default_result(struct factory_data *data)
 {
 	char delim = ':';
@@ -310,13 +351,13 @@ static void fw_update(void *device_data)
 
 static void get_fw_ver_bin(void *device_data)
 {
-	struct factory_data *data =
-				((struct ts_data *)device_data)->factory_data;
+	struct ts_data *ts_data = (struct ts_data *)device_data;
+	struct factory_data *data = ts_data->factory_data;
 
 	data->cmd_state = RUNNING;
 
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%s", FW_KERNEL_VERSION);
+	sprintf(data->cmd_buff, "%s", ts_data->fw_info->version);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
 	data->cmd_state = OK;
@@ -333,10 +374,9 @@ static void get_fw_ver_ic(void *device_data)
 
 	ts_read_reg_data(ts_data->client,
 			get_reg_address(ts_data->client, FW_ADDRESS), buf, 4);
-	strncpy(FW_IC_VERSION, buf, 5);
 
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%s", FW_IC_VERSION);
+	sprintf(data->cmd_buff, "%s", buf);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
 	data->cmd_state = OK;
@@ -345,14 +385,16 @@ static void get_fw_ver_ic(void *device_data)
 
 static void get_config_ver(void *device_data)
 {
-	struct ts_data *ts_data = (struct ts_data *)device_data;
-	struct factory_data *data = ts_data->factory_data;
+	struct ts_data *ts = (struct ts_data *)device_data;
+	struct factory_data *data = ts->factory_data;
 
 	data->cmd_state = RUNNING;
 
 	set_default_result(data);
 	sprintf(data->cmd_buff, "%s_%s_%s",
-		ts_data->platform_data->model_name, TSP_VENDOR, FW_DATE);
+					ts->platform_data->model_name,
+					TSP_VENDOR,
+					ts->fw_info->release_date);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
 	data->cmd_state = OK;
@@ -864,38 +906,14 @@ static ssize_t cmd_result_show(struct device *dev,
 	return sprintf(buf, "%s\n", data->cmd_result);
 }
 
-#if CONTROL_JITTER
-static ssize_t set_jitter_store(struct device *dev,
-		struct device_attribute *devattr, const char *buf, size_t count)
-{
-	struct ts_data *ts_data = dev_get_drvdata(dev);
-	u8 buff[count];
-
-	memcpy(buff, buf, 1);
-
-	if (buff[0] == '1')
-		set_jitter_filter(ts_data, true);
-	else
-		set_jitter_filter(ts_data, false);
-
-	return count;
-}
-#endif
-
 static DEVICE_ATTR(cmd, S_IWUSR | S_IWGRP, NULL, cmd_store);
 static DEVICE_ATTR(cmd_status, S_IRUGO, cmd_status_show, NULL);
 static DEVICE_ATTR(cmd_result, S_IRUGO, cmd_result_show, NULL);
-#if CONTROL_JITTER
-static DEVICE_ATTR(set_jitter, S_IWUSR | S_IWGRP, NULL, set_jitter_store);
-#endif
 
 static struct attribute *touchscreen_attributes[] = {
 	&dev_attr_cmd.attr,
 	&dev_attr_cmd_status.attr,
 	&dev_attr_cmd_result.attr,
-#if CONTROL_JITTER
-	&dev_attr_set_jitter.attr,
-#endif
 	NULL,
 };
 
@@ -921,37 +939,29 @@ static void reset_points(struct ts_data *ts)
 }
 
 #define REG_INTERRUPT_STATUS		0x14
-#define REG_RESET			0x85
 
-static int init_tsp(struct ts_data *ts)
+static void init_tsp(struct ts_data *ts)
 {
 	u8 buf;
 
 	reset_points(ts);
 
-	buf = 1;
-	ts_write_reg_data(ts->client, REG_RESET, &buf, 1);
-	mdelay(300);
-
 	/* To high interrupt pin */
 	if (ts_read_reg_data(ts->client, REG_INTERRUPT_STATUS, &buf, 1) < 0)
-		pr_err("tsp: init_tsp: read reg_data failed.\n");
+		pr_err("tsp: init_tsp: read reg_data failed.");
 
 	set_ta_mode(&(ts->platform_data->ta_state));
-#if CONTROL_JITTER
-	ts->enable = true;
-	set_jitter_filter(ts, ts->jitter_on);
-#endif
+
 	tsp_debug("init_tsp done.");
-	return true;
+	return;
 }
 
 static void reset_tsp(struct ts_data *ts)
 {
-	ts->platform_data->set_power(false);
-	mdelay(200);
-	ts->platform_data->set_power(true);
-	mdelay(200);
+	if (ts->platform_data->set_power) {
+		ts->platform_data->set_power(false);
+		ts->platform_data->set_power(true);
+	}
 	init_tsp(ts);
 
 	return;
@@ -965,17 +975,9 @@ static void ts_early_suspend(struct early_suspend *h)
 	ts = container_of(h, struct ts_data, early_suspend);
 	disable_irq(ts->client->irq);
 	reset_points(ts);
-	ts->platform_data->set_power(false);
-#if TOUCH_BOOST
-	if (true == boost) {
-		omap_cpufreq_min_limit_free(DVFS_LOCK_ID_TSP);
-		boost = false;
-		del_timer_sync(&ts->timer);
-	}
-#endif
-#if CONTROL_JITTER
-	ts->enable = false;
-#endif
+	if (ts->platform_data->set_power)
+		ts->platform_data->set_power(false);
+
 	return ;
 }
 
@@ -985,8 +987,8 @@ static void ts_late_resume(struct early_suspend *h)
 	u8 buf[2];
 
 	ts = container_of(h, struct ts_data, early_suspend);
-	ts->platform_data->set_power(true);
-	mdelay(300);
+	if (ts->platform_data->set_power)
+		ts->platform_data->set_power(true);
 
 	init_tsp(ts);
 
@@ -994,22 +996,6 @@ static void ts_late_resume(struct early_suspend *h)
 	enable_irq(ts->client->irq);
 
 	return ;
-}
-#endif
-
-#if TOUCH_BOOST
-static void disable_dvfs(struct work_struct *unused)
-{
-	omap_cpufreq_min_limit_free(DVFS_LOCK_ID_TSP);
-	boost = false;
-	return;
-}
-static DECLARE_WORK(tsp_wq, disable_dvfs);
-
-static void timer_cb(unsigned long data)
-{
-	schedule_work(&tsp_wq);
-	return;
 }
 #endif
 
@@ -1025,6 +1011,7 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 
 	int i, j;
 	int cur_state, id;
+	static u32 cnt;
 	u16 x, y;
 	u8 buf;
 	u8 state[3] = {0, };
@@ -1041,12 +1028,6 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 		return IRQ_HANDLED;
 	}
 
-#if TOUCH_BOOST
-	if (false == boost) {
-		omap_cpufreq_min_limit(DVFS_LOCK_ID_TSP, 600000);
-		boost = true;
-	}
-#endif
 	if (ts_read_reg_data(ts->client, REG_FINGER_STATUS, state, 3) < 0) {
 		pr_err("tsp: ts_irq_event: i2c failed\n");
 		return IRQ_HANDLED;
@@ -1072,28 +1053,37 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 			x = (point[0] << 4) + (point[2] & 0x0F);
 			y = (point[1] << 4) + ((point[2] & 0xF0) >> 4);
 
+			if (ts->platform_data->pivot) {
+				swap(x, y);
+				x = ts->platform_data->x_pixel_size - x;
+			}
+
 			if (cur_state == 0 && ts->finger_state[id] == 1) {
 #if TRACKING_COORD
-				pr_info("tsp: finger %d up (%d, %d, %d)\n",
+				tsp_debug("%d up (%d, %d, %d)\n",
 							id, x, y, point[4]);
 #else
-				pr_info("tsp: finger %d up\n", id);
+				tsp_debug("%d up. remain: %d\n", id, --cnt);
 #endif
 				input_mt_slot(ts->input_dev, id);
 				input_mt_report_slot_state(ts->input_dev,
 							MT_TOOL_FINGER, false);
+				input_sync(ts->input_dev);
+
 				ts->finger_state[id] = 0;
 				continue;
 			}
+
 			if (cur_state == 1 && ts->finger_state[id] == 0) {
 #if TRACKING_COORD
-				pr_info("tsp: finger %d down (%d, %d, %d)\n",
+				tsp_debug("%d dn (%d, %d, %d)\n",
 							id, x, y, point[4]);
 #else
-				pr_info("tsp: finger %d down\n", id);
+				tsp_debug("%d dn. remain: %d\n", id, ++cnt);
 #endif
 				ts->finger_state[id] = 1;
 			}
+
 			input_mt_slot(ts->input_dev, id);
 			input_mt_report_slot_state(ts->input_dev,
 						MT_TOOL_FINGER, true);
@@ -1103,13 +1093,13 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 						point[4]);
 			input_report_abs(ts->input_dev, ABS_MT_POSITION_X, x);
 			input_report_abs(ts->input_dev, ABS_MT_POSITION_Y, y);
+			input_sync(ts->input_dev);
 #if TRACKING_COORD
-			pr_info("tsp: finger %d drag (%d, %d, %d)\n",
+			tsp_debug("tsp: %d drag (%d, %d, %d)\n",
 							id, x, y, point[4]);
 #endif
 		}
 	}
-	input_sync(ts->input_dev);
 
 	/* to high interrupt pin */
 	if (ts_read_reg_data(ts->client, REG_INTERRUPT_STATUS, state, 1) < 0) {
@@ -1117,14 +1107,6 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 		return IRQ_HANDLED;
 	}
 
-#if TOUCH_BOOST
-	for (i = 0; i < MAX_TOUCH_NUM; i++) {
-		if (ts->finger_state[i] == 1)
-			break;
-		if (i == MAX_TOUCH_NUM - 1)
-			mod_timer(&ts->timer, jiffies + msecs_to_jiffies(3000));
-	}
-#endif
 	return IRQ_HANDLED;
 }
 
@@ -1132,11 +1114,11 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 #define TS_MAX_W_TOUCH			100
 
 static int __devinit ts_probe(struct i2c_client *client,
-				const struct i2c_device_id *id)
+						const struct i2c_device_id *id)
 {
 	struct ts_data *ts;
 	int ret = 0;
-#if FACTORY_TESTING
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	struct device *fac_dev_ts;
 	int i;
 	struct factory_data *factory_data;
@@ -1163,10 +1145,9 @@ static int __devinit ts_probe(struct i2c_client *client,
 	i2c_set_clientdata(client, ts);
 	ts->platform_data = client->dev.platform_data;
 	ts->platform_data->set_ta_mode = set_ta_mode;
-	ts->platform_data->link = ts;
+	ts->platform_data->driver_data = ts;
 
-	if (ts->platform_data->panel_name && system_rev >= 7)
-		tsp_debug("attached panel: %s", ts->platform_data->panel_name);
+	ts->fw_info = (struct synaptics_fw_info *)ts->platform_data->fw_info;
 
 	ts->input_dev = input_allocate_device();
 	if (!ts->input_dev) {
@@ -1177,32 +1158,32 @@ static int __devinit ts_probe(struct i2c_client *client,
 
 	input_mt_init_slots(ts->input_dev, MAX_TOUCH_NUM);
 
-	ts->input_dev->name = "synaptics-ts";
-	__set_bit(EV_ABS, ts->input_dev->evbit);
-	__set_bit(INPUT_PROP_DIRECT, ts->input_dev->propbit);
+	ts->input_dev->name = SEC_TS_NAME;
+	set_bit(EV_ABS, ts->input_dev->evbit);
+	set_bit(INPUT_PROP_DIRECT, ts->input_dev->propbit);
 
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0,
-			     ts->platform_data->x_pixel_size, 0, 0);
+					ts->platform_data->x_pixel_size, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0,
-			     ts->platform_data->y_pixel_size, 0, 0);
+					ts->platform_data->y_pixel_size, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_PRESSURE, 0,
-			     TS_MAX_Z_TOUCH, 0, 0);
+					TS_MAX_Z_TOUCH, 0, 0);
 	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0,
-			     TS_MAX_W_TOUCH, 0, 0);
+					TS_MAX_W_TOUCH, 0, 0);
 
-	if (input_register_device(ts->input_dev)) {
-		pr_err("tsp: ts_probe: Failed to register device\n");
+	if (input_register_device(ts->input_dev) < 0) {
+		pr_err("tsp: ts_probe: Failed to register input device!!\n");
 		ret = -ENOMEM;
 		goto err_input_register_device_failed;
 	}
-#if TOUCH_BOOST
-	setup_timer(&ts->timer, timer_cb, 0);
-#endif
 
 	tsp_debug("succeed to register input device\n");
 
+	/* Power on touch IC */
+	if (ts->platform_data->set_power)
+		ts->platform_data->set_power(true);
+
 	/* Check the new fw. and update */
-	set_fw_version(FW_KERNEL_VERSION, FW_DATE);
 	fw_updater(ts, "normal");
 
 	if (ts->client->irq) {
@@ -1221,7 +1202,7 @@ static int __devinit ts_probe(struct i2c_client *client,
 		}
 	}
 
-#if FACTORY_TESTING
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	rx = ts->platform_data->rx_channel_no;
 	tx = ts->platform_data->tx_channel_no;
 
@@ -1274,19 +1255,13 @@ static int __devinit ts_probe(struct i2c_client *client,
 	ts->early_suspend.resume = ts_late_resume;
 	register_early_suspend(&ts->early_suspend);
 #endif
-#if CONTROL_JITTER
-	ts->jitter_on = true;
-#endif
-	reset_tsp(ts);
-
-	/* To set TA connet mode when boot while keep TA, USB be connected. */
-	set_ta_mode(&(ts->platform_data->ta_state));
 
 	pr_info("tsp: ts_probe: Start touchscreen. name: %s, irq: %d\n",
 					ts->client->name, ts->client->irq);
 
 	return 0;
 
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 err_alloc_factory_data_failed:
 	pr_err("tsp: ts_probe: err_alloc_factory_data failed.\n");
 
@@ -1297,7 +1272,7 @@ err_alloc_node_data_failed:
 	kfree(ts->node_data->tx_to_tx_data);
 	kfree(ts->node_data->tx_to_gnd_data);
 	kfree(ts->node_data);
-
+#endif
 err_request_irq:
 	pr_err("tsp: ts_probe: err_request_irq failed.\n");
 	free_irq(client->irq, ts);
@@ -1328,28 +1303,37 @@ static int ts_remove(struct i2c_client *client)
 	unregister_early_suspend(&ts->early_suspend);
 	free_irq(client->irq, ts);
 	input_unregister_device(ts->input_dev);
-#if FACTORY_TESTING
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	kfree(ts->factory_data);
 #endif
 	kfree(ts);
-#if TOUCH_BOOST
-	del_timer_sync(&ts->timer);
-#endif
+
 	return 0;
 }
 
+static void ts_shutdown(struct i2c_client *client)
+{
+	struct ts_data *ts = i2c_get_clientdata(client);
+
+	disable_irq(client->irq);
+	reset_points(ts);
+	if (ts->platform_data->set_power)
+		ts->platform_data->set_power(false);
+}
+
 static const struct i2c_device_id ts_id[] = {
-	{SYNAPTICS_TS_NAME, 0},
+	{"synaptics_ts", 0},
 	{}
 };
 
 static struct i2c_driver ts_driver = {
 	.driver = {
-		   .name = SYNAPTICS_TS_NAME,
-		},
+		.name = "synaptics_ts",
+	},
 	.id_table = ts_id,
 	.probe = ts_probe,
 	.remove = __devexit_p(ts_remove),
+	.shutdown = ts_shutdown,
 };
 
 static int __devinit ts_init(void)

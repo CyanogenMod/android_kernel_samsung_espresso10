@@ -77,6 +77,7 @@ struct omap_mmc_platform_data {
 		 */
 		u8  wires;	/* Used for the MMC driver on omap1 and 2420 */
 		u32 caps;	/* Used for the MMC driver on 2430 and later */
+		u32 caps2;	/* Used for emmc v4.5 features  */
 
 		/*
 		 * nomux means "standard" muxing is wrong on this board, and

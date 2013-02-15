@@ -37,6 +37,7 @@ struct al3201_data {
 	u8 reg_cache[AL3201_NUM_CACHABLE_REGS];
 	int state;
 	struct device *light_sensor_device;
+	struct al3201_platform_data *pdata;
 };
 
 /*
@@ -147,6 +148,16 @@ static int al3201_get_adc_value(struct i2c_client *client)
 	u32 val;
 	struct al3201_data *data = i2c_get_clientdata(client);
 
+	range = al3201_get_range(client);
+	if (!range) {
+		pr_err("%s: reset! need to re-init...\n", __func__);
+		/* 1 : High resolution range, 0 to 8192 lux*/
+		al3201_set_range(client, 1);
+		/* 0x02 : Response time 200ms low pass fillter */
+		al3201_set_response_time(client, 0x02);
+		usleep_range(10000, 11000);
+	}
+
 	mutex_lock(&data->lock);
 	lsb = i2c_smbus_read_byte_data(client, AL3201_ADC_LSB);
 	if (lsb < 0) {
@@ -158,7 +169,6 @@ static int al3201_get_adc_value(struct i2c_client *client)
 	if (msb < 0)
 		return msb;
 
-	range = al3201_get_range(client);
 	val = (u32) (msb << 8 | lsb);
 	if (val < 7)
 		val = 0;
@@ -168,7 +178,6 @@ static int al3201_get_adc_value(struct i2c_client *client)
 static void al3201_work_func_light(struct work_struct *work)
 {
 	u32 result;
-	static int wake_adc = 1;
 	struct al3201_data *data =
 	    container_of(work, struct al3201_data, work_light);
 
@@ -177,12 +186,9 @@ static void al3201_work_func_light(struct work_struct *work)
 	if (result > 60000)
 		result = 60000;
 	if (!result)
-		result += wake_adc++;
-	input_report_abs(data->input, ABS_MISC, result);
+		result = 1;
+	input_report_rel(data->input, REL_MISC, result);
 	input_sync(data->input);
-
-	if (wake_adc > 2)
-		wake_adc = 0;
 }
 
 static enum hrtimer_restart al3201_timer_func(struct hrtimer *timer)
@@ -395,6 +401,7 @@ static int __devinit al3201_probe(struct i2c_client *client,
 	struct al3201_data *data;
 	struct input_dev *input_dev;
 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+	struct al3201_platform_data *pdata = client->dev.platform_data;
 
 	if (!i2c_check_functionality(adapter, I2C_FUNC_I2C))
 		return -EIO;
@@ -405,9 +412,14 @@ static int __devinit al3201_probe(struct i2c_client *client,
 		       __func__);
 		return -ENOMEM;
 	}
-
+	data->pdata = pdata;
 	data->client = client;
 	i2c_set_clientdata(client, data);
+
+	if (likely(pdata)) {
+		if (pdata->power_on)
+			pdata->power_on(true);
+	}
 
 	mutex_init(&data->lock);
 
@@ -441,9 +453,7 @@ static int __devinit al3201_probe(struct i2c_client *client,
 
 	input_set_drvdata(input_dev, data);
 	input_dev->name = "light_sensor";
-	input_set_capability(input_dev, EV_ABS, ABS_MISC);
-	input_set_abs_params(input_dev, ABS_MISC,
-			     LUX_MIN_VALUE, LUX_MAX_VALUE, 0, 0);
+	input_set_capability(input_dev, EV_REL, REL_MISC);
 
 	err = input_register_device(input_dev);
 	if (err < 0) {
@@ -480,6 +490,10 @@ err_input_allocate_device_light:
 err_create_workqueue:
 err_initializ_chip:
 	mutex_destroy(&data->lock);
+	if (likely(data->pdata)) {
+		if (data->pdata->power_on)
+			data->pdata->power_on(false);
+	}
 	kfree(data);
 done:
 	return err;
@@ -488,10 +502,8 @@ done:
 static int al3201_remove(struct i2c_client *client)
 {
 	struct al3201_data *data = i2c_get_clientdata(client);
-	sensors_unregister(data->light_sensor_device);
 	sysfs_remove_group(&data->input->dev.kobj, &al3201_attribute_group);
 	input_unregister_device(data->input);
-	al3201_set_power_state(client, OFF);
 
 	if (data->state)
 		al3201_disable(data);
@@ -503,18 +515,15 @@ static int al3201_remove(struct i2c_client *client)
 	return 0;
 }
 
-static int al3201_shutdown(struct i2c_client *client)
+static void al3201_shutdown(struct i2c_client *client)
 {
-	int err = 0;
 	struct al3201_data *data = i2c_get_clientdata(client);
-
-	if (data->state) {
-		err = al3201_disable(data);
-		if (err)
-			pr_err("%s: could not disable\n", __func__);
+	if (data->state)
+		al3201_disable(data);
+	if (likely(data->pdata)) {
+		if (data->pdata->power_on)
+			data->pdata->power_on(false);
 	}
-
-	return err;
 }
 
 static int al3201_suspend(struct device *dev)

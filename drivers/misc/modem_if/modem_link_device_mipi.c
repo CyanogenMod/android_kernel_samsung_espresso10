@@ -235,8 +235,21 @@ static void mipi_hsi_tx_work(struct work_struct *work)
 			if (ret < 0) {
 				/* TODO: Re Enqueue */
 				pr_err("[MIPI-HSI] write fail : %d\n", ret);
-			}  else
+			}  else {
 				pr_debug("[MIPI-HSI] write Done\n");
+
+				if ((iod->format == IPC_FMT) ||
+						(iod->format == IPC_RFS))
+					print_hex_dump(KERN_DEBUG,
+							iod->format == IPC_FMT ?
+							"IPC-TX: " : "RFS-TX: ",
+							DUMP_PREFIX_NONE,
+							1, 1,
+							(void *)fmt_skb->data,
+							fmt_skb->len <= 16 ?
+							(size_t)fmt_skb->len :
+							(size_t)16, false);
+			}
 
 			dev_kfree_skb_any(fmt_skb);
 		}
@@ -1388,7 +1401,8 @@ static void if_hsi_write_done(struct hsi_device *dev, unsigned int size)
 	if ((channel->channel_id == HSI_CONTROL_CHANNEL) &&
 		(((*channel->tx_data & 0xF0000000) >> 28) ==
 			HSI_LL_MSG_CONN_CLOSED) &&
-			mipi_ld->ld.com_state == COM_ONLINE) {
+			(mipi_ld->ld.com_state == COM_ONLINE ||
+			mipi_ld->ld.com_state == COM_HANDSHAKE)) {
 		mod_timer(&mipi_ld->hsi_acwake_down_timer, jiffies +
 					HSI_ACWAKE_DOWN_TIMEOUT);
 		mipi_ld->hsi_channles[
@@ -1618,8 +1632,20 @@ static void if_hsi_read_done(struct hsi_device *dev, unsigned int size)
 				hsi_conn_err_recovery(mipi_ld);
 				return;
 			}
-			channel->packet_size = 0;
 
+			if ((iod->format == IPC_FMT) ||
+						(iod->format == IPC_RFS))
+				print_hex_dump(KERN_DEBUG,
+						iod->format == IPC_FMT ?
+						"IPC-RX: " : "RFS-RX: ",
+						DUMP_PREFIX_NONE,
+						1, 1,
+						(void *)channel->rx_data,
+						channel->packet_size <= 16 ?
+						(size_t)channel->packet_size :
+						(size_t)16, false);
+
+			channel->packet_size = 0;
 			ch = channel->channel_id;
 			param = 0;
 			ret = if_hsi_send_command(mipi_ld,

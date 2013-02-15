@@ -280,6 +280,12 @@ struct musb_platform_ops {
 	int	(*adjust_channel_params)(struct dma_channel *channel,
 				u16 packet_sz, u8 *mode,
 				dma_addr_t *dma_addr, u32 *len);
+	int	(*vbus_reset)(struct musb *musb);
+	int (*otg_notifications)(struct musb *musb, unsigned long event);
+#ifdef CONFIG_USB_SAMSUNG_OMAP_NORPM
+	int	(*async_resume)(struct musb *musb);
+	int	(*async_suspend)(struct musb *musb);
+#endif
 };
 
 /*
@@ -385,6 +391,7 @@ struct musb {
 
 	/* mutex for synchronization */
 	struct mutex		musb_lock;
+	struct mutex		async_musb_lock;
 
 	const struct musb_platform_ops *ops;
 	struct musb_context_registers context;
@@ -524,6 +531,11 @@ struct musb {
 #ifdef MUSB_CONFIG_PROC_FS
 	struct proc_dir_entry *proc_entry;
 #endif
+#ifdef CONFIG_USB_SAMSUNG_OMAP_NORPM
+	int async_resume;
+	int reserve_async_suspend;
+#endif
+	int vbus_reset_count;
 };
 
 struct musb_otg_work {
@@ -678,5 +690,44 @@ static inline int musb_platform_exit(struct musb *musb)
 
 	return musb->ops->exit(musb);
 }
+
+static inline int musb_platform_vbus_reset(struct musb *musb)
+{
+	if (!musb->ops->vbus_reset)
+		return -EINVAL;
+
+	return musb->ops->vbus_reset(musb);
+}
+
+static inline int musb_platform_otg_notifications(struct musb *musb, u32 event)
+{
+	if (!musb->ops->otg_notifications)
+		return -EINVAL;
+
+	return musb->ops->otg_notifications(musb, event);
+}
+
+#ifdef CONFIG_USB_SAMSUNG_OMAP_NORPM
+static inline int musb_platform_async_suspend(struct musb *musb)
+{
+	if (!musb->ops->async_suspend)
+		return -EINVAL;
+
+	return musb->ops->async_suspend(musb);
+}
+static inline int musb_platform_async_resume(struct musb *musb)
+{
+	if (!musb->ops->async_resume)
+		return -EINVAL;
+
+	return musb->ops->async_resume(musb);
+}
+extern int musb_add_hcd(struct musb *musb);
+extern int musb_remove_hcd(struct musb *musb);
+#endif
+
+extern int musb_async_suspend(struct musb *musb);
+extern int musb_async_resume(struct musb *musb);
+extern void musb_all_ep_flush(struct musb *musb);
 
 #endif	/* __MUSB_CORE_H__ */

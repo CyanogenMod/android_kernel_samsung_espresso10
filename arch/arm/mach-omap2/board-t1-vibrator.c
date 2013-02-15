@@ -18,7 +18,6 @@
 #include <asm/mach-types.h>
 #include <linux/sec-vibrator.h>
 #include <plat/dmtimer.h>
-#include <mach/cpufreq_limits.h>
 
 #include "mux.h"
 #include "board-t1.h"
@@ -92,17 +91,12 @@ static struct secvib_platform_data vib_pdata = {
 static int vibrator_enable(int actr_idx, int on)
 {
 	int ret;
-	static bool cpufreq_lock;
 
 	/* actr_idx will not be used for t1 becase we have only one */
 	if (unlikely(gptimer == NULL))
 		return -EINVAL;
 
 	if (on) {
-		if (!cpufreq_lock) {
-			cpufreq_lock = true;
-			omap_cpufreq_min_limit(DVFS_LOCK_ID_VIB, 1200000);
-		}
 		gpio_set_value(vib_pdata.gpio_en, 1);
 		ret = omap_dm_timer_start(gptimer);
 		if (unlikely(ret < 0))
@@ -111,10 +105,6 @@ static int vibrator_enable(int actr_idx, int on)
 	} else {
 		omap_dm_timer_stop(gptimer);
 		gpio_set_value(vib_pdata.gpio_en, 0);
-		if (cpufreq_lock) {
-			omap_cpufreq_min_limit_free(DVFS_LOCK_ID_VIB);
-			cpufreq_lock = false;
-		}
 	}
 	return 0;
 }
@@ -139,7 +129,6 @@ static int pwm_init(void)
 		OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
 	omap_dm_timer_enable(gptimer);
 	omap_dm_timer_write_counter(gptimer, -2);
-	omap_dm_timer_disable(gptimer);
 
 	return 0;
 
@@ -178,6 +167,7 @@ static int pwm_set(int actr_idx, unsigned long force)
 			OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
 	omap_dm_timer_enable(gptimer);
 	omap_dm_timer_write_counter(gptimer, -2);
+	omap_dm_timer_save_context(gptimer);
 
 	return 0;
 }

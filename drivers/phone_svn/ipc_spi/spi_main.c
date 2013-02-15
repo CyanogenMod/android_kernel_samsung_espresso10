@@ -244,7 +244,7 @@ static void _start_packet_tx(void)
 #ifdef SPI_GUARANTEE_MRDY_GAP
 	mrdy_high_time_save = spi_os_get_tick();
 	if (check_mrdy_time_gap(mrdy_low_time_save, mrdy_high_time_save))
-		spi_os_loop_delay(MRDY_GUARANTEE_MRDY_LOOP_COUNT);
+		spi_os_sleep(1);
 #endif
 
 	spi_dev_set_gpio(SPI_DEV_GPIOPIN_MRDY, SPI_DEV_GPIOLEVEL_HIGH);
@@ -261,7 +261,7 @@ static void _start_packet_tx(void)
 
 		guaran_cnt++;
 		if (guaran_cnt > MRDY_GUARANTEE_MRDY_TIME_SLEEP * 20) {
-			pr_debug("%s spi_main_state=[%d]\n",
+			pr_err("%s spi_main_state=[%d]\n",
 				"[SPI] === spi Fail to receiving SUBSRDY CONF :",
 				(int)spi_main_state);
 
@@ -312,6 +312,8 @@ static void _start_packet_tx_send(void)
 		SPI_DEV_MAX_PACKET_SIZE) != 0) {
 		/* TODO: save failed packet */
 		/* back data to each queue */
+		pr_err("[SPI] spi_dev_send fail\n");
+		panic("[SPI] spi_dev_send\n");
 	}
 
 	spi_main_state = SPI_MAIN_STATE_TX_TERMINATE;
@@ -395,6 +397,9 @@ static void _start_packet_receive(void)
 			/* call function for send data to IPC, RAW, RFS */
 			spi_send_msg_to_app();
 		}
+	} else {
+		pr_err("[SPI] spi_dev_receive fail\n");
+		panic("[SPI] spi_dev_receive\n");
 	}
 
 	spi_main_state = SPI_MAIN_STATE_RX_TERMINATE;

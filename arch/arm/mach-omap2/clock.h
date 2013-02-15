@@ -89,7 +89,7 @@ u32 omap2_clksel_round_rate_div(struct clk *clk, unsigned long target_rate,
 				u32 *new_div);
 void omap2_init_clksel_parent(struct clk *clk);
 unsigned long omap2_clksel_recalc(struct clk *clk);
-unsigned long omap2_clksel_speculate(struct clk *clk, unsigned long parent_rt);
+unsigned long omap2_clksel_speculate(struct clk *clk, unsigned long parent_rate);
 long omap2_clksel_round_rate(struct clk *clk, unsigned long target_rate);
 int omap2_clksel_set_rate(struct clk *clk, unsigned long rate);
 int omap2_clksel_set_parent(struct clk *clk, struct clk *new_parent);
@@ -122,8 +122,12 @@ static inline void omap3_clk_prepare_for_reboot(void)
 
 #ifdef CONFIG_ARCH_OMAP4
 void omap4_clk_prepare_for_reboot(void);
+void omap4_dpll_abe_reconfigure(void);
 #else
 static inline void omap4_clk_prepare_for_reboot(void)
+{
+}
+static inline void omap4_dpll_abe_reconfigure(void)
 {
 }
 #endif
@@ -139,7 +143,7 @@ void omap2_clk_print_new_rates(const char *hfclkin_ck_name,
 			       const char *core_ck_name,
 			       const char *mpu_ck_name);
 
-extern u8 cpu_mask;
+extern u16 cpu_mask;
 
 extern const struct clkops clkops_omap2_dflt_wait;
 extern const struct clkops clkops_dummy;
