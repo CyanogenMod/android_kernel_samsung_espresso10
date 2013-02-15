@@ -722,6 +722,8 @@ static int l2cap_sock_recvmsg(struct kiocb *iocb, struct socket *sock, struct ms
 
 	if (sk->sk_state == BT_CONNECT2 && bt_sk(sk)->defer_setup) {
 		sk->sk_state = BT_CONFIG;
+		/* from bluez git */
+		pi->chan->state = BT_CONFIG;
 
 		__l2cap_connect_rsp_defer(pi->chan);
 		release_sock(sk);

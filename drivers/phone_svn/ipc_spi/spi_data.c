@@ -666,8 +666,8 @@ static int _prepare_tx_type_packet(void *buf,
 	unsigned int spi_packet_free_length;
 
 	unsigned int spi_packet_count = 0;
-	unsigned int cur_dequeue_length;
 	unsigned int spi_data_mux;
+	int cur_dequeue_length;
 
 	struct spi_data_queue *queue;
 

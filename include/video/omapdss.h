@@ -46,7 +46,9 @@
 #define DISPC_IRQ_VID3_FIFO_UNDERFLOW	(1 << 20)
 #define DISPC_IRQ_ACBIAS_COUNT_STAT2	(1 << 21)
 #define DISPC_IRQ_FRAMEDONE2		(1 << 22)
+#define DISPC_IRQ_FRAMEDONE_WB		(1 << 23)
 #define DISPC_IRQ_FRAMEDONETV		(1 << 24)
+#define DISPC_IRQ_WBINCOMPLETE		(1 << 26)
 
 struct omap_dss_device;
 struct omap_overlay_manager;
@@ -66,6 +68,7 @@ enum omap_plane {
 	OMAP_DSS_VIDEO1	= 1,
 	OMAP_DSS_VIDEO2	= 2,
 	OMAP_DSS_VIDEO3 = 3,
+	OMAP_DSS_WB	= 4,
 };
 
 enum omap_channel {
@@ -246,6 +249,7 @@ void rfbi_bus_unlock(void);
 /* DSI */
 void dsi_bus_lock(struct omap_dss_device *dssdev);
 void dsi_bus_unlock(struct omap_dss_device *dssdev);
+bool dsi_bus_was_unlocked(struct omap_dss_device *dssdev);
 int dsi_vc_dcs_write(struct omap_dss_device *dssdev, int channel, u8 *data,
 		int len);
 int dsi_vc_dcs_write_0(struct omap_dss_device *dssdev, int channel,
@@ -260,12 +264,22 @@ int dsi_vc_dcs_read_1(struct omap_dss_device *dssdev, int channel, u8 dcs_cmd,
 		u8 *data);
 int dsi_vc_dcs_read_2(struct omap_dss_device *dssdev, int channel, u8 dcs_cmd,
 		u8 *data1, u8 *data2);
+int dsi_vc_gen_write_nosync(struct omap_dss_device *dssdev, int channel,
+		u8 *data, int len);
+int dsi_vc_gen_write(struct omap_dss_device *dssdev, int channel,
+		u8 *data, int len);
 int dsi_vc_set_max_rx_packet_size(struct omap_dss_device *dssdev, int channel,
 		u16 len);
 int dsi_vc_send_null(struct omap_dss_device *dssdev, int channel);
 int dsi_vc_send_bta_sync(struct omap_dss_device *dssdev, int channel);
 
 int dsi_video_mode_enable(struct omap_dss_device *dssdev, u8 data_type);
+void dsi_video_mode_disable(struct omap_dss_device *dssdev);
+
+int dsi_vc_gen_read_2(struct omap_dss_device *dssdev, int channel, u16 cmd,
+		u8 *buf, int buflen);
+void dsi_videomode_panel_preinit(struct omap_dss_device *dssdev);
+
 
 /* Board specific data */
 struct omap_dss_board_info {
@@ -310,6 +324,45 @@ struct omap_video_timings {
 	u16 vfp;	/* Vertical front porch */
 	/* Unit: line clocks */
 	u16 vbp;	/* Vertical back porch */
+};
+
+struct omap_dsi_timings {
+	/* Unit: HS DSI byte clocks */
+	u16 tl;		/* Total line length */
+	/* Unit: pixels */
+	u16 vact;	/* Active lines */
+	/* Unit: HS DSI byte clocks */
+	u16 hsa;	/* Horizontal synchronization pulse width */
+	/* Unit: HS DSI byte clocks */
+	u16 hfp;	/* Horizontal front porch */
+	/* Unit: HS DSI byte clocks */
+	u16 hbp;	/* Horizontal back porch */
+	/* Unit: Line clocks */
+	u16 vsa;	/* Vertical synchronization pulse width */
+	/* Unit: Line clocks */
+	u16 vfp;	/* Vertical front porch */
+	/* Unit: Line clocks */
+	u16 vbp;	/* Vertical back porch */
+	/* Unit: HS DSI byte clocks */
+	u16 hsa_hs_int;	/* HSA HS interleaving */
+	/* Unit: HS DSI byte clocks */
+	u16 hfp_hs_int;	/* HFP HS interleaving */
+	/* Unit: HS DSI byte clocks */
+	u16 hbp_hs_int;	/* HBP HS interleaving */
+	/* Unit: DSI Command mode packets */
+	u16 hsa_lp_int;	/* HSA LP interleaving */
+	/* Unit: DSI Command mode packets */
+	u16 hfp_lp_int;	/* HFP LP interleaving */
+	/* Unit: DSI Command mode packets */
+	u16 hbp_lp_int;	/* HBP LP interleaving */
+	/* Unit: HS DSI byte clocks */
+	u16 bl_hs_int;	/* Blanking HS interleaving */
+	/* Unit: DSI command mode packets */
+	u16 bl_lp_int;	/* Blanking LP interleaving */
+	/* Unit: HS DSI byte clocks */
+	u16 enter_lat;	/* Enter HS mode latency */
+	/* Unit: HS DSI byte clocks */
+	u16 exit_lat;	/* Exit HS mode latency */
 };
 
 #ifdef CONFIG_OMAP2_DSS_VENC
@@ -376,6 +429,7 @@ struct omap_overlay_info {
 	u16 out_height;	/* if 0, out_height == height */
 	u8 global_alpha;
 	u8 pre_mult_alpha;
+	u8 wb_source;
 	enum omap_overlay_zorder zorder;
 	u16 min_x_decim, max_x_decim, min_y_decim, max_y_decim;
 	struct omap_dss_cconv_coefs cconv;
@@ -420,6 +474,9 @@ struct omap_overlay_manager_info {
 	bool trans_enabled;
 
 	bool alpha_enabled;
+
+	/* if true, manager is used in MEM2MEM mode */
+	bool wb_only;
 
 	struct omapdss_ovl_cb cb;
 
@@ -466,6 +523,71 @@ struct omap_overlay_manager {
 	int (*disable)(struct omap_overlay_manager *mgr);
 };
 
+/* Writeback data structures */
+enum omap_writeback_source {
+	OMAP_WB_LCD1		= 0,
+	OMAP_WB_TV		= 1,
+	OMAP_WB_LCD2		= 2,
+	OMAP_WB_GFX		= 3,
+	OMAP_WB_VID1		= 4,
+	OMAP_WB_VID2		= 5,
+	OMAP_WB_VID3		= 6
+};
+
+enum omap_writeback_capturemode {
+	OMAP_WB_CAPTURE_ALL		= 0x0,
+	OMAP_WB_CAPTURE_1		= 0x1,
+	OMAP_WB_CAPTURE_1_OF_2	= 0x2,
+	OMAP_WB_CAPTURE_1_OF_3	= 0x3,
+	OMAP_WB_CAPTURE_1_OF_4	= 0x4,
+	OMAP_WB_CAPTURE_1_OF_5	= 0x5,
+	OMAP_WB_CAPTURE_1_OF_6	= 0x6,
+	OMAP_WB_CAPTURE_1_OF_7	= 0x7
+};
+
+enum omap_writeback_mode {
+	OMAP_WB_CAPTURE_MODE	= 0x0,
+	OMAP_WB_MEM2MEM_MODE	= 0x1,
+};
+
+struct omap_writeback_info {
+	bool					enabled;
+	bool					info_dirty;
+	enum omap_writeback_source		source;
+	u16					width;
+	u16					height;
+	u16					out_width;
+	u16					out_height;
+	enum omap_color_mode			dss_mode;
+	enum omap_writeback_capturemode		capturemode;
+	/* capture or mem2mem mode */
+	enum omap_writeback_mode		mode;
+	u32					paddr;
+	/* NV12 support*/
+	u32					p_uv_addr;
+	u8					rotation;
+	enum omap_dss_rotation_type		rotation_type;
+};
+
+struct omap_writeback {
+	struct kobject			kobj;
+	struct list_head		list;
+	bool				info_dirty;
+	int				width;
+	int				height;
+	/* mutex to control access to wb data */
+	struct mutex			lock;
+	struct omap_writeback_info	info;
+	struct completion		wb_completion;
+
+	bool (*check_wb)(struct omap_writeback *wb);
+	int (*set_wb_info)(struct omap_writeback *wb,
+			struct omap_writeback_info *info);
+	void (*get_wb_info)(struct omap_writeback *wb,
+			struct omap_writeback_info *info);
+	int (*register_framedone)(struct omap_writeback *wb);
+	int (*wait_framedone)(struct omap_writeback *wb);
+};
 struct omap_dss_device {
 	struct device dev;
 
@@ -506,6 +628,7 @@ struct omap_dss_device {
 
 			bool ext_te;
 			u8 ext_te_gpio;
+			u8 line_bufs;
 		} dsi;
 
 		struct {
@@ -534,6 +657,18 @@ struct omap_dss_device {
 			u16 lp_clk_div;
 			unsigned offset_ddr_clk;
 			enum omap_dss_clk_source dsi_fclk_src;
+			u8 tlpx;
+			struct {
+				u8 zero;
+				u8 prepare;
+				u8 trail;
+			} tclk;
+			struct {
+				u8 zero;
+				u8 prepare;
+				u8 trail;
+				u8 exit;
+			} ths;
 		} dsi;
 
 		struct {
@@ -556,6 +691,9 @@ struct omap_dss_device {
 
 		u32 width_in_um;
 		u32 height_in_um;
+		u16 fb_xres;
+		u16 fb_yres;
+		u32 hdmi_default_cea_code;
 	} panel;
 
 	struct {
@@ -595,6 +733,17 @@ struct omap_dss_device {
 	void (*platform_disable)(struct omap_dss_device *dssdev);
 	int (*set_backlight)(struct omap_dss_device *dssdev, int level);
 	int (*get_backlight)(struct omap_dss_device *dssdev);
+
+	struct omap_video_timings *dispc_timings;
+	struct omap_dsi_timings *dsi_timings;
+#ifdef CONFIG_FB_OMAP_BOOTLOADER_INIT
+	void (*dss_clks_disable)(void);
+#endif
+};
+
+struct omap_dss_hdmi_data
+{
+	int hpd_gpio;
 };
 
 struct omap_dss_driver {
@@ -655,6 +804,7 @@ struct omap_dss_driver {
 	/* for wrapping around state changes */
 	void (*disable_orig)(struct omap_dss_device *display);
 	int (*enable_orig)(struct omap_dss_device *display);
+	int (*suspend_orig)(struct omap_dss_device *display);
 };
 
 int omap_dss_register_driver(struct omap_dss_driver *);
@@ -675,6 +825,7 @@ struct omap_overlay_manager *omap_dss_get_overlay_manager(int num);
 
 int omap_dss_get_num_overlays(void);
 struct omap_overlay *omap_dss_get_overlay(int num);
+struct omap_writeback *omap_dss_get_wb(int num);
 
 void omapdss_default_get_resolution(struct omap_dss_device *dssdev,
 		u16 *xres, u16 *yres);

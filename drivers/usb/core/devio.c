@@ -407,7 +407,7 @@ static void async_completed(struct urb *urb)
 		sinfo.si_errno = as->status;
 		sinfo.si_code = SI_ASYNCIO;
 		sinfo.si_addr = as->userurb;
-		pid = as->pid;
+		pid = get_pid(as->pid);
 		uid = as->uid;
 		euid = as->euid;
 		secid = as->secid;
@@ -422,9 +422,11 @@ static void async_completed(struct urb *urb)
 		cancel_bulk_urbs(ps, as->bulk_addr);
 	spin_unlock(&ps->lock);
 
-	if (signr)
+	if (signr) {
 		kill_pid_info_as_uid(sinfo.si_signo, &sinfo, pid, uid,
 				      euid, secid);
+		put_pid(pid);
+	}
 
 	wake_up(&ps->wait);
 }
@@ -607,9 +609,10 @@ static int findintfep(struct usb_device *dev, unsigned int ep)
 }
 
 static int check_ctrlrecip(struct dev_state *ps, unsigned int requesttype,
-			   unsigned int index)
+			   unsigned int request, unsigned int index)
 {
 	int ret = 0;
+	struct usb_host_interface *alt_setting;
 
 	if (ps->dev->state != USB_STATE_UNAUTHENTICATED
 	 && ps->dev->state != USB_STATE_ADDRESS
@@ -617,6 +620,19 @@ static int check_ctrlrecip(struct dev_state *ps, unsigned int requesttype,
 		return -EHOSTUNREACH;
 	if (USB_TYPE_VENDOR == (USB_TYPE_MASK & requesttype))
 		return 0;
+
+	/*
+	 * check for the special corner case 'get_device_id' in the printer
+	 * class specification, where wIndex is (interface << 8 | altsetting)
+	 * instead of just interface
+	 */
+	if (requesttype == 0xa1 && request == 0) {
+		alt_setting = usb_find_alt_setting(ps->dev->actconfig,
+						   index >> 8, index & 0xff);
+		if (alt_setting
+		 && alt_setting->desc.bInterfaceClass == USB_CLASS_PRINTER)
+			index >>= 8;
+	}
 
 	index &= 0xff;
 	switch (requesttype & USB_RECIP_MASK) {
@@ -770,7 +786,8 @@ static int proc_control(struct dev_state *ps, void __user *arg)
 
 	if (copy_from_user(&ctrl, arg, sizeof(ctrl)))
 		return -EFAULT;
-	ret = check_ctrlrecip(ps, ctrl.bRequestType, ctrl.wIndex);
+	ret = check_ctrlrecip(ps, ctrl.bRequestType, ctrl.bRequest,
+			      ctrl.wIndex);
 	if (ret)
 		return ret;
 	wLength = ctrl.wLength;		/* To suppress 64k PAGE_SIZE warning */
@@ -1100,7 +1117,7 @@ static int proc_do_submiturb(struct dev_state *ps, struct usbdevfs_urb *uurb,
 			kfree(dr);
 			return -EINVAL;
 		}
-		ret = check_ctrlrecip(ps, dr->bRequestType,
+		ret = check_ctrlrecip(ps, dr->bRequestType, dr->bRequest,
 				      le16_to_cpup(&dr->wIndex));
 		if (ret) {
 			kfree(dr);
@@ -1916,13 +1933,86 @@ static long usbdev_do_ioctl(struct file *file, unsigned int cmd,
 	return ret;
 }
 
+#ifdef CONFIG_USB_HOST_NOTIFY
+static void usbdev_log(unsigned int cmd, int ret)
+{
+	char *cmd_string;
+	switch (cmd) {
+	case USBDEVFS_CONTROL:
+		cmd_string = "CONTROL";
+		break;
+	case USBDEVFS_BULK:
+		cmd_string = "BULK";
+		break;
+	case USBDEVFS_RESETEP:
+		cmd_string = "RESETEP";
+		break;
+	case USBDEVFS_RESET:
+		cmd_string = "RESET";
+		break;
+	case USBDEVFS_CLEAR_HALT:
+		cmd_string = "CLEAR_HALT";
+		break;
+	case USBDEVFS_GETDRIVER:
+		cmd_string = "GETDRIVER";
+		break;
+	case USBDEVFS_CONNECTINFO:
+		cmd_string = "CONNECTINFO";
+		break;
+	case USBDEVFS_SETINTERFACE:
+		cmd_string = "SETINTERFACE";
+		break;
+	case USBDEVFS_SETCONFIGURATION:
+		cmd_string = "SETCONFIGURATION";
+		break;
+	case USBDEVFS_SUBMITURB:
+		cmd_string = "SUBMITURB";
+		break;
+	case USBDEVFS_DISCARDURB:
+		cmd_string = "DISCARDURB";
+		break;
+	case USBDEVFS_REAPURB:
+		cmd_string = "REAPURB";
+		break;
+	case USBDEVFS_REAPURBNDELAY:
+		cmd_string = "REAPURBNDELAY";
+		break;
+	case USBDEVFS_DISCSIGNAL:
+		cmd_string = "DISCSIGNAL";
+		break;
+	case USBDEVFS_CLAIMINTERFACE:
+		cmd_string = "CLAIMINTERFACE";
+		break;
+	case USBDEVFS_RELEASEINTERFACE:
+		cmd_string = "RELEASEINTERFACE";
+		break;
+	case USBDEVFS_IOCTL:
+		cmd_string = "IOCTL";
+		break;
+	case USBDEVFS_CLAIM_PORT:
+		cmd_string = "CLAIM_PORT";
+		break;
+	case USBDEVFS_RELEASE_PORT:
+		cmd_string = "RELEASE_PORT";
+		break;
+	default:
+		cmd_string = "DEFAULT";
+		break;
+	}
+	printk(KERN_ERR "%s: %s error ret=%d\n", __func__, cmd_string, ret);
+}
+#endif
+
 static long usbdev_ioctl(struct file *file, unsigned int cmd,
 			unsigned long arg)
 {
 	int ret;
 
 	ret = usbdev_do_ioctl(file, cmd, (void __user *)arg);
-
+#ifdef CONFIG_USB_HOST_NOTIFY
+	if (ret < 0)
+		usbdev_log(cmd, ret);
+#endif
 	return ret;
 }
 

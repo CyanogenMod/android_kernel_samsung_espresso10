@@ -23,11 +23,11 @@
 #include "sec_muxtbl.h"
 
 static struct omap_muxtbl muxtbl[] __initdata = {
-	/* [--OUT] usbb1_ulpitll_dat7 - gpio_95 - MOTOR_EN */
+	/* [--OUT] usbb1_ulpitll_dat7.gpio_95 - MOTOR_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     USBB1_ULPITLL_DAT7, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     95, "MOTOR_EN"),
-	/* [IN---] sim_pwrctrl - gpio_wk4 - EAR_SEND_END */
+	/* [IN---] sim_pwrctrl.gpio_wk4 - EAR_SEND_END */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
 		     SIM_PWRCTRL,
 		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT |

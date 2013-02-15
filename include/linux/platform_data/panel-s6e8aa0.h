@@ -100,6 +100,7 @@ struct s6e8aa0_elvss_parameters {
 
 struct panel_s6e8aa0_data {
 	int	reset_gpio;
+	int oled_id_gpio;
 	void	(* set_power)(bool enable);
 
 	const struct s6e8aa0_sequence_entry *seq_display_set;

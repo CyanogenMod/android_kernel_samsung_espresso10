@@ -43,16 +43,6 @@ config SVNET_WHITELIST
 	bool "svnet uses whitelist via onedram"
 	default n
 
-config CHN_CMCC_SPI_SPRD
-	tristate "Samsung M0-TD CP SPRD"
-	depends on SAMSUNG_PHONE_SVNET
-	default n
-
-config WORKQUEUE_FRONT
-	tristate "IPC_SPI workqueue front"
-	depends on SAMSUNG_PHONE_SVNET
-	default n
-
 config FEATURE_SAMSUNG_SPI
 	tristate "IPC_SPI protocol"
 	depends on SAMSUNG_PHONE_SVNET

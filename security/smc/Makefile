@@ -27,7 +27,9 @@ plus_sec := $(call as-instr,.arch_extension sec,+sec)
 EXTRA_CFLAGS += -Iarch/arm/mach-omap2
 EXTRA_CFLAGS += -Iarch/arm/plat-omap/include/plat
 EXTRA_CFLAGS += -DCONFIG_TF_TEEC
+ifeq ($(CONFIG_ION),y)
 EXTRA_CFLAGS += -DCONFIG_TF_ION
+endif
 
 tf_driver-objs += tf_util.o
 tf_driver-objs += tf_conn.o

@@ -1,0 +1,4 @@
+config MACH_SAMSUNG_GOKEY
+	bool "Samsung Gokey (YP-GH1) Board"
+	default n
+	select MACH_OMAP4_SAMSUNG

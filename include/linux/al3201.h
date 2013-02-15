@@ -71,9 +71,13 @@ static const int adc_table[5] = {
 	65000,
 };
 
+struct al3201_platform_data {
+	void (*power_on) (bool);
+};
+
 enum {
 	OFF = 0,
-	ON = 1,
-} SENSOR_STATE;
+	ON,
+};
 
 #endif

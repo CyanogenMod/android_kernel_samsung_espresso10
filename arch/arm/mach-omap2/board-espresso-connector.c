@@ -339,6 +339,9 @@ static void espresso_set_vbus_drive(bool enable)
 #else
 static void espresso_set_vbus_drive(bool enable)
 {
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
+	if (espresso_otg->pdata->usbhostd_wakeup && enable)
+		espresso_otg->pdata->usbhostd_wakeup();
 	espresso_accessory_power(2, enable);
 }
 #endif
@@ -380,8 +383,16 @@ static void espresso_ap_usb_detach(struct omap4_otg *otg)
 
 static void espresso_usb_host_attach(struct omap4_otg *otg)
 {
+	pr_info("[%s]\n", __func__);
 	/* Accessory power down needed */
 	espresso_accessory_power(0, 0);
+
+#ifdef CONFIG_USB_HOST_NOTIFY
+	if (otg->pdata && otg->pdata->usbhostd_start) {
+		otg->pdata->ndev.mode = NOTIFY_HOST_MODE;
+		otg->pdata->usbhostd_start();
+	}
+#endif
 
 	omap4_vusb_enable(otg, true);
 
@@ -392,18 +403,16 @@ static void espresso_usb_host_attach(struct omap4_otg *otg)
 	atomic_notifier_call_chain(&otg->otg.notifier,
 			USB_EVENT_ID,
 			otg->otg.gadget);
-
-#ifdef CONFIG_USB_HOST_NOTIFY
-	if (otg->pdata && otg->pdata->usbhostd_start) {
-		otg->pdata->ndev.mode = NOTIFY_HOST_MODE;
-		otg->pdata->usbhostd_start();
-	}
-#endif
 }
 
 static void espresso_usb_host_detach(struct omap4_otg *otg)
 {
-	omap4_vusb_enable(otg, false);
+#ifdef CONFIG_USB_HOST_NOTIFY
+	if (otg->pdata && otg->pdata->usbhostd_stop) {
+		otg->pdata->ndev.mode = NOTIFY_NONE_MODE;
+		otg->pdata->usbhostd_stop();
+	}
+#endif
 
 	otg->otg.state = OTG_STATE_B_IDLE;
 	otg->otg.default_a = false;
@@ -413,14 +422,8 @@ static void espresso_usb_host_detach(struct omap4_otg *otg)
 			USB_EVENT_HOST_NONE,
 			otg->otg.gadget);
 
-#ifdef CONFIG_USB_HOST_NOTIFY
-	if (otg->pdata && otg->pdata->usbhostd_stop) {
-		otg->pdata->ndev.mode = NOTIFY_NONE_MODE;
-		otg->pdata->usbhostd_stop();
-	}
-#endif
-
 	espresso_set_vbus_drive(false);
+	omap4_vusb_enable(otg, false);
 }
 
 static void espresso_cp_usb_attach(void)
@@ -483,12 +486,12 @@ static void espresso_gpio_rel_for_adc_check_1(void)
 int omap4_espresso_get_adc(enum espresso_adc_ch ch)
 {
 	int adc;
-	u8 stmpe811_ch;
 	int i;
 	int adc_tmp;
 	int adc_min = MAX_ADC_VAL;
 	int adc_max = MIN_ADC_VAL;
 	int adc_sum = 0;
+	u8 stmpe811_ch = ADC_CHANNEL_IN2;
 
 	if (ch == REMOTE_SENSE)
 		stmpe811_ch = ADC_CHANNEL_IN1;
@@ -535,6 +538,7 @@ static void espresso_con_usb_charger_attached(struct omap4_otg *otg)
 	/* USB cable connected */
 	pr_info("%s, USB_EVENT_VBUS\n", __func__);
 
+	val = gpio_get_value(otg->ta_nconnected);
 	if (val < 0) {
 		pr_err("usb ta_nconnected: gpio_get_value error %d\n", val);
 		return;
@@ -1280,9 +1284,12 @@ switch_dev_fail:
 int __init omap4_espresso_connector_late_init(void)
 {
 	unsigned int board_type = omap4_espresso_get_board_type();
+
 	if (system_rev < 7 || board_type != SEC_MACHINE_ESPRESSO)
 		if (gpio_get_value(connector_gpios[GPIO_JIG_ON].gpio))
 			uart_set_l3_cstr(true);
+
+	return 0;
 }
 
 late_initcall(omap4_espresso_connector_late_init);

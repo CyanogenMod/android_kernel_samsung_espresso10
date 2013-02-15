@@ -143,11 +143,27 @@ static struct attribute_group host_notify_attr_grp = {
 	.attrs = host_notify_attrs,
 };
 
+void host_notify_set_ovc_en(struct host_notify_dev *ndev, int enable)
+{
+	ndev->ovc_en = !!enable ? NOTIFY_SET_ON : NOTIFY_SET_OFF;
+}
+EXPORT_SYMBOL_GPL(host_notify_set_ovc_en);
+
+int host_notify_get_ovc_en(struct host_notify_dev *ndev)
+{
+	return ndev->ovc_en;
+}
+EXPORT_SYMBOL_GPL(host_notify_get_ovc_en);
+
 void host_state_notify(struct host_notify_dev *ndev, int state)
 {
 	printk(KERN_INFO
 	       "host_notify: ndev name=%s: from state=%d -> to state=%d\n",
 	       ndev->name, ndev->state, state);
+	if (!host_notify_get_ovc_en(ndev) && state == NOTIFY_HOST_OVERCURRENT) {
+		printk(KERN_INFO "host_notify: ovc_en is disabled. No uevent.\n");
+		return;
+	}
 	if (ndev->state != state) {
 		ndev->state = state;
 		kobject_uevent(&ndev->dev->kobj, KOBJ_CHANGE);
@@ -231,6 +247,7 @@ int host_notify_dev_register(struct host_notify_dev *ndev)
 
 	dev_set_drvdata(ndev->dev, ndev);
 	ndev->state = 0;
+	ndev->ovc_en = NOTIFY_SET_ON;
 	return 0;
 }
 EXPORT_SYMBOL_GPL(host_notify_dev_register);

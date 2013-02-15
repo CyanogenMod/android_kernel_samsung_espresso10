@@ -1076,6 +1076,10 @@ static int sd_ioctl(struct block_device *bdev, fmode_t mode,
 	SCSI_LOG_IOCTL(1, printk("sd_ioctl: disk=%s, cmd=0x%x\n",
 						disk->disk_name, cmd));
 
+	error = scsi_verify_blk_ioctl(bdev, cmd);
+	if (error < 0)
+		return error;
+
 	/*
 	 * If we are in the middle of error recovery, don't let anyone
 	 * else try and use this device.  Also, if error recovery fails, it
@@ -1098,7 +1102,7 @@ static int sd_ioctl(struct block_device *bdev, fmode_t mode,
 			error = scsi_ioctl(sdp, cmd, p);
 			break;
 		default:
-			error = scsi_cmd_ioctl(disk->queue, disk, mode, cmd, p);
+			error = scsi_cmd_blk_ioctl(bdev, mode, cmd, p);
 			if (error != -ENOTTY)
 				break;
 			error = scsi_ioctl(sdp, cmd, p);
@@ -1209,9 +1213,6 @@ out:
 	 */
 	kfree(sshdr);
 	retval = sdp->changed ? DISK_EVENT_MEDIA_CHANGE : 0;
-#ifdef CONFIG_USB_HOST_NOTIFY
-	sdkp->previous_state = retval;
-#endif
 	sdp->changed = 0;
 	return retval;
 }
@@ -1271,6 +1272,11 @@ static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
 			   unsigned int cmd, unsigned long arg)
 {
 	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
+	int ret;
+
+	ret = scsi_verify_blk_ioctl(bdev, cmd);
+	if (ret < 0)
+		return -ENOIOCTLCMD;
 
 	/*
 	 * If we are in the middle of error recovery, don't let anyone
@@ -1282,8 +1288,6 @@ static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
 		return -ENODEV;
 	       
 	if (sdev->host->hostt->compat_ioctl) {
-		int ret;
-
 		ret = sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
 
 		return ret;
@@ -2554,27 +2558,35 @@ exit:
 	while ((part = disk_part_iter_next(&piter)))
 		kobject_uevent(&part_to_dev(part)->kobj, KOBJ_ADD);
 	disk_part_iter_exit(&piter);
+
+	sdkp->async_end = 1;
+	wake_up_interruptible(&sdkp->delay_wait);
 }
 
 static int sd_media_scan_thread(void *__sdkp)
 {
 	struct scsi_disk *sdkp = __sdkp;
 	int ret;
-	sdkp->media_scan = sdkp->previous_state;
-
+	sdkp->async_end = 1;
+	sdkp->device->changed = 0;
 	while (!kthread_should_stop()) {
 		wait_event_interruptible_timeout(sdkp->delay_wait,
-			sdkp->thread_remove, 3*HZ);
-		if (sdkp->thread_remove)
+			(sdkp->thread_remove && sdkp->async_end), 3*HZ);
+		if (sdkp->thread_remove && sdkp->async_end)
 			break;
 		ret = sd_check_events(sdkp->disk, 0);
-		if (ret != sdkp->media_scan) {
+
+		if (sdkp->prv_media_present
+				!= sdkp->media_present) {
 			sd_printk(KERN_NOTICE, sdkp,
-				"sd_media_changed ret=%d\n", ret);
+				"sd_check_ret=%d prv_media=%d media=%d\n",
+					ret, sdkp->prv_media_present
+							, sdkp->media_present);
 			sdkp->disk->media_present = 0;
+			sdkp->async_end = 0;
 			async_schedule(sd_scanpartition_async, sdkp);
+			sdkp->prv_media_present = sdkp->media_present;
 		}
-		sdkp->media_scan = ret;
 	}
 	sd_printk(KERN_NOTICE, sdkp, "sd_media_scan_thread exit\n");
 	complete_and_exit(&sdkp->scanning_done, 0);
@@ -2626,8 +2638,16 @@ static void sd_probe_async(void *data, async_cookie_t cookie)
 		gd->flags |= GENHD_FL_REMOVABLE;
 		gd->events |= DISK_EVENT_MEDIA_CHANGE;
 	}
+#ifdef CONFIG_USB_HOST_NOTIFY
+	if (sdp->host->by_usb)
+		gd->interfaces = GENHD_IF_USB;
+	msleep(500);
+#endif
 
 	add_disk(gd);
+#ifdef CONFIG_USB_HOST_NOTIFY
+	sdkp->prv_media_present = sdkp->media_present;
+#endif
 	sd_dif_config_host(sdkp);
 
 	sd_revalidate_disk(gd);
@@ -2734,8 +2754,6 @@ static int sd_probe(struct device *dev)
 	dev_set_drvdata(dev, sdkp);
 
 #ifdef CONFIG_USB_HOST_NOTIFY
-	sdkp->previous_state = 1;
-
 	if (sdp->host->by_usb) {
 		init_waitqueue_head(&sdkp->delay_wait);
 		init_completion(&sdkp->scanning_done);
