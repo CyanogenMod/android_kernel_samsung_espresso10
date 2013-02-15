@@ -98,13 +98,27 @@ enum cable_type_t {
 #define M_PI (3.14159265358979323846)
 #endif
 
+enum {
+	YAS532_POSITION_0 = 1,
+	YAS532_POSITION_1,
+	YAS532_POSITION_2,
+	YAS532_POSITION_3,
+	YAS532_POSITION_4,
+	YAS532_POSITION_5,
+	YAS532_POSITION_6,
+	YAS532_POSITION_7,
+};
+
+#define YAS532_POSITION_OFFSET	1
+
 /* -------------------------------------------------------------------------- */
 /*  Structure definition                                                      */
 /* -------------------------------------------------------------------------- */
 
 struct acc_platform_data {
-	const char *cal_path[32];
-	bool	ldo_ctl;
+	const char *cal_path;
+	void (*ldo_on) (bool);
+	int orientation;
 };
 struct accel_cal {
 	s16 v[3];
@@ -119,11 +133,13 @@ struct yas_vector {
 };
 
 struct mag_platform_data {
+	void (*power_on) (bool);
 	int offset_enable;
 	int chg_status;
 	struct yas_vector ta_offset;
 	struct yas_vector usb_offset;
 	struct yas_vector full_offset;
+	int orientation;
 };
 
 struct yas_matrix {
@@ -328,6 +344,8 @@ struct yas_acc_driver {
 	int (*get_position) (void);
 	int (*set_position) (int position);
 	int (*measure) (struct yas_acc_data *data);
+	void (*set_motion_interrupt)(bool enable, bool factorytest);
+	int (*get_motion_interrupt)(void);
 #if DEBUG
 	int (*get_register) (uint8_t adr, uint8_t *val);
 #endif

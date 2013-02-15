@@ -598,13 +598,17 @@ static PVRSRV_ERROR FreeResourceByPtr(RESMAN_ITEM	*psItem,
 			(IMG_UINTPTR_T)psItem->pfnFreeResource, psItem->ui32Flags));
 
 	
+	List_RESMAN_ITEM_Remove(psItem);
+
+
+	
 	RELEASE_SYNC_OBJ;
 
 	
 	if (bExecuteCallback)
 	{
 		eError = psItem->pfnFreeResource(psItem->pvParam, psItem->ui32Param, bForceCleanup);
-	 	if ((eError != PVRSRV_OK) && (eError != PVRSRV_ERROR_RETRY))
+	 	if (eError != PVRSRV_OK)
 		{
 			PVR_DPF((PVR_DBG_ERROR, "FreeResourceByPtr: ERROR calling FreeResource function"));
 		}
@@ -613,14 +617,8 @@ static PVRSRV_ERROR FreeResourceByPtr(RESMAN_ITEM	*psItem,
 	
 	ACQUIRE_SYNC_OBJ;
 
-	if (eError != PVRSRV_ERROR_RETRY)
-	{
-		
-		List_RESMAN_ITEM_Remove(psItem);
-
-		
-		OSFreeMem(PVRSRV_OS_PAGEABLE_HEAP, sizeof(RESMAN_ITEM), psItem, IMG_NULL);
-	}
+	
+	OSFreeMem(PVRSRV_OS_PAGEABLE_HEAP, sizeof(RESMAN_ITEM), psItem, IMG_NULL);
 
 	return(eError);
 }
@@ -681,19 +679,7 @@ static PVRSRV_ERROR FreeResourceByCriteria(PRESMAN_CONTEXT	psResManContext,
 						 				ui32Param)) != IMG_NULL
 		  	&& eError == PVRSRV_OK)
 	{
-		do
-		{
-			eError = FreeResourceByPtr(psCurItem, bExecuteCallback, CLEANUP_WITH_POLL);
-			if (eError == PVRSRV_ERROR_RETRY)
-			{
-				RELEASE_SYNC_OBJ;
-				OSReleaseBridgeLock();
-				
-				OSSleepms(MAX_CLEANUP_TIME_WAIT_US/1000);
-				OSReacquireBridgeLock();
-				ACQUIRE_SYNC_OBJ;
-			}
-		} while (eError == PVRSRV_ERROR_RETRY);
+		eError = FreeResourceByPtr(psCurItem, bExecuteCallback, CLEANUP_WITH_POLL);
 	}
 
 	return eError;

@@ -399,6 +399,14 @@ config LEDS_ASIC3
 	  cannot be used. This driver supports hardware blinking with an on+off
 	  period from 62ms to 125s. Say Y to enable LEDs on the HP iPAQ hx4700.
 
+config LEDS_MAX77693
+	bool "LED support for the MAX77693"
+	depends on LEDS_CLASS
+	depends on MFD_MAX77693
+	default n
+	help
+	  This option enables support for the LEDs on the MAX77693.
+
 config LEDS_TRIGGERS
 	bool "LED Trigger support"
 	depends on LEDS_CLASS

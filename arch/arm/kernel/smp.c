@@ -297,8 +297,6 @@ asmlinkage void __cpuinit secondary_start_kernel(void)
 	unsigned int cpu = smp_processor_id();
 	static bool booted;
 
-	printk("CPU%u: Booted secondary processor\n", cpu);
-
 	/*
 	 * All kernel threads share the same mm context; grab a
 	 * reference and switch to it.
@@ -309,6 +307,8 @@ asmlinkage void __cpuinit secondary_start_kernel(void)
 	cpu_switch_mm(mm->pgd, mm);
 	enter_lazy_tlb(mm, current);
 	local_flush_tlb_all();
+
+	printk("CPU%u: Booted secondary processor\n", cpu);
 
 	cpu_init();
 	preempt_disable();
@@ -328,9 +328,7 @@ asmlinkage void __cpuinit secondary_start_kernel(void)
 	smp_store_cpu_info(cpu);
 
 	/*
-	 * OK, now it's safe to let the boot CPU continue.  Wait for
-	 * the CPU migration code to notice that the CPU is online
-	 * before we continue.
+	 * OK, now it's safe to let the boot CPU continue.
 	 */
 	set_cpu_online(cpu, true);
 
@@ -339,13 +337,6 @@ asmlinkage void __cpuinit secondary_start_kernel(void)
 	 */
 	percpu_timer_setup();
 
-	while (!cpu_active(cpu))
-		cpu_relax();
-
-	/*
-	 * cpu_active bit is set, so it's safe to enable interrupts
-	 * now.
-	 */
 	local_irq_enable();
 	local_fiq_enable();
 

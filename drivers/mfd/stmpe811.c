@@ -220,25 +220,28 @@ static int __init stmpe811_adc_init(void)
 	sec_adc_dev = device_create(sec_class, NULL, 0, NULL, "sec_adc");
 	if (IS_ERR(sec_adc_dev)) {
 		pr_err("failed to create device!\n");
-		goto  DEREGISTER_MISC;
+		goto  err_dev;
 	}
 
 	ret = device_create_file(sec_adc_dev, &dev_attr_adc_test);
 	if (ret < 0) {
 		pr_err("failed to create device file(%s)!\n",
 						dev_attr_adc_test.attr.name);
-		goto DESTROY_DEVICE;
+		goto err_attr;
 	}
 
-	if (i2c_add_driver(&stmpe811_adc_i2c_driver))
+	if (i2c_add_driver(&stmpe811_adc_i2c_driver)) {
 		pr_err("%s: Can't add fg i2c drv\n", __func__);
+		goto err_i2c;
+	}
 
 	return 0;
 
-DESTROY_DEVICE:
-	device_destroy(sec_class, 0);
-
-DEREGISTER_MISC:
+err_i2c:
+	device_remove_file(sec_adc_dev, &dev_attr_adc_test);
+err_attr:
+	device_destroy(sec_class, sec_adc_dev->devt);
+err_dev:
 	misc_deregister(&stmpe811_adc_device);
 
 	return ret;

@@ -50,6 +50,7 @@ struct twlreg_info {
 	/* chip constraints on regulator behavior */
 	u16			min_mV;
 	u16			max_mV;
+	u16			step_mv;
 
 	u8			flags;
 
@@ -57,7 +58,7 @@ struct twlreg_info {
 	struct regulator_desc	desc;
 
 	/* chip specific features */
-	unsigned long 		features;
+	unsigned long		features;
 };
 
 
@@ -101,7 +102,9 @@ struct twlreg_info {
 #define TWL6030_CFG_STATE_SLEEP	0x03
 #define TWL6030_CFG_STATE_GRP_SHIFT	5
 #define TWL6030_CFG_STATE_APP_SHIFT	2
-#define TWL6030_CFG_STATE_APP_MASK	(0x03 << TWL6030_CFG_STATE_APP_SHIFT)
+#define TWL6030_CFG_STATE_MASK		0x03
+#define TWL6030_CFG_STATE_APP_MASK	(TWL6030_CFG_STATE_MASK << \
+						TWL6030_CFG_STATE_APP_SHIFT)
 #define TWL6030_CFG_STATE_APP(v)	(((v) & TWL6030_CFG_STATE_APP_MASK) >>\
 						TWL6030_CFG_STATE_APP_SHIFT)
 
@@ -111,16 +114,27 @@ struct twlreg_info {
 #define SMPS_OFFSET_EN		BIT(0)
 #define SMPS_EXTENDED_EN	BIT(1)
 
-/* twl6025 SMPS EPROM values */
+/* twl6032 SMPS EPROM values */
 #define TWL6030_SMPS_OFFSET		0xB0
 #define TWL6030_SMPS_MULT		0xB3
 #define SMPS_MULTOFFSET_SMPS4	BIT(0)
 #define SMPS_MULTOFFSET_VIO	BIT(1)
 #define SMPS_MULTOFFSET_SMPS3	BIT(6)
 
+/* twl6034 SMPS EPROM values */
+#define TWL6030_SMPS_OFFSET2		0xCE
+#define TWL6030_SMPS_MULT2		0xCF
+#define SMPS_MULTOFFSET_SMPSN7		BIT(1)
+#define SMPS_MULTOFFSET_SMPSN8		BIT(2)
+#define SMPS_MULTOFFSET_SMPSN9		BIT(3)
+#define SMPS_MULTOFFSET_SMPSN10	BIT(4)
+
 /* TWL6030 VUSB supplemental config registers */
 #define TWL6030_MISC2		0xE5
 #define TWL6030_CFG_LDO_PD2	0xF5
+
+/* TWL6030 default voltage step of ldo is 100mV */
+#define TWL6030_DEFAULT_LDO_VOLTAGE_STEP	100
 
 /*
  * TWL603X SMPS has 6 bits xxxx_CFG_VOLTAGE.VSEL[5:0] to configure voltages and
@@ -129,6 +143,16 @@ struct twlreg_info {
  */
 #define TWL603X_SMPS_VSEL_MASK	0x3F
 #define TWL603X_SMPS_NUMBER_VOLTAGES TWL603X_SMPS_VSEL_MASK
+#define TWL6034_SMPS2_NUMBER_VOLTAGES 8
+
+/*
+ * There's 2 ldo function in TWL6034.
+ * To access register each ldo function, we should use different sub group id.
+ */
+#define TWL603x_LDO_I2C_MOD_NUM(twl_info)		\
+	((twl_info->features & TWL6034_SUBCLASS) &&	\
+	(twl_info->desc.id >= TWL6034_REG_LDON16))	\
+	? TWL6034_MODULE_LDO2 : TWL_MODULE_PM_RECEIVER
 
 static inline int
 twlreg_read(struct twlreg_info *info, unsigned slave_subgp, unsigned offset)
@@ -187,22 +211,20 @@ static int twl6030reg_is_enabled(struct regulator_dev *rdev)
 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
 	int			grp = 0, val;
 
-	if (!(twl_class_is_6030() && (info->features & TWL6025_SUBCLASS)))
+	if (!(info->features & (TWL6032_SUBCLASS | TWL6034_SUBCLASS))) {
 		grp = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_GRP);
-	if (grp < 0)
-		return grp;
+		if (grp < 0)
+			return grp;
 
-	if (!(twl_class_is_6030() && (info->features & TWL6025_SUBCLASS)))
 		grp &= P1_GRP_6030;
-	else
-		grp = 1;
-
-	val = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_STATE);
-
-	if (!(twl_class_is_6030() && (info->features & TWL6025_SUBCLASS)))
+		val = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_STATE);
 		val = TWL6030_CFG_STATE_APP(val);
-	else
-		val = TWL6032_CFG_STATE(val);
+	} else {
+		val = twlreg_read(info, TWL603x_LDO_I2C_MOD_NUM(info),
+					VREG_STATE);
+		val &= TWL6030_CFG_STATE_MASK;
+		grp = 1;
+	}
 
 	return grp && (val == TWL6030_CFG_STATE_ON);
 }
@@ -215,7 +237,7 @@ static int twl6030reg_set_trans_state(struct regulator_dev *rdev,
 	u8			mask;
 
 	/* Read CFG_TRANS register of TWL6030 */
-	rval = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_TRANS);
+	rval = twlreg_read(info, TWL603x_LDO_I2C_MOD_NUM(info), VREG_TRANS);
 
 	if (rval < 0)
 		return rval;
@@ -230,7 +252,8 @@ static int twl6030reg_set_trans_state(struct regulator_dev *rdev,
 	rval &= ~mask;
 	rval |= val;
 
-	return twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_TRANS, rval);
+	return twlreg_write(info, TWL603x_LDO_I2C_MOD_NUM(info),
+				VREG_TRANS, rval);
 }
 
 static int twl4030reg_enable(struct regulator_dev *rdev)
@@ -258,14 +281,16 @@ static int twl6030reg_enable(struct regulator_dev *rdev)
 	int			grp = 0;
 	int			ret;
 
-	if (!(twl_class_is_6030() && (info->features & TWL6025_SUBCLASS)))
+	if (!(twl_class_is_6030() &&
+		(info->features & (TWL6032_SUBCLASS | TWL6034_SUBCLASS))))
 		grp = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_GRP);
+
 	if (grp < 0)
 		return grp;
 
-	ret = twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_STATE,
-			grp << TWL6030_CFG_STATE_GRP_SHIFT |
-			TWL6030_CFG_STATE_ON);
+	ret = twlreg_write(info, TWL603x_LDO_I2C_MOD_NUM(info), VREG_STATE,
+				grp << TWL6030_CFG_STATE_GRP_SHIFT |
+				TWL6030_CFG_STATE_ON);
 	/*
 	 * Ensure it stays in Auto mode when we enter suspend state.
 	 * (TWL6030 in sleep mode).
@@ -302,13 +327,14 @@ static int twl6030reg_disable(struct regulator_dev *rdev)
 	int			grp = 0;
 	int			ret;
 
-	if (!(twl_class_is_6030() && (info->features & TWL6025_SUBCLASS)))
+	if (!(twl_class_is_6030() &&
+		(info->features & (TWL6032_SUBCLASS | TWL6034_SUBCLASS))))
 		grp = P1_GRP_6030 | P2_GRP_6030 | P3_GRP_6030;
 
 	/* For 6030, set the off state for all grps enabled */
-	ret = twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_STATE,
-			(grp) << TWL6030_CFG_STATE_GRP_SHIFT |
-			TWL6030_CFG_STATE_OFF);
+	ret = twlreg_write(info, TWL603x_LDO_I2C_MOD_NUM(info), VREG_STATE,
+				(grp) << TWL6030_CFG_STATE_GRP_SHIFT |
+				TWL6030_CFG_STATE_OFF);
 
 	/* Ensure it remains OFF when we enter suspend (TWL6030 in sleep). */
 	if (!ret)
@@ -343,9 +369,14 @@ static int twl6030reg_get_status(struct regulator_dev *rdev)
 	if (val < 0)
 		return val;
 
-	val = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_STATE);
+	val = twlreg_read(info, TWL603x_LDO_I2C_MOD_NUM(info), VREG_STATE);
 
-	switch (TWL6030_CFG_STATE_APP(val)) {
+	if (info->features & (TWL6032_SUBCLASS | TWL6034_SUBCLASS))
+		val &= TWL6030_CFG_STATE_MASK;
+	else
+		val = TWL6030_CFG_STATE_APP(val);
+
+	switch (val) {
 	case TWL6030_CFG_STATE_ON:
 		return REGULATOR_STATUS_NORMAL;
 
@@ -401,7 +432,8 @@ static int twl6030reg_set_mode(struct regulator_dev *rdev, unsigned mode)
 	int grp = 0;
 	int val;
 
-	if (!(twl_class_is_6030() && (info->features & TWL6025_SUBCLASS)))
+	if (!(twl_class_is_6030() &&
+		(info->features & (TWL6032_SUBCLASS | TWL6034_SUBCLASS))))
 		grp = twlreg_read(info, TWL_MODULE_PM_RECEIVER, VREG_GRP);
 
 	if (grp < 0)
@@ -422,7 +454,8 @@ static int twl6030reg_set_mode(struct regulator_dev *rdev, unsigned mode)
 		return -EINVAL;
 	}
 
-	return twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_STATE, val);
+	return twlreg_write(info, TWL603x_LDO_I2C_MOD_NUM(info),
+				VREG_STATE, val);
 }
 
 static int twl6030reg_suspend_enable(struct regulator_dev *rdev)
@@ -598,7 +631,14 @@ static int twl6030ldo_list_voltage(struct regulator_dev *rdev, unsigned index)
 {
 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
 
-	return ((info->min_mV + (index * 100)) * 1000);
+	/*
+	 * For backword compatibility, set default ldo voltage step.
+	 * Default ldo voltage step of twl6030/6032 is 100mV.
+	 */
+	if (!info->step_mv)
+		info->step_mv = TWL6030_DEFAULT_LDO_VOLTAGE_STEP;
+
+	return (info->min_mV + (index * info->step_mv)) * 1000;
 }
 
 static int
@@ -612,29 +652,51 @@ twl6030ldo_set_voltage(struct regulator_dev *rdev, int min_uV, int max_uV,
 		return -EDOM;
 
 	/*
-	 * Use the below formula to calculate vsel
-	 * mV = 1000mv + 100mv * (vsel - 1)
+	 * For backword compatibility, set default ldo voltage step.
+	 * Default ldo voltage step of twl6030/6032 is 100mV.
 	 */
-	vsel = (min_uV/1000 - 1000)/100 + 1;
-	*selector = vsel;
-	return twlreg_write(info, TWL_MODULE_PM_RECEIVER, VREG_VOLTAGE, vsel);
+	if (!info->step_mv)
+		info->step_mv = TWL6030_DEFAULT_LDO_VOLTAGE_STEP;
 
+	/*
+	 * Use the below formula to calculate vsel
+	 * When info->min_mV is 1000
+	 * mV = 1000mv + voltage step * (vsel - 1)
+	 * When info->min_mV is 900
+	 * mV = 900mV + voltage step * (vsel - 1)
+	 */
+	vsel = (min_uV/1000 - info->min_mV)/info->step_mv + 1;
+	*selector = vsel;
+
+	return twlreg_write(info, TWL603x_LDO_I2C_MOD_NUM(info),
+						VREG_VOLTAGE, vsel);
 }
 
 static int twl6030ldo_get_voltage(struct regulator_dev *rdev)
 {
 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
-	int		vsel = twlreg_read(info, TWL_MODULE_PM_RECEIVER,
-								VREG_VOLTAGE);
+	int			vsel;
+
+	/*
+	 * For backword compatibility, set default ldo voltage step.
+	 * Default ldo voltage step of twl6030/6032 is 100mV.
+	 */
+	if (!info->step_mv)
+		info->step_mv = TWL6030_DEFAULT_LDO_VOLTAGE_STEP;
+
+	vsel = twlreg_read(info, TWL603x_LDO_I2C_MOD_NUM(info), VREG_VOLTAGE);
 
 	if (vsel < 0)
 		return vsel;
 
 	/*
 	 * Use the below formula to calculate vsel
-	 * mV = 1000mv + 100mv * (vsel - 1)
+	 * When info->min_mV is 1000
+	 * mV = 1000mv + voltage step * (vsel - 1)
+	 * When info->min_mV is 900
+	 * mV = 900mV + voltage step * (vsel - 1)
 	 */
-	return (1000 + (100 * (vsel - 1))) * 1000;
+	return (info->min_mV + (info->step_mv * (vsel - 1))) * 1000;
 }
 
 static struct regulator_ops twl6030ldo_ops = {
@@ -725,82 +787,116 @@ static int twl6030smps_list_voltage(struct regulator_dev *rdev, unsigned index)
 
 	int voltage = 0;
 
-	switch (info->flags) {
-	case SMPS_OFFSET_EN:
-		voltage = 100000;
-		/* fall through */
-	case 0:
+	/* SMPSn9/SMPSn10 of twl6034 use different vsel table from others. */
+	if ((info->features & TWL6034_SUBCLASS) &&
+			((info->desc.id == TWL6034_REG_SMPSN9) ||
+			(info->desc.id == TWL6034_REG_SMPSN10))) {
 		switch (index) {
 		case 0:
-			voltage = 0;
+		voltage = 0;
 			break;
-		case 58:
-			voltage = 1350 * 1000;
+		case 1:
+		voltage = 1500 * 1000;
 			break;
-		case 59:
-			voltage = 1500 * 1000;
+		case 2:
+		voltage = 1800 * 1000;
 			break;
-		case 60:
-			voltage = 1800 * 1000;
+		case 3:
+		voltage = 2100 * 1000;
 			break;
-		case 61:
-			voltage = 1900 * 1000;
+		case 4:
+		voltage = 2800 * 1000;
 			break;
-		case 62:
-			voltage = 2100 * 1000;
+		case 5:
+		voltage = 2842 * 1000;
+			break;
+		case 6:
+		voltage = 2908 * 1000;
+			break;
+		case 7:
+		voltage = 3000 * 1000;
 			break;
 		default:
-			voltage += (600000 + (12500 * (index - 1)));
+			return -EINVAL;
 		}
-		break;
-	case SMPS_EXTENDED_EN:
-		switch (index) {
+	} else {
+		switch (info->flags) {
+		case SMPS_OFFSET_EN:
+			voltage = 100000;
+			/* fall through */
 		case 0:
-			voltage = 0;
+			switch (index) {
+			case 0:
+				voltage = 0;
+				break;
+			case 58:
+				voltage = 1350 * 1000;
+				break;
+			case 59:
+				voltage = 1500 * 1000;
+				break;
+			case 60:
+				voltage = 1800 * 1000;
+				break;
+			case 61:
+				voltage = 1900 * 1000;
+				break;
+			case 62:
+				voltage = 2100 * 1000;
+				break;
+			default:
+				voltage += (600000 + (12500 * (index - 1)));
+			}
 			break;
-		case 58:
-			voltage = 2084 * 1000;
+		case SMPS_EXTENDED_EN:
+			switch (index) {
+			case 0:
+				voltage = 0;
+				break;
+			case 58:
+				voltage = 2084 * 1000;
+				break;
+			case 59:
+				voltage = 2315 * 1000;
+				break;
+			case 60:
+				voltage = 2778 * 1000;
+				break;
+			case 61:
+				voltage = 2932 * 1000;
+				break;
+			case 62:
+				voltage = 3241 * 1000;
+				break;
+			default:
+				voltage = (1852000 + (38600 * (index - 1)));
+			}
 			break;
-		case 59:
-			voltage = 2315 * 1000;
+		case SMPS_OFFSET_EN | SMPS_EXTENDED_EN:
+			switch (index) {
+			case 0:
+				voltage = 0;
+				break;
+			case 58:
+				voltage = 4167 * 1000;
+				break;
+			case 59:
+				voltage = 2315 * 1000;
+				break;
+			case 60:
+				voltage = 2778 * 1000;
+				break;
+			case 61:
+				voltage = 2932 * 1000;
+				break;
+			case 62:
+				voltage = 3241 * 1000;
+				break;
+			default:
+				voltage = (2161000 + (38600 * (index - 1)));
+			}
 			break;
-		case 60:
-			voltage = 2778 * 1000;
-			break;
-		case 61:
-			voltage = 2932 * 1000;
-			break;
-		case 62:
-			voltage = 3241 * 1000;
-			break;
-		default:
-			voltage = (1852000 + (38600 * (index - 1)));
 		}
-		break;
-	case SMPS_OFFSET_EN | SMPS_EXTENDED_EN:
-		switch (index) {
-		case 0:
-			voltage = 0;
-			break;
-		case 58:
-			voltage = 4167 * 1000;
-			break;
-		case 59:
-			voltage = 2315 * 1000;
-			break;
-		case 60:
-			voltage = 2778 * 1000;
-			break;
-		case 61:
-			voltage = 2932 * 1000;
-			break;
-		case 62:
-			voltage = 3241 * 1000;
-			break;
-		default:
-			voltage = (2161000 + (38600 * (index - 1)));
-		}
-		break;
 	}
 
 	return voltage;
@@ -813,81 +909,117 @@ twl6030smps_set_voltage(struct regulator_dev *rdev, int min_uV, int max_uV,
 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
 	int	vsel = 0;
 
-	switch (info->flags) {
-	case 0:
-		if (min_uV == 0)
-			vsel = 0;
-		else if ((min_uV >= 600000) && (max_uV <= 1300000)) {
-			vsel = (min_uV - 600000) / 125;
-			if (vsel % 100)
-				vsel += 100;
-			vsel /= 100;
-			vsel++;
-		}
-		/* Values 1..57 for vsel are linear and can be calculated
-		 * values 58..62 are non linear.
-		 */
-		else if ((min_uV > 1900000) && (max_uV >= 2100000))
-			vsel = 62;
-		else if ((min_uV > 1800000) && (max_uV >= 1900000))
-			vsel = 61;
-		else if ((min_uV > 1500000) && (max_uV >= 1800000))
-			vsel = 60;
-		else if ((min_uV > 1350000) && (max_uV >= 1500000))
-			vsel = 59;
-		else if ((min_uV > 1300000) && (max_uV >= 1350000))
-			vsel = 58;
-		else
+	/* SMPSn9/SMPSn10 of twl6034 use different vsel table from others. */
+	if ((info->features & TWL6034_SUBCLASS) &&
+			((info->desc.id == TWL6034_REG_SMPSN9) ||
+			(info->desc.id == TWL6034_REG_SMPSN10))) {
+		switch (min_uV) {
+		case 0:
+		vsel = 0;
+			break;
+		case 1500000:
+		vsel = 1;
+			break;
+		case 1800000:
+		vsel = 2;
+			break;
+		case 2100000:
+		vsel = 3;
+			break;
+		case 2800000:
+		vsel = 4;
+			break;
+		case 2842000:
+		vsel = 5;
+			break;
+		case 2908000:
+		vsel = 6;
+			break;
+		case 3000000:
+		vsel = 7;
+			break;
+		default:
 			return -EINVAL;
-		break;
-	case SMPS_OFFSET_EN:
-		if (min_uV == 0)
-			vsel = 0;
-		else if ((min_uV >= 700000) && (max_uV <= 1420000)) {
-			vsel = (min_uV - 700000) / 125;
-			if (vsel % 100)
-				vsel += 100;
-			vsel /= 100;
-			vsel++;
 		}
-		/* Values 1..57 for vsel are linear and can be calculated
-		 * values 58..62 are non linear.
-		 */
-		else if ((min_uV > 1900000) && (max_uV >= 2100000))
-			vsel = 62;
-		else if ((min_uV > 1800000) && (max_uV >= 1900000))
-			vsel = 61;
-		else if ((min_uV > 1350000) && (max_uV >= 1800000))
-			vsel = 60;
-		else if ((min_uV > 1350000) && (max_uV >= 1500000))
-			vsel = 59;
-		else if ((min_uV > 1300000) && (max_uV >= 1350000))
-			vsel = 58;
-		else
-			return -EINVAL;
-		break;
-	case SMPS_EXTENDED_EN:
-		if (min_uV == 0)
-			vsel = 0;
-		else if ((min_uV >= 1852000) && (max_uV <= 4013600)) {
-			vsel = (min_uV - 1852000) / 386;
-			if (vsel % 100)
-				vsel += 100;
-			vsel /= 100;
-			vsel++;
+	} else {
+		switch (info->flags) {
+		case 0:
+			if (min_uV == 0)
+				vsel = 0;
+			else if ((min_uV >= 600000) && (max_uV <= 1300000)) {
+				vsel = (min_uV - 600000) / 125;
+				if (vsel % 100)
+					vsel += 100;
+				vsel /= 100;
+				vsel++;
+			}
+			/* Values 1..57 for vsel are linear and
+			 * can be calculated.
+			 * values 58..62 are non linear.
+			 */
+			else if ((min_uV > 1900000) && (max_uV >= 2100000))
+				vsel = 62;
+			else if ((min_uV > 1800000) && (max_uV >= 1900000))
+				vsel = 61;
+			else if ((min_uV > 1500000) && (max_uV >= 1800000))
+				vsel = 60;
+			else if ((min_uV > 1350000) && (max_uV >= 1500000))
+				vsel = 59;
+			else if ((min_uV > 1300000) && (max_uV >= 1350000))
+				vsel = 58;
+			else
+				return -EINVAL;
+			break;
+		case SMPS_OFFSET_EN:
+			if (min_uV == 0)
+				vsel = 0;
+			else if ((min_uV >= 700000) && (max_uV <= 1420000)) {
+				vsel = (min_uV - 700000) / 125;
+				if (vsel % 100)
+					vsel += 100;
+				vsel /= 100;
+				vsel++;
+			}
+			/* Values 1..57 for vsel are linear and
+			 * can be calculated.
+			 * values 58..62 are non linear.
+			 */
+			else if ((min_uV > 1900000) && (max_uV >= 2100000))
+				vsel = 62;
+			else if ((min_uV > 1800000) && (max_uV >= 1900000))
+				vsel = 61;
+			else if ((min_uV > 1350000) && (max_uV >= 1800000))
+				vsel = 60;
+			else if ((min_uV > 1350000) && (max_uV >= 1500000))
+				vsel = 59;
+			else if ((min_uV > 1300000) && (max_uV >= 1350000))
+				vsel = 58;
+			else
+				return -EINVAL;
+			break;
+		case SMPS_EXTENDED_EN:
+			if (min_uV == 0)
+				vsel = 0;
+			else if ((min_uV >= 1852000) && (max_uV <= 4013600)) {
+				vsel = (min_uV - 1852000) / 386;
+				if (vsel % 100)
+					vsel += 100;
+				vsel /= 100;
+				vsel++;
+			}
+			break;
+		case SMPS_OFFSET_EN|SMPS_EXTENDED_EN:
+			if (min_uV == 0)
+				vsel = 0;
+			else if ((min_uV >= 2161000) && (max_uV <= 4321000)) {
+				vsel = (min_uV - 1852000) / 386;
+				if (vsel % 100)
+					vsel += 100;
+				vsel /= 100;
+				vsel++;
+			}
+			break;
 		}
-		break;
-	case SMPS_OFFSET_EN|SMPS_EXTENDED_EN:
-		if (min_uV == 0)
-			vsel = 0;
-		else if ((min_uV >= 2161000) && (max_uV <= 4321000)) {
-			vsel = (min_uV - 1852000) / 386;
-			if (vsel % 100)
-				vsel += 100;
-			vsel /= 100;
-			vsel++;
-		}
-		break;
 	}
 
 	*selector = vsel;
@@ -909,6 +1041,19 @@ static struct regulator_ops twlsmps_ops = {
 	.set_voltage		= twl6030smps_set_voltage,
 	.get_voltage_sel	= twl6030smps_get_voltage_sel,
 
+	.enable			= twl6030reg_enable,
+	.disable		= twl6030reg_disable,
+	.is_enabled		= twl6030reg_is_enabled,
+
+	.set_mode		= twl6030reg_set_mode,
+
+	.get_status		= twl6030reg_get_status,
+
+	.set_suspend_enable	= twl6030reg_suspend_enable,
+	.set_suspend_disable	= twl6030reg_suspend_disable,
+};
+
+static struct regulator_ops twl6030_external_control_pin_ops = {
 	.enable			= twl6030reg_enable,
 	.disable		= twl6030reg_disable,
 	.is_enabled		= twl6030reg_is_enabled,
@@ -962,14 +1107,30 @@ static struct regulator_ops twlsmps_ops = {
 		}, \
 	}
 
-#define TWL6025_ADJUSTABLE_LDO(label, offset, min_mVolts, max_mVolts) { \
+#define TWL6032_ADJUSTABLE_LDO(label, offset, min_mVolts, max_mVolts) { \
 	.base = offset, \
 	.min_mV = min_mVolts, \
 	.max_mV = max_mVolts, \
 	.desc = { \
 		.name = #label, \
-		.id = TWL6025_REG_##label, \
+		.id = TWL6032_REG_##label, \
 		.n_voltages = ((max_mVolts - min_mVolts)/100) + 1, \
+		.ops = &twl6030ldo_ops, \
+		.type = REGULATOR_VOLTAGE, \
+		.owner = THIS_MODULE, \
+		}, \
+	}
+
+#define TWL6034_ADJUSTABLE_LDO(label, offset,	\
+				min_mVolts, max_mVolts, step_mVolts) { \
+	.base = offset, \
+	.min_mV = min_mVolts, \
+	.max_mV = max_mVolts, \
+	.step_mv = step_mVolts,	\
+	.desc = { \
+		.name = #label, \
+		.id = TWL6034_REG_##label, \
+		.n_voltages = ((max_mVolts - min_mVolts)/step_mVolts) + 1, \
 		.ops = &twl6030ldo_ops, \
 		.type = REGULATOR_VOLTAGE, \
 		.owner = THIS_MODULE, \
@@ -1019,15 +1180,55 @@ static struct regulator_ops twlsmps_ops = {
 		}, \
 	}
 
-#define TWL6025_ADJUSTABLE_SMPS(label, offset) { \
+#define TWL6032_ADJUSTABLE_SMPS(label, offset) { \
 	.base = offset, \
 	.min_mV = 600, \
 	.max_mV = 2100, \
 	.desc = { \
 		.name = #label, \
-		.id = TWL6025_REG_##label, \
+		.id = TWL6032_REG_##label, \
 		.n_voltages = TWL603X_SMPS_NUMBER_VOLTAGES, \
 		.ops = &twlsmps_ops, \
+		.type = REGULATOR_VOLTAGE, \
+		.owner = THIS_MODULE, \
+		}, \
+	}
+
+#define TWL6034_ADJUSTABLE_SMPS(label, offset, min_mVolts, max_mVolts) { \
+	.base = offset, \
+	.min_mV = min_mVolts, \
+	.max_mV = max_mVolts, \
+	.desc = { \
+		.name = #label, \
+		.id = TWL6034_REG_##label, \
+		.n_voltages = TWL603X_SMPS_NUMBER_VOLTAGES, \
+		.ops = &twlsmps_ops, \
+		.type = REGULATOR_VOLTAGE, \
+		.owner = THIS_MODULE, \
+		}, \
+	}
+
+#define TWL6034_ADJUSTABLE_SMPS2(label, offset, min_mVolts, max_mVolts) { \
+	.base = offset, \
+	.min_mV = min_mVolts, \
+	.max_mV = max_mVolts, \
+	.desc = { \
+		.name = #label, \
+		.id = TWL6034_REG_##label, \
+		.n_voltages = TWL6034_SMPS2_NUMBER_VOLTAGES, \
+		.ops = &twlsmps_ops, \
+		.type = REGULATOR_VOLTAGE, \
+		.owner = THIS_MODULE, \
+		}, \
+	}
+
+#define TWL6030_EXTERNAL_CONTROL_PIN(label, offset, turnon_delay) { \
+	.base = offset, \
+	.delay = turnon_delay, \
+	.desc = { \
+		.name = #label, \
+		.id = TWL6030_REG_##label, \
+		.ops = &twl6030_external_control_pin_ops, \
 		.type = REGULATOR_VOLTAGE, \
 		.owner = THIS_MODULE, \
 		}, \
@@ -1073,43 +1274,99 @@ static struct twlreg_info twl_regs[] = {
 	TWL6030_FIXED_LDO(VCXIO, 0x60, 1800, 0),
 	TWL6030_FIXED_LDO(VDAC, 0x64, 1800, 0),
 	TWL6030_FIXED_LDO(VUSB, 0x70, 3300, 0),
-	TWL6030_FIXED_RESOURCE(SYSEN, 0x83, 0),
 	TWL6030_FIXED_RESOURCE(CLK32KG, 0x8C, 0),
 	TWL6030_FIXED_RESOURCE(CLK32KAUDIO, 0x8F, 0),
 	TWL6030_ADJUSTABLE_SMPS(VMEM, 0x34, 600, 4000),
 	TWL6030_ADJUSTABLE_SMPS(V2V1, 0x1c, 1800, 2100),
 
-	/* 6025 are renamed compared to 6030 versions */
-	TWL6025_ADJUSTABLE_LDO(LDO2, 0x54, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDO4, 0x58, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDO3, 0x5c, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDO5, 0x68, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDO1, 0x6c, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDO7, 0x74, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDO6, 0x60, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDOLN, 0x64, 1000, 3300),
-	TWL6025_ADJUSTABLE_LDO(LDOUSB, 0x70, 1000, 3300),
+	/* 6032 are renamed compared to 6030 versions */
+	TWL6032_ADJUSTABLE_LDO(LDO2, 0x54, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDO4, 0x58, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDO3, 0x5c, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDO5, 0x68, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDO1, 0x6c, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDO7, 0x74, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDO6, 0x60, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDOLN, 0x64, 1000, 3300),
+	TWL6032_ADJUSTABLE_LDO(LDOUSB, 0x70, 1000, 3300),
 
-	TWL6025_ADJUSTABLE_SMPS(SMPS3, 0x34),
-	TWL6025_ADJUSTABLE_SMPS(SMPS4, 0x10),
-	TWL6025_ADJUSTABLE_SMPS(VIO, 0x16),
+	TWL6032_ADJUSTABLE_SMPS(SMPS3, 0x34),
+	TWL6032_ADJUSTABLE_SMPS(SMPS4, 0x10),
+	TWL6032_ADJUSTABLE_SMPS(VIO, 0x16),
+
+	/* 6034 FUNC LDO1 */
+	TWL6034_ADJUSTABLE_LDO(LDON12, 0x44, 1000, 3300, 100),
+	TWL6034_ADJUSTABLE_LDO(LDON13, 0x48, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON14, 0x4C, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON15, 0x78, 900, 3300, 50),
+
+	/* 6034 FUNC LDO2 */
+	TWL6034_ADJUSTABLE_LDO(LDON16, 0xFF, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON17, 0x03, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON18, 0x07, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON19, 0x0B, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON20, 0x0F, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON21, 0x13, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON22, 0x17, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON23, 0x1B, 1000, 3300, 100),
+	TWL6034_ADJUSTABLE_LDO(LDON24, 0x1F, 1000, 3300, 100),
+	TWL6034_ADJUSTABLE_LDO(LDON25, 0x23, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON26, 0x27, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON27, 0x2B, 900, 3300, 50),
+	TWL6034_ADJUSTABLE_LDO(LDON28, 0x2F, 900, 3300, 50),
+
+	/* 6034 SMPS */
+	TWL6034_ADJUSTABLE_SMPS(SMPSN7, 0x1C, 600, 2100),
+	TWL6034_ADJUSTABLE_SMPS(SMPSN8, 0x0A, 600, 2100),
+	TWL6034_ADJUSTABLE_SMPS2(SMPSN9, 0x2E, 1500, 3000),
+	TWL6034_ADJUSTABLE_SMPS2(SMPSN10, 0x39, 1500, 3000),
+
+	TWL6030_EXTERNAL_CONTROL_PIN(SYSEN, 0x83, 0),
+	TWL6030_EXTERNAL_CONTROL_PIN(REGEN1, 0x7d, 0),
 };
 
-static u8 twl_get_smps_offset(void)
+static u8 twl_get_smps_offset(int id)
 {
 	u8 value;
 
-	twl_i2c_read_u8(TWL_MODULE_PM_RECEIVER, &value,
-			TWL6030_SMPS_OFFSET);
+	switch (id) {
+	case TWL6032_REG_SMPS3:
+	case TWL6032_REG_SMPS4:
+		twl_i2c_read_u8(TWL_MODULE_PM_RECEIVER, &value,
+				TWL6030_SMPS_OFFSET);
+		break;
+	case TWL6034_REG_SMPSN7:
+	case TWL6034_REG_SMPSN8:
+	case TWL6034_REG_SMPSN9:
+	case TWL6034_REG_SMPSN10:
+		twl_i2c_read_u8(TWL_MODULE_PM_RECEIVER, &value,
+				TWL6030_SMPS_OFFSET2);
+		break;
+	}
+
 	return value;
 }
 
-static u8 twl_get_smps_mult(void)
+static u8 twl_get_smps_mult(int id)
 {
 	u8 value;
 
-	twl_i2c_read_u8(TWL_MODULE_PM_RECEIVER, &value,
-			TWL6030_SMPS_MULT);
+	switch (id) {
+	case TWL6032_REG_SMPS3:
+	case TWL6032_REG_SMPS4:
+	case TWL6032_REG_VIO:
+		twl_i2c_read_u8(TWL_MODULE_PM_RECEIVER, &value,
+				TWL6030_SMPS_MULT);
+		break;
+	case TWL6034_REG_SMPSN7:
+	case TWL6034_REG_SMPSN8:
+	case TWL6034_REG_SMPSN9:
+	case TWL6034_REG_SMPSN10:
+		twl_i2c_read_u8(TWL_MODULE_PM_RECEIVER, &value,
+				TWL6030_SMPS_MULT2);
+		break;
+	}
+
 	return value;
 }
 
@@ -1172,23 +1429,92 @@ static int __devinit twlreg_probe(struct platform_device *pdev)
 		break;
 	}
 
+	/* Check SMPS voltage selection register */
 	switch (pdev->id) {
-	case TWL6025_REG_SMPS3:
-		if (twl_get_smps_mult() & SMPS_MULTOFFSET_SMPS3)
+	case TWL6032_REG_SMPS3:
+	case TWL6032_REG_SMPS4:
+	case TWL6032_REG_VIO:
+	case TWL6034_REG_SMPSN7:
+	case TWL6034_REG_SMPSN8:
+	case TWL6034_REG_SMPSN9:
+	case TWL6034_REG_SMPSN10:
+		ret = twl_get_smps_mult(pdev->id);
+		if (ret < 0)
+			return ret;
+	}
+
+	switch (pdev->id) {
+	case TWL6032_REG_SMPS3:
+		if (ret & SMPS_MULTOFFSET_SMPS3)
 			info->flags |= SMPS_EXTENDED_EN;
-		if (twl_get_smps_offset() & SMPS_MULTOFFSET_SMPS3)
+		break;
+	case TWL6032_REG_SMPS4:
+		if (ret & SMPS_MULTOFFSET_SMPS4)
+			info->flags |= SMPS_EXTENDED_EN;
+		break;
+	case TWL6032_REG_VIO:
+		if (ret & SMPS_MULTOFFSET_VIO)
+			info->flags |= SMPS_EXTENDED_EN;
+		break;
+	case TWL6034_REG_SMPSN7:
+		if (ret & SMPS_MULTOFFSET_SMPSN7)
+			info->flags |= SMPS_EXTENDED_EN;
+		break;
+	case TWL6034_REG_SMPSN8:
+		if (ret & SMPS_MULTOFFSET_SMPSN8)
+			info->flags |= SMPS_EXTENDED_EN;
+		break;
+	case TWL6034_REG_SMPSN9:
+		if (ret & SMPS_MULTOFFSET_SMPSN9)
+			info->flags |= SMPS_EXTENDED_EN;
+		break;
+	case TWL6034_REG_SMPSN10:
+		if (ret & SMPS_MULTOFFSET_SMPSN10)
+			info->flags |= SMPS_EXTENDED_EN;
+		break;
+	}
+
+	/* Check SMPS offset register */
+	switch (pdev->id) {
+	case TWL6032_REG_SMPS3:
+	case TWL6032_REG_SMPS4:
+	case TWL6032_REG_VIO:
+	case TWL6034_REG_SMPSN7:
+	case TWL6034_REG_SMPSN8:
+	case TWL6034_REG_SMPSN9:
+	case TWL6034_REG_SMPSN10:
+		ret = twl_get_smps_offset(pdev->id);
+		if (ret < 0)
+			return ret;
+	}
+
+	switch (pdev->id) {
+	case TWL6032_REG_SMPS3:
+		if (ret & SMPS_MULTOFFSET_SMPS3)
 			info->flags |= SMPS_OFFSET_EN;
 		break;
-	case TWL6025_REG_SMPS4:
-		if (twl_get_smps_mult() & SMPS_MULTOFFSET_SMPS4)
-			info->flags |= SMPS_EXTENDED_EN;
-		if (twl_get_smps_offset() & SMPS_MULTOFFSET_SMPS4)
+	case TWL6032_REG_SMPS4:
+		if (ret & SMPS_MULTOFFSET_SMPS4)
 			info->flags |= SMPS_OFFSET_EN;
 		break;
-	case TWL6025_REG_VIO:
-		if (twl_get_smps_mult() & SMPS_MULTOFFSET_VIO)
-			info->flags |= SMPS_EXTENDED_EN;
-		if (twl_get_smps_offset() & SMPS_MULTOFFSET_VIO)
+	case TWL6032_REG_VIO:
+		if (ret & SMPS_MULTOFFSET_VIO)
+			info->flags |= SMPS_OFFSET_EN;
+		break;
+	case TWL6034_REG_SMPSN7:
+		if (ret & SMPS_MULTOFFSET_SMPSN7)
+			info->flags |= SMPS_OFFSET_EN;
+		break;
+	case TWL6034_REG_SMPSN8:
+		if (ret & SMPS_MULTOFFSET_SMPSN8)
+			info->flags |= SMPS_OFFSET_EN;
+		break;
+	case TWL6034_REG_SMPSN9:
+		if (ret & SMPS_MULTOFFSET_SMPSN9)
+			info->flags |= SMPS_OFFSET_EN;
+		break;
+	case TWL6034_REG_SMPSN10:
+		if (ret & SMPS_MULTOFFSET_SMPSN10)
 			info->flags |= SMPS_OFFSET_EN;
 		break;
 	}

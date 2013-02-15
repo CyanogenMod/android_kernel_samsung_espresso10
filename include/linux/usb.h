@@ -314,6 +314,7 @@ struct usb_bus {
 	int busnum;			/* Bus number (in order of reg) */
 	const char *bus_name;		/* stable id (PCI slot_name etc) */
 	u8 uses_dma;			/* Does the host controller use DMA? */
+	u8 dma_align;			/* Should the DMA buffer be aligned? */
 	u8 uses_pio_for_control;	/*
 					 * Does the host controller use PIO
 					 * for control transfers?
@@ -1202,6 +1203,7 @@ struct urb {
 	void *transfer_buffer;		/* (in) associated data buffer */
 	dma_addr_t transfer_dma;	/* (in) dma addr for transfer_buffer */
 	struct scatterlist *sg;		/* (in) scatter gather buffer list */
+	int num_mapped_sgs;		/* (internal) mapped sg entries */
 	int num_sgs;			/* (in) number of entries in the sg list */
 	u32 transfer_buffer_length;	/* (in) data buffer length */
 	u32 actual_length;		/* (return) actual transfer length */

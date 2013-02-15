@@ -115,71 +115,6 @@ struct gp2a_data {
 	struct device *proximity_sensor_device;
 };
 
-void gp2a_sensor_ldo_on(struct device *dev)
-{
-	struct regulator *reg_v28;
-	struct regulator *reg_v18;
-
-	reg_v28 =
-		regulator_get(dev, "SENSOR_2.8V");
-	if (IS_ERR(reg_v28)) {
-		pr_err("[gp2a] %s [%d] failed to get v2.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	reg_v18 =
-		regulator_get(dev, "SENSOR_1.8V");
-	if (IS_ERR(reg_v18)) {
-		pr_err("[gp2a] %s [%d] failed to get v1.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	regulator_enable(reg_v28);
-	regulator_enable(reg_v18);
-
-	regulator_put(reg_v28);
-	regulator_put(reg_v18);
-
-	msleep(30);
-}
-
-void gp2a_sensor_ldo_reset(struct device *dev)
-{
-	struct regulator *reg_v28;
-	struct regulator *reg_v18;
-
-	reg_v28 =
-		regulator_get(dev, "SENSOR_2.8V");
-	if (IS_ERR(reg_v28)) {
-		pr_err("[gp2a] %s [%d] failed to get v2.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	reg_v18 =
-		regulator_get(dev, "SENSOR_1.8V");
-	if (IS_ERR(reg_v18)) {
-		pr_err("[gp2a] %s [%d] failed to get v1.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	regulator_disable(reg_v18);
-	regulator_disable(reg_v28);
-
-	msleep(30);
-
-	regulator_enable(reg_v28);
-	regulator_enable(reg_v18);
-
-	regulator_put(reg_v28);
-	regulator_put(reg_v18);
-
-	msleep(30);
-}
-
 int gp2a_i2c_read(struct gp2a_data *gp2a, u8 reg, u8 *val)
 {
 
@@ -187,7 +122,7 @@ int gp2a_i2c_read(struct gp2a_data *gp2a, u8 reg, u8 *val)
 	u8 buf[1];
 	struct i2c_msg msg[2];
 	struct i2c_client *client = gp2a->i2c_client;
-	int retry = 3;
+	int retry = 2;
 
 	buf[0] = reg;
 
@@ -196,48 +131,43 @@ int gp2a_i2c_read(struct gp2a_data *gp2a, u8 reg, u8 *val)
 	msg[0].len = 2;
 	msg[0].buf = buf;
 
-	while (1) {
+	do {
 		err = i2c_transfer(client->adapter, msg, 1);
-		if (err < 0) {
+		if (unlikely(err < 0))
 			pr_err("%s, slave addr=%02x, reg addr=%02x, err = %d\n",
 				__func__, client->addr, reg, err);
-			retry--;
-			if (err == -110)
-				gp2a_sensor_ldo_reset(&client->dev);
-			if (!retry)
-				return err;
-		} else {
-			*val = buf[1];
-			return 0;
-		}
-	}
+	} while (unlikely(err < 0) && retry--);
+	if (likely(err >= 0))
+		*val = buf[1];
+	return err;
 }
 
 int gp2a_i2c_write(struct gp2a_data *gp2a, u8 reg, u8 *val)
 {
-	int err = 0;
+	int err;
 	struct i2c_msg msg[1];
 	unsigned char data[2];
-	int retry = 10;
+	int retry = 2;
 	struct i2c_client *client = gp2a->i2c_client;
 
-	if ((client == NULL) || (!client->adapter))
-		return -ENODEV;
-
-	while (retry--) {
-		data[0] = reg;
-		data[1] = *val;
-
-		msg->addr = client->addr;
-		msg->flags = 0; /* write */
-		msg->len = 2;
-		msg->buf = data;
-
-		err = i2c_transfer(client->adapter, msg, 1);
-
-		if (err >= 0)
-			return 0;
+	if (unlikely((client == NULL) || (!client->adapter))) {
+		err = -ENODEV;
+		goto done;
 	}
+
+	data[0] = reg;
+	data[1] = *val;
+	msg->addr = client->addr;
+	msg->flags = 0; /* write */
+	msg->len = 2;
+	msg->buf = data;
+
+	do {
+		err = i2c_transfer(client->adapter, msg, 1);
+		if (err >= 0)
+			err = 0;
+	} while (unlikely(err < 0) && retry--);
+done:
 	return err;
 }
 
@@ -508,19 +438,16 @@ static void gp2a_work_func_light(struct work_struct *work)
 {
 	struct gp2a_data *gp2a = container_of(work, struct gp2a_data,
 					      work_light);
-	static int wake_adc = 1;
 	int adc = gp2a->pdata->light_adc_value();
 	if (adc < 0) {
 		pr_err("adc returned error %d\n", adc);
 		return;
 	}
 	if (!adc)
-		adc += wake_adc++;
+		adc = 1;
 	gp2a_dbgmsg("adc returned light value %d\n", adc);
-	input_report_abs(gp2a->light_input_dev, ABS_MISC, adc);
+	input_report_rel(gp2a->light_input_dev, REL_MISC, adc);
 	input_sync(gp2a->light_input_dev);
-	if (wake_adc > 2)
-		wake_adc = 0;
 }
 
 /* This function is for light sensor.  It operates every a few seconds.
@@ -694,7 +621,12 @@ static int gp2a_i2c_probe(struct i2c_client *client,
 	gp2a->pdata = pdata;
 	gp2a->i2c_client = client;
 	i2c_set_clientdata(client, gp2a);
-	gp2a_sensor_ldo_on(&client->dev);
+
+	if (pdata->ldo_on != NULL)
+		pdata->ldo_on(true);
+
+	if (pdata->led_on != NULL)
+		pdata->led_on(true);
 
 	ret = gp2a_i2c_read(gp2a, REGS_PROX, &value);
 	if (ret < 0) {
@@ -781,8 +713,7 @@ static int gp2a_i2c_probe(struct i2c_client *client,
 	}
 	input_set_drvdata(input_dev, gp2a);
 	input_dev->name = "light_sensor";
-	input_set_capability(input_dev, EV_ABS, ABS_MISC);
-	input_set_abs_params(input_dev, ABS_MISC, 0, 1023, 0, 0);
+	input_set_capability(input_dev, EV_REL, REL_MISC);
 
 	gp2a_dbgmsg("registering lightsensor-level input device\n");
 	ret = input_register_device(input_dev);
@@ -826,6 +757,7 @@ err_sysfs_create_factory_light:
 			   &light_attribute_group);
 err_sysfs_create_group_light:
 	input_unregister_device(gp2a->light_input_dev);
+	input_free_device(gp2a->light_input_dev);
 err_input_register_device_light:
 err_input_allocate_device_light:
 	destroy_workqueue(gp2a->wq);
@@ -845,6 +777,10 @@ err_input_allocate_device_proximity:
 	destroy_workqueue(gp2a->prox_wq);
 err_create_prox_workqueue:
 err_i2c_access_fail:
+	if (pdata->led_on != NULL)
+		pdata->led_on(false);
+	if (pdata->ldo_on != NULL)
+		pdata->ldo_on(false);
 	kfree(gp2a);
 done:
 	return ret;
@@ -904,6 +840,23 @@ static int gp2a_i2c_remove(struct i2c_client *client)
 	return 0;
 }
 
+static void gp2a_i2c_shutdown(struct i2c_client *client)
+{
+	struct gp2a_data *gp2a = i2c_get_clientdata(client);
+
+	if (gp2a->power_state) {
+		gp2a->power_state = 0;
+		if (gp2a->power_state & LIGHT_ENABLED)
+			gp2a_light_disable(gp2a);
+		gp2a->pdata->power(false);
+	}
+
+	if (gp2a->pdata->led_on != NULL)
+		gp2a->pdata->led_on(false);
+	if (gp2a->pdata->ldo_on != NULL)
+		gp2a->pdata->ldo_on(false);
+}
+
 static const struct i2c_device_id gp2a_device_id[] = {
 	{"gp2a", 0},
 	{}
@@ -921,9 +874,10 @@ static struct i2c_driver gp2a_i2c_driver = {
 		.owner = THIS_MODULE,
 		.pm = &gp2a_pm_ops
 	},
-	.probe		= gp2a_i2c_probe,
-	.remove		= gp2a_i2c_remove,
-	.id_table	= gp2a_device_id,
+	.probe = gp2a_i2c_probe,
+	.remove = gp2a_i2c_remove,
+	.shutdown = gp2a_i2c_shutdown,
+	.id_table = gp2a_device_id,
 };
 
 

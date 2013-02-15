@@ -23,13 +23,13 @@
 #include "sec_muxtbl.h"
 
 static struct omap_muxtbl muxtbl[] __initdata = {
-	/* [--OUT] gpmc_ad15 - gpio_39 - CP_PMU_RST */
+	/* [--OUT] gpmc_ad15.gpio_39 - CP_PMU_RST */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD15,
 		     OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT |
 		     OMAP_PIN_OFF_OUTPUT_HIGH,
 		     39, "CP_PMU_RST"),
-	/* [IN---] sim_reset - gpio_wk2 - ACCESSORY_INT_1.8V */
+	/* [IN---] sim_reset.gpio_wk2 - ACCESSORY_INT_1.8V */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
 		     SIM_RESET,
 		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT |

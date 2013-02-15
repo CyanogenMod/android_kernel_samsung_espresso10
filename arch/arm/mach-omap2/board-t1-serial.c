@@ -20,6 +20,7 @@
 #include <linux/platform_device.h>
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
+#include <linux/hwspinlock.h>
 
 #include <plat/common.h>
 #include <plat/omap_hwmod.h>
@@ -47,6 +48,38 @@ static struct i2c_board_info __initdata t1_i2c_board_info[] = {
 		.ext_master	= true,
 	},
 };
+
+#ifdef CONFIG_REGULATOR_TPS6130X
+static struct i2c_board_info __initdata t1_i2c1_board_info[] = {
+	{
+		I2C_BOARD_INFO("tps6130x", 0x33),
+		.platform_data = &twl6040_vddhf,
+	},
+};
+#endif
+
+static void __init omap_i2c_hwspinlock_init(int bus_id, int spinlock_id,
+		struct omap_i2c_bus_board_data *pdata)
+{
+	/* spnilock_id should be -1 for a generic lock request */
+	if (spinlock_id < 0)
+		pdata->handle = hwspin_lock_request();
+	else
+		pdata->handle = hwspin_lock_request_specific(spinlock_id);
+
+	if (pdata->handle != NULL) {
+		pdata->hwspin_lock_timeout = hwspin_lock_timeout;
+		pdata->hwspin_unlock = hwspin_unlock;
+	} else {
+		pr_err("I2C hwspinlock request failed for bus %d\n",
+				bus_id);
+	}
+}
+
+static struct omap_i2c_bus_board_data __initdata t1_i2c1_bus_pdata;
+static struct omap_i2c_bus_board_data __initdata t1_i2c2_bus_pdata;
+static struct omap_i2c_bus_board_data __initdata t1_i2c3_bus_pdata;
+static struct omap_i2c_bus_board_data __initdata t1_i2c4_bus_pdata;
 
 static void __init t1_i2c_init(void)
 {
@@ -79,11 +112,27 @@ static void __init t1_i2c_init(void)
 	SET_LOAD(reg_val, SDA, SR, LOAD_860_OHM);
 	omap4_ctrl_wk_pad_writel(reg_val,
 			OMAP4_CTRL_MODULE_PAD_WKUP_CONTROL_I2C_2);
+
+	omap_i2c_hwspinlock_init(1, 0, &t1_i2c1_bus_pdata);
+	omap_i2c_hwspinlock_init(2, 1, &t1_i2c2_bus_pdata);
+	omap_i2c_hwspinlock_init(3, 2, &t1_i2c3_bus_pdata);
+	omap_i2c_hwspinlock_init(4, 3, &t1_i2c4_bus_pdata);
+
+	omap_register_i2c_bus_board_data(1, &t1_i2c1_bus_pdata);
+	omap_register_i2c_bus_board_data(2, &t1_i2c2_bus_pdata);
+	omap_register_i2c_bus_board_data(3, &t1_i2c3_bus_pdata);
+	omap_register_i2c_bus_board_data(4, &t1_i2c4_bus_pdata);
+
 	/*
 	 * Phoenix Audio IC needs I2C1 to
 	 * start with 400 KHz or less
 	 */
+#ifdef CONFIG_REGULATOR_TPS6130X
+	omap_register_i2c_bus(1, 400, t1_i2c1_board_info,
+			      ARRAY_SIZE(t1_i2c_board_info));
+#else
 	omap_register_i2c_bus(1, 400, NULL, 0);
+#endif
 	omap_register_i2c_bus(2, 400, t1_i2c_board_info,
 			      ARRAY_SIZE(t1_i2c_board_info));
 	omap_register_i2c_bus(3, 400, NULL, 0);
@@ -275,9 +324,19 @@ static void __init omap_serial_none_pads_cfg_mux(void)
 	struct omap_mux_partition *wkup = omap_mux_get("wkup");
 	struct omap_muxtbl *tbl;
 	char *none_pins[] = {
+#if defined(CONFIG_MACH_SAMSUNG_T1_CHN_CMCC)
+		"AP_FLM_RXD",
+		"AP_FLM_TXD",
+#else
 		"AP_FLM_RXD(nc)",
 		"AP_FLM_TXD(nc)",
+#endif
 	};
+
+#if defined(CONFIG_MACH_SAMSUNG_T1_CHN_CMCC)
+	if (sec_bootmode != 5)
+		return;
+#endif
 
 	for (i = 0; i < ARRAY_SIZE(none_pins); i++) {
 		tbl = omap_muxtbl_find_by_name(none_pins[i]);
@@ -344,10 +403,9 @@ void __init omap4_t1_serial_init(void)
 
 int __init omap4_t1_serial_late_init(void)
 {
-#if !defined(CONFIG_MACH_SAMSUNG_T1_CHN_CMCC)
 	/* Not USE AP_FLM_TX/RX in T1_ICS */
 	omap_serial_none_pads_cfg_mux();
-#endif
+
 	return 0;
 }
 

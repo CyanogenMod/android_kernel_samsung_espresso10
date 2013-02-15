@@ -232,10 +232,10 @@
  * @OFF:     Power Off. No restrictions on transition times.
  */
 enum snd_soc_bias_level {
-	SND_SOC_BIAS_OFF,
-	SND_SOC_BIAS_STANDBY,
-	SND_SOC_BIAS_PREPARE,
-	SND_SOC_BIAS_ON,
+	SND_SOC_BIAS_OFF = 0,
+	SND_SOC_BIAS_STANDBY = 1,
+	SND_SOC_BIAS_PREPARE = 2,
+	SND_SOC_BIAS_ON = 3,
 };
 
 enum snd_soc_dsp_state {
@@ -343,6 +343,7 @@ struct snd_pcm_substream *snd_soc_get_dai_substream(struct snd_soc_card *card,
 		const char *dai_link, int stream);
 struct snd_soc_pcm_runtime *snd_soc_get_pcm_runtime(struct snd_soc_card *card,
 		const char *dai_link);
+int snd_soc_card_active_links(struct snd_soc_card *card);
 
 /* Utility functions to get clock rates from various things */
 int snd_soc_calc_frame_size(int sample_size, int channels, int tdm_slots);
@@ -679,7 +680,12 @@ struct snd_soc_platform_driver {
 	int (*resume)(struct snd_soc_dai *dai);
 
 	/* pcm creation and destruction */
+#ifdef CONFIG_ARCH_OMAP
 	int (*pcm_new)(struct snd_soc_pcm_runtime *);
+#else
+	int (*pcm_new)(struct snd_card *, struct snd_soc_dai *,
+		struct snd_pcm *);
+#endif
 	void (*pcm_free)(struct snd_pcm *);
 
 	/*
@@ -753,6 +759,8 @@ struct snd_soc_dai_link {
 	unsigned int be_id;
 	/* This DAI can support no host IO (no pcm data is copied to from host) */
 	unsigned int no_host_mode:2;
+	/* DAI link active */
+	unsigned int active;
 
 	/* codec/machine specific init - e.g. add machine controls */
 	int (*init)(struct snd_soc_pcm_runtime *rtd);
@@ -763,10 +771,6 @@ struct snd_soc_dai_link {
 
 	/* machine stream operations */
 	struct snd_soc_ops *ops;
-
-	/* pre and post DAI link activity */
-	int (*pre)(struct snd_pcm_substream *substream);
-	void (*post)(struct snd_pcm_substream *substream);
 };
 
 struct snd_soc_codec_conf {
@@ -823,8 +827,14 @@ struct snd_soc_card {
 
 	/* callbacks */
 	int (*set_bias_level)(struct snd_soc_card *,
+#ifdef CONFIG_SND_OPEN_SOC_SOURCE
+			      struct snd_soc_dapm_context *dapm,
+#endif
 			      enum snd_soc_bias_level level);
 	int (*set_bias_level_post)(struct snd_soc_card *,
+#ifdef CONFIG_SND_OPEN_SOC_SOURCE
+				   struct snd_soc_dapm_context *dapm,
+#endif
 				   enum snd_soc_bias_level level);
 
 	long pmdown_time;

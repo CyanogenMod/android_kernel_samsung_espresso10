@@ -19,6 +19,16 @@
 #include <linux/delay.h>
 #include <trace/events/asoc.h>
 
+#ifndef CONFIG_SAMSUNG_JACK
+#include <linux/switch.h>
+#include <linux/sec_jack.h>
+
+/* Android jack detection */
+static struct switch_dev android_switch = {
+	.name = "h2w",
+};
+#endif /* not CONFIG_SAMSUNG_JACK */
+
 /**
  * snd_soc_jack_new - Create a new jack
  * @card:  ASoC card
@@ -39,6 +49,10 @@ int snd_soc_jack_new(struct snd_soc_codec *codec, const char *id, int type,
 	INIT_LIST_HEAD(&jack->pins);
 	INIT_LIST_HEAD(&jack->jack_zones);
 	BLOCKING_INIT_NOTIFIER_HEAD(&jack->notifier);
+
+#ifndef CONFIG_SAMSUNG_JACK
+	switch_dev_register(&android_switch);
+#endif /* not CONFIG_SAMSUNG_JACK */
 
 	return snd_jack_new(codec->card->snd_card, id, type, &jack->jack);
 }
@@ -65,6 +79,17 @@ void snd_soc_jack_report(struct snd_soc_jack *jack, int status, int mask)
 	struct snd_soc_jack_pin *pin;
 	int enable;
 	int oldstatus;
+
+#ifndef CONFIG_SAMSUNG_JACK
+	if (mask & SND_JACK_HEADSET) {
+		if (status & SND_JACK_MICROPHONE)
+			switch_set_state(&android_switch, SEC_HEADSET_4POLE);
+		else if (status & SND_JACK_HEADPHONE)
+			switch_set_state(&android_switch, SEC_HEADSET_3POLE);
+		else
+			switch_set_state(&android_switch, SEC_JACK_NO_DEVICE);
+	}
+#endif /* not CONFIG_SAMSUNG_JACK */
 
 	trace_snd_soc_jack_report(jack, mask, status);
 

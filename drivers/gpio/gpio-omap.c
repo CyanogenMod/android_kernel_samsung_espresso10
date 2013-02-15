@@ -1608,7 +1608,7 @@ int omap2_gpio_prepare_for_idle(int off_mode, bool suspend)
 		if (!bank->mod_usage)
 			continue;
 
-#if CONFIG_ENABLE_GPIO_TO_ALLOW_C2_IN_CAMERA
+#ifdef CONFIG_ENABLE_GPIO_TO_ALLOW_C2_IN_CAMERA
 		if (bank->loses_context && off_mode)
 #else
 		if (bank->loses_context)
@@ -1633,7 +1633,7 @@ void omap2_gpio_resume_after_idle(int off_mode)
 		if (!bank->mod_usage)
 			continue;
 
-#if CONFIG_ENABLE_GPIO_TO_ALLOW_C2_IN_CAMERA
+#ifdef CONFIG_ENABLE_GPIO_TO_ALLOW_C2_IN_CAMERA
 		if (bank->loses_context && off_mode)
 #else
 		if (bank->loses_context)

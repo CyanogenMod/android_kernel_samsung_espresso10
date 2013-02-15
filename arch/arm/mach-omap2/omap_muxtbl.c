@@ -136,6 +136,14 @@ int __init omap_muxtbl_add_muxset(struct omap_muxset *muxset)
 		return 0;
 
 	do {
+		/* if gpio is assigned in gpio-expander */
+		if (unlikely(muxtbl->gpio.gpio >= OMAP_MAX_GPIO_LINES &&
+			     muxtbl->gpio.gpio != OMAP_MUXTBL_NO_GPIO))
+			/*                          0         1  */
+			/*                          01234567890  */
+			/* initially muxtbl->pin = "EXT_GPIO000" */
+			sprintf(&(muxtbl->pin[8]), "%03d", muxtbl->gpio.gpio);
+
 		crc32_l = crc32(0, muxtbl->gpio.label,
 				strlen(muxtbl->gpio.label));
 		crc32_p = crc32(0, muxtbl->pin, strlen(muxtbl->pin));
@@ -163,6 +171,13 @@ struct omap_muxtbl __init *omap_muxtbl_find_by_name(const char *label)
 	unsigned int crc32 = crc32(0, label, strlen(label));
 
 	return omap_muxtbl_rb_search(crc32, 0);
+}
+
+struct omap_muxtbl __init *omap_muxtbl_find_by_pin(const char *pin)
+{
+	unsigned int crc32 = crc32(0, pin, strlen(pin));
+
+	return omap_muxtbl_rb_search(0, crc32);
 }
 
 int __init omap_muxtbl_get_gpio_by_name(const char *label)

@@ -543,7 +543,7 @@ static void mxt_power_on(int enable)
 		if (likely(system_rev >= 4)) {
 			gpio_direction_output(tsp_gpios[GPIO_TOUCH_EN].gpio,
 					      1);
-			msleep(80);
+			msleep(100);
 		}
 	} else {
 		if (regulator_is_enabled(regulator))
@@ -593,9 +593,11 @@ static void tk_power_on(int enable)
 
 static const int tk_keymap[] = { 0, KEY_MENU, KEY_BACK, };
 
+#define TOUCH_MODULE_V01    0x01
 #define TOUCH_FIRMWARE_V0B  0x0B
 static struct cptk_platform_data cptk_data = {
 	.power		= tk_power_on,
+	.mod_ver	= TOUCH_MODULE_V01,
 	.firm_ver	= TOUCH_FIRMWARE_V0B,
 	.keymap		= tk_keymap,
 	.keymap_size	= ARRAY_SIZE(tk_keymap),
@@ -604,7 +606,7 @@ static struct cptk_platform_data cptk_data = {
 
 static struct i2c_board_info __initdata t1_tk_boardinfo[] = {
 	{
-		I2C_BOARD_INFO("melfas_touchkey", 0x20),
+		I2C_BOARD_INFO("cypress_touchkey", 0x20),
 		.platform_data = &cptk_data,
 	},
 };

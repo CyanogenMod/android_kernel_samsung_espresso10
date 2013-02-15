@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -90,13 +90,13 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 
 	PVRSRV_ERROR PDumpMemPDEntriesKM(PDUMP_MMU_ATTRIB *psMMUAttrib,
 									 IMG_HANDLE hOSMemHandle,
-							 		 IMG_CPU_VIRTADDR pvLinAddr,
-							 		 IMG_UINT32 ui32Bytes,
-							 		 IMG_UINT32 ui32Flags,
-							 		 IMG_BOOL bInitialisePages,
-							 		 IMG_HANDLE hUniqueTag1,
-							 		 IMG_HANDLE hUniqueTag2);
-							 
+									 IMG_CPU_VIRTADDR pvLinAddr,
+									 IMG_UINT32 ui32Bytes,
+									 IMG_UINT32 ui32Flags,
+									 IMG_BOOL bInitialisePages,
+									 IMG_HANDLE hUniqueTag1,
+									 IMG_HANDLE hUniqueTag2);
+
 	PVRSRV_ERROR PDumpMemPTEntriesKM(PDUMP_MMU_ATTRIB *psMMUAttrib,
 									 IMG_HANDLE         hOSMemHandle,
 									 IMG_CPU_VIRTADDR	pvLinAddr,
@@ -199,12 +199,12 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 	IMG_BOOL PDumpTestNextFrame(IMG_UINT32 ui32CurrentFrame);
 
 	PVRSRV_ERROR PDumpSaveMemKM (PVRSRV_DEVICE_IDENTIFIER *psDevId,
-							 	 IMG_CHAR			*pszFileName,
+								 IMG_CHAR			*pszFileName,
 								 IMG_UINT32			ui32FileOffset,
 								 IMG_DEV_VIRTADDR	sDevBaseAddr,
-								 IMG_UINT32 		ui32Size,
-								 IMG_UINT32 		ui32DataMaster,
-								 IMG_UINT32 		ui32PDumpFlags);
+								 IMG_UINT32		ui32Size,
+								 IMG_UINT32		ui32DataMaster,
+								 IMG_UINT32		ui32PDumpFlags);
 
 	PVRSRV_ERROR PDumpTASignatureRegisters(PVRSRV_DEVICE_IDENTIFIER *psDevId,
 								   IMG_UINT32	ui32DumpFrameNum,
@@ -242,7 +242,7 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 								  IMG_HANDLE				hOSMemHandle,
 								  IMG_UINT32				ui32NumBytes,
 								  IMG_UINT32				ui32PageSize,
-		                          IMG_BOOL			  		bShared,
+		                          IMG_BOOL					bShared,
 								  IMG_HANDLE				hUniqueTag);
 	PVRSRV_ERROR PDumpMallocPageTable(PVRSRV_DEVICE_IDENTIFIER	*psDevId,
 									  IMG_HANDLE            hOSMemHandle,
@@ -255,7 +255,7 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 							IMG_DEV_VIRTADDR	sDevVAddr,
 							IMG_UINT32			ui32NumBytes,
 							IMG_UINT32			ui32PageSize,
-							IMG_HANDLE      	hUniqueTag,
+							IMG_HANDLE		hUniqueTag,
 							IMG_BOOL			bInterleaved);
 	PVRSRV_ERROR PDumpFreePageTable(PVRSRV_DEVICE_IDENTIFIER *psDevID,
 									IMG_HANDLE          hOSMemHandle,
@@ -268,18 +268,18 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 										IMG_CHAR			*pszFileName,
 										IMG_UINT32			ui32FileOffset,
 										IMG_DEV_VIRTADDR	sDevBaseAddr,
-										IMG_UINT32 			ui32Size,
+										IMG_UINT32			ui32Size,
 										IMG_UINT32			ui32MMUContextID,
-										IMG_UINT32 			ui32PDumpFlags);
+										IMG_UINT32			ui32PDumpFlags);
 
 	PVRSRV_ERROR PDumpSignatureBuffer(PVRSRV_DEVICE_IDENTIFIER *psDevId,
 									  IMG_CHAR			*pszFileName,
 									  IMG_CHAR			*pszBufferType,
 									  IMG_UINT32		ui32FileOffset,
 									  IMG_DEV_VIRTADDR	sDevBaseAddr,
-									  IMG_UINT32 		ui32Size,
+									  IMG_UINT32		ui32Size,
 									  IMG_UINT32		ui32MMUContextID,
-									  IMG_UINT32 		ui32PDumpFlags);
+									  IMG_UINT32		ui32PDumpFlags);
 
 	PVRSRV_ERROR PDumpCBP(PPVRSRV_KERNEL_MEM_INFO	psROffMemInfo,
 				  IMG_UINT32				ui32ROffOffset,
@@ -297,9 +297,9 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 								  IMG_UINT32	ui32Flags);
 
 	IMG_VOID PDumpVGXMemToFile(IMG_CHAR *pszFileName,
-							   IMG_UINT32 ui32FileOffset, 
+							   IMG_UINT32 ui32FileOffset,
 							   PVRSRV_KERNEL_MEM_INFO *psMemInfo,
-							   IMG_UINT32 uiAddr, 
+							   IMG_UINT32 uiAddr,
 							   IMG_UINT32 ui32Size,
 							   IMG_UINT32 ui32PDumpFlags,
 							   IMG_HANDLE hUniqueTag);
@@ -307,12 +307,12 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 	IMG_VOID PDumpSuspendKM(IMG_VOID);
 	IMG_VOID PDumpResumeKM(IMG_VOID);
 
-	
+
 	PVRSRV_ERROR PDumpStoreMemToFile(PDUMP_MMU_ATTRIB *psMMUAttrib,
 							         IMG_CHAR *pszFileName,
-									 IMG_UINT32 ui32FileOffset, 
+									 IMG_UINT32 ui32FileOffset,
 									 PVRSRV_KERNEL_MEM_INFO *psMemInfo,
-									 IMG_UINT32 uiAddr, 
+									 IMG_UINT32 uiAddr,
 									 IMG_UINT32 ui32Size,
 									 IMG_UINT32 ui32PDumpFlags,
 									 IMG_HANDLE hUniqueTag);
@@ -408,5 +408,4 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 }
 #endif
 
-#endif 
-
+#endif

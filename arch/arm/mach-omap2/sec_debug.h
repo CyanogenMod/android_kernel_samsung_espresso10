@@ -140,4 +140,10 @@ extern void debug_rwsemaphore_up_log(struct rw_semaphore *sem);
 #define debug_rwsemaphore_down_write_log(x)	\
 	debug_rwsemaphore_down_log(x, WRITE_SEM)
 
+/* MISC facilities */
+#if defined(CONFIG_ARCH_OMAP)
+/* arch/arm/mach-omap2/serial.c */
+extern char *cmdline_find_option(char *str);
+#endif
+
 #endif /* SEC_DEBUG_H */

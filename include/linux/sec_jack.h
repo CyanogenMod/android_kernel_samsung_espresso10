@@ -54,6 +54,9 @@ struct sec_jack_platform_data {
 	int	send_end_gpio;
 	bool	det_active_high;
 	bool	send_end_active_high;
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+	int     ear_reselector_zone;
+#endif
 };
 #endif
 
