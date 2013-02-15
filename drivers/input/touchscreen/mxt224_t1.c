@@ -2096,6 +2096,8 @@ static int __devinit mxt224_probe(struct i2c_client *client,
 		goto err_reset;
 
 	msleep(MXT224_RESET_TIME);
+
+	cal_check_flag = 0;
 	calibrate_chip();
 
 	for (i = 0; i < data->num_fingers; i++)

@@ -35,11 +35,59 @@ config MACH_SAMSUNG_ESPRESSO
 	bool "Samsung Espresso (GT-P3100) Board"
 	default n
 	select MACH_OMAP4_SAMSUNG
+	select FW_SAMSUNG_ESPRESSO_TSP
+
+config FW_SAMSUNG_ESPRESSO_TSP
+	bool
+	default n
 
 config MACH_SAMSUNG_ESPRESSO_10
 	bool "Samsung Espresso 10.1 (GT-P5100) Board"
 	default n
 	select MACH_OMAP4_SAMSUNG
+	select FW_SAMSUNG_ESPRESSO_10_TSP
+
+config FW_SAMSUNG_ESPRESSO_10_TSP
+	bool
+	default n
+
+config MACH_SAMSUNG_PALAU
+	bool "Samsung Palau (GT-I9270) Board"
+	default n
+	select MACH_OMAP4_SAMSUNG
+	select REGULATOR_FIXED_VOLTAGE
+
+config MACH_SAMSUNG_KONA
+	bool "Samsung Kona (GT-N5100) Board"
+	default n
+	select MACH_OMAP4_SAMSUNG
+	select REGULATOR_FIXED_VOLTAGE
+	select FW_SAMSUNG_KONA_TSP
+	select FW_SAMSUNG_KONA_WACOM
+
+config FW_SAMSUNG_KONA_TSP
+	bool
+	default n
+
+config FW_SAMSUNG_KONA_WACOM
+	bool
+	default n
+
+config MACH_SAMSUNG_SUPERIOR
+	bool "Samsung Superior (GT-I9260) Board"
+	default n
+	select MACH_OMAP4_SAMSUNG
+	select REGULATOR_FIXED_VOLTAGE
+	select FW_SAMSUNG_SUPERIOR_TSP
+	select FW_SAMSUNG_SUPERIOR_TOUCH_KEY
+
+config FW_SAMSUNG_SUPERIOR_TSP
+	bool
+	default n
+
+config FW_SAMSUNG_SUPERIOR_TOUCH_KEY
+	bool
+	default n
 
 if BT
 config BT_BCM4330
@@ -48,12 +96,29 @@ config BT_BCM4330
 	help
 		Adds BCM4330 RFKILL driver for Broadcom BCM4330 chipset
 
+config BT_BCM4334
+	bool "Enable BCM4334 driver"
+	default n
+	help
+		Adds BCM4334 RFKILL driver for Broadcom BCM4334 chipset
+
 config BT_MGMT
-       bool "Bluetooth Mgmt"
-       default n
- 	help
-	  This is for bluetooth mgmt
+	bool "Bluetooth Mgmt"
+	default n
+	help
+		This is for bluetooth mgmt
 endif
+
+config OMAP_STMPE_NR
+	int "Number used STMPE MFD device for OMAP"
+	default 1
+	depends on ARCH_OMAP && MFD_STMPE
+	help
+		Define a number of used STMPE MFD device attached to OMAP.
+		STMPE is can be used for a GPIO-Expander / Key-Matrix
+		device, and it rquires its own IRQ number. Generally, only
+		one STMPE is used on one device but two or more STMPE device
+		are also used if number of GPIOs are not enough on OMAP.
 
 menu "OMAP Samsung Specific Configurations"
 	depends on MACH_OMAP_SAMSUNG
@@ -143,6 +208,17 @@ config SAMSUNG_REPLACE_LAST_KMSG
 		if this feature is enabled, SEC_LOG_BUF can be read through
 		out '/proc/last_kmsg' node.
 
+config SAMSUNG_DIABLE_SEC_LOG_WHEN_TTY
+	bool "Samsung disable SEC_LOG_BUF when tty is used"
+	depends on SAMSUNG_USE_SEC_LOG_BUF && MACH_OMAP4_SAMSUNG
+	default y
+	help
+		Device is hanging when sec_log_buf and ttyOx are enabled at
+		the same time. This feature disables sec_log_buf when ttyOx
+		is used. Disabling sec_log_buf is not a big problem because,
+		developer can whatching a serial log through out the teminal
+		program.
+
 menu "SAMSUNG Common Debugging Features"
 menuconfig SEC_DEBUG
 	bool "Samsung TN Ramdump Feature"
@@ -196,3 +272,7 @@ config SEC_DEBUG_IRQ_EXIT_LOG
 endmenu
 
 endmenu
+
+config SAMSUNG_EXFAT
+	bool "Support exFAT filesystem driver"
+	default y

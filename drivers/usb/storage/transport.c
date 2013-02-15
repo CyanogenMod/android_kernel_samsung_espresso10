@@ -284,6 +284,9 @@ static int interpret_urb_result(struct us_data *us, unsigned int pipe,
 		 * a failed command */
 		if (usb_pipecontrol(pipe)) {
 			US_DEBUGP("-- stall on control pipe\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+			printk(KERN_ERR "usb storage -- stall on control pipe\n");
+#endif
 			return USB_STOR_XFER_STALLED;
 		}
 
@@ -296,26 +299,41 @@ static int interpret_urb_result(struct us_data *us, unsigned int pipe,
 	/* babble - the device tried to send more than we wanted to read */
 	case -EOVERFLOW:
 		US_DEBUGP("-- babble\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+		printk(KERN_ERR "usb storage -- babble\n");
+#endif
 		return USB_STOR_XFER_LONG;
 
 	/* the transfer was cancelled by abort, disconnect, or timeout */
 	case -ECONNRESET:
 		US_DEBUGP("-- transfer cancelled\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+		printk(KERN_ERR "usb storage -- transfer cancelled\n");
+#endif
 		return USB_STOR_XFER_ERROR;
 
 	/* short scatter-gather read transfer */
 	case -EREMOTEIO:
 		US_DEBUGP("-- short read transfer\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+		printk(KERN_ERR "usb storage -- short read transfer\n");
+#endif
 		return USB_STOR_XFER_SHORT;
 
 	/* abort or disconnect in progress */
 	case -EIO:
 		US_DEBUGP("-- abort or disconnect in progress\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+		printk(KERN_ERR "usb storage -- abort or disconnect in progress\n");
+#endif
 		return USB_STOR_XFER_ERROR;
 
 	/* the catch-all error case */
 	default:
 		US_DEBUGP("-- unknown error\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+		printk(KERN_ERR "usb storage -- unknown error %d\n", result);
+#endif
 		return USB_STOR_XFER_ERROR;
 	}
 }
@@ -609,6 +627,9 @@ void usb_stor_invoke_transport(struct scsi_cmnd *srb, struct us_data *us)
 	 */
 	if (test_bit(US_FLIDX_TIMED_OUT, &us->dflags)) {
 		US_DEBUGP("-- command was aborted\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+		printk(KERN_ERR "usb storage -- command was aborted\n");
+#endif
 		srb->result = DID_ABORT << 16;
 		goto Handle_Errors;
 	}
@@ -616,6 +637,9 @@ void usb_stor_invoke_transport(struct scsi_cmnd *srb, struct us_data *us)
 	/* if there is a transport error, reset and don't auto-sense */
 	if (result == USB_STOR_TRANSPORT_ERROR) {
 		US_DEBUGP("-- transport indicates error, resetting\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+		printk(KERN_ERR "usb storage -- transport indicates error, resetting\n");
+#endif
 		srb->result = DID_ERROR << 16;
 		goto Handle_Errors;
 	}
@@ -691,6 +715,9 @@ void usb_stor_invoke_transport(struct scsi_cmnd *srb, struct us_data *us)
 		int temp_result;
 		struct scsi_eh_save ses;
 		int sense_size = US_SENSE_SIZE;
+		struct scsi_sense_hdr sshdr;
+		const u8 *scdd;
+		u8 fm_ili;
 
 		/* device supports and needs bigger sense buffer */
 		if (us->fflags & US_FL_SANE_SENSE)
@@ -716,6 +743,9 @@ Retry_Sense:
 
 		if (test_bit(US_FLIDX_TIMED_OUT, &us->dflags)) {
 			US_DEBUGP("-- auto-sense aborted\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+			printk(KERN_ERR "usb storage -- auto-sense aborted\n");
+#endif
 			srb->result = DID_ABORT << 16;
 
 			/* If SANE_SENSE caused this problem, disable it */
@@ -743,6 +773,9 @@ Retry_Sense:
 		/* Other failures */
 		if (temp_result != USB_STOR_TRANSPORT_GOOD) {
 			US_DEBUGP("-- auto-sense failure\n");
+#ifdef CONFIG_USB_HOST_NOTIFY
+			printk(KERN_ERR "usb storage -- auto-sense failure\n");
+#endif
 
 			/* we skip the reset if this happens to be a
 			 * multi-target device, since failure of an
@@ -774,32 +807,30 @@ Retry_Sense:
 			srb->sense_buffer[7] = (US_SENSE_SIZE - 8);
 		}
 
+		scsi_normalize_sense(srb->sense_buffer, SCSI_SENSE_BUFFERSIZE,
+				     &sshdr);
+
 		US_DEBUGP("-- Result from auto-sense is %d\n", temp_result);
 		US_DEBUGP("-- code: 0x%x, key: 0x%x, ASC: 0x%x, ASCQ: 0x%x\n",
-			  srb->sense_buffer[0],
-			  srb->sense_buffer[2] & 0xf,
-			  srb->sense_buffer[12], 
-			  srb->sense_buffer[13]);
+			  sshdr.response_code, sshdr.sense_key,
+			  sshdr.asc, sshdr.ascq);
 #ifdef CONFIG_USB_STORAGE_DEBUG
-		usb_stor_show_sense(
-			  srb->sense_buffer[2] & 0xf,
-			  srb->sense_buffer[12], 
-			  srb->sense_buffer[13]);
+		usb_stor_show_sense(sshdr.sense_key, sshdr.asc, sshdr.ascq);
 #endif
 
 		/* set the result so the higher layers expect this data */
 		srb->result = SAM_STAT_CHECK_CONDITION;
 
+		scdd = scsi_sense_desc_find(srb->sense_buffer,
+					    SCSI_SENSE_BUFFERSIZE, 4);
+		fm_ili = (scdd ? scdd[3] : srb->sense_buffer[2]) & 0xA0;
+
 		/* We often get empty sense data.  This could indicate that
 		 * everything worked or that there was an unspecified
 		 * problem.  We have to decide which.
 		 */
-		if (	/* Filemark 0, ignore EOM, ILI 0, no sense */
-				(srb->sense_buffer[2] & 0xaf) == 0 &&
-			/* No ASC or ASCQ */
-				srb->sense_buffer[12] == 0 &&
-				srb->sense_buffer[13] == 0) {
-
+		if (sshdr.sense_key == 0 && sshdr.asc == 0 && sshdr.ascq == 0 &&
+		    fm_ili == 0) {
 			/* If things are really okay, then let's show that.
 			 * Zero out the sense buffer so the higher layers
 			 * won't realize we did an unsolicited auto-sense.
@@ -814,7 +845,10 @@ Retry_Sense:
 			 */
 			} else {
 				srb->result = DID_ERROR << 16;
-				srb->sense_buffer[2] = HARDWARE_ERROR;
+				if ((sshdr.response_code & 0x72) == 0x72)
+					srb->sense_buffer[1] = HARDWARE_ERROR;
+				else
+					srb->sense_buffer[2] = HARDWARE_ERROR;
 			}
 		}
 	}
@@ -1329,8 +1363,10 @@ int usb_stor_port_reset(struct us_data *us)
 		return -EPERM;
 
 	result = usb_lock_device_for_reset(us->pusb_dev, us->pusb_intf);
-	if (result < 0)
+	if (result < 0) {
 		US_DEBUGP("unable to lock device for reset: %d\n", result);
+		msleep(30);
+	}
 	else {
 		/* Were we disconnected while waiting for the lock? */
 		if (test_bit(US_FLIDX_DISCONNECTING, &us->dflags)) {

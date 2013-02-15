@@ -7,11 +7,13 @@ config MACH_SAMSUNG_ESPRESSO_CHN_CMCC
         bool "Samsung Espresso CHINA CMCC (GT-P3108) Board"
         default n
         select MACH_OMAP4_SAMSUNG
+	select FW_SAMSUNG_ESPRESSO_TSP
 
 config MACH_SAMSUNG_ESPRESSO_CHN_OPEN
         bool "Samsung Espresso CHINA OPEN (GT-P3100) Board"
         default n
         select MACH_OMAP4_SAMSUNG
+	select FW_SAMSUNG_ESPRESSO_TSP
 
 config TARGET_LOCALE_CHN
 	bool "Samsung Espresso CHINA LOCALE"
@@ -28,3 +30,16 @@ config MACH_SAMSUNG_T1_CHN_OPEN
 	default n
 	select MACH_OMAP4_SAMSUNG
 
+config MACH_SAMSUNG_SUPERIOR_CHN_OPEN
+	bool "Samsung Superior CHINA OPEN Board"
+	default n
+	select MACH_OMAP4_SAMSUNG
+	select FW_SAMSUNG_SUPERIOR_TSP
+	select FW_SAMSUNG_SUPERIOR_TOUCH_KEY
+
+config MACH_SAMSUNG_SUPERIOR_CHN_CMCC
+        bool "Samsung Superior CHINA CMCC Board"
+        default n
+        select MACH_OMAP4_SAMSUNG
+	select FW_SAMSUNG_SUPERIOR_TSP
+	select FW_SAMSUNG_SUPERIOR_TOUCH_KEY

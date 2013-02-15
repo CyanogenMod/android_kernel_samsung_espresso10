@@ -17,13 +17,8 @@
 
 #include <linux/serial_core.h>
 
+#include "sec_board_id.h"
 #include "sec_common.h"
-/* Reference Device */
-#define SEC_MACHINE_ESPRESSO		0x01
-/* Non-Modem Device */
-#define SEC_MACHINE_ESPRESSO_WIFI	0x03
-/* Non-Modem Device for Best Buy */
-#define SEC_MACHINE_ESPRESSO_USA_BBY	0x05
 
 enum espresso_adc_ch {
 	REMOTE_SENSE = 0,
@@ -37,6 +32,7 @@ unsigned int omap4_espresso_get_board_type(void);
 
 /** @category LCD, HDMI */
 void omap4_espresso_display_init(void);
+void omap4_espresso_memory_display_init(void);
 
 /** @category LCD */
 void __init omap4_espresso_display_early_init(void);

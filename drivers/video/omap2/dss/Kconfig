@@ -144,9 +144,8 @@ config OMAP_HDMI_AUDIO_CH_EVENT
 	depends on OMAP4_DSS_HDMI
 	default n
 	help
-	  There is edid information from sink. Hdmi source can read edid and parse,
-	  hdmi checks number of audio supporting channel (2-ch, 5-1ch).
-
+	  There is edid information from sink. Hdmi source can read edid and
+	  parse, hdmi checks number of audio supporting channel (2-ch, 5-1ch).
 
 config OMAP2_HDMI_FORCED_TIMING
 	bool "sysfs for forced hdmi timing"
@@ -154,4 +153,101 @@ config OMAP2_HDMI_FORCED_TIMING
 	default n
 	help
 	  This is for forced hdmi timing and will be used for factory test.
+
+config OMAP2_DSS_DSI_SAMSUNG_ENABLE_VP_VSYNC_END
+	bool "Generate VSYNC end signal for DSI"
+	depends on OMAP2_DSS_DSI
+	default n
+	help
+	  Enable this to to generate vsync end signal(VE).
+	  Default dsi code does not generate vsync end
+	  signal(VE).
+	  By this, DSI video mode is driven by signal mode.
+
+config OMAP2_DSS_DSI_SAMSUNG_ENABLE_VP_HSYNC_END
+	bool "Generate HSYNC end signal for DSI"
+	depends on OMAP2_DSS_DSI
+	default n
+	help
+	  Enable this to to generate hsync end signal(HE).
+	  Default dsi code does not generate hsync end
+	  signal(VE).
+	  By this, DSI video mode is driven by signal mode.
+
+config OMAP2_DSS_DSI_SAMSUNG_ENABLE_LP_CMD_SEND
+	bool "Send command in LP state"
+	depends on OMAP2_DSS_DSI
+	default n
+	help
+	  Some LDI requires commands are sent in LP state.
+	  Default dsi code sends command in HS. Wihtout this,
+	  command is not sent properly even if it is sometimes
+	  sent without problem.
+
+config OMAP2_DSS_DSI_SAMSUNG_TTAGET_9CYC
+	bool "TTA-GET timing in terms of number of 9 TXCLKESC"
+	depends on OMAP2_DSS_DSI
+	default n
+	help
+	  Increase TTAGET timing to 9 cycles.
+	  Some panel timing requires longer BTA timing margin.
+	  HW reset default is 5 cycles (TTAGET=0x2)
+	  Need to increas this to 9 cycles (TTAGET=0x6)
+
+config OMAP2_DSS_DSI_SAMSUNG_FIFO_SIZE_CH0
+	int "TX/RX fifo size of virtual channel 0 for DSI"
+	range 0 4
+	default 1
+	help
+	  This is the fifo size for the virtual channel 0 of DSI.
+	  Generally 1(32x33bits) is enough. However this is not
+	  enough if long(as long as the buffer size) packets are
+	  sent frequently. If FIFO overflow happens, consider to
+	  increase the fifo size.
+		0: 0x33bits,  1: 32x33bits, 2: 64x33bits,
+		3: 96x33bits, 4: 128x33bits
+	  Note : The sum of the size of all fifos for 4 channels <= 4
+
+config OMAP2_DSS_DSI_SAMSUNG_FIFO_SIZE_CH1
+	int "TX/RX fifo size of virtual channel 1 for DSI"
+	range 0 4
+	default 1
+	help
+	  This is the fifo size for the virtual channel 1 of DSI.
+	  Generally 1(32x33bits) is enough. However this is not
+	  enough if long(as long as the buffer size) packets are
+	  sent frequently. If FIFO overflow happens, consider to
+	  increase the fifo size.
+		0: 0x33bits,  1: 32x33bits, 2: 64x33bits,
+		3: 96x33bits, 4: 128x33bits
+	  Note : The sum of the size of all fifos for 4 channels <= 4
+
+config OMAP2_DSS_DSI_SAMSUNG_FIFO_SIZE_CH2
+	int "TX/RX fifo size of virtual channel 2 for DSI"
+	range 0 4
+	default 1
+	help
+	  This is the fifo size for the virtual channel 2 of DSI.
+	  Generally 1(32x33bits) is enough. However this is not
+	  enough if long(as long as the buffer size) packets are
+	  sent frequently. If FIFO overflow happens, consider to
+	  increase the fifo size.
+		0: 0x33bits,  1: 32x33bits, 2: 64x33bits,
+		3: 96x33bits, 4: 128x33bits
+	  Note : The sum of the size of all fifos for 4 channels <= 4
+
+config OMAP2_DSS_DSI_SAMSUNG_FIFO_SIZE_CH3
+	int "TX/RX fifo size of virtual channel 3 for DSI"
+	range 0 4
+	default 1
+	help
+	  This is the fifo size for the virtual channel 3 of DSI.
+	  Generally 1(32x33bits) is enough. However this is not
+	  enough if long(as long as the buffer size) packets are
+	  sent frequently. If FIFO overflow happens, consider to
+	  increase the fifo size.
+		0: 0x33bits,  1: 32x33bits, 2: 64x33bits,
+		3: 96x33bits, 4: 128x33bits
+	  Note : The sum of the size of all fifos for 4 channels <= 4
+
 endif

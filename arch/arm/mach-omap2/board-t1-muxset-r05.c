@@ -23,11 +23,11 @@
 #include "sec_muxtbl.h"
 
 static struct omap_muxtbl muxtbl[] __initdata = {
-	/* [-N-C-] kpd_row4 - gpio_176 - NC */
+	/* [-N-C-] kpd_row4.safe_mode - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     KPD_ROW4, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
 		     176, "kpd_row4.nc"),
-	/* [IN---] fref_clk3_out - gpio_wk31 - HOME_KEY */
+	/* [IN---] fref_clk3_out.gpio_wk31 - HOME_KEY */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
 		     FREF_CLK3_OUT,
 		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT |

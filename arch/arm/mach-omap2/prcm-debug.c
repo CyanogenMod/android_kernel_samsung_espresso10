@@ -1115,17 +1115,15 @@ static struct d_clkd_info cd_cortexa9 = {
 	.intgens = {NULL},
 };
 
-/* CD_L4SEC not in TRM, below based on Linux code. */
-
 static struct d_clkd_info cd_l4sec = {
 	.name = "CD_L4SEC",
 	.prcm_partition	  = OMAP4430_CM2_PARTITION,
 	.cm_inst	  = OMAP4430_CM2_L4PER_INST,
 	.clkdm_offs	  = OMAP4430_CM2_L4PER_L4SEC_CDOFFS,
-	.activity	  = 0x200,
+	.activity	  = 0x300,
 	.mods = {&mod_aes1, &mod_aes2, &mod_des3des, &mod_pkaeip29, &mod_rng,
 		 &mod_sha2md51, &mod_cryptodma, NULL},
-	.intgens = {NULL}, // TBD: No docs
+	.intgens = {NULL},
 };
 
 #if 0 /* Don't appear to be valid */
@@ -1568,8 +1566,17 @@ static void prcmdebug_dump_pd(struct seq_file *sf, struct d_pwrd_info *pd,
 			OMAP4430_LASTPOWERSTATEENTERED_SHIFT;
 
 		if (flags & PRCMDEBUG_LASTSLEEP &&
-		    (prevst == PWRDM_POWER_OFF || prevst == PWRDM_POWER_RET))
+		   (prevst == PWRDM_POWER_OFF || prevst == PWRDM_POWER_RET) &&
+			((!strcmp(pd->name, "PD_CORE")	||
+				!strcmp(pd->name, "PD_MPU")	||
+				!strcmp(pd->name, "PD_L4_PER")	||
+				!strcmp(pd->name, "PD_L3_INIT"))))
 			return;
+
+		if (flags & PRCMDEBUG_LASTSLEEP &&
+		    (currst == PWRDM_POWER_OFF || currst == PWRDM_POWER_RET)) {
+			return;
+		}
 
 		if (flags & PRCMDEBUG_ON &&
 		    (currst == PWRDM_POWER_OFF || currst == PWRDM_POWER_RET))

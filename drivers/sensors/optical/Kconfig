@@ -10,3 +10,8 @@ config INPUT_CM3663
 config OPTICAL_AL3201
          tristate "Rohm bh1721 Optical Sensor"
          depends on I2C
+
+config OPTICAL_GP2AP020A00F
+	depends on I2C
+	bool "Sharp GP2AP020A00F driver"
+	default n

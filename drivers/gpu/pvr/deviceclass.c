@@ -581,6 +581,10 @@ static PVRSRV_ERROR CloseDCDeviceCallBack(IMG_PVOID  pvParam,
 		psDCInfo->psFuncTable->pfnCloseDCDevice(psDCInfo->hExtDevice);
 
 		PVRSRVKernelSyncInfoDecRef(psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+		if (psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo->ui32RefCount == 0)
+		{
+			PVRSRVFreeSyncInfoKM(psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo);
+		}
 
 		psDCInfo->hDevMemContext = IMG_NULL;
 		psDCInfo->hExtDevice = IMG_NULL;
@@ -667,7 +671,7 @@ PVRSRV_ERROR PVRSRVOpenDCDeviceKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 		{
 			PVR_DPF((PVR_DBG_ERROR,"PVRSRVOpenDCDeviceKM: Failed to open external DC device"));
 			psDCInfo->ui32RefCount--;
-			PVRSRVKernelSyncInfoDecRef(psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+			PVRSRVFreeSyncInfoKM(psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo);
 			return eError;
 		}
 
@@ -677,9 +681,11 @@ PVRSRV_ERROR PVRSRVOpenDCDeviceKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 		{
 			PVR_DPF((PVR_DBG_ERROR,"PVRSRVOpenDCDeviceKM: Failed to get system buffer"));
 			psDCInfo->ui32RefCount--;
-			PVRSRVKernelSyncInfoDecRef(psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+			PVRSRVFreeSyncInfoKM(psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo);
 			return eError;
 		}
+
+		PVRSRVKernelSyncInfoIncRef(psDCInfo->sSystemBuffer.sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
 		psDCInfo->sSystemBuffer.sDeviceClassBuffer.ui32MemMapRefCount = 0;
 	}
 	else
@@ -884,6 +890,10 @@ static PVRSRV_ERROR DestroyDCSwapChain(PVRSRV_DC_SWAPCHAIN *psSwapChain)
 		if(psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo)
 		{
 			PVRSRVKernelSyncInfoDecRef(psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+			if (psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo->ui32RefCount == 0)
+			{
+				PVRSRVFreeSyncInfoKM(psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo);
+			}
 		}
 	}
 
@@ -1087,6 +1097,8 @@ PVRSRV_ERROR PVRSRVCreateDCSwapChainKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 			goto ErrorExit;
 		}
 
+		PVRSRVKernelSyncInfoIncRef(psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+
 		
 		psSwapChain->asBuffer[i].sDeviceClassBuffer.pfnGetBufferAddr = psDCInfo->psFuncTable->pfnGetBufferAddr;
 		psSwapChain->asBuffer[i].sDeviceClassBuffer.hDevMemContext = psDCInfo->hDevMemContext;
@@ -1186,6 +1198,10 @@ ErrorExit:
 		if(psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo)
 		{
 			PVRSRVKernelSyncInfoDecRef(psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+			if (psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo->ui32RefCount == 0)
+			{
+				PVRSRVFreeSyncInfoKM(psSwapChain->asBuffer[i].sDeviceClassBuffer.psKernelSyncInfo);
+			}
 		}
 	}
 
@@ -1604,6 +1620,7 @@ PVRSRV_ERROR PVRSRVSwapToDCBuffer2KM(IMG_HANDLE	hDeviceKM,
 	psCallbackData->pvPrivData = pvPrivData;
 	psCallbackData->ui32PrivDataLength = ui32PrivDataLength;
 
+	
 	if(OSAllocMem(PVRSRV_OS_PAGEABLE_HEAP,
 				  sizeof(IMG_VOID *) * ui32NumMemSyncInfos,
 				  (IMG_VOID **)&ppvMemInfos, IMG_NULL,
@@ -1645,6 +1662,7 @@ PVRSRV_ERROR PVRSRVSwapToDCBuffer2KM(IMG_HANDLE	hDeviceKM,
 
 		ui32NumCompiledSyncInfos = ui32NumMemSyncInfos + ui32NumUniqueSyncInfos;
 
+		
 		if(OSAllocMem(PVRSRV_OS_PAGEABLE_HEAP,
 					  sizeof(PVRSRV_KERNEL_SYNC_INFO *) * ui32NumCompiledSyncInfos,
 					  (IMG_VOID **)&ppsCompiledSyncInfos, IMG_NULL,
@@ -1718,9 +1736,6 @@ PVRSRV_ERROR PVRSRVSwapToDCBuffer2KM(IMG_HANDLE	hDeviceKM,
 
 	psFlipCmd->ppsMemInfos = (PDC_MEM_INFO *)ppvMemInfos;
 	psFlipCmd->ui32NumMemInfos = ui32NumMemSyncInfos;
-
-	
-	psFlipCmd->hUnused = IMG_NULL;
 
 	SysAcquireData(&psSysData);
 
@@ -2122,6 +2137,10 @@ static PVRSRV_ERROR CloseBCDeviceCallBack(IMG_PVOID  pvParam,
 			if(psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo)
 			{
 				PVRSRVKernelSyncInfoDecRef(psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+				if (psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo->ui32RefCount == 0)
+				{
+					PVRSRVFreeSyncInfoKM(psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo);
+				}
 			}
 		}
 
@@ -2243,6 +2262,8 @@ PVRSRV_ERROR PVRSRVOpenBCDeviceKM (PVRSRV_PER_PROCESS_DATA	*psPerProc,
 				PVR_DPF((PVR_DBG_ERROR,"PVRSRVOpenBCDeviceKM: Failed sync info alloc"));
 				goto ErrorExit;
 			}
+
+			PVRSRVKernelSyncInfoIncRef(psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
 			
 			
 
@@ -2285,6 +2306,10 @@ ErrorExit:
 		if(psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo)
 		{
 			PVRSRVKernelSyncInfoDecRef(psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo, IMG_NULL);
+			if (psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo->ui32RefCount == 0)
+			{
+				PVRSRVFreeSyncInfoKM(psBCInfo->psBuffer[i].sDeviceClassBuffer.psKernelSyncInfo);
+			}
 		}
 	}
 

@@ -121,6 +121,9 @@ struct sec_jack_platform_data sec_jack_pdata = {
 	.num_zones		= ARRAY_SIZE(sec_jack_zones),
 	.buttons_zones		= sec_jack_buttons_zones,
 	.num_buttons_zones	= ARRAY_SIZE(sec_jack_buttons_zones),
+#ifdef CONFIG_JACK_RESELECTOR_SUPPORT
+	.ear_reselector_zone    = 2600,
+#endif
 };
 
 static struct platform_device sec_device_jack = {

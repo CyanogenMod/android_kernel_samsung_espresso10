@@ -33,7 +33,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     38, "MOTOR_EN"),
 	/* [--OUT] gpmc_a17 - gpio_41 - PS_VOUT */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     GPMC_A17, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
+		     GPMC_A17, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
 		     41, "PS_VOUT"),
 	/* [--OUT] gpmc_a21 - gpio_45 - CODEC_LDO_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -167,6 +167,10 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		GPMC_AD13,
 		OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT | OMAP_PIN_OFF_NONE,
 		37, "CP_ON"),
+	/* [IN---] gpmc_nadv_ale - gpio_56 - NC */
+	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
+		GPMC_NADV_ALE, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		56, "CP_DUMP_INT.nc"),
 };
 
 add_sec_muxtbl_to_list(SEC_MACHINE_ESPRESSO, 4, muxtbl);

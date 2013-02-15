@@ -30,21 +30,49 @@
 #include <linux/uaccess.h>
 #include <linux/poll.h>
 #include <linux/list.h>
+#include <linux/interrupt.h>
+#include <linux/irq.h>
+#include <linux/wakelock.h>
 #include <linux/regulator/consumer.h>
 
 #define __LINUX_KERNEL_DRIVER__
 #include <linux/yas.h>
 #include <linux/sensors_core.h>
 #include "yas_acc_driver.c"
+#include <linux/yas_accel.h>
 
-#define YAS_ACC_KERNEL_VERSION	"4.2.602"
+#define YAS_ACC_KERNEL_VERSION	"4.4.702a"
 #define YAS_ACC_KERNEL_NAME	"accelerometer"
+#define CAL_SUCCESS	1
+#define CAL_FAIL	0
+
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+char vendor_name[MAX_CHIP_NUM][MAX_LEN_OF_NAME] = {
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250)
+	{"BOSCH"},
+#elif (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+	{"STM"},
+#endif
+};
+
+char chip_name[MAX_CHIP_NUM][MAX_LEN_OF_NAME] = {
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250)
+	{"BMA254"},
+#elif (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+	{"K2DH"},
+#endif
+};
+#endif
 
 /* ABS axes parameter range [um/s^2] (for input event) */
 #define GRAVITY_EARTH		9806550
 #define ABSMAX_2G		(GRAVITY_EARTH * 2)
 #define ABSMIN_2G		(-GRAVITY_EARTH * 2)
-
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+#define HAL_RESOLUTION	1024
+#else
+#define HAL_RESOLUTION	256
+#endif
 #define delay_to_jiffies(d)	((d) ? msecs_to_jiffies(d) : 1)
 #define actual_delay(d)	(jiffies_to_msecs(delay_to_jiffies(d)))
 
@@ -77,6 +105,7 @@ static int yas_acc_set_filter_enable(struct yas_acc_driver *, int);
 static int yas_acc_measure(struct yas_acc_driver *, struct yas_acc_data *);
 static int yas_acc_input_init(struct yas_acc_private_data *);
 static void yas_acc_input_fini(struct yas_acc_private_data *);
+static int yas_acc_set_offset(struct yas_acc_driver *, struct yas_vector *);
 static int yas_acc_set_enable_factory_test(struct yas_acc_driver *, int);
 
 static ssize_t yas_acc_enable_show
@@ -127,8 +156,11 @@ struct yas_acc_private_data {
 	struct input_dev *input;
 	struct yas_acc_driver *driver;
 	struct delayed_work work;
+	struct work_struct alert_work;
+	struct wake_lock reactive_wake_lock;
 	struct yas_acc_data last;
 	int suspend_enable;
+	int calibrate;
 #if DEBUG
 	struct mutex suspend_mutex;
 	int suspend;
@@ -137,9 +169,19 @@ struct yas_acc_private_data {
 	struct list_head devfile_list;
 #endif
 	struct device *accel_sensor_device;
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+	struct yas_vector cal_data;
+#else
 	struct accel_cal cal_data;
+#endif
 	struct acc_platform_data *acc_pdata;
 	int enabled;
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+	int used_chip;
+#endif
+	atomic_t reactive_state;
+	atomic_t reactive_enable;
+	bool factory_mode;
 };
 
 static struct yas_acc_private_data *yas_acc_private_data;
@@ -148,76 +190,7 @@ static struct yas_acc_private_data *yas_acc_get_data(void)
 	return yas_acc_private_data;
 }
 
-void sensor_ldo_on(void)
-{
-	struct regulator *reg_v28;
-	struct regulator *reg_v18;
-
-	reg_v28 =
-		regulator_get(&yas_acc_private_data->client->dev,
-			"SENSOR_2.8V");
-	if (IS_ERR(reg_v28)) {
-		pr_err("[bma254] %s [%d] failed to get v2.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	reg_v18 =
-		regulator_get(&yas_acc_private_data->client->dev,
-			"SENSOR_1.8V");
-	if (IS_ERR(reg_v18)) {
-		pr_err("[bma254] %s [%d] failed to get v1.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	regulator_enable(reg_v28);
-	regulator_enable(reg_v18);
-
-	regulator_put(reg_v28);
-	regulator_put(reg_v18);
-
-	msleep(30);
-}
-
-void sensor_ldo_reset(void)
-{
-	struct regulator *reg_v28;
-	struct regulator *reg_v18;
-
-	reg_v28 =
-		regulator_get(&yas_acc_private_data->client->dev,
-			"SENSOR_2.8V");
-	if (IS_ERR(reg_v28)) {
-		pr_err("[bma254] %s [%d] failed to get v2.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	reg_v18 =
-		regulator_get(&yas_acc_private_data->client->dev,
-			"SENSOR_1.8V");
-	if (IS_ERR(reg_v18)) {
-		pr_err("[bma254] %s [%d] failed to get v1.8 regulator.\n",
-			__func__, __LINE__);
-		return;
-	}
-
-	regulator_disable(reg_v18);
-	regulator_disable(reg_v28);
-
-	msleep(30);
-
-	regulator_enable(reg_v28);
-	regulator_enable(reg_v18);
-
-	regulator_put(reg_v28);
-	regulator_put(reg_v18);
-
-	msleep(30);
-}
-
-int read_accel_raw_xyz(struct yas_vector *acc)
+static int read_accel_raw_xyz(struct yas_vector *acc)
 {
 	struct yas_acc_data accel;
 	struct yas_acc_private_data *data = yas_acc_get_data();
@@ -248,8 +221,9 @@ static int accel_open_calibration(void)
 	old_fs = get_fs();
 	set_fs(KERNEL_DS);
 
-	cal_filp = filp_open(*data->acc_pdata->cal_path, O_RDONLY,
+	cal_filp = filp_open(data->acc_pdata->cal_path, O_RDONLY,
 		S_IRUGO | S_IWUSR | S_IWGRP);
+
 	if (IS_ERR(cal_filp)) {
 		pr_err("%s: Can't open calibration file\n", __func__);
 		set_fs(old_fs);
@@ -258,15 +232,27 @@ static int accel_open_calibration(void)
 	}
 
 	err = cal_filp->f_op->read(cal_filp,
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+		(char *)&data->cal_data, 3 * sizeof(s32), &cal_filp->f_pos);
+	if (err != 3 * sizeof(s32)) {
+#else
 		(char *)&data->cal_data, 3 * sizeof(s16), &cal_filp->f_pos);
 	if (err != 3 * sizeof(s16)) {
+#endif
 		pr_err("%s: Can't read the cal data from file\n", __func__);
 		err = -EIO;
 	}
 
 	pr_info("%s: (%d,%d,%d)\n", __func__,
 		data->cal_data.v[0], data->cal_data.v[1], data->cal_data.v[2]);
-
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+	if (data->cal_data.v[0] == 0
+		&& data->cal_data.v[1] == 0
+		&& data->cal_data.v[2] == 0)
+		data->calibrate = CAL_FAIL;
+	else
+		data->calibrate = CAL_SUCCESS;
+#endif
 	filp_close(cal_filp, current->files);
 	set_fs(old_fs);
 
@@ -312,11 +298,19 @@ static int accel_do_calibrate(int enable)
 		data->cal_data.v[1] =
 			(sum[1] / 100);
 		data->cal_data.v[2] =
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+			((sum[2] / 100) - HAL_RESOLUTION);
+		data->calibrate = CAL_SUCCESS;
+#else
 			((sum[2] / 100) - 256);
+#endif
 	} else {
 		data->cal_data.v[0] = 0;
 		data->cal_data.v[1] = 0;
 		data->cal_data.v[2] = 0;
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+		data->calibrate = CAL_FAIL;
+#endif
 	}
 
 	pr_info("%s: cal data (%d,%d,%d)\n", __func__,
@@ -326,9 +320,11 @@ static int accel_do_calibrate(int enable)
 	old_fs = get_fs();
 	set_fs(KERNEL_DS);
 
-	cal_filp = filp_open(*data->acc_pdata->cal_path,
+
+	cal_filp = filp_open(data->acc_pdata->cal_path,
 			O_CREAT | O_TRUNC | O_WRONLY,
 			S_IRUGO | S_IWUSR | S_IWGRP);
+
 	if (IS_ERR(cal_filp)) {
 		pr_err("%s: Can't open calibration file\n", __func__);
 		set_fs(old_fs);
@@ -337,10 +333,18 @@ static int accel_do_calibrate(int enable)
 	}
 
 	err = cal_filp->f_op->write(cal_filp,
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+		(char *)&data->cal_data, 3 * sizeof(s32), &cal_filp->f_pos);
+	if (err != 3 * sizeof(s32)) {
+#else
 		(char *)&data->cal_data, 3 * sizeof(s16), &cal_filp->f_pos);
 	if (err != 3 * sizeof(s16)) {
+#endif
 		pr_err("%s: Can't write the cal data to file\n", __func__);
 		err = -EIO;
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+		data->calibrate = CAL_FAIL;
+#endif
 	}
 
 	filp_close(cal_filp, current->files);
@@ -593,9 +597,10 @@ static int yas_acc_i2c_write(uint8_t adr, const uint8_t *buf, int len)
 	int err;
 	int i;
 
-	if (len > 15)
-		return -1;
-
+	if (len > 15) {
+		err = -1;
+		goto done;
+	}
 	reg = adr;
 	buffer[0] = reg;
 	for (i = 0; i < len; i++)
@@ -610,10 +615,10 @@ static int yas_acc_i2c_write(uint8_t adr, const uint8_t *buf, int len)
 		dev_err(&data->client->dev,
 			"i2c_transfer() write error: slave_addr=%02x, reg_addr=%02x, err=%d\n",
 			data->client->addr, adr, err);
-		return err;
-	}
-
-	return 0;
+	} else
+		err = 0;
+done:
+	return err;
 }
 
 static int yas_acc_i2c_read(uint8_t adr, uint8_t *buf, int len)
@@ -622,7 +627,7 @@ static int yas_acc_i2c_read(uint8_t adr, uint8_t *buf, int len)
 	struct i2c_msg msg[2];
 	uint8_t reg;
 	int err;
-	int retry = 3;
+	int retry = 2;
 
 	reg = adr;
 	msg[0].addr = data->client->addr;
@@ -634,25 +639,26 @@ static int yas_acc_i2c_read(uint8_t adr, uint8_t *buf, int len)
 	msg[1].len = len;
 	msg[1].buf = buf;
 
-	while (1) {
+	do {
 		err = i2c_transfer(data->client->adapter, msg, 2);
 		if (err != 2) {
 			dev_err(&data->client->dev,
 				"i2c_transfer() read error: slave_addr=%02x, reg_addr=%02x, err=%d\n",
 				data->client->addr, adr, err);
-			retry--;
-			if (err == -110)
-				sensor_ldo_reset();
-			if (!retry)
-				return err;
-		} else
-			return 0;
-	}
+			if (retry < 1)
+				goto done;
+		} else {
+			err = 0;
+			goto done;
+		}
+	} while (unlikely(err < 0) && retry--);
+done:
+	return err;
 }
 
 static void yas_acc_msleep(int msec)
 {
-	msleep(msec);
+	usleep_range(msec * 999, msec * 1000);
 }
 
 /* ------------------------------- *
@@ -680,7 +686,14 @@ static int yas_acc_core_driver_init(struct yas_acc_private_data *data)
 	cbk->device_read = yas_acc_i2c_read;
 	cbk->msleep = yas_acc_msleep;
 
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+	if (data->used_chip == K2DH_ENABLED)
+		err = yas_acc_driver_lis3dh_init(driver);
+	else if (data->used_chip == BMA25X_ENABLED)
+		err = yas_acc_driver_BMA25X_init(driver);
+#else
 	err = yas_acc_driver_init(driver);
+#endif
 	if (err != YAS_NO_ERROR) {
 		kfree(driver);
 		return err;
@@ -691,13 +704,27 @@ static int yas_acc_core_driver_init(struct yas_acc_private_data *data)
 		kfree(driver);
 		return err;
 	}
-
-	err = driver->set_position(CONFIG_INPUT_YAS_ACCELEROMETER_POSITION);
+	if (data->acc_pdata) {
+		if (data->acc_pdata->orientation) {
+			pr_info("%s: set from board file.\n", __func__);
+			err = driver->set_position(
+				data->acc_pdata->orientation
+				- YAS532_POSITION_OFFSET);
+		} else {
+			pr_info("%s: set from defconfig.\n", __func__);
+			err = driver->set_position(
+				CONFIG_INPUT_YAS_ACCELEROMETER_POSITION);
+		}
+	} else {
+		err = driver->set_position(
+			CONFIG_INPUT_YAS_ACCELEROMETER_POSITION);
+	}
 	if (err != YAS_NO_ERROR) {
 		kfree(driver);
 		return err;
 	}
-
+	pr_info("%s: accelerometer position is %d\n", __func__,
+				driver->get_position());
 	return 0;
 }
 
@@ -1079,7 +1106,8 @@ static ssize_t yas_acc_private_data_show(struct device *dev,
 #if YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA150
 #define ADR_MAX (0x16)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA222 || \
-	YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250
+	YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250 ||	\
+	YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA254
 #define ADR_MAX (0x40)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXSD9
 #define ADR_MAX (0x0f)
@@ -1089,7 +1117,7 @@ static ssize_t yas_acc_private_data_show(struct device *dev,
 #define ADR_MAX (0x60)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DL  || \
 	YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLH || \
-		YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLM
+	YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLM
 #define ADR_MAX (0x40)
 #elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH
 #define ADR_MAX (0x3e)
@@ -1288,7 +1316,13 @@ static ssize_t acc_data_read(struct device *dev,
 	yas_acc_measure(data->driver, &accel);
 	yas_acc_set_enable_factory_test(data->driver, 1);
 	mutex_unlock(&data->data_mutex);
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+	x = (accel.xyz.v[0] - data->cal_data.v[0]);
+	y = (accel.xyz.v[1] - data->cal_data.v[1]);
+	z = (accel.xyz.v[2] - data->cal_data.v[2]);
 
+	return sprintf(buf, "%d, %d, %d\n", -x, -y, -z);
+#else
 	x = (accel.xyz.v[0] - data->cal_data.v[0]) * 4;
 	y = (accel.xyz.v[1] - data->cal_data.v[1]) * 4;
 	z = (accel.xyz.v[2] - data->cal_data.v[2]) * 4;
@@ -1296,6 +1330,7 @@ static ssize_t acc_data_read(struct device *dev,
 		x, y, z);
 
 	return sprintf(buf, "%d, %d, %d\n", x, y, z);
+#endif
 }
 
 static DEVICE_ATTR(raw_data, S_IRUGO, acc_data_read,
@@ -1306,9 +1341,15 @@ static ssize_t accel_calibration_show(struct device *dev,
 					char *buf)
 {
 	int count = 0;
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+	s32 x;
+	s32 y;
+	s32 z;
+#else
 	s16 x;
 	s16 y;
 	s16 z;
+#endif
 	int err;
 	struct yas_acc_private_data *data = yas_acc_get_data();
 
@@ -1333,9 +1374,17 @@ static ssize_t accel_calibration_store(struct device *dev,
 	int err;
 	int count;
 	unsigned long enable;
+#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
+	s32 x;
+	s32 y;
+	s32 z;
+#else
 	s16 x;
 	s16 y;
 	s16 z;
+#endif
+	char tmp[64];
+
 	struct yas_acc_private_data *data = yas_acc_get_data();
 	if (strict_strtoul(buf, 10, &enable))
 		return -EINVAL;
@@ -1351,18 +1400,94 @@ static ssize_t accel_calibration_store(struct device *dev,
 	pr_info("accel_calibration_store %d %d %d\n", x, y, z);
 	if (err > 0)
 		err = 0;
-	count = sprintf(buf, "%d\n", err);
+	count = sprintf(tmp, "%d\n", err);
 	return count;
 }
 
 static DEVICE_ATTR(calibration, 0664, accel_calibration_show,
 	accel_calibration_store);
 
+#ifdef CONFIG_INPUT_YAS_ACC_ALERT_INT
+static ssize_t yas_acc_reactive_enable_show(struct device *dev,
+					struct device_attribute
+						*attr, char *buf)
+{
+	struct yas_acc_private_data *data = yas_acc_get_data();
+	pr_info("%s: state =%d\n", __func__,
+		atomic_read(&data->reactive_state));
+	return sprintf(buf, "%d\n",
+		atomic_read(&data->reactive_state));
+}
+
+static ssize_t yas_acc_reactive_enable_store(struct device *dev,
+					struct device_attribute
+						*attr, const char *buf,
+							size_t count)
+{
+	struct yas_acc_private_data *data = yas_acc_get_data();
+	bool onoff = false;
+	bool factory_test = false;
+	unsigned long value = 0;
+	int err = count;
+
+	if (strict_strtoul(buf, 10, &value)) {
+		err = -EINVAL;
+		goto done;
+	}
+	switch (value) {
+	case 0:
+		break;
+	case 1:
+		onoff = true;
+		break;
+	case 2:
+		onoff = true;
+		factory_test = true;
+		break;
+	default:
+		err = -EINVAL;
+		pr_err("%s: invalid value %d\n", __func__, *buf);
+		goto done;
+	}
+
+	if (data->client->irq) {
+		if (!value) {
+			disable_irq_wake(data->client->irq);
+			disable_irq(data->client->irq);
+		} else {
+			enable_irq(data->client->irq);
+			enable_irq_wake(data->client->irq);
+		}
+	}
+	mutex_lock(&data->data_mutex);
+	atomic_set(&data->reactive_enable, onoff);
+	if (data->client->irq)
+		data->driver->set_motion_interrupt(onoff, factory_test);
+	atomic_set(&data->reactive_state, false);
+	mutex_unlock(&data->data_mutex);
+
+	pr_info("%s: onoff = %d, state =%d\n", __func__,
+		atomic_read(&data->reactive_enable),
+		atomic_read(&data->reactive_state));
+done:
+	return err;
+}
+static struct device_attribute dev_attr_reactive_alert =
+	__ATTR(reactive_alert, S_IRUGO | S_IWUSR | S_IWGRP,
+	yas_acc_reactive_enable_show,
+	yas_acc_reactive_enable_store);
+#endif
+
 static ssize_t accel_vendor_show(struct device *dev,
 					   struct device_attribute *attr,
 					   char *buf)
 {
-	return sprintf(buf, "%s\n", "BOSCH");
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+	struct yas_acc_private_data *data = yas_acc_get_data();
+	return sprintf(buf, "%s\n", vendor_name[data->used_chip]);
+#else
+	return sprintf(buf, "%s\n", VENDOR_NAME);
+#endif
 }
 static struct device_attribute dev_attr_accel_sensor_vendor =
 	__ATTR(vendor, S_IRUSR | S_IRGRP, accel_vendor_show, NULL);
@@ -1371,7 +1496,12 @@ static ssize_t accel_name_show(struct device *dev,
 					   struct device_attribute *attr,
 					   char *buf)
 {
-	return sprintf(buf, "%s\n", "BMA254");
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+	struct yas_acc_private_data *data = yas_acc_get_data();
+	return sprintf(buf, "%s\n", chip_name[data->used_chip]);
+#else
+	return sprintf(buf, "%s\n", CHIP_NAME);
+#endif
 }
 static struct device_attribute dev_attr_accel_sensor_name =
 	__ATTR(name, S_IRUSR | S_IRGRP, accel_name_show, NULL);
@@ -1379,16 +1509,54 @@ static struct device_attribute dev_attr_accel_sensor_name =
 static struct device_attribute *accel_sensor_attrs[] = {
 	&dev_attr_raw_data,
 	&dev_attr_calibration,
+#ifdef CONFIG_INPUT_YAS_ACC_ALERT_INT
+	&dev_attr_reactive_alert,
+#endif
 	&dev_attr_accel_sensor_vendor,
 	&dev_attr_accel_sensor_name,
 	NULL,
 };
+
+#ifdef CONFIG_INPUT_YAS_ACC_ALERT_INT
+static void yas_work_func_alert(struct work_struct *work)
+{
+	struct yas_acc_private_data *data =
+		container_of(work, struct yas_acc_private_data, alert_work);
+	int result;
+
+	result = data->driver->get_motion_interrupt();
+
+	if (result || data->factory_mode) {
+		/*handle motion recognition*/
+		atomic_set(&data->reactive_state, true);
+		data->factory_mode = false;
+		pr_info("%s: motion interrupt happened\n",
+			__func__);
+		wake_lock_timeout(&data->reactive_wake_lock,
+			msecs_to_jiffies(2000));
+	}
+}
+
+static irqreturn_t yas_acc_irq_thread(int irq, void *dev)
+{
+	struct yas_acc_private_data *data = yas_acc_get_data();
+	schedule_work(&data->alert_work);
+	return IRQ_HANDLED;
+}
+#endif
 
 static int yas_acc_probe(struct i2c_client *client,
 			 const struct i2c_device_id *id)
 {
 	struct yas_acc_private_data *data;
 	struct acc_platform_data *pdata;
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+	struct accel_platform_data *platform_data;
+
+	if (client->dev.platform_data != NULL)
+		platform_data = client->dev.platform_data;
+
+#endif
 	int err;
 
 	/* Setup private data */
@@ -1398,6 +1566,9 @@ static int yas_acc_probe(struct i2c_client *client,
 		goto ERR1;
 	}
 	yas_acc_set_data(data);
+#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
+	data->used_chip = platform_data->used_chip;
+#endif
 
 	pdata = (struct acc_platform_data *) client->dev.platform_data;
 	data->acc_pdata = pdata;
@@ -1416,9 +1587,11 @@ static int yas_acc_probe(struct i2c_client *client,
 	}
 	i2c_set_clientdata(client, data);
 	data->client = client;
-	if (data->acc_pdata->ldo_ctl)
-		sensor_ldo_on();
 
+	if (data->acc_pdata) {
+		if (data->acc_pdata->ldo_on != NULL)
+			data->acc_pdata->ldo_on(true);
+	}
 	/* Setup accelerometer core driver */
 	err = yas_acc_core_driver_init(data);
 	if (err < 0)
@@ -1426,6 +1599,12 @@ static int yas_acc_probe(struct i2c_client *client,
 
 	/* Setup driver interface */
 	INIT_DELAYED_WORK(&data->work, yas_acc_work_func);
+
+#ifdef CONFIG_INPUT_YAS_ACC_ALERT_INT
+		INIT_WORK(&data->alert_work, yas_work_func_alert);
+		wake_lock_init(&data->reactive_wake_lock, WAKE_LOCK_SUSPEND,
+			"reactive_wake_lock");
+#endif
 
 	/* Setup input device interface */
 	err = yas_acc_input_init(data);
@@ -1445,6 +1624,21 @@ static int yas_acc_probe(struct i2c_client *client,
 #endif
 	pr_info("yas_acc_probe -\n");
 
+#ifdef CONFIG_INPUT_YAS_ACC_ALERT_INT
+	if (client->irq > 0) {
+		err = request_threaded_irq(client->irq,
+			NULL, yas_acc_irq_thread,
+			IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+			"accelerometer", data);
+		pr_info("%s: irq = %d\n", __func__, client->irq);
+		if (err < 0) {
+			pr_err("%s request_threaded_irq fail err=%d\n",
+				__func__, err);
+			goto ERR4;
+		}
+		disable_irq(client->irq);
+	}
+#endif
 	err = sensors_register(data->accel_sensor_device,
 		NULL, accel_sensor_attrs,
 			"accelerometer_sensor");
@@ -1460,8 +1654,15 @@ out_sensor_register_failed:
 ERR4:
 	yas_acc_input_fini(data);
 ERR3:
+#ifdef CONFIG_INPUT_YAS_ACC_ALERT_INT
+	wake_lock_destroy(&data->reactive_wake_lock);
+#endif
 	yas_acc_core_driver_fini(data);
 ERR2:
+	if (data->acc_pdata) {
+		if (data->acc_pdata->ldo_on != NULL)
+			data->acc_pdata->ldo_on(false);
+	}
 	kfree(data);
 ERR1:
 	return err;
@@ -1478,10 +1679,25 @@ static int yas_acc_remove(struct i2c_client *client)
 	yas_acc_set_enable(driver, 0);
 	sysfs_remove_group(&data->input->dev.kobj, &yas_acc_attribute_group);
 	yas_acc_input_fini(data);
+#ifdef CONFIG_INPUT_YAS_ACC_ALERT_INT
+	wake_lock_destroy(&data->reactive_wake_lock);
+#endif
 	yas_acc_core_driver_fini(data);
 	kfree(data);
 
 	return 0;
+}
+
+static void yas_acc_shutdown(struct i2c_client *client)
+{
+	struct yas_acc_private_data *data = i2c_get_clientdata(client);
+	struct yas_acc_driver *driver = data->driver;
+
+	yas_acc_set_enable(driver, 0);
+	if (data->acc_pdata) {
+		if (data->acc_pdata->ldo_on != NULL)
+			data->acc_pdata->ldo_on(false);
+	}
 }
 
 static int yas_acc_suspend(struct i2c_client *client, pm_message_t mesg)
@@ -1524,13 +1740,14 @@ MODULE_DEVICE_TABLE(i2c, yas_acc_id);
 
 struct i2c_driver yas_acc_driver = {
 	.driver = {
-		   .name = "accelerometer",
-		   .owner = THIS_MODULE,
-		   },
+		.name = "accelerometer",
+		.owner = THIS_MODULE,
+	},
 	.probe = yas_acc_probe,
 	.remove = yas_acc_remove,
 	.suspend = yas_acc_suspend,
 	.resume = yas_acc_resume,
+	.shutdown = yas_acc_shutdown,
 	.id_table = yas_acc_id,
 };
 

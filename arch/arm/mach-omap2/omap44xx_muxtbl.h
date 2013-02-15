@@ -20,6 +20,8 @@
 #define OMAP4_MUXTBL_DOMAIN_CORE	0
 #define OMAP4_MUXTBL_DOMAIN_WKUP	1
 
+#define OMAP4_CTRL_MODULE_PAD_EXT_GPIO000_OFFSET	0x00
+
 #define OMAP4_MUXTBL(_domain, _M0, _mux_value, _gpio, _label)	\
 {									\
 	.gpio = {							\

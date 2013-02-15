@@ -277,6 +277,12 @@ static struct tsProdRevMap prodRevsMap[] = {
 	{MPU_SILICON_REV_B6, 0},	/* 24 |  (npp)    */
 	{MPU_SILICON_REV_B6, 0},	/* 25 V  (npp)    */
 	{MPU_SILICON_REV_B6, 131},	/* 26    (B6/A11) */
+	{MPU_SILICON_REV_B6, 0},	/* 27 |  */
+	{MPU_SILICON_REV_B6, 0},	/* 28 |  */
+	{MPU_SILICON_REV_B6, 0},	/* 29 |  */
+	{MPU_SILICON_REV_B6, 0},	/* 30 |  */
+	{MPU_SILICON_REV_B6, 0},	/* 31 |  */
+	{MPU_SILICON_REV_B6, 131},	/* 32 |  */
 };
 #endif				/* !M_HW */
 
@@ -291,44 +297,10 @@ static struct tsProdRevMap prodRevsMap[] = {
 static int MLDLGetSiliconRev(struct mldl_cfg *pdata,
 			     void *mlsl_handle)
 {
-	int result;
-	unsigned char index = 0x00;
-	unsigned char bank =
-	    (BIT_PRFTCH_EN | BIT_CFG_USER_BANK | MPU_MEM_OTP_BANK_0);
-	unsigned short memAddr = ((bank << 8) | 0x06);
+	pdata->silicon_revision = MPU_SILICON_REV_B6;
+	pdata->trim = 131;
 
-	result = MLSLSerialReadMem(mlsl_handle, pdata->addr,
-				   memAddr, 1, &index);
-	ERROR_CHECK(result)
-	if (result)
-		return result;
-	index >>= 2;
-
-	/* clean the prefetch and cfg user bank bits */
-	result =
-	    MLSLSerialWriteSingle(mlsl_handle, pdata->addr,
-				  MPUREG_BANK_SEL, 0);
-	ERROR_CHECK(result)
-	if (result)
-		return result;
-
-	if (index < OLDEST_PROD_REV_SUPPORTED || NUM_OF_PROD_REVS <= index) {
-		pdata->silicon_revision = 0;
-		pdata->trim = 0;
-		MPL_LOGE("Unsupported Product Revision Detected : %d\n", index);
-		return ML_ERROR_INVALID_MODULE;
-	}
-
-	pdata->silicon_revision = prodRevsMap[index].siliconRev;
-	pdata->trim = prodRevsMap[index].sensTrim;
-
-	if (pdata->trim == 0) {
-		MPL_LOGE("sensitivity trim is 0"
-			 " - unsupported non production part.\n");
-		return ML_ERROR_INVALID_MODULE;
-	}
-
-	return result;
+	return 0;
 }
 
 /**

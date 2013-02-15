@@ -112,6 +112,7 @@ static const u8 twl6030_rtc_reg_map[] = {
 #define BIT_RTC_CTRL_REG_TEST_MODE_M             0x10
 #define BIT_RTC_CTRL_REG_SET_32_COUNTER_M        0x20
 #define BIT_RTC_CTRL_REG_GET_TIME_M              0x40
+#define BIT_RTC_CTRL_REG_RTC_V_OPT               0x80
 
 /* RTC_STATUS_REG bitfields */
 #define BIT_RTC_STATUS_REG_RUN_M                 0x02
@@ -227,23 +228,55 @@ static int twl_rtc_read_time(struct device *dev, struct rtc_time *tm)
 	unsigned char rtc_data[ALL_TIME_REGS + 1];
 	int ret;
 	u8 save_control;
+	u8 rtc_control;
 
 	ret = twl_rtc_read_u8(&save_control, REG_RTC_CTRL_REG);
-	if (ret < 0)
+	if (ret < 0) {
+		dev_err(dev, "%s: reading CTRL_REG, error %d\n", __func__, ret);
 		return ret;
+	}
+	/* for twl6030/32 make sure BIT_RTC_CTRL_REG_GET_TIME_M is clear */
+	if (twl_class_is_6030()) {
+		if (save_control & BIT_RTC_CTRL_REG_GET_TIME_M) {
+			save_control &= ~BIT_RTC_CTRL_REG_GET_TIME_M;
+			ret = twl_rtc_write_u8(save_control, REG_RTC_CTRL_REG);
+			if (ret < 0) {
+				dev_err(dev, "%s, writing CTRL_REG, error %d\n",
+						__func__, ret);
+				return ret;
+			}
+		}
+	}
 
-	save_control |= BIT_RTC_CTRL_REG_GET_TIME_M;
+	/* Copy RTC counting registers to static registers or latches */
+	rtc_control = save_control | BIT_RTC_CTRL_REG_GET_TIME_M;
 
-	ret = twl_rtc_write_u8(save_control, REG_RTC_CTRL_REG);
-	if (ret < 0)
+	/* for twl6030/32 enable read access to static shadowed registers */
+	if (twl_class_is_6030())
+		rtc_control |= BIT_RTC_CTRL_REG_RTC_V_OPT;
+
+	ret = twl_rtc_write_u8(rtc_control, REG_RTC_CTRL_REG);
+	if (ret < 0) {
+		dev_err(dev, "%s: writing CTRL_REG, error %d\n", __func__, ret);
 		return ret;
+	}
 
 	ret = twl_i2c_read(TWL_MODULE_RTC, rtc_data,
 			(rtc_reg_map[REG_SECONDS_REG]), ALL_TIME_REGS);
 
 	if (ret < 0) {
-		dev_err(dev, "rtc_read_time error %d\n", ret);
+		dev_err(dev, "%s: reading data, error %d\n", __func__, ret);
 		return ret;
+	}
+
+	/* for twl6030 restore original state of rtc control register */
+	if (twl_class_is_6030()) {
+		ret = twl_rtc_write_u8(save_control, REG_RTC_CTRL_REG);
+		if (ret < 0) {
+			dev_err(dev, "%s: writing CTRL_REG, error %d\n",
+					__func__, ret);
+			return ret;
+		}
 	}
 
 	tm->tm_sec = bcd2bin(rtc_data[0]);
@@ -283,7 +316,7 @@ static int twl_rtc_set_time(struct device *dev, struct rtc_time *tm)
 		goto out;
 
 	save_control &= ~BIT_RTC_CTRL_REG_STOP_RTC_M;
-	twl_rtc_write_u8(save_control, REG_RTC_CTRL_REG);
+	ret = twl_rtc_write_u8(save_control, REG_RTC_CTRL_REG);
 	if (ret < 0)
 		goto out;
 
@@ -394,7 +427,7 @@ static void check_alarm_boot()
 	rtc_tm_to_time(&current_rtc_time, &time_sec);
 	rtc_tm_to_time(&alm_reg_time, &alarm_sec);
 
-	if ((time_sec > alarm_sec - 5) && (time_sec < alarm_sec + 5))
+	if ((time_sec > alarm_sec - 20) && (time_sec < alarm_sec + 20))
 		kernel_restart(NULL);
 }
 #endif
@@ -405,13 +438,20 @@ static irqreturn_t twl_rtc_interrupt(int irq, void *rtc)
 	int ret = IRQ_NONE;
 	int res;
 	u8 rd_reg;
+#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
+	u8 check_alm_boot;
+#endif
 
 	res = twl_rtc_read_u8(&rd_reg, REG_RTC_STATUS_REG);
 	if (res)
 		goto out;
 
 #if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	if (sec_bootmode == 5) {
+	res = twl_rtc_read_u8(&check_alm_boot, 0x17);
+	if (res)
+		goto out;
+
+	if ((sec_bootmode == 5) && check_alm_boot) {
 		if (rd_reg & 0x40)
 			check_alarm_boot();
 	}
@@ -489,8 +529,17 @@ static int __devinit twl_rtc_probe(struct platform_device *pdev)
 	if (ret < 0)
 		goto out1;
 
-	if (rd_reg & BIT_RTC_STATUS_REG_POWER_UP_M)
+	if (rd_reg & BIT_RTC_STATUS_REG_POWER_UP_M) {
 		dev_warn(&pdev->dev, "Power up reset detected.\n");
+
+		if (rtc_platform_data &&
+				rtc_platform_data->
+				rtc_default_time.tm_year > 100) {
+			twl_rtc_set_time(&pdev->dev,
+			&rtc_platform_data->rtc_default_time);
+		}
+
+	}
 
 	if (rd_reg & BIT_RTC_STATUS_REG_ALARM_M)
 		dev_warn(&pdev->dev, "Pending Alarm interrupt detected.\n");
@@ -598,6 +647,11 @@ static int __devinit twl_rtc_probe(struct platform_device *pdev)
 	alm_reg_time.tm_mday = bcd2bin(t_alarm_time[3]);
 	alm_reg_time.tm_mon = bcd2bin(t_alarm_time[4]) - 1;
 	alm_reg_time.tm_year = bcd2bin(t_alarm_time[5]) + 100;
+
+	ret = twl_i2c_write_u8(TWL_MODULE_RTC, 0x00, 0x17);
+	if (ret < 0)
+		pr_err("twl_rtc: Could not write TWL"
+		       "register 0x17 - error %d\n", ret);
 #endif
 
 	return 0;
@@ -639,12 +693,23 @@ static void twl_rtc_shutdown(struct platform_device *pdev)
 {
 	/* mask timer interrupts*/
 	mask_rtc_irq_bit(BIT_RTC_INTERRUPTS_REG_IT_TIMER_M);
+
+#ifdef CONFIG_ANDROID
+	/* mask alarm interrupts as well so that we don't get powered on
+	 when alarm is triggered on android */
+	mask_rtc_irq_bit(BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
+#endif
+
 #if !defined(CONFIG_RTC_CHN_ALARM_BOOT)
 	mask_rtc_irq_bit(BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
 #endif
 
 #if defined(CONFIG_RTC_CHN_ALARM_BOOT)
 	twl_rtc_set_alarm(&pdev->dev, &autoboot_alm_exit);
+	if (autoboot_alm_exit.enabled)
+		twl_i2c_write_u8(TWL_MODULE_RTC, 0x01, 0x17);
+	else
+		twl_i2c_write_u8(TWL_MODULE_RTC, 0x00, 0x17);
 #endif
 }
 

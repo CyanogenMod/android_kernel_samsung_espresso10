@@ -23,10 +23,9 @@
 #include "sec_muxtbl.h"
 
 static struct omap_muxtbl muxtbl[] __initdata = {
-	/* [-----] usbb1_ulpitll_dat4 - gpio_92 - TSP_VENDOR3 */
+	/* [IN---] usbb1_ulpitll_dat4.gpio_92 - TSP_VENDOR3 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     USBB1_ULPITLL_DAT4,
-		     OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     USBB1_ULPITLL_DAT4, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
 		     92, "TSP_VENDOR3"),
 };
 

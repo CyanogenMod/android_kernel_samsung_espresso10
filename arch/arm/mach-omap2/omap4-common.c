@@ -38,8 +38,11 @@ static void __iomem *l2cache_base;
 
 static void __iomem *gic_dist_base_addr;
 static void __iomem *gic_cpu_base;
-static struct clockdomain *l4_secure_clkdm;
 static void *dram_barrier_base;
+
+#ifndef CONFIG_SECURITY_MIDDLEWARE_COMPONENT
+static struct clockdomain *l4_secure_clkdm;
+#endif
 
 static void omap_bus_sync_noop(void)
 { }
@@ -110,7 +113,7 @@ void gic_dist_enable(void)
 }
 void gic_dist_disable(void)
 {
-	__raw_writel(0, gic_dist_base_addr + GIC_CPU_CTRL);
+	__raw_writel(0, gic_dist_base_addr + GIC_DIST_CTRL);
 }
 
 void gic_timer_retrigger(void)
@@ -233,7 +236,7 @@ static int __init omap_l2_cache_init(void)
 	if (omap_type() != OMAP2_DEVICE_TYPE_GP)
 		omap4_secure_dispatcher(PPA_SERVICE_PL310_POR, 0x7, 1,
 				por_ctrl, 0, 0, 0);
-	else if (omap_rev() >= OMAP4430_REV_ES2_1)
+	else if (omap_rev() >= OMAP4430_REV_ES2_2)
 		omap_smc1(0x113, por_ctrl);
 	printk(KERN_INFO "===[%s(%d)]===\n", __func__, __LINE__);
 

@@ -19,6 +19,7 @@ struct sec_log_buf {
 	unsigned int *flag;
 	unsigned int *count;
 	char *data;
+	bool enable;
 };
 
 #endif /* __SEC_LOG_BUF_H__ */

@@ -320,14 +320,8 @@ int hsi_open(struct hsi_device *dev)
 	/* Restart with flags cleaned up */
 	ch->flags = HSI_CH_OPEN;
 
-	if (port->wake_rx_3_wires_mode)
-		hsi_driver_enable_interrupt(port, HSI_ERROROCCURED
-						| HSI_BREAKDETECTED);
-	else
-		hsi_driver_enable_interrupt(port, HSI_CAWAKEDETECTED
-						| HSI_ERROROCCURED
-						| HSI_BREAKDETECTED);
-
+	hsi_driver_enable_interrupt(port, HSI_CAWAKEDETECTED | HSI_ERROROCCURED
+					| HSI_BREAKDETECTED);
 
 	/* NOTE: error and break are port events and do not need to be
 	 * enabled for HSI extended enable register */
@@ -453,6 +447,7 @@ int hsi_read(struct hsi_device *dev, u32 *addr, unsigned int size)
 			"hsi_device %p data %p count %d", dev, addr, size);
 		return -EINVAL;
 	}
+
 	if (unlikely(!(dev->ch->flags & HSI_CH_OPEN))) {
 		dev_err(dev->device.parent, "HSI device NOT open\n");
 		return -EINVAL;
@@ -569,7 +564,7 @@ int hsi_write_cancel(struct hsi_device *dev)
 	err = __hsi_write_cancel(dev->ch);
 
 	hsi_clocks_disable_channel(hsi_ctrl->dev, dev->ch->channel_number,
-				__func__);
+				   __func__);
 	spin_unlock_bh(&hsi_ctrl->lock);
 
 	return err;
@@ -637,7 +632,7 @@ int hsi_read_cancel(struct hsi_device *dev)
 	err = __hsi_read_cancel(dev->ch);
 
 	hsi_clocks_disable_channel(hsi_ctrl->dev, dev->ch->channel_number,
-					__func__);
+				   __func__);
 	spin_unlock_bh(&hsi_ctrl->lock);
 
 	return err;
@@ -679,7 +674,7 @@ int hsi_poll(struct hsi_device *dev)
 	err = hsi_driver_enable_read_interrupt(ch, NULL);
 
 	hsi_clocks_disable_channel(hsi_ctrl->dev, dev->ch->channel_number,
-					__func__);
+				   __func__);
 	spin_unlock_bh(&hsi_ctrl->lock);
 
 	return err;
@@ -720,7 +715,7 @@ int hsi_unpoll(struct hsi_device *dev)
 	hsi_driver_disable_read_interrupt(ch);
 
 	hsi_clocks_disable_channel(hsi_ctrl->dev, dev->ch->channel_number,
-					__func__);
+				   __func__);
 	spin_unlock_bh(&hsi_ctrl->lock);
 
 	return 0;
@@ -938,8 +933,7 @@ int hsi_ioctl(struct hsi_device *dev, unsigned int command, void *arg)
 		hsi_driver_disable_interrupt(pport, HSI_CAWAKEDETECTED);
 		break;
 	case HSI_IOCTL_SET_WAKE_RX_4WIRES_MODE:
-		dev_info(hsi_ctrl->dev,
-			 "Entering RX wakeup in 4 wires mode\n");
+		dev_info(hsi_ctrl->dev, "Entering RX wakeup in 4 wires mode\n");
 		pport->wake_rx_3_wires_mode = 0;
 
 		/* HSI-C1BUG00085: ixxx: HSI wakeup issue in 3 wires mode
@@ -950,10 +944,6 @@ int hsi_ioctl(struct hsi_device *dev, unsigned int command, void *arg)
 							(hsi_ctrl->dev)))
 				hsi_set_pm_default(hsi_ctrl);
 
-		/* Clean CA_WAKE status */
-		pport->cawake_status = -1;
-		hsi_outl(HSI_CAWAKEDETECTED, base,
-			 HSI_SYS_MPU_STATUS_REG(port, pport->n_irq));
 		hsi_driver_enable_interrupt(pport, HSI_CAWAKEDETECTED);
 		hsi_outl_and(HSI_SET_WAKE_3_WIRES_MASK,	base,
 			     HSI_SYS_SET_WAKE_REG(port));
@@ -1050,7 +1040,7 @@ void hsi_close(struct hsi_device *dev)
 	}
 
 	hsi_clocks_disable_channel(hsi_ctrl->dev, dev->ch->channel_number,
-					__func__);
+				   __func__);
 	spin_unlock_bh(&hsi_ctrl->lock);
 }
 EXPORT_SYMBOL(hsi_close);
@@ -1116,15 +1106,10 @@ void hsi_set_port_event_cb(struct hsi_device *dev,
 	hsi_clocks_enable_channel(hsi_ctrl->dev, dev->ch->channel_number,
 					__func__);
 
-	if (port->wake_rx_3_wires_mode)
-		hsi_driver_enable_interrupt(port, HSI_ERROROCCURED
-						| HSI_BREAKDETECTED);
-	else
-		hsi_driver_enable_interrupt(port, HSI_CAWAKEDETECTED
-						| HSI_ERROROCCURED
-						| HSI_BREAKDETECTED);
+	hsi_driver_enable_interrupt(port, HSI_CAWAKEDETECTED | HSI_ERROROCCURED
+					| HSI_BREAKDETECTED);
 	hsi_clocks_disable_channel(hsi_ctrl->dev, dev->ch->channel_number,
-					__func__);
+				   __func__);
 	spin_unlock_bh(&hsi_ctrl->lock);
 }
 EXPORT_SYMBOL(hsi_set_port_event_cb);

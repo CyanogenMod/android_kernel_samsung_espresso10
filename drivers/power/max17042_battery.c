@@ -165,6 +165,21 @@ static int max17042_read_reg(struct i2c_client *client, u8 reg)
 	return ret;
 }
 
+static int max17042_get_register(struct max17042_fuelgauge_callbacks *ptr,
+		u8 addr)
+{
+	int reg_data;
+	struct max17042_chip *chip =
+		container_of(ptr, struct max17042_chip, callbacks);
+
+	reg_data = max17042_read_reg(chip->client, addr);
+
+	pr_debug("%s: addr(%d), cap(0x%x, %d)\n", __func__,
+			addr, reg_data, (reg_data / 2));
+
+	return reg_data;
+}
+
 static int max17042_get_vcell(struct i2c_client *client)
 {
 	u32 vcell;
@@ -215,28 +230,37 @@ static int max17042_check_battery_present(struct i2c_client *client)
 
 static int max17042_get_temperature(struct i2c_client *client)
 {
-	u16 data;
+	u16 data = 0;
 	int temper;
+	struct max17042_chip *chip = i2c_get_clientdata(client);
 
 	if (max17042_check_battery_present(client)) {
 		data = max17042_read_reg(client, MAX17042_TEMP);
 
 		if ((data >> 8) & (0x1 << 7)) {
 			temper = ((~(data >> 8)) & 0xFF) + 1;
-			temper *= (-1000);
+			temper *= (-10);
 		} else {
 			temper = (data >> 8) & 0x7f;
 			temper *= 1000;
 			temper += (data & 0xFF) * 39 / 10;
+			temper /= 100;
 		}
 	} else {
-		temper = 20000;
+		temper = 200;
+	}
+
+	if (chip->info.battery_type != SDI_BATTERY_TYPE) {
+		if (temper > 350)
+			temper = (27 * temper) / 10 - 595;
+		else if (temper <= (-10))
+			temper = ((7 * temper) / 10 + 7) + 20;
 	}
 
 	dev_info(&client->dev, "TEMPERATURE : %d, data :0x%x\n",
 		temper, data);
 
-	return temper / 100;
+	return temper;
 }
 
 static int max17042_get_avg_current(struct i2c_client *client)
@@ -375,6 +399,46 @@ static int max17042_reset_soc(struct max17042_fuelgauge_callbacks *ptr)
 	return 0;
 }
 
+static void max17042_set_battery_type(struct max17042_chip *chip)
+{
+	u16 data;
+
+	data = max17042_read_reg(chip->client, MAX17042_DesignCap);
+
+	if ((data == chip->pdata->sdi_vfcapacity) ||
+			(data == chip->pdata->sdi_vfcapacity-1))
+		chip->info.battery_type = SDI_BATTERY_TYPE;
+	else if ((data == chip->pdata->byd_vfcapacity) ||
+			(data == chip->pdata->byd_vfcapacity-1))
+		chip->info.battery_type = BYD_BATTERY_TYPE;
+	else {
+		pr_info("%s : Unknown battery is set to SDI type.\n", __func__);
+		chip->info.battery_type = SDI_BATTERY_TYPE;
+	}
+
+	pr_info("%s : DesignCAP(0x%04x), Battery type(%s)\n",
+			__func__, data,
+			chip->info.battery_type == SDI_BATTERY_TYPE ?
+			"SDI_TYPE_BATTERY" : "BYD_TYPE_BATTERY");
+
+	switch (chip->info.battery_type) {
+	case BYD_BATTERY_TYPE:
+		chip->info.capacity = chip->pdata->byd_capacity;
+		chip->info.vfcapacity = chip->pdata->byd_vfcapacity;
+		chip->info.check_start_vol =
+			chip->pdata->sdi_low_bat_comp_start_vol;
+		break;
+
+	case SDI_BATTERY_TYPE:
+	default:
+		chip->info.capacity = chip->pdata->sdi_capacity;
+		chip->info.vfcapacity = chip->pdata->sdi_vfcapacity;
+		chip->info.check_start_vol =
+			chip->pdata->byd_low_bat_comp_start_vol;
+		break;
+	}
+}
+
 static void max17042_periodic_read(struct i2c_client *client)
 {
 	u8 reg;
@@ -386,7 +450,7 @@ static void max17042_periodic_read(struct i2c_client *client)
 	getnstimeofday(&ts);
 	rtc_time_to_tm(ts.tv_sec, &tm);
 
-	pr_info("[MAX17042] %d/%d/%d %02d:%02d,",
+	pr_debug("[MAX17042] %d/%d/%d %02d:%02d,",
 			tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900,
 			tm.tm_hour, tm.tm_min);
 
@@ -394,7 +458,7 @@ static void max17042_periodic_read(struct i2c_client *client)
 		for (reg = 0; reg < 0x10; reg++)
 			data[reg] = max17042_read_reg(client, reg + i * 0x10);
 
-		pr_info("%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,"
+		pr_debug("%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,"
 				"%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,%04xh,",
 				data[0x00], data[0x01], data[0x02], data[0x03],
 				data[0x04], data[0x05], data[0x06], data[0x07],
@@ -403,7 +467,7 @@ static void max17042_periodic_read(struct i2c_client *client)
 		if (i == 4)
 			i = 13;
 	}
-	pr_info("\n");
+	pr_debug("\n");
 }
 
 static void max17042_reset_capacity(struct max17042_fuelgauge_callbacks *ptr)
@@ -855,11 +919,6 @@ static int max17042_alert_init(struct i2c_client *client)
 
 	/* Using RepSOC */
 	misccgf_data = max17042_read_reg(client, MAX17042_MiscCFG);
-	if (misccgf_data < 0) {
-		dev_err(&client->dev,
-			"%s: Failed to read MISCCFG_REG\n", __func__);
-		return -1;
-	}
 	misccgf_data &= ~(0x03);
 
 	if (max17042_write_reg(client, MAX17042_MiscCFG, misccgf_data) < 0) {
@@ -914,11 +973,6 @@ static int max17042_alert_init(struct i2c_client *client)
 
 	/* Enable SOC alerts */
 	config_data = max17042_read_reg(client, MAX17042_CONFIG);
-	if (config_data < 0) {
-		dev_err(&client->dev,
-			"%s: Failed to read CONFIG_REG\n", __func__);
-		return -1;
-	}
 	config_data |= (0x1 << 2);
 
 	if (max17042_write_reg(client, MAX17042_CONFIG, config_data) < 0) {
@@ -937,11 +991,6 @@ static int max17042_check_status_reg(struct i2c_client *client)
 
 	/* 1. Check Smn was generatedread */
 	status_data = max17042_read_reg(client, MAX17042_STATUS);
-	if (status_data < 0) {
-		dev_err(&client->dev,
-			"%s: Failed to read STATUS_REG\n", __func__);
-		return -1;
-	}
 	dev_info(&client->dev, "%s - addr(0x00), data(0x%04x)\n",
 			__func__, status_data);
 
@@ -1229,10 +1278,7 @@ static int __devinit max17042_probe(struct i2c_client *client,
 		ret = -EINVAL;
 		goto err_pdata;
 	} else {
-		chip->info.capacity = chip->pdata->capacity;
-		chip->info.vfcapacity = chip->pdata->vfcapacity;
-		chip->info.check_start_vol =
-			chip->pdata->low_bat_comp_start_vol;
+		max17042_set_battery_type(chip);
 	}
 
 	/* Init parameters to prevent wrong compensation. */
@@ -1267,6 +1313,7 @@ static int __devinit max17042_probe(struct i2c_client *client,
 				max17042_check_cap_corruption;
 	chip->callbacks.update_remcap_to_fullcap =
 				max17042_update_remcap_to_fullcap;
+	chip->callbacks.get_register_value = max17042_get_register;
 
 	if (chip->pdata->register_callbacks)
 		chip->pdata->register_callbacks(&chip->callbacks);

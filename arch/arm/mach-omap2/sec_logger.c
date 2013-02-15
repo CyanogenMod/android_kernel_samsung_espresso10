@@ -51,7 +51,7 @@ static ssize_t sec_logger_level_show(struct device *dev,
 	return sprintf(buf, "%u\n", sec_logger_level);
 }
 
-static ssize_t sec_logger_level_store(struct debug *dev,
+static ssize_t sec_logger_level_store(struct device *dev,
 				      struct device_attribute *attr,
 				      const char *buf, size_t count)
 {
@@ -137,11 +137,7 @@ int sec_logger_add_log_ram_console(void *logp, size_t orig)
 		/* add a line-feed if needed */
 		strcat(logger_buf, "\n");
 
-	if (likely(sec_ram_console_write_ext))
-		sec_ram_console_write_ext(NULL, logger_buf,
-					  strlen(logger_buf));
-	else
-		pr_info("%s", logger_buf);
+	sec_ram_console_write_ext(NULL, logger_buf, strlen(logger_buf));
 
 	return 0;
 }
@@ -158,19 +154,25 @@ static void __init sec_logger_create_sysfs(void)
 		       __func__);
 }
 
+static void sec_logger_console_write(struct console *console,
+				     const char *s, unsigned int count)
+{
+	pr_info("%s", s);
+}
+
 static void __init sec_logger_ram_console_init(void)
 {
 	const char *console[] = {
 		"ram_console_write",
 		"sec_log_buf_write",
 	};
-	int i;
+	unsigned int i = ARRAY_SIZE(console) - 1;
 
 	sec_platform_log_en = true;
 
 	sec_logger_create_sysfs();
 
-	for (i = 0; i < ARRAY_SIZE(console); i++) {
+	do {
 		sec_ram_console_write_ext =
 			(void *)kallsyms_lookup_name(console[i]);
 
@@ -179,8 +181,9 @@ static void __init sec_logger_ram_console_init(void)
 			 __func__, console[i], sec_ram_console_write_ext);
 			return;
 		}
-	}
+	} while (i-- != 0);
 
+	sec_ram_console_write_ext = sec_logger_console_write;
 	pr_debug("(%s): init fail - printk\n", __func__);
 }
 
@@ -227,4 +230,4 @@ static int __init sec_logger_init(void)
 	return 0;
 }
 
-late_initcall(sec_logger_init);
+arch_initcall(sec_logger_init);
