@@ -43,6 +43,8 @@
 #include <plat/cpu.h>
 #include <plat/omap-pm.h>
 
+#define DEBUG_PRINT 0
+
 /* OMAP HSMMC Host Controller Registers */
 #define OMAP_HSMMC_SYSCONFIG	0x0010
 #define OMAP_HSMMC_SYSSTATUS	0x0014
@@ -333,8 +335,10 @@ static int omap_hsmmc_1_set_power(struct device *dev, int slot, int power_on,
 
 	if (power_on) {
 		if (host->external_ldo) {
+#if DEBUG_PRINT
 			printk(KERN_INFO "%s LDO enable\n",
 				mmc_hostname(host->mmc));
+#endif
 			gpio_set_value(host->gpio_for_ldo, 1);
 			}
 		else
@@ -342,8 +346,10 @@ static int omap_hsmmc_1_set_power(struct device *dev, int slot, int power_on,
 		}
 	else {
 		if (host->external_ldo) {
+#if DEBUG_PRINT
 			printk(KERN_INFO "%s LDO Disable\n",
 				mmc_hostname(host->mmc));
+#endif
 			gpio_set_value(host->gpio_for_ldo, 0);
 			}
 		else
@@ -369,7 +375,9 @@ static int omap_hsmmc_2_set_power(struct device *dev, int slot, int power_on,
 		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
 
 	if (power_on) {
+#if DEBUG_PRINT
 		printk(KERN_INFO "%s LDO enable\n", mmc_hostname(host->mmc));
+#endif
 		if (host->external_ldo)
 			gpio_set_value(host->gpio_for_ldo, 1);
 		else {
@@ -378,7 +386,9 @@ static int omap_hsmmc_2_set_power(struct device *dev, int slot, int power_on,
 				ret = regulator_enable(host->vcc_aux);
 		}
 	} else {
+#if DEBUG_PRINT
 		printk(KERN_INFO "%s LDO Disable\n", mmc_hostname(host->mmc));
+#endif
 		if (host->external_ldo)
 			gpio_set_value(host->gpio_for_ldo, 0);
 		else {
@@ -2689,7 +2699,11 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
 	mmc->max_seg_size = mmc->max_req_size;
 
 	mmc->caps |= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED |
-		     MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_ERASE | MMC_CAP_CMD23;
+#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) || defined(CONFIG_MACH_SAMSUNG_ESPRESSO10)
+		     MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_CMD23;
+#else
+ 		     MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_ERASE | MMC_CAP_CMD23;
+#endif
 
 	mmc->caps |= mmc_slot(host).caps;
 	if (mmc->caps & MMC_CAP_8_BIT_DATA)

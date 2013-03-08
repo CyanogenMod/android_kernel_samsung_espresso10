@@ -41,6 +41,8 @@
 
 #define PWM_DUTY_MAX			1200 /* 32kHz */
 
+#define DEBUG_PRINT 0
+
 struct ltn070nl01 {
 	struct device *dev;
 	struct omap_dss_device *dssdev;
@@ -257,8 +259,10 @@ static int ltn070nl01_set_brightness(struct backlight_device *bd)
 		(lcd->enabled) &&
 		(lcd->current_brightness != lcd->bl)) {
 		update_brightness(dssdev);
+#if DEBUG_PRINT
 		dev_info(&bd->dev, "[%d] brightness=%d, bl=%d\n",
 			 lcd->pdata->panel_id, bd->props.brightness, lcd->bl);
+#endif
 	}
 	mutex_unlock(&lcd->lock);
 	return ret;
@@ -298,7 +302,9 @@ static ssize_t ltn070nl01_sysfs_store_lcd_power(struct device *dev,
 	if (rc < 0)
 		return rc;
 
+#if DEBUG_PRINT
 	dev_info(dev, "ltn070nl01_sysfs_store_lcd_power - %d\n", lcd_enable);
+#endif
 
 	mutex_lock(&lcd->lock);
 	if (lcd_enable) {

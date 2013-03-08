@@ -13,7 +13,7 @@
  *
  */
 
-#define DEBUG_PRINT			1
+#define DEBUG_PRINT			0
 
 #if DEBUG_PRINT
 #define	tsp_debug(fmt, args...) \
