@@ -563,7 +563,7 @@ static void omap_cpu_early_suspend(struct early_suspend *h)
 		if (cur > max_capped)
 			omap_cpufreq_scale(max_capped, cur);
 	}
-	mask_mpu_static_dependency_value();
+	/*mask_mpu_static_dependency_value();*/
 	mutex_unlock(&omap_cpufreq_lock);
 }
 
@@ -580,7 +580,7 @@ static void omap_cpu_late_resume(struct early_suspend *h)
 		if (cur != current_target_freq)
 			omap_cpufreq_scale(current_target_freq, cur);
 	}
-	unmask_mpu_static_dependency_value();
+	/*unmask_mpu_static_dependency_value();*/
 	mutex_unlock(&omap_cpufreq_lock);
 }
 

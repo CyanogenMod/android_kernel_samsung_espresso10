@@ -59,6 +59,7 @@ struct geomagnetic_data {
 	struct semaphore driver_lock;
 	struct semaphore multi_lock;
 	atomic_t last_data[3];
+	atomic_t last_raw_data[3];
 	atomic_t last_status;
 	atomic_t enable;
 	int filter_enable;
@@ -1372,7 +1373,7 @@ static struct attribute_group geomagnetic_raw_attribute_group = {
 	.attrs = geomagnetic_raw_attributes
 };
 
-static ssize_t yas532_rawdata_show(struct device *dev,
+static ssize_t magnetic_rawdata_show(struct device *dev,
 	struct device_attribute *attr, char *buf)
 {
 	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
@@ -1380,12 +1381,12 @@ static ssize_t yas532_rawdata_show(struct device *dev,
 	usleep_range(3000, 3100);
 
 	return snprintf(buf, PAGE_SIZE, "%d,%d,%d\n",
-			atomic_read(&data->last_data[0]) / 1000,
-			atomic_read(&data->last_data[1]) / 1000,
-			atomic_read(&data->last_data[2]) / 1000);
+			atomic_read(&data->last_raw_data[0]) / 1000,
+			atomic_read(&data->last_raw_data[1]) / 1000,
+			atomic_read(&data->last_raw_data[2]) / 1000);
 }
 static struct device_attribute dev_attr_magnetic_sensor_raw_data =
-	__ATTR(raw_data, S_IRUSR | S_IRGRP, yas532_rawdata_show, NULL);
+	__ATTR(raw_data, S_IRUSR | S_IRGRP, magnetic_rawdata_show, NULL);
 
 static ssize_t magnetic_vendor_show(struct device *dev,
 					   struct device_attribute *attr,
@@ -1540,9 +1541,12 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 			input_sync(data->input_data);
 #endif
 
-			for (i = 0; i < 3; i++)
+			for (i = 0; i < 3; i++) {
 				atomic_set(&data->last_data[i],
-					   magdata->xyz.v[i]);
+					magdata->xyz.v[i]);
+				atomic_set(&data->last_raw_data[i],
+					magdata->raw.v[i]);
+			}
 		}
 
 		if (rt & YAS_REPORT_CALIB) {

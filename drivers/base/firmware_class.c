@@ -639,6 +639,7 @@ static int request_firmware_work_func(void *arg)
 
 	ret = _request_firmware(&fw, fw_work->name, fw_work->device,
 				fw_work->uevent, true);
+	pr_err("%s _request_firmware ret : %d fw : %s\n", __FUNCTION__, ret, fw ? "Loaded" : "Not Loaded");
 	fw_work->cont(fw, fw_work->context);
 
 	module_put(fw_work->module);
@@ -692,7 +693,7 @@ request_firmware_nowait(
 	task = kthread_run(request_firmware_work_func, fw_work,
 			    "firmware/%s", name);
 	if (IS_ERR(task)) {
-        pr_err("firmware_class: request_firmware_work_func derped!!!");
+		pr_err("%s request_firmware_work_func error : %ld\n", __FUNCTION__, PTR_ERR(task));
 		fw_work->cont(NULL, fw_work->context);
 		module_put(fw_work->module);
 		kfree(fw_work);

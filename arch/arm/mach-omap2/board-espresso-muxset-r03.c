@@ -164,7 +164,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     51, "VT_CAM_nSTBY"),
 	/* [IN---] gpmc_ncs2.gpio_52 - GPS_CNTL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     GPMC_NCS2, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		     GPMC_NCS2, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
 		     52, "GPS_CNTL"),
 	/* [IN---] gpmc_ncs3.gpio_53 - eMMC_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,

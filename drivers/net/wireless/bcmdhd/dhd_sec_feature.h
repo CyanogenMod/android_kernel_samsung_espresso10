@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Header file describing the internal (inter-module) DHD interfaces.
  *
  * Provides type definitions and function prototypes used to link the
@@ -76,7 +76,7 @@
 
 #if (WLAN_REGION_CODE >= 100) && (WLAN_REGION_CODE < 200) /*EUR*/
 #if (WLAN_REGION_CODE == 101) /*EUR ORG*/
-;/* GAN LITE NAT KEEPALIVE FILTER */
+/* GAN LITE NAT KEEPALIVE FILTER */
 #define GAN_LITE_NAT_KEEPALIVE_FILTER
 #endif
 #endif

@@ -194,7 +194,26 @@ struct sched_log {
 		struct worker *worker;
 		struct work_struct *work;
 		work_func_t f;
+		int en;
 	} work[CONFIG_NR_CPUS][SCHED_LOG_MAX];
+	struct hrtimer_log {
+		unsigned long long time;
+		struct hrtimer *timer;
+		enum hrtimer_restart (*fn)(struct hrtimer *);
+		int en;
+	} hrtimers[CONFIG_NR_CPUS][8];
+	struct {
+		unsigned long long time;
+		unsigned long pc;
+		unsigned long lr;
+		unsigned long sp;
+	} last_wdtkick_regs[CONFIG_NR_CPUS];
+	struct {
+		unsigned long long time;
+		unsigned long pc;
+		unsigned long lr;
+		unsigned long sp;
+	} last_irq_regs[CONFIG_NR_CPUS][4];
 };
 
 static struct sched_log sec_debug_log __cacheline_aligned;
@@ -208,6 +227,12 @@ static atomic_t irq_log_idx[NR_CPUS] = {
 	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
 };
 static atomic_t work_log_idx[NR_CPUS] = {
+	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
+};
+static atomic_t hrtimer_log_idx[NR_CPUS] = {
+	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
+};
+static atomic_t irq_regs_idx[NR_CPUS] = {
 	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
 };
 
@@ -593,10 +618,11 @@ static int sec_debug_panic_handler(struct notifier_block *nb,
 
 	pr_err("(%s) checksum_sched_log: %x\n", __func__, checksum_sched_log());
 
+	sec_debug_dump_stack();
+
 	sec_gaf_dump_all_task_info();
 	sec_gaf_dump_cpu_stat();
 
-	sec_debug_dump_stack();
 	sec_debug_hw_reset();
 
 	return 0;
@@ -784,7 +810,7 @@ void __sec_debug_irq_log(unsigned int irq, void *fn, int en)
 }
 
 void __sec_debug_work_log(struct worker *worker,
-			  struct work_struct *work, work_func_t f)
+			  struct work_struct *work, work_func_t f, int en)
 {
 	int cpu = raw_smp_processor_id();
 	unsigned i;
@@ -797,7 +823,62 @@ void __sec_debug_work_log(struct worker *worker,
 	psec_debug_log->work[cpu][i].worker = worker;
 	psec_debug_log->work[cpu][i].work = work;
 	psec_debug_log->work[cpu][i].f = f;
+	psec_debug_log->work[cpu][i].en = en;
 }
+
+void __sec_debug_hrtimer_log(struct hrtimer *timer,
+		     enum hrtimer_restart (*fn) (struct hrtimer *), int en)
+{
+	int cpu = raw_smp_processor_id();
+	unsigned i;
+
+	if (likely(!sec_debug_level.en.kernel_fault))
+		return;
+
+	i = atomic_inc_return(&hrtimer_log_idx[cpu]) &
+	    (ARRAY_SIZE(psec_debug_log->hrtimers[0]) - 1);
+	psec_debug_log->hrtimers[cpu][i].time = cpu_clock(cpu);
+	psec_debug_log->hrtimers[cpu][i].timer = timer;
+	psec_debug_log->hrtimers[cpu][i].fn = fn;
+	psec_debug_log->hrtimers[cpu][i].en = en;
+}
+
+void __sec_debug_wdtkick_regs_log(struct pt_regs *regs)
+{
+	int cpu = raw_smp_processor_id();
+	struct pt_regs dummy_regs = {
+		.ARM_pc = 0,
+		.ARM_lr = 0,
+		.ARM_sp = 0,
+	};
+
+	if (likely(!sec_debug_level.en.kernel_fault))
+		return;
+
+	if (!regs)	/* regs can be NULL */
+		regs = &dummy_regs;
+
+	psec_debug_log->last_wdtkick_regs[cpu].time = cpu_clock(cpu);
+	psec_debug_log->last_wdtkick_regs[cpu].pc = regs->ARM_pc;
+	psec_debug_log->last_wdtkick_regs[cpu].lr = regs->ARM_lr;
+	psec_debug_log->last_wdtkick_regs[cpu].sp = regs->ARM_sp;
+}
+
+void __sec_debug_irq_regs_log(int cpu, struct pt_regs *regs)
+{
+	unsigned i;
+
+	if (likely(!sec_debug_level.en.kernel_fault))
+		return;
+
+	i = atomic_inc_return(&irq_regs_idx[cpu]) &
+	    (ARRAY_SIZE(psec_debug_log->last_irq_regs[0]) - 1);
+	psec_debug_log->last_irq_regs[cpu][i].time = cpu_clock(cpu);
+	psec_debug_log->last_irq_regs[cpu][i].pc = regs->ARM_pc;
+	psec_debug_log->last_irq_regs[cpu][i].lr = regs->ARM_lr;
+	psec_debug_log->last_irq_regs[cpu][i].sp = regs->ARM_sp;
+}
+
 #ifdef CONFIG_SEC_DEBUG_IRQ_EXIT_LOG
 static unsigned long long excp_irq_exit_time[NR_CPUS];
 
