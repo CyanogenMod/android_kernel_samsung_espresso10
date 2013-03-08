@@ -9,7 +9,6 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
-
 #include <linux/mfd/max77693.h>
 #include <linux/mfd/max77693-private.h>
 #include <linux/debugfs.h>
@@ -18,9 +17,15 @@
 #define ENABLE 1
 #define DISABLE 0
 
-#define MAX77693_TERMINATION_CURRENT_MASK 0x7
+#define MAX77693_TERMINATION_CURRENT_MASK	0x7
+#define MAX77693_TOPOFF_TIME_MASK		0x38
+
+static DEFINE_MUTEX(isr_lock);
+static DEFINE_MUTEX(init_lock);
 
 static struct dentry	*max77693_dentry;
+
+static int max77693_get_vbus_state(struct sec_charger_info *charger);
 
 static void max77693_register_lock(struct sec_charger_info *charger, int enable)
 {
@@ -88,9 +93,13 @@ static void max77693_set_buck(struct sec_charger_info *charger,
 	else
 		reg_data &= ~MAX77693_MODE_BUCK;
 
+	max77693_register_lock(charger, 0);
+
 	pr_debug("%s: CHG_CNFG_00(0x%02x)\n", __func__, reg_data);
 	max77693_write_reg(charger->client,
 		MAX77693_CHG_REG_CHG_CNFG_00, reg_data);
+
+	max77693_register_lock(charger, 1);
 
 }
 
@@ -109,49 +118,35 @@ static void max77693_set_termination_current(struct sec_charger_info *charger,
 	reg_data &= ~MAX77693_TERMINATION_CURRENT_MASK;
 	reg_data |= value;
 
-	pr_debug("%s: CHG_CNFG_03(0x%02x)\n", __func__, reg_data);
+	max77693_register_lock(charger, 0);
+
+	pr_info("%s: CHG_CNFG_03(0x%02x)\n", __func__, reg_data);
 	max77693_write_reg(charger->client,
 		MAX77693_CHG_REG_CHG_CNFG_03, reg_data);
+
+	max77693_register_lock(charger, 1);
 }
 
-static void max77693_set_input_current(struct sec_charger_info *charger,
-		int cur)
+static void max77693_set_toff_time(struct sec_charger_info *charger,
+		int toff_time)
 {
-	int set_current_reg, now_current_reg;
-	int step;
+	u8 reg_data;
+	u8 time;
+
+	time = toff_time / 10;
+
+	max77693_read_reg(charger->client,
+			MAX77693_CHG_REG_CHG_CNFG_03, &reg_data);
+
+	reg_data &= ~MAX77693_TOPOFF_TIME_MASK;
+	reg_data |= time;
 
 	max77693_register_lock(charger, 0);
 
-	if (!cur) {
-		max77693_write_reg(charger->client,
-			MAX77693_CHG_REG_CHG_CNFG_09, 0);
-		max77693_set_buck(charger, DISABLE);
-		return;
-	} else
-		max77693_set_buck(charger, ENABLE);
-
-	set_current_reg = cur / 20;
-
-	msleep(SOFT_CHG_STEP_DUR);
-
-	step = 0;
-
-	do {
-		now_current_reg = ((SOFT_CHG_START_CURR +
-					(SOFT_CHG_CURR_STEP * (++step))) / 20);
-		now_current_reg = min(now_current_reg, set_current_reg);
-		max77693_write_reg(charger->client,
-			MAX77693_CHG_REG_CHG_CNFG_09, now_current_reg);
-		msleep(SOFT_CHG_STEP_DUR);
-	} while (now_current_reg < set_current_reg);
-
-	pr_info("%s: reg_data(0x%02x)\n", __func__, set_current_reg);
-
+	pr_info("%s: CHG_CNFG_03(0x%02x)\n", __func__, reg_data);
 	max77693_write_reg(charger->client,
-		MAX77693_CHG_REG_CHG_CNFG_09, set_current_reg);
-
+			MAX77693_CHG_REG_CHG_CNFG_03, reg_data);
 	max77693_register_lock(charger, 1);
-
 }
 
 static int max77693_get_input_current(struct sec_charger_info *charger)
@@ -160,13 +155,39 @@ static int max77693_get_input_current(struct sec_charger_info *charger)
 	int get_current = 0;
 
 	max77693_read_reg(charger->client,
-		MAX77693_CHG_REG_CHG_CNFG_09, &reg_data);
-	pr_info("%s: CHG_CNFG_09(0x%02x)\n", __func__, reg_data);
+			MAX77693_CHG_REG_CHG_CNFG_09, &reg_data);
+	pr_debug("%s: CHG_CNFG_09(0x%02x)\n", __func__, reg_data);
 
 	get_current = reg_data * 20;
 
 	pr_debug("%s: get input current: %dmA\n", __func__, get_current);
 	return get_current;
+}
+
+static int max_input_current = 1100;
+
+static void max77693_set_input_current(struct sec_charger_info *charger,
+		int cur)
+{
+	int set_current_reg, now_current_reg;
+	int step;
+
+	max_input_current = cur;
+
+	max77693_register_lock(charger, 0);
+	max77693_write_reg(charger->client,
+		MAX77693_CHG_REG_CHG_CNFG_09, 0x5);
+
+	set_current_reg = cur / 20;
+	msleep(80);
+
+	max77693_write_reg(charger->client,
+		MAX77693_CHG_REG_CHG_CNFG_09, set_current_reg);
+
+	max77693_register_lock(charger, 1);
+	pr_info("%s: set input current : %d\n", __func__,
+			max77693_get_input_current(charger));
+
 }
 
 static void max77693_set_charge_current(struct sec_charger_info *charger,
@@ -225,19 +246,19 @@ static int max77693_get_vbus_state(struct sec_charger_info *charger)
 
 	switch (reg_data) {
 	case 0x00:
-		pr_info("%s: VBUS is invalid. CHGIN < CHGIN_UVLO\n",
+		pr_debug("%s: VBUS is invalid. CHGIN < CHGIN_UVLO\n",
 			__func__);
 		break;
 	case 0x01:
-		pr_info("%s: VBUS is invalid. CHGIN < MBAT+CHGIN2SYS"
+		pr_debug("%s: VBUS is invalid. CHGIN < MBAT+CHGIN2SYS"
 			"and CHGIN > CHGIN_UVLO\n", __func__);
 		break;
 	case 0x02:
-		pr_info("%s: VBUS is invalid. CHGIN > CHGIN_OVLO",
+		pr_debug("%s: VBUS is invalid. CHGIN > CHGIN_OVLO",
 			__func__);
 		break;
 	case 0x03:
-		pr_info("%s: VBUS is valid. CHGIN < CHGIN_OVLO", __func__);
+		pr_debug("%s: VBUS is valid. CHGIN < CHGIN_OVLO", __func__);
 		break;
 	default:
 		break;
@@ -254,7 +275,7 @@ static int max77693_get_charger_state(struct sec_charger_info *charger)
 	max77693_read_reg(charger->client,
 		MAX77693_CHG_REG_CHG_DTLS_01, &reg_data);
 	reg_data = ((reg_data & MAX77693_CHG_DTLS) >> MAX77693_CHG_DTLS_SHIFT);
-	pr_info("%s: CHG_DTLS : 0x%2x\n", __func__, reg_data);
+	pr_debug("%s: CHG_DTLS : 0x%2x\n", __func__, reg_data);
 
 	switch (reg_data) {
 	case 0x0:
@@ -297,31 +318,31 @@ static int max77693_get_health_state(struct sec_charger_info *charger)
 	pr_info("%s: BAT_DTLS : %d", __func__, reg_data);
 	switch (reg_data) {
 	case 0x00:
-		pr_info("%s: No battery and the charger is suspended\n",
+		pr_debug("%s: No battery and the charger is suspended\n",
 			__func__);
 		state = POWER_SUPPLY_HEALTH_UNKNOWN;
 	case 0x01:
 		state = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
 		break;
 	case 0x02:
-		pr_info("%s: battery dead\n", __func__);
+		pr_debug("%s: battery dead\n", __func__);
 		state = POWER_SUPPLY_HEALTH_DEAD;
 		break;
 	case 0x03:
-		pr_info("%s: battery good\n", __func__);
+		pr_debug("%s: battery good\n", __func__);
 		state = POWER_SUPPLY_HEALTH_GOOD;
 		break;
 	case 0x04:
-		pr_info("%s: battery is okay "
+		pr_debug("%s: battery is okay "
 			"but its voltage is low\n", __func__);
 		state = POWER_SUPPLY_HEALTH_GOOD;
 		break;
 	case 0x05:
-		pr_info("%s: battery ovp\n", __func__);
+		pr_debug("%s: battery ovp\n", __func__);
 		state = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
 		break;
 	default:
-		pr_info("%s: battery unknown : 0x%d\n", __func__, reg_data);
+		pr_debug("%s: battery unknown : 0x%d\n", __func__, reg_data);
 		state = POWER_SUPPLY_HEALTH_UNKNOWN;
 		break;
 	}
@@ -351,10 +372,45 @@ static int sec_chg_get_property(struct power_supply *psy,
 {
 	struct sec_charger_info *charger =
 		container_of(psy, struct sec_charger_info, psy_chg);
+	u8 vbus_state, reg_data, dtls_01;
+	u8 vbus, adc, chgtyp;
+	int count = 0;
 
 	switch (psp) {
 	case POWER_SUPPLY_PROP_ONLINE:
-		val->intval = charger->charging_current ? 1 : 0;
+		max77693_muic_charger_detect(&vbus, &adc, &chgtyp);
+		max77693_read_reg(charger->client,
+				MAX77693_CHG_REG_CHG_DTLS_01, &dtls_01);
+		if (vbus && !(dtls_01 & 0x8)) {
+			vbus_state = max77693_get_vbus_state(charger);
+			while (vbus_state <= 0x1 && count < 10) {
+				max77693_read_reg(charger->client,
+					MAX77693_CHG_REG_CHG_CNFG_09,
+					&reg_data);
+
+				if (reg_data <= 5)
+					break;
+				else
+					reg_data -= 5;
+
+				max77693_write_reg(charger->client,
+					MAX77693_CHG_REG_CHG_CNFG_09, reg_data);
+				pr_info("%s: Under Voltage Current re-set:%d\n",
+					__func__, reg_data * 20);
+				count++;
+				msleep(200);
+
+				vbus_state = max77693_get_vbus_state(charger);
+			}
+		}
+
+		max77693_read_reg(charger->client,
+				MAX77693_CHG_REG_CHG_DTLS_01, &dtls_01);
+		max77693_read_reg(charger->client,
+				MAX77693_CHG_REG_CHG_CNFG_09, &reg_data);
+		vbus_state = max77693_get_vbus_state(charger);
+
+		val->intval = dtls_01 & 0x0f;
 		break;
 	case POWER_SUPPLY_PROP_STATUS:
 		val->intval = max77693_get_charger_state(charger);
@@ -382,6 +438,7 @@ static int sec_chg_set_property(struct power_supply *psy,
 {
 	struct sec_charger_info *charger =
 		container_of(psy, struct sec_charger_info, psy_chg);
+	u8 vbus, adc, chgtyp, charge_status;
 
 	switch (psp) {
 	/* val->intval : type */
@@ -392,17 +449,50 @@ static int sec_chg_set_property(struct power_supply *psy,
 		else
 			charger->is_charging = true;
 
+		max77693_muic_charger_detect(&vbus, &adc, &chgtyp);
+
 		/* current setting */
-		charger->charging_current =
+		charger->charging_current = vbus || charger->is_charging ?
 			charger->pdata->charging_current[
-			val->intval].fast_charging_current;
-		max77693_set_charge_current(charger,
-				charger->charging_current);
-		max77693_set_input_current(charger, charger->charging_current);
-		max77693_set_charger_state(charger, charger->is_charging);
-		max77693_set_termination_current(charger,
+			val->intval].fast_charging_current :
 			charger->pdata->charging_current[
-				val->intval].full_check_current_1st);
+			POWER_SUPPLY_TYPE_BATTERY].fast_charging_current;
+
+		max77693_read_reg(charger->client,
+			MAX77693_CHG_REG_CHG_CNFG_00, &charge_status);
+
+		if ((charge_status & 0x1) != charger->is_charging) {
+			pr_info("%s: Charge Status Changed : %d\n", __func__,
+				charger->is_charging);
+			mutex_lock(&init_lock);
+			max77693_set_buck(charger, DISABLE);
+			max77693_set_charge_current(charger,
+					charger->charging_current);
+
+			if (charger->is_charging) {
+				max77693_set_toff_time(charger, 0);
+				max77693_set_termination_current(charger,
+					charger->pdata->charging_current[
+					val->intval].full_check_current_1st);
+			}
+
+			if (charger->is_charging) {
+				/* if not set, input current default 500mA */
+				max77693_set_input_current(charger, 100);
+				msleep(20);
+			}
+
+			if (vbus)
+				max77693_set_buck(charger, ENABLE);
+
+			max77693_set_charger_state(charger,
+					charger->is_charging);
+
+			if (charger->is_charging)
+				max77693_set_input_current(charger,
+					charger->charging_current);
+			mutex_unlock(&init_lock);
+		}
 		break;
 	/* val->intval : charging current */
 	case POWER_SUPPLY_PROP_CURRENT_NOW:
@@ -420,6 +510,9 @@ static void max77693_charger_initialize(struct sec_charger_info *charger)
 	u8 reg_data;
 	pr_debug("%s\n", __func__);
 
+	/* Buck always enable */
+	max77693_set_buck(charger, ENABLE);
+
 	/* unlock charger setting protect */
 	max77693_register_lock(charger, 0);
 	/*
@@ -433,7 +526,7 @@ static void max77693_charger_initialize(struct sec_charger_info *charger)
 
 	reg_data = 0xb0;
 
-	pr_info("%s: CHG_REG_CHG_CNFG_01 : 0x%02x\n", __func__, reg_data);
+	pr_debug("%s: CHG_REG_CHG_CNFG_01 : 0x%02x\n", __func__, reg_data);
 
 	max77693_write_reg(charger->client,
 		MAX77693_CHG_REG_CHG_CNFG_01, reg_data);
@@ -448,7 +541,7 @@ static void max77693_charger_initialize(struct sec_charger_info *charger)
 
 	reg_data |= MAX77693_OTG_ILIM;
 
-	pr_info("%s: CHG_REG_CHG_CNFG_02 : 0x%02x\n", __func__, reg_data);
+	pr_debug("%s: CHG_REG_CHG_CNFG_02 : 0x%02x\n", __func__, reg_data);
 
 	max77693_write_reg(charger->client,
 		MAX77693_CHG_REG_CHG_CNFG_02, reg_data);
@@ -457,12 +550,8 @@ static void max77693_charger_initialize(struct sec_charger_info *charger)
 	 * top off current 100mA
 	 * top off timer 0min
 	 */
-	max77693_read_reg(charger->client,
-		MAX77693_CHG_REG_CHG_CNFG_03, &reg_data);
-
-	reg_data = 0x18;
-
-	pr_info("%s: CHG_REG_CHG_CNFG_03 : 0x%02x\n", __func__, reg_data);
+	reg_data = 0x0;
+	pr_debug("%s: CHG_REG_CHG_CNFG_03 : 0x%02x\n", __func__, reg_data);
 
 	max77693_write_reg(charger->client,
 		MAX77693_CHG_REG_CHG_CNFG_03, reg_data);
@@ -476,12 +565,12 @@ static void max77693_charger_initialize(struct sec_charger_info *charger)
 
 	reg_data  = (reg_data & 0x80) | (0xDD << 0);
 
-	pr_info("%s: battery cv voltage %s, (sysrev %d)\n", __func__,
+	pr_debug("%s: battery cv voltage %s, (sysrev %d)\n", __func__,
 		(((reg_data & MAX77693_CHG_PRM_MASK) == \
 		(0x1D << MAX77693_CHG_PRM_SHIFT)) ? "4.35V" : "4.2V"),
 		system_rev);
 
-	pr_info("%s: CHG_REG_CHG_CNFG_04 : 0x%02x\n", __func__, reg_data);
+	pr_debug("%s: CHG_REG_CHG_CNFG_04 : 0x%02x\n", __func__, reg_data);
 
 	max77693_write_reg(charger->client,
 		MAX77693_CHG_REG_CHG_CNFG_04, reg_data);
@@ -494,7 +583,7 @@ static void max77693_charger_initialize(struct sec_charger_info *charger)
 	max77693_write_reg(charger->client,
 		MAX77693_CHG_REG_CHG_CNFG_11, reg_data);
 
-	pr_info("%s: CHG_REG_CHG_CNFG_11 : 0x%02x\n", __func__, reg_data);
+	pr_debug("%s: CHG_REG_CHG_CNFG_11 : 0x%02x\n", __func__, reg_data);
 
 	max77693_register_lock(charger, 1);
 }
@@ -609,13 +698,72 @@ static irqreturn_t sec_chg_irq_thread(int irq, void *irq_data)
 {
 	struct sec_charger_info *charger = irq_data;
 
-	pr_info("%s: Charger interrupt occured\n", __func__);
-
 	if ((charger->pdata->full_check_type ==
 				SEC_BATTERY_FULLCHARGED_CHGINT) ||
 			(charger->pdata->ovp_uvlo_check_type ==
 			 SEC_BATTERY_OVP_UVLO_CHGINT))
 		schedule_delayed_work(&charger->isr_work, 0);
+
+	return IRQ_HANDLED;
+}
+
+static irqreturn_t sec_bypass_irq_thread(int irq, void *irq_data)
+{
+	struct sec_charger_info *charger = irq_data;
+	struct power_supply *psy_bat = power_supply_get_by_name("battery");
+	union power_supply_propval val;
+
+	u8 dtls_00, dtls_01, dtls_02;
+	u8 chgin_dtls, chg_dtls, bat_dtls, byp_dtls;
+	u8 vbus, adc, chgtyp, reg_data;
+
+	mutex_lock(&isr_lock);
+	max77693_register_lock(charger, 0);
+
+	max77693_read_reg(charger->client,
+		MAX77693_CHG_REG_CHG_DTLS_00, &dtls_00);
+	chgin_dtls = dtls_00 >> 5;
+
+	max77693_read_reg(charger->client,
+		MAX77693_CHG_REG_CHG_DTLS_01, &dtls_01);
+	chg_dtls = dtls_01 & 0x0f;
+	bat_dtls = (dtls_01 & 0xf0) >> 4;
+
+	max77693_read_reg(charger->client,
+		MAX77693_CHG_REG_CHG_DTLS_02, &dtls_02);
+	byp_dtls = dtls_02 & 0x0f;
+
+	max77693_muic_charger_detect(&vbus, &adc, &chgtyp);
+
+	pr_info("%s: CHG_DTLS(%d) BAT_DTLS(%d), BYP_DTLS(%d)\n",
+		__func__, chg_dtls, bat_dtls, byp_dtls);
+
+	pr_info("%s: vbus(%d), adc(%d), chgtyp(%d)\n", __func__,
+		vbus, adc, chgtyp);
+
+	if (chg_dtls & 0x08) {
+		val.intval = POWER_SUPPLY_TYPE_BATTERY;
+		if (psy_bat) {
+			psy_bat->set_property(psy_bat,
+				POWER_SUPPLY_PROP_ONLINE, &val);
+			power_supply_changed(psy_bat);
+		}
+	} else if (chgin_dtls <= 0x1) {
+		max77693_read_reg(charger->client,
+			MAX77693_CHG_REG_CHG_CNFG_09, &reg_data);
+
+		/* min current set 100mA */
+		reg_data = (reg_data - 5 <= 5) ? 5 : reg_data - 5;
+
+		max77693_write_reg(charger->client,
+			MAX77693_CHG_REG_CHG_CNFG_09, reg_data);
+
+		pr_info("%s: Under Voltage Current re-set :%d\n",
+			__func__, reg_data * 20);
+	}
+
+	max77693_register_lock(charger, 1);
+	mutex_unlock(&isr_lock);
 
 	return IRQ_HANDLED;
 }
@@ -626,6 +774,7 @@ static __devinit int max77693_charger_probe(struct platform_device *pdev)
 	struct max77693_platform_data *pdata = dev_get_platdata(iodev->dev);
 	struct sec_charger_info *charger;
 	int ret = 0;
+	int irq_bypass;
 
 	pr_info("%s: MAX77693 Charger driver probe\n", __func__);
 
@@ -672,6 +821,14 @@ static __devinit int max77693_charger_probe(struct platform_device *pdev)
 			pr_err("%s: Failed to Reqeust IRQ\n", __func__);
 			goto err_irq;
 		}
+	}
+
+	irq_bypass = OMAP_MAX77693_IRQ_BASE + MAX77693_CHG_IRQ_BYP_I;
+	ret = request_threaded_irq(irq_bypass, NULL, sec_bypass_irq_thread,
+			0, "bypass-irq", charger);
+	if (ret) {
+		pr_err("%s: Failed to Reqeust IRQ\n", __func__);
+		goto err_irq;
 	}
 
 	max77693_dentry = debugfs_create_file("max77693-regs",
@@ -732,7 +889,7 @@ static struct platform_driver max77693_charger_driver = {
 
 static int __init max77693_charger_init(void)
 {
-	pr_info("func:%s\n", __func__);
+	pr_debug("func:%s\n", __func__);
 	return platform_driver_register(&max77693_charger_driver);
 }
 module_init(max77693_charger_init);

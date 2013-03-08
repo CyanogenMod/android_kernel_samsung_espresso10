@@ -34,6 +34,8 @@
 #include <linux/bat_manager.h>
 #include <linux/gpio.h>
 
+#define DEBUG_PRINT 0
+
 #define FAST_POLL	(1 * 40)
 #define SLOW_POLL	(30 * 60)
 
@@ -496,6 +498,7 @@ static void battery_manager_work(struct work_struct *work)
 			(di->charge_status != prev_status))
 		power_supply_changed(&di->psy_bat);
 
+#if DEBUG_PRINT
 	dev_info(di->dev, "vcell = %d soc = %d  current = %d avg_current = %d "
 		"status = %d health = %d temp = %d "
 		"discharge status = %d, limit time : %ld, bootmode : %d\n",
@@ -503,6 +506,7 @@ static void battery_manager_work(struct work_struct *work)
 		di->bat_info.avg_current, di->charge_status,
 		di->bat_info.health, di->bat_info.temp,
 		di->discharge_status, di->chg_limit_time, di->pdata->bootmode);
+#endif
 
 	di->last_poll = alarm_get_elapsed_realtime();
 	ts = ktime_to_timespec(di->last_poll);

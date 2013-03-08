@@ -2641,7 +2641,7 @@ static void sd_probe_async(void *data, async_cookie_t cookie)
 #ifdef CONFIG_USB_HOST_NOTIFY
 	if (sdp->host->by_usb)
 		gd->interfaces = GENHD_IF_USB;
-	msleep(500);
+	msleep(300);
 #endif
 
 	add_disk(gd);

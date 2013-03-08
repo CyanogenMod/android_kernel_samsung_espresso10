@@ -4774,7 +4774,7 @@ static int __devinit ts_probe(struct i2c_client *client,
 #endif
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 1;
+	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 3;
 	ts->early_suspend.suspend = ts_early_suspend;
 	ts->early_suspend.resume = ts_late_resume;
 	register_early_suspend(&ts->early_suspend);

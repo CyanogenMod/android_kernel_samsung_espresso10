@@ -53,6 +53,8 @@
 #define DUTY_MAX	81
 #define PWM_DUTY_MAX			1600 /* 25kHz */
 
+#define DEBUG_PRINT 0
+
 struct ltn101al03 {
 	struct device *dev;
 	struct omap_dss_device *dssdev;
@@ -267,8 +269,10 @@ static int ltn101al03_set_brightness(struct backlight_device *bd)
 		(lcd->enabled) &&
 		(lcd->current_brightness != lcd->bl)) {
 		update_brightness(dssdev);
+#if DEBUG_PRINT
 		dev_info(&bd->dev, "[%d] brightness=%d, bl=%d\n",
 			 lcd->pdata->panel_id, bd->props.brightness, lcd->bl);
+#endif
 	}
 	mutex_unlock(&lcd->lock);
 	return ret;
@@ -308,7 +312,9 @@ static ssize_t ltn101al03_sysfs_store_lcd_power(struct device *dev,
 	if (rc < 0)
 		return rc;
 
+#if DEBUG_PRINT
 	dev_info(dev, "ltn101al03_sysfs_store_lcd_power - %d\n", lcd_enable);
+#endif
 
 	mutex_lock(&lcd->lock);
 	if (lcd_enable) {

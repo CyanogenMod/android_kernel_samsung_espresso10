@@ -42,7 +42,7 @@ static struct omap2_hsmmc_info espresso10_mmc_info[] = {
 		.gpio_wp	= -EINVAL,
 		.gpio_cd	= -EINVAL,
 #ifdef CONFIG_PM_RUNTIME
-		.power_saving = true,
+		.power_saving = false,
 #endif
 	},
 	{
@@ -51,7 +51,7 @@ static struct omap2_hsmmc_info espresso10_mmc_info[] = {
 		.gpio_wp	= -EINVAL,
 		.gpio_cd	= -EINVAL,
 #ifdef CONFIG_PM_RUNTIME
-		.power_saving = true,
+		.power_saving = false,
 #endif
 	},
 	{

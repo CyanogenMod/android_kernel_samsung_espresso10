@@ -13,7 +13,7 @@
  *
  */
 
-#define DEBUG_PRINT			1
+#define DEBUG_PRINT			0
 
 #if DEBUG_PRINT
 #define	tsp_log(fmt, args...) \
@@ -1156,9 +1156,9 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 		if ((buf[i] & 0x80) == 0) {
 			cnt--;
 #if TRACKING_COORD
-			pr_info("tsp: finger %d up (%d, %d)\n", id, x, y);
+			tsp_log("tsp: finger %d up (%d, %d)\n", id, x, y);
 #else
-			pr_info("tsp: finger %d up remain: %d", id, cnt);
+			tsp_log("tsp: finger %d up remain: %d", id, cnt);
 #endif
 			input_mt_slot(ts->input_dev, id);
 			input_mt_report_slot_state(ts->input_dev,
@@ -1182,13 +1182,13 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 			ts->finger_state[id] = 1;
 			cnt++;
 #if TRACKING_COORD
-			pr_info("tsp: finger %d down (%d, %d)\n", id, x, y);
+			tsp_log("tsp: finger %d down (%d, %d)\n", id, x, y);
 #else
-			pr_info("tsp: finger %d down remain: %d", id, cnt);
+			tsp_log("tsp: finger %d down remain: %d", id, cnt);
 #endif
 		} else {
 #if TRACKING_COORD
-			pr_info("tsp: finger %d move (%d, %d)\n", id, x, y);
+			tsp_log("tsp: finger %d move (%d, %d)\n", id, x, y);
 #endif
 		}
 	}

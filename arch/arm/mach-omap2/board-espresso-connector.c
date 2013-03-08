@@ -1230,7 +1230,7 @@ void __init omap4_espresso_connector_init(void)
 		pr_err("espresso_otg: cannot set transceiver (%d)\n", ret);
 
 	omap4430_phy_init(&espresso_otg->dev);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET);
+	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
 	espresso_otg_set_suspend(&espresso_otg->otg, 0);
 	espresso_vbus_detect_init(espresso_otg);
 #ifdef CONFIG_USB_HOST_NOTIFY

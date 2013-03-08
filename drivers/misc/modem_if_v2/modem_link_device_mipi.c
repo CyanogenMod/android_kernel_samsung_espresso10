@@ -30,6 +30,7 @@
 #include "modem_link_device_mipi.h"
 #include "modem_utils.h"
 
+#define DEBUG_PRINT 0
 
 static int mipi_hsi_init_communication(struct link_device *ld,
 			struct io_device *iod)
@@ -231,7 +232,7 @@ static void mipi_hsi_tx_work(struct work_struct *work)
 			}  else {
 				mipi_debug("write Done\n");
 
-#if 0
+#if DEBUG_PRINT
 				if ((iod->format == IPC_FMT) ||
 						(iod->format == IPC_RFS))
 					print_hex_dump(KERN_DEBUG,
@@ -498,17 +499,15 @@ static int hsi_init_handshake(struct mipi_link_device *mipi_ld, int mode)
 		if (timer_pending(&mipi_ld->hsi_acwake_down_timer))
 			del_timer(&mipi_ld->hsi_acwake_down_timer);
 
-		if (mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].opened) {
-			hsi_ioctl(mipi_ld->hsi_channles[
-			HSI_FLASHLESS_CHANNEL].dev, HSI_IOCTL_SW_RESET,
-						NULL);
-			for (i = 0; i < HSI_NUM_OF_USE_CHANNELS; i++)
-				mipi_ld->hsi_channles[i].opened = 0;
-		}
 
 		if (!mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].opened)
 			if_hsi_open_channel(
 				&mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL]);
+
+		hsi_ioctl(mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].dev,
+				HSI_IOCTL_SET_WAKE_RX_3WIRES_MODE, NULL);
+		mipi_debug("Set 3 WIRE MODE\n");
+
 		mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].send_step
 					= STEP_IDLE;
 		mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].recv_step
@@ -531,9 +530,7 @@ static int hsi_init_handshake(struct mipi_link_device *mipi_ld, int mode)
 					HSI_IOCTL_SET_RX, &rx_config);
 		mipi_debug("Set TX/RX MIPI-HSI\n");
 
-		hsi_ioctl(mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].dev,
-				HSI_IOCTL_SET_WAKE_RX_3WIRES_MODE, NULL);
-		mipi_debug("Set 3 WIRE MODE\n");
+		
 
 		if (!wake_lock_active(&mipi_ld->wlock)) {
 			wake_lock(&mipi_ld->wlock);
@@ -551,20 +548,18 @@ static int hsi_init_handshake(struct mipi_link_device *mipi_ld, int mode)
 	case HSI_INIT_MODE_FLASHLESS_BOOT_EBL:
 		mipi_ld->ld.com_state = COM_BOOT_EBL;
 
-		if (mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].opened) {
-			hsi_ioctl(mipi_ld->hsi_channles[
-			HSI_FLASHLESS_CHANNEL].dev, HSI_IOCTL_SW_RESET,
-						NULL);
-			for (i = 0; i < HSI_NUM_OF_USE_CHANNELS; i++)
-				mipi_ld->hsi_channles[i].opened = 0;
-		}
-
+		
 		if (!mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].opened)
 			if_hsi_open_channel(
 				&mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL]);
 
 		hsi_ioctl(mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].dev,
+			HSI_IOCTL_SET_WAKE_RX_4WIRES_MODE, NULL);
+		mipi_debug("Set 4 WIRE MODE\n");
+
+		hsi_ioctl(mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].dev,
 					HSI_IOCTL_GET_TX, &tx_config);
+
 		tx_config.mode = 2;
 		tx_config.divisor = 0; /* Speed : 96MHz */
 		tx_config.channels = 1;
@@ -580,10 +575,7 @@ static int hsi_init_handshake(struct mipi_link_device *mipi_ld, int mode)
 					HSI_IOCTL_SET_RX, &rx_config);
 		mipi_debug("Set TX/RX MIPI-HSI\n");
 
-		hsi_ioctl(mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].dev,
-				HSI_IOCTL_SET_WAKE_RX_4WIRES_MODE, NULL);
-		mipi_debug("Set 4 WIRE MODE\n");
-
+		
 		if (!wake_lock_active(&mipi_ld->wlock)) {
 			wake_lock(&mipi_ld->wlock);
 			mipi_debug("wake_lock\n");
@@ -603,17 +595,16 @@ static int hsi_init_handshake(struct mipi_link_device *mipi_ld, int mode)
 	case HSI_INIT_MODE_CP_RAMDUMP:
 		mipi_ld->ld.com_state = COM_CRASH;
 
-		if (mipi_ld->hsi_channles[HSI_CP_RAMDUMP_CHANNEL].opened) {
-			hsi_ioctl(mipi_ld->hsi_channles[
-			HSI_CP_RAMDUMP_CHANNEL].dev, HSI_IOCTL_SW_RESET,
-						NULL);
-			for (i = 0; i < HSI_NUM_OF_USE_CHANNELS; i++)
-				mipi_ld->hsi_channles[i].opened = 0;
-		}
+		
 
 		if (!mipi_ld->hsi_channles[HSI_CP_RAMDUMP_CHANNEL].opened)
 			if_hsi_open_channel(
 				&mipi_ld->hsi_channles[HSI_CP_RAMDUMP_CHANNEL]);
+
+		hsi_ioctl(mipi_ld->hsi_channles[HSI_CP_RAMDUMP_CHANNEL].dev,
+				HSI_IOCTL_SET_WAKE_RX_4WIRES_MODE, NULL);
+		mipi_debug("Set 4 WIRE MODE\n");
+
 		mipi_ld->hsi_channles[HSI_CP_RAMDUMP_CHANNEL].send_step
 					= STEP_IDLE;
 		mipi_ld->hsi_channles[HSI_CP_RAMDUMP_CHANNEL].recv_step
@@ -636,9 +627,6 @@ static int hsi_init_handshake(struct mipi_link_device *mipi_ld, int mode)
 					HSI_IOCTL_SET_RX, &rx_config);
 		mipi_debug("Set TX/RX MIPI-HSI\n");
 
-		hsi_ioctl(mipi_ld->hsi_channles[HSI_CP_RAMDUMP_CHANNEL].dev,
-				HSI_IOCTL_SET_WAKE_RX_4WIRES_MODE, NULL);
-		mipi_debug("Set 4 WIRE MODE\n");
 
 		if (!wake_lock_active(&mipi_ld->wlock)) {
 			wake_lock(&mipi_ld->wlock);
@@ -1336,8 +1324,10 @@ static int if_hsi_write(struct if_hsi_channel *channel, u32 *data,
 		mipi_err("ch=%d, hsi_write_done timeout : %d\n",
 					channel->channel_id, size);
 
+#if DEBUG_PRINT
 		print_hex_dump_bytes("[HSI]", DUMP_PREFIX_OFFSET,
 						channel->tx_data, size);
+#endif
 
 		hsi_write_cancel(channel->dev);
 
@@ -1556,8 +1546,10 @@ static void if_hsi_read_done(struct hsi_device *dev, unsigned int size)
 			if (ret)
 				mipi_err("send_cmd fail=%d\n", ret);
 
+#if DEBUG_PRINT
 			print_hex_dump_bytes("[HSI]", DUMP_PREFIX_OFFSET,
 					channel->rx_data, channel->packet_size);
+#endif
 
 			/* to clean the all wrong packet */
 			channel->packet_size = 0;
@@ -1565,7 +1557,7 @@ static void if_hsi_read_done(struct hsi_device *dev, unsigned int size)
 			return;
 		}
 
-#if 0
+#if DEBUG_PRINT
 		if ((iod->format == IPC_FMT) ||
 					(iod->format == IPC_RFS))
 			print_hex_dump(KERN_DEBUG,
