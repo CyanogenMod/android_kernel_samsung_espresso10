@@ -188,10 +188,10 @@ typedef BWL_PRE_PACKED_STRUCT struct bcm_event {
 #define WLC_E_AUTH_REQ		91	
 #define WLC_E_TDLS_PEER_EVENT 	92	
 #define WLC_E_SPEEDY_RECREATE_FAIL	93	
-#define WLC_E_SERVICE_FOUND             102     
-#define WLC_E_GAS_FRAGMENT_RX   103     
-#define WLC_E_GAS_COMPLETE              104     
-#define WLC_E_LAST                      105     
+#define WLC_E_SERVICE_FOUND             102
+#define WLC_E_GAS_FRAGMENT_RX   103
+#define WLC_E_GAS_COMPLETE              104
+#define WLC_E_LAST                      105
 
 
 

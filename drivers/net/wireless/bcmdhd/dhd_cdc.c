@@ -1845,7 +1845,7 @@ dhd_wlfc_txcomplete(dhd_pub_t *dhd, void *txp, bool success)
 static int
 dhd_wlfc_compressed_txstatus_update(dhd_pub_t *dhd, uint8* pkt_info, uint8 len)
 {
-	uint8 	status_flag;
+	uint8	status_flag;
 	uint32	status;
 	int		ret;
 	int		remove_from_hanger = 1;

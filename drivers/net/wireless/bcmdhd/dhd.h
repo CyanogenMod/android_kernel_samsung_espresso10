@@ -425,7 +425,7 @@ void dhd_net_if_unlock(struct net_device *dev);
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 25)) && 1
 extern struct mutex _dhd_sdio_mutex_lock_;
-#endif 
+#endif
 
 typedef struct dhd_if_event {
 	uint8 ifidx;
@@ -543,10 +543,10 @@ extern int dhd_dev_get_pno_status(struct net_device *dev);
 #define DHD_MULTICAST4_FILTER_NUM	2
 #define DHD_MULTICAST6_FILTER_NUM	3
 #define DHD_MDNS_FILTER_NUM			4
-extern int 	dhd_os_enable_packet_filter(dhd_pub_t *dhdp, int val);
-extern void 	dhd_enable_packet_filter(int value, dhd_pub_t *dhd);
-extern int 	net_os_enable_packet_filter(struct net_device *dev, int val);
-extern int 	net_os_rxfilter_add_remove(struct net_device *dev, int val, int num);
+extern int	dhd_os_enable_packet_filter(dhd_pub_t *dhdp, int val);
+extern void	dhd_enable_packet_filter(int value, dhd_pub_t *dhd);
+extern int	net_os_enable_packet_filter(struct net_device *dev, int val);
+extern int	net_os_rxfilter_add_remove(struct net_device *dev, int val, int num);
 #endif /* PKT_FILTER_SUPPORT */
 
 extern int dhd_get_suspend_bcn_li_dtim(dhd_pub_t *dhd);
@@ -697,30 +697,30 @@ extern uint dhd_force_tx_queueing;
 #define NULL_PKT_STR	"null_pkt"
 
 /* hooks for custom glom setting option via Makefile */
-#define DEFAULT_GLOM_VALUE 	-1
+#define DEFAULT_GLOM_VALUE	-1
 #ifndef CUSTOM_GLOM_SETTING
-#define CUSTOM_GLOM_SETTING 	DEFAULT_GLOM_VALUE
+#define CUSTOM_GLOM_SETTING	DEFAULT_GLOM_VALUE
 #endif
 
 /* hooks for custom Roaming Trigger  setting via Makefile */
 #define DEFAULT_ROAM_TRIGGER_VALUE -75 /* dBm default roam trigger all band */
-#define DEFAULT_ROAM_TRIGGER_SETTING 	-1
+#define DEFAULT_ROAM_TRIGGER_SETTING	-1
 #ifndef CUSTOM_ROAM_TRIGGER_SETTING
-#define CUSTOM_ROAM_TRIGGER_SETTING 	DEFAULT_ROAM_TRIGGER_VALUE
+#define CUSTOM_ROAM_TRIGGER_SETTING	DEFAULT_ROAM_TRIGGER_VALUE
 #endif
 
 /* hooks for custom Roaming Romaing  setting via Makefile */
 #define DEFAULT_ROAM_DELTA_VALUE  10 /* dBm default roam delta all band */
-#define DEFAULT_ROAM_DELTA_SETTING 	-1
+#define DEFAULT_ROAM_DELTA_SETTING	-1
 #ifndef CUSTOM_ROAM_DELTA_SETTING
-#define CUSTOM_ROAM_DELTA_SETTING 	DEFAULT_ROAM_DELTA_VALUE
+#define CUSTOM_ROAM_DELTA_SETTING	DEFAULT_ROAM_DELTA_VALUE
 #endif
 
 
 /* hooks for custom dhd_dpc_prio setting option via Makefile */
 #define DEFAULT_DHP_DPC_PRIO  1
 #ifndef CUSTOM_DPC_PRIO_SETTING
-#define CUSTOM_DPC_PRIO_SETTING 	DEFAULT_DHP_DPC_PRIO
+#define CUSTOM_DPC_PRIO_SETTING		DEFAULT_DHP_DPC_PRIO
 #endif
 
 #define DEFAULT_SUSPEND_BCN_LI_DTIM		3

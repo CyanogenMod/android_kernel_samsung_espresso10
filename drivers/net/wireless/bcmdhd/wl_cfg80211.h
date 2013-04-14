@@ -2,13 +2,13 @@
  * Linux cfg80211 driver
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -76,7 +76,7 @@ do {										\
 	if ((wl_dbg_level & WL_DBG_ERR) && net_ratelimit()) {				\
 			printk(KERN_INFO "CFG80211-INFO2) %s : ", __func__);	\
 			printk args;						\
-		} 								\
+		}								\
 } while (0)
 #endif /* defined(DHD_DEBUG) */
 
@@ -119,7 +119,7 @@ do {										\
 	if (wl_dbg_level & WL_DBG_ERR) {				\
 			printk(KERN_INFO "CFG80211-TRACE) %s : ", __func__);	\
 			printk args;						\
-		} 								\
+		}								\
 } while (0)
 #else
 #define	WL_TRACE_HW4			WL_TRACE
@@ -157,11 +157,11 @@ do {									\
 #define WL_MIN_DWELL_TIME	100
 #define WL_LONG_DWELL_TIME 	1000
 #define IFACE_MAX_CNT 		2
-#define WL_SCAN_CONNECT_DWELL_TIME_MS 		200
-#define WL_SCAN_JOIN_PROBE_INTERVAL_MS 		20
-#define WL_SCAN_JOIN_ACTIVE_DWELL_TIME_MS 	320
-#define WL_SCAN_JOIN_PASSIVE_DWELL_TIME_MS 	400
-#define WL_AF_TX_MAX_RETRY 	5
+#define WL_SCAN_CONNECT_DWELL_TIME_MS		200
+#define WL_SCAN_JOIN_PROBE_INTERVAL_MS		20
+#define WL_SCAN_JOIN_ACTIVE_DWELL_TIME_MS	320
+#define WL_SCAN_JOIN_PASSIVE_DWELL_TIME_MS	400
+#define WL_AF_TX_MAX_RETRY	5
 
 #define WL_SCAN_TIMER_INTERVAL_MS	8000 /* Scan timeout */
 #define WL_CHANNEL_SYNC_RETRY 	5
@@ -483,7 +483,7 @@ struct parsed_ies {
 
 #ifdef WL11U
 /* Max length of Interworking element */
-#define IW_IES_MAX_BUF_LEN 		9
+#define IW_IES_MAX_BUF_LEN		9
 #endif
 
 /* private data of cfg80211 interface */

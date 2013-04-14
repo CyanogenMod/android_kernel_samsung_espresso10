@@ -598,7 +598,7 @@ extern void *_bcmutils_dummy_fn;
 
 
 #ifndef setbit
-#ifndef NBBY		  
+#ifndef NBBY
 #define	NBBY	8	
 #endif 
 #define	setbit(a, i)	(((uint8 *)a)[(i) / NBBY] |= 1 << ((i) % NBBY))
@@ -663,7 +663,7 @@ extern void *_bcmutils_dummy_fn;
 #else
 #define MACDBG				"%02x:%02x:%02x"
 #define MAC2STRDBG(ea) (ea)[0], (ea)[4], (ea)[5]
-#endif 
+#endif
 
 
 typedef struct bcm_bit_desc {
