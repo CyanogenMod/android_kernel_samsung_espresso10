@@ -1115,8 +1115,17 @@ ssize_t mms136_pivot_store(struct device *dev,
 		pivot = 1;
 	}
 
-	ts->platform_data->pivot = pivot;
-	pr_info("tsp: pivot mode=%d\n", pivot);
+	if (ts->platform_data->pivot != pivot) {
+		swap(ts->platform_data->x_pixel_size,
+					ts->platform_data->y_pixel_size);
+		input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0,
+					ts->platform_data->x_pixel_size, 0, 0);
+		input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0,
+					ts->platform_data->y_pixel_size, 0, 0);
+
+		ts->platform_data->pivot = pivot;
+		pr_info("tsp: pivot mode=%d\n", pivot);
+	}
 
 	return size;
 }
