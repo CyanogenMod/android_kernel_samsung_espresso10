@@ -360,6 +360,9 @@ int apparmor_bprm_set_creds(struct linux_binprm *bprm)
 	if (bprm->cred_prepared)
 		return 0;
 
+	/* XXX: someone who understands apparmor needs to fix this. */
+	BUG_ON(bprm->unsafe & LSM_UNSAFE_NO_NEW_PRIVS);
+
 	cxt = bprm->cred->security;
 	BUG_ON(!cxt);
 
