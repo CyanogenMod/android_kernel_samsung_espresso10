@@ -217,6 +217,9 @@ struct platform_device;
 struct bus_type *dss_get_bus(void);
 struct regulator *dss_get_vdds_dsi(void);
 struct regulator *dss_get_vdds_sdi(void);
+void omap_dss_request_high_bandwidth(struct device *dss_dev);
+void omap_dss_reset_high_bandwidth(struct device *dss_dev);
+void omap_dss_overlay_ensure_bw(void);
 
 /* display */
 int dss_suspend_all_devices(void);
@@ -615,6 +618,8 @@ int omapdss_hdmi_unregister_cec_callbacks(void);
 int omap_dss_ovl_set_info(struct omap_overlay *ovl,
 		struct omap_overlay_info *info);
 
+void hdmi_disable_video_boot(void);
+
 /* RFBI */
 #ifdef CONFIG_OMAP2_DSS_RFBI
 int rfbi_init_platform_driver(void);
@@ -648,5 +653,5 @@ void hdmi_set_forced_timing(int timing);
 int hdmi_get_forced_timing(void);
 #endif
 
-
+extern u32 sec_bootmode;
 #endif
