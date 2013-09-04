@@ -39,7 +39,6 @@
 #include <plat/omap-pm.h>
 
 #include <video/omapdss.h>
-
 #include "dss.h"
 #include "dss_features.h"
 
@@ -184,30 +183,23 @@ static inline void dss_uninitialize_debugfs(void)
  * can go so covers the higest supported resolution.
  */
 #define HIGH_RES_TPUT 600000 /* MiB/s */
-static void omap_dss_request_bandwidth(struct omap_dss_device *display)
+void omap_dss_request_high_bandwidth(struct device *dss_dev)
 {
-	struct device *dss_dev;
-
-	if (display->panel.timings.x_res * display->panel.timings.y_res >=
-							(1080 * 1920)) {
-		dss_dev = omap_hwmod_name_get_dev("dss_core");
-		if (dss_dev)
-			omap_pm_set_min_bus_tput(dss_dev,
-						 OCP_INITIATOR_AGENT,
-						 HIGH_RES_TPUT);
-		else
-			DSSDBG("Failed to set L3 bus speed\n");
-	}
+	if (IS_ERR_OR_NULL(dss_dev))
+		DSSERR("%s: wrong dss_dev pointer\n", __func__);
+	else if (!omap_pm_set_min_bus_tput(dss_dev,
+					OCP_INITIATOR_AGENT, HIGH_RES_TPUT))
+		return;
+	DSSDBG("Failed to set high L3 bus speed\n");
 }
 
-static void omap_dss_reset_bandwidth(void)
+void omap_dss_reset_high_bandwidth(struct device *dss_dev)
 {
-	struct device *dss_dev;
-	dss_dev = omap_hwmod_name_get_dev("dss_core");
 	if (IS_ERR_OR_NULL(dss_dev))
+		DSSERR("%s: wrong dss_dev pointer\n", __func__);
+	else if (!omap_pm_set_min_bus_tput(dss_dev, OCP_INITIATOR_AGENT, -1))
 		return;
-	omap_pm_set_min_bus_tput(dss_dev,
-				 OCP_INITIATOR_AGENT, -1);
+	DSSDBG("Failed to reset high L3 bus speed\n");
 }
 
 /* PLATFORM DEVICE */
@@ -502,7 +494,6 @@ static void omap_dss_driver_disable(struct omap_dss_device *dssdev)
 static int omap_dss_driver_enable(struct omap_dss_device *dssdev)
 {
 	int r;
-	omap_dss_request_bandwidth(dssdev);
 	r = dssdev->driver->enable_orig(dssdev);
 	if (!r && dssdev->state == OMAP_DSS_DISPLAY_ACTIVE)
 		blocking_notifier_call_chain(&dssdev->state_notifiers,
@@ -513,7 +504,12 @@ static int omap_dss_driver_enable(struct omap_dss_device *dssdev)
 static int omap_dss_driver_suspend(struct omap_dss_device *dssdev)
 {
 	int r = dssdev->driver->suspend_orig(dssdev);
-	omap_dss_reset_bandwidth();
+	return r;
+}
+
+static int omap_dss_driver_shutdown(struct omap_dss_device *dssdev)
+{
+	int r = dssdev->driver->shutdown_orig(dssdev);
 	return r;
 }
 
@@ -536,6 +532,9 @@ int omap_dss_register_driver(struct omap_dss_driver *dssdriver)
 
 	dssdriver->suspend_orig = dssdriver->suspend;
 	dssdriver->suspend = omap_dss_driver_suspend;
+
+	dssdriver->shutdown_orig = dssdriver->shutdown;
+	dssdriver->shutdown = omap_dss_driver_shutdown;
 
 	return driver_register(&dssdriver->driver);
 }

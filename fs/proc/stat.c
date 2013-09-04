@@ -6,7 +6,6 @@
 #include <linux/proc_fs.h>
 #include <linux/sched.h>
 #include <linux/seq_file.h>
-#include <linux/slab.h>
 #include <linux/time.h>
 #include <linux/irqnr.h>
 #include <asm/cputime.h>
@@ -134,24 +133,18 @@ static int show_stat(struct seq_file *p, void *v)
 static int stat_open(struct inode *inode, struct file *file)
 {
 	unsigned size = 4096 * (1 + num_possible_cpus() / 32);
-	char *buf;
 	struct seq_file *m;
 	int res;
 
-	/* don't ask for more than the kmalloc() max size */
-	if (size > KMALLOC_MAX_SIZE)
-		size = KMALLOC_MAX_SIZE;
-	buf = kmalloc(size, GFP_KERNEL);
-	if (!buf)
-		return -ENOMEM;
-
 	res = single_open(file, show_stat, NULL);
-	if (!res) {
-		m = file->private_data;
-		m->buf = buf;
-		m->size = size;
-	} else
-		kfree(buf);
+	if (res)
+		return res;
+
+	m = file->private_data;
+	res = seq_reserve(m, size);
+	if (res)
+		single_release(inode, file);
+
 	return res;
 }
 
