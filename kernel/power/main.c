@@ -355,9 +355,6 @@ static void cpufreq_min_limit(const char *buf, size_t count)
 		goto out;
 	}
 
-	pr_debug("%s: current max freq=%d req max freq=%d\n",
-		__func__, cpufreq_max_limit_val, cpufreq_min_limit_val);
-
 	if (cpufreq_min_locked)
 		omap_cpufreq_min_limit_free(DVFS_LOCK_ID_USER);
 
@@ -412,9 +409,6 @@ static void cpufreq_max_limit(const char *buf)
 		}
 		goto out;
 	}
-
-	pr_debug("%s: current min freq=%d req max freq=%d\n",
-		__func__, cpufreq_min_limit_val, cpufreq_max_limit_val);
 
 	if (cpufreq_max_locked)
 		omap_cpufreq_max_limit_free(DVFS_LOCK_ID_USER);

@@ -27,6 +27,9 @@
  * $Id: dhd_sec_feature.h 309548 2012-01-20 01:13:08Z $
  */
 
+#ifndef _dhd_sec_feature_h_
+#define _dhd_sec_feature_h_
+
 /* PROJECTS */
 
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO)\
@@ -73,6 +76,11 @@
 #endif
 
 /* REGION CODE */
+#ifndef CONFIG_WLAN_REGION_CODE
+#define CONFIG_WLAN_REGION_CODE 100
+#endif /* CONFIG_WLAN_REGION_CODE */
+
+/* REGION CODE */
 
 //#if (WLAN_REGION_CODE >= 100) && (WLAN_REGION_CODE < 200) /*EUR*/
 //#if (WLAN_REGION_CODE == 101) /*EUR ORG*/
@@ -85,20 +93,20 @@
 #undef USE_INITIAL_2G_SCAN_ORG
 #ifndef ROAM_ENABLE
 #define ROAM_ENABLE
-#endif
+#endif /* ROAM_ENABLE */
 #ifndef ROAM_API
 #define ROAM_API
-#endif
+#endif /* ROAM_API */
 #ifndef ROAM_CHANNEL_CACHE
 #define ROAM_CHANNEL_CACHE
-#endif
+#endif /* ROAM_CHANNEL_CACHE */
 #ifndef OKC_SUPPORT
 #define OKC_SUPPORT
-#endif
+#endif /* OKC_SUPPORT */
 
 #ifndef ROAM_AP_ENV_DETECTION
 #define ROAM_AP_ENV_DETECTION
-#endif
+#endif /* ROAM_AP_ENV_DETECTION */
 
 #undef WRITE_MACADDR
 #undef READ_MACADDR
@@ -106,26 +114,29 @@
 #define READ_MACADDR
 #else
 #define RDWR_MACADDR
-#endif
+#endif /* CONFIG_BCM4334 */
 
 #if (WLAN_REGION_CODE == 201) /* SKT */
-#endif
+#endif /* WLAN_REGION_CODE == 201 */
 
 #if (WLAN_REGION_CODE == 202) /* KTT */
 #define VLAN_MODE_OFF
-#define KEEP_ALIVE_PACKET_PERIOD_30_SEC
+#define CUSTOM_KEEP_ALIVE_SETTING	30000
 #define FULL_ROAMING_SCAN_PERIOD_60_SEC
-#endif
+#endif /* WLAN_REGION_CODE == 202 */
 
 #if (WLAN_REGION_CODE == 203) /* LGT */
-#endif
-#endif
+#endif /* WLAN_REGION_CODE == 203 */
+#endif /* WLAN_REGION_CODE >= 200 && WLAN_REGION_CODE < 300 */
 
 #if (WLAN_REGION_CODE >= 300) && (WLAN_REGION_CODE < 400) /* CHN */
 #define BCMWAPI_WPI
 #define BCMWAPI_WAI
-#endif
+#endif /* WLAN_REGION_CODE >= 300 && WLAN_REGION_CODE < 400 */
 
-#if !defined(READ_MACADDR) && !defined(WRITE_MACADDR) && !defined(RDWR_KORICS_MACADDR) && !defined(RDWR_MACADDR)
+#if !defined(READ_MACADDR) && !defined(WRITE_MACADDR)\
+	&& !defined(RDWR_KORICS_MACADDR) && !defined(RDWR_MACADDR)
 #define GET_MAC_FROM_OTP
-#endif
+#endif /* !READ_MACADDR && !WRITE_MACADDR && !RDWR_KORICS_MACADDR && !RDWR_MACADDR */
+
+#endif /* _dhd_sec_feature_h_ */

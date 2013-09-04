@@ -82,6 +82,8 @@ static struct omap_device_pm_latency omap_musb_latency[] = {
 	},
 };
 
+/* Commenting to avoid warning during compilation */
+/*
 static void usb_musb_mux_init(struct omap_musb_board_data *board_data)
 {
 	switch (board_data->interface_type) {
@@ -119,6 +121,7 @@ static void usb_musb_mux_init(struct omap_musb_board_data *board_data)
 		break;
 	}
 }
+*/
 
 static struct omap_musb_board_data musb_default_board_data = {
 	.interface_type		= MUSB_INTERFACE_ULPI,
