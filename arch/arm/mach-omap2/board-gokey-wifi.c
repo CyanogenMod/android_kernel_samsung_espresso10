@@ -250,9 +250,9 @@ static int gokey_wifi_power(int on)
 {
 	pr_debug("%s: %d\n", __func__, on);
 	gpio_set_value(gokey_vwlan.gpio, on);
-
-	gokey_wifi_power_state = on;
-
+#ifdef CONFIG_MP3_LP_MODE
+	cpufreq_lpmode.wifi_enabled = on;
+#endif
 	return 0;
 }
 

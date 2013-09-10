@@ -915,12 +915,16 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		omapfb_lock(fbdev);
 		fbdev->vsync_active = !!p.crt;
 
-		if (display->state == OMAP_DSS_DISPLAY_ACTIVE) {
-			if (p.crt)
-				omapfb_enable_vsync(fbdev);
+		if (p.crt)
+			if (display->state == OMAP_DSS_DISPLAY_ACTIVE)
+				omapfb_enable_vsync(fbdev, display->channel,
+						true);
 			else
-				omapfb_disable_vsync(fbdev);
-		}
+				r = -EBUSY;
+		else
+			omapfb_enable_vsync(fbdev, display->channel,
+					false);
+
 		omapfb_unlock(fbdev);
 		break;
 
