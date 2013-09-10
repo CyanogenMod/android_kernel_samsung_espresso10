@@ -125,6 +125,8 @@ struct menu_device {
 #define LOAD_INT(x) ((x) >> FSHIFT)
 #define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
 
+/* commenting this function because we r not using it currenlty*/
+#if 0
 static int get_loadavg(void)
 {
 	unsigned long this = this_cpu_load();
@@ -132,6 +134,7 @@ static int get_loadavg(void)
 
 	return LOAD_INT(this) * 10 + LOAD_FRAC(this) / 10;
 }
+#endif
 
 static inline int which_bucket(unsigned int duration)
 {
