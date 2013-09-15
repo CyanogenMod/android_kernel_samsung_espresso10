@@ -909,6 +909,28 @@ config CC_OPTIMIZE_FOR_SIZE
 
 	  If unsure, say Y.
 
+config OPTIMIZE_SIZE_GCC_48_FIXES
+  bool "Implemet gcc-4.8 fixes (EXPERIMENTAL)"
+  default y
+  depends on CC_OPTIMIZE_FOR_SIZE && GCC_48_FIXES
+  help
+    gcc 4.8 adds some new flags that are not really stable
+    when using Optimize for size, and can cause builds to fail
+    for certain target boards such as mako.  This fixes that.
+
+    If unsure, say N.
+
+config GCC_48_FIXES
+  bool "Implement gcc-4.8 fixes (EXPERIMENTAL)"
+  default n
+  help
+    gcc 4.8 adds some new flags that are not really stable,
+    and can cause builds to fail for certain target boards
+    such as mako.  This fixes that.
+
+    If unsure, say N.
+
+
 config SYSCTL
 	bool
 
