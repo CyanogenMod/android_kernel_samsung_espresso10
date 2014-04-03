@@ -42,8 +42,6 @@
 #include "musb_core.h"
 #include "omap2430.h"
 
-#define INIT_OTG_DELAY	800
-
 struct omap2430_glue {
 	struct device		*dev;
 	struct platform_device	*musb;
@@ -326,33 +324,25 @@ static void musb_otg_core_reset(struct musb *musb)
 
 static void musb_otg_init(struct musb *musb)
 {
-	unsigned long flags = 0;
 	pm_runtime_get_sync(musb->controller);
 
 	/* reset musb controller */
 #ifndef CONFIG_USB_SAMSUNG_OMAP_NORPM
 	musb_otg_core_reset(musb);
 #endif
-	spin_lock_irqsave(&musb->lock, flags);
+
 	if (otg_is_active(musb->xceiv))
 		otg_set_suspend(musb->xceiv, 1);
 
 	otg_set_suspend(musb->xceiv, 0);
-	spin_unlock_irqrestore(&musb->lock, flags);
 
 	otg_init(musb->xceiv);
-	msleep(musb->otg_enum_delay);
+	msleep(1000);
 	omap2430_musb_set_vbus(musb, 1);
-	musb->otg_enum_delay = INIT_OTG_DELAY;
 }
 
 #ifdef CONFIG_PM
 #ifdef CONFIG_USB_SAMSUNG_OMAP_NORPM
-int omap2430_async_resumed(struct musb *musb)
-{
-	return musb->async_resume;
-}
-
 int omap2430_async_suspend(struct musb *musb)
 {
 	struct platform_device *pdev
@@ -523,10 +513,6 @@ static void musb_otg_notifier_work(struct work_struct *data_notifier_work)
 	case USB_EVENT_HOST_NONE:
 #ifdef CONFIG_USB_SAMSUNG_OMAP_NORPM
 		dev_info(musb->controller, "USB host Disconnect. ID float\n");
-		if (!omap2430_async_resumed(musb)) {
-			dev_err(musb->controller, "async suspended. abnormal state.\n");
-			return;
-		}
 		musb_stop(musb);
 		musb_remove_hcd(musb);
 		if (data->interface_type == MUSB_INTERFACE_UTMI) {
@@ -551,14 +537,10 @@ static void musb_otg_notifier_work(struct work_struct *data_notifier_work)
 
 		dev_info(musb->controller, "VBUS Disconnect\n");
 #ifndef CONFIG_USB_SAMSUNG_OMAP_NORPM
-		if (pm_runtime_suspended(musb->controller)) {
-			dev_err(musb->controller, "runtime pm suspended. abnormal state.\n");
-			return;
-		}
+
 		spin_lock_irqsave(&musb->lock, flags);
 		musb_g_disconnect(musb);
 		spin_unlock_irqrestore(&musb->lock, flags);
-
 #ifdef CONFIG_USB_GADGET_MUSB_HDRC
 		if (is_otg_enabled(musb) || is_peripheral_enabled(musb))
 			if (musb->gadget_driver)
@@ -575,15 +557,11 @@ static void musb_otg_notifier_work(struct work_struct *data_notifier_work)
 		}
 		otg_shutdown(musb->xceiv);
 #else
-		if (!omap2430_async_resumed(musb)) {
-			dev_err(musb->controller, "async suspended. abnormal state.\n");
-			return;
-		}
 		musb_platform_pullup(musb, 0);
 		spin_lock_irqsave(&musb->lock, flags);
 		musb_stop(musb);
-		musb_g_disconnect(musb);
 		musb_all_ep_flush(musb);
+		musb_g_disconnect(musb);
 		spin_unlock_irqrestore(&musb->lock, flags);
 		if (data->interface_type == MUSB_INTERFACE_UTMI)
 			omap2430_musb_set_vbus(musb, 0);
@@ -662,8 +640,6 @@ static int omap2430_musb_init(struct musb *musb)
 
 	setup_timer(&musb_idle_timer, musb_do_idle, (unsigned long) musb);
 
-	musb->otg_enum_delay = INIT_OTG_DELAY;
-
 	pm_runtime_put_noidle(musb->controller);
 #ifdef CONFIG_USB_SAMSUNG_OMAP_NORPM
 	musb->reserve_async_suspend++;
@@ -680,6 +656,8 @@ err1:
 
 static void omap2430_musb_enable(struct musb *musb)
 {
+	u8		devctl;
+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
 	struct device *dev = musb->controller;
 	struct musb_hdrc_platform_data *pdata = dev->platform_data;
 	struct omap_musb_board_data *data = pdata->board_data;
@@ -726,10 +704,8 @@ static void omap2430_musb_enable(struct musb *musb)
 
 static void omap2430_musb_disable(struct musb *musb)
 {
-#if 0
 	if (musb->xceiv->last_event)
 		otg_shutdown(musb->xceiv);
-#endif
 }
 
 static int omap2430_musb_exit(struct musb *musb)
@@ -750,15 +726,11 @@ static int omap2430_musb_vbus_reset(struct musb *musb)
 
 	dev_info(musb->controller, "%s count=%d\n", __func__,
 					musb->vbus_reset_count);
-	if (musb->vbus_reset_count < 0)
-		goto err;
 	if (musb->vbus_reset_count < 5) {
-		if (musb->xceiv->start_hnp) {
+		if (musb->xceiv->start_hnp)
 			ret = otg_start_hnp(musb->xceiv);
-			musb->vbus_reset_count++;
-		}
 	}
-err:
+
 	return ret;
 }
 

@@ -35,39 +35,13 @@
  */
 #define PAGE_ALLOC_COSTLY_ORDER 3
 
-enum {
-	MIGRATE_UNMOVABLE,
-	MIGRATE_RECLAIMABLE,
-	MIGRATE_MOVABLE,
-	MIGRATE_PCPTYPES,   /* the number of types on the pcp lists */
-	MIGRATE_RESERVE = MIGRATE_PCPTYPES,
-	/*
-	 * MIGRATE_CMA migration type is designed to mimic the way
-	 * ZONE_MOVABLE works.  Only movable pages can be allocated
-	 * from MIGRATE_CMA pageblocks and page allocator never
-	 * implicitly change migration type of MIGRATE_CMA pageblock.
-	 *
-	 * The way to use it is to change migratetype of a range of
-	 * pageblocks to MIGRATE_CMA which can be done by
-	 * __free_pageblock_cma() function.  What is important though
-	 * is that a range of pageblocks must be aligned to
-	 * MAX_ORDER_NR_PAGES should biggest page be bigger then
-	 * a single pageblock.
-	 */
-	MIGRATE_CMA,
-	MIGRATE_ISOLATE,    /* can't allocate from here */
-	MIGRATE_TYPES
-};
-
-#ifdef CONFIG_CMA
-bool is_cma_pageblock(struct page *page);
-#define is_migrate_cma(migratetype) unlikely((migratetype) == MIGRATE_CMA)
-#define cma_wmark_pages(zone) (zone->min_cma_pages)
-#else
-#define is_cma_pageblock(page) false
-#define is_migrate_cma(migratetype) false
-#define cma_wmark_pages(zone) 0
-#endif
+#define MIGRATE_UNMOVABLE     0
+#define MIGRATE_RECLAIMABLE   1
+#define MIGRATE_MOVABLE       2
+#define MIGRATE_PCPTYPES      3 /* the number of types on the pcp lists */
+#define MIGRATE_RESERVE       3
+#define MIGRATE_ISOLATE       4 /* can't allocate from here */
+#define MIGRATE_TYPES         5
 
 #define for_each_migratetype_order(order, type) \
 	for (order = 0; order < MAX_ORDER; order++) \
@@ -141,7 +115,6 @@ enum zone_stat_item {
 	NUMA_OTHER,		/* allocation from other node */
 #endif
 	NR_ANON_TRANSPARENT_HUGEPAGES,
-	NR_FREE_CMA_PAGES,
 	NR_VM_ZONE_STAT_ITEMS };
 
 /*
@@ -343,12 +316,6 @@ struct zone {
 	/* see spanned/present_pages for more description */
 	seqlock_t		span_seqlock;
 #endif
-	/*
-	 * CMA needs to increase watermark levels during the allocation
-	 * process to make sure that the system is not starved.
-	 */
-	unsigned long       min_cma_pages;
-	bool                cma_alloc;
 	struct free_area	free_area[MAX_ORDER];
 
 #ifndef CONFIG_SPARSEMEM

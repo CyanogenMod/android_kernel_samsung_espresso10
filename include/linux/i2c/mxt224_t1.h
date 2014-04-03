@@ -95,10 +95,6 @@ struct mxt224_platform_data {
 	u8 noisethr_charging;
 	u8 movfilter_batt;
 	u8 movfilter_charging;
-	u8 actvsyncsperx_batt;
-	u8 actvsyncsperx_chrg;
-	u8 actvsyncsperx_chrg_err1;
-	u8 actvsyncsperx_chrg_err2;
 	u8 atchfrccalthr_e;
 	u8 atchfrccalratio_e;
 	const u8 *t48_config_batt_e;

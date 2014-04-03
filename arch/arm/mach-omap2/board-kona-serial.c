@@ -87,17 +87,10 @@ static void __init kona_i2c_init(void)
 	omap_register_i2c_bus(3, 400, NULL, 0);
 	omap_register_i2c_bus(4, 400, NULL, 0);
 
-	omap_mux_init_signal("i2c2_scl.i2c2_scl", OMAP_PIN_INPUT_PULLDOWN);
-	omap_mux_init_signal("i2c2_sda.i2c2_sda", OMAP_PIN_INPUT_PULLDOWN);
-
 	r = omap4_ctrl_pad_readl(OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_I2C_0);
-	r |= (1 << OMAP4_I2C2_SDA_PULLUPRESX_SHIFT);
-	r |= (1 << OMAP4_I2C2_SCL_PULLUPRESX_SHIFT);
 	r |= (1 << OMAP4_I2C3_SDA_PULLUPRESX_SHIFT);
 	r |= (1 << OMAP4_I2C3_SCL_PULLUPRESX_SHIFT);
 	omap4_ctrl_pad_writel(r, OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_I2C_0);
-
-
 }
 
 static struct i2c_gpio_platform_data kona_gpio_i2c5_pdata = {
@@ -205,21 +198,6 @@ static struct platform_device kona_gpio_i2c11_device = {
 	},
 };
 
-static struct i2c_gpio_platform_data kona_gpio_i2c12_pdata = {
-	/* .sda_pin = (LCD_FREQ_SDA), */
-	/* .scl_pin = (LCD_FREQ_SCL), */
-	.udelay = 10,
-	.timeout = 0,
-};
-
-static struct platform_device kona_gpio_i2c12_device = {
-	.name = "i2c-gpio",
-	.id = 12,
-	.dev = {
-		.platform_data = &kona_gpio_i2c12_pdata,
-	},
-};
-
 static struct i2c_gpio_platform_data kona_gpio_i2c13_pdata = {
 	/* .sda_pin = (BL_I2C_SDA), */
 	/* .scl_pin = (BL_I2C_SCL), */
@@ -268,10 +246,6 @@ static void __init kona_gpio_i2c_init(void)
 
 	/* gpio-i2c 13 */
 	KONA_SET_GPIO_4_I2C(13, "BL_I2C_SDA", "BL_I2C_SCL");
-
-	/* gpio-i2c 12 */
-	if (likely(system_rev >= 7))
-		KONA_SET_GPIO_4_I2C(12, "LCD_FREQ_SDA", "LCD_FREQ_SCL");
 }
 
 enum {
@@ -413,7 +387,4 @@ void __init omap4_kona_serial_init(void)
 	kona_uart_init();
 
 	platform_add_devices(kona_serial_devices, nr_gpio_i2c);
-
-	if (likely(system_rev >= 7))
-		platform_device_register(&kona_gpio_i2c12_device);
 }

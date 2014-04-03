@@ -962,14 +962,6 @@ config USB_ANDROID_SAMSUNG_MTP
 	  If you enable this option,
 	  google mtp will be changed to samsung mtp.
 
-config USB_ANDROID_MTP_LATE_INIT
-	boolean "Initializing Android USB depending on the rom type"
-	depends on USB_ANDROID_SAMSUNG_MTP
-	default n
-	help
-	  Gokhan Moral's tricky way of initializing android usb
-	  subsystem (Google or Samsung MTP) depending on the rom type
-
 config USB_DUN_SUPPORT
 	boolean "DUN support function"
 	depends on USB_G_ANDROID

@@ -36,7 +36,7 @@ struct hdcp hdcp;
 struct hdcp_sha_in sha_input;
 
 /* State machine / workqueue */
-/*static void hdcp_wq_disable(void);*/ /*temporary commenting*/
+static void hdcp_wq_disable(void);
 static void hdcp_wq_start_authentication(void);
 static void hdcp_wq_check_r0(void);
 static void hdcp_wq_step2_authentication(void);
@@ -110,8 +110,6 @@ static void hdcp_release_dss(void)
 #endif
 }
 
-/* commenting this func as we r not using it currently */
-#if 0
 /*-----------------------------------------------------------------------------
  * Function: hdcp_wq_disable
  *-----------------------------------------------------------------------------
@@ -124,7 +122,6 @@ static void hdcp_wq_disable(void)
 	hdcp_lib_disable();
 	hdcp.pending_disable = 0;
 }
-#endif
 
 /*-----------------------------------------------------------------------------
  * Function: hdcp_wq_start_authentication

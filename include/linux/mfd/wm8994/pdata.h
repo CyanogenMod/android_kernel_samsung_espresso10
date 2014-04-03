@@ -29,7 +29,7 @@ struct wm8994_ldo_pdata {
 #define WM8994_CONFIGURE_GPIO 0x10000
 
 #define WM8994_DRC_REGS 5
-#define WM8994_EQ_REGS  21
+#define WM8994_EQ_REGS  20
 #define WM8958_MBC_CUTOFF_REGS 20
 #define WM8958_MBC_COEFF_REGS  48
 #define WM8958_MBC_COMBINED_REGS 56
@@ -173,11 +173,6 @@ struct wm8994_pdata {
         unsigned int lineout1fb:1;
         unsigned int lineout2fb:1;
 
-	/* Delay between detecting a jack and starting microphone
-	 * detect (specified in ms)
-	 */
-	int micdet_delay;
-
 	/* IRQ for microphone detection if brought out directly as a
 	 * signal.
 	 */
@@ -217,13 +212,6 @@ struct wm8994_pdata {
 	 * system.
 	 */
 	bool spkmode_pu;
-
-	/*
-	 * Soc Jack Detect can get the mic bias adc
-	 * which is connected with this function pointer.
-	 * (This function is defined in the arch/arm/mach driver.)
-	 */
-	int (*get_earjack_adc)(void);
 };
 
 #endif

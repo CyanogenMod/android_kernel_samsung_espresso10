@@ -118,8 +118,6 @@ static int smb136_i2c_write(struct i2c_client *client, u8 reg, u8 data)
 	return ret;
 }
 
-/* commenting this function because we r not using it currently */
-#if 0
 static void smb136_test_read(struct smb136_chg_data *chg)
 {
 	u8 data = 0;
@@ -137,7 +135,6 @@ static void smb136_test_read(struct smb136_chg_data *chg)
 			"SMB136 addr : 0x%02x data : 0x%02x\n",	addr, data);
 	}
 }
-#endif
 
 static int smb136_read_status(struct smb_charger_callbacks *ptr)
 {
@@ -189,8 +186,6 @@ static int smb136_read_status(struct smb_charger_callbacks *ptr)
 	return res;
 }
 
-/* commenting this function because we r not using it currently */
-#if 0
 static int smb136_get_charging_current(struct smb136_chg_data *chg)
 {
 	u8 data = 0;
@@ -232,7 +227,6 @@ static int smb136_get_charging_current(struct smb136_chg_data *chg)
 
 	return get_current;
 }
-#endif
 
 static void smb136_set_charging_state(struct smb_charger_callbacks *ptr,
 		int cable_status)

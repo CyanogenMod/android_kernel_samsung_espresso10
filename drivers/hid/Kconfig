@@ -50,6 +50,8 @@ config HIDRAW
 
 	If unsure, say Y.
 
+source "drivers/hid/usbhid/Kconfig"
+
 config UHID
 	tristate "User-space I/O driver support for HID subsystem"
 	depends on HID

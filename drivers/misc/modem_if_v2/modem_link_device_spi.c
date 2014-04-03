@@ -1261,18 +1261,9 @@ err3:
 
 static void if_spi_send_modem_bin(struct work_struct *send_modem_w)
 {
-	struct spi_link_device *spild;
-	struct io_device *iod;
 	int retval;
 	struct image_buf img;
 	unsigned long tick1, tick2 = 0;
-
-	spild = p_spild;
-	iod = link_get_iod_with_format(&spild->ld, IPC_FMT);
-	if (!iod) {
-		mif_err("no iodevice for modem control\n");
-		return;
-	}
 
 	tick1 = jiffies_to_msecs(jiffies);
 
@@ -1322,14 +1313,7 @@ static void if_spi_send_modem_bin(struct work_struct *send_modem_w)
 	p_spild->ril_send_cnt = 0;
 	p_spild->spi_state = SPI_STATE_IDLE;
 
-	if (iod)
-		iod->modem_state_changed(iod,
-			STATE_ONLINE);
-	return;
 err:
-	if (iod)
-		iod->modem_state_changed(iod,
-			STATE_OFFLINE);
 	return;
 
 }

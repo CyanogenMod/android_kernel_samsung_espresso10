@@ -266,15 +266,6 @@ const struct clkops clkops_omap2_dflt = {
  */
 void omap2_clk_disable(struct clk *clk)
 {
-	/* Sometimes, it fails to enable dss interface clock,
-	 * due to usecount mismatch, and it causes l3 bus error
-	 * because kernel tries to access dss register without interface clock.
-	 * Until fix the issue, adds below log to debug.
-	 */
-	if (!strncmp(clk->name, "dss_fck", 7))
-		pr_info("%s: dss interface clock usecount = %d\n",
-						__func__, clk->usecount);
-
 	if (clk->usecount == 0) {
 		WARN(1, "clock: %s: omap2_clk_disable() called, but usecount "
 		     "already 0?", clk->name);
@@ -318,15 +309,6 @@ int omap2_clk_enable(struct clk *clk)
 	int ret;
 
 	pr_debug("clock: %s: incrementing usecount\n", clk->name);
-
-	/* Sometimes, it fails to enable dss interface clock,
-	 * due to usecount mismatch, and it causes l3 bus error
-	 * because kernel tries to access dss register without interface clock.
-	 * Until fix the issue, adds below log to debug.
-	 */
-	if (!strncmp(clk->name, "dss_fck", 7))
-		pr_info("%s: dss interface clock usecount = %d\n",
-						__func__, clk->usecount);
 
 	clk->usecount++;
 

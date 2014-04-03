@@ -240,26 +240,18 @@ static void notify_change_of_temperature(struct tmp102_temp_sensor *tmp102)
 	int env_offset = 0;
 	int siop_level = 0;
 	int ret = 0;
-	static int prev_temp;
-	static int prev_siop_level = SIOP_LEVEL_COUNT + 1;
+	static int prev_temp ;
 	struct sec_siop_info *info = dev_get_drvdata(&tmp102->siop_pdev->dev);
 
 	if (tmp102->therm_fw->current_temp/1000 == prev_temp/1000)
 		return;
-	else
-		prev_temp = tmp102->therm_fw->current_temp;
-
-	siop_level = find_samsung_siop_level(info,
-			(tmp102->therm_fw->current_temp/100 > prev_temp/100));
-	if (siop_level == prev_siop_level)
-		return;
-	else
-		prev_siop_level = siop_level;
 
 	snprintf(temp_buf, sizeof(temp_buf), "TEMPERATURE=%d",
 			tmp102->therm_fw->current_temp/100);
 	envp[env_offset++] = temp_buf;
 
+	siop_level = find_samsung_siop_level(info,
+			(tmp102->therm_fw->current_temp/100 > prev_temp/100));
 	snprintf(siop_buf, sizeof(siop_buf),
 			"SIOP_LEVEL=%d", siop_level);
 	envp[env_offset++] = siop_buf;
@@ -276,6 +268,8 @@ static void notify_change_of_temperature(struct tmp102_temp_sensor *tmp102)
 	if (ret < 0)
 		dev_err(&tmp102->siop_pdev->dev,
 				"Uevent Notify fail [%d]\n", ret);
+
+	prev_temp = tmp102->therm_fw->current_temp;
 
 	return;
 }

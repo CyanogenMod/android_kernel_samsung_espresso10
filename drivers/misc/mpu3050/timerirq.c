@@ -82,6 +82,8 @@ static void timerirq_handler(unsigned long arg)
 	if (data->run)
 		mod_timer(&data->timer,
 			jiffies + msecs_to_jiffies(data->period));
+	else
+		complete(&data->timer_done);
 }
 
 static int start_timerirq(struct timerirq_data *data)
@@ -100,6 +102,7 @@ static int start_timerirq(struct timerirq_data *data)
 	data->run = TRUE;
 	data->data_ready = FALSE;
 
+	init_completion(&data->timer_done);
 	setup_timer(&data->timer, timerirq_handler, (unsigned long)data);
 
 	return mod_timer(&data->timer,
@@ -113,7 +116,8 @@ static int stop_timerirq(struct timerirq_data *data)
 
 	if (data->run) {
 		data->run = FALSE;
-		del_timer_sync(&data->timer);
+		mod_timer(&data->timer, jiffies + 1);
+		wait_for_completion(&data->timer_done);
 	}
 	return 0;
 }

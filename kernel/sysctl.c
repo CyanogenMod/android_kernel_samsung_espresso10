@@ -227,33 +227,6 @@ extern struct ctl_table epoll_table[];
 int sysctl_legacy_va_layout;
 #endif
 
-#ifdef CONFIG_USB_ANDROID_MTP_LATE_INIT
-extern int late_init_android_gadget(int romtype);
-int rom_feature_set_sysctl(struct ctl_table *table, int write,
-                     void __user *buffer, size_t *lenp,
-                     loff_t *ppos)
-{
-	int error;
-	static int rom_feature_set_save = 0;
-
-	error = proc_dointvec(table, write, buffer, lenp, ppos);
-	if (error)
-		return error;
-
-	if (write) {
-		if( (rom_feature_set & 0x10) == 0x10)
-		{
-			rom_feature_set = rom_feature_set_save;
-			return 0;
-		}
-		rom_feature_set_save = rom_feature_set;
-		printk("Initializing USB with rom_feature_set: %d\n", rom_feature_set);
-		late_init_android_gadget(rom_feature_set);
-	}
-	return 0;
-}
-#endif
-
 /* The default sysctl tables: */
 
 static struct ctl_table root_table[] = {
@@ -307,15 +280,6 @@ static struct ctl_table kern_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec,
 	},
-#ifdef CONFIG_USB_ANDROID_MTP_LATE_INIT
-	{
-		.procname	= "rom_feature_set",
-		.data		= &rom_feature_set,
-		.maxlen		= sizeof(unsigned int),
-		.mode		= 0644,
-		.proc_handler	= rom_feature_set_sysctl,
-	},
-#endif
 #ifdef CONFIG_SCHED_DEBUG
 	{
 		.procname	= "sched_min_granularity_ns",

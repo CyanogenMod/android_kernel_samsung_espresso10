@@ -39,9 +39,9 @@
 #define aid_30nit_F8_18th		0x7A
 #define aid_20nit_F8_18th		0x88
 #define AOR40_BASE_188			199
-#define AOR40_BASE_186			213
-#define AOR40_BASE_184			230
-#define AOR40_BASE_182			246
+#define AOR40_BASE_186			211
+#define AOR40_BASE_184			229
+#define AOR40_BASE_182			247
 #define AOR40_BASE_180			270
 #define AOR40_BASE_170			256
 #define AOR40_BASE_160			242

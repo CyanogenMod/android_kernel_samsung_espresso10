@@ -740,7 +740,7 @@ static int gc_probe_opp(struct platform_device *pdev)
 	}
 
 	core->opp_freqs = kzalloc((core->opp_count) * sizeof(unsigned long),
-			GFP_ATOMIC);
+			GFP_KERNEL);
 	if (!core->opp_freqs) {
 		core->opp_count = 0;
 		goto done;

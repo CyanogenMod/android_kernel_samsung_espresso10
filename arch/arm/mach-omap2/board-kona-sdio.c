@@ -38,12 +38,12 @@ static struct omap2_hsmmc_info kona_mmc_info[] = {
 		.external_ldo	= false,
 		.caps		= MMC_CAP_8_BIT_DATA | MMC_CAP_1_8V_DDR |
 						MMC_CAP_UHS_DDR50,
-		.caps2		= MMC_CAP2_PACKED_CMD | MMC_CAP2_ADAPT_PACKED,
+		.caps2		= MMC_CAP2_PACKED_CMD,
 		.ocr_mask	= MMC_VDD_165_195,
 		.gpio_wp	= -EINVAL,
 		.gpio_cd	= -EINVAL,
 #ifdef CONFIG_PM_RUNTIME
-		.power_saving = false,
+		.power_saving = true,
 #endif
 	},
 	{
@@ -52,7 +52,7 @@ static struct omap2_hsmmc_info kona_mmc_info[] = {
 		.gpio_wp	= -EINVAL,
 		.gpio_cd	= -EINVAL,
 #ifdef CONFIG_PM_RUNTIME
-		.power_saving = false,
+		.power_saving = true,
 #endif
 	},
 	{

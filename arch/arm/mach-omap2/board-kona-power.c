@@ -39,9 +39,9 @@
 #define SEC_BATTERY_PMIC_NAME ""
 
 #define TA_ADC_LOW              700
+#define TA_ADC_HIGH             1750
 
 static struct power_supply *charger_supply;
-static bool is_jig_on;
 
 static struct gpio charger_gpios[] = {
 	{ .flags = GPIOF_IN, .label = "TA_nCONNECTED" },
@@ -85,18 +85,9 @@ static bool sec_bat_is_lpm(void)
 	return sec_bootmode == 5 ? true : false;
 }
 
-void check_jig_status(int status)
-{
-	if (status) {
-		pr_info("%s: JIG On so reset fuel gauge capacity\n", __func__);
-		is_jig_on = true;
-	}
-
-}
-
 static bool sec_bat_check_jig_status(void)
 {
-	return is_jig_on;
+	return false;
 }
 
 static int current_cable_type = POWER_SUPPLY_TYPE_BATTERY;
@@ -115,11 +106,14 @@ static int sec_bat_check_cable_callback(void)
 
 	attach = !gpio_get_value(charger_gpios[0].gpio) ?
 						true : false;
+
 	kona_vusb_enable(2, 1);
+
+	pr_info("%s: attach : %d\n", __func__, attach);
 
 	adc = omap4_kona_get_adc(ADC_CHECK_1);
 	current_cable_type = !gpio_get_value(charger_gpios[0].gpio) ?
-				adc >= TA_ADC_LOW ?
+				adc >= TA_ADC_LOW && adc <= TA_ADC_HIGH ?
 				POWER_SUPPLY_TYPE_MAINS :
 				POWER_SUPPLY_TYPE_USB :
 				POWER_SUPPLY_TYPE_BATTERY;
@@ -127,12 +121,6 @@ static int sec_bat_check_cable_callback(void)
 	kona_30pin_detected(P30_USB, attach);
 
 	kona_vusb_enable(2, 0);
-
-	pr_info("%s: Cable type(%s), Attach(%d), Adc(%d)\n",
-		__func__,
-		current_cable_type == POWER_SUPPLY_TYPE_BATTERY ?
-		"Battery" : current_cable_type == POWER_SUPPLY_TYPE_USB ?
-		"USB" : "TA", attach, adc);
 
 	return current_cable_type;
 }
@@ -207,14 +195,14 @@ static sec_bat_adc_region_t cable_adc_value_table[] = {
 static sec_charging_current_t charging_current_table[] = {
 	{0,     0,      0,      0},     /* POWER_SUPPLY_TYPE_BATTERY */
 	{0,     0,      0,      0},     /* POWER_SUPPLY_TYPE_UPS */
-	{1500,  1500,   200,    0},     /* POWER_SUPPLY_TYPE_MAINS */
-	{500,   500,    200,    0},     /* POWER_SUPPLY_TYPE_USB */
-	{500,   500,    200,    0},     /* POWER_SUPPLY_TYPE_USB_DCP */
-	{500,   500,    200,    0},     /* POWER_SUPPLY_TYPE_USB_CDP */
-	{500,   500,    200,    0},     /* POWER_SUPPLY_TYPE_USB_ACA */
+	{1500,  1500,    256,    0},     /* POWER_SUPPLY_TYPE_MAINS */
+	{500,   500,    256,    0},     /* POWER_SUPPLY_TYPE_USB */
+	{500,   500,    256,    0},     /* POWER_SUPPLY_TYPE_USB_DCP */
+	{500,   500,    256,    0},     /* POWER_SUPPLY_TYPE_USB_CDP */
+	{500,   500,    256,    0},     /* POWER_SUPPLY_TYPE_USB_ACA */
 	{0,     0,      0,      0},     /* POWER_SUPPLY_TYPE_OTG */
 	{0,     0,      0,      0},     /* POWER_SUPPLY_TYPE_DOCK */
-	{500,   500,    200,    0},     /* POWER_SUPPLY_TYPE_MISC */
+	{500,   500,    256,    0},     /* POWER_SUPPLY_TYPE_MISC */
 	{0,     0,      0,      0},     /* POWER_SUPPLY_TYPE_WIRELESS */
 };
 
@@ -230,7 +218,7 @@ static int polling_time_table[] = {
 static struct battery_data_t kona_battery_data[] = {
 	/* SDI battery data */
 	{
-		.Capacity = 0x2530,
+		.Capacity = 0x2008,
 		.low_battery_comp_voltage = 3600,
 		.low_battery_table = {
 			/* range, slope, offset */
@@ -350,19 +338,19 @@ static sec_battery_platform_data_t sec_battery_pdata = {
 	.thermal_source = SEC_BATTERY_THERMAL_SOURCE_FG,
 
 	.temp_check_type = SEC_BATTERY_TEMP_CHECK_TEMP,
-	.temp_check_count = 1,
-	.temp_high_threshold_event = 500, /* set temp value */
-	.temp_high_recovery_event = 420,
-	.temp_low_threshold_event = -50,
-	.temp_low_recovery_event = 0,
-	.temp_high_threshold_normal = 500,
-	.temp_high_recovery_normal = 420,
-	.temp_low_threshold_normal = -50,
-	.temp_low_recovery_normal = 0,
-	.temp_high_threshold_lpm = 500,
+	.temp_check_count = 3,
+	.temp_high_threshold_event = 25000, /* set temp value */
+	.temp_high_recovery_event = 450,
+	.temp_low_threshold_event = 0,
+	.temp_low_recovery_event = -50,
+	.temp_high_threshold_normal = 25000,
+	.temp_high_recovery_normal = 400,
+	.temp_low_threshold_normal = 0,
+	.temp_low_recovery_normal = -30,
+	.temp_high_threshold_lpm = 250000,
 	.temp_high_recovery_lpm = 420,
-	.temp_low_threshold_lpm = -50,
-	.temp_low_recovery_lpm = 0,
+	.temp_low_threshold_lpm = 2,
+	.temp_low_recovery_lpm = -30,
 
 	.full_check_type = SEC_BATTERY_FULLCHARGED_CHGINT,
 	.full_check_count = 3,
@@ -391,16 +379,15 @@ static sec_battery_platform_data_t sec_battery_pdata = {
 	.fuel_alert_soc = 1,
 	.repeated_fuelalert = false,
 	.capacity_calculation_type =
-		SEC_FUELGAUGE_CAPACITY_TYPE_DYNAMIC_SCALE,
+		SEC_FUELGAUGE_CAPACITY_TYPE_RAW,
 	.capacity_max = 1000,
 	.capacity_min = 0,
-	.capacity_max_margin = 30,
 
 	/* Charger */
 	.chg_polarity_en = 0,   /* active LOW charge enable */
 	.chg_polarity_status = 0,
 	.chg_irq_attr = IRQF_TRIGGER_RISING,
-	.chg_float_voltage = 4300,
+	.chg_float_voltage = 4200,
 };
 
 static struct platform_device sec_device_battery = {
@@ -445,6 +432,9 @@ static void charger_gpio_init(void)
 
 	sec_battery_pdata.chg_irq =
 		gpio_to_irq(charger_gpios[CHG_INT].gpio);
+
+	sec_battery_pdata.fg_irq =
+		gpio_to_irq(charger_gpios[FUEL_ALERT].gpio);
 }
 
 void __init omap4_kona_charger_init(void)

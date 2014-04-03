@@ -59,7 +59,6 @@ obj-$(CONFIG_MFD_MAX77693)	+= max77693-muic.o
 obj-$(CONFIG_USB_SWITCH_FSA9480)	+= fsa9480.o
 obj-$(CONFIG_OMAP_DIE_TEMP_SENSOR)	+= omap_temp_sensor.o
 obj-$(CONFIG_OMAP_4430_TEMP_SENSOR)	+= omap4430_temp_sensor.o
-obj-$(CONFIG_OMAP4_DUTY_CYCLE_LEGACY)  += omap4_duty_cycle.o
 obj-$(CONFIG_LEDS_AN30259A)	+= leds-an30259a.o
 obj-$(CONFIG_SEC_30PIN_CON)	+= 30pin_con.o
 obj-$(CONFIG_TWL6040_VIB)  += twl6040-vib.o

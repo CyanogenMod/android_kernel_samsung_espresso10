@@ -303,49 +303,6 @@ out:
 	return ERR_PTR(err);
 }
 
-struct scatterlist *mmc_blk_get_sg(struct mmc_card *card,
-			unsigned char *buf, int *sg_len, int size)
-{
-	struct scatterlist *sg;
-	struct scatterlist *sl;
-	int total_sec_cnt, sec_cnt;
-	int max_seg_size, len;
-
-	sl = kmalloc(sizeof(struct scatterlist) *
-		card->host->max_segs, GFP_KERNEL);
-	if (!sl)
-		return NULL;
-
-	sg = (struct scatterlist *)sl;
-	sg_init_table(sg, card->host->max_segs);
-
-	total_sec_cnt = size;
-	max_seg_size = card->host->max_seg_size;
-
-	len = 0;
-	while (total_sec_cnt) {
-		if (total_sec_cnt < max_seg_size)
-			sec_cnt = total_sec_cnt;
-		else
-			sec_cnt = max_seg_size;
-		sg_set_page(sg, virt_to_page(buf),
-			sec_cnt, offset_in_page(buf));
-		buf = buf + sec_cnt;
-		total_sec_cnt = total_sec_cnt - sec_cnt;
-		len++;
-		if (total_sec_cnt == 0)
-			break;
-		sg = sg_next(sg);
-	}
-
-	if (sg)
-		sg_mark_end(sg);
-
-	*sg_len = len;
-
-	return sl;
-}
-
 static int mmc_blk_ioctl_cmd(struct block_device *bdev,
 	struct mmc_ioc_cmd __user *ic_ptr)
 {
@@ -355,7 +312,7 @@ static int mmc_blk_ioctl_cmd(struct block_device *bdev,
 	struct mmc_command cmd = {0};
 	struct mmc_data data = {0};
 	struct mmc_request mrq = {0};
-	struct scatterlist *sg = 0;
+	struct scatterlist sg;
 	int err = 0;
 
 	/*
@@ -387,14 +344,12 @@ static int mmc_blk_ioctl_cmd(struct block_device *bdev,
 	cmd.flags = idata->ic.flags;
 
 	if (idata->buf_bytes) {
-		int len;
+		data.sg = &sg;
+		data.sg_len = 1;
 		data.blksz = idata->ic.blksz;
 		data.blocks = idata->ic.blocks;
 
-		sg = mmc_blk_get_sg(card, idata->buf, &len,
-			idata->buf_bytes);
-		data.sg = sg;
-		data.sg_len = len;
+		sg_init_one(data.sg, idata->buf, idata->buf_bytes);
 
 		if (idata->ic.write_flag)
 			data.flags = MMC_DATA_WRITE;
@@ -454,19 +409,16 @@ static int mmc_blk_ioctl_cmd(struct block_device *bdev,
 	 * issuing the command.
 	 */
 	if (idata->ic.postsleep_min_us)
-		usleep_range(idata->ic.postsleep_min_us,
-			idata->ic.postsleep_max_us);
+		usleep_range(idata->ic.postsleep_min_us, idata->ic.postsleep_max_us);
 
-	if (copy_to_user(&(ic_ptr->response),
-			cmd.resp, sizeof(cmd.resp))) {
+	if (copy_to_user(&(ic_ptr->response), cmd.resp, sizeof(cmd.resp))) {
 		err = -EFAULT;
 		goto cmd_rel_host;
 	}
 
 	if (!idata->ic.write_flag) {
-		if (copy_to_user(
-				(void __user *)(unsigned long) idata->ic.data_ptr,
-				idata->buf, idata->buf_bytes)) {
+		if (copy_to_user((void __user *)(unsigned long) idata->ic.data_ptr,
+						idata->buf, idata->buf_bytes)) {
 			err = -EFAULT;
 			goto cmd_rel_host;
 		}
@@ -478,8 +430,6 @@ cmd_rel_host:
 cmd_done:
 	if (md)
 		mmc_blk_put(md);
-	if (sg)
-		kfree(sg);
 	kfree(idata->buf);
 	kfree(idata);
 	return err;
@@ -1302,11 +1252,6 @@ static u8 mmc_blk_prep_packed_list(struct mmc_queue *mq, struct request *req)
 	}
 
 	while (reqs < max_packed_rw - 1) {
-		/*We should stop no-more packing its nopacked_period*/
-		if ((card->host->caps2 & MMC_CAP2_ADAPT_PACKED)
-			 &&  mmc_is_nopacked_period(mq))
-			break;
-
 		spin_lock_irq(q->queue_lock);
 		next = blk_fetch_request(q);
 		spin_unlock_irq(q->queue_lock);
@@ -1836,8 +1781,7 @@ static int mmc_blk_issue_rq(struct mmc_queue *mq, struct request *req)
 		/* complete ongoing async transfer before issuing discard */
 		if (card->host->areq)
 			mmc_blk_issue_rw_rq(mq, NULL);
-		if ((req->cmd_flags & REQ_SECURE) &&
-			(card->host->caps2 & MMC_CAP2_SECURE_ERASE_EN))
+		if (req->cmd_flags & REQ_SECURE)
 			ret = mmc_blk_issue_secdiscard_rq(mq, req);
 		else
 			ret = mmc_blk_issue_discard_rq(mq, req);
@@ -2110,8 +2054,6 @@ static int mmc_add_disk(struct mmc_blk_data *md)
 	return ret;
 }
 
-#define CID_MANFID_SAMSUNG 0x15
-
 static const struct mmc_fixup blk_fixups[] = {
 	MMC_FIXUP("SEM02G", 0x2, 0x100, add_quirk, MMC_QUIRK_INAND_CMD38),
 	MMC_FIXUP("SEM04G", 0x2, 0x100, add_quirk, MMC_QUIRK_INAND_CMD38),
@@ -2133,35 +2075,6 @@ static const struct mmc_fixup blk_fixups[] = {
 		  MMC_QUIRK_BLK_NO_CMD23),
 	MMC_FIXUP("MMC32G", 0x11, CID_OEMID_ANY, add_quirk_mmc,
 		  MMC_QUIRK_BLK_NO_CMD23),
-
-	/* Some TLC movinand cards needs Sync operation for performance*/
-	MMC_FIXUP("S5U00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("J5U00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("J5U00B", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("J5U00A", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("L7U00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("N5U00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("K5U00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("K5U00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("K7U00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("M4G1YC", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("M8G1WA", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("MAG2WA", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-	MMC_FIXUP("MBG4WA", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
-			MMC_QUIRK_MOVINAND_TLC),
-
 	END_FIXUP
 };
 

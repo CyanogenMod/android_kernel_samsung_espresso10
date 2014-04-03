@@ -19,8 +19,6 @@
 
 #define GAMMA_PARAM_SIZE		26
 #define ELVSS_PARAM_SIZE		3
-#define ID_PARAM_SIZE		3
-#define MTP_PARAM_SIZE		24
 
 #ifdef CONFIG_AID_DIMMING
 #define ELVSS_OFFSET_300		0x00
@@ -182,9 +180,6 @@ struct panel_s6e8aa0a01_data {
 
 	const struct s6e8aa0a01_acl_parameters *acl_table;
 	unsigned int acl_table_size;
-
-	u8 panel_id[ID_PARAM_SIZE];
-	u8 mtp_data[MTP_PARAM_SIZE];
 };
 
 #endif /* __PANEL_S6E8AA0A01_H__ */

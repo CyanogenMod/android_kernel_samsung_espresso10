@@ -34,8 +34,6 @@
 #include <linux/bat_manager.h>
 #include <linux/gpio.h>
 
-#define DEBUG_PRINT 0
-
 #define FAST_POLL	(1 * 40)
 #define SLOW_POLL	(30 * 60)
 
@@ -291,15 +289,14 @@ static void batman_get_temp_status(struct charger_device_info *di)
 		di->bat_info.temp =
 			di->pdata->get_fuel_value(READ_FG_TEMP);
 	}
-	if (di->is_cable_attached) {
-		if (di->bat_info.temp >= di->pdata->high_block_temp) {
-			di->bat_info.health = POWER_SUPPLY_HEALTH_OVERHEAT;
-		} else if (di->bat_info.temp <= di->pdata->high_recover_temp &&
+
+	if (di->bat_info.temp >= di->pdata->high_block_temp) {
+		di->bat_info.health = POWER_SUPPLY_HEALTH_OVERHEAT;
+	} else if (di->bat_info.temp <= di->pdata->high_recover_temp &&
 			di->bat_info.temp >= di->pdata->low_recover_temp) {
-			di->bat_info.health = POWER_SUPPLY_HEALTH_GOOD;
-		} else if (di->bat_info.temp <= di->pdata->low_block_temp) {
-			di->bat_info.health = POWER_SUPPLY_HEALTH_COLD;
-		}
+		di->bat_info.health = POWER_SUPPLY_HEALTH_GOOD;
+	} else if (di->bat_info.temp <= di->pdata->low_block_temp) {
+		di->bat_info.health = POWER_SUPPLY_HEALTH_COLD;
 	}
 }
 
@@ -422,7 +419,7 @@ static void charger_detect_work(struct work_struct *work)
 static int batman_get_bat_level(struct charger_device_info *di)
 {
 	int soc = 0;
-	int prev_soc = di->bat_info.soc;
+
 	/* check VFcapacity every five minutes */
 	if (!(di->fg_chk_cnt++ % 10)) {
 		di->pdata->check_vf_fullcap_range();
@@ -434,12 +431,6 @@ static int batman_get_bat_level(struct charger_device_info *di)
 			di->pdata->get_fuel_value(READ_FG_SOC);
 		if (!di->is_full_charged && soc > 99 && di->is_cable_attached)
 			soc = 99;
-
-		/* The following condition is a handling in software for current soc to
-		not be less than prev_soc when charging source is detached*/
-		if(prev_soc < soc && prev_soc > 98 && !di->is_cable_attached)
-			soc=prev_soc;
-
 		di->bat_info.soc = soc;
 	}
 
@@ -505,7 +496,6 @@ static void battery_manager_work(struct work_struct *work)
 			(di->charge_status != prev_status))
 		power_supply_changed(&di->psy_bat);
 
-#if DEBUG_PRINT
 	dev_info(di->dev, "vcell = %d soc = %d  current = %d avg_current = %d "
 		"status = %d health = %d temp = %d "
 		"discharge status = %d, limit time : %ld, bootmode : %d\n",
@@ -513,7 +503,6 @@ static void battery_manager_work(struct work_struct *work)
 		di->bat_info.avg_current, di->charge_status,
 		di->bat_info.health, di->bat_info.temp,
 		di->discharge_status, di->chg_limit_time, di->pdata->bootmode);
-#endif
 
 	di->last_poll = alarm_get_elapsed_realtime();
 	ts = ktime_to_timespec(di->last_poll);
@@ -547,7 +536,6 @@ static int otg_handle_notification(struct notifier_block *nb,
 		break;
 	case USB_EVENT_CHARGER_NONE:
 		pr_info("[BAT_MANAGER] Charger Disconnect\n");
-		di->bat_info.health = POWER_SUPPLY_HEALTH_GOOD;
 		wake_unlock(&di->cable_wake_lock);
 		break;
 	default:

@@ -423,8 +423,8 @@ enum mpu_ext_sync {
 
 #define MPUREG_GYRO_CONFIG_VALUE(x_st, y_st, z_st, full_scale)	\
 	((x_st ? 0x80 : 0) |				\
-	 (y_st ? 0x40 : 0) |				\
-	 (z_st ? 0x20 : 0) |				\
+	 (y_st ? 0x70 : 0) |				\
+	 (z_st ? 0x60 : 0) |				\
 	 (full_scale << 3))
 
 #define ACC_CAL_TIME 20

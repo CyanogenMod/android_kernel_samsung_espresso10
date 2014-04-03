@@ -137,23 +137,21 @@ static u8 fled_current_shift[MAX77693_LED_MAX] = {
 	4,
 };
 
-int max77693_get_flash_brightness(enum max77693_led_id id)
+int max77693_get_flash_brightness(void)
 {
-	struct led_classdev *led_cdev = &g_max77693_led_datas[id]->led;
+	struct led_classdev *led_cdev = &g_max77693_led_datas[2]->led;
 
 	return led_cdev->brightness;
 }
 EXPORT_SYMBOL(max77693_get_flash_brightness);
 
-void max77693_set_flash_brightness(enum max77693_led_id id, int brightness)
+void max77693_set_flash_brightness(int brightness)
 {
-	struct led_classdev *led_cdev = &g_max77693_led_datas[id]->led;
+	struct led_classdev *led_cdev = &g_max77693_led_datas[2]->led;
 
 	if (brightness > led_cdev->max_brightness)
 		brightness = led_cdev->max_brightness;
 	led_cdev->brightness = brightness;
-
-	pr_info("%s: id=%d, brightness =%d\n", __func__, id, brightness);
 
 	if (!(led_cdev->flags & LED_SUSPENDED))
 		led_cdev->brightness_set(led_cdev, brightness);
@@ -207,9 +205,6 @@ static void led_set(struct max77693_led_data *led_data)
 	else
 		val = led_data->chip_brightness << shift;
 
-	pr_info("%s: id=%d, chip brt=%d, brt=%d, val=%d\n", __func__, id,
-			led_data->chip_brightness, led_data->brightness, val);
-
 	ret = max77693_update_reg(i2c, fled_current_reg[id], val,
 							fled_current_mask[id]);
 	if (unlikely(ret))
@@ -239,58 +234,40 @@ static void max77693_led_work(struct work_struct *work)
 	mutex_unlock(&led_data->lock);
 }
 
-static int max77693_led_init_set(struct i2c_client *i2c,
-		struct max77693_led_data **led_datas)
+static int max77693_led_init_set(struct max77693_led_data *led_data)
 {
-	u8 val;
-	int id;
+	struct i2c_client *i2c = led_data->i2c;
+	struct max77693_led *data = led_data->data;
+	int id = data->id;
+	int val;
 	int ret = 0;
 
-	ret |= max77693_write_reg(i2c, MAX77693_LED_REG_VOUT_CNTL,
-				  MAX77693_BOOST_FLASH_FLEDNUM_2 |
-				  MAX77693_BOOST_FLASH_MODE_BOTH);
-
+	max77693_write_reg(i2c, MAX77693_LED_REG_VOUT_CNTL,
+				  MAX77693_BOOST_FLASH_FLEDNUM_2
+				| MAX77693_BOOST_FLASH_MODE_BOTH);
 	ret |= max77693_write_reg(i2c, MAX77693_LED_REG_VOUT_FLASH1,
 				  MAX77693_BOOST_VOUT_FLASH_FROM_VOLT(5000));
+	ret |= max77693_write_reg(i2c,
+				MAX77693_LED_REG_MAX_FLASH1, 0x80);
+	ret |= max77693_write_reg(i2c,
+				MAX77693_LED_REG_MAX_FLASH2, 0x00);
 
-	ret |= max77693_write_reg(i2c, MAX77693_LED_REG_MAX_FLASH1, 0x80);
-	ret |= max77693_write_reg(i2c, MAX77693_LED_REG_MAX_FLASH2, 0x00);
-
-	val = 0;
-	for (id = 0; id < MAX77693_LED_MAX; id++)
-		if (led_datas[id])
-			val |=  max77693_led_get_en_value(id, 0);
-	ret |= max77693_write_reg(i2c, MAX77693_LED_REG_FLASH_EN, val);
+	val = max77693_led_get_en_value(id, 0);
+	ret |= max77693_update_reg(i2c, MAX77693_LED_REG_FLASH_EN, val,
+							fled_en_mask[id]);
 
 	/* Set TORCH_TMR_DUR or FLASH_TMR_DUR */
-	if (led_datas[MAX77693_FLASH_LED_1]) {
-		val = led_datas[MAX77693_FLASH_LED_1]->data->timer |
-			led_datas[MAX77693_FLASH_LED_1]->data->timer_mode << 7;
+	if (id < MAX77693_TORCH_LED_1)
 		ret |= max77693_write_reg(i2c, MAX77693_LED_REG_FLASH_TIMER,
-									val);
-	}
-
-	if (led_datas[MAX77693_TORCH_LED_1] || led_datas[MAX77693_TORCH_LED_2])
+					(data->timer | data->timer_mode << 7));
+	else
 		ret |= max77693_write_reg(i2c,
 				MAX77693_LED_REG_ITORCHTORCHTIMER, 0x40);
 
 	/* Set current */
-	if (led_datas[MAX77693_FLASH_LED_1])
-		ret |= max77693_write_reg(i2c, MAX77693_LED_REG_IFLASH1,
-				led_datas[MAX77693_FLASH_LED_1]->brightness);
-
-	if (led_datas[MAX77693_FLASH_LED_2])
-		ret |= max77693_write_reg(i2c, MAX77693_LED_REG_IFLASH2,
-				led_datas[MAX77693_FLASH_LED_2]->brightness);
-
-	val = 0;
-	if (led_datas[MAX77693_TORCH_LED_1])
-		val |= led_datas[MAX77693_TORCH_LED_1]->brightness;
-	if (led_datas[MAX77693_TORCH_LED_2])
-		val |= led_datas[MAX77693_TORCH_LED_2]->brightness << 4;
-
-	ret |= max77693_write_reg(i2c, MAX77693_LED_REG_ITORCH, val);
-
+	ret |= max77693_update_reg(i2c, fled_current_reg[id],
+				led_data->brightness << fled_current_shift[id],
+				fled_current_mask[id]);
 
 	return ret;
 }
@@ -331,7 +308,7 @@ static int max77693_led_probe(struct platform_device *pdev)
 
 		led_data = kzalloc(sizeof(struct max77693_led_data),
 				   GFP_KERNEL);
-		led_datas[data->id] = led_data;
+		led_datas[i] = led_data;
 		if (unlikely(!led_data)) {
 			pr_err("[LED] memory allocation error %s\n", __func__);
 			ret = -ENOMEM;
@@ -343,7 +320,7 @@ static int max77693_led_probe(struct platform_device *pdev)
 		led_data->data = data;
 		led_data->led.name = data->name;
 		led_data->led.brightness_set = max77693_led_set;
-		led_data->led.brightness = data->brightness;
+		led_data->led.brightness = LED_OFF;
 		led_data->brightness = data->brightness;
 		led_data->led.flags = 0;
 		led_data->led.max_brightness = data->id < 2
@@ -360,26 +337,18 @@ static int max77693_led_probe(struct platform_device *pdev)
 			ret = -EFAULT;
 			continue;
 		}
+
+		ret = max77693_led_init_set(led_data);
+		if (unlikely(ret)) {
+			pr_err("unable to register LED\n");
+			mutex_destroy(&led_data->lock);
+			led_classdev_unregister(&led_data->led);
+			kfree(led_data);
+			ret = -EFAULT;
+		}
 	}
 
-	ret = max77693_led_init_set(max77693->i2c, led_datas);
-	if (unlikely(ret)) {
-		pr_err("unable to register LED(ret=%d)\n", ret);
-		goto err;
-	}
-
-	return 0;
-
-err:
-	for (i = 0; i < MAX77693_LED_MAX; i++) {
-		if (!led_datas[i])
-			continue;
-		mutex_destroy(&led_datas[i]->lock);
-		led_classdev_unregister(&led_datas[i]->led);
-		kfree(led_datas[i]);
-	}
-	kfree(led_datas);
-	return -EFAULT;
+	return ret;
 }
 
 static int __devexit max77693_led_remove(struct platform_device *pdev)

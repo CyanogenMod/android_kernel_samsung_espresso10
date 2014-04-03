@@ -12,13 +12,8 @@
 #ifndef __LEDS_MAX77693_H__
 #define __LEDS_MAX77693_H__
 
-#define MAX_FLASH_CURRENT       1000    /* 1000mA(0x1f) */
-#define MAX_TORCH_CURRENT       250     /* 250mA(0x0f) */
-#define MAX_FLASH_DRV_LEVEL     63      /* 15.625 + 15.625*63 mA */
-#define MAX_TORCH_DRV_LEVEL     15      /* 15.625 + 15.625*15 mA */
-
 enum max77693_led_id {
-	MAX77693_FLASH_LED_1 = 0,
+	MAX77693_FLASH_LED_1,
 	MAX77693_FLASH_LED_2,
 	MAX77693_TORCH_LED_1,
 	MAX77693_TORCH_LED_2,
@@ -90,7 +85,7 @@ struct max77693_led_platform_data {
 	struct max77693_led leds[MAX77693_LED_MAX];
 };
 
-int max77693_get_flash_brightness(enum max77693_led_id id);
-void max77693_set_flash_brightness(enum max77693_led_id id, int brightness);
+int max77693_get_flash_brightness(void);
+void max77693_set_flash_brightness(int brightness);
 
 #endif

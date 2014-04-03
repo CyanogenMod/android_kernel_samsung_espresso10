@@ -189,7 +189,7 @@ config COMPACTION
 config MIGRATION
 	bool "Page migration"
 	def_bool y
-	depends on NUMA || ARCH_ENABLE_MEMORY_HOTREMOVE || COMPACTION || CMA
+	depends on NUMA || ARCH_ENABLE_MEMORY_HOTREMOVE || COMPACTION
 	help
 	  Allows the migration of the physical location of pages of processes
 	  while the virtual addresses are not changed. This is useful in
@@ -370,24 +370,3 @@ config CLEANCACHE
 	  in a negligible performance hit.
 
 	  If unsure, say Y to enable cleancache
-
-config COMPACTION_RETRY
-	bool "retry compaction once more after direct reclaim fails"
-	default n
-	depends on COMPACTION
-	help
-	  This enables compaction retry in android.
-	  If fails to get pages even with direct reclaim,
-	  we give one more try to allocate pages with forced compaction.
-	  This might avoid oom-killer invocation.
-	  with many free pages being already there.
-
-config COMPACTION_RETRY_DEBUG
-	bool "debug information for COMPACTION_RETRY"
-	default n
-	depends on COMPACTION_RETRY
-	help
-	  This enables debug feature for compaction retry.
-	  This shows us the buddy information
-	  before and after compation retrial.
-	  This should be turned off later.

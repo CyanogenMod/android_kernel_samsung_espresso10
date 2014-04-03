@@ -74,23 +74,17 @@ static int bq2415x_write_block(struct bq2415x_device_info *di, u8 *value,
 {
 	struct i2c_msg msg[1];
 	int ret;
-	int count = 0;
 
-	*value = reg;
+	*value		= reg;
 
 	msg[0].addr	= di->client->addr;
 	msg[0].flags	= 0;
 	msg[0].buf	= value;
 	msg[0].len	= num_bytes + 1;
 
-	do {
-		count++;
-		ret = i2c_transfer(di->client->adapter, msg, 1);
-		if (ret != 1)
-			dev_err(di->dev,
-				"i2c_write failed to transfer all messages\n");
-		} while (ret != 1 && count < 0xff);
+	ret = i2c_transfer(di->client->adapter, msg, 1);
 
+	/* i2c_transfer returns number of messages transferred */
 	if (ret != 1) {
 		dev_err(di->dev,
 			"i2c_write failed to transfer all messages\n");
@@ -109,9 +103,8 @@ static int bq2415x_read_block(struct bq2415x_device_info *di, u8 *value,
 	struct i2c_msg msg[2];
 	u8 buf;
 	int ret;
-	int count = 0;
 
-	buf = reg;
+	buf		= reg;
 
 	msg[0].addr	= di->client->addr;
 	msg[0].flags	= 0;
@@ -123,14 +116,9 @@ static int bq2415x_read_block(struct bq2415x_device_info *di, u8 *value,
 	msg[1].buf	= value;
 	msg[1].len	= num_bytes;
 
-	do {
-		count++;
-		ret = i2c_transfer(di->client->adapter, msg, 2);
-		if (ret != 2)
-			dev_err(di->dev,
-				"i2c_write failed to transfer all messages\n");
-		} while (ret != 2 && count < 0xff);
+	ret = i2c_transfer(di->client->adapter, msg, 2);
 
+	/* i2c_transfer returns number of messages transferred */
 	if (ret != 2) {
 		dev_err(di->dev,
 			"i2c_write failed to transfer all messages\n");
@@ -185,14 +173,14 @@ static void bq2415x_config_control_reg(struct bq2415x_device_info *di)
 	return;
 }
 
-static void bq2415x_config_control_reg_800mA()
+void bq2415x_config_control_reg_nolimit()
 {
 	u8 read_reg = 0;
 	struct bq2415x_device_info *di = dev_info_irq;
 
 	bq2415x_read_byte(di, &read_reg, REG_CONTROL_REGISTER);
 
-	di->control_reg = ((2 << INPUT_CURRENT_LIMIT_SHIFT)
+	di->control_reg = ((3 << INPUT_CURRENT_LIMIT_SHIFT)
 				| (1 << ENABLE_ITERM_SHIFT));
 
 	bq2415x_write_byte(di, di->control_reg, REG_CONTROL_REGISTER);
@@ -200,7 +188,7 @@ static void bq2415x_config_control_reg_800mA()
 	return;
 }
 
-static void bq2415x_config_control_reg_limit()
+void bq2415x_config_control_reg_limit()
 {
 	u8 read_reg = 0;
 	struct bq2415x_device_info *di = dev_info_irq;
@@ -229,30 +217,6 @@ static void bq2415x_config_voltage_reg(struct bq2415x_device_info *di)
 	Voreg = (voltagemV - 3500)/20;
 	di->voltage_reg = (Voreg << VOLTAGE_SHIFT);
 	bq2415x_write_byte(di, di->voltage_reg, REG_BATTERY_VOLTAGE);
-	return;
-}
-
-static void get_charge_register(void)
-{
-	u8 read_reg0 = 0;
-	u8 read_reg1 = 0;
-	u8 read_reg2 = 0;
-	u8 read_reg3 = 0;
-	u8 read_reg4 = 0;
-	u8 read_reg5 = 0;
-	u8 read_reg6 = 0;
-	struct bq2415x_device_info *di = dev_info_irq;
-
-	bq2415x_read_block(di, &read_reg0, 0, 1);
-	bq2415x_read_block(di, &read_reg1, 1, 1);
-	bq2415x_read_block(di, &read_reg2, 2, 1);
-	bq2415x_read_block(di, &read_reg3, 3, 1);
-	bq2415x_read_block(di, &read_reg4, 4, 1);
-	bq2415x_read_block(di, &read_reg5, 5, 1);
-	bq2415x_read_block(di, &read_reg6, 6, 1);
-	pr_info("get_charge_register :%x  %x  %x  %x  %x  %x  %x\n",
-	read_reg0, read_reg1, read_reg2, read_reg3,
-	read_reg4, read_reg5, read_reg6);
 	return;
 }
 
@@ -297,7 +261,7 @@ static void bq2415x_config_current_reg(struct bq2415x_device_info *di)
 
 static void bq2415x_config_special_charger_reg(struct bq2415x_device_info *di)
 {
-	u8 Vsreg = 3;	/* DPM voltage :  4.44V for GOKEY 20121115*/
+	u8 Vsreg = 2;	/* DPM voltage :  4.36V for HARRISON 20120704*/
 
 	di->special_charger_reg = Vsreg;
 	bq2415x_write_byte(di, di->special_charger_reg,
@@ -323,6 +287,7 @@ static void bq2415x_config_safety_reg(struct bq2415x_device_info *di,
 		max_voltagemV = 4200;
 	else if (max_voltagemV > 4440)
 		max_voltagemV = 4440;
+
 	di->max_voltagemV = max_voltagemV;
 	di->max_currentmA = max_currentmA;
 	di->voltagemV = max_voltagemV;
@@ -335,15 +300,18 @@ static void bq2415x_config_safety_reg(struct bq2415x_device_info *di,
 	return;
 }
 
-static bool
-bq2415x_charger_update_status(void)
+static void
+bq2415x_charger_update_status(struct bq2415x_device_info *di)
 {
-	struct bq2415x_device_info *di = dev_info_irq;
 	u8 read_reg[7] = {0};
 	int i = 0;
-	pr_info("bq2415x_charger_update_status\n");
+
 	timer_fault = 0;
 	bq2415x_read_block(di, &read_reg[0], 0, 7);
+
+	for (i = 0; i < 7; i++)
+		dev_info(di->dev, "Register value [%d] : 0x%x\n",
+			i, read_reg[i]);
 
 	dev_dbg(di->dev, "Charging Status : %x\n", read_reg[0]);
 	if ((read_reg[0] & 0x30) == 0x20)
@@ -357,14 +325,7 @@ bq2415x_charger_update_status(void)
 		dev_err(di->dev, "CHARGER FAULT %x\n", read_reg[0]);
 	}
 
-	if ((read_reg[1] & 0xc0) == 0x0)
-		dev_info(di->dev, "Current_Limit fualt\n");
-
-	if (read_reg[2] < 0xac)
-		dev_info(di->dev, "Voltage_Register fualt\n");
-
-	if ((timer_fault == 1) || (di->cfg_params == 1) ||
-		((read_reg[1] & 0xc0) == 0x0) || (read_reg[2] < 0xac)) {
+	if ((timer_fault == 1) || (di->cfg_params == 1)) {
 		bq2415x_write_byte(di, di->control_reg, REG_CONTROL_REGISTER);
 		bq2415x_write_byte(di, di->voltage_reg, REG_BATTERY_VOLTAGE);
 		bq2415x_write_byte(di, di->current_reg, REG_BATTERY_CURRENT);
@@ -372,11 +333,10 @@ bq2415x_charger_update_status(void)
 		di->cfg_params = 0;
 	}
 
-	bq2415x_read_block(di, &read_reg[0], 0, 1);
-	if ((read_reg[0] & 0x30) == 0x30)
-		return 1;
-	else
-		return 0;
+	/* reset 32 second timer */
+	bq2415x_config_status_reg(di);
+
+	return;
 }
 
 static void bq24157_irq_work(struct work_struct *bq24157_work)
@@ -391,20 +351,9 @@ static void bq24157_irq_work(struct work_struct *bq24157_work)
 
 	if ((read_reg & 0x30) == 0x20) {
 		if (di->term_currentmA == di->pdata->first_term_currentmA) {
-				dev_info(di->dev, "1st full charged\n");
+				dev_info(di->dev, "Full charged\n");
 				di->pdata->set_full_charge();
-		} else if (di->term_currentmA
-			== di->pdata->second_term_currentmA) {
-			dev_info(di->dev, "2nd full charged\n");
-			di->pdata->set_full_charge();
-		} else if (di->term_currentmA
-			== di->pdata->third_term_currentmA) {
-			dev_info(di->dev, "3rd full charged\n");
-			di->pdata->set_full_charge();
 		}
-	} else if (read_reg == 0xf0) {	/* abnormal charger fault case */
-		di->pdata->set_charge_fault();
-		dev_info(di->dev, "charger is fault\n");
 	}
 }
 
@@ -463,25 +412,7 @@ static void set_term_current(struct bq2415x_charger_callbacks *ptr,
 	struct bq2415x_device_info *di = container_of(ptr,
 	struct bq2415x_device_info, callbacks);
 
-
-	switch (term_type) {
-	case 1:
-		di->term_currentmA = di->pdata->first_term_currentmA;
-		break;
-	case 2:
-		di->term_currentmA = di->pdata->second_term_currentmA;
-		break;
-	default:
-	case 3:
-		di->term_currentmA = di->pdata->third_term_currentmA;
-		break;
-	}
-#if 0
-	if (term_type == 1)
-		di->term_currentmA = di->pdata->first_term_currentmA;
-	else if (term_type == 2)
-		di->term_currentmA = di->pdata->second_term_currentmA;
-#endif
+	di->term_currentmA = di->pdata->first_term_currentmA;
 	di->enable_iterm = 1;
 	bq2415x_config_current_reg(di);
 }
@@ -539,10 +470,6 @@ static int __devinit bq2415x_charger_probe(struct i2c_client *client,
 
 	di->callbacks.set_charge_current = set_charge_current;
 	di->callbacks.set_termination_current = set_term_current;
-	di->callbacks.get_charger_register = get_charge_register;
-	di->callbacks.set_charger_voreg = bq2415x_charger_update_status;
-	di->callbacks.set_control_limit = bq2415x_config_control_reg_limit;
-	di->callbacks.set_control_800 = bq2415x_config_control_reg_800mA;
 	if (di->pdata->register_callbacks)
 		di->pdata->register_callbacks(&di->callbacks);
 
@@ -589,7 +516,7 @@ static int __devinit bq2415x_charger_probe(struct i2c_client *client,
 	if (!(read_reg & 0x08))
 		di->active = 1;
 
-	bq2415x_charger_update_status();
+	bq2415x_charger_update_status(di);
 
 	return 0;
 

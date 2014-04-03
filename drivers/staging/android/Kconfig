@@ -90,11 +90,6 @@ config ANDROID_LOW_MEMORY_KILLER
 	---help---
 	  Register processes to be killed when memory is low
 
-config ENHANCED_LMK_ROUTINE
-	bool "LMK may kill up to 3 processes"
-	depends on ANDROID_LOW_MEMORY_KILLER
-	default y
-
 endif # if ANDROID
 
 endmenu

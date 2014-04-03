@@ -131,12 +131,10 @@ struct sec_battery_info {
 	/* charging */
 	unsigned int charging_mode;
 	int cable_type;
-	int extended_cable_type;
 	struct wake_lock cable_wake_lock;
 	struct work_struct cable_work;
 	struct wake_lock vbus_wake_lock;
 	unsigned int full_check_cnt;
-	unsigned int recharge_check_cnt;
 
 	/* test mode */
 	bool test_activated;

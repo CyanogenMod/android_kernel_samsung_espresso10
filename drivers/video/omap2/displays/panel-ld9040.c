@@ -82,7 +82,6 @@ struct ld9040 {
 	unsigned int			ldi_enable;
 	unsigned int			acl_enable;
 	unsigned int			cur_acl;
-	unsigned int			auto_brightness;
 	struct mutex	lock;
 	struct lcd_device		*ld;
 	struct backlight_device		*bd;
@@ -150,12 +149,13 @@ static int ld9040_panel_send_sequence(struct ld9040 *lcd,
 static int get_gamma_value_from_bl(int bl)
 {
 	int gamma_value = 0;
+	int gamma_val_x10 = 0;
 
-	if (bl == MAX_BL)
-		gamma_value = MAX_GAMMA_VALUE;
-	else if (bl >= MIN_BL) {
-		gamma_value = (bl - MIN_BL)*(MAX_GAMMA_VALUE - 1)
-					/(MAX_BL - MIN_BL) + 1;
+	if (bl >= MIN_BL) {
+		gamma_val_x10 = 10 * (MAX_GAMMA_VALUE - 1)
+			* bl/(MAX_BL-MIN_BL) + (10 - 10 * (MAX_GAMMA_VALUE - 1)
+			* (MIN_BL)/(MAX_BL-MIN_BL));
+		gamma_value = (gamma_val_x10 + 5)/10;
 	} else
 		gamma_value = 0;
 
@@ -199,19 +199,19 @@ static int ld9040_set_elvss(struct ld9040 *lcd)
 
 	if (get_lcdtype) {  /* for SM2 A2*/
 		switch (lcd->bl) {
-		case 0 ... 7: /* 30cd ~ 100cd */
+		case 0 ... 5: /* 30cd ~ 100cd */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[0]);
 			break;
-		case 8 ... 13: /* 110cd ~ 160cd */
+		case 6 ... 11: /* 110cd ~ 160cd */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[1]);
 			break;
-		case 14 ... 17: /* 170cd ~ 200cd */
+		case 12 ... 15: /* 170cd ~ 200cd */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[2]);
 			break;
-		case 18 ... 24: /* 210cd ~ 290cd (300cd) */
+		case 16 ... 24: /* 210cd ~ 290cd (300cd) */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[3]);
 			break;
@@ -220,19 +220,19 @@ static int ld9040_set_elvss(struct ld9040 *lcd)
 		}
 	} else {	/* for SM2 A1*/
 		switch (lcd->bl) {
-		case 0 ... 7: /* 30cd ~ 100cd */
+		case 0 ... 6: /* 30cd ~ 100cd */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[0]);
 			break;
-		case 8 ... 13: /* 110cd ~ 160cd */
+		case 7 ... 12: /* 110cd ~ 160cd */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[1]);
 			break;
-		case 14 ... 17: /* 170cd ~ 200cd */
+		case 13 ... 16: /* 170cd ~ 200cd */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[2]);
 			break;
-		case 18 ... 24: /* 210cd ~ 280cd (300cd) */
+		case 17 ... 24: /* 210cd ~ 280cd (300cd) */
 			ret = ld9040_panel_send_sequence(lcd,
 					pdata->elvss_sm2_table[3]);
 			break;
@@ -268,7 +268,7 @@ static int ld9040_set_acl(struct ld9040 *lcd)
 			}
 		}
 		switch (lcd->bl) {
-		case 0 ... 2: /* 30cd ~ 60cd */
+		case 0 ... 2: /* 30cd ~ 50cd */
 			if (lcd->cur_acl != 0) {
 				ret = ld9040_panel_send_sequence(lcd,
 						pdata->acl_table[0]);
@@ -277,7 +277,7 @@ static int ld9040_set_acl(struct ld9040 *lcd)
 				lcd->cur_acl = 0;
 			}
 			break;
-		case 3 ... 15: /* 70cd ~ 180cd */
+		case 3 ... 14: /* 70cd ~ 180cd */
 			if (lcd->cur_acl != 40) {
 				ret = ld9040_panel_send_sequence(lcd,
 						pdata->acl_table[1]);
@@ -286,7 +286,7 @@ static int ld9040_set_acl(struct ld9040 *lcd)
 				lcd->cur_acl = 40;
 			}
 			break;
-		case 16: /* 190cd */
+		case 15: /* 190cd */
 			if (lcd->cur_acl != 43) {
 				ret = ld9040_panel_send_sequence(lcd,
 						pdata->acl_table[2]);
@@ -295,7 +295,7 @@ static int ld9040_set_acl(struct ld9040 *lcd)
 				lcd->cur_acl = 43;
 			}
 			break;
-		case 17: /* 200cd */
+		case 16: /* 200cd */
 			if (lcd->cur_acl != 45) {
 				ret = ld9040_panel_send_sequence(lcd,
 						pdata->acl_table[3]);
@@ -304,7 +304,7 @@ static int ld9040_set_acl(struct ld9040 *lcd)
 				lcd->cur_acl = 45;
 			}
 			break;
-		case 18: /* 210cd */
+		case 17: /* 210cd */
 			if (lcd->cur_acl != 47) {
 				ret = ld9040_panel_send_sequence(lcd,
 						pdata->acl_table[4]);
@@ -313,7 +313,7 @@ static int ld9040_set_acl(struct ld9040 *lcd)
 				lcd->cur_acl = 47;
 			}
 			break;
-		case 19: /* 220cd */
+		case 18: /* 220cd */
 			if (lcd->cur_acl != 48) {
 				ret = ld9040_panel_send_sequence(lcd,
 						pdata->acl_table[5]);
@@ -570,6 +570,7 @@ static int ld9040_get_brightness(struct backlight_device *bd)
 static int ld9040_set_brightness(struct backlight_device *bd)
 {
 	int ret = 0, bl = bd->props.brightness;
+	unsigned int temp_bl;
 	struct ld9040 *lcd = bl_get_data(bd);
 
 	if (bl < MIN_BRIGHTNESS ||
@@ -579,11 +580,8 @@ static int ld9040_set_brightness(struct backlight_device *bd)
 		return -EINVAL;
 	}
 
-	/* add for new auto-brightness concept */
-	if (!lcd->auto_brightness && (bl == 255))
-		bl = 254;
-
-	lcd->bl = get_gamma_value_from_bl(bl);
+	temp_bl = get_gamma_value_from_bl(bl);
+	lcd->bl = temp_bl;
 
 	if ((lcd->ldi_enable) && (lcd->current_brightness != lcd->bl)) {
 		ret = update_brightness(lcd);
@@ -772,42 +770,6 @@ static ssize_t ld9040_sysfs_store_lcd_power(struct device *dev,
 
 static DEVICE_ATTR(lcd_power, S_IRUGO | S_IWUSR | S_IWGRP,
 		NULL, ld9040_sysfs_store_lcd_power);
-
-static ssize_t ld9040_auto_brightness_show(struct device *dev,
-	struct device_attribute *attr, char *buf)
-{
-	struct ld9040 *lcd = dev_get_drvdata(dev);
-	char temp[3];
-	sprintf(temp, "%d\n", lcd->auto_brightness);
-	strcpy(buf, temp);
-
-	return strlen(buf);
-}
-
-static ssize_t ld9040_auto_brightness_store(struct device *dev,
-	struct device_attribute *attr, const char *buf, size_t size)
-{
-	struct ld9040 *lcd = dev_get_drvdata(dev);
-	int value;
-	int err;
-	err = kstrtoint(buf, 0, &value);
-	if (unlikely(err < 0))
-		return err;
-	else {
-		if (lcd->auto_brightness != value) {
-			dev_info(dev, "%s - %d, %d\n",
-				__func__, lcd->auto_brightness, value);
-			lcd->auto_brightness = value;
-			if (panel_ld9040_enabled && !lcd->auto_brightness)
-				update_brightness(lcd);
-		}
-	}
-	return size;
-}
-
-static DEVICE_ATTR(auto_brightness, S_IRUGO | S_IWUSR,
-		ld9040_auto_brightness_show,
-		ld9040_auto_brightness_store);
 
 #if 0
 void ld9040_power_down(struct ld9040 *lcd)
@@ -1072,9 +1034,6 @@ static int ld9040_probe(struct spi_device *spi)
 	if (ret < 0)
 		dev_err(lcd->dev,  "failed to add sysfs entries\n");
 
-	ret = device_create_file(&lcd->bd->dev, &dev_attr_auto_brightness);
-	if (ret < 0)
-		dev_err(lcd->dev, "failed to add sysfs entries\n");
 
 /* Do not turn off lcd during booting */
 #ifndef CONFIG_FB_OMAP_BOOTLOADER_INIT

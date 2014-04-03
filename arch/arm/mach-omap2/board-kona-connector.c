@@ -42,7 +42,6 @@
 #include "board-kona.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
-#include "omap_phy_tune.c"
 
 #define KONA_MANUAL_USB_NONE	0
 #define KONA_MANUAL_USB_MODEM	1
@@ -81,15 +80,6 @@
 #define USB_INDEX	1
 #define CHARGER_INDEX	2
 
-
-#define SWCAP_TRIM_OFFSET			(-0x3)
-#define SWCAP_TRIM_OFFSET_HOST			(-0x42)
-#define BGTRIM_TRIM_OFFSET_HOST			(-0x3FA0)
-#define RTERM_RMX_OFFSET_HOST			(0x20)
-
-/* Recommended(by H/W Team) Swing level value for Kona */
-#define KONA_MHL_SWING_LEVEL	0x60
-
 static char *device_names[] = {
 	[P30_OTG]			= "otg",
 	[P30_EARJACK_WITH_DOCK]		= "earjack",
@@ -118,7 +108,6 @@ struct omap4_otg {
 	u32 usb_ldo_inst;
 	bool vbus_on;
 	bool need_vbus_drive;
-	bool usb_phy_suspend_lock;
 	int usb_manual_mode;
 	int uart_manual_mode;
 	int current_device;
@@ -131,19 +120,6 @@ struct omap4_otg {
 };
 
 static struct omap4_otg kona_otg_xceiv;
-
-#define USB_PHY_SUSPEND_LOCK()		\
-do {		\
-	kona_otg_xceiv.usb_phy_suspend_lock = 1;	\
-} while (0)
-
-#define USB_PHY_SUSPEND_UNLOCK()	\
-do {		\
-	kona_otg_xceiv.usb_phy_suspend_lock = 0;	\
-} while (0)
-
-#define IS_USB_PHY_SUSPEND_LOCK()	\
-	(kona_otg_xceiv.usb_phy_suspend_lock == 1 ? 1 : 0)
 
 static int init_switch_sel;
 
@@ -241,27 +217,23 @@ static void kona_set_audio_switch(int state)
 
 static void kona_cp_usb_attach(void)
 {
-	pr_info("%s: set usb path to CP\n", __func__);
 	gpio_set_value(connector_gpios[GPIO_USB_SEL0].gpio, 0);
 	gpio_set_value(connector_gpios[GPIO_USB_SEL1].gpio, 1);
 }
 
 static void kona_cp_usb_detach(void)
 {
-	pr_info("%s: set usb path to AP\n", __func__);
 	gpio_set_value(connector_gpios[GPIO_USB_SEL0].gpio, 1);
 	gpio_set_value(connector_gpios[GPIO_USB_SEL1].gpio, 1);
 }
 
 static void kona_ap_uart_actions(void)
 {
-	pr_info("%s: set uart path to AP\n", __func__);
 	gpio_set_value(connector_gpios[GPIO_UART_SEL].gpio, IF_UART_SEL_AP);
 }
 
 static void kona_cp_uart_actions(void)
 {
-	pr_info("%s: set uart path to CP\n", __func__);
 	gpio_set_value(connector_gpios[GPIO_UART_SEL].gpio, IF_UART_SEL_CP);
 }
 
@@ -411,8 +383,6 @@ int kona_vusb_enable(u32 device_index, bool enable)
 		if (unlikely(pwr_en_gpio == -EINVAL))
 			pr_err("%s gpio error. value is %d\n",
 				__func__, pwr_en_gpio);
-		else if (IS_USB_PHY_SUSPEND_LOCK() && !enable)
-			pr_err("%s phy suspend is locked\n", __func__);
 		else {
 			gpio_set_value(pwr_en_gpio, (int)!!enable);
 			kona_otg->reg_on = enable;
@@ -425,14 +395,8 @@ int kona_vusb_enable(u32 device_index, bool enable)
 	return ret;
 }
 
-static void kona_set_vbus_drive(struct omap4_otg *kona_otg, bool enable)
+static void kona_set_vbus_drive(bool enable)
 {
-	if (enable)
-		host_notify_set_ovc_en
-			(&kona_otg->pdata->ndev, NOTIFY_SET_ON);
-	else
-		host_notify_set_ovc_en
-			(&kona_otg->pdata->ndev, NOTIFY_SET_OFF);
 	kona_accessory_power(2, enable);
 	return;
 }
@@ -442,7 +406,7 @@ static void kona_otg_work(struct work_struct *data)
 	struct omap4_otg *kona_otg =
 		container_of(data, struct omap4_otg, set_vbus_work);
 
-	kona_set_vbus_drive(kona_otg, kona_otg->need_vbus_drive);
+	kona_set_vbus_drive(kona_otg->need_vbus_drive);
 }
 
 static int kona_otg_set_vbus(struct otg_transceiver *otg, bool enabled)
@@ -477,15 +441,8 @@ static void kona_otg_phy_shutdown(struct otg_transceiver *otg)
 
 static int kona_otg_set_suspend(struct otg_transceiver *otg, int suspend)
 {
-	int ret = 0;
 	dev_info(otg->dev, "%s = %d\n", __func__, suspend);
-
-	if (IS_USB_PHY_SUSPEND_LOCK() && suspend)
-		dev_info(otg->dev, "phy suspend is locked\n");
-	else
-		ret = omap4430_phy_suspend(otg->dev, suspend);
-
-	return ret;
+	return omap4430_phy_suspend(otg->dev, suspend);
 }
 
 static int kona_otg_is_active(struct otg_transceiver *otg)
@@ -516,10 +473,7 @@ static void kona_ap_usb_attach(struct omap4_otg *otg)
 {
 	pr_debug("[%s]", __func__);
 
-	USB_PHY_SUSPEND_LOCK();
 	kona_vusb_enable(USB_INDEX, true);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
-	USB_PHY_SUSPEND_UNLOCK();
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
@@ -551,19 +505,12 @@ static void kona_usb_host_attach(struct omap4_otg *otg)
 
 #ifdef CONFIG_USB_HOST_NOTIFY
 	if (otg->pdata && otg->pdata->usbhostd_start) {
-		host_notify_set_ovc_en
-			(&otg->pdata->ndev, NOTIFY_SET_OFF);
 		otg->pdata->ndev.mode = NOTIFY_HOST_MODE;
 		otg->pdata->usbhostd_start();
 	}
 #endif
 
-	USB_PHY_SUSPEND_LOCK();
 	kona_vusb_enable(USB_INDEX, true);
-	omap4430_phy_init_for_eyediagram
-		(SWCAP_TRIM_OFFSET_HOST, BGTRIM_TRIM_OFFSET_HOST
-						, RTERM_RMX_OFFSET_HOST);
-	USB_PHY_SUSPEND_UNLOCK();
 
 	otg->otg.state = OTG_STATE_A_IDLE;
 	otg->otg.default_a = true;
@@ -742,7 +689,7 @@ static struct sii9234_platform_data sii9234_pdata = {
 	.reg_notifier	= acc_register_notifier,
 	.unreg_notifier	= acc_unregister_notifier,
 	.dongle		= DONGLE_NONE,
-	.swing_level	= KONA_MHL_SWING_LEVEL,
+	.swing_level	= DEFAULT_MHL_SWING_LEVEL,
 	.early_read_devcap = NULL,
 };
 
@@ -847,7 +794,6 @@ void kona_30pin_detected(int device, bool connected)
 		break;
 	case P30_JIG:
 		if (connected) {
-			check_jig_status(1);
 			if (kona_otg->uart_manual_mode ==
 					KONA_MANUAL_UART_MODEM)
 				kona_cp_uart_actions();
@@ -937,7 +883,6 @@ static ssize_t kona_usb_sel_store(struct device *dev,
 
 	old_mode = kona_otg->usb_manual_mode;
 
-	pr_info("%s: input: %s\n", __func__, buf);
 	if (!strncasecmp(buf, "PDA", 3)) {
 		kona_otg->usb_manual_mode = KONA_MANUAL_USB_AP;
 
@@ -1332,7 +1277,6 @@ void __init omap4_kona_connector_init(void)
 	}
 
 	omap4430_phy_init(&kona_otg->dev);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
 	kona_otg_set_suspend(&kona_otg->otg, 0);
 #ifdef CONFIG_USB_HOST_NOTIFY
 	kona_host_notifier_init(kona_otg);

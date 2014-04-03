@@ -31,9 +31,6 @@
 #define CAM_MAJOR	119
 #define CAM_REG_MAX 1
 
-#define FLASH_CURRENT_LEVEL_9	(9/2)	/* 15.625 * (9/2) = 70.3125 mA */
-#define FLASH_CURRENT_LEVEL_0	0	/* 0mA */
-
 static int power_enable;
 static int cam_regulator_request(unsigned int ldo_enable);
 static void cam_regulator_release(void);
@@ -63,7 +60,7 @@ struct max77693_led_platform_data max77693_led_pdata = {
 	.leds[0].timer = MAX77693_FLASH_TIME_500MS,
 	.leds[0].timer_mode = MAX77693_TIMER_MODE_MAX_TIMER,
 	.leds[0].cntrl_mode = MAX77693_LED_CTRL_BY_FLASHSTB,
-	.leds[0].brightness = 0x1F,	/* 15.625 * 31 = 484.375 mA */
+	.leds[0].brightness = 0x1F,
 
 	.leds[1].name = "leds-sec2",
 	.leds[1].id = MAX77693_FLASH_LED_2,
@@ -75,12 +72,12 @@ struct max77693_led_platform_data max77693_led_pdata = {
 	.leds[2].name = "torch-sec1",
 	.leds[2].id = MAX77693_TORCH_LED_1,
 	.leds[2].cntrl_mode = MAX77693_LED_CTRL_BY_FLASHSTB,
-	.leds[2].brightness = 0x4,	/* 15.625 * 9 = 140.625 mA */
+	.leds[2].brightness = 0x3F,
 
 	.leds[3].name = "torch-sec2",
 	.leds[3].id = MAX77693_TORCH_LED_2,
 	.leds[3].cntrl_mode = MAX77693_LED_CTRL_BY_I2C,
-	.leds[3].brightness = 0x4,
+	.leds[3].brightness = 0x4F,
 };
 
 static ssize_t rear_camera_type_show(struct device *dev,
@@ -301,38 +298,25 @@ static struct device_attribute dev_attr_camfw_front =
 static ssize_t show_camera_flash(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
-	int brt[MAX77693_LED_MAX];
-	int i;
+	int brightness = max77693_get_flash_brightness();
 
-	for (i = 0; i < MAX77693_LED_MAX; i++)
-		brt[i] = max77693_get_flash_brightness(i);
-
-	return sprintf(buf, "%d, %d, %d, %d\n", brt[0], brt[1], brt[2], brt[3]);
+	return sprintf(buf, "%d", brightness);
 }
 
 static ssize_t set_camera_flash(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count)
 {
-	int val;
+	int brightness;
 	int ret;
-	int i;
 
-	ret = kstrtoint(buf, 10, &val);
+	ret = kstrtoint(buf, 10, &brightness);
 	if (unlikely(ret < 0)) {
 		pr_err("%s: failed to get brightness from input value.\n",
 				__func__);
 		return count;
 	}
 
-	if (val) {
-		pr_info("%s: Flash on (281.25mA), (%d)\n", __func__, val);
-		for (i = 0; i < MAX77693_LED_MAX; i++)
-			max77693_set_flash_brightness(i, FLASH_CURRENT_LEVEL_9);
-	} else {
-		pr_info("%s: Flash off\n", __func__);
-		for (i = 0; i < MAX77693_LED_MAX; i++)
-			max77693_set_flash_brightness(i, FLASH_CURRENT_LEVEL_0);
-	}
+	max77693_set_flash_brightness(brightness);
 
 	return count;
 }
@@ -418,7 +402,7 @@ int cam_regulator_request(unsigned int ldo_enable)
 		if (IS_ERR_OR_NULL(cam_reg_depot[i].reg_p)) {
 			pr_err("%s: error providing regulator %s\n",
 					 __func__, reg_name);
-			return -EINVAL;
+			ret = -EINVAL;
 		}
 
 		cam_reg_depot[i].orig_uv = regulator_get_voltage(

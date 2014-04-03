@@ -314,17 +314,8 @@ int __init omap4_espresso_irled_init(void)
 	int i;
 	unsigned int boardtype = omap4_espresso_get_board_type();
 
-	if (system_rev > 6 && boardtype != SEC_MACHINE_ESPRESSO_USA_BBY) {
-		for (i = 0; i < ARRAY_SIZE(irled_gpios); i++) {
-			irled_gpios[i].gpio =
-			omap_muxtbl_get_gpio_by_name(irled_gpios[i].label);
-			omap_mux_set_gpio(
-				OMAP_PIN_INPUT_PULLDOWN | OMAP_MUX_MODE7,
-				irled_gpios[i].gpio);
-		}
-
+	if (system_rev > 6 && boardtype != SEC_MACHINE_ESPRESSO_USA_BBY)
 		return 0;
-	}
 
 	for (i = 0; i < ARRAY_SIZE(irled_gpios); i++)
 		irled_gpios[i].gpio =

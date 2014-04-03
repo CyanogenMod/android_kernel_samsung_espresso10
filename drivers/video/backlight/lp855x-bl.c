@@ -108,23 +108,6 @@ static int lp855x_update_reg(struct i2c_client *client, u8 reg, u8 val,
 	return 0;
 }
 
-static void lp855x_dump_data(struct i2c_client *client)
-{
-	u8 val;
-	u8 addr;
-
-	pr_info("%s: LP8556 Registers Value\n", __func__);
-	for (addr = 0; addr < 0x06; addr++) {
-		val = lp855x_read_reg(client, addr);
-		pr_info("REG: 0x%x, VAL: 0x%x\n", addr, val);
-	}
-
-	for (addr = 0xA0; addr < 0xAF; addr++) {
-		val = lp855x_read_reg(client, addr);
-		pr_info("REG: 0x%x, VAL: 0x%x\n", addr, val);
-	}
-}
-
 static int lp855x_send_intensity(struct backlight_device *bd)
 {
 	struct lp855x_info *info = dev_get_drvdata(&bd->dev);
@@ -145,13 +128,11 @@ static int lp855x_send_intensity(struct backlight_device *bd)
 	}
 
 	if (pdata->brt_mode != BRT_MODE_REG) {
-		if (pdata->send_intensity) {
+		if (pdata->send_intensity)
 			ret = pdata->send_intensity(intensity);
-			if (unlikely(ret < 0)) {
-				dev_err(&client->dev,
-						"failed to send intensity\n");
-				return ret;
-			}
+		if (unlikely(ret < 0)) {
+			dev_err(&client->dev, "failed to send intensity\n");
+			return ret;
 		}
 	}
 
@@ -296,6 +277,7 @@ static void lp855x_late_resume(struct early_suspend *h)
 }
 #endif
 
+
 static ssize_t lp8556_mode_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -391,22 +373,9 @@ static ssize_t auto_brightness_store(struct device *dev,
 static DEVICE_ATTR(auto_brightness, S_IRUGO|S_IWUSR|S_IWGRP,
 				auto_brightness_show, auto_brightness_store);
 
-static ssize_t lp8556_reg_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	struct lp855x_info *info = dev_get_drvdata(dev);
-
-	lp855x_dump_data(info->client);
-
-	return sprintf(buf, "%d\n", info->auto_brightness);
-}
-
-static DEVICE_ATTR(reg, S_IRUGO, lp8556_reg_show, NULL);
-
 static struct attribute *lp855x_attributes[] = {
 	&dev_attr_mode.attr,
 	&dev_attr_auto_brightness.attr,
-	&dev_attr_reg.attr,
 	NULL,
 };
 

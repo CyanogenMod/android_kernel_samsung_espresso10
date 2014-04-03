@@ -59,8 +59,6 @@
 #define REGS_HYS		0x2 /* Write Only */
 #define REGS_CYCLE		0x3 /* Write Only */
 #define REGS_OPMOD		0x4 /* Write Only */
-#define REGS_AMP		0x5 /* Write Only */
-
 #if defined(CONFIG_GP2A_MODE_B)
 #define REGS_CON	0x6 /* Write Only */
 #endif
@@ -75,21 +73,19 @@
 /* start time delay for light sensor in nano seconds */
 #define LIGHT_SENSOR_START_TIME_DELAY 50000000
 
-static u8 reg_defaults[6] = {
+static u8 reg_defaults[5] = {
 	0x00, /* PROX: read only register */
 	0x08, /* GAIN: large LED drive level */
 	0xC2, /* HYS: receiver sensitivity */
-	0x00, /* CYCLE: */
+	0x04, /* CYCLE: */
 	0x01, /* OPMOD: normal operating mode */
-	0xC0, /* AMP: bandwidth change */
 };
-static u8 reg_b_mode[6] = {
+static u8 reg_b_mode[5] = {
 	0x00, /* PROX: read only register */
 	0x08, /* GAIN: large LED drive level */
 	0x40, /* HYS: receiver sensitivity */
-	0x00, /* CYCLE: */
+	0x04, /* CYCLE: */
 	0x03, /* OPMOD: normal operating mode */
-	0xC0, /* AMP: bandwidth change */
 };
 
 enum {
@@ -663,7 +659,6 @@ static int gp2a_i2c_probe(struct i2c_client *client,
 	gp2a_i2c_write(gp2a, REGS_HYS, &reg_b_mode[2]);
 	gp2a_i2c_write(gp2a, REGS_CYCLE, &reg_b_mode[3]);
 	gp2a_i2c_write(gp2a, REGS_OPMOD, &reg_b_mode[4]);
-	gp2a_i2c_write(gp2a, REGS_AMP, &reg_b_mode[5]);
 #endif
 	gp2a->proximity_input_dev = input_dev;
 	input_set_drvdata(input_dev, gp2a);

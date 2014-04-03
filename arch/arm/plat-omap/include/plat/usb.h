@@ -58,11 +58,13 @@ struct ehci_hcd_omap_platform_data {
 	 * for low power mode entry
 	 */
 	struct clk			*transceiver_clk[OMAP3_HS_USB_PORTS];
+	int				*usbhs_update_sar;
 };
 
 struct ohci_hcd_omap_platform_data {
 	enum usbhs_omap_port_mode	port_mode[OMAP3_HS_USB_PORTS];
 	unsigned			es2_compatibility:1;
+	int				*usbhs_update_sar;
 };
 
 struct usbhs_omap_platform_data {
@@ -115,6 +117,7 @@ extern int omap4430_phy_set_clk(struct device *dev, int on);
 extern int omap4430_phy_init(struct device *dev);
 extern int omap4430_phy_exit(struct device *dev);
 extern int omap4430_phy_suspend(struct device *dev, int suspend);
+extern int omap4430_usbhs_update_sar(void);
 extern int omap4430_phy_is_active(struct device *dev);
 #endif
 

@@ -25,13 +25,9 @@
 #include <linux/power_supply.h>
 #include <linux/regulator/consumer.h>
 #include <linux/platform_data/sec_ts.h>
-#include <linux/touchscreen/synaptics.h>
 #include <linux/delay.h>
 #include <linux/wacom_i2c.h>
 #include <linux/slab.h>
-
-#include <linux/power_supply.h>	/* for check battery temp */
-#include <linux/timer.h>
 
 #include <mach/cpufreq_limits.h>
 
@@ -47,23 +43,17 @@
 #define TOUCH_DVFS_FREQ	800000
 #define TOUCH_MAX_SLOT		10
 
-static struct touch_dvfs_data {
+struct touch_dvfs_data {
 	struct work_struct dvfs_work;
 	bool mode;
 	bool enable;
-} kona_dvfs_data;
+};
 
-static struct touch_temp_data {
-	bool low_temp;
-	union power_supply_propval value;
-	struct power_supply *psy;
-	struct work_struct temp_work;
-	struct timer_list timer;
-} kona_temp_data;
+static struct touch_dvfs_data dvfs_data;
 
 static void touch_dvfs_work(struct work_struct *work)
 {
-	if (kona_dvfs_data.enable)
+	if (dvfs_data.enable)
 		omap_cpufreq_min_limit(DVFS_LOCK_ID_TSP, TOUCH_DVFS_FREQ);
 	else
 		omap_cpufreq_min_limit_free(DVFS_LOCK_ID_TSP);
@@ -99,12 +89,12 @@ static void touch_dvfs_event(struct input_handle *handle,
 			(code == BTN_TOOL_PEN || code == BTN_TOOL_RUBBER))
 		epen_state = !!value;
 
-	if ((cnt || epen_state) && !kona_dvfs_data.enable) {
-		kona_dvfs_data.enable = true;
-		schedule_work(&kona_dvfs_data.dvfs_work);
-	} else if (!cnt && !epen_state && kona_dvfs_data.enable) {
-		kona_dvfs_data.enable = false;
-		schedule_work(&kona_dvfs_data.dvfs_work);
+	if ((cnt || epen_state) && !dvfs_data.enable) {
+		dvfs_data.enable = true;
+		schedule_work(&dvfs_data.dvfs_work);
+	} else if (!cnt && !epen_state && dvfs_data.enable) {
+		dvfs_data.enable = false;
+		schedule_work(&dvfs_data.dvfs_work);
 	}
 }
 
@@ -292,7 +282,7 @@ static void __init kona_input_keyboard_init(void)
 }
 
 /* touch device settings for synaptics rmi control program */
-#ifdef CONFIG_TOUCHSCREEN_SYNAPTICS_RMI4
+#if defined(CONFIG_TOUCHSCREEN_SYNAPTICS_RMI4)
 
 #include <linux/rmi.h>
 
@@ -409,57 +399,10 @@ static struct gpio tsp_gpios[] = {
 	},
 };
 
-#define TEMP_THRESHOLD			(-50)
-#define TEMP_CHECK_INTERVAL		(jiffies + msecs_to_jiffies(60000))
-
-static void kona_touch_temp_work(struct work_struct *work)
-{
-	union power_supply_propval value;
-	struct power_supply *psy = power_supply_get_by_name("sec-fuelgauge");
-
-	if (psy) {
-		psy->get_property(psy, POWER_SUPPLY_PROP_TEMP, &value);
-	} else {
-		pr_err("tsp: To get battery temperature failed.\n");
-		return;
-	}
-
-	if (value.intval < TEMP_THRESHOLD && !kona_temp_data.low_temp) {
-		kona_temp_data.low_temp = true;
-		synaptics_set_low_temp_bit(true);
-		pr_info("tsp: Device going to low temperature mode. temp: %d\n",
-								value.intval);
-	} else if (kona_temp_data.low_temp) {
-		kona_temp_data.low_temp = false;
-		synaptics_set_low_temp_bit(false);
-		pr_info("tsp: Device going to room temperature mode. temp: %d\n",
-								value.intval);
-	}
-	return;
-}
-
-static void kona_touch_temp_handler(unsigned long data)
-{
-	schedule_work(&kona_temp_data.temp_work);
-	mod_timer(&kona_temp_data.timer, TEMP_CHECK_INTERVAL);
-
-	return;
-}
-
-static void __init kona_check_temp_init(void)
-{
-	setup_timer(&kona_temp_data.timer, kona_touch_temp_handler, 0);
-	mod_timer(&kona_temp_data.timer, TEMP_CHECK_INTERVAL);
-
-	INIT_WORK(&kona_temp_data.temp_work, kona_touch_temp_work);
-
-	return;
-}
-
 static void tsp_set_power_regulator(bool on)
 {
 	static struct regulator *tsp_vdd, *tsp_pull_up;
-	static bool kernel_boot_time = true;
+	static bool boot_on;
 
 	if (unlikely(!tsp_vdd || !tsp_pull_up)) {
 		tsp_vdd = regulator_get(NULL, "TSP_3.3V");
@@ -475,39 +418,23 @@ static void tsp_set_power_regulator(bool on)
 		pr_info("tsp: power on.\n");
 		regulator_enable(tsp_pull_up);
 		regulator_enable(tsp_vdd);
-
-		/* This reduce kernel boot time.
-		   Regulator set tsp voltages to enabled at boot time. */
-		if (likely(!kernel_boot_time)) {
-			msleep(300); /* for guarantee a device boot time */
-			kona_temp_data.low_temp = false;
-			kona_touch_temp_handler(0);
-		} else
-			kernel_boot_time = false;
+		if (likely(boot_on))
+			msleep(300); /* for guarantee a boot time */
+		else
+			boot_on = true;
 	} else {
 		pr_info("tsp: power off.\n");
-		if (likely(regulator_is_enabled(tsp_vdd) &&
-					regulator_is_enabled(tsp_pull_up))) {
-			regulator_disable(tsp_vdd);
-			regulator_disable(tsp_pull_up);
-		}
+		regulator_disable(tsp_vdd);
+		regulator_disable(tsp_pull_up);
 		msleep(50);
-		del_timer(&kona_temp_data.timer);
 	}
 
 	return;
 }
 
-static struct synaptics_fw_info kona_tsp_fw_info = {
-	.vendor		= "SY",
-	.hw_id		= 0x01,
-	.release_date	= "1023",
-};
-
 static struct sec_ts_platform_data kona_ts_pdata = {
 	.model_name	= "N5100",
-	.fw_name	= "synaptics/N5100_SY_01.fw",
-	.fw_info	= &kona_tsp_fw_info,
+	.fw_name	= "synaptics/n5100.fw",
 	.ext_fw_name	= "/mnt/sdcard/n5100.img",
 	.rx_channel_no	= 41, /* Rx ch. */
 	.tx_channel_no	= 26, /* Tx ch. */
@@ -547,16 +474,13 @@ static void __init kona_tsp_gpio_init(void)
 static void __init kona_input_tsp_init(void)
 {
 	kona_tsp_gpio_init();
-	kona_check_temp_init();
 
 	i2c_register_board_info(3, kona_i2c3_boardinfo,
 				ARRAY_SIZE(kona_i2c3_boardinfo));
 }
-#endif
 
 void omap4_kona_tsp_ta_detect(int cable_type)
 {
-#ifndef CONFIG_TOUCHSCREEN_SYNAPTICS_RMI4
 	struct regulator *tsp_vdd;
 	tsp_vdd = regulator_get(NULL, "TSP_3.3V");
 
@@ -575,9 +499,9 @@ void omap4_kona_tsp_ta_detect(int cable_type)
 	/* Conditions to prevent kernel panic */
 	if (kona_ts_pdata.set_ta_mode && regulator_is_enabled(tsp_vdd))
 		kona_ts_pdata.set_ta_mode(&kona_ts_pdata.ta_state);
-#endif
 	return;
 }
+#endif
 
 /* wacom device setting */
 enum {
@@ -626,8 +550,8 @@ static struct wacom_platform_data wacom_pdata = {
 	.boot_addr = 0x09,
 	.binary_fw_path = "wacom/n5100.fw",
 	.file_fw_path = "/sdcard/firmware/wacom_firm.bin",
-	.fw_version = 0x501,
-	.fw_checksum = {0x1F, 0x1E, 0xF2, 0xAD, 0x5D},
+	.fw_version = 0x338,
+	.fw_checksum = {0x1F, 0xF9, 0xE6, 0x18, 0x6A},
 	.power = wacom_power_on,
 };
 
@@ -670,11 +594,11 @@ static void __init kona_input_wacom_init(void)
 				ARRAY_SIZE(kona_i2c10_boardinfo));
 }
 
-static void __init touch_dvfs_handler_init(void)
+static void touch_dvfs_handler_init(void)
 {
 	int ret;
 
-	INIT_WORK(&kona_dvfs_data.dvfs_work, touch_dvfs_work);
+	INIT_WORK(&dvfs_data.dvfs_work, touch_dvfs_work);
 	ret = input_register_handler(&touch_dvfs_handler);
 	if (ret < 0)
 		pr_err("tsp: failed to register touch dvfs handler\n");

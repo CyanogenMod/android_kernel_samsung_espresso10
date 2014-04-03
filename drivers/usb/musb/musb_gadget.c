@@ -207,7 +207,8 @@ __acquires(ep->musb->lock)
 				ep->end_point.name, request,
 				req->request.actual, req->request.length,
 				request->status);
-	/*  check the validation of function */
+        
+	/* check the validation of function */
 	if (req->request.complete)
 		req->request.complete(&req->ep->end_point, &req->request);
 	spin_lock(&musb->lock);
@@ -331,13 +332,6 @@ static void txstate(struct musb *musb, struct musb_request *req)
 	int			use_dma = 0;
 
 	musb_ep = req->ep;
-
-	/* Check if EP is disabled */
-	if (!musb_ep->desc) {
-		dev_dbg(musb->controller, "ep:%s disabled - ignore request\n",
-						musb_ep->end_point.name);
-		return;
-	}
 
 	/* we shouldn't get here while DMA is active ... but we do ... */
 	if (dma_channel_status(musb_ep->dma) == MUSB_DMA_STATUS_BUSY) {
@@ -566,7 +560,8 @@ void musb_g_tx(struct musb *musb, u8 epnum)
 			&& (request->actual == request->length))
 #if defined(CONFIG_USB_INVENTRA_DMA) || defined(CONFIG_USB_UX500_DMA)
 			|| (is_dma && (!dma->desired_mode ||
-				(request->actual % musb_ep->packet_sz)))
+				(request->actual &
+					(musb_ep->packet_sz - 1))))
 #endif
 		) {
 			/*
@@ -578,14 +573,8 @@ void musb_g_tx(struct musb *musb, u8 epnum)
 
 			dev_dbg(musb->controller, "sending zero pkt\n");
 			musb_writew(epio, MUSB_TXCSR, MUSB_TXCSR_MODE
-					| MUSB_TXCSR_TXPKTRDY
-					| (csr & MUSB_TXCSR_P_ISO));
+					| MUSB_TXCSR_TXPKTRDY);
 			request->zero = 0;
-			/*
-			 * Return from here with the expectation of the endpoint
-			 * interrupt for further action.
-			 */
-			return;
 		}
 
 		if (request->actual == request->length) {
@@ -665,13 +654,6 @@ static void rxstate(struct musb *musb, struct musb_request *req)
 		musb_ep = &hw_ep->ep_out;
 
 	len = musb_ep->packet_sz;
-
-	/* Check if EP is disabled */
-	if (!musb_ep->desc) {
-		dev_dbg(musb->controller, "ep:%s disabled - ignore request\n",
-						musb_ep->end_point.name);
-		return;
-	}
 
 	/* We shouldn't get here while DMA is active, but we do... */
 	if (dma_channel_status(musb_ep->dma) == MUSB_DMA_STATUS_BUSY) {
@@ -1773,7 +1755,7 @@ void musb_platform_pullup(struct musb *musb, int is_on)
 	unsigned long	flags;
 	spin_lock_irqsave(&musb->lock, flags);
 	if (musb->softconnect)
-		musb_pullup(musb, is_on);
+	musb_pullup(musb, is_on);
 	spin_unlock_irqrestore(&musb->lock, flags);
 	dev_info(musb->controller, "%s is_on=%d\n", __func__, is_on);
 }

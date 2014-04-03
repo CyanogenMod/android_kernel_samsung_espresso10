@@ -250,23 +250,4 @@ config OMAP2_DSS_DSI_SAMSUNG_FIFO_SIZE_CH3
 		3: 96x33bits, 4: 128x33bits
 	  Note : The sum of the size of all fifos for 4 channels <= 4
 
-config OMAP2_DSS_DSI_SAMSUNG_DELAY_DISABLE_IF
-	int "Delay(us) after Disabling DSI interface"
-	default 0
-	help
-	  This delay is inserted after disabling DSI interface.
-	  OMAP DSI code checks the result of disabling or enabling
-	  of DSI interface by polling the enable bit of DSI_CTRL
-	  register. However, sometimes empirical delay should be
-	  inserted to send remaining packets in TX fifo.
-
-config OMAP2_DSS_DSI_SAMSUNG_NUM_DUMMY_PAYLOAD
-	int "Number of Dummy Payload after DSI long payload"
-	default 0
-	help
-	  This is the number of dummy payload for DSI long payload issue.
-	  Sometimes last some payload is not sent to panel side.
-	  So some dummy payload are added after sending long payload
-	  as a workaround of this issue. This number of dummy payload(0,0,0,0)
-	  are inserted after sending long payload.
 endif

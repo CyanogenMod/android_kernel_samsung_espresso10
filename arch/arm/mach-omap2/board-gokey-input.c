@@ -287,12 +287,10 @@ struct touch_platform_data cyttsp4_i2c_touch_platform_data = {
 
 static struct sec_ts_platform_data gokey_ts_pdata = {
 	.model_name	= "gh1",
-	.rx_channel_no	= 20,
-	.tx_channel_no	= 13,
+	.rx_channel_no	= 14,
+	.tx_channel_no	= 26,
 	.x_pixel_size	= 480,
 	.y_pixel_size	= 800,
-	.fw_name	= "cypress/gh1.fw",
-	.ext_fw_name	= "/mnt/sdcard/gh1.bin",
 	.private_data	= &cyttsp4_i2c_touch_platform_data,
 	.key		= gokey_touch_keys,
 	.key_size	= ARRAY_SIZE(gokey_touch_keys),

@@ -522,13 +522,12 @@ void jbd2_journal_lock_updates(journal_t *journal)
 			break;
 
 		spin_lock(&transaction->t_handle_lock);
-		prepare_to_wait(&journal->j_wait_updates, &wait,
-				TASK_UNINTERRUPTIBLE);
 		if (!atomic_read(&transaction->t_updates)) {
 			spin_unlock(&transaction->t_handle_lock);
-			finish_wait(&journal->j_wait_updates, &wait);
 			break;
 		}
+		prepare_to_wait(&journal->j_wait_updates, &wait,
+				TASK_UNINTERRUPTIBLE);
 		spin_unlock(&transaction->t_handle_lock);
 		write_unlock(&journal->j_state_lock);
 		schedule();
@@ -1681,20 +1680,8 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
 		__journal_try_to_free_buffer(journal, bh);
 		jbd2_journal_put_journal_head(jh);
 		jbd_unlock_bh_state(bh);
-#ifndef CONFIG_CMA
 		if (buffer_jbd(bh))
 			goto busy;
-#else
-		if (buffer_jbd(bh)) {
-			/*
-			 * Workaround: In case of CMA page, just commit journal.
-			 */
-			if (is_cma_pageblock(page))
-				jbd2_journal_force_commit(journal);
-			else
-				goto busy;
-		}
-#endif
 	} while ((bh = bh->b_this_page) != head);
 
 	ret = try_to_free_buffers(page);

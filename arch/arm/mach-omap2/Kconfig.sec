@@ -51,6 +51,12 @@ config FW_SAMSUNG_ESPRESSO_10_TSP
 	bool
 	default n
 
+config MACH_SAMSUNG_PALAU
+	bool "Samsung Palau (GT-I9270) Board"
+	default n
+	select MACH_OMAP4_SAMSUNG
+	select REGULATOR_FIXED_VOLTAGE
+
 config MACH_SAMSUNG_KONA
 	bool "Samsung Kona (GT-N5100) Board"
 	default n
@@ -212,13 +218,6 @@ config SAMSUNG_DIABLE_SEC_LOG_WHEN_TTY
 		is used. Disabling sec_log_buf is not a big problem because,
 		developer can whatching a serial log through out the teminal
 		program.
-
-config SAMSUNG_Y_CABLE
-	bool "Y Cable Support"
-	default n
-	help
-		This is implementation is a proto-type implementation for
-		Y-Cable support P5113 Chipset, still needs to be worked-out.
 
 menu "SAMSUNG Common Debugging Features"
 menuconfig SEC_DEBUG

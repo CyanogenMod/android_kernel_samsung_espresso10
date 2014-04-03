@@ -698,9 +698,6 @@ static int dss_mgr_wait_for_vsync(struct omap_overlay_manager *mgr)
 	unsigned long timeout = msecs_to_jiffies(500);
 	u32 irq = 0; /* For non-supported panels will cause a timeout */
 	int r;
-	r = dispc_runtime_get();
-	if (r)
-		return r;
 
 	switch (mgr->device->type) {
 	case OMAP_DISPLAY_TYPE_VENC:
@@ -754,7 +751,6 @@ static int dss_mgr_wait_for_vsync(struct omap_overlay_manager *mgr)
 	if (!r)
 		mgr->device->first_vsync = true;
 
-	dispc_runtime_put();
 	return r;
 }
 
@@ -769,9 +765,6 @@ static int dss_mgr_wait_for_go(struct omap_overlay_manager *mgr)
 
 	if (!dssdev || dssdev->state != OMAP_DSS_DISPLAY_ACTIVE)
 		return 0;
-	r = dispc_runtime_get();
-	if (r)
-		return r;
 
 	if (dssdev->type == OMAP_DISPLAY_TYPE_VENC
 			|| dssdev->type == OMAP_DISPLAY_TYPE_HDMI) {
@@ -833,7 +826,7 @@ static int dss_mgr_wait_for_go(struct omap_overlay_manager *mgr)
 			break;
 		}
 	}
-	dispc_runtime_put();
+
 	return r;
 }
 
@@ -853,9 +846,7 @@ int dss_mgr_wait_for_go_ovl(struct omap_overlay *ovl)
 
 	if (!dssdev || dssdev->state != OMAP_DSS_DISPLAY_ACTIVE)
 		return 0;
-	r = dispc_runtime_get();
-	if (r)
-		return r;
+
 	if (dssdev->type == OMAP_DISPLAY_TYPE_VENC
 			|| dssdev->type == OMAP_DISPLAY_TYPE_HDMI) {
 		irq = DISPC_IRQ_EVSYNC_ODD | DISPC_IRQ_EVSYNC_EVEN
@@ -914,7 +905,7 @@ int dss_mgr_wait_for_go_ovl(struct omap_overlay *ovl)
 			break;
 		}
 	}
-	dispc_runtime_put();
+
 	return r;
 }
 
@@ -1920,10 +1911,7 @@ static int omap_dss_mgr_apply(struct omap_overlay_manager *mgr)
 	if (r)
 		return r;
 
-	omap_dss_overlay_ensure_bw();
-
 	spin_lock_irqsave(&dss_cache.lock, flags);
-
 
 	if (!mgr->device || (mgr->device->state != OMAP_DSS_DISPLAY_ACTIVE &&
 							!mgr->info.wb_only)) {

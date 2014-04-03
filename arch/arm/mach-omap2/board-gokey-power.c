@@ -41,7 +41,6 @@
 #define TA_ENABLE	1
 
 #define TEMP_ADC_CHANNEL	1
-#define EAR_ADC_CHANNEL		2
 #define ADC_NUM_SAMPLES		5
 #define ADC_LIMIT_ERR_COUNT	5
 
@@ -59,87 +58,87 @@ static struct gpio charger_gpios[] = {
 static struct temp_adc_table_data temper_table[] = {
 	/* ADC, Temperature (C/10) */
 	/* adjusted in 20120407 */
-	{ 322,   700     },
-	{ 329,   690     },
-	{ 336,   680     },
-	{ 343,   670     },
-	{ 350,   660     },
-	{ 357,   650     },
-	{ 364,   640     },
-	{ 371,   630     },
-	{ 378,   620     },
-	{ 385,   610     },
-	{ 392,   600     },
-	{ 401,   590     },
-	{ 410,   580     },
-	{ 425,   570     },
-	{ 442,   560     },
-	{ 464,   550     },
-	{ 482,   540     },
-	{ 499,   530     },
-	{ 518,   520     },
-	{ 536,   510     },
-	{ 560,   500     },
-	{ 584,   490     },
-	{ 603,   480     },
-	{ 618,   470     },
-	{ 631,   460     },
-	{ 643,   450     },
-	{ 661,   440     },
-	{ 683,   430     },
-	{ 700,   420     },
-	{ 746,   410     },
-	{ 796,   400     },
-	{ 834,   390     },
-	{ 879,   380     },
-	{ 922,   370     },
-	{ 963,   360     },
-	{ 1005,   350     },
-	{ 1043,   340     },
-	{ 1083,  330     },
-	{ 1125,  320     },
-	{ 1169,  310     },
-	{ 1206,  300     },
-	{ 1243,  290     },
-	{ 1280,  280     },
-	{ 1317,  270     },
-	{ 1354,  260     },
-	{ 1391,  250     },
-	{ 1428,  240     },
-	{ 1465,  230     },
-	{ 1502,  220     },
-	{ 1539,  210     },
-	{ 1576,  200     },
-	{ 1613,  190     },
-	{ 1650,  180     },
-	{ 1687,  170     },
-	{ 1724,  160     },
-	{ 1761,  150     },
-	{ 1798,  140     },
-	{ 1835,  130     },
-	{ 1872,  120     },
-	{ 1909,  110     },
-	{ 1946,  100     },
-	{ 1983,  90      },
-	{ 2020,  80      },
-	{ 2040,  70      },
-	{ 2070,  60      },
-	{ 2140,  50      },
-	{ 2180,  40      },
+	{ 250,   700     },
+	{ 260,   690     },
+	{ 270,   680     },
+	{ 280,   670     },
+	{ 290,   660     },
+	{ 300,   650     },
+	{ 308,   640     },
+	{ 318,   630     },
+	{ 330,   620     },
+	{ 341,   610     },
+	{ 354,   600     },
+	{ 367,   590     },
+	{ 380,   580     },
+	{ 394,   570     },
+	{ 413,   560     },
+	{ 432,   550     },
+	{ 451,   540     },
+	{ 470,   530     },
+	{ 489,   520     },
+	{ 508,   510     },
+	{ 527,   500     },
+	{ 546,   490     },
+	{ 565,   480     },
+	{ 584,   470     },
+	{ 603,   460     },
+	{ 622,   450     },
+	{ 632,   440     },
+	{ 643,   430     },
+	{ 666,   420     },
+	{ 687,   410     },
+	{ 717,   400     },
+	{ 741,   390     },
+	{ 763,   380     },
+	{ 785,   370     },
+	{ 809,   360     },
+	{ 834,   350     },
+	{ 876,   340     },
+	{ 916,  330     },
+	{ 956,  320     },
+	{ 996,  310     },
+	{ 1036,  300     },
+	{ 1076,  290     },
+	{ 1116,  280     },
+	{ 1156,  270     },
+	{ 1196,  260     },
+	{ 1236,  250     },
+	{ 1263,  240     },
+	{ 1291,  230     },
+	{ 1319,  220     },
+	{ 1347,  210     },
+	{ 1375,  200     },
+	{ 1438,  190     },
+	{ 1500,  180     },
+	{ 1562,  170     },
+	{ 1624,  160     },
+	{ 1686,  150     },
+	{ 1717,  140     },
+	{ 1748,  130     },
+	{ 1779,  120     },
+	{ 1810,  110     },
+	{ 1841,  100     },
+	{ 1888,  90      },
+	{ 1933,  80      },
+	{ 1978,  70      },
+	{ 2023,  60      },
+	{ 2068,  50      },
+	{ 2146,  40      },
 	{ 2225,  30      },
-	{ 2320,  20      },
-	{ 2365,  10      },
-	{ 2415,  0       },
-	{ 2495,  (-10)   },
-	{ 2598,  (-20)   },
-	{ 2658,  (-30)   },
-	{ 2695,  (-40)   },
-	{ 2764,  (-50)   },
-	{ 2835,  (-60)   },
-	{ 2905,  (-70)   },
-	{ 2974,  (-80)   },
-	{ 3027,  (-90)   },
-	{ 3080,  (-100)  },
+	{ 2297,  20      },
+	{ 2370,  10      },
+	{ 2442,  0       },
+	{ 2513,  (-10)   },
+	{ 2578,  (-20)   },
+	{ 2648,  (-30)   },
+	{ 2720,  (-40)   },
+	{ 2792,  (-50)   },
+	{ 2867,  (-60)   },
+	{ 2937,  (-70)   },
+	{ 3007,  (-80)   },
+	{ 3077,  (-90)   },
+	{ 3147,  (-100)  },
 };
 
 static int twl6030_get_adc_data(int ch)
@@ -221,21 +220,12 @@ static int get_adc_temperature(void)
 	return 3400 - twl6030_get_adc_data(TEMP_ADC_CHANNEL);
 }
 
+
 static int get_temperature(void)
 {
 	return temp_adc_value();
 }
 
-int get_temp(void)
-{
-	return temp_adc_value();
-}
-
-int omap4_get_adc_earjack(void)
-{
-	usleep_range(100000, 110000);
-	return twl6030_get_madc_conversion(EAR_ADC_CHANNEL);
-}
 
 static void charger_gpio_init(void)
 {
@@ -254,7 +244,7 @@ static void charger_enble_set(int state)
 	/*if battery is not detected, make charging set disable*/
 	gpio_set_value(charger_gpios[TA_ENABLE].gpio, !state);
 
-	pr_info("%s: Set charge status : %d, current status: %d\n",
+	pr_debug("%s: Set charge status : %d, current status: %d\n",
 		__func__, state,
 		gpio_get_value(charger_gpios[TA_ENABLE].gpio));
 }
@@ -301,30 +291,6 @@ static void set_termination_current(int term_type)
 							term_type);
 }
 
-static void get_charger_register(void)
-{
-	if (charger_callback && charger_callback->get_charger_register)
-		charger_callback->get_charger_register(charger_callback);
-}
-
-static void set_charger_voreg(void)
-{
-	if (charger_callback && charger_callback->set_charger_voreg)
-		charger_callback->set_charger_voreg(charger_callback);
-}
-
-static void set_control_limit(void)
-{
-	if (charger_callback && charger_callback->set_control_limit)
-		charger_callback->set_control_limit(charger_callback);
-}
-
-static void set_control_800mA(void)
-{
-	if (charger_callback && charger_callback->set_control_800)
-		charger_callback->set_control_800(charger_callback);
-}
-
 static void set_chg_current(int cable_type)
 {
 	if (charger_callback && charger_callback->set_charge_current)
@@ -338,12 +304,6 @@ static void set_full_charge_notify(void)
 		cable_callbacks->set_full_charge(cable_callbacks);
 }
 
-static void set_charge_fault_notify(void)
-{
-	if (cable_callbacks && cable_callbacks->set_charge_fault)
-		cable_callbacks->set_charge_fault(cable_callbacks);
-}
-
 static void connector_register_charger_callbacks(
 		struct battery_manager_callbacks *ptr)
 {
@@ -351,16 +311,13 @@ static void connector_register_charger_callbacks(
 }
 
 static struct bq2415x_platform_data bq24157_pdata = {
-	.max_charger_currentmA = 750,
+	.max_charger_currentmA = 1150,
 	.max_charger_voltagemV = 4360,
 	.first_term_currentmA = 150,
-	.second_term_currentmA = 50,
-	.third_term_currentmA = 50,
-	.cin_limit_current = 750,
-	.charge_ac_current = 750,
+	.cin_limit_current = 1150,
+	.charge_ac_current = 1150,
 	.charge_usb_current = 550,
 	.set_full_charge = set_full_charge_notify,
-	.set_charge_fault = set_charge_fault_notify,
 	.set_charge = charger_enble_set,
 	.register_callbacks = bq24157_charger_register_callbacks,
 };
@@ -392,12 +349,7 @@ static int check_charger_type(void)
 	char *cable_type_str[] = {"NONE", "USB", "AC"};
 
 	cable_type = gokey_get_charging_type();
-#ifdef CONFIG_MP3_LP_MODE
-	if (cable_type)
-		cpufreq_lpmode.cable_attached = 1;
-	else
-		cpufreq_lpmode.cable_attached = 0;
-#endif
+
 	pr_info("%s: Charger type is [%s]\n",
 			__func__, cable_type_str[cable_type]);
 
@@ -409,10 +361,6 @@ static struct batman_platform_data battery_manager_pdata = {
 	.set_charger_state = set_chg_state,
 	.set_charger_en = charger_enble_set,
 	.set_term_current = set_termination_current,
-	.set_charger_voreg = set_charger_voreg,
-	.set_control_limit = set_control_limit,
-	.set_control_800mA = set_control_800mA,
-	.get_charger_register = get_charger_register,
 	.get_temp = get_temperature,
 	.get_temp_adc = get_adc_temperature,
 	.get_charger_type = check_charger_type,
@@ -423,7 +371,7 @@ static struct batman_platform_data battery_manager_pdata = {
 	.low_recover_temp = 0,
 	.limit_charging_time = 28800,	/* 8 hours */
 	.limit_recharging_time = 7200,	/* 2 hours */
-	.recharge_voltage = 4290000,
+	.recharge_voltage = 4300000,
 };
 
 static struct platform_device battery_manager_device = {
@@ -458,9 +406,9 @@ static struct stc311x_platform_data stc3115_data = {
 	/* Vbat alm level mV*/
 	.Alm_Vbat = 3600,
 	/* nominal CC_cnf, coming from battery characterisation*/
-	.CC_cnf = 849,
+	.CC_cnf = 894,
 	/* nominal VM cnf , coming from battery characterisation*/
-	.VM_cnf = 459,
+	.VM_cnf = 468,
 	/* nominal capacity in mAh, coming from battery characterisation*/
 	.Cnom = 2100,
 	/* sense resistor mOhms*/
@@ -470,48 +418,30 @@ static struct stc311x_platform_data stc3115_data = {
 	/* 1=Adaptive mode enabled, 0=Adaptive mode disabled */
 	.Adaptive = 1,
 	/* capacity derating in 0.1% */
-	.CapDerating[6] = 190,	/* for temp = -20 C */
-	.CapDerating[5] = 70,	/* for temp = -10 C */
-	.CapDerating[4] = 30,	/* for temp = 0  C */
+	.CapDerating[6] = 19,	/* for temp = -20 C */
+	.CapDerating[5] = 7,	/* for temp = -10 C */
+	.CapDerating[4] = 3,	/* for temp = 0  C */
 	.CapDerating[3] = 0,	/* for temp = 10 C */
 	.CapDerating[2] = 0,	/* for temp = 25 C */
-	.CapDerating[1] = -20,	/* for temp = 40 C */
-	.CapDerating[0] = -40,	/* for temp = 60 C */
+	.CapDerating[1] = -5,	/* for temp = 40 C */
+	.CapDerating[0] = -7,	/* for temp = 60 C */
 
-	.OCVOffset[15] = -123,	/* OCV curve adjustment */
-	.OCVOffset[14] = -30,	/* OCV curve adjustment */
-	.OCVOffset[13] = -12,	/* OCV curve adjustment */
-	.OCVOffset[12] = -27,	/* OCV curve adjustment */
+	.OCVOffset[15] = -93,	/* OCV curve adjustment */
+	.OCVOffset[14] = 5,		/* OCV curve adjustment */
+	.OCVOffset[13] = 15,	/* OCV curve adjustment */
+	.OCVOffset[12] = -6,	/* OCV curve adjustment */
 	.OCVOffset[11] = 0,		/* OCV curve adjustment */
-	.OCVOffset[10] = -27,	/* OCV curve adjustment */
-	.OCVOffset[9] = 4,		/* OCV curve adjustment */
-	.OCVOffset[8] = 1,		/* OCV curve adjustment */
-	.OCVOffset[7] = 7,		/* OCV curve adjustment */
-	.OCVOffset[6] = 9,		/* OCV curve adjustment */
-	.OCVOffset[5] = 9,		/* OCV curve adjustment */
-	.OCVOffset[4] = 16,		/* OCV curve adjustment */
-	.OCVOffset[3] = 33,		/* OCV curve adjustment */
-	.OCVOffset[2] = 34,		/* OCV curve adjustment */
-	.OCVOffset[1] = 46,		/* OCV curve adjustment */
-	.OCVOffset[0] = -3,		/* OCV curve adjustment */
-
-
-	.OCVOffset2[15] = -45,	/* OCV curve adjustment */
-	.OCVOffset2[14] = -35,	/* OCV curve adjustment */
-	.OCVOffset2[13] = -21,	/* OCV curve adjustment */
-	.OCVOffset2[12] = -32,	/* OCV curve adjustment */
-	.OCVOffset2[11] = -8,	/* OCV curve adjustment */
-	.OCVOffset2[10] = -9,	/* OCV curve adjustment */
-	.OCVOffset2[9] = -1,		/* OCV curve adjustment */
-	.OCVOffset2[8] = 3,		/* OCV curve adjustment */
-	.OCVOffset2[7] = 2,		/* OCV curve adjustment */
-	.OCVOffset2[6] = 3,		/* OCV curve adjustment */
-	.OCVOffset2[5] = 4,		/* OCV curve adjustment */
-	.OCVOffset2[4] = -2,	/* OCV curve adjustment */
-	.OCVOffset2[3] = 23,	/* OCV curve adjustment */
-	.OCVOffset2[2] = 57,	/* OCV curve adjustment */
-	.OCVOffset2[1] = 90,	/* OCV curve adjustment */
-	.OCVOffset2[0] = 0,	/* OCV curve adjustment */
+	.OCVOffset[10] = -6,	/* OCV curve adjustment */
+	.OCVOffset[9] = 25,		/* OCV curve adjustment */
+	.OCVOffset[8] = 10,		/* OCV curve adjustment */
+	.OCVOffset[7] = 11,		/* OCV curve adjustment */
+	.OCVOffset[6] = 11,		/* OCV curve adjustment */
+	.OCVOffset[5] = 11,		/* OCV curve adjustment */
+	.OCVOffset[4] = 19,		/* OCV curve adjustment */
+	.OCVOffset[3] = 38,		/* OCV curve adjustment */
+	.OCVOffset[2] = 37,		/* OCV curve adjustment */
+	.OCVOffset[1] = 57,		/* OCV curve adjustment */
+	.OCVOffset[0] = 1,		/* OCV curve adjustment */
 
 	/*if the application temperature data is preferred
 		than the STC3115 temperature*/
@@ -563,9 +493,6 @@ void __init omap4_gokey_charger_init(void)
 
 	battery_manager_pdata.jig_on =
 				omap_muxtbl_get_gpio_by_name("JIG_ON_18");
-
-	battery_manager_pdata.vbus_gpio  =
-				omap_muxtbl_get_gpio_by_name("5V_DET");
 
 	battery_manager_pdata.bootmode = sec_bootmode;
 

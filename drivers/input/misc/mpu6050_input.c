@@ -52,7 +52,6 @@ struct motion_int_data {
 	unsigned char pwr_mnt[2];
 	unsigned char cfg;
 	unsigned char accel_cfg;
-	unsigned char gyro_cfg;
 	unsigned char int_cfg;
 	unsigned char smplrt_div;
 	bool is_set;
@@ -87,8 +86,6 @@ struct mpu6050_input_data {
 	u8 mode;
 	s16 acc_cal[3];
 	bool factory_mode;
-	struct delayed_work accel_off_work;
-	bool accel_on_by_system;
 };
 
 static struct mpu6050_input_data *gb_mpu_data;
@@ -285,10 +282,8 @@ static void mpu6050_input_report_gyro_xyz(struct mpu6050_input_data *data)
 static irqreturn_t mpu6050_input_irq_thread(int irq, void *dev)
 {
 	struct mpu6050_input_data *data = (struct mpu6050_input_data *)dev;
-	struct motion_int_data *mot_data = &data->mot_data;
 	unsigned char reg;
-	unsigned long timediff = 0;
-	int result;
+	unsigned int timediff = 0;
 
 	if (!atomic_read(&data->reactive_enable)) {
 #ifndef CONFIG_INPUT_MPU6050_POLLING
@@ -299,29 +294,19 @@ static irqreturn_t mpu6050_input_irq_thread(int irq, void *dev)
 			mpu6050_input_report_gyro_xyz(data);
 #endif
 	} else {
-		result =
-			mpu6050_i2c_read_reg(data->client,
-			MPUREG_INT_STATUS, 1, &reg);
-		if (result) {
-			pr_err("%s: i2c_read err= %d\n", __func__, result);
-			goto done;
-		}
+		mpu6050_i2c_read_reg(data->client, MPUREG_INT_STATUS, 1, &reg);
 		/* skip erronous interrupt in 100ms */
 		timediff = jiffies_to_msecs(jiffies - (data->motion_st_time));
-		if (timediff < 150 && !(data->factory_mode)) {
-			pr_debug("%s: timediff = %ld msec\n",
-				__func__, timediff);
+		if (timediff < 100 && !(data->factory_mode)) {
+			pr_info("%s: timediff = %d msec\n", __func__, timediff);
 			goto done;
 		}
 		if (reg & (1 << 6) || data->factory_mode) {
 			/*handle motion recognition*/
 			atomic_set(&data->reactive_state, true);
-			gb_mpu_data->factory_mode = false;
+			data->factory_mode = false;
 			pr_info("%s: motion interrupt happened\n",
 				__func__);
-			/* disable motion int */
-			mpu6050_i2c_write_single_reg(data->client,
-				MPUREG_INT_ENABLE, mot_data->int_cfg);
 			wake_lock_timeout(&data->reactive_wake_lock,
 				msecs_to_jiffies(2000));
 		}
@@ -413,9 +398,24 @@ static int mpu6050_input_set_motion_interrupt(struct mpu6050_input_data *data,
 	struct motion_int_data *mot_data = &data->mot_data;
 	unsigned char reg;
 
-	atomic_set(&data->reactive_state, false);
-
 	if (enable) {
+		if (!mot_data->is_set) {
+			mpu6050_i2c_read_reg(data->client,
+				MPUREG_PWR_MGMT_1, 2,
+					mot_data->pwr_mnt);
+			mpu6050_i2c_read_reg(data->client,
+				MPUREG_CONFIG, 1, &mot_data->cfg);
+			mpu6050_i2c_read_reg(data->client,
+				MPUREG_ACCEL_CONFIG, 1,
+					&mot_data->accel_cfg);
+			mpu6050_i2c_read_reg(data->client,
+				MPUREG_INT_ENABLE, 1,
+					&mot_data->int_cfg);
+			mpu6050_i2c_read_reg(data->client,
+				MPUREG_SMPLRT_DIV, 1,
+					&mot_data->smplrt_div);
+		}
+
 		/* 1) initialize */
 		mpu6050_i2c_read_reg(data->client, MPUREG_INT_STATUS, 1, &reg);
 		pr_info("%s: Initialize motion interrupt : INT_STATUS=%x\n",
@@ -437,10 +437,7 @@ static int mpu6050_input_set_motion_interrupt(struct mpu6050_input_data *data,
 				MPUREG_ACCEL_CONFIG, reg);
 
 		/* 3. set motion thr & dur */
-		if (factory_test)
-			reg = 0x41;	/* Make the motion & drdy enable */
-		else
-			reg = 0x40;	/* Make the motion interrupt enable */
+		reg = 0x40;	/* Make the motion interrupt enable */
 		mpu6050_i2c_write_single_reg(data->client,
 				MPUREG_INT_ENABLE, reg);
 		reg = 0x02;	/* Motion Duration =1 ms */
@@ -454,23 +451,21 @@ static int mpu6050_input_set_motion_interrupt(struct mpu6050_input_data *data,
 		mpu6050_i2c_write_single_reg(data->client,
 				MPUREG_ACCEL_MOT_THR, reg);
 
-		if (!factory_test) {
-			/* 5. */
-			/* Steps to setup the lp mode for PWM-2 register */
-			reg = mot_data->pwr_mnt[1];
-			reg |= (BITS_LPA_WAKE_20HZ); /* the freq of wakeup */
-			reg |= 0x07; /* put gyro in standby. */
-			reg &= ~(BIT_STBY_XA | BIT_STBY_YA | BIT_STBY_ZA);
-			mpu6050_i2c_write_single_reg(data->client,
-				MPUREG_PWR_MGMT_2, reg);
+		/* 5. */
+		/* Steps to setup the lower power mode for PWM-2 register */
+		reg = mot_data->pwr_mnt[1];
+		reg |= (BITS_LPA_WAKE_20HZ); /* setup the frequency of wakeup */
+		reg |= 0x07; /* put gyro in standby. */
+		reg &= ~(BIT_STBY_XA | BIT_STBY_YA | BIT_STBY_ZA);
+		mpu6050_i2c_write_single_reg(data->client,
+					MPUREG_PWR_MGMT_2, reg);
 
-			reg = 0x1;
-			reg |= 0x20; /* Set the cycle bit to be 1. LP MODE */
-			reg &= ~0x08; /* Clear the temp disp bit. */
-			mpu6050_i2c_write_single_reg(data->client,
+		reg = 0x1;
+		reg |= 0x20; /* Set the cycle bit to be 1. LOW POWER MODE */
+		reg &= ~0x08; /* Clear the temp disp bit. */
+		mpu6050_i2c_write_single_reg(data->client,
 				MPUREG_PWR_MGMT_1,
 				reg & ~BIT_SLEEP);
-		}
 		data->motion_st_time = jiffies;
 	} else {
 		if (mot_data->is_set) {
@@ -488,9 +483,6 @@ static int mpu6050_input_set_motion_interrupt(struct mpu6050_input_data *data,
 				MPUREG_ACCEL_CONFIG,
 				mot_data->accel_cfg);
 			mpu6050_i2c_write_single_reg(data->client,
-				MPUREG_GYRO_CONFIG,
-				mot_data->gyro_cfg);
-			mpu6050_i2c_write_single_reg(data->client,
 				MPUREG_INT_ENABLE,
 				mot_data->int_cfg);
 			reg = 0xff; /* Motion Duration =1 ms */
@@ -502,6 +494,7 @@ static int mpu6050_input_set_motion_interrupt(struct mpu6050_input_data *data,
 				MPUREG_ACCEL_MOT_THR, reg);
 			mpu6050_i2c_read_reg(data->client,
 				MPUREG_INT_STATUS, 1, &reg);
+
 			mpu6050_i2c_write_single_reg(data->client,
 				MPUREG_SMPLRT_DIV,
 				mot_data->smplrt_div);
@@ -618,7 +611,7 @@ static int mpu6050_input_suspend_gyro(struct mpu6050_input_data *data)
 static int mpu6050_input_resume_gyro(struct mpu6050_input_data *data)
 {
 	int result;
-	unsigned char regs[2] = { 0, };
+	unsigned regs[2] = { 0, };
 
 	CHECK_RESULT(mpu6050_i2c_read_reg
 		(data->client, MPUREG_PWR_MGMT_1, 2, data->gyro_pwr_mgnt));
@@ -632,8 +625,7 @@ static int mpu6050_input_resume_gyro(struct mpu6050_input_data *data)
 	CHECK_RESULT(mpu6050_i2c_write_single_reg
 		(data->client, MPUREG_PWR_MGMT_2, data->gyro_pwr_mgnt[1]));
 
-	regs[0] =
-		MPUREG_GYRO_CONFIG_VALUE(0, 0, 0, MPU_FS_500DPS);
+	regs[0] = 3 << 3;	/* 2000dps */
 	CHECK_RESULT(mpu6050_i2c_write_single_reg
 		(data->client, MPUREG_GYRO_CONFIG, regs[0]));
 
@@ -667,7 +659,7 @@ static int mpu6050_input_activate_gyro(struct mpu6050_input_data *data,
 
 static int mpu6050_set_delay(struct mpu6050_input_data *data)
 {
-	int result = 0;
+	int result;
 	int delay = 200;
 
 	if (data->enabled_sensors & MPU6050_SENSOR_ACCEL)
@@ -678,16 +670,9 @@ static int mpu6050_set_delay(struct mpu6050_input_data *data)
 
 	data->current_delay = delay;
 
-	if (data->enabled_sensors & MPU6050_SENSOR_ACCEL ||
-		data->enabled_sensors & MPU6050_SENSOR_GYRO) {
-		CHECK_RESULT(mpu6050_input_set_odr(data,
-			data->current_delay));
-#ifndef CONFIG_INPUT_MPU6050_POLLING
-		if (!atomic_read(&data->reactive_enable))
-			CHECK_RESULT(mpu6050_input_set_irq(data,
-				BIT_RAW_RDY_EN));
-#endif
-	}
+	CHECK_RESULT(mpu6050_input_set_odr(data, data->current_delay));
+	CHECK_RESULT(mpu6050_input_set_irq(data, BIT_RAW_RDY_EN));
+
 	return result;
 }
 
@@ -696,6 +681,7 @@ static int mpu6050_input_activate_devices(struct mpu6050_input_data *data,
 {
 	int result;
 	unsigned char reg;
+	struct motion_int_data *mot_data = &data->mot_data;
 
 	if (sensors & MPU6050_SENSOR_ACCEL)
 		CHECK_RESULT(mpu6050_input_actiave_accel(data, enable));
@@ -715,6 +701,10 @@ static int mpu6050_input_activate_devices(struct mpu6050_input_data *data,
 				MPUREG_PWR_MGMT_1,
 				reg |
 				BIT_SLEEP));
+		}
+		if (atomic_read(&data->reactive_enable) && !mot_data->is_set) {
+			usleep_range(5000, 5100);
+			mpu6050_input_set_motion_interrupt(data, true, false);
 		}
 	}
 
@@ -737,14 +727,6 @@ static int mpu6050_input_initialize(struct mpu6050_input_data *data,
 	return mpu6050_input_set_mode(data, MPU6050_MODE_SLEEP);
 }
 
-static void accel_turn_off_work(struct work_struct *work)
-{
-	if (!(gb_mpu_data->enabled_sensors & MPU6050_SENSOR_ACCEL)) {
-		mpu6050_input_suspend_accel(gb_mpu_data);
-		gb_mpu_data->accel_on_by_system = false;
-		pr_info("%s\n", __func__);
-	}
-}
 
 static int read_accel_raw_xyz(s16 *x, s16 *y, s16 *z)
 {
@@ -767,7 +749,7 @@ static int read_accel_raw_xyz(s16 *x, s16 *y, s16 *z)
 			+ gb_mpu_data->pdata->orientation[i*3+2] * raw[2];
 	} while (i-- != 0);
 
-	pr_debug("%s : x = %d, y = %d, z = %d\n", __func__,
+	pr_info("%s : x = %d, y = %d, z = %d\n", __func__,
 		orien_raw[0], orien_raw[1], orien_raw[2]);
 
 	*x = orien_raw[0];
@@ -782,23 +764,20 @@ static int read_accel_raw_xyz_cal(s16 *x, s16 *y, s16 *z)
 	s16 raw_x;
 	s16 raw_y;
 	s16 raw_z;
-
 	if (!(gb_mpu_data->enabled_sensors & MPU6050_SENSOR_ACCEL)) {
-		if (!gb_mpu_data->accel_on_by_system) {
-			usleep_range(10000, 11000);
-			mpu6050_input_resume_accel(gb_mpu_data);
-			msleep(150);
-			gb_mpu_data->accel_on_by_system = true;
-		} else {
-			cancel_delayed_work_sync(&gb_mpu_data->accel_off_work);
-		}
-		schedule_delayed_work(&gb_mpu_data->accel_off_work,
-			msecs_to_jiffies(5000));
+		mpu6050_input_resume_accel(gb_mpu_data);
+		usleep_range(10000, 11000);
 	}
+
 	read_accel_raw_xyz(&raw_x, &raw_y, &raw_z);
 	*x = raw_x - gb_mpu_data->acc_cal[0];
 	*y = raw_y - gb_mpu_data->acc_cal[1];
 	*z = raw_z - gb_mpu_data->acc_cal[2];
+
+	if (!(gb_mpu_data->enabled_sensors & MPU6050_SENSOR_ACCEL)) {
+		mpu6050_input_suspend_accel(gb_mpu_data);
+		usleep_range(10000, 11000);
+	}
 	return 0;
 }
 
@@ -931,7 +910,7 @@ static ssize_t mpu6050_input_accel_enable_store(struct device *dev,
 {
 	struct input_dev *input_data = to_input_dev(dev);
 	struct mpu6050_input_data *data = input_get_drvdata(input_data);
-	struct motion_int_data *mot_data = &data->mot_data;
+
 	unsigned long value = 0;
 
 	if (strict_strtoul(buf, 10, &value))
@@ -942,27 +921,20 @@ static ssize_t mpu6050_input_accel_enable_store(struct device *dev,
 	pr_info("%s : enable = %ld\n", __func__, value);
 
 	mutex_lock(&data->mutex);
+
+	mpu6050_input_activate_devices(data, MPU6050_SENSOR_ACCEL,
+			(value == 1) ? true : false);
 #ifdef CONFIG_INPUT_MPU6050_POLLING
-	if (value && !atomic_read(&data->accel_enable)) {
-		if (mot_data->is_set)
-			mpu6050_input_set_motion_interrupt(
-				data, false, data->factory_mode);
-		mpu6050_input_activate_devices(data,
-			MPU6050_SENSOR_ACCEL, true);
-		schedule_delayed_work(&data->accel_work,
-			msecs_to_jiffies(5));
-	}
-	if (!value && atomic_read(&data->accel_enable)) {
+	if ((atomic_read(&data->accel_enable)) && !value)
 		cancel_delayed_work_sync(&data->accel_work);
-		mpu6050_input_activate_devices(data,
-			MPU6050_SENSOR_ACCEL, false);
-		if (atomic_read(&data->reactive_enable))
-			mpu6050_input_set_motion_interrupt(
-				data, true, data->factory_mode);
-	}
+
+	if (!(atomic_read(&data->accel_enable)) && value)
+		schedule_delayed_work(&data->accel_work, 0);
 #endif
 	atomic_set(&data->accel_enable, value);
+
 	mutex_unlock(&data->mutex);
+
 	return count;
 }
 
@@ -998,6 +970,7 @@ static ssize_t mpu6050_input_accel_delay_store(struct device *dev,
 	mpu6050_set_delay(data);
 
 	mutex_unlock(&data->mutex);
+
 	return count;
 }
 
@@ -1091,7 +1064,7 @@ static ssize_t mpu6050_input_gyro_enable_store(struct device *dev,
 {
 	struct input_dev *input_data = to_input_dev(dev);
 	struct mpu6050_input_data *data = input_get_drvdata(input_data);
-	struct motion_int_data *mot_data = &data->mot_data;
+
 	unsigned long value = 0;
 
 	if (strict_strtoul(buf, 10, &value))
@@ -1099,30 +1072,23 @@ static ssize_t mpu6050_input_gyro_enable_store(struct device *dev,
 
 	gyro_open_calibration();
 
+	mutex_lock(&data->mutex);
+
 	pr_info("%s : enable = %ld\n", __func__, value);
 
-	mutex_lock(&data->mutex);
+	mpu6050_input_activate_devices(data, MPU6050_SENSOR_GYRO,
+				(value == 1) ? true : false);
 #ifdef CONFIG_INPUT_MPU6050_POLLING
-	if (value && !atomic_read(&data->gyro_enable)) {
-		if (mot_data->is_set)
-			mpu6050_input_set_motion_interrupt(
-				data, false, data->factory_mode);
-		mpu6050_input_activate_devices(data,
-			MPU6050_SENSOR_GYRO, true);
-		schedule_delayed_work(&data->gyro_work,
-			msecs_to_jiffies(5));
-	}
-	if (!value && atomic_read(&data->gyro_enable)) {
+	if ((atomic_read(&data->gyro_enable)) && !value)
 		cancel_delayed_work_sync(&data->gyro_work);
-		mpu6050_input_activate_devices(data,
-			MPU6050_SENSOR_GYRO, false);
-		if (atomic_read(&data->reactive_enable))
-			mpu6050_input_set_motion_interrupt(
-				data, true, data->factory_mode);
-	}
+
+	if (!(atomic_read(&data->gyro_enable)) && value)
+		schedule_delayed_work(&data->gyro_work, 0);
 #endif
 	atomic_set(&data->gyro_enable, value);
+
 	mutex_unlock(&data->mutex);
+
 	return count;
 }
 
@@ -1149,12 +1115,16 @@ static ssize_t mpu6050_input_gyro_delay_store(struct device *dev,
 	if (strict_strtoul(buf, 10, &value))
 		return -EINVAL;
 
+	mutex_lock(&data->mutex);
+
+	atomic_set(&data->gyro_delay, value/1000);
+
 	pr_info("%s : delay = %ld\n", __func__, value);
 
-	mutex_lock(&data->mutex);
-	atomic_set(&data->gyro_delay, value/1000);
 	mpu6050_set_delay(data);
+
 	mutex_unlock(&data->mutex);
+
 	return count;
 }
 
@@ -1243,7 +1213,7 @@ static ssize_t mpu6050_input_reactive_enable_show(struct device *dev,
 					struct device_attribute
 						*attr, char *buf)
 {
-	pr_debug("%s: state =%d\n", __func__,
+	pr_info("%s: state =%d\n", __func__,
 		atomic_read(&gb_mpu_data->reactive_state));
 	return sprintf(buf, "%d\n",
 		atomic_read(&gb_mpu_data->reactive_state));
@@ -1255,9 +1225,9 @@ static ssize_t mpu6050_input_reactive_enable_store(struct device *dev,
 							size_t count)
 {
 	bool onoff = false;
+	bool factory_test = false;
 	unsigned long value = 0;
 	int err = count;
-	struct motion_int_data *mot_data = &gb_mpu_data->mot_data;
 
 	if (strict_strtoul(buf, 10, &value)) {
 		err = -EINVAL;
@@ -1271,7 +1241,7 @@ static ssize_t mpu6050_input_reactive_enable_store(struct device *dev,
 		break;
 	case 2:
 		onoff = true;
-		gb_mpu_data->factory_mode = true;
+		factory_test = true;
 		break;
 	default:
 		err = -EINVAL;
@@ -1290,38 +1260,11 @@ static ssize_t mpu6050_input_reactive_enable_store(struct device *dev,
 #endif
 
 	mutex_lock(&gb_mpu_data->mutex);
-	if (onoff) {
-		pr_info("enable from %s\n", __func__);
-		atomic_set(&gb_mpu_data->reactive_enable, true);
-		if (!mot_data->is_set) {
-			mpu6050_i2c_read_reg(gb_mpu_data->client,
-				MPUREG_PWR_MGMT_1, 2,
-					mot_data->pwr_mnt);
-			mpu6050_i2c_read_reg(gb_mpu_data->client,
-				MPUREG_CONFIG, 1, &mot_data->cfg);
-			mpu6050_i2c_read_reg(gb_mpu_data->client,
-				MPUREG_ACCEL_CONFIG, 1,
-					&mot_data->accel_cfg);
-			mpu6050_i2c_read_reg(gb_mpu_data->client,
-				MPUREG_GYRO_CONFIG, 1,
-					&mot_data->gyro_cfg);
-			mpu6050_i2c_read_reg(gb_mpu_data->client,
-				MPUREG_INT_ENABLE, 1,
-					&mot_data->int_cfg);
-			mpu6050_i2c_read_reg(gb_mpu_data->client,
-				MPUREG_SMPLRT_DIV, 1,
-					&mot_data->smplrt_div);
-		}
+	atomic_set(&gb_mpu_data->reactive_enable, onoff);
+	if (!onoff || factory_test)
 		mpu6050_input_set_motion_interrupt(gb_mpu_data,
-			true, gb_mpu_data->factory_mode);
-	} else {
-		pr_info("%s disable\n", __func__);
-		mpu6050_input_set_motion_interrupt(gb_mpu_data,
-			false, gb_mpu_data->factory_mode);
-		atomic_set(&gb_mpu_data->reactive_enable, false);
-		if (gb_mpu_data->factory_mode)
-			gb_mpu_data->factory_mode = false;
-	}
+			onoff, factory_test);
+	atomic_set(&gb_mpu_data->reactive_state, false);
 	mutex_unlock(&gb_mpu_data->mutex);
 
 	pr_info("%s: onoff = %d, state =%d\n", __func__,
@@ -1527,14 +1470,9 @@ static int mpu6050_input_register_input_device(struct
 
 	atomic_set(&data->accel_enable, 0);
 	atomic_set(&data->accel_delay, 200);
-	atomic_set(&data->gyro_enable, 0);
-	atomic_set(&data->gyro_delay, 200);
 	atomic_set(&data->reactive_state, 0);
 	atomic_set(&data->reactive_enable, 0);
 	data->input = idev;
-
-	INIT_DELAYED_WORK(&data->accel_off_work, accel_turn_off_work);
-	data->accel_on_by_system = false;
 done:
 	return error;
 }
@@ -1555,11 +1493,13 @@ static void mpu6050_work_func_acc(struct work_struct *work)
 	if (atomic_read(&data->accel_delay) < 60) {
 		usleep_range(atomic_read(&data->accel_delay) * 1000,
 			atomic_read(&data->accel_delay) * 1100);
-		schedule_delayed_work(&data->accel_work, 0);
+		if (atomic_read(&data->accel_enable))
+			schedule_delayed_work(&data->accel_work, 0);
 	} else {
-		schedule_delayed_work(&data->accel_work,
-			msecs_to_jiffies(
-			atomic_read(&data->accel_delay)));
+		if (atomic_read(&data->accel_enable))
+			schedule_delayed_work(&data->accel_work,
+				msecs_to_jiffies(
+					atomic_read(&data->accel_delay)));
 	}
 }
 
@@ -1575,13 +1515,15 @@ static void mpu6050_work_func_gyro(struct work_struct *work)
 		atomic_read(&data->gyro_enable),
 			atomic_read(&data->gyro_delay));
 	if (atomic_read(&data->gyro_delay) < 60) {
-		usleep_range(atomic_read(&data->gyro_delay) * 1000,
-			atomic_read(&data->gyro_delay) * 1100);
-		schedule_delayed_work(&data->gyro_work, 0);
+			usleep_range(atomic_read(&data->gyro_delay) * 1000,
+				atomic_read(&data->gyro_delay) * 1100);
+			if (atomic_read(&data->gyro_enable))
+				schedule_delayed_work(&data->gyro_work, 0);
 	} else {
-		schedule_delayed_work(&data->gyro_work,
-			msecs_to_jiffies(
-			atomic_read(&data->gyro_delay)));
+		if (atomic_read(&data->gyro_enable))
+			schedule_delayed_work(&data->gyro_work,
+				msecs_to_jiffies(
+					atomic_read(&data->gyro_delay)));
 	}
 }
 #endif
@@ -1722,21 +1664,17 @@ static int mpu6050_input_suspend(struct device *dev)
 	struct i2c_client *client = to_i2c_client(dev);
 	struct mpu6050_input_data *data = i2c_get_clientdata(client);
 
-#ifdef CONFIG_INPUT_MPU6050_POLLING
-	if (atomic_read(&data->accel_enable))
-		cancel_delayed_work_sync(&data->accel_work);
-	if (atomic_read(&data->gyro_enable))
-		cancel_delayed_work_sync(&data->gyro_work);
-#endif
-
 	if (!atomic_read(&data->reactive_enable)) {
-#ifndef CONFIG_INPUT_MPU6050_POLLING
+#ifdef CONFIG_INPUT_MPU6050_POLLING
+		if (atomic_read(&data->accel_enable))
+			cancel_delayed_work_sync(&data->accel_work);
+		if (atomic_read(&data->gyro_enable))
+			cancel_delayed_work_sync(&data->gyro_work);
+#else
 		disable_irq_wake(client->irq);
 		disable_irq(client->irq);
 #endif
-		if (atomic_read(&data->accel_enable) ||
-			atomic_read(&data->gyro_enable))
-			mpu6050_input_set_mode(data, MPU6050_MODE_SLEEP);
+		mpu6050_input_set_mode(data, MPU6050_MODE_SLEEP);
 	}
 	return 0;
 }
@@ -1747,20 +1685,17 @@ static int mpu6050_input_resume(struct device *dev)
 	struct mpu6050_input_data *data = i2c_get_clientdata(client);
 
 	if (!atomic_read(&data->reactive_enable)) {
-#ifndef CONFIG_INPUT_MPU6050_POLLING
-		enable_irq(client->irq);
-		enable_irq_wake(client->irq);
-#endif
-		if (atomic_read(&data->accel_enable) ||
-			atomic_read(&data->gyro_enable))
-			mpu6050_input_set_mode(data, MPU6050_MODE_NORMAL);
-	}
+		mpu6050_input_set_mode(data, MPU6050_MODE_NORMAL);
 #ifdef CONFIG_INPUT_MPU6050_POLLING
 		if (atomic_read(&data->accel_enable))
 			schedule_delayed_work(&data->accel_work, 0);
 		if (atomic_read(&data->gyro_enable))
 			schedule_delayed_work(&data->gyro_work, 0);
+#else
+		enable_irq(client->irq);
+		enable_irq_wake(client->irq);
 #endif
+	}
 	return 0;
 }
 

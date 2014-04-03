@@ -72,3 +72,10 @@ config WLAN_REGION_CODE
 		- 202 : KOR KTT
 		- 203 : KOR LGT
 		- 300 : CHN OPEN
+
+config BROADCOM_WIFI
+	bool "Broadcom WiFi Driver"
+	depends on (BCM4330 || BCM4334 || BCM43241)
+	default y
+	---help---
+		This is a configuration for broadcom WLAN driver.

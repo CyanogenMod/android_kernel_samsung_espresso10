@@ -220,31 +220,6 @@ out:
 	pte_unmap_unlock(ptep, ptl);
 }
 
-#ifdef CONFIG_CMA
-extern struct page *failed_pages[5][10];
-
-static int is_failed_page(struct page *page, int pass, int tries)
-{
-	if (tries == 4 && pass == 9) {
-		int i, j, k = 1;
-
-		for (i = 0; i < 5; i++) {
-			for (j = 0; j < 10; j++) {
-				if (failed_pages[i][j] == page)
-					k++;
-			}
-		}
-
-		printk(KERN_ERR "%s[%d]: %d fails\n", __func__, __LINE__, k);
-		return 1;
-	}
-
-	return 0;
-}
-#else
-#define is_failed_page(page, pass, tries)	0
-#endif
-
 /*
  * Replace the page in the mapping.
  *
@@ -254,22 +229,15 @@ static int is_failed_page(struct page *page, int pass, int tries)
  * 3 for pages with a mapping and PagePrivate/PagePrivate2 set.
  */
 static int migrate_page_move_mapping(struct address_space *mapping,
-		struct page *newpage, struct page *page,
-		int pass, int tries)
+		struct page *newpage, struct page *page)
 {
 	int expected_count;
 	void **pslot;
 
 	if (!mapping) {
 		/* Anonymous page without mapping */
-		if (page_count(page) != 1) {
-			if (is_failed_page(page, pass, tries)) {
-				printk(KERN_ERR "%s[%d]: 1 ",
-						 __func__, __LINE__);
-				dump_page(page);
-			}
+		if (page_count(page) != 1)
 			return -EAGAIN;
-		}
 		return 0;
 	}
 
@@ -282,19 +250,11 @@ static int migrate_page_move_mapping(struct address_space *mapping,
 	if (page_count(page) != expected_count ||
 		radix_tree_deref_slot_protected(pslot, &mapping->tree_lock) != page) {
 		spin_unlock_irq(&mapping->tree_lock);
-		if (is_failed_page(page, pass, tries)) {
-			printk("%s[%d]: 2 ", __func__, __LINE__);
-			dump_page(page);
-		}
 		return -EAGAIN;
 	}
 
 	if (!page_freeze_refs(page, expected_count)) {
 		spin_unlock_irq(&mapping->tree_lock);
-		if (is_failed_page(page, pass, tries)) {
-			printk("%s[%d]: 3 ", __func__, __LINE__);
-			dump_page(page);
-		}
 		return -EAGAIN;
 	}
 
@@ -454,32 +414,20 @@ EXPORT_SYMBOL(fail_migrate_page);
  *
  * Pages are locked upon entry and exit.
  */
-static int __migrate_page(struct address_space *mapping,
-		struct page *newpage, struct page *page,
-		int pass, int tries)
+int migrate_page(struct address_space *mapping,
+		struct page *newpage, struct page *page)
 {
 	int rc;
 
 	BUG_ON(PageWriteback(page));	/* Writeback must be complete */
 
-	rc = migrate_page_move_mapping(mapping, newpage, page, pass, tries);
+	rc = migrate_page_move_mapping(mapping, newpage, page);
 
-	if (rc) {
-		if (is_failed_page(page, pass, tries)) {
-			printk("%s[%d]: 1 ", __func__, __LINE__);
-			dump_page(page);
-		}
+	if (rc)
 		return rc;
-	}
 
 	migrate_page_copy(newpage, page);
 	return 0;
-}
-
-int migrate_page(struct address_space *mapping,
-		struct page *newpage, struct page *page)
-{
-	return __migrate_page(mapping, newpage, page, 0, 0);
 }
 EXPORT_SYMBOL(migrate_page);
 
@@ -500,7 +448,7 @@ int buffer_migrate_page(struct address_space *mapping,
 
 	head = page_buffers(page);
 
-	rc = migrate_page_move_mapping(mapping, newpage, page, 0, 0);
+	rc = migrate_page_move_mapping(mapping, newpage, page);
 
 	if (rc)
 		return rc;
@@ -588,40 +536,20 @@ static int writeout(struct address_space *mapping, struct page *page)
  * Default handling if a filesystem does not provide a migration function.
  */
 static int fallback_migrate_page(struct address_space *mapping,
-	struct page *newpage, struct page *page, int pass, int tries)
+	struct page *newpage, struct page *page)
 {
-	int rc;
-
-	if (PageDirty(page)) {
-		rc = writeout(mapping, page);
-		if (is_failed_page(page, pass, tries)) {
-			printk("%s[%d] 1 ", __func__, __LINE__);
-			dump_page(page);
-		}
-		return rc;
-	}
+	if (PageDirty(page))
+		return writeout(mapping, page);
 
 	/*
 	 * Buffers may be managed in a filesystem specific way.
 	 * We must have no buffers or drop them.
 	 */
 	if (page_has_private(page) &&
-	    !try_to_release_page(page, GFP_KERNEL)) {
-		if (is_failed_page(page, pass, tries)) {
-			printk("%s[%d] 2 ", __func__, __LINE__);
-			dump_page(page);
-		}
+	    !try_to_release_page(page, GFP_KERNEL))
 		return -EAGAIN;
-	}
 
-	rc = __migrate_page(mapping, newpage, page, pass, tries);
-	if (rc) {
-		if (is_failed_page(page, pass, tries)) {
-			printk("%s[%d] 3 ", __func__, __LINE__);
-			dump_page(page);
-		}
-	}
-	return rc;
+	return migrate_page(mapping, newpage, page);
 }
 
 /*
@@ -636,11 +564,10 @@ static int fallback_migrate_page(struct address_space *mapping,
  *  == 0 - success
  */
 static int move_to_new_page(struct page *newpage, struct page *page,
-					int remap_swapcache, bool sync,
-					int pass, int tries)
+					int remap_swapcache, bool sync)
 {
 	struct address_space *mapping;
-	int rc = 0;
+	int rc;
 
 	/*
 	 * Block others from accessing the page when we get around to
@@ -657,31 +584,18 @@ static int move_to_new_page(struct page *newpage, struct page *page,
 		SetPageSwapBacked(newpage);
 
 	mapping = page_mapping(page);
-	if (!mapping) {
-		rc = __migrate_page(mapping, newpage, page, pass, tries);
-		if (rc) {
-			if (is_failed_page(page, pass, tries)) {
-				printk("%s[%d]: 1 ", __func__, __LINE__);
-				dump_page(page);
-			}
-		}
-	} else {
+	if (!mapping)
+		rc = migrate_page(mapping, newpage, page);
+	else {
 		/*
 		 * Do not writeback pages if !sync and migratepage is
 		 * not pointing to migrate_page() which is nonblocking
 		 * (swapcache/tmpfs uses migratepage = migrate_page).
 		 */
 		if (PageDirty(page) && !sync &&
-		    mapping->a_ops->migratepage != migrate_page) {
+		    mapping->a_ops->migratepage != migrate_page)
 			rc = -EBUSY;
-			if (rc) {
-				if (is_failed_page(page, pass, tries)) {
-					printk(KERN_ERR "%s[%d]: 2 ",
-							 __func__, __LINE__);
-					dump_page(page);
-				}
-			}
-		} else if (mapping->a_ops->migratepage) {
+		else if (mapping->a_ops->migratepage)
 			/*
 			 * Most pages have a mapping and most filesystems
 			 * should provide a migration function. Anonymous
@@ -691,24 +605,8 @@ static int move_to_new_page(struct page *newpage, struct page *page,
 			 */
 			rc = mapping->a_ops->migratepage(mapping,
 							newpage, page);
-			if (rc) {
-				if (is_failed_page(page, pass, tries)) {
-					printk(KERN_ERR "%s[%d]: 3 ",
-							__func__, __LINE__);
-					dump_page(page);
-				}
-			}
-		} else	{
-			rc = fallback_migrate_page(mapping, newpage, page,
-							 pass, tries);
-			if (rc) {
-				if (is_failed_page(page, pass, tries)) {
-					printk(KERN_ERR "%s[%d]: 4 ",
-							__func__, __LINE__);
-					dump_page(page);
-				}
-			}
-		}
+		else
+			rc = fallback_migrate_page(mapping, newpage, page);
 	}
 
 	if (rc) {
@@ -728,8 +626,7 @@ static int move_to_new_page(struct page *newpage, struct page *page,
  * to the newly allocated page in newpage.
  */
 static int unmap_and_move(new_page_t get_new_page, unsigned long private,
-			struct page *page, int force, bool offlining, bool sync,
-			int pass, int tries)
+			struct page *page, int force, bool offlining, bool sync)
 {
 	int rc = 0;
 	int *result = NULL;
@@ -754,13 +651,8 @@ static int unmap_and_move(new_page_t get_new_page, unsigned long private,
 	rc = -EAGAIN;
 
 	if (!trylock_page(page)) {
-		if (!force || !sync) {
-			if (is_failed_page(page, pass, tries)) {
-				printk("%s[%d] 1 ", __func__, __LINE__);
-				dump_page(page);
-			}
+		if (!force || !sync)
 			goto move_newpage;
-		}
 
 		/*
 		 * It's not safe for direct compaction to call lock_page.
@@ -775,13 +667,8 @@ static int unmap_and_move(new_page_t get_new_page, unsigned long private,
 		 * avoid the use of lock_page for direct compaction
 		 * altogether.
 		 */
-		if (current->flags & PF_MEMALLOC) {
-			if (is_failed_page(page, pass, tries)) {
-				printk("%s[%d] 2 ", __func__, __LINE__);
-				dump_page(page);
-			}
+		if (current->flags & PF_MEMALLOC)
 			goto move_newpage;
-		}
 
 		lock_page(page);
 	}
@@ -797,11 +684,6 @@ static int unmap_and_move(new_page_t get_new_page, unsigned long private,
 	 */
 	if (PageKsm(page) && !offlining) {
 		rc = -EBUSY;
-		goto unlock;
-	}
-
-	if (invalidate_inode_page(page)) {
-		rc = 0;
 		goto unlock;
 	}
 
@@ -859,10 +741,6 @@ static int unmap_and_move(new_page_t get_new_page, unsigned long private,
 			 */
 			remap_swapcache = 0;
 		} else {
-			if (is_failed_page(page, pass, tries)) {
-				printk("%s[%d] 3 ", __func__, __LINE__);
-				dump_page(page);
-			}
 			goto uncharge;
 		}
 	}
@@ -883,10 +761,6 @@ static int unmap_and_move(new_page_t get_new_page, unsigned long private,
 		VM_BUG_ON(PageAnon(page));
 		if (page_has_private(page)) {
 			try_to_free_buffers(page);
-			if (is_failed_page(page, pass, tries)) {
-				printk("%s[%d] 4 ", __func__, __LINE__);
-				dump_page(page);
-			}
 			goto uncharge;
 		}
 		goto skip_unmap;
@@ -896,16 +770,8 @@ static int unmap_and_move(new_page_t get_new_page, unsigned long private,
 	try_to_unmap(page, TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
 
 skip_unmap:
-	if (!page_mapped(page)) {
-		rc = move_to_new_page(newpage, page, remap_swapcache, sync,
-					pass, tries);
-		if (rc) {
-			if (is_failed_page(page, pass, tries)) {
-				printk("%s[%d] 5 ", __func__, __LINE__);
-				dump_page(page);
-			}
-		}
-	}
+	if (!page_mapped(page))
+		rc = move_to_new_page(newpage, page, remap_swapcache, sync);
 
 	if (rc && remap_swapcache)
 		remove_migration_ptes(page, page);
@@ -993,7 +859,7 @@ static int unmap_and_move_huge_page(new_page_t get_new_page,
 	try_to_unmap(hpage, TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
 
 	if (!page_mapped(hpage))
-		rc = move_to_new_page(new_hpage, hpage, 1, sync, 0, 0);
+		rc = move_to_new_page(new_hpage, hpage, 1, sync);
 
 	if (rc)
 		remove_migration_ptes(hpage, hpage);
@@ -1019,8 +885,6 @@ out:
 	return rc;
 }
 
-struct page *migrate_pages_current = NULL;
-
 /*
  * migrate_pages
  *
@@ -1038,7 +902,7 @@ struct page *migrate_pages_current = NULL;
  */
 int migrate_pages(struct list_head *from,
 		new_page_t get_new_page, unsigned long private, bool offlining,
-		bool sync, int tries)
+		bool sync)
 {
 	int retry = 1;
 	int nr_failed = 0;
@@ -1059,11 +923,7 @@ int migrate_pages(struct list_head *from,
 
 			rc = unmap_and_move(get_new_page, private,
 						page, pass > 2, offlining,
-						sync, pass, tries);
-#ifdef CONFIG_CMA
-			if (rc)
-				failed_pages[tries][pass] = page;
-#endif
+						sync);
 
 			switch(rc) {
 			case -ENOMEM:
@@ -1239,7 +1099,7 @@ set_status:
 	err = 0;
 	if (!list_empty(&pagelist)) {
 		err = migrate_pages(&pagelist, new_page_node,
-				(unsigned long)pm, 0, true, 0);
+				(unsigned long)pm, 0, true);
 		if (err)
 			putback_lru_pages(&pagelist);
 	}

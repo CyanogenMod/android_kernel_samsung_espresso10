@@ -18,7 +18,6 @@
 
 #include "mux.h"
 #include "omap_muxtbl.h"
-#include "omap44xx_muxtbl.h"
 
 #include <linux/phone_svn/ipc_spi.h>
 #include <plat/mcspi.h>
@@ -76,36 +75,6 @@ struct gpio spi_gpios[] __initdata = {
 	 }
 };
 
-static void __init omap_spi_none_pads_cfg_mux(void)
-{
-	int i;
-	struct omap_mux_partition *partition;
-	struct omap_mux_partition *core = omap_mux_get("core");
-	struct omap_mux_partition *wkup = omap_mux_get("wkup");
-	struct omap_muxtbl *tbl;
-	char *none_pins[] = {
-		"mcspi2_clk",
-		"mcspi2_somi",
-		"mcspi2_simo",
-	};
-
-	for (i = 0; i < ARRAY_SIZE(none_pins); i++) {
-		tbl = omap_muxtbl_find_by_name(none_pins[i]);
-		if (!tbl)
-			continue;
-		if (tbl->domain == OMAP4_MUXTBL_DOMAIN_WKUP)
-			partition = wkup;
-		else
-			partition = core;
-
-		omap_mux_write(partition,
-			OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
-			tbl->mux.reg_offset);
-	}
-
-	pr_info("[SPI] %s\n", __func__);
-}
-
 static void __init spi_modem_cfg_gpio(void)
 {
 	int i;
@@ -132,10 +101,6 @@ static int __init init_spi(void)
 
 	spi_register_board_info(superior_omap4_spi_board_info,
 		ARRAY_SIZE(superior_omap4_spi_board_info));
-
-	if (sec_bootmode == 5)
-		omap_spi_none_pads_cfg_mux();
-
 	return 0;
 }
 

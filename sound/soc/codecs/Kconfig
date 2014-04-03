@@ -360,9 +360,6 @@ config SND_SOC_WM8993
 config SND_SOC_WM8994
 	tristate
 
-config SND_SOC_MID_WM8994
-	tristate
-
 config SND_SOC_WM8995
 	tristate
 

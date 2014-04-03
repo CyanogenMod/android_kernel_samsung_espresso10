@@ -14,11 +14,6 @@
 #define CTRL_CHARGER_ENABLE	BIT(6)
 
 #include <linux/battery/sec_charger.h>
-#include <linux/debugfs.h>
-#include <linux/seq_file.h>
-
-static struct dentry    *ncp1851_dentry;
-
 static int ncp1851_i2c_write(struct i2c_client *client,
 				int reg, u8 *buf)
 {
@@ -106,16 +101,12 @@ static int ncp1851_get_charging_status(struct i2c_client *client)
 		"%s : charger Control_1 Register(0x%02x)\n",
 		__func__, ctrl_reg);
 
-	/* Charge mode : FAULT */
-	if ((stat_reg & 0xb0) == 0xb0)
-		goto charging_status_end;
-
 	/* At least one charge cycle terminated,
 	 * Charge current < Termination Current
 	 */
 	if ((stat_reg & 0x60) == 0x60) {
 		/* top-off by full charging */
-		stat = POWER_SUPPLY_STATUS_FULL;
+		status = POWER_SUPPLY_STATUS_FULL;
 		goto charging_status_end;
 	}
 
@@ -125,16 +116,16 @@ static int ncp1851_get_charging_status(struct i2c_client *client)
 		/* check for 0x06 : no charging (0b00) */
 		/* not charging */
 		if ((stat_reg & 0xB0) == 0xB0) {
-			stat = POWER_SUPPLY_STATUS_NOT_CHARGING;
+			status = POWER_SUPPLY_STATUS_NOT_CHARGING;
 			goto charging_status_end;
 		} else if (stat_reg >= 0x2 && stat_reg <= 6) {
-			stat = POWER_SUPPLY_STATUS_CHARGING;
+			status = POWER_SUPPLY_STATUS_CHARGING;
 			goto charging_status_end;
 		}
 	} else
-		stat = POWER_SUPPLY_STATUS_DISCHARGING;
+		status = POWER_SUPPLY_STATUS_DISCHARGING;
 charging_status_end:
-	return (int)stat;
+	return (int)status;
 }
 
 static int ncp1851_get_charging_health(struct i2c_client *client)
@@ -214,6 +205,7 @@ static void ncp1851_charger_function_conrol(
 	struct sec_charger_info *charger = i2c_get_clientdata(client);
 	u8 data;
 	u8 cur_reg;
+	u8 chg_cur_reg;
 
 	if (charger->charging_current < 0) {
 		dev_dbg(&client->dev,
@@ -226,9 +218,8 @@ static void ncp1851_charger_function_conrol(
 		ncp1851_i2c_read(client, NCP1851_CTRL1, &cur_reg);
 		dev_info(&client->dev,
 			"%s : charger Control_1 Register(0x%x)\n",
-			__func__, cur_reg);
+			__func__, &cur_reg);
 		cur_reg &= ~0x40;
-
 		/* turn off charger */
 		ncp1851_set_command(client,
 			NCP1851_CTRL1, cur_reg);
@@ -266,17 +257,11 @@ static void ncp1851_charger_function_conrol(
 		cur_reg = 0x41;
 		ncp1851_i2c_write(client, NCP1851_CTRL1, &cur_reg);
 
-		/* Vchg : 4.3V */
-		cur_reg = charger->pdata->chg_float_voltage ?
-			(charger->pdata->chg_float_voltage - 3300) / 25 :
-			0x24;
+		cur_reg = 0x26;
 		ncp1851_i2c_write(client, NCP1851_VBAT_SET, &cur_reg);
 
-		/* IINSET_PIN_Disable, IINLIM_enable, AICL disable
-		** if USB Trans pin enable
-		*/
-		cur_reg = charger->cable_type == POWER_SUPPLY_TYPE_USB ?
-			  0xF2 : 0xE2;
+		/* IINSET_PIN_Disable, IINLIM_enable, AICL disable */
+		cur_reg = 0xe2;
 		ncp1851_i2c_write(client, NCP1851_CTRL2, &cur_reg);
 	}
 	ncp1851_test_read(client);
@@ -288,39 +273,8 @@ static void ncp1851_charger_otg_conrol(
 	struct sec_charger_info *charger = i2c_get_clientdata(client);
 }
 
-static int ncp1851_debugfs_show(struct seq_file *s, void *data)
-{
-	struct sec_charger_info *charger = s->private;
-	u8 reg;
-	u8 reg_data;
-
-	seq_printf(s, "NCP1851 CHARGER IC :\n");
-	seq_printf(s, "==================\n");
-	for (reg = 0x00; reg <= 0x12; reg++) {
-		ncp1851_i2c_read(charger->client, reg, &reg_data);
-		seq_printf(s, "0x%02x:\t0x%02x\n", reg, reg_data);
-	}
-
-	seq_printf(s, "\n");
-
-	return 0;
-}
-
-static int ncp1851_debugfs_open(struct inode *inode, struct file *file)
-{
-	return single_open(file, ncp1851_debugfs_show, inode->i_private);
-}
-
-static const struct file_operations ncp1851_debugfs_fops = {
-	.open           = ncp1851_debugfs_open,
-	.read           = seq_read,
-	.llseek         = seq_lseek,
-	.release        = single_release,
-};
-
 bool sec_hal_chg_init(struct i2c_client *client)
 {
-	struct sec_charger_info *charger = i2c_get_clientdata(client);
 	u8 ctrl_reg;
 
 	ncp1851_i2c_read(client, NCP1851_CTRL1, &ctrl_reg);
@@ -331,9 +285,8 @@ bool sec_hal_chg_init(struct i2c_client *client)
 	ctrl_reg &= ~0x1;
 	ncp1851_i2c_write(client, NCP1851_CTRL1, &ctrl_reg);
 
+
 	ncp1851_test_read(client);
-	ncp1851_dentry = debugfs_create_file("ncp1851-regs",
-			S_IRUSR, NULL, charger, &ncp1851_debugfs_fops);
 
 	return true;
 }

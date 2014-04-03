@@ -775,15 +775,6 @@ config TOUCHSCREEN_SYNAPTICS_S7301
 		To compile this driver as a module, choose M here: the
 		module will be called synaptics_ts.
 
-config TOUCHSCREEN_SUPPORT_SYNA_SURFACE
-	bool "SYNAPTICS S7301 Touchscreen Interface"
-	depends on TOUCHSCREEN_SYNAPTICS_S7301
-	help
-		Say Y here if you want support for Synaptics Surface touch
-		solution.
-
-		It is only compatible with some samsung android devices.
-
 config TOUCHSCREEN_MELFAS_MMS144
 	tristate "MELFAS MMS144 Touchscreen Interface"
 	depends on I2C
@@ -818,6 +809,16 @@ config TOUCH_DVFS
 		for DVFS control at touch inputed.
 		It reduces more battery power.
 
+config TOUCH_SCREEN_BOOST_MODE
+	bool "Touch Boost Mode"
+	depends on TOUCHSCREEN_MELFAS_MMS136 || TOUCHSCREEN_MELFAS_MMS144
+	help
+		Say Y here if you want to support for touch boost mode.
+		It boosts AP frequency up to 800 MHz during 1 second at last
+		touch point released.
+
+		If unsure, say N.
+
 config INPUT_WACOM
 	tristate "Wacom penabled i2c touchscreen"
 	depends on I2C
@@ -846,13 +847,6 @@ config SUPPORT_CYPRESS_TOUCH_KEY
 	help
 		Say Y here if you want to support for Cypress Touch Key
 		at GEN4.
-
-config TOUCHSCREEN_OLD_FW_STD
-	bool "Separate codes old firmware standrad and new firmware standard"
-	depends on TOUCHSCREEN_SYNAPTICS_S7301
-	help
-		Say Y here if you want to support for samsung old firmware
-		standard declare.
 
 source "drivers/input/touchscreen/synaptics_rmi4/Kconfig"
 endif

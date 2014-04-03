@@ -364,7 +364,7 @@ static char __sec_common_convert_reboot_mode(char mode,  const char *cmd)
 		{"arm11_fota", 'f'},
 		{"arm9_fota", 'f'},
 		{"recovery", 'r'},
-		{"bootloader", 'b'},
+        {"bootloader", 'b'},
 		{"download", 'd'},
 		{"cp_crash", 'C'}
 	};

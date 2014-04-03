@@ -39,7 +39,7 @@
 
 #define SUPERIOR_FB_RAM_SIZE		SZ_16M /* ~1280*720*4 * 2 */
 
-static char *panel_data;
+static unsigned int panel_id;
 struct regulator *superior_oled_reg;
 struct regulator *superior_oled_reg_iovcc;
 
@@ -109,7 +109,7 @@ static const struct s6e8aa0a01_acl_parameters superior_oled_acl[] = {
 		},
 	},
 	{
-		.cd = GAMMA_300CD,
+		.cd = GAMMA_250CD,
 		.acl_val = 40,
 		.regs = {
 			0xC1,
@@ -119,6 +119,19 @@ static const struct s6e8aa0a01_acl_parameters superior_oled_acl[] = {
 
 			0x01, 0x07, 0x0C, 0x12, 0x17, 0x1D,
 			0x23, 0x28, 0x2E, 0x33, 0x39
+		},
+	},
+	{
+		.cd = GAMMA_300CD,
+		.acl_val = 50,
+		.regs = {
+			0xC1,
+			0x47, 0x53, 0x13, 0x53, 0x00, 0x00,
+			0x02, 0xCF, 0x00, 0x00, 0x04, 0xFF,
+			0x00, 0x00, 0x00, 0x00, 0x00,
+
+			0x01, 0x09, 0x10, 0x18, 0x1F, 0x27,
+			0x2E, 0x36, 0x3D, 0x45, 0x4C
 		},
 	},
 };
@@ -159,7 +172,7 @@ static const struct s6e8aa0a01_acl_parameters superior_oled_acl[] = {
 		},
 	},
 	{
-		.cd = GAMMA_300CD,
+		.cd = GAMMA_250CD,
 		.acl_val = 40,
 		.regs = {
 			0xC1,
@@ -169,6 +182,19 @@ static const struct s6e8aa0a01_acl_parameters superior_oled_acl[] = {
 
 			0x01, 0x07, 0x0C, 0x12, 0x17, 0x1D,
 			0x23, 0x28, 0x2E, 0x33, 0x39
+		},
+	},
+	{
+		.cd = GAMMA_300CD,
+		.acl_val = 50,
+		.regs = {
+			0xC1,
+			0x47, 0x53, 0x13, 0x53, 0x00, 0x00,
+			0x02, 0xCF, 0x00, 0x00, 0x04, 0xFF,
+			0x00, 0x00, 0x00, 0x00, 0x00,
+
+			0x01, 0x09, 0x10, 0x18, 0x1F, 0x27,
+			0x2E, 0x36, 0x3D, 0x45, 0x4C
 		},
 	},
 };
@@ -350,7 +376,20 @@ static const struct s6e8aa0a01_sequence_entry superior_oled_seq_etc_set[] = {
 	},
 };
 
-static struct panel_s6e8aa0a01_data superior_oled_data = {
+static struct panel_s6e8aa0a01_data superior_oled_data_a1 = {
+	.set_power		= superior_oled_set_power,
+	.seq_display_set	= superior_oled_seq_display_set,
+	.seq_display_set_size	= ARRAY_SIZE(superior_oled_seq_display_set),
+	.seq_etc_set		= superior_oled_seq_etc_set,
+	.seq_etc_set_size	= ARRAY_SIZE(superior_oled_seq_etc_set),
+	.seq_panel_condition_set = superior_oled_cmd_init_panel,
+	.seq_panel_condition_set_size =
+		ARRAY_SIZE(superior_oled_cmd_init_panel),
+	.acl_table		= superior_oled_acl,
+	.acl_table_size		= ARRAY_SIZE(superior_oled_acl),
+};
+
+static struct panel_s6e8aa0a01_data superior_oled_data_a2 = {
 	.set_power		= superior_oled_set_power,
 	.seq_display_set	= superior_oled_seq_display_set,
 	.seq_display_set_size	= ARRAY_SIZE(superior_oled_seq_display_set),
@@ -386,7 +425,7 @@ static struct omap_dss_device superior_oled_device = {
 		.timings = {
 			.x_res = 720,
 			.y_res = 1280,
-			.pixel_clock = 87111,
+			.pixel_clock = 80842,
 			.hfp = 158,
 			.hsw = 2,
 			.hbp = 160,
@@ -413,8 +452,8 @@ static struct omap_dss_device superior_oled_device = {
 			.dispc_fclk_src = OMAP_DSS_CLK_SRC_FCK,
 		},
 		.dsi = {
-			.regn		= 18,	/* DSI_PLL_REGN */
-			.regm		= 233,	/* DSI_PLL_REGM */
+			.regn		= 19,	/* DSI_PLL_REGN */
+			.regm		= 240,	/* DSI_PLL_REGM */
 
 			.regm_dispc	= 6,	/* PLL_CLK1 (M4) */
 			.regm_dsi	= 6,	/* PLL_CLK2 (M5) */
@@ -501,47 +540,6 @@ void __init omap4_superior_memory_display_init(void)
 				   get_omap_ion_platform_data());
 }
 
-static inline char _tolower(const char c)
-{
-	return c | 0x20;
-}
-
-static int get_panel_data(char *str, struct panel_s6e8aa0a01_data *panel)
-{
-	u8 temp_data[(ID_PARAM_SIZE+MTP_PARAM_SIZE)*2];
-	unsigned int val;
-	int i = 0;
-
-	while (*str) {
-
-		if ('0' <= *str && *str <= '9')
-			val = *str - '0';
-		else if ('a' <= _tolower(*str) && _tolower(*str) <= 'f')
-			val = _tolower(*str) - 'a' + 10;
-		else if (*str == '\n' && *(str + 1) == '\0')
-			break;
-		else
-			return -EINVAL;
-
-		temp_data[i++] = val;
-
-		str++;
-	}
-
-	for (i = 0; i < ID_PARAM_SIZE; i++) {
-		panel->panel_id[i] =
-			((temp_data[i*2]<<4)&0xF0)|(temp_data[i*2+1]&0x0F);
-		pr_info("panel_id[%d]=0x%02x\n", i, panel->panel_id[i]);
-	}
-	for (i = 0; i < MTP_PARAM_SIZE; i++) {
-		panel->mtp_data[i] =
-			((temp_data[(i+ID_PARAM_SIZE)*2]<<4)&0xF0)|
-			(temp_data[(i+ID_PARAM_SIZE)*2+1]&0x0F);
-		pr_info("mtp_data[%d]=0x%02x\n", i, panel->mtp_data[i]);
-	}
-
-}
-
 void __init omap4_superior_display_init(void)
 {
 	struct panel_s6e8aa0a01_data *panel;
@@ -571,7 +569,10 @@ void __init omap4_superior_display_init(void)
 	}
 #endif
 
-	panel = &superior_oled_data;
+	if (panel_id == SM2A2)
+		panel = &superior_oled_data_a2;
+	else
+		panel = &superior_oled_data_a1;
 
 	superior_oled_device.data = panel;
 
@@ -588,15 +589,19 @@ void __init omap4_superior_display_init(void)
 	gpio_direction_input(oled_det_gpio);
 	panel->oled_det_irq = gpio_to_irq(oled_det_gpio);
 
-	get_panel_data(panel_data, panel);
-
 	omap_display_init(&superior_dss_data);
 }
 
 static int __init get_panel_id(char *str)
 {
-	panel_data = str;
+	long value;
+	int ret;
 
+	ret = strict_strtol(str, 0, &value);
+	if (ret < 0)
+		return ret;
+
+	panel_id = (unsigned int)value;
 	return 0;
 }
 __setup("mms_ts.panel_id=", get_panel_id);

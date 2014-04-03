@@ -19,7 +19,6 @@
 
 #include "sec_board_id.h"
 #include "sec_common.h"
-#include <linux/cpuidle.h>
 
 enum gokey_adc_ch {
 	REMOTE_SENSE = 0,
@@ -27,8 +26,6 @@ enum gokey_adc_ch {
 	ACCESSORY_ID,		/* OTG detection */
 	EAR_ADC_35,		/* Earjack detection */
 };
-
-int get_temp(void);
 
 /** @category LCD, HDMI */
 void omap4_gokey_display_init(void);
@@ -62,9 +59,6 @@ void omap4_gokey_pmic_init(void);
 /** @category WM1811 */
 void omap4_gokey_audio_init(void);
 
-/** @category EarJack */
-int omap4_get_adc_earjack(void);
-
 /** @category I2C, UART(GPS) */
 void omap4_gokey_serial_init(void);
 
@@ -90,33 +84,6 @@ void omap4_gokey_camera_init(void);
 #ifdef CONFIG_TDMB
 /** @category TDMB */
 void omap4_gokey_tdmb_init(void);
-#endif
-
-#ifdef CONFIG_MP3_LP_MODE
-extern bool is_playback_lpmode_available(void);
-struct cpufreq_lpmode_info {
-	bool bt_enabled;
-	bool wifi_enabled;
-	bool cable_attached;
-	bool lp_mode_enabled;
-};
-#define OMAP4_STATE_C1		0
-#define OMAP4_MAX_STATES	4
-struct omap4_processor_cx {
-	u8 valid;
-	u8 type;
-	u32 exit_latency;
-	u32 target_residency;
-	u32 mpu_state;
-	u32 mpu_logic_state;
-	u32 core_state;
-	u32 core_logic_state;
-	const char *desc;
-};
-extern struct cpufreq_lpmode_info cpufreq_lpmode;
-extern void omap4_init_power_states(const struct cpuidle_params
-					*cpuidle_params_table);
-extern struct omap4_processor_cx omap4_power_states[OMAP4_MAX_STATES];
 #endif
 
 #endif				/* __BOARD_GOKEY_H__ */

@@ -86,10 +86,8 @@ void snd_soc_jack_report(struct snd_soc_jack *jack, int status, int mask)
 			switch_set_state(&android_switch, SEC_HEADSET_4POLE);
 		else if (status & SND_JACK_HEADPHONE)
 			switch_set_state(&android_switch, SEC_HEADSET_3POLE);
-		else {
-			printk(KERN_INFO "=%s= EAR JACK removed =\n", __func__);
+		else
 			switch_set_state(&android_switch, SEC_JACK_NO_DEVICE);
-		}
 	}
 #endif /* not CONFIG_SAMSUNG_JACK */
 

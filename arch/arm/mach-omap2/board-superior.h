@@ -29,7 +29,6 @@ void __init omap4_superior_display_early_init(void);
 
 /** @category Key, TSP, Touch-Key */
 void omap4_superior_input_init(void);
-void omap4_superior_tsp_ta_detect(int);
 
 /** @category Jack, Dock */
 void omap4_superior_jack_init(void);

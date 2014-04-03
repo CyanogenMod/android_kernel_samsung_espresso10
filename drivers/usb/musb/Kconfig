@@ -150,11 +150,6 @@ config USB_SAMSUNG_OMAP_NOSRQ
 	depends on USB_MUSB_HDRC
 	default n
 
-config USB_SAMSUNG_OMAP_HCD_RESET_SUPPORT
-	bool 'reset hcd when usb phy is stucked'
-	depends on USB_MUSB_HDRC
-	default n
-
 config MUSB_PIO_ONLY
 	bool 'Disable DMA (always use PIO)'
 	depends on USB_MUSB_HDRC

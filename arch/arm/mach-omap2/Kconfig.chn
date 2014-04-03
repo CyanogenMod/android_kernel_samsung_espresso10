@@ -20,13 +20,6 @@ config TARGET_LOCALE_CHN
 	default n
 	select MACH_OMAP4_SAMSUNG
 
-config MACH_SAMSUNG_KONA_CHN_OPEN
-	bool "Samsung Kona CHINA OPEN (GT-N5100) Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-	select FW_SAMSUNG_KONA_TSP
-	select FW_SAMSUNG_KONA_WACOM
-
 config MACH_SAMSUNG_T1_CHN_CMCC
 	bool "Samsung T1 CHINA CMCC Board"
 	default n

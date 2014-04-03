@@ -211,6 +211,7 @@ err:
 
 static int si470x_dev_chan_select(struct si470x_device *radio, u32 frequency)
 {
+
 	int ret;
 	ret = si470x_set_freq(radio, frequency);
 	if (unlikely(ret < 0)) {
@@ -567,16 +568,7 @@ static int si470x_dev_chan_get(struct si470x_device *radio,
 	}
 	return ret;
 }
-int si470x_dev_seek_full(struct si470x_device *radio, u32 *frequency)
-{
-	int ret;
-	ret = si470x_dev_set_seek(radio, 0, 1, frequency);
-	if (unlikely(ret < 0)) {
-		pr_err("(%s):err while setting the seekfull\n", __func__);
-		ret = -1;
-	}
-	return ret;
-}
+
 static int si470x_dev_seek_up(struct si470x_device *radio, u32 *frequency)
 {
 	int ret;
@@ -871,10 +863,6 @@ static long si470x_dev_ioctl(struct file *filp, unsigned int ioctl_cmd,
 	case SI470X_IOC_CHAN_GET:
 		m_si470x_dev_ioctl_copy_to_user(radio, ret, argp,
 						si470x_dev_chan_get, buf_u32);
-		break;
-	case SI470X_IOC_SEEK_FULL:
-		m_si470x_dev_ioctl_copy_to_user(radio, ret, argp,
-						si470x_dev_seek_full, buf_u32);
 		break;
 	case SI470X_IOC_SEEK_UP:
 		m_si470x_dev_ioctl_copy_to_user(radio, ret, argp,

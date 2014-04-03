@@ -38,13 +38,6 @@
 #include <linux/sensors_core.h>
 #include "yas_mag_driver.c"
 
-#define SYSFS_PCBTEST
-#ifdef SYSFS_PCBTEST
-#include "yas_pcb_test.h"
-#include "yas_pcb_test.c"
-#endif
-
-
 #define GEOMAGNETIC_I2C_DEVICE_NAME         "geomagnetic"
 #define GEOMAGNETIC_INPUT_NAME              "geomagnetic"
 #define GEOMAGNETIC_INPUT_RAW_NAME          "geomagnetic_raw"
@@ -93,7 +86,6 @@ struct geomagnetic_data {
 	struct device *magnetic_sensor_device;
 	struct mag_platform_data *mag_pdata;
 	uint8_t dev_id;
-	int noise_test_init;
 };
 
 static struct i2c_client *this_client;
@@ -842,41 +834,6 @@ geomagnetic_status_show(struct device *dev,
 }
 
 static ssize_t
-geomagnetic_status_store(struct device *dev, struct device_attribute *attr,
-	const char *buf, size_t count)
-{
-	struct input_dev *input_data = to_input_dev(dev);
-	struct geomagnetic_data *data = input_get_drvdata(input_data);
-	static int16_t cnt = 1;
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct input_event ev;
-#endif
-	int accuracy = 0;
-	int code = 0;
-	int value = 0;
-
-	geomagnetic_multi_lock();
-
-	sscanf(buf, "%d", &accuracy);
-	if (0 <= accuracy && accuracy <= 3)
-		atomic_set(&data->last_status, accuracy);
-	code |= YAS_REPORT_CALIB_OFFSET_CHANGED;
-	value = (cnt++ << 16) | (code);
-
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	mkev(&ev, EV_ABS, ABS_RAW_REPORT, value);
-	sensor_event(&data->raw_devfile_list, &ev, 1);
-#else
-	input_report_abs(data->input_raw, ABS_RAW_REPORT, value);
-	input_sync(data->input_raw);
-#endif
-
-	geomagnetic_multi_unlock();
-
-	return count;
-}
-
-static ssize_t
 geomagnetic_wake_store(struct device *dev,
 		       struct device_attribute *attr,
 		       const char *buf, size_t count)
@@ -951,8 +908,7 @@ static DEVICE_ATTR(filter_noise, S_IRUGO | S_IWUSR | S_IWGRP,
 		   geomagnetic_filter_noise_show,
 		   geomagnetic_filter_noise_store);
 static DEVICE_ATTR(data, S_IRUGO, geomagnetic_data_show, NULL);
-static DEVICE_ATTR(status, S_IRUGO|S_IWUSR|S_IWGRP, geomagnetic_status_show,
-		geomagnetic_status_store);
+static DEVICE_ATTR(status, S_IRUGO, geomagnetic_status_show, NULL);
 static DEVICE_ATTR(wake, S_IWUSR | S_IWGRP, NULL, geomagnetic_wake_store);
 static DEVICE_ATTR(position, S_IRUGO | S_IWUSR,
 		   geomagnetic_position_show, geomagnetic_position_store);
@@ -1374,123 +1330,6 @@ geomagnetic_raw_ellipsoid_mode_store(struct device *dev,
 	return count;
 }
 
-#ifdef SYSFS_PCBTEST
-
-static int
-pcbtest_i2c_write(uint8_t slave, uint8_t addr, const uint8_t *buf, int len)
-{
-	return geomagnetic_i2c_write(addr, buf, len);
-}
-
-static int
-pcbtest_i2c_read(uint8_t slave, uint8_t addr, uint8_t *buf, int len)
-{
-	return geomagnetic_i2c_read(addr, buf, len);
-}
-
-static struct yas_pcb_test pcbtest = {
-	.callback = {
-		.power_on	= NULL,
-		.power_off	= NULL,
-		.i2c_open	= geomagnetic_i2c_open,
-		.i2c_close	= geomagnetic_i2c_close,
-		.i2c_read	= pcbtest_i2c_read,
-		.i2c_write	= pcbtest_i2c_write,
-		.msleep		= geomagnetic_msleep,
-		.read_intpin	= NULL,
-	},
-};
-
-
-static ssize_t
-geomagnetic_raw_self_test_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
-	int id, x, y1, y2, dir, sx, sy, ohx, ohy, ohz;
-	int err1, err2, err3, err4, err5, err6, err7;
-
-	if (data->noise_test_init)
-		pcbtest.power_off();
-	err1 = pcbtest.power_on_and_device_check(&id);
-	err3 = pcbtest.initialization();
-	err4 = pcbtest.offset_control_measurement_and_set_offset_register(
-			&x, &y1, &y2);
-	err5 = pcbtest.direction_measurement(&dir);
-	err6 = pcbtest.sensitivity_measurement_of_magnetic_sensor_by_test_coil(
-			&sx, &sy);
-	err7 = pcbtest.magnetic_field_level_check(&ohx, &ohy, &ohz);
-	err2 = pcbtest.power_off();
-	data->noise_test_init = 0;
-	if (unlikely(id != 0x2))
-		err1 = -1;
-	if (unlikely(x < -30 || x > 30))
-		err4 = -1;
-	if (unlikely(y1 < -30 || y1 > 30))
-		err4 = -1;
-	if (unlikely(y2 < -30 || y2 > 30))
-		err4 = -1;
-	if (unlikely(sx < 17 || sy < 22))
-		err6 = -1;
-	if (unlikely(ohx < -600 || ohx > 600))
-		err7 = -1;
-	if (unlikely(ohy < -600 || ohy > 600))
-		err7 = -1;
-	if (unlikely(ohz < -600 || ohz > 600))
-		err7 = -1;
-
-	pr_info("%s\n"
-		"Test1 - err = %d, id = %d\n"
-		"Test3 - err = %d\n"
-		"Test4 - err = %d, offset = %d,%d,%d\n"
-		"Test5 - err = %d, direction = %d\n"
-		"Test6 - err = %d, sensitivity = %d,%d\n"
-		"Test7 - err = %d, offset = %d,%d,%d\n"
-		"Test2 - err = %d\n", __func__,
-		err1, id, err3, err4, x, y1, y2, err5, dir, err6, sx, sy,
-		err7, ohx, ohy, ohz, err2);
-
-	return sprintf(buf,
-			"%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
-			err1, id, err3, err4, x, y1, y2, err5, dir, err6, sx,
-			sy, err7, ohx, ohy, ohz, err2);
-}
-
-static ssize_t
-geomagnetic_raw_self_test_noise_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
-	int id, x, y1, y2, dir, hx0, hy0, hz0;
-	int err8;
-
-	if (!data->noise_test_init) {
-		pcbtest.power_on_and_device_check(&id);
-		pcbtest.initialization();
-		pcbtest.offset_control_measurement_and_set_offset_register(
-			&x, &y1, &y2);
-	}
-	pcbtest.direction_measurement(&dir);
-	err8 = pcbtest.noise_level_check(&hx0, &hy0, &hz0);
-	if (err8 < 0) {
-		pr_err("%s: err8=%d\n", __func__, err8);
-		hx0 = 0;
-		hy0 = 0;
-		hz0 = 0;
-	}
-	usleep_range(3000, 3100);
-	data->noise_test_init = 1;
-	pr_debug("%s: %d, %d, %d\n", __func__, hx0, hy0, hz0);
-	return snprintf(buf, PAGE_SIZE, "%d,%d,%d\n", hx0, hy0, hz0);
-}
-
-static DEVICE_ATTR(self_test, S_IRUSR, geomagnetic_raw_self_test_show, NULL);
-static DEVICE_ATTR(self_test_noise, S_IRUSR,
-		geomagnetic_raw_self_test_noise_show, NULL);
-
-#endif
-
-
 static DEVICE_ATTR(threshold, S_IRUGO | S_IWUSR,
 		   geomagnetic_raw_threshold_show,
 		   geomagnetic_raw_threshold_store);
@@ -1516,10 +1355,6 @@ static DEVICE_ATTR(ellipsoid_mode, S_IRUGO | S_IWUSR,
 		   geomagnetic_raw_ellipsoid_mode_show,
 		   geomagnetic_raw_ellipsoid_mode_store);
 static struct attribute *geomagnetic_raw_attributes[] = {
-#ifdef SYSFS_PCBTEST
-	&dev_attr_self_test.attr,
-	&dev_attr_self_test_noise.attr,
-#endif
 	&dev_attr_threshold.attr,
 	&dev_attr_distortion.attr,
 	&dev_attr_shape.attr,
@@ -1536,13 +1371,21 @@ static struct attribute *geomagnetic_raw_attributes[] = {
 static struct attribute_group geomagnetic_raw_attribute_group = {
 	.attrs = geomagnetic_raw_attributes
 };
-static struct device_attribute dev_attr_magnetic_sensor_selftest =
-	__ATTR(selftest, S_IRUSR | S_IRGRP,
-	geomagnetic_raw_self_test_show, NULL);
 
+static ssize_t yas532_rawdata_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
+
+	usleep_range(3000, 3100);
+
+	return snprintf(buf, PAGE_SIZE, "%d,%d,%d\n",
+			atomic_read(&data->last_data[0]) / 1000,
+			atomic_read(&data->last_data[1]) / 1000,
+			atomic_read(&data->last_data[2]) / 1000);
+}
 static struct device_attribute dev_attr_magnetic_sensor_raw_data =
-	__ATTR(raw_data, S_IRUSR | S_IRGRP,
-	geomagnetic_raw_self_test_noise_show, NULL);
+	__ATTR(raw_data, S_IRUSR | S_IRGRP, yas532_rawdata_show, NULL);
 
 static ssize_t magnetic_vendor_show(struct device *dev,
 					   struct device_attribute *attr,
@@ -1569,7 +1412,6 @@ static struct device_attribute dev_attr_magnetic_sensor_name =
 	__ATTR(name, S_IRUSR | S_IRGRP, magnetic_name_show, NULL);
 
 static struct device_attribute *magnetic_sensor_attrs[] = {
-	&dev_attr_magnetic_sensor_selftest,
 	&dev_attr_magnetic_sensor_raw_data,
 	&dev_attr_magnetic_sensor_vendor,
 	&dev_attr_magnetic_sensor_name,
@@ -1700,7 +1542,7 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 
 			for (i = 0; i < 3; i++)
 				atomic_set(&data->last_data[i],
-					magdata->xyz.v[i]);
+					   magdata->xyz.v[i]);
 		}
 
 		if (rt & YAS_REPORT_CALIB) {
@@ -1967,13 +1809,6 @@ geomagnetic_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		hwdep_driver.get_static_matrix(&data->static_matrix);
 	if (hwdep_driver.get_dynamic_matrix != NULL)
 		hwdep_driver.get_dynamic_matrix(&data->dynamic_matrix);
-#ifdef SYSFS_PCBTEST
-	rt = yas_pcb_test_init(&pcbtest);
-	if (rt < 0) {
-		YLOGE(("yas_pcb_test_init failed[%d]\n", rt));
-		goto err;
-	}
-#endif
 #ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
 	INIT_LIST_HEAD(&data->devfile_list);
 	INIT_LIST_HEAD(&data->raw_devfile_list);

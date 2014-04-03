@@ -65,11 +65,11 @@ static const struct regulator_init_data vbatt_initdata = {
 		.always_on = 1,
 	},
 	.num_consumer_supplies = ARRAY_SIZE(vbatt_supplies),
-	.consumer_supplies = (struct regulator_consumer_supply *) vbatt_supplies,
+	.consumer_supplies = vbatt_supplies,
 };
 
 static const struct fixed_voltage_config vbatt_config = {
-	.init_data = (struct regulator_init_data *) &vbatt_initdata,
+	.init_data = &vbatt_initdata,
 	.microvolts = 1800000,
 	.supply_name = "VBATT",
 	.gpio = -EINVAL,
@@ -79,7 +79,7 @@ static struct platform_device vbatt_device = {
 	.name	= "reg-fixed-voltage",
 	.id	= -1,
 	.dev = {
-		.platform_data = (struct fixed_voltage_config *) &vbatt_config,
+		.platform_data = &vbatt_config,
 	},
 };
 
@@ -93,7 +93,7 @@ static const struct regulator_init_data wm1811_ldo1_initdata = {
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 	},
 	.num_consumer_supplies = ARRAY_SIZE(wm1811_ldo1_supplies),
-	.consumer_supplies = (struct regulator_consumer_supply *) wm1811_ldo1_supplies,
+	.consumer_supplies = wm1811_ldo1_supplies,
 };
 
 static const struct regulator_consumer_supply wm1811_ldo2_supplies[] = {
@@ -106,7 +106,7 @@ static const struct regulator_init_data wm1811_ldo2_initdata = {
 		.always_on = true,  /* Actually status changed by LDO1 */
 	},
 	.num_consumer_supplies = ARRAY_SIZE(wm1811_ldo2_supplies),
-	.consumer_supplies = (struct regulator_consumer_supply *) wm1811_ldo2_supplies,
+	.consumer_supplies = wm1811_ldo2_supplies,
 };
 
 static struct wm8994_pdata wm1811_pdata = {
@@ -124,10 +124,10 @@ static struct wm8994_pdata wm1811_pdata = {
 
 	.ldo = {
 		{
-			.init_data = (struct regulator_init_data *) &wm1811_ldo1_initdata,
+			.init_data = &wm1811_ldo1_initdata,
 		},
 		{
-			.init_data = (struct regulator_init_data *) &wm1811_ldo2_initdata,
+			.init_data = &wm1811_ldo2_initdata,
 		}
 	},
 

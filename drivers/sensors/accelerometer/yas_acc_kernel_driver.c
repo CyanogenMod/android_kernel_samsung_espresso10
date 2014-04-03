@@ -1321,7 +1321,7 @@ static ssize_t acc_data_read(struct device *dev,
 	y = (accel.xyz.v[1] - data->cal_data.v[1]);
 	z = (accel.xyz.v[2] - data->cal_data.v[2]);
 
-	return sprintf(buf, "%d, %d, %d\n", x, y, z);
+	return sprintf(buf, "%d, %d, %d\n", -x, -y, -z);
 #else
 	x = (accel.xyz.v[0] - data->cal_data.v[0]) * 4;
 	y = (accel.xyz.v[1] - data->cal_data.v[1]) * 4;

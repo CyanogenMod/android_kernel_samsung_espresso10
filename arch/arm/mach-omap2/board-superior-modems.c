@@ -184,8 +184,7 @@ static void __init umts_modem_cfg_gpio(void)
 	umts_modem_data.gpio_pda_active = modem_gpios[GPIO_PDA_ACTIVE].gpio;
 	umts_modem_data.gpio_phone_active = modem_gpios[GPIO_PHONE_ACTIVE].gpio;
 	umts_modem_data.gpio_cp_dump_int = modem_gpios[GPIO_CP_DUMP_INT].gpio;
-	/* umts_modem_data.gpio_ap_dump_int =
-				modem_gpios[GPIO_AP_DUMP_INT].gpio; */
+	umts_modem_data.gpio_ap_dump_int = modem_gpios[GPIO_AP_DUMP_INT].gpio;
 
 	pr_debug("umts_modem_cfg_gpio done\n");
 }

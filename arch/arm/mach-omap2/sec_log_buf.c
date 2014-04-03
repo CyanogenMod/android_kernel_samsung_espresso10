@@ -22,7 +22,6 @@
 #include <linux/platform_device.h>
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
-#include <linux/vmalloc.h>
 
 #include <mach/hardware.h>
 
@@ -83,12 +82,15 @@ static const unsigned int sec_log_buf_magic = 0x404C4F47;	/* @LOG */
 static char *last_log_buf;
 static unsigned int last_log_buf_size;
 
+static void __init sec_last_log_buf_reserve(void)
+{
+	last_log_buf = (char *)alloc_bootmem(s_log_buf_msk + 1);
+}
+
 static void __init sec_last_log_buf_setup(void)
 {
 	unsigned int max_size = s_log_buf_msk + 1;
 	unsigned int head;
-
-	last_log_buf = vmalloc(s_log_buf_msk + 1);
 
 	if (*s_log_buf.count > max_size) {
 		head = *s_log_buf.count & s_log_buf_msk;
@@ -156,10 +158,11 @@ static int __init sec_last_log_buf_init(void)
 late_initcall(sec_last_log_buf_init);
 
 #else /* CONFIG_SAMSUNG_USE_LAST_SEC_LOG_BUF */
+#define sec_last_log_buf_reserve()
 #define sec_last_log_buf_setup()
 #endif /* CONFIG_SAMSUNG_USE_LAST_SEC_LOG_BUF */
 
-static int __init sec_log_buf_setup_early(char *str)
+static int __init sec_log_buf_setup(char *str)
 {
 	unsigned long res;
 
@@ -171,28 +174,18 @@ static int __init sec_log_buf_setup_early(char *str)
 		if (kstrtoul(++str, 16, &res))
 			goto __err;
 		sec_log_buf_start = res;
+		/* call reserve_bootmem to prevent the area accessed by
+		 * others */
+		if (reserve_bootmem
+		    (sec_log_buf_start, sec_log_buf_size, BOOTMEM_EXCLUSIVE)) {
+			pr_err("(%s): failed to reserve size %d@0x%X\n",
+			       __func__, sec_log_buf_size / 1024,
+			       sec_log_buf_start);
+			goto __err;
+		}
 	}
 
-	return 0;
-
-__err:
-	sec_log_buf_start = 0;
-	sec_log_buf_size = 0;
-	return 0;
-}
-
-/* 1st handler for 'sec_log' command-line option */
-early_param("sec_log", sec_log_buf_setup_early);
-
-void  __init sec_log_buf_reserve(void)
-{
-	if (unlikely(!sec_log_buf_start || !sec_log_buf_size))
-		return;
-
-	/* if sec_log_buf is located in lowmem area */
-	if ((sec_log_buf_start + sec_log_buf_size) <= arm_lowmem_limit)
-		return;
-
+	/* call memblock_remove to use ioremap */
 	if (memblock_remove(sec_log_buf_start, sec_log_buf_size)) {
 		pr_err("(%s): failed to remove size %d@0x%x\n",
 		       __func__, sec_log_buf_size / 1024, sec_log_buf_start);
@@ -200,52 +193,16 @@ void  __init sec_log_buf_reserve(void)
 	}
 	s_log_buf_msk = sec_log_buf_size - sec_log_buf_flag_size - 1;
 
-	return;
+	sec_last_log_buf_reserve();
+	return 1;
 
 __err:
 	sec_log_buf_start = 0;
 	sec_log_buf_size = 0;
-}
-
-static int __init sec_log_buf_reserve_late(char* str)
-{
-	/* TODO: we don't need to parse 'str' variable because it is already
-	 * translated in early_param */
-	if (unlikely(!sec_log_buf_start || !sec_log_buf_size))
-		return 0;
-
-	/* this is a safe operation because, initcall is always called later
-	 * than mdesc->reserve() call-back. */
-	if ((sec_log_buf_start + sec_log_buf_size) > arm_lowmem_limit)
-		return 0;
-
-	if (reserve_bootmem(sec_log_buf_start, sec_log_buf_size,
-			    BOOTMEM_EXCLUSIVE)) {
-		pr_err("(%s): failed to reserve size %d@0x%x\n",
-		       __func__, sec_log_buf_size / 1024, sec_log_buf_start);
-		goto __err_reserve_bootmem;
-	}
-
-	/* call memblock_remove to use ioremap */
-	if (memblock_remove(sec_log_buf_start, sec_log_buf_size)) {
-		pr_err("(%s): failed to remove size %d@0x%x\n",
-		       __func__, sec_log_buf_size / 1024, sec_log_buf_start);
-		goto __err_memblock_remove;
-	}
-	s_log_buf_msk = sec_log_buf_size - sec_log_buf_flag_size - 1;
-
-	return 0;
-
-__err_memblock_remove:
-	free_bootmem(sec_log_buf_start, sec_log_buf_size);
-__err_reserve_bootmem:
-	sec_log_buf_start = 0;
-	sec_log_buf_size = 0;
 	return 0;
 }
 
-/* 2nd handler for 'sec_log' command-line option */
-__setup("sec_log=", sec_log_buf_reserve_late);
+__setup("sec_log=", sec_log_buf_setup);
 
 static void __init sec_log_buf_create_sysfs(void)
 {
@@ -304,7 +261,6 @@ int __init sec_log_buf_init(void)
 	s_log_buf.flag = (unsigned int *)start;
 	s_log_buf.count = (unsigned int *)(start + 4);
 	s_log_buf.data = (char *)(start + sec_log_buf_flag_size);
-	s_log_buf.phys_data = sec_log_buf_start + sec_log_buf_flag_size;
 
 	sec_last_log_buf_setup();
 

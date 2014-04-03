@@ -41,4 +41,3 @@ config FB_OMAP2_VSYNC_SYSFS
 	depends on FB_OMAP2
 	help
 	  Pass vsync via sysfs to userspace.
-

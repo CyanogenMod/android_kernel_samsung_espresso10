@@ -19,16 +19,7 @@ struct sec_log_buf {
 	unsigned int *flag;
 	unsigned int *count;
 	char *data;
-	phys_addr_t phys_data;
 	bool enable;
 };
-
-#ifdef CONFIG_SAMSUNG_USE_SEC_LOG_BUF
-void sec_log_buf_reserve(void);
-#else
-#define sec_log_buf_reserve()
-#endif
-
-extern phys_addr_t arm_lowmem_limit;
 
 #endif /* __SEC_LOG_BUF_H__ */

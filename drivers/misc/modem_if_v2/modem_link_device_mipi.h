@@ -47,8 +47,6 @@
 
 #define MIPI_BULK_TX_SIZE	(8 * 1024)
 
-#define MIPI_CMD_SAVE_BUF_SIZE	50
-
 enum {
 	HSI_LL_MSG_BREAK, /* 0x0 */
 	HSI_LL_MSG_ECHO,
@@ -127,12 +125,6 @@ struct if_hsi_command {
 	struct list_head list;
 };
 
-struct if_hsi_cmd_save {
-	unsigned long long time;
-	u32 command;
-	bool direction;
-};
-
 struct mipi_link_device {
 	struct link_device ld;
 
@@ -158,9 +150,6 @@ struct mipi_link_device {
 	/* for mipi-link's first initialization
 	 * link has to be initialized right after modem power on */
 	bool modem_power_on;
-
-	unsigned int cmd_save_pt;
-	struct if_hsi_cmd_save cmd_save[MIPI_CMD_SAVE_BUF_SIZE];
 };
 /* converts from struct link_device* to struct xxx_link_device* */
 #define to_mipi_link_device(linkdev) \

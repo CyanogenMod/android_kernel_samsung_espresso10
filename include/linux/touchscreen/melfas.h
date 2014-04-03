@@ -24,7 +24,6 @@ struct melfas_fw_info {
 	const char core_version;
 	char private_version;
 	char public_version;
-	const char release_date[4];
 };
 
 extern void touch_i2c_to_gpio(bool to_gpios);

@@ -35,7 +35,7 @@ enum ion_heap_type {
 	ION_HEAP_TYPE_CARVEOUT,
 	ION_HEAP_TYPE_CUSTOM, /* must be last so device specific heaps always
 				 are at the end of this enum */
-	ION_NUM_HEAPS = 16,
+	ION_NUM_HEAPS,
 };
 
 #define ION_HEAP_SYSTEM_MASK		(1 << ION_HEAP_TYPE_SYSTEM)
@@ -83,7 +83,7 @@ struct ion_platform_heap {
  */
 struct ion_platform_data {
 	int nr;
-	struct ion_platform_heap *heaps;
+	struct ion_platform_heap heaps[];
 };
 
 /**
@@ -266,7 +266,6 @@ struct ion_handle *ion_import_fd(struct ion_client *client, int fd);
 struct ion_allocation_data {
 	size_t len;
 	size_t align;
-        unsigned int heap_mask;
 	unsigned int flags;
 	struct ion_handle *handle;
 };
@@ -323,6 +322,7 @@ struct ion_map_data {
 	struct ion_handle *handle;
 	unsigned char map_cacheable;
 	int fd;
+	unsigned char cacheable;
 };
 
 /**
@@ -397,7 +397,7 @@ struct ion_map_gralloc_to_ionhandle_data {
  * descriptor obtained from ION_IOC_SHARE and returns the struct with the handle
  * filed set to the corresponding opaque handle.
  */
-#define ION_IOC_IMPORT		_IOWR(ION_IOC_MAGIC, 5, struct ion_fd_data)
+#define ION_IOC_IMPORT		_IOWR(ION_IOC_MAGIC, 5, int)
 
 /**
  * DOC: ION_IOC_CUSTOM - call architecture specific ion ioctl
@@ -407,10 +407,9 @@ struct ion_map_gralloc_to_ionhandle_data {
  */
 #define ION_IOC_CUSTOM		_IOWR(ION_IOC_MAGIC, 6, struct ion_custom_data)
 
-#define ION_IOC_SYNC 			_IOWR(ION_IOC_MAGIC, 7, struct ion_fd_data)
-#define ION_IOC_MAP_CACHEABLE		_IOWR(ION_IOC_MAGIC, 8, struct ion_fd_data)
-#define ION_IOC_FLUSH_CACHED		_IOWR(ION_IOC_MAGIC, 9, struct ion_cached_user_buf_data)
-#define ION_IOC_INVAL_CACHED		_IOWR(ION_IOC_MAGIC, 10, struct ion_cached_user_buf_data)
-#define ION_IOC_MAP_GRALLOC	        _IOWR(ION_IOC_MAGIC, 11, \
+#define ION_IOC_MAP_CACHEABLE		_IOWR(ION_IOC_MAGIC, 7, struct ion_fd_data)
+#define ION_IOC_FLUSH_CACHED		_IOWR(ION_IOC_MAGIC, 8, struct ion_cached_user_buf_data)
+#define ION_IOC_INVAL_CACHED		_IOWR(ION_IOC_MAGIC, 9, struct ion_cached_user_buf_data)
+#define ION_IOC_MAP_GRALLOC	        _IOWR(ION_IOC_MAGIC, 10, \
 				struct ion_map_gralloc_to_ionhandle_data)
 #endif /* _LINUX_ION_H */

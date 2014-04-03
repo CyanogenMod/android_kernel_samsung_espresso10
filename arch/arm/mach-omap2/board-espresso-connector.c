@@ -78,12 +78,6 @@
 #else
 #define SWCAP_TRIM_OFFSET			0x22
 #endif
-#define SWCAP_TRIM_OFFSET_HOST			(-0x4E)
-#define BGTRIM_TRIM_OFFSET_HOST			(-0x3FA0)
-#define RTERM_RMX_OFFSET_HOST			(0x20)
-#define RTERM_CAL_OFFSET_HOST			(0x0)
-#define HS_CODE_SEL_HOST	(0x1)
-#define SQ_OFF_CODE_DAC3_OFFSET_HOST	(0x3)
 
 static char *device_names[] = {
 	[P30_OTG]			= "otg",
@@ -354,10 +348,7 @@ static void espresso_set_vbus_drive(bool enable)
 
 static void espresso_ap_usb_attach(struct omap4_otg *otg)
 {
-	pr_info("[%s]\n", __func__);
 	omap4_vusb_enable(otg, true);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
-	omap4460_phy_tuning_for_eyediagram(0, 0, 0x1);
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
@@ -370,7 +361,7 @@ static void espresso_ap_usb_attach(struct omap4_otg *otg)
 
 static void espresso_ap_usb_detach(struct omap4_otg *otg)
 {
-	pr_info("[%s]\n", __func__);
+	omap4_vusb_enable(otg, false);
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
@@ -388,7 +379,6 @@ static void espresso_ap_usb_detach(struct omap4_otg *otg)
 	atomic_notifier_call_chain(&otg->otg.notifier,
 				USB_EVENT_CHARGER_NONE,
 				otg->otg.gadget);
-	omap4_vusb_enable(otg, false);
 }
 
 static void espresso_usb_host_attach(struct omap4_otg *otg)
@@ -405,12 +395,6 @@ static void espresso_usb_host_attach(struct omap4_otg *otg)
 #endif
 
 	omap4_vusb_enable(otg, true);
-	omap4430_phy_init_for_eyediagram
-		(SWCAP_TRIM_OFFSET_HOST, BGTRIM_TRIM_OFFSET_HOST
-			, RTERM_RMX_OFFSET_HOST);
-	omap4460_phy_tuning_for_eyediagram
-		(RTERM_CAL_OFFSET_HOST, SQ_OFF_CODE_DAC3_OFFSET_HOST
-			, HS_CODE_SEL_HOST);
 
 	otg->otg.state = OTG_STATE_A_IDLE;
 	otg->otg.default_a = true;
@@ -1246,7 +1230,7 @@ void __init omap4_espresso_connector_init(void)
 		pr_err("espresso_otg: cannot set transceiver (%d)\n", ret);
 
 	omap4430_phy_init(&espresso_otg->dev);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
+	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET);
 	espresso_otg_set_suspend(&espresso_otg->otg, 0);
 	espresso_vbus_detect_init(espresso_otg);
 #ifdef CONFIG_USB_HOST_NOTIFY

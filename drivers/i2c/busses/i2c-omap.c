@@ -510,13 +510,8 @@ static int omap_i2c_init(struct omap_i2c_dev *dev)
 	omap_i2c_write_reg(dev, OMAP_I2C_PSC_REG, psc);
 
 	/* SCL low and high time values */
-	if ((cpu_is_omap443x()) && ((unsigned int)dev->base == 0xfa070000)) {
-		omap_i2c_write_reg(dev, OMAP_I2C_SCLL_REG, 0xC);
-		omap_i2c_write_reg(dev, OMAP_I2C_SCLH_REG, 0x6);
-	} else {
-		omap_i2c_write_reg(dev, OMAP_I2C_SCLL_REG, scll);
-		omap_i2c_write_reg(dev, OMAP_I2C_SCLH_REG, sclh);
-	}
+	omap_i2c_write_reg(dev, OMAP_I2C_SCLL_REG, scll);
+	omap_i2c_write_reg(dev, OMAP_I2C_SCLH_REG, sclh);
 
 	if (dev->fifo_size) {
 		/* Note: setup required fifo size - 1. RTRSH and XTRSH */
@@ -535,13 +530,8 @@ static int omap_i2c_init(struct omap_i2c_dev *dev)
 
 	if (cpu_is_omap34xx() || cpu_is_omap44xx()) {
 		dev->pscstate = psc;
-		if ((cpu_is_omap443x()) && ((int)dev->base == 0xfa070000)) {
-			dev->scllstate = 0xC;
-			dev->sclhstate = 0x6;
-		} else {
-			dev->scllstate = scll;
-			dev->sclhstate = sclh;
-		}
+		dev->scllstate = scll;
+		dev->sclhstate = sclh;
 		dev->bufstate = buf;
 	}
 	return 0;

@@ -34,7 +34,6 @@
  * use the following define to allow auto load of firmware at startup
 #define CY_AUTO_LOAD_FW
  */
-#define CY_AUTO_LOAD_FW
 
 /* use the following define to allow auto load of Touch Params at startup
 #define CY_AUTO_LOAD_TOUCH_PARAMS

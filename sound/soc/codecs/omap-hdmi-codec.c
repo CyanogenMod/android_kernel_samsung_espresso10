@@ -271,7 +271,7 @@ int hdmi_audio_notifier_callback(struct notifier_block *nb,
 				msecs_to_jiffies(1));
 		}
 	} else {
-		cancel_delayed_work_sync(&hdmi_data.delayed_work);
+		cancel_delayed_work(&hdmi_data.delayed_work);
 	}
 	return 0;
 }
@@ -327,7 +327,7 @@ static int hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-		cancel_delayed_work_sync(&hdmi_data.delayed_work);
+		cancel_delayed_work(&hdmi_data.delayed_work);
 		priv->active = 0;
 		hdmi_ti_4xxx_audio_transfer_en(&priv->ip_data, 0);
 		hdmi_ti_4xxx_wp_audio_enable(&priv->ip_data, 0);

@@ -55,7 +55,6 @@
 #include "sec_debug.h"
 #include "sec_getlog.h"
 #include "sec_muxtbl.h"
-#include "sec_log_buf.h"
 
 #define T1_MEM_BANK_0_SIZE	0x20000000
 #define T1_MEM_BANK_0_ADDR	0x80000000
@@ -246,11 +245,11 @@ static void __init t1_map_io(void)
 static void omap4_t1_init_carveout_sizes(
 		struct omap_ion_platform_data *ion)
 {
-	ion->tiler1d_size = (SZ_1M * 14);
+	ion->tiler1d_size = (SZ_1M * 90);
 	/* WFD is not supported in T1 So the size is zero */
 	ion->secure_output_wfdhdcp_size = 0;
 	ion->ducati_heap_size = (SZ_1M * 105);
-	ion->nonsecure_tiler2d_size = (SZ_1M * 10);
+	ion->nonsecure_tiler2d_size = (SZ_1M * 15);
 	ion->tiler2d_size = (SZ_1M * 81);
 }
 
@@ -279,8 +278,6 @@ static void __init t1_reserve(void)
 			OMAP4_ION_HEAP_SECURE_INPUT_SIZE +
 			OMAP4_ION_HEAP_SECURE_OUTPUT_WFDHDCP_SIZE);
 	omap_reserve();
-
-	sec_log_buf_reserve();
 }
 
 MACHINE_START(OMAP4_SAMSUNG, "T1 Samsung board")

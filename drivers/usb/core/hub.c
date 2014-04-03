@@ -2962,12 +2962,6 @@ hub_port_init (struct usb_hub *hub, struct usb_device *udev, int port1,
 				}
 				if (r == 0)
 					break;
-				else if (hcd->driver->hcd_reset
-						&& !hub->hdev->parent) {
-					r = hcd->driver->hcd_reset(hcd);
-					if (r == 0)
-						break;
-				}
 			}
 			udev->descriptor.bMaxPacketSize0 =
 					buf->bMaxPacketSize0;

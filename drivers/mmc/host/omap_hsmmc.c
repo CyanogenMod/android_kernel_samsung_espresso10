@@ -43,8 +43,6 @@
 #include <plat/cpu.h>
 #include <plat/omap-pm.h>
 
-#define DEBUG_PRINT 0
-
 /* OMAP HSMMC Host Controller Registers */
 #define OMAP_HSMMC_SYSCONFIG	0x0010
 #define OMAP_HSMMC_SYSSTATUS	0x0014
@@ -129,7 +127,7 @@
 #define ADMA_ERR		(1 << 25)
 #define ADMA_XFER_INT		(1 << 3)
 
-#define DMA_TABLE_NUM_ENTRIES	2048
+#define DMA_TABLE_NUM_ENTRIES	1024
 #define ADMA_TABLE_SZ	\
 	(DMA_TABLE_NUM_ENTRIES * sizeof(struct adma_desc_table))
 
@@ -242,7 +240,6 @@ struct omap_hsmmc_host {
 	int			gpio_for_ldo;
 	struct	timer_list	sw_timer;
 	struct	omap_mmc_platform_data	*pdata;
-	struct wake_lock	wake_lock;
 };
 
 static void omap_hsmmc_status_notify_cb(int card_present, void *dev_id)
@@ -335,10 +332,8 @@ static int omap_hsmmc_1_set_power(struct device *dev, int slot, int power_on,
 
 	if (power_on) {
 		if (host->external_ldo) {
-#if DEBUG_PRINT
 			printk(KERN_INFO "%s LDO enable\n",
 				mmc_hostname(host->mmc));
-#endif
 			gpio_set_value(host->gpio_for_ldo, 1);
 			}
 		else
@@ -346,10 +341,8 @@ static int omap_hsmmc_1_set_power(struct device *dev, int slot, int power_on,
 		}
 	else {
 		if (host->external_ldo) {
-#if DEBUG_PRINT
 			printk(KERN_INFO "%s LDO Disable\n",
 				mmc_hostname(host->mmc));
-#endif
 			gpio_set_value(host->gpio_for_ldo, 0);
 			}
 		else
@@ -375,9 +368,7 @@ static int omap_hsmmc_2_set_power(struct device *dev, int slot, int power_on,
 		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
 
 	if (power_on) {
-#if DEBUG_PRINT
 		printk(KERN_INFO "%s LDO enable\n", mmc_hostname(host->mmc));
-#endif
 		if (host->external_ldo)
 			gpio_set_value(host->gpio_for_ldo, 1);
 		else {
@@ -386,9 +377,7 @@ static int omap_hsmmc_2_set_power(struct device *dev, int slot, int power_on,
 				ret = regulator_enable(host->vcc_aux);
 		}
 	} else {
-#if DEBUG_PRINT
 		printk(KERN_INFO "%s LDO Disable\n", mmc_hostname(host->mmc));
-#endif
 		if (host->external_ldo)
 			gpio_set_value(host->gpio_for_ldo, 0);
 		else {
@@ -610,8 +599,6 @@ static int omap_hsmmc_reg_get(struct omap_hsmmc_host *host)
 				regulator_disable(reg);
 			}
 		}
-		/*add delay to stabilize power*/
-		mdelay(50);
 	}
 
 	return 0;
@@ -1218,7 +1205,7 @@ static void omap_hsmmc_report_irq(struct omap_hsmmc_host *host, u32 status)
 static inline void omap_hsmmc_reset_controller_fsm(struct omap_hsmmc_host *host,
 						   unsigned long bit)
 {
-	unsigned long i = 0, j = 0;
+	unsigned long i = 0;
 #ifdef CONFIG_WIWLAN_SDIO
 	unsigned long limit = (loops_per_jiffy *
 				msecs_to_jiffies(MMC_TIMEOUT_MS));
@@ -1245,19 +1232,19 @@ static inline void omap_hsmmc_reset_controller_fsm(struct omap_hsmmc_host *host,
 #else
 	if (mmc_slot(host).features & HSMMC_HAS_UPDATED_RESET) {
 		while ((!(OMAP_HSMMC_READ(host, SYSCTL) & bit))
-						&& (i++ < 200))
-			udelay(10);
+						&& (i++ < 50))
+			udelay(100);
 	}
 	i = 0;
 	while ((OMAP_HSMMC_READ(host, SYSCTL) & bit) &&
-		(i++ < 200))
-		udelay(10);
+		(i++ < 50))
+		udelay(100);
 #endif
 
 	if (OMAP_HSMMC_READ(host->base, SYSCTL) & bit)
 		dev_err(mmc_dev(host->mmc),
-		"Timeout waiting on controller reset in %s, I = %lu, J = %lu\n",
-		__func__, i, j);
+			"Timeout waiting on controller reset in %s\n",
+			__func__);
 }
 
 static void omap_hsmmc_do_irq(struct omap_hsmmc_host *host, int status)
@@ -1558,8 +1545,6 @@ static irqreturn_t omap_hsmmc_cd_handler(int irq, void *dev_id)
 
 	if (host->suspended)
 		return IRQ_HANDLED;
-
-	wake_lock_timeout(&host->wake_lock, 1 * HZ);
 	schedule_work(&host->mmc_carddetect_work);
 
 	return IRQ_HANDLED;
@@ -2594,10 +2579,6 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
 
 	spin_lock_init(&host->irq_lock);
 
-	/* wake lock init */
-	wake_lock_init(&host->wake_lock,
-		WAKE_LOCK_SUSPEND, "omaphsmmc_wake_lock");
-
 #ifdef CONFIG_MMC_SOFTWARE_TIMEOUT
 	init_timer(&host->sw_timer);
 	host->sw_timer.function = omap_hsmmc_timeout_irq;
@@ -2655,6 +2636,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
 	}
 
 	/* ADMA is not used if packed cmd is enabled*/
+	if (!(mmc_slot(host).caps2 & MMC_CAP2_PACKED_CMD)) {
 		ctrlr_caps = OMAP_HSMMC_READ(host->base, CAPA);
 
 		if (ctrlr_caps & CAPA_ADMA_SUPPORT) {
@@ -2666,6 +2648,7 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
 			if (host->adma_table != NULL)
 				host->dma_type = ADMA_XFER;
 			}
+		}
 
 	dev_dbg(mmc_dev(host->mmc), "DMA Mode=%d\n", host->dma_type);
 

@@ -470,8 +470,6 @@ asmlinkage void __exception_irq_entry do_local_timer(struct pt_regs *regs)
 	struct pt_regs *old_regs = set_irq_regs(regs);
 	int cpu = smp_processor_id();
 
-	sec_debug_irq_regs_log(cpu, regs);
-
 	if (local_timer_ack()) {
 		__inc_irq_stat(cpu, local_timer_irqs);
 		sec_debug_irq_log(0, do_local_timer, 1);
@@ -647,7 +645,6 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
 	if (ipinr >= IPI_TIMER && ipinr < IPI_TIMER + NR_IPI)
 		__inc_irq_stat(cpu, ipi_irqs[ipinr - IPI_TIMER]);
 
-	sec_debug_irq_regs_log(cpu, regs);
 	sec_debug_irq_log(ipinr, do_IPI, 1);
 
 	switch (ipinr) {

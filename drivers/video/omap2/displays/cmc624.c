@@ -14,6 +14,7 @@
 
 #include <linux/delay.h>
 #include <linux/err.h>
+#include <linux/backlight.h>
 #include <linux/fb.h>
 #include <linux/interrupt.h>
 #include <linux/gpio.h>
@@ -67,15 +68,11 @@ struct cmc624_state_type {
 
 struct cmc624_info {
 	struct device *dev;
-	struct device *lcd_dev;
-	struct omap_dss_device *dssdev;
 	struct i2c_client *client;
 	struct cmc624_panel_data *pdata;
 	struct cmc624_register_set cmc624_tune_seq[CMC624_MAX_SETTINGS];
 	struct class *mdnie_class;
-	struct class *lcd_class;
 	struct cmc624_state_type state;
-	struct mutex power_lock;
 	struct mutex tune_lock;
 
 	int init_tune_flag[3];
@@ -89,10 +86,6 @@ static struct cmc624_info *g_cmc624_info;
 
 static LIST_HEAD(tune_data_list);
 static DEFINE_MUTEX(tune_data_list_mutex);
-
-static int cmc624_tune_restore(struct cmc624_info *info);
-static int cmc624_enable(struct omap_dss_device *dssdev);
-static void cmc624_disable(struct omap_dss_device *dssdev);
 
 /*
  * FUNCTIONS
@@ -249,7 +242,12 @@ set_error:
 void cmc624_set_auto_brightness(enum auto_brt_val auto_brt)
 {
 	struct cmc624_info *info = g_cmc624_info;
-	enum tune_menu_cabc new_cabc;
+
+	/* if auto brightness value is 0, turn off cabc */
+	if (auto_brt)
+		info->state.cabc_mode = MENU_CABC_ON;
+	else
+		info->state.cabc_mode = MENU_CABC_OFF;
 
 	/* select cmc624 power lut table to control pwm with  cabc-on mode */
 	if (auto_brt < AUTO_BRIGHTNESS_VAL4)
@@ -258,20 +256,6 @@ void cmc624_set_auto_brightness(enum auto_brt_val auto_brt)
 		info->pwrlut_lev = PWRLUT_LEV_OUTDOOR1;
 	else
 		info->pwrlut_lev = PWRLUT_LEV_OUTDOOR2;
-
-	/* if auto brightness value is 0, turn off cabc */
-	if (auto_brt)
-		new_cabc = MENU_CABC_ON;
-	else
-		new_cabc = MENU_CABC_OFF;
-
-	if (new_cabc == info->state.cabc_mode) {
-		dev_dbg(info->dev, "%s: skip to set cabc mode\n", __func__);
-		return;
-	}
-
-	info->state.cabc_mode = new_cabc;
-	cmc624_tune_restore(info);
 }
 EXPORT_SYMBOL(cmc624_set_auto_brightness);
 
@@ -370,8 +354,6 @@ static int _cmc624_set_pwm(struct cmc624_info *info, int intensity)
 		return ret;
 	}
 
-	info->state.brightness = intensity;
-
 	return 0;
 }
 
@@ -410,9 +392,13 @@ static int apply_sub_tune_value(struct cmc624_info *info,
 	u32 id;
 	int ret;
 
-	/* Do not skip for duplication case.
-	 * If scenario is changed, cmc624 looses temperature setting,
-	 */
+	if ((info->state.temperature == temp) &&
+		(info->state.outdoor == outdoor)) {
+		dev_info(info->dev, "%s: dupulication setting(%d, %d)\n",
+						__func__, temp, outdoor);
+		return 0;
+	}
+
 	if (info->state.negative)
 		goto skip_tune;
 
@@ -476,8 +462,6 @@ static int apply_tune_value(struct cmc624_info *info,
 	int app;
 	int ret;
 
-	pr_info("%s: bg=%d, ui=%d, force=%d\n", __func__, bg, ui, force);
-
 	/* set main tune */
 	ret = apply_main_tune_value(info, bg, ui, force);
 	if (ret < 0) {
@@ -519,8 +503,6 @@ static int apply_browser_tune_value(struct cmc624_info *info,
 	u32 id;
 	int ret;
 
-	pr_info("%s: browser mode = %d, %d\n", __func__, browser_mode, force);
-
 	if (info->state.negative)
 		goto skip_tune;
 
@@ -557,8 +539,6 @@ static int apply_negative_tune_value(struct cmc624_info *info, int negative)
 {
 	u32 id;
 	int ret;
-
-	pr_info("%s: negative = %d\n", __func__, negative);
 
 	info->state.negative = negative;
 
@@ -704,6 +684,19 @@ err_file_open:
 /**************************************************************************
  * SYSFS Start
  ***************************************************************************/
+
+static ssize_t lcdtype_show(struct device *dev,
+	struct device_attribute *attr, char *buf)
+{
+	struct cmc624_info *info = dev_get_drvdata(dev);
+
+	dev_info(dev, "type: %s\n", info->pdata->lcd_name);
+	return sprintf(buf, info->pdata->lcd_name);
+
+}
+
+static DEVICE_ATTR(lcdtype, S_IRUGO, lcdtype_show, NULL);
+
 static ssize_t scenario_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -1029,59 +1022,23 @@ static ssize_t cabc_store(struct device *dev,
 {
 	struct cmc624_info *info = dev_get_drvdata(dev);
 	int value;
-	enum tune_menu_cabc new_cabc;
 
 	sscanf(buf, "%d", &value);
 
 	if (value)
-		new_cabc = MENU_CABC_ON;
+		info->state.cabc_mode = MENU_CABC_ON;
 	else
-		new_cabc = MENU_CABC_OFF;
+		info->state.cabc_mode = MENU_CABC_OFF;
 
-	dev_info(dev, "%s: cabc mode = %d -> %d\n",
-				__func__, info->state.cabc_mode, new_cabc);
+	dev_info(dev, "%s: cabc mode = %d\n", __func__, info->state.cabc_mode);
 
-	if (new_cabc == info->state.cabc_mode) {
-		dev_dbg(info->dev, "%s: skip to set cabc mode\n", __func__);
-		goto skip;
-	}
-
-	info->state.cabc_mode = new_cabc;
-	cmc624_tune_restore(info);
-	cmc624_set_pwm(info->state.brightness);
-
-skip:
 	return size;
 }
 
 static DEVICE_ATTR(cabc, S_IRUGO|S_IWUSR|S_IWGRP, cabc_show, cabc_store);
 
-static ssize_t reg_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
-{
-	struct cmc624_info *info = dev_get_drvdata(dev);
-	int bank;
-	int reg;
-	u16 val;
-
-	pr_info("CMC624 Register Value\n");
-	for (bank = 0; bank < 6; bank++) {
-		pr_info("BANK %d\n", bank);
-		cmc624_reg_write(info, 0x00, bank);
-
-		for (reg = 0; reg < 0x100; reg++) {
-			val = cmc624_reg_read(info, reg);
-			pr_info("REG: 0x%02x, VAL: 0x%04x\n", reg, val);
-		}
-	}
-
-	return sprintf(buf, "%d", info->state.cabc_mode);
-}
-
-static DEVICE_ATTR(reg, S_IRUGO, reg_show, NULL);
-
-
 static struct attribute *manual_cmc624_attributes[] = {
+	&dev_attr_lcdtype.attr,
 	&dev_attr_scenario.attr,
 	&dev_attr_outdoor.attr,
 	&dev_attr_negative.attr,
@@ -1090,7 +1047,6 @@ static struct attribute *manual_cmc624_attributes[] = {
 	&dev_attr_tuning.attr,
 	&dev_attr_pwm.attr,
 	&dev_attr_cabc.attr,
-	&dev_attr_reg.attr,
 	NULL,
 };
 
@@ -1098,70 +1054,9 @@ static const struct attribute_group manual_cmc624_group = {
 	.attrs = manual_cmc624_attributes,
 };
 
-static ssize_t lcd_type_show(struct device *dev,
-				struct device_attribute *attr, char *buf)
-{
-	struct cmc624_info *info = dev_get_drvdata(dev);
-
-	return sprintf(buf, "%s\n", info->pdata->lcd_name);
-}
-
-static DEVICE_ATTR(lcd_type, S_IRUGO|S_IWUSR|S_IWGRP, lcd_type_show, NULL);
-
-static ssize_t lcd_power_store(struct device *dev,
-		struct device_attribute *attr, const char *buf, size_t size)
-{
-	struct cmc624_info *info = dev_get_drvdata(dev);
-	int power;
-
-	sscanf(buf, "%d", &power);
-
-	dev_info(dev, "%s: power = %d\n", __func__, power);
-
-	if (power)
-		cmc624_enable(info->dssdev);
-	else
-		cmc624_disable(info->dssdev);
-
-	return size;
-}
-
-static DEVICE_ATTR(lcd_power, S_IRUGO|S_IWUSR|S_IWGRP, NULL, lcd_power_store);
-
-static struct attribute *manual_lcd_attributes[] = {
-	&dev_attr_lcd_type.attr,
-	&dev_attr_lcd_power.attr,
-	NULL,
-};
-
-static const struct attribute_group manual_lcd_group = {
-	.attrs = manual_lcd_attributes,
-};
-
 /**************************************************************************
  * SYSFS -- END
  ***************************************************************************/
-
-static int cmc624_tune_restore(struct cmc624_info *info)
-{
-	int ret;
-
-	pr_info("%s: bg=%d, app=%d, temp=%d, out=%d, cabc=%d, negative=%d\n",
-			__func__, info->state.background, info->state.scenario,
-			info->state.temperature, info->state.outdoor,
-			info->state.cabc_mode, info->state.negative);
-
-	if (info->state.negative)
-		ret = apply_negative_tune_value(info, 1);
-	else if (info->state.scenario == MENU_APP_BROWSER)
-		ret = apply_browser_tune_value(info,
-					info->state.browser_scenario, 1);
-	else
-		ret = apply_tune_value(info, info->state.background,
-						info->state.scenario, 1);
-
-	return ret;
-}
 
 static int cmc624_i2c_probe(struct i2c_client *client,
 	const struct i2c_device_id *id)
@@ -1287,14 +1182,14 @@ static int cmc624_power_on_seq(struct omap_dss_device *dssdev)
 		dssdev->skip_init = false;
 	dsi_bus_unlock(dssdev);
 
-	if (!dssdev->skip_init && !info->pdata->skip_ldi_cmd) {
+	if (!dssdev->skip_init) {
 		/* LDI sequence */
 		TUNE_DATA_ID(id, MENU_CMD_INIT_LDI, MENU_SKIP,
 				MENU_SKIP, MENU_SKIP, MENU_SKIP,
 				MENU_SKIP, MENU_SKIP);
 		data = cmc624_get_tune_data(id, BITMASK_CMD);
 		if (!data)
-			return -ENODEV;
+			return -1;
 		cmc624_send_cmd(data->value, data->size);
 	}
 
@@ -1315,11 +1210,10 @@ static int __devinit cmc624_probe(struct omap_dss_device *dssdev)
 	}
 
 	mutex_init(&info->tune_lock);
-	mutex_init(&info->power_lock);
 
 	/* set initial cmc624 state */
 	info->state.cabc_mode = MENU_CABC_OFF;
-	info->state.brightness = 130;
+	info->state.brightness = 42;
 	info->state.suspended = 0;
 	info->state.scenario = MENU_APP_UI;
 	info->state.browser_scenario = MENU_SPEC_TONE1;
@@ -1332,7 +1226,6 @@ static int __devinit cmc624_probe(struct omap_dss_device *dssdev)
 
 	info->last_cmc624_Algorithm = 0xFFFF;
 	info->last_cmc624_Bank = 0xFFFF;
-	info->dssdev = dssdev;
 	info->pdata = dssdev->data;
 	dev_set_drvdata(&dssdev->dev, info);
 
@@ -1363,6 +1256,7 @@ static int __devinit cmc624_probe(struct omap_dss_device *dssdev)
 	if (ret < 0) {
 		dev_err(&dssdev->dev, "%s: failed to register tune list\n",
 								__func__);
+		ret = -1;
 		goto cmc624_init_tune_list;
 	}
 
@@ -1378,63 +1272,33 @@ static int __devinit cmc624_probe(struct omap_dss_device *dssdev)
 		dev_err(&dssdev->dev, "%s: failed to create mdnie class\n",
 								__func__);
 		ret = -1;
-		goto mdnie_class_create_fail;
+		goto class_create_fail;
 	}
-
-	info->lcd_class = class_create(THIS_MODULE, "lcd");
-	if (IS_ERR(info->lcd_class)) {
-		dev_err(&dssdev->dev, "%s: failed to create lcd class\n",
-								__func__);
-		ret = -1;
-		goto lcd_class_create_fail;
-	}
-
-	info->dev = device_create(info->mdnie_class, NULL, 0, NULL, "mdnie");
+	info->dev = device_create(info->mdnie_class,
+		NULL, 0, NULL, "mdnie");
 	if (IS_ERR(info->dev)) {
 		dev_err(&dssdev->dev, "%s: failed to create mdnie file\n",
 								__func__);
 		ret = -1;
-		goto mdnie_device_create_fail;
-	}
-
-	info->lcd_dev = device_create(info->lcd_class, NULL, 0, NULL, "panel");
-	if (IS_ERR(info->dev)) {
-		dev_err(&dssdev->dev, "%s: failed to create panel file\n",
-								__func__);
-		ret = -1;
-		goto lcd_device_create_fail;
+		goto device_create_fail;
 	}
 
 	dev_set_drvdata(info->dev, info);
-	dev_set_drvdata(info->lcd_dev, info);
 
 	ret = sysfs_create_group(&info->dev->kobj, &manual_cmc624_group);
 	if (ret < 0) {
-		dev_err(&dssdev->dev, "%s: failed to create sysfs group\n",
-								__func__);
-		goto mdnie_sysfs_create_group_fail;
-	}
-
-	ret = sysfs_create_group(&info->lcd_dev->kobj, &manual_lcd_group);
-	if (ret < 0) {
-		dev_err(&dssdev->dev, "%s: failed to create lcd sysfs group\n",
-								__func__);
-		goto lcd_sysfs_create_group_fail;
+		dev_err(&dssdev->dev, "%s: failed to create sysfs group(%d)\n",
+								__func__, ret);
+		goto sysfs_create_group_fail;
 	}
 
 	return 0;
 
-lcd_sysfs_create_group_fail:
-	sysfs_remove_group(&info->dev->kobj, &manual_cmc624_group);
-mdnie_sysfs_create_group_fail:
-	device_destroy(info->lcd_class, 0);
-lcd_device_create_fail:
+sysfs_create_group_fail:
 	device_destroy(info->mdnie_class, 0);
-mdnie_device_create_fail:
-	class_destroy(info->lcd_class);
-lcd_class_create_fail:
+device_create_fail:
 	class_destroy(info->mdnie_class);
-mdnie_class_create_fail:
+class_create_fail:
 	i2c_del_driver(&sec_cmc624_i2c_driver);
 i2c_add_driver_fail:
 no_panel_data:
@@ -1462,17 +1326,15 @@ static void __devexit cmc624_remove(struct omap_dss_device *dssdev)
 
 static int cmc624_enable(struct omap_dss_device *dssdev)
 {
-	struct cmc624_info *info = dev_get_drvdata(&dssdev->dev);
 	int r = 0;
+	struct cmc624_info *info = dev_get_drvdata(&dssdev->dev);
 
-	mutex_lock(&info->power_lock);
 	dev_info(&dssdev->dev, "CMC624 enable\n");
 
 	if (!info) {
 		dev_err(&dssdev->dev, "%s: cmc624 is not initialized\n",
 								__func__);
-		r = -ENODEV;
-		goto err_nodev;
+		return -1;
 	}
 
 	if (dssdev->state == OMAP_DSS_DISPLAY_ACTIVE)
@@ -1519,7 +1381,7 @@ static int cmc624_enable(struct omap_dss_device *dssdev)
 	if (!dssdev->skip_init) {
 		/* FAIL_SAFEB HIGH */
 		gpio_set_value(info->pdata->gpio_ima_cmc_en, 1);
-		udelay(30);
+		udelay(20);
 
 		/* RESETB LOW */
 		gpio_set_value(info->pdata->gpio_ima_nrst, 0);
@@ -1532,9 +1394,6 @@ static int cmc624_enable(struct omap_dss_device *dssdev)
 	dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
 
 	cmc624_power_on_seq(dssdev);
-	cmc624_tune_restore(info);
-
-	mutex_unlock(&info->power_lock);
 
 	return 0;
 
@@ -1549,20 +1408,15 @@ err_platform_enable:
 	omapdss_dsi_display_disable(dssdev, 0, 0);
 	dsi_bus_unlock(dssdev);
 err_state:
-err_nodev:
-	mutex_unlock(&info->power_lock);
 	return r;
 }
 
 static void cmc624_disable(struct omap_dss_device *dssdev)
 {
-	struct cmc624_info *info = dev_get_drvdata(&dssdev->dev);
-
-	mutex_lock(&info->power_lock);
 	dev_info(&dssdev->dev, "CMC624 disable\n");
 
 	if (dssdev->state != OMAP_DSS_DISPLAY_ACTIVE)
-		goto skip;
+		return;
 
 	if (dssdev->platform_disable)
 		dssdev->platform_disable(dssdev);
@@ -1575,8 +1429,6 @@ static void cmc624_disable(struct omap_dss_device *dssdev)
 	cmc624_power_off_seq(dssdev);
 
 	dssdev->state = OMAP_DSS_DISPLAY_DISABLED;
-skip:
-	mutex_unlock(&info->power_lock);
 }
 
 static int cmc624_suspend(struct omap_dss_device *dssdev)

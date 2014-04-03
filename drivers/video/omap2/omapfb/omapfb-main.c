@@ -839,12 +839,8 @@ static int omapfb_release(struct fb_info *fbi, int user)
 {
 	struct omapfb_info *ofbi = FB2OFB(fbi);
 	struct omapfb2_device *fbdev = ofbi->fbdev;
-	struct omap_dss_device *display = fb2display(fbi);
 
-	if (!display)
-		return -ENODEV;
-
-	omapfb_enable_vsync(fbdev, display->channel, false);
+	omapfb_disable_vsync(fbdev);
 
 	return 0;
 }
@@ -1404,9 +1400,8 @@ static int omapfb_blank(int blank, struct fb_info *fbi)
 				r = display->driver->enable(display);
 		}
 
-		if (fbdev->vsync_active &&
-			(display->state == OMAP_DSS_DISPLAY_ACTIVE))
-			omapfb_enable_vsync(fbdev, display->channel, true);
+		if (fbdev->vsync_active)
+			omapfb_enable_vsync(fbdev);
 
 		break;
 
@@ -1418,7 +1413,7 @@ static int omapfb_blank(int blank, struct fb_info *fbi)
 	case FB_BLANK_POWERDOWN:
 
 		if (fbdev->vsync_active)
-			omapfb_enable_vsync(fbdev, display->channel, false);
+			omapfb_disable_vsync(fbdev);
 
 		if (display->state != OMAP_DSS_DISPLAY_ACTIVE)
 			goto exit;
@@ -2427,31 +2422,18 @@ static void omapfb_vsync_isr(void *data, u32 mask)
 	schedule_work(&fbdev->vsync_work);
 }
 
-int omapfb_enable_vsync(struct omapfb2_device *fbdev, enum omap_channel ch,
-		 bool enable)
+int omapfb_enable_vsync(struct omapfb2_device *fbdev)
 {
-	int r = 0;
-	const u32 masks[] = {
-		DISPC_IRQ_VSYNC,
-		DISPC_IRQ_EVSYNC_EVEN,
-		DISPC_IRQ_VSYNC2
-	};
-	if (ch > OMAP_DSS_CHANNEL_LCD2) {
-		pr_warn("%s wrong channel number\n", __func__);
-		return -ENODEV;
-	}
-
-	if (enable)
-		r = omap_dispc_register_isr(omapfb_vsync_isr, fbdev,
-				masks[ch]);
-	else
-		r = omap_dispc_unregister_isr(omapfb_vsync_isr, fbdev,
-				masks[ch]);
+	int r;
+	/* TODO: should determine correct IRQ like dss_mgr_wait_for_vsync does*/
+	r = omap_dispc_register_isr(omapfb_vsync_isr, fbdev, DISPC_IRQ_VSYNC2);
 	return r;
-
-
 }
 
+void omapfb_disable_vsync(struct omapfb2_device *fbdev)
+{
+	omap_dispc_unregister_isr(omapfb_vsync_isr, fbdev, DISPC_IRQ_VSYNC2);
+}
 
 static int omapfb_probe(struct platform_device *pdev)
 {

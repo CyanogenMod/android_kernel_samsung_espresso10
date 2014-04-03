@@ -56,7 +56,6 @@
 #include "sec_debug.h"
 #include "sec_getlog.h"
 #include "sec_muxtbl.h"
-#include "sec_log_buf.h"
 
 /* gpio to classify 3G / WiFi-Only
  *
@@ -263,7 +262,6 @@ static void __init kona_init_machine(void)
 	omap4_kona_sensors_init();
 	omap4_kona_irled_init();
 	omap4_kona_vibrator_init();
-	omap4_kona_camera_init();
 
 #ifdef CONFIG_OMAP_HSI_DEVICE
 	/* Allow HSI omap_device to be registered later */
@@ -291,7 +289,7 @@ static void __init kona_map_io(void)
 static void omap4_kona_init_carveout_sizes(
 		struct omap_ion_platform_data *ion)
 {
-	ion->tiler1d_size = (SZ_1M * 14);
+	ion->tiler1d_size = (SZ_1M * 90);
 	/*
 	 * REVIST:
 	 * wfdhdcp_size = SZ_16M; will be adopted once
@@ -332,8 +330,6 @@ static void __init kona_reserve(void)
 				    OMAP4_ION_HEAP_SECURE_INPUT_SIZE +
 				    OMAP4_ION_HEAP_SECURE_OUTPUT_WFDHDCP_SIZE);
 	omap_reserve();
-
-	sec_log_buf_reserve();
 }
 
 MACHINE_START(OMAP4_SAMSUNG, "Kona")

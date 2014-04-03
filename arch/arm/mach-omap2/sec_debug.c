@@ -27,8 +27,7 @@
 #include <linux/spinlock.h>
 #include <linux/sysrq.h>
 #include <linux/uaccess.h>
-#include <linux/bootmem.h>
-#include <linux/memblock.h>
+
 #include <mach/system.h>
 
 #include <asm/cacheflush.h>
@@ -173,8 +172,6 @@ static const char * const gkernel_sec_build_info_date_time[] = {
 };
 
 static char gkernel_sec_build_info[100];
-static unsigned int secdbg_paddr;
-static unsigned int secdbg_size;
 
 /* klaatu - schedule log */
 #ifdef CONFIG_SEC_DEBUG_SCHED_LOG
@@ -197,31 +194,12 @@ struct sched_log {
 		struct worker *worker;
 		struct work_struct *work;
 		work_func_t f;
-		int en;
 	} work[CONFIG_NR_CPUS][SCHED_LOG_MAX];
-	struct hrtimer_log {
-		unsigned long long time;
-		struct hrtimer *timer;
-		enum hrtimer_restart (*fn)(struct hrtimer *);
-		int en;
-	} hrtimers[CONFIG_NR_CPUS][8];
-	struct {
-		unsigned long long time;
-		unsigned long pc;
-		unsigned long lr;
-		unsigned long sp;
-	} last_wdtkick_regs[CONFIG_NR_CPUS];
-	struct {
-		unsigned long long time;
-		unsigned long pc;
-		unsigned long lr;
-		unsigned long sp;
-	} last_irq_regs[CONFIG_NR_CPUS][8];
 };
 
 static struct sched_log sec_debug_log __cacheline_aligned;
 
-static struct sched_log (*psec_debug_log);
+static struct sched_log (*psec_debug_log) = (&sec_debug_log);
 
 static atomic_t task_log_idx[NR_CPUS] = {
 	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
@@ -232,49 +210,15 @@ static atomic_t irq_log_idx[NR_CPUS] = {
 static atomic_t work_log_idx[NR_CPUS] = {
 	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
 };
-static atomic_t hrtimer_log_idx[NR_CPUS] = {
-	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
-};
-static atomic_t irq_regs_idx[NR_CPUS] = {
-	ATOMIC_INIT(-1), ATOMIC_INIT(-1)
-};
 
 static int checksum_sched_log(void)
 {
 	int sum = 0, i;
 
-	for (i = 0; i < sizeof(struct sched_log); i++)
-		sum += *((char *)psec_debug_log + i);
+	for (i = 0; i < sizeof(sec_debug_log); i++)
+		sum += *((char *)&sec_debug_log + i);
 
 	return sum;
-}
-
-static int __init __init_sec_debug_log(void)
-{
-	struct sched_log *vaddr;
-	unsigned int size;
-
-	if (secdbg_paddr == 0 || secdbg_size == 0) {
-		pr_info("%s: secdbg_paddr not provided. Using sec_debug_log __cacheline_aligned..\n",
-			__func__);
-		psec_debug_log = &sec_debug_log;
-	} else {
-		size = secdbg_size;
-		vaddr = ioremap_nocache(secdbg_paddr, secdbg_size);
-
-		if ((vaddr == NULL) || (sizeof(struct sched_log) > size)) {
-			pr_info("%s: ERROR! init failed!\n", __func__);
-			return -EFAULT;
-		}
-
-		psec_debug_log = vaddr;
-		pr_info("%s: vaddr=0x%x paddr=0x%x size=0x%x "
-			"sizeof(struct sched_log)=0x%x\n", __func__,
-			(unsigned int)vaddr, secdbg_paddr, secdbg_size,
-			sizeof(struct sched_log));
-	}
-
-	return 0;
 }
 #else
 static int checksum_sched_log(void)
@@ -649,11 +593,10 @@ static int sec_debug_panic_handler(struct notifier_block *nb,
 
 	pr_err("(%s) checksum_sched_log: %x\n", __func__, checksum_sched_log());
 
-	sec_debug_dump_stack();
-
 	sec_gaf_dump_all_task_info();
 	sec_gaf_dump_cpu_stat();
 
+	sec_debug_dump_stack();
 	sec_debug_hw_reset();
 
 	return 0;
@@ -787,10 +730,6 @@ static int __init sec_debug_init(void)
 	if (!sec_debug_level.en.kernel_fault)
 		return -1;
 
-#ifdef CONFIG_SEC_DEBUG_SCHED_LOG
-	__init_sec_debug_log();
-#endif
-
 	sec_debug_set_build_info();
 
 	sec_debug_set_upload_magic(SEC_DEBUG_MAGIC_DUMP);
@@ -823,9 +762,6 @@ void __sec_debug_task_log(int cpu, struct task_struct *task)
 	if (likely(!sec_debug_level.en.kernel_fault))
 		return;
 
-	if (!psec_debug_log)
-		return;
-
 	i = atomic_inc_return(&task_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
 	psec_debug_log->task[cpu][i].time = cpu_clock(cpu);
 	strcpy(psec_debug_log->task[cpu][i].comm, task->comm);
@@ -840,9 +776,6 @@ void __sec_debug_irq_log(unsigned int irq, void *fn, int en)
 	if (likely(!sec_debug_level.en.kernel_fault))
 		return;
 
-	if (!psec_debug_log)
-		return;
-
 	i = atomic_inc_return(&irq_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
 	psec_debug_log->irq[cpu][i].time = cpu_clock(cpu);
 	psec_debug_log->irq[cpu][i].irq = irq;
@@ -851,15 +784,12 @@ void __sec_debug_irq_log(unsigned int irq, void *fn, int en)
 }
 
 void __sec_debug_work_log(struct worker *worker,
-			  struct work_struct *work, work_func_t f, int en)
+			  struct work_struct *work, work_func_t f)
 {
 	int cpu = raw_smp_processor_id();
 	unsigned i;
 
 	if (likely(!sec_debug_level.en.kernel_fault))
-		return;
-
-	if (!psec_debug_log)
 		return;
 
 	i = atomic_inc_return(&work_log_idx[cpu]) & (SCHED_LOG_MAX - 1);
@@ -867,71 +797,7 @@ void __sec_debug_work_log(struct worker *worker,
 	psec_debug_log->work[cpu][i].worker = worker;
 	psec_debug_log->work[cpu][i].work = work;
 	psec_debug_log->work[cpu][i].f = f;
-	psec_debug_log->work[cpu][i].en = en;
 }
-
-void __sec_debug_hrtimer_log(struct hrtimer *timer,
-		     enum hrtimer_restart (*fn) (struct hrtimer *), int en)
-{
-	int cpu = raw_smp_processor_id();
-	unsigned i;
-
-	if (likely(!sec_debug_level.en.kernel_fault))
-		return;
-
-	if (!psec_debug_log)
-		return;
-
-	i = atomic_inc_return(&hrtimer_log_idx[cpu]) &
-	    (ARRAY_SIZE(psec_debug_log->hrtimers[0]) - 1);
-	psec_debug_log->hrtimers[cpu][i].time = cpu_clock(cpu);
-	psec_debug_log->hrtimers[cpu][i].timer = timer;
-	psec_debug_log->hrtimers[cpu][i].fn = fn;
-	psec_debug_log->hrtimers[cpu][i].en = en;
-}
-
-void __sec_debug_wdtkick_regs_log(struct pt_regs *regs)
-{
-	int cpu = raw_smp_processor_id();
-	struct pt_regs dummy_regs = {
-		.ARM_pc = 0,
-		.ARM_lr = 0,
-		.ARM_sp = 0,
-	};
-
-	if (likely(!sec_debug_level.en.kernel_fault))
-		return;
-
-	if (!psec_debug_log)
-		return;
-
-	if (!regs)	/* regs can be NULL */
-		regs = &dummy_regs;
-
-	psec_debug_log->last_wdtkick_regs[cpu].time = cpu_clock(cpu);
-	psec_debug_log->last_wdtkick_regs[cpu].pc = regs->ARM_pc;
-	psec_debug_log->last_wdtkick_regs[cpu].lr = regs->ARM_lr;
-	psec_debug_log->last_wdtkick_regs[cpu].sp = regs->ARM_sp;
-}
-
-void __sec_debug_irq_regs_log(int cpu, struct pt_regs *regs)
-{
-	unsigned i;
-
-	if (likely(!sec_debug_level.en.kernel_fault))
-		return;
-
-	if (!psec_debug_log)
-		return;
-
-	i = atomic_inc_return(&irq_regs_idx[cpu]) &
-	    (ARRAY_SIZE(psec_debug_log->last_irq_regs[0]) - 1);
-	psec_debug_log->last_irq_regs[cpu][i].time = cpu_clock(cpu);
-	psec_debug_log->last_irq_regs[cpu][i].pc = regs->ARM_pc;
-	psec_debug_log->last_irq_regs[cpu][i].lr = regs->ARM_lr;
-	psec_debug_log->last_irq_regs[cpu][i].sp = regs->ARM_sp;
-}
-
 #ifdef CONFIG_SEC_DEBUG_IRQ_EXIT_LOG
 static unsigned long long excp_irq_exit_time[NR_CPUS];
 
@@ -1093,50 +959,6 @@ void debug_rwsemaphore_up_log(struct rw_semaphore *sem)
 	spin_unlock_irqrestore(&rwsem_debug_lock, flags);
 }
 #endif /* CONFIG_SEC_DEBUG_SEMAPHORE_LOG */
-
-static int __init sec_dbg_setup(char *str)
-{
-	unsigned size = memparse(str, &str);
-
-	pr_emerg("%s: str=%s\n", __func__, str);
-
-	if (size && (size == roundup_pow_of_two(size)) && (*str == '@')) {
-		secdbg_paddr = (unsigned int)memparse(++str, NULL);
-		secdbg_size = size;
-	}
-
-	if (unlikely(!secdbg_paddr || !secdbg_size))
-		return 0;
-
-	if (reserve_bootmem(secdbg_paddr, secdbg_size,
-			    BOOTMEM_EXCLUSIVE)) {
-		pr_err("(%s): failed to reserve size %d@0x%x\n",
-		       __func__, secdbg_size / 1024, secdbg_paddr);
-		goto __err;
-	}
-
-	/* call memblock_remove to use ioremap */
-	if (memblock_remove(secdbg_paddr, secdbg_size)) {
-		pr_err("(%s): failed to remove size %d@0x%x\n",
-		       __func__, secdbg_size / 1024, secdbg_paddr);
-		goto __err_memblock_remove;
-	}
-
-	pr_emerg("%s: secdbg_paddr = 0x%x\n", __func__, secdbg_paddr);
-	pr_emerg("%s: secdbg_size = 0x%x\n", __func__, secdbg_size);
-
-	return 1;
-
-__err_memblock_remove:
-	free_bootmem(secdbg_paddr, secdbg_size);
-__err:
-	secdbg_paddr = 0;
-	secdbg_size = 0;
-	return 0;
-}
-
-__setup("sec_debug=", sec_dbg_setup);
-
 
 #ifdef CONFIG_SEC_DEBUG_USER
 void sec_user_fault_dump(void)
