@@ -255,7 +255,6 @@ static inline unsigned int twl6030_get_usb_max_power(struct otg_transceiver *x)
 static const unsigned int fuelgauge_rate[4] = {1, 4, 16, 64};
 static struct wake_lock chrg_lock;
 
-
 struct twl6030_bci_device_info {
 	struct device		*dev;
 

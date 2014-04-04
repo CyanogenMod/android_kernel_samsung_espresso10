@@ -42,7 +42,6 @@ MODULE_DESCRIPTION("pcm3052 (onyx) codec driver for snd-aoa");
 #include "../aoa.h"
 #include "../soundbus/soundbus.h"
 
-
 #define PFX "snd-aoa-codec-onyx: "
 
 struct onyx {
@@ -362,7 +361,6 @@ static struct snd_kcontrol_new mute_control = {
 	.get = onyx_snd_mute_get,
 	.put = onyx_snd_mute_put,
 };
-
 
 #define onyx_snd_single_bit_info	snd_ctl_boolean_mono_info
 

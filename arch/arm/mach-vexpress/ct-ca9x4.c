@@ -121,7 +121,6 @@ static struct amba_device *ct_ca9x4_amba_devs[] __initdata = {
 	&gpio_device,
 };
 
-
 static long ct_round(struct clk *clk, unsigned long rate)
 {
 	return rate;

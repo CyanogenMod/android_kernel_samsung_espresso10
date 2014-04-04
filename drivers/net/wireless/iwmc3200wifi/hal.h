@@ -63,7 +63,6 @@ do {									  \
 			((val & name##_SEED) << name##_POS));		  \
 } while (0)
 
-
 #define UDMA_UMAC_INIT	{	.eop = 1,				  \
 				.credit_group = 0x4,			  \
 				.ra_tid = UMAC_HDI_ACT_TBL_IDX_HOST_CMD,  \
@@ -72,7 +71,6 @@ do {									  \
 				.credit_group = 0x4,			  \
 				.ra_tid = UMAC_HDI_ACT_TBL_IDX_HOST_CMD,  \
 				.lmac_offset = 4 }
-
 
 /* UDMA IN OP CODE -- cmd bits [3:0] */
 #define UDMA_HDI_IN_NW_CMD_OPCODE_POS		0
@@ -208,7 +206,6 @@ struct iwm_wifi_cmd *iwm_get_pending_wifi_cmd(struct iwm_priv *iwm,
 					      u16 seq_num);
 struct iwm_nonwifi_cmd *iwm_get_pending_nonwifi_cmd(struct iwm_priv *iwm,
 						    u8 seq_num, u8 cmd_opcode);
-
 
 int iwm_hal_send_target_cmd(struct iwm_priv *iwm,
 			    struct iwm_udma_nonwifi_cmd *ucmd,

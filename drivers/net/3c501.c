@@ -40,7 +40,6 @@
     Fixed zero fill corner case
 		20030104 Alan Cox <alan@lxorguk.ukuu.org.uk>
 
-
    For the avoidance of doubt the "preferred form" of this code is one which
    is in an open non patent encumbered format. Where cryptographic key signing
    forms part of the process of creating an executable the information
@@ -48,7 +47,6 @@
    are deemed to be part of the source code.
 
 */
-
 
 /**
  * DOC: 3c501 Card Notes
@@ -101,7 +99,6 @@
 
 #define DRV_NAME	"3c501"
 #define DRV_VERSION	"2002/10/09"
-
 
 static const char version[] =
 	DRV_NAME ".c: " DRV_VERSION " Alan Cox (alan@lxorguk.ukuu.org.uk).\n";
@@ -385,7 +382,6 @@ static void el_timeout(struct net_device *dev)
 	netif_wake_queue(dev);
 }
 
-
 /**
  * el_start_xmit:
  * @skb: The packet that is queued to be sent
@@ -667,7 +663,6 @@ out:
 	return IRQ_HANDLED;
 }
 
-
 /**
  * el_receive:
  * @dev: Device to pull the packets from
@@ -819,7 +814,6 @@ static void set_multicast_list(struct net_device *dev)
 	}
 }
 
-
 static void netdev_get_drvinfo(struct net_device *dev,
 			       struct ethtool_drvinfo *info)
 {
@@ -893,4 +887,3 @@ void __exit cleanup_module(void)
 MODULE_AUTHOR("Donald Becker, Alan Cox");
 MODULE_DESCRIPTION("Support for the ancient 3Com 3c501 ethernet card");
 MODULE_LICENSE("GPL");
-

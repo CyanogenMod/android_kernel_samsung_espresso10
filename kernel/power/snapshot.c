@@ -958,7 +958,6 @@ static inline void do_copy_page(long *dst, long *src)
 		*dst++ = *src++;
 }
 
-
 /**
  *	safe_copy_page - check if the page we are going to copy is marked as
  *		present in the kernel page tables (this always is the case if
@@ -975,7 +974,6 @@ static void safe_copy_page(void *dst, struct page *s_page)
 		kernel_map_pages(s_page, 1, 0);
 	}
 }
-
 
 #ifdef CONFIG_HIGHMEM
 static inline struct page *

@@ -71,7 +71,6 @@ static unsigned short int max_sectors_per_io = MAX_SECTORS_PER_IO;
 module_param(max_sectors_per_io, ushort, 0);
 MODULE_PARM_DESC(max_sectors_per_io, "Maximum number of sectors per I/O request (default=MAX_SECTORS_PER_IO=128)");
 
-
 static unsigned short int max_mbox_busy_wait = MBOX_BUSY_WAIT;
 module_param(max_mbox_busy_wait, ushort, 0);
 MODULE_PARM_DESC(max_mbox_busy_wait, "Maximum wait for mailbox in microseconds if busy (default=MBOX_BUSY_WAIT=10)");
@@ -120,7 +119,6 @@ static int major;
 
 #define IS_RAID_CH(hba, ch)	(((hba)->mega_ch_class >> (ch)) & 0x01)
 
-
 /*
  * Debug variable to print some diagnostic messages
  */
@@ -141,7 +139,7 @@ mega_setup_mailbox(adapter_t *adapter)
 			sizeof(mbox64_t), &adapter->una_mbox64_dma);
 
 	if( !adapter->una_mbox64 ) return -1;
-		
+
 	adapter->mbox = &adapter->una_mbox64->mbox;
 
 	adapter->mbox = (mbox_t *)((((unsigned long) adapter->mbox) + 15) &
@@ -180,7 +178,6 @@ mega_setup_mailbox(adapter_t *adapter)
 
 	return 0;
 }
-
 
 /*
  * mega_query_adapter()
@@ -275,7 +272,6 @@ mega_query_adapter(adapter_t *adapter)
 				sizeof(mega_product_info), PCI_DMA_FROMDEVICE);
 	}
 
-
 	/*
 	 * kernel scans the channels from 0 to <= max_channel
 	 */
@@ -304,7 +300,6 @@ mega_query_adapter(adapter_t *adapter)
 	mega_get_max_sgl(adapter);
 
 	adapter->host->sg_tablesize = adapter->sglen;
-
 
 	/* use HP firmware and bios version encoding */
 	if (adapter->product_info.subsysvid == HP_SUBSYS_VID) {
@@ -341,7 +336,6 @@ mega_query_adapter(adapter_t *adapter)
 	if (adapter->support_ext_cdb)
 		printk(KERN_NOTICE "megaraid: supports extended CDBs.\n");
 
-
 	return 0;
 }
 
@@ -376,7 +370,6 @@ megaraid_queue_lck(Scsi_Cmnd *scmd, void (*done)(Scsi_Cmnd *))
 	adapter = (adapter_t *)scmd->device->host->hostdata;
 
 	scmd->scsi_done = done;
-
 
 	/*
 	 * Allocate and build a SCB request
@@ -458,12 +451,11 @@ mega_get_ldrv_num(adapter_t *adapter, Scsi_Cmnd *cmd, int channel)
 	int		ldrv_num;
 
 	tgt = cmd->device->id;
-	
+
 	if ( tgt > adapter->this_id )
 		tgt--;	/* we do not get inquires for initiator id */
 
 	ldrv_num = (channel * 15) + tgt;
-
 
 	/*
 	 * If we have a logical drive with boot enabled, project it first
@@ -528,7 +520,6 @@ mega_build_cmd(adapter_t *adapter, Scsi_Cmnd *cmd, int *busy)
 	int	target = 0;
 	int	ldrv_num = 0;   /* logical drive number */
 
-
 	/*
 	 * filter the internal and ioctl commands
 	 */
@@ -555,7 +546,7 @@ mega_build_cmd(adapter_t *adapter, Scsi_Cmnd *cmd, int *busy)
 		}
 		else {
 			/* this is physical channel */
-			channel = cmd->device->channel; 
+			channel = cmd->device->channel;
 			target = cmd->device->id;
 
 			/*
@@ -574,15 +565,14 @@ mega_build_cmd(adapter_t *adapter, Scsi_Cmnd *cmd, int *busy)
 	else {
 		if( islogical ) {
 			/* this is the logical channel */
-			channel = cmd->device->channel;	
+			channel = cmd->device->channel;
 		}
 		else {
 			/* physical channel */
-			channel = cmd->device->channel - NVIRT_CHAN;	
+			channel = cmd->device->channel - NVIRT_CHAN;
 			target = cmd->device->id;
 		}
 	}
-
 
 	if(islogical) {
 
@@ -594,7 +584,6 @@ mega_build_cmd(adapter_t *adapter, Scsi_Cmnd *cmd, int *busy)
 		}
 
 		ldrv_num = mega_get_ldrv_num(adapter, cmd, channel);
-
 
 		max_ldrv_num = (adapter->flag & BOARD_40LD) ?
 			MAX_LOGICAL_DRIVES_40LD : MAX_LOGICAL_DRIVES_8LD;
@@ -941,7 +930,6 @@ mega_build_cmd(adapter_t *adapter, Scsi_Cmnd *cmd, int *busy)
 	return NULL;
 }
 
-
 /**
  * mega_prepare_passthru()
  * @adapter - pointer to our soft state
@@ -1003,7 +991,6 @@ mega_prepare_passthru(adapter_t *adapter, scb_t *scb, Scsi_Cmnd *cmd,
 	}
 	return pthru;
 }
-
 
 /**
  * mega_prepare_extpassthru()
@@ -1088,7 +1075,6 @@ __mega_runpendq(adapter_t *adapter)
 	return;
 }
 
-
 /**
  * issue_scb()
  * @adapter - pointer to our soft state
@@ -1115,12 +1101,11 @@ issue_scb(adapter_t *adapter, scb_t *scb)
 	}
 
 	/* Copy mailbox data into host structure */
-	memcpy((char *)&mbox->m_out, (char *)scb->raw_mbox, 
+	memcpy((char *)&mbox->m_out, (char *)scb->raw_mbox,
 			sizeof(struct mbox_out));
 
 	mbox->m_out.cmdid = scb->idx;	/* Set cmdid */
 	mbox->m_in.busy = 1;		/* Set busy */
-
 
 	/*
 	 * Increment the pending queue counter
@@ -1250,7 +1235,6 @@ bug_blocked_mailbox:
 	return -1;
 }
 
-
 /**
  * megaraid_isr_iomapped()
  * @irq - irq
@@ -1270,7 +1254,6 @@ megaraid_isr_iomapped(int irq, void *devp)
 	u8	completed[MAX_FIRMWARE_STATUS];
 	u8	byte;
 	int	handled = 0;
-
 
 	/*
 	 * loop till F/W has more commands for us to complete.
@@ -1300,7 +1283,7 @@ megaraid_isr_iomapped(int irq, void *devp)
 		 */
 		atomic_sub(nstatus, &adapter->pend_cmds);
 
-		memcpy(completed, (void *)adapter->mbox->m_in.completed, 
+		memcpy(completed, (void *)adapter->mbox->m_in.completed,
 				nstatus);
 
 		/* Acknowledge interrupt */
@@ -1326,7 +1309,6 @@ megaraid_isr_iomapped(int irq, void *devp)
 	return IRQ_RETVAL(handled);
 }
 
-
 /**
  * megaraid_isr_memmapped()
  * @irq - irq
@@ -1346,7 +1328,6 @@ megaraid_isr_memmapped(int irq, void *devp)
 	u8	nstatus;
 	u8	completed[MAX_FIRMWARE_STATUS];
 	int	handled = 0;
-
 
 	/*
 	 * loop till F/W has more commands for us to complete.
@@ -1377,7 +1358,7 @@ megaraid_isr_memmapped(int irq, void *devp)
 		 */
 		atomic_sub(nstatus, &adapter->pend_cmds);
 
-		memcpy(completed, (void *)adapter->mbox->m_in.completed, 
+		memcpy(completed, (void *)adapter->mbox->m_in.completed,
 				nstatus);
 
 		/* Acknowledge interrupt */
@@ -1662,7 +1643,6 @@ mega_cmd_done(adapter_t *adapter, u8 completed[], int nstatus, int status)
 	}
 }
 
-
 /*
  * mega_runpendq()
  *
@@ -1684,7 +1664,6 @@ mega_rundoneq (adapter_t *adapter)
 
 	INIT_LIST_HEAD(&adapter->completed_list);
 }
-
 
 /*
  * Free a SCB structure
@@ -1716,7 +1695,6 @@ mega_free_scb(adapter_t *adapter, scb_t *scb)
 
 	list_add(&scb->list, &adapter->free_list);
 }
-
 
 static int
 __mega_busywait_mbox (adapter_t *adapter)
@@ -1784,7 +1762,6 @@ mega_build_sglist(adapter_t *adapter, scb_t *scb, u32 *buf, u32 *len)
 	/* Return count of SG requests */
 	return sgcnt;
 }
-
 
 /*
  * mega_8_to_40ld()
@@ -1863,7 +1840,6 @@ mega_free_sgl(adapter_t *adapter)
 	}
 }
 
-
 /*
  * Get information about the card/driver
  */
@@ -1905,7 +1881,6 @@ megaraid_abort(Scsi_Cmnd *cmd)
 
 	return rval;
 }
-
 
 static int
 megaraid_reset(struct scsi_cmnd *cmd)
@@ -1960,7 +1935,7 @@ megaraid_abort_and_reset(adapter_t *adapter, Scsi_Cmnd *cmd, int aor)
 
 	printk(KERN_WARNING "megaraid: %s cmd=%x <c=%d t=%d l=%d>\n",
 	     (aor == SCB_ABORT)? "ABORTING":"RESET",
-	     cmd->cmnd[0], cmd->device->channel, 
+	     cmd->cmnd[0], cmd->device->channel,
 	     cmd->device->id, cmd->device->lun);
 
 	if(list_empty(&adapter->pending_list))
@@ -2056,13 +2031,11 @@ mega_allocate_inquiry(dma_addr_t *dma_handle, struct pci_dev *pdev)
 	return pci_alloc_consistent(pdev, sizeof(mega_inquiry3), dma_handle);
 }
 
-
 static inline void
 mega_free_inquiry(void *inquiry, dma_addr_t dma_handle, struct pci_dev *pdev)
 {
 	pci_free_consistent(pdev, sizeof(mega_inquiry3), inquiry, dma_handle);
 }
-
 
 #ifdef CONFIG_PROC_FS
 /* Following code handles /proc fs  */
@@ -2129,7 +2102,6 @@ mega_create_proc_entry(int index, struct proc_dir_entry *parent)
 					proc_rdrv_40);
 #endif
 }
-
 
 /**
  * proc_read_config()
@@ -2229,8 +2201,6 @@ proc_read_config(char *page, char **start, off_t offset, int count, int *eof,
 	return len;
 }
 
-
-
 /**
  * proc_read_stat()
  * @page - buffer to write the data in
@@ -2283,7 +2253,6 @@ proc_read_stat(char *page, char **start, off_t offset, int count, int *eof,
 	return len;
 }
 
-
 /**
  * proc_read_mbox()
  * @page - buffer to write the data in
@@ -2306,30 +2275,29 @@ proc_read_mbox(char *page, char **start, off_t offset, int count, int *eof,
 	int	len = 0;
 
 	len = sprintf(page, "Contents of Mail Box Structure\n");
-	len += sprintf(page+len, "  Fw Command   = 0x%02x\n", 
+	len += sprintf(page+len, "  Fw Command   = 0x%02x\n",
 			mbox->m_out.cmd);
-	len += sprintf(page+len, "  Cmd Sequence = 0x%02x\n", 
+	len += sprintf(page+len, "  Cmd Sequence = 0x%02x\n",
 			mbox->m_out.cmdid);
-	len += sprintf(page+len, "  No of Sectors= %04d\n", 
+	len += sprintf(page+len, "  No of Sectors= %04d\n",
 			mbox->m_out.numsectors);
-	len += sprintf(page+len, "  LBA          = 0x%02x\n", 
+	len += sprintf(page+len, "  LBA          = 0x%02x\n",
 			mbox->m_out.lba);
-	len += sprintf(page+len, "  DTA          = 0x%08x\n", 
+	len += sprintf(page+len, "  DTA          = 0x%08x\n",
 			mbox->m_out.xferaddr);
-	len += sprintf(page+len, "  Logical Drive= 0x%02x\n", 
+	len += sprintf(page+len, "  Logical Drive= 0x%02x\n",
 			mbox->m_out.logdrv);
 	len += sprintf(page+len, "  No of SG Elmt= 0x%02x\n",
 			mbox->m_out.numsgelements);
-	len += sprintf(page+len, "  Busy         = %01x\n", 
+	len += sprintf(page+len, "  Busy         = %01x\n",
 			mbox->m_in.busy);
-	len += sprintf(page+len, "  Status       = 0x%02x\n", 
+	len += sprintf(page+len, "  Status       = 0x%02x\n",
 			mbox->m_in.status);
 
 	*eof = 1;
 
 	return len;
 }
-
 
 /**
  * proc_rebuild_rate()
@@ -2388,7 +2356,6 @@ proc_rebuild_rate(char *page, char **start, off_t offset, int count, int *eof,
 			inquiry)->raid_inq.adapter_info.rebuild_rate);
 	}
 
-
 	mega_free_inquiry(inquiry, dma_handle, pdev);
 
 	free_local_pdev(pdev);
@@ -2397,7 +2364,6 @@ proc_rebuild_rate(char *page, char **start, off_t offset, int count, int *eof,
 
 	return len;
 }
-
 
 /**
  * proc_battery()
@@ -2466,27 +2432,26 @@ proc_battery(char *page, char **start, off_t offset, int count, int *eof,
 
 	if(battery_status & MEGA_BATT_MODULE_MISSING)
 		strcat(str, " Module Missing");
-	
+
 	if(battery_status & MEGA_BATT_LOW_VOLTAGE)
 		strcat(str, " Low Voltage");
-	
+
 	if(battery_status & MEGA_BATT_TEMP_HIGH)
 		strcat(str, " Temperature High");
-	
+
 	if(battery_status & MEGA_BATT_PACK_MISSING)
 		strcat(str, " Pack Missing");
-	
+
 	if(battery_status & MEGA_BATT_CHARGE_INPROG)
 		strcat(str, " Charge In-progress");
-	
+
 	if(battery_status & MEGA_BATT_CHARGE_FAIL)
 		strcat(str, " Charge Fail");
-	
+
 	if(battery_status & MEGA_BATT_CYCLES_EXCEEDED)
 		strcat(str, " Cycles Exceeded");
 
 	len = sprintf(page, "%s\n", str);
-
 
 	mega_free_inquiry(inquiry, dma_handle, pdev);
 
@@ -2496,7 +2461,6 @@ proc_battery(char *page, char **start, off_t offset, int count, int *eof,
 
 	return len;
 }
-
 
 /**
  * proc_pdrv_ch0()
@@ -2520,7 +2484,6 @@ proc_pdrv_ch0(char *page, char **start, off_t offset, int count, int *eof,
 	return (proc_pdrv(adapter, page, 0));
 }
 
-
 /**
  * proc_pdrv_ch1()
  * @page - buffer to write the data in
@@ -2542,7 +2505,6 @@ proc_pdrv_ch1(char *page, char **start, off_t offset, int count, int *eof,
 
 	return (proc_pdrv(adapter, page, 1));
 }
-
 
 /**
  * proc_pdrv_ch2()
@@ -2566,7 +2528,6 @@ proc_pdrv_ch2(char *page, char **start, off_t offset, int count, int *eof,
 	return (proc_pdrv(adapter, page, 2));
 }
 
-
 /**
  * proc_pdrv_ch3()
  * @page - buffer to write the data in
@@ -2588,7 +2549,6 @@ proc_pdrv_ch3(char *page, char **start, off_t offset, int count, int *eof,
 
 	return (proc_pdrv(adapter, page, 3));
 }
-
 
 /**
  * proc_pdrv()
@@ -2628,7 +2588,6 @@ proc_pdrv(adapter_t *adapter, char *page, int channel)
 
 		goto free_inquiry;
 	}
-
 
 	scsi_inq = pci_alloc_consistent(pdev, 256, &scsi_inq_dma_handle);
 
@@ -2725,7 +2684,6 @@ free_pdev:
 	return len;
 }
 
-
 /*
  * Display scsi inquiry
  */
@@ -2769,7 +2727,6 @@ mega_print_inquiry(char *page, char *scsi_inq)
 	return len;
 }
 
-
 /**
  * proc_rdrv_10()
  * @page - buffer to write the data in
@@ -2791,7 +2748,6 @@ proc_rdrv_10(char *page, char **start, off_t offset, int count, int *eof,
 
 	return (proc_rdrv(adapter, page, 0, 9));
 }
-
 
 /**
  * proc_rdrv_20()
@@ -2815,7 +2771,6 @@ proc_rdrv_20(char *page, char **start, off_t offset, int count, int *eof,
 	return (proc_rdrv(adapter, page, 10, 19));
 }
 
-
 /**
  * proc_rdrv_30()
  * @page - buffer to write the data in
@@ -2838,7 +2793,6 @@ proc_rdrv_30(char *page, char **start, off_t offset, int count, int *eof,
 	return (proc_rdrv(adapter, page, 20, 29));
 }
 
-
 /**
  * proc_rdrv_40()
  * @page - buffer to write the data in
@@ -2860,7 +2814,6 @@ proc_rdrv_40(char *page, char **start, off_t offset, int count, int *eof,
 
 	return (proc_rdrv(adapter, page, 30, 39));
 }
-
 
 /**
  * proc_rdrv()
@@ -3042,7 +2995,7 @@ proc_rdrv(adapter_t *adapter, char *page, int start, int end )
 			len += sprintf(page+len,
 					", initialization in progress");
 		}
-		
+
 		len += sprintf(page+len, "\n");
 
 		len += sprintf(page+len, "Span depth:%3d, ",
@@ -3056,7 +3009,6 @@ proc_rdrv(adapter_t *adapter, char *page, int start, int end )
 
 		len += sprintf(page+len, "Row size:%3d\n",
 				lparam->row_size);
-
 
 		len += sprintf(page+len, "Read Policy: ");
 
@@ -3117,7 +3069,6 @@ static inline void mega_create_proc_entry(int index, struct proc_dir_entry *pare
 {
 }
 #endif
-
 
 /**
  * megaraid_biosparam()
@@ -3258,7 +3209,6 @@ mega_init_scb(adapter_t *adapter)
 			return -1;
 		}
 
-
 		scb->dma_type = MEGA_DMA_TYPE_NONE;
 
 		/*
@@ -3274,14 +3224,13 @@ mega_init_scb(adapter_t *adapter)
 	return 0;
 }
 
-
 /**
  * megadev_open()
  * @inode - unused
  * @filep - unused
  *
  * Routines for the character/ioctl interface to the driver. Find out if this
- * is a valid open. 
+ * is a valid open.
  */
 static int
 megadev_open (struct inode *inode, struct file *filep)
@@ -3293,7 +3242,6 @@ megadev_open (struct inode *inode, struct file *filep)
 
 	return 0;
 }
-
 
 /**
  * megadev_ioctl()
@@ -3347,7 +3295,6 @@ megadev_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 	memset(&uioc, 0, sizeof(nitioctl_t));
 	if( (rval = mega_m_to_n( (void __user *)arg, &uioc)) != 0 )
 		return rval;
-
 
 	switch( uioc.opcode ) {
 
@@ -3547,7 +3494,6 @@ megadev_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 				pthru->dataxferaddr = data_dma_hndl;
 			}
 
-
 			/*
 			 * Is data coming down-stream
 			 */
@@ -3575,7 +3521,6 @@ megadev_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
 			rval = mega_n_to_m((void __user *)arg, &mc);
 
 			if( rval ) goto freemem_and_return;
-
 
 			/*
 			 * Is data going up-stream
@@ -3729,7 +3674,6 @@ mega_m_to_n(void __user *arg, nitioctl_t *uioc)
 	u8	opcode;
 	u8	subopcode;
 
-
 	/*
 	 * check is the application conforms to NIT. We do not have to do much
 	 * in that case.
@@ -3764,7 +3708,6 @@ mega_m_to_n(void __user *arg, nitioctl_t *uioc)
 	if( copy_from_user(&uioc_mimd, arg, sizeof(struct uioctl_t)) )
 		return (-EFAULT);
 
-
 	/*
 	 * Get the opcode and subopcode for the commands
 	 */
@@ -3797,7 +3740,6 @@ mega_m_to_n(void __user *arg, nitioctl_t *uioc)
 		}
 
 		break;
-
 
 	case 0x81:
 
@@ -3901,7 +3843,6 @@ mega_n_to_m(void __user *arg, megacmd_t *mc)
 	return 0;
 }
 
-
 /*
  * MEGARAID 'FW' commands.
  */
@@ -3930,12 +3871,10 @@ mega_is_bios_enabled(adapter_t *adapter)
 	raw_mbox[0] = IS_BIOS_ENABLED;
 	raw_mbox[2] = GET_BIOS;
 
-
 	ret = issue_scb_block(adapter, raw_mbox);
 
 	return *(char *)adapter->mega_buffer;
 }
-
 
 /**
  * mega_enum_raid_scsi()
@@ -3977,7 +3916,7 @@ mega_enum_raid_scsi(adapter_t *adapter)
 
 	}
 
-	for( i = 0; i < adapter->product_info.nchannels; i++ ) { 
+	for( i = 0; i < adapter->product_info.nchannels; i++ ) {
 		if( (adapter->mega_ch_class >> i) & 0x01 ) {
 			printk(KERN_INFO "megaraid: channel[%d] is raid.\n",
 					i);
@@ -3990,7 +3929,6 @@ mega_enum_raid_scsi(adapter_t *adapter)
 
 	return;
 }
-
 
 /**
  * mega_get_boot_drv()
@@ -4088,7 +4026,6 @@ mega_support_random_del(adapter_t *adapter)
 	return !rval;
 }
 
-
 /**
  * mega_support_ext_cdb()
  * @adapter - pointer to our soft state
@@ -4115,7 +4052,6 @@ mega_support_ext_cdb(adapter_t *adapter)
 
 	return !rval;
 }
-
 
 /**
  * mega_del_logdrv()
@@ -4172,7 +4108,6 @@ mega_del_logdrv(adapter_t *adapter, int logdrv)
 	return rval;
 }
 
-
 static int
 mega_do_del_logdrv(adapter_t *adapter, int logdrv)
 {
@@ -4202,7 +4137,6 @@ mega_do_del_logdrv(adapter_t *adapter, int logdrv)
 	return rval;
 }
 
-
 /**
  * mega_get_max_sgl()
  * @adapter - pointer to our soft state
@@ -4227,7 +4161,6 @@ mega_get_max_sgl(adapter_t *adapter)
 	raw_mbox[0] = MAIN_MISC_OPCODE;
 	raw_mbox[2] = GET_MAX_SG_SUPPORT;
 
-
 	if( issue_scb_block(adapter, raw_mbox) ) {
 		/*
 		 * f/w does not support this command. Choose the default value
@@ -4236,7 +4169,7 @@ mega_get_max_sgl(adapter_t *adapter)
 	}
 	else {
 		adapter->sglen = *((char *)adapter->mega_buffer);
-		
+
 		/*
 		 * Make sure this is not more than the resources we are
 		 * planning to allocate
@@ -4247,7 +4180,6 @@ mega_get_max_sgl(adapter_t *adapter)
 
 	return;
 }
-
 
 /**
  * mega_support_cluster()
@@ -4325,7 +4257,6 @@ mega_adapinq(adapter_t *adapter, dma_addr_t dma_handle)
 	return 0;
 }
 
-
 /** mega_internal_dev_inquiry()
  * @adapter - pointer to our soft state
  * @ch - channel for this device
@@ -4343,7 +4274,6 @@ mega_internal_dev_inquiry(adapter_t *adapter, u8 ch, u8 tgt,
 	megacmd_t	mc;
 	int		rval;
 	struct pci_dev	*pdev;
-
 
 	/*
 	 * For all internal commands, the buffer must be allocated in <4GB
@@ -4376,7 +4306,6 @@ mega_internal_dev_inquiry(adapter_t *adapter, u8 ch, u8 tgt,
 	pthru->cdb[3] = 0;
 	pthru->cdb[4] = 255;
 	pthru->cdb[5] = 0;
-
 
 	pthru->dataxferaddr = (u32)buf_dma_handle;
 	pthru->dataxferlen = 256;
@@ -4482,7 +4411,6 @@ mega_internal_command(adapter_t *adapter, megacmd_t *mc, mega_passthru *pthru)
 	return rval;
 }
 
-
 /**
  * mega_internal_done()
  * @scmd - internal scsi command
@@ -4500,13 +4428,12 @@ mega_internal_done(Scsi_Cmnd *scmd)
 
 }
 
-
 static struct scsi_host_template megaraid_template = {
 	.module				= THIS_MODULE,
 	.name				= "MegaRAID",
 	.proc_name			= "megaraid_legacy",
 	.info				= megaraid_info,
-	.queuecommand			= megaraid_queue,	
+	.queuecommand			= megaraid_queue,
 	.bios_param			= megaraid_biosparam,
 	.max_sectors			= MAX_SECTORS_PER_IO,
 	.can_queue			= MAX_COMMANDS,
@@ -4808,7 +4735,6 @@ megaraid_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
 	mcontroller[i].pcislot = PCI_SLOT(pci_dev_func);
 	mcontroller[i].uid = (pci_bus << 8) | pci_dev_func;
 
-
 	/* Set the Mode of addressing to 64 bit if we can */
 	if ((adapter->flag & BOARD_64BIT) && (sizeof(dma_addr_t) == 8)) {
 		pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
@@ -4817,7 +4743,7 @@ megaraid_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
 		pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
 		adapter->has_64bit_addr = 0;
 	}
-		
+
 	mutex_init(&adapter->int_mtx);
 	init_completion(&adapter->int_waitq);
 
@@ -4900,7 +4826,7 @@ __megaraid_shutdown(adapter_t *adapter)
 
 	/* Issue a blocking (interrupts disabled) command to the card */
 	issue_scb_block(adapter, raw_mbox);
-	
+
 	if (atomic_read(&adapter->pend_cmds) > 0)
 		printk(KERN_WARNING "megaraid: pending commands!!\n");
 

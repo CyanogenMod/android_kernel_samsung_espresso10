@@ -151,7 +151,6 @@ struct nilfs_transaction_info {
 #define NILFS_TI_COMMIT		0x0008	/* Change happened or not */
 #define NILFS_TI_WRITER		0x0010	/* Constructor context */
 
-
 int nilfs_transaction_begin(struct super_block *,
 			    struct nilfs_transaction_info *, int);
 int nilfs_transaction_commit(struct super_block *);
@@ -321,6 +320,5 @@ extern const struct inode_operations nilfs_symlink_inode_operations;
  * filesystem type
  */
 extern struct file_system_type nilfs_fs_type;
-
 
 #endif	/* _NILFS_H */

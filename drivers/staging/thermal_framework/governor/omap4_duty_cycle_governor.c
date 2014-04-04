@@ -196,4 +196,3 @@ module_exit(omap4_duty_governor_exit);
 MODULE_AUTHOR("Euvgen Mandrenko <ievgen.mandrenko@ti.com>");
 MODULE_DESCRIPTION("OMAP on-die thermal governor");
 MODULE_LICENSE("GPL");
-

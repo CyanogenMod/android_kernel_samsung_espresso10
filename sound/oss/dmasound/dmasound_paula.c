@@ -14,7 +14,6 @@
  *	       [0.4] - put in default hard/soft settings
 */
 
-
 #include <linux/module.h>
 #include <linux/mm.h>
 #include <linux/init.h>
@@ -42,14 +41,12 @@
 
 extern volatile u_short amiga_audio_min_period;
 
-
    /*
     *	amiga_mksound() should be able to restore the period after beeping
     *	(Imported from arch/m68k/amiga/amisound.c)
     */
 
 extern u_short amiga_audio_period;
-
 
    /*
     *	Audio DMA masks
@@ -59,16 +56,13 @@ extern u_short amiga_audio_period;
 #define AMI_AUDIO_8	(DMAF_SETCLR | DMAF_MASTER | DMAF_AUD0 | DMAF_AUD1)
 #define AMI_AUDIO_14	(AMI_AUDIO_8 | DMAF_AUD2 | DMAF_AUD3)
 
-
     /*
      *  Helper pointers for 16(14)-bit sound
      */
 
 static int write_sq_block_size_half, write_sq_block_size_quarter;
 
-
 /*** Low level stuff *********************************************************/
-
 
 static void *AmiAlloc(unsigned int size, gfp_t flags);
 static void AmiFree(void *obj, unsigned int size);
@@ -113,14 +107,12 @@ static inline void enable_heartbeat(void)
 #define enable_heartbeat()	do { } while (0)
 #endif /* !CONFIG_HEARTBEAT */
 
-
 /*** Mid level stuff *********************************************************/
 
 static void AmiMixerInit(void);
 static int AmiMixerIoctl(u_int cmd, u_long arg);
 static int AmiWriteSqSetup(void);
 static int AmiStateInfo(char *buffer, size_t space);
-
 
 /*** Translations ************************************************************/
 
@@ -147,7 +139,6 @@ static int AmiStateInfo(char *buffer, size_t space);
  *
  * ++geert: split in even more functions (one per format)
  */
-
 
     /*
      *  Native format
@@ -179,7 +170,6 @@ static ssize_t ami_ct_s8(const u_char __user *userPtr, size_t userCount,
 	*frameUsed += used;
 	return used;
 }
-
 
     /*
      *  Copy and convert 8 bit data
@@ -230,7 +220,6 @@ static ssize_t funcname(const u_char __user *userPtr, size_t userCount,	\
 GENERATE_AMI_CT8(ami_ct_ulaw, AMI_CT_ULAW)
 GENERATE_AMI_CT8(ami_ct_alaw, AMI_CT_ALAW)
 GENERATE_AMI_CT8(ami_ct_u8, AMI_CT_U8)
-
 
     /*
      *  Copy and convert 16 bit data
@@ -293,7 +282,6 @@ GENERATE_AMI_CT_16(ami_ct_u16be, AMI_CT_U16BE)
 GENERATE_AMI_CT_16(ami_ct_s16le, AMI_CT_S16LE)
 GENERATE_AMI_CT_16(ami_ct_u16le, AMI_CT_U16LE)
 
-
 static TRANS transAmiga = {
 	.ct_ulaw	= ami_ct_ulaw,
 	.ct_alaw	= ami_ct_alaw,
@@ -353,7 +341,6 @@ static void AmiSilence(void)
 	StopDMA();
 }
 
-
 static void AmiInit(void)
 {
 	int period, i;
@@ -379,7 +366,6 @@ static void AmiInit(void)
 		custom.aud[i].audper = period;
 	amiga_audio_period = period;
 }
-
 
 static int AmiSetFormat(int format)
 {
@@ -418,7 +404,6 @@ static int AmiSetFormat(int format)
 	return format;
 }
 
-
 #define VOLUME_VOXWARE_TO_AMI(v) \
 	(((v) < 0) ? 0 : ((v) > 100) ? 64 : ((v) * 64)/100)
 #define VOLUME_AMI_TO_VOXWARE(v) ((v)*100/64)
@@ -452,11 +437,9 @@ static int AmiSetTreble(int treble)
 	return treble;
 }
 
-
 #define AMI_PLAY_LOADED		1
 #define AMI_PLAY_PLAYING	2
 #define AMI_PLAY_MASK		3
-
 
 static void AmiPlayNextFrame(int index)
 {
@@ -515,7 +498,6 @@ static void AmiPlayNextFrame(int index)
 	write_sq.active |= AMI_PLAY_LOADED;
 }
 
-
 static void AmiPlay(void)
 {
 	int minframes = 1;
@@ -551,7 +533,6 @@ static void AmiPlay(void)
 
 	custom.intena = IF_SETCLR | IF_AUD0;
 }
-
 
 static irqreturn_t AmiInterrupt(int irq, void *dummy)
 {
@@ -599,7 +580,6 @@ static irqreturn_t AmiInterrupt(int irq, void *dummy)
 
 /*** Mid level stuff *********************************************************/
 
-
 /*
  * /dev/mixer abstraction
  */
@@ -641,14 +621,12 @@ static int AmiMixerIoctl(u_int cmd, u_long arg)
 	return -EINVAL;
 }
 
-
 static int AmiWriteSqSetup(void)
 {
 	write_sq_block_size_half = write_sq.block_size>>1;
 	write_sq_block_size_quarter = write_sq_block_size_half>>1;
 	return 0;
 }
-
 
 static int AmiStateInfo(char *buffer, size_t space)
 {
@@ -663,7 +641,6 @@ static int AmiStateInfo(char *buffer, size_t space)
 	}
 	return len;
 }
-
 
 /*** Machine definitions *****************************************************/
 
@@ -707,9 +684,7 @@ static MACHINE machAmiga = {
 	.capabilities	= DSP_CAP_BATCH          /* As per SNDCTL_DSP_GETCAPS */
 };
 
-
 /*** Config & Setup **********************************************************/
-
 
 static int __init amiga_audio_probe(struct platform_device *pdev)
 {

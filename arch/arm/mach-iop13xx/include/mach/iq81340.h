@@ -24,5 +24,4 @@
 #define PBI_CF_IDE_BASE     (IQ81340_CMP_FLSH)
 #define PBI_CF_BAR_ADDR     (IOP13XX_PBI_BAR1)
 
-
 #endif	/* _IQ81340_H_ */

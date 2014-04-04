@@ -248,7 +248,6 @@ static int bcm4330_bluetooth_probe(struct platform_device *pdev)
 
 	bt_gpio_init();
 
-
 	gpio_direction_output(bt_gpios[GPIO_BT_EN].gpio, 0);
 	gpio_direction_output(bt_gpios[GPIO_BT_nRST].gpio, 0);
 
@@ -343,7 +342,6 @@ static void __exit bcm4330_bluetooth_exit(void)
 {
 	platform_driver_unregister(&bcm4330_bluetooth_platform_driver);
 }
-
 
 module_init(bcm4330_bluetooth_init);
 module_exit(bcm4330_bluetooth_exit);

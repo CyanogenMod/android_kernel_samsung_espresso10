@@ -57,7 +57,6 @@
 
 #include <media/saa6588.h>
 
-
 unsigned int bttv_num;			/* number of Bt848s in use */
 struct bttv *bttvs[BTTV_MAX];
 
@@ -198,7 +197,6 @@ static void flush_request_modules(struct bttv *dev)
 #define request_modules(dev)
 #define flush_request_modules(dev)
 #endif /* CONFIG_MODULES */
-
 
 /* ----------------------------------------------------------------------- */
 /* static data                                                             */
@@ -794,8 +792,6 @@ static const struct v4l2_queryctrl bttv_ctls[] = {
 		.default_value = 0,
 		.type          = V4L2_CTRL_TYPE_INTEGER,
 	}
-
-
 
 };
 
@@ -2851,7 +2847,6 @@ static int bttv_streamon(struct file *file, void *priv,
 	return videobuf_streamon(bttv_queue(fh));
 }
 
-
 static int bttv_streamoff(struct file *file, void *priv,
 					enum v4l2_buf_type type)
 {
@@ -2859,7 +2854,6 @@ static int bttv_streamoff(struct file *file, void *priv,
 	struct bttv *btv = fh->btv;
 	int retval;
 	int res = bttv_resource(fh);
-
 
 	retval = videobuf_streamoff(bttv_queue(fh));
 	if (retval < 0)
@@ -4118,7 +4112,6 @@ static irqreturn_t bttv_irq(int irq, void *dev_id)
 	return IRQ_RETVAL(handled);
 }
 
-
 /* ----------------------------------------------------------------------- */
 /* initialitation                                                          */
 
@@ -4220,7 +4213,6 @@ static int __devinit bttv_register_video(struct bttv *btv)
 	bttv_unregister_video(btv);
 	return -1;
 }
-
 
 /* on OpenFirmware machines (PowerMac at least), PCI memory cycle */
 /* response on cards with no firmware is not enabled by OF */

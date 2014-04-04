@@ -72,7 +72,6 @@ u64 hipz_h_alloc_resource_cq(const struct ipz_adapter_handle adapter_handle,
 			     struct ehca_cq *cq,
 			     struct ehca_alloc_cq_parms *param);
 
-
 /*
  * hipz_h_alloc_resource_qp allocates QP resources in HW and FW,
  * initialize resources, create empty QPPTs (2 rings).

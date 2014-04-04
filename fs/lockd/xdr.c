@@ -18,7 +18,6 @@
 
 #define NLMDBG_FACILITY		NLMDBG_XDR
 
-
 static inline loff_t
 s32_to_loff_t(__s32 offset)
 {
@@ -46,7 +45,7 @@ static __be32 *nlm_decode_cookie(__be32 *p, struct nlm_cookie *c)
 	unsigned int	len;
 
 	len = ntohl(*p++);
-	
+
 	if(len==0)
 	{
 		c->len=4;
@@ -58,7 +57,7 @@ static __be32 *nlm_decode_cookie(__be32 *p, struct nlm_cookie *c)
 		memcpy(c->data, p, len);
 		p+=XDR_QUADLEN(len);
 	}
-	else 
+	else
 	{
 		dprintk("lockd: bad cookie size %d (only cookies under "
 			"%d bytes are supported.)\n",
@@ -182,7 +181,6 @@ nlm_encode_testres(__be32 *p, struct nlm_res *resp)
 
 	return p;
 }
-
 
 /*
  * First, the server side XDR functions

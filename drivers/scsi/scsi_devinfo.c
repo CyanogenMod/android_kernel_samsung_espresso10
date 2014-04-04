@@ -1,4 +1,3 @@
-
 #include <linux/blkdev.h>
 #include <linux/init.h>
 #include <linux/kernel.h>
@@ -12,7 +11,6 @@
 #include <scsi/scsi_devinfo.h>
 
 #include "scsi_priv.h"
-
 
 /*
  * scsi_dev_info_list: structure to hold black/white listed devices.
@@ -31,7 +29,6 @@ struct scsi_dev_info_list_table {
 	const char *name;	/* name of list for /proc (NULL for global) */
 	int key;		/* unique numeric identifier */
 };
-
 
 static const char spaces[] = "                "; /* 16 of them */
 static unsigned scsi_default_dev_flags;
@@ -290,8 +287,8 @@ static void scsi_strcpy_devinfo(char *name, char *to, size_t to_length,
 			 */
 			to[from_length] = '\0';
 		} else {
-			/* 
-			 * space pad the string if it is short. 
+			/*
+			 * space pad the string if it is short.
 			 */
 			strncpy(&to[from_length], spaces,
 				to_length - from_length);
@@ -539,7 +536,6 @@ int scsi_get_device_flags(struct scsi_device *sdev,
 					   SCSI_DEVINFO_GLOBAL);
 }
 
-
 /**
  * scsi_get_device_flags_keyed - get device specific flags from the dynamic device list
  * @sdev:       &scsi_device to get flags for
@@ -714,7 +710,7 @@ static int proc_scsi_devinfo_open(struct inode *inode, struct file *file)
 	return seq_open(file, &scsi_devinfo_seq_ops);
 }
 
-/* 
+/*
  * proc_scsi_dev_info_write - allow additions to scsi_dev_info_list via /proc.
  *
  * Description: Adds a black/white list entry for vendor and model with an

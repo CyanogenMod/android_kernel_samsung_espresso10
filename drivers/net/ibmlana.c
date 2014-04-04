@@ -23,7 +23,7 @@ paper sources:
   'LAN Technical Reference Ethernet Adapter Interface Version 1 Release 1.0
    Document Number SC30-3661-00' by IBM for info on the adapter itself
 
-  Also see http://www.national.com/analog 
+  Also see http://www.national.com/analog
 
 special acknowledgements to:
   - Bob Eager for helping me out with documentation from IBM
@@ -202,7 +202,6 @@ static int wait_timeout(struct net_device *dev, int regoffs, u16 mask,
 
 	return 0;
 }
-
 
 /* reset the whole board */
 
@@ -904,7 +903,6 @@ static char *ibmlana_adapter_names[] __devinitdata = {
 	"IBM LAN Adapter/A",
 	NULL
 };
-
 
 static const struct net_device_ops ibmlana_netdev_ops = {
 	.ndo_open 		= ibmlana_open,

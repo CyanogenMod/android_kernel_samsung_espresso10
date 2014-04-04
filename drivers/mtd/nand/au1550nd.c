@@ -439,7 +439,6 @@ static void au1550_command(struct mtd_info *mtd, unsigned command, int column, i
 	while(!this->dev_ready(mtd));
 }
 
-
 /*
  * Main initialization routine
  */
@@ -464,7 +463,6 @@ static int __init au1xxx_nand_init(void)
 	/* Link the private data with the MTD structure */
 	au1550_mtd->priv = this;
 	au1550_mtd->owner = THIS_MODULE;
-
 
 	/* MEM_STNDCTL: disable ints, disable nand boot */
 	au_writel(0, MEM_STNDCTL);

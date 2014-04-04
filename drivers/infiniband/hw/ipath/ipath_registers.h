@@ -264,7 +264,6 @@
 #define INFINIPATH_IBCS_L_STATE_ACTIVE		0x3
 #define INFINIPATH_IBCS_L_STATE_ACT_DEFER	0x4
 
-
 /* kr_extstatus bits */
 #define INFINIPATH_EXTS_SERDESPLLLOCK 0x1
 #define INFINIPATH_EXTS_GPIOIN_MASK 0xFFFFULL
@@ -307,7 +306,6 @@
 /* common kr_xgxsconfig bits (or safe in all, even if not implemented) */
 #define INFINIPATH_XGXS_RX_POL_SHIFT 19
 #define INFINIPATH_XGXS_RX_POL_MASK 0xfULL
-
 
 /*
  * IPATH_PIO_MAXIBHDR is the max IB header size allowed for in our

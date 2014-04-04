@@ -21,4 +21,3 @@ struct htcpld_core_platform_data {
 };
 
 #endif /* __LINUX_HTCPLD_H */
-

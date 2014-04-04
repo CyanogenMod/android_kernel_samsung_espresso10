@@ -29,7 +29,6 @@
 #include "alloc.h"
 #include "dat.h"
 
-
 #define NILFS_CNO_MIN	((__u64)1)
 #define NILFS_CNO_MAX	(~(__u64)0)
 

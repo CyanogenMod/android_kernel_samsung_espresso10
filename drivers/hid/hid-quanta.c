@@ -106,14 +106,14 @@ static int quanta_input_mapped(struct hid_device *hdev, struct hid_input *hi,
  */
 static void quanta_filter_event(struct quanta_data *td, struct input_dev *input)
 {
-	
+
 	td->first = !td->first; /* touchscreen emulation */
 
 	if (!td->valid) {
 		/*
 		 * touchscreen emulation: if no finger in this frame is valid
 		 * and there previously was finger activity, this is a release
-		 */ 
+		 */
 		if (!td->first && !td->activity_now && td->activity) {
 			input_event(input, EV_KEY, BTN_TOUCH, 0);
 			td->activity = false;
@@ -141,7 +141,6 @@ static void quanta_filter_event(struct quanta_data *td, struct input_dev *input)
 		input_event(input, EV_ABS, ABS_Y, td->y);
 	}
 }
-
 
 static int quanta_event(struct hid_device *hid, struct hid_field *field,
 				struct hid_usage *usage, __s32 value)
@@ -258,4 +257,3 @@ static void __exit quanta_exit(void)
 
 module_init(quanta_init);
 module_exit(quanta_exit);
-

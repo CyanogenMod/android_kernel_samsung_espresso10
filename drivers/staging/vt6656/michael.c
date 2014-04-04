@@ -136,7 +136,6 @@ void MIC_vInit(DWORD dwK0, DWORD dwK1)
 	s_vSetKey(dwK0, dwK1);
 }
 
-
 void MIC_vUnInit(void)
 {
 	/* Wipe the key material */

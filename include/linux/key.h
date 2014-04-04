@@ -192,7 +192,6 @@ extern struct key *key_alloc(struct key_type *type,
 			     key_perm_t perm,
 			     unsigned long flags);
 
-
 #define KEY_ALLOC_IN_QUOTA	0x0000	/* add to quota, reject if would overrun */
 #define KEY_ALLOC_QUOTA_OVERRUN	0x0001	/* add to quota, permit even if overrun */
 #define KEY_ALLOC_NOT_IN_QUOTA	0x0002	/* not in quota */

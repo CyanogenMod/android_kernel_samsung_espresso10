@@ -930,7 +930,6 @@ static void pll_factors(struct _pll_div *pll_div, unsigned int target,
 	u64 Kpart;
 	unsigned int K, Ndiv, Nmod;
 
-
 	Ndiv = target / source;
 	if (Ndiv < 6) {
 		source >>= 1;

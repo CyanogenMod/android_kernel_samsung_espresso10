@@ -397,7 +397,6 @@ extern void handle_nested_irq(unsigned int irq);
 extern void note_interrupt(unsigned int irq, struct irq_desc *desc,
 			   irqreturn_t action_ret);
 
-
 /* Enable/disable irq debugging output: */
 extern int noirqdebug_setup(char *str);
 

@@ -17,7 +17,6 @@
 #include "../trigger.h"
 #include "adis16260.h"
 
-
 /**
  * adis16260_read_ring_data() read data registers which will be placed into ring
  * @dev: device associated with child of actual device (iio_dev or iio_trig)

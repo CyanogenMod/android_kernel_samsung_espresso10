@@ -28,7 +28,6 @@ config DMADEVICES_VDEBUG
           say N here.  This enables deeper (more verbose) debugging of
           the DMA engine core and drivers.
 
-
 if DMADEVICES
 
 comment "DMA Devices"

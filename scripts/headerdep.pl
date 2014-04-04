@@ -37,7 +37,6 @@ if($opt_graph) {
 	detect_cycles(@headers);
 }
 
-
 sub help {
 	print "Usage: $0 [options] file...\n";
 	print "\n";

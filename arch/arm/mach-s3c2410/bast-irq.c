@@ -20,7 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/ioport.h>
@@ -46,7 +45,6 @@
 
 #define irqdbf(x...)
 #define irqdbf2(x...)
-
 
 /* handle PC104 ISA interrupts from the system CPLD */
 

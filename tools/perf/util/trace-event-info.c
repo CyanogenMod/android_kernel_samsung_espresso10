@@ -72,8 +72,6 @@ struct events {
 	char *name;
 };
 
-
-
 static void die(const char *fmt, ...)
 {
 	va_list ap;

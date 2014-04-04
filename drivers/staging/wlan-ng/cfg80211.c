@@ -1,6 +1,5 @@
 /* cfg80211 Interface for prism2_usb module */
 
-
 /* Prism2 channell/frequency/bitrate declarations */
 static const struct ieee80211_channel prism2_channels[] = {
 	{ .center_freq = 2412 },
@@ -32,7 +31,6 @@ static const u32 prism2_cipher_suites[PRISM2_NUM_CIPHER_SUITES] = {
 	WLAN_CIPHER_SUITE_WEP104
 };
 
-
 /* prism2 device private data */
 struct prism2_wiphy_private {
 	wlandevice_t *wlandev;
@@ -45,7 +43,6 @@ struct prism2_wiphy_private {
 };
 
 static const void * const prism2_wiphy_privid = &prism2_wiphy_privid;
-
 
 /* Helper Functions */
 static int prism2_result2err(int prism2_result)
@@ -95,7 +92,6 @@ static int prism2_domibset_pstr32(wlandevice_t *wlandev,
 
 	return p80211req_dorequest(wlandev, (u8 *) &msg);
 }
-
 
 /* The interface functions, called by the cfg80211 layer */
 int prism2_change_virtual_intf(struct wiphy *wiphy,
@@ -290,7 +286,6 @@ int prism2_set_default_key(struct wiphy *wiphy, struct net_device *dev,
 	return err;
 }
 
-
 int prism2_get_station(struct wiphy *wiphy, struct net_device *dev,
 		       u8 *mac, struct station_info *sinfo)
 {
@@ -313,7 +308,6 @@ int prism2_get_station(struct wiphy *wiphy, struct net_device *dev,
 		return -EOPNOTSUPP;
 
 	result = wlandev->mlmerequest(wlandev, (struct p80211msg *) &quality);
-
 
 	if (result == 0) {
 		sinfo->txrate.legacy = quality.txrate.data;
@@ -594,7 +588,6 @@ int prism2_disconnect(struct wiphy *wiphy, struct net_device *dev,
 	int result;
 	int err = 0;
 
-
 	/* Do a join, with a bogus ssid. Thats the only way I can think of */
 	msg_join.msgcode = DIDmsg_lnxreq_autojoin;
 
@@ -609,7 +602,6 @@ int prism2_disconnect(struct wiphy *wiphy, struct net_device *dev,
 	return err;
 }
 
-
 int prism2_join_ibss(struct wiphy *wiphy, struct net_device *dev,
 		     struct cfg80211_ibss_params *params)
 {
@@ -620,7 +612,6 @@ int prism2_leave_ibss(struct wiphy *wiphy, struct net_device *dev)
 {
 	return -EOPNOTSUPP;
 }
-
 
 int prism2_set_tx_power(struct wiphy *wiphy, enum nl80211_tx_power_setting type,
 			int mbm)
@@ -675,9 +666,6 @@ exit:
 	return err;
 }
 
-
-
-
 /* Interface callback functions, passing data back up to the cfg80211 layer */
 void prism2_connect_result(wlandevice_t *wlandev, u8 failed)
 {
@@ -699,7 +687,6 @@ void prism2_roamed(wlandevice_t *wlandev)
 		NULL, 0, NULL, 0, GFP_KERNEL);
 }
 
-
 /* Structures for declaring wiphy interface */
 static const struct cfg80211_ops prism2_usb_cfg_ops = {
 	.change_virtual_intf = prism2_change_virtual_intf,
@@ -717,7 +704,6 @@ static const struct cfg80211_ops prism2_usb_cfg_ops = {
 	.set_tx_power = prism2_set_tx_power,
 	.get_tx_power = prism2_get_tx_power,
 };
-
 
 /* Functions to create/free wiphy interface */
 struct wiphy *wlan_create_wiphy(struct device *dev, wlandevice_t *wlandev)
@@ -754,7 +740,6 @@ struct wiphy *wlan_create_wiphy(struct device *dev, wlandevice_t *wlandev)
 
 	return wiphy;
 }
-
 
 void wlan_free_wiphy(struct wiphy *wiphy)
 {

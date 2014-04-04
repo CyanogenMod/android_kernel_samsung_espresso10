@@ -483,7 +483,6 @@ static void au0828_copy_vbi(struct au0828_dev *dev,
 	dma_q->pos += len;
 }
 
-
 /*
  * video-buf generic routine to get the next available VBI buffer
  */
@@ -856,7 +855,6 @@ void au0828_analog_unregister(struct au0828_dev *dev)
 	mutex_unlock(&au0828_sysfs_lock);
 }
 
-
 /* Usage lock check functions */
 static int res_get(struct au0828_fh *fh, unsigned int bit)
 {
@@ -966,7 +964,6 @@ void au0828_vbi_buffer_timeout(unsigned long data)
 		mod_timer(&dev->vbi_timeout, jiffies + (HZ / 10));
 	spin_unlock_irqrestore(&dev->slock, flags);
 }
-
 
 static int au0828_v4l2_open(struct file *filp)
 {
@@ -1230,7 +1227,6 @@ static int au0828_set_format(struct au0828_dev *dev, unsigned int cmd,
 
 	return 0;
 }
-
 
 static int vidioc_queryctrl(struct file *file, void *priv,
 			    struct v4l2_queryctrl *qc)
@@ -1558,7 +1554,6 @@ static int vidioc_s_frequency(struct file *file, void *priv,
 	return 0;
 }
 
-
 /* RAW VBI ioctls */
 
 static int vidioc_g_fmt_vbi_cap(struct file *file, void *priv,
@@ -1697,14 +1692,18 @@ static int vidioc_streamoff(struct file *file, void *priv,
 			(AUVI_INPUT(i).audio_setup)(dev, 0);
 		}
 
-		videobuf_streamoff(&fh->vb_vidq);
-		res_free(fh, AU0828_RESOURCE_VIDEO);
+		if (res_check(fh, AU0828_RESOURCE_VIDEO)) {
+			videobuf_streamoff(&fh->vb_vidq);
+			res_free(fh, AU0828_RESOURCE_VIDEO);
+		}
 	} else if (fh->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
 		dev->vbi_timeout_running = 0;
 		del_timer_sync(&dev->vbi_timeout);
 
-		videobuf_streamoff(&fh->vb_vbiq);
-		res_free(fh, AU0828_RESOURCE_VBI);
+		if (res_check(fh, AU0828_RESOURCE_VBI)) {
+			videobuf_streamoff(&fh->vb_vbiq);
+			res_free(fh, AU0828_RESOURCE_VBI);
+		}
 	}
 
 	return 0;
@@ -1995,4 +1994,3 @@ int au0828_analog_register(struct au0828_dev *dev,
 
 	return 0;
 }
-

@@ -38,5 +38,4 @@ static inline int ocfs2_inode_is_fast_symlink(struct inode *inode)
 		inode->i_blocks == 0);
 }
 
-
 #endif /* OCFS2_SYMLINK_H */

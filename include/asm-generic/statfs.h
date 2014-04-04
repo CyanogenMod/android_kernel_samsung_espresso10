@@ -15,7 +15,7 @@ typedef __kernel_fsid_t	fsid_t;
  * with a 10' pole.
  */
 #ifndef __statfs_word
-#if BITS_PER_LONG == 64
+#if __BITS_PER_LONG == 64
 #define __statfs_word long
 #else
 #define __statfs_word __u32
@@ -39,7 +39,7 @@ struct statfs {
 
 /*
  * ARM needs to avoid the 32-bit padding at the end, for consistency
- * between EABI and OABI 
+ * between EABI and OABI
  */
 #ifndef ARCH_PACK_STATFS64
 #define ARCH_PACK_STATFS64
@@ -60,7 +60,7 @@ struct statfs64 {
 	__statfs_word f_spare[4];
 } ARCH_PACK_STATFS64;
 
-/* 
+/*
  * IA64 and x86_64 need to avoid the 32-bit padding at the end,
  * to be compatible with the i386 ABI
  */

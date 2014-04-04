@@ -122,7 +122,6 @@ static int pwm_init(void)
 {
 	int ret;
 
-
 	gptimer = omap_dm_timer_request_specific(VIB_GPTIMER_NUM);
 	if (unlikely(gptimer == NULL))
 		return -EINVAL;

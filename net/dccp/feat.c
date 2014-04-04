@@ -730,7 +730,6 @@ int dccp_feat_register_sp(struct sock *sk, u8 feat, u8 is_local,
 				  0, list, len);
 }
 
-
 /*
  *	Tracking features whose value depend on the choice of CCID
  *

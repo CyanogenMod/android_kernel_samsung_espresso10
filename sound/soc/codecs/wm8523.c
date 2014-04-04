@@ -249,7 +249,6 @@ static int wm8523_set_dai_sysclk(struct snd_soc_dai *codec_dai,
 	return 0;
 }
 
-
 static int wm8523_set_dai_fmt(struct snd_soc_dai *codec_dai,
 		unsigned int fmt)
 {
@@ -345,7 +344,6 @@ static int wm8523_set_bias_level(struct snd_soc_codec *codec,
 			for (i = WM8523_AIF_CTRL1;
 			     i < WM8523_MAX_REGISTER; i++)
 				snd_soc_write(codec, i, reg_cache[i]);
-
 
 			msleep(100);
 		}

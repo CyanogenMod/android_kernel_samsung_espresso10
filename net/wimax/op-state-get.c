@@ -32,13 +32,11 @@
 #define D_SUBMODULE op_state_get
 #include "debug-levels.h"
 
-
 static const struct nla_policy wimax_gnl_state_get_policy[WIMAX_GNL_ATTR_MAX + 1] = {
 	[WIMAX_GNL_STGET_IFIDX] = {
 		.type = NLA_U32,
 	},
 };
-
 
 /*
  * Exporting to user space over generic netlink
@@ -72,7 +70,6 @@ error_no_wimax_dev:
 	d_fnend(3, NULL, "(skb %p info %p) = %d\n", skb, info, result);
 	return result;
 }
-
 
 struct genl_ops wimax_gnl_state_get = {
 	.cmd = WIMAX_GNL_OP_STATE_GET,

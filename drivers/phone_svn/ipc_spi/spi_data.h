@@ -85,7 +85,6 @@
 #define RFS_IN		0x41E000
 #define RFS_SZ		0x100000 /* 1 MB */
 
-
 enum SPI_DATA_TYPE_T {
 	SPI_DATA_MUX_IPC			= 0x01,
 	SPI_DATA_MUX_RAW			= 0x02,

@@ -337,7 +337,6 @@ static int blkif_queue_request(struct request *req)
 	return 0;
 }
 
-
 static inline void flush_requests(struct blkfront_info *info)
 {
 	int notify;
@@ -428,7 +427,6 @@ static int xlvbd_init_blk_queue(struct gendisk *gd, u16 sector_size)
 	return 0;
 }
 
-
 static void xlvbd_flush(struct blkfront_info *info)
 {
 	blk_queue_flush(info->rq, info->feature_flush);
@@ -467,7 +465,7 @@ static int xen_translate_vdev(int vdevice, int *minor, unsigned int *offset)
 		case XEN_SCSI_DISK5_MAJOR:
 		case XEN_SCSI_DISK6_MAJOR:
 		case XEN_SCSI_DISK7_MAJOR:
-			*offset = (*minor / PARTS_PER_DISK) + 
+			*offset = (*minor / PARTS_PER_DISK) +
 				((major - XEN_SCSI_DISK1_MAJOR + 1) * 16) +
 				EMULATED_SD_DISK_NAME_OFFSET;
 			*minor = *minor +
@@ -482,7 +480,7 @@ static int xen_translate_vdev(int vdevice, int *minor, unsigned int *offset)
 		case XEN_SCSI_DISK13_MAJOR:
 		case XEN_SCSI_DISK14_MAJOR:
 		case XEN_SCSI_DISK15_MAJOR:
-			*offset = (*minor / PARTS_PER_DISK) + 
+			*offset = (*minor / PARTS_PER_DISK) +
 				((major - XEN_SCSI_DISK8_MAJOR + 8) * 16) +
 				EMULATED_SD_DISK_NAME_OFFSET;
 			*minor = *minor +
@@ -523,7 +521,7 @@ static int xlvbd_alloc_gendisk(blkif_sector_t capacity,
 	if (!VDEV_IS_EXTENDED(info->vdevice)) {
 		err = xen_translate_vdev(info->vdevice, &minor, &offset);
 		if (err)
-			return err;		
+			return err;
  		nr_parts = PARTS_PER_DISK;
 	} else {
 		minor = BLKIF_MINOR_EXT(info->vdevice);
@@ -777,7 +775,6 @@ static irqreturn_t blkif_interrupt(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 static int setup_blkring(struct xenbus_device *dev,
 			 struct blkfront_info *info)
 {
@@ -823,7 +820,6 @@ fail:
 	blkif_free(info, 0);
 	return err;
 }
-
 
 /* Common code used when first setting up, and when resuming. */
 static int talk_to_blkback(struct xenbus_device *dev,
@@ -969,7 +965,6 @@ static int blkfront_probe(struct xenbus_device *dev,
 
 	return 0;
 }
-
 
 static int blkif_recover(struct blkfront_info *info)
 {
@@ -1178,7 +1173,7 @@ static void blkfront_connect(struct blkfront_info *info)
 		info->feature_flush = REQ_FLUSH;
 		info->flush_op = BLKIF_OP_FLUSH_DISKCACHE;
 	}
-		
+
 	err = xlvbd_alloc_gendisk(sectors, info, binfo, sector_size);
 	if (err) {
 		xenbus_dev_fatal(info->xbdev, err, "xlvbd_add at %s",
@@ -1366,7 +1361,6 @@ static const struct block_device_operations xlvbd_block_fops =
 	.ioctl = blkif_ioctl,
 };
 
-
 static const struct xenbus_device_id blkfront_ids[] = {
 	{ "vbd" },
 	{ "" }
@@ -1397,7 +1391,6 @@ static int __init xlblk_init(void)
 	return xenbus_register_frontend(&blkfront);
 }
 module_init(xlblk_init);
-
 
 static void __exit xlblk_exit(void)
 {

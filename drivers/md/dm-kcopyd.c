@@ -296,7 +296,6 @@ static void push(struct list_head *jobs, struct kcopyd_job *job)
 	spin_unlock_irqrestore(&kc->job_lock, flags);
 }
 
-
 static void push_head(struct list_head *jobs, struct kcopyd_job *job)
 {
 	unsigned long flags;

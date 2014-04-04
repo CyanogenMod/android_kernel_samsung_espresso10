@@ -20,7 +20,6 @@ struct whci_card {
 	struct umc_dev *devs[0];
 };
 
-
 /* Fix faulty HW :( */
 static
 u64 whci_capdata_quirks(struct whci_card *card, u64 capdata)
@@ -53,7 +52,6 @@ u64 whci_capdata_quirks(struct whci_card *card, u64 capdata)
 	return capdata;
 }
 
-
 /**
  * whci_wait_for - wait for a WHCI register to be set
  *
@@ -78,7 +76,6 @@ int whci_wait_for(struct device *dev, u32 __iomem *reg, u32 mask, u32 result,
 	return 0;
 }
 EXPORT_SYMBOL_GPL(whci_wait_for);
-
 
 /*
  * NOTE: the capinfo and capdata registers are slightly different
@@ -243,7 +240,6 @@ static struct pci_device_id whci_id_table[] = {
 	{ 0 },
 };
 MODULE_DEVICE_TABLE(pci, whci_id_table);
-
 
 static struct pci_driver whci_driver = {
 	.name     = "whci",

@@ -29,7 +29,6 @@
 #include "usbhid/usbhid.h"
 #include "hid-ids.h"
 
-
 #define pk_debug(format, arg...) \
 	pr_debug("hid-prodikeys: " format "\n" , ## arg)
 #define pk_error(format, arg...) \
@@ -100,7 +99,6 @@ module_param_array(enable, bool, NULL, 0444);
 MODULE_PARM_DESC(index, "Index value for the PC-MIDI virtual audio driver");
 MODULE_PARM_DESC(id, "ID string for the PC-MIDI virtual audio driver");
 MODULE_PARM_DESC(enable, "Enable for the PC-MIDI virtual audio driver");
-
 
 /* Output routine for the sysfs channel file */
 static ssize_t show_channel(struct device *dev,
@@ -215,7 +213,6 @@ static DEVICE_ATTR(octave, S_IRUGO | S_IWUSR | S_IWGRP, show_octave,
 static struct device_attribute *sysfs_device_attr_octave = {
 		&dev_attr_octave,
 		};
-
 
 static void pcmidi_send_note(struct pcmidi_snd *pm,
 	unsigned char status, unsigned char note, unsigned char velocity)
@@ -773,7 +770,6 @@ static int pk_input_mapping(struct hid_device *hdev, struct hid_input *hi,
 
 	return 0;
 }
-
 
 static int pk_raw_event(struct hid_device *hdev, struct hid_report *report,
 	u8 *data, int size)

@@ -24,7 +24,9 @@ static DEFINE_MUTEX(net_mutex);
 LIST_HEAD(net_namespace_list);
 EXPORT_SYMBOL_GPL(net_namespace_list);
 
-struct net init_net;
+struct net init_net = {
+	.dev_base_head = LIST_HEAD_INIT(init_net.dev_base_head),
+};
 EXPORT_SYMBOL(init_net);
 
 #define INITIAL_NET_GEN_PTRS	13 /* +1 for len +2 for rcu_head */
@@ -178,7 +180,6 @@ out_undo:
 	rcu_barrier();
 	goto out;
 }
-
 
 #ifdef CONFIG_NET_NS
 static struct kmem_cache *net_cachep;
@@ -498,7 +499,7 @@ again:
 
 static void unregister_pernet_operations(struct pernet_operations *ops)
 {
-	
+
 	__unregister_pernet_operations(ops);
 	rcu_barrier();
 	if (ops->id)

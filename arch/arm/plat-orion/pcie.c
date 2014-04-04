@@ -50,7 +50,6 @@
 #define PCIE_DEBUG_CTRL         0x1a60
 #define  PCIE_DEBUG_SOFT_RESET		(1<<20)
 
-
 u32 __init orion_pcie_dev_id(void __iomem *base)
 {
 	return readl(base + PCIE_DEV_ID_OFF) >> 16;

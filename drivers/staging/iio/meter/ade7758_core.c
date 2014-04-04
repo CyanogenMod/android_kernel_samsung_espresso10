@@ -167,7 +167,6 @@ static int ade7758_spi_read_reg_16(struct device *dev,
 		},
 	};
 
-
 	mutex_lock(&st->buf_lock);
 	st->tx[0] = ADE7758_READ_REG(reg_address);
 	st->tx[1] = 0;

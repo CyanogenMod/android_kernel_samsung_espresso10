@@ -207,7 +207,6 @@ struct mdp_page_protection {
 	uint32_t page_protection;
 };
 
-
 struct msm_panel_common_pdata {
 	int gpio;
 	int (*backlight_level)(int level, int max, int min);

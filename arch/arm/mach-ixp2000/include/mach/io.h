@@ -130,5 +130,4 @@
 #define __io(p)			((void __iomem *)((p)+IXP2000_PCI_IO_VIRT_BASE))
 #endif
 
-
 #endif

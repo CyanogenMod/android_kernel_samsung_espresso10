@@ -240,4 +240,3 @@ const struct header_ops ax25_header_ops = {
 EXPORT_SYMBOL(ax25_hard_header);
 EXPORT_SYMBOL(ax25_rebuild_header);
 EXPORT_SYMBOL(ax25_header_ops);
-

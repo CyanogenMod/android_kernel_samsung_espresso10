@@ -1,4 +1,3 @@
-
 #include "../sysfs.h"
 
 /* Gyroscope types of attribute */

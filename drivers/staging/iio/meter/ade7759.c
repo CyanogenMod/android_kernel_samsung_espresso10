@@ -503,7 +503,6 @@ static int __devinit ade7759_probe(struct spi_device *spi)
 		goto error_unreg_dev;
 	return 0;
 
-
 error_unreg_dev:
 	iio_device_unregister(st->indio_dev);
 error_free_dev:

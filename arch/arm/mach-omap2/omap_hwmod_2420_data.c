@@ -608,7 +608,6 @@ static struct omap_hwmod omap2420_timer5_hwmod = {
 	.omap_chip	= OMAP_CHIP_INIT(CHIP_IS_OMAP2420)
 };
 
-
 /* timer6 */
 static struct omap_hwmod omap2420_timer6_hwmod;
 static struct omap_hwmod_irq_info omap2420_timer6_mpu_irqs[] = {

@@ -473,7 +473,6 @@ out:
 	return destroy;
 }
 
-
 int rds_iw_cm_initiate_connect(struct rdma_cm_id *cm_id)
 {
 	struct rds_connection *conn = cm_id->context;
@@ -720,7 +719,6 @@ int rds_iw_conn_alloc(struct rds_connection *conn, gfp_t gfp)
 	spin_lock_irqsave(&iw_nodev_conns_lock, flags);
 	list_add_tail(&ic->iw_node, &iw_nodev_conns);
 	spin_unlock_irqrestore(&iw_nodev_conns_lock, flags);
-
 
 	rdsdebug("conn %p conn ic %p\n", conn, conn->c_transport_data);
 	return 0;

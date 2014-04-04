@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -95,7 +95,6 @@ void ar6000_snrThresholdEvent_rx(void *devt,
 
 void ar6000_lqThresholdEvent_rx(void *devt, WMI_LQ_THRESHOLD_VAL range, u8 lqVal);
 
-
 void ar6000_ratemask_rx(void *devt, u32 ratemask);
 
 int ar6000_get_driver_cfg(struct net_device *dev,
@@ -131,7 +130,6 @@ void ar6000_dset_data_req(void *devt,
                           u32 targ_buf,
                           u32 targ_reply_fn,
                           u32 targ_reply_arg);
-
 
 #if defined(CONFIG_TARGET_PROFILE_SUPPORT)
 void prof_count_rx(unsigned int addr, unsigned int count);

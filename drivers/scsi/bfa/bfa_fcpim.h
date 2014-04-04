@@ -24,7 +24,6 @@
 #include "bfa_defs_svc.h"
 #include "bfa_cs.h"
 
-
 #define BFA_ITNIM_MIN   32
 #define BFA_ITNIM_MAX   1024
 
@@ -35,7 +34,6 @@
 #define BFA_TSKIM_MAX   512
 #define BFA_FCPIM_PATHTOV_DEF	(30 * 1000)	/* in millisecs */
 #define BFA_FCPIM_PATHTOV_MAX	(90 * 1000)	/* in millisecs */
-
 
 #define bfa_itnim_ioprofile_update(__itnim, __index)			\
 	(__itnim->ioprofile.iocomps[__index]++)

@@ -20,7 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 /*
  * This file requires the following identifiers used in USB strings to
  * be defined (each of type pointer to char):
@@ -52,11 +51,9 @@
  * characters rather then a pointer to void.
  */
 
-
 #include <linux/usb/storage.h>
 #include <scsi/scsi.h>
 #include <asm/unaligned.h>
-
 
 /*
  * Thanks to NetChip Technologies for donating this product ID.
@@ -67,9 +64,7 @@
 #define FSG_VENDOR_ID	0x0525	/* NetChip */
 #define FSG_PRODUCT_ID	0xa4a5	/* Linux-USB File-backed Storage Gadget */
 
-
 /*-------------------------------------------------------------------------*/
-
 
 #ifndef DEBUG
 #undef VERBOSE_DEBUG
@@ -114,8 +109,6 @@
 #define WARNING(d, fmt, args...) dev_warn(&(d)->gadget->dev , fmt , ## args)
 #define INFO(d, fmt, args...)    dev_info(&(d)->gadget->dev , fmt , ## args)
 
-
-
 #ifdef DUMP_MSGS
 
 #  define dump_msg(fsg, /* const char * */ label,			\
@@ -147,10 +140,6 @@
 #  endif /* VERBOSE_DEBUG */
 
 #endif /* DUMP_MSGS */
-
-
-
-
 
 /*-------------------------------------------------------------------------*/
 
@@ -189,7 +178,6 @@ struct bulk_cs_wrap {
 #define USB_BULK_RESET_REQUEST		0xff
 #define USB_BULK_GET_MAX_LUN_REQUEST	0xfe
 
-
 /* CBI Interrupt data structure */
 struct interrupt_data {
 	u8	bType;
@@ -200,7 +188,6 @@ struct interrupt_data {
 
 /* CBI Accept Device-Specific Command request */
 #define USB_CBI_ADSC_REQUEST		0x00
-
 
 /* Length of a SCSI Command Data Block */
 #define MAX_COMMAND_SIZE	16
@@ -225,9 +212,7 @@ struct interrupt_data {
 #define ASC(x)		((u8) ((x) >> 8))
 #define ASCQ(x)		((u8) (x))
 
-
 /*-------------------------------------------------------------------------*/
-
 
 struct fsg_lun {
 	struct file	*filp;
@@ -256,7 +241,6 @@ static struct fsg_lun *fsg_lun_from_dev(struct device *dev)
 {
 	return container_of(dev, struct fsg_lun, dev);
 }
-
 
 /* Big enough to hold our biggest descriptor */
 #define EP0_BUFSIZE	256
@@ -322,18 +306,14 @@ enum data_direction {
 	DATA_DIR_NONE
 };
 
-
 /*-------------------------------------------------------------------------*/
-
 
 static inline u32 get_unaligned_be24(u8 *buf)
 {
 	return 0xffffff & (u32) get_unaligned_be32(buf - 1);
 }
 
-
 /*-------------------------------------------------------------------------*/
-
 
 enum {
 #ifndef FSG_NO_DEVICE_STRINGS
@@ -344,7 +324,6 @@ enum {
 #endif
 	FSG_STRING_INTERFACE
 };
-
 
 #ifndef FSG_NO_OTG
 static struct usb_otg_descriptor
@@ -429,7 +408,6 @@ static struct usb_descriptor_header *fsg_fs_function[] = {
 	NULL,
 };
 
-
 /*
  * USB 2.0 devices need to expose both high speed and full speed
  * descriptors, unless they only run at full speed.
@@ -503,7 +481,6 @@ fsg_ep_desc(struct usb_gadget *g, struct usb_endpoint_descriptor *fs,
 	return fs;
 }
 
-
 /* Static strings, in UTF-8 (for simplicity we use only ASCII characters) */
 static struct usb_string		fsg_strings[] = {
 #ifndef FSG_NO_DEVICE_STRINGS
@@ -520,7 +497,6 @@ static struct usb_gadget_strings	fsg_stringtab = {
 	.language	= 0x0409,		/* en-us */
 	.strings	= fsg_strings,
 };
-
 
  /*-------------------------------------------------------------------------*/
 
@@ -611,7 +587,6 @@ out:
 	return rc;
 }
 
-
 static void fsg_lun_close(struct fsg_lun *curlun)
 {
 	if (curlun->filp) {
@@ -620,7 +595,6 @@ static void fsg_lun_close(struct fsg_lun *curlun)
 		curlun->filp = NULL;
 	}
 }
-
 
 /*-------------------------------------------------------------------------*/
 
@@ -655,9 +629,7 @@ static void store_cdrom_address(u8 *dest, int msf, u32 addr)
 	}
 }
 
-
 /*-------------------------------------------------------------------------*/
-
 
 static ssize_t fsg_show_ro(struct device *dev, struct device_attribute *attr,
 			   char *buf)
@@ -703,7 +675,6 @@ static ssize_t fsg_show_file(struct device *dev, struct device_attribute *attr,
 	up_read(filesem);
 	return rc;
 }
-
 
 static ssize_t fsg_store_ro(struct device *dev, struct device_attribute *attr,
 			    const char *buf, size_t count)
@@ -762,7 +733,6 @@ static ssize_t fsg_store_file(struct device *dev, struct device_attribute *attr,
 	struct fsg_lun	*curlun = fsg_lun_from_dev(dev);
 	struct rw_semaphore	*filesem = dev_get_drvdata(dev);
 	int		rc = 0;
-
 
 #ifndef CONFIG_USB_ANDROID_MASS_STORAGE
 	/* disabled in android because we need to allow closing the backing file

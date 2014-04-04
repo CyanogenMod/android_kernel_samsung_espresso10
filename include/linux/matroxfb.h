@@ -39,4 +39,3 @@ enum matroxfb_ctrl_id {
 };
 
 #endif
-

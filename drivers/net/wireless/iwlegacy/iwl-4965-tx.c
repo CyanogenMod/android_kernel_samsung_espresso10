@@ -429,7 +429,6 @@ int iwl4965_tx_skb(struct iwl_priv *priv, struct sk_buff *skb)
 	/* Copy MAC header from skb into command buffer */
 	memcpy(tx_cmd->hdr, hdr, hdr_len);
 
-
 	/* Total # bytes to be transmitted */
 	len = (u16)skb->len;
 	tx_cmd->len = cpu_to_le16(len);
@@ -862,7 +861,6 @@ static int iwl4965_txq_agg_enable(struct iwl_priv *priv, int txq_id,
 
 	return 0;
 }
-
 
 int iwl4965_tx_agg_start(struct iwl_priv *priv, struct ieee80211_vif *vif,
 			struct ieee80211_sta *sta, u16 tid, u16 *ssn)

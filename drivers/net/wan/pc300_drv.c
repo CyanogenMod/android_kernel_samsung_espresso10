@@ -14,9 +14,9 @@ static const char rcsid[] =
  *	modify it under the terms of the GNU General Public License
  *	as published by the Free Software Foundation; either version
  *	2 of the License, or (at your option) any later version.
- *	
+ *
  *	Using tabstop = 4.
- * 
+ *
  * $Log: pc300_drv.c,v $
  * Revision 3.23  2002/03/20 13:58:40  henrique
  * Fixed ortographic mistakes
@@ -79,30 +79,30 @@ static const char rcsid[] =
  * PC300 initial CVS version (3.4.0-pre1)
  *
  * Revision 3.0.1.2 2001/06/08 daniela
- * Did some changes in the DMA programming implementation to avoid the 
+ * Did some changes in the DMA programming implementation to avoid the
  * occurrence of a SCA-II bug when CDA is accessed during a DMA transfer.
  *
  * Revision 3.0.1.1 2001/05/02 daniela
  * Added kernel 2.4.3 support.
- * 
+ *
  * Revision 3.0.1.0 2001/03/13 daniela, henrique
  * Added Frame Relay Support.
  * Driver now uses HDLC generic driver to provide protocol support.
- * 
+ *
  * Revision 3.0.0.8 2001/03/02 daniela
- * Fixed ram size detection. 
+ * Fixed ram size detection.
  * Changed SIOCGPC300CONF ioctl, to give hw information to pc300util.
- * 
+ *
  * Revision 3.0.0.7 2001/02/23 daniela
- * netif_stop_queue called before the SCA-II transmition commands in 
- * cpc_queue_xmit, and with interrupts disabled to avoid race conditions with 
+ * netif_stop_queue called before the SCA-II transmition commands in
+ * cpc_queue_xmit, and with interrupts disabled to avoid race conditions with
  * transmition interrupts.
  * Fixed falc_check_status for Unframed E1.
- * 
+ *
  * Revision 3.0.0.6 2000/12/13 daniela
  * Implemented pc300util support: trace, statistics, status and loopback
  * tests for the PC300 TE boards.
- * 
+ *
  * Revision 3.0.0.5 2000/12/12 ivan
  * Added support for Unframed E1.
  * Implemented monitor mode.
@@ -168,11 +168,11 @@ static const char rcsid[] =
  * SCA programming now covers X.21 as well.
  *
  * Revision 0.3.1.0 1999/11/18 ivan
- * Made X.25 support configuration-dependent (as it depends on external 
+ * Made X.25 support configuration-dependent (as it depends on external
  * modules to work).
  * Changed X.25-specific function names to comply with adopted convention.
  * Fixed typos in X.25 functions that would cause compile errors (Daniela).
- * Fixed bug in ch_config that would disable interrupts on a previously 
+ * Fixed bug in ch_config that would disable interrupts on a previously
  * enabled channel if the other channel on the same board was enabled later.
  *
  * Revision 0.3.0.0 1999/11/16 daniela
@@ -185,24 +185,24 @@ static const char rcsid[] =
  * Now using PCI clock instead of internal oscillator clock for the SCA.
  *
  * Revision 0.2.2.0 1999/11/10 ivan
- * Changed the *_dma_buf_check functions so that they would print only 
+ * Changed the *_dma_buf_check functions so that they would print only
  * the useful info instead of the whole buffer descriptor bank.
- * Fixed bug in cpc_queue_xmit that would eventually crash the system 
+ * Fixed bug in cpc_queue_xmit that would eventually crash the system
  * in case of a packet drop.
  * Implemented TX underrun handling.
  * Improved SCA fine tuning to boost up its performance.
  *
  * Revision 0.2.1.0 1999/11/03 ivan
- * Added functions *dma_buf_pt_init to allow independent initialization 
+ * Added functions *dma_buf_pt_init to allow independent initialization
  * of the next-descr. and DMA buffer pointers on the DMA descriptors.
- * Kernel buffer release and tbusy clearing is now done in the interrupt 
+ * Kernel buffer release and tbusy clearing is now done in the interrupt
  * handler.
  * Fixed bug in cpc_open that would cause an interface reopen to fail.
  * Added a protocol-specific code section in cpc_net_rx.
  * Removed printk level defs (they might be added back after the beta phase).
  *
  * Revision 0.2.0.0 1999/10/28 ivan
- * Revisited the code so that new protocols can be easily added / supported. 
+ * Revisited the code so that new protocols can be easily added / supported.
  *
  * Revision 0.1.0.1 1999/10/20 ivan
  * Mostly "esthetic" changes.
@@ -376,7 +376,7 @@ static void tx_dma_buf_check(pc300_t * card, int ch)
 	for (i = first_bd,
 	     ptdescr = (card->hw.rambase + TX_BD_ADDR(ch, first_bd));
 	     i != ((next_bd + 1) & (N_DMA_TX_BUF - 1));
-	     i = (i + 1) & (N_DMA_TX_BUF - 1), 
+	     i = (i + 1) & (N_DMA_TX_BUF - 1),
 		 ptdescr = (card->hw.rambase + TX_BD_ADDR(ch, i))) {
 		printk("\n CH%d TX%d: next=0x%x, ptbuf=0x%x, ST=0x%x, len=%d",
 		       ch, i, cpc_readl(&ptdescr->next),
@@ -449,7 +449,7 @@ static int dma_get_rx_frame_size(pc300_t * card, int ch)
 		rcvd += cpc_readw(&ptdescr->len);
 		first_bd = (first_bd + 1) & (N_DMA_RX_BUF - 1);
 		if ((status & DST_EOM) || (first_bd == card->chan[ch].rx_last_bd)) {
-			/* Return the size of a good frame or incomplete bad frame 
+			/* Return the size of a good frame or incomplete bad frame
 			* (dma_buf_read will clean the buffer descriptors in this case). */
 			return rcvd;
 		}
@@ -586,7 +586,7 @@ static void rx_dma_start(pc300_t * card, int ch)
 {
 	void __iomem *scabase = card->hw.scabase;
 	pc300ch_t *chan = (pc300ch_t *) & card->chan[ch];
-	
+
 	/* Start DMA */
 	cpc_writel(scabase + DRX_REG(CDAL, ch),
 		   RX_BD_ADDR(ch, chan->rx_first_bd));
@@ -661,11 +661,11 @@ static void falc_intr_enable(pc300_t * card, int ch)
 				   ~(IMR2_FAR | IMR2_LFA | IMR2_AIS | IMR2_LOS));
 			if (pfalc->multiframe_mode) {
 				cpc_writeb(falcbase + F_REG(IMR2, ch),
-					   cpc_readb(falcbase + F_REG(IMR2, ch)) & 
+					   cpc_readb(falcbase + F_REG(IMR2, ch)) &
 					   ~(IMR2_T400MS | IMR2_MFAR));
 			} else {
 				cpc_writeb(falcbase + F_REG(IMR2, ch),
-					   cpc_readb(falcbase + F_REG(IMR2, ch)) | 
+					   cpc_readb(falcbase + F_REG(IMR2, ch)) |
 					   IMR2_T400MS | IMR2_MFAR);
 			}
 		}
@@ -678,13 +678,13 @@ static void falc_open_timeslot(pc300_t * card, int ch, int timeslot)
 	u8 tshf = card->chan[ch].falc.offset;
 
 	cpc_writeb(falcbase + F_REG((ICB1 + (timeslot - tshf) / 8), ch),
-		   cpc_readb(falcbase + F_REG((ICB1 + (timeslot - tshf) / 8), ch)) & 
+		   cpc_readb(falcbase + F_REG((ICB1 + (timeslot - tshf) / 8), ch)) &
 		   	~(0x80 >> ((timeslot - tshf) & 0x07)));
 	cpc_writeb(falcbase + F_REG((TTR1 + timeslot / 8), ch),
-		   cpc_readb(falcbase + F_REG((TTR1 + timeslot / 8), ch)) | 
+		   cpc_readb(falcbase + F_REG((TTR1 + timeslot / 8), ch)) |
    			(0x80 >> (timeslot & 0x07)));
 	cpc_writeb(falcbase + F_REG((RTR1 + timeslot / 8), ch),
-		   cpc_readb(falcbase + F_REG((RTR1 + timeslot / 8), ch)) | 
+		   cpc_readb(falcbase + F_REG((RTR1 + timeslot / 8), ch)) |
 			(0x80 >> (timeslot & 0x07)));
 }
 
@@ -694,13 +694,13 @@ static void falc_close_timeslot(pc300_t * card, int ch, int timeslot)
 	u8 tshf = card->chan[ch].falc.offset;
 
 	cpc_writeb(falcbase + F_REG((ICB1 + (timeslot - tshf) / 8), ch),
-		   cpc_readb(falcbase + F_REG((ICB1 + (timeslot - tshf) / 8), ch)) | 
+		   cpc_readb(falcbase + F_REG((ICB1 + (timeslot - tshf) / 8), ch)) |
 		   (0x80 >> ((timeslot - tshf) & 0x07)));
 	cpc_writeb(falcbase + F_REG((TTR1 + timeslot / 8), ch),
-		   cpc_readb(falcbase + F_REG((TTR1 + timeslot / 8), ch)) & 
+		   cpc_readb(falcbase + F_REG((TTR1 + timeslot / 8), ch)) &
 		   ~(0x80 >> (timeslot & 0x07)));
 	cpc_writeb(falcbase + F_REG((RTR1 + timeslot / 8), ch),
-		   cpc_readb(falcbase + F_REG((RTR1 + timeslot / 8), ch)) & 
+		   cpc_readb(falcbase + F_REG((RTR1 + timeslot / 8), ch)) &
 		   ~(0x80 >> (timeslot & 0x07)));
 }
 
@@ -876,7 +876,7 @@ static void falc_init_t1(pc300_t * card, int ch)
 			cpc_writeb(falcbase + F_REG(FMR4, ch),
 				   cpc_readb(falcbase + F_REG(FMR4, ch)) | FMR4_FM1);
 			cpc_writeb(falcbase + F_REG(FMR1, ch),
-				   cpc_readb(falcbase + F_REG(FMR1, ch)) | 
+				   cpc_readb(falcbase + F_REG(FMR1, ch)) |
 				   FMR1_CRC | FMR1_EDL);
 			cpc_writeb(falcbase + F_REG(XDL1, ch), 0);
 			cpc_writeb(falcbase + F_REG(XDL2, ch), 0);
@@ -1078,7 +1078,7 @@ static void falc_init_e1(pc300_t * card, int ch)
 			cpc_writeb(falcbase + F_REG(FMR1, ch),
 				   cpc_readb(falcbase + F_REG(FMR1, ch)) & ~FMR1_XFS);
 			cpc_writeb(falcbase + F_REG(FMR2, ch),
-				   cpc_readb(falcbase + F_REG(FMR2, ch)) & 
+				   cpc_readb(falcbase + F_REG(FMR2, ch)) &
 				   ~(FMR2_RFS1 | FMR2_RFS0));
 			cpc_writeb(falcbase + F_REG(XSW, ch),
 				   cpc_readb(falcbase + F_REG(XSW, ch)) | XSW_XSIS);
@@ -1104,12 +1104,12 @@ static void falc_init_e1(pc300_t * card, int ch)
 			cpc_writeb(falcbase + F_REG(FMR1, ch),
 				   cpc_readb(falcbase + F_REG(FMR1, ch)) & ~FMR1_XFS);
 			cpc_writeb(falcbase + F_REG(FMR2, ch),
-				   cpc_readb(falcbase + F_REG(FMR2, ch)) & 
+				   cpc_readb(falcbase + F_REG(FMR2, ch)) &
 				   ~(FMR2_RFS1 | FMR2_RFS0));
 			cpc_writeb(falcbase + F_REG(XSP, ch),
 				   cpc_readb(falcbase + F_REG(XSP, ch)) | XSP_TT0);
 			cpc_writeb(falcbase + F_REG(XSW, ch),
-				   cpc_readb(falcbase + F_REG(XSW, ch)) & 
+				   cpc_readb(falcbase + F_REG(XSW, ch)) &
 				   ~(XSW_XTM|XSW_XY0|XSW_XY1|XSW_XY2|XSW_XY3|XSW_XY4));
 			cpc_writeb(falcbase + F_REG(TSWM, ch), 0xff);
 			cpc_writeb(falcbase + F_REG(FMR2, ch),
@@ -1256,9 +1256,9 @@ static void falc_check_status(pc300_t * card, int ch, unsigned char frs0)
 			if (!pfalc->blue_alarm) {
 				// EVENT_FALC_ABNORMAL
 				if (conf->media == IF_IFACE_T1) {
-					/* Disable this interrupt as it may otherwise interfere 
+					/* Disable this interrupt as it may otherwise interfere
 					 * with other working boards. */
-					cpc_writeb(falcbase + F_REG(IMR0, ch), 
+					cpc_writeb(falcbase + F_REG(IMR0, ch),
 						   cpc_readb(falcbase + F_REG(IMR0, ch))
 						   | IMR0_PDEN);
 				}
@@ -1300,7 +1300,7 @@ static void falc_check_status(pc300_t * card, int ch, unsigned char frs0)
 				if (!pfalc->blue_alarm && !pfalc->red_alarm) {
 					// EVENT_FALC_ABNORMAL
 					if (conf->media == IF_IFACE_T1) {
-						/* Disable this interrupt as it may otherwise 
+						/* Disable this interrupt as it may otherwise
 						 * interfere with other working boards. */
 						cpc_writeb(falcbase + F_REG(IMR0, ch),
 							   cpc_readb(falcbase + F_REG(IMR0, ch))
@@ -1327,7 +1327,7 @@ static void falc_check_status(pc300_t * card, int ch, unsigned char frs0)
 				    !pfalc->loss_fa) {
 					// EVENT_FALC_ABNORMAL
 					if (conf->media == IF_IFACE_T1) {
-						/* Disable this interrupt as it may otherwise 
+						/* Disable this interrupt as it may otherwise
 						 * interfere with other working boards. */
 						cpc_writeb(falcbase + F_REG(IMR0, ch),
 							   cpc_readb(falcbase + F_REG(IMR0, ch))
@@ -1459,7 +1459,7 @@ static void falc_remote_loop(pc300_t * card, int ch, int loop_on)
 	if (loop_on) {
 		// EVENT_FALC_ABNORMAL
 		if (conf->media == IF_IFACE_T1) {
-			/* Disable this interrupt as it may otherwise interfere with 
+			/* Disable this interrupt as it may otherwise interfere with
 			 * other working boards. */
 			cpc_writeb(falcbase + F_REG(IMR0, ch),
 				   cpc_readb(falcbase + F_REG(IMR0, ch)) | IMR0_PDEN);
@@ -1485,7 +1485,7 @@ static void falc_remote_loop(pc300_t * card, int ch, int loop_on)
 /*----------------------------------------------------------------------------
  * falc_local_loop
  *----------------------------------------------------------------------------
- * Description: The local loopback mode disconnects the receive lines 
+ * Description: The local loopback mode disconnects the receive lines
  *		RL1/RL2 resp. RDIP/RDIN from the receiver. Instead of the
  *		signals coming from the line the data provided by system
  *		interface are routed through the analog receiver back to
@@ -1517,7 +1517,7 @@ static void falc_local_loop(pc300_t * card, int ch, int loop_on)
  * Description: This routine allows to enable/disable payload loopback.
  *		When the payload loop is activated, the received 192 bits
  *		of payload data will be looped back to the transmit
- *		direction. The framing bits, CRC6 and DL bits are not 
+ *		direction. The framing bits, CRC6 and DL bits are not
  *		looped. They are originated by the FALC-LH transmitter.
  *----------------------------------------------------------------------------
  */
@@ -1531,7 +1531,7 @@ static void falc_payload_loop(pc300_t * card, int ch, int loop_on)
 	if (loop_on) {
 		// EVENT_FALC_ABNORMAL
 		if (conf->media == IF_IFACE_T1) {
-			/* Disable this interrupt as it may otherwise interfere with 
+			/* Disable this interrupt as it may otherwise interfere with
 			 * other working boards. */
 			cpc_writeb(falcbase + F_REG(IMR0, ch),
 				   cpc_readb(falcbase + F_REG(IMR0, ch)) | IMR0_PDEN);
@@ -1634,7 +1634,7 @@ static void falc_generate_loop_up_code(pc300_t * card, int ch)
 	}
 	// EVENT_FALC_ABNORMAL
 	if (conf->media == IF_IFACE_T1) {
-		/* Disable this interrupt as it may otherwise interfere with 
+		/* Disable this interrupt as it may otherwise interfere with
 		 * other working boards. */
 		cpc_writeb(falcbase + F_REG(IMR0, ch),
 			   cpc_readb(falcbase + F_REG(IMR0, ch)) | IMR0_PDEN);
@@ -1700,13 +1700,13 @@ static void falc_pattern_test(pc300_t * card, int ch, unsigned int activate)
 			cpc_writeb(falcbase + F_REG(IMR1, ch),
 				   cpc_readb(falcbase + F_REG(IMR1, ch)) | IMR1_LLBSC);
 		}
-		/* Activates generation and monitoring of PRBS 
+		/* Activates generation and monitoring of PRBS
 		 * (Pseudo Random Bit Sequence) */
 		cpc_writeb(falcbase + F_REG(LCR1, ch),
 			   cpc_readb(falcbase + F_REG(LCR1, ch)) | LCR1_EPRM | LCR1_XPRBS);
 	} else {
 		pfalc->prbs = 0;
-		/* Deactivates generation and monitoring of PRBS 
+		/* Deactivates generation and monitoring of PRBS
 		 * (Pseudo Random Bit Sequence) */
 		cpc_writeb(falcbase + F_REG(LCR1, ch),
 			   cpc_readb(falcbase+F_REG(LCR1,ch)) & ~(LCR1_EPRM | LCR1_XPRBS));
@@ -1822,7 +1822,7 @@ static int cpc_queue_xmit(struct sk_buff *skb, struct net_device *dev)
 		cpc_writeb(card->hw.scabase + M_REG(CMD, ch), CMD_TX_BUF_CLR);
 		if (card->hw.type == PC300_TE) {
 			cpc_writeb(card->hw.falcbase + card->hw.cpld_reg2,
-				   cpc_readb(card->hw.falcbase + card->hw.cpld_reg2) & 
+				   cpc_readb(card->hw.falcbase + card->hw.cpld_reg2) &
 				   			~(CPLD_REG2_FALC_LED1 << (2 * ch)));
 		}
 		CPC_UNLOCK(card, flags);
@@ -1890,11 +1890,11 @@ static void cpc_net_rx(struct net_device *dev)
 
 		if (!netif_carrier_ok(dev)) {
 			/* DCD must be OFF: drop packet */
-		    printk("%s : DCD is OFF - drop %d rx bytes\n", dev->name, rxb); 
+		    printk("%s : DCD is OFF - drop %d rx bytes\n", dev->name, rxb);
 			skb = NULL;
 		} else {
 			if (rxb > (dev->mtu + 40)) { /* add headers */
-				printk("%s : MTU exceeded %d\n", dev->name, rxb); 
+				printk("%s : MTU exceeded %d\n", dev->name, rxb);
 				skb = NULL;
 			} else {
 				skb = dev_alloc_skb(rxb);
@@ -1960,10 +1960,10 @@ static void cpc_net_rx(struct net_device *dev)
 /************************************/
 static void sca_tx_intr(pc300dev_t *dev)
 {
-	pc300ch_t *chan = (pc300ch_t *)dev->chan; 
-	pc300_t *card = (pc300_t *)chan->card; 
-	int ch = chan->channel; 
-	volatile pcsca_bd_t __iomem * ptdescr; 
+	pc300ch_t *chan = (pc300ch_t *)dev->chan;
+	pc300_t *card = (pc300_t *)chan->card;
+	int ch = chan->channel;
+	volatile pcsca_bd_t __iomem * ptdescr;
 
     /* Clean up descriptors from previous transmission */
 	ptdescr = (card->hw.rambase +
@@ -2029,7 +2029,7 @@ static void sca_intr(pc300_t * card)
 							}
 							cpc_tty_receive(d);
 							rx_dma_start(card, ch);
-						} else 
+						} else
 #endif
 						{
 							if ((cpc_readb(scabase + DSR_RX(ch)) & DSR_DE)) {
@@ -2100,7 +2100,7 @@ static void sca_intr(pc300_t * card)
 						}
 						if (card->hw.type == PC300_TE) {
 							cpc_writeb(card->hw.falcbase + card->hw.cpld_reg2,
-								   cpc_readb (card->hw.falcbase + 
+								   cpc_readb (card->hw.falcbase +
 										   card->hw.cpld_reg2) &
 								   ~ (CPLD_REG2_FALC_LED1 << (2 * ch)));
 						}
@@ -2186,7 +2186,7 @@ static void falc_t1_loop_detection(pc300_t *card, int ch, u8 frs1)
 		} else {
 			if ((frs1 & FRS1_LLBAD) &&
 			    ((cpc_readb(falcbase + F_REG(LCR1, ch)) & LCR1_EPRM) == 0)) {
-				// A Line Loop Back Activation signal detected  
+				// A Line Loop Back Activation signal detected
 				if (!pfalc->loop_active) {
 					falc_remote_loop(card, ch, 1);
 				}
@@ -2211,7 +2211,7 @@ static void falc_e1_loop_detection(pc300_t *card, int ch, u8 rsp)
 		} else {
 			if ((rsp & RSP_LLBAD) &&
 			    ((cpc_readb(falcbase + F_REG(LCR1, ch)) & LCR1_EPRM) == 0)) {
-				// A Line Loop Back Activation signal detected  
+				// A Line Loop Back Activation signal detected
 				if (!pfalc->loop_active) {
 					falc_remote_loop(card, ch, 1);
 				}
@@ -2286,7 +2286,7 @@ static void falc_e1_intr(pc300_t * card, int ch)
 			if (isr1 & FISR1_XMB) {
 				if ((pfalc->xmb_cause & 2) &&
 				    pfalc->multiframe_mode) {
-					if (cpc_readb (falcbase + F_REG(FRS0, ch)) & 
+					if (cpc_readb (falcbase + F_REG(FRS0, ch)) &
 									(FRS0_LOS | FRS0_AIS | FRS0_LFA)) {
 						cpc_writeb(falcbase + F_REG(XSP, ch),
 							   cpc_readb(falcbase + F_REG(XSP, ch))
@@ -2546,14 +2546,14 @@ static int cpc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 #endif
 			memcpy(&conf_aux.conf, conf, sizeof(pc300chconf_t));
 			memcpy(&conf_aux.hw, &card->hw, sizeof(pc300hw_t));
-			if (!arg || 
-				copy_to_user(arg, &conf_aux, sizeof(pc300conf_t))) 
+			if (!arg ||
+				copy_to_user(arg, &conf_aux, sizeof(pc300conf_t)))
 				return -EINVAL;
 			return 0;
 		case SIOCSPC300CONF:
 			if (!capable(CAP_NET_ADMIN))
 				return -EPERM;
-			if (!arg || 
+			if (!arg ||
 				copy_from_user(&conf_aux.conf, arg, sizeof(pc300chconf_t)))
 				return -EINVAL;
 			if (card->hw.cpld_id < 0x02 &&
@@ -2569,7 +2569,7 @@ static int cpc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 				}
 			} else {
 				if (conf_aux.conf.proto == 0xffff) {
-					if (conf->proto == PC300_PROTO_MLPPP){ 
+					if (conf->proto == PC300_PROTO_MLPPP){
 						/* ifdown interface */
 						cpc_close(dev);
 					}
@@ -2658,7 +2658,7 @@ static int cpc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 				if (card->hw.type != PC300_TE)
 					return -EINVAL;
 
-				if (!arg || 
+				if (!arg ||
 					copy_from_user(&pc300loop, arg, sizeof(pc300loopback_t)))
 						return -EINVAL;
 				switch (pc300loop.loop_type) {
@@ -2709,7 +2709,7 @@ static int cpc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 					return -EINVAL;
 				}
 
-				if (!arg || 
+				if (!arg ||
 					copy_from_user(&pc300patrntst,arg,sizeof(pc300patterntst_t)))
 						return -EINVAL;
 				if (pc300patrntst.patrntst_on == 2) {
@@ -2738,7 +2738,7 @@ static int cpc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 						ifr->ifr_settings.size = size;
 						return -ENOBUFS;
 					}
-	
+
 					if (copy_to_user(settings->ifs_ifsu.sync,
 							 &conf->phys_settings, size)) {
 						return -EFAULT;
@@ -2760,14 +2760,14 @@ static int cpc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 						return -ENOBUFS;
 					}
 
-					if (copy_from_user(&conf->phys_settings, 
+					if (copy_from_user(&conf->phys_settings,
 							   settings->ifs_ifsu.sync, size)) {
 						return -EFAULT;
 					}
 
 					if (conf->phys_settings.loopback) {
 						cpc_writeb(card->hw.scabase + M_REG(MD2, ch),
-							cpc_readb(card->hw.scabase + M_REG(MD2, ch)) | 
+							cpc_readb(card->hw.scabase + M_REG(MD2, ch)) |
 							MD2_LOOP_MIR);
 					}
 					conf->media = ifr->ifr_settings.type;
@@ -2789,14 +2789,14 @@ static int cpc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 						return -ENOBUFS;
 					}
 
-					if (copy_from_user(&conf->phys_settings, 
+					if (copy_from_user(&conf->phys_settings,
 							   settings->ifs_ifsu.te1, size)) {
 						return -EFAULT;
 					}/* Ignoring HDLC slot_map for a while */
-					
+
 					if (conf->phys_settings.loopback) {
 						cpc_writeb(card->hw.scabase + M_REG(MD2, ch),
-							cpc_readb(card->hw.scabase + M_REG(MD2, ch)) | 
+							cpc_readb(card->hw.scabase + M_REG(MD2, ch)) |
 							MD2_LOOP_MIR);
 					}
 					conf->media = ifr->ifr_settings.type;
@@ -2935,7 +2935,7 @@ static int ch_config(pc300dev_t * d)
 					   (TXS_DTRXC | TXS_IBRG | br));
 				if (clktype == CLOCK_INT) {
 					cpc_writeb(scabase + M_REG(TMCR, ch), tmc);
-					cpc_writeb(scabase + M_REG(RXS, ch), 
+					cpc_writeb(scabase + M_REG(RXS, ch),
 						   (RXS_IBRG | br));
 				} else {
 					cpc_writeb(scabase + M_REG(TMCR, ch), 1);
@@ -2950,10 +2950,10 @@ static int ch_config(pc300dev_t * d)
 			} else {
 				cpc_writeb(scabase + M_REG(TMCT, ch), 1);
 				if (clktype == CLOCK_EXT) {
-					cpc_writeb(scabase + M_REG(TXS, ch), 
+					cpc_writeb(scabase + M_REG(TXS, ch),
 						   TXS_DTRXC);
 				} else {
-					cpc_writeb(scabase + M_REG(TXS, ch), 
+					cpc_writeb(scabase + M_REG(TXS, ch),
 						   TXS_DTRXC|TXS_RCLK);
 				}
 	    			cpc_writeb(scabase + M_REG(TMCR, ch), 1);
@@ -3674,4 +3674,3 @@ MODULE_DESCRIPTION("Cyclades-PC300 cards driver");
 MODULE_AUTHOR(  "Author: Ivan Passos <ivan@cyclades.com>\r\n"
                 "Maintainer: PC300 Maintainer <pc300@cyclades.com");
 MODULE_LICENSE("GPL");
-

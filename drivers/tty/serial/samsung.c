@@ -146,7 +146,6 @@ static void s3c24xx_serial_start_tx(struct uart_port *port)
 	}
 }
 
-
 static void s3c24xx_serial_stop_rx(struct uart_port *port)
 {
 	struct s3c24xx_uart_port *ourport = to_ourport(port);
@@ -185,7 +184,6 @@ static int s3c24xx_serial_rx_fifocnt(struct s3c24xx_uart_port *ourport,
 
 	return (ufstat & info->rx_fifomask) >> info->rx_fifoshift;
 }
-
 
 /* ? - where has parity gone?? */
 #define S3C2410_UERSTAT_PARITY (0x1000)
@@ -389,7 +387,6 @@ static void s3c24xx_serial_shutdown(struct uart_port *port)
 	}
 }
 
-
 static int s3c24xx_serial_startup(struct uart_port *port)
 {
 	struct s3c24xx_uart_port *ourport = to_ourport(port);
@@ -477,7 +474,6 @@ static void s3c24xx_serial_pm(struct uart_port *port, unsigned int level,
  * pick the closest one and select that.
  *
 */
-
 
 #define MAX_CLKS (8)
 
@@ -849,7 +845,6 @@ s3c24xx_serial_verify_port(struct uart_port *port, struct serial_struct *ser)
 	return 0;
 }
 
-
 #ifdef CONFIG_SERIAL_SAMSUNG_CONSOLE
 
 static struct console s3c24xx_serial_console;
@@ -878,7 +873,6 @@ static struct uart_ops s3c24xx_serial_ops = {
 	.config_port	= s3c24xx_serial_config_port,
 	.verify_port	= s3c24xx_serial_verify_port,
 };
-
 
 static struct uart_driver s3c24xx_uart_drv = {
 	.owner		= THIS_MODULE,
@@ -959,7 +953,6 @@ static inline int s3c24xx_serial_resetport(struct uart_port *port,
 
 	return (info->reset_port)(port, cfg);
 }
-
 
 #ifdef CONFIG_CPU_FREQ
 
@@ -1109,7 +1102,7 @@ static int s3c24xx_serial_init_port(struct s3c24xx_uart_port *ourport,
 		ourport->rx_irq = ret;
 		ourport->tx_irq = ret + 1;
 	}
-	
+
 	ret = platform_get_irq(platdev, 1);
 	if (ret > 0)
 		ourport->tx_irq = ret;
@@ -1364,7 +1357,6 @@ s3c24xx_serial_get_options(struct uart_port *port, int *baud,
 			rate = clk_get_rate(clk) / clksrc.divisor;
 		else
 			rate = 1;
-
 
 		*baud = rate / (16 * (ubrdiv + 1));
 		dbg("calculated baud %d\n", *baud);

@@ -2,13 +2,13 @@
  * BT-AMP support routines
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -44,7 +44,6 @@
 
 #include <dhd_bta.h>
 
-
 #ifdef SEND_HCI_CMD_VIA_IOCTL
 #define BTA_HCI_CMD_MAX_LEN HCI_CMD_PREAMBLE_SIZE + HCI_CMD_DATA_SIZE
 
@@ -65,7 +64,6 @@ dhd_bta_docmd(dhd_pub_t *pub, void *cmd_buf, uint cmd_len)
 
 	len = bcm_mkiovar("HCI_cmd",
 		(char *)cmd, (uint)cmd->plen + HCI_CMD_PREAMBLE_SIZE, (char *)buf, len);
-
 
 	memset(&ioc, 0, sizeof(ioc));
 
@@ -194,7 +192,6 @@ dhd_bta_docmd(dhd_pub_t *pub, void *cmd_buf, uint cmd_len)
 		return BCME_NOMEM;
 	}
 
-
 	/* intercept and handle the HCI cmd locally */
 	if ((status = _dhd_bta_docmd(pub, cmd)) > 0)
 		return 0;
@@ -247,7 +244,6 @@ dhd_bta_tx_hcidata(dhd_pub_t *pub, void *data_buf, uint data_len)
 		DHD_ERROR(("dhd_bta_tx_hcidata: out of memory\n"));
 		return BCME_NOMEM;
 	}
-
 
 	/* copy in HCI ACL data header and HCI ACL data */
 	PKTPULL(osh, p, pub->hdrlen + RFC1042_HDR_LEN);

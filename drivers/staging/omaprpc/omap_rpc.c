@@ -30,7 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #include "omap_rpc_internal.h"
 
 static struct class *omaprpc_class;
@@ -1241,4 +1240,3 @@ MODULE_AUTHOR("Erik Rainey <erik.rainey@ti.com>");
 MODULE_DESCRIPTION("OMAP Remote Procedure Call Driver");
 MODULE_ALIAS("rpmsg:omaprpc");
 MODULE_LICENSE("GPL v2");
-

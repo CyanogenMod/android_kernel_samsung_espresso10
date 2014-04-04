@@ -34,7 +34,6 @@ void paging_init(void);
 
 extern void set_pmd_pfn(unsigned long, unsigned long, pgprot_t);
 
-
 /*
  * Define this if things work differently on an i386 and an i486:
  * it will (on an i486) warn about kernel memory accesses that are

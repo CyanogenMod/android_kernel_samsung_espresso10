@@ -108,7 +108,6 @@ int s5p64x0_armclk_set_rate(struct clk *clk, unsigned long rate)
 	if (round_tmp == cur_rate)
 		return 0;
 
-
 	for (iter = 0 ; iter < ARRAY_SIZE(clock_table) ; iter++) {
 		if (round_tmp == clock_table[iter][0])
 			break;
@@ -128,7 +127,6 @@ int s5p64x0_armclk_set_rate(struct clk *clk, unsigned long rate)
 				~(S5P64X0_CLKDIV0_HCLK_MASK);
 		clk_div0_tmp |= clock_table[iter][2];
 		__raw_writel(clk_div0_tmp, ARM_CLK_DIV);
-
 
 	} else {
 		/* Frequency Up */

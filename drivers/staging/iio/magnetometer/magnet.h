@@ -1,4 +1,3 @@
-
 #include "../sysfs.h"
 
 /* Magnetometer types of attribute */

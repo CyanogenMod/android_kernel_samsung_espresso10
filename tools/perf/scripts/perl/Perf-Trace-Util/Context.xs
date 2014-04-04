@@ -39,4 +39,3 @@ common_flags(context)
 int
 common_lock_depth(context)
 	struct scripting_context * context
-

@@ -101,7 +101,6 @@ static inline int prio_tree_right_empty(const struct prio_tree_node *node)
 	return node->right == node;
 }
 
-
 struct prio_tree_node *prio_tree_replace(struct prio_tree_root *root,
                 struct prio_tree_node *old, struct prio_tree_node *node);
 struct prio_tree_node *prio_tree_insert(struct prio_tree_root *root,

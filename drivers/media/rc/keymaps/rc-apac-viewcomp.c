@@ -29,7 +29,6 @@ static struct rc_map_table apac_viewcomp[] = {
 	{ 0x17, KEY_LAST },		/* +100 */
 	{ 0x0a, KEY_LIST },		/* recall */
 
-
 	{ 0x1c, KEY_TUNER },		/* TV/FM */
 	{ 0x15, KEY_SEARCH },		/* scan */
 	{ 0x12, KEY_POWER },		/* power */

@@ -350,7 +350,6 @@ static int init_rar_params(struct rar_device *rar)
 		if (result != 0)
 			return result;
 
-
 		/*
 		* Only the upper 22 bits of the RAR addresses are
 		* stored in their corresponding RAR registers so we

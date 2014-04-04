@@ -354,7 +354,6 @@ int ngene_command(struct ngene *dev, struct ngene_command *com)
 	return result;
 }
 
-
 static int ngene_command_load_firmware(struct ngene *dev,
 				       u8 *ngene_fw, u32 size)
 {
@@ -387,7 +386,6 @@ static int ngene_command_load_firmware(struct ngene *dev,
 
 	return ngene_command(dev, &com);
 }
-
 
 static int ngene_command_config_buf(struct ngene *dev, u8 config)
 {
@@ -432,7 +430,6 @@ int ngene_command_gpio_set(struct ngene *dev, u8 select, u8 level)
 
 	return ngene_command(dev, &com);
 }
-
 
 /*
  02000640 is sample on rising edge.
@@ -517,7 +514,6 @@ void FillTSBuffer(void *Buffer, int Length, u32 Flags)
 		Length -= 188;
 	}
 }
-
 
 static void flush_buffers(struct ngene_channel *chan)
 {
@@ -776,7 +772,6 @@ void set_transfer(struct ngene_channel *chan, int state)
 		spin_unlock_irq(&chan->state_lock);
 	}
 }
-
 
 /****************************************************************************/
 /* nGene hardware init and release functions ********************************/
@@ -1071,7 +1066,6 @@ static u32 Buffer2Sizes[MAX_STREAM] = {
 	0
 };
 
-
 static int AllocCommonBuffers(struct ngene *dev)
 {
 	int status = 0, i;
@@ -1343,7 +1337,6 @@ static int ngene_buffer_config(struct ngene *dev)
 	}
 	return stat;
 }
-
 
 static int ngene_start(struct ngene *dev)
 {
@@ -1676,7 +1669,6 @@ int __devinit ngene_probe(struct pci_dev *pci_dev,
 	stat = ngene_buffer_config(dev);
 	if (stat < 0)
 		goto fail1;
-
 
 	dev->i2c_current_bus = -1;
 

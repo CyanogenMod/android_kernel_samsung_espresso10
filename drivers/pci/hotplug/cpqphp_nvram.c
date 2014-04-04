@@ -39,7 +39,6 @@
 #include "cpqphp.h"
 #include "cpqphp_nvram.h"
 
-
 #define ROM_INT15_PHY_ADDR		0x0FF859
 #define READ_EV				0xD8A4
 #define WRITE_EV			0xD8A5
@@ -69,7 +68,6 @@ struct all_reg {
 	struct register_foo eflags_reg;
 } __attribute__ ((packed));
 
-
 struct ev_hrt_header {
 	u8 Version;
 	u8 num_of_ctrl;
@@ -87,7 +85,6 @@ struct ev_hrt_ctrl {
 	u8 next;
 };
 
-
 static u8 evbuffer_init;
 static u8 evbuffer_length;
 static u8 evbuffer[1024];
@@ -97,7 +94,6 @@ static void __iomem *compaq_int15_entry_point;
 /* lock for ordering int15_bios_call() */
 static spinlock_t int15_lock;
 
-
 /* This is a series of function that deals with
  * setting & getting the hotplug resource table in some environment variable.
  */
@@ -106,7 +102,6 @@ static spinlock_t int15_lock;
  * We really shouldn't be doing this unless there is a _very_ good reason to!!!
  * greg k-h
  */
-
 
 static u32 add_byte( u32 **p_buffer, u8 value, u32 *used, u32 *avail)
 {
@@ -122,7 +117,6 @@ static u32 add_byte( u32 **p_buffer, u8 value, u32 *used, u32 *avail)
 	return(0);
 }
 
-
 static u32 add_dword( u32 **p_buffer, u32 value, u32 *used, u32 *avail)
 {
 	if ((*used + 4) > *avail)
@@ -133,7 +127,6 @@ static u32 add_dword( u32 **p_buffer, u32 value, u32 *used, u32 *avail)
 	*used+=4;
 	return(0);
 }
-
 
 /*
  * check_for_compaq_ROM
@@ -165,7 +158,6 @@ static int check_for_compaq_ROM (void __iomem *rom_start)
 	return result;
 }
 
-
 static u32 access_EV (u16 operation, u8 *ev_name, u8 *buffer, u32 *buf_size)
 {
 	unsigned long flags;
@@ -191,7 +183,6 @@ static u32 access_EV (u16 operation, u8 *ev_name, u8 *buffer, u32 *buf_size)
 
 	return((ret_val & 0xFF00) >> 8);
 }
-
 
 /*
  * load_HRT
@@ -227,7 +218,6 @@ static int load_HRT (void __iomem *rom_start)
 
 	return rc;
 }
-
 
 /*
  * store_HRT
@@ -425,7 +415,6 @@ static u32 store_HRT (void __iomem *rom_start)
 	return(0);
 }
 
-
 void compaq_nvram_init (void __iomem *rom_start)
 {
 	if (rom_start) {
@@ -436,7 +425,6 @@ void compaq_nvram_init (void __iomem *rom_start)
 	/* initialize our int15 lock */
 	spin_lock_init(&int15_lock);
 }
-
 
 int compaq_nvram_load (void __iomem *rom_start, struct controller *ctrl)
 {
@@ -652,7 +640,6 @@ int compaq_nvram_load (void __iomem *rom_start, struct controller *ctrl)
 	return 0;
 }
 
-
 int compaq_nvram_store (void __iomem *rom_start)
 {
 	int rc = 1;
@@ -668,4 +655,3 @@ int compaq_nvram_store (void __iomem *rom_start)
 	}
 	return rc;
 }
-

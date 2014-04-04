@@ -1,4 +1,3 @@
-
 /*
  * Linux driver for Disk-On-Chip Millennium
  * (c) 1999 Machine Vision Holdings, Inc.

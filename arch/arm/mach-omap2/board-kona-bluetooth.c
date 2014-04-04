@@ -331,7 +331,6 @@ static void __exit bcm4334_bluetooth_exit(void)
 	platform_driver_unregister(&bcm4334_bluetooth_platform_driver);
 }
 
-
 module_init(bcm4334_bluetooth_init);
 module_exit(bcm4334_bluetooth_exit);
 

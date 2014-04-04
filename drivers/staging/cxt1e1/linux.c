@@ -141,7 +141,6 @@ getuserbychan (int channum)
     return ch ? ch->user : 0;
 }
 
-
 char       *
 get_hdlc_name (hdlc_device * hdlc)
 {
@@ -150,7 +149,6 @@ get_hdlc_name (hdlc_device * hdlc)
 
     return dev->name;
 }
-
 
 static      status_t
 mkret (int bsd)
@@ -176,7 +174,6 @@ mkret (int bsd)
  *   mch_t -> struct work_struct ch_work;  (statically allocated using ???)
  *
  ***/
-
 
 /*
  * Called by the start transmit routine when a channel TX_ENABLE is to be
@@ -264,7 +261,6 @@ c4_linux_interrupt (int irq, void *dev_instance)
     return musycc_intr_th_handler(netdev_priv(ndev));
 }
 
-
 #ifdef CONFIG_SBE_PMCC4_NCOMM
 irqreturn_t
 c4_ebus_interrupt (int irq, void *dev_instance)
@@ -275,14 +271,12 @@ c4_ebus_interrupt (int irq, void *dev_instance)
 }
 #endif
 
-
 static int
 void_open (struct net_device * ndev)
 {
     pr_info("%s: trying to open master device !\n", ndev->name);
     return -1;
 }
-
 
 STATIC int
 chan_open (struct net_device * ndev)
@@ -303,7 +297,6 @@ chan_open (struct net_device * ndev)
     return 0;                       /* no error = success */
 }
 
-
 STATIC int
 chan_close (struct net_device * ndev)
 {
@@ -317,13 +310,11 @@ chan_close (struct net_device * ndev)
     return 0;
 }
 
-
 STATIC int
 chan_dev_ioctl (struct net_device * dev, struct ifreq * ifr, int cmd)
 {
     return hdlc_ioctl (dev, ifr, cmd);
 }
-
 
 STATIC int
 chan_attach_noop (struct net_device * ndev, unsigned short foo_1, unsigned short foo_2)
@@ -331,7 +322,6 @@ chan_attach_noop (struct net_device * ndev, unsigned short foo_1, unsigned short
     return 0;                   /* our driver has nothing to do here, show's
                                  * over, go home */
 }
-
 
 STATIC struct net_device_stats *
 chan_get_stats (struct net_device * ndev)
@@ -385,13 +375,11 @@ chan_get_stats (struct net_device * ndev)
     return nstats;
 }
 
-
 static ci_t *
 get_ci_by_dev (struct net_device * ndev)
 {
     return (ci_t *)(netdev_priv(ndev));
 }
-
 
 STATIC int
 c4_linux_xmit (struct sk_buff * skb, struct net_device * ndev)
@@ -505,7 +493,6 @@ create_chan (struct net_device * ndev, ci_t * ci,
     }
     return dev;
 }
-
 
 /* the idea here is to get port information and pass it back (using pointer) */
 STATIC      status_t
@@ -848,7 +835,6 @@ c4_ioctl (struct net_device * ndev, struct ifreq * ifr, int cmd)
         }           u;
     }           arg;
 
-
     if (!capable (CAP_SYS_ADMIN))
         return -EPERM;
     if (cmd != SIOCDEVPRIVATE + 15)
@@ -992,7 +978,6 @@ c4_add_dev (hdw_info_t * hi, int brdno, unsigned long f0, unsigned long f1,
     ci->ci_musycc_isr_tq.data = ci;
 #endif
 
-
     if (register_netdev (ndev) ||
         (c4_init (ci, (u_char *) f0, (u_char *) f1) != SBE_DRVR_SUCCESS))
     {
@@ -1089,7 +1074,6 @@ c4_add_dev (hdw_info_t * hi, int brdno, unsigned long f0, unsigned long f1,
     tasklet_enable (&ci->ci_musycc_isr_tasklet);
 #endif
 
-
     if ((error_flag = c4_init2 (ci)) != SBE_DRVR_SUCCESS)
     {
 #ifdef CONFIG_PROC_FS
@@ -1141,7 +1125,6 @@ c4_mod_init (void)
     return 0;                       /* installation success */
 }
 
-
  /*
   * find any still allocated hdlc registrations and unregister via call to
   * do_deluser()
@@ -1169,7 +1152,6 @@ cleanup_hdlc (void)
         }
     }
 }
-
 
 STATIC void __exit
 c4_mod_remove (void)

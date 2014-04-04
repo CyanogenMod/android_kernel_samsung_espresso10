@@ -30,7 +30,6 @@
 #include "hyperv.h"
 #include "hyperv_net.h"
 
-
 enum rndis_device_state {
 	RNDIS_DEV_UNINITIALIZED = 0,
 	RNDIS_DEV_INITIALIZING,
@@ -72,8 +71,6 @@ struct rndis_request {
 static void rndis_filter_send_completion(void *ctx);
 
 static void rndis_filter_send_request_completion(void *ctx);
-
-
 
 static struct rndis_device *get_rndis_device(void)
 {
@@ -568,7 +565,6 @@ Exit:
 	return ret;
 }
 
-
 static int rndis_filter_init_device(struct rndis_device *dev)
 {
 	struct rndis_request *request;
@@ -598,7 +594,6 @@ static int rndis_filter_init_device(struct rndis_device *dev)
 		dev->state = RNDIS_DEV_UNINITIALIZED;
 		goto Cleanup;
 	}
-
 
 	t = wait_for_completion_timeout(&request->wait_event, 5*HZ);
 
@@ -704,7 +699,6 @@ int rndis_filte_device_add(struct hv_device *dev,
 		return ret;
 	}
 
-
 	/* Initialize the rndis device */
 	netDevice = dev->ext;
 
@@ -756,7 +750,6 @@ int rndis_filter_device_remove(struct hv_device *dev)
 
 	return 0;
 }
-
 
 int rndis_filter_open(struct hv_device *dev)
 {
@@ -840,7 +833,6 @@ static void rndis_filter_send_completion(void *ctx)
 	/* Pass it back to the original handler */
 	filterPacket->completion(filterPacket->completion_ctx);
 }
-
 
 static void rndis_filter_send_request_completion(void *ctx)
 {

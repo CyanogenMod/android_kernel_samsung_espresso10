@@ -15,7 +15,6 @@
  * (at your option) any later version.
  */
 
-
 struct m32r_sio_probe {
 	struct module	*owner;
 	int		(*pci_init_one)(struct pci_dev *dev);

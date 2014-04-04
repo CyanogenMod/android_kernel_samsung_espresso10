@@ -16,9 +16,7 @@
 #include <linux/ctype.h>
 #include <linux/slab.h>
 
-
 static int(*get_fallback_sprom)(struct ssb_bus *dev, struct ssb_sprom *out);
-
 
 static int sprom2hex(const u16 *sprom, char *buf, size_t buf_len,
 		     size_t sprom_size_words)

@@ -91,7 +91,6 @@ static void notify_netlink_uevent(const char *iface, struct idletimer_tg *timer)
 	kobject_uevent_env(idletimer_tg_kobj, KOBJ_CHANGE, envp);
 	return;
 
-
 }
 
 static

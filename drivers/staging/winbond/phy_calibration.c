@@ -15,7 +15,6 @@
 #include "wb35reg_f.h"
 #include "core.h"
 
-
 /****************** DEBUG CONSTANT AND MACRO SECTION ************************/
 
 /****************** LOCAL CONSTANT AND MACRO SECTION ************************/
@@ -315,7 +314,6 @@ static unsigned char hal_set_dxx_reg(struct hw_data *pHwData, u16 number, u32 va
 }
 #define hw_set_dxx_reg(_A, _B, _C) hal_set_dxx_reg(_A, _B, (u32)_C)
 
-
 void _reset_rx_cal(struct hw_data *phw_data)
 {
 	u32     val;
@@ -330,10 +328,7 @@ void _reset_rx_cal(struct hw_data *phw_data)
 	hw_set_dxx_reg(phw_data, 0x54, val);
 }
 
-
 /**************for winbond calibration*********/
-
-
 
 /**********************************************/
 void _rxadc_dc_offset_cancellation_winbond(struct hw_data *phw_data, u32 frequency)
@@ -664,7 +659,6 @@ void _txqdac_dc_offset_cacellation_winbond(struct hw_data *phw_data)
 	hw_set_dxx_reg(phw_data, 0x5C, reg_dc_cancel);
 	PHY_DEBUG(("[CAL]    DC_CANCEL (write) = 0x%08X\n", reg_dc_cancel));
 
-
 	/* f. */
 	reg_mode_ctrl &= ~MASK_CALIB_START;
 	hw_set_dxx_reg(phw_data, REG_MODE_CTRL, reg_mode_ctrl);
@@ -777,7 +771,6 @@ u8 _tx_iq_calibration_loop_winbond(struct hw_data *phw_data,
 
 		iqcal_tone_i = iqcal_tone_i_avg;
 		iqcal_tone_q = iqcal_tone_q_avg;
-
 
 		rot_i_b = (iqcal_tone_i * iqcal_tone_i0 +
 				   iqcal_tone_q * iqcal_tone_q0) / 1024;
@@ -1035,7 +1028,6 @@ void _tx_iq_calibration_winbond(struct hw_data *phw_data)
 					hw_set_dxx_reg(phw_data, 0x3C, val);
 				}
 
-
 				result = _tx_iq_calibration_loop_winbond(phw_data, 700, 500);
 
 				if (result > 0) {
@@ -1092,7 +1084,6 @@ void _tx_iq_calibration_winbond(struct hw_data *phw_data)
 	PHY_DEBUG(("[CAL]       tx_cal_reg[2] = %d\n", tx_cal_reg[2]));
 	PHY_DEBUG(("[CAL]       tx_cal_reg[3] = %d\n", tx_cal_reg[3]));
 #endif
-
 
 	/*
 	 * for test - BEN
@@ -1190,7 +1181,6 @@ u8 _rx_iq_calibration_loop_winbond(struct hw_data *phw_data, u16 factor, u32 fre
 				iqcal_tone_q_avg = (iqcal_tone_q_avg*(capture_time-1) + iqcal_tone_q)/capture_time;
 			}
 		}
-
 
 		iqcal_image_i = iqcal_image_i_avg;
 		iqcal_image_q = iqcal_image_q_avg;
@@ -1526,7 +1516,6 @@ unsigned char adjust_TXVGA_for_iq_mag(struct hw_data *phw_data)
 	s32     iq_mag_0_tx;
 	u8	reg_state;
 	int	current_txvga;
-
 
 	reg_state = 0;
 	for (init_txvga = 0; init_txvga < 10; init_txvga++) {

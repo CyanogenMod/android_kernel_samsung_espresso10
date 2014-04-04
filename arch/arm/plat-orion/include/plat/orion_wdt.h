@@ -13,6 +13,4 @@ struct orion_wdt_platform_data {
 	u32	tclk;		/* no <linux/clk.h> support yet */
 };
 
-
 #endif
-

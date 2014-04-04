@@ -125,7 +125,6 @@ static void print_overflow_msg(const char *func, const struct xdr_stream *xdr)
 		func, xdr->end - xdr->p);
 }
 
-
 /*
  * Encode/decode NFSv3 basic data types
  *
@@ -819,7 +818,6 @@ static void encode_diropargs3(struct xdr_stream *xdr, const struct nfs_fh *fh,
 	encode_nfs_fh3(xdr, fh);
 	encode_filename3(xdr, name, length);
 }
-
 
 /*
  * NFSv3 XDR encode functions

@@ -55,7 +55,6 @@ struct at_dma_slave {
 	u32			ctrla;
 };
 
-
 /* Platform-configurable bits in CFG */
 #define	ATC_SRC_PER(h)		(0xFU & (h))	/* Channel src rq associated with periph handshaking ifc h */
 #define	ATC_DST_PER(h)		((0xFU & (h)) <<  4)	/* Channel dst rq associated with periph handshaking ifc h */

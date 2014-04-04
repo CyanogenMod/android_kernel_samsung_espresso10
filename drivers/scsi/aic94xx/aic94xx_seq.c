@@ -186,7 +186,6 @@ static int asd_seq_unpause_lseq(struct asd_ha_struct *asd_ha, int lseq)
 	return 0;
 }
 
-
 /* ---------- Downloading CSEQ/LSEQ microcode ---------- */
 
 static int asd_verify_cseq(struct asd_ha_struct *asd_ha, const u8 *_prog,
@@ -1093,7 +1092,6 @@ static void asd_init_lseq_cio(struct asd_ha_struct *asd_ha, int lseq)
 	asd_write_reg_byte(asd_ha, LmM1STPALIGN(lseq), STP_ALIGN_DEFAULT);
 }
 
-
 /**
  * asd_post_init_cseq -- clear CSEQ Mode n Int. status and Response mailbox
  * @asd_ha: pointer to host adapter struct
@@ -1197,7 +1195,6 @@ static void asd_seq_setup_seqs(struct asd_ha_struct *asd_ha)
 		asd_init_lseq_cio(asd_ha, lseq);
 	asd_post_init_cseq(asd_ha);
 }
-
 
 /**
  * asd_seq_start_cseq -- start the central sequencer, CSEQ

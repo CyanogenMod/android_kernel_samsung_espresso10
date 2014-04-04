@@ -61,7 +61,6 @@ MODULE_DESCRIPTION("Davicom PHY driver");
 MODULE_AUTHOR("Andy Fleming");
 MODULE_LICENSE("GPL");
 
-
 #define DM9161_DELAY 1
 static int dm9161_config_intr(struct phy_device *phydev)
 {

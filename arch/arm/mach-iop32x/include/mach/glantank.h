@@ -9,5 +9,4 @@
 
 #define GLANTANK_UART		0xfe800000	/* UART */
 
-
 #endif

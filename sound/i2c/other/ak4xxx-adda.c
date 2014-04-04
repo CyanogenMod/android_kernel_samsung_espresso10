@@ -130,7 +130,6 @@ void snd_akm4xxx_reset(struct snd_akm4xxx *ak, int state)
 
 EXPORT_SYMBOL(snd_akm4xxx_reset);
 
-
 /*
  * Volume conversion table for non-linear volumes
  * from -63.5dB (mute) to 0dB step 0.5dB
@@ -498,7 +497,7 @@ static int snd_akm4xxx_deemphasis_put(struct snd_kcontrol *kcontrol,
 	int shift = AK_GET_SHIFT(kcontrol->private_value);
 	unsigned char nval = ucontrol->value.enumerated.item[0] & 3;
 	int change;
-	
+
 	nval = (nval << shift) |
 		(snd_akm4xxx_get(ak, chip, addr) & ~(3 << shift));
 	change = snd_akm4xxx_get(ak, chip, addr) != nval;
@@ -637,7 +636,7 @@ static int build_dac_controls(struct snd_akm4xxx *ak)
 	mixer_ch = 0;
 	for (idx = 0; idx < ak->num_dacs; ) {
 		/* mute control for Revolution 7.1 - AK4381 */
-		if (ak->type == SND_AK4381 
+		if (ak->type == SND_AK4381
 				&&  ak->dac_info[mixer_ch].switch_name) {
 			memset(&knew, 0, sizeof(knew));
 			knew.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
@@ -785,7 +784,7 @@ static int build_adc_controls(struct snd_akm4xxx *ak)
 			return err;
 
 		if (ak->type == SND_AK5365 && (idx % 2) == 0) {
-			if (! ak->adc_info || 
+			if (! ak->adc_info ||
 			    ! ak->adc_info[mixer_ch].switch_name) {
 				knew.name = "Capture Switch";
 				knew.index = mixer_ch + ak->idx_offset * 2;
@@ -935,10 +934,10 @@ static int __init alsa_akm4xxx_module_init(void)
 {
 	return 0;
 }
-        
+
 static void __exit alsa_akm4xxx_module_exit(void)
 {
 }
-        
+
 module_init(alsa_akm4xxx_module_init)
 module_exit(alsa_akm4xxx_module_exit)

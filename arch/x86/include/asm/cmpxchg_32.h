@@ -262,7 +262,6 @@ static inline unsigned long cmpxchg_386(volatile void *ptr, unsigned long old,
 		       : "memory");				\
 	__ret; })
 
-
 #define cmpxchg64_local(ptr, o, n)				\
 ({								\
 	__typeof__(*(ptr)) __ret;				\

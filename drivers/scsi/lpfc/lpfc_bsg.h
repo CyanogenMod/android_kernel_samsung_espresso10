@@ -59,7 +59,6 @@ struct send_mgmt_resp {
 	uint32_t tag;
 };
 
-
 #define INTERNAL_LOOP_BACK 0x1 /* adapter short cuts the loop internally */
 #define EXTERNAL_LOOP_BACK 0x2 /* requires an external loopback plug */
 

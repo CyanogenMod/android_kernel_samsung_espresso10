@@ -388,7 +388,6 @@ static int saa7146_i2c_xfer(struct i2c_adapter* adapter, struct i2c_msg *msg, in
 	return saa7146_i2c_transfer(dev, msg, num, adapter->retries);
 }
 
-
 /*****************************************************************************/
 /* i2c-adapter helper functions                                              */
 

@@ -54,7 +54,7 @@ static void snd_seq_timer_set_tick_resolution(struct snd_seq_timer *tmr)
 struct snd_seq_timer *snd_seq_timer_new(void)
 {
 	struct snd_seq_timer *tmr;
-	
+
 	tmr = kzalloc(sizeof(*tmr), GFP_KERNEL);
 	if (tmr == NULL) {
 		snd_printd("malloc failed for snd_seq_timer_new() \n");
@@ -64,10 +64,10 @@ struct snd_seq_timer *snd_seq_timer_new(void)
 
 	/* reset setup to defaults */
 	snd_seq_timer_defaults(tmr);
-	
+
 	/* reset time */
 	snd_seq_timer_reset(tmr);
-	
+
 	return tmr;
 }
 
@@ -124,7 +124,6 @@ void snd_seq_timer_reset(struct snd_seq_timer * tmr)
 
 	spin_unlock_irqrestore(&tmr->lock, flags);
 }
-
 
 /* called by timer interrupt routine. the period time since previous invocation is passed */
 static void snd_seq_timer_interrupt(struct snd_timer_instance *timeri,
@@ -290,10 +289,10 @@ int snd_seq_timer_open(struct snd_seq_queue *q)
 			tid.device = SNDRV_TIMER_GLOBAL_SYSTEM;
 			err = snd_timer_open(&t, str, &tid, q->queue);
 		}
-		if (err < 0) {
-			snd_printk(KERN_ERR "seq fatal error: cannot create timer (%i)\n", err);
-			return err;
-		}
+	}
+	if (err < 0) {
+		snd_printk(KERN_ERR "seq fatal error: cannot create timer (%i)\n", err);
+		return err;
 	}
 	t->callback = snd_seq_timer_interrupt;
 	t->callback_data = q;
@@ -305,7 +304,7 @@ int snd_seq_timer_open(struct snd_seq_queue *q)
 int snd_seq_timer_close(struct snd_seq_queue *q)
 {
 	struct snd_seq_timer *tmr;
-	
+
 	tmr = q->timer;
 	if (snd_BUG_ON(!tmr))
 		return -EINVAL;
@@ -398,7 +397,7 @@ snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr)
 	snd_seq_real_time_t cur_time;
 
 	cur_time = tmr->cur_time;
-	if (tmr->running) { 
+	if (tmr->running) {
 		struct timeval tm;
 		int usec;
 		do_gettimeofday(&tm);
@@ -412,8 +411,8 @@ snd_seq_real_time_t snd_seq_timer_get_cur_time(struct snd_seq_timer *tmr)
 		}
 		snd_seq_sanity_real_time(&cur_time);
 	}
-                
-	return cur_time;	
+
+	return cur_time;
 }
 
 /* TODO: use interpolation on tick queue (will only be useful for very
@@ -422,7 +421,6 @@ snd_seq_tick_time_t snd_seq_timer_get_cur_tick(struct snd_seq_timer *tmr)
 {
 	return tmr->tick.cur_tick;
 }
-
 
 #ifdef CONFIG_PROC_FS
 /* exported to seq_info.c */
@@ -434,7 +432,7 @@ void snd_seq_info_timer_read(struct snd_info_entry *entry,
 	struct snd_seq_timer *tmr;
 	struct snd_timer_instance *ti;
 	unsigned long resolution;
-	
+
 	for (idx = 0; idx < SNDRV_SEQ_MAX_QUEUES; idx++) {
 		q = queueptr(idx);
 		if (q == NULL)
@@ -452,4 +450,3 @@ void snd_seq_info_timer_read(struct snd_info_entry *entry,
  	}
 }
 #endif /* CONFIG_PROC_FS */
-

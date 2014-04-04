@@ -317,7 +317,6 @@ static inline u32 hme_read_desc32(struct happy_meal *hp, hme32 *p)
 #endif
 #endif
 
-
 /* Oh yes, the MIF BitBang is mighty fun to program.  BitBucket is more like it. */
 static void BB_PUT_BIT(struct happy_meal *hp, void __iomem *tregs, int bit)
 {
@@ -3356,7 +3355,6 @@ static int __init happy_meal_probe(void)
 
 	return err;
 }
-
 
 static void __exit happy_meal_exit(void)
 {

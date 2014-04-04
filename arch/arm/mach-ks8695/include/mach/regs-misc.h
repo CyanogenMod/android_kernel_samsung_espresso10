@@ -17,7 +17,6 @@
 #define KS8695_MISC_VA		(KS8695_IO_VA + KS8695_MISC_OFFSET)
 #define KS8695_MISC_PA		(KS8695_IO_PA + KS8695_MISC_OFFSET)
 
-
 /*
  * Miscellaneous registers
  */
@@ -92,6 +91,5 @@
 
 /* PHY Power Save Register */
 #define PPS_PPSM		(1 << 0)	/* PHY Power Save Mode */
-
 
 #endif

@@ -23,7 +23,6 @@
 #ifndef CYASGADGET_IOCTL_H
 #define CYASGADGET_IOCTL_H
 
-
 #include <linux/types.h>
 #include <linux/ioctl.h>
 
@@ -37,7 +36,6 @@ typedef struct cy_as_gadget_ioctl_get_object {
 	uint32_t status;
 	uint32_t byte_count;
 } cy_as_gadget_ioctl_get_object;
-
 
 typedef struct cy_as_gadget_ioctl_tmtp_status {
 	cy_bool tmtp_send_complete;
@@ -62,7 +60,6 @@ typedef struct cy_as_gadget_ioctl_i_s_o_j_d {
 	uint32_t	name_length;
 
 } cy_as_gadget_ioctl_i_s_o_j_d;
-
 
 /*Init get object data*/
 typedef struct cy_as_gadget_ioctl_i_g_o_j_d  {

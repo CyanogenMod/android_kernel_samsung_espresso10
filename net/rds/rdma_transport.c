@@ -247,4 +247,3 @@ module_exit(rds_rdma_exit);
 MODULE_AUTHOR("Oracle Corporation <rds-devel@oss.oracle.com>");
 MODULE_DESCRIPTION("RDS: IB/iWARP transport");
 MODULE_LICENSE("Dual BSD/GPL");
-

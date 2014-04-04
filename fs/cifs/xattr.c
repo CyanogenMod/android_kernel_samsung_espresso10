@@ -36,11 +36,9 @@
 #define CIFS_XATTR_OS2_PREFIX "os2."
 #define CIFS_XATTR_SECURITY_PREFIX "security."
 #define CIFS_XATTR_TRUSTED_PREFIX "trusted."
-#define XATTR_TRUSTED_PREFIX_LEN  8
-#define XATTR_SECURITY_PREFIX_LEN 9
+#define CIFS_XATTR_TRUSTED_PREFIX_LEN  8
+#define CIFS_XATTR_SECURITY_PREFIX_LEN 9
 /* BB need to add server (Samba e.g) support for security and trusted prefix */
-
-
 
 int cifs_removexattr(struct dentry *direntry, const char *ea_name)
 {
@@ -339,10 +337,10 @@ ssize_t cifs_getxattr(struct dentry *direntry, const char *ea_name,
 		cFYI(1, "Query CIFS ACL not supported yet");
 #endif /* CONFIG_CIFS_ACL */
 	} else if (strncmp(ea_name,
-		  CIFS_XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_LEN) == 0) {
+		  CIFS_XATTR_TRUSTED_PREFIX, CIFS_XATTR_TRUSTED_PREFIX_LEN) == 0) {
 		cFYI(1, "Trusted xattr namespace not supported yet");
 	} else if (strncmp(ea_name,
-		  CIFS_XATTR_SECURITY_PREFIX, XATTR_SECURITY_PREFIX_LEN) == 0) {
+		  CIFS_XATTR_SECURITY_PREFIX, CIFS_XATTR_SECURITY_PREFIX_LEN) == 0) {
 		cFYI(1, "Security xattr namespace not supported yet");
 	} else
 		cFYI(1,

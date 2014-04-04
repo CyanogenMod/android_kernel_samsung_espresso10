@@ -1175,7 +1175,6 @@ static u16 MXL5005_ControlInit(struct dvb_frontend *fe)
 	state->Init_Ctrl[39].bit[0] = 3;
 	state->Init_Ctrl[39].val[0] = 1;
 
-
 	state->CH_Ctrl_Num = CHCTRL_NUM ;
 
 	state->CH_Ctrl[0].Ctrl_Num = DN_POLY ;
@@ -3308,7 +3307,6 @@ static u16 MXL_TuneRF(struct dvb_frontend *fe, u32 RF_Freq)
 
 		/* change back from above condition */
 		status += MXL_ControlWrite(fe, RFSYN_CHP_GAIN, 5);
-
 
 		if (state->RF_IN >= 43000000 && state->RF_IN < 174000000) {
 

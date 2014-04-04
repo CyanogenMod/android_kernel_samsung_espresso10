@@ -328,7 +328,6 @@
 #define NETX_PFIFO_FILL_LEVEL(pfifo)  NETX_PFIFO_REG(0x180 + ((pfifo)<<2))
 #define NETX_PFIFO_XPEC_ISR(xpec)     NETX_PFIFO_REG(0x400 + ((xpec) << 2))
 
-
 /*******************************
  * Memory Controller           *
  *******************************/
@@ -348,7 +347,6 @@
 #define NETX_MEMCR_SRAM_CTRL_WSPOSTPAUSEEXTMEM(x) (((x) & 0x3)  << 16)
 #define NETX_MEMCR_SRAM_CTRL_WSPREPASEEXTMEM(x)   (((x) & 0x3)  << 8)
 #define NETX_MEMCR_SRAM_CTRL_WSEXTMEM(x)          (((x) & 0x1f) << 0)
-
 
 /*******************************
  * Dual Port Memory            *

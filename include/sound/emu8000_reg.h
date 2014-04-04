@@ -118,7 +118,6 @@
 #define EMU8000_FM2FRQ2_READ(emu, chan) \
 	snd_emu8000_peek((emu), EMU8000_DATA3(emu), EMU8000_CMD(5, (chan)))
 
-
 #define EMU8000_CPF_WRITE(emu, chan, val) \
 	snd_emu8000_poke_dw((emu), EMU8000_DATA0(emu), EMU8000_CMD(0, (chan)), (val))
 #define EMU8000_PTRX_WRITE(emu, chan, val) \

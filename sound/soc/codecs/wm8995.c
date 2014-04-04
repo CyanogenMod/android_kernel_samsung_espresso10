@@ -251,37 +251,30 @@ static void wm8995_update_class_w(struct snd_soc_codec *codec)
 	reg = snd_soc_read(codec, WM8995_DAC1_LEFT_MIXER_ROUTING);
 	switch (reg) {
 	case WM8995_AIF2DACL_TO_DAC1L:
-		dev_dbg(codec->dev, "Class W source AIF2DAC\n");
 		source = 2 << WM8995_CP_DYN_SRC_SEL_SHIFT;
 		break;
 	case WM8995_AIF1DAC2L_TO_DAC1L:
-		dev_dbg(codec->dev, "Class W source AIF1DAC2\n");
 		source = 1 << WM8995_CP_DYN_SRC_SEL_SHIFT;
 		break;
 	case WM8995_AIF1DAC1L_TO_DAC1L:
-		dev_dbg(codec->dev, "Class W source AIF1DAC1\n");
 		source = 0 << WM8995_CP_DYN_SRC_SEL_SHIFT;
 		break;
 	default:
-		dev_dbg(codec->dev, "DAC mixer setting: %x\n", reg);
 		enable = 0;
 		break;
 	}
 
 	reg_r = snd_soc_read(codec, WM8995_DAC1_RIGHT_MIXER_ROUTING);
 	if (reg_r != reg) {
-		dev_dbg(codec->dev, "Left and right DAC mixers different\n");
 		enable = 0;
 	}
 
 	if (enable) {
-		dev_dbg(codec->dev, "Class W enabled\n");
 		snd_soc_update_bits(codec, WM8995_CLASS_W_1,
 				    WM8995_CP_DYN_PWR_MASK |
 				    WM8995_CP_DYN_SRC_SEL_MASK,
 				    source | WM8995_CP_DYN_PWR);
 	} else {
-		dev_dbg(codec->dev, "Class W disabled\n");
 		snd_soc_update_bits(codec, WM8995_CLASS_W_1,
 				    WM8995_CP_DYN_PWR_MASK, 0);
 	}
@@ -354,9 +347,6 @@ static void dc_servo_cmd(struct snd_soc_codec *codec,
 			 unsigned int reg, unsigned int val, unsigned int mask)
 {
 	int timeout = 10;
-
-	dev_dbg(codec->dev, "%s: reg = %#x, val = %#x, mask = %#x\n",
-		__func__, reg, val, mask);
 
 	snd_soc_write(codec, reg, val);
 	while (timeout--) {
@@ -470,8 +460,6 @@ static int configure_aif_clock(struct snd_soc_codec *codec, int aif)
 		rate /= 2;
 		reg1 |= WM8995_AIF1CLK_DIV;
 
-		dev_dbg(codec->dev, "Dividing AIF%d clock to %dHz\n",
-			aif + 1, rate);
 	}
 
 	wm8995->aifclk[aif] = rate;
@@ -1128,7 +1116,6 @@ static int wm8995_hw_params(struct snd_pcm_substream *substream,
 			lrclk_reg = WM8995_AIF1DAC_LRCLK;
 		} else {
 			lrclk_reg = WM8995_AIF1ADC_LRCLK;
-			dev_dbg(codec->dev, "AIF1 using split LRCLK\n");
 		}
 		break;
 	case 1:
@@ -1140,7 +1127,6 @@ static int wm8995_hw_params(struct snd_pcm_substream *substream,
 			lrclk_reg = WM8995_AIF2DAC_LRCLK;
 		} else {
 			lrclk_reg = WM8995_AIF2ADC_LRCLK;
-			dev_dbg(codec->dev, "AIF2 using split LRCLK\n");
 		}
 		break;
 	default:
@@ -1181,10 +1167,6 @@ static int wm8995_hw_params(struct snd_pcm_substream *substream,
 	}
 	rate_val = i << WM8995_AIF1_SR_SHIFT;
 
-	dev_dbg(dai->dev, "Sample rate is %dHz\n", srs[i]);
-	dev_dbg(dai->dev, "AIF%dCLK is %dHz, target BCLK %dHz\n",
-		dai->id + 1, wm8995->aifclk[dai->id], bclk_rate);
-
 	/* AIFCLK/fs ratio; look for a close match in either direction */
 	best = 1;
 	best_val = abs((fs_ratios[1] * params_rate(params))
@@ -1198,9 +1180,6 @@ static int wm8995_hw_params(struct snd_pcm_substream *substream,
 		best_val = cur_val;
 	}
 	rate_val |= best;
-
-	dev_dbg(dai->dev, "Selected AIF%dCLK/fs = %d\n",
-		dai->id + 1, fs_ratios[best]);
 
 	/*
 	 * We may not get quite the right frequency if using
@@ -1219,12 +1198,8 @@ static int wm8995_hw_params(struct snd_pcm_substream *substream,
 	bclk |= best << WM8995_AIF1_BCLK_DIV_SHIFT;
 
 	bclk_rate = wm8995->aifclk[dai->id] * 10 / bclk_divs[best];
-	dev_dbg(dai->dev, "Using BCLK_DIV %d for actual BCLK %dHz\n",
-		bclk_divs[best], bclk_rate);
 
 	lrclk = bclk_rate / params_rate(params);
-	dev_dbg(dai->dev, "Using LRCLK rate %d for actual LRCLK %dHz\n",
-		lrclk, bclk_rate / lrclk);
 
 	snd_soc_update_bits(codec, aif1_reg,
 			    WM8995_AIF1_WL_MASK, aif1);
@@ -1484,22 +1459,16 @@ static int wm8995_set_dai_sysclk(struct snd_soc_dai *dai,
 	case WM8995_SYSCLK_MCLK1:
 		wm8995->sysclk[dai->id] = WM8995_SYSCLK_MCLK1;
 		wm8995->mclk[0] = freq;
-		dev_dbg(dai->dev, "AIF%d using MCLK1 at %uHz\n",
-			dai->id + 1, freq);
 		break;
 	case WM8995_SYSCLK_MCLK2:
 		wm8995->sysclk[dai->id] = WM8995_SYSCLK_MCLK1;
 		wm8995->mclk[1] = freq;
-		dev_dbg(dai->dev, "AIF%d using MCLK2 at %uHz\n",
-			dai->id + 1, freq);
 		break;
 	case WM8995_SYSCLK_FLL1:
 		wm8995->sysclk[dai->id] = WM8995_SYSCLK_FLL1;
-		dev_dbg(dai->dev, "AIF%d using FLL1\n", dai->id + 1);
 		break;
 	case WM8995_SYSCLK_FLL2:
 		wm8995->sysclk[dai->id] = WM8995_SYSCLK_FLL2;
-		dev_dbg(dai->dev, "AIF%d using FLL2\n", dai->id + 1);
 		break;
 	case WM8995_SYSCLK_OPCLK:
 	default:

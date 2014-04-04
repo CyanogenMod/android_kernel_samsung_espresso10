@@ -59,7 +59,6 @@ static int ir_raw_event_thread(void *data)
 
 		spin_unlock_irq(&raw->lock);
 
-
 		BUG_ON(retval != sizeof(ev));
 
 		mutex_lock(&ir_raw_handler_lock);

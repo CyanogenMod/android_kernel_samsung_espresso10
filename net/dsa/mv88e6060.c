@@ -31,7 +31,6 @@ static int reg_read(struct dsa_switch *ds, int addr, int reg)
 		__ret;						\
 	})
 
-
 static int reg_write(struct dsa_switch *ds, int addr, int reg, u16 val)
 {
 	return mdiobus_write(ds->master_mii_bus, ds->pd->sw_addr + addr,

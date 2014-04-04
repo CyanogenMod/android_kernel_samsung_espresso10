@@ -225,7 +225,6 @@ struct ext3_new_group_data {
 	__u32 free_blocks_count;
 };
 
-
 /*
  * ioctl commands
  */
@@ -258,7 +257,6 @@ struct ext3_new_group_data {
 #endif
 #define EXT3_IOC32_GETVERSION_OLD	FS_IOC32_GETVERSION
 #define EXT3_IOC32_SETVERSION_OLD	FS_IOC32_SETVERSION
-
 
 /*
  *  Mount options
@@ -789,7 +787,6 @@ struct dx_hash_info
  */
 #define HASH_NB_ALWAYS		1
 
-
 /*
  * Describe an inode's exact location on disk and in memory
  */
@@ -893,7 +890,6 @@ extern unsigned long ext3_count_dirs (struct super_block *);
 extern void ext3_check_inodes_bitmap (struct super_block *);
 extern unsigned long ext3_count_free (struct buffer_head *, unsigned);
 
-
 /* inode.c */
 int ext3_forget(handle_t *handle, int is_metadata, struct inode *inode,
 		struct buffer_head *bh, ext3_fsblk_t blocknr);
@@ -973,7 +969,6 @@ extern const struct inode_operations ext3_special_inode_operations;
 /* symlink.c */
 extern const struct inode_operations ext3_symlink_inode_operations;
 extern const struct inode_operations ext3_fast_symlink_inode_operations;
-
 
 #endif	/* __KERNEL__ */
 

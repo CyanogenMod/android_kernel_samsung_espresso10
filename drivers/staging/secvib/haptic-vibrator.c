@@ -52,7 +52,6 @@
 #define TSPDRV_DISABLE_AMP		_IO(TSPDRV_MAGIC_NUMBER & 0xFF, 4)
 #define TSPDRV_GET_NUM_ACTUATORS _IO(TSPDRV_MAGIC_NUMBER & 0xFF, 5)
 
-
 #define VIBE_MAX_DEVICE_NAME_LENGTH		64
 /* DO NOT CHANGE - SPI buffer header size */
 #define SPI_HEADER_SIZE					3
@@ -489,18 +488,18 @@ static ssize_t secvib_write(struct file *file,
 		goto out;
 	}
 
-	/* copy immediately the input buffer */
-	if (0 != copy_from_user(secvib->write_buf, buf, count)) {
-		/* failed to copy all the data, exit */
-		pr_err("secvib: write failed to copy all the data\n");
-		goto out;
-	}
-
 	/* Check buffer size */
 	if ((count <= SPI_HEADER_SIZE)
 			|| (count > (SPI_BUFFER_SIZE
 					* secvib->pdata->num_actuators))) {
 		pr_err("secvib: invalid write buffer size.\n");
+		goto out;
+	}
+
+	/* copy immediately the input buffer */
+	if (0 != copy_from_user(secvib->write_buf, buf, count)) {
+		/* failed to copy all the data, exit */
+		pr_err("secvib: write failed to copy all the data\n");
 		goto out;
 	}
 
@@ -573,7 +572,6 @@ static ssize_t secvib_write(struct file *file,
 out:
 	mutex_unlock(&secvib->lock);
 	return -EINVAL;
-
 
 }
 
@@ -690,7 +688,6 @@ static int secvib_probe(struct platform_device *pdev)
 	struct secvib_data *secvib;
 	int ret, i;
 
-
 	if (!pdata)
 		return -EBUSY;
 
@@ -798,9 +795,27 @@ static int secvib_remove(struct platform_device *pdev)
 	return 0;
 }
 
+static int secvib_suspend(struct platform_device *pdev, pm_message_t state)
+{
+	struct secvib_data *secvib = platform_get_drvdata(pdev);
+	int i;
+
+	for (i = 0; i < secvib->pdata->num_actuators; i++)
+		secvib->pdata->vib_enable(i, 0);
+
+	return 0;
+}
+
+static int secvib_resume(struct platform_device *pdev)
+{
+	return 0;
+}
+
 static struct platform_driver secvib_driver = {
 	.probe		= secvib_probe,
 	.remove		= secvib_remove,
+	.suspend		= secvib_suspend,
+	.resume		= secvib_resume,
 	.driver		= {
 		.name		= VIB_DEVNAME,
 		.owner		= THIS_MODULE,

@@ -38,8 +38,6 @@ static int ec168_rw_udev(struct usb_device *udev, struct ec168_req *req)
 	u8 request, requesttype;
 	u8 *buf;
 
-
-
 	switch (req->cmd) {
 	case DOWNLOAD_FIRMWARE:
 	case GPIO:
@@ -180,7 +178,6 @@ error:
 	mutex_unlock(&d->i2c_mutex);
 	return i;
 }
-
 
 static u32 ec168_i2c_func(struct i2c_adapter *adapter)
 {

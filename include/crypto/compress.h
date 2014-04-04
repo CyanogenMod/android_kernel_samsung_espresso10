@@ -22,7 +22,6 @@
 
 #include <linux/crypto.h>
 
-
 struct comp_request {
 	const void *next_in;		/* next input byte */
 	void *next_out;			/* next output byte */
@@ -41,14 +40,12 @@ enum zlib_comp_params {
 
 #define ZLIB_COMP_MAX	(__ZLIB_COMP_MAX - 1)
 
-
 enum zlib_decomp_params {
 	ZLIB_DECOMP_WINDOWBITS = 1,	/* e.g. DEF_WBITS */
 	__ZLIB_DECOMP_MAX,
 };
 
 #define ZLIB_DECOMP_MAX	(__ZLIB_DECOMP_MAX - 1)
-
 
 struct crypto_pcomp {
 	struct crypto_tfm base;

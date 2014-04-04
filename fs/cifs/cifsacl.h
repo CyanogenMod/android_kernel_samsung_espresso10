@@ -22,7 +22,6 @@
 #ifndef _CIFSACL_H
 #define _CIFSACL_H
 
-
 #define NUM_AUTHS 6 /* number of authority fields */
 #define NUM_SUBAUTHS 5 /* number of sub authority fields */
 #define NUM_WK_SIDS 7 /* number of well known sids */

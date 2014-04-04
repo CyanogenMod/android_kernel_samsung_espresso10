@@ -122,7 +122,6 @@ static int ali_configure(void)
 	return 0;
 }
 
-
 static void m1541_cache_flush(void)
 {
 	int i, page_count;
@@ -185,7 +184,6 @@ static void m1541_destroy_page(struct page *page, int flags)
 	agp_generic_destroy_page(page, flags);
 }
 
-
 /* Setup function */
 
 static const struct aper_size_info_32 ali_generic_sizes[7] =
@@ -247,7 +245,6 @@ static const struct agp_bridge_driver ali_m1541_bridge = {
 	.agp_destroy_page	= m1541_destroy_page,
 	.agp_type_to_mask_type  = agp_generic_type_to_mask_type,
 };
-
 
 static struct agp_device_ids ali_agp_device_ids[] __devinitdata =
 {
@@ -320,7 +317,6 @@ static int __devinit agp_ali_probe(struct pci_dev *pdev,
 	dev_err(&pdev->dev, "unsupported ALi chipset [%04x/%04x])\n",
 		pdev->vendor, pdev->device);
 	return -ENODEV;
-
 
 found:
 	bridge = agp_alloc_bridge();
@@ -420,4 +416,3 @@ module_exit(agp_ali_cleanup);
 
 MODULE_AUTHOR("Dave Jones <davej@redhat.com>");
 MODULE_LICENSE("GPL and additional rights");
-

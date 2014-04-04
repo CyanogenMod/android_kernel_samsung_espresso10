@@ -333,7 +333,6 @@ spin_unlock_irqrestore(&temp_sensor->lock, flags);
 	return ret;
 }
 
-
 static int omap_temp_sensor_disable(struct omap_temp_sensor *temp_sensor)
 {
 	u32 temp;

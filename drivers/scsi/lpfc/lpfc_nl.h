@@ -111,7 +111,6 @@ struct lpfc_fcprdchkerr_event {
 	uint32_t fcpiparam;
 };
 
-
 /* scsi event header */
 struct lpfc_scsi_event_header {
 	uint32_t event_type;
@@ -155,7 +154,6 @@ struct lpfc_board_event_header {
 	uint32_t subcategory;
 };
 
-
 /* event codes for FC_REG_ADAPTER_EVENT */
 #define LPFC_EVENT_ARRIVAL	0x01
 
@@ -164,7 +162,6 @@ struct lpfc_adapter_event_header {
 	uint32_t event_type;
 	uint32_t subcategory;
 };
-
 
 /* event codes for temp_event */
 #define LPFC_CRIT_TEMP		0x1
@@ -176,4 +173,3 @@ struct temp_event {
 	uint32_t event_code;
 	uint32_t data;
 };
-

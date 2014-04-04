@@ -34,7 +34,6 @@
 extern int pc_debug;
 #define init_wds 0	/* help compiler optimize away dead code */
 
-
 /* General driver definitions */
 #define PCIDEVICE_LATENCY_TIMER_MIN		0x40
 #define PCIDEVICE_LATENCY_TIMER_VAL		0x50

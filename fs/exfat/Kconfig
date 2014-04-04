@@ -1,0 +1,17 @@
+config EXFAT_FS
+	tristate "Samsung Open-Sourced exFAT"
+	depends on BLOCK
+	select NLS_UTF8
+	default y
+	help
+	  exFAT (Extended File Allocation Table) is a Microsoft file system optimized for flash drives.
+	  It is supported in Windows XP and later, Mac OS X Snow Leopard from 10.6.5, Mac OSX Lion
+	  and OSX Mountain Lion. Also is supported in a number of media devices such as flat panel TVs,
+	  media centers, and portable media players.
+	  exFAT can be used where the NTFS file system is not a feasible solution, due to data structure overhead,
+	  or where the file size limit of the standard FAT32 file system is unacceptable.
+	  Unlike NTFS, exFAT cannot pre-allocate disk space for a file by just marking arbitrary space on disk
+	  as 'allocated'.
+
+  	  To compile this file system support as a module, choose M here.
+  	  The modules will be called exfat_core.ko and exfat_fs.ko

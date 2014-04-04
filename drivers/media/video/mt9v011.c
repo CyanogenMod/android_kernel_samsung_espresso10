@@ -157,7 +157,6 @@ static void mt9v011_write(struct v4l2_subdev *sd, unsigned char addr,
 			 "i2c i/o error: rc == %d (should be 3)\n", rc);
 }
 
-
 struct i2c_reg_value {
 	unsigned char reg;
 	u16           value;
@@ -370,7 +369,6 @@ static int mt9v011_queryctrl(struct v4l2_subdev *sd, struct v4l2_queryctrl *qc)
 	return -EINVAL;
 }
 
-
 static int mt9v011_s_ctrl(struct v4l2_subdev *sd, struct v4l2_control *ctrl)
 {
 	struct mt9v011 *core = to_mt9v011(sd);
@@ -562,7 +560,6 @@ static const struct v4l2_subdev_ops mt9v011_ops = {
 	.core  = &mt9v011_core_ops,
 	.video = &mt9v011_video_ops,
 };
-
 
 /****************************************************************************
 			I2C Client & Driver

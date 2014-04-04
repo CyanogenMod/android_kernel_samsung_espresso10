@@ -46,7 +46,6 @@ void dsa_slave_mii_bus_init(struct dsa_switch *ds)
 	ds->slave_mii_bus->parent = &ds->master_mii_bus->dev;
 }
 
-
 /* slave device handling ****************************************************/
 static int dsa_slave_init(struct net_device *dev)
 {
@@ -170,7 +169,6 @@ static int dsa_slave_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 
 	return -EOPNOTSUPP;
 }
-
 
 /* ethtool operations *******************************************************/
 static int

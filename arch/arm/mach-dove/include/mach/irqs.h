@@ -92,5 +92,4 @@
 
 #define NR_IRQS			(IRQ_DOVE_PMU_START + NR_PMU_IRQS)
 
-
 #endif

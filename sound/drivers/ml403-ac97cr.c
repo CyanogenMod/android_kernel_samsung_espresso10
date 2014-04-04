@@ -63,7 +63,6 @@
 
 #include "pcm-indirect2.h"
 
-
 #define SND_ML403_AC97CR_DRIVER "ml403-ac97cr"
 
 MODULE_AUTHOR("Joachim Foerster <JOFT@gmx.de>");
@@ -122,8 +121,6 @@ MODULE_PARM_DESC(enable, "Enable this ML403 AC97 Controller Reference.");
 #else
 #define PDEBUG(fac, fmt, args...) /* nothing */
 #endif
-
-
 
 /* Defines for "waits"/timeouts (portions of HZ=250 on arch/ppc by default) */
 #define CODEC_TIMEOUT_ON_INIT       5	/* timeout for checking for codec
@@ -295,7 +292,6 @@ static void lm4550_regfile_write_values_after_init(struct snd_ac97 *ac97)
 			lm4550_regfile[i].flag |= LM4550_REG_DONEREAD;
 		}
 }
-
 
 /* direct registers */
 #define CR_REG(ml403_ac97cr, x) ((ml403_ac97cr)->port + CR_REG_##x)

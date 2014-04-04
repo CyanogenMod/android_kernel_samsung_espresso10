@@ -20,7 +20,6 @@
 #include "tuner-simple.h"
 #include "stv0297.h"
 
-
 /* Can we use the specified front-end?  Remember that if we are compiled
  * into the kernel we can't call code that's in modules.  */
 #define FE_SUPPORTED(fe) (defined(CONFIG_DVB_##fe) || \

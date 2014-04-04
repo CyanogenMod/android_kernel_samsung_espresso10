@@ -444,7 +444,6 @@ struct fc_exch {
 };
 #define	fc_seq_exch(sp) container_of(sp, struct fc_exch, seq)
 
-
 struct libfc_function_template {
 	/*
 	 * Interface to send a FC frame
@@ -1101,7 +1100,6 @@ void fc_fill_reply_hdr(struct fc_frame *, const struct fc_frame *,
 		       enum fc_rctl, u32 parm_offset);
 void fc_fill_hdr(struct fc_frame *, const struct fc_frame *,
 		 enum fc_rctl, u32 f_ctl, u16 seq_cnt, u32 parm_offset);
-
 
 /*
  * EXCHANGE MANAGER LAYER

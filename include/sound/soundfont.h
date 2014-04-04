@@ -125,5 +125,4 @@ int snd_sf_calc_parm_decay(int msec);
 extern int snd_sf_vol_table[128];
 int snd_sf_linear_to_log(unsigned int amount, int offset, int ratio);
 
-
 #endif /* __SOUND_SOUNDFONT_H */

@@ -389,7 +389,6 @@ static void tenxpress_phy_remove(struct efx_nic *efx)
 	efx->phy_data = NULL;
 }
 
-
 /* Override the RX, TX and link LEDs */
 void tenxpress_set_id_led(struct efx_nic *efx, enum efx_led_mode mode)
 {

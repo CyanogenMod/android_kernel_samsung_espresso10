@@ -39,8 +39,6 @@ static struct map_region	map_regions[MAX_NUM_REGIONS];
 static int			map_regions_set[MAX_NUM_REGIONS] = {0,0,0,0};
 static int			map_regions_parts[MAX_NUM_REGIONS] = {0,0,0,0};
 
-
-
 struct map_info default_map = {
 	.size = DEF_WINDOW_SIZE,
 	.bankwidth = 4,

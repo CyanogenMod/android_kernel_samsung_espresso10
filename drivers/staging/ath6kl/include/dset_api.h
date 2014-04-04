@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="dset_api.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -60,6 +60,5 @@ int wmi_dset_data_reply(struct wmi_t *wmip,
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 
 #endif /* _DSET_API_H_ */

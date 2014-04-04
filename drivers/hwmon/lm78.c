@@ -1,7 +1,7 @@
 /*
     lm78.c - Part of lm_sensors, Linux kernel modules for hardware
              monitoring
-    Copyright (c) 1998, 1999  Frodo Looijaard <frodol@dds.nl> 
+    Copyright (c) 1998, 1999  Frodo Looijaard <frodol@dds.nl>
     Copyright (c) 2007        Jean Delvare <khali@linux-fr.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -75,8 +75,7 @@ enum chips { lm78, lm79 };
 #define LM78_REG_CHIPID 0x49
 #define LM78_REG_I2C_ADDR 0x48
 
-
-/* Conversions. Rounding and limit checking is only done on the TO_REG 
+/* Conversions. Rounding and limit checking is only done on the TO_REG
    variants. */
 
 /* IN: mV, (0V to 4.08V)
@@ -142,7 +141,6 @@ struct lm78_data {
 	u16 alarms;		/* Register encoding, combined */
 };
 
-
 static int lm78_i2c_detect(struct i2c_client *client,
 			   struct i2c_board_info *info);
 static int lm78_i2c_probe(struct i2c_client *client,
@@ -156,7 +154,6 @@ static int lm78_read_value(struct lm78_data *data, u8 reg);
 static int lm78_write_value(struct lm78_data *data, u8 reg, u8 value);
 static struct lm78_data *lm78_update_device(struct device *dev);
 static void lm78_init_device(struct lm78_data *data);
-
 
 static const struct i2c_device_id lm78_i2c_id[] = {
 	{ "lm78", lm78 },
@@ -185,7 +182,6 @@ static struct platform_driver lm78_isa_driver = {
 	.probe		= lm78_isa_probe,
 	.remove		= __devexit_p(lm78_isa_remove),
 };
-
 
 /* 7 Voltages */
 static ssize_t show_in(struct device *dev, struct device_attribute *da,
@@ -241,7 +237,7 @@ static ssize_t set_in_max(struct device *dev, struct device_attribute *da,
 	mutex_unlock(&data->update_lock);
 	return count;
 }
-	
+
 #define show_in_offset(offset)					\
 static SENSOR_DEVICE_ATTR(in##offset##_input, S_IRUGO,		\
 		show_in, NULL, offset);				\
@@ -734,7 +730,7 @@ static int __devexit lm78_isa_remove(struct platform_device *pdev)
 	return 0;
 }
 
-/* The SMBus locks itself, but ISA access must be locked explicitly! 
+/* The SMBus locks itself, but ISA access must be locked explicitly!
    We don't want to lock the whole ISA bus, so we lock each client
    separately.
    We ignore the LM78 BUSY flag at this moment - it could lead to deadlocks,
@@ -754,11 +750,11 @@ static int lm78_read_value(struct lm78_data *data, u8 reg)
 		return i2c_smbus_read_byte_data(client, reg);
 }
 
-/* The SMBus locks itself, but ISA access muse be locked explicitly! 
+/* The SMBus locks itself, but ISA access muse be locked explicitly!
    We don't want to lock the whole ISA bus, so we lock each client
    separately.
    We ignore the LM78 BUSY flag at this moment - it could lead to deadlocks,
-   would slow down the LM78 access and should not be necessary. 
+   would slow down the LM78 access and should not be necessary.
    There are some ugly typecasts here, but the good new is - they should
    nowhere else be necessary! */
 static int lm78_write_value(struct lm78_data *data, u8 reg, u8 value)
@@ -1008,8 +1004,6 @@ static void __exit sm_lm78_exit(void)
 	}
 	i2c_del_driver(&lm78_driver);
 }
-
-
 
 MODULE_AUTHOR("Frodo Looijaard <frodol@dds.nl>");
 MODULE_DESCRIPTION("LM78/LM79 driver");

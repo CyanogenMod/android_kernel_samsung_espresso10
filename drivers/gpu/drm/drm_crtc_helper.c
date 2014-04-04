@@ -450,7 +450,6 @@ done:
 }
 EXPORT_SYMBOL(drm_crtc_helper_set_mode);
 
-
 /**
  * drm_crtc_helper_set_config - set a new config from userspace
  * @crtc: CRTC to setup

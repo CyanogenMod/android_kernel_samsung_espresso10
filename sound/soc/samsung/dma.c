@@ -146,7 +146,6 @@ static int dma_hw_params(struct snd_pcm_substream *substream,
 		snd_soc_dai_get_dma_data(rtd->cpu_dai, substream);
 	int ret = 0;
 
-
 	pr_debug("Entered %s\n", __func__);
 
 	/* return if this is a bufferless transfer e.g.

@@ -57,7 +57,6 @@ static int pvr2_i2c_write(struct pvr2_hdw *hdw, /* Context */
 	/* Return value - default 0 means success */
 	int ret;
 
-
 	if (!data) length = 0;
 	if (length > (sizeof(hdw->cmd_buffer) - 3)) {
 		pvr2_trace(PVR2_TRACE_ERROR_LEGS,
@@ -110,7 +109,6 @@ static int pvr2_i2c_read(struct pvr2_hdw *hdw, /* Context */
 {
 	/* Return value - default 0 means success */
 	int ret;
-
 
 	if (!data) dlen = 0;
 	if (dlen > (sizeof(hdw->cmd_buffer) - 4)) {
@@ -192,7 +190,6 @@ static int pvr2_i2c_basic_op(struct pvr2_hdw *hdw,
 		return pvr2_i2c_write(hdw,i2c_addr,wdata,wlen);
 	}
 }
-
 
 /* This is a special entry point for cases of I2C transaction attempts to
    the IR receiver.  The implementation here simulates the IR receiver by
@@ -536,7 +533,6 @@ static struct i2c_adapter pvr2_i2c_adap_template = {
 	.owner         = THIS_MODULE,
 	.class	       = 0,
 };
-
 
 /* Return true if device exists at given address */
 static int do_i2c_probe(struct pvr2_hdw *hdw, int addr)

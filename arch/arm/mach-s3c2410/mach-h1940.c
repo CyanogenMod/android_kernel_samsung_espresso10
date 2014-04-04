@@ -504,7 +504,6 @@ static void h1940_backlight_exit(struct device *dev)
 	gpio_set_value(H1940_LATCH_MAX1698_nSHUTDOWN, 0);
 }
 
-
 static struct platform_pwm_backlight_data backlight_data = {
 	.pwm_id         = 0,
 	.max_brightness = 100,

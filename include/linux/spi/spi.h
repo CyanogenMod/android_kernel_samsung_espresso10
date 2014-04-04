@@ -143,8 +143,6 @@ static inline void *spi_get_drvdata(struct spi_device *spi)
 
 struct spi_message;
 
-
-
 /**
  * struct spi_driver - Host side "protocol" driver
  * @id_table: List of SPI devices supported by this driver
@@ -199,7 +197,6 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
 	if (sdrv)
 		driver_unregister(&sdrv->driver);
 }
-
 
 /**
  * struct spi_master - interface to SPI master controller
@@ -331,7 +328,6 @@ static inline void spi_master_put(struct spi_master *master)
 	if (master)
 		put_device(&master->dev);
 }
-
 
 /* the spi driver core manages memory for the spi_master classdev */
 extern struct spi_master *
@@ -731,7 +727,6 @@ struct spi_board_info {
 	/* slower signaling on noisy or low voltage boards */
 	u32		max_speed_hz;
 
-
 	/* bus_num is board specific and matches the bus_num of some
 	 * spi_master that will probably be registered later.
 	 *
@@ -762,7 +757,6 @@ static inline int
 spi_register_board_info(struct spi_board_info const *info, unsigned n)
 	{ return 0; }
 #endif
-
 
 /* If you're hotplugging an adapter with devices (parport, usb, etc)
  * use spi_new_device() to describe each device.  You can also call

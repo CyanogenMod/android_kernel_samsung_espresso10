@@ -22,7 +22,6 @@
 
 #define OSCC_PEN       (1 << 11)       /* 13MHz POUT */
 
-
 /*
  * Service Power Management Unit (MPMU)
  */

@@ -19,4 +19,3 @@ struct tosa_bt_data {
 };
 
 #endif
-

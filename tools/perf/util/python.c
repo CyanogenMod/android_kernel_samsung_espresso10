@@ -640,7 +640,7 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
 			Py_DECREF(file);
 			goto free_list;
 		}
-			
+
 		Py_DECREF(file);
 	}
 
@@ -648,7 +648,6 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
 free_list:
 	return PyErr_NoMemory();
 }
-
 
 static PyObject *pyrf_evlist__add(struct pyrf_evlist *pevlist,
 				  PyObject *args, PyObject *kwargs __used)

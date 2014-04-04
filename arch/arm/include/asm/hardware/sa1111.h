@@ -511,9 +511,6 @@
 #define PCSSR_S0_SLEEP	(1<<0)
 #define PCSSR_S1_SLEEP	(1<<1)
 
-
-
-
 extern struct bus_type sa1111_bus_type;
 
 #define SA1111_DEVID_SBI	0

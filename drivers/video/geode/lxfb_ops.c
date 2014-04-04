@@ -124,7 +124,6 @@ static const struct {
   { 0x00002130, 320207 }
 };
 
-
 static void lx_set_dotpll(u32 pllval)
 {
 	u32 dotpll_lo, dotpll_hi;

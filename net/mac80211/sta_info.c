@@ -339,7 +339,6 @@ static int sta_info_finish_insert(struct sta_info *sta, bool async)
 	sinfo.generation = local->sta_generation;
 	cfg80211_new_sta(sdata->dev, sta->sta.addr, &sinfo, GFP_KERNEL);
 
-
 	return 0;
 }
 
@@ -585,7 +584,6 @@ static int sta_info_buffer_expired(struct sta_info *sta,
 	return time_after(jiffies, info->control.jiffies + timeout);
 }
 
-
 static bool sta_info_cleanup_expire_buffered(struct ieee80211_local *local,
 					     struct sta_info *sta)
 {
@@ -794,7 +792,7 @@ void sta_info_init(struct ieee80211_local *local)
 
 void sta_info_stop(struct ieee80211_local *local)
 {
-	del_timer(&local->sta_cleanup);
+	del_timer_sync(&local->sta_cleanup);
 	sta_info_flush(local, NULL);
 }
 

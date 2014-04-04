@@ -818,7 +818,6 @@ static void fscache_enqueue_dependents(struct fscache_object *object)
 				 struct fscache_object, dep_link);
 		list_del_init(&dep->dep_link);
 
-
 		/* sort onto appropriate lists */
 		fscache_enqueue_object(dep);
 		fscache_put_object(dep);

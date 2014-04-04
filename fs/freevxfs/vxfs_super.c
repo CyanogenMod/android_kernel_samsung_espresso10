@@ -47,13 +47,11 @@
 #include "vxfs_dir.h"
 #include "vxfs_inode.h"
 
-
 MODULE_AUTHOR("Christoph Hellwig");
 MODULE_DESCRIPTION("Veritas Filesystem (VxFS) driver");
 MODULE_LICENSE("Dual BSD/GPL");
 
 MODULE_ALIAS("vxfs"); /* makes mount -t vxfs autoload the module */
-
 
 static void		vxfs_put_super(struct super_block *);
 static int		vxfs_statfs(struct dentry *, struct kstatfs *);
@@ -232,7 +230,7 @@ static int vxfs_fill_super(struct super_block *sbp, void *dp, int silent)
 	}
 
 	return 0;
-	
+
 out_free_ilist:
 	vxfs_put_fake_inode(infp->vsi_fship);
 	vxfs_put_fake_inode(infp->vsi_ilist);

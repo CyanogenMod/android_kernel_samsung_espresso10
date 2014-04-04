@@ -323,7 +323,6 @@ static ssize_t read_file_recv(struct file *file, char __user *user_buf,
 			"%20s : %10u\n", "TOTAL PHY ERR",
 			priv->debug.rx_stats.err_phy);
 
-
 	PHY_ERR("UNDERRUN", ATH9K_PHYERR_UNDERRUN);
 	PHY_ERR("TIMING", ATH9K_PHYERR_TIMING);
 	PHY_ERR("PARITY", ATH9K_PHYERR_PARITY);

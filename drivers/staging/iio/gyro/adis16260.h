@@ -122,7 +122,6 @@ ssize_t adis16260_read_data_from_ring(struct device *dev,
 				      struct device_attribute *attr,
 				      char *buf);
 
-
 int adis16260_configure_ring(struct iio_dev *indio_dev);
 void adis16260_unconfigure_ring(struct iio_dev *indio_dev);
 

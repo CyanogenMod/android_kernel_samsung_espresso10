@@ -120,4 +120,3 @@ MODULE_LICENSE("GPL");
 
 module_init(vmic_init);
 module_exit(vmic_exit);
-

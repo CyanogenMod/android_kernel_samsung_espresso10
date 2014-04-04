@@ -29,7 +29,6 @@
    the kernel context */
 #define __cold			__attribute__((__cold__))
 
-
 #if __GNUC_MINOR__ >= 5
 /*
  * Mark a position in code as unreachable.  This can be used to

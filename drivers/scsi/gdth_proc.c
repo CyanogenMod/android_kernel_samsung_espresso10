@@ -1,11 +1,11 @@
-/* gdth_proc.c 
+/* gdth_proc.c
  * $Id: gdth_proc.c,v 1.43 2006/01/11 16:15:00 achim Exp $
  */
 
 #include <linux/completion.h>
 #include <linux/slab.h>
 
-int gdth_proc_info(struct Scsi_Host *host, char *buffer,char **start,off_t offset,int length,   
+int gdth_proc_info(struct Scsi_Host *host, char *buffer,char **start,off_t offset,int length,
                    int inout)
 {
     gdth_ha_str *ha = shost_priv(host);
@@ -36,7 +36,7 @@ static int gdth_set_info(char *buffer,int length,struct Scsi_Host *host,
 
     return ret_val;
 }
-         
+
 static int gdth_set_asc_info(struct Scsi_Host *host, char *buffer,
                         int length, gdth_ha_str *ha)
 {
@@ -185,8 +185,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
 
     TRACE2(("gdth_get_info() ha %d\n",ha->hanum));
 
-    
-    /* request is i.e. "cat /proc/scsi/gdth/0" */ 
+    /* request is i.e. "cat /proc/scsi/gdth/0" */
     /* format: %-15s\t%-10s\t%-15s\t%s */
     /* driver parameters */
     size = sprintf(buffer+len,"Driver Parameters:\n");
@@ -196,7 +195,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
     else {
         hlen = sprintf(hrec, "%d", reserve_list[0]);
         for (i = 1;  i < MAX_RES_ARGS; i++) {
-            if (reserve_list[i] == 0xff) 
+            if (reserve_list[i] == 0xff)
                 break;
             hlen += snprintf(hrec + hlen , 161 - hlen, ",%d", reserve_list[i]);
         }
@@ -220,7 +219,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
     len += size;  pos = begin + len;
 
     if (ha->more_proc)
-        sprintf(hrec, "%d.%02d.%02d-%c%03X", 
+        sprintf(hrec, "%d.%02d.%02d-%c%03X",
                 (u8)(ha->binfo.upd_fw_ver>>24),
                 (u8)(ha->binfo.upd_fw_ver>>16),
                 (u8)(ha->binfo.upd_fw_ver),
@@ -234,7 +233,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
                    " Driver Ver.:  \t%-10s\tFirmware Ver.: \t%s\n",
                    GDTH_VERSION_STR, hrec);
     len += size;  pos = begin + len;
- 
+
     if (ha->more_proc) {
         /* more information: 1. about controller */
         size = sprintf(buffer+len,
@@ -265,13 +264,13 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
         size = sprintf(buffer+len,"\nPhysical Devices:");
         len += size;  pos = begin + len;
         flag = FALSE;
-            
+
         buf = gdth_ioctl_alloc(ha, GDTH_SCRATCH, FALSE, &paddr);
-        if (!buf) 
+        if (!buf)
             goto stop_output;
         for (i = 0; i < ha->bus_cnt; ++i) {
             /* 2.a statistics (and retries/reassigns) */
-            TRACE2(("pdr_statistics() chn %d\n",i));                
+            TRACE2(("pdr_statistics() chn %d\n",i));
             pds = (gdth_dskstat_str *)(buf + GDTH_SCRATCH/4);
             gdtcmd->Service = CACHESERVICE;
             gdtcmd->OpCode = GDT_IOCTL;
@@ -294,14 +293,14 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
             for (j = 0; j < ha->raw[i].pdev_cnt; ++j) {
                 /* 2.b drive info */
                 TRACE2(("scsi_drv_info() chn %d dev %d\n",
-                    i, ha->raw[i].id_list[j]));             
+                    i, ha->raw[i].id_list[j]));
                 pdi = (gdth_diskinfo_str *)buf;
                 gdtcmd->Service = CACHESERVICE;
                 gdtcmd->OpCode = GDT_IOCTL;
                 gdtcmd->u.ioctl.p_param = paddr;
                 gdtcmd->u.ioctl.param_size = sizeof(gdth_diskinfo_str);
                 gdtcmd->u.ioctl.subfunc = SCSI_DR_INFO | L_CTRL_PATTERN;
-                gdtcmd->u.ioctl.channel = 
+                gdtcmd->u.ioctl.channel =
                     ha->raw[i].address | ha->raw[i].id_list[j];
 
                 if (gdth_execute(host, gdtcmd, cmnd, 30, NULL) == S_OK) {
@@ -327,7 +326,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
                 } else {
                     pdi->devtype = 0xff;
                 }
-                    
+
                 if (pdi->devtype == 0) {
                     /* search retries/reassigns */
                     for (k = 0; k < pds->count; ++k) {
@@ -343,14 +342,14 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
                     }
                     /* 2.c grown defects */
                     TRACE2(("scsi_drv_defcnt() chn %d dev %d\n",
-                            i, ha->raw[i].id_list[j]));             
+                            i, ha->raw[i].id_list[j]));
                     pdef = (gdth_defcnt_str *)buf;
                     gdtcmd->Service = CACHESERVICE;
                     gdtcmd->OpCode = GDT_IOCTL;
                     gdtcmd->u.ioctl.p_param = paddr;
                     gdtcmd->u.ioctl.param_size = sizeof(gdth_defcnt_str);
                     gdtcmd->u.ioctl.subfunc = SCSI_DEF_CNT | L_CTRL_PATTERN;
-                    gdtcmd->u.ioctl.channel = 
+                    gdtcmd->u.ioctl.channel =
                         ha->raw[i].address | ha->raw[i].id_list[j];
                     pdef->sddc_type = 0x08;
 
@@ -384,7 +383,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
         flag = FALSE;
 
         buf = gdth_ioctl_alloc(ha, GDTH_SCRATCH, FALSE, &paddr);
-        if (!buf) 
+        if (!buf)
             goto stop_output;
         for (i = 0; i < MAX_LDRIVES; ++i) {
             if (!ha->hdr[i].is_logdrv)
@@ -416,7 +415,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
                 } else {
                     strcpy(hrec, "ok");
                 }
-                    
+
                 if (drv_no == i) {
                     size = sprintf(buffer+len,
                                    "\n Number:       \t%-2d        \tStatus:        \t%s\n",
@@ -457,14 +456,14 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
                     goto stop_output;
 		}
             } while (drv_no != -1);
-             
+
             if (is_mirr) {
                 size = sprintf(buffer+len,
                                " Missing Drv.: \t%-2d        \tInvalid Drv.:  \t%d\n",
                                no_mdrv - j - k, k);
                 len += size;  pos = begin + len;
             }
-              
+
             if (!ha->hdr[i].is_arraydrv)
                 strcpy(hrec, "--");
             else
@@ -480,13 +479,13 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
 		gdth_ioctl_free(ha, GDTH_SCRATCH, buf, paddr);
                 goto stop_output;
 	    }
-        }       
+        }
         gdth_ioctl_free(ha, GDTH_SCRATCH, buf, paddr);
-        
+
         if (!flag) {
             size = sprintf(buffer+len, "\n --\n");
             len += size;  pos = begin + len;
-        }   
+        }
 
         /* 4. about array drives */
         size = sprintf(buffer+len,"\nArray Drives:");
@@ -494,7 +493,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
         flag = FALSE;
 
         buf = gdth_ioctl_alloc(ha, GDTH_SCRATCH, FALSE, &paddr);
-        if (!buf) 
+        if (!buf)
             goto stop_output;
         for (i = 0; i < MAX_LDRIVES; ++i) {
             if (!(ha->hdr[i].is_arraydrv && ha->hdr[i].is_master))
@@ -537,7 +536,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
                     strcpy(hrec, "RAID-4");
                 else if (pai->ai_type == 5)
                     strcpy(hrec, "RAID-5");
-                else 
+                else
                     strcpy(hrec, "RAID-10");
                 size = sprintf(buffer+len,
                                " Capacity [MB]:\t%-6d    \tType:          \t%s\n",
@@ -555,7 +554,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
             }
         }
         gdth_ioctl_free(ha, GDTH_SCRATCH, buf, paddr);
-        
+
         if (!flag) {
             size = sprintf(buffer+len, "\n --\n");
             len += size;  pos = begin + len;
@@ -567,14 +566,14 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
         flag = FALSE;
 
         buf = gdth_ioctl_alloc(ha, sizeof(gdth_hget_str), FALSE, &paddr);
-        if (!buf) 
+        if (!buf)
             goto stop_output;
         for (i = 0; i < MAX_LDRIVES; ++i) {
-            if (!ha->hdr[i].is_logdrv || 
+            if (!ha->hdr[i].is_logdrv ||
                 (ha->hdr[i].is_arraydrv && !ha->hdr[i].is_master))
                 continue;
             /* 5.a get host drive list */
-            TRACE2(("host_get() drv_no %d\n",i));           
+            TRACE2(("host_get() drv_no %d\n",i));
             phg = (gdth_hget_str *)buf;
             gdtcmd->Service = CACHESERVICE;
             gdtcmd->OpCode = GDT_IOCTL;
@@ -583,7 +582,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
             gdtcmd->u.ioctl.subfunc = HOST_GET | LA_CTRL_PATTERN;
             gdtcmd->u.ioctl.channel = i;
             phg->entries = MAX_HDRIVES;
-            phg->offset = GDTOFFSOF(gdth_hget_str, entry[0]); 
+            phg->offset = GDTOFFSOF(gdth_hget_str, entry[0]);
             if (gdth_execute(host, gdtcmd, cmnd, 30, NULL) == S_OK) {
                 ha->hdr[i].ldr_no = i;
                 ha->hdr[i].rw_attribs = 0;
@@ -604,7 +603,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
         for (i = 0; i < MAX_HDRIVES; ++i) {
             if (!(ha->hdr[i].present))
                 continue;
-              
+
             size = sprintf(buffer+len,
                            "\n Number:       \t%-2d        \tArr/Log. Drive:\t%d\n",
                            i, ha->hdr[i].ldr_no);
@@ -622,7 +621,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
             if (pos > offset + length)
                 goto stop_output;
         }
-        
+
         if (!flag) {
             size = sprintf(buffer+len, "\n --\n");
             len += size;  pos = begin + len;
@@ -638,7 +637,7 @@ static int gdth_get_info(char *buffer,char **start,off_t offset,int length,
         if (estr->event_source == 0)
             break;
         if (estr->event_data.eu.driver.ionode == ha->hanum &&
-            estr->event_source == ES_ASYNC) { 
+            estr->event_source == ES_ASYNC) {
             gdth_log_event(&estr->event_data, hrec);
             do_gettimeofday(&tv);
             sec = (int)(tv.tv_sec - estr->first_stamp);
@@ -747,7 +746,7 @@ static void gdth_wait_completion(gdth_ha_str *ha, int busnum, int id)
 
         b = scp->device->channel;
         t = scp->device->id;
-        if (!SPECIAL_SCP(scp) && t == (u8)id && 
+        if (!SPECIAL_SCP(scp) && t == (u8)id &&
             b == (u8)busnum) {
             cmndinfo->wait_for_completion = 0;
             spin_unlock_irqrestore(&ha->smp_lock, flags);

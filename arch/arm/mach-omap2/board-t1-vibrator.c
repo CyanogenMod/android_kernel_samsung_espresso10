@@ -23,7 +23,6 @@
 #include "board-t1.h"
 #include "omap_muxtbl.h"
 
-
 #define VIB_GPTIMER_NUM		10
 #define PWM_DUTY_MAX		1463
 
@@ -112,7 +111,6 @@ static int vibrator_enable(int actr_idx, int on)
 static int pwm_init(void)
 {
 	int ret;
-
 
 	gptimer = omap_dm_timer_request_specific(VIB_GPTIMER_NUM);
 	if (unlikely(gptimer == NULL))

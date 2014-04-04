@@ -82,7 +82,6 @@ int InitialiseRamdac(volatile STG4000REG __iomem * pSTGReg,
 	     | (stride / ulPdiv));
 	STG_WRITE_REG(DACPrimSize, tmp);
 
-
 	/* Set Pixel Clock */
 	*pixelClock = ProgramClock(REF_CLOCK, *pixelClock, &F, &R, &P);
 

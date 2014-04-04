@@ -1329,7 +1329,6 @@ static int set_control_line(struct ipw_hardware *hw, int prio,
 	return 0;
 }
 
-
 static int set_DTR(struct ipw_hardware *hw, int priority,
 		   unsigned int channel_idx, int state)
 {

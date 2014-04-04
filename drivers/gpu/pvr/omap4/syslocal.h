@@ -48,7 +48,6 @@
 #endif
 #endif
 
-
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,35))
 #if !defined(LDM_PLATFORM)
 #error "LDM_PLATFORM must be set"
@@ -92,8 +91,6 @@
 #if defined (__cplusplus)
 extern "C" {
 #endif
-
-
 
 IMG_VOID DisableSystemClocks(SYS_DATA *psSysData);
 PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData);

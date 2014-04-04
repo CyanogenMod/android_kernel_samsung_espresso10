@@ -1295,7 +1295,6 @@ int insert_inode_locked4(struct inode *inode, unsigned long hashval,
 }
 EXPORT_SYMBOL(insert_inode_locked4);
 
-
 int generic_delete_inode(struct inode *inode)
 {
 	return 1;

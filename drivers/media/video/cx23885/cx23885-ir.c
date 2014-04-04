@@ -33,7 +33,6 @@
 
 #define CX23885_IR_TX_FIFO_SERVICE_REQ		0
 
-
 void cx23885_ir_rx_work_handler(struct work_struct *work)
 {
 	struct cx23885_dev *dev =

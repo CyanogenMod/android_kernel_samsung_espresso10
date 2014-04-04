@@ -36,14 +36,12 @@
 #include "modem_variation.h"
 #include "modem_utils.h"
 
-
 /* Channel 0, 5, 6, 27, 255 are reserved in SIPC5.
  * see SIPC5 spec: 2.2.2 Channel Identification (Ch ID) Field.
  * They do not need to store in `iodevs_tree_fmt'
  */
 #define sipc5_is_not_reserved_channel(ch) \
 	((ch) != 0 && (ch) != 5 && (ch) != 6 && (ch) != 27 && (ch) != 255)
-
 
 static struct modem_shared *create_modem_shared_data(void)
 {

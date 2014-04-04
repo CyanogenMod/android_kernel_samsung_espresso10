@@ -123,7 +123,6 @@ typedef	union _QOS_CTRL_FIELD{
 
 }QOS_CTRL_FIELD, *PQOS_CTRL_FIELD;
 
-
 //
 // QoS Info Field
 // Ref:
@@ -284,8 +283,6 @@ typedef	union _AC_PARAM{
 	}f;	// Field
 }AC_PARAM, *PAC_PARAM;
 
-
-
 //
 // QoS element subtype
 //
@@ -293,7 +290,6 @@ typedef	enum _QOS_ELE_SUBTYPE{
 	QOSELE_TYPE_INFO	= 0x00,		// 0x00: Information element
 	QOSELE_TYPE_PARAM	= 0x01,		// 0x01: parameter element
 }QOS_ELE_SUBTYPE,*PQOS_ELE_SUBTYPE;
-
 
 //
 // Direction Field Values.
@@ -305,7 +301,6 @@ typedef	enum _DIRECTION_VALUE{
 	DIR_DIRECT		= 2,		// 0x10	// DirectLink
 	DIR_BI_DIR		= 3,		// 0x11	// Bi-Direction
 }DIRECTION_VALUE,*PDIRECTION_VALUE;
-
 
 //
 // TS Info field in WMM TSPEC Element.
@@ -357,7 +352,6 @@ typedef union _TSPEC_BODY{
 	} f;	// Field
 }TSPEC_BODY, *PTSPEC_BODY;
 
-
 //
 // WMM TSPEC Element.
 // Ref: WMM spec 2.2.11: WME TSPEC Element, p.16.
@@ -382,7 +376,6 @@ typedef	enum _ACM_METHOD{
 	eAcmWay2_SW			= 2,		// By SW.
 }ACM_METHOD,*PACM_METHOD;
 
-
 typedef struct _ACM{
 //	u8		RegEnableACM;
 	u64		UsedTime;
@@ -403,7 +396,6 @@ typedef	u8		AC_UAPSD, *PAC_UAPSD;
 
 #define	GET_BE_UAPSD(_apsd) ((_apsd) & BIT3)
 #define	SET_BE_UAPSD(_apsd) ((_apsd) |= BIT3)
-
 
 //typedef struct _TCLASS{
 // TODO
@@ -565,14 +557,12 @@ typedef struct _BSS_QOS{
 	AC_PARAM		AcParameter[4];
 }BSS_QOS, *PBSS_QOS;
 
-
 //
 // Ref: sQoSCtlLng and QoSCtl definition in 8185 QoS code.
 //#define QoSCtl   ((	(Adapter->bRegQoS) && (Adapter->dot11QoS.QoSMode &(QOS_EDCA|QOS_HCCA))	  )  ?sQoSCtlLng:0)
 //
 #define sQoSCtlLng			2
 #define	QOS_CTRL_LEN(_QosMode)		((_QosMode > QOS_DISABLE)? sQoSCtlLng : 0)
-
 
 //Added by joseph
 //UP Mapping to AC, using in MgntQuery_SequenceNumber() and maybe for DSCP

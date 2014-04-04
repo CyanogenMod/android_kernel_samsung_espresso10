@@ -30,7 +30,6 @@
 #include <linux/usb.h>
 #include <linux/usb/tmc.h>
 
-
 #define USBTMC_MINOR_BASE	176
 
 /*
@@ -995,7 +994,6 @@ static struct usb_class_driver usbtmc_class = {
 	.fops =		&fops,
 	.minor_base =	USBTMC_MINOR_BASE,
 };
-
 
 static int usbtmc_probe(struct usb_interface *intf,
 			const struct usb_device_id *id)

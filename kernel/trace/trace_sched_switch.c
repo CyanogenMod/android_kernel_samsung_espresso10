@@ -20,7 +20,6 @@ static int			sched_ref;
 static DEFINE_MUTEX(sched_register_mutex);
 static int			sched_stopped;
 
-
 void
 tracing_sched_switch_trace(struct trace_array *tr,
 			   struct task_struct *prev,
@@ -246,4 +245,3 @@ void tracing_sched_switch_assign_trace(struct trace_array *tr)
 {
 	ctx_trace = tr;
 }
-

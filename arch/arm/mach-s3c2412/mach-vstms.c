@@ -48,7 +48,6 @@
 #include <plat/devs.h>
 #include <plat/cpu.h>
 
-
 static struct map_desc vstms_iodesc[] __initdata = {
 };
 

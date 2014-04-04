@@ -69,7 +69,6 @@
 
 #define STB6100_NUMREGS                 0x0c
 
-
 #define INRANGE(val, x, y)		(((x <= val) && (val <= y)) ||		\
 					 ((y <= val) && (val <= x)) ? 1 : 0)
 

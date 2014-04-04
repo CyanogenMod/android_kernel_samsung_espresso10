@@ -45,4 +45,3 @@ struct fb_info *viafbinfo;
 struct fb_info *viafbinfo1;
 struct viafb_par *viaparinfo;
 struct viafb_par *viaparinfo1;
-

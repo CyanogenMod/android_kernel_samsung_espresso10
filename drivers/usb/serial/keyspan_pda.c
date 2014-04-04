@@ -67,7 +67,6 @@
  *
  */
 
-
 #include <linux/kernel.h>
 #include <linux/errno.h>
 #include <linux/init.h>
@@ -113,7 +112,6 @@ struct keyspan_pda_private {
 	struct usb_serial	*serial;
 	struct usb_serial_port	*port;
 };
-
 
 #define KEYSPAN_VENDOR_ID		0x06cd
 #define KEYSPAN_PDA_FAKE_ID		0x0103
@@ -203,7 +201,6 @@ static void keyspan_pda_request_unthrottle(struct work_struct *work)
 		    __func__, result);
 }
 
-
 static void keyspan_pda_rx_interrupt(struct urb *urb)
 {
 	struct usb_serial_port *port = urb->context;
@@ -270,7 +267,6 @@ exit:
 			__func__, retval);
 }
 
-
 static void keyspan_pda_rx_throttle(struct tty_struct *tty)
 {
 	/* stop receiving characters. We just turn off the URB request, and
@@ -284,7 +280,6 @@ static void keyspan_pda_rx_throttle(struct tty_struct *tty)
 	usb_kill_urb(port->interrupt_in_urb);
 }
 
-
 static void keyspan_pda_rx_unthrottle(struct tty_struct *tty)
 {
 	struct usb_serial_port *port = tty->driver_data;
@@ -294,7 +289,6 @@ static void keyspan_pda_rx_unthrottle(struct tty_struct *tty)
 	if (usb_submit_urb(port->interrupt_in_urb, GFP_KERNEL))
 		dbg(" usb_submit_urb(read urb) failed");
 }
-
 
 static speed_t keyspan_pda_setbaud(struct usb_serial *serial, speed_t baud)
 {
@@ -354,7 +348,6 @@ static speed_t keyspan_pda_setbaud(struct usb_serial *serial, speed_t baud)
 	return baud;
 }
 
-
 static void keyspan_pda_break_ctl(struct tty_struct *tty, int break_state)
 {
 	struct usb_serial_port *port = tty->driver_data;
@@ -378,7 +371,6 @@ static void keyspan_pda_break_ctl(struct tty_struct *tty, int break_state)
 	   seconds apart, but it feels like the break sent isn't as long as it
 	   is on /dev/ttyS0 */
 }
-
 
 static void keyspan_pda_set_termios(struct tty_struct *tty,
 		struct usb_serial_port *port, struct ktermios *old_termios)
@@ -420,7 +412,6 @@ static void keyspan_pda_set_termios(struct tty_struct *tty,
 	tty_encode_baud_rate(tty, speed, speed);
 }
 
-
 /* modem control pins: DTR and RTS are outputs and can be controlled.
    DCD, RI, DSR, CTS are inputs and can be read. All outputs can also be
    read. The byte passed is: DTR(b7) DCD RI DSR CTS RTS(b2) unused unused */
@@ -445,7 +436,6 @@ static int keyspan_pda_get_modem_info(struct usb_serial *serial,
 	kfree(data);
 	return rc;
 }
-
 
 static int keyspan_pda_set_modem_info(struct usb_serial *serial,
 				      unsigned char value)
@@ -622,7 +612,6 @@ exit:
 	return rc;
 }
 
-
 static void keyspan_pda_write_bulk_callback(struct urb *urb)
 {
 	struct usb_serial_port *port = urb->context;
@@ -635,7 +624,6 @@ static void keyspan_pda_write_bulk_callback(struct urb *urb)
 	schedule_work(&priv->wakeup_work);
 }
 
-
 static int keyspan_pda_write_room(struct tty_struct *tty)
 {
 	struct usb_serial_port *port = tty->driver_data;
@@ -646,7 +634,6 @@ static int keyspan_pda_write_room(struct tty_struct *tty)
 	   running a console through the device. */
 	return priv->tx_room;
 }
-
 
 static int keyspan_pda_chars_in_buffer(struct tty_struct *tty)
 {
@@ -667,7 +654,6 @@ static int keyspan_pda_chars_in_buffer(struct tty_struct *tty)
 	return ret;
 }
 
-
 static void keyspan_pda_dtr_rts(struct usb_serial_port *port, int on)
 {
 	struct usb_serial *serial = port->serial;
@@ -679,7 +665,6 @@ static void keyspan_pda_dtr_rts(struct usb_serial_port *port, int on)
 			keyspan_pda_set_modem_info(serial, 0);
 	}
 }
-
 
 static int keyspan_pda_open(struct tty_struct *tty,
 					struct usb_serial_port *port)
@@ -737,7 +722,6 @@ static void keyspan_pda_close(struct usb_serial_port *port)
 		usb_kill_urb(port->interrupt_in_urb);
 	}
 }
-
 
 /* download the firmware to a "fake" device (pre-renumeration) */
 static int keyspan_pda_fake_startup(struct usb_serial *serial)
@@ -883,7 +867,6 @@ static struct usb_serial_driver keyspan_pda_device = {
 	.release =		keyspan_pda_release,
 };
 
-
 static int __init keyspan_pda_init(void)
 {
 	int retval;
@@ -922,7 +905,6 @@ failed_pda_register:
 	return retval;
 }
 
-
 static void __exit keyspan_pda_exit(void)
 {
 	usb_deregister(&keyspan_pda_driver);
@@ -935,7 +917,6 @@ static void __exit keyspan_pda_exit(void)
 #endif
 }
 
-
 module_init(keyspan_pda_init);
 module_exit(keyspan_pda_exit);
 
@@ -945,4 +926,3 @@ MODULE_LICENSE("GPL");
 
 module_param(debug, bool, S_IRUGO | S_IWUSR);
 MODULE_PARM_DESC(debug, "Debug enabled or not");
-

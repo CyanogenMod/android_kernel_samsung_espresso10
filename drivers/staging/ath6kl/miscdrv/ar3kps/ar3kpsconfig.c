@@ -24,8 +24,6 @@
  *
  */
 
-
-
 #include "ar3kpsconfig.h"
 #ifndef HCI_TRANSPORT_SDIO
 #include "hci_ath.h"
@@ -36,7 +34,7 @@
 #define MAX_BDADDR_FORMAT_LENGTH    30
 
 /*
- *  Structure used to send HCI packet, hci packet length and device info 
+ *  Structure used to send HCI packet, hci packet length and device info
  *  together as parameter to PSThread.
  */
 typedef struct {
@@ -88,9 +86,6 @@ void Hci_log(u8 * log_string,u8 *data,u32 len)
 #define Hci_log(string,data,len)
 #endif /* BT_PS_DEBUG */
 
-
-
-
 int AthPSInitialize(struct ar3k_config_info *hdev)
 {
     int status = 0;
@@ -102,7 +97,6 @@ int AthPSInitialize(struct ar3k_config_info *hdev)
 #ifndef HCI_TRANSPORT_SDIO
     DECLARE_WAITQUEUE(wait, current);
 #endif /* HCI_TRANSPORT_SDIO */
-    
 
 #ifdef HCI_TRANSPORT_SDIO
     status = PSSendOps((void*)hdev);
@@ -124,12 +118,11 @@ int AthPSInitialize(struct ar3k_config_info *hdev)
 
 #endif /* HCI_TRANSPORT_SDIO */
 
-
     return status;
-    
+
 }
 
-int PSSendOps(void *arg) 
+int PSSendOps(void *arg)
 {
     int i;
     int status = 0;
@@ -152,9 +145,9 @@ int PSSendOps(void *arg)
     status = 0;
     HciCmdList = NULL;
 #ifdef HCI_TRANSPORT_SDIO
-    device = hdev->pBtStackHCIDev; 
+    device = hdev->pBtStackHCIDev;
     firmwareDev = device->parent;
-#else 
+#else
     device = hdev;
     firmwareDev = &device->dev;
     AthEnableSyncCommandOp(true);
@@ -190,7 +183,7 @@ int PSSendOps(void *arg)
 	    } else{
     		AR_DEBUG_PRINTF(ATH_DEBUG_ERR,(" FPGA Test Image : %x %x  \n",Rom_Version,Build_Version));
                 if((Rom_Version == 0x99999999) && (Build_Version == 1)){
-                        
+
     			AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("FPGA Test Image : Skipping Patch File load\n"));
     			patchFileName = NULL;
 		}
@@ -227,7 +220,6 @@ int PSSendOps(void *arg)
         A_RELEASE_FIRMWARE(firmware);
     }
 
-
     /* Read the patch file to a dynamically allocated buffer */
 	if(patchFileName != NULL)
                 snprintf(config_path,
@@ -238,7 +230,7 @@ int PSSendOps(void *arg)
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Patch File Name %s\n", config_path));
     if((patchFileName == NULL) || (A_REQUEST_FIRMWARE(&firmware,config_path,firmwareDev) < 0)) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("%s: firmware file open error\n", __FUNCTION__ ));
-        /* 
+        /*
          *  It is not necessary that Patch file be available, continue with PS Operations if.
          *  failed.
          */
@@ -267,11 +259,10 @@ int PSSendOps(void *arg)
     AthCreateCommandList(&HciCmdList,&numCmds);
 
     /* Form the parameter for PSSendOps() API */
- 
 
     /*
-     * First Send the CRC packet, 
-     * We have to continue with the PS operations only if the CRC packet has been replied with 
+     * First Send the CRC packet,
+     * We have to continue with the PS operations only if the CRC packet has been replied with
      * a Command complete event with status Error.
      */
 
@@ -285,12 +276,12 @@ int PSSendOps(void *arg)
             if(bufferToFree != NULL) {
                 kfree(bufferToFree);
                 }
-	
+
 #ifndef HCI_TRANSPORT_SDIO
 			if(bdaddr && bdaddr[0] !='\0') {
 				write_bdaddr(hdev,bdaddr,BDADDR_TYPE_STRING);
 			}
-#endif 
+#endif
                status = 1;
                goto complete;
         }
@@ -301,9 +292,9 @@ int PSSendOps(void *arg)
         status = 0;
         goto complete;
     }
- 
+
     for(i = 1; i <numCmds; i++) {
-    
+
         if(SendHCICommandWaitCommandComplete
         (hdev,
         HciCmdList[i].Hcipacket,
@@ -342,8 +333,6 @@ int PSSendOps(void *arg)
 	} else
 #endif /* HCI_TRANSPORT_SDIO */
     /* Write BDADDR Read from OTP here */
-
-
 
 #endif
 
@@ -387,7 +376,7 @@ complete:
 /*
  *  This API is used to send the HCI command to controller and return
  *  with a HCI Command Complete event.
- *  For HCI SDIO transport, this will be internally defined. 
+ *  For HCI SDIO transport, this will be internally defined.
  */
 int SendHCICommandWaitCommandComplete(struct ar3k_config_info *pConfig,
                                            u8 *pHCICommand,
@@ -421,7 +410,7 @@ int SendHCICommandWaitCommandComplete(struct ar3k_config_info *pConfig,
 
 int ReadPSEvent(u8* Data){
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,(" PS Event %x %x %x\n",Data[4],Data[5],Data[3]));
-                                
+
     if(Data[4] == 0xFC && Data[5] == 0x00)
     {
          switch(Data[3]){
@@ -431,10 +420,10 @@ int ReadPSEvent(u8* Data){
                  case 0x0C:
                     /* Change Baudrate */
                         return 0;
-                 break;  
+                 break;
                  case 0x04:
                      return 0;
-                 break;  
+                 break;
 		case 0x1E:
 			Rom_Version = Data[9];
 			Rom_Version = ((Rom_Version << 8) |Data[8]);
@@ -448,11 +437,10 @@ int ReadPSEvent(u8* Data){
 			return 0;
 		break;
 
-        
                 }
-    }                       
-        
-    return A_ERROR;           
+    }
+
+    return A_ERROR;
 }
 int str2ba(unsigned char *str_bdaddr,unsigned char *bdaddr)
 {
@@ -464,7 +452,6 @@ int str2ba(unsigned char *str_bdaddr,unsigned char *bdaddr)
 	if(NULL != strstr(str_bdaddr,":")) {
 		colon_present = 1;
 	}
-
 
 	bdbyte[2] = '\0';
 
@@ -478,12 +465,12 @@ int str2ba(unsigned char *str_bdaddr,unsigned char *bdaddr)
 			str_byte+=2;
 		}
 	}
-	return 0; 
+	return 0;
 }
 
 int write_bdaddr(struct ar3k_config_info *pConfig,u8 *bdaddr,int type)
 {
-	u8 bdaddr_cmd[] = { 0x0B, 0xFC, 0x0A, 0x01, 0x01, 
+	u8 bdaddr_cmd[] = { 0x0B, 0xFC, 0x0A, 0x01, 0x01,
 							0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
     u8 *event;
@@ -568,5 +555,3 @@ int getDeviceType(struct ar3k_config_info *pConfig, u32 *code)
    }
     return result;
 }
-
-

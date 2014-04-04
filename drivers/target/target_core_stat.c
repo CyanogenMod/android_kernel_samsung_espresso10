@@ -294,7 +294,6 @@ static ssize_t target_stat_scsi_tgt_dev_show_attr_resets(
 }
 DEV_STAT_SCSI_TGT_DEV_ATTR_RO(resets);
 
-
 CONFIGFS_EATTR_OPS(target_stat_scsi_tgt_dev, se_dev_stat_grps, scsi_tgt_dev_group);
 
 static struct configfs_attribute *target_stat_scsi_tgt_dev_attrs[] = {

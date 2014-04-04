@@ -19,8 +19,6 @@
  *
  */
 
-
-
 #ifndef _NET_BATMAN_ADV_TYPES_H_
 #define _NET_BATMAN_ADV_TYPES_H_
 
@@ -31,7 +29,6 @@
 	((sizeof(struct unicast_packet) > sizeof(struct bcast_packet) ? \
 	 sizeof(struct unicast_packet) : \
 	 sizeof(struct bcast_packet))))
-
 
 struct hard_iface {
 	struct list_head list;
@@ -127,7 +124,6 @@ struct neigh_node {
 	struct hard_iface *if_incoming;
 	spinlock_t tq_lock;	/* protects: tq_recv, tq_index */
 };
-
 
 struct bat_priv {
 	atomic_t mesh_state;

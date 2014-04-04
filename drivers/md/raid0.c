@@ -5,17 +5,16 @@
 	     <maz@gloups.fdn.fr>
              Copyright (C) 1999, 2000 Ingo Molnar, Red Hat
 
-
    RAID-0 management functions.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
-   
+
    You should have received a copy of the GNU General Public License
    (for example /usr/src/linux/COPYING); if not, write to the Free
-   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  
+   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #include <linux/blkdev.h>
@@ -314,7 +313,7 @@ static int raid0_mergeable_bvec(struct request_queue *q,
 	if (max < 0) max = 0; /* bio_add cannot handle a negative return */
 	if (max <= biovec->bv_len && bio_sectors == 0)
 		return biovec->bv_len;
-	else 
+	else
 		return max;
 }
 

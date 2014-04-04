@@ -93,7 +93,6 @@ fail:
 	return NULL;
 }
 
-
 static void ieee80211_ccmp_deinit(void *priv)
 {
 	struct ieee80211_ccmp_data *_priv = priv;
@@ -103,15 +102,12 @@ static void ieee80211_ccmp_deinit(void *priv)
 	kfree(priv);
 }
 
-
 static inline void xor_block(u8 *b, u8 *a, size_t len)
 {
 	int i;
 	for (i = 0; i < len; i++)
 		b[i] ^= a[i];
 }
-
-
 
 static void ccmp_init_blocks(struct crypto_tfm *tfm,
 			     struct ieee80211_hdr_4addr *hdr,
@@ -191,8 +187,6 @@ static void ccmp_init_blocks(struct crypto_tfm *tfm,
 	ieee80211_ccmp_aes_encrypt(tfm, b0, s0);
 }
 
-
-
 static int ieee80211_ccmp_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 {
 	struct ieee80211_ccmp_data *key = priv;
@@ -228,7 +222,6 @@ static int ieee80211_ccmp_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	*pos++ = key->tx_pn[2];
 	*pos++ = key->tx_pn[1];
 	*pos++ = key->tx_pn[0];
-
 
 	hdr = (struct ieee80211_hdr_4addr *) skb->data;
 	if (!tcb_desc->bHwSec)
@@ -266,7 +259,6 @@ static int ieee80211_ccmp_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	}
 	return 0;
 }
-
 
 static int ieee80211_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 {
@@ -333,7 +325,6 @@ static int ieee80211_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 		u8 *a = key->rx_a;
 		int i, blocks, last, len;
 
-
 		ccmp_init_blocks(key->tfm, hdr, pn, data_len, b0, a, b);
 		xor_block(mic, b, CCMP_MIC_LEN);
 
@@ -372,7 +363,6 @@ static int ieee80211_ccmp_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	return keyidx;
 }
 
-
 static int ieee80211_ccmp_set_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct ieee80211_ccmp_data *data = priv;
@@ -403,7 +393,6 @@ static int ieee80211_ccmp_set_key(void *key, int len, u8 *seq, void *priv)
 	return 0;
 }
 
-
 static int ieee80211_ccmp_get_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct ieee80211_ccmp_data *data = priv;
@@ -426,7 +415,6 @@ static int ieee80211_ccmp_get_key(void *key, int len, u8 *seq, void *priv)
 
 	return CCMP_TK_LEN;
 }
-
 
 static char * ieee80211_ccmp_print_stats(char *p, void *priv)
 {

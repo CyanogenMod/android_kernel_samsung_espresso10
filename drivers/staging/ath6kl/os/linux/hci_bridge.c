@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -55,7 +55,7 @@
 
     /* only build on newer kernels which have BT configured */
 #if defined(CONFIG_BT_MODULE) || defined(CONFIG_BT)
-#define CONFIG_BLUEZ_HCI_BRIDGE  
+#define CONFIG_BLUEZ_HCI_BRIDGE
 #endif
 
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
@@ -82,7 +82,7 @@ struct ar6k_hci_bridge_info {
     u8 *pHTCStructAlloc;
     spinlock_t              BridgeLock;
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
-    struct hci_transport_misc_handles    HCITransHdl; 
+    struct hci_transport_misc_handles    HCITransHdl;
 #else
     struct ar6_softc              *ar;
 #endif /* EXPORT_HCI_BRIDGE_INTERFACE */
@@ -109,11 +109,11 @@ static int bt_setup_hci(struct ar6k_hci_bridge_info *pHcidevInfo);
 static void     bt_cleanup_hci(struct ar6k_hci_bridge_info *pHcidevInfo);
 static int bt_register_hci(struct ar6k_hci_bridge_info *pHcidevInfo);
 static bool   bt_indicate_recv(struct ar6k_hci_bridge_info      *pHcidevInfo,
-                                 HCI_TRANSPORT_PACKET_TYPE Type, 
+                                 HCI_TRANSPORT_PACKET_TYPE Type,
                                  struct sk_buff            *skb);
 static struct sk_buff *bt_alloc_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, int Length);
-static void     bt_free_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, struct sk_buff *skb);   
-                               
+static void     bt_free_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, struct sk_buff *skb);
+
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
 int ar6000_setup_hci(void *ar);
 void     ar6000_cleanup_hci(void *ar);
@@ -129,7 +129,7 @@ int hci_test_send(struct ar6_softc *ar, struct sk_buff *skb);
 #define UNLOCK_BRIDGE(dev) spin_unlock_bh(&(dev)->BridgeLock)
 
 static inline void FreeBtOsBuf(struct ar6k_hci_bridge_info *pHcidevInfo, void *osbuf)
-{    
+{
     if (pHcidevInfo->HciNormalMode) {
         bt_free_buffer(pHcidevInfo, (struct sk_buff *)osbuf);
     } else {
@@ -142,7 +142,7 @@ static void FreeHTCStruct(struct ar6k_hci_bridge_info *pHcidevInfo, struct htc_p
 {
     LOCK_BRIDGE(pHcidevInfo);
     HTC_PACKET_ENQUEUE(&pHcidevInfo->HTCPacketStructHead,pPacket);
-    UNLOCK_BRIDGE(pHcidevInfo);  
+    UNLOCK_BRIDGE(pHcidevInfo);
 }
 
 static struct htc_packet * AllocHTCStruct(struct ar6k_hci_bridge_info *pHcidevInfo)
@@ -150,14 +150,14 @@ static struct htc_packet * AllocHTCStruct(struct ar6k_hci_bridge_info *pHcidevIn
     struct htc_packet  *pPacket = NULL;
     LOCK_BRIDGE(pHcidevInfo);
     pPacket = HTC_PACKET_DEQUEUE(&pHcidevInfo->HTCPacketStructHead);
-    UNLOCK_BRIDGE(pHcidevInfo);  
+    UNLOCK_BRIDGE(pHcidevInfo);
     return pPacket;
 }
 
 #define BLOCK_ROUND_UP_PWR2(x, align)    (((int) (x) + ((align)-1)) & ~((align)-1))
 
-static void RefillRecvBuffers(struct ar6k_hci_bridge_info      *pHcidevInfo, 
-                              HCI_TRANSPORT_PACKET_TYPE Type, 
+static void RefillRecvBuffers(struct ar6k_hci_bridge_info      *pHcidevInfo,
+                              HCI_TRANSPORT_PACKET_TYPE Type,
                               int                       NumBuffers)
 {
     int                 length, i;
@@ -166,48 +166,48 @@ static void RefillRecvBuffers(struct ar6k_hci_bridge_info      *pHcidevInfo,
     struct htc_packet          *pPacket;
 
     INIT_HTC_PACKET_QUEUE(&queue);
-    
-    if (Type == HCI_ACL_TYPE) {     
-        if (pHcidevInfo->HciNormalMode) {  
+
+    if (Type == HCI_ACL_TYPE) {
+        if (pHcidevInfo->HciNormalMode) {
             length = HCI_MAX_FRAME_SIZE;
         } else {
-            length = MAX_ACL_RECV_LENGTH;    
+            length = MAX_ACL_RECV_LENGTH;
         }
     } else {
         length = MAX_EVT_RECV_LENGTH;
     }
-    
-        /* add on transport head and tail room */ 
+
+        /* add on transport head and tail room */
     length += pHcidevInfo->HCIProps.HeadRoom + pHcidevInfo->HCIProps.TailRoom;
-        /* round up to the required I/O padding */      
+        /* round up to the required I/O padding */
     length = BLOCK_ROUND_UP_PWR2(length,pHcidevInfo->HCIProps.IOBlockPad);
-             
-    for (i = 0; i < NumBuffers; i++) {   
-           
-        if (pHcidevInfo->HciNormalMode) {   
-            osBuf = bt_alloc_buffer(pHcidevInfo,length);       
+
+    for (i = 0; i < NumBuffers; i++) {
+
+        if (pHcidevInfo->HciNormalMode) {
+            osBuf = bt_alloc_buffer(pHcidevInfo,length);
         } else {
-            osBuf = A_NETBUF_ALLOC(length);  
+            osBuf = A_NETBUF_ALLOC(length);
         }
-          
+
         if (NULL == osBuf) {
-            break;    
-        }            
-         
+            break;
+        }
+
         pPacket = AllocHTCStruct(pHcidevInfo);
         if (NULL == pPacket) {
             FreeBtOsBuf(pHcidevInfo,osBuf);
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Failed to alloc HTC struct \n"));
-            break;    
-        }     
-        
+            break;
+        }
+
         SET_HTC_PACKET_INFO_RX_REFILL(pPacket,osBuf,A_NETBUF_DATA(osBuf),length,Type);
             /* add to queue */
         HTC_PACKET_ENQUEUE(&queue,pPacket);
     }
-    
+
     if (i > 0) {
-        HCI_TransportAddReceivePkts(pHcidevInfo->pHCIDev, &queue);    
+        HCI_TransportAddReceivePkts(pHcidevInfo->pHCIDev, &queue);
     }
 }
 
@@ -215,45 +215,45 @@ static void RefillRecvBuffers(struct ar6k_hci_bridge_info      *pHcidevInfo,
         (((ar)->arTargetType == TARGET_TYPE_AR6002) ? AR6002_HOST_INTEREST_ITEM_ADDRESS(item) : \
         (((ar)->arTargetType == TARGET_TYPE_AR6003) ? AR6003_HOST_INTEREST_ITEM_ADDRESS(item) : 0))
 static int ar6000_hci_transport_ready(HCI_TRANSPORT_HANDLE     HCIHandle,
-                                           struct hci_transport_properties *pProps, 
+                                           struct hci_transport_properties *pProps,
                                            void                     *pContext)
 {
     struct ar6k_hci_bridge_info *pHcidevInfo = (struct ar6k_hci_bridge_info *)pContext;
     int              status;
     u32 address, hci_uart_pwr_mgmt_params;
 //    struct ar3k_config_info      ar3kconfig;
-    
+
     pHcidevInfo->pHCIDev = HCIHandle;
-    
+
     memcpy(&pHcidevInfo->HCIProps,pProps,sizeof(*pProps));
-    
-    AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE,("HCI ready (hci:0x%lX, headroom:%d, tailroom:%d blockpad:%d) \n", 
-            (unsigned long)HCIHandle, 
-            pHcidevInfo->HCIProps.HeadRoom, 
+
+    AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE,("HCI ready (hci:0x%lX, headroom:%d, tailroom:%d blockpad:%d) \n",
+            (unsigned long)HCIHandle,
+            pHcidevInfo->HCIProps.HeadRoom,
             pHcidevInfo->HCIProps.TailRoom,
             pHcidevInfo->HCIProps.IOBlockPad));
-    
+
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
     A_ASSERT((pProps->HeadRoom + pProps->TailRoom) <= (struct net_device *)(pHcidevInfo->HCITransHdl.netDevice)->hard_header_len);
 #else
     A_ASSERT((pProps->HeadRoom + pProps->TailRoom) <= pHcidevInfo->ar->arNetDev->hard_header_len);
 #endif
-                             
+
         /* provide buffers */
     RefillRecvBuffers(pHcidevInfo, HCI_ACL_TYPE, MAX_ACL_RECV_BUFS);
     RefillRecvBuffers(pHcidevInfo, HCI_EVENT_TYPE, MAX_EVT_RECV_BUFS);
-   
+
     do {
             /* start transport */
         status = HCI_TransportStart(pHcidevInfo->pHCIDev);
-         
+
         if (status) {
-            break;    
+            break;
         }
-        
+
         if (!pHcidevInfo->HciNormalMode) {
                 /* in test mode, no need to go any further */
-            break;    
+            break;
         }
 
         // The delay is required when AR6K is driving the BT reset line
@@ -264,7 +264,7 @@ static int ar6000_hci_transport_ready(HCI_TRANSPORT_HANDLE     HCIHandle,
         // reset line. This could be done by some module parameter or based on some HW config
         // info. For now apply 100ms delay blindly
         A_MDELAY(100);
-        
+
         A_MEMZERO(&ar3kconfig,sizeof(ar3kconfig));
         ar3kconfig.pHCIDev = pHcidevInfo->pHCIDev;
         ar3kconfig.pHCIProps = &pHcidevInfo->HCIProps;
@@ -274,23 +274,23 @@ static int ar6000_hci_transport_ready(HCI_TRANSPORT_HANDLE     HCIHandle,
         ar3kconfig.pHIFDevice = pHcidevInfo->ar->arHifDevice;
 #endif
         ar3kconfig.pBtStackHCIDev = pHcidevInfo->pBtStackHCIDev;
-        
+
         if (ar3khcibaud != 0) {
                 /* user wants ar3k baud rate change */
             ar3kconfig.Flags |= AR3K_CONFIG_FLAG_SET_AR3K_BAUD;
             ar3kconfig.Flags |= AR3K_CONFIG_FLAG_AR3K_BAUD_CHANGE_DELAY;
-            ar3kconfig.AR3KBaudRate = ar3khcibaud;    
+            ar3kconfig.AR3KBaudRate = ar3khcibaud;
         }
-        
-        if ((hciuartscale != 0) || (hciuartstep != 0)) {   
+
+        if ((hciuartscale != 0) || (hciuartstep != 0)) {
                 /* user wants to tune HCI bridge UART scale/step values */
             ar3kconfig.AR6KScale = (u16)hciuartscale;
             ar3kconfig.AR6KStep = (u16)hciuartstep;
             ar3kconfig.Flags |= AR3K_CONFIG_FLAG_SET_AR6K_SCALE_STEP;
         }
-        
+
         /* Fetch the address of the hi_hci_uart_pwr_mgmt_params instance in the host interest area */
-        address = TARG_VTOP(pHcidevInfo->ar->arTargetType, 
+        address = TARG_VTOP(pHcidevInfo->ar->arTargetType,
                             HOST_INTEREST_ITEM_ADDRESS(pHcidevInfo->ar, hi_hci_uart_pwr_mgmt_params));
         status = ar6000_ReadRegDiag(pHcidevInfo->ar->arHifDevice, &address, &hci_uart_pwr_mgmt_params);
         if (0 == status) {
@@ -300,11 +300,11 @@ static int ar6000_hci_transport_ready(HCI_TRANSPORT_HANDLE     HCIHandle,
         } else {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge: failed to read hci_uart_pwr_mgmt_params! \n"));
         }
-        /* configure the AR3K device */         
+        /* configure the AR3K device */
 		memcpy(ar3kconfig.bdaddr,pHcidevInfo->ar->bdaddr,6);
         status = AR3KConfigure(&ar3kconfig);
         if (status) {
-            break; 
+            break;
         }
 
         /* Make sure both AR6K and AR3K have power management enabled */
@@ -314,33 +314,33 @@ static int ar6000_hci_transport_ready(HCI_TRANSPORT_HANDLE     HCIHandle,
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge: failed to enable TLPM for AR6K! \n"));
             }
         }
-        
+
         status = bt_register_hci(pHcidevInfo);
-        
+
     } while (false);
 
-    return status; 
+    return status;
 }
 
 static void ar6000_hci_transport_failure(void *pContext, int Status)
 {
     struct ar6k_hci_bridge_info *pHcidevInfo = (struct ar6k_hci_bridge_info *)pContext;
-    
+
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge: transport failure! \n"));
-    
+
     if (pHcidevInfo->HciNormalMode) {
-        /* TODO .. */    
+        /* TODO .. */
     }
 }
 
 static void ar6000_hci_transport_removed(void *pContext)
 {
     struct ar6k_hci_bridge_info *pHcidevInfo = (struct ar6k_hci_bridge_info *)pContext;
-    
+
     AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE, ("HCI Bridge: transport removed. \n"));
-    
+
     A_ASSERT(pHcidevInfo->pHCIDev != NULL);
-        
+
     HCI_TransportDetach(pHcidevInfo->pHCIDev);
     bt_cleanup_hci(pHcidevInfo);
     pHcidevInfo->pHCIDev = NULL;
@@ -352,81 +352,81 @@ static void ar6000_hci_send_complete(void *pContext, struct htc_packet *pPacket)
     void                 *osbuf = pPacket->pPktContext;
     A_ASSERT(osbuf != NULL);
     A_ASSERT(pHcidevInfo != NULL);
-    
+
     if (pPacket->Status) {
         if ((pPacket->Status != A_ECANCELED) && (pPacket->Status != A_NO_RESOURCE)) {
-            AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge: Send Packet Failed: %d \n",pPacket->Status)); 
-        }   
+            AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge: Send Packet Failed: %d \n",pPacket->Status));
+        }
     }
-            
-    FreeHTCStruct(pHcidevInfo,pPacket);    
+
+    FreeHTCStruct(pHcidevInfo,pPacket);
     FreeBtOsBuf(pHcidevInfo,osbuf);
-    
+
 }
 
 static void ar6000_hci_pkt_recv(void *pContext, struct htc_packet *pPacket)
 {
     struct ar6k_hci_bridge_info *pHcidevInfo = (struct ar6k_hci_bridge_info *)pContext;
     struct sk_buff       *skb;
-    
+
     A_ASSERT(pHcidevInfo != NULL);
     skb = (struct sk_buff *)pPacket->pPktContext;
     A_ASSERT(skb != NULL);
-          
+
     do {
-        
+
         if (pPacket->Status) {
             break;
         }
-  
-        AR_DEBUG_PRINTF(ATH_DEBUG_HCI_RECV, 
+
+        AR_DEBUG_PRINTF(ATH_DEBUG_HCI_RECV,
                         ("HCI Bridge, packet received type : %d len:%d \n",
                         HCI_GET_PACKET_TYPE(pPacket),pPacket->ActualLength));
-    
+
             /* set the actual buffer position in the os buffer, HTC recv buffers posted to HCI are set
              * to fill the front of the buffer */
         A_NETBUF_PUT(skb,pPacket->ActualLength + pHcidevInfo->HCIProps.HeadRoom);
         A_NETBUF_PULL(skb,pHcidevInfo->HCIProps.HeadRoom);
-        
+
         if (AR_DEBUG_LVL_CHECK(ATH_DEBUG_HCI_DUMP)) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ANY,("<<< Recv HCI %s packet len:%d \n",
                         (HCI_GET_PACKET_TYPE(pPacket) == HCI_EVENT_TYPE) ? "EVENT" : "ACL",
                         skb->len));
             AR_DEBUG_PRINTBUF(skb->data, skb->len,"BT HCI RECV Packet Dump");
         }
-        
+
         if (pHcidevInfo->HciNormalMode) {
-                /* indicate the packet */         
+                /* indicate the packet */
             if (bt_indicate_recv(pHcidevInfo,HCI_GET_PACKET_TYPE(pPacket),skb)) {
                     /* bt stack accepted the packet */
                 skb = NULL;
-            }  
+            }
             break;
         }
-        
-            /* for testing, indicate packet to the network stack */ 
+
+            /* for testing, indicate packet to the network stack */
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
-        skb->dev = (struct net_device *)(pHcidevInfo->HCITransHdl.netDevice);        
+        skb->dev = (struct net_device *)(pHcidevInfo->HCITransHdl.netDevice);
         if ((((struct net_device *)pHcidevInfo->HCITransHdl.netDevice)->flags & IFF_UP) == IFF_UP) {
             skb->protocol = eth_type_trans(skb, (struct net_device *)(pHcidevInfo->HCITransHdl.netDevice));
 #else
-        skb->dev = pHcidevInfo->ar->arNetDev;        
+        skb->dev = pHcidevInfo->ar->arNetDev;
         if ((pHcidevInfo->ar->arNetDev->flags & IFF_UP) == IFF_UP) {
             skb->protocol = eth_type_trans(skb, pHcidevInfo->ar->arNetDev);
 #endif
             netif_rx(skb);
             skb = NULL;
-        } 
-        
+        }
+
     } while (false);
-    
+
     FreeHTCStruct(pHcidevInfo,pPacket);
-    
+
     if (skb != NULL) {
             /* packet was not accepted, free it */
-        FreeBtOsBuf(pHcidevInfo,skb);       
+        FreeBtOsBuf(pHcidevInfo,skb);
     }
-    
+
 }
 
 static void  ar6000_hci_pkt_refill(void *pContext, HCI_TRANSPORT_PACKET_TYPE Type, int BuffersAvailable)
@@ -435,30 +435,30 @@ static void  ar6000_hci_pkt_refill(void *pContext, HCI_TRANSPORT_PACKET_TYPE Typ
     int                  refillCount;
 
     if (Type == HCI_ACL_TYPE) {
-        refillCount =  MAX_ACL_RECV_BUFS - BuffersAvailable;   
+        refillCount =  MAX_ACL_RECV_BUFS - BuffersAvailable;
     } else {
-        refillCount =  MAX_EVT_RECV_BUFS - BuffersAvailable;     
+        refillCount =  MAX_EVT_RECV_BUFS - BuffersAvailable;
     }
-    
+
     if (refillCount > 0) {
         RefillRecvBuffers(pHcidevInfo,Type,refillCount);
     }
-    
+
 }
 
 static HCI_SEND_FULL_ACTION  ar6000_hci_pkt_send_full(void *pContext, struct htc_packet *pPacket)
 {
     struct ar6k_hci_bridge_info    *pHcidevInfo = (struct ar6k_hci_bridge_info *)pContext;
     HCI_SEND_FULL_ACTION    action = HCI_SEND_FULL_KEEP;
-    
+
     if (!pHcidevInfo->HciNormalMode) {
             /* for epping testing, check packet tag, some epping packets are
              * special and cannot be dropped */
         if (HTC_GET_TAG_FROM_PKT(pPacket) == AR6K_DATA_PKT_TAG) {
-            action = HCI_SEND_FULL_DROP;     
+            action = HCI_SEND_FULL_DROP;
         }
     }
-    
+
     return action;
 }
 
@@ -473,17 +473,16 @@ int ar6000_setup_hci(struct ar6_softc *ar)
     int                       i;
     struct htc_packet                *pPacket;
     struct ar6k_hci_bridge_info      *pHcidevInfo;
-        
-       
+
     do {
-        
+
         pHcidevInfo = (struct ar6k_hci_bridge_info *)A_MALLOC(sizeof(struct ar6k_hci_bridge_info));
-        
+
         if (NULL == pHcidevInfo) {
             status = A_NO_MEMORY;
-            break;    
+            break;
         }
-        
+
         A_MEMZERO(pHcidevInfo, sizeof(struct ar6k_hci_bridge_info));
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
         g_pHcidevInfo = pHcidevInfo;
@@ -496,35 +495,35 @@ int ar6000_setup_hci(struct ar6_softc *ar)
         INIT_HTC_PACKET_QUEUE(&pHcidevInfo->HTCPacketStructHead);
 
         ar->exitCallback = AR3KConfigureExit;
-    
+
         status = bt_setup_hci(pHcidevInfo);
         if (status) {
-            break;    
+            break;
         }
-        
-        if (pHcidevInfo->HciNormalMode) {      
-            AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE, ("HCI Bridge: running in normal mode... \n"));    
+
+        if (pHcidevInfo->HciNormalMode) {
+            AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE, ("HCI Bridge: running in normal mode... \n"));
         } else {
-            AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE, ("HCI Bridge: running in test mode... \n"));     
+            AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE, ("HCI Bridge: running in test mode... \n"));
         }
-        
+
         pHcidevInfo->pHTCStructAlloc = (u8 *)A_MALLOC((sizeof(struct htc_packet)) * NUM_HTC_PACKET_STRUCTS);
-        
+
         if (NULL == pHcidevInfo->pHTCStructAlloc) {
             status = A_NO_MEMORY;
-            break;    
+            break;
         }
-        
+
         pPacket = (struct htc_packet *)pHcidevInfo->pHTCStructAlloc;
         for (i = 0; i < NUM_HTC_PACKET_STRUCTS; i++,pPacket++) {
-            FreeHTCStruct(pHcidevInfo,pPacket);                
+            FreeHTCStruct(pHcidevInfo,pPacket);
         }
-        
-        A_MEMZERO(&config,sizeof(struct hci_transport_config_info));        
+
+        A_MEMZERO(&config,sizeof(struct hci_transport_config_info));
         config.ACLRecvBufferWaterMark = MAX_ACL_RECV_BUFS / 2;
         config.EventRecvBufferWaterMark = MAX_EVT_RECV_BUFS / 2;
         config.MaxSendQueueDepth = MAX_HCI_WRITE_QUEUE_DEPTH;
-        config.pContext = pHcidevInfo;    
+        config.pContext = pHcidevInfo;
         config.TransportFailure = ar6000_hci_transport_failure;
         config.TransportReady = ar6000_hci_transport_ready;
         config.TransportRemoved = ar6000_hci_transport_removed;
@@ -532,7 +531,7 @@ int ar6000_setup_hci(struct ar6_softc *ar)
         config.pHCIPktRecv = ar6000_hci_pkt_recv;
         config.pHCIPktRecvRefill = ar6000_hci_pkt_refill;
         config.pHCISendFull = ar6000_hci_pkt_send_full;
-       
+
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
         pHcidevInfo->pHCIDev = HCI_TransportAttach(pHcidevInfo->HCITransHdl.htcHandle, &config);
 #else
@@ -540,22 +539,22 @@ int ar6000_setup_hci(struct ar6_softc *ar)
 #endif
 
         if (NULL == pHcidevInfo->pHCIDev) {
-            status = A_ERROR;      
+            status = A_ERROR;
         }
-    
+
     } while (false);
-    
+
     if (status) {
         if (pHcidevInfo != NULL) {
             if (NULL == pHcidevInfo->pHCIDev) {
                 /* GMBOX may not be present in older chips */
-                /* just return success */ 
+                /* just return success */
                 status = 0;
             }
         }
-        ar6000_cleanup_hci(ar);    
+        ar6000_cleanup_hci(ar);
     }
-    
+
     return status;
 }
 
@@ -570,28 +569,27 @@ void  ar6000_cleanup_hci(struct ar6_softc *ar)
 #else
     struct ar6k_hci_bridge_info *pHcidevInfo = (struct ar6k_hci_bridge_info *)ar->hcidev_info;
 #endif
-    
+
     if (pHcidevInfo != NULL) {
-        bt_cleanup_hci(pHcidevInfo);   
-        
+        bt_cleanup_hci(pHcidevInfo);
+
         if (pHcidevInfo->pHCIDev != NULL) {
             HCI_TransportStop(pHcidevInfo->pHCIDev);
             HCI_TransportDetach(pHcidevInfo->pHCIDev);
             pHcidevInfo->pHCIDev = NULL;
-        } 
-        
+        }
+
         if (pHcidevInfo->pHTCStructAlloc != NULL) {
             kfree(pHcidevInfo->pHTCStructAlloc);
-            pHcidevInfo->pHTCStructAlloc = NULL;    
+            pHcidevInfo->pHTCStructAlloc = NULL;
         }
-        
+
         kfree(pHcidevInfo);
 #ifndef EXPORT_HCI_BRIDGE_INTERFACE
         ar->hcidev_info = NULL;
 #endif
     }
-    
-    
+
 }
 
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
@@ -603,63 +601,63 @@ int hci_test_send(struct ar6_softc *ar, struct sk_buff *skb)
     int              status = 0;
     int              length;
     EPPING_HEADER    *pHeader;
-    struct htc_packet       *pPacket;   
+    struct htc_packet       *pPacket;
     HTC_TX_TAG       htc_tag = AR6K_DATA_PKT_TAG;
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
     struct ar6k_hci_bridge_info *pHcidevInfo = g_pHcidevInfo;
 #else
     struct ar6k_hci_bridge_info *pHcidevInfo = (struct ar6k_hci_bridge_info *)ar->hcidev_info;
 #endif
-            
+
     do {
-        
+
         if (NULL == pHcidevInfo) {
             status = A_ERROR;
-            break;    
+            break;
         }
-        
+
         if (NULL == pHcidevInfo->pHCIDev) {
             status = A_ERROR;
-            break;    
+            break;
         }
-        
+
         if (pHcidevInfo->HciNormalMode) {
                 /* this interface cannot run when normal WMI is running */
             status = A_ERROR;
-            break;    
+            break;
         }
-        
+
         pHeader = (EPPING_HEADER *)A_NETBUF_DATA(skb);
-        
+
         if (!IS_EPPING_PACKET(pHeader)) {
             status = A_EINVAL;
             break;
         }
-                       
+
         if (IS_EPING_PACKET_NO_DROP(pHeader)) {
-            htc_tag = AR6K_CONTROL_PKT_TAG;   
+            htc_tag = AR6K_CONTROL_PKT_TAG;
         }
-        
+
         length = sizeof(EPPING_HEADER) + pHeader->DataLength;
-                
+
         pPacket = AllocHTCStruct(pHcidevInfo);
-        if (NULL == pPacket) {        
+        if (NULL == pPacket) {
             status = A_NO_MEMORY;
             break;
-        } 
-     
+        }
+
         SET_HTC_PACKET_INFO_TX(pPacket,
                                skb,
                                A_NETBUF_DATA(skb),
                                length,
                                HCI_ACL_TYPE,  /* send every thing out as ACL */
                                htc_tag);
-             
+
         HCI_TransportSendPkt(pHcidevInfo->pHCIDev,pPacket,false);
         pPacket = NULL;
-            
+
     } while (false);
-            
+
     return status;
 }
 
@@ -673,10 +671,10 @@ void ar6000_set_default_ar3kconfig(struct ar6_softc *ar, void *ar3kconfig)
     config->pHIFDevice = ar->arHifDevice;
     config->pBtStackHCIDev = pHcidevInfo->pBtStackHCIDev;
     config->Flags |= AR3K_CONFIG_FLAG_SET_AR3K_BAUD;
-    config->AR3KBaudRate = 115200;    
+    config->AR3KBaudRate = 115200;
 }
 
-#ifdef CONFIG_BLUEZ_HCI_BRIDGE   
+#ifdef CONFIG_BLUEZ_HCI_BRIDGE
 /*** BT Stack Entrypoints *******/
 
 /*
@@ -684,11 +682,11 @@ void ar6000_set_default_ar3kconfig(struct ar6_softc *ar, void *ar3kconfig)
 */
 static int bt_open(struct hci_dev *hdev)
 {
- 
+
     AR_DEBUG_PRINTF(ATH_DEBUG_TRC, ("HCI Bridge: bt_open - enter - x\n"));
     set_bit(HCI_RUNNING, &hdev->flags);
     set_bit(HCI_UP, &hdev->flags);
-    set_bit(HCI_INIT, &hdev->flags);         
+    set_bit(HCI_INIT, &hdev->flags);
     return 0;
 }
 
@@ -713,29 +711,29 @@ static int bt_send_frame(struct sk_buff *skb)
     struct htc_packet                 *pPacket;
     int                   status = 0;
     struct sk_buff             *txSkb = NULL;
-    
+
     if (!hdev) {
         AR_DEBUG_PRINTF(ATH_DEBUG_WARN, ("HCI Bridge: bt_send_frame - no device\n"));
         return -ENODEV;
     }
-      
+
     if (!test_bit(HCI_RUNNING, &hdev->flags)) {
         AR_DEBUG_PRINTF(ATH_DEBUG_TRC, ("HCI Bridge: bt_send_frame - not open\n"));
         return -EBUSY;
     }
-  
-    pHcidevInfo = (struct ar6k_hci_bridge_info *)hdev->driver_data;   
+
+    pHcidevInfo = (struct ar6k_hci_bridge_info *)hdev->driver_data;
     A_ASSERT(pHcidevInfo != NULL);
-      
+
     AR_DEBUG_PRINTF(ATH_DEBUG_HCI_SEND, ("+bt_send_frame type: %d \n",bt_cb(skb)->pkt_type));
     type = HCI_COMMAND_TYPE;
-    
+
     switch (bt_cb(skb)->pkt_type) {
         case HCI_COMMAND_PKT:
             type = HCI_COMMAND_TYPE;
             hdev->stat.cmd_tx++;
             break;
- 
+
         case HCI_ACLDATA_PKT:
             type = HCI_ACL_TYPE;
             hdev->stat.acl_tx++;
@@ -749,7 +747,7 @@ static int bt_send_frame(struct sk_buff *skb)
             A_ASSERT(false);
             kfree_skb(skb);
             return 0;
-    } 
+    }
 
     if (AR_DEBUG_LVL_CHECK(ATH_DEBUG_HCI_DUMP)) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ANY,(">>> Send HCI %s packet len: %d\n",
@@ -757,35 +755,35 @@ static int bt_send_frame(struct sk_buff *skb)
                         skb->len));
         if (type == HCI_COMMAND_TYPE) {
             u16 opcode = HCI_GET_OP_CODE(skb->data);
-            AR_DEBUG_PRINTF(ATH_DEBUG_ANY,("    HCI Command: OGF:0x%X OCF:0x%X \r\n", 
+            AR_DEBUG_PRINTF(ATH_DEBUG_ANY,("    HCI Command: OGF:0x%X OCF:0x%X \r\n",
                   opcode >> 10, opcode & 0x3FF));
         }
         AR_DEBUG_PRINTBUF(skb->data,skb->len,"BT HCI SEND Packet Dump");
     }
-    
+
     do {
-        
-        txSkb = bt_skb_alloc(TX_PACKET_RSV_OFFSET + pHcidevInfo->HCIProps.HeadRoom + 
-                             pHcidevInfo->HCIProps.TailRoom + skb->len, 
+
+        txSkb = bt_skb_alloc(TX_PACKET_RSV_OFFSET + pHcidevInfo->HCIProps.HeadRoom +
+                             pHcidevInfo->HCIProps.TailRoom + skb->len,
                              GFP_ATOMIC);
 
         if (txSkb == NULL) {
             status = A_NO_MEMORY;
-            break;    
+            break;
         }
-        
+
         bt_cb(txSkb)->pkt_type = bt_cb(skb)->pkt_type;
         txSkb->dev = (void *)pHcidevInfo->pBtStackHCIDev;
         skb_reserve(txSkb, TX_PACKET_RSV_OFFSET + pHcidevInfo->HCIProps.HeadRoom);
         memcpy(txSkb->data, skb->data, skb->len);
         skb_put(txSkb,skb->len);
-        
-        pPacket = AllocHTCStruct(pHcidevInfo);        
+
+        pPacket = AllocHTCStruct(pHcidevInfo);
         if (NULL == pPacket) {
             status = A_NO_MEMORY;
-            break;    
-        }       
-              
+            break;
+        }
+
         /* HCI packet length here doesn't include the 1-byte transport header which
          * will be handled by the HCI transport layer. Enough headroom has already
          * been reserved above for the transport header
@@ -794,25 +792,25 @@ static int bt_send_frame(struct sk_buff *skb)
                                txSkb,
                                txSkb->data,
                                txSkb->len,
-                               type, 
+                               type,
                                AR6K_CONTROL_PKT_TAG); /* HCI packets cannot be dropped */
-        
+
         AR_DEBUG_PRINTF(ATH_DEBUG_HCI_SEND, ("HCI Bridge: bt_send_frame skb:0x%lX \n",(unsigned long)txSkb));
         AR_DEBUG_PRINTF(ATH_DEBUG_HCI_SEND, ("HCI Bridge: type:%d, Total Length:%d Bytes \n",
                                       type, txSkb->len));
-                                      
+
         status = HCI_TransportSendPkt(pHcidevInfo->pHCIDev,pPacket,false);
         pPacket = NULL;
         txSkb = NULL;
-        
+
     } while (false);
-   
+
     if (txSkb != NULL) {
-        kfree_skb(txSkb);    
+        kfree_skb(txSkb);
     }
-    
-    kfree_skb(skb);        
-       
+
+    kfree_skb(skb);
+
     AR_DEBUG_PRINTF(ATH_DEBUG_HCI_SEND, ("-bt_send_frame  \n"));
     return 0;
 }
@@ -831,20 +829,19 @@ static int bt_ioctl(struct hci_dev *hdev, unsigned int cmd, unsigned long arg)
 */
 static int bt_flush(struct hci_dev *hdev)
 {
-    struct ar6k_hci_bridge_info    *pHcidevInfo; 
-    
+    struct ar6k_hci_bridge_info    *pHcidevInfo;
+
     AR_DEBUG_PRINTF(ATH_DEBUG_TRC, ("HCI Bridge: bt_flush - enter\n"));
-    
-    pHcidevInfo = (struct ar6k_hci_bridge_info *)hdev->driver_data;   
-    
-    /* TODO??? */   
-    
+
+    pHcidevInfo = (struct ar6k_hci_bridge_info *)hdev->driver_data;
+
+    /* TODO??? */
+
     return 0;
 }
 
-
 /*
- * bt_destruct - 
+ * bt_destruct -
 */
 static void bt_destruct(struct hci_dev *hdev)
 {
@@ -857,40 +854,40 @@ static int bt_setup_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
     int                    status = 0;
     struct hci_dev              *pHciDev = NULL;
     struct hif_device_os_device_info   osDevInfo;
-    
+
     if (!setupbtdev) {
         return 0;
-    } 
-        
+    }
+
     do {
-            
+
         A_MEMZERO(&osDevInfo,sizeof(osDevInfo));
             /* get the underlying OS device */
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
-        status = ar6000_get_hif_dev((struct hif_device *)(pHcidevInfo->HCITransHdl.hifDevice), 
+        status = ar6000_get_hif_dev((struct hif_device *)(pHcidevInfo->HCITransHdl.hifDevice),
                                     &osDevInfo);
 #else
-        status = HIFConfigureDevice(pHcidevInfo->ar->arHifDevice, 
+        status = HIFConfigureDevice(pHcidevInfo->ar->arHifDevice,
                                     HIF_DEVICE_GET_OS_DEVICE,
-                                    &osDevInfo, 
+                                    &osDevInfo,
                                     sizeof(osDevInfo));
 #endif
-                                    
+
         if (status) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Failed to OS device info from HIF\n"));
             break;
         }
-        
+
             /* allocate a BT HCI struct for this device */
         pHciDev = hci_alloc_dev();
         if (NULL == pHciDev) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge - failed to allocate bt struct \n"));
             status = A_NO_MEMORY;
             break;
-        }    
+        }
             /* save the device, we'll register this later */
-        pHcidevInfo->pBtStackHCIDev = pHciDev;       
-        SET_HCIDEV_DEV(pHciDev,osDevInfo.pOSDevice);          
+        pHcidevInfo->pBtStackHCIDev = pHciDev;
+        SET_HCIDEV_DEV(pHciDev,osDevInfo.pOSDevice);
         SET_HCI_BUS_TYPE(pHciDev, HCI_VIRTUAL, HCI_BREDR);
         pHciDev->driver_data = pHcidevInfo;
         pHciDev->open     = bt_open;
@@ -899,45 +896,45 @@ static int bt_setup_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
         pHciDev->ioctl    = bt_ioctl;
         pHciDev->flush    = bt_flush;
         pHciDev->destruct = bt_destruct;
-        pHciDev->owner = THIS_MODULE; 
+        pHciDev->owner = THIS_MODULE;
             /* driver is running in normal BT mode */
         pHcidevInfo->HciNormalMode = true;
-        
+
     } while (false);
-    
+
     if (status) {
-        bt_cleanup_hci(pHcidevInfo);    
+        bt_cleanup_hci(pHcidevInfo);
     }
-    
+
     return status;
 }
 
 static void bt_cleanup_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
-{   
-    int   err;      
-        
+{
+    int   err;
+
     if (pHcidevInfo->HciRegistered) {
         pHcidevInfo->HciRegistered = false;
         clear_bit(HCI_RUNNING, &pHcidevInfo->pBtStackHCIDev->flags);
         clear_bit(HCI_UP, &pHcidevInfo->pBtStackHCIDev->flags);
-        clear_bit(HCI_INIT, &pHcidevInfo->pBtStackHCIDev->flags);   
+        clear_bit(HCI_INIT, &pHcidevInfo->pBtStackHCIDev->flags);
         A_ASSERT(pHcidevInfo->pBtStackHCIDev != NULL);
             /* unregister */
         if ((err = hci_unregister_dev(pHcidevInfo->pBtStackHCIDev)) < 0) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge: failed to unregister with bluetooth %d\n",err));
-        }          
-    }   
-    
+        }
+    }
+
     kfree(pHcidevInfo->pBtStackHCIDev);
-    pHcidevInfo->pBtStackHCIDev = NULL;  
+    pHcidevInfo->pBtStackHCIDev = NULL;
 }
 
 static int bt_register_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
 {
     int       err;
     int  status = 0;
-    
-    do {          
+
+    do {
         AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE, ("HCI Bridge: registering HCI... \n"));
         A_ASSERT(pHcidevInfo->pBtStackHCIDev != NULL);
              /* mark that we are registered */
@@ -948,80 +945,80 @@ static int bt_register_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
             status = A_ERROR;
             break;
         }
-    
+
         AR_DEBUG_PRINTF(ATH_DEBUG_HCI_BRIDGE, ("HCI Bridge: HCI registered \n"));
-        
+
     } while (false);
-    
+
     return status;
 }
 
 static bool bt_indicate_recv(struct ar6k_hci_bridge_info      *pHcidevInfo,
-                               HCI_TRANSPORT_PACKET_TYPE Type, 
+                               HCI_TRANSPORT_PACKET_TYPE Type,
                                struct                    sk_buff *skb)
 {
     u8 btType;
     int                   len;
     bool                success = false;
     BT_HCI_EVENT_HEADER   *pEvent;
-    
+
     do {
-             
+
         if (!test_bit(HCI_RUNNING, &pHcidevInfo->pBtStackHCIDev->flags)) {
             AR_DEBUG_PRINTF(ATH_DEBUG_WARN, ("HCI Bridge: bt_indicate_recv - not running\n"));
             break;
         }
-    
+
         switch (Type) {
             case HCI_ACL_TYPE:
                 btType = HCI_ACLDATA_PKT;
                 break;
-            case HCI_EVENT_TYPE:  
-                btType = HCI_EVENT_PKT;  
+            case HCI_EVENT_TYPE:
+                btType = HCI_EVENT_PKT;
                 break;
             default:
                 btType = 0;
                 A_ASSERT(false);
                 break;
-        } 
-        
-        if (0 == btType) {
-            break;    
         }
-        
+
+        if (0 == btType) {
+            break;
+        }
+
             /* set the final type */
         bt_cb(skb)->pkt_type = btType;
             /* set dev */
         skb->dev = (void *)pHcidevInfo->pBtStackHCIDev;
         len = skb->len;
-        
+
         if (AR_DEBUG_LVL_CHECK(ATH_DEBUG_HCI_RECV)) {
-            if (bt_cb(skb)->pkt_type == HCI_EVENT_PKT) {                
-                pEvent = (BT_HCI_EVENT_HEADER *)skb->data; 
-                AR_DEBUG_PRINTF(ATH_DEBUG_HCI_RECV, ("BT HCI EventCode: %d, len:%d \n", 
+            if (bt_cb(skb)->pkt_type == HCI_EVENT_PKT) {
+                pEvent = (BT_HCI_EVENT_HEADER *)skb->data;
+                AR_DEBUG_PRINTF(ATH_DEBUG_HCI_RECV, ("BT HCI EventCode: %d, len:%d \n",
                         pEvent->EventCode, pEvent->ParamLength));
-            } 
+            }
         }
-        
-            /* pass receive packet up the stack */    
+
+            /* pass receive packet up the stack */
         if (hci_recv_frame(skb) != 0) {
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("HCI Bridge: hci_recv_frame failed \n"));
             break;
         } else {
-            AR_DEBUG_PRINTF(ATH_DEBUG_HCI_RECV, 
+            AR_DEBUG_PRINTF(ATH_DEBUG_HCI_RECV,
                     ("HCI Bridge: Indicated RCV of type:%d, Length:%d \n",btType,len));
         }
-            
+
         success = true;
-    
+
     } while (false);
-    
+
     return success;
 }
 
-static struct sk_buff* bt_alloc_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, int Length) 
-{ 
-    struct sk_buff *skb;         
+static struct sk_buff* bt_alloc_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, int Length)
+{
+    struct sk_buff *skb;
         /* in normal HCI mode we need to alloc from the bt core APIs */
     skb = bt_skb_alloc(Length, GFP_ATOMIC);
     if (NULL == skb) {
@@ -1032,7 +1029,7 @@ static struct sk_buff* bt_alloc_buffer(struct ar6k_hci_bridge_info *pHcidevInfo,
 
 static void bt_free_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, struct sk_buff *skb)
 {
-    kfree_skb(skb);    
+    kfree_skb(skb);
 }
 
 #else // { CONFIG_BLUEZ_HCI_BRIDGE
@@ -1043,24 +1040,24 @@ static int bt_setup_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
     return 0;
 }
 static void bt_cleanup_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
-{   
-     
+{
+
 }
 static int bt_register_hci(struct ar6k_hci_bridge_info *pHcidevInfo)
 {
     A_ASSERT(false);
-    return A_ERROR;    
+    return A_ERROR;
 }
 
 static bool bt_indicate_recv(struct ar6k_hci_bridge_info      *pHcidevInfo,
-                               HCI_TRANSPORT_PACKET_TYPE Type, 
+                               HCI_TRANSPORT_PACKET_TYPE Type,
                                struct                    sk_buff *skb)
 {
     A_ASSERT(false);
     return false;
 }
 
-static struct sk_buff* bt_alloc_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, int Length) 
+static struct sk_buff* bt_alloc_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, int Length)
 {
     A_ASSERT(false);
     return NULL;
@@ -1075,7 +1072,7 @@ static void bt_free_buffer(struct ar6k_hci_bridge_info *pHcidevInfo, struct sk_b
 #else  // { ATH_AR6K_ENABLE_GMBOX
 
     /* stubs when GMBOX support is not needed */
-    
+
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
 int ar6000_setup_hci(void *ar)
 #else
@@ -1091,7 +1088,7 @@ void ar6000_cleanup_hci(void *ar)
 void ar6000_cleanup_hci(struct ar6_softc *ar)
 #endif
 {
-    return;    
+    return;
 }
 
 #ifndef EXPORT_HCI_BRIDGE_INTERFACE
@@ -1111,7 +1108,6 @@ int hci_test_send(struct ar6_softc *ar, struct sk_buff *skb)
 }
 
 #endif // } ATH_AR6K_ENABLE_GMBOX
-
 
 #ifdef EXPORT_HCI_BRIDGE_INTERFACE
 static int __init

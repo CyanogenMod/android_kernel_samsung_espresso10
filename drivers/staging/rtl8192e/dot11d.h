@@ -73,7 +73,6 @@ static inline void cpMacAddr(unsigned char *des, unsigned char *src)
 #define IS_DOT11D_STATE_DONE(__pIeeeDev) \
 		(GET_DOT11D_INFO(__pIeeeDev)->State == DOT11D_STATE_DONE)
 
-
 void Dot11d_Init(struct ieee80211_device *dev);
 
 void Dot11d_Reset(struct ieee80211_device *dev);

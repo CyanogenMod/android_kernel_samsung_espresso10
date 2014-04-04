@@ -41,5 +41,4 @@ int vb2_mmap_pfn_range(struct vm_area_struct *vma, unsigned long paddr,
 struct vm_area_struct *vb2_get_vma(struct vm_area_struct *vma);
 void vb2_put_vma(struct vm_area_struct *vma);
 
-
 #endif

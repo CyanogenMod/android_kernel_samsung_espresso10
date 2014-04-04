@@ -1,38 +1,37 @@
 /*
   Keyspan USB to Serial Converter driver
- 
+
   (C) Copyright (C) 2000-2001
       Hugh Blemings <hugh@blemings.org>
-   
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
 
   See http://blemings.org/hugh/keyspan.html for more information.
-  
+
   Code in this driver inspired by and in a number of places taken
   from Brian Warner's original Keyspan-PDA driver.
 
   This driver has been put together with the support of Innosys, Inc.
   and Keyspan, Inc the manufacturers of the Keyspan USB-serial products.
   Thanks Guys :)
-  
+
   Thanks to Paulus for miscellaneous tidy ups, some largish chunks
   of much nicer and/or completely new code and (perhaps most uniquely)
   having the patience to sit down and explain why and where he'd changed
   stuff.
 
-  Tip 'o the hat to IBM (and previously Linuxcare :) for supporting 
+  Tip 'o the hat to IBM (and previously Linuxcare :) for supporting
   staff in their work on open source projects.
-  
+
   See keyspan.c for update history.
 
 */
 
 #ifndef __LINUX_USB_SERIAL_KEYSPAN_H
 #define __LINUX_USB_SERIAL_KEYSPAN_H
-
 
 /* Function prototypes for Keyspan serial converter */
 static int  keyspan_open		(struct tty_struct *tty,
@@ -52,7 +51,6 @@ static int  keyspan_write		(struct tty_struct *tty,
 static void keyspan_send_setup		(struct usb_serial_port *port,
 					 int reset_port);
 
-
 static void keyspan_set_termios		(struct tty_struct *tty,
 					 struct usb_serial_port *port,
 					 struct ktermios *old);
@@ -64,7 +62,7 @@ static int  keyspan_tiocmset		(struct tty_struct *tty,
 					 unsigned int clear);
 static int  keyspan_fake_startup	(struct usb_serial *serial);
 
-static int  keyspan_usa19_calc_baud	(u32 baud_rate, u32 baudclk, 
+static int  keyspan_usa19_calc_baud	(u32 baud_rate, u32 baudclk,
 					 u8 *rate_hi, u8 *rate_low,
 					 u8 *prescaler, int portnum);
 
@@ -191,7 +189,7 @@ struct keyspan_device_details {
 	int	(*calculate_baud_rate) (u32 baud_rate, u32 baudclk,
 			u8 *rate_hi, u8 *rate_low, u8 *prescaler, int portnum);
 	u32	baudclk;
-}; 
+};
 
 /* Now for each device type we setup the device detail
    structure with the appropriate information (provided
@@ -330,7 +328,7 @@ static const struct keyspan_device_details usa28_device_details = {
 	.indat_endpoint		= -1,
 	.glocont_endpoint	= 0x07,
 	.calculate_baud_rate	= keyspan_usa28_calc_baud,
-	.baudclk		= KEYSPAN_USA28_BAUDCLK,		
+	.baudclk		= KEYSPAN_USA28_BAUDCLK,
 };
 
 static const struct keyspan_device_details usa28x_device_details = {
@@ -488,7 +486,7 @@ static const struct usb_device_id keyspan_ids_combined[] = {
 MODULE_DEVICE_TABLE(usb, keyspan_ids_combined);
 
 static struct usb_driver keyspan_driver = {
-	.name =		"keyspan",                
+	.name =		"keyspan",
 	.probe =	usb_serial_probe,
 	.disconnect =	usb_serial_disconnect,
 	.id_table =	keyspan_ids_combined,

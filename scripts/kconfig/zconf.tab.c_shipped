@@ -1,21 +1,20 @@
-
 /* A Bison parser, made by GNU Bison 2.4.1.  */
 
 /* Skeleton implementation for Bison's Yacc-like parsers in C
-   
+
       Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
-   
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -28,7 +27,7 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
@@ -72,9 +71,7 @@
 #define yydebug         zconfdebug
 #define yynerrs         zconfnerrs
 
-
 /* Copy the first part of user declarations.  */
-
 
 /*
  * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
@@ -113,8 +110,6 @@ static struct menu *current_menu, *current_entry;
 #define YYERROR_VERBOSE
 #endif
 
-
-
 /* Enabling traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -132,7 +127,6 @@ static struct menu *current_menu, *current_entry;
 #ifndef YYTOKEN_TABLE
 # define YYTOKEN_TABLE 0
 #endif
-
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -176,12 +170,9 @@ static struct menu *current_menu, *current_entry;
    };
 #endif
 
-
-
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
 {
-
 
 	char *string;
 	struct file *file;
@@ -190,22 +181,16 @@ typedef union YYSTYPE
 	struct menu *menu;
 	struct kconf_id *id;
 
-
-
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 #endif
 
-
 /* Copy the second part of user declarations.  */
-
 
 /* Include zconf.hash.c here so it can see the token constants. */
 #include "zconf.hash.c"
-
-
 
 #ifdef short
 # undef short
@@ -359,7 +344,6 @@ void free (void *); /* INFRINGES ON USER NAME SPACE */
 #  endif
 # endif
 #endif /* ! defined yyoverflow || YYERROR_VERBOSE */
-
 
 #if (! defined yyoverflow \
      && (! defined __cplusplus \
@@ -803,7 +787,6 @@ static const yytype_uint8 yystos[] =
 #define YYABORT		goto yyabortlab
 #define YYERROR		goto yyerrorlab
 
-
 /* Like YYERROR except do call yyerror.  This remains here temporarily
    to ease the transition to the new meaning of YYERROR, for GCC.
    Once GCC version 2 has supplanted version 1, this can go.  */
@@ -829,10 +812,8 @@ do								\
     }								\
 while (YYID (0))
 
-
 #define YYTERROR	1
 #define YYERRCODE	256
-
 
 /* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
    If N is 0, then set CURRENT to the empty location which ends
@@ -859,7 +840,6 @@ while (YYID (0))
     while (YYID (0))
 #endif
 
-
 /* YY_LOCATION_PRINT -- Print the location on the stream.
    This macro was not mandated originally: define only if we know
    we won't break user code: when these are the locations we know.  */
@@ -874,7 +854,6 @@ while (YYID (0))
 #  define YY_LOCATION_PRINT(File, Loc) ((void) 0)
 # endif
 #endif
-
 
 /* YYLEX -- calling `yylex' with the right arguments.  */
 
@@ -909,7 +888,6 @@ do {									  \
     }									  \
 } while (YYID (0))
 
-
 /*--------------------------------.
 | Print this symbol on YYOUTPUT.  |
 `--------------------------------*/
@@ -941,7 +919,6 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 	break;
     }
 }
-
 
 /*--------------------------------.
 | Print this symbol on YYOUTPUT.  |
@@ -999,7 +976,6 @@ do {								\
     yy_stack_print ((Bottom), (Top));				\
 } while (YYID (0))
 
-
 /*------------------------------------------------.
 | Report that the YYRULE is going to be reduced.  |
 `------------------------------------------------*/
@@ -1046,7 +1022,6 @@ int yydebug;
 # define YY_STACK_PRINT(Bottom, Top)
 # define YY_REDUCE_PRINT(Rule)
 #endif /* !YYDEBUG */
-
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
 #ifndef	YYINITDEPTH
@@ -1353,7 +1328,6 @@ int yyparse ();
 #endif
 #endif /* ! YYPARSE_PARAM */
 
-
 /* The lookahead symbol.  */
 int yychar;
 
@@ -1362,8 +1336,6 @@ YYSTYPE yylval;
 
 /* Number of syntax errors so far.  */
 int yynerrs;
-
-
 
 /*-------------------------.
 | yyparse or yypush_parse.  |
@@ -1391,7 +1363,6 @@ yyparse ()
 #endif
 #endif
 {
-
 
     int yystate;
     /* Number of tokens to shift before error messages enabled.  */
@@ -1600,7 +1571,6 @@ yybackup:
 
   goto yynewstate;
 
-
 /*-----------------------------------------------------------.
 | yydefault -- do the default action for the current state.  |
 `-----------------------------------------------------------*/
@@ -1609,7 +1579,6 @@ yydefault:
   if (yyn == 0)
     goto yyerrlab;
   goto yyreduce;
-
 
 /*-----------------------------.
 | yyreduce -- Do a reduction.  |
@@ -1627,7 +1596,6 @@ yyreduce:
      unconditionally makes the parser a bit smaller, and it avoids a
      GCC warning that YYVAL may be used uninitialized.  */
   yyval = yyvsp[1-yylen];
-
 
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
@@ -2030,8 +1998,6 @@ yyreduce:
     { (yyval.string) = NULL; ;}
     break;
 
-
-
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2055,7 +2021,6 @@ yyreduce:
     yystate = yydefgoto[yyn - YYNTOKENS];
 
   goto yynewstate;
-
 
 /*------------------------------------.
 | yyerrlab -- here on detecting error |
@@ -2102,8 +2067,6 @@ yyerrlab:
 #endif
     }
 
-
-
   if (yyerrstatus == 3)
     {
       /* If just tried and failed to reuse lookahead token after an
@@ -2127,7 +2090,6 @@ yyerrlab:
      token.  */
   goto yyerrlab1;
 
-
 /*---------------------------------------------------.
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
@@ -2146,7 +2108,6 @@ yyerrorlab:
   YY_STACK_PRINT (yyss, yyssp);
   yystate = *yyssp;
   goto yyerrlab1;
-
 
 /*-------------------------------------------------------------.
 | yyerrlab1 -- common code for both syntax error and YYERROR.  |
@@ -2172,7 +2133,6 @@ yyerrlab1:
       if (yyssp == yyss)
 	YYABORT;
 
-
       yydestruct ("Error: popping",
 		  yystos[yystate], yyvsp);
       YYPOPSTACK (1);
@@ -2182,13 +2142,11 @@ yyerrlab1:
 
   *++yyvsp = yylval;
 
-
   /* Shift the error token.  */
   YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
 
   yystate = yyn;
   goto yynewstate;
-
 
 /*-------------------------------------.
 | yyacceptlab -- YYACCEPT comes here.  |
@@ -2239,10 +2197,6 @@ yyreturn:
   /* Make sure YYID is used.  */
   return YYID (yyresult);
 }
-
-
-
-
 
 void conf_parse(const char *name)
 {
@@ -2502,4 +2456,3 @@ void zconfdump(FILE *out)
 #include "expr.c"
 #include "symbol.c"
 #include "menu.c"
-

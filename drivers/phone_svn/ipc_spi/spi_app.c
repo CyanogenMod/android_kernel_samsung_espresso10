@@ -26,7 +26,6 @@
  *
  */
 
-
 /*
  *
  *	Preprocessor by common
@@ -37,7 +36,6 @@
 #include "spi_app.h"
 #include "spi_os.h"
 #include "spi_data.h"
-
 
 /**********************************************************
 Prototype	void spi_send_msg ( void )
@@ -74,4 +72,3 @@ void spi_send_msg_to_app(void)
 		ipc_spi_make_data_interrupt(int_cmd, od_spi);
 	}
 }
-

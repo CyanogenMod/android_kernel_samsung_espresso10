@@ -2348,7 +2348,6 @@ iwl4965_rs_rate_init(struct iwl_priv *priv,
 	lq_sta = &sta_priv->lq_sta;
 	sband = hw->wiphy->bands[conf->channel->band];
 
-
 	lq_sta->lq.sta_id = sta_id;
 
 	for (j = 0; j < LQ_SIZE; j++)
@@ -2562,7 +2561,6 @@ static void iwl4965_rs_free_sta(void *priv_r, struct ieee80211_sta *sta,
 	IWL_DEBUG_RATE(priv, "enter\n");
 	IWL_DEBUG_RATE(priv, "leave\n");
 }
-
 
 #ifdef CONFIG_MAC80211_DEBUGFS
 static int iwl4965_open_file_generic(struct inode *inode, struct file *file)

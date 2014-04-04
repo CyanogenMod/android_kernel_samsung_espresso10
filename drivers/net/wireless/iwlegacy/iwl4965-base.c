@@ -61,7 +61,6 @@
 #include "iwl-4965.h"
 #include "iwl-4965-led.h"
 
-
 /******************************************************************************
  *
  * module boiler plate
@@ -80,7 +79,6 @@
 #endif
 
 #define DRV_VERSION     IWLWIFI_VERSION VD
-
 
 MODULE_DESCRIPTION(DRV_DESCRIPTION);
 MODULE_VERSION(DRV_VERSION);
@@ -487,7 +485,6 @@ static void iwl4965_bg_statistics_periodic(unsigned long data)
 
 	iwl_legacy_send_statistics_request(priv, CMD_ASYNC, false);
 }
-
 
 static void iwl4965_print_cont_event_trace(struct iwl_priv *priv, u32 base,
 					u32 start_idx, u32 num_events,
@@ -1136,9 +1133,7 @@ static ssize_t iwl4965_store_debug_level(struct device *d,
 static DEVICE_ATTR(debug_level, S_IWUSR | S_IRUGO,
 			iwl4965_show_debug_level, iwl4965_store_debug_level);
 
-
 #endif /* CONFIG_IWLWIFI_LEGACY_DEBUG */
-
 
 static ssize_t iwl4965_show_temperature(struct device *d,
 				struct device_attribute *attr, char *buf)
@@ -2082,7 +2077,6 @@ static void iwl4965_alive_start(struct iwl_priv *priv)
 		goto restart;
 	}
 
-
 	/* After the ALIVE response, we can send host commands to the uCode */
 	set_bit(STATUS_ALIVE, &priv->status);
 
@@ -2392,7 +2386,6 @@ static int __iwl4965_up(struct iwl_priv *priv)
 	return -EIO;
 }
 
-
 /*****************************************************************************
  *
  * Workqueue callbacks
@@ -2573,7 +2566,6 @@ static int iwl4965_mac_setup_register(struct iwl_priv *priv,
 
 	return 0;
 }
-
 
 int iwl4965_mac_start(struct ieee80211_hw *hw)
 {
@@ -3113,7 +3105,6 @@ void iwl4965_tx_queue_set_status(struct iwl_priv *priv,
 		       scd_retry ? "BA" : "AC", txq_id, tx_fifo_id);
 }
 
-
 static int iwl4965_init_drv(struct iwl_priv *priv)
 {
 	int ret;
@@ -3309,7 +3300,6 @@ iwl4965_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 		goto out_pci_disable_device;
 
 	pci_set_drvdata(pdev, priv);
-
 
 	/***********************
 	 * 3. Read REV register
@@ -3520,7 +3510,6 @@ static void __devexit iwl4965_pci_remove(struct pci_dev *pdev)
 	iwl4965_hw_txq_ctx_free(priv);
 
 	iwl_legacy_eeprom_free(priv);
-
 
 	/*netif_stop_queue(dev); */
 	flush_workqueue(priv->workqueue);

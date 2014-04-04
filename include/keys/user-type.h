@@ -43,5 +43,4 @@ extern void user_describe(const struct key *user, struct seq_file *m);
 extern long user_read(const struct key *key,
 		      char __user *buffer, size_t buflen);
 
-
 #endif /* _KEYS_USER_TYPE_H */

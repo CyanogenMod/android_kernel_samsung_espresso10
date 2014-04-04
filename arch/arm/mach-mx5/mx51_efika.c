@@ -631,4 +631,3 @@ void __init efika_board_common_init(void)
 	get_cpu_op = mx51_get_cpu_op;
 #endif
 }
-

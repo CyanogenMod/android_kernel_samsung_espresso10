@@ -55,7 +55,6 @@
 static int debug;
 module_param(debug, int, 0644);    /* debug level (0,1,2) */
 
-
 #define MODULE_NAME "ir-kbd-i2c"
 #define dprintk(level, fmt, arg...)	if (debug >= level) \
 	printk(KERN_DEBUG MODULE_NAME ": " fmt , ## arg)

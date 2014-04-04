@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -95,9 +95,9 @@ struct ieee80211req_addpmkid {
 
 struct ieee80211req_authalg {
    u_int8_t auth_alg;
-};  
+};
 
-/* 
+/*
  * Request to add an IE to a Management Frame
  */
 enum{
@@ -120,9 +120,9 @@ struct ieee80211req_getset_appiebuf {
     u_int8_t  app_buf[];
 };
 
-/* 
+/*
  * The following definitions are used by an application to set filter
- * for receiving management frames 
+ * for receiving management frames
  */
 enum {
      IEEE80211_FILTER_TYPE_BEACON      =   0x1,
@@ -151,7 +151,7 @@ enum {
     IEEE80211_PARAM_PRIVACY     = 13,   /* privacy invoked */
     IEEE80211_PARAM_COUNTERMEASURES = 14,   /* WPA/TKIP countermeasures */
     IEEE80211_PARAM_DROPUNENCRYPTED = 15,   /* discard unencrypted frames */
-    IEEE80211_PARAM_WAPI = 16,   /* WAPI policy from wapid */        
+    IEEE80211_PARAM_WAPI = 16,   /* WAPI policy from wapid */
 };
 
 /*

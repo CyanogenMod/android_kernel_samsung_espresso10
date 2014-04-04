@@ -60,5 +60,4 @@ struct attrlist_cursor_kern;
 #define VN_DIRTY(vp)	mapping_tagged(vp->i_mapping, \
 					PAGECACHE_TAG_DIRTY)
 
-
 #endif	/* __XFS_VNODE_H__ */

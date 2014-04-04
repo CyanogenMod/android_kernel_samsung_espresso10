@@ -771,7 +771,6 @@ static int bcm3510_init(struct dvb_frontend* fe)
 	return 0;
 }
 
-
 static struct dvb_frontend_ops bcm3510_ops;
 
 struct dvb_frontend* bcm3510_attach(const struct bcm3510_config *config,

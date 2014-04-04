@@ -61,7 +61,6 @@
 /* Interrupts on the BadgePAD 4 */
 #define BADGE4_IRQ_GPIO_SA1111		IRQ_GPIO0    /* SA-1111 interrupt */
 
-
 /* PCM5ENV Usage tracking */
 
 #define BADGE4_5V_PCMCIA_SOCK0		(1<<0)

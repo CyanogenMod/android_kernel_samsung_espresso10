@@ -28,13 +28,11 @@
 #define CEPH_MDSC_PROTOCOL   32 /* server/client */
 #define CEPH_MONC_PROTOCOL   15 /* server/client */
 
-
 #define CEPH_INO_ROOT  1
 #define CEPH_INO_CEPH  2        /* hidden .ceph dir */
 
 /* arbitrary limit on max # of monitors (cluster of 3 is typical) */
 #define CEPH_MAX_MON   31
-
 
 /*
  * feature bits
@@ -47,7 +45,6 @@
 #define CEPH_FEATURE_MONNAMES       (1<<5)
 #define CEPH_FEATURE_RECONNECT_SEQ  (1<<6)
 #define CEPH_FEATURE_DIRLAYOUTHASH  (1<<7)
-
 
 /*
  * ceph_file_layout - describe data layout for a file/inode
@@ -93,7 +90,6 @@ struct ceph_dir_layout {
 
 #define CEPH_AUTH_UID_DEFAULT ((__u64) -1)
 
-
 /*********************************************
  * message layer
  */
@@ -134,20 +130,17 @@ struct ceph_dir_layout {
 #define CEPH_MSG_POOLOP_REPLY           48
 #define CEPH_MSG_POOLOP                 49
 
-
 /* osd */
 #define CEPH_MSG_OSD_MAP                41
 #define CEPH_MSG_OSD_OP                 42
 #define CEPH_MSG_OSD_OPREPLY            43
 #define CEPH_MSG_WATCH_NOTIFY           44
 
-
 /* watch-notify operations */
 enum {
   WATCH_NOTIFY				= 1, /* notifying watcher */
   WATCH_NOTIFY_COMPLETE			= 2, /* notifier notified when done */
 };
-
 
 /* pool operations */
 enum {
@@ -259,7 +252,6 @@ struct ceph_mon_subscribe_ack {
 
 extern const char *ceph_mds_state_name(int s);
 
-
 /*
  * metadata lock types.
  *  - these are bitmasks.. we can compose them
@@ -342,7 +334,6 @@ enum {
 };
 
 extern const char *ceph_mds_op_name(int op);
-
 
 #define CEPH_SETATTR_MODE   1
 #define CEPH_SETATTR_UID    2
@@ -511,7 +502,6 @@ struct ceph_filelock {
 	__u8 type; /* shared lock, exclusive lock, or unlock */
 } __attribute__ ((packed));
 
-
 /* file access modes */
 #define CEPH_FILE_MODE_PIN        0
 #define CEPH_FILE_MODE_RD         1
@@ -521,7 +511,6 @@ struct ceph_filelock {
 #define CEPH_FILE_MODE_NUM        8  /* bc these are bit fields.. mostly */
 
 int ceph_flags_to_mode(int flags);
-
 
 /* capability bits */
 #define CEPH_CAP_PIN         1  /* no specific capabilities beyond the pin */
@@ -541,7 +530,7 @@ int ceph_flags_to_mode(int flags);
 #define CEPH_CAP_SLINK      4
 #define CEPH_CAP_SXATTR     6
 #define CEPH_CAP_SFILE      8
-#define CEPH_CAP_SFLOCK    20 
+#define CEPH_CAP_SFLOCK    20
 
 #define CEPH_CAP_BITS       22
 
@@ -563,7 +552,6 @@ int ceph_flags_to_mode(int flags);
 #define CEPH_CAP_FILE_LAZYIO   (CEPH_CAP_GLAZYIO   << CEPH_CAP_SFILE)
 #define CEPH_CAP_FLOCK_SHARED  (CEPH_CAP_GSHARED   << CEPH_CAP_SFLOCK)
 #define CEPH_CAP_FLOCK_EXCL    (CEPH_CAP_GEXCL     << CEPH_CAP_SFLOCK)
-
 
 /* cap masks (for getattr) */
 #define CEPH_STAT_CAP_INODE    CEPH_CAP_PIN

@@ -811,8 +811,6 @@ u32 w89rf242_txvga_data[][5] = {
 
 /* ================================================================================================== */
 
-
-
 /*
  * =============================================================================================================
  *  Uxx_ReadEthernetAddress --
@@ -849,7 +847,6 @@ void Uxx_ReadEthernetAddress(struct hw_data *pHwData)
 	Wb35Reg_WriteSync(pHwData, 0x03e8, cpu_to_le32(*(u32 *)pHwData->PermanentMacAddress));
 	Wb35Reg_WriteSync(pHwData, 0x03ec, cpu_to_le32(*(u32 *)(pHwData->PermanentMacAddress + 4)));
 }
-
 
 /*
  * ===============================================================================================================
@@ -939,7 +936,6 @@ void Set_ChanIndep_RfData_al7230_50(struct hw_data *pHwData, u32 *pltmp, char nu
 		pltmp[i] = (1 << 31) | (0 << 30) | (24 << 24) | (al7230_rf_data_50[i] & 0xffffff);
 	}
 }
-
 
 /*
  * =============================================================================================================
@@ -2056,7 +2052,6 @@ void Mxx_initial(struct hw_data *pHwData)
 	u32	pltmp[11];
 	u16	i;
 
-
 	/*
 	 * ======================================================
 	 * Initial Mxx register
@@ -2134,7 +2129,6 @@ void Mxx_initial(struct hw_data *pHwData)
 	Wb35Reg_WriteSync(pHwData, 0x0898, 0xffff8888);
 	reg->M98_MacControl = 0xffff8888;
 }
-
 
 void Uxx_power_off_procedure(struct hw_data *pHwData)
 {
@@ -2369,4 +2363,3 @@ void BBProcessor_RateChanging(struct hw_data *pHwData,  u8 rate)
 		break;
 	}
 }
-

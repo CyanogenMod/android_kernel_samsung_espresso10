@@ -575,7 +575,6 @@ static int fimc_cap_s_input(struct file *file, void *priv,
 	if (i >= pdata->num_clients)
 		return -EINVAL;
 
-
 	if (fimc->vid_cap.sd) {
 		int ret = v4l2_subdev_call(fimc->vid_cap.sd, core, s_power, 0);
 		if (ret)
@@ -632,7 +631,6 @@ static int fimc_cap_reqbufs(struct file *file, void *priv,
 	struct fimc_ctx *ctx = priv;
 	struct fimc_vid_cap *cap = &ctx->fimc_dev->vid_cap;
 	int ret;
-
 
 	ret = vb2_reqbufs(&cap->vbq, reqbufs);
 	if (!ret)
@@ -762,7 +760,6 @@ static int fimc_cap_s_crop(struct file *file, void *fh,
 
 	return 0;
 }
-
 
 static const struct v4l2_ioctl_ops fimc_capture_ioctl_ops = {
 	.vidioc_querycap		= fimc_vidioc_querycap_capture,

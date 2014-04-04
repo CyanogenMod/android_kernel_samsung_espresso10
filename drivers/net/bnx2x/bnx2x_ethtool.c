@@ -20,7 +20,6 @@
 #include <linux/sched.h>
 #include <linux/crc32.h>
 
-
 #include "bnx2x.h"
 #include "bnx2x_cmn.h"
 #include "bnx2x_dump.h"

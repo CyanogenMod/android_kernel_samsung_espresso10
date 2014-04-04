@@ -58,7 +58,6 @@ u64 notrace trace_clock(void)
 	return local_clock();
 }
 
-
 /*
  * trace_clock_global(): special globally coherent trace clock
  *

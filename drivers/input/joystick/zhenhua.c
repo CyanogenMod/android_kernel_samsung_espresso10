@@ -73,7 +73,6 @@ struct zhenhua {
 	char phys[32];
 };
 
-
 /* bits in all incoming bytes needs to be "reversed" */
 static int zhenhua_bitreverse(int x)
 {

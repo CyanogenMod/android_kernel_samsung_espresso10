@@ -298,7 +298,6 @@ int selinux_xfrm_policy_alloc(struct xfrm_sec_ctx **ctxp,
 	return err;
 }
 
-
 /*
  * LSM hook implementation that copies security data structure from old to
  * new for policy cloning.
@@ -310,7 +309,7 @@ int selinux_xfrm_policy_clone(struct xfrm_sec_ctx *old_ctx,
 
 	if (old_ctx) {
 		new_ctx = kmalloc(sizeof(*old_ctx) + old_ctx->ctx_len,
-				  GFP_KERNEL);
+				  GFP_ATOMIC);
 		if (!new_ctx)
 			return -ENOMEM;
 

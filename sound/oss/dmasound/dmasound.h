@@ -53,7 +53,6 @@ static inline int ioctl_return(int __user *addr, int value)
 	return value < 0 ? value : put_user(value, addr);
 }
 
-
     /*
      *  Configuration
      */
@@ -202,7 +201,6 @@ static inline int dmasound_set_gain(int gain)
 {
 	return dmasound.mach.setGain ? dmasound.mach.setGain(gain) : 100;
 }
-
 
     /*
      * Sound queue stuff, the heart of the driver

@@ -25,7 +25,6 @@ struct fiq_debugger_ringbuf {
 	u8 buf[];
 };
 
-
 static inline struct fiq_debugger_ringbuf *fiq_debugger_ringbuf_alloc(int len)
 {
 	struct fiq_debugger_ringbuf *rbuf;

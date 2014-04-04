@@ -64,4 +64,3 @@ config SND_MPC52xx_SOC_EFIKA
 	select SND_SOC_STAC9766
 	help
 	  Say Y if you want to add support for sound on the Efika.
-

@@ -9,7 +9,6 @@ typedef struct _BULK_ENDP_IN
     UINT bulk_in_pipe;
 }BULK_ENDP_IN, *PBULK_ENDP_IN;
 
-
 typedef struct _BULK_ENDP_OUT
 {
     UCHAR			bulk_out_buffer;
@@ -38,14 +37,12 @@ typedef struct _INTR_ENDP_OUT
     UINT int_out_pipe;
 }INTR_ENDP_OUT, *PINTR_ENDP_OUT;
 
-
 typedef struct _USB_TCB
 {
 	struct urb *urb;
 	PVOID psIntfAdapter;
 	BOOLEAN bUsed;
 }USB_TCB, *PUSB_TCB;
-
 
 typedef struct _USB_RCB
 {
@@ -71,8 +68,6 @@ typedef struct _S_INTERFACE_ADAPTER
 	INTR_ENDP_IN	sIntrIn;
 	/* Interrupt endpoint out info */
 	INTR_ENDP_OUT	sIntrOut;
-
-
 
 	ULONG ulInterruptData[2];
 

@@ -371,4 +371,3 @@ static struct v4l2_file_operations uvc_v4l2_fops = {
 	.mmap		= uvc_v4l2_mmap,
 	.poll		= uvc_v4l2_poll,
 };
-

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wlan_node.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -49,7 +49,7 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(wlan,
                                  ATH_DEBUG_MASK_DEFAULTS,
                                  ATH_DEBUG_DESCRIPTION_COUNT(wlan_debug_desc),
                                  wlan_debug_desc);
-                                 
+
 #endif
 
 #ifdef THREAD_X
@@ -289,7 +289,7 @@ wlan_node_table_init(void *wmip, struct ieee80211_node_table *nt)
     IEEE80211_NODE_LOCK_INIT(nt);
 
     A_REGISTER_MODULE_DEBUG_INFO(wlan);
-    
+
     nt->nt_node_first = nt->nt_node_last = NULL;
     for(i = 0; i < IEEE80211_NODE_HASHSIZE; i++)
     {
@@ -304,7 +304,7 @@ wlan_node_table_init(void *wmip, struct ieee80211_node_table *nt)
     nt->nt_nodeAge = WLAN_NODE_INACT_TIMEOUT_MSEC;
 
     //
-    // nt_scangen never initialized before and during suspend/resume of winmobile, 
+    // nt_scangen never initialized before and during suspend/resume of winmobile,
     // that some junk has been stored in this, due to this scan list didn't properly updated
     //
     nt->nt_scangen   = 0;
@@ -633,4 +633,3 @@ wlan_find_matching_Ssidnode (struct ieee80211_node_table *nt, u8 *pSsid,
 
     return best_ni;
 }
-

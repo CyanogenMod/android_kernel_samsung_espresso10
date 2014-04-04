@@ -30,7 +30,6 @@ MODULE_AUTHOR("Jes Sorensen <Jes.Sorensen@gmail.com>");
 MODULE_DESCRIPTION("Toshiba Laptop ACPI Bluetooth Enable Driver");
 MODULE_LICENSE("GPL");
 
-
 static int toshiba_bt_rfkill_add(struct acpi_device *device);
 static int toshiba_bt_rfkill_remove(struct acpi_device *device, int type);
 static void toshiba_bt_rfkill_notify(struct acpi_device *device, u32 event);
@@ -54,7 +53,6 @@ static struct acpi_driver toshiba_bt_rfkill_driver = {
 			},
 	.owner = 	THIS_MODULE,
 };
-
 
 static int toshiba_bluetooth_enable(acpi_handle handle)
 {

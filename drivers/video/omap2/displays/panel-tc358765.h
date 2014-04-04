@@ -1,4 +1,3 @@
-
 #ifndef __PANEL_TC358765_H__
 #define __PANEL_TC358765_H__
 
@@ -78,7 +77,6 @@
 #define VTIM1			0x045c		/* Vertical Timing */
 #define VTIM2			0x0460		/* Vertical Timing */
 #define VFUEN			0x0464		/* Video Frame Timing */
-
 
 /* LVDS Registers */
 #define LVMX0003		0x0480		/* LVDS Mux Input - Bit 0 to 3 */

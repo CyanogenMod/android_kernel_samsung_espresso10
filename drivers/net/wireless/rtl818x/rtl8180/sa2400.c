@@ -1,4 +1,3 @@
-
 /*
  * Radio tuning for Philips SA2400 on RTL8180
  *

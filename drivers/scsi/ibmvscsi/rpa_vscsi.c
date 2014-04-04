@@ -91,7 +91,7 @@ static void rpavscsi_release_crq_queue(struct crq_queue *queue,
  * crq_queue_next_crq: - Returns the next entry in message queue
  * @queue:	crq_queue to use
  *
- * Returns pointer to next entry in queue, or NULL if there are no new 
+ * Returns pointer to next entry in queue, or NULL if there are no new
  * entried in the CRQ.
  */
 static struct viosrp_crq *crq_queue_next_crq(struct crq_queue *queue)

@@ -51,7 +51,6 @@ enum {
 	BFA_TRC_HAL_IOCFC_CB	= 5,
 };
 
-
 /*
  * Macro to define a new BFA module
  */
@@ -98,7 +97,6 @@ struct bfa_module_s {
 	void (*stop) (struct bfa_s *bfa);
 	void (*iocdisable) (struct bfa_s *bfa);
 };
-
 
 struct bfa_s {
 	void			*bfad;		/*  BFA driver instance    */

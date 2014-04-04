@@ -13,4 +13,3 @@
 #define FB_SIZE			0x01000000
 
 #endif
-

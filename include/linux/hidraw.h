@@ -44,7 +44,6 @@ struct hidraw_devinfo {
 /* number of reports to buffer */
 #define HIDRAW_BUFFER_SIZE 64
 
-
 /* kernel-only API declarations */
 #ifdef __KERNEL__
 

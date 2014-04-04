@@ -44,7 +44,6 @@ static void refresh_text_box(WINDOW *dialog, WINDOW *box, int boxh, int boxw,
 	wrefresh(dialog);
 }
 
-
 /*
  * Display text from a file in a dialog box.
  */
@@ -320,8 +319,11 @@ static void print_page(WINDOW * win, int height, int width)
  */
 static void print_line(WINDOW * win, int row, int width)
 {
-	int y, x;
+	int y=0, x=0;
 	char *line;
+
+	y=x;
+	x=y;
 
 	line = get_line();
 	line += MIN(strlen(line), hscroll);	/* Scroll horizontally */

@@ -62,10 +62,8 @@
 
 #include "dz.h"
 
-
 MODULE_DESCRIPTION("DECstation DZ serial driver");
 MODULE_LICENSE("GPL");
-
 
 static char dz_name[] __initdata = "DECstation DZ serial driver version ";
 static char dz_version[] __initdata = "1.04";
@@ -550,7 +548,6 @@ static int dz_encode_baud_rate(unsigned int baud)
 	}
 }
 
-
 static void dz_reset(struct dz_port *dport)
 {
 	struct dz_mux *mux = dport->mux;
@@ -660,7 +657,6 @@ static void dz_pm(struct uart_port *uport, unsigned int state,
 		dz_stop_tx(&dport->port);
 	spin_unlock_irqrestore(&dport->port.lock, flags);
 }
-
 
 static const char *dz_type(struct uart_port *uport)
 {

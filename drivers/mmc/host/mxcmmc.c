@@ -647,7 +647,6 @@ static void mxcmci_request(struct mmc_host *mmc, struct mmc_request *req)
 			goto out;
 		}
 
-
 		cmdat |= CMD_DAT_CONT_DATA_ENABLE;
 
 		if (req->data->flags & MMC_DATA_WRITE)

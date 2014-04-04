@@ -96,7 +96,6 @@ struct snd_emu8000 {
 /* sequencer device id */
 #define SNDRV_SEQ_DEV_ID_EMU8000	"emu8000-synth"
 
-
 /* exported functions */
 int snd_emu8000_new(struct snd_card *card, int device, long port, int seq_ports,
 		    struct snd_seq_device **ret);

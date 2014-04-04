@@ -258,7 +258,6 @@ struct rcv_desc {
 #define qlcnic_get_lro_sts_seq_number(sts_data)		\
 	((sts_data) & 0x0FFFFFFFF)
 
-
 struct status_desc {
 	__le64 status_desc_data[2];
 } __attribute__ ((aligned(16)));
@@ -755,7 +754,6 @@ struct qlcnic_cardrsp_tx_ctx {
 #define QLCNIC_HOST_INT_CRB_MODE_NOTX	3
 #define QLCNIC_HOST_INT_CRB_MODE_NORXTX	4
 
-
 /* MAC */
 
 #define MC_COUNT_P3P	38
@@ -1019,7 +1017,6 @@ struct qlcnic_adapter {
 
 	struct delayed_work fw_work;
 
-
 	struct qlcnic_filter_hash fhash;
 
 	spinlock_t tx_clean_lock;
@@ -1091,7 +1088,6 @@ struct qlcnic_eswitch {
 #define QLCNIC_SWITCH_PROMISC_MODE	BIT_3
 #define QLCNIC_SWITCH_PORT_MIRRORING	BIT_4
 };
-
 
 /* Return codes for Error handling */
 #define QL_STATUS_INVALID_PARAM	-1

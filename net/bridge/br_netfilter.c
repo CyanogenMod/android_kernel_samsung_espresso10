@@ -233,6 +233,9 @@ static int br_parse_ip_options(struct sk_buff *skb)
 	struct net_device *dev = skb->dev;
 	u32 len;
 
+	if (!pskb_may_pull(skb, sizeof(struct iphdr)))
+		goto inhdr_error;
+
 	iph = ip_hdr(skb);
 	opt = &(IPCB(skb)->opt);
 
@@ -661,7 +664,6 @@ static unsigned int br_nf_pre_routing(unsigned int hook, struct sk_buff *skb,
 
 	return NF_STOLEN;
 }
-
 
 /* PF_BRIDGE/LOCAL_IN ************************************************/
 /* The packet is locally destined, which requires a real

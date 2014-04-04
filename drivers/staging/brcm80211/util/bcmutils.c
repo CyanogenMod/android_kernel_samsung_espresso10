@@ -76,7 +76,6 @@ void bcm_pkt_buf_free_skb(struct sk_buff *skb)
 }
 EXPORT_SYMBOL(bcm_pkt_buf_free_skb);
 
-
 /* copy a buffer into a pkt buffer chain */
 uint bcm_pktfrombuf(struct sk_buff *p, uint offset, int len,
 		unsigned char *buf)
@@ -557,7 +556,6 @@ bcm_tlv_t *bcm_parse_tlvs(void *buf, int buflen, uint key)
 	return NULL;
 }
 EXPORT_SYMBOL(bcm_parse_tlvs);
-
 
 #if defined(BCMDBG)
 int

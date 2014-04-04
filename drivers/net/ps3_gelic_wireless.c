@@ -46,7 +46,6 @@
 #include "ps3_gelic_net.h"
 #include "ps3_gelic_wireless.h"
 
-
 static int gelic_wl_start_scan(struct gelic_wl_info *wl, int always_scan,
 			       u8 *essid, size_t essid_len);
 static int gelic_wl_try_associate(struct net_device *netdev);
@@ -566,7 +565,6 @@ static void gelic_wl_parse_ie(u8 *data, size_t len,
 		 ie_info->rsn.data, ie_info->rsn.len);
 }
 
-
 /*
  * translate the scan informations from hypervisor to a
  * independent format
@@ -701,7 +699,6 @@ static char *gelic_wl_translate_scan(struct net_device *netdev,
 	pr_debug("%s: ->\n", __func__);
 	return ev;
 }
-
 
 static int gelic_wl_get_scan(struct net_device *netdev,
 			     struct iw_request_info *info,
@@ -983,7 +980,6 @@ static int gelic_wl_set_essid(struct net_device *netdev,
 	}
 	set_bit(GELIC_WL_STAT_CONFIGURED, &wl->stat);
 	spin_unlock_irqrestore(&wl->lock, irqflag);
-
 
 	gelic_wl_try_associate(netdev); /* FIXME */
 	pr_debug("%s: ->\n", __func__);
@@ -1399,7 +1395,6 @@ static int gelic_wl_get_nick(struct net_device *net_dev,
 	data->data.flags = 1;
 	return 0;
 }
-
 
 /* --- */
 

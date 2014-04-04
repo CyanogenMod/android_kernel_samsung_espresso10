@@ -17,4 +17,3 @@ struct remapper {
 extern void register_remapper(struct remapper *info);
 
 #endif
-

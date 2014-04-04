@@ -102,7 +102,6 @@ extern int memblock_memory_can_coalesce(phys_addr_t addr1, phys_addr_t size1,
  */
 extern void memblock_set_current_limit(phys_addr_t limit);
 
-
 /*
  * pfn conversion functions
  *
@@ -151,7 +150,6 @@ static inline unsigned long memblock_region_reserved_end_pfn(const struct memblo
 	for (region = memblock.memblock_type.regions;				\
 	     region < (memblock.memblock_type.regions + memblock.memblock_type.cnt);	\
 	     region++)
-
 
 #ifdef ARCH_DISCARD_MEMBLOCK
 #define __init_memblock __init

@@ -38,7 +38,6 @@
 #include "xfs_vnodeops.h"
 #include "xfs_trace.h"
 
-
 /*
  * Enter all inodes for a rename transaction into a sorted array.
  */

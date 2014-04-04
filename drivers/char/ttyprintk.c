@@ -66,7 +66,7 @@ static int tpk_printk(const unsigned char *buf, int count)
 				tmp[tpk_curr + 1] = '\0';
 				printk(KERN_INFO "%s%s", tpk_tag, tmp);
 				tpk_curr = 0;
-				if (buf[i + 1] == '\n')
+				if ((i + 1) < count && buf[i + 1] == '\n')
 					i++;
 				break;
 			case '\n':
@@ -123,7 +123,6 @@ static int tpk_write(struct tty_struct *tty,
 {
 	struct ttyprintk_port *tpkp = tty->driver_data;
 	int ret;
-
 
 	/* exclusive use of tpk_printk within this tty */
 	mutex_lock(&tpkp->port_write_mutex);

@@ -26,7 +26,6 @@ static struct sysdev_class node_class = {
 	.attrs = node_state_attrs,
 };
 
-
 static ssize_t node_read_cpumap(struct sys_device *dev, int type, char *buf)
 {
 	struct node *node_dev = to_node(dev);
@@ -254,7 +253,6 @@ static inline void hugetlb_register_node(struct node *node) {}
 
 static inline void hugetlb_unregister_node(struct node *node) {}
 #endif
-
 
 /*
  * register_node - Setup a sysfs device for a node.

@@ -55,7 +55,7 @@
 // 1.2.8
 // Device file system support (MHW)
 //
-// 1.2.7 
+// 1.2.7
 // Fixed
 // Reload of ip2 without unloading ip2main hangs system on cat of /proc/modules
 //
@@ -240,7 +240,7 @@ static const struct file_operations ip2_ipl = {
 	.unlocked_ioctl	= ip2_ipl_ioctl,
 	.open		= ip2_ipl_open,
 	.llseek		= noop_llseek,
-}; 
+};
 
 static unsigned long irq_counter;
 static unsigned long bh_counter;
@@ -328,7 +328,7 @@ static struct class *ip2_class;
 static int __init is_valid_irq(int irq)
 {
 	int *i = Valid_Irqs;
-	
+
 	while (*i != 0 && *i != irq)
 		i++;
 
@@ -478,7 +478,6 @@ static const struct tty_operations ip2_ops = {
 /* IRQF_SHARED    - for shared irq PCI or maybe EISA only */
 /* SA_RANDOM   - can be source for cert. random number generators */
 #define IP2_SA_FLAGS	0
-
 
 static const struct firmware *ip2_request_firmware(void)
 {
@@ -669,7 +668,7 @@ out:
 			if (ip2config.addr[i] != 0) {
 				/* Eisa_irq set as side effect, boo */
 				ip2config.type[i] = EISA;
-			} 
+			}
 			ip2config.irq[i] = Eisa_irq;
 			break;
 		}	/* switch */
@@ -742,7 +741,7 @@ out:
 		ip2_class = class_create(THIS_MODULE, "ip2");
 		if (IS_ERR(ip2_class)) {
 			err = PTR_ERR(ip2_class);
-			goto out_chrdev;	
+			goto out_chrdev;
 		}
 	}
 	/* Register the read_procmem thing */
@@ -1165,7 +1164,6 @@ service_all_boards(void)
 	}
 }
 
-
 /******************************************************************************/
 /* Function:   ip2_interrupt_bh(work)                                         */
 /* Parameters: work - pointer to the board structure                          */
@@ -1184,7 +1182,7 @@ ip2_interrupt_bh(struct work_struct *work)
 //	here from the IMMEDIATE queue.  Here, we process the boards.
 //	Checking pB doesn't cost much and it saves us from the sanity checkers.
 
-	bh_counter++; 
+	bh_counter++;
 
 	if ( pB ) {
 		i2ServiceBoard( pB );
@@ -1194,7 +1192,6 @@ ip2_interrupt_bh(struct work_struct *work)
 		}
 	}
 }
-
 
 /******************************************************************************/
 /* Function:   ip2_interrupt(int irq, void *dev_id)    */
@@ -1332,7 +1329,7 @@ static inline void  isig(int sig, struct tty_struct *tty, int flush)
 	if (tty->pgrp)
 		kill_pgrp(tty->pgrp, sig, 1);
 	if (flush || !L_NOFLSH(tty)) {
-		if ( tty->ldisc->ops->flush_buffer )  
+		if ( tty->ldisc->ops->flush_buffer )
 			tty->ldisc->ops->flush_buffer(tty);
 		i2InputFlush( tty->driver_data );
 	}
@@ -1369,7 +1366,7 @@ static void do_status(struct work_struct *work)
 		if ( (status & I2_BRK) ) {
 			brkf = TTY_BREAK;
 			brkc = '\0';
-		} 
+		}
 		else if (status & I2_PAR) {
 			brkf = TTY_PARITY;
 			brkc = the_char;
@@ -1422,7 +1419,7 @@ skip_this:
 /* Verifies the structure magic numbers and cross links.                      */
 /******************************************************************************/
 #ifdef IP2DEBUG_OPEN
-static void 
+static void
 open_sanity_check( i2ChanStrPtr pCh, i2eBordStrPtr pBrd )
 {
 	if ( pBrd->i2eValid != I2E_MAGIC ) {
@@ -1438,7 +1435,6 @@ open_sanity_check( i2ChanStrPtr pCh, i2eBordStrPtr pBrd )
 	}
 }
 #endif
-
 
 /******************************************************************************/
 /* Function:   ip2_open()                                                     */
@@ -1537,7 +1533,7 @@ ip2_open( PTTY tty, struct file *pFile )
 			remove_wait_queue(&pCh->open_wait, &wait);
 			return ( pCh->flags & ASYNC_HUP_NOTIFY ) ? -EBUSY : -ERESTARTSYS;
 		}
-		if (!(pCh->flags & ASYNC_CLOSING) && 
+		if (!(pCh->flags & ASYNC_CLOSING) &&
 				(do_clocal || (pCh->dataSetIn & I2_DCD) )) {
 			rc = 0;
 			break;
@@ -1666,7 +1662,7 @@ ip2_close( PTTY tty, struct file *pFile )
 	tty_ldisc_flush(tty);
 	tty_driver_flush_buffer(tty);
 	tty->closing = 0;
-	
+
 	pCh->pTTY = NULL;
 
 	if (pCh->wopen) {
@@ -1682,7 +1678,6 @@ ip2_close( PTTY tty, struct file *pFile )
 #ifdef IP2DEBUG_OPEN
 	DBG_CNT("ip2_close: after wakeups--");
 #endif
-
 
 	ip2trace (CHANN, ITRC_CLOSE, ITRC_RETURN, 1, 1 );
 
@@ -1720,7 +1715,7 @@ ip2_hangup ( PTTY tty )
 		pCh->dataSetOut &= ~(I2_DTR | I2_RTS);
 		i2QueueCommands( PTYPE_INLINE, pCh, 100, 1, CMD_PAUSE(25));
 	}
-	i2QueueCommands(PTYPE_INLINE, pCh, 1, 3, 
+	i2QueueCommands(PTYPE_INLINE, pCh, 1, 3,
 				CMD_CTS_NREP, CMD_DSR_NREP, CMD_RI_NREP);
 	serviceOutgoingFifo ( pCh->pMyBord );
 
@@ -2218,7 +2213,7 @@ ip2_ioctl ( PTTY tty, UINT cmd, ULONG arg )
 			ip2_wait_until_sent(tty,0);
 			i2QueueCommands(PTYPE_INLINE, pCh, 100, 1,
 				CMD_SEND_BRK(arg ? arg*100 : 250));
-			serviceOutgoingFifo ( pCh->pMyBord );	
+			serviceOutgoingFifo ( pCh->pMyBord );
 		}
 		break;
 
@@ -2227,7 +2222,7 @@ ip2_ioctl ( PTTY tty, UINT cmd, ULONG arg )
 		ip2trace (CHANN, ITRC_IOCTL, 6, 1, rc );
 
 			rc = put_user(C_CLOCAL(tty) ? 1 : 0, (unsigned long __user *)argp);
-		if (rc)	
+		if (rc)
 			return rc;
 	break;
 
@@ -2236,11 +2231,11 @@ ip2_ioctl ( PTTY tty, UINT cmd, ULONG arg )
 		ip2trace (CHANN, ITRC_IOCTL, 7, 1, rc );
 
 		rc = get_user(arg,(unsigned long __user *) argp);
-		if (rc) 
+		if (rc)
 			return rc;
 		tty->termios->c_cflag = ((tty->termios->c_cflag & ~CLOCAL)
 					 | (arg ? CLOCAL : 0));
-		
+
 		break;
 
 	/*
@@ -2252,7 +2247,7 @@ ip2_ioctl ( PTTY tty, UINT cmd, ULONG arg )
 		write_lock_irqsave(&pB->read_fifo_spinlock, flags);
 		cprev = pCh->icount;	 /* note the counters on entry */
 		write_unlock_irqrestore(&pB->read_fifo_spinlock, flags);
-		i2QueueCommands(PTYPE_BYPASS, pCh, 100, 4, 
+		i2QueueCommands(PTYPE_BYPASS, pCh, 100, 4,
 						CMD_DCD_REP, CMD_CTS_REP, CMD_DSR_REP, CMD_RI_REP);
 		init_waitqueue_entry(&wait, current);
 		add_wait_queue(&pCh->delta_msr_wait, &wait);
@@ -2291,7 +2286,7 @@ ip2_ioctl ( PTTY tty, UINT cmd, ULONG arg )
 		set_current_state( TASK_RUNNING );
 		remove_wait_queue(&pCh->delta_msr_wait, &wait);
 
-		i2QueueCommands(PTYPE_BYPASS, pCh, 100, 3, 
+		i2QueueCommands(PTYPE_BYPASS, pCh, 100, 3,
 						 CMD_CTS_NREP, CMD_DSR_NREP, CMD_RI_NREP);
 		if ( ! (pCh->flags	& ASYNC_CHECK_CD)) {
 			i2QueueCommands(PTYPE_BYPASS, pCh, 100, 1, CMD_DCD_NREP);
@@ -2587,25 +2582,25 @@ set_params( i2ChanStrPtr pCh, struct ktermios *o_tios )
 			}
 		}
 		i2QueueCommands( PTYPE_INLINE, pCh, 100, 1, CMD_SETBAUD(pCh->speed));
-		
+
 		i2QueueCommands ( PTYPE_INLINE, pCh, 100, 2, CMD_DTRUP, CMD_RTSUP);
 		pCh->dataSetOut |= (I2_DTR | I2_RTS);
 	}
-	if ( (CSTOPB & cflag) ^ (CSTOPB & o_tios->c_cflag)) 
-	{
-		i2QueueCommands ( PTYPE_INLINE, pCh, 100, 1, 
-			CMD_SETSTOP( ( cflag & CSTOPB ) ? CST_2 : CST_1));
-	}
-	if (((PARENB|PARODD) & cflag) ^ ((PARENB|PARODD) & o_tios->c_cflag)) 
+	if ( (CSTOPB & cflag) ^ (CSTOPB & o_tios->c_cflag))
 	{
 		i2QueueCommands ( PTYPE_INLINE, pCh, 100, 1,
-			CMD_SETPAR( 
+			CMD_SETSTOP( ( cflag & CSTOPB ) ? CST_2 : CST_1));
+	}
+	if (((PARENB|PARODD) & cflag) ^ ((PARENB|PARODD) & o_tios->c_cflag))
+	{
+		i2QueueCommands ( PTYPE_INLINE, pCh, 100, 1,
+			CMD_SETPAR(
 				(cflag & PARENB ?  (cflag & PARODD ? CSP_OD : CSP_EV) : CSP_NP)
 			)
 		);
 	}
 	/* byte size and parity */
-	if ( (CSIZE & cflag)^(CSIZE & o_tios->c_cflag)) 
+	if ( (CSIZE & cflag)^(CSIZE & o_tios->c_cflag))
 	{
 		int datasize;
 		switch ( cflag & CSIZE ) {
@@ -2632,32 +2627,32 @@ set_params( i2ChanStrPtr pCh, struct ktermios *o_tios )
 	start_char = START_CHAR(pCh->pTTY);
 
 	//////////// can't be \000
-	if (stop_char == __DISABLED_CHAR ) 
+	if (stop_char == __DISABLED_CHAR )
 	{
-		stop_char = ~__DISABLED_CHAR; 
+		stop_char = ~__DISABLED_CHAR;
 	}
-	if (start_char == __DISABLED_CHAR ) 
+	if (start_char == __DISABLED_CHAR )
 	{
 		start_char = ~__DISABLED_CHAR;
 	}
 	/////////////////////////////////
 
-	if ( o_tios->c_cc[VSTART] != start_char ) 
+	if ( o_tios->c_cc[VSTART] != start_char )
 	{
 		i2QueueCommands(PTYPE_BYPASS, pCh, 100, 1, CMD_DEF_IXON(start_char));
 		i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_DEF_OXON(start_char));
 	}
-	if ( o_tios->c_cc[VSTOP] != stop_char ) 
+	if ( o_tios->c_cc[VSTOP] != stop_char )
 	{
 		 i2QueueCommands(PTYPE_BYPASS, pCh, 100, 1, CMD_DEF_IXOFF(stop_char));
 		 i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_DEF_OXOFF(stop_char));
 	}
-	if (stop_char == __DISABLED_CHAR ) 
+	if (stop_char == __DISABLED_CHAR )
 	{
 		stop_char = ~__DISABLED_CHAR;  //TEST123
 		goto no_xoff;
 	}
-	if ((iflag & (IXOFF))^(o_tios->c_iflag & (IXOFF))) 
+	if ((iflag & (IXOFF))^(o_tios->c_iflag & (IXOFF)))
 	{
 		if ( iflag & IXOFF ) {	// Enable XOFF output flow control
 			i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_OXON_OPT(COX_XON));
@@ -2666,11 +2661,11 @@ no_xoff:
 			i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_OXON_OPT(COX_NONE));
 		}
 	}
-	if (start_char == __DISABLED_CHAR ) 
+	if (start_char == __DISABLED_CHAR )
 	{
 		goto no_xon;
 	}
-	if ((iflag & (IXON|IXANY)) ^ (o_tios->c_iflag & (IXON|IXANY))) 
+	if ((iflag & (IXON|IXANY)) ^ (o_tios->c_iflag & (IXON|IXANY)))
 	{
 		if ( iflag & IXON ) {
 			if ( iflag & IXANY ) { // Enable XON/XANY output flow control
@@ -2683,19 +2678,19 @@ no_xon:
 			i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_IXON_OPT(CIX_NONE));
 		}
 	}
-	if ( (iflag & ISTRIP) ^ ( o_tios->c_iflag & (ISTRIP)) ) 
+	if ( (iflag & ISTRIP) ^ ( o_tios->c_iflag & (ISTRIP)) )
 	{
-		i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, 
+		i2QueueCommands(PTYPE_INLINE, pCh, 100, 1,
 				CMD_ISTRIP_OPT((iflag & ISTRIP ? 1 : 0)));
 	}
-	if ( (iflag & INPCK) ^ ( o_tios->c_iflag & (INPCK)) ) 
+	if ( (iflag & INPCK) ^ ( o_tios->c_iflag & (INPCK)) )
 	{
-		i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, 
+		i2QueueCommands(PTYPE_INLINE, pCh, 100, 1,
 				CMD_PARCHK((iflag & INPCK) ? CPK_ENAB : CPK_DSAB));
 	}
 
-	if ( (iflag & (IGNBRK|PARMRK|BRKINT|IGNPAR)) 
-			^	( o_tios->c_iflag & (IGNBRK|PARMRK|BRKINT|IGNPAR)) ) 
+	if ( (iflag & (IGNBRK|PARMRK|BRKINT|IGNPAR))
+			^	( o_tios->c_iflag & (IGNBRK|PARMRK|BRKINT|IGNPAR)) )
 	{
 		char brkrpt = 0;
 		char parrpt = 0;
@@ -2719,7 +2714,7 @@ no_xon:
 				}
 			}
 			i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_BRK_REP(brkrpt));
-		} 
+		}
 
 		if (iflag & IGNPAR) {
 			parrpt = 0x20;
@@ -2734,7 +2729,7 @@ no_xon:
 				i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_ISTRIP_OPT((char)0));
 			} else {
 				parrpt = 0x03;
-			} 
+			}
 		}
 		i2QueueCommands(PTYPE_INLINE, pCh, 100, 1, CMD_SET_ERROR(parrpt));
 	}
@@ -2748,7 +2743,7 @@ no_xon:
 	}
 
 service_it:
-	i2DrainOutput( pCh, 100 );		
+	i2DrainOutput( pCh, 100 );
 }
 
 /******************************************************************************/
@@ -2768,7 +2763,7 @@ service_it:
 /*                                                                            */
 /******************************************************************************/
 
-static 
+static
 ssize_t
 ip2_ipl_read(struct file *pFile, char __user *pData, size_t count, loff_t *off )
 {
@@ -3081,7 +3076,7 @@ static int ip2_proc_show(struct seq_file *m, void *v)
 		boxes = 0;
 		pB = i2BoardPtrTable[i];
 		if( pB ) {
-			switch( pB->i2ePom.e.porID & ~POR_ID_RESERVED ) 
+			switch( pB->i2ePom.e.porID & ~POR_ID_RESERVED )
 			{
 			case POR_ID_FIIEX:
 				seq_printf(m, "Board %d: EX ports=", i);
@@ -3091,7 +3086,7 @@ static int ip2_proc_show(struct seq_file *m, void *v)
 					ports = 0;
 
 					if( pB->i2eChannelMap[box] != 0 ) ++boxes;
-					for( j = 0; j < ABS_BIGGEST_BOX; ++j ) 
+					for( j = 0; j < ABS_BIGGEST_BOX; ++j )
 					{
 						if( pB->i2eChannelMap[box] & 1<< j ) {
 							++ports;
@@ -3165,7 +3160,7 @@ static const struct file_operations ip2_proc_fops = {
 	.llseek		= seq_lseek,
 	.release	= single_release,
 };
- 
+
 /******************************************************************************/
 /* Function:   ip2trace()                                                     */
 /* Parameters: Value to add to trace buffer                                   */
@@ -3183,7 +3178,6 @@ ip2trace (unsigned short pn, unsigned char cat, unsigned char label, unsigned lo
 	unsigned long *pCode = &codes;
 	union ip2breadcrumb bc;
 	i2ChanStrPtr  pCh;
-
 
 	tracebuf[tracestuff++] = jiffies;
 	if ( tracestuff == TRACEMAX ) {
@@ -3220,7 +3214,6 @@ ip2trace (unsigned short pn, unsigned char cat, unsigned char label, unsigned lo
 	}
 }
 #endif
-
 
 MODULE_LICENSE("GPL");
 

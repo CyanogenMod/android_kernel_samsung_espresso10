@@ -448,7 +448,6 @@
 #define WM8350_LDO1_VIMG_MASK                   0x001F
 #define WM8350_LDO1_HIB_MODE_DIS		(0x1 << 12)
 
-
 /*
  * R203 (0xCB) - LDO2 Control
  */

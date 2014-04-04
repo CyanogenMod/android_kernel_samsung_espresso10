@@ -106,7 +106,6 @@ typedef struct xfs_dqblk {
  */
 #define XFS_DQUOT_LOGRES(mp)	(sizeof(xfs_disk_dquot_t) * 3)
 
-
 /*
  * These are the structures used to lay out dquots and quotaoff
  * records on the log. Quite similar to those of inodes.
@@ -140,7 +139,6 @@ typedef struct xfs_qoff_logformat {
 	unsigned int		qf_flags;	/* USR and/or GRP */
 	char			qf_pad[12];	/* padding for future */
 } xfs_qoff_logformat_t;
-
 
 /*
  * Disk quotas status in m_qflags, and also sb_qflags. 16 bits.
@@ -236,7 +234,6 @@ typedef struct xfs_qoff_logformat {
 #define XFS_TRANS_DQ_RTBCOUNT	XFS_QMOPT_RTBCOUNT
 #define XFS_TRANS_DQ_DELRTBCOUNT XFS_QMOPT_DELRTBCOUNT
 
-
 #define XFS_QMOPT_QUOTALL	\
 		(XFS_QMOPT_UQUOTA | XFS_QMOPT_PQUOTA | XFS_QMOPT_GQUOTA)
 #define XFS_QMOPT_RESBLK_MASK	(XFS_QMOPT_RES_REGBLKS | XFS_QMOPT_RES_RTBLKS)
@@ -278,7 +275,6 @@ typedef struct xfs_qoff_logformat {
 				 XFS_UQUOTA_CHKD|XFS_PQUOTA_ACCT|\
 				 XFS_OQUOTA_ENFD|XFS_OQUOTA_CHKD|\
 				 XFS_GQUOTA_ACCT)
-
 
 /*
  * The structure kept inside the xfs_trans_t keep track of dquot changes

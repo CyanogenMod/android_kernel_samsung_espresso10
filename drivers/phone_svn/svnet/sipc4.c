@@ -1262,7 +1262,6 @@ static int _read_rfs(struct sipc *si, int inbuf, struct ringbuf *rb)
 	return 0;
 }
 
-
 static struct frag_list *_find_frag_list(u8 control, struct frag_head *fh)
 {
 	struct frag_list *fl;

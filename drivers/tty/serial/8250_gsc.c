@@ -95,7 +95,6 @@ static struct parisc_device_id lasi_tbl[] = {
 	{ 0 }
 };
 
-
 MODULE_DEVICE_TABLE(parisc, serial_tbl);
 
 static struct parisc_driver lasi_driver = {

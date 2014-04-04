@@ -1,4 +1,3 @@
-
 ccflags-y := -Iinclude/drm
 
 vmwgfx-y := vmwgfx_execbuf.o vmwgfx_gmr.o vmwgfx_kms.o vmwgfx_drv.o \

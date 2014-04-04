@@ -53,4 +53,3 @@ config IPWIRELESS
 	  is shipped for service called UMTS 4G.
 
 endmenu
-

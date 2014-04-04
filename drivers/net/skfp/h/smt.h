@@ -68,7 +68,6 @@ _packed struct smt_header {
 #define FC_SMT_NSA	0x4f		/* SMT Next Station Addressing */
 #endif
 
-
 /*
  * type codes
  */
@@ -98,7 +97,6 @@ _packed struct smt_header {
 #endif
 
 #define SMT_MAX_INFO_LEN	(4352-20)	/* max length for SMT info */
-
 
 /*
  * parameter types
@@ -336,7 +334,6 @@ struct smt_p_mac_fnc {
 	u_int	nc_counter ;		/* not copied counter */
 } ;
 
-
 /*
  * P0D : MAC priority values
  */
@@ -384,8 +381,6 @@ struct smp_p_user {
 	struct smt_para	para ;		/* generic parameter header */
 	u_char us_data[32] ;		/* arbitrary data */
 } ;
-
-
 
 /*
  * P11 : echo data
@@ -707,7 +702,6 @@ struct smt_p_4053 {
 	u_short			p4053_mytype ;
 	u_short			p4053_neighbortype ;
 } ;
-
 
 #define SMT_P_SETCOUNT	0x1035
 #define SWAP_SMT_P_SETCOUNT	"l8"

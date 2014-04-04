@@ -24,7 +24,6 @@
 #define GCIOCTL_TYPE 0x5D
 #define GCIOCTL_BASE 0x5D
 
-
 /*******************************************************************************
  * Commit API entry.
  */
@@ -123,7 +122,6 @@ struct gcschedunmap {
 	struct list_head link;
 };
 
-
 /*******************************************************************************
  * Map/unmap API entries.
  */
@@ -158,7 +156,6 @@ struct gcmap {
 	unsigned int size;
 };
 
-
 /*****************************************************************************
  * Cache manipulation API entries.
  */
@@ -176,7 +173,6 @@ struct gccachexfer {
 	/* Direction of data. */
 	int dir;
 };
-
 
 /*******************************************************************************
  * Callback API entry.
@@ -212,6 +208,5 @@ struct gccmdcallbackwait {
 	void (*callback) (void *callbackparam);
 	void *callbackparam;
 };
-
 
 #endif

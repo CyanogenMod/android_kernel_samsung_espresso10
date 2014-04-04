@@ -58,7 +58,6 @@ void h3xxx_init_gpio(struct gpio_default_state *s, size_t n)
 	}
 }
 
-
 /*
  * H3xxx flash support
  */
@@ -114,7 +113,6 @@ static struct resource h3xxx_flash_resource = {
 	.end		= SA1100_CS0_PHYS + SZ_32M - 1,
 	.flags		= IORESOURCE_MEM,
 };
-
 
 /*
  * H3xxx uart support
@@ -310,4 +308,3 @@ void __init h3xxx_map_io(void)
 	GPCR = 0x0fffffff;	/* All outputs are set low by default */
 	GPDR = 0;		/* Configure all GPIOs as input */
 }
-

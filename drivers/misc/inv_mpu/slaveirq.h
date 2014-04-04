@@ -29,10 +29,8 @@
 #define SLAVEIRQ_GET_INTERRUPT_CNT     _IOR(MPU_IOCTL, 0x51, unsigned long)
 #define SLAVEIRQ_GET_IRQ_TIME          _IOR(MPU_IOCTL, 0x52, unsigned long)
 
-
 void slaveirq_exit(struct ext_slave_platform_data *pdata);
 int slaveirq_init(struct i2c_adapter *slave_adapter,
 		  struct ext_slave_platform_data *pdata, char *name);
-
 
 #endif

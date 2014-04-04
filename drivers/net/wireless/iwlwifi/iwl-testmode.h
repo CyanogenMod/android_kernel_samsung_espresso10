@@ -65,7 +65,6 @@
 
 #include <linux/types.h>
 
-
 /* Commands from user space to kernel space(IWL_TM_CMD_ID_APP2DEV_XX) and
  * from and kernel space to user space(IWL_TM_CMD_ID_DEV2APP_XX).
  * The command ID is carried with IWL_TM_ATTR_COMMAND. There are three types of

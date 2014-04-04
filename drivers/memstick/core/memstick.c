@@ -616,7 +616,6 @@ void memstick_unregister_driver(struct memstick_driver *drv)
 }
 EXPORT_SYMBOL(memstick_unregister_driver);
 
-
 static int __init memstick_init(void)
 {
 	int rc;

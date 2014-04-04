@@ -343,7 +343,6 @@ static int pc87413_release(struct inode *inode, struct file *file)
  *      return, if the watchdog is enabled (timeout is set...)
  */
 
-
 static int pc87413_status(void)
 {
 	  return 0; /* currently not supported */
@@ -597,4 +596,3 @@ module_param(nowayout, int, 0);
 MODULE_PARM_DESC(nowayout,
 		"Watchdog cannot be stopped once started (default="
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
-

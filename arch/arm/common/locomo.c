@@ -209,7 +209,6 @@ static void locomo_setup_irq(struct locomo *lchip)
 	}
 }
 
-
 static void locomo_dev_release(struct device *_dev)
 {
 	struct locomo_dev *dev = LOCOMO_DEV(_dev);
@@ -353,7 +352,6 @@ static int locomo_resume(struct platform_device *dev)
 }
 #endif
 
-
 /**
  *	locomo_probe - probe for a single LoCoMo chip.
  *	@phys_addr: physical address of device.
@@ -468,7 +466,7 @@ static int locomo_remove_child(struct device *dev, void *data)
 {
 	device_unregister(dev);
 	return 0;
-} 
+}
 
 static void __locomo_remove(struct locomo *lchip)
 {

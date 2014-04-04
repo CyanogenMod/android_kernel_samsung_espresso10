@@ -112,7 +112,6 @@ static struct rtc_device *alarmtimer_get_rtcdev(void)
 #define rtcdev (0)
 #endif
 
-
 /**
  * alarmtimer_enqueue - Adds an alarm timer to an alarm_base timerqueue
  * @base: pointer to the base where the timer is being run
@@ -156,7 +155,6 @@ static void alarmtimer_remove(struct alarm_base *base, struct alarm *alarm)
 		hrtimer_start(&base->timer, next->expires, HRTIMER_MODE_ABS);
 	}
 }
-
 
 /**
  * alarmtimer_fired - Handles alarm hrtimer being fired.
@@ -291,7 +289,6 @@ static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
 	spin_unlock_irqrestore(&freezer_delta_lock, flags);
 }
 
-
 /**
  * alarm_init - Initialize an alarm structure
  * @alarm: ptr to alarm to be initialized
@@ -344,7 +341,6 @@ void alarm_cancel(struct alarm *alarm)
 	alarm->enabled = 0;
 	spin_unlock_irqrestore(&base->lock, flags);
 }
-
 
 /**
  * clock2alarm - helper that converts from clockid to alarmtypes
@@ -542,7 +538,6 @@ static int alarmtimer_do_nsleep(struct alarm *alarm, ktime_t absexp)
 	return (alarm->data == NULL);
 }
 
-
 /**
  * update_rmtp - Update remaining timespec value
  * @exp: expiration time
@@ -600,7 +595,6 @@ static long __sched alarm_timer_nsleep_restart(struct restart_block *restart)
 		if (ret <= 0)
 			goto out;
 	}
-
 
 	/* The other values in restart are already filled in */
 	ret = -ERESTART_RESTARTBLOCK;
@@ -670,7 +664,6 @@ out:
 	return ret;
 }
 
-
 /* Suspend hook structures */
 static const struct dev_pm_ops alarmtimer_pm_ops = {
 	.suspend = alarmtimer_suspend,
@@ -725,4 +718,3 @@ static int __init alarmtimer_init(void)
 	return error;
 }
 device_initcall(alarmtimer_init);
-

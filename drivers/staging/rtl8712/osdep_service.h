@@ -239,4 +239,3 @@ static inline u32 _RND512(u32 sz)
 #define STRUCT_PACKED __attribute__ ((packed))
 
 #endif
-

@@ -156,7 +156,6 @@ static int tp_event_has_id(struct dirent *sys_dir, struct dirent *evt_dir)
 
 #define MAX_EVENT_LENGTH 512
 
-
 struct tracepoint_path *tracepoint_id_to_path(u64 config)
 {
 	struct tracepoint_path *path = NULL;
@@ -467,7 +466,6 @@ parse_single_tracepoint_event(char *sys_name,
 	attr->sample_type |= PERF_SAMPLE_CPU;
 
 	attr->sample_period = 1;
-
 
 	return EVT_HANDLED;
 }
@@ -915,7 +913,7 @@ void print_tracepoint_events(const char *subsys_glob, const char *event_glob)
 		return;
 
 	for_each_subsystem(sys_dir, sys_dirent, sys_next) {
-		if (subsys_glob != NULL && 
+		if (subsys_glob != NULL &&
 		    !strglobmatch(sys_dirent.d_name, subsys_glob))
 			continue;
 
@@ -926,7 +924,7 @@ void print_tracepoint_events(const char *subsys_glob, const char *event_glob)
 			continue;
 
 		for_each_event(sys_dirent, evt_dir, evt_dirent, evt_next) {
-			if (event_glob != NULL && 
+			if (event_glob != NULL &&
 			    !strglobmatch(evt_dirent.d_name, event_glob))
 				continue;
 
@@ -1051,7 +1049,7 @@ void print_events(const char *event_glob)
 			ntypes_printed++;
 		}
 
-		if (event_glob != NULL && 
+		if (event_glob != NULL &&
 		    !(strglobmatch(syms->symbol, event_glob) ||
 		      (syms->alias && strglobmatch(syms->alias, event_glob))))
 			continue;

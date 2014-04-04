@@ -387,7 +387,6 @@ static void __exit bfin_ac97_exit(void)
 }
 module_exit(bfin_ac97_exit);
 
-
 MODULE_AUTHOR("Roy Huang");
 MODULE_DESCRIPTION("AC97 driver for ADI Blackfin");
 MODULE_LICENSE("GPL");

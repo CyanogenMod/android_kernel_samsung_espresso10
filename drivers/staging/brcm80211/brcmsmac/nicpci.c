@@ -73,7 +73,6 @@ static bool pcicore_pmecap(pcicore_info_t *pi);
 
 #define PCIE_ASPM(sih)	((PCIE_PUB(sih)) && (((sih)->buscorerev >= 3) && ((sih)->buscorerev <= 5)))
 
-
 /* delay needed between the mdio control/ mdiodata register data access */
 #define PR28829_DELAY() udelay(10)
 

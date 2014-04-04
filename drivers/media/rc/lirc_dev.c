@@ -151,7 +151,6 @@ static int lirc_thread(void *irctl)
 	return 0;
 }
 
-
 static struct file_operations lirc_dev_fops = {
 	.owner		= THIS_MODULE,
 	.read		= lirc_dev_fop_read,
@@ -765,7 +764,6 @@ void *lirc_get_pdata(struct file *file)
 }
 EXPORT_SYMBOL(lirc_get_pdata);
 
-
 ssize_t lirc_dev_fop_write(struct file *file, const char __user *buffer,
 			   size_t length, loff_t *ppos)
 {
@@ -784,7 +782,6 @@ ssize_t lirc_dev_fop_write(struct file *file, const char __user *buffer,
 	return -EINVAL;
 }
 EXPORT_SYMBOL(lirc_dev_fop_write);
-
 
 static int __init lirc_dev_init(void)
 {
@@ -805,15 +802,12 @@ static int __init lirc_dev_init(void)
 		goto error;
 	}
 
-
 	printk(KERN_INFO "lirc_dev: IR Remote Control driver registered, "
 	       "major %d \n", MAJOR(lirc_base_dev));
 
 error:
 	return retval;
 }
-
-
 
 static void __exit lirc_dev_exit(void)
 {

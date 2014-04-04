@@ -216,7 +216,6 @@ void carl9170_handle_command_response(struct ar9170 *ar, void *buf, u32 len)
 
 		break;
 
-
 	case CARL9170_RSP_TXCOMP:
 		/* TX status notification */
 		carl9170_tx_process_status(ar, cmd);

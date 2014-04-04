@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2002 Jeff Dike (jdike@karaya.com)
  * Licensed under the GPL
  */
@@ -9,4 +9,3 @@
 extern int xterm_fd(int socket, int *pid_out);
 
 #endif
-

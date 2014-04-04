@@ -463,7 +463,6 @@ int avtab_read(struct avtab *a, void *fp, struct policydb *pol)
 	__le32 buf[1];
 	u32 nel, i;
 
-
 	rc = next_entry(buf, fp, sizeof(u32));
 	if (rc < 0) {
 		printk(KERN_ERR "SELinux: avtab: truncated table\n");

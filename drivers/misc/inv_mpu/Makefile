@@ -1,4 +1,3 @@
-
 # Kernel makefile for motions sensors
 #
 #
@@ -19,4 +18,3 @@ obj-$(CONFIG_MPU_SENSORS_TIMERIRQ)+= timerirq.o
 obj-y			+= accel/
 obj-y			+= compass/
 obj-y			+= pressure/
-

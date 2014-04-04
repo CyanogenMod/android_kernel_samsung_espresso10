@@ -596,7 +596,6 @@ int tty_set_ldisc(struct tty_struct *tty, int ldisc)
 
 	o_tty = tty->link;	/* o_tty is the pty side or NULL */
 
-
 	/*
 	 *	Check the no-op case
 	 */
@@ -747,7 +746,6 @@ static void tty_reset_termios(struct tty_struct *tty)
 	tty->termios->c_ospeed = tty_termios_baud_rate(tty->termios);
 	mutex_unlock(&tty->termios_mutex);
 }
-
 
 /**
  *	tty_ldisc_reinit	-	reinitialise the tty ldisc

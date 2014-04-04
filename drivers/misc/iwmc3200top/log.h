@@ -27,7 +27,6 @@
 #ifndef __LOG_H__
 #define __LOG_H__
 
-
 /* log severity:
  * The log levels here match FW log levels
  * so values need to stay as is */

@@ -24,7 +24,6 @@
  *
  */
 
-
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/types.h>
@@ -38,7 +37,6 @@
 #include <linux/timer.h>
 #include <linux/kthread.h>
 #include <linux/delay.h>
-
 
 #include "cluster/heartbeat.h"
 #include "cluster/nodemanager.h"
@@ -114,7 +112,6 @@ int __dlm_lockres_unused(struct dlm_lock_resource *res)
 	BUG_ON(res->inflight_locks != 0);
 	return 1;
 }
-
 
 /* Call whenever you may have added or deleted something from one of
  * the lockres queue's. This will figure out whether it belongs on the
@@ -483,7 +480,6 @@ void __dlm_dirty_lockres(struct dlm_ctxt *dlm, struct dlm_lock_resource *res)
 	     res->lockname.name);
 }
 
-
 /* Launch the NM thread for the mounted volume */
 int dlm_launch_thread(struct dlm_ctxt *dlm)
 {
@@ -625,7 +621,6 @@ static void dlm_flush_asts(struct dlm_ctxt *dlm)
 	wake_up(&dlm->ast_wq);
 	spin_unlock(&dlm->ast_lock);
 }
-
 
 #define DLM_THREAD_TIMEOUT_MS (4 * 1000)
 #define DLM_THREAD_MAX_DIRTY  100

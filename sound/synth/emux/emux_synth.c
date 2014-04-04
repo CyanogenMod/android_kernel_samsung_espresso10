@@ -51,7 +51,6 @@ static int calc_pan(struct snd_emux_voice *vp);
 static int calc_volume(struct snd_emux_voice *vp);
 static int calc_pitch(struct snd_emux_voice *vp);
 
-
 /*
  * Start a note.
  */
@@ -262,7 +261,6 @@ snd_emux_key_press(void *p, int note, int vel, struct snd_midi_channel *chan)
 	spin_unlock_irqrestore(&emu->voice_lock, flags);
 }
 
-
 /*
  * Modulate the voices which belong to the channel
  */
@@ -296,7 +294,7 @@ snd_emux_update_channel(struct snd_emux_port *port, struct snd_midi_channel *cha
 void
 snd_emux_update_port(struct snd_emux_port *port, int update)
 {
-	struct snd_emux *emu; 
+	struct snd_emux *emu;
 	struct snd_emux_voice *vp;
 	int i;
 	unsigned long flags;
@@ -317,7 +315,6 @@ snd_emux_update_port(struct snd_emux_port *port, int update)
 	spin_unlock_irqrestore(&emu->voice_lock, flags);
 }
 
-
 /*
  * Deal with a controller type event.  This includes all types of
  * control events, not just the midi controllers
@@ -336,7 +333,7 @@ snd_emux_control(void *p, int type, struct snd_midi_channel *chan)
 	case MIDI_CTL_MSB_EXPRESSION:
 		snd_emux_update_channel(port, chan, SNDRV_EMUX_UPDATE_VOLUME);
 		break;
-		
+
 	case MIDI_CTL_MSB_PAN:
 		snd_emux_update_channel(port, chan, SNDRV_EMUX_UPDATE_PAN);
 		break;
@@ -371,7 +368,6 @@ snd_emux_control(void *p, int type, struct snd_midi_channel *chan)
 	}
 }
 
-
 /*
  * terminate note - if free flag is true, free the terminated voice
  */
@@ -392,7 +388,6 @@ terminate_note1(struct snd_emux *emu, int note, struct snd_midi_channel *chan, i
 	spin_unlock_irqrestore(&emu->voice_lock, flags);
 }
 
-
 /*
  * terminate note - exported for midi emulation
  */
@@ -412,7 +407,6 @@ snd_emux_terminate_note(void *p, int note, struct snd_midi_channel *chan)
 
 	terminate_note1(emu, note, chan, 1);
 }
-
 
 /*
  * Terminate all the notes
@@ -477,7 +471,6 @@ snd_emux_sounds_off_all(struct snd_emux_port *port)
 	spin_unlock_irqrestore(&emu->voice_lock, flags);
 }
 
-
 /*
  * Terminate all voices that have the same exclusive class.  This
  * is mainly for drums.
@@ -518,7 +511,6 @@ terminate_voice(struct snd_emux *emu, struct snd_emux_voice *vp, int free)
 		emu->ops.free_voice(vp);
 }
 
-
 /*
  * Modulate the voice
  */
@@ -541,10 +533,9 @@ update_voice(struct snd_emux *emu, struct snd_emux_voice *vp, int update)
 	emu->ops.update(vp, update);
 }
 
-
 #if 0 // not used
 /* table for volume target calculation */
-static unsigned short voltarget[16] = { 
+static unsigned short voltarget[16] = {
 	0xEAC0, 0xE0C8, 0xD740, 0xCE20, 0xC560, 0xBD08, 0xB500, 0xAD58,
 	0xA5F8, 0x9EF0, 0x9830, 0x91C0, 0x8B90, 0x85A8, 0x8000, 0x7A90
 };
@@ -688,7 +679,6 @@ calc_pan(struct snd_emux_voice *vp)
 		return 0;
 	}
 }
-
 
 /*
  * calculate volume attenuation
@@ -888,14 +878,13 @@ get_bank(struct snd_emux_port *port, struct snd_midi_channel *chan)
 			return 128;
 		/* ignore LSB (bank map) */
 		return chan->control[MIDI_CTL_MSB_BANK];
-		
+
 	default:
 		if (chan->drum_channel)
 			return 128;
 		return chan->control[MIDI_CTL_MSB_BANK];
 	}
 }
-
 
 /* Look for the zones matching with the given note and velocity.
  * The resultant zones are stored on table.

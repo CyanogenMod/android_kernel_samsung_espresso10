@@ -44,7 +44,6 @@ MFC_LINES		Lines in the multicast router cache (tunable)
 
 NetROM parameters are tunable via an ioctl passing a struct
 
-4000			Size a Unix domain socket malloc falls back to 
+4000			Size a Unix domain socket malloc falls back to
 			(tunable) should be 8K - a bit for 8K machines like
 			the ALPHA
-

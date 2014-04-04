@@ -93,7 +93,6 @@ static void iwl5000_nic_config(struct iwl_priv *priv)
 				APMG_PS_CTRL_EARLY_PWR_OFF_RESET_DIS,
 				~APMG_PS_CTRL_EARLY_PWR_OFF_RESET_DIS);
 
-
 	spin_unlock_irqrestore(&priv->lock, flags);
 }
 

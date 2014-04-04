@@ -553,7 +553,6 @@ acpi_remove_notify_handler(acpi_handle device,
 		goto exit;
 	}
 
-
 	/* Make sure all deferred tasks are completed */
 	acpi_os_wait_events_complete(NULL);
 

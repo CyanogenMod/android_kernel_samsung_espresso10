@@ -104,7 +104,6 @@ struct vp702x_device_state {
 	u8 *buf;
 };
 
-
 extern struct dvb_frontend * vp702x_fe_attach(struct dvb_usb_device *d);
 
 extern int vp702x_usb_inout_op(struct dvb_usb_device *d, u8 *o, int olen, u8 *i, int ilen, int msec);

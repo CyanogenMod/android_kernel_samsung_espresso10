@@ -105,4 +105,3 @@ config NCPFS_EXTRAS
 
 	  To use the new attributes, it is recommended to use the flags
 	  '-f 600 -d 755' on the ncpmount command line.
-

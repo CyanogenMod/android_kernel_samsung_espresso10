@@ -51,7 +51,6 @@ int iwctl_giwrange(struct net_device *dev,
              struct iw_point *wrq,
              char *extra);
 
-
 int iwctl_giwmode(struct net_device *dev,
              struct iw_request_info *info,
              __u32 *wmode,
@@ -121,7 +120,6 @@ int iwctl_siwrts(struct net_device *dev,
              struct iw_request_info *info,
 			 struct iw_param *wrq,
              char *extra);
-
 
 int iwctl_giwrts(struct net_device *dev,
              struct iw_request_info *info,

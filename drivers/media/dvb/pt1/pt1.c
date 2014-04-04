@@ -1189,12 +1189,10 @@ static struct pci_driver pt1_driver = {
 	.id_table	= pt1_id_table,
 };
 
-
 static int __init pt1_init(void)
 {
 	return pci_register_driver(&pt1_driver);
 }
-
 
 static void __exit pt1_cleanup(void)
 {

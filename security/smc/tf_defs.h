@@ -69,7 +69,6 @@ enum TF_SHMEM_TYPE {
 	TF_SHMEM_TYPE_PM_HIBERNATE,
 };
 
-
 /*
  * This structure contains a pointer on a coarse page table
  */
@@ -90,7 +89,6 @@ struct tf_coarse_page_table {
 	 */
 	struct tf_coarse_page_table_array *parent;
 };
-
 
 #define TF_PAGE_DESCRIPTOR_TYPE_NORMAL       0
 #define TF_PAGE_DESCRIPTOR_TYPE_PREALLOCATED 1
@@ -121,7 +119,6 @@ struct tf_coarse_page_table_array {
 	u8 ref_count;
 };
 
-
 /*
  * This structure describes a list of coarse page table arrays
  * with some of the coarse page tables free. It is used
@@ -144,7 +141,6 @@ struct tf_coarse_page_table_allocation_context {
 	 */
 	struct list_head free_coarse_page_tables;
 };
-
 
 /*
  * Fully describes a shared memory block
@@ -179,7 +175,6 @@ struct tf_shmem_desc {
 	/* Reference counter */
 	atomic_t ref_count;
 };
-
 
 /*----------------------------------------------------------------------------*/
 
@@ -257,7 +252,6 @@ struct tf_comm {
 	struct mutex dma_mutex;
 #endif
 };
-
 
 #define TF_COMM_FLAG_IRQ_REQUESTED		(0)
 #define TF_COMM_FLAG_PA_AVAILABLE		(1)
@@ -383,7 +377,6 @@ enum TF_CONN_STATE {
 	TF_CONN_STATE_DESTROY_DEVICE_CONTEXT_SENT
 };
 
-
 /*
  *  This type describes the  status of the command.
  *
@@ -413,7 +406,6 @@ enum TF_CONNECTION_OWNER {
 	TF_CONNECTION_OWNER_PROCESS = 0,
 	TF_CONNECTION_OWNER_KERNEL,
 };
-
 
 /*
  * This structure describes a connection to the driver
@@ -521,7 +513,6 @@ struct tf_answer_struct {
  * this driver.
  */
 #define TF_DEVICE_BASE_NAME	"tf_driver"
-
 
 /**
  * The major and minor numbers of the registered character device driver.

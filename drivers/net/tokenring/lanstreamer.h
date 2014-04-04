@@ -6,7 +6,7 @@
  *  Copyright (C) 1999 IBM Corporation
  *
  *  Linux driver for IBM PCI tokenring cards based on the LanStreamer MPC
- *  chipset. 
+ *  chipset.
  *
  *  This driver is based on the olympic driver for IBM PCI TokenRing cards (Pit/Pit-Phy/Olympic
  *  chipsets) written  by:
@@ -19,41 +19,41 @@
  *      Copyright 1993 United States Government as represented by the
  *      Director, National Security Agency.
  *
- * This program is free software; you can redistribute it and/or modify      
- * it under the terms of the GNU General Public License as published by      
- * the Free Software Foundation; either version 2 of the License, or         
- * (at your option) any later version.                                       
- *                                                                           
- * This program is distributed in the hope that it will be useful,           
- * but WITHOUT ANY WARRANTY; without even the implied warranty of            
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             
- * GNU General Public License for more details.                              
- *                                                                           
- * NO WARRANTY                                                               
- * THE PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR        
- * CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT      
- * LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT,      
- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is    
- * solely responsible for determining the appropriateness of using and       
- * distributing the Program and assumes all risks associated with its        
- * exercise of rights under this Agreement, including but not limited to     
- * the risks and costs of program errors, damage to or loss of data,         
- * programs or equipment, and unavailability or interruption of operations.  
- *                                                                           
- * DISCLAIMER OF LIABILITY                                                   
- * NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY   
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL        
- * DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND   
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR     
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE    
- * USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED  
- * HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES             
- *                                                                           
- * You should have received a copy of the GNU General Public License         
- * along with this program; if not, write to the Free Software               
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *                                                                           
- * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * NO WARRANTY
+ * THE PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT
+ * LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is
+ * solely responsible for determining the appropriateness of using and
+ * distributing the Program and assumes all risks associated with its
+ * exercise of rights under this Agreement, including but not limited to
+ * the risks and costs of program errors, damage to or loss of data,
+ * programs or equipment, and unavailability or interruption of operations.
+ *
+ * DISCLAIMER OF LIABILITY
+ * NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED
+ * HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *
  *  12/10/99 - Alpha Release 0.1.0
  *            First release to the public
  *  08/15/01 - Added ioctl() definitions and others - Kent Yoder <yoder1@us.ibm.com>
@@ -198,7 +198,6 @@
 #define OPEN_ADAPTER_INHIBIT_ETR (1<<4)
 #define OPEN_ADAPTER_INTERNAL_WRAP (1<<3)
 
-
 /* Defines for SRB Commands */
 #define SRB_CLOSE_ADAPTER 0x04
 #define SRB_CONFIGURE_BRIDGE 0x0c
@@ -228,14 +227,13 @@
 /* ASB Response commands */
 #define ASB_RECEIVE_DATA 0x81
 
-
 /* Streamer defaults for buffers */
 
 #define STREAMER_RX_RING_SIZE 16	/* should be a power of 2 */
 /* Setting the number of TX descriptors to 1 is a workaround for an
  * undocumented hardware problem with the lanstreamer board. Setting
  * this to something higher may slightly increase the throughput you
- * can get from the card, but at the risk of locking up the box. - 
+ * can get from the card, but at the risk of locking up the box. -
  * <yoder1@us.ibm.com>
  */
 #define STREAMER_TX_RING_SIZE 1	/* should be a power of 2 */
@@ -281,7 +279,7 @@ struct streamer_private {
         struct pci_dev *pci_dev;
 	__u8 __iomem *streamer_mmio;
         char *streamer_card_name;
- 
+
         spinlock_t streamer_lock;
 
 	volatile int srb_queued;	/* True if an SRB is still posted */

@@ -3,7 +3,6 @@
 
 /* $DHD: intelfb/intelfbhw.h,v 1.5 2003/06/27 15:06:25 dawes Exp $ */
 
-
 /*** HW-specific data ***/
 
 /* Information about the 852GM/855GM variants */
@@ -516,7 +515,6 @@
 /* in bytes */
 #define MAX_MONO_IMM_SIZE		128
 
-
 /*** Macros ***/
 
 /* I/O macros */
@@ -555,7 +553,6 @@
 		udelay(10);						\
 	} while (head != tail);						\
 } while (0)
-
 
 /* function protoypes */
 extern int intelfbhw_get_chipset(struct pci_dev *pdev, struct intelfb_info *dinfo);

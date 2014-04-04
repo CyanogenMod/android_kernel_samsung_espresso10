@@ -32,7 +32,6 @@
 #ifndef __SEP_DRIVER_CONFIG_H__
 #define __SEP_DRIVER_CONFIG_H__
 
-
 /*--------------------------------------
   DRIVER CONFIGURATION FLAGS
   -------------------------------------*/
@@ -106,7 +105,6 @@ held by the process (struct file) */
 #define SEP_DEV_NAME "sep_sec_driver"
 #define SEP_DEV_SINGLETON "sep_sec_singleton_driver"
 #define SEP_DEV_DAEMON "sep_req_daemon_driver"
-
 
 /*
 	the maximum length of the message - the rest of the message shared

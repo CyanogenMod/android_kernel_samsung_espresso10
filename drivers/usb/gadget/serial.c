@@ -19,7 +19,6 @@
 #include "u_serial.h"
 #include "gadget_chips.h"
 
-
 /* Defines */
 
 #define GS_VERSION_STR			"v2.4"

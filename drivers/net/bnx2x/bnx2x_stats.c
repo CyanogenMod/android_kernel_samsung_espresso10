@@ -149,7 +149,6 @@ static inline long bnx2x_hilo(u32 *hiref)
  * Init service functions
  */
 
-
 static void bnx2x_storm_stats_post(struct bnx2x *bp)
 {
 	if (!bp->stats_pending) {

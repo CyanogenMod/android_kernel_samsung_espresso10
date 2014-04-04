@@ -181,7 +181,6 @@ static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo_wf[] = {
 	},
 };
 
-
 void __init omap4_espresso_sensors_init(void)
 {
 	int i;
@@ -221,4 +220,3 @@ void __init omap4_espresso_sensors_init(void)
 		}
 	}
 }
-

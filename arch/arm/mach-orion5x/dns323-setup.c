@@ -65,7 +65,6 @@ enum {
 	DNS323_REV_C1,	/* 2 */
 };
 
-
 /****************************************************************************
  * PCI setup
  */
@@ -290,7 +289,6 @@ static struct gpio_led dns323ab_leds[] = {
 	},
 };
 
-
 static struct gpio_led dns323c_leds[] = {
 	{
 		.name = "power:blue",
@@ -307,7 +305,6 @@ static struct gpio_led dns323c_leds[] = {
 		.active_low = 1,
 	},
 };
-
 
 static struct gpio_led_platform_data dns323ab_led_data = {
 	.num_leds	= ARRAY_SIZE(dns323ab_leds),

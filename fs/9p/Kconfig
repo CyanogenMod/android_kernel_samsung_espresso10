@@ -18,7 +18,6 @@ config 9P_FSCACHE
 	  Choose Y here to enable persistent, read-only local
 	  caching support for 9p clients using FS-Cache
 
-
 config 9P_FS_POSIX_ACL
 	bool "9P POSIX Access Control Lists"
 	select FS_POSIX_ACL

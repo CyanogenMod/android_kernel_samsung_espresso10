@@ -269,7 +269,6 @@ static int bl_get_brightness(struct backlight_device *b)
 	return get_lcd_level();
 }
 
-
 static int bl_update_status(struct backlight_device *b)
 {
 	return set_lcd_level(b->props.brightness);

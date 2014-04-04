@@ -55,7 +55,6 @@ static enum ata_completion_errors sas_to_ata_err(struct task_status_struct *ts)
 		case SAS_NAK_R_ERR:
 			return AC_ERR_ATA_BUS;
 
-
 		case SAS_DATA_UNDERRUN:
 			/*
 			 * Some programs that use the taskfile interface

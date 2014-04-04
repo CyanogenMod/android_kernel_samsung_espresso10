@@ -88,7 +88,6 @@
 #define PCH_CLOCK_HZ		50000000
 #define PCH_MAX_SPBR		1023
 
-
 /**
  * struct pch_spi_data - Holds the SPI channel specific details
  * @io_remap_addr:		The remapped PCI base address
@@ -621,7 +620,6 @@ static void pch_spi_set_tx(struct pch_spi_data *data, int *bpw,
 	data->transfer_active = true;
 }
 
-
 static void pch_spi_nomore_transfer(struct pch_spi_data *data,
 						struct spi_message *pmsg)
 {
@@ -741,7 +739,6 @@ static void pch_spi_copy_rx_data(struct pch_spi_data *data, int bpw)
 			*rx_sbuf++ = data->pkt_rx_buff[j];
 	}
 }
-
 
 static void pch_spi_process_messages(struct work_struct *pwork)
 {
@@ -1082,7 +1079,6 @@ static int pch_spi_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 
 	dev_dbg(&pdev->dev, "%s spi_register_master returned=%d\n",
 		__func__, retval);
-
 
 	return 0;
 

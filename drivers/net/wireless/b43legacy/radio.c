@@ -37,7 +37,6 @@
 #include "radio.h"
 #include "ilt.h"
 
-
 /* Table for b43legacy_radio_calibrationvalue() */
 static const u16 rcc_table[16] = {
 	0x0002, 0x0003, 0x0001, 0x000F,

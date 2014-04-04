@@ -209,7 +209,6 @@ typedef struct elf64_sym {
   Elf64_Xword st_size;		/* Associated symbol size */
 } Elf64_Sym;
 
-
 #define EI_NIDENT	16
 
 typedef struct elf32_hdr{
@@ -307,7 +306,7 @@ typedef struct elf64_phdr {
 #define SHN_ABS		0xfff1
 #define SHN_COMMON	0xfff2
 #define SHN_HIRESERVE	0xffff
- 
+
 typedef struct elf32_shdr {
   Elf32_Word	sh_name;
   Elf32_Word	sh_type;
@@ -396,7 +395,6 @@ typedef struct elf64_shdr {
 #define NT_S390_PREFIX	0x305		/* s390 prefix register */
 #define NT_S390_LAST_BREAK	0x306	/* s390 breaking event address */
 #define NT_ARM_VFP	0x400		/* ARM VFP/NEON registers */
-
 
 /* Note header in a PT_NOTE section */
 typedef struct elf32_note {

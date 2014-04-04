@@ -343,8 +343,6 @@ static void ad9910_init(struct ad9910_state *st)
 error_ret:
 	mutex_unlock(&st->lock);
 
-
-
 }
 
 static struct attribute *ad9910_attributes[] = {

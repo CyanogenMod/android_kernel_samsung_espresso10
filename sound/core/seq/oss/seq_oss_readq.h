@@ -24,7 +24,6 @@
 
 #include "seq_oss_device.h"
 
-
 /*
  * definition of read queue
  */

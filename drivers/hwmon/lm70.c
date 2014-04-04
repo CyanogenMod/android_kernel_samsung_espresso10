@@ -38,7 +38,6 @@
 #include <linux/spi/spi.h>
 #include <linux/slab.h>
 
-
 #define DRVNAME		"lm70"
 
 #define LM70_CHIP_LM70		0	/* original NS LM70 */
@@ -194,7 +193,6 @@ static int __devexit lm70_remove(struct spi_device *spi)
 
 	return 0;
 }
-
 
 static const struct spi_device_id lm70_ids[] = {
 	{ "lm70",   LM70_CHIP_LM70 },

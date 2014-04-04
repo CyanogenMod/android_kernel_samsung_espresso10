@@ -346,7 +346,6 @@ static int cycx_data_boot(void __iomem *addr, u8 *code, u32 len)
 	return 0;
 }
 
-
 /* Load code.bin file through boot (reset) interface. */
 static int cycx_code_boot(void __iomem *addr, u8 *code, u32 len)
 {

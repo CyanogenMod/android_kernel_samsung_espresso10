@@ -17,8 +17,6 @@
  *
  */
 
-
-
 #ifndef _LLD_
 #define _LLD_
 
@@ -105,7 +103,4 @@ extern u16 GLOB_LLD_Read_Page_Main_Spare_cdma(u8 *data,
 #define LLD_CMD_FLAG_ORDER_BEFORE_REST		(0x1)
 #define LLD_CMD_FLAG_MODE_CDMA			(0x8)
 
-
 #endif /*_LLD_ */
-
-

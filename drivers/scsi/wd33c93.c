@@ -95,7 +95,6 @@
 
 #define optimum_sx_per(hostdata) (hostdata)->sx_table[1].period_ns
 
-
 #define WD33C93_VERSION    "1.26++"
 #define WD33C93_DATE       "10/Feb/2007"
 
@@ -1538,7 +1537,6 @@ reset_wd33c93(struct Scsi_Host *instance)
 		      calc_sync_xfer(hostdata->default_sx_per / 4,
 				     DEFAULT_SX_OFF, 0, hostdata->sx_table));
 	write_wd33c93(regs, WD_COMMAND, WD_CMD_RESET);
-
 
 #ifdef CONFIG_MVME147_SCSI
 	udelay(25);		/* The old wd33c93 on MVME147 needs this, at least */

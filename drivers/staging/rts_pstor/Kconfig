@@ -13,4 +13,3 @@ config RTS_PSTOR_DEBUG
 	help
 	  Say Y here in order to have the rts_pstor code generate
 	  verbose debugging messages.
-

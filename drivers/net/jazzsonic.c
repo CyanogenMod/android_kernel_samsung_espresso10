@@ -61,7 +61,6 @@ do {									\
 	*((volatile unsigned int *)dev->base_addr+(reg)) = (val);		\
 } while (0)
 
-
 /* use 0 for production, 1 for verification, >1 for debug */
 #ifdef SONIC_DEBUG
 static unsigned int sonic_debug = SONIC_DEBUG;

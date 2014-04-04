@@ -123,7 +123,6 @@ config RTC_INTF_ALARM_DEV
 	help
 	  Exports the alarm interface to user-space.
 
-
 config RTC_DRV_TEST
 	tristate "Test driver/device"
 	help
@@ -944,7 +943,6 @@ config RTC_DRV_VT8500
 	  If you say Y here you will get access to the real time clock
 	  built into your VIA VT8500 SoC or its relatives.
 
-
 config RTC_DRV_SUN4V
 	bool "SUN4V Hypervisor RTC"
 	depends on SPARC64
@@ -996,7 +994,6 @@ config RTC_DRV_COH901331
 
 	  This driver can also be built as a module. If so, the module
 	  will be called "rtc-coh901331".
-
 
 config RTC_DRV_STMP
 	tristate "Freescale STMP3xxx RTC"

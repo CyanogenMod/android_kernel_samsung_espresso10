@@ -52,4 +52,3 @@ static inline int pci_cleanup_aer_uncorrect_error_status(struct pci_dev *dev)
 extern void cper_print_aer(const char *prefix, int cper_severity,
 			   struct aer_capability_regs *aer);
 #endif //_AER_H_
-

@@ -85,7 +85,6 @@
 #define DRV_MINOR_VERSION   22
 #define DRV_VERSION_STR     "7.22"
 
-
 #if defined BUS_PCMCIA
 #define BUS_TYPE            "PCMCIA"
 #elif defined BUS_PCI
@@ -149,8 +148,6 @@ err: define bus type;
 //#define DBG_MOD_NAME         DRIVER_NAME ":" BUS_TYPE ":" HW_TYPE ":" FW_TYPE
 #define DBG_MOD_NAME        MODULE_NAME
 
-
-
 /*******************************************************************************
  *  bus architechture specific defines, includes, etc.
  ******************************************************************************/
@@ -172,8 +169,5 @@ err: define bus type;
                         skb_reserve((skb), 2); \
                         BLOCK_INPUT_DMA(skb_put((skb), (count)), (count)); \
                         (skb)->protocol = eth_type_trans((skb), (dev))
-
-
-
 
 #endif  // __WL_VERSION_H__

@@ -47,7 +47,6 @@
 #define WIN_REMAP_LO_OFF	0x0008
 #define WIN_REMAP_HI_OFF	0x000c
 
-
 struct mbus_dram_target_info mv78xx0_mbus_dram_info;
 
 static void __init __iomem *win_cfg_base(int win)

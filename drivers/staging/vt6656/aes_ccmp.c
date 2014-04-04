@@ -118,7 +118,6 @@ static void xor_128(BYTE *a, BYTE *b, BYTE *out)
 	(*dwPtrOut++) = (*dwPtrA++) ^ (*dwPtrB++);
 }
 
-
 static void xor_32(BYTE *a, BYTE *b, BYTE *out)
 {
 	PDWORD dwPtrA = (PDWORD) a;

@@ -373,7 +373,6 @@ static void cx24113_calc_pll_nf(struct cx24113_state *state, u16 *n, s32 *f)
 	*f = (s32) F;
 }
 
-
 static void cx24113_set_nfr(struct cx24113_state *state, u16 n, s32 f, u8 r)
 {
 	u8 reg;
@@ -617,4 +616,3 @@ MODULE_PARM_DESC(debug, "Activates frontend debugging (default:0)");
 MODULE_AUTHOR("Patrick Boettcher <pb@linuxtv.org>");
 MODULE_DESCRIPTION("DVB Frontend module for Conexant CX24113/CX24128hardware");
 MODULE_LICENSE("GPL");
-

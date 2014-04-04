@@ -3,13 +3,13 @@
  *  implement bcmsdh API for SDIOH driver
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,12 +17,12 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: bcmsdh.c 347614 2012-07-27 10:24:51Z $
+ * $Id: bcmsdh.c 373329 2012-12-07 04:46:09Z $
  */
 
 /**
@@ -44,8 +44,6 @@
 #include <sbsdio.h>	/* SDIO device core hardware definitions. */
 
 #include <sdio.h>	/* SDIO Device and Protocol Specs */
-
-#include <dhd_sec_feature.h>
 
 #define SDIOH_API_ACCESS_RETRY_LIMIT	2
 const uint bcmsdh_msglevel = BCMSDH_ERROR_VAL;
@@ -159,9 +157,17 @@ bcmsdh_intr_enable(void *sdh)
 {
 	bcmsdh_info_t *bcmsdh = (bcmsdh_info_t *)sdh;
 	SDIOH_API_RC status;
+#ifdef BCMSPI_ANDROID
+	uint32 data;
+#endif /* BCMSPI_ANDROID */
 	ASSERT(bcmsdh);
 
 	status = sdioh_interrupt_set(bcmsdh->sdioh, TRUE);
+#ifdef BCMSPI_ANDROID
+	data = bcmsdh_cfg_read_word(sdh, 0, 4, NULL);
+	data |= 0xE0E70000;
+	bcmsdh_cfg_write_word(sdh, 0, 4, data, NULL);
+#endif /* BCMSPI_ANDROID */
 	return (SDIOH_API_SUCCESS(status) ? 0 : BCME_ERROR);
 }
 
@@ -170,9 +176,17 @@ bcmsdh_intr_disable(void *sdh)
 {
 	bcmsdh_info_t *bcmsdh = (bcmsdh_info_t *)sdh;
 	SDIOH_API_RC status;
+#ifdef BCMSPI_ANDROID
+	uint32 data;
+#endif /* BCMSPI_ANDROID */
 	ASSERT(bcmsdh);
 
 	status = sdioh_interrupt_set(bcmsdh->sdioh, FALSE);
+#ifdef BCMSPI_ANDROID
+	data = bcmsdh_cfg_read_word(sdh, 0, 4, NULL);
+	data &= ~0xE0E70000;
+	bcmsdh_cfg_write_word(sdh, 0, 4, data, NULL);
+#endif /* BCMSPI_ANDROID */
 	return (SDIOH_API_SUCCESS(status) ? 0 : BCME_ERROR);
 }
 
@@ -208,7 +222,6 @@ bcmsdh_intr_pending(void *sdh)
 	return sdioh_interrupt_pending(bcmsdh->sdioh);
 }
 #endif
-
 
 int
 bcmsdh_devremove_reg(void *sdh, bcmsdh_cb_fn_t fn, void *argh)
@@ -335,7 +348,6 @@ bcmsdh_cfg_write_word(void *sdh, uint fnc_num, uint32 addr, uint32 data, int *er
 	             addr, data));
 }
 
-
 int
 bcmsdh_cis_read(void *sdh, uint func, uint8 *cis, uint length)
 {
@@ -374,7 +386,6 @@ bcmsdh_cis_read(void *sdh, uint func, uint8 *cis, uint length)
 
 	return (SDIOH_API_SUCCESS(status) ? 0 : BCME_ERROR);
 }
-
 
 int
 bcmsdhsdio_set_sbaddr_window(void *sdh, uint32 address, bool force_set)
@@ -620,7 +631,6 @@ bcmsdh_waitlockfree(void *sdh)
 
 	return sdioh_waitlockfree(bcmsdh->sdioh);
 }
-
 
 #ifdef BCMSPI     /* 4329 gSPI won't have CIS reads. */
 int

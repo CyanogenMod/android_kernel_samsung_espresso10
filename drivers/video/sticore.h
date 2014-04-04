@@ -6,7 +6,7 @@
 #if 0
 #define DPRINTK(x)	printk x
 #else
-#define DPRINTK(x) 
+#define DPRINTK(x)
 #endif
 
 #define MAX_STI_ROMS 4		/* max no. of ROMs which this driver handles */
@@ -29,11 +29,11 @@
  *
  * Probably the best solution to all this is have the generic code manage
  * the screen buffer and a kernel thread to call STI occasionally.
- * 
+ *
  * Luckily, the frame buffer guys have the same problem so we can just wait
  * for them to fix it and steal their solution.   prumpf
  */
- 
+
 #include <asm/io.h>
 
 #define STI_WAIT 1
@@ -48,7 +48,6 @@
 				   STI_PTR(glob_cfg));	\
        })
 
-
 #define sti_onscreen_x(sti) (sti->glob_cfg->onscreen_x)
 #define sti_onscreen_y(sti) (sti->glob_cfg->onscreen_y)
 
@@ -56,11 +55,10 @@
 #define sti_font_x(sti) (PTR_STI(sti->font)->width)
 #define sti_font_y(sti) (PTR_STI(sti->font)->height)
 
-
 /* STI function configuration structs */
 
 typedef union region {
-	struct { 
+	struct {
 		u32 offset	: 14;	/* offset in 4kbyte page */
 		u32 sys_only	: 1;	/* don't map to user space */
 		u32 cache	: 1;	/* map to data cache */
@@ -97,7 +95,6 @@ struct sti_glob_cfg {
 	u32 save_addr;			/* where to save or restore reentrant state */
 	u32 ext_ptr;			/* pointer to extended glob_cfg data structure */
 };
-
 
 /* STI init function structs */
 
@@ -136,14 +133,11 @@ struct sti_init_inptr {
 	u32 ext_ptr;		/* pointer to extended init_graph inptr data structure*/
 };
 
-
 struct sti_init_outptr {
 	s32 errno;		/* error number on failure */
 	s32 text_planes;	/* number of planes used for text */
 	u32 future_ptr; 	/* pointer to future data */
 };
-
-
 
 /* STI configuration function structs */
 
@@ -158,7 +152,7 @@ struct sti_conf_inptr {
 };
 
 struct sti_conf_outptr_ext {
-	u32 crt_config[3];	/* hardware specific X11/OGL information */	
+	u32 crt_config[3];	/* hardware specific X11/OGL information */
 	u32 crt_hdw[3];
 	u32 future_ptr;
 };
@@ -215,7 +209,7 @@ struct sti_rom {
 	u32 set_cm_entry;
 	u32 dma_ctrl;
 	 u8 res040[7 * 4];
-	
+
 	u32 init_graph_addr;
 	u32 state_mgmt_addr;
 	u32 font_unp_addr;
@@ -271,7 +265,7 @@ struct sti_font_flags {
 	u32 pad : 30;		/* pad to word boundary */
 	u32 future_ptr; 	/* pointer to future data */
 };
-	
+
 struct sti_font_outptr {
 	s32 errno;		/* error number on failure */
 	u32 future_ptr; 	/* pointer to future data */
@@ -305,14 +299,13 @@ struct sti_blkmv_outptr {
 	u32 future_ptr; 	/* pointer to future data */
 };
 
-
 /* internal generic STI struct */
 
 struct sti_struct {
 	spinlock_t lock;
-		
+
 	/* the following fields needs to be filled in by the word/byte routines */
-	int font_width;	
+	int font_width;
 	int font_height;
 	/* char **mon_strings; */
 	int sti_mem_request;
@@ -344,7 +337,6 @@ struct sti_struct {
 	/* pointer to the fb_info where this STI device is used */
 	struct fb_info *info;
 };
-
 
 /* sticore interface functions */
 

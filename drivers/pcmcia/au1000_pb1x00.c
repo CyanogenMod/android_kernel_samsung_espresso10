@@ -60,7 +60,7 @@ static int pb1x00_pcmcia_init(struct pcmcia_init *init)
 	pcr |= SET_VCC_VPP(VCC_HIZ,VPP_HIZ,1);
 	au_writel(pcr, PB1000_PCR);
 	au_sync_delay(20);
-	  
+
 	return PCMCIA_NUM_SOCKS;
 }
 
@@ -75,7 +75,7 @@ static int pb1x00_pcmcia_shutdown(void)
 	return 0;
 }
 
-static int 
+static int
 pb1x00_pcmcia_socket_state(unsigned sock, struct pcmcia_state *state)
 {
 	u32 inserted0, inserted1;
@@ -135,10 +135,9 @@ pb1x00_pcmcia_socket_state(unsigned sock, struct pcmcia_state *state)
 
 	state->bvd1=1;
 	state->bvd2=1;
-	state->wrprot=0; 
+	state->wrprot=0;
 	return 1;
 }
-
 
 static int pb1x00_pcmcia_get_irq_info(struct pcmcia_irq_info *info)
 {
@@ -154,8 +153,7 @@ static int pb1x00_pcmcia_get_irq_info(struct pcmcia_irq_info *info)
 	return 0;
 }
 
-
-static int 
+static int
 pb1x00_pcmcia_configure_socket(const struct pcmcia_configure *configure)
 {
 	u16 pcr;
@@ -165,16 +163,16 @@ pb1x00_pcmcia_configure_socket(const struct pcmcia_configure *configure)
 	pcr = au_readl(PB1000_PCR);
 
 	if (configure->sock == 0) {
-		pcr &= ~(PCR_SLOT_0_VCC0 | PCR_SLOT_0_VCC1 | 
+		pcr &= ~(PCR_SLOT_0_VCC0 | PCR_SLOT_0_VCC1 |
 				PCR_SLOT_0_VPP0 | PCR_SLOT_0_VPP1);
 	}
 	else  {
-		pcr &= ~(PCR_SLOT_1_VCC0 | PCR_SLOT_1_VCC1 | 
+		pcr &= ~(PCR_SLOT_1_VCC0 | PCR_SLOT_1_VCC1 |
 				PCR_SLOT_1_VPP0 | PCR_SLOT_1_VPP1);
 	}
 
 	pcr &= ~PCR_SLOT_0_RST;
-	debug("Vcc %dV Vpp %dV, pcr %x\n", 
+	debug("Vcc %dV Vpp %dV, pcr %x\n",
 			configure->vcc, configure->vpp, pcr);
 	switch(configure->vcc){
 		case 0:  /* Vcc 0 */
@@ -198,9 +196,9 @@ pb1x00_pcmcia_configure_socket(const struct pcmcia_configure *configure)
 				default:
 					pcr |= SET_VCC_VPP(VCC_HIZ,VPP_HIZ,
 							configure->sock);
-					printk("%s: bad Vcc/Vpp (%d:%d)\n", 
+					printk("%s: bad Vcc/Vpp (%d:%d)\n",
 							__func__,
-							configure->vcc, 
+							configure->vcc,
 							configure->vpp);
 					break;
 			}
@@ -226,9 +224,9 @@ pb1x00_pcmcia_configure_socket(const struct pcmcia_configure *configure)
 				default:
 					pcr |= SET_VCC_VPP(VCC_HIZ,VPP_HIZ,
 							configure->sock);
-					printk("%s: bad Vcc/Vpp (%d:%d)\n", 
+					printk("%s: bad Vcc/Vpp (%d:%d)\n",
 							__func__,
-							configure->vcc, 
+							configure->vcc,
 							configure->vpp);
 					break;
 			}
@@ -254,16 +252,16 @@ pb1x00_pcmcia_configure_socket(const struct pcmcia_configure *configure)
 				default:
 					pcr |= SET_VCC_VPP(VCC_HIZ,VPP_HIZ,
 							configure->sock);
-					printk("%s: bad Vcc/Vpp (%d:%d)\n", 
+					printk("%s: bad Vcc/Vpp (%d:%d)\n",
 							__func__,
-							configure->vcc, 
+							configure->vcc,
 							configure->vpp);
 					break;
 			}
 			break;
 		default: /* what's this ? */
 			pcr |= SET_VCC_VPP(VCC_HIZ,VPP_HIZ,configure->sock);
-			printk(KERN_ERR "%s: bad Vcc %d\n", 
+			printk(KERN_ERR "%s: bad Vcc %d\n",
 					__func__, configure->vcc);
 			break;
 	}
@@ -284,8 +282,7 @@ pb1x00_pcmcia_configure_socket(const struct pcmcia_configure *configure)
 	return 0;
 }
 
-
-struct pcmcia_low_level pb1x00_pcmcia_ops = { 
+struct pcmcia_low_level pb1x00_pcmcia_ops = {
 	pb1x00_pcmcia_init,
 	pb1x00_pcmcia_shutdown,
 	pb1x00_pcmcia_socket_state,

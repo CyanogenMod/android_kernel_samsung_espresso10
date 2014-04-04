@@ -96,7 +96,6 @@
 		GRU_##hn##_BASE + GRU_NUM_##hn * GRU_HANDLE_STRIDE &&   \
 		(((h) & (GRU_HANDLE_STRIDE - 1)) == 0))
 
-
 /* General addressing macros. */
 static inline void *get_gseg_base_address(void *base, int ctxnum)
 {
@@ -172,9 +171,6 @@ static inline struct gru_control_block_extended *gru_tfh_to_cbe(
 	cbe = (unsigned long)tfh - GRU_TFH_BASE + GRU_CBE_BASE;
 	return (struct gru_control_block_extended*)cbe;
 }
-
-
-
 
 /*
  * Global TLB Fault Map
@@ -261,7 +257,6 @@ enum gru_tgh_cause {
 	TGHCAUSE_DATA_ERR,
 	TGHCAUSE_SW_FORCE
 };
-
 
 /*
  * TFH - TLB Global Handle

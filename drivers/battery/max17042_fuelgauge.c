@@ -811,7 +811,6 @@ static int fg_check_battery_present(struct i2c_client *client)
 	return ret;
 }
 
-
 static int fg_read_temp(struct i2c_client *client)
 {
 	struct sec_fuelgauge_info *fuelgauge = i2c_get_clientdata(client);
@@ -1045,7 +1044,6 @@ int fg_reset_soc(struct i2c_client *client)
 
 	return 0;
 }
-
 
 int fg_reset_capacity(struct i2c_client *client)
 {
@@ -1888,7 +1886,6 @@ int low_batt_compensation(struct i2c_client *client,
 			else
 				bCntReset = 1;
 		}
-
 
 		if (check_low_batt_comp_condition(client, &new_level)) {
 #if defined(CONFIG_MACH_P8_REV00) || \

@@ -94,7 +94,6 @@ static const unsigned int h3_keymap[] = {
 	KEY(4, 5, KEY_SLEEP),
 };
 
-
 static struct mtd_partition nor_partitions[] = {
 	/* bootloader (U-Boot, etc) in first sector */
 	{

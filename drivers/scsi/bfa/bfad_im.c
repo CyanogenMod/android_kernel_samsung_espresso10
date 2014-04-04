@@ -1157,7 +1157,6 @@ bfad_im_queuecommand_lck(struct scsi_cmnd *cmnd, void (*done) (struct scsi_cmnd 
 		goto out_fail_cmd;
 	}
 
-
 	itnim = itnim_data->itnim;
 	if (!itnim) {
 		cmnd->result = ScsiResult(DID_IMM_RETRY, 0);

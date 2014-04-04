@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="bmi.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -122,8 +122,8 @@ BMIRawWrite(struct hif_device *device,
             u32 length);
 
 int
-BMIRawRead(struct hif_device *device, 
-           u8 *buffer, 
+BMIRawRead(struct hif_device *device,
+           u8 *buffer,
            u32 length,
            bool want_timeout);
 

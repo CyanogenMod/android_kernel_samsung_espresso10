@@ -1,35 +1,33 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
 ******************************************************************************/
 
 #ifndef __PVR_DEBUG_H__
 #define __PVR_DEBUG_H__
 
-
 #include "img_types.h"
-
 
 #if defined (__cplusplus)
 extern "C" {
@@ -76,7 +74,6 @@ IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVDebugAssertFail(const IMG_CHAR *pszFile,
 	#define PVR_DBG_BREAK
 
 #endif /* defined(PVRSRV_NEED_PVR_ASSERT) */
-
 
 /* PVR_DPF() handling */
 
@@ -155,7 +152,6 @@ IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVDebugPrintf(IMG_UINT32 ui32DebugLevel,
 
 #endif /* defined(PVRSRV_NEED_PVR_DPF) */
 
-
 /* PVR_TRACE() handling */
 
 #if defined(PVRSRV_NEED_PVR_TRACE)
@@ -171,7 +167,6 @@ IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVTrace(const IMG_CHAR* pszFormat, ... )
 
 #endif /* defined(PVRSRV_NEED_PVR_TRACE) */
 
-
 #if defined (__cplusplus)
 }
 #endif
@@ -181,4 +176,3 @@ IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVTrace(const IMG_CHAR* pszFormat, ... )
 /******************************************************************************
  End of file (pvr_debug.h)
 ******************************************************************************/
-

@@ -15,4 +15,3 @@ extern int um_request_irq(unsigned int irq, int fd, int type,
 			  void *dev_id);
 
 #endif
-

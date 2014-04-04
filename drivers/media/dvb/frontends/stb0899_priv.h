@@ -62,9 +62,7 @@
 #define LSB(x)					((x & 0xff))
 #define MSB(y)					((y >> 8) & 0xff)
 
-
 #define STB0899_GETFIELD(bitf, val)		((val >> STB0899_OFFST_##bitf) & ((1 << STB0899_WIDTH_##bitf) - 1))
-
 
 #define STB0899_SETFIELD(mask, val, width, offset)      (mask & (~(((1 << width) - 1) <<	\
 							 offset))) | ((val &			\
@@ -73,7 +71,6 @@
 #define STB0899_SETFIELD_VAL(bitf, mask, val)	(mask = (mask & (~(((1 << STB0899_WIDTH_##bitf) - 1) <<\
 							 STB0899_OFFST_##bitf))) | \
 							 (val << STB0899_OFFST_##bitf))
-
 
 enum stb0899_status {
 	NOAGC1	= 0,
@@ -250,7 +247,6 @@ extern int stb0899_write_s2reg(struct stb0899_state *state,
 			       u32 stb0899_data);
 
 extern int stb0899_i2c_gate_ctrl(struct dvb_frontend *fe, int enable);
-
 
 #define STB0899_READ_S2REG(DEVICE, REG) 	(_stb0899_read_s2reg(state, DEVICE, STB0899_BASE_##REG, STB0899_OFF0_##REG))
 //#define STB0899_WRITE_S2REG(DEVICE, REG, DATA)	(_stb0899_write_s2reg(state, DEVICE, STB0899_BASE_##REG, STB0899_OFF0_##REG, DATA))

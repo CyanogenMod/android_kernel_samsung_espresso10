@@ -132,7 +132,7 @@ struct acpi_video_device_attrib {
 	u32 display_type:4;	/*Describe the specific type in use */
 	u32 vendor_specific:4;	/*Chipset Vendor Specific */
 	u32 bios_can_detect:1;	/*BIOS can detect the device */
-	u32 depend_on_vga:1;	/*Non-VGA output device whose power is related to 
+	u32 depend_on_vga:1;	/*Non-VGA output device whose power is related to
 				   the VGA device. */
 	u32 pipe_id:3;		/*For VGA multiple-head devices. */
 	u32 reserved:10;	/*Must be 0 */
@@ -326,7 +326,6 @@ acpi_video_device_lcd_query_levels(struct acpi_video_device *device,
 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
 	union acpi_object *obj;
 
-
 	*levels = NULL;
 
 	status = acpi_evaluate_object(device->dev->handle, "_BCL", NULL, &buffer);
@@ -390,6 +389,18 @@ static int __init video_set_bqc_offset(const struct dmi_system_id *d)
 	return 0;
 }
 
+static int video_ignore_initial_backlight(const struct dmi_system_id *d)
+{
+	use_bios_initial_backlight = 0;
+	return 0;
+}
+
+static int video_ignore_initial_backlight(const struct dmi_system_id *d)
+{
+	use_bios_initial_backlight = 0;
+	return 0;
+}
+
 static struct dmi_system_id video_dmi_table[] __initdata = {
 	/*
 	 * Broken _BQC workaround http://bugzilla.kernel.org/show_bug.cgi?id=13121
@@ -432,6 +443,54 @@ static struct dmi_system_id video_dmi_table[] __initdata = {
 	 .matches = {
 		DMI_MATCH(DMI_BOARD_VENDOR, "Acer"),
 		DMI_MATCH(DMI_PRODUCT_NAME, "Aspire 7720"),
+		},
+	},
+	{
+	 .callback = video_ignore_initial_backlight,
+	 .ident = "HP Folio 13-2000",
+	 .matches = {
+		DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+		DMI_MATCH(DMI_PRODUCT_NAME, "HP Folio 13 - 2000 Notebook PC"),
+		},
+	},
+	{
+	 .callback = video_ignore_initial_backlight,
+	 .ident = "HP Pavilion g6 Notebook PC",
+	 .matches = {
+		 DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+		 DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion g6 Notebook PC"),
+		},
+	},
+	{
+	 .callback = video_ignore_initial_backlight,
+	 .ident = "HP Pavilion m4",
+	 .matches = {
+		DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+		DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion m4 Notebook PC"),
+		},
+	},
+	{
+	 .callback = video_ignore_initial_backlight,
+	 .ident = "HP Folio 13-2000",
+	 .matches = {
+		DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+		DMI_MATCH(DMI_PRODUCT_NAME, "HP Folio 13 - 2000 Notebook PC"),
+		},
+	},
+	{
+	 .callback = video_ignore_initial_backlight,
+	 .ident = "HP Pavilion g6 Notebook PC",
+	 .matches = {
+		 DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+		 DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion g6 Notebook PC"),
+		},
+	},
+	{
+	 .callback = video_ignore_initial_backlight,
+	 .ident = "HP Pavilion m4",
+	 .matches = {
+		DMI_MATCH(DMI_BOARD_VENDOR, "Hewlett-Packard"),
+		DMI_MATCH(DMI_PRODUCT_NAME, "HP Pavilion m4 Notebook PC"),
 		},
 	},
 	{}
@@ -500,7 +559,6 @@ acpi_video_device_EDID(struct acpi_video_device *device,
 	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
 	struct acpi_object_list args = { 1, &arg0 };
 
-
 	*edid = NULL;
 
 	if (!device)
@@ -534,7 +592,7 @@ acpi_video_device_EDID(struct acpi_video_device *device,
 /*
  *  Arg:
  *  	video		: video bus device pointer
- *	bios_flag	: 
+ *	bios_flag	:
  *		0.	The system BIOS should NOT automatically switch(toggle)
  *			the active display output.
  *		1.	The system BIOS should automatically switch (toggle) the
@@ -546,7 +604,7 @@ acpi_video_device_EDID(struct acpi_video_device *device,
  *	lcd_flag	:
  *		0.	The system BIOS should automatically control the brightness level
  *			of the LCD when the power changes from AC to DC
- *		1. 	The system BIOS should NOT automatically control the brightness 
+ *		1. 	The system BIOS should NOT automatically control the brightness
  *			level of the LCD when the power changes from AC to DC.
  * Return Value:
  * 		-1	wrong arg.
@@ -558,7 +616,6 @@ acpi_video_bus_DOS(struct acpi_video_bus *video, int bios_flag, int lcd_flag)
 	u64 status = 0;
 	union acpi_object arg0 = { ACPI_TYPE_INTEGER };
 	struct acpi_object_list args = { 1, &arg0 };
-
 
 	if (bios_flag < 0 || bios_flag > 3 || lcd_flag < 0 || lcd_flag > 1) {
 		status = -1;
@@ -583,7 +640,7 @@ acpi_video_cmp_level(const void *a, const void *b)
 }
 
 /*
- *  Arg:	
+ *  Arg:
  *  	device	: video output device (LCD, CRT, ..)
  *
  *  Return Value:
@@ -855,7 +912,7 @@ static void acpi_video_device_find_cap(struct acpi_video_device *device)
 }
 
 /*
- *  Arg:	
+ *  Arg:
  *  	device	: video output device (VGA)
  *
  *  Return Value:
@@ -1071,12 +1128,12 @@ acpi_video_bus_get_one_device(struct acpi_device *device,
 
 /*
  *  Arg:
- *  	video	: video bus device 
+ *  	video	: video bus device
  *
  *  Return:
  *  	none
- *  
- *  Enumerate the video device list of the video bus, 
+ *
+ *  Enumerate the video device list of the video bus,
  *  bind the ids with the corresponding video devices
  *  under the video bus.
  */
@@ -1095,13 +1152,13 @@ static void acpi_video_device_rebind(struct acpi_video_bus *video)
 
 /*
  *  Arg:
- *  	video	: video bus device 
- *  	device	: video output device under the video 
+ *  	video	: video bus device
+ *  	device	: video output device under the video
  *  		bus
  *
  *  Return:
  *  	none
- *  
+ *
  *  Bind the ids with the corresponding video devices
  *  under the video bus.
  */
@@ -1124,11 +1181,11 @@ acpi_video_device_bind(struct acpi_video_bus *video,
 
 /*
  *  Arg:
- *  	video	: video bus device 
+ *  	video	: video bus device
  *
  *  Return:
  *  	< 0	: error
- *  
+ *
  *  Call _DOD to enumerate all devices attached to display adapter
  *
  */
@@ -1712,7 +1769,6 @@ static int acpi_video_bus_remove(struct acpi_device *device, int type)
 {
 	struct acpi_video_bus *video = NULL;
 
-
 	if (!device || !acpi_driver_data(device))
 		return -EINVAL;
 
@@ -1732,6 +1788,7 @@ static int acpi_video_bus_remove(struct acpi_device *device, int type)
 
 static int __init intel_opregion_present(void)
 {
+	int i915 = 0;
 #if defined(CONFIG_DRM_I915) || defined(CONFIG_DRM_I915_MODULE)
 	struct pci_dev *dev = NULL;
 	u32 address;
@@ -1744,10 +1801,10 @@ static int __init intel_opregion_present(void)
 		pci_read_config_dword(dev, 0xfc, &address);
 		if (!address)
 			continue;
-		return 1;
+		i915 = 1;
 	}
 #endif
-	return 0;
+	return i915;
 }
 
 int acpi_video_register(void)

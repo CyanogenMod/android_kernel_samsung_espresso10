@@ -100,7 +100,6 @@ static struct hsi_platform_data omap_hsi_platform_data = {
 
 static struct omap_device *hsi_od;
 
-
 static bool omap_hsi_registration_allowed;
 
 void omap_hsi_allow_registration(void)
@@ -245,7 +244,6 @@ int omap_hsi_wakeup(int hsi_port)
 	if (i == omap_hsi_platform_data.num_ports)
 		return -ENODEV;
 
-
 	/* Check no other interrupt handler has already scheduled the tasklet */
 	if (test_and_set_bit(HSI_FLAGS_TASKLET_LOCK,
 			     &hsi_ctrl->hsi_port[i].flags))
@@ -310,4 +308,3 @@ int __init omap_hsi_dev_init(void)
 					    omap_hsi_register, NULL);
 }
 arch_initcall(omap_hsi_dev_init);
-

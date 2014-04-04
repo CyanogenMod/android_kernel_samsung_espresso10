@@ -31,7 +31,6 @@
  * need to wait for MDS acknowledgement.
  */
 
-
 /*
  * Prepare an open request.  Preallocate ceph_cap to avoid an
  * inopportune ENOMEM later.
@@ -202,7 +201,6 @@ int ceph_open(struct inode *inode, struct file *file)
 out:
 	return err;
 }
-
 
 /*
  * Do a lookup + open with a single request.
@@ -569,7 +567,7 @@ more:
 			spin_unlock(&ci->i_unsafe_lock);
 			ceph_get_cap_refs(ci, CEPH_CAP_FILE_WR);
 		}
-		
+
 		ret = ceph_osdc_wait_request(&fsc->client->osdc, req);
 		if (ret < 0 && req->r_safe_callback) {
 			spin_lock(&ci->i_unsafe_lock);
@@ -825,4 +823,3 @@ const struct file_operations ceph_file_fops = {
 	.unlocked_ioctl = ceph_ioctl,
 	.compat_ioctl	= ceph_ioctl,
 };
-

@@ -1,7 +1,6 @@
 /* drivers/atm/uPD98402.h - NEC uPD98402 (PHY) declarations */
- 
-/* Written 1995 by Werner Almesberger, EPFL LRC */
 
+/* Written 1995 by Werner Almesberger, EPFL LRC */
 
 #ifndef DRIVERS_ATM_uPD98402_H
 #define DRIVERS_ATM_uPD98402_H
@@ -99,7 +98,6 @@
 #define uPD98402_PCO_LFBC	0x10	/* LFEVC overflow */
 #define uPD98402_PCO_HECC	0x20	/* HECCT overflow */
 #define uPD98402_PCO_FJC	0x40	/* FJCT overflow */
-
 
 int uPD98402_init(struct atm_dev *dev);
 

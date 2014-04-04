@@ -283,7 +283,6 @@
 #define E1HOV_PRI_HASH_TYPE 6
 #define DSCP_HASH_TYPE 7
 
-
 /* Ethernet Ring parameters */
 #define X_ETH_LOCAL_RING_SIZE 13
 #define FIRST_BD_IN_PKT 0
@@ -355,7 +354,6 @@
 #define ETH_RSS_MODE_IP_DSCP 4
 #define ETH_RSS_MODE_E2_INTEG 5
 
-
 /* ETH vlan filtering modes */
 #define ETH_VLAN_FILTER_ANY_VLAN 0 /* Don't filter by vlan */
 #define ETH_VLAN_FILTER_SPECIFIC_VLAN \
@@ -367,7 +365,6 @@
 #define ETH_FP_CQE_REGULAR 0
 #define ETH_FP_CQE_SGL 1
 #define ETH_FP_CQE_RAW 2
-
 
 /**
 * This file defines HSI constants common to all microcode flows
@@ -383,7 +380,6 @@
 #define RESERVED_CONNECTION_TYPE_1 6
 #define RESERVED_CONNECTION_TYPE_2 7
 #define NONE_CONNECTION_TYPE 8
-
 
 #define PROTOCOL_STATE_BIT_OFFSET 6
 
@@ -403,7 +399,6 @@
 
 /* microcode fixed page page size 4K (chains and ring segments) */
 #define MC_PAGE_SIZE 4096
-
 
 /* Host coalescing constants */
 #define HC_IGU_BC_MODE 0
@@ -442,7 +437,6 @@
 #define RX_ETH_CQE_TYPE_ETH_FASTPATH 0
 #define RX_ETH_CQE_TYPE_ETH_RAMROD 1
 
-
 /**** DEFINES FOR TIMERS/CLOCKS RESOLUTIONS ****/
 
 #define TIMERS_TICK_SIZE_CHIP (1e-3)
@@ -466,7 +460,6 @@
 
 #define FAIRNESS_COS_WRR_MODE 0
 #define FAIRNESS_COS_ETS_MODE 1
-
 
 /* Priority Flow Control (PFC) */
 #define MAX_PFC_PRIORITIES 8
@@ -506,7 +499,6 @@
 #define IP_V4 0
 #define IP_V6 1
 
-
 #define C_ERES_PER_PAGE \
 	(PAGE_SIZE / BITS_TO_BYTES(STRUCT_SIZE(event_ring_elem)))
 #define C_ERE_PER_PAGE_MASK (C_ERES_PER_PAGE - 1)
@@ -526,6 +518,5 @@
 #define VF_PF_CHANNEL_STATE_WAITING_FOR_ACK 1
 
 #define VF_PF_CHANNEL_STATE_MAX_NUMBER 2
-
 
 #endif /* BNX2X_FW_DEFS_H */

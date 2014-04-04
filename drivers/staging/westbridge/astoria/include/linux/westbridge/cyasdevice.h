@@ -134,7 +134,6 @@
 /* This request originated from a version V1.2 function call */
 #define CY_AS_REQUEST_RESPONSE_MS (0x04)
 
-
 #define CY_AS_DEVICE_HANDLE_SIGNATURE (0x01211219)
 
 /*
@@ -532,8 +531,6 @@ typedef struct cy_as_context {
 	((ctxt)->state |= CY_AS_CTXT_STATE_WAITING_RESPONSE)
 #define cy_as_context_clear_waiting(ctxt) \
 	((ctxt)->state &= ~CY_AS_CTXT_STATE_WAITING_RESPONSE)
-
-
 
 /* Summary
    This data structure stores SDIO function

@@ -59,7 +59,6 @@
 #include "scsi_logging.h"
 #include "sr.h"
 
-
 MODULE_DESCRIPTION("SCSI cdrom (sr) driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS_BLOCKDEV_MAJOR(SCSI_CDROM_MAJOR);
@@ -409,7 +408,7 @@ static int sr_prep_fn(struct request_queue *q, struct request *rq)
 
 	/*
 	 * we do lazy blocksize switching (when reading XA sectors,
-	 * see CDROMREADMODE2 ioctl) 
+	 * see CDROMREADMODE2 ioctl)
 	 */
 	s_size = cd->device->sector_size;
 	if (s_size > 2048) {
@@ -464,7 +463,6 @@ static int sr_prep_fn(struct request_queue *q, struct request *rq)
 	}
 
 	this_count = (scsi_bufflen(SCpnt) >> 9) / (s_size >> 9);
-
 
 	SCSI_LOG_HLQUEUE(2, printk("%s : %s %d/%u 512 byte blocks.\n",
 				cd->cdi.name,
@@ -603,7 +601,7 @@ static const struct block_device_operations sr_bdops =
 	.ioctl		= sr_block_ioctl,
 	.check_events	= sr_block_check_events,
 	.revalidate_disk = sr_block_revalidate_disk,
-	/* 
+	/*
 	 * No compat_ioctl for now because sr_block_ioctl never
 	 * seems to pass arbitrary ioctls down to host drivers.
 	 */
@@ -626,7 +624,7 @@ static int sr_open(struct cdrom_device_info *cdi, int purpose)
 	return 0;
 
 error_out:
-	return retval;	
+	return retval;
 }
 
 static void sr_release(struct cdrom_device_info *cdi)
@@ -728,7 +726,6 @@ fail:
 	return error;
 }
 
-
 static void get_sectorsize(struct scsi_cd *cd)
 {
 	unsigned char cmd[10];
@@ -750,7 +747,6 @@ static void get_sectorsize(struct scsi_cd *cd)
 		retries--;
 
 	} while (the_result && retries);
-
 
 	if (the_result) {
 		cd->capacity = 0x1fffff;
@@ -829,7 +825,6 @@ static void get_capabilities(struct scsi_cd *cd)
 		""
 	};
 
-
 	/* allocate transfer buffer */
 	buffer = kmalloc(512, GFP_KERNEL | GFP_DMA);
 	if (!buffer) {
@@ -876,7 +871,7 @@ static void get_capabilities(struct scsi_cd *cd)
 	if ((buffer[n + 2] & 0x8) == 0)
 		/* not a DVD drive */
 		cd->cdi.mask |= CDC_DVD;
-	if ((buffer[n + 3] & 0x20) == 0) 
+	if ((buffer[n + 3] & 0x20) == 0)
 		/* can't write DVD-RAM media */
 		cd->cdi.mask |= CDC_DVD_RAM;
 	if ((buffer[n + 3] & 0x10) == 0)
@@ -915,7 +910,7 @@ static void get_capabilities(struct scsi_cd *cd)
 
 /*
  * sr_packet() is the entry point for the generic commands generated
- * by the Uniform CD-ROM layer. 
+ * by the Uniform CD-ROM layer.
  */
 static int sr_packet(struct cdrom_device_info *cdi,
 		struct packet_command *cgc)

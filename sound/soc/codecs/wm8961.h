@@ -28,7 +28,6 @@
 #define WM8961_BCLK_DIV_24  11
 #define WM8961_BCLK_DIV_32  13
 
-
 /*
  * Register values.
  */
@@ -87,7 +86,6 @@
 #define WM8961_WRITE_SEQUENCER_6                0x5C
 #define WM8961_WRITE_SEQUENCER_7                0x5D
 #define WM8961_GENERAL_TEST_1                   0xFC
-
 
 /*
  * Field Definitions.

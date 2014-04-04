@@ -20,7 +20,6 @@
 #include <asm/hardware/dec21285.h>
 #include <asm/mach-types.h>
 
-
 static struct mtd_info *dc21285_mtd;
 
 #ifdef CONFIG_ARCH_NETWINDER
@@ -143,7 +142,6 @@ static struct map_info dc21285_map = {
 	.copy_from = dc21285_copy_from,
 };
 
-
 /* Partition stuff */
 static struct mtd_partition *dc21285_parts;
 static const char *probes[] = { "RedBoot", "cmdlinepart", NULL };
@@ -232,7 +230,6 @@ static void __exit cleanup_dc21285(void)
 
 module_init(init_dc21285);
 module_exit(cleanup_dc21285);
-
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Nicolas Pitre <nico@fluxnic.net>");

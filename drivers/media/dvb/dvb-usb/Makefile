@@ -54,7 +54,6 @@ obj-$(CONFIG_DVB_USB_DIB0700) += dvb-usb-dib0700.o
 dvb-usb-opera-objs = opera1.o
 obj-$(CONFIG_DVB_USB_OPERA1) += dvb-usb-opera.o
 
-
 dvb-usb-af9005-objs = af9005.o af9005-fe.o
 obj-$(CONFIG_DVB_USB_AF9005) += dvb-usb-af9005.o
 
@@ -97,4 +96,3 @@ obj-$(CONFIG_DVB_USB_TECHNISAT_USB2) += dvb-usb-technisat-usb2.o
 EXTRA_CFLAGS += -Idrivers/media/dvb/dvb-core/ -Idrivers/media/dvb/frontends/
 # due to tuner-xc3028
 EXTRA_CFLAGS += -Idrivers/media/common/tuners
-

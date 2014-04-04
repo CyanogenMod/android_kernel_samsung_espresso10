@@ -422,7 +422,6 @@ struct rx_info {
 	dma_addr_t	phy_descs;
 };
 
-
 struct ns83820 {
 	u8			__iomem *base;
 
@@ -492,7 +491,6 @@ static inline void kick_rx(struct net_device *ndev)
 //free = (tx_done_idx + NR_TX_DESC-2 - free_idx) % NR_TX_DESC
 #define start_tx_okay(dev)	\
 	(((NR_TX_DESC-2 + dev->tx_done_idx - dev->tx_free_idx) % NR_TX_DESC) > MIN_TX_DESC_FREE)
-
 
 #ifdef NS83820_VLAN_ACCEL_SUPPORT
 static void ns83820_vlan_rx_register(struct net_device *ndev, struct vlan_group *grp)
@@ -2304,7 +2302,6 @@ static struct pci_driver driver = {
 	.resume		= ,
 #endif
 };
-
 
 static int __init ns83820_init(void)
 {

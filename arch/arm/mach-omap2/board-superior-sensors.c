@@ -42,7 +42,6 @@ enum {
 	GP2AP030,
 };
 
-
 struct gpio sensors_gpios[] = {
 	[NUM_PS_ALS_INT] = {
 		.flags = GPIOF_IN,

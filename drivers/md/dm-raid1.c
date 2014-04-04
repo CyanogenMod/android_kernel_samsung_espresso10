@@ -580,7 +580,6 @@ static void do_reads(struct mirror_set *ms, struct bio_list *reads)
  * NOSYNC:	increment pending, just write to the default mirror
  *---------------------------------------------------------------*/
 
-
 static void write_callback(unsigned long error, void *context)
 {
 	unsigned i, ret = 0;
@@ -1210,7 +1209,7 @@ static int mirror_end_io(struct dm_target *ti, struct bio *bio,
 	 * We need to dec pending if this was a write.
 	 */
 	if (rw == WRITE) {
-		if (!(bio->bi_rw & REQ_FLUSH))
+		if (!(bio->bi_rw & (REQ_FLUSH | REQ_DISCARD)))
 			dm_rh_dec(ms->rh, map_context->ll);
 		return error;
 	}
@@ -1355,7 +1354,6 @@ static char device_status_char(struct mirror *m)
 		(test_bit(DM_RAID1_SYNC_ERROR, &(m->error_type))) ? 'S' :
 		(test_bit(DM_RAID1_READ_ERROR, &(m->error_type))) ? 'R' : 'U';
 }
-
 
 static int mirror_status(struct dm_target *ti, status_type_t type,
 			 char *result, unsigned int maxlen)

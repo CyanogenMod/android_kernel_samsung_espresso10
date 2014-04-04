@@ -23,7 +23,6 @@ enum fsid_source {
 };
 extern enum fsid_source fsid_source(struct svc_fh *fhp);
 
-
 /* This might look a little large to "inline" but in all calls except
  * one, 'vers' is constant so moste of the function disappears.
  */
@@ -111,7 +110,7 @@ static __inline__ struct svc_fh *
 fh_copy(struct svc_fh *dst, struct svc_fh *src)
 {
 	WARN_ON(src->fh_dentry || src->fh_locked);
-			
+
 	*dst = *src;
 	return dst;
 }
@@ -155,7 +154,6 @@ extern void fill_post_wcc(struct svc_fh *);
 #define	fill_pre_wcc(ignored)
 #define fill_post_wcc(notused)
 #endif /* CONFIG_NFSD_V3 */
-
 
 /*
  * Lock a file handle/inode

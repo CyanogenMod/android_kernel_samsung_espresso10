@@ -373,6 +373,9 @@ static void setup_events_to_report(struct input_dev *input_dev,
 	__set_bit(BTN_TOOL_QUADTAP, input_dev->keybit);
 	__set_bit(BTN_LEFT, input_dev->keybit);
 
+	if (cfg->caps & HAS_INTEGRATED_BUTTON)
+		__set_bit(INPUT_PROP_BUTTONPAD, input_dev->propbit);
+
 	input_set_events_per_packet(input_dev, 60);
 }
 
@@ -892,4 +895,3 @@ static void __exit bcm5974_exit(void)
 
 module_init(bcm5974_init);
 module_exit(bcm5974_exit);
-

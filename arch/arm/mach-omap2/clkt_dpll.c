@@ -340,4 +340,3 @@ long omap2_dpll_round_rate(struct clk *clk, unsigned long target_rate)
 
 	return target_rate;
 }
-

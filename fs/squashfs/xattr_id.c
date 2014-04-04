@@ -59,7 +59,6 @@ int squashfs_xattr_lookup(struct super_block *sb, unsigned int index,
 	return 0;
 }
 
-
 /*
  * Read uncompressed xattr id lookup table indexes from disk into memory
  */

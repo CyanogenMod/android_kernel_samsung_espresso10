@@ -13,9 +13,7 @@
 	Please submit bugs to http://bugzilla.kernel.org/ .
 */
 
-
 #include "tulip.h"
-
 
 void tulip_media_task(struct work_struct *work)
 {
@@ -125,7 +123,6 @@ void tulip_media_task(struct work_struct *work)
 	break;
 	}
 
-
 	spin_lock_irqsave(&tp->lock, flags);
 	if (tp->timeout_recovery) {
 		tulip_tx_timeout_complete(tp, ioaddr);
@@ -138,7 +135,6 @@ void tulip_media_task(struct work_struct *work)
 	 */
 	mod_timer(&tp->timer, RUN_AT(next_tick));
 }
-
 
 void mxic_timer(unsigned long data)
 {
@@ -155,7 +151,6 @@ void mxic_timer(unsigned long data)
 		mod_timer(&tp->timer, RUN_AT(next_tick));
 	}
 }
-
 
 void comet_timer(unsigned long data)
 {
@@ -176,4 +171,3 @@ void comet_timer(unsigned long data)
 		{ netif_carrier_on(dev); }
 	mod_timer(&tp->timer, RUN_AT(next_tick));
 }
-

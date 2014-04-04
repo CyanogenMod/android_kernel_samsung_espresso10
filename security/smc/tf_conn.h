@@ -102,5 +102,4 @@ int tf_open(struct tf_device *dev,
 void tf_close(
 	struct tf_connection *connection);
 
-
 #endif  /* !defined(__TF_CONN_H__) */

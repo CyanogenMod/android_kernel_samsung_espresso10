@@ -124,14 +124,12 @@
 #define TM			3	/* M port */
 #define TNONE			4
 
-
 /*
  * indexes in MIB
  */
 #define INDEX_MAC	1
 #define INDEX_PATH	1
 #define INDEX_PORT	1
-
 
 /*
  * policies
@@ -307,7 +305,6 @@
 #define DA_PASSED	1		/* test passed */
 #define DA_FAILED	2		/* test failed */
 
-
 /*
  * optical bypass
  */
@@ -341,7 +338,6 @@
 #define MA_TREQ		4		/* change T_Req */
 #define MA_OFFLINE	5		/* switch MAC to offline */
 
-
 /*
  * trace prop
  * bit map for trace propagation
@@ -359,7 +355,6 @@
 
 #define RES_MAC		2	/* resource type MAC */
 #define RES_PORT	4	/* resource type PORT */
-
 
 /*
  * CFM state

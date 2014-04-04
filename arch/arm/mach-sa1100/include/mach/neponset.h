@@ -13,7 +13,7 @@
 #define __ASM_ARCH_NEPONSET_H
 
 /*
- * Neponset definitions: 
+ * Neponset definitions:
  */
 
 #define NEPONSET_CPLD_BASE      (0x10000000)

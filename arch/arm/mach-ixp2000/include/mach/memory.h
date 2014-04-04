@@ -28,4 +28,3 @@
 #define __bus_to_pfn(b)		__phys_to_pfn(__bus_to_phys(b))
 
 #endif
-

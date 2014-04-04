@@ -15,6 +15,7 @@
 
 #include <linux/ipv6.h>
 #include <linux/hardirq.h>
+#include <linux/jhash.h>
 #include <net/if_inet6.h>
 #include <net/ndisc.h>
 #include <net/flow.h>
@@ -43,14 +44,12 @@
 
 #define NEXTHDR_MAX		255
 
-
-
 #define IPV6_DEFAULT_HOPLIMIT   64
 #define IPV6_DEFAULT_MCASTHOPS	1
 
 /*
  *	Addr type
- *	
+ *
  *	type	-	unicast | multicast
  *	scope	-	local	| site	    | global
  *	v4	-	compat
@@ -61,8 +60,8 @@
 
 #define IPV6_ADDR_ANY		0x0000U
 
-#define IPV6_ADDR_UNICAST      	0x0001U	
-#define IPV6_ADDR_MULTICAST    	0x0002U	
+#define IPV6_ADDR_UNICAST      	0x0001U
+#define IPV6_ADDR_MULTICAST    	0x0002U
 
 #define IPV6_ADDR_LOOPBACK	0x0010U
 #define IPV6_ADDR_LINKLOCAL	0x0020U
@@ -305,7 +304,7 @@ static inline void ipv6_addr_copy(struct in6_addr *a1, const struct in6_addr *a2
 	memcpy(a1, a2, sizeof(struct in6_addr));
 }
 
-static inline void ipv6_addr_prefix(struct in6_addr *pfx, 
+static inline void ipv6_addr_prefix(struct in6_addr *pfx,
 				    const struct in6_addr *addr,
 				    int plen)
 {
@@ -319,7 +318,7 @@ static inline void ipv6_addr_prefix(struct in6_addr *pfx,
 		pfx->s6_addr[o] = addr->s6_addr[o] & (0xff00 >> b);
 }
 
-static inline void ipv6_addr_set(struct in6_addr *addr, 
+static inline void ipv6_addr_set(struct in6_addr *addr,
 				     __be32 w1, __be32 w2,
 				     __be32 w3, __be32 w4)
 {
@@ -386,6 +385,17 @@ struct ip6_create_arg {
 void ip6_frag_init(struct inet_frag_queue *q, void *a);
 int ip6_frag_match(struct inet_frag_queue *q, void *a);
 
+/* more secured version of ipv6_addr_hash() */
+static inline u32 ipv6_addr_jhash(const struct in6_addr *a)
+{
+	u32 v = (__force u32)a->s6_addr32[0] ^ (__force u32)a->s6_addr32[1];
+
+	return jhash_3words(v,
+			    (__force u32)a->s6_addr32[2],
+			    (__force u32)a->s6_addr32[3],
+			    ipv6_hash_secret);
+}
+
 static inline int ipv6_addr_any(const struct in6_addr *a)
 {
 	return (a->s6_addr32[0] | a->s6_addr32[1] |
@@ -440,7 +450,7 @@ static inline int __ipv6_addr_diff(const void *token1, const void *token2, int a
 	}
 
 	/*
-	 *	we should *never* get to this point since that 
+	 *	we should *never* get to this point since that
 	 *	would mean the addrs are equal
 	 *
 	 *	However, we do get to it 8) And exacly, when
@@ -473,8 +483,8 @@ extern void ipv6_select_ident(struct frag_hdr *fhdr, struct in6_addr *addr);
  *	rcv function (called from netdevice level)
  */
 
-extern int			ipv6_rcv(struct sk_buff *skb, 
-					 struct net_device *dev, 
+extern int			ipv6_rcv(struct sk_buff *skb,
+					 struct net_device *dev,
 					 struct packet_type *pt,
 					 struct net_device *orig_dev);
 
@@ -567,13 +577,13 @@ extern struct in6_addr *fl6_update_dst(struct flowi6 *fl6,
  *	socket options (ipv6_sockglue.c)
  */
 
-extern int			ipv6_setsockopt(struct sock *sk, int level, 
+extern int			ipv6_setsockopt(struct sock *sk, int level,
 						int optname,
-						char __user *optval, 
+						char __user *optval,
 						unsigned int optlen);
-extern int			ipv6_getsockopt(struct sock *sk, int level, 
+extern int			ipv6_getsockopt(struct sock *sk, int level,
 						int optname,
-						char __user *optval, 
+						char __user *optval,
 						int __user *optlen);
 extern int			compat_ipv6_setsockopt(struct sock *sk,
 						int level,
@@ -586,7 +596,7 @@ extern int			compat_ipv6_getsockopt(struct sock *sk,
 						char __user *optval,
 						int __user *optlen);
 
-extern int			ip6_datagram_connect(struct sock *sk, 
+extern int			ip6_datagram_connect(struct sock *sk,
 						     struct sockaddr *addr, int addr_len);
 
 extern int 			ipv6_recv_error(struct sock *sk, struct msghdr *msg, int len);
@@ -597,11 +607,11 @@ extern void			ipv6_local_error(struct sock *sk, int err, struct flowi6 *fl6, u32
 extern void			ipv6_local_rxpmtu(struct sock *sk, struct flowi6 *fl6, u32 mtu);
 
 extern int inet6_release(struct socket *sock);
-extern int inet6_bind(struct socket *sock, struct sockaddr *uaddr, 
+extern int inet6_bind(struct socket *sock, struct sockaddr *uaddr,
 		      int addr_len);
 extern int inet6_getname(struct socket *sock, struct sockaddr *uaddr,
 			 int *uaddr_len, int peer);
-extern int inet6_ioctl(struct socket *sock, unsigned int cmd, 
+extern int inet6_ioctl(struct socket *sock, unsigned int cmd,
 		       unsigned long arg);
 
 extern int inet6_hash_connect(struct inet_timewait_death_row *death_row,

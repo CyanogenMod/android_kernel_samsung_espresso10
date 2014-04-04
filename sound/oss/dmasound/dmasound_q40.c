@@ -13,7 +13,6 @@
  *	       [0.3] - put in default hard/soft settings.
  */
 
-
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/slab.h>
@@ -32,9 +31,7 @@
 static int expand_bal;	/* Balance factor for expanding (not volume!) */
 static int expand_data;	/* Data for expanding */
 
-
 /*** Low level stuff *********************************************************/
-
 
 static void *Q40Alloc(unsigned int size, gfp_t flags);
 static void Q40Free(void *, unsigned int);
@@ -52,10 +49,7 @@ static irqreturn_t Q40StereoInterrupt(int irq, void *dummy);
 static irqreturn_t Q40MonoInterrupt(int irq, void *dummy);
 static void Q40Interrupt(void);
 
-
 /*** Mid level stuff *********************************************************/
-
-
 
 /* userCount, frameUsed, frameLeft == byte counts */
 static ssize_t q40_ct_law(const u_char __user *userPtr, size_t userCount,
@@ -77,7 +71,6 @@ static ssize_t q40_ct_law(const u_char __user *userPtr, size_t userCount,
 	*frameUsed += used ;
 	return used;
 }
-
 
 static ssize_t q40_ct_s8(const u_char __user *userPtr, size_t userCount,
 			  u_char frame[], ssize_t *frameUsed,
@@ -111,7 +104,6 @@ static ssize_t q40_ct_u8(const u_char __user *userPtr, size_t userCount,
 	*frameUsed += used;
 	return used;
 }
-
 
 /* a bit too complicated to optimise right now ..*/
 static ssize_t q40_ctx_law(const u_char __user *userPtr, size_t userCount,
@@ -151,7 +143,6 @@ static ssize_t q40_ctx_law(const u_char __user *userPtr, size_t userCount,
 	return utotal;
 }
 
-
 static ssize_t q40_ctx_s8(const u_char __user *userPtr, size_t userCount,
 			   u_char frame[], ssize_t *frameUsed,
 			   ssize_t frameLeft)
@@ -161,7 +152,6 @@ static ssize_t q40_ctx_s8(const u_char __user *userPtr, size_t userCount,
 	int bal = expand_bal;
 	int hSpeed = dmasound.hard.speed, sSpeed = dmasound.soft.speed;
 	int utotal, ftotal;
-
 
 	ftotal = frameLeft;
 	utotal = userCount;
@@ -187,7 +177,6 @@ static ssize_t q40_ctx_s8(const u_char __user *userPtr, size_t userCount,
 	utotal -= userCount;
 	return utotal;
 }
-
 
 static ssize_t q40_ctx_u8(const u_char __user *userPtr, size_t userCount,
 			   u_char frame[], ssize_t *frameUsed,
@@ -235,7 +224,7 @@ static ssize_t q40_ctc_law(const u_char __user *userPtr, size_t userCount,
 	int bal = expand_bal;
 	int hSpeed = dmasound.hard.speed, sSpeed = dmasound.soft.speed;
 	int utotal, ftotal;
- 
+
 	ftotal = frameLeft;
 	utotal = userCount;
 	while (frameLeft) {
@@ -263,7 +252,6 @@ static ssize_t q40_ctc_law(const u_char __user *userPtr, size_t userCount,
 	utotal -= userCount;
 	return utotal;
 }
-
 
 static ssize_t q40_ctc_s8(const u_char __user *userPtr, size_t userCount,
 			   u_char frame[], ssize_t *frameUsed,
@@ -303,7 +291,6 @@ static ssize_t q40_ctc_s8(const u_char __user *userPtr, size_t userCount,
 	return utotal;
 }
 
-
 static ssize_t q40_ctc_u8(const u_char __user *userPtr, size_t userCount,
 			   u_char frame[], ssize_t *frameUsed,
 			   ssize_t frameLeft)
@@ -342,7 +329,6 @@ static ssize_t q40_ctc_u8(const u_char __user *userPtr, size_t userCount,
 	return utotal;
 }
 
-
 static TRANS transQ40Normal = {
 	q40_ct_law, q40_ct_law, q40_ct_s8, q40_ct_u8, NULL, NULL, NULL, NULL
 };
@@ -354,7 +340,6 @@ static TRANS transQ40Expanding = {
 static TRANS transQ40Compressing = {
 	q40_ctc_law, q40_ctc_law, q40_ctc_s8, q40_ctc_u8, NULL, NULL, NULL, NULL
 };
-
 
 /*** Low level stuff *********************************************************/
 
@@ -378,7 +363,6 @@ static int __init Q40IrqInit(void)
 	return(1);
 }
 
-
 #ifdef MODULE
 static void Q40IrqCleanUp(void)
 {
@@ -386,7 +370,6 @@ static void Q40IrqCleanUp(void)
 	free_irq(Q40_IRQ_SAMPLE, Q40Interrupt);
 }
 #endif /* MODULE */
-
 
 static void Q40Silence(void)
 {
@@ -503,7 +486,6 @@ static void Q40Interrupt(void)
 	master_outb(1,SAMPLE_CLEAR_REG);
 }
 
-
 static void Q40Init(void)
 {
 	int i, idx;
@@ -540,7 +522,6 @@ static void Q40Init(void)
 	expand_bal = -dmasound.soft.speed;
 }
 
-
 static int Q40SetFormat(int format)
 {
 	/* Q40 sound supports only 8bit modes */
@@ -572,7 +553,6 @@ static int Q40SetVolume(int volume)
 {
     return 0;
 }
-
 
 /*** Machine definitions *****************************************************/
 
@@ -611,9 +591,7 @@ static MACHINE machQ40 = {
 	.capabilities	= DSP_CAP_BATCH  /* As per SNDCTL_DSP_GETCAPS */
 };
 
-
 /*** Config & Setup **********************************************************/
-
 
 static int __init dmasound_q40_init(void)
 {

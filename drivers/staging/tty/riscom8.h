@@ -4,9 +4,9 @@
  *      Copyright (C) 1994-1996  Dmitry Gorodchanin (pgmdsg@ibi.com)
  *
  *      This code is loosely based on the Linux serial driver, written by
- *      Linus Torvalds, Theodore T'so and others. The RISCom/8 card 
- *      programming info was obtained from various drivers for other OSes 
- *	(FreeBSD, ISC, etc), but no source code from those drivers were 
+ *      Linus Torvalds, Theodore T'so and others. The RISCom/8 card
+ *      programming info was obtained from various drivers for other OSes
+ *	(FreeBSD, ISC, etc), but no source code from those drivers were
  *	directly included in this driver.
  *
  *
@@ -34,7 +34,7 @@
 
 #define RC_NBOARD		4
 /* NOTE: RISCom decoder recognizes 16 addresses... */
-#define RC_NPORT        	8  
+#define RC_NPORT        	8
 #define RC_BOARD(line)		(((line) >> 3) & 0x07)
 #define RC_PORT(line)		((line) & (RC_NPORT - 1))
 
@@ -63,7 +63,7 @@ struct riscom_board {
 
 #define RC_BOARD_PRESENT	0x00000001
 #define RC_BOARD_ACTIVE		0x00000002
-	
+
 struct riscom_port {
 	int			magic;
 	struct			tty_port port;
@@ -81,7 +81,7 @@ struct riscom_port {
 	unsigned char		COR2;
 #ifdef RC_REPORT_OVERRUN
 	unsigned long		overrun;
-#endif	
+#endif
 #ifdef RC_REPORT_FIFO
 	unsigned long		hits[10];
 #endif

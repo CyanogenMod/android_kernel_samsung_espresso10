@@ -96,4 +96,3 @@ module_exit(rz1000_ide_exit);
 MODULE_AUTHOR("Andre Hedrick");
 MODULE_DESCRIPTION("PCI driver module for RZ1000 IDE");
 MODULE_LICENSE("GPL");
-

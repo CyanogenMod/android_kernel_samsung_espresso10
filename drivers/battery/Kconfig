@@ -1,4 +1,3 @@
-
 config BATTERY_SAMSUNG
 	tristate "samsung battery driver"
 	help
@@ -6,7 +5,6 @@ config BATTERY_SAMSUNG
 	 This battery driver integrated all battery-related functions
 	 To see battery-related functions,
 	 refer to sec_charging_common.h
-
 
 # Fuel Gauge
 
@@ -89,7 +87,6 @@ config FUELGAUGE_MAX17050_COULOMB_COUNTING
 	 as coulomb counting (including voltage tracking).
 	 This mode is for target that consumes high current
 	 like tablet.
-
 
 # Charger
 config CHARGER_SAMSUNG

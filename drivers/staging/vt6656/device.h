@@ -145,7 +145,6 @@
 #define ANT_RXA                 2
 #define ANT_RXB                 3
 
-
 #define MAXCHECKHANGCNT         4
 
 //Packet type
@@ -274,7 +273,6 @@ typedef enum __DEVICE_NDIS_STATUS {
 // PMKID Structures
 typedef unsigned char   NDIS_802_11_PMKID_VALUE[16];
 
-
 typedef enum _NDIS_802_11_WEP_STATUS
 {
     Ndis802_11WEPEnabled,
@@ -292,7 +290,6 @@ typedef enum _NDIS_802_11_WEP_STATUS
 } NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS,
   NDIS_802_11_ENCRYPTION_STATUS, *PNDIS_802_11_ENCRYPTION_STATUS;
 
-
 typedef enum _NDIS_802_11_STATUS_TYPE
 {
     Ndis802_11StatusType_Authentication,
@@ -306,7 +303,6 @@ typedef struct _PMKID_CANDIDATE {
     NDIS_802_11_MAC_ADDRESS BSSID;
     unsigned long Flags;
 } PMKID_CANDIDATE, *PPMKID_CANDIDATE;
-
 
 typedef struct _BSSID_INFO
 {
@@ -341,7 +337,6 @@ typedef struct tagSQuietControl {
 
 //--
 
-
 // The receive duplicate detection cache entry
 typedef struct tagSCacheEntry{
     WORD        wFmSequence;
@@ -371,8 +366,6 @@ typedef struct tagSDeFragControlBlock
     BOOL            bInUse;
 } SDeFragControlBlock, *PSDeFragControlBlock;
 
-
-
 //flags for options
 #define     DEVICE_FLAGS_UNPLUG          0x00000001UL
 #define     DEVICE_FLAGS_PREAMBLE_TYPE   0x00000002UL
@@ -399,7 +392,6 @@ typedef struct tagSDeFragControlBlock
 //for device_set_media_duplex
 #define     DEVICE_LINK_CHANGE           0x00000001UL
 
-
 typedef struct __device_opt {
     int         nRxDescs0;    //Number of RX descriptors0
     int         nTxDescs0;    //Number of TX descriptors 0, 1, 2, 3
@@ -413,7 +405,6 @@ typedef struct __device_opt {
     int         bbp_type;
     u32         flags;
 } OPTIONS, *POPTIONS;
-
 
 typedef struct __device_info {
 
@@ -488,10 +479,8 @@ typedef struct __device_info {
     BOOL                        fKillEventPollingThread;
     BOOL                        bEventAvailable;
 
-
   //default config from file by user setting
     DEFAULT_CONFIG    config_file;
-
 
     //
     // Statistic for USB
@@ -511,13 +500,11 @@ typedef struct __device_info {
     unsigned long                       ulIntInContCRCError;
     unsigned long                       ulIntInBytesRead;
 
-
     // Version control
     WORD                        wFirmwareVersion;
     BYTE                        byLocalID;
     BYTE                        byRFType;
     BYTE                        byBBRxConf;
-
 
     BYTE                        byZoneType;
     BOOL                        bZoneRegExist;
@@ -547,7 +534,6 @@ typedef struct __device_info {
     unsigned long                       SendContextsInUse;
     unsigned long                       RcvBuffersInUse;
 
-
     // 802.11 management
     SMgmtObject                 sMgmtObj;
 
@@ -558,7 +544,6 @@ typedef struct __device_info {
     // 802.11 MAC specific
     unsigned int                        uCurrRSSI;
     BYTE                        byCurrSQ;
-
 
     //Antenna Diversity
     BOOL                        bTxRxAntInv;
@@ -616,7 +601,6 @@ typedef struct __device_info {
     BYTE                        byACKRate;
     BYTE                        byTopOFDMBasicRate;
     BYTE                        byTopCCKBasicRate;
-
 
     DWORD                       dwAotoRateTxOkCnt;
     DWORD                       dwAotoRateTxFailCnt;
@@ -732,7 +716,6 @@ typedef struct __device_info {
     SKeyManagement          sKey;
     DWORD                   dwIVCounter;
 
-
     RC4Ext                  SBox;
     BYTE                    abyPRNG[WLAN_WEPMAX_KEYLEN+3];
     BYTE                    byKeyIndex;
@@ -750,12 +733,10 @@ typedef struct __device_info {
     // QoS
     BOOL                    bGrpAckPolicy;
 
-
     BYTE                    byAutoFBCtrl;
 
     BOOL                    bTxMICFail;
     BOOL                    bRxMICFail;
-
 
     // For Update BaseBand VGA Gain Offset
     BOOL                    bUpdateBBVGA;
@@ -767,7 +748,6 @@ typedef struct __device_info {
 
     BYTE                    byBBPreEDRSSI;
     BYTE                    byBBPreEDIndex;
-
 
     BOOL                    bRadioCmd;
     DWORD                   dwDiagRefCount;
@@ -807,7 +787,6 @@ typedef struct __device_info {
     SPMKID                  gsPMKID;
     SPMKIDCandidateEvent    gsPMKIDCandidate;
 
-
     // for 802.11h
     BOOL                    b11hEnable;
 
@@ -844,9 +823,6 @@ typedef struct __device_info {
 
 } DEVICE_INFO, *PSDevice;
 
-
-
-
 #define EnqueueRCB(_Head, _Tail, _RCB)                  \
 {                                                       \
     if (!_Head) {                                       \
@@ -868,14 +844,12 @@ typedef struct __device_info {
     Head = RCB->Next;                                   \
 }
 
-
 #define ADD_ONE_WITH_WRAP_AROUND(uVar, uModulo) {   \
     if ((uVar) >= ((uModulo) - 1))                  \
         (uVar) = 0;                                 \
     else                                            \
         (uVar)++;                                   \
 }
-
 
 #define fMP_RESET_IN_PROGRESS               0x00000001
 #define fMP_DISCONNECTED                    0x00000002

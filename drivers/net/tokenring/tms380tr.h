@@ -1,4 +1,4 @@
-/* 
+/*
  * tms380tr.h: TI TMS380 Token Ring driver for Linux
  *
  * Authors:
@@ -58,8 +58,6 @@ void tms380tr_wait(unsigned long time);
 /* Get the high word of a long.                     */
 #define HIWORD(l)       ((unsigned short)((unsigned long)(l) >> 16))
 
-
-
 /* Token ring adapter I/O addresses for normal mode. */
 
 /*
@@ -117,7 +115,6 @@ void tms380tr_wait(unsigned long time);
 					 * adapter after hardware reset)
 					 */
 
-
 /* ACL commands (high-low) */
 #define ACL_SWHLDA		0x0800  /* Software hold acknowledge. */
 #define ACL_SWDDIR		0x0400  /* Data transfer direction. */
@@ -140,13 +137,12 @@ void tms380tr_wait(unsigned long time);
 					 */
 #define ACL_PEN                 0x0004
 
-#define ACL_NSELOUT0            0x0002 
+#define ACL_NSELOUT0            0x0002
 #define ACL_NSELOUT1            0x0001	/* NSELOUTx have a card-specific
 					 * meaning for setting ring speed.
 					 */
 
 #define PS_DMA_MASK		(ACL_SWHRQ | ACL_PSDMAEN)
-
 
 /* SIFSTS register return codes (high-low) */
 #define STS_SYSTEM_IRQ		0x0080	/* Adapter-to-attached-system
@@ -168,20 +164,19 @@ void tms380tr_wait(unsigned long time);
 					 * be read after init and before open.
 					 */
 
-
 /* Interrupt Codes (only MAC IRQs) */
 #define STS_IRQ_ADAPTER_CHECK	0x0000	/* unrecoverable hardware or
 					 * software error.
-					 */ 
+					 */
 #define STS_IRQ_RING_STATUS	0x0004  /* SSB is updated with ring status. */
 #define STS_IRQ_LLC_STATUS	0x0005	/* Not used in MAC-only microcode */
 #define STS_IRQ_SCB_CLEAR	0x0006	/* SCB clear, following an
 					 * SCB_REQUEST IRQ.
 					 */
 #define STS_IRQ_TIMER		0x0007	/* Not normally used in MAC ucode */
-#define STS_IRQ_COMMAND_STATUS	0x0008	/* SSB is updated with command 
+#define STS_IRQ_COMMAND_STATUS	0x0008	/* SSB is updated with command
 					 * status.
-					 */ 
+					 */
 #define STS_IRQ_RECEIVE_STATUS	0x000A	/* SSB is updated with receive
 					 * status.
 					 */
@@ -190,7 +185,6 @@ void tms380tr_wait(unsigned long time);
 					 */
 #define STS_IRQ_RECEIVE_PENDING	0x000E	/* Not used in MAC-only microcode */
 #define STS_IRQ_MASK		0x000F	/* = STS_ERROR_MASK. */
-
 
 /* TRANSMIT_STATUS completion code: (SSB.Parm[0]) */
 #define COMMAND_COMPLETE	0x0080	/* TRANSMIT command completed
@@ -237,14 +231,13 @@ void tms380tr_wait(unsigned long time);
 					 */
 #define ILLEGAL_FRAME_FORMAT	0x0200	/* Bit 0 or FC field was set to one. */
 
-
 /*
  * Since we need to support some functions even if the adapter is in a
  * CLOSED state, we have a (pseudo-) command queue which holds commands
  * that are outstandig to be executed.
  *
  * Each time a command completes, an interrupt occurs and the next
- * command is executed. The command queue is actually a simple word with 
+ * command is executed. The command queue is actually a simple word with
  * a bit for each outstandig command. Therefore the commands will not be
  * executed in the order they have been queued.
  *
@@ -280,7 +273,7 @@ void tms380tr_wait(unsigned long time);
 #define RECEIVE			0x0600	/* C: receive command. S: completion
 					 * status. (reject: COMMAND_REJECT if
 					 * adapter not opened, RECEIVE already
-					 * issued or address passed in the SCB 
+					 * issued or address passed in the SCB
 					 * not word aligned)
 					 */
 #define CLOSE			0x0700	/* C: close adapter. S: completion.
@@ -307,7 +300,7 @@ void tms380tr_wait(unsigned long time);
 #define MODIFY_OPEN_PARMS	0x0D00	/* C: modify some adapter operational
 					 * parameters. (bit correspondend to
 					 * WRAP_INTERFACE is ignored)
-					 * S: completion. (reject: 
+					 * S: completion. (reject:
 					 * COMMAND_REJECT)
 					 */
 #define RESTORE_OPEN_PARMS	0x0E00	/* C: modify some adapter operational
@@ -334,7 +327,6 @@ void tms380tr_wait(unsigned long time);
 
 #define SPEED_4			4
 #define SPEED_16		16	/* Default transmission speed  */
-
 
 /* Initialization Parameter Block (IPB); word alignment necessary! */
 #define BURST_SIZE	0x0018	/* Default burst size */
@@ -390,7 +382,7 @@ typedef struct {
 					 * up to nine fragments possible)
 					 */
 #define TX_BUF_MIN	20		/* ??? (Stephan: calculation with */
-#define TX_BUF_MAX	40		/* BUFFER_SIZE and MAX_FRAME_SIZE) ??? 
+#define TX_BUF_MAX	40		/* BUFFER_SIZE and MAX_FRAME_SIZE) ???
 					 */
 #define DISABLE_EARLY_TOKEN_RELEASE 	0x1000
 
@@ -432,7 +424,7 @@ typedef struct {
 					 */
 #define COPY_ALL_MAC_FRAMES	0x0400	/* All MAC frames are copied to
 					 * the system. (after OPEN: duplicate
-					 * address test (DAT) MAC frame is 
+					 * address test (DAT) MAC frame is
 					 * first received frame copied to the
 					 * system)
 					 */
@@ -444,7 +436,7 @@ typedef struct {
 					 * of RPLs must contain internal
 					 * BUFFER_SIZE bits for promiscuous mode.
 					 */
-#define ENABLE_FULL_DUPLEX_SELECTION	0x2000 
+#define ENABLE_FULL_DUPLEX_SELECTION	0x2000
  					/* Enable the use of full-duplex
 					 * settings with bits in byte 22 in
 					 * ocpl. (new feature in firmware
@@ -470,7 +462,7 @@ typedef struct {
 #pragma pack(1)
 typedef struct {
 	u_int16_t OPENOptions;
-	u_int8_t  NodeAddr[6];	/* Adapter node address; use ROM 
+	u_int8_t  NodeAddr[6];	/* Adapter node address; use ROM
 				 * address
 				 */
 	u_int32_t GroupAddr;	/* Multicast: high order
@@ -479,7 +471,7 @@ typedef struct {
 	u_int32_t FunctAddr;	/* High order bytes = 0xC000 */
 	__be16 RxListSize;	/* RPL size: 0 (=26), 14, 20 or
 				 * 26 bytes read by the adapter.
-				 * (Depending on the number of 
+				 * (Depending on the number of
 				 * fragments/list)
 				 */
 	__be16 TxListSize;	/* TPL size */
@@ -577,7 +569,6 @@ typedef struct {
 } ERRORTAB;	/* Adapter error counters */
 #pragma pack()
 
-
 /*--------------------- Send and Receive definitions -------------------*/
 #pragma pack(1)
 typedef struct {
@@ -595,7 +586,7 @@ typedef struct {
 #pragma pack()
 
 #define MAX_FRAG_NUMBERS    9	/* Maximal number of fragments possible to use
-				 * in one RPL/TPL. (depending on TI firmware 
+				 * in one RPL/TPL. (depending on TI firmware
 				 * version)
 				 */
 
@@ -625,7 +616,6 @@ typedef struct {
 #define GET_FRAME_STATUS_LOW_AC(Fs)       ((unsigned char)(((Fs) & 0x0C) >> 2))
 #define DIRECTED_FRAME(Context)           (!((Context)->MData[2] & GROUP_BIT))
 
-
 /*--------------------- Send Functions ---------------------------------*/
 /* define TX_CSTAT _REQUEST (R) and _COMPLETE (C) values (high-low) */
 
@@ -635,7 +625,7 @@ typedef struct {
 #define TX_FRAME_COMPLETE	0x0040	/* R: must be reset to zero.
 					 * C: set to one.
 					 */
-#define TX_START_FRAME		0x0020  /* R: start of a frame: 1 
+#define TX_START_FRAME		0x0020  /* R: start of a frame: 1
 					 * C: unchanged.
 					 */
 #define TX_END_FRAME		0x0010  /* R: end of a frame: 1
@@ -694,7 +684,7 @@ struct s_TPL {	/* Transmit Parameter List (align on even word boundaries) */
 					 * as a frame including AC/FC,
 					 * Destination, Source, Routing field
 					 * not including CRC, FS, End Delimiter
-					 * (valid only if START_FRAME bit in 
+					 * (valid only if START_FRAME bit in
 					 * CSTAT nonzero) must not be zero in
 					 * any list; maximum value: (BUFFER_SIZE
 					 * - 8) * TX_BUF_MAX sum of DataCount
@@ -750,7 +740,7 @@ struct s_TPL {	/* Transmit Parameter List (align on even word boundaries) */
 					 * C: unchanged.
 					 */
 #define RX_PASS_CRC		0x0002  /* R: if set, the adapter includes
-					 * the CRC in data passed. (last four 
+					 * the CRC in data passed. (last four
 					 * bytes; valid only if FRAME_START is
 					 * set)
 					 * C: set, if CRC is included in
@@ -770,7 +760,7 @@ struct s_TPL {	/* Transmit Parameter List (align on even word boundaries) */
 					 */
 #define RX_ADDR_MATCH		0x0300  /* R: reserved; must be reset to zero.
 					 * C: address match code mask.
-					 */ 
+					 */
 #define RX_STATUS_MASK		0x00FF  /* Mask for receive status bits. */
 
 #define RX_INTERN_ADDR_MATCH    0x0100  /* C: internally address match. */
@@ -1009,7 +999,7 @@ enum SKB_STAT {
 	SKB_DATA_COPY
 };
 
-/* Receive Parameter List (RPL) The length of the RPLs has to be initialized 
+/* Receive Parameter List (RPL) The length of the RPLs has to be initialized
  * in the OPL. (OPEN parameter list)
  */
 #define RPL_NUM		3
@@ -1034,9 +1024,9 @@ struct s_RPL {	/* Receive Parameter List */
 					 */
 	volatile __be16 FrameSize;	 /* Number of bytes received as a
 					 * frame including AC/FC, Destination,
-					 * Source, Routing field not including 
+					 * Source, Routing field not including
 					 * CRC, FS (Frame Status), End Delimiter
-					 * (valid only if START_FRAME bit in 
+					 * (valid only if START_FRAME bit in
 					 * CSTAT nonzero) must not be zero in
 					 * any list; maximum value: (BUFFER_SIZE
 					 * - 8) * TX_BUF_MAX sum of DataCount
@@ -1067,10 +1057,10 @@ struct s_RPL {	/* Receive Parameter List */
 typedef struct net_local {
 #pragma pack(1)
 	IPB ipb;	/* Initialization Parameter Block. */
-	SCB scb;	/* System Command Block: system to adapter 
+	SCB scb;	/* System Command Block: system to adapter
 			 * communication.
 			 */
-	SSB ssb;	/* System Status Block: adapter to system 
+	SSB ssb;	/* System Status Block: adapter to system
 			 * communication.
 			 */
 	OPB ocpl;	/* Open Options Parameter Block. */
@@ -1109,7 +1099,7 @@ typedef struct net_local {
 	unsigned long LastOpenStatus;
 	unsigned short CurrentRingStatus;
 	unsigned long MaxPacketSize;
-	
+
 	unsigned long StartTime;
 	unsigned long LastSendTime;
 

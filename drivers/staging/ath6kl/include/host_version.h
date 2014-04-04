@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="host_version.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -43,7 +43,7 @@ extern "C" {
 #define ATH_SW_VER_MAJOR      __VER_MAJOR_
 #define ATH_SW_VER_MINOR      __VER_MINOR_
 #define ATH_SW_VER_PATCH      __VER_PATCH_
-#define ATH_SW_VER_BUILD      __BUILD_NUMBER_ 
+#define ATH_SW_VER_BUILD      __BUILD_NUMBER_
 
 #ifdef __cplusplus
 }

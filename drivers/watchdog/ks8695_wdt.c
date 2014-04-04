@@ -40,7 +40,6 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 #endif
 
-
 static unsigned long ks8695wdt_busy;
 static spinlock_t ks8695_lock;
 

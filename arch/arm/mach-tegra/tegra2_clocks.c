@@ -1420,7 +1420,6 @@ static struct clk_ops tegra_clk_shared_bus_ops = {
 	.round_rate = tegra_clk_shared_bus_round_rate,
 };
 
-
 /* Clock definitions */
 static struct clk tegra_clk_32k = {
 	.name = "clk_32k",

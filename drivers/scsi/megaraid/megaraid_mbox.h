@@ -15,15 +15,12 @@
 #ifndef _MEGARAID_H_
 #define _MEGARAID_H_
 
-
 #include "mega_common.h"
 #include "mbox_defs.h"
 #include "megaraid_ioctl.h"
 
-
 #define MEGARAID_VERSION	"2.20.5.1"
 #define MEGARAID_EXT_VERSION	"(Release Date: Thu Nov 16 15:32:35 EST 2006)"
-
 
 /*
  * Define some PCI values here until they are put in the kernel
@@ -90,7 +87,6 @@
 #define PCI_SUBSYS_ID_PERC3_SC				0x0475
 #define PCI_SUBSYS_ID_CERC_ATA100_4CH			0x0511
 
-
 #define MBOX_MAX_SCSI_CMDS	128	// number of cmds reserved for kernel
 #define MBOX_MAX_USER_CMDS	32	// number of cmds for applications
 #define MBOX_DEF_CMD_PER_LUN	64	// default commands per lun
@@ -110,7 +106,6 @@
  * internnaly from the driver.
  */
 #define MBOX_IBUF_SIZE		4096
-
 
 /**
  * mbox_ccb_t - command control block specific to mailbox based controllers
@@ -143,7 +138,6 @@ typedef struct {
 	dma_addr_t		epthru_dma_h;
 	dma_addr_t		buf_dma_h;
 } mbox_ccb_t;
-
 
 /**
  * mraid_device_t - adapter soft state structure for mailbox controllers
@@ -226,7 +220,6 @@ typedef struct {
 
 // Find out if this channel is a RAID or SCSI
 #define IS_RAID_CH(rdev, ch)	(((rdev)->channel_class >> (ch)) & 0x01)
-
 
 #define RDINDOOR(rdev)		readl((rdev)->baseaddr + 0x20)
 #define RDOUTDOOR(rdev)		readl((rdev)->baseaddr + 0x2C)

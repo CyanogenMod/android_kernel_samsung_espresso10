@@ -114,4 +114,3 @@ static void __exit h4_panel_drv_cleanup(void)
 
 module_init(h4_panel_drv_init);
 module_exit(h4_panel_drv_cleanup);
-

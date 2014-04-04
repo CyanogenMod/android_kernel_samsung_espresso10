@@ -1304,7 +1304,6 @@ static void atl2_poll_controller(struct net_device *netdev)
 }
 #endif
 
-
 static const struct net_device_ops atl2_netdev_ops = {
 	.ndo_open		= atl2_open,
 	.ndo_stop		= atl2_close,

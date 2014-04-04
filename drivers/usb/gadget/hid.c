@@ -20,7 +20,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #include <linux/kernel.h>
 #include <linux/platform_device.h>
 #include <linux/list.h>
@@ -49,7 +48,6 @@
 #include "epautoconf.c"
 
 #include "f_hid.c"
-
 
 struct hidg_func_node {
 	struct list_head node;
@@ -99,7 +97,6 @@ static const struct usb_descriptor_header *otg_desc[] = {
 	NULL,
 };
 
-
 /* string IDs are assigned dynamically */
 
 #define STRING_MANUFACTURER_IDX		0
@@ -122,8 +119,6 @@ static struct usb_gadget_strings *dev_strings[] = {
 	&stringtab_dev,
 	NULL,
 };
-
-
 
 /****************************** Configurations ******************************/
 
@@ -177,7 +172,6 @@ static int __init hid_bind(struct usb_composite_dev *cdev)
 		device_desc.bcdDevice = cpu_to_le16(0x0300 | gcnum);
 	else
 		device_desc.bcdDevice = cpu_to_le16(0x0300 | 0x0099);
-
 
 	/* Allocate string descriptor numbers ... note that string
 	 * contents can be overridden by the composite_dev glue.
@@ -247,9 +241,7 @@ static int __devexit hidg_plat_driver_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 /****************************** Some noise ******************************/
-
 
 static struct usb_composite_driver hidg_driver = {
 	.name		= "g_hid",
@@ -265,7 +257,6 @@ static struct platform_driver hidg_plat_driver = {
 		.name	= "hidg",
 	},
 };
-
 
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_AUTHOR("Fabien Chouteau, Peter Korsgaard");

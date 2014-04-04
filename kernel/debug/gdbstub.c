@@ -446,7 +446,6 @@ static struct task_struct *getthread(struct pt_regs *regs, int tid)
 	return find_task_by_pid_ns(tid, &init_pid_ns);
 }
 
-
 /*
  * Remap normal tasks to their real PID,
  * CPU shadow threads are mapped to -CPU - 2

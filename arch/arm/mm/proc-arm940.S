@@ -404,4 +404,3 @@ __arm940_proc_info:
 	.long	0
 	.long	arm940_cache_fns
 	.size	__arm940_proc_info, . - __arm940_proc_info
-

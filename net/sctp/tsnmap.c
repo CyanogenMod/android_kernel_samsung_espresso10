@@ -112,7 +112,6 @@ int sctp_tsnmap_check(const struct sctp_tsnmap *map, __u32 tsn)
 		return 0;
 }
 
-
 /* Mark this TSN as seen.  */
 int sctp_tsnmap_mark(struct sctp_tsnmap *map, __u32 tsn)
 {
@@ -154,7 +153,6 @@ int sctp_tsnmap_mark(struct sctp_tsnmap *map, __u32 tsn)
 
 	return 0;
 }
-
 
 /* Initialize a Gap Ack Block iterator from memory being provided.  */
 SCTP_STATIC void sctp_tsnmap_iter_init(const struct sctp_tsnmap *map,
@@ -247,7 +245,6 @@ static void sctp_tsnmap_update(struct sctp_tsnmap *map)
 {
 	u16 len;
 	unsigned long zero_bit;
-
 
 	len = map->max_tsn_seen - map->cumulative_tsn_ack_point;
 	zero_bit = find_first_zero_bit(map->tsn_map, len);

@@ -27,7 +27,6 @@
 #include <linux/io.h>
 #include <asm/gpio.h>
 
-
 #define SPI_FIFO_SIZE 4
 #define SPI_MAX_DIVIDER 0xff	/* Max. value for SPCR1.SER */
 #define SPI_MIN_DIVIDER 1	/* Min. value for SPCR1.SER */
@@ -68,7 +67,6 @@
 #define TXx9_SPSR_SIDLE		0x0004
 #define TXx9_SPSR_STRDY		0x0002
 #define TXx9_SPSR_SRRDY		0x0001
-
 
 struct txx9spi {
 	struct workqueue_struct	*workqueue;

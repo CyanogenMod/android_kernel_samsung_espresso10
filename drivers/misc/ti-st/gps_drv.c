@@ -83,7 +83,6 @@ enum {
 /* Reg time out defined to 6 seconds */
 #define GPSDRV_REG_TIMEOUT	6000
 
-
 struct gpsdrv_event_hdr {
 	uint8_t opcode;
 	uint16_t plen;
@@ -455,7 +454,6 @@ ssize_t gpsdrv_read(struct file *file, char __user *data, size_t size,
 		return -ETIMEDOUT;
 	}
 
-
 	/* hgps->rx_list not empty skb already present */
 	skb = skb_dequeue(&hgps->rx_list);
 
@@ -536,7 +534,6 @@ ssize_t gpsdrv_write(struct file *file, const char __user *data,
 		GPSDRV_ERR(" Can't write to ST, hgps->st_write null ?");
 		return -EINVAL;
 	}
-
 
 	skb = alloc_skb(size + GPS_CH9_PKT_HDR_SIZE, GFP_ATOMIC);
 	/* Validate Created SKB */

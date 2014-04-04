@@ -5,7 +5,6 @@
 #include <linux/if_arp.h>
 #include <net/neighbour.h>
 
-
 extern struct neigh_table arp_tbl;
 
 extern void	arp_init(void);

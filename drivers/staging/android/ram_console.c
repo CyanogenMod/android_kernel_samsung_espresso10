@@ -271,7 +271,6 @@ static int __init ram_console_init(struct ram_console_buffer *buffer,
 
 	ram_console_par_buffer = buffer->data + ram_console_buffer_size;
 
-
 	/* first consecutive root is 0
 	 * primitive element to generate roots = 1
 	 */
@@ -440,4 +439,3 @@ console_initcall(ram_console_early_init);
 postcore_initcall(ram_console_module_init);
 #endif
 late_initcall(ram_console_late_init);
-

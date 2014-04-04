@@ -78,7 +78,6 @@
 #define		ISI_DTR			0x0100
 #define		ISI_RTS			0x0200
 
-
 #define		ISI_TXOK		0x0001
 
 #endif	/*	ISICOM_H	*/

@@ -101,4 +101,3 @@ struct lcd_sync_arg {
 #define FBIPUT_VSYNC		_IOW('F', 10, int)
 
 #endif  /* ifndef DA8XX_FB_H */
-

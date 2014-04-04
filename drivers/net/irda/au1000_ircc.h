@@ -77,7 +77,6 @@ typedef struct db_dest {
 	dma_addr_t dma_addr;
 } db_dest_t;
 
-
 typedef struct ring_desc {
 	u8 count_0;               /* 7:0  */
 	u8 count_1;               /* 12:8 */
@@ -88,7 +87,6 @@ typedef struct ring_desc {
 	u8 addr_2;                /* 23:16 */
 	u8 addr_3;                /* 31:24 */
 } ring_dest_t;
-
 
 /* Private data for each instance */
 struct au1k_private {
@@ -107,16 +105,16 @@ struct au1k_private {
 	iobuff_t rx_buff;
 
 	struct net_device *netdev;
-	
+
 	struct timeval stamp;
 	struct timeval now;
 	struct qos_info		qos;
 	struct irlap_cb		*irlap;
-	
+
 	u8 open;
 	u32 speed;
 	u32 newspeed;
-	
+
 	u32 intr_work_done; /* number of Rx and Tx pkts processed in the isr */
 	struct timer_list timer;
 

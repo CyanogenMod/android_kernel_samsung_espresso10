@@ -60,7 +60,6 @@ static int trackpoint_toggle_bit(struct ps2dev *ps2dev, unsigned char loc, unsig
 	return 0;
 }
 
-
 /*
  * Trackpoint-specific attributes
  */
@@ -130,7 +129,6 @@ static ssize_t trackpoint_set_bit_attr(struct psmouse *psmouse, void *data,
 
 	return count;
 }
-
 
 #define TRACKPOINT_BIT_ATTR(_name, _command, _mask, _inv)				\
 	static struct trackpoint_attr_data trackpoint_attr_##_name = {		\
@@ -332,4 +330,3 @@ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
 
 	return 0;
 }
-

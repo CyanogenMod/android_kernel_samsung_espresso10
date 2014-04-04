@@ -67,7 +67,6 @@ b43_nphy_get_chantabent_rev2(struct b43_wldev *dev, u8 channel);
 const struct b43_nphy_channeltab_entry_rev3 *
 b43_nphy_get_chantabent_rev3(struct b43_wldev *dev, u16 freq);
 
-
 /* The N-PHY tables. */
 
 #define B43_NTAB_TYPEMASK		0xF0000000

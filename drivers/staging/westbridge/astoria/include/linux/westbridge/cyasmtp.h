@@ -82,7 +82,6 @@
 
 */
 
-
 /* Summary
    This constants defines the maximum number of
    entries in the Block Table used to describe
@@ -296,7 +295,6 @@ typedef void (*cy_as_mtp_function_callback)(
    * CY_AS_ERROR_OUT_OF_MEMORY
    * CY_AS_ERROR_INVALID_RESPONSE
 
-
    See Also
    * CyAsMTPStop
    * CyAsUsbStart
@@ -311,7 +309,6 @@ cy_as_mtp_start(
 	cy_as_function_callback cb,
 	uint32_t client
 	);
-
 
 /*  Summary
 	This function stops the MTP stack.
@@ -335,7 +332,6 @@ cy_as_mtp_start(
    * CY_AS_ERROR_STARTSTOP_PENDING
    * CY_AS_ERROR_OUT_OF_MEMORY
    * CY_AS_ERROR_INVALID_RESPONSE
-
 
 	See Also
 	* CyAsMTPStart

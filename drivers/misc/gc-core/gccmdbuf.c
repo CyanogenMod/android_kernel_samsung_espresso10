@@ -28,7 +28,6 @@
 extern volatile u32 int_data;
 #endif
 
-
 struct cmdbuf {
 	struct mmu2dpage page;
 

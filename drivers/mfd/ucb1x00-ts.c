@@ -36,8 +36,6 @@
 #include <mach/collie.h>
 #include <asm/mach-types.h>
 
-
-
 struct ucb1x00_ts {
 	struct input_dev	*idev;
 	struct ucb1x00		*ucb;
@@ -233,7 +231,6 @@ static int ucb1x00_thread(void *_ts)
 
 		ucb1x00_enable(ts->ucb);
 
-
 		if (ucb1x00_ts_pen_down(ts)) {
 			set_current_state(TASK_INTERRUPTIBLE);
 
@@ -359,7 +356,6 @@ static int ucb1x00_ts_resume(struct ucb1x00_dev *dev)
 #else
 #define ucb1x00_ts_resume NULL
 #endif
-
 
 /*
  * Initialisation.

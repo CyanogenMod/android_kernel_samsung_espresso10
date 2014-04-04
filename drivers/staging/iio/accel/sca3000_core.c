@@ -259,7 +259,6 @@ error_ret:
 }
 #endif /* SCA3000_DEBUG */
 
-
 /**
  * sca3000_show_reg() - sysfs interface to read the chip revision number
  **/
@@ -406,7 +405,6 @@ error_ret:
 
 	return ret;
 }
-
 
 /* Not even vaguely standard attributes so defined here rather than
  * in the relevant IIO core headers
@@ -659,7 +657,6 @@ static IIO_DEV_ATTR_SAMP_FREQ_AVAIL(sca3000_read_av_freq);
 static IIO_DEV_ATTR_SAMP_FREQ(S_IWUSR | S_IRUGO,
 			      sca3000_read_frequency,
 			      sca3000_set_frequency);
-
 
 /**
  * sca3000_read_temp() sysfs interface to get the temperature when available

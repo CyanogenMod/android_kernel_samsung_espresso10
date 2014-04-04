@@ -48,7 +48,6 @@ typedef struct __user_cap_data_struct {
         __u32 inheritable;
 } __user *cap_user_data_t;
 
-
 #define VFS_CAP_REVISION_MASK	0xFF000000
 #define VFS_CAP_REVISION_SHIFT	24
 #define VFS_CAP_FLAGS_MASK	~VFS_CAP_REVISION_MASK
@@ -107,7 +106,6 @@ struct cpu_vfs_cap_data {
 
 #endif
 
-
 /**
  ** POSIX-draft defined capabilities.
  **/
@@ -161,7 +159,6 @@ struct cpu_vfs_cap_data {
 /* Allows forged pids on socket credentials passing. */
 
 #define CAP_SETUID           7
-
 
 /**
  ** Linux-specific capabilities
@@ -358,7 +355,6 @@ struct cpu_vfs_cap_data {
 /* Allow triggering something that will wake the system */
 
 #define CAP_WAKE_ALARM            35
-
 
 #define CAP_LAST_CAP         CAP_WAKE_ALARM
 

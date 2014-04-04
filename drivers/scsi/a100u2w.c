@@ -81,7 +81,6 @@
 
 #include "a100u2w.h"
 
-
 static struct orc_scb *__orc_alloc_scb(struct orc_host * host);
 static void inia100_scb_handler(struct orc_host *host, struct orc_scb *scb);
 
@@ -134,7 +133,6 @@ static u8 default_nvram[64] =
 	0x00,			/* 0x3E: Reserved               */
 	0x00			/* 0x3F: Checksum               */
 };
-
 
 static u8 wait_chip_ready(struct orc_host * host)
 {
@@ -280,7 +278,6 @@ static void orc_exec_scb(struct orc_host * host, struct orc_scb * scb)
 	outb(scb->scbidx, host->base + ORC_PQUEUE);
 }
 
-
 /**
  *	se2_rd_all	-	read SCSI parameters from EEPROM
  *	@host: Host whose EEPROM is being loaded
@@ -351,7 +348,6 @@ static void read_eeprom(struct orc_host * host)
 	}
 }
 
-
 /**
  *	orc_load_firmware	-	initialise firmware
  *	@host: Host to set up
@@ -368,7 +364,6 @@ static u8 orc_load_firmware(struct orc_host * host)
 	u16 bios_addr;
 	u16 i;
 	u8 *data32_ptr, data;
-
 
 	/* Set up the EEPROM for access */
 
@@ -660,7 +655,6 @@ static int orc_device_reset(struct orc_host * host, struct scsi_cmnd *cmd, unsig
  *	is returned if no SCB is free. The caller must already hold
  *	the allocator lock at this point.
  */
-
 
 static struct orc_scb *__orc_alloc_scb(struct orc_host * host)
 {
@@ -1112,7 +1106,6 @@ static int __devinit inia100_probe_one(struct pci_dev *pdev,
 	/* <02> read from base address + 0x50 offset to get the bios value. */
 	bios = inw(port + 0x50);
 
-
 	shost = scsi_host_alloc(&inia100_template, sizeof(struct orc_host));
 	if (!shost)
 		goto out_release_region;
@@ -1212,7 +1205,7 @@ static void __devexit inia100_remove_one(struct pci_dev *pdev)
         release_region(shost->io_port, 256);
 
 	scsi_host_put(shost);
-} 
+}
 
 static struct pci_device_id inia100_pci_tbl[] = {
 	{PCI_VENDOR_ID_INIT, 0x1060, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0},

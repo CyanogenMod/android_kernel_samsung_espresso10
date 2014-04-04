@@ -170,7 +170,6 @@ struct BTableChangesDelta {
 struct BTableChangesDelta *p_BTableChangesDelta;
 #endif
 
-
 #define MARK_BLOCK_AS_BAD(blocknode)      (blocknode |= BAD_BLOCK)
 #define MARK_BLK_AS_DISCARD(blk)  (blk = (blk & ~SPARE_BLOCK) | DISCARD_BLOCK)
 
@@ -352,7 +351,6 @@ static int FTL_Extract_Block_Table_Tag(u8 *buf, u8 **tagarray)
 
 	return tagi;
 }
-
 
 static int FTL_Execute_SPL_Recovery(void)
 {
@@ -829,7 +827,6 @@ int GLOB_FTL_Init(void)
 	return 0;
 }
 
-
 #if CMD_DMA
 #if 0
 static void save_blk_table_changes(u16 idx)
@@ -1268,7 +1265,6 @@ int GLOB_FTL_Flash_Release(void)
 	return GLOB_LLD_Flash_Release();
 }
 
-
 /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 * Function:     GLOB_FTL_Cache_Release
 * Inputs:       none
@@ -1583,8 +1579,6 @@ static u32 find_least_worn_blk_for_l2_cache(void)
 	return least_wear_blk_idx;
 }
 
-
-
 /* Get blocks for Level2 Cache */
 static int get_l2_cache_blks(void)
 {
@@ -1677,7 +1671,7 @@ static int flush_l2_cache(void)
 			IS_BAD_BLOCK(pnd->logical_blk_num) ||
 			IS_DISCARDED_BLOCK(pnd->logical_blk_num)) {
 			nand_dbg_print(NAND_DBG_WARN, "%s, Line %d\n", __FILE__, __LINE__);
-			memset(cache_l2_blk_buf, 0xff, DeviceInfo.wPagesPerBlock * DeviceInfo.wPageDataSize);			
+			memset(cache_l2_blk_buf, 0xff, DeviceInfo.wPagesPerBlock * DeviceInfo.wPageDataSize);
 		} else {
 			nand_dbg_print(NAND_DBG_WARN, "%s, Line %d\n", __FILE__, __LINE__);
 			phy_blk = pbt[pnd->logical_blk_num] & (~BAD_BLOCK);
@@ -1818,7 +1812,7 @@ static int write_back_to_l2_cache(u8 *buf, u64 logical_addr)
 	}
 #endif
 
-	/* 
+	/*
 	 * Update the L2 Cache table.
 	 *
 	 * First seaching in the table to see whether the logical block
@@ -1841,14 +1835,14 @@ static int write_back_to_l2_cache(u8 *buf, u64 logical_addr)
 
 		/* The logical pages to physical pages map array is
 		 * located at the end of struct spectra_l2_cache_list.
-		 */ 
+		 */
 		node_size = sizeof(struct spectra_l2_cache_list) +
 			sizeof(u32) * DeviceInfo.wPagesPerBlock;
 		pnd_new = kmalloc(node_size, GFP_ATOMIC);
 		if (!pnd_new) {
 			printk(KERN_ERR "Failed to kmalloc in %s Line %d\n",
 				__FILE__, __LINE__);
-			/* 
+			/*
 			 * TODO: Need to flush all the L2 cache into NAND ASAP
 			 * since no memory available here
 			 */
@@ -2103,7 +2097,6 @@ static int FTL_Check_Block_Table(int wOldTable)
 
 	return wResult;
 }
-
 
 /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 * Function:     FTL_Write_Block_Table
@@ -3183,7 +3176,6 @@ int GLOB_FTL_Garbage_Collection(void)
 	return wResult;
 }
 
-
 #if CMD_DMA
 static int do_bt_garbage_collection(void)
 {
@@ -3983,7 +3975,6 @@ int GLOB_FTL_Block_Erase(u64 blk_addr)
 	return status;
 }
 
-
 /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 * Function:     FTL_Adjust_Relative_Erase_Count
 * Inputs:       index to block that was just incremented and is at the max
@@ -4302,4 +4293,3 @@ int FTL_Read_Disturbance(u32 blk_addr)
 
 	return wResult;
 }
-

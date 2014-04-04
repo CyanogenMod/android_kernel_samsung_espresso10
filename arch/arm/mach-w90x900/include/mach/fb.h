@@ -16,8 +16,6 @@
 #ifndef __ASM_ARM_FB_H
 #define __ASM_ARM_FB_H
 
-
-
 /* LCD Controller Hardware Desc */
 struct nuc900fb_hw {
 	unsigned int lcd_dccs;

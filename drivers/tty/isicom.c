@@ -1277,7 +1277,6 @@ static void isicom_hangup(struct tty_struct *tty)
 	tty_port_hangup(&port->port);
 }
 
-
 /*
  * Driver init and deinit functions
  */

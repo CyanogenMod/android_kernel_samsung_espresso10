@@ -10,7 +10,6 @@
 #include <linux/mtd/mtd.h>
 #include <linux/mtd/map.h>
 
-
 #define WINDOW_ADDR 0xfe000000
 #define WINDOW_SIZE 0x800000
 

@@ -54,7 +54,6 @@
 				+ RATE_TLV_MAX_SIZE                 \
 				+ WILDCARD_SSID_TLV_MAX_SIZE)
 
-
 union mwifiex_scan_cmd_config_tlv {
 	/* Scan configuration (variable length) */
 	struct mwifiex_scan_cmd_config config;
@@ -1151,7 +1150,6 @@ mwifiex_ret_802_11_scan_get_tlv_ptrs(struct mwifiex_adapter *adapter,
 		if (*tlv_data)
 			break;
 
-
 		tlv_buf_left -= (sizeof(tlv->header) + tlv_len);
 		current_tlv =
 			(struct mwifiex_ie_types_data *) (current_tlv->data +
@@ -1303,7 +1301,6 @@ mwifiex_interpret_bss_desc_with_ie(struct mwifiex_adapter *adapter,
 		bss_entry->bss_mode = NL80211_IFTYPE_ADHOC;
 	else
 		bss_entry->bss_mode = NL80211_IFTYPE_STATION;
-
 
 	/* Process variable IE */
 	while (bytes_left_for_current_beacon >= 2) {
@@ -2305,7 +2302,6 @@ int mwifiex_scan_networks(struct mwifiex_private *priv,
 	if (user_scan_in)
 		keep_previous_scan = user_scan_in->keep_previous_scan;
 
-
 	if (!keep_previous_scan) {
 		memset(adapter->scan_table, 0x00,
 		       sizeof(struct mwifiex_bssdescriptor) * IW_MAX_AP);
@@ -2430,7 +2426,6 @@ int mwifiex_ret_802_11_scan(struct mwifiex_private *priv,
 		scan_rsp = &resp->params.bg_scan_query_resp.scan_resp;
 	else
 		scan_rsp = &resp->params.scan_resp;
-
 
 	if (scan_rsp->number_of_sets > IW_MAX_AP) {
 		dev_err(adapter->dev, "SCAN_RESP: too many AP returned (%d)\n",

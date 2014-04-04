@@ -11,14 +11,12 @@
 #ifndef __HDLC_H
 #define __HDLC_H
 
-
 #define HDLC_MAX_MTU 1500	/* Ethernet 1500 bytes */
 #if 0
 #define HDLC_MAX_MRU (HDLC_MAX_MTU + 10 + 14 + 4) /* for ETH+VLAN over FR */
 #else
 #define HDLC_MAX_MRU 1600 /* as required for FR network */
 #endif
-
 
 #ifdef __KERNEL__
 
@@ -43,7 +41,6 @@ struct hdlc_proto {
 	struct hdlc_proto *next; /* next protocol in the list */
 };
 
-
 /* Pointed to by netdev_priv(dev) */
 typedef struct hdlc_device {
 	/* used by HDLC layer to take control over HDLC device from hw driver*/
@@ -62,8 +59,6 @@ typedef struct hdlc_device {
 	void *priv;
 } hdlc_device;
 
-
-
 /* Exported from hdlc module */
 
 /* Called by hardware driver when a user requests HDLC service */
@@ -72,7 +67,6 @@ int hdlc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd);
 /* Must be used by hardware driver on module startup/exit */
 #define register_hdlc_device(dev)	register_netdev(dev)
 void unregister_hdlc_device(struct net_device *dev);
-
 
 void register_hdlc_protocol(struct hdlc_proto *proto);
 void unregister_hdlc_protocol(struct hdlc_proto *proto);
@@ -97,7 +91,6 @@ static __inline__ void debug_frame(const struct sk_buff *skb)
 	}
 	printk("\n");
 }
-
 
 /* Must be called by hardware driver when HDLC device is being opened */
 int hdlc_open(struct net_device *dev);

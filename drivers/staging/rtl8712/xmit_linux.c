@@ -31,7 +31,6 @@
 #include "osdep_service.h"
 #include "drv_types.h"
 
-
 #include "if_ether.h"
 #include "ip.h"
 #include "rtl871x_byteorder.h"
@@ -76,7 +75,6 @@ sint r8712_endofpktfile(struct pkt_file *pfile)
 	else
 		return false;
 }
-
 
 void r8712_set_qos(struct pkt_file *ppktfile, struct pkt_attrib *pattrib)
 {

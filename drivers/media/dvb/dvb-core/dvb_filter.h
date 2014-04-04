@@ -40,7 +40,6 @@ void dvb_filter_pes2ts_init(struct dvb_filter_pes2ts *p2ts, unsigned short pid,
 int dvb_filter_pes2ts(struct dvb_filter_pes2ts *p2ts, unsigned char *pes,
 		      int len, int payload_start);
 
-
 #define PROG_STREAM_MAP  0xBC
 #define PRIVATE_STREAM1  0xBD
 #define PADDING_STREAM   0xBE
@@ -82,7 +81,6 @@ int dvb_filter_pes2ts(struct dvb_filter_pes2ts *p2ts, unsigned char *pes,
 #define INIT_DISP_HORIZONTAL_SIZE   540
 #define INIT_DISP_VERTICAL_SIZE     576
 
-
 //flags2
 #define PTS_DTS_FLAGS    0xC0
 #define ESCR_FLAG        0x20
@@ -122,7 +120,6 @@ int dvb_filter_pes2ts(struct dvb_filter_pes2ts *p2ts, unsigned char *pes,
 #define LTW_FLAG       0x80
 #define PIECE_RATE     0x40
 #define SEAM_SPLICE    0x20
-
 
 #define MAX_PLENGTH 0xFFFF
 #define MMAX_PLENGTH (256*MAX_PLENGTH)
@@ -241,6 +238,5 @@ struct dvb_audio_info {
 };
 
 int dvb_filter_get_ac3info(u8 *mbuf, int count, struct dvb_audio_info *ai, int pr);
-
 
 #endif

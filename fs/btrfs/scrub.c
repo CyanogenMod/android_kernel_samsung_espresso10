@@ -1054,7 +1054,6 @@ int scrub_enumerate_chunks(struct scrub_dev *sdev, u64 start, u64 end)
 	key.offset = 0ull;
 	key.type = BTRFS_DEV_EXTENT_KEY;
 
-
 	while (1) {
 		ret = btrfs_search_slot(NULL, root, &key, path, 0, 0);
 		if (ret < 0)
@@ -1182,7 +1181,6 @@ static noinline_for_stack void scrub_workers_put(struct btrfs_root *root)
 	WARN_ON(fs_info->scrub_workers_refcnt < 0);
 	mutex_unlock(&fs_info->scrub_lock);
 }
-
 
 int btrfs_scrub_dev(struct btrfs_root *root, u64 devid, u64 start, u64 end,
 		    struct btrfs_scrub_progress *progress, int readonly)

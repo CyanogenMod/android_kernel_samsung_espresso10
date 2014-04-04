@@ -51,6 +51,4 @@ typedef struct _RX_TS_RECORD {
 //	QOS_DL_RECORD		DLRecord;
 } RX_TS_RECORD, *PRX_TS_RECORD;
 
-
 #endif
-

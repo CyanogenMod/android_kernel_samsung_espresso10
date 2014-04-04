@@ -45,7 +45,6 @@
  * necessary.
  */
 
-
 /*** ANI parameter control ***/
 
 /**
@@ -92,7 +91,6 @@ ath5k_ani_set_noise_immunity_level(struct ath5k_hw *ah, int level)
 	ATH5K_DBG_UNLIMIT(ah->ah_sc, ATH5K_DEBUG_ANI, "new level %d", level);
 }
 
-
 /**
  * ath5k_ani_set_spur_immunity_level() - Set spur immunity level
  *
@@ -118,7 +116,6 @@ ath5k_ani_set_spur_immunity_level(struct ath5k_hw *ah, int level)
 	ATH5K_DBG_UNLIMIT(ah->ah_sc, ATH5K_DEBUG_ANI, "new level %d", level);
 }
 
-
 /**
  * ath5k_ani_set_firstep_level() - Set "firstep" level
  *
@@ -140,7 +137,6 @@ ath5k_ani_set_firstep_level(struct ath5k_hw *ah, int level)
 	ah->ah_sc->ani_state.firstep_level = level;
 	ATH5K_DBG_UNLIMIT(ah->ah_sc, ATH5K_DEBUG_ANI, "new level %d", level);
 }
-
 
 /**
  * ath5k_ani_set_ofdm_weak_signal_detection() - Control OFDM weak signal
@@ -183,7 +179,6 @@ ath5k_ani_set_ofdm_weak_signal_detection(struct ath5k_hw *ah, bool on)
 			  on ? "on" : "off");
 }
 
-
 /**
  * ath5k_ani_set_cck_weak_signal_detection() - control CCK weak signal detection
  *
@@ -199,7 +194,6 @@ ath5k_ani_set_cck_weak_signal_detection(struct ath5k_hw *ah, bool on)
 	ATH5K_DBG_UNLIMIT(ah->ah_sc, ATH5K_DEBUG_ANI, "turned %s",
 			  on ? "on" : "off");
 }
-
 
 /*** ANI algorithm ***/
 
@@ -291,7 +285,6 @@ ath5k_ani_raise_immunity(struct ath5k_hw *ah, struct ath5k_ani_state *as,
 	*/
 }
 
-
 /**
  * ath5k_ani_lower_immunity() - Decrease noise immunity
  *
@@ -353,7 +346,6 @@ ath5k_ani_lower_immunity(struct ath5k_hw *ah, struct ath5k_ani_state *as)
 	}
 }
 
-
 /**
  * ath5k_hw_ani_get_listen_time() - Update counters and return listening time
  *
@@ -379,7 +371,6 @@ ath5k_hw_ani_get_listen_time(struct ath5k_hw *ah, struct ath5k_ani_state *as)
 
 	return listen;
 }
-
 
 /**
  * ath5k_ani_save_and_clear_phy_errors() - Clear and save PHY error counters
@@ -430,7 +421,6 @@ ath5k_ani_save_and_clear_phy_errors(struct ath5k_hw *ah,
 	return 1;
 }
 
-
 /**
  * ath5k_ani_period_restart() - Restart ANI period
  *
@@ -448,7 +438,6 @@ ath5k_ani_period_restart(struct ath5k_hw *ah, struct ath5k_ani_state *as)
 	as->cck_errors = 0;
 	as->listen_time = 0;
 }
-
 
 /**
  * ath5k_ani_calibration() - The main ANI calibration function
@@ -509,7 +498,6 @@ ath5k_ani_calibration(struct ath5k_hw *ah)
 	}
 }
 
-
 /*** INTERRUPT HANDLER ***/
 
 /**
@@ -550,7 +538,6 @@ ath5k_ani_mib_intr(struct ath5k_hw *ah)
 		tasklet_schedule(&ah->ah_sc->ani_tasklet);
 }
 
-
 /**
  * ath5k_ani_phy_error_report() - Used by older HW to report PHY errors
  *
@@ -574,7 +561,6 @@ ath5k_ani_phy_error_report(struct ath5k_hw *ah,
 	}
 }
 
-
 /*** INIT ***/
 
 /**
@@ -597,7 +583,6 @@ ath5k_enable_phy_err_counters(struct ath5k_hw *ah)
 	ath5k_hw_reg_write(ah, 0, AR5K_CCK_FIL_CNT);
 }
 
-
 /**
  * ath5k_disable_phy_err_counters() - Disable PHY error counters
  *
@@ -615,7 +600,6 @@ ath5k_disable_phy_err_counters(struct ath5k_hw *ah)
 	ath5k_hw_reg_write(ah, 0, AR5K_OFDM_FIL_CNT);
 	ath5k_hw_reg_write(ah, 0, AR5K_CCK_FIL_CNT);
 }
-
 
 /**
  * ath5k_ani_init() - Initialize ANI
@@ -689,7 +673,6 @@ ath5k_ani_init(struct ath5k_hw *ah, enum ath5k_ani_mode mode)
 
 	ah->ah_sc->ani_state.ani_mode = mode;
 }
-
 
 /*** DEBUG ***/
 

@@ -45,9 +45,7 @@ extern int  drvr_state;
 void        c4_stopwd (ci_t *);
 struct net_device * __init c4_add_dev (hdw_info_t *, int, unsigned long, unsigned long, int, int);
 
-
 struct s_hdw_info hdw_info[MAX_BOARDS];
-
 
 void        __init
 show_two (hdw_info_t * hi, int brdno)
@@ -100,7 +98,6 @@ show_two (hdw_info_t * hi, int brdno)
             (u_int8_t) PCI_FUNC (pdev->devfn), pdev->irq);
 }
 
-
 void        __init
 hdw_sn_get (hdw_info_t * hi, int brdno)
 {
@@ -150,7 +147,6 @@ hdw_sn_get (hdw_info_t * hi, int brdno)
         hi->mfg_info_sts = EEPROM_OK;
 }
 
-
 void        __init
 prep_hdw_info (void)
 {
@@ -196,7 +192,6 @@ cleanup_ioremap (void)
     }
 }
 
-
 void
 cleanup_devs (void)
 {
@@ -219,7 +214,6 @@ cleanup_devs (void)
         OS_kfree (hi->ndev);
     }
 }
-
 
 STATIC int  __init
 c4_hdw_init (struct pci_dev * pdev, int found)
@@ -293,7 +287,6 @@ c4_hdw_init (struct pci_dev * pdev, int found)
 
     return 1;
 }
-
 
 status_t    __init
 c4hw_attach_all (void)

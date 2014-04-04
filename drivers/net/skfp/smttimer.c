@@ -109,7 +109,7 @@ void smt_timer_start(struct s_smc *smc, struct smt_timer *timer, u_long time,
 
 void smt_force_irq(struct s_smc *smc)
 {
-	smt_timer_start(smc,&smc->t.st_fast,32L, EV_TOKEN(EVENT_SMT,SM_FAST)); 
+	smt_timer_start(smc,&smc->t.st_fast,32L, EV_TOKEN(EVENT_SMT,SM_FAST));
 }
 
 void smt_timer_done(struct s_smc *smc)
@@ -153,4 +153,3 @@ static void timer_done(struct s_smc *smc, int restart)
 	if (restart && smc->t.st_queue)
 		hwt_start(smc,smc->t.st_queue->tm_delta) ;
 }
-

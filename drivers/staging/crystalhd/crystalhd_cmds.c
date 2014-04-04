@@ -125,7 +125,6 @@ static enum BC_STATUS bc_cproc_get_version(struct crystalhd_cmd *ctx,
 	return BC_STS_SUCCESS;
 }
 
-
 static enum BC_STATUS bc_cproc_get_hwtype(struct crystalhd_cmd *ctx,
 					struct crystalhd_ioctl_data *idata)
 {

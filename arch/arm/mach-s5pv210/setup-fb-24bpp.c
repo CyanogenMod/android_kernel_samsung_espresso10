@@ -29,7 +29,6 @@ static void s5pv210_fb_cfg_gpios(unsigned int base, unsigned int nr)
 		s5p_gpio_set_drvstr(base, S5P_GPIO_DRVSTR_LV4);
 }
 
-
 void s5pv210_fb_gpio_setup_24bpp(void)
 {
 	s5pv210_fb_cfg_gpios(S5PV210_GPF0(0), 8);

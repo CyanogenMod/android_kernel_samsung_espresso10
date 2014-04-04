@@ -196,7 +196,6 @@ static int xennet_can_sg(struct net_device *dev)
 	return dev->features & NETIF_F_SG;
 }
 
-
 static void rx_refill_timeout(unsigned long data)
 {
 	struct net_device *dev = (struct net_device *)data;
@@ -1854,7 +1853,6 @@ static struct xenbus_device_id netfront_ids[] = {
 	{ "" }
 };
 
-
 static int __devexit xennet_remove(struct xenbus_device *dev)
 {
 	struct netfront_info *info = dev_get_drvdata(&dev->dev);
@@ -1897,7 +1895,6 @@ static int __init netif_init(void)
 	return xenbus_register_frontend(&netfront_driver);
 }
 module_init(netif_init);
-
 
 static void __exit netif_exit(void)
 {

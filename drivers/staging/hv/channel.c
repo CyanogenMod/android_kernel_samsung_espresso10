@@ -136,7 +136,6 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
 	if (!out)
 		return -ENOMEM;
 
-
 	in = (void *)((unsigned long)out + send_ringbuffer_size);
 
 	newchannel->ringbuffer_pages = out;
@@ -157,7 +156,6 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
 		err = ret;
 		goto errorout;
 	}
-
 
 	/* Establish the gpadl for the ring buffer */
 	newchannel->ringbuffer_gpadlhandle = 0;
@@ -217,7 +215,6 @@ int vmbus_open(struct vmbus_channel *newchannel, u32 send_ringbuffer_size,
 		err = -ETIMEDOUT;
 		goto errorout;
 	}
-
 
 	if (openInfo->response.open_result.status)
 		err = openInfo->response.open_result.status;
@@ -485,7 +482,6 @@ int vmbus_establish_gpadl(struct vmbus_channel *channel, void *kbuffer,
 	t = wait_for_completion_timeout(&msginfo->waitevent, HZ);
 	BUG_ON(t == 0);
 
-
 	/* At this point, we received the gpadl created msg */
 	*gpadl_handle = gpadlmsg->gpadl;
 
@@ -566,7 +562,6 @@ void vmbus_close(struct vmbus_channel *channel)
 	 *        function is void */
 	if (!info)
 		return;
-
 
 	msg = (struct vmbus_channel_close_channel *)info->msg;
 	msg->header.msgtype = CHANNELMSG_CLOSECHANNEL;
@@ -754,7 +749,6 @@ int vmbus_sendpacket_multipagebuffer(struct vmbus_channel *channel,
 	packetlen = descsize + bufferlen;
 	packetlen_aligned = ALIGN(packetlen, sizeof(u64));
 
-
 	/* Setup the descriptor */
 	desc.type = VM_PKT_DATA_USING_GPA_DIRECT;
 	desc.flags = VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED;
@@ -868,7 +862,6 @@ int vmbus_recvpacket_raw(struct vmbus_channel *channel, void *buffer,
 		spin_unlock_irqrestore(&channel->inbound_lock, flags);
 		return 0;
 	}
-
 
 	packetlen = desc.len8 << 3;
 	userlen = packetlen - (desc.offset8 << 3);

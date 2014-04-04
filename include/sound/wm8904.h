@@ -51,7 +51,6 @@
 #define WM8904_MICBIAS_SEL_SHIFT                     0  /* MICBIAS_SEL - [2:0] */
 #define WM8904_MICBIAS_SEL_WIDTH                     3  /* MICBIAS_SEL - [2:0] */
 
-
 /*
  * R121 (0x79) - GPIO Control 1
  */

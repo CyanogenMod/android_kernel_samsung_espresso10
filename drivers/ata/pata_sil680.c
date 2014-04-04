@@ -72,7 +72,6 @@ static unsigned long sil680_seldev(struct ata_port *ap, struct ata_device *adev,
 	return base;
 }
 
-
 /**
  *	sil680_cable_detect	-	cable detection
  *	@ap: ATA port
@@ -224,7 +223,6 @@ static bool sil680_sff_irq_check(struct ata_port *ap)
 static struct scsi_host_template sil680_sht = {
 	ATA_BMDMA_SHT(DRV_NAME),
 };
-
 
 static struct ata_port_operations sil680_port_ops = {
 	.inherits		= &ata_bmdma32_port_ops,

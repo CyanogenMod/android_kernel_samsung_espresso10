@@ -24,7 +24,6 @@
 #include <linux/string.h>
 #include <linux/mutex.h>
 
-
 static int pvr2_ctrl_range_check(struct pvr2_ctrl *cptr,int val)
 {
 	if (cptr->info->check_value) {
@@ -48,13 +47,11 @@ static int pvr2_ctrl_range_check(struct pvr2_ctrl *cptr,int val)
 	return 0;
 }
 
-
 /* Set the given control. */
 int pvr2_ctrl_set_value(struct pvr2_ctrl *cptr,int val)
 {
 	return pvr2_ctrl_set_mask_value(cptr,~0,val);
 }
-
 
 /* Set/clear specific bits of the given control. */
 int pvr2_ctrl_set_mask_value(struct pvr2_ctrl *cptr,int mask,int val)
@@ -80,7 +77,6 @@ int pvr2_ctrl_set_mask_value(struct pvr2_ctrl *cptr,int mask,int val)
 	return ret;
 }
 
-
 /* Get the current value of the given control. */
 int pvr2_ctrl_get_value(struct pvr2_ctrl *cptr,int *valptr)
 {
@@ -92,14 +88,12 @@ int pvr2_ctrl_get_value(struct pvr2_ctrl *cptr,int *valptr)
 	return ret;
 }
 
-
 /* Retrieve control's type */
 enum pvr2_ctl_type pvr2_ctrl_get_type(struct pvr2_ctrl *cptr)
 {
 	if (!cptr) return pvr2_ctl_int;
 	return cptr->info->type;
 }
-
 
 /* Retrieve control's maximum value (int type) */
 int pvr2_ctrl_get_max(struct pvr2_ctrl *cptr)
@@ -116,7 +110,6 @@ int pvr2_ctrl_get_max(struct pvr2_ctrl *cptr)
 	return ret;
 }
 
-
 /* Retrieve control's minimum value (int type) */
 int pvr2_ctrl_get_min(struct pvr2_ctrl *cptr)
 {
@@ -131,7 +124,6 @@ int pvr2_ctrl_get_min(struct pvr2_ctrl *cptr)
 	} while(0); LOCK_GIVE(cptr->hdw->big_lock);
 	return ret;
 }
-
 
 /* Retrieve control's default value (any type) */
 int pvr2_ctrl_get_def(struct pvr2_ctrl *cptr, int *valptr)
@@ -148,7 +140,6 @@ int pvr2_ctrl_get_def(struct pvr2_ctrl *cptr, int *valptr)
 	return ret;
 }
 
-
 /* Retrieve control's enumeration count (enum only) */
 int pvr2_ctrl_get_cnt(struct pvr2_ctrl *cptr)
 {
@@ -161,7 +152,6 @@ int pvr2_ctrl_get_cnt(struct pvr2_ctrl *cptr)
 	} while(0); LOCK_GIVE(cptr->hdw->big_lock);
 	return ret;
 }
-
 
 /* Retrieve control's valid mask bits (bit mask only) */
 int pvr2_ctrl_get_mask(struct pvr2_ctrl *cptr)
@@ -176,7 +166,6 @@ int pvr2_ctrl_get_mask(struct pvr2_ctrl *cptr)
 	return ret;
 }
 
-
 /* Retrieve the control's name */
 const char *pvr2_ctrl_get_name(struct pvr2_ctrl *cptr)
 {
@@ -184,14 +173,12 @@ const char *pvr2_ctrl_get_name(struct pvr2_ctrl *cptr)
 	return cptr->info->name;
 }
 
-
 /* Retrieve the control's desc */
 const char *pvr2_ctrl_get_desc(struct pvr2_ctrl *cptr)
 {
 	if (!cptr) return NULL;
 	return cptr->info->desc;
 }
-
 
 /* Retrieve a control enumeration or bit mask value */
 int pvr2_ctrl_get_valname(struct pvr2_ctrl *cptr,int val,
@@ -234,14 +221,12 @@ int pvr2_ctrl_get_valname(struct pvr2_ctrl *cptr,int val,
 	return ret;
 }
 
-
 /* Return V4L ID for this control or zero if none */
 int pvr2_ctrl_get_v4lid(struct pvr2_ctrl *cptr)
 {
 	if (!cptr) return 0;
 	return cptr->info->v4l_id;
 }
-
 
 unsigned int pvr2_ctrl_get_v4lflags(struct pvr2_ctrl *cptr)
 {
@@ -260,14 +245,12 @@ unsigned int pvr2_ctrl_get_v4lflags(struct pvr2_ctrl *cptr)
 	return flags;
 }
 
-
 /* Return true if control is writable */
 int pvr2_ctrl_is_writable(struct pvr2_ctrl *cptr)
 {
 	if (!cptr) return 0;
 	return cptr->info->set_value != NULL;
 }
-
 
 /* Return true if control has custom symbolic representation */
 int pvr2_ctrl_has_custom_symbols(struct pvr2_ctrl *cptr)
@@ -277,7 +260,6 @@ int pvr2_ctrl_has_custom_symbols(struct pvr2_ctrl *cptr)
 	if (!cptr->info->sym_to_val) return 0;
 	return !0;
 }
-
 
 /* Convert a given mask/val to a custom symbolic value */
 int pvr2_ctrl_custom_value_to_sym(struct pvr2_ctrl *cptr,
@@ -290,7 +272,6 @@ int pvr2_ctrl_custom_value_to_sym(struct pvr2_ctrl *cptr,
 	return cptr->info->val_to_sym(cptr,mask,val,buf,maxlen,len);
 }
 
-
 /* Convert a symbolic value to a mask/value pair */
 int pvr2_ctrl_custom_sym_to_value(struct pvr2_ctrl *cptr,
 				  const char *buf,unsigned int len,
@@ -300,7 +281,6 @@ int pvr2_ctrl_custom_sym_to_value(struct pvr2_ctrl *cptr,
 	if (!cptr->info->sym_to_val) return -EINVAL;
 	return cptr->info->sym_to_val(cptr,buf,len,maskptr,valptr);
 }
-
 
 static unsigned int gen_bitmask_string(int msk,int val,int msk_only,
 				       const char **names,
@@ -356,14 +336,12 @@ static unsigned int gen_bitmask_string(int msk,int val,int msk_only,
 	return uc;
 }
 
-
 static const char *boolNames[] = {
 	"false",
 	"true",
 	"no",
 	"yes",
 };
-
 
 static int parse_token(const char *ptr,unsigned int len,
 		       int *valptr,
@@ -398,7 +376,6 @@ static int parse_token(const char *ptr,unsigned int len,
 	return 1;
 }
 
-
 static int parse_mtoken(const char *ptr,unsigned int len,
 			int *valptr,
 			const char **names,int valid_bits)
@@ -426,7 +403,6 @@ static int parse_mtoken(const char *ptr,unsigned int len,
 	if (*p2) return -EINVAL;
 	return 0;
 }
-
 
 static int parse_tlist(const char *ptr,unsigned int len,
 		       int *maskptr,int *valptr,
@@ -485,7 +461,6 @@ static int parse_tlist(const char *ptr,unsigned int len,
 	return ret;
 }
 
-
 /* Convert a symbolic value to a mask/value pair */
 int pvr2_ctrl_sym_to_value(struct pvr2_ctrl *cptr,
 			   const char *ptr,unsigned int len,
@@ -542,7 +517,6 @@ int pvr2_ctrl_sym_to_value(struct pvr2_ctrl *cptr,
 	return ret;
 }
 
-
 /* Convert a given mask/val to a symbolic value */
 int pvr2_ctrl_value_to_sym_internal(struct pvr2_ctrl *cptr,
 				    int mask,int val,
@@ -582,7 +556,6 @@ int pvr2_ctrl_value_to_sym_internal(struct pvr2_ctrl *cptr,
 	return ret;
 }
 
-
 /* Convert a given mask/val to a symbolic value */
 int pvr2_ctrl_value_to_sym(struct pvr2_ctrl *cptr,
 			   int mask,int val,
@@ -596,7 +569,6 @@ int pvr2_ctrl_value_to_sym(struct pvr2_ctrl *cptr,
 	} while(0); LOCK_GIVE(cptr->hdw->big_lock);
 	return ret;
 }
-
 
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:

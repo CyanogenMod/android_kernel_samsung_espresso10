@@ -55,7 +55,6 @@
 
 #define CYPRESS_MAX_REQSIZE	8
 
-
 /* table of devices that work with this driver */
 static const struct usb_device_id cypress_table[] = {
 	{ USB_DEVICE(CYPRESS_VENDOR_ID, CYPRESS_PRODUCT_ID) },
@@ -199,7 +198,6 @@ static ssize_t get_port1_handler(struct device *dev,
 static DEVICE_ATTR(port0, S_IRUGO | S_IWUSR, get_port0_handler, set_port0_handler);
 
 static DEVICE_ATTR(port1, S_IRUGO | S_IWUSR, get_port1_handler, set_port1_handler);
-
 
 static int cypress_probe(struct usb_interface *interface,
 			 const struct usb_device_id *id)

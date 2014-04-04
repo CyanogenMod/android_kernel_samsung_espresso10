@@ -340,7 +340,6 @@ void __init at91rm9200_initialize(unsigned long main_clock)
 		cpu_is_at91rm9200_bga() ? AT91RM9200_BGA : AT91RM9200_PQFP);
 }
 
-
 /* --------------------------------------------------------------------
  *  Interrupt initialization
  * -------------------------------------------------------------------- */

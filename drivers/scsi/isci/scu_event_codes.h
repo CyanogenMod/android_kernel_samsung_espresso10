@@ -311,7 +311,6 @@
 #define scu_get_event_code(event_code) \
 	((event_code) & SCU_EVENT_CODE_MASK)
 
-
 /**
  *
  *
@@ -331,6 +330,5 @@
 	SCU_EVENT_MESSAGE(SCU_EVENT_TYPE_PTX_SCHEDULE_EVENT, 0x02)
 #define SCU_EVENT_SPECIFIC_IT_NEXUS_TIMEOUT \
 	scu_get_event_specifier(SCU_EVENT_IT_NEXUS_TIMEOUT)
-
 
 #endif /* __SCU_EVENT_CODES_HEADER__ */

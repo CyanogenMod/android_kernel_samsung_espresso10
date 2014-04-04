@@ -1,4 +1,4 @@
-/* 
+/*
  * DES & Triple DES EDE Cipher Algorithms.
  */
 
@@ -12,7 +12,6 @@
 #define DES3_EDE_KEY_SIZE	(3 * DES_KEY_SIZE)
 #define DES3_EDE_EXPKEY_WORDS	(3 * DES_EXPKEY_WORDS)
 #define DES3_EDE_BLOCK_SIZE	DES_BLOCK_SIZE
-
 
 extern unsigned long des_ekey(u32 *pe, const u8 *k);
 

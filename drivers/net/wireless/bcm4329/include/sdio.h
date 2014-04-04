@@ -3,13 +3,13 @@
  * Protocol and standard (common) device definitions
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -27,7 +27,6 @@
 
 #ifndef	_SDIO_H
 #define	_SDIO_H
-
 
 /* CCCR structure for function 0 */
 typedef volatile struct {
@@ -240,8 +239,6 @@ typedef volatile struct {
 #define CARDREG_STATUS_BIT_IOCURRENTSTATE0	9
 #define CARDREG_STATUS_BIT_FUN_NUM_ERROR	4
 
-
-
 #define SD_CMD_GO_IDLE_STATE		0	/* mandatory for SDIO */
 #define SD_CMD_SEND_OPCOND		1
 #define SD_CMD_MMC_SET_RCA		3
@@ -334,7 +331,6 @@ typedef volatile struct {
 
 #define SD_RSP_R5_ERRBITS		0xCB
 
-
 /* ------------------------------------------------
  *  SDIO Commands and responses
  *
@@ -394,7 +390,6 @@ typedef volatile struct {
 #define CMD52_FUNCTION_S	28
 #define CMD52_RW_FLAG_M		BITFIELD_MASK(1)  /* Bit  31       - R/W flag */
 #define CMD52_RW_FLAG_S		31
-
 
 #define CMD53_BYTE_BLK_CNT_M	BITFIELD_MASK(9) /* Bits [8:0]     - Byte/Block Count of CMD53 */
 #define CMD53_BYTE_BLK_CNT_S	0
@@ -481,7 +476,6 @@ typedef volatile struct {
 #define RSP1_ADDR_ERR_S		30
 #define RSP1_OUT_OF_RANGE_M	BITFIELD_MASK(1)  /* Bit 31   - Cmd arg was out of range */
 #define RSP1_OUT_OF_RANGE_S	31
-
 
 #define RSP5_DATA_M		BITFIELD_MASK(8)  /* Bits [0:7]   - data */
 #define RSP5_DATA_S		0

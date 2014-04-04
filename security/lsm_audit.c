@@ -182,7 +182,6 @@ int ipv6_skb_to_auditdata(struct sk_buff *skb,
 }
 #endif
 
-
 static inline void print_ipv6_addr(struct audit_buffer *ab,
 				   struct in6_addr *addr, __be16 port,
 				   char *name1, char *name2)

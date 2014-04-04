@@ -27,6 +27,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
+ * This is Modified by Samsung Electronics
+ * Taewan Kim <taewan95.kim@samsung.com>
+ *
  */
 
 #include <linux/module.h>
@@ -36,30 +39,46 @@
 #include <linux/sched.h>
 #include <linux/notifier.h>
 
-static uint32_t lowmem_debug_level = 2;
+#define LMK_COUNT_READ
+
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+#define LOWMEM_DEATHPENDING_DEPTH 3
+#endif
+
+#ifdef LMK_COUNT_READ
+static uint32_t lmk_count = 0;
+#endif
+
+static uint32_t lowmem_debug_level = 1;
+
 static int lowmem_adj[6] = {
 	0,
-	1,
-	6,
+	2,
+	4,
+	9,
 	12,
+	15,
 };
-static int lowmem_adj_size = 4;
+static int lowmem_adj_size = 6;
+
 static size_t lowmem_minfree[6] = {
 	3 * 512,	/* 6MB */
 	2 * 1024,	/* 8MB */
 	4 * 1024,	/* 16MB */
+	8 * 1024,	/* 32MB */
 	16 * 1024,	/* 64MB */
+	32 * 1024,	/* 128MB */
 };
-static int lowmem_minfree_size = 4;
+static int lowmem_minfree_size = 6;
 
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+static struct task_struct *lowmem_deathpending[LOWMEM_DEATHPENDING_DEPTH] = {
+	NULL,
+};
+#else
 static struct task_struct *lowmem_deathpending;
+#endif
 static unsigned long lowmem_deathpending_timeout;
-
-#define lowmem_print(level, x...)			\
-	do {						\
-		if (lowmem_debug_level >= (level))	\
-			printk(x);			\
-	} while (0)
 
 static int
 task_notify_func(struct notifier_block *self, unsigned long val, void *data);
@@ -72,9 +91,18 @@ static int
 task_notify_func(struct notifier_block *self, unsigned long val, void *data)
 {
 	struct task_struct *task = data;
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+	int i = 0;
 
+	for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++)
+		if (task == lowmem_deathpending[i]) {
+			lowmem_deathpending[i] = NULL;
+			break;
+		}
+#else
 	if (task == lowmem_deathpending)
 		lowmem_deathpending = NULL;
+#endif
 
 	return NOTIFY_OK;
 }
@@ -82,15 +110,30 @@ task_notify_func(struct notifier_block *self, unsigned long val, void *data)
 static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 {
 	struct task_struct *p;
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+	struct task_struct *selected[LOWMEM_DEATHPENDING_DEPTH] = {NULL,};
+#else
 	struct task_struct *selected = NULL;
+#endif
 	int rem = 0;
 	int tasksize;
 	int i;
 	int min_adj = OOM_ADJUST_MAX + 1;
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+	int selected_tasksize[LOWMEM_DEATHPENDING_DEPTH] = {0,};
+	int selected_oom_adj[LOWMEM_DEATHPENDING_DEPTH] = {OOM_ADJUST_MAX,};
+	int all_selected_oom = 0;
+#else
 	int selected_tasksize = 0;
 	int selected_oom_adj;
+#endif
 	int array_size = ARRAY_SIZE(lowmem_adj);
+#ifndef CONFIG_CMA
 	int other_free = global_page_state(NR_FREE_PAGES);
+#else
+	int other_free = global_page_state(NR_FREE_PAGES) -
+					global_page_state(NR_FREE_CMA_PAGES);
+#endif
 	int other_file = global_page_state(NR_FILE_PAGES) -
 						global_page_state(NR_SHMEM);
 
@@ -101,9 +144,17 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 	 * this pass.
 	 *
 	 */
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+	for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++) {
+		if (lowmem_deathpending[i] &&
+	    time_before_eq(jiffies, lowmem_deathpending_timeout))
+			return 0;
+	}
+#else
 	if (lowmem_deathpending &&
 	    time_before_eq(jiffies, lowmem_deathpending_timeout))
 		return 0;
+#endif
 
 	if (lowmem_adj_size < array_size)
 		array_size = lowmem_adj_size;
@@ -116,20 +167,20 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 			break;
 		}
 	}
-	if (sc->nr_to_scan > 0)
-		lowmem_print(3, "lowmem_shrink %lu, %x, ofree %d %d, ma %d\n",
-			     sc->nr_to_scan, sc->gfp_mask, other_free, other_file,
-			     min_adj);
 	rem = global_page_state(NR_ACTIVE_ANON) +
 		global_page_state(NR_ACTIVE_FILE) +
 		global_page_state(NR_INACTIVE_ANON) +
 		global_page_state(NR_INACTIVE_FILE);
 	if (sc->nr_to_scan <= 0 || min_adj == OOM_ADJUST_MAX + 1) {
-		lowmem_print(5, "lowmem_shrink %lu, %x, return %d\n",
-			     sc->nr_to_scan, sc->gfp_mask, rem);
 		return rem;
 	}
+
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+	for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++)
+		selected_oom_adj[i] = min_adj;
+#else
 	selected_oom_adj = min_adj;
+#endif
 
 	read_lock(&tasklist_lock);
 	for_each_process(p) {
@@ -153,6 +204,28 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		task_unlock(p);
 		if (tasksize <= 0)
 			continue;
+
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+		for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++) {
+			if (all_selected_oom >= LOWMEM_DEATHPENDING_DEPTH) {
+				if (oom_adj < selected_oom_adj[i])
+					continue;
+				if (oom_adj == selected_oom_adj[i] &&
+					tasksize <= selected_tasksize[i])
+					continue;
+			} else if (selected[i])
+				continue;
+
+			selected[i] = p;
+			selected_tasksize[i] = tasksize;
+			selected_oom_adj[i] = oom_adj;
+
+			if (all_selected_oom < LOWMEM_DEATHPENDING_DEPTH)
+				all_selected_oom++;
+
+			break;
+		}
+#else
 		if (selected) {
 			if (oom_adj < selected_oom_adj)
 				continue;
@@ -163,20 +236,32 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 		selected = p;
 		selected_tasksize = tasksize;
 		selected_oom_adj = oom_adj;
-		lowmem_print(2, "select %d (%s), adj %d, size %d, to kill\n",
-			     p->pid, p->comm, oom_adj, tasksize);
+
+#endif
 	}
+#ifdef CONFIG_ENHANCED_LMK_ROUTINE
+	for (i = 0; i < LOWMEM_DEATHPENDING_DEPTH; i++) {
+		if (selected[i]) {
+			lowmem_deathpending[i] = selected[i];
+			lowmem_deathpending_timeout = jiffies + HZ;
+			force_sig(SIGKILL, selected[i]);
+			rem -= selected_tasksize[i];
+#ifdef LMK_COUNT_READ
+			lmk_count++;
+#endif
+		}
+	}
+#else
 	if (selected) {
-		lowmem_print(1, "send sigkill to %d (%s), adj %d, size %d\n",
-			     selected->pid, selected->comm,
-			     selected_oom_adj, selected_tasksize);
 		lowmem_deathpending = selected;
 		lowmem_deathpending_timeout = jiffies + HZ;
 		force_sig(SIGKILL, selected);
 		rem -= selected_tasksize;
+#ifdef LMK_COUNT_READ
+		lmk_count++;
+#endif
 	}
-	lowmem_print(4, "lowmem_shrink %lu, %x, return %d\n",
-		     sc->nr_to_scan, sc->gfp_mask, rem);
+#endif
 	read_unlock(&tasklist_lock);
 	return rem;
 }
@@ -206,8 +291,11 @@ module_param_array_named(minfree, lowmem_minfree, uint, &lowmem_minfree_size,
 			 S_IRUGO | S_IWUSR);
 module_param_named(debug_level, lowmem_debug_level, uint, S_IRUGO | S_IWUSR);
 
+#ifdef LMK_COUNT_READ
+module_param_named(lmkcount, lmk_count, uint, S_IRUGO);
+#endif
+
 module_init(lowmem_init);
 module_exit(lowmem_exit);
 
 MODULE_LICENSE("GPL");
-

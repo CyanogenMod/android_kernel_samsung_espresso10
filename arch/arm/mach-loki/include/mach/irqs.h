@@ -54,5 +54,4 @@
 
 #define NR_IRQS			(IRQ_LOKI_GPIO_START + NR_GPIO_IRQS)
 
-
 #endif

@@ -111,7 +111,6 @@ EXPORT_SYMBOL(laptop_mode);
 
 /* End of sysctl-exported parameters */
 
-
 /*
  * Scale the writeback cache size proportional to the relative writeout speeds.
  *
@@ -196,7 +195,6 @@ int dirty_ratio_handler(struct ctl_table *table, int write,
 	}
 	return ret;
 }
-
 
 int dirty_bytes_handler(struct ctl_table *table, int write,
 		void __user *buffer, size_t *lenp,

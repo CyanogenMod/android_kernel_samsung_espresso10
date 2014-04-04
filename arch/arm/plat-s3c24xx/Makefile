@@ -9,7 +9,6 @@ obj-m				:=
 obj-n				:=
 obj-				:=
 
-
 # Core files
 
 obj-y				+= cpu.o

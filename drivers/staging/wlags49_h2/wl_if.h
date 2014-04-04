@@ -62,9 +62,6 @@
 #ifndef __WAVELAN2_IF_H__
 #define __WAVELAN2_IF_H__
 
-
-
-
 /*******************************************************************************
  *  constant definitions
  ******************************************************************************/
@@ -78,7 +75,6 @@
 #define MAX_LINE_SIZE   			256
 #define HCF_NUM_IO_PORTS            0x80
 #define TX_TIMEOUT                  ((800 * HZ) / 1000)
-
 
 //#define HCF_MIN_COMM_QUALITY        0
 //#define HCF_MAX_COMM_QUALITY        92
@@ -106,7 +102,6 @@
 #define HCF_MIN_COMM_QUALITY        0
 #define HCF_MAX_COMM_QUALITY        (HCF_MAX_SIGNAL_LEVEL - HCF_MIN_NOISE_LEVEL + 1)
 
-
 /* For encryption (WEP) */
 #define MIN_KEY_SIZE                5       // 40 bits RC4 - WEP
 #define MAX_KEY_SIZE                13      // 104 bits
@@ -129,9 +124,6 @@
 #define CFG_UIL_CONNECT_ACK_CODE    0x5653435A      // VSCZ
 #define WVLAN2_UIL_CONNECTED        (0x01L << 0)
 #define WVLAN2_UIL_BUSY             (0x01L << 1)
-
-
-
 
 /*******************************************************************************
  * driver ioctl interface
@@ -170,7 +162,6 @@ UIL_FUN_PUT_INFO
 #define WL_IOCTL_RTS_BATCH_READ     3
 #define WL_IOCTL_RTS_BATCH_WRITE    4
 
-
 /*******************************************************************************
  * STRUCTURE DEFINITIONS
  ******************************************************************************/
@@ -180,7 +171,6 @@ typedef struct
     __u8    name[HCF_MAX_NAME_LEN];
 }
 wvName_t;
-
 
 typedef struct
 {
@@ -194,7 +184,6 @@ typedef struct
     } u;
 }
 ltv_t;
-
 
 struct uilreq
 {
@@ -214,7 +203,6 @@ struct uilreq
     void       *data;
 };
 
-
 struct rtsreq
 {
     union
@@ -229,6 +217,4 @@ struct rtsreq
     __u16   *data;
 };
 
-
 #endif  // __WAVELAN2_IF_H__
-

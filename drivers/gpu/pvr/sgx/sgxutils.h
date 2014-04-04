@@ -27,7 +27,6 @@
 #include "perproc.h"
 #include "sgxinfokm.h"
 
-
 #define CCB_OFFSET_IS_VALID(type, psCCBMemInfo, psCCBKick, offset) \
 	((sizeof(type) <= (psCCBMemInfo)->uAllocSize) && \
 	((psCCBKick)->offset <= (psCCBMemInfo)->uAllocSize - sizeof(type)))
@@ -35,7 +34,6 @@
 #define	CCB_DATA_FROM_OFFSET(type, psCCBMemInfo, psCCBKick, offset) \
 	((type *)(((IMG_CHAR *)(psCCBMemInfo)->pvLinAddrKM) + \
 		(psCCBKick)->offset))
-
 
 IMG_IMPORT
 IMG_VOID SGXTestActivePowerEvent(PVRSRV_DEVICE_NODE	*psDeviceNode,

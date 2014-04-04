@@ -97,7 +97,6 @@
 #include <linux/of.h>
 #endif
 
-
 /* Board/System/Debug information/definition ---------------- */
 #define PCI_DM9132_ID   0x91321282      /* Davicom DM9132 ID */
 #define PCI_DM9102_ID   0x91021282      /* Davicom DM9102 ID */
@@ -131,7 +130,6 @@
 #define DMFE_WOL_SAMPLEPACKET	0x10000000
 #define DMFE_WOL_MAGICPACKET	0x08000000
 
-
 #define DMFE_10MHF      0
 #define DMFE_100MHF     1
 #define DMFE_10MFD      4
@@ -161,7 +159,6 @@
 	pr_info("Change Speed to %sMhz %s duplex\n" ,	\
 		(mode & 1) ? "100":"10",		\
 		(mode & 4) ? "full":"half");
-
 
 /* CR9 definition: SROM/MII */
 #define CR9_SROM_READ   0x4800
@@ -312,7 +309,6 @@ static u8 HPNA_tx_cmd;		/* Default: Don't issue remote command */
 static u8 HPNA_NoiseFloor;	/* Default: HPNA NoiseFloor */
 static u8 SF_mode;		/* Special Function: 1:VLAN, 2:RX Flow Control
 				   4: TX pause packet */
-
 
 /* function declaration ------------------------------------- */
 static int dmfe_open(struct DEVICE *);
@@ -521,7 +517,6 @@ err_out_free:
 	return err;
 }
 
-
 static void __devexit dmfe_remove_one (struct pci_dev *pdev)
 {
 	struct net_device *dev = pci_get_drvdata(pdev);
@@ -546,7 +541,6 @@ static void __devexit dmfe_remove_one (struct pci_dev *pdev)
 
 	DMFE_DBUG(0, "dmfe_remove_one() exit", 0);
 }
-
 
 /*
  *	Open the interface.
@@ -603,7 +597,6 @@ static int dmfe_open(struct DEVICE *dev)
 
 	return 0;
 }
-
 
 /*	Initialize DM910X board
  *	Reset DM910X board
@@ -671,7 +664,6 @@ static void dmfe_init_dm910x(struct DEVICE *dev)
 	db->cr6_data |= CR6_RXSC | CR6_TXSC | 0x40000;
 	update_cr6(db->cr6_data, ioaddr);
 }
-
 
 /*
  *	Hardware start transmission.
@@ -742,7 +734,6 @@ static netdev_tx_t dmfe_start_xmit(struct sk_buff *skb,
 	return NETDEV_TX_OK;
 }
 
-
 /*
  *	Stop the interface.
  *	The interface is stopped when it is brought.
@@ -783,7 +774,6 @@ static int dmfe_stop(struct DEVICE *dev)
 
 	return 0;
 }
-
 
 /*
  *	DM9102 insterrupt handler
@@ -847,7 +837,6 @@ static irqreturn_t dmfe_interrupt(int irq, void *dev_id)
 	spin_unlock_irqrestore(&db->lock, flags);
 	return IRQ_HANDLED;
 }
-
 
 #ifdef CONFIG_NET_POLL_CONTROLLER
 /*
@@ -933,7 +922,6 @@ static void dmfe_free_tx_pkt(struct DEVICE *dev, struct dmfe_board_info * db)
 		netif_wake_queue(dev);	/* Active upper layer, send again */
 }
 
-
 /*
  *	Calculate the CRC valude of the Rx packet
  *	flag = 	1 : return the reverse CRC (for the received packet CRC)
@@ -946,7 +934,6 @@ static inline u32 cal_CRC(unsigned char * Data, unsigned int Len, u8 flag)
 	if (flag) crc = ~crc;
 	return crc;
 }
-
 
 /*
  *	Receive the come packet and pass to upper layer
@@ -1116,7 +1103,6 @@ static void dmfe_ethtool_get_wol(struct net_device *dev,
 	wolinfo->wolopts = db->wol_mode;
 }
 
-
 static const struct ethtool_ops netdev_ethtool_ops = {
 	.get_drvinfo		= dmfe_ethtool_get_drvinfo,
 	.get_link               = ethtool_op_get_link,
@@ -1158,7 +1144,6 @@ static void dmfe_timer(unsigned long data)
 			return;
 		}
 	}
-
 
 	/* Operating Mode Check */
 	if ( (db->dm910x_chk_mode & 0x1) &&
@@ -1217,7 +1202,6 @@ static void dmfe_timer(unsigned long data)
 		/*0x43 is used instead of 0x3 because bit 6 should represent
 			link status of external PHY */
 		link_ok = (tmp_cr12 & 0x43) ? 1 : 0;
-
 
 	/* If chip reports that link is failed it could be because external
 		PHY link status pin is not connected correctly to chip
@@ -1278,7 +1262,6 @@ static void dmfe_timer(unsigned long data)
 	spin_unlock_irqrestore(&db->lock, flags);
 }
 
-
 /*
  *	Dynamic reset the DM910X board
  *	Stop DM910X board
@@ -1319,7 +1302,6 @@ static void dmfe_dynamic_reset(struct DEVICE *dev)
 	netif_wake_queue(dev);
 }
 
-
 /*
  *	free all allocated rx buffer
  */
@@ -1335,7 +1317,6 @@ static void dmfe_free_rxbuffer(struct dmfe_board_info * db)
 		db->rx_avail_cnt--;
 	}
 }
-
 
 /*
  *	Reuse the SK buffer
@@ -1356,7 +1337,6 @@ static void dmfe_reuse_skb(struct dmfe_board_info *db, struct sk_buff * skb)
 	} else
 		DMFE_DBUG(0, "SK Buffer reuse method error", db->rx_avail_cnt);
 }
-
 
 /*
  *	Initialize transmit/Receive descriptor
@@ -1423,7 +1403,6 @@ static void dmfe_descriptor_init(struct dmfe_board_info *db, unsigned long ioadd
 	allocate_rx_buffer(db);
 }
 
-
 /*
  *	Update CR6 value
  *	Firstly stop DM910X , then written value and start
@@ -1439,7 +1418,6 @@ static void update_cr6(u32 cr6_data, unsigned long ioaddr)
 	outl(cr6_data, ioaddr + DCR6);
 	udelay(5);
 }
-
 
 /*
  *	Send a setup frame for DM9132
@@ -1481,7 +1459,6 @@ static void dm9132_id_table(struct DEVICE *dev)
 	for (i = 0; i < 4; i++, ioaddr += 4)
 		outw(hash_table[i], ioaddr);
 }
-
 
 /*
  *	Send a setup frame for DM9102/DM9102A
@@ -1544,7 +1521,6 @@ static void send_filter_frame(struct DEVICE *dev)
 		db->tx_queue_cnt++;	/* Put in TX queue */
 }
 
-
 /*
  *	Allocate rx buffer,
  *	As possible as allocate maxiumn Rx buffer
@@ -1571,7 +1547,6 @@ static void allocate_rx_buffer(struct dmfe_board_info *db)
 
 	db->rx_insert_ptr = rxptr;
 }
-
 
 /*
  *	Read one word data from the serial ROM
@@ -1612,7 +1587,6 @@ static u16 read_srom_word(long ioaddr, int offset)
 	return srom_data;
 }
 
-
 /*
  *	Auto sense the media mode
  */
@@ -1652,7 +1626,6 @@ static u8 dmfe_sense_speed(struct dmfe_board_info * db)
 
 	return ErrFlag;
 }
-
 
 /*
  *	Set 10/100 phyxcer capability
@@ -1708,7 +1681,6 @@ static void dmfe_set_phyxcer(struct dmfe_board_info *db)
 		phy_write(db->ioaddr, db->phy_addr, 0, 0x1200, db->chip_id);
 }
 
-
 /*
  *	Process op-mode
  *	AUTO mode : PHY controller in Auto-negotiation Mode
@@ -1756,7 +1728,6 @@ static void dmfe_process_mode(struct dmfe_board_info *db)
 		}
 	}
 }
-
 
 /*
  *	Write a word to Phy register
@@ -1807,7 +1778,6 @@ static void phy_write(unsigned long iobase, u8 phy_addr, u8 offset,
 				       phy_data & i ? PHY_DATA_1 : PHY_DATA_0);
 	}
 }
-
 
 /*
  *	Read a word data from phy register
@@ -1862,7 +1832,6 @@ static u16 phy_read(unsigned long iobase, u8 phy_addr, u8 offset, u32 chip_id)
 	return phy_data;
 }
 
-
 /*
  *	Write one bit data to Phy Controller
  */
@@ -1876,7 +1845,6 @@ static void phy_write_1bit(unsigned long ioaddr, u32 phy_data)
 	outl(phy_data, ioaddr);			/* MII Clock Low */
 	udelay(1);
 }
-
 
 /*
  *	Read one bit phy data from PHY controller
@@ -1894,7 +1862,6 @@ static u16 phy_read_1bit(unsigned long ioaddr)
 
 	return phy_data;
 }
-
 
 /*
  *	Parser SROM and media mode
@@ -1993,7 +1960,6 @@ static void dmfe_parse_srom(struct dmfe_board_info * db)
 
 }
 
-
 /*
  *	Init HomeRun DM9801
  */
@@ -2031,7 +1997,6 @@ static void dmfe_program_DM9801(struct dmfe_board_info * db, int HPNA_rev)
 	phy_write(db->ioaddr, db->phy_addr, 25, reg25, db->chip_id);
 }
 
-
 /*
  *	Init HomeRun DM9802
  */
@@ -2046,7 +2011,6 @@ static void dmfe_program_DM9802(struct dmfe_board_info * db)
 	phy_reg = ( phy_reg & 0xff00) + HPNA_NoiseFloor;
 	phy_write(db->ioaddr, db->phy_addr, 25, phy_reg, db->chip_id);
 }
-
 
 /*
  *	Check remote HPNA power and speed status. If not correct,
@@ -2075,8 +2039,6 @@ static void dmfe_HPNA_remote_cmd_chk(struct dmfe_board_info * db)
 		db->HPNA_timer=600;	/* Match, every 10 minutes, check */
 }
 
-
-
 static DEFINE_PCI_DEVICE_TABLE(dmfe_pci_tbl) = {
 	{ 0x1282, 0x9132, PCI_ANY_ID, PCI_ANY_ID, 0, 0, PCI_DM9132_ID },
 	{ 0x1282, 0x9102, PCI_ANY_ID, PCI_ANY_ID, 0, 0, PCI_DM9102_ID },
@@ -2085,7 +2047,6 @@ static DEFINE_PCI_DEVICE_TABLE(dmfe_pci_tbl) = {
 	{ 0, }
 };
 MODULE_DEVICE_TABLE(pci, dmfe_pci_tbl);
-
 
 #ifdef CONFIG_PM
 static int dmfe_suspend(struct pci_dev *pci_dev, pm_message_t state)
@@ -2235,7 +2196,6 @@ static int __init dmfe_init_module(void)
 
 	return 0;
 }
-
 
 /*
  *	Description:

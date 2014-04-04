@@ -61,7 +61,7 @@ typedef enum {
 #define PARPORT_MODE_DMA	(1<<5) /* Hardware can DMA. */
 #define PARPORT_MODE_SAFEININT	(1<<6) /* SPP registers accessible in IRQ. */
 
-/* IEEE1284 modes: 
+/* IEEE1284 modes:
    Nibble mode, byte mode, ECP, ECPRLE and EPP are their own
    'extensibility request' values.  Others are special.
    'Real' ECP modes must have the IEEE1284_MODE_ECP bit set.  */
@@ -144,7 +144,7 @@ struct parport_state {
 		struct ax88796_parport_state ax88796;
 		/* Atari has not state. */
 		struct ip32_parport_state ip32;
-		void *misc; 
+		void *misc;
 	} u;
 };
 
@@ -211,7 +211,7 @@ struct parport_device_info {
 /* Each device can have two callback functions:
  *  1) a preemption function, called by the resource manager to request
  *     that the driver relinquish control of the port.  The driver should
- *     return zero if it agrees to release the port, and nonzero if it 
+ *     return zero if it agrees to release the port, and nonzero if it
  *     refuses.  Do not call parport_release() - the kernel will do this
  *     implicitly.
  *
@@ -382,10 +382,10 @@ extern void parport_put_port (struct parport *);
    - kf is the wake-up function (may be NULL for no callback)
    - irq_func is the interrupt handler (may be NULL for no interrupts)
    - handle is a user pointer that gets handed to callback functions.  */
-struct pardevice *parport_register_device(struct parport *port, 
+struct pardevice *parport_register_device(struct parport *port,
 			  const char *name,
 			  int (*pf)(void *), void (*kf)(void *),
-			  void (*irq_func)(void *), 
+			  void (*irq_func)(void *),
 			  int flags, void *handle);
 
 /* parport_unregister unlinks a device from the chain. */

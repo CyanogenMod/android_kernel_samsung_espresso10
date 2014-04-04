@@ -339,7 +339,6 @@ struct r6_state {
  * HANDLE gets cleared if stripe_handle leave nothing locked.
  */
 
-
 struct disk_info {
 	mdk_rdev_t	*rdev;
 };
@@ -467,7 +466,6 @@ typedef struct raid5_private_data raid5_conf_t;
 #define ALGORITHM_ROTATING_ZERO_RESTART	8 /* DDF PRL=6 RLQ=1 */
 #define ALGORITHM_ROTATING_N_RESTART	9 /* DDF PRL=6 RLQ=2 */
 #define ALGORITHM_ROTATING_N_CONTINUE	10 /*DDF PRL=6 RLQ=3 */
-
 
 /* For every RAID5 algorithm we define a RAID6 algorithm
  * with exactly the same layout for data and parity, and

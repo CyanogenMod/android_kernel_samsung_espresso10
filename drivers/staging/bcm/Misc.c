@@ -27,7 +27,6 @@ static VOID default_wimax_protocol_initialize(PMINI_ADAPTER Adapter)
     return;
 }
 
-
 INT
 InitAdapter(PMINI_ADAPTER psAdapter)
 {
@@ -66,7 +65,6 @@ InitAdapter(PMINI_ADAPTER psAdapter)
 	psAdapter->waiting_to_fw_download_done = TRUE;
     //init_waitqueue_head(&psAdapter->device_wake_queue);
     psAdapter->fw_download_done=FALSE;
-
 
 	default_wimax_protocol_initialize(psAdapter);
 	for (i=0;i<MAX_CNTRL_PKTS;i++)
@@ -107,7 +105,6 @@ InitAdapter(PMINI_ADAPTER psAdapter)
 	}
 
 	BCM_DEBUG_PRINT(psAdapter,DBG_TYPE_INITEXIT, MP_INIT, DBG_LVL_ALL,  "Adapter initialised");
-
 
 	return STATUS_SUCCESS;
 }
@@ -201,7 +198,6 @@ static struct file *open_firmware_file(PMINI_ADAPTER Adapter, const char *path)
 
     return flp;
 }
-
 
 static int BcmFileDownload(PMINI_ADAPTER Adapter,/**< Logical Adapter */
                         const char *path,     /**< path to image file */
@@ -360,8 +356,6 @@ INT CopyBufferToControlPacket(PMINI_ADAPTER Adapter,/**<Logical Adapter*/
 			Adapter->bWakeUpDevice = TRUE;
 			wake_up(&Adapter->process_rx_cntrlpkt);
 
-
-
 			if(LINK_DOWN_REQ_PAYLOAD == pLinkReq->szData[0])
 			{
 				// We should not send DREG message down while in idlemode.
@@ -481,7 +475,6 @@ static VOID SendStatisticsPointerRequest(PMINI_ADAPTER Adapter,
 }
 #endif
 
-
 /******************************************************************
 * Function    - LinkMessage()
 *
@@ -538,7 +531,6 @@ VOID LinkMessage(PMINI_ADAPTER Adapter)
 	return;
 }
 
-
 /**********************************************************************
 * Function    - StatisticsResponse()
 *
@@ -557,7 +549,6 @@ VOID StatisticsResponse(PMINI_ADAPTER Adapter,PVOID pvBuffer)
 	BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL, "%s <====",__FUNCTION__);
 	return;
 }
-
 
 /**********************************************************************
 * Function    - LinkControlResponseMessage()
@@ -676,7 +667,6 @@ void SendIdleModeResponse(PMINI_ADAPTER Adapter)
 
 	lowPwrAbortMsg= down_trylock(&Adapter->LowPowerModeSync);
 
-
 	if((NVMAccess || lowPwrAbortMsg || atomic_read(&Adapter->TotalPacketCount)) &&
 		  (Adapter->ulPowerSaveMode != DEVICE_POWERSAVE_MODE_AS_PROTOCOL_IDLE_MODE)  )
 	{
@@ -708,7 +698,6 @@ void SendIdleModeResponse(PMINI_ADAPTER Adapter)
 			/* Wait for 1 SEC for LED to OFF */
 			iRetVal = wait_event_timeout(Adapter->LEDInfo.idleModeSyncEvent, \
 				Adapter->LEDInfo.bIdle_led_off, msecs_to_jiffies(1000));
-
 
 			/* If Timed Out to Sync IDLE MODE Enter, do IDLE mode Exit and Send NACK to device */
 			if(iRetVal <= 0)
@@ -808,7 +797,6 @@ VOID DumpPackInfo(PMINI_ADAPTER Adapter)
 			BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"\tDumping	Classifier Rule Entry For Index: %X bDestIpValid : %X\n",uiClsfrIndex,pstClassifierEntry->bDestIpValid);
 			BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"\tDumping	Classifier Rule Entry For Index: %X bSrcIpValid : %X\n",uiClsfrIndex,pstClassifierEntry->bSrcIpValid);
 
-
 			for(uiIndex=0;uiIndex<MAX_PORT_RANGE;uiIndex++)
 			{
 				BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"\tusSrcPortRangeLo:%X\n",pstClassifierEntry->usSrcPortRangeLo[uiIndex]);
@@ -853,13 +841,11 @@ VOID DumpPackInfo(PMINI_ADAPTER Adapter)
 			BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"\tucProtocol:0x%X\n",pstClassifierEntry->ucProtocol[0]);
 			BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"\tu8ClassifierRulePriority:%X\n",pstClassifierEntry->u8ClassifierRulePriority);
 
-
 		}
 		BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"ulSFID:%lX\n",Adapter->PackInfo[uiLoopIndex].ulSFID);
 		BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"usVCID_Value:%X\n",Adapter->PackInfo[uiLoopIndex].usVCID_Value);
 		BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"PhsEnabled: 0x%X\n",Adapter->PackInfo[uiLoopIndex].bHeaderSuppressionEnabled);
 		BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"uiThreshold:%X\n",Adapter->PackInfo[uiLoopIndex].uiThreshold);
-
 
 		BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"bValid:%X\n",Adapter->PackInfo[uiLoopIndex].bValid);
 		BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"bActive:%X\n",Adapter->PackInfo[uiLoopIndex].bActive);
@@ -907,10 +893,7 @@ VOID DumpPackInfo(PMINI_ADAPTER Adapter)
 	for(uiLoopIndex = 0 ; uiLoopIndex < MIBS_MAX_HIST_ENTRIES ; uiLoopIndex++)
 			BCM_DEBUG_PRINT (Adapter, DBG_TYPE_OTHERS, DUMP_INFO, DBG_LVL_ALL,"Adapter->aTxPktSizeHist[%x] = %x\n",uiLoopIndex,Adapter->aTxPktSizeHist[uiLoopIndex]);
 
-
-
 	return;
-
 
 }
 
@@ -1204,7 +1187,6 @@ int InitCardAndDownloadFirmware(PMINI_ADAPTER ps_adapter)
 		goto OUT;
 	}
 
-
 	ps_adapter->fw_download_done = TRUE;
 	mdelay(10);
 
@@ -1217,7 +1199,6 @@ OUT:
 
 	return status;
 }
-
 
 static int bcm_parse_target_params(PMINI_ADAPTER Adapter)
 {
@@ -1426,7 +1407,6 @@ OUT:
 }
 #endif
 
-
 static void convertEndian(B_UINT8 rwFlag, PUINT puiBuffer, UINT uiByteCount)
 {
 	UINT uiIndex = 0;
@@ -1464,7 +1444,6 @@ int wrm(PMINI_ADAPTER Adapter, UINT uiAddress, PCHAR pucBuff, size_t sSize)
 	iRetVal = Adapter->interface_wrm(Adapter->pvInterfaceAdapter,
 			uiAddress, pucBuff, sSize);
 
-
 	return iRetVal;
 }
 
@@ -1483,7 +1462,6 @@ int rdmalt (PMINI_ADAPTER Adapter, UINT uiAddress, PUINT pucBuff, size_t size)
 
 	return uiRetVal;
 }
-
 
 int wrmWithLock(PMINI_ADAPTER Adapter, UINT uiAddress, PCHAR pucBuff, size_t sSize)
 {
@@ -1547,7 +1525,6 @@ exit:
 	return uiRetVal;
 }
 
-
 static VOID HandleShutDownModeWakeup(PMINI_ADAPTER Adapter)
 {
 	int clear_abort_pattern = 0,Status = 0;
@@ -1602,7 +1579,6 @@ static VOID SendShutModeResponse(PMINI_ADAPTER Adapter)
 	NVMAccess = down_trylock(&Adapter->NVMRdmWrmLock);
 
 	lowPwrAbortMsg= down_trylock(&Adapter->LowPowerModeSync);
-
 
 	if(NVMAccess || lowPwrAbortMsg|| atomic_read(&Adapter->TotalPacketCount))
 	{
@@ -1674,7 +1650,6 @@ static VOID SendShutModeResponse(PMINI_ADAPTER Adapter)
 		StartInterruptUrb((PS_INTERFACE_ADAPTER)(Adapter->pvInterfaceAdapter));
 	}
 }
-
 
 static void HandleShutDownModeRequest(PMINI_ADAPTER Adapter,PUCHAR pucBuffer)
 {
@@ -1894,8 +1869,3 @@ static void beceem_protocol_reset (PMINI_ADAPTER Adapter)
 		       0, sizeof(S_MIBS_EXTSERVICEFLOW_PARAMETERS));
 	}
 }
-
-
-
-
-

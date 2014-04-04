@@ -167,4 +167,3 @@ int __init tablet_sensor_init(void)
 
 	return 0;
 }
-

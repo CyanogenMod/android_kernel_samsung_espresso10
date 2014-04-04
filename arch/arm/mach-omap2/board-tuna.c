@@ -142,7 +142,6 @@ int omap4_tuna_get_type(void)
 	return tuna_hw_rev & TUNA_TYPE_MASK;
 }
 
-
 static const char *omap4_tuna_hw_rev_name(void) {
 	const char *ret;
 	const char **names;
@@ -263,7 +262,6 @@ static struct platform_device twl6030_madc_device = {
 		.platform_data	= &twl6030_madc,
 	},
 };
-
 
 static struct i2c_gpio_platform_data tuna_gpio_i2c5_pdata = {
 	.sda_pin = GPIO_MHL_SDA_18V,
@@ -689,7 +687,6 @@ static struct regulator_init_data tuna_clk32kaudio = {
 	.num_consumer_supplies  = ARRAY_SIZE(tuna_clk32kaudio_supply),
 	.consumer_supplies      = tuna_clk32kaudio_supply,
 };
-
 
 static struct regulator_init_data tuna_vdd3 = {
 	.constraints = {

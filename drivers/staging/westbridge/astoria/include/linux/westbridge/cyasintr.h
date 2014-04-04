@@ -83,7 +83,6 @@ cy_as_intr_stop(
 	cy_as_device *dev_p
 	);
 
-
 /* Summary
    The interrupt service routine for West Bridge
 

@@ -368,7 +368,6 @@ static int rmi_f1a_read_control_parameters(struct rmi_device *rmi_dev,
 	return 0;
 }
 
-
 static int rmi_f1a_init(struct rmi_function_container *fc)
 {
 	int rc;
@@ -396,7 +395,6 @@ err_free_data:
 
 	return rc;
 }
-
 
 static int rmi_f1a_alloc_memory(struct rmi_function_container *fc)
 {
@@ -470,8 +468,6 @@ static int rmi_f1a_alloc_memory(struct rmi_function_container *fc)
 	return 0;
 }
 
-
-
 static void rmi_f1a_free_memory(struct rmi_function_container *fc)
 {
 	struct f1a_data *f1a = fc->data;
@@ -487,7 +483,6 @@ static void rmi_f1a_free_memory(struct rmi_function_container *fc)
 		fc->data = NULL;
 	}
 }
-
 
 static int rmi_f1a_initialize(struct rmi_function_container *fc)
 {
@@ -530,8 +525,6 @@ static int rmi_f1a_initialize(struct rmi_function_container *fc)
 
 	return 0;
 }
-
-
 
 static int rmi_f1a_register_device(struct rmi_function_container *fc)
 {
@@ -576,7 +569,6 @@ error_free_device:
 
 	return rc;
 }
-
 
 static int rmi_f1a_create_sysfs(struct rmi_function_container *fc)
 {
@@ -636,8 +628,6 @@ err_remove_sysfs:
 	return rc;
 
 }
-
-
 
 static int rmi_f1a_config(struct rmi_function_container *fc)
 {
@@ -743,13 +733,11 @@ static int rmi_f1a_config(struct rmi_function_container *fc)
 	return 0;
 }
 
-
 static int rmi_f1a_reset(struct rmi_function_container *fc)
 {
 	/* we do nnothing here */
 	return 0;
 }
-
 
 static void rmi_f1a_remove(struct rmi_function_container *fc)
 {
@@ -1224,7 +1212,6 @@ static ssize_t rmi_f1a_electrode_map_show(struct device *dev,
 			 __func__);
 	return total_len;
 
-
 }
 
 static ssize_t rmi_f1a_electrode_map_store(struct device *dev,
@@ -1344,7 +1331,6 @@ static ssize_t rmi_f1a_threshold_button_show(struct device *dev,
 			 __func__);
 	return total_len;
 
-
 }
 
 static ssize_t rmi_f1a_threshold_button_store(struct device *dev,
@@ -1418,7 +1404,6 @@ static ssize_t rmi_f1a_threshold_button_store(struct device *dev,
 	kfree(new_value);
 	return count;
 }
-
 
 static ssize_t rmi_f1a_button_release_threshold_show(struct device *dev,
 					 struct device_attribute *attr,
@@ -1586,7 +1571,6 @@ static ssize_t rmi_f1a_filter_strength_store(struct device *dev,
 
 	return count;
 }
-
 
 static ssize_t rmi_f1a_button_count_show(struct device *dev,
 					struct device_attribute *attr,

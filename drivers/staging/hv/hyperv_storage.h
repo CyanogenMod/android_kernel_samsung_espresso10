@@ -25,11 +25,9 @@
 #ifndef _HYPERV_STORAGE_H
 #define _HYPERV_STORAGE_H
 
-
 /* vstorage.w revision number.  This is used in the case of a version match, */
 /* to alert the user that structure sizes may be mismatched even though the */
 /* protocol versions match. */
-
 
 #define REVISION_STRING(REVISION_) #REVISION_
 #define FILL_VMSTOR_REVISION(RESULT_LVALUE_)				\
@@ -59,9 +57,6 @@
 /* V1 RC > 2008/1/31          2.0 */
 #define VMSTOR_PROTOCOL_VERSION_CURRENT VMSTOR_PROTOCOL_VERSION(2, 0)
 
-
-
-
 /*  This will get replaced with the max transfer length that is possible on */
 /*  the host adapter. */
 /*  The max transfer length will be published when we offer a vmbus channel. */
@@ -69,7 +64,6 @@
 #define DEFAULT_PACKET_SIZE (sizeof(struct vmdata_gpa_direct) +	\
 			sizeof(struct vstor_packet) +		\
 			sizesizeof(u64) * (MAX_TRANSFER_LENGTH / PAGE_SIZE)))
-
 
 /*  Packet structure describing virtual storage requests. */
 enum vstor_packet_operation {
@@ -122,7 +116,6 @@ struct vmscsi_request {
 		unsigned char reserved_array[MAX_DATA_BUF_LEN_WITH_PADDING];
 	};
 } __attribute((packed));
-
 
 /*
  * This structure is sent during the intialization phase to get the different
@@ -197,7 +190,6 @@ struct vstor_packet {
 /*  This is the set of flags that the vsc can set in any packets it sends */
 #define VSC_LEGAL_FLAGS		(REQUEST_COMPLETION_FLAG)
 
-
 #include <linux/kernel.h>
 #include <linux/wait.h>
 #include "hyperv_storage.h"
@@ -229,7 +221,6 @@ enum storvsc_request_type {
 	UNKNOWN_TYPE,
 };
 
-
 struct hv_storvsc_request {
 	struct hv_storvsc_request *request;
 	struct hv_device *device;
@@ -244,7 +235,6 @@ struct hv_storvsc_request {
 
 	struct vstor_packet vstor_packet;
 };
-
 
 struct storvsc_device_info {
 	u32 ring_buffer_size;
@@ -287,7 +277,6 @@ struct storvsc_device {
 	struct hv_storvsc_request reset_request;
 };
 
-
 /* Get the stordevice object iff exists and its refcount > 1 */
 static inline struct storvsc_device *get_stor_device(struct hv_device *device)
 {
@@ -301,7 +290,6 @@ static inline struct storvsc_device *get_stor_device(struct hv_device *device)
 
 	return stor_device;
 }
-
 
 static inline void put_stor_device(struct hv_device *device)
 {

@@ -145,7 +145,6 @@ int private_ioctl(PSDevice pDevice, struct ifreq *rq) {
           ///////read zonetype
 	  BYTE                       zonetype=0;
 
-
            if(zonetype == 0x00)  { //USA
              sZoneTypeCmd.ZoneType = ZoneType_USA;
            }
@@ -456,7 +455,6 @@ int private_ioctl(PSDevice pDevice, struct ifreq *rq) {
 
         break;
 
-
     case WLAN_CMD_SET_HOST_WEP:
 
         DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "WLAN_CMD_SET_HOST_WEP\n");
@@ -518,7 +516,6 @@ int private_ioctl(PSDevice pDevice, struct ifreq *rq) {
 			result = -EFAULT;
 			break;
 	    }
-
 
 	    if (sStartAPCmd.wBBPType == PHY80211g) {
             pMgmt->byAPBBType = PHY_TYPE_11G;
@@ -670,7 +667,6 @@ int private_ioctl(PSDevice pDevice, struct ifreq *rq) {
       pMgmt->Cisco_cckm =1;
     else
     pMgmt->Cisco_cckm =0;
-
 
 if(wpa_Result.authenticated==TRUE) {
    {

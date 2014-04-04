@@ -264,7 +264,6 @@
 /* 38 on 5210 but shouldn't matter */
 #define	AR5K_AGC_SETTLING_TURBO			37
 
-
 /* GENERIC CHIPSET DEFINITIONS */
 
 /* MAC Chips */
@@ -361,7 +360,7 @@ struct ath5k_srev_name {
 /*
  * Some of this information is based on Documentation from:
  *
- * http://madwifi-project.org/wiki/ChipsetFeatures/SuperAG 
+ * http://madwifi-project.org/wiki/ChipsetFeatures/SuperAG
  *
  * Modulation for Atheros' eXtended Range - range enhancing extension that is
  * supposed to double the distance an Atheros client device can keep a
@@ -591,7 +590,6 @@ enum ath5k_dmasize {
 	AR5K_DMASIZE_512B
 };
 
-
 /****************\
   RX DEFINITIONS
 \****************/
@@ -619,7 +617,6 @@ struct ath5k_rx_status {
 #define AR5K_RXKEYIX_INVALID	((u8) - 1)
 #define AR5K_TXKEYIX_INVALID	((u32) - 1)
 
-
 /**************************\
  BEACON TIMERS DEFINITIONS
 \**************************/
@@ -627,7 +624,6 @@ struct ath5k_rx_status {
 #define AR5K_BEACON_PERIOD	0x0000ffff
 #define AR5K_BEACON_ENA		0x00800000 /*enable beacon xmit*/
 #define AR5K_BEACON_RESET_TSF	0x01000000 /*force a TSF reset*/
-
 
 /*
  * TSF to TU conversion:
@@ -637,7 +633,6 @@ struct ath5k_rx_status {
  * time equal to 1024 usec", so it's roughly milliseconds (usec / 1024).
  */
 #define TSF_TO_TU(_tsf) (u32)((_tsf) >> 10)
-
 
 /*******************************\
   GAIN OPTIMIZATION DEFINITIONS
@@ -703,7 +698,6 @@ struct ath5k_athchan_2ghz {
 	u32	a2_flags;
 	u16	a2_athchan;
 };
-
 
 /******************\
   RATE DEFINITIONS
@@ -973,7 +967,6 @@ enum ath5k_capability_type {
 	AR5K_CAP_RFSILENT		= 20,	/* Supports RFsilent */
 };
 
-
 /* XXX: we *may* move cap_range stuff to struct wiphy */
 struct ath5k_capabilities {
 	/*
@@ -1096,7 +1089,6 @@ struct ath5k_hw {
 	struct ath5k_gain	ah_gain;
 	u8			ah_offset[AR5K_MAX_RF_BANKS];
 
-
 	struct {
 		/* Temporary tables used for interpolation */
 		u8		tmpL[AR5K_EEPROM_N_PD_GAINS]
@@ -1206,7 +1198,6 @@ void ath5k_led_enable(struct ath5k_softc *sc);
 void ath5k_led_off(struct ath5k_softc *sc);
 void ath5k_unregister_leds(struct ath5k_softc *sc);
 
-
 /* Reset Functions */
 int ath5k_hw_nic_wakeup(struct ath5k_hw *ah, int flags, bool initial);
 int ath5k_hw_on_hold(struct ath5k_hw *ah);
@@ -1216,12 +1207,10 @@ int ath5k_hw_register_timeout(struct ath5k_hw *ah, u32 reg, u32 flag, u32 val,
 			      bool is_set);
 /* Power management functions */
 
-
 /* Clock rate related functions */
 unsigned int ath5k_hw_htoclock(struct ath5k_hw *ah, unsigned int usec);
 unsigned int ath5k_hw_clocktoh(struct ath5k_hw *ah, unsigned int clock);
 void ath5k_hw_set_clockrate(struct ath5k_hw *ah);
-
 
 /* DMA Related Functions */
 void ath5k_hw_start_rx_dma(struct ath5k_hw *ah);
@@ -1245,7 +1234,6 @@ int ath5k_hw_dma_stop(struct ath5k_hw *ah);
 /* EEPROM access functions */
 int ath5k_eeprom_init(struct ath5k_hw *ah);
 void ath5k_eeprom_detach(struct ath5k_hw *ah);
-
 
 /* Protocol Control Unit Functions */
 /* Helpers */
@@ -1300,7 +1288,6 @@ int ath5k_hw_setup_mrr_tx_desc(struct ath5k_hw *ah, struct ath5k_desc *desc,
 	unsigned int tx_rate1, u_int tx_tries1, u_int tx_rate2,
 	u_int tx_tries2, unsigned int tx_rate3, u_int tx_tries3);
 
-
 /* GPIO Functions */
 void ath5k_hw_set_ledstate(struct ath5k_hw *ah, unsigned int state);
 int ath5k_hw_set_gpio_input(struct ath5k_hw *ah, u32 gpio);
@@ -1310,11 +1297,9 @@ int ath5k_hw_set_gpio(struct ath5k_hw *ah, u32 gpio, u32 val);
 void ath5k_hw_set_gpio_intr(struct ath5k_hw *ah, unsigned int gpio,
 			    u32 interrupt_level);
 
-
 /* RFkill Functions */
 void ath5k_rfkill_hw_start(struct ath5k_hw *ah);
 void ath5k_rfkill_hw_stop(struct ath5k_hw *ah);
-
 
 /* Misc functions TODO: Cleanup */
 int ath5k_hw_set_capabilities(struct ath5k_hw *ah);
@@ -1324,10 +1309,8 @@ int ath5k_hw_get_capability(struct ath5k_hw *ah,
 int ath5k_hw_enable_pspoll(struct ath5k_hw *ah, u8 *bssid, u16 assoc_id);
 int ath5k_hw_disable_pspoll(struct ath5k_hw *ah);
 
-
 /* Initial register settings functions */
 int ath5k_hw_write_initvals(struct ath5k_hw *ah, u8 mode, bool change_channel);
-
 
 /* PHY functions */
 /* Misc PHY functions */

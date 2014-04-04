@@ -40,8 +40,6 @@ ath5k_ahb_eeprom_read(struct ath_common *common, u32 off, u16 *data)
 	struct ar231x_board_config *bcfg = pdev->dev.platform_data;
 	u16 *eeprom, *eeprom_end;
 
-
-
 	bcfg = pdev->dev.platform_data;
 	eeprom = (u16 *) bcfg->radio;
 	eeprom_end = ((void *) bcfg->config) + BOARD_CONFIG_BUFSZ;

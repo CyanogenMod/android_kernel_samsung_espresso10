@@ -228,7 +228,6 @@ ltq_wdt_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 static struct platform_driver ltq_wdt_driver = {
 	.remove = __devexit_p(ltq_wdt_remove),
 	.driver = {

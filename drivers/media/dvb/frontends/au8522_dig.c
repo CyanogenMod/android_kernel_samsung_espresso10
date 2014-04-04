@@ -924,7 +924,6 @@ void au8522_release_state(struct au8522_state *state)
 	mutex_unlock(&au8522_list_mutex);
 }
 
-
 static void au8522_release(struct dvb_frontend *fe)
 {
 	struct au8522_state *state = fe->demodulator_priv;

@@ -250,7 +250,6 @@ struct iwl_channel_info {
 #define IEEE80211_HLEN                  (IEEE80211_4ADDR_LEN)
 #define IEEE80211_FRAME_LEN             (IEEE80211_DATA_LEN + IEEE80211_HLEN)
 
-
 #define SEQ_TO_SN(seq) (((seq) & IEEE80211_SCTL_SEQ) >> 4)
 #define SN_TO_SEQ(ssn) (((ssn) << 4) & IEEE80211_SCTL_SEQ)
 #define MAX_SN ((IEEE80211_SCTL_SEQ) >> 4)
@@ -377,7 +376,6 @@ struct iwl_ht_agg {
 	u8 state;
 	u8 tx_fifo;
 };
-
 
 struct iwl_tid_data {
 	u16 seq_number; /* agn only */
@@ -623,10 +621,8 @@ struct iwl_sensitivity_ranges {
 	u16 nrg_th_cca;
 };
 
-
 #define KELVIN_TO_CELSIUS(x) ((x)-273)
 #define CELSIUS_TO_KELVIN(x) ((x)+273)
-
 
 /**
  * struct iwl_hw_params
@@ -678,7 +674,6 @@ struct iwl_hw_params {
 	const struct iwl_sensitivity_ranges *sens;
 };
 
-
 /******************************************************************************
  *
  * Functions implemented in core module which are forward declared here
@@ -704,12 +699,10 @@ static inline int iwl_queue_used(const struct iwl_queue *q, int i)
 		!(i < q->read_ptr && i >= q->write_ptr);
 }
 
-
 static inline u8 get_cmd_index(struct iwl_queue *q, u32 index)
 {
 	return index & (q->n_window - 1);
 }
-
 
 struct iwl_dma_ptr {
 	dma_addr_t dma;
@@ -774,7 +767,6 @@ enum iwlagn_chain_noise_state {
 	IWL_CHAIN_NOISE_CALIBRATED,
 	IWL_CHAIN_NOISE_DONE,
 };
-
 
 /*
  * enum iwl_calib
@@ -1047,7 +1039,6 @@ struct iwl_event_log {
 /* Firmware reload counter and Timestamp */
 #define IWL_MIN_RELOAD_DURATION		1000 /* 1000 ms */
 #define IWL_MAX_CONTINUE_RELOAD_CNT	4
-
 
 enum iwl_reset {
 	IWL_RF_RESET = 0,
@@ -1477,7 +1468,6 @@ struct iwl_priv {
 	s8 tx_power_lmt_in_half_dbm; /* max tx power in half-dBm format */
 	s8 tx_power_next;
 
-
 #ifdef CONFIG_IWLWIFI_DEBUG
 	/* debugging info */
 	u32 debug_level; /* per device debugging will override global
@@ -1545,7 +1535,6 @@ static inline u32 iwl_get_debug_level(struct iwl_priv *priv)
 	return iwl_debug_level;
 }
 #endif
-
 
 static inline struct ieee80211_hdr *iwl_tx_queue_get_hdr(struct iwl_priv *priv,
 							 int txq_id, int idx)

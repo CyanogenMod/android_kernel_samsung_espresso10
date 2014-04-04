@@ -172,7 +172,6 @@ struct dlm_lockstatus {
 #define LKM_RECOVERY     0x80000000  /* extension: flag for recovery lock
 					used to avoid recovery rwsem */
 
-
 typedef void (dlm_astlockfunc_t)(void *);
 typedef void (dlm_bastlockfunc_t)(void *, int);
 typedef void (dlm_astunlockfunc_t)(void *, enum dlm_status);

@@ -86,7 +86,7 @@ struct htb_class {
 	unsigned int children;
 	struct htb_class *parent;	/* parent class */
 
-	int prio;		/* these two are used only by leaves... */
+	u32 prio;		/* these two are used only by leaves... */
 	int quantum;		/* but stored for parent-to-leaf return */
 
 	union {
@@ -337,7 +337,6 @@ static void htb_safe_rb_erase(struct rb_node *rb, struct rb_root *root)
 	}
 }
 
-
 /**
  * htb_remove_class_from_row - removes class from its row
  *
@@ -455,7 +454,6 @@ static inline long htb_hiwater(const struct htb_class *cl)
 	else
 		return 0;
 }
-
 
 /**
  * htb_class_mode - computes and returns current class mode
@@ -876,7 +874,7 @@ ok:
 	q->now = psched_get_time();
 	start_at = jiffies;
 
-	next_event = q->now + 5 * PSCHED_TICKS_PER_SEC;
+	next_event = q->now + 5LLU * PSCHED_TICKS_PER_SEC;
 
 	for (level = 0; level < TC_HTB_MAXDEPTH; level++) {
 		/* common case optimization - skip event handler quickly */

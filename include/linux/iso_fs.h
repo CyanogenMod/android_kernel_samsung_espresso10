@@ -98,7 +98,6 @@ struct iso_supplementary_descriptor {
 	char unused5			[ISODCL (1396, 2048)];
 };
 
-
 #define HS_STANDARD_ID "CDROM"
 
 struct  hs_volume_descriptor {
@@ -108,7 +107,6 @@ struct  hs_volume_descriptor {
 	char version			[ISODCL ( 15,  15)]; /* 711 */
 	char data[ISODCL(16,2048)];
 };
-
 
 struct hs_primary_descriptor {
 	char foo			[ISODCL (  1,   8)]; /* 733 */

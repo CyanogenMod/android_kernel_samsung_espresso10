@@ -110,7 +110,7 @@ static int sysvipc_sem_proc_show(struct seq_file *s, void *it);
  *	sem_array.sem_pending{,last},
  *	sem_array.sem_undo: sem_lock() for read/write
  *	sem_undo.proc_next: only "current" is allowed to read/write that field.
- *	
+ *
  */
 
 #define sc_semmsl	sem_ctls[0]
@@ -291,7 +291,6 @@ static int newary(struct ipc_namespace *ns, struct ipc_params *params)
 	return sma->sem_perm.id;
 }
 
-
 /*
  * Called with sem_ids.rw_mutex and ipcp locked.
  */
@@ -356,7 +355,7 @@ static int try_atomic_semop (struct sem_array * sma, struct sembuf * sops,
 		curr = sma->sem_base + sop->sem_num;
 		sem_op = sop->sem_op;
 		result = curr->semval;
-  
+
 		if (!sem_op && result)
 			goto would_block;
 
@@ -383,7 +382,7 @@ static int try_atomic_semop (struct sem_array * sma, struct sembuf * sops,
 			un->semadj[sop->sem_num] -= sop->sem_op;
 		sop--;
 	}
-	
+
 	return 0;
 
 out_of_range:
@@ -525,7 +524,6 @@ static int check_restart(struct sem_array *sma, struct sem_queue *q)
 	return 0;
 }
 
-
 /**
  * update_queue(sma, semnum): Look for tasks that can be completed.
  * @sma: semaphore array.
@@ -640,7 +638,6 @@ done:
 	if (otime)
 		sma->sem_otime = get_seconds();
 }
-
 
 /* The following counts are associated to each semaphore:
  *   semncnt        number of tasks waiting on semval being nonzero
@@ -774,7 +771,7 @@ static int semctl_nolock(struct ipc_namespace *ns, int semid,
 		err = security_sem_semctl(NULL, cmd);
 		if (err)
 			return err;
-		
+
 		memset(&seminfo,0,sizeof(seminfo));
 		seminfo.semmni = ns->sc_semmni;
 		seminfo.semmns = ns->sc_semmns;
@@ -794,7 +791,7 @@ static int semctl_nolock(struct ipc_namespace *ns, int semid,
 		}
 		max_id = ipc_get_maxid(&sem_ids(ns));
 		up_read(&sem_ids(ns).rw_mutex);
-		if (copy_to_user (arg.__buf, &seminfo, sizeof(struct seminfo))) 
+		if (copy_to_user (arg.__buf, &seminfo, sizeof(struct seminfo)))
 			return -EFAULT;
 		return (max_id < 0) ? 0: max_id;
 	}
@@ -1260,7 +1257,6 @@ out:
 	return un;
 }
 
-
 /**
  * get_queue_result - Retrieve the result code from sem_queue
  * @q: Pointer to queue structure
@@ -1285,7 +1281,6 @@ static int get_queue_result(struct sem_queue *q)
 
 	return error;
 }
-
 
 SYSCALL_DEFINE4(semtimedop, int, semid, struct sembuf __user *, tsops,
 		unsigned, nsops, const struct timespec __user *, timeout)
@@ -1406,7 +1401,7 @@ SYSCALL_DEFINE4(semtimedop, int, semid, struct sembuf __user *, tsops,
 	/* We need to sleep on this operation, so we put the current
 	 * task into the pending queue and go to sleep.
 	 */
-		
+
 	queue.sops = sops;
 	queue.nsops = nsops;
 	queue.undo = un;
@@ -1470,7 +1465,6 @@ SYSCALL_DEFINE4(semtimedop, int, semid, struct sembuf __user *, tsops,
 		goto out_free;
 	}
 
-
 	/*
 	 * If queue.status != -EINTR we are woken up by another process.
 	 * Leave without unlink_queue(), but with sem_unlock().
@@ -1518,7 +1512,7 @@ int copy_semundo(unsigned long clone_flags, struct task_struct *tsk)
 			return error;
 		atomic_inc(&undo_list->refcnt);
 		tsk->sysvsem.undo_list = undo_list;
-	} else 
+	} else
 		tsk->sysvsem.undo_list = NULL;
 
 	return 0;

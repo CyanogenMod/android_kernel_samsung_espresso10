@@ -27,7 +27,7 @@
 #ifdef CONFIG_PROC_FS
 
 static void
-snd_emux_proc_info_read(struct snd_info_entry *entry, 
+snd_emux_proc_info_read(struct snd_info_entry *entry,
 			struct snd_info_buffer *buf)
 {
 	struct snd_emux *emu;
@@ -102,7 +102,6 @@ snd_emux_proc_info_read(struct snd_info_entry *entry,
 #endif
 	mutex_unlock(&emu->register_mutex);
 }
-
 
 void snd_emux_proc_init(struct snd_emux *emu, struct snd_card *card, int device)
 {

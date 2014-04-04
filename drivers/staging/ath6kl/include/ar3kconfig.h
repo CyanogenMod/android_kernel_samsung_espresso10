@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -37,13 +37,12 @@ extern "C" {
 #define AR3K_CONFIG_FLAG_AR3K_BAUD_CHANGE_DELAY     (1 << 2)
 #define AR3K_CONFIG_FLAG_SET_AR6K_SCALE_STEP        (1 << 3)
 
-
 struct ar3k_config_info {
     u32 Flags;           /* config flags */
     void                     *pHCIDev;        /* HCI bridge device     */
     struct hci_transport_properties *pHCIProps;      /* HCI bridge props      */
     struct hif_device               *pHIFDevice;     /* HIF layer device      */
-    
+
     u32 AR3KBaudRate;    /* AR3K operational baud rate */
     u16 AR6KScale;       /* AR6K UART scale value */
     u16 AR6KStep;        /* AR6K UART step value  */
@@ -53,7 +52,7 @@ struct ar3k_config_info {
     u16 WakeupTimeout;   /* TLPM wakeup timeout */
     u8 bdaddr[6];       /* Bluetooth device address */
 };
-                                                                                        
+
 int AR3KConfigure(struct ar3k_config_info *pConfigInfo);
 
 int AR3KConfigureExit(void *config);

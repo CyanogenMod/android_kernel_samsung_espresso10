@@ -2817,7 +2817,6 @@ static u16 e1000_shift_in_mdi_bits(struct e1000_hw *hw)
 	return data;
 }
 
-
 /**
  * e1000_read_phy_reg - read a phy register
  * @hw: Struct containing variables accessed by shared code
@@ -5690,7 +5689,6 @@ static s32 e1000_set_vco_speed(struct e1000_hw *hw)
 
 	return E1000_SUCCESS;
 }
-
 
 /**
  * e1000_enable_mng_pass_thru - check for bmc pass through

@@ -1,4 +1,3 @@
-
 /*******************************************************************
 * 		Headers.h
 *******************************************************************/
@@ -60,7 +59,6 @@
 #include "Prototypes.h"
 #include "Queue.h"
 #include "vendorspecificextn.h"
-
 
 #include "InterfaceMacros.h"
 #include "InterfaceAdapter.h"

@@ -208,7 +208,6 @@ static ssize_t cm3663_proximity_state_show(struct device *dev,
 		cm3663->prox_val <= PROXIMITY_THRESHOLD ? 0 : 1);
 }
 
-
 /*
  * sysfs interface
  * return the adc value of proximity
@@ -685,7 +684,6 @@ static struct miscdevice light_device = {
 	.fops   = &light_fops,
 };
 
-
 /*
  * probe function
  */
@@ -916,7 +914,6 @@ static int cm3663_resume(struct device *dev)
 	return 0;
 }
 
-
 static int cm3663_i2c_remove(struct i2c_client *client)
 {
 	struct cm3663_data *cm3663 = i2c_get_clientdata(client);
@@ -965,7 +962,6 @@ static struct i2c_driver cm3663_i2c_driver = {
 	.id_table	= cm3663_device_id,
 };
 
-
 static int __init cm3663_init(void)
 {
 	return i2c_add_driver(&cm3663_i2c_driver);
@@ -982,4 +978,3 @@ module_exit(cm3663_exit);
 MODULE_AUTHOR("tim.sk.lee@samsung.com");
 MODULE_DESCRIPTION("Optical Sensor driver for cm3663");
 MODULE_LICENSE("GPL");
-

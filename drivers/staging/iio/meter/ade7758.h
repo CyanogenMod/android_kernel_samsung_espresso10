@@ -107,7 +107,6 @@
 
 #define DRIVER_NAME		"ade7758"
 
-
 /**
  * struct ade7758_state - device instance specific data
  * @us:			actual spi_device
@@ -145,7 +144,6 @@ int ade7758_probe_trigger(struct iio_dev *indio_dev);
 ssize_t ade7758_read_data_from_ring(struct device *dev,
 		struct device_attribute *attr,
 		char *buf);
-
 
 int ade7758_configure_ring(struct iio_dev *indio_dev);
 void ade7758_unconfigure_ring(struct iio_dev *indio_dev);

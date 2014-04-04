@@ -71,7 +71,6 @@
 #define OMAP_PACKAGE_ZAC		2		/* 24xx 447-pin POP */
 #define OMAP_PACKAGE_ZAF		1		/* 2420 447-pin SIP */
 
-
 #define OMAP_MUX_NR_MODES		8		/* Available modes */
 #define OMAP_MUX_NR_SIDES		2		/* Bottom & top */
 
@@ -378,4 +377,3 @@ int omap_mux_init(const char *name, u32 flags,
 		  struct omap_mux *package_subset,
 		  struct omap_board_mux *board_mux,
 		  struct omap_ball *package_balls);
-

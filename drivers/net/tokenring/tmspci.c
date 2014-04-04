@@ -10,7 +10,7 @@
  *	- SysKonnect TR4/16(+) PCI	(SK-4590)
  *	- SysKonnect TR4/16 PCI		(SK-4591)
  *      - Compaq TR 4/16 PCI
- *      - Thomas-Conrad TC4048 4/16 PCI 
+ *      - Thomas-Conrad TC4048 4/16 PCI
  *      - 3Com 3C339 Token Link Velocity
  *
  *  Maintainer(s):
@@ -92,7 +92,7 @@ static void tms_pci_sifwritew(struct net_device *dev, unsigned short val, unsign
 }
 
 static int __devinit tms_pci_attach(struct pci_dev *pdev, const struct pci_device_id *ent)
-{	
+{
 	static int versionprinted;
 	struct net_device *dev;
 	struct net_local *tp;
@@ -127,11 +127,11 @@ static int __devinit tms_pci_attach(struct pci_dev *pdev, const struct pci_devic
 
 	dev_info(&pdev->dev, "%s\n", cardinfo->name);
 	dev_info(&pdev->dev, "    IO: %#4lx  IRQ: %d\n", dev->base_addr, dev->irq);
-		
+
 	tms_pci_read_eeprom(dev);
 
 	dev_info(&pdev->dev, "    Ring Station Address: %pM\n", dev->dev_addr);
-		
+
 	ret = tmsdev_init(dev, &pdev->dev);
 	if (ret) {
 		dev_info(&pdev->dev, "unable to get memory for dev->priv.\n");
@@ -140,12 +140,12 @@ static int __devinit tms_pci_attach(struct pci_dev *pdev, const struct pci_devic
 
 	tp = netdev_priv(dev);
 	tp->setnselout = tms_pci_setnselout_pins;
-		
+
 	tp->sifreadb = tms_pci_sifreadb;
 	tp->sifreadw = tms_pci_sifreadw;
 	tp->sifwriteb = tms_pci_sifwriteb;
 	tp->sifwritew = tms_pci_sifwritew;
-		
+
 	memcpy(tp->ProductID, cardinfo->name, PROD_ID_SIZE + 1);
 
 	tp->tmspriv = cardinfo;
@@ -163,7 +163,7 @@ static int __devinit tms_pci_attach(struct pci_dev *pdev, const struct pci_devic
 	ret = register_netdev(dev);
 	if (ret)
 		goto err_out_irq;
-	
+
 	return 0;
 
 err_out_irq:
@@ -180,7 +180,7 @@ err_out_trdev:
 
 /*
  * Reads MAC address from adapter RAM, which should've read it from
- * the onboard ROM.  
+ * the onboard ROM.
  *
  * Calling this on a board that does not support it can be a very
  * dangerous thing.  The Madge board, for instance, will lock your
@@ -190,11 +190,11 @@ err_out_trdev:
 static void tms_pci_read_eeprom(struct net_device *dev)
 {
 	int i;
-	
+
 	/* Address: 0000:0000 */
 	tms_pci_sifwritew(dev, 0, SIFADX);
-	tms_pci_sifwritew(dev, 0, SIFADR);	
-	
+	tms_pci_sifwritew(dev, 0, SIFADR);
+
 	/* Read six byte MAC address data */
 	dev->addr_len = 6;
 	for(i = 0; i < 6; i++)
@@ -206,7 +206,7 @@ static unsigned short tms_pci_setnselout_pins(struct net_device *dev)
 	unsigned short val = 0;
 	struct net_local *tp = netdev_priv(dev);
 	struct card_info *cardinfo = tp->tmspriv;
-  
+
 	if(tp->DataRate == SPEED_4)
 		val |= cardinfo->nselout[0];	/* Set 4Mbps */
 	else
@@ -246,4 +246,3 @@ static void __exit tms_pci_rmmod (void)
 
 module_init(tms_pci_init);
 module_exit(tms_pci_rmmod);
-

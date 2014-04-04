@@ -1,11 +1,9 @@
 /* drivers/atm/midway.h - Efficient Networks Midway (SAR) description */
- 
+
 /* Written 1995-1999 by Werner Almesberger, EPFL LRC/ICA */
- 
 
 #ifndef DRIVERS_ATM_MIDWAY_H
 #define DRIVERS_ATM_MIDWAY_H
-
 
 #define NR_VCI		1024		/* number of VCIs */
 #define NR_VCI_LD	10		/* log2(NR_VCI) */
@@ -164,7 +162,6 @@ struct midway_eprom {
 	u32 serial,inv_serial;
 	u32 magic,inv_magic;
 };
-
 
 /*
  * VCI table entry

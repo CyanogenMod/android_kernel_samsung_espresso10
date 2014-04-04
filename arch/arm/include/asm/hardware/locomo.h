@@ -40,7 +40,6 @@
 #define LOCOMO_HSC	0x2c		/* HSYS period */
 #define LOCOMO_TADC	0x30		/* tablet ADC clock */
 
-
 /* Long time timer */
 #define LOCOMO_LTC	0xd8		/* LTC interrupt setting */
 #define LOCOMO_LTINT	0xdc		/* LTC interrupt */

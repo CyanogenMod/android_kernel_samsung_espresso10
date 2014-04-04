@@ -23,14 +23,12 @@
 
 #include "mantis_common.h"
 
-
 #define FE_TYPE_SAT	0
 #define FE_TYPE_CAB	1
 #define FE_TYPE_TER	2
 
 #define FE_TYPE_TS204	0
 #define FE_TYPE_TS188	1
-
 
 struct vendorname {
 	u8  *sub_vendor_name;
@@ -43,7 +41,6 @@ struct devicetype {
 	u8  device_type;
 	u32 type_flags;
 };
-
 
 extern int mantis_dma_init(struct mantis_pci *mantis);
 extern int mantis_dma_exit(struct mantis_pci *mantis);

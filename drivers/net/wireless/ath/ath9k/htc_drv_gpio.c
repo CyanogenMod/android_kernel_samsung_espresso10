@@ -140,7 +140,6 @@ void ath_htc_resume_btcoex_work(struct ath9k_htc_priv *priv)
 	ieee80211_queue_delayed_work(priv->hw, &priv->coex_period_work, 0);
 }
 
-
 /*
  * Cancel btcoex and bt duty cycle work.
  */

@@ -139,7 +139,6 @@ extern int	create_l1(struct dchannel *, dchannel_l1callback *);
 struct layer1;
 extern int	l1_event(struct layer1 *, u_int);
 
-
 struct bchannel {
 	struct mISDNchannel	ch;
 	int			nr;

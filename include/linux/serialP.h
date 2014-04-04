@@ -2,8 +2,8 @@
  * Private header file for the (dumb) serial driver
  *
  * Copyright (C) 1997 by Theodore Ts'o.
- * 
- * Redistribution of this file is permitted under the terms of the GNU 
+ *
+ * Redistribution of this file is permitted under the terms of the GNU
  * Public License (GPL)
  */
 
@@ -12,7 +12,7 @@
 
 /*
  * This is our internal structure for each serial port's state.
- * 
+ *
  * Many fields are paralleled by the structure used by the serial_struct
  * structure.
  *
@@ -42,7 +42,7 @@ struct serial_state {
 	u16	iomem_reg_shift;
 	unsigned short	close_delay;
 	unsigned short	closing_wait; /* time to wait before closing */
-	struct async_icount	icount;	
+	struct async_icount	icount;
 	int	io_type;
 	struct async_struct *info;
 	struct pci_dev	*dev;
@@ -83,11 +83,11 @@ struct async_struct {
 	wait_queue_head_t	open_wait;
 	wait_queue_head_t	close_wait;
 	wait_queue_head_t	delta_msr_wait;
-#else	
+#else
 	struct wait_queue	*open_wait;
 	struct wait_queue	*close_wait;
 	struct wait_queue	*delta_msr_wait;
-#endif	
+#endif
 	struct async_struct	*next_port; /* For the linked list */
 	struct async_struct	*prev_port;
 };

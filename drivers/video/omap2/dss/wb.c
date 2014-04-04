@@ -182,7 +182,6 @@ static __attribute__ ((unused)) void omap_dss_add_wb(struct omap_writeback *wb)
 	list_add_tail(&wb->list, &wb_list);
 }
 
-
 void dss_init_writeback(struct platform_device *pdev)
 {
 	int r;

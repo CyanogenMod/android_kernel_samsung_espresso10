@@ -78,7 +78,6 @@ MODULE_LICENSE("GPL");
  0x6a: Right    106
  */
 
-
 static unsigned char atakbd_keycode[0x72] = {	/* American layout */
 	[0]	 = KEY_GRAVE,
 	[1]	 = KEY_ESC,

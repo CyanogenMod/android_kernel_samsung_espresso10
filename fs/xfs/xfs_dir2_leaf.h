@@ -95,7 +95,7 @@ static inline xfs_dir2_leaf_tail_t *
 xfs_dir2_leaf_tail_p(struct xfs_mount *mp, xfs_dir2_leaf_t *lp)
 {
 	return (xfs_dir2_leaf_tail_t *)
-		((char *)(lp) + (mp)->m_dirblksize - 
+		((char *)(lp) + (mp)->m_dirblksize -
 		  (uint)sizeof(xfs_dir2_leaf_tail_t));
 }
 

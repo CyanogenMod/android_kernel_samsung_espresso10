@@ -59,11 +59,9 @@ $SF file_contexts /
 mounts=`cat /proc/$$/mounts | egrep "ext2|ext3|xfs|jfs|ext4|ext4dev|gfs2" | awk '{ print $2 '}`
 $SF file_contexts $mounts
 
-
 dodev=`cat /proc/$$/mounts | grep "/dev "`
 if [ "eq$dodev" != "eq" ]; then
 	mount --move /dev /mnt
 	$SF file_contexts /dev
 	mount --move /mnt /dev
 fi
-

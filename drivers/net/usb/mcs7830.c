@@ -358,7 +358,6 @@ static int mcs7830_set_autoneg(struct usbnet *dev, int ptrUserPhyMode)
 	return ret;
 }
 
-
 /*
  * if we can read register 22, the chip revision is C or higher
  */

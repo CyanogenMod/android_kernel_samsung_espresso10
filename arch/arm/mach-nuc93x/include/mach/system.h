@@ -25,4 +25,3 @@ static void arch_reset(char mode, const char *cmd)
 {
 	cpu_reset(0);
 }
-

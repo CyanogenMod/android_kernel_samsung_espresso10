@@ -1,7 +1,6 @@
 # This allows us to work with the newline character:
 define newline
 
-
 endef
 newline := $(newline)
 

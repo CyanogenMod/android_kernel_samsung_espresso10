@@ -482,7 +482,6 @@ static ssize_t show_boardversion(struct device *device,
 	return scnprintf(buf, PAGE_SIZE, "%s", dd->boardversion);
 }
 
-
 static ssize_t show_localbus_info(struct device *device,
 				  struct device_attribute *attr, char *buf)
 {
@@ -493,7 +492,6 @@ static ssize_t show_localbus_info(struct device *device,
 	/* The string printed here is already newline-terminated. */
 	return scnprintf(buf, PAGE_SIZE, "%s", dd->lbus_info);
 }
-
 
 static ssize_t show_nctxts(struct device *device,
 			   struct device_attribute *attr, char *buf)

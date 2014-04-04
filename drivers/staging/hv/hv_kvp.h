@@ -44,7 +44,6 @@
  */
 #define HV_KVP_EXCHANGE_MAX_VALUE_SIZE          (2048)
 
-
 /*
  * Maximum key size - the registry limit for the length of an entry name
  * is 256 characters, including the null terminator
@@ -124,9 +123,6 @@ struct hv_ku_msg {
 	__u8  kvp_value[HV_KVP_EXCHANGE_MAX_VALUE_SIZE]; /* Key  value */
 };
 
-
-
-
 #ifdef __KERNEL__
 
 /*
@@ -181,4 +177,3 @@ void hv_kvp_onchannelcallback(void *);
 
 #endif /* __KERNEL__ */
 #endif	/* _KVP_H */
-

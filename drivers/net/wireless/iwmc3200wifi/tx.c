@@ -460,7 +460,6 @@ int iwm_xmit_frame(struct sk_buff *skb, struct net_device *netdev)
 	u16 queue;
 	int ret;
 
-
 	if (!test_bit(IWM_STATUS_ASSOCIATED, &iwm->status)) {
 		IWM_DBG_TX(iwm, DBG, "LINK: stop netif_all_queues: "
 			   "not associated\n");

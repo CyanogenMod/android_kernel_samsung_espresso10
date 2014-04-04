@@ -86,4 +86,3 @@ static inline int mmp2_add_sdhost(int id, struct sdhci_pxa_platdata *data)
 }
 
 #endif /* __ASM_MACH_MMP2_H */
-

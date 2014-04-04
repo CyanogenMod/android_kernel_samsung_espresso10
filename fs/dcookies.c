@@ -47,19 +47,16 @@ static inline int is_live(void)
 	return !(list_empty(&dcookie_users));
 }
 
-
 /* The dentry is locked, its address will do for the cookie */
 static inline unsigned long dcookie_value(struct dcookie_struct * dcs)
 {
 	return (unsigned long)dcs->path.dentry;
 }
 
-
 static size_t dcookie_hash(unsigned long dcookie)
 {
 	return (dcookie >> L1_CACHE_SHIFT) & (hash_size - 1);
 }
-
 
 static struct dcookie_struct * find_dcookie(unsigned long dcookie)
 {
@@ -81,13 +78,11 @@ static struct dcookie_struct * find_dcookie(unsigned long dcookie)
 	return found;
 }
 
-
 static void hash_dcookie(struct dcookie_struct * dcs)
 {
 	struct list_head * list = dcookie_hashtable + dcookie_hash(dcookie_value(dcs));
 	list_add(&dcs->hash_list, list);
 }
-
 
 static struct dcookie_struct *alloc_dcookie(struct path *path)
 {
@@ -107,7 +102,6 @@ static struct dcookie_struct *alloc_dcookie(struct path *path)
 	hash_dcookie(dcs);
 	return dcs;
 }
-
 
 /* This is the main kernel-side routine that retrieves the cookie
  * value for a dentry/vfsmnt pair.
@@ -140,7 +134,6 @@ out:
 	mutex_unlock(&dcookie_mutex);
 	return err;
 }
-
 
 /* And here is where the userspace process can look up the cookie value
  * to retrieve the path.
@@ -186,7 +179,7 @@ SYSCALL_DEFINE(lookup_dcookie)(u64 cookie64, char __user * buf, size_t len)
 	}
 
 	err = -ERANGE;
- 
+
 	pathlen = kbuf + PAGE_SIZE - path;
 	if (pathlen <= len) {
 		err = pathlen;
@@ -262,7 +255,6 @@ out_kmem:
 	goto out;
 }
 
-
 static void free_dcookie(struct dcookie_struct * dcs)
 {
 	struct dentry *d = dcs->path.dentry;
@@ -274,7 +266,6 @@ static void free_dcookie(struct dcookie_struct * dcs)
 	path_put(&dcs->path);
 	kmem_cache_free(dcookie_cache, dcs);
 }
-
 
 static void dcookie_exit(void)
 {
@@ -297,11 +288,10 @@ static void dcookie_exit(void)
 	kmem_cache_destroy(dcookie_cache);
 }
 
-
 struct dcookie_user {
 	struct list_head next;
 };
- 
+
 struct dcookie_user * dcookie_register(void)
 {
 	struct dcookie_user * user;
@@ -325,7 +315,6 @@ out_free:
 	user = NULL;
 	goto out;
 }
-
 
 void dcookie_unregister(struct dcookie_user * user)
 {

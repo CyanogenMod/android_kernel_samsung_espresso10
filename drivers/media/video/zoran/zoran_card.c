@@ -1197,7 +1197,6 @@ static int __devinit zoran_probe(struct pci_dev *pdev,
 	char *codec_name, *vfe_name;
 	unsigned int nr;
 
-
 	nr = zoran_num++;
 	if (nr >= BUZ_MAX) {
 		dprintk(1, KERN_ERR "%s: driver limited to %d card(s) maximum\n",

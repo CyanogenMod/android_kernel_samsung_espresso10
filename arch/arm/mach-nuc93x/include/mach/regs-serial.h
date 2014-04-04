@@ -22,7 +22,6 @@
 #define UART0_PA	NUC93X_PA_UART
 #define UART1_PA	(NUC93X_PA_UART+0x100)
 
-
 #ifndef __ASSEMBLY__
 
 struct nuc93x_uart_clksrc {
@@ -49,4 +48,3 @@ struct nuc93x_uartcfg {
 #endif /* __ASSEMBLY__ */
 
 #endif /* __ASM_ARM_REGS_SERIAL_H */
-

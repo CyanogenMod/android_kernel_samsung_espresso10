@@ -495,7 +495,6 @@ static void parse_file(FILE *infile)
 	fflush(stdout);
 }
 
-
 int main(int argc, char *argv[])
 {
 	FILE * infile;

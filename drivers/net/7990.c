@@ -621,7 +621,6 @@ static void lance_load_multicast (struct net_device *dev)
         }
 }
 
-
 void lance_set_multicast (struct net_device *dev)
 {
         struct lance_private *lp = netdev_priv(dev);

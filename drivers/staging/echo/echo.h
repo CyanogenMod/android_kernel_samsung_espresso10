@@ -36,7 +36,6 @@ What does it do?
 This module aims to provide G.168-2002 compliant echo cancellation, to remove
 electrical echoes (e.g. from 2-4 wire hybrids) from voice calls.
 
-
 How does it work?
 
 The heart of the echo cancellor is FIR filter. This is adapted to match the

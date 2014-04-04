@@ -34,7 +34,6 @@ typedef u64 cputime64_t;
 
 #define nsecs_to_cputime64(__ct)	nsecs_to_jiffies64(__ct)
 
-
 /*
  * Convert cputime to microseconds and back.
  */

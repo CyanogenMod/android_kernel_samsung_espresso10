@@ -23,7 +23,6 @@
 #define ATI_GART_CACHE_CNTRL		0x0c
 #define ATI_GART_CACHE_ENTRY_CNTRL	0x10
 
-
 static const struct aper_size_info_lvl2 ati_generic_sizes[7] =
 {
 	{2048, 524288, 0x0000000c},
@@ -39,7 +38,6 @@ static struct gatt_mask ati_generic_masks[] =
 {
 	{ .mask = 1, .type = 0}
 };
-
 
 struct ati_page_map {
 	unsigned long *real;
@@ -72,14 +70,12 @@ static int ati_create_page_map(struct ati_page_map *page_map)
 	return 0;
 }
 
-
 static void ati_free_page_map(struct ati_page_map *page_map)
 {
 	unmap_page_from_agp(virt_to_page(page_map->real));
 	set_memory_wb((unsigned long)page_map->real, 1);
 	free_page((unsigned long) page_map->real);
 }
-
 
 static void ati_free_gatt_pages(void)
 {
@@ -98,7 +94,6 @@ static void ati_free_gatt_pages(void)
 	}
 	kfree(tables);
 }
-
 
 static int ati_create_gatt_pages(int nr_tables)
 {
@@ -193,7 +188,6 @@ static void ati_cleanup(void)
 	iounmap((volatile u8 __iomem *)ati_generic_private.registers);
 }
 
-
 static int ati_configure(void)
 {
 	u32 temp;
@@ -230,7 +224,6 @@ static int ati_configure(void)
 
 	return 0;
 }
-
 
 #ifdef CONFIG_PM
 static int agp_ati_suspend(struct pci_dev *dev, pm_message_t state)
@@ -301,7 +294,7 @@ static int ati_insert_memory(struct agp_memory * mem,
 	for (i = 0, j = pg_start; i < mem->page_count; i++, j++) {
 		addr = (j * PAGE_SIZE) + agp_bridge->gart_bus_addr;
 		cur_gatt = GET_GATT(addr);
-		writel(agp_bridge->driver->mask_memory(agp_bridge,	
+		writel(agp_bridge->driver->mask_memory(agp_bridge,
 						       page_to_phys(mem->pages[i]),
 						       mem->type),
 		       cur_gatt+GET_GATT_OFF(addr));
@@ -444,7 +437,6 @@ static const struct agp_bridge_driver ati_generic_bridge = {
 	.agp_type_to_mask_type  = agp_generic_type_to_mask_type,
 };
 
-
 static struct agp_device_ids ati_agp_device_ids[] __devinitdata =
 {
 	{
@@ -583,4 +575,3 @@ module_exit(agp_ati_cleanup);
 
 MODULE_AUTHOR("Dave Jones <davej@redhat.com>");
 MODULE_LICENSE("GPL and additional rights");
-

@@ -18,7 +18,6 @@
 #include <asm/cacheflush.h>
 #include <asm/hardware/cache-tauros2.h>
 
-
 /*
  * When Tauros2 is used on a CPU that supports the v7 hierarchical
  * cache operations, the cache handling code in proc-v7.S takes care
@@ -47,7 +46,6 @@ static inline void tauros2_inv_pa(unsigned long addr)
 {
 	__asm__("mcr p15, 1, %0, c7, c7, 3" : : "r" (addr));
 }
-
 
 /*
  * Linux primitives.

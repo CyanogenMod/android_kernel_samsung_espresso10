@@ -165,7 +165,6 @@ static int __init s3c2442_core_init(void)
 
 core_initcall(s3c2442_core_init);
 
-
 #ifdef CONFIG_PM
 static struct sleep_save s3c244x_sleep[] = {
 	SAVE_ITEM(S3C2440_DSC0),

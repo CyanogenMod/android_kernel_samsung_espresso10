@@ -85,10 +85,10 @@
 static struct pci_driver amd756_driver;
 static unsigned short amd756_ioport;
 
-/* 
+/*
   SMBUS event = I/O 28-29 bit 11
      see E0 for the status bits and enabled in E2
-     
+
 */
 #define GS_ABRT_STS	(1 << 0)
 #define GS_COL_STS	(1 << 1)
@@ -104,7 +104,6 @@ static unsigned short amd756_ioport;
 #define GE_CYC_TYPE_MASK	(7)
 #define GE_HOST_STC		(1 << 3)
 #define GE_ABORT		(1 << 5)
-
 
 static int amd756_transaction(struct i2c_adapter *adap)
 {
@@ -260,7 +259,6 @@ static s32 amd756_access(struct i2c_adapter * adap, u16 addr,
 	if ((read_write == I2C_SMBUS_WRITE) || (size == AMD756_QUICK))
 		return 0;
 
-
 	switch (size) {
 	case AMD756_BYTE:
 		data->byte = inw_p(SMB_HOST_DATA);
@@ -330,7 +328,7 @@ static int __devinit amd756_probe(struct pci_dev *pdev,
 	int nforce = (id->driver_data == NFORCE);
 	int error;
 	u8 temp;
-	
+
 	if (amd756_ioport) {
 		dev_err(&pdev->dev, "Only one device supported "
 		       "(you have a strange motherboard, btw)\n");

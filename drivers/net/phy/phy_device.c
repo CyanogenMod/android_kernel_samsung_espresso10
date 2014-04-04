@@ -403,7 +403,7 @@ void phy_disconnect(struct phy_device *phydev)
 		phy_stop_interrupts(phydev);
 
 	phy_stop_machine(phydev);
-	
+
 	phydev->adjust_link = NULL;
 
 	phy_detach(phydev);
@@ -534,7 +534,6 @@ void phy_detach(struct phy_device *phydev)
 }
 EXPORT_SYMBOL(phy_detach);
 
-
 /* Generic PHY support and helper functions */
 
 /**
@@ -563,7 +562,7 @@ static int genphy_config_advert(struct phy_device *phydev)
 	if (adv < 0)
 		return adv;
 
-	adv &= ~(ADVERTISE_ALL | ADVERTISE_100BASE4 | ADVERTISE_PAUSE_CAP | 
+	adv &= ~(ADVERTISE_ALL | ADVERTISE_100BASE4 | ADVERTISE_PAUSE_CAP |
 		 ADVERTISE_PAUSE_ASYM);
 	if (advertise & ADVERTISED_10baseT_Half)
 		adv |= ADVERTISE_10HALF;
@@ -634,12 +633,11 @@ static int genphy_setup_forced(struct phy_device *phydev)
 
 	if (DUPLEX_FULL == phydev->duplex)
 		ctl |= BMCR_FULLDPLX;
-	
+
 	err = phy_write(phydev, MII_BMCR, ctl);
 
 	return err;
 }
-
 
 /**
  * genphy_restart_aneg - Enable and Restart Autonegotiation
@@ -664,7 +662,6 @@ int genphy_restart_aneg(struct phy_device *phydev)
 	return ctl;
 }
 EXPORT_SYMBOL(genphy_restart_aneg);
-
 
 /**
  * genphy_config_aneg - restart auto-negotiation or write BMCR
@@ -801,7 +798,7 @@ int genphy_read_status(struct phy_device *phydev)
 				phydev->duplex = DUPLEX_FULL;
 		} else if (lpa & (LPA_100FULL | LPA_100HALF)) {
 			phydev->speed = SPEED_100;
-			
+
 			if (lpa & LPA_100FULL)
 				phydev->duplex = DUPLEX_FULL;
 		} else

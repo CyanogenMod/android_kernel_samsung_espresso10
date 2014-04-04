@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000 - 2007 Jeff Dike (jdike@{addtoit,linux.intel}.com)
  * Licensed under the GPL
  */
@@ -80,7 +80,6 @@ static inline void prepare_to_copy(struct task_struct *tsk)
 {
 }
 
-
 extern unsigned long thread_saved_pc(struct task_struct *t);
 
 static inline void mm_copy_segments(struct mm_struct *from_mm,
@@ -111,7 +110,7 @@ extern unsigned long stacksizelim;
  */
 #define TASK_UNMAPPED_BASE	(0x40000000)
 
-extern void start_thread(struct pt_regs *regs, unsigned long entry, 
+extern void start_thread(struct pt_regs *regs, unsigned long entry,
 			 unsigned long stack);
 
 struct cpuinfo_um {
@@ -130,7 +129,6 @@ extern struct cpuinfo_um cpu_data[];
 #define cpu_data (&boot_cpu_data)
 #define current_cpu_data boot_cpu_data
 #endif
-
 
 #define KSTK_REG(tsk, reg) get_thread_reg(reg, &tsk->thread.switch_buf)
 extern unsigned long get_wchan(struct task_struct *p);

@@ -64,7 +64,6 @@ config MAC80211_RC_DEFAULT_MINSTREL
 	---help---
 	  Select Minstrel as the default rate control algorithm.
 
-
 endchoice
 
 config MAC80211_RC_DEFAULT

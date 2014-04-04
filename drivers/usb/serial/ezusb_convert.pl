@@ -1,13 +1,11 @@
 #! /usr/bin/perl -w
 
-
 # convert an Intel HEX file into a set of C records usable by the firmware
 # loading code in usb-serial.c (or others)
 
 # accepts the .hex file(s) on stdin, a basename (to name the initialized
 # array) as an argument, and prints the .h file to stdout. Typical usage:
 #  perl ezusb_convert.pl foo <foo.hex >fw_foo.h
-
 
 my $basename = $ARGV[0];
 die "no base name specified" unless $basename;

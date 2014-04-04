@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -23,7 +23,6 @@
 //==============================================================================
 #ifndef _HOST_WLAN_API_H_
 #define _HOST_WLAN_API_H_
-
 
 #ifdef __cplusplus
 extern "C" {

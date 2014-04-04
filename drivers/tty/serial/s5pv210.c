@@ -46,7 +46,6 @@ static int s5pv210_serial_setsource(struct uart_port *port,
 	return 0;
 }
 
-
 static int s5pv210_serial_getsource(struct uart_port *port,
 					struct s3c24xx_uart_clksrc *clk)
 {

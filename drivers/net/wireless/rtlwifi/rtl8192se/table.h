@@ -46,4 +46,3 @@ extern u32 rtl8192semac_2t_array[MAC_2T_ARRAYLENGTH];
 extern u32 rtl8192seagctab_array[AGCTAB_ARRAYLENGTH];
 
 #endif
-

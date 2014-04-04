@@ -87,7 +87,6 @@ static int orinoco_tmd_cor_reset(struct orinoco_private *priv)
 	return 0;
 }
 
-
 static int orinoco_tmd_init_one(struct pci_dev *pdev,
 				const struct pci_device_id *ent)
 {

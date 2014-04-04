@@ -19,7 +19,6 @@
  *
  */
 
-
 #define WDT_COUNT0		(io+0)
 #define WDT_COUNT1		(io+1)
 #define WDT_COUNT2		(io+2)
@@ -48,4 +47,3 @@
 #define WDC_SR_PSUOVER		32	/* Active low */ /*  X   X   -  */
 #define WDC_SR_PSUUNDR		64	/* Active low */ /*  X   X   -  */
 #define WDC_SR_IRQ		128	/* Active low */ /*  X   X   X  */
-

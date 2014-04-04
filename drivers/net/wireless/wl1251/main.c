@@ -334,7 +334,6 @@ static int wl1251_join(struct wl1251 *wl, u8 bss_type, u8 channel,
 	if (ret < 0)
 		goto out;
 
-
 	ret = wl1251_cmd_join(wl, bss_type, channel, beacon_interval,
 			      dtim_period);
 	if (ret < 0)
@@ -1098,7 +1097,6 @@ out:
 	mutex_unlock(&wl->mutex);
 }
 
-
 /* can't be const, mac80211 writes to this */
 static struct ieee80211_rate wl1251_rates[] = {
 	{ .bitrate = 10,
@@ -1207,14 +1205,14 @@ static int wl1251_op_get_survey(struct ieee80211_hw *hw, int idx,
 {
 	struct wl1251 *wl = hw->priv;
 	struct ieee80211_conf *conf = &hw->conf;
- 
+
 	if (idx != 0)
 		return -ENOENT;
- 
+
 	survey->channel = conf->channel;
 	survey->filled = SURVEY_INFO_NOISE_DBM;
 	survey->noise = wl->noise;
- 
+
 	return 0;
 }
 

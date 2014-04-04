@@ -186,7 +186,6 @@ static int ade7854_reset(struct device *dev)
 	return st->write_reg_16(dev, ADE7854_CONFIG, val);
 }
 
-
 static ssize_t ade7854_write_reset(struct device *dev,
 		struct device_attribute *attr,
 		const char *buf, size_t len)

@@ -49,7 +49,6 @@ struct nfqnl_instance {
 	unsigned int queue_dropped;
 	unsigned int queue_user_dropped;
 
-
 	u_int16_t queue_num;			/* number of this queue */
 	u_int8_t copy_mode;
 /*
@@ -257,7 +256,6 @@ nfqnl_build_packet_message(struct nfqnl_instance *queue,
 		size += nla_total_size(data_len);
 		break;
 	}
-
 
 	skb = alloc_skb(size, GFP_ATOMIC);
 	if (!skb)

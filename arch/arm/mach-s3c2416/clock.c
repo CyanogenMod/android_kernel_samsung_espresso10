@@ -112,7 +112,6 @@ void __init_or_cpufreq s3c2416_setup_clocks(void)
 	s3c2443_common_setup_clocks(s3c2416_get_pll, s3c2416_fclk_div);
 }
 
-
 static struct clksrc_clk *clksrcs[] __initdata = {
 	&hsmmc_div[0],
 	&hsmmc_div[1],

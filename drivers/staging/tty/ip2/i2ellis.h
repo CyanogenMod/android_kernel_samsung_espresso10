@@ -167,7 +167,7 @@ typedef struct _i2eBordStr
 						// IntelliPort-II, always the same, for -IIEX
 						// taken from the Power-On reset message.
 
-	volatile 
+	volatile
 	unsigned short i2eFifoRemains;
 						// Used during normal operation to indicate a
 						// lower bound on the amount of data which
@@ -195,7 +195,7 @@ typedef struct _i2eBordStr
 
 	//-------------------------------------------------------
 	// Information presented in a common format across boards
-	// For each box, bit map of the channels present.  Box closest to 
+	// For each box, bit map of the channels present.  Box closest to
 	// the host is box 0. LSB is channel 0. IntelliPort-II (non-expandable)
 	// is taken to be box 0. These are derived from product i.d. registers.
 
@@ -267,7 +267,6 @@ typedef struct _i2eBordStr
 
 	void  (*i2eWriteMask)(struct _i2eBordStr *, unsigned char);
 
-
 	// State information
 
 	// During downloading, indicates the number of blocks remaining to download
@@ -312,7 +311,7 @@ typedef struct _i2eBordStr
 
 	unsigned char  i2eOutMailWaiting;
 
-	// The head of any incoming packet is read into here, is then examined and 
+	// The head of any incoming packet is read into here, is then examined and
 	// we dispatch accordingly.
 
 	unsigned short i2eLeadoffWord[1];
@@ -350,7 +349,7 @@ typedef struct _i2eBordStr
 	rwlock_t	Fbuf_spinlock;
 	volatile
 	unsigned short i2Fbuf_strip;	// Strip index
-	volatile 
+	volatile
 	unsigned short i2Fbuf_stuff;	// Stuff index
 	void  *i2Fbuf[CH_QUEUE_SIZE];	// An array of channel pointers
 									// of channels who need to send
@@ -391,7 +390,7 @@ typedef struct _i2eBordStr
 	unsigned long debugFlowCount;
 	unsigned long debugInlineCount;
 	unsigned long debugBypassCount;
-	
+
 	rwlock_t	read_fifo_spinlock;
 	rwlock_t	write_fifo_spinlock;
 
@@ -433,7 +432,6 @@ typedef void (*delayFunc_t)(unsigned int);
 //
 #define I2E_MAGIC       0x4251   // Structure is valid.
 #define I2E_INCOMPLETE  0x1122   // Structure failed during init.
-
 
 // i2eError
 //

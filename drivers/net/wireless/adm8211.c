@@ -1,4 +1,3 @@
-
 /*
  * Linux device driver for ADMtek ADM8211 (IEEE 802.11b MAC/BBP)
  *
@@ -73,7 +72,6 @@ static const struct ieee80211_channel adm8211_channels[] = {
 	{ .center_freq = 2472},
 	{ .center_freq = 2484},
 };
-
 
 static void adm8211_eeprom_register_read(struct eeprom_93cx6 *eeprom)
 {
@@ -350,7 +348,6 @@ static void adm8211_interrupt_tci(struct ieee80211_hw *dev)
 	spin_unlock(&priv->lock);
 }
 
-
 static void adm8211_interrupt_rci(struct ieee80211_hw *dev)
 {
 	struct adm8211_priv *priv = dev->priv;
@@ -450,7 +447,6 @@ static void adm8211_interrupt_rci(struct ieee80211_hw *dev)
 
 	/* TODO: check LPC and update stats? */
 }
-
 
 static irqreturn_t adm8211_interrupt(int irq, void *dev_id)
 {
@@ -1600,7 +1596,6 @@ static void adm8211_calc_durations(int *dur, int *plcp, size_t payload_len, int 
 			3 * (IEEE80211_DUR_DS_SLOW_PLCPHDR -
 			     IEEE80211_DUR_DS_FAST_PLCPHDR);
 
-
 	*plcp = (80 * len) / plcp_signal;
 	remainder = (80 * len) % plcp_signal;
 	if (plcp_signal == PLCP_SIGNAL_11M &&
@@ -1785,7 +1780,6 @@ static int __devinit adm8211_probe(struct pci_dev *pdev,
 		goto err_disable_pdev;
 	}
 
-
 	/* check signature */
 	pci_read_config_dword(pdev, 0x80 /* CR32 */, &reg);
 	if (reg != ADM8211_SIG1 && reg != ADM8211_SIG2) {
@@ -1930,7 +1924,6 @@ static int __devinit adm8211_probe(struct pci_dev *pdev,
 	return err;
 }
 
-
 static void __devexit adm8211_remove(struct pci_dev *pdev)
 {
 	struct ieee80211_hw *dev = pci_get_drvdata(pdev);
@@ -1956,7 +1949,6 @@ static void __devexit adm8211_remove(struct pci_dev *pdev)
 	ieee80211_free_hw(dev);
 }
 
-
 #ifdef CONFIG_PM
 static int adm8211_suspend(struct pci_dev *pdev, pm_message_t state)
 {
@@ -1973,7 +1965,6 @@ static int adm8211_resume(struct pci_dev *pdev)
 }
 #endif /* CONFIG_PM */
 
-
 MODULE_DEVICE_TABLE(pci, adm8211_pci_id_table);
 
 /* TODO: implement enable_wake */
@@ -1988,19 +1979,15 @@ static struct pci_driver adm8211_driver = {
 #endif /* CONFIG_PM */
 };
 
-
-
 static int __init adm8211_init(void)
 {
 	return pci_register_driver(&adm8211_driver);
 }
 
-
 static void __exit adm8211_exit(void)
 {
 	pci_unregister_driver(&adm8211_driver);
 }
-
 
 module_init(adm8211_init);
 module_exit(adm8211_exit);

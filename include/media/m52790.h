@@ -32,7 +32,6 @@
 /* Selects component input instead of composite */
 #define M52790_SW1_YCMIX    	0x0004
 
-
 /* Input routing switch 2 */
 
 #define M52790_SW2_IN_MASK 	0x0300
@@ -43,7 +42,6 @@
 
 /* Selects component input instead of composite */
 #define M52790_SW2_YCMIX    	0x0400
-
 
 /* Output routing switch 1 */
 
@@ -60,7 +58,6 @@
 #define M52790_SW1_AUDIO_L 	0x0080
 #define M52790_SW1_AUDIO_STEREO 0x00c0
 
-
 /* Output routing switch 2 */
 
 /* Enable 6dB amplifier for composite out */
@@ -75,7 +72,6 @@
 #define M52790_SW2_AUDIO_R 	0x4000
 #define M52790_SW2_AUDIO_L 	0x8000
 #define M52790_SW2_AUDIO_STEREO 0xc000
-
 
 /* Common values */
 #define M52790_IN_TUNER (M52790_SW1_IN_TUNER | M52790_SW2_IN_TUNER)

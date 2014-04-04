@@ -25,7 +25,6 @@
 
 #include "ili9320.h"
 
-
 static inline int ili9320_write_spi(struct ili9320 *ili,
 				    unsigned int reg,
 				    unsigned int value)

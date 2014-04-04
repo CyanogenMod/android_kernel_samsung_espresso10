@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="hif_internal.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -98,11 +98,11 @@ void AddToAsyncList(struct hif_device *device, BUS_REQUEST *busrequest);
 #define MAX_SCATTER_REQ_TRANSFER_SIZE    32*1024
 
 struct hif_scatter_req_priv {
-    struct hif_scatter_req     *pHifScatterReq;  /* HIF scatter request with allocated entries */   
+    struct hif_scatter_req     *pHifScatterReq;  /* HIF scatter request with allocated entries */
     struct hif_device          *device;          /* this device */
     BUS_REQUEST         *busrequest;      /* request associated with request */
-        /* scatter list for linux */    
-    struct scatterlist  sgentries[MAX_SCATTER_ENTRIES_PER_REQ];   
+        /* scatter list for linux */
+    struct scatterlist  sgentries[MAX_SCATTER_ENTRIES_PER_REQ];
 };
 
 #define ATH_DEBUG_SCATTER  ATH_DEBUG_MAKE_MODULE_MASK(0)
@@ -128,4 +128,3 @@ static inline int DoHifReadWriteScatter(struct hif_device *device, BUS_REQUEST *
 #endif // HIF_LINUX_MMC_SCATTER_SUPPORT
 
 #endif // _HIF_INTERNAL_H_
-

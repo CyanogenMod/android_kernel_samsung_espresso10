@@ -331,7 +331,6 @@ static u32 compress_raw_buf(struct ivtv *itv, u8 *buf, u32 size)
 	return lines * (line_size - 4);
 }
 
-
 /* Compressed VBI format, all found sliced blocks put next to one another
    Returns new compressed size */
 static u32 compress_sliced_buf(struct ivtv *itv, u32 line, u8 *buf, u32 size, u8 sav)
@@ -469,7 +468,6 @@ void ivtv_disable_cc(struct ivtv *itv)
 	ivtv_set_cc(itv, 0, &cc);
 	itv->vbi.cc_payload_idx = 0;
 }
-
 
 void ivtv_vbi_work_handler(struct ivtv *itv)
 {

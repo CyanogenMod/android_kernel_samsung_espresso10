@@ -515,7 +515,6 @@ void tcp_set_keepalive(struct sock *sk, int val)
 		inet_csk_delete_keepalive_timer(sk);
 }
 
-
 static void tcp_keepalive_timer (unsigned long data)
 {
 	struct sock *sk = (struct sock *) data;

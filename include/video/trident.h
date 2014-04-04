@@ -1,4 +1,3 @@
-
 #ifndef TRIDENTFB_DEBUG
 #define TRIDENTFB_DEBUG 0
 #endif
@@ -19,7 +18,7 @@
 #define CYBER9320	0x9320
 #define CYBER9388	0x9388
 #define CYBER9382	0x9382		/* the real PCI id for this is 9660 */
-#define CYBER9385	0x9385		/* ditto */		
+#define CYBER9385	0x9385		/* ditto */
 #define CYBER9397	0x9397
 #define CYBER9397DVD	0x939A
 #define CYBER9520	0x9520
@@ -51,7 +50,7 @@
 
 /* 3C4 */
 #define RevisionID 0x09
-#define OldOrNew 0x0B	
+#define OldOrNew 0x0B
 #define ConfPort1 0x0C
 #define ConfPort2 0x0C
 #define NewMode2 0x0D
@@ -110,7 +109,6 @@
 #define TVinterface 0xC0
 #define TVMode 0xC1
 #define ClockControl 0xCF
-
 
 /* 3CE */
 #define MiscExtFunc 0x0F

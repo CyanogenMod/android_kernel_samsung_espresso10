@@ -115,7 +115,6 @@ int mdp_lcdc_on(struct platform_device *pdev)
 	else
 		format = MDP_ARGB_8888;
 
-
 	if (lcdc_pipe == NULL) {
 		ptype = mdp4_overlay_format2type(format);
 		pipe = mdp4_overlay_pipe_alloc();
@@ -200,7 +199,6 @@ int mdp_lcdc_on(struct platform_device *pdev)
 		active_v_start = 0;
 		active_v_end = 0;
 	}
-
 
 #ifdef CONFIG_FB_MSM_MDP40
 	hsync_polarity = 1;

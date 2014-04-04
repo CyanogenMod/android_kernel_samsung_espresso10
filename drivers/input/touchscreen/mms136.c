@@ -13,7 +13,7 @@
  *
  */
 
-#define DEBUG_PRINT			1
+#define DEBUG_PRINT			0
 
 #if DEBUG_PRINT
 #define	tsp_log(fmt, args...) \
@@ -92,12 +92,14 @@ struct ts_data {
 	u16			addr;
 	u32			flags;
 	bool			finger_state[MELFAS_MAX_TOUCH];
+	size_t			finger_cnt;
 	struct semaphore	poll;
 	struct i2c_client	*client;
 	struct input_dev	*input_dev;
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend	early_suspend;
 #endif
+	u32 fw_version_ic;
 	struct sec_ts_platform_data *platform_data;
 #if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	struct factory_data	*factory_data;
@@ -147,9 +149,9 @@ static void reset_points(struct ts_data *ts)
 									false);
 	}
 	input_sync(ts->input_dev);
+	ts->finger_cnt = 0;
 	if (ts->platform_data->set_dvfs)
 		ts->platform_data->set_dvfs(false);
-	tsp_log("reset_all_fingers");
 	return;
 }
 
@@ -179,7 +181,6 @@ static void reset_tsp(struct ts_data *ts)
 	mdelay(200);
 	init_tsp(ts);
 
-	tsp_log("reset tsp ic done");
 	return;
 }
 
@@ -204,13 +205,13 @@ static bool fw_updater(struct ts_data *ts, char const *mode)
 	if (ts_read_reg_data(ts, TS_READ_VERSION_ADDR, 4, buf) > 0) {
 		pr_info("tsp: binary fw. ver: 0x%.2x, IC fw. ver: 0x%.2x\n",
 							fw_version, buf[0]);
+		ts->fw_version_ic = (u32)buf[0];
 	} else {
 		pr_err("tsp: fw. ver. read fail!!\n");
 		mode = "force";
 	}
 
 	if ((!strcmp("force", mode)) || (buf[0] < fw_version)) {
-		pr_info("tsp: fw_updater: fw. force upload.\n");
 		ret = isp_updater(fw->data, fw->size, ts->platform_data);
 
 	} else if (!strcmp("file", mode)) {
@@ -259,16 +260,15 @@ static bool fw_updater(struct ts_data *ts, char const *mode)
 		kfree(fw_data);
 
 	} else {
-		pr_info("tsp: fw_updater: No need to fw. update.\n");
 		updated = false;
 	}
 
 	if (updated) {
 		reset_tsp(ts);
-		if (ts_read_reg_data(ts, TS_READ_VERSION_ADDR, 4, buf) > 0)
-			pr_info("tsp: fw. ver. : new.(%.2x), cur.(%.2x)\n",
-							fw_version, buf[0]);
-		else
+		if (ts_read_reg_data(ts, TS_READ_VERSION_ADDR, 4, buf) > 0) {
+			pr_info("tsp: fw. ver. : new.(%.2x), cur.(%.2x)\n", fw_version, buf[0]);
+			ts->fw_version_ic = (u32)buf[0];
+		} else
 			pr_err("tsp: fw. ver. read fail!!\n");
 	}
 
@@ -378,8 +378,6 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_log("cm_delta: rx %d tx %d value %d", x, y,
-				ts_data->node_data->cm_delta_data[x * tx + y]);
 			break;
 
 			case CM_ABS:
@@ -388,8 +386,6 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_log("cm_abs: rx %d tx %d value %d", x, y,
-				ts_data->node_data->cm_abs_data[x * tx + y]);
 			break;
 
 			case INTENSITY_DATA:
@@ -398,8 +394,6 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_log("intensity: rx %d tx %d value %d", x, y,
-				ts_data->node_data->intensity_data[x * tx + y]);
 			break;
 
 			case REFERENCE_DATA:
@@ -408,8 +402,6 @@ static void set_node_data(struct ts_data *ts_data, const u8 data_type,
 			if (x == 0 && y == 0)
 				*max_value = *min_value = temp;
 
-			tsp_log("reference: rx %d tx %d value %d", x, y,
-				ts_data->node_data->reference_data[x * tx + y]);
 			break;
 
 			default:
@@ -451,8 +443,6 @@ static void not_support_cmd(void *device_data)
 	sprintf(data->cmd_buff, "%s", "NA");
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 	data->cmd_state = NOT_APPLICABLE;
-	pr_info("tsp factory : %s: \"%s(%d)\"\n", __func__,
-				data->cmd_buff,	strlen(data->cmd_buff));
 	return;
 }
 
@@ -503,18 +493,10 @@ static void get_fw_ver_ic(void *device_data)
 	struct ts_data *ts_data = (struct ts_data *)device_data;
 	struct factory_data *data = ts_data->factory_data;
 
-	u8 buf[2];
-
 	data->cmd_state = RUNNING;
 
-	if (ts_read_reg_data(ts_data, TS_READ_VERSION_ADDR, 1, buf) < 0) {
-		pr_err("tsp: i2c read data failed.");
-		data->cmd_state = FAIL;
-		return;
-	}
-
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%.2x", buf[0]);
+	sprintf(data->cmd_buff, "%.2x", ts_data->fw_version_ic);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
 	data->cmd_state = OK;
@@ -864,7 +846,6 @@ static void run_cm_abs_read(void *device_data)
 
 			max_value = max(max_value, temp);
 			min_value = min(min_value, temp);
-			tsp_log("cm_abs: rx %d tx %d value %d", x, y, temp);
 		}
 	}
 out:
@@ -1087,47 +1068,43 @@ static DEVICE_ATTR(cmd, S_IWUSR | S_IWGRP, NULL, cmd_store);
 static DEVICE_ATTR(cmd_status, S_IRUGO, cmd_status_show, NULL);
 static DEVICE_ATTR(cmd_result, S_IRUGO, cmd_result_show, NULL);
 
-static ssize_t mms136_pivot_show(struct device *dev,
-		struct device_attribute *attr, char *buf)
+static ssize_t mms136_pivot_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
-	struct ts_data *ts = dev_get_drvdata(dev);
-	int count;
+  struct ts_data *ts = dev_get_drvdata(dev);
+  int count;
 
-	count = sprintf(buf, "%d\n", ts->platform_data->pivot);
-	pr_info("tsp: pivot mode=%d\n", ts->platform_data->pivot);
+  count = sprintf(buf, "%d\n", ts->platform_data->pivot);
+  pr_info("tsp: pivot mode=%d\n", ts->platform_data->pivot);
 
-	return count;
+  return count;
 }
 
-ssize_t mms136_pivot_store(struct device *dev,
-		struct device_attribute *attr,
-		const char *buf, size_t size)
+ssize_t mms136_pivot_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t size)
 {
-	struct ts_data *ts = dev_get_drvdata(dev);
-	int pivot;
+  struct ts_data *ts = dev_get_drvdata(dev);
+  int pivot;
 
-	if (kstrtoint(buf, 0, &pivot))
-		pr_err("tsp: failed storing pivot value\n");
+  if (kstrtoint(buf, 0, &pivot))
+    pr_err("tsp: failed storing pivot value\n");
 
-	if (pivot < 0) {
-		pivot = 0;
-	} else if (pivot > 1) {
-		pivot = 1;
-	}
+  if (pivot < 0) {
+    pivot = 0;
+  } else if (pivot > 1) {
+    pivot = 1;
+  }
 
-	if (ts->platform_data->pivot != pivot) {
-		swap(ts->platform_data->x_pixel_size,
-					ts->platform_data->y_pixel_size);
-		input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0,
-					ts->platform_data->x_pixel_size, 0, 0);
-		input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0,
-					ts->platform_data->y_pixel_size, 0, 0);
+  if (ts->platform_data->pivot != pivot) {
+    swap(ts->platform_data->x_pixel_size,
+          ts->platform_data->y_pixel_size);
+    input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0,
+		  ts->platform_data->x_pixel_size, 0, 0);
+    input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0,
+		  ts->platform_data->y_pixel_size, 0, 0);
+    ts->platform_data->pivot = pivot;
+    pr_info("tsp: pivot mode=%d\n", pivot);
+  }
 
-		ts->platform_data->pivot = pivot;
-		pr_info("tsp: pivot mode=%d\n", pivot);
-	}
-
-	return size;
+  return size;
 }
 
 static DEVICE_ATTR(pivot, S_IRUGO | S_IWUSR, mms136_pivot_show, mms136_pivot_store);
@@ -1157,7 +1134,6 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 	int ret = 0, i;
 	int event_packet_size, id, x, y;
 	u8 buf[6 * MELFAS_MAX_TOUCH] = {0, };
-	static u32 cnt;
 
 	if (ts_read_reg_data(ts, TS_INPUT_PACKET_SIZE_REG, 1, buf) < 0) {
 		pr_err("tsp: ts_irq_event: Read finger num failed!!\n");
@@ -1199,12 +1175,13 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 			return IRQ_HANDLED;
 		}
 
-		if ((buf[i] & 0x80) == 0) {
-			cnt--;
+		if (ts->finger_state[id] && (buf[i] & 0x80) == 0) {
+			ts->finger_cnt--;
 #if TRACKING_COORD
-			pr_info("tsp: finger %d up (%d, %d)\n", id, x, y);
+			tsp_log("tsp: finger %d up (%d, %d)\n", id, x, y);
 #else
-			pr_info("tsp: finger %d up remain: %d", id, cnt);
+			tsp_log("tsp: finger %d up remain: %d",	id,
+								ts->finger_cnt);
 #endif
 			input_mt_slot(ts->input_dev, id);
 			input_mt_report_slot_state(ts->input_dev,
@@ -1226,21 +1203,22 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 
 		if (ts->finger_state[id] == 0) {
 			ts->finger_state[id] = 1;
-			cnt++;
+			ts->finger_cnt++;
 #if TRACKING_COORD
-			pr_info("tsp: finger %d down (%d, %d)\n", id, x, y);
+			tsp_log("tsp: finger %d down (%d, %d)\n", id, x, y);
 #else
-			pr_info("tsp: finger %d down remain: %d", id, cnt);
+			tsp_log("tsp: finger %d down remain: %d", id,
+								ts->finger_cnt);
 #endif
 		} else {
 #if TRACKING_COORD
-			pr_info("tsp: finger %d move (%d, %d)\n", id, x, y);
+			tsp_log("tsp: finger %d move (%d, %d)\n", id, x, y);
 #endif
 		}
 	}
 
 	if (ts->platform_data->set_dvfs)
-		ts->platform_data->set_dvfs(!!cnt);
+		ts->platform_data->set_dvfs(!!ts->finger_cnt);
 
 	return IRQ_HANDLED;
 }
@@ -1285,7 +1263,6 @@ static int __devinit ts_probe(struct i2c_client *client,
 	struct node_data *node_data;
 	u32 rx, tx;
 #endif
-	tsp_log("enter");
 
 	/* Return 1 if adapter supports everything we need, 0 if not. */
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
@@ -1359,8 +1336,6 @@ static int __devinit ts_probe(struct i2c_client *client,
 	}
 
 	if (ts->client->irq) {
-		tsp_log("trying to request irq: %s-%d",
-			ts->client->name, ts->client->irq);
 		ret = request_threaded_irq(client->irq, NULL,
 					ts_irq_handler,
 					IRQF_TRIGGER_LOW | IRQF_ONESHOT,

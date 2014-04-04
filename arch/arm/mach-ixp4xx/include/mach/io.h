@@ -22,7 +22,6 @@
 extern int (*ixp4xx_pci_read)(u32 addr, u32 cmd, u32* data);
 extern int ixp4xx_pci_write(u32 addr, u32 cmd, u32 data);
 
-
 /*
  * IXP4xx provides two methods of accessing PCI memory space:
  *
@@ -49,7 +48,7 @@ extern int ixp4xx_pci_write(u32 addr, u32 cmd, u32 data);
 
 /*
  * In the case of using indirect PCI, we simply return the actual PCI
- * address and our read/write implementation use that to drive the 
+ * address and our read/write implementation use that to drive the
  * access registers. If something outside of PCI is ioremap'd, we
  * fallback to the default.
  */
@@ -224,7 +223,6 @@ static inline void __indirect_readsl(const volatile void __iomem *bus_addr,
 	while (count--)
 		*vaddr++ = readl(bus_addr);
 }
-
 
 /*
  * We can use the built-in functions b/c they end up calling writeb/readb

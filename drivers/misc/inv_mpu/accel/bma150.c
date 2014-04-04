@@ -774,4 +774,3 @@ MODULE_ALIAS("bma150_mod");
 /**
  *  @}
  */
-

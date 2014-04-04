@@ -731,7 +731,6 @@ int menelaus_set_vmmc(unsigned int mV)
 }
 EXPORT_SYMBOL(menelaus_set_vmmc);
 
-
 static const struct menelaus_vtg_value vaux_values[] = {
 	{ 1500, 0 },
 	{ 1800, 1 },

@@ -25,7 +25,6 @@
 #include "jfs_dinode.h"
 #include "jfs_debug.h"
 
-
 void jfs_set_inode_flags(struct inode *inode)
 {
 	unsigned int flags = JFS_IP(inode)->mode2;

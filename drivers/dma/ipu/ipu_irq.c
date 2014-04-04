@@ -32,7 +32,6 @@ static void ipu_write_reg(struct ipu *ipu, u32 value, unsigned long reg)
 	__raw_writel(value, ipu->reg_ipu + reg);
 }
 
-
 /*
  * IPU IRQ chip driver
  */

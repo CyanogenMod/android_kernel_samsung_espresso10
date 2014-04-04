@@ -12,7 +12,6 @@
  * may be copied, distributed, and modified under those terms.
  */
 
-
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/virtio.h>
@@ -623,7 +622,6 @@ out:
 	mutex_unlock(&rprm->lock);
 	return ret;
 }
-
 
 static int rprm_rpres_request(struct rprm_elem *e, int type)
 {

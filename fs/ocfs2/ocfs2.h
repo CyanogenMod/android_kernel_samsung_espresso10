@@ -162,7 +162,6 @@ struct ocfs2_lock_res {
 	void                    *l_priv;
 	struct ocfs2_lock_res_ops *l_ops;
 
-
 	struct list_head         l_blocked_list;
 	struct list_head         l_mask_waiters;
 
@@ -579,7 +578,6 @@ static inline void ocfs2_set_osb_flag(struct ocfs2_super *osb,
 	spin_unlock(&osb->osb_lock);
 }
 
-
 static inline unsigned long  ocfs2_test_osb_flag(struct ocfs2_super *osb,
 						 unsigned long flag)
 {
@@ -667,7 +665,6 @@ static inline int ocfs2_uses_extended_slot_map(struct ocfs2_super *osb)
 		OCFS2_FEATURE_INCOMPAT_EXTENDED_SLOT_MAP);
 }
 
-
 #define OCFS2_IS_VALID_DINODE(ptr)					\
 	(!strcmp((ptr)->i_signature, OCFS2_INODE_SIGNATURE))
 
@@ -676,7 +673,6 @@ static inline int ocfs2_uses_extended_slot_map(struct ocfs2_super *osb)
 
 #define OCFS2_IS_VALID_GROUP_DESC(ptr)					\
 	(!strcmp((ptr)->bg_signature, OCFS2_GROUP_DESC_SIGNATURE))
-
 
 #define OCFS2_IS_VALID_XATTR_BLOCK(ptr)					\
 	(!strcmp((ptr)->xb_signature, OCFS2_XATTR_BLOCK_SIGNATURE))
@@ -850,4 +846,3 @@ static inline void _ocfs2_clear_bit(unsigned int bit, unsigned long *bitmap)
 #define ocfs2_find_next_zero_bit find_next_zero_bit_le
 #define ocfs2_find_next_bit find_next_bit_le
 #endif  /* OCFS2_H */
-

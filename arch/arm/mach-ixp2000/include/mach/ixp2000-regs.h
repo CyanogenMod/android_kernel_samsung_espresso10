@@ -35,7 +35,7 @@
  * fef00000	c0000000	1M		CAP
  */
 
-/* 
+/*
  * Static I/O regions.
  *
  * Most of the registers are clumped in 4K regions spread throughout
@@ -107,7 +107,7 @@
 #define IXP2000_PCI_CFG1_VIRT_BASE	0xfb000000
 #define IXP2000_PCI_CFG1_SIZE		0x01000000
 
-/* 
+/*
  * Timers
  */
 #define	IXP2000_TIMER_REG(x)		((volatile unsigned long*)(IXP2000_TIMER_VIRT_BASE | (x)))
@@ -302,7 +302,7 @@
 #define	IXP2000_SLOWPORT_FIN		SLOWPORT_CSR(0x28)
 
 /*
- * CCR values.  
+ * CCR values.
  * The CCR configures the clock division for the slowport interface.
  */
 #define	SLOWPORT_CCR_DIV_1		0x00
@@ -354,7 +354,6 @@
 #define	SLOWPORT_WRTC_SHIFT_SU		0x02
 #define	SLOWPORT_WRTC_SHFIT_PW		0x06
 
-
 /*
  * GPIO registers & GPIO interface.
  */
@@ -404,7 +403,6 @@
 #define	RSTALL				(1 << 16)
 #define	WDT_RESET_ENABLE		0x01000000
 
-
 /*
  * MSF registers.  The IXP2400 and IXP2800 have somewhat different MSF
  * units, but the registers that differ between the two don't overlap,
@@ -446,6 +444,5 @@
 #define IXP2000_MSF_TRAIN_FLOW_CONTROL		IXP2000_MSF_REG(0x00a8)
 #define IXP2000_MSF_TX_CALENDAR_0		IXP2000_MSF_REG(0x1000)
 #define IXP2000_MSF_RX_PORT_CALENDAR_STATUS	IXP2000_MSF_REG(0x1400)
-
 
 #endif				/* _IXP2000_H_ */

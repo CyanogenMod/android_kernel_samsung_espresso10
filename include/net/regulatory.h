@@ -10,7 +10,6 @@
  * published by the Free Software Foundation.
  */
 
-
 /**
  * enum environment_cap - Environment parsed from country IE
  * @ENVIRON_ANY: indicates country IE applies to both indoor and

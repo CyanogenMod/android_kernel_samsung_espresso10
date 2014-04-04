@@ -18,4 +18,3 @@ extern struct foo me;
 #define read_pda(me) (&me)
 
 #endif
-

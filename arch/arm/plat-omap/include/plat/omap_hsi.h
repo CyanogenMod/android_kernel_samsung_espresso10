@@ -36,7 +36,6 @@
  * Warning : 192MHz will force OPP100 on VDD_CORE (no OPP50 possible) */
 #define HSI_DEFAULT_FCLK		HSI_FCLK_LOW_SPEED	/* 96 MHz */
 
-
 #define HSI_PORT_OFFSET			0x1000
 
 /*
@@ -121,7 +120,6 @@
 #define HSI_SYS_GDD_MPU_IRQ_STATUS_REG	0x0800
 #define HSI_SYS_GDD_MPU_IRQ_ENABLE_REG	0x0804
 #define HSI_GDD_LCH(channel)		(1 << (channel))
-
 
 #define HSI_SYS_WAKE_OFFSET		0x10
 #define HSI_SYS_WAKE_BASE		0x0c00
@@ -224,7 +222,6 @@
 #define HSI_HST_SWAPBUF_BASE(port)		(HSI_HST_BASE(port) + 0x00c0)
 #define HSI_HST_SWAPBUF_CH_REG(port, channel)	(HSI_HST_SWAPBUF_BASE(port) +\
 						((channel) * 4))
-
 
 /* Additional registers for HSI */
 #define	HSI_HST_FIFO_COUNT			16
@@ -430,7 +427,6 @@
 #define HSI_GDD_CSSA_REG(channel)	(HSI_GDD_CSSA_BASE +\
 					((channel) * HSI_GDD_CSSA_OFFSET))
 
-
 #define HSI_GDD_CDSA_BASE		(HSI_GDD_BASE + 0x080c)
 #define HSI_GDD_CDSA_OFFSET		0x40
 #define HSI_GDD_CDSA_REG(channel)	(HSI_GDD_CDSA_BASE +\
@@ -440,7 +436,6 @@
 #define HSI_GDD_CEN_OFFSET		0x40
 #define HSI_GDD_CEN_REG(channel)	(HSI_GDD_CEN_BASE +\
 					((channel) * HSI_GDD_CEN_OFFSET))
-
 
 #define HSI_GDD_CSAC_BASE		(HSI_GDD_BASE + 0x0818)
 #define HSI_GDD_CSAC_OFFSET		0x40
@@ -474,7 +469,6 @@
 			      HSI_SYS_MPU_STATUS_REG(port, irq) :    \
 			      HSI_SYS_MPU_U_STATUS_REG(port, irq))
 
-
 /* HSI errata handling */
 #define IS_HSI_ERRATA(errata, id)		(errata & (id))
 #define SET_HSI_ERRATA(errata, id)		(errata |= (id))
@@ -496,7 +490,6 @@
 * System cannot enter in off mode due to the DSP.
 */
 #define HSI_ERRATUM_i702_PM_HSI_SWAKEUP			BIT(2)
-
 
 /**
  *	struct omap_ssi_config - SSI board configuration

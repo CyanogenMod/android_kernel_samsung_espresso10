@@ -1,4 +1,3 @@
-
 /* arch/arm/mach-omap2/board-t1-camera.c
  *
  * Copyright (C) 2012 Samsung Electronics Co, Ltd
@@ -26,7 +25,6 @@ static ssize_t front_camera_type_show(struct device *dev,
 	return sprintf(buf, "%s", camType);
 }
 static DEVICE_ATTR(camtype_front, S_IRUGO, front_camera_type_show, NULL);
-
 
 void __init omap4_t1_cam_init(void)
 {

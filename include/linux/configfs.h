@@ -120,7 +120,6 @@ static inline void config_group_put(struct config_group *group)
 extern struct config_item *config_group_find_item(struct config_group *,
 						  const char *);
 
-
 struct configfs_attribute {
 	const char		*ca_name;
 	struct module 		*ca_owner;

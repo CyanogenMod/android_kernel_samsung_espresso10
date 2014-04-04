@@ -455,7 +455,6 @@ static inline int is_callback(u32 proc)
 		|| proc == NLMPROC_NSM_NOTIFY;
 }
 
-
 static int lockd_authenticate(struct svc_rqst *rqstp)
 {
 	rqstp->rq_client = NULL;
@@ -474,7 +473,6 @@ static int lockd_authenticate(struct svc_rqst *rqstp)
 	}
 	return SVC_DENIED;
 }
-
 
 param_set_min_max(port, int, simple_strtol, 0, 65535)
 param_set_min_max(grace_period, unsigned long, simple_strtoul,

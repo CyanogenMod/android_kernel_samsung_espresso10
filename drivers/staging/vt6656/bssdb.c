@@ -61,16 +61,11 @@
 
 /*---------------------  Static Definitions -------------------------*/
 
-
-
-
 /*---------------------  Static Classes  ----------------------------*/
 
 /*---------------------  Static Variables  --------------------------*/
 static int          msglevel                =MSG_LEVEL_INFO;
 //static int          msglevel                =MSG_LEVEL_DEBUG;
-
-
 
 const WORD             awHWRetry0[5][5] = {
                                             {RATE_18M, RATE_18M, RATE_12M, RATE_12M, RATE_12M},
@@ -87,8 +82,6 @@ const WORD             awHWRetry1[5][5] = {
                                             {RATE_54M, RATE_54M, RATE_36M, RATE_18M, RATE_18M}
                                            };
 
-
-
 /*---------------------  Static Functions  --------------------------*/
 
 void s_vCheckSensitivity(void *hDeviceContext);
@@ -97,12 +90,7 @@ void s_uCalculateLinkQual(void *hDeviceContext);
 
 /*---------------------  Export Variables  --------------------------*/
 
-
 /*---------------------  Export Functions  --------------------------*/
-
-
-
-
 
 /*+
  *
@@ -241,7 +229,6 @@ PKnownBSS BSSpSearchBSSList(void *hDeviceContext,
         DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"BSSpSearchBSSList pSelect1[%02X %02X %02X-%02X %02X %02X]\n",*pCurrBSS->abyBSSID,*(pCurrBSS->abyBSSID+1),*(pCurrBSS->abyBSSID+2),*(pCurrBSS->abyBSSID+3),*(pCurrBSS->abyBSSID+4),*(pCurrBSS->abyBSSID+5));
         jj++;
 
-
                 if (pSelect == NULL) {
                     pSelect = pCurrBSS;
                 } else {
@@ -270,7 +257,6 @@ pDevice->bSameBSSMaxNum = jj;
 
 }
 
-
 /*+
  *
  * Routine Description:
@@ -280,7 +266,6 @@ pDevice->bSameBSSMaxNum = jj;
  *    None.
  *
 -*/
-
 
 void BSSvClearBSSList(void *hDeviceContext, BOOL bKeepCurrBSSID)
 {
@@ -313,8 +298,6 @@ void BSSvClearBSSList(void *hDeviceContext, BOOL bKeepCurrBSSID)
 
     return;
 }
-
-
 
 /*+
  *
@@ -351,8 +334,6 @@ PKnownBSS BSSpAddrIsInBSSList(void *hDeviceContext,
     return NULL;
 };
 
-
-
 /*+
  *
  * Routine Description:
@@ -388,8 +369,6 @@ BOOL BSSbInsertToBSSList(void *hDeviceContext,
     PKnownBSS       pBSSList = NULL;
     unsigned int            ii;
     BOOL            bParsingQuiet = FALSE;
-
-
 
     pBSSList = (PKnownBSS)&(pMgmt->sBSSList[0]);
 
@@ -572,7 +551,6 @@ BOOL BSSbInsertToBSSList(void *hDeviceContext,
     return TRUE;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -611,10 +589,8 @@ BOOL BSSbUpdateToBSSList(void *hDeviceContext,
     BOOL            bParsingQuiet = FALSE;
   //  BYTE            abyTmpSSID[WLAN_IEHDR_LEN + WLAN_SSID_MAXLEN + 1];
 
-
     if (pBSSList == NULL)
         return FALSE;
-
 
     HIDWORD(pBSSList->qwBSSTimestamp) = cpu_to_le32(HIDWORD(qwTimestamp));
     LODWORD(pBSSList->qwBSSTimestamp) = cpu_to_le32(LODWORD(qwTimestamp));
@@ -715,10 +691,6 @@ BOOL BSSbUpdateToBSSList(void *hDeviceContext,
     return TRUE;
 }
 
-
-
-
-
 /*+
  *
  * Routine Description:
@@ -750,8 +722,6 @@ BOOL BSSbIsSTAInNodeDB(void *hDeviceContext,
 
    return FALSE;
 };
-
-
 
 /*+
  *
@@ -812,8 +782,6 @@ void BSSvCreateOneNode(void *hDeviceContext, unsigned int *puNodeIndex)
     return;
 };
 
-
-
 /*+
  *
  * Routine Description:
@@ -832,7 +800,6 @@ void BSSvRemoveOneNode(void *hDeviceContext, unsigned int uNodeIndex)
     PSMgmtObject    pMgmt = &(pDevice->sMgmtObj);
     BYTE            byMask[8] = {1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80};
     struct sk_buff  *skb;
-
 
     while ((skb = skb_dequeue(&pMgmt->sNodeDBTable[uNodeIndex].sTxPSQueue)) != NULL)
             dev_kfree_skb(skb);
@@ -1049,7 +1016,6 @@ if((pMgmt->eCurrState!=WMAC_STATE_ASSOC) &&
                 if (pMgmt->sNodeDBTable[ii].bPSEnable)
                     uSleepySTACnt++;
 
-
             }
 
             // Rate fallback check
@@ -1085,7 +1051,6 @@ if((pMgmt->eCurrState!=WMAC_STATE_ASSOC) &&
         }
 
     }
-
 
     if ((pMgmt->eCurrMode == WMAC_MODE_ESS_AP) && (pDevice->byBBType == BB_TYPE_11G)) {
 
@@ -1135,7 +1100,6 @@ if((pMgmt->eCurrState!=WMAC_STATE_ASSOC) &&
         }
 
     }
-
 
     // Check if any STA in PS mode, enable DTIM multicast deliver
     if (pMgmt->eCurrMode == WMAC_MODE_ESS_AP) {
@@ -1478,7 +1442,6 @@ void BSSvUpdateNodeTxCounter(void *hDeviceContext,
 
     return;
 
-
 }
 
 /*+
@@ -1639,4 +1602,3 @@ void s_vCheckPreEDThreshold(void *hDeviceContext)
     }
     return;
 }
-

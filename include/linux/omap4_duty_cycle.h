@@ -28,4 +28,3 @@ int duty_cooling_dev_register(struct duty_cycle_dev *duty_cycle_dev);
 void duty_cooling_dev_unregister(void);
 
 #endif /*__OMAP4_DUTY_CYCLE_H__*/
-

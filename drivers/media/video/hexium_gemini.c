@@ -345,7 +345,6 @@ static int vidioc_s_ctrl(struct file *file, void *fh, struct v4l2_control *vc)
 	return -EINVAL;
 }
 
-
 static struct saa7146_ext_vv vv_data;
 
 /* this function only gets called when the probing was successful */

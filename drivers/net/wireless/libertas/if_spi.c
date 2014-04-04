@@ -117,7 +117,6 @@ MODULE_FIRMWARE("libertas/gspi8686.bin");
 MODULE_FIRMWARE("libertas/gspi8688_helper.bin");
 MODULE_FIRMWARE("libertas/gspi8688.bin");
 
-
 /*
  * SPI Interface Unit Routines
  *

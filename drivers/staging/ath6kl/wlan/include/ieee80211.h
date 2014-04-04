@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ieee80211.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -49,7 +49,6 @@
 #define IEEE80211_WAPI_EXTIVLEN      10   /* extended IV length */
 #endif /* WAPI ENABLE */
 
-
 #define IEEE80211_ADDR_LEN  6       /* size of 802.11 address */
 /* is 802.11 address multicast/broadcast? */
 #define IEEE80211_IS_MULTICAST(_a)  (*(_a) & 0x01)
@@ -63,7 +62,6 @@
                     IEEE80211_WEP_EXTIVLEN)
 #define TKIP_TRAILER IEEE80211_WEP_CRCLEN
 #define TKIP_MICLEN  IEEE80211_WEP_MICLEN
-
 
 #define IEEE80211_ADDR_EQ(addr1, addr2)     \
     (memcmp(addr1, addr2, IEEE80211_ADDR_LEN) == 0)
@@ -90,8 +88,6 @@
 
 #define IEEE80211_IS_VALID_WEP_CIPHER_LEN(len) \
         (((len) == 5) || ((len) == 13) || ((len) == 16))
-
-
 
 /*
  * generic definitions for IEEE 802.11 frames
@@ -342,7 +338,6 @@ typedef PREPACK struct wmm_tspec_ie_t {
     u16 sba;
     u16 mediumTime;
 } POSTPACK WMM_TSPEC_IE;
-
 
 /*
  * BEACON management packets

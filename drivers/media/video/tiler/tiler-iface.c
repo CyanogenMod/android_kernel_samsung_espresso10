@@ -130,7 +130,6 @@ static void destroy_processes(void)
 	mutex_unlock(&ops->mtx);
 }
 
-
 /* initialize tiler interface */
 void tiler_iface_init(struct tiler_ops *tiler)
 {

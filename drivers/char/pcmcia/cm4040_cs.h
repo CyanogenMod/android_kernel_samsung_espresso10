@@ -23,7 +23,6 @@
 #define SCR_PULSE_INTERRUPT      0x02
 #define SCR_POWER_DOWN           0x01
 
-
 #define  CMD_PC_TO_RDR_ICCPOWERON       0x62
 #define  CMD_PC_TO_RDR_GETSLOTSTATUS    0x65
 #define  CMD_PC_TO_RDR_ICCPOWEROFF      0x63
@@ -36,7 +35,6 @@
 #define  CMD_PC_TO_RDR_ICCCLOCK         0x6E
 #define  CMD_PC_TO_RDR_TEST_SECURE      0x74
 #define  CMD_PC_TO_RDR_OK_SECURE        0x89
-
 
 #define  CMD_RDR_TO_PC_SLOTSTATUS         0x81
 #define  CMD_RDR_TO_PC_DATABLOCK          0x80

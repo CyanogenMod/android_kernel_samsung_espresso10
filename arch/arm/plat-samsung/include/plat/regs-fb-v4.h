@@ -106,7 +106,6 @@
 #define DITHMODE				(0x170)
 #define WINxMAP(_win)				(0x180 + ((_win) * 4))
 
-
 #define DITHMODE_R_POS_MASK			(0x3 << 5)
 #define DITHMODE_R_POS_SHIFT			(5)
 #define DITHMODE_R_POS_8BIT			(0x0 << 5)
@@ -135,7 +134,6 @@
 #define WPALCON_W4PAL_16BPP_A555		(1 << 8)
 #define WPALCON_W3PAL_16BPP_A555		(1 << 7)
 #define WPALCON_W2PAL_16BPP_A555		(1 << 6)
-
 
 /* Notes on per-window bpp settings
  *

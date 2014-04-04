@@ -57,7 +57,6 @@ struct mv_xor_shared_private {
 	void __iomem	*xor_high_base;
 };
 
-
 /**
  * struct mv_xor_device - internal representation of a XOR device
  * @pdev: Platform device
@@ -178,6 +177,5 @@ struct mv_xor_desc {
 #define MV_XOR_MIN_BYTE_COUNT	(128)
 #define XOR_MAX_BYTE_COUNT	((16 * 1024 * 1024) - 1)
 #define MV_XOR_MAX_BYTE_COUNT	XOR_MAX_BYTE_COUNT
-
 
 #endif

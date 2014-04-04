@@ -170,7 +170,6 @@ static struct platform_device gpio_keys = {
 	.id   = -1,
 };
 
-
 /*
  * EGPIO (Xilinx CPLD)
  *
@@ -646,7 +645,6 @@ static struct pxamci_platform_data magician_mci_info = {
 	.gpio_power		= EGPIO_MAGICIAN_SD_POWER,
 };
 
-
 /*
  * USB OHCI
  */
@@ -656,7 +654,6 @@ static struct pxaohci_platform_data magician_ohci_info = {
 	.flags		= ENABLE_PORT1 | ENABLE_PORT3 | POWER_CONTROL_LOW,
 	.power_budget	= 0,
 };
-
 
 /*
  * StrataFlash
@@ -761,7 +758,6 @@ static void __init magician_init(void)
 	} else
 		pr_err("LCD detection: CPLD mapping failed\n");
 }
-
 
 MACHINE_START(MAGICIAN, "HTC Magician")
 	.boot_params = 0xa0000100,

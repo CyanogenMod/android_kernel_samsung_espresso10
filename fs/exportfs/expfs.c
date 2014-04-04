@@ -18,10 +18,8 @@
 
 #define dprintk(fmt, args...) do{}while(0)
 
-
 static int get_name(struct vfsmount *mnt, struct dentry *dentry, char *name,
 		struct dentry *child);
-
 
 static int exportfs_get_name(struct vfsmount *mnt, struct dentry *dir,
 		char *name, struct dentry *child)

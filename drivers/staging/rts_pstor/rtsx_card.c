@@ -1095,7 +1095,6 @@ int card_share_mode(struct rtsx_chip *chip, int card)
 	return STATUS_SUCCESS;
 }
 
-
 int select_card(struct rtsx_chip *chip, int card)
 {
 	int retval;

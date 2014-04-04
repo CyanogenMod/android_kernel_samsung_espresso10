@@ -16,4 +16,3 @@ struct ht_priv {
 };
 
 #endif	/*_RTL871X_HT_H_ */
-

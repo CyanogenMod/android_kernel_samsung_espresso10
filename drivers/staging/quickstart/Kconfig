@@ -7,4 +7,3 @@ config ACPI_QUICKSTART
 
 	  To compile this driver as a module, choose M here: the module will be
 	  called quickstart.
-

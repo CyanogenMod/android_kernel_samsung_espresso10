@@ -104,7 +104,6 @@ static const expansioncard_ops_t pata_icside_ops_arcin_v5 = {
 	.irqdisable	= pata_icside_irqdisable_arcin_v5,
 };
 
-
 /* ---------------- Version 6 PCB Support Functions --------------------- */
 /* Prototype: pata_icside_irqenable_arcin_v6 (struct expansion_card *ec, int irqnr)
  * Purpose  : enable interrupts from card
@@ -147,7 +146,6 @@ static const expansioncard_ops_t pata_icside_ops_arcin_v6 = {
 	.irqdisable	= pata_icside_irqdisable_arcin_v6,
 	.irqpending	= pata_icside_irqpending_arcin_v6,
 };
-
 
 /*
  * SG-DMA support.
@@ -290,7 +288,6 @@ static int icside_dma_init(struct pata_icside_info *info)
 
 	return 0;
 }
-
 
 static struct scsi_host_template pata_icside_sht = {
 	ATA_BASE_SHT(DRV_NAME),

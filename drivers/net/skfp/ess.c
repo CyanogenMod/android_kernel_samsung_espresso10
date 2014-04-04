@@ -38,7 +38,6 @@
 #include "h/smc.h"
 #include "h/smt_p.h"
 
-
 #ifndef	SLIM_SMT
 
 #ifdef ESS
@@ -73,7 +72,6 @@ static const struct fddi_addr null_addr = {{0,0,0,0,0,0}} ;
 	-------------------------------------------------------------
 */
 
-
 /*
 	-------------------------------------------------------------
 	LOCAL FUNCTIONS:
@@ -103,7 +101,6 @@ void ess_para_change(struct s_smc *smc);
 int ess_raf_received_pack(struct s_smc *smc, SMbuf *mb, struct smt_header *sm,
 			  int fs);
 static int process_bw_alloc(struct s_smc *smc, long int payload, long int overhead);
-
 
 /*
  * --------------------------------------------------------------------------
@@ -176,7 +173,7 @@ int ess_raf_received_pack(struct s_smc *smc, SMbuf *mb, struct smt_header *sm,
 			 */
 			if (!local || smc->mib.fddiESSPayload)
 				return fs;
-			
+
 			p = (void *) sm_to_para(smc,sm,SMT_P0019)  ;
 			for (i = 0; i < 5; i++) {
 				if (((struct smt_p_0019 *)p)->alloc_addr.a[i]) {
@@ -252,13 +249,13 @@ int ess_raf_received_pack(struct s_smc *smc, SMbuf *mb, struct smt_header *sm,
                 if (!p) {
                         printk(KERN_ERR "ESS: sm_to_para failed");
                         return fs;
-                }       
+                }
 		payload = ((struct smt_p_320f *)p)->mib_payload ;
 		p = (void *) sm_to_para(smc,sm,SMT_P3210) ;
                 if (!p) {
                         printk(KERN_ERR "ESS: sm_to_para failed");
                         return fs;
-                }       
+                }
 		overhead = ((struct smt_p_3210 *)p)->mib_overhead ;
 
 		DB_ESSN(2,"payload= %lx	overhead= %lx\n",payload,overhead) ;
@@ -463,7 +460,6 @@ static int process_bw_alloc(struct s_smc *smc, long int payload, long int overhe
 	smc->mib.a[PATH0].fddiPATHSbaPayload = payload ;
 	smc->mib.a[PATH0].fddiPATHSbaOverhead = overhead ;
 
-
 	DB_ESSN(2,"tsync = %lx\n",smc->ess.sync_bw,0) ;
 
 	ess_config_fifo(smc) ;
@@ -576,7 +572,7 @@ static void ess_send_alc_req(struct s_smc *smc)
 		smc->ess.timer_count = 7 ;	/* next RAF alc req after 3 s */
 		return ;
 	}
-	
+
 	/*
 	 * get and initialize the response frame
 	 */
@@ -693,7 +689,7 @@ void ess_para_change(struct s_smc *smc)
 static void ess_config_fifo(struct s_smc *smc)
 {
 	/*
-	 * if nothing to do exit 
+	 * if nothing to do exit
 	 */
 	if (smc->mib.a[PATH0].fddiPATHSbaPayload) {
 		if (smc->hw.fp.fifo.fifo_config_mode & SYNC_TRAFFIC_ON &&
@@ -717,4 +713,3 @@ static void ess_config_fifo(struct s_smc *smc)
 #endif /* ESS */
 
 #endif	/* no SLIM_SMT */
-

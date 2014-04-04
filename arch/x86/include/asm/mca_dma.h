@@ -54,7 +54,6 @@
 #define MCA_DMA_MODE_IO    0x01  /* DMA from IO register */
 #define MCA_DMA_MODE_16    0x40  /* 16 bit xfers */
 
-
 /**
  *	mca_enable_dma	-	channel to enable DMA on
  *	@dmanr: DMA channel

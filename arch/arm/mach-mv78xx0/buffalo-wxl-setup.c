@@ -23,7 +23,6 @@
 #include "common.h"
 #include "mpp.h"
 
-
 /* This arch has 2 Giga Ethernet */
 
 static struct mv643xx_eth_platform_data db78x00_ge00_data = {
@@ -34,7 +33,6 @@ static struct mv643xx_eth_platform_data db78x00_ge01_data = {
 	.phy_addr	= MV643XX_ETH_PHY_ADDR(8),
 };
 
-
 /* 2 SATA controller supporting HotPlug */
 
 static struct mv_sata_platform_data db78x00_sata_data = {
@@ -44,7 +42,6 @@ static struct mv_sata_platform_data db78x00_sata_data = {
 static struct i2c_board_info __initdata db78x00_i2c_rtc = {
 	I2C_BOARD_INFO("ds1338", 0x68),
 };
-
 
 static unsigned int wxl_mpp_config[] __initdata = {
 	MPP0_GE1_TXCLK,
@@ -99,7 +96,6 @@ static unsigned int wxl_mpp_config[] __initdata = {
 	MPP49_SATA0_ACTn,
 	0
 };
-
 
 static void __init wxl_init(void)
 {

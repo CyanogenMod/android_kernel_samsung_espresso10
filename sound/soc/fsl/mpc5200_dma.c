@@ -182,7 +182,6 @@ static int psc_dma_trigger(struct snd_pcm_substream *substream, int cmd)
 	return 0;
 }
 
-
 /* ---------------------------------------------------------------------
  * The PSC DMA 'ASoC platform' driver
  *

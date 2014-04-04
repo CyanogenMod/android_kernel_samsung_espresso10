@@ -81,5 +81,3 @@
 #define ZEUS_SRAM_SIZE		(256 * 1024)
 
 #endif
-
-

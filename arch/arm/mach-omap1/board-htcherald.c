@@ -425,7 +425,6 @@ static struct omap_mmc_platform_data htc_mmc1_data = {
 static struct omap_mmc_platform_data *htc_mmc_data[1];
 #endif
 
-
 /* Platform devices for the Herald */
 static struct platform_device *devices[] __initdata = {
 	&kp_device,

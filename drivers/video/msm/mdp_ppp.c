@@ -516,7 +516,6 @@ static void blit_blur(const struct mdp_info *mdp, struct mdp_blit_req *req,
 	regs->op |= (PPP_OP_SCALE_Y_ON | PPP_OP_SCALE_X_ON);
 }
 
-
 #define IMG_LEN(rect_h, w, rect_w, bpp) (((rect_h) * w) * bpp)
 
 #define Y_TO_CRCB_RATIO(format) \
@@ -574,7 +573,6 @@ static int valid_src_dst(unsigned long src_start, unsigned long src_len,
 	}
 	return 1;
 }
-
 
 static void flush_imgs(struct mdp_blit_req *req, struct mdp_regs *regs,
 		       struct file *src_file, struct file *dst_file)

@@ -130,7 +130,7 @@ out:
 
 /*
  * New, all-improved, singing, dancing, iBCS2-compliant getdents()
- * interface. 
+ * interface.
  */
 struct linux_dirent {
 	unsigned long	d_ino;

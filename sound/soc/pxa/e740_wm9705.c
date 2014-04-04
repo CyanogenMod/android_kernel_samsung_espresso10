@@ -25,7 +25,6 @@
 #include "../codecs/wm9705.h"
 #include "pxa2xx-ac97.h"
 
-
 #define E740_AUDIO_OUT 1
 #define E740_AUDIO_IN  2
 

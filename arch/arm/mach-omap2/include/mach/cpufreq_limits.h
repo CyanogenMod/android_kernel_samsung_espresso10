@@ -1,5 +1,3 @@
-
-
 #ifndef OMAP_ARCH_PM_COMMON_H
 #define OMAP_ARCH_PM_COMMON_H
 
@@ -30,4 +28,3 @@ extern void omap_cpufreq_max_limit_free(unsigned int nId);
 
 #define CONFIG_DVFS_LIMIT 1
 #endif
-

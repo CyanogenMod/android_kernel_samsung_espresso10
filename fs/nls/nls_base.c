@@ -57,7 +57,7 @@ int utf8_to_utf32(const u8 *s, int len, unicode_t *pu)
 	unsigned long l;
 	int c0, c, nc;
 	const struct utf8_table *t;
-  
+
 	nc = 0;
 	c0 = *s;
 	l = c0;
@@ -114,34 +114,57 @@ int utf32_to_utf8(unicode_t u, u8 *s, int maxlen)
 }
 EXPORT_SYMBOL(utf32_to_utf8);
 
-int utf8s_to_utf16s(const u8 *s, int len, wchar_t *pwcs)
+static inline void put_utf16(wchar_t *s, unsigned c, enum utf16_endian endian)
+{
+	switch (endian) {
+	default:
+		*s = (wchar_t) c;
+		break;
+	case UTF16_LITTLE_ENDIAN:
+		*s = __cpu_to_le16(c);
+		break;
+	case UTF16_BIG_ENDIAN:
+		*s = __cpu_to_be16(c);
+		break;
+	}
+}
+
+int utf8s_to_utf16s(const u8 *s, int len, enum utf16_endian endian,
+		wchar_t *pwcs, int maxlen)
 {
 	u16 *op;
 	int size;
 	unicode_t u;
 
 	op = pwcs;
-	while (*s && len > 0) {
+	while (len > 0 && maxlen > 0 && *s) {
 		if (*s & 0x80) {
 			size = utf8_to_utf32(s, len, &u);
 			if (size < 0)
 				return -EINVAL;
-
-			if (u >= PLANE_SIZE) {
-				u -= PLANE_SIZE;
-				*op++ = (wchar_t) (SURROGATE_PAIR |
-						((u >> 10) & SURROGATE_BITS));
-				*op++ = (wchar_t) (SURROGATE_PAIR |
-						SURROGATE_LOW |
-						(u & SURROGATE_BITS));
-			} else {
-				*op++ = (wchar_t) u;
-			}
 			s += size;
 			len -= size;
+
+			if (u >= PLANE_SIZE) {
+				if (maxlen < 2)
+					break;
+				u -= PLANE_SIZE;
+				put_utf16(op++, SURROGATE_PAIR |
+						((u >> 10) & SURROGATE_BITS),
+						endian);
+				put_utf16(op++, SURROGATE_PAIR |
+						SURROGATE_LOW |
+						(u & SURROGATE_BITS),
+						endian);
+				maxlen -= 2;
+			} else {
+				put_utf16(op++, u, endian);
+				maxlen--;
+			}
 		} else {
-			*op++ = *s++;
+			put_utf16(op++, *s++, endian);
 			len--;
+			maxlen--;
 		}
 	}
 	return op - pwcs;
@@ -227,7 +250,7 @@ int register_nls(struct nls_table * nls)
 	nls->next = tables;
 	tables = nls;
 	spin_unlock(&nls_lock);
-	return 0;	
+	return 0;
 }
 
 int unregister_nls(struct nls_table * nls)
@@ -469,7 +492,6 @@ static const unsigned char charset2upper[256] = {
 	0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff, /* 0xf8-0xff */
 };
 
-
 static int uni2char(wchar_t uni, unsigned char *out, int boundlen)
 {
 	const unsigned char *uni2charset;
@@ -507,7 +529,7 @@ static struct nls_table default_table = {
 struct nls_table *load_nls_default(void)
 {
 	struct nls_table *default_nls;
-	
+
 	default_nls = load_nls(CONFIG_NLS_DEFAULT);
 	if (default_nls != NULL)
 		return default_nls;

@@ -436,8 +436,6 @@ struct cx231xx_fh {
 
 	enum v4l2_buf_type type;
 
-
-
 /*following is copyed from cx23885.h*/
 	u32                        resources;
 
@@ -821,8 +819,6 @@ void cx231xx_dump_HH_reg(struct cx231xx *dev);
 void update_HH_register_after_set_DIF(struct cx231xx *dev);
 void cx231xx_dump_SC_reg(struct cx231xx *dev);
 
-
-
 int cx231xx_dif_set_standard(struct cx231xx *dev, u32 standard);
 int cx231xx_tuner_pre_channel_change(struct cx231xx *dev);
 int cx231xx_tuner_post_channel_change(struct cx231xx *dev);
@@ -977,7 +973,6 @@ void cx231xx_ir_exit(struct cx231xx *dev);
 #define cx231xx_ir_init(dev)	(0)
 #define cx231xx_ir_exit(dev)	(0)
 #endif
-
 
 /* printk macros */
 

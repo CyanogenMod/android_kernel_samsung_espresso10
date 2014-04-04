@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 //
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -24,9 +24,6 @@
 
 #ifndef __AR3KPSPARSER_H
 #define __AR3KPSPARSER_H
-
-
-
 
 #include <linux/fs.h>
 #include <linux/slab.h>
@@ -51,8 +48,6 @@
 #define ATH_DEBUG_WARN         (1 << 1)
 #define ATH_DEBUG_INFO         (1 << 2)
 
-
-
 #define false   0
 #define true    1
 
@@ -66,22 +61,15 @@
 #define A_STRTOUL               simple_strtoul
 #endif  /* A_STRTOL */
 
-#ifndef A_STRTOL 
+#ifndef A_STRTOL
 #define A_STRTOL                simple_strtol
 #endif /* A_STRTOL */
-
 
 /* The maximum number of bytes possible in a patch entry */
 #define MAX_PATCH_SIZE                    20000
 
 /* Maximum HCI packets that will be formed from the Patch file */
 #define MAX_NUM_PATCH_ENTRY               (MAX_PATCH_SIZE/MAX_BYTE_LENGTH) + 1
-
-
-
-
-
-
 
 struct ps_cmd_packet
 {
@@ -95,7 +83,7 @@ int AthDoParsePatch(u8 *, u32 );
 /* parses a PS information buffer and stores it in a global structure */
 int AthDoParsePS(u8 *, u32 );
 
-/* 
+/*
  *  Uses the output of Both AthDoParsePS and AthDoParsePatch APIs to form HCI command array with
  *  all the PS and patch commands.
  *  The list will have the below mentioned commands in order.
@@ -105,7 +93,7 @@ int AthDoParsePS(u8 *, u32 );
  *  PS Reset Command
  *  PS Tag Command(s)
  *
- */  
+ */
 int AthCreateCommandList(struct ps_cmd_packet **, u32 *);
 
 /* Cleanup the dynamically allicated HCI command list */

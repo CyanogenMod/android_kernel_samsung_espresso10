@@ -792,7 +792,6 @@ spin_unlock_irqrestore(&temp_sensor->lock, flags);
 	return ret;
 }
 
-
 static int omap_temp_sensor_disable(struct omap_temp_sensor *temp_sensor)
 {
 	u32 temp;
@@ -956,10 +955,8 @@ static int __devinit omap_temp_sensor_probe(struct platform_device *pdev)
 	pm_runtime_enable(dev);
 	pm_runtime_irq_safe(dev);
 
-
 	kobject_uevent(&pdev->dev.kobj, KOBJ_ADD);
 	platform_set_drvdata(pdev, temp_sensor);
-
 
 	/*
 	 * check if the efuse has a non-zero value if not

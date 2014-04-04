@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_services.h" company="Atheros">
 //    Copyright (c) 2007 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -28,8 +28,8 @@
 
 typedef enum {
     RSVD_SERVICE_GROUP  = 0,
-    WMI_SERVICE_GROUP   = 1, 
-    
+    WMI_SERVICE_GROUP   = 1,
+
     HTC_TEST_GROUP = 254,
     HTC_SERVICE_GROUP_LAST = 255
 }HTC_SERVICE_GROUP_IDS;

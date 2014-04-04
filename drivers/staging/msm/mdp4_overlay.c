@@ -42,14 +42,12 @@
 #include "msm_fb.h"
 #include "mdp4.h"
 
-
 struct mdp4_overlay_ctrl {
 	struct mdp4_overlay_pipe plist[MDP4_MAX_OVERLAY_PIPE];
 	struct mdp4_overlay_pipe *stage[MDP4_MAX_MIXER][MDP4_MAX_STAGE];
 } mdp4_overlay_db;
 
 static struct mdp4_overlay_ctrl *ctrl = &mdp4_overlay_db;
-
 
 void mdp4_overlay_dmap_cfg(struct msm_fb_data_type *mfd, int lcdc)
 {
@@ -61,7 +59,6 @@ void mdp4_overlay_dmap_cfg(struct msm_fb_data_type *mfd, int lcdc)
 		dma2_cfg_reg |= DMA_PACK_PATTERN_BGR;
 	else
 		dma2_cfg_reg |= DMA_PACK_PATTERN_RGB;
-
 
 	if (mfd->panel_info.bpp == 18) {
 		dma2_cfg_reg |= DMA_DSTC0G_6BITS |	/* 666 18BPP */
@@ -746,7 +743,6 @@ void mdp4_mixer_blend_setup(struct mdp4_overlay_pipe *pipe)
 		blend_op = (MDP4_BLEND_BG_ALPHA_BG_CONST |
 				MDP4_BLEND_FG_ALPHA_FG_CONST);
 
-
 	if (pipe->alpha_enable == 0) { 	/* not ARGB */
 		if (pipe->is_fg) {
 			outpdw(overlay_base + off + 0x108, pipe->alpha);
@@ -883,7 +879,6 @@ struct mdp4_overlay_pipe *mdp4_overlay_pipe_alloc(void)
 
 	return NULL;
 }
-
 
 void mdp4_overlay_pipe_free(struct mdp4_overlay_pipe *pipe)
 {
@@ -1162,7 +1157,6 @@ uint32 tile_mem_size(struct mdp4_overlay_pipe *pipe, struct tile_desc *tp)
 {
 	uint32 tile_w, tile_h;
 	uint32 row_num_w, row_num_h;
-
 
 	tile_w = tp->width * tp->row_tile_w;
 	tile_h = tp->height * tp->row_tile_h;

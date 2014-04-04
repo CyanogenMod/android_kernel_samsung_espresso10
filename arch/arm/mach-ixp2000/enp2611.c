@@ -60,7 +60,6 @@ static struct sys_timer enp2611_timer = {
 	.offset		= ixp2000_gettimeoffset,
 };
 
-
 /*************************************************************************
  * ENP-2611 I/O
  *************************************************************************/
@@ -88,7 +87,6 @@ void __init enp2611_map_io(void)
 	ixp2000_map_io();
 	iotable_init(enp2611_io_desc, ARRAY_SIZE(enp2611_io_desc));
 }
-
 
 /*************************************************************************
  * ENP-2611 PCI
@@ -195,7 +193,6 @@ int __init enp2611_pci_init(void)
 
 subsys_initcall(enp2611_pci_init);
 
-
 /*************************************************************************
  * ENP-2611 Machine Initialization
  *************************************************************************/
@@ -250,7 +247,6 @@ static void __init enp2611_init_machine(void)
 	ixp2000_uart_init();
 }
 
-
 MACHINE_START(ENP2611, "Radisys ENP-2611 PCI network processor board")
 	/* Maintainer: Lennert Buytenhek <buytenh@wantstofly.org> */
 	.boot_params	= 0x00000100,
@@ -259,5 +255,3 @@ MACHINE_START(ENP2611, "Radisys ENP-2611 PCI network processor board")
 	.timer		= &enp2611_timer,
 	.init_machine	= enp2611_init_machine,
 MACHINE_END
-
-

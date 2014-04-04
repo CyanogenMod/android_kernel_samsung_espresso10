@@ -197,20 +197,17 @@
 #define PCIE_CFG_FIRMWARE_POWER_BUDGETING_8_7 0x00000188 /* FIRMWARE_POWER_BUDGETING_8_7 Register */
 #define PCIE_CFG_PCIE_1_1_ADVISORY_NON_FATAL_ERROR_MASKING 0x0000018c /* PCIE_1_1_ADVISORY_NON_FATAL_ERROR_MASKING Register */
 
-
 /****************************************************************************
  * BCM70012_TGT_TOP_PCIE_TL
  ***************************************************************************/
 #define PCIE_TL_TL_CONTROL             0x00000400 /* TL_CONTROL Register */
 #define PCIE_TL_TRANSACTION_CONFIGURATION 0x00000404 /* TRANSACTION_CONFIGURATION Register */
 
-
 /****************************************************************************
  * BCM70012_TGT_TOP_PCIE_DLL
  ***************************************************************************/
 #define PCIE_DLL_DATA_LINK_CONTROL     0x00000500 /* DATA_LINK_CONTROL Register */
 #define PCIE_DLL_DATA_LINK_STATUS      0x00000504 /* DATA_LINK_STATUS Register */
-
 
 /****************************************************************************
  * BCM70012_TGT_TOP_INTR
@@ -222,7 +219,6 @@
 #define INTR_INTR_MSK_SET_REG          0x00000710 /* Interrupt Mask Set Register */
 #define INTR_INTR_MSK_CLR_REG          0x00000714 /* Interrupt Mask Clear Register */
 #define INTR_EOI_CTRL                  0x00000720 /* End of interrupt control register */
-
 
 /****************************************************************************
  * BCM70012_MISC_TOP_MISC1
@@ -267,7 +263,6 @@
 #define MISC1_READ_CHANNEL_ERROR_STATUS 0x00000c9c /* Read Channel Error Status */
 #define MISC1_PCIE_DMA_CTRL            0x00000ca0 /* PCIE DMA Control Register */
 
-
 /****************************************************************************
  * BCM70012_MISC_TOP_MISC2
  ***************************************************************************/
@@ -275,7 +270,6 @@
 #define MISC2_INTERNAL_STATUS          0x00000d04 /* Internal Status Register */
 #define MISC2_INTERNAL_STATUS_MUX_CTRL 0x00000d08 /* Internal Debug Mux Control */
 #define MISC2_DEBUG_FIFO_LENGTH        0x00000d0c /* Debug FIFO Length */
-
 
 /****************************************************************************
  * BCM70012_MISC_TOP_MISC3
@@ -289,7 +283,6 @@
 #define MISC3_CSI_TEST_CTRL            0x00000e18 /* CSI Test Control Register */
 #define MISC3_HD_DVI_TEST_CTRL         0x00000e1c /* HD DVI Test Control Register */
 
-
 /****************************************************************************
  * BCM70012_MISC_TOP_MISC_PERST
  ***************************************************************************/
@@ -302,7 +295,6 @@
 #define MISC_PERST_MEM_CTRL            0x00000e98 /* Memory Control Register */
 #define MISC_PERST_CLOCK_CTRL          0x00000e9c /* Clock Control Register */
 
-
 /****************************************************************************
  * BCM70012_MISC_TOP_GISB_ARBITER
  ***************************************************************************/
@@ -310,7 +302,6 @@
 #define GISB_ARBITER_SCRATCH           0x00000f04 /* GISB ARBITER Scratch Register */
 #define GISB_ARBITER_REQ_MASK          0x00000f08 /* GISB ARBITER Master Request Mask Register */
 #define GISB_ARBITER_TIMER             0x00000f0c /* GISB ARBITER Timer Value Register */
-
 
 /****************************************************************************
  * BCM70012_OTP_TOP_OTP
@@ -340,7 +331,6 @@
 #define OTP_DATA_INPUT                 0x00001458 /* Data Input Register */
 #define OTP_DATA_OUTPUT                0x0000145c /* Data Output Register */
 
-
 /****************************************************************************
  * BCM70012_AES_TOP_AES
  ***************************************************************************/
@@ -352,7 +342,6 @@
 #define AES_EEPROM_DATA_1              0x00001814 /* AES EEPROM Data Register 1 */
 #define AES_EEPROM_DATA_2              0x00001818 /* AES EEPROM Data Register 2 */
 #define AES_EEPROM_DATA_3              0x0000181c /* AES EEPROM Data Register 3 */
-
 
 /****************************************************************************
  * BCM70012_DCI_TOP_DCI
@@ -370,7 +359,6 @@
 #define DCI_SIGNATURE_DATA_5           0x00001c28 /* Signature Data Register 5 */
 #define DCI_SIGNATURE_DATA_6           0x00001c2c /* Signature Data Register 6 */
 #define DCI_SIGNATURE_DATA_7           0x00001c30 /* Signature Data Register 7 */
-
 
 /****************************************************************************
  * BCM70012_TGT_TOP_INTR
@@ -480,7 +468,6 @@
 #define INTR_INTR_STATUS_L0_TX_DMA_DONE_INTR_BITS                  1
 #define INTR_INTR_STATUS_L0_TX_DMA_DONE_INTR_SHIFT                 0
 
-
 /****************************************************************************
  * MISC1 :: TX_SW_DESC_LIST_CTRL_STS
  ***************************************************************************/
@@ -513,7 +500,6 @@
 #define MISC1_TX_SW_DESC_LIST_CTRL_STS_TX_DMA_RUN_STOP_ALIGN       0
 #define MISC1_TX_SW_DESC_LIST_CTRL_STS_TX_DMA_RUN_STOP_BITS        1
 #define MISC1_TX_SW_DESC_LIST_CTRL_STS_TX_DMA_RUN_STOP_SHIFT       0
-
 
 /****************************************************************************
  * MISC1 :: TX_DMA_ERROR_STATUS
@@ -583,7 +569,6 @@
 #define MISC1_TX_DMA_ERROR_STATUS_reserved4_ALIGN                  0
 #define MISC1_TX_DMA_ERROR_STATUS_reserved4_BITS                   1
 #define MISC1_TX_DMA_ERROR_STATUS_reserved4_SHIFT                  0
-
 
 /****************************************************************************
  * MISC1 :: Y_RX_ERROR_STATUS
@@ -665,7 +650,6 @@
 #define MISC1_Y_RX_ERROR_STATUS_reserved4_ALIGN                    0
 #define MISC1_Y_RX_ERROR_STATUS_reserved4_BITS                     1
 #define MISC1_Y_RX_ERROR_STATUS_reserved4_SHIFT                    0
-
 
 /****************************************************************************
  * MISC1 :: UV_RX_ERROR_STATUS
@@ -754,4 +738,3 @@
 #endif /* #ifndef MACFILE_H__ */
 
 /* End of File */
-

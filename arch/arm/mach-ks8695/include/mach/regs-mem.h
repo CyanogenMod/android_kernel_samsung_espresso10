@@ -17,7 +17,6 @@
 #define KS8695_MEM_VA		(KS8695_IO_VA + KS8695_MEM_OFFSET)
 #define KS8695_MEM_PA		(KS8695_IO_PA + KS8695_MEM_OFFSET)
 
-
 /*
  * Memory Controller Registers
  */
@@ -32,7 +31,6 @@
 #define KS8695_SDGCON		(0x38)		/* SDRAM General Control */
 #define KS8695_SDBCON		(0x3c)		/* SDRAM Buffer Control */
 #define KS8695_REFTIM		(0x40)		/* SDRAM Refresh Timer */
-
 
 /* External I/O Access Control Registers */
 #define EXTACON_EBNPTR		(0x3ff << 22)		/* Last Address Pointer */
@@ -84,6 +82,5 @@
 
 /* SDRAM Refresh Timer Register */
 #define REFTIM_REFTIM		(0xffff << 0)		/* Refresh Timer Value */
-
 
 #endif

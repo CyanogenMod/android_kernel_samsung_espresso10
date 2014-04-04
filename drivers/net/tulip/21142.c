@@ -20,11 +20,9 @@
 #include <linux/delay.h>
 #include "tulip.h"
 
-
 static u16 t21142_csr13[] = { 0x0001, 0x0009, 0x0009, 0x0000, 0x0001, };
 u16 t21142_csr14[] =	    { 0xFFFF, 0x0705, 0x0705, 0x0000, 0x7F3D, };
 static u16 t21142_csr15[] = { 0x0008, 0x0006, 0x000E, 0x0008, 0x0008, };
-
 
 /* Handle the 21143 uniquely: do autoselect with NWay, not the EEPROM list
    of available transceivers.  */
@@ -110,7 +108,6 @@ void t21142_media_task(struct work_struct *work)
 	mod_timer(&tp->timer, RUN_AT(next_tick));
 }
 
-
 void t21142_start_nway(struct net_device *dev)
 {
 	struct tulip_private *tp = netdev_priv(dev);
@@ -136,8 +133,6 @@ void t21142_start_nway(struct net_device *dev)
 		iowrite16(0x0008, ioaddr + CSR15);
 	iowrite32(0x1301, ioaddr + CSR12); 		/* Trigger NWAY. */
 }
-
-
 
 void t21142_lnk_change(struct net_device *dev, int csr5)
 {
@@ -256,5 +251,3 @@ void t21142_lnk_change(struct net_device *dev, int csr5)
 		tulip_restart_rxtx(tp);
 	}
 }
-
-

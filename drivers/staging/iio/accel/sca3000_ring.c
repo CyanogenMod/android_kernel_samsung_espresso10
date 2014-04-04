@@ -226,7 +226,6 @@ static IIO_DEVICE_ATTR(75_percent, S_IRUGO | S_IWUSR,
 		       sca3000_set_ring_int,
 		       SCA3000_INT_MASK_RING_THREE_QUARTER);
 
-
 /**
  * sca3000_show_ring_bpse() -sysfs function to query bits per sample from ring
  * @dev: ring buffer device

@@ -2,13 +2,13 @@
  * Misc system wide definitions
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -27,11 +27,7 @@
 #ifndef	_bcmdefs_h_
 #define	_bcmdefs_h_
 
-
-
-
 #define BCM_REFERENCE(data)	((void)(data))
-
 
 #define STATIC_ASSERT(expr) { \
 	 \
@@ -39,8 +35,6 @@
 	 \
 	typedef char STATIC_ASSERT_FAIL[(expr) ? 1 : -1]; \
 }
-
-
 
 #define bcmreclaimed 		0
 #define _data	_data
@@ -56,9 +50,7 @@
 #ifndef BCMFASTPATH
 #define BCMFASTPATH
 #define BCMFASTPATH_HOST
-#endif 
-
-
+#endif
 
 #define _data	_data
 #define BCMROMDAT_NAME(_data)	_data
@@ -70,16 +62,14 @@
 #define BCMROMDAT_APATCH(data)
 #define BCMROMDAT_SPATCH(data)
 
-
-#define	SI_BUS			0	
-#define	PCI_BUS			1	
-#define	PCMCIA_BUS		2	
-#define SDIO_BUS		3	
-#define JTAG_BUS		4	
-#define USB_BUS			5	
-#define SPI_BUS			6	
-#define RPC_BUS			7	
-
+#define	SI_BUS			0
+#define	PCI_BUS			1
+#define	PCMCIA_BUS		2
+#define SDIO_BUS		3
+#define JTAG_BUS		4
+#define USB_BUS			5
+#define SPI_BUS			6
+#define RPC_BUS			7
 
 #ifdef BCMBUSTYPE
 #define BUSTYPE(bus) 	(BCMBUSTYPE)
@@ -87,14 +77,11 @@
 #define BUSTYPE(bus) 	(bus)
 #endif
 
-
 #ifdef BCMCHIPTYPE
 #define CHIPTYPE(bus) 	(BCMCHIPTYPE)
 #else
 #define CHIPTYPE(bus) 	(bus)
 #endif
-
-
 
 #if defined(BCMSPROMBUS)
 #define SPROMBUS	(BCMSPROMBUS)
@@ -103,7 +90,6 @@
 #else
 #define SPROMBUS	(PCI_BUS)
 #endif
-
 
 #ifdef BCMCHIPID
 #define CHIPID(chip)	(BCMCHIPID)
@@ -117,15 +103,14 @@
 #define CHIPREV(rev)	(rev)
 #endif
 
+#define DMADDR_MASK_32 0x0
+#define DMADDR_MASK_30 0xc0000000
+#define DMADDR_MASK_0  0xffffffff
 
-#define DMADDR_MASK_32 0x0		
-#define DMADDR_MASK_30 0xc0000000	
-#define DMADDR_MASK_0  0xffffffff	
-
-#define	DMADDRWIDTH_30  30 
-#define	DMADDRWIDTH_32  32 
-#define	DMADDRWIDTH_63  63 
-#define	DMADDRWIDTH_64  64 
+#define	DMADDRWIDTH_30  30
+#define	DMADDRWIDTH_32  32
+#define	DMADDRWIDTH_63  63
+#define	DMADDRWIDTH_64  64
 
 #ifdef BCMDMA64OSL
 typedef struct {
@@ -154,8 +139,7 @@ typedef unsigned long dmaaddr_t;
 	do { \
 		(_pa) = (_val);			\
 	} while (0)
-#endif 
-
+#endif
 
 typedef struct  {
 	dmaaddr_t addr;
@@ -164,35 +148,28 @@ typedef struct  {
 
 #define MAX_DMA_SEGS 4
 
-
 typedef struct {
-	void *oshdmah; 
-	uint origsize; 
+	void *oshdmah;
+	uint origsize;
 	uint nsegs;
 	hnddma_seg_t segs[MAX_DMA_SEGS];
 } hnddma_seg_map_t;
 
-
-
-
 #if defined(BCM_RPC_NOCOPY) || defined(BCM_RCP_TXNOCOPY)
 
 #define BCMEXTRAHDROOM 220
-#else 
+#else
 #define BCMEXTRAHDROOM 172
-#endif 
-
+#endif
 
 #ifndef SDALIGN
 #define SDALIGN	32
 #endif
 
-
 #define BCMDONGLEHDRSZ 12
 #define BCMDONGLEPADSZ 16
 
 #define BCMDONGLEOVERHEAD	(BCMDONGLEHDRSZ + BCMDONGLEPADSZ)
-
 
 #if defined(NO_BCMDBG_ASSERT)
 # undef BCMDBG_ASSERT
@@ -201,8 +178,7 @@ typedef struct {
 
 #if defined(BCMASSERT_LOG)
 #define BCMASSERT_SUPPORT
-#endif 
-
+#endif
 
 #define BITFIELD_MASK(width) \
 		(((unsigned)1 << (width)) - 1)
@@ -212,28 +188,24 @@ typedef struct {
 		(((val) & (~(field ## _M << field ## _S))) | \
 		 ((unsigned)(bits) << field ## _S))
 
-
 #ifdef BCMSMALL
 #undef	BCMSPACE
-#define bcmspace	FALSE	
+#define bcmspace	FALSE
 #else
 #define	BCMSPACE
-#define bcmspace	TRUE	
+#define bcmspace	TRUE
 #endif
 
-
 #define	MAXSZ_NVRAM_VARS	4096
-
-
 
 #ifdef DL_NVRAM
 #define NVRAM_ARRAY_MAXSIZE	DL_NVRAM
 #else
 #define NVRAM_ARRAY_MAXSIZE	MAXSZ_NVRAM_VARS
-#endif 
+#endif
 
 #ifdef BCMUSBDEV_ENABLED
 extern uint32 gFWID;
 #endif
 
-#endif 
+#endif

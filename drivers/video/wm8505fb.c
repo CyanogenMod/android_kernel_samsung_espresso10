@@ -44,7 +44,6 @@ struct wm8505fb_info {
 	unsigned int		contrast;
 };
 
-
 static int wm8505fb_init_hw(struct fb_info *info)
 {
 	struct wm8505fb_info *fbi = to_wm8505fb_info(info);
@@ -106,7 +105,6 @@ static int wm8505fb_set_timing(struct fb_info *info)
 
 	return 0;
 }
-
 
 static int wm8505fb_set_par(struct fb_info *info)
 {

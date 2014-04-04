@@ -91,7 +91,6 @@ static int smk_cipso_doi_value = SMACK_CIPSO_DOI_DEFAULT;
 
 const char *smack_cipso_option = SMACK_CIPSO_OPTION;
 
-
 #define	SEQ_READ_FINISHED	1
 
 /*
@@ -313,7 +312,6 @@ out:
 	kfree(data);
 	return rc;
 }
-
 
 /*
  * Seq_file read operations for /smack/load
@@ -817,7 +815,6 @@ static void smk_netlbladdr_insert(struct smk_netlbladdr *new)
 	}
 }
 
-
 /**
  * smk_write_netlbladdr - write() for /smack/netlabel
  * @file: file pointer, not actually used
@@ -1312,8 +1309,6 @@ static ssize_t smk_write_logging(struct file *file, const char __user *buf,
 	return count;
 }
 
-
-
 static const struct file_operations smk_logging_ops = {
 	.read		= smk_read_logging,
 	.write		= smk_write_logging,
@@ -1387,7 +1382,6 @@ static const struct seq_operations load_self_seq_ops = {
 	.show  = load_self_seq_show,
 	.stop  = load_self_seq_stop,
 };
-
 
 /**
  * smk_open_load_self - open() for /smack/load-self

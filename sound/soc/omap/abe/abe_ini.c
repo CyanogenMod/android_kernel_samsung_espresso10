@@ -72,7 +72,6 @@
 
 #include "abe_taskid.h"
 
-
 #define ABE_TASK_ID(ID) (OMAP_ABE_D_TASKSLIST_ADDR + sizeof(ABE_STask)*(ID))
 void omap_abe_build_scheduler_table(struct omap_abe *abe);
 void omap_abe_reset_all_ports(struct omap_abe *abe);
@@ -80,7 +79,6 @@ void omap_abe_reset_all_ports(struct omap_abe *abe);
 const u32 abe_firmware_array[ABE_FIRMWARE_MAX_SIZE] = {
 #include "abe_firmware.c"
 };
-
 
 /*
  * initialize the default values for call-backs to subroutines

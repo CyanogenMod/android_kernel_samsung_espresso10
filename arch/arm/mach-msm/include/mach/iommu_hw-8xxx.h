@@ -51,7 +51,6 @@ do { \
 	writel((t & ~((mask) << (shift))) + (((v) & (mask)) << (shift)), addr);\
 } while (0)
 
-
 #define NUM_FL_PTE	4096
 #define NUM_SL_PTE	256
 #define NUM_TEX_CLASS	8
@@ -129,7 +128,6 @@ do { \
 #define GET_IDR(b)		 GET_GLOBAL_REG(IDR, (b))
 #define GET_RPU_ACR(b)		 GET_GLOBAL_REG(RPU_ACR, (b))
 
-
 /* Context register setters/getters */
 #define SET_SCTLR(b, c, v)	 SET_CTX_REG(SCTLR, (b), (c), (v))
 #define SET_ACTLR(b, c, v)	 SET_CTX_REG(ACTLR, (b), (c), (v))
@@ -189,7 +187,6 @@ do { \
 #define GET_V2PUW(b, c)		 GET_CTX_REG(V2PUW, (b), (c))
 #define GET_RESUME(b, c)	 GET_CTX_REG(RESUME, (b), (c))
 
-
 /* Global field setters / getters */
 /* Global Field Setters: */
 /* CBACR_N */
@@ -198,7 +195,6 @@ do { \
 #define SET_RWGE(b, n, v)     SET_GLOBAL_FIELD(b, (n<<2)|(CBACR_N), RWGE, v)
 #define SET_CBVMID(b, n, v)   SET_GLOBAL_FIELD(b, (n<<2)|(CBACR_N), CBVMID, v)
 #define SET_IRPTNDX(b, n, v)  SET_GLOBAL_FIELD(b, (n<<2)|(CBACR_N), IRPTNDX, v)
-
 
 /* M2VCBR_N */
 #define SET_VMID(b, n, v)     SET_GLOBAL_FIELD(b, (n<<2)|(M2VCBR_N), VMID, v)
@@ -213,7 +209,6 @@ do { \
 #define SET_BPMEMTYPE(b, n, v) \
 	SET_GLOBAL_FIELD(b, (n<<2)|(M2VCBR_N), BPMEMTYPE, v)
 
-
 /* CR */
 #define SET_RPUE(b, v)		 SET_GLOBAL_FIELD(b, CR, RPUE, v)
 #define SET_RPUERE(b, v)	 SET_GLOBAL_FIELD(b, CR, RPUERE, v)
@@ -226,12 +221,10 @@ do { \
 #define SET_TLBIVMIDCFG(b, v)    SET_GLOBAL_FIELD(b, CR, TLBIVMIDCFG, v)
 #define SET_CR_HUME(b, v)        SET_GLOBAL_FIELD(b, CR, CR_HUME, v)
 
-
 /* ESR */
 #define SET_CFG(b, v)		 SET_GLOBAL_FIELD(b, ESR, CFG, v)
 #define SET_BYPASS(b, v)	 SET_GLOBAL_FIELD(b, ESR, BYPASS, v)
 #define SET_ESR_MULTI(b, v)      SET_GLOBAL_FIELD(b, ESR, ESR_MULTI, v)
-
 
 /* ESYNR0 */
 #define SET_ESYNR0_AMID(b, v)    SET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_AMID, v)
@@ -239,7 +232,6 @@ do { \
 #define SET_ESYNR0_ABID(b, v)    SET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_ABID, v)
 #define SET_ESYNR0_AVMID(b, v)   SET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_AVMID, v)
 #define SET_ESYNR0_ATID(b, v)    SET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_ATID, v)
-
 
 /* ESYNR1 */
 #define SET_ESYNR1_AMEMTYPE(b, v) \
@@ -260,7 +252,6 @@ do { \
 #define SET_ESYNR1_AC(b, v)      SET_GLOBAL_FIELD(b, ESYNR1, ESYNR1_AC, v)
 #define SET_ESYNR1_DCD(b, v)     SET_GLOBAL_FIELD(b, ESYNR1, ESYNR1_DCD, v)
 
-
 /* TESTBUSCR */
 #define SET_TBE(b, v)		 SET_GLOBAL_FIELD(b, TESTBUSCR, TBE, v)
 #define SET_SPDMBE(b, v)	 SET_GLOBAL_FIELD(b, TESTBUSCR, SPDMBE, v)
@@ -272,15 +263,12 @@ do { \
 #define SET_SPDM2SEL(b, v)       SET_GLOBAL_FIELD(b, TESTBUSCR, SPDM2SEL, v)
 #define SET_SPDM3SEL(b, v)       SET_GLOBAL_FIELD(b, TESTBUSCR, SPDM3SEL, v)
 
-
 /* TLBIVMID */
 #define SET_TLBIVMID_VMID(b, v)  SET_GLOBAL_FIELD(b, TLBIVMID, TLBIVMID_VMID, v)
-
 
 /* TLBRSW */
 #define SET_TLBRSW_INDEX(b, v)   SET_GLOBAL_FIELD(b, TLBRSW, TLBRSW_INDEX, v)
 #define SET_TLBBFBS(b, v)	 SET_GLOBAL_FIELD(b, TLBRSW, TLBBFBS, v)
-
 
 /* TLBTR0 */
 #define SET_PR(b, v)		 SET_GLOBAL_FIELD(b, TLBTR0, PR, v)
@@ -295,11 +283,9 @@ do { \
 #define SET_DPSIZR(b, v)	 SET_GLOBAL_FIELD(b, TLBTR0, DPSIZR, v)
 #define SET_DPSIZC(b, v)	 SET_GLOBAL_FIELD(b, TLBTR0, DPSIZC, v)
 
-
 /* TLBTR1 */
 #define SET_TLBTR1_VMID(b, v)    SET_GLOBAL_FIELD(b, TLBTR1, TLBTR1_VMID, v)
 #define SET_TLBTR1_PA(b, v)      SET_GLOBAL_FIELD(b, TLBTR1, TLBTR1_PA, v)
-
 
 /* TLBTR2 */
 #define SET_TLBTR2_ASID(b, v)    SET_GLOBAL_FIELD(b, TLBTR2, TLBTR2_ASID, v)
@@ -308,7 +294,6 @@ do { \
 #define SET_TLBTR2_NV(b, v)      SET_GLOBAL_FIELD(b, TLBTR2, TLBTR2_NV, v)
 #define SET_TLBTR2_VA(b, v)      SET_GLOBAL_FIELD(b, TLBTR2, TLBTR2_VA, v)
 
-
 /* Global Field Getters */
 /* CBACR_N */
 #define GET_RWVMID(b, n)	 GET_GLOBAL_FIELD(b, (n<<2)|(CBACR_N), RWVMID)
@@ -316,7 +301,6 @@ do { \
 #define GET_RWGE(b, n)		 GET_GLOBAL_FIELD(b, (n<<2)|(CBACR_N), RWGE)
 #define GET_CBVMID(b, n)	 GET_GLOBAL_FIELD(b, (n<<2)|(CBACR_N), CBVMID)
 #define GET_IRPTNDX(b, n)	 GET_GLOBAL_FIELD(b, (n<<2)|(CBACR_N), IRPTNDX)
-
 
 /* M2VCBR_N */
 #define GET_VMID(b, n)       GET_GLOBAL_FIELD(b, (n<<2)|(M2VCBR_N), VMID)
@@ -330,7 +314,6 @@ do { \
 #define GET_BPMTCFG(b, n)    GET_GLOBAL_FIELD(b, (n<<2)|(M2VCBR_N), BPMTCFG)
 #define GET_BPMEMTYPE(b, n)  GET_GLOBAL_FIELD(b, (n<<2)|(M2VCBR_N), BPMEMTYPE)
 
-
 /* CR */
 #define GET_RPUE(b)		 GET_GLOBAL_FIELD(b, CR, RPUE)
 #define GET_RPUERE(b)		 GET_GLOBAL_FIELD(b, CR, RPUERE)
@@ -343,12 +326,10 @@ do { \
 #define GET_TLBIVMIDCFG(b)	 GET_GLOBAL_FIELD(b, CR, TLBIVMIDCFG)
 #define GET_CR_HUME(b)		 GET_GLOBAL_FIELD(b, CR, CR_HUME)
 
-
 /* ESR */
 #define GET_CFG(b)		 GET_GLOBAL_FIELD(b, ESR, CFG)
 #define GET_BYPASS(b)		 GET_GLOBAL_FIELD(b, ESR, BYPASS)
 #define GET_ESR_MULTI(b)	 GET_GLOBAL_FIELD(b, ESR, ESR_MULTI)
-
 
 /* ESYNR0 */
 #define GET_ESYNR0_AMID(b)	 GET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_AMID)
@@ -356,7 +337,6 @@ do { \
 #define GET_ESYNR0_ABID(b)	 GET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_ABID)
 #define GET_ESYNR0_AVMID(b)	 GET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_AVMID)
 #define GET_ESYNR0_ATID(b)	 GET_GLOBAL_FIELD(b, ESYNR0, ESYNR0_ATID)
-
 
 /* ESYNR1 */
 #define GET_ESYNR1_AMEMTYPE(b)   GET_GLOBAL_FIELD(b, ESYNR1, ESYNR1_AMEMTYPE)
@@ -376,7 +356,6 @@ do { \
 #define GET_ESYNR1_AC(b)	 GET_GLOBAL_FIELD(b, ESYNR1, ESYNR1_AC)
 #define GET_ESYNR1_DCD(b)	 GET_GLOBAL_FIELD(b, ESYNR1, ESYNR1_DCD)
 
-
 /* IDR */
 #define GET_NM2VCBMT(b)		 GET_GLOBAL_FIELD(b, IDR, NM2VCBMT)
 #define GET_HTW(b)		 GET_GLOBAL_FIELD(b, IDR, HTW)
@@ -385,11 +364,9 @@ do { \
 #define GET_NCB(b)		 GET_GLOBAL_FIELD(b, IDR, NCB)
 #define GET_NIRPT(b)		 GET_GLOBAL_FIELD(b, IDR, NIRPT)
 
-
 /* REV */
 #define GET_MAJOR(b)		 GET_GLOBAL_FIELD(b, REV, MAJOR)
 #define GET_MINOR(b)		 GET_GLOBAL_FIELD(b, REV, MINOR)
-
 
 /* TESTBUSCR */
 #define GET_TBE(b)		 GET_GLOBAL_FIELD(b, TESTBUSCR, TBE)
@@ -402,10 +379,8 @@ do { \
 #define GET_SPDM2SEL(b)		 GET_GLOBAL_FIELD(b, TESTBUSCR, SPDM2SEL)
 #define GET_SPDM3SEL(b)		 GET_GLOBAL_FIELD(b, TESTBUSCR, SPDM3SEL)
 
-
 /* TLBIVMID */
 #define GET_TLBIVMID_VMID(b)	 GET_GLOBAL_FIELD(b, TLBIVMID, TLBIVMID_VMID)
-
 
 /* TLBTR0 */
 #define GET_PR(b)		 GET_GLOBAL_FIELD(b, TLBTR0, PR)
@@ -420,11 +395,9 @@ do { \
 #define GET_DPSIZR(b)		 GET_GLOBAL_FIELD(b, TLBTR0, DPSIZR)
 #define GET_DPSIZC(b)		 GET_GLOBAL_FIELD(b, TLBTR0, DPSIZC)
 
-
 /* TLBTR1 */
 #define GET_TLBTR1_VMID(b)	 GET_GLOBAL_FIELD(b, TLBTR1, TLBTR1_VMID)
 #define GET_TLBTR1_PA(b)	 GET_GLOBAL_FIELD(b, TLBTR1, TLBTR1_PA)
-
 
 /* TLBTR2 */
 #define GET_TLBTR2_ASID(b)	 GET_GLOBAL_FIELD(b, TLBTR2, TLBTR2_ASID)
@@ -432,7 +405,6 @@ do { \
 #define GET_TLBTR2_NSTID(b)	 GET_GLOBAL_FIELD(b, TLBTR2, TLBTR2_NSTID)
 #define GET_TLBTR2_NV(b)	 GET_GLOBAL_FIELD(b, TLBTR2, TLBTR2_NV)
 #define GET_TLBTR2_VA(b)	 GET_GLOBAL_FIELD(b, TLBTR2, TLBTR2_VA)
-
 
 /* Context Register setters / getters */
 /* Context Register setters */
@@ -454,7 +426,6 @@ do { \
 #define SET_PTMTCFG(b, c, v)	 SET_CONTEXT_FIELD(b, c, ACTLR, PTMTCFG, v)
 #define SET_PTMEMTYPE(b, c, v)	 SET_CONTEXT_FIELD(b, c, ACTLR, PTMEMTYPE, v)
 
-
 /* BFBCR */
 #define SET_BFBDFE(b, c, v)	 SET_CONTEXT_FIELD(b, c, BFBCR, BFBDFE, v)
 #define SET_BFBSFE(b, c, v)	 SET_CONTEXT_FIELD(b, c, BFBCR, BFBSFE, v)
@@ -462,13 +433,11 @@ do { \
 #define SET_FLVIC(b, c, v)	 SET_CONTEXT_FIELD(b, c, BFBCR, FLVIC, v)
 #define SET_SLVIC(b, c, v)	 SET_CONTEXT_FIELD(b, c, BFBCR, SLVIC, v)
 
-
 /* CONTEXTIDR */
 #define SET_CONTEXTIDR_ASID(b, c, v)   \
 		SET_CONTEXT_FIELD(b, c, CONTEXTIDR, CONTEXTIDR_ASID, v)
 #define SET_CONTEXTIDR_PROCID(b, c, v) \
 		SET_CONTEXT_FIELD(b, c, CONTEXTIDR, PROCID, v)
-
 
 /* FSR */
 #define SET_TF(b, c, v)		 SET_CONTEXT_FIELD(b, c, FSR, TF, v)
@@ -482,13 +451,11 @@ do { \
 #define SET_SS(b, c, v)		 SET_CONTEXT_FIELD(b, c, FSR, SS, v)
 #define SET_MULTI(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSR, MULTI, v)
 
-
 /* FSYNR0 */
 #define SET_AMID(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSYNR0, AMID, v)
 #define SET_APID(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSYNR0, APID, v)
 #define SET_ABID(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSYNR0, ABID, v)
 #define SET_ATID(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSYNR0, ATID, v)
-
 
 /* FSYNR1 */
 #define SET_AMEMTYPE(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSYNR1, AMEMTYPE, v)
@@ -505,7 +472,6 @@ do { \
 				SET_CONTEXT_FIELD(b, c, FSYNR1, FSYNR1_ASIZE, v)
 #define SET_ALOCK(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSYNR1, ALOCK, v)
 #define SET_AFULL(b, c, v)	 SET_CONTEXT_FIELD(b, c, FSYNR1, AFULL, v)
-
 
 /* NMRR */
 #define SET_ICPC0(b, c, v)	 SET_CONTEXT_FIELD(b, c, NMRR, ICPC0, v)
@@ -524,7 +490,6 @@ do { \
 #define SET_OCPC5(b, c, v)	 SET_CONTEXT_FIELD(b, c, NMRR, OCPC5, v)
 #define SET_OCPC6(b, c, v)	 SET_CONTEXT_FIELD(b, c, NMRR, OCPC6, v)
 #define SET_OCPC7(b, c, v)	 SET_CONTEXT_FIELD(b, c, NMRR, OCPC7, v)
-
 
 /* PAR */
 #define SET_FAULT(b, c, v)	 SET_CONTEXT_FIELD(b, c, PAR, FAULT, v)
@@ -548,7 +513,6 @@ do { \
 #define SET_NOFAULT_NOS(b, c, v) SET_CONTEXT_FIELD(b, c, PAR, NOFAULT_NOS, v)
 #define SET_NPFAULT_PA(b, c, v)	 SET_CONTEXT_FIELD(b, c, PAR, NPFAULT_PA, v)
 
-
 /* PRRR */
 #define SET_MTC0(b, c, v)	 SET_CONTEXT_FIELD(b, c, PRRR, MTC0, v)
 #define SET_MTC1(b, c, v)	 SET_CONTEXT_FIELD(b, c, PRRR, MTC1, v)
@@ -571,10 +535,8 @@ do { \
 #define SET_NOS6(b, c, v)	 SET_CONTEXT_FIELD(b, c, PRRR, NOS6, v)
 #define SET_NOS7(b, c, v)	 SET_CONTEXT_FIELD(b, c, PRRR, NOS7, v)
 
-
 /* RESUME */
 #define SET_TNR(b, c, v)	 SET_CONTEXT_FIELD(b, c, RESUME, TNR, v)
-
 
 /* SCTLR */
 #define SET_M(b, c, v)		 SET_CONTEXT_FIELD(b, c, SCTLR, M, v)
@@ -583,7 +545,6 @@ do { \
 #define SET_HAF(b, c, v)	 SET_CONTEXT_FIELD(b, c, SCTLR, HAF, v)
 #define SET_BE(b, c, v)		 SET_CONTEXT_FIELD(b, c, SCTLR, BE, v)
 #define SET_AFFD(b, c, v)	 SET_CONTEXT_FIELD(b, c, SCTLR, AFFD, v)
-
 
 /* TLBLKCR */
 #define SET_LKE(b, c, v)	   SET_CONTEXT_FIELD(b, c, TLBLKCR, LKE, v)
@@ -595,12 +556,10 @@ do { \
 #define SET_FLOOR(b, c, v)	SET_CONTEXT_FIELD(b, c, TLBLKCR, FLOOR, v)
 #define SET_VICTIM(b, c, v)	SET_CONTEXT_FIELD(b, c, TLBLKCR, VICTIM, v)
 
-
 /* TTBCR */
 #define SET_N(b, c, v)	         SET_CONTEXT_FIELD(b, c, TTBCR, N, v)
 #define SET_PD0(b, c, v)	 SET_CONTEXT_FIELD(b, c, TTBCR, PD0, v)
 #define SET_PD1(b, c, v)	 SET_CONTEXT_FIELD(b, c, TTBCR, PD1, v)
-
 
 /* TTBR0 */
 #define SET_TTBR0_IRGNH(b, c, v) SET_CONTEXT_FIELD(b, c, TTBR0, TTBR0_IRGNH, v)
@@ -610,7 +569,6 @@ do { \
 #define SET_TTBR0_IRGNL(b, c, v) SET_CONTEXT_FIELD(b, c, TTBR0, TTBR0_IRGNL, v)
 #define SET_TTBR0_PA(b, c, v)	 SET_CONTEXT_FIELD(b, c, TTBR0, TTBR0_PA, v)
 
-
 /* TTBR1 */
 #define SET_TTBR1_IRGNH(b, c, v) SET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_IRGNH, v)
 #define SET_TTBR1_SH(b, c, v)	 SET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_SH, v)
@@ -619,11 +577,9 @@ do { \
 #define SET_TTBR1_IRGNL(b, c, v) SET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_IRGNL, v)
 #define SET_TTBR1_PA(b, c, v)	 SET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_PA, v)
 
-
 /* V2PSR */
 #define SET_HIT(b, c, v)	 SET_CONTEXT_FIELD(b, c, V2PSR, HIT, v)
 #define SET_INDEX(b, c, v)	 SET_CONTEXT_FIELD(b, c, V2PSR, INDEX, v)
-
 
 /* Context Register getters */
 /* ACTLR */
@@ -651,12 +607,10 @@ do { \
 #define GET_FLVIC(b, c)		GET_CONTEXT_FIELD(b, c, BFBCR, FLVIC)
 #define GET_SLVIC(b, c)		GET_CONTEXT_FIELD(b, c, BFBCR, SLVIC)
 
-
 /* CONTEXTIDR */
 #define GET_CONTEXTIDR_ASID(b, c) \
 			GET_CONTEXT_FIELD(b, c, CONTEXTIDR, CONTEXTIDR_ASID)
 #define GET_CONTEXTIDR_PROCID(b, c) GET_CONTEXT_FIELD(b, c, CONTEXTIDR, PROCID)
-
 
 /* FSR */
 #define GET_TF(b, c)		GET_CONTEXT_FIELD(b, c, FSR, TF)
@@ -670,13 +624,11 @@ do { \
 #define GET_SS(b, c)		GET_CONTEXT_FIELD(b, c, FSR, SS)
 #define GET_MULTI(b, c)		GET_CONTEXT_FIELD(b, c, FSR, MULTI)
 
-
 /* FSYNR0 */
 #define GET_AMID(b, c)		GET_CONTEXT_FIELD(b, c, FSYNR0, AMID)
 #define GET_APID(b, c)		GET_CONTEXT_FIELD(b, c, FSYNR0, APID)
 #define GET_ABID(b, c)		GET_CONTEXT_FIELD(b, c, FSYNR0, ABID)
 #define GET_ATID(b, c)		GET_CONTEXT_FIELD(b, c, FSYNR0, ATID)
-
 
 /* FSYNR1 */
 #define GET_AMEMTYPE(b, c)	GET_CONTEXT_FIELD(b, c, FSYNR1, AMEMTYPE)
@@ -691,7 +643,6 @@ do { \
 #define GET_FSYNR1_ASIZE(b, c)	GET_CONTEXT_FIELD(b, c, FSYNR1, FSYNR1_ASIZE)
 #define GET_ALOCK(b, c)		GET_CONTEXT_FIELD(b, c, FSYNR1, ALOCK)
 #define GET_AFULL(b, c)		GET_CONTEXT_FIELD(b, c, FSYNR1, AFULL)
-
 
 /* NMRR */
 #define GET_ICPC0(b, c)		GET_CONTEXT_FIELD(b, c, NMRR, ICPC0)
@@ -734,7 +685,6 @@ do { \
 #define GET_NOFAULT_NOS(b, c)   GET_CONTEXT_FIELD(b, c, PAR, PAR_NOFAULT_NOS)
 #define GET_NPFAULT_PA(b, c)	GET_CONTEXT_FIELD(b, c, PAR, PAR_NPFAULT_PA)
 
-
 /* PRRR */
 #define GET_MTC0(b, c)		GET_CONTEXT_FIELD(b, c, PRRR, MTC0)
 #define GET_MTC1(b, c)		GET_CONTEXT_FIELD(b, c, PRRR, MTC1)
@@ -759,10 +709,8 @@ do { \
 #define PRRR_NOS(prrr, n)	 ((prrr) & (1 << ((n) + 24)) ? 1 : 0)
 #define PRRR_MT(prrr, n)	 ((((prrr) & (3 << ((n) * 2))) >> ((n) * 2)))
 
-
 /* RESUME */
 #define GET_TNR(b, c)		GET_CONTEXT_FIELD(b, c, RESUME, TNR)
-
 
 /* SCTLR */
 #define GET_M(b, c)		GET_CONTEXT_FIELD(b, c, SCTLR, M)
@@ -771,7 +719,6 @@ do { \
 #define GET_HAF(b, c)		GET_CONTEXT_FIELD(b, c, SCTLR, HAF)
 #define GET_BE(b, c)		GET_CONTEXT_FIELD(b, c, SCTLR, BE)
 #define GET_AFFD(b, c)		GET_CONTEXT_FIELD(b, c, SCTLR, AFFD)
-
 
 /* TLBLKCR */
 #define GET_LKE(b, c)		GET_CONTEXT_FIELD(b, c, TLBLKCR, LKE)
@@ -782,12 +729,10 @@ do { \
 #define GET_FLOOR(b, c)		GET_CONTEXT_FIELD(b, c, TLBLKCR, FLOOR)
 #define GET_VICTIM(b, c)	GET_CONTEXT_FIELD(b, c, TLBLKCR, VICTIM)
 
-
 /* TTBCR */
 #define GET_N(b, c)		GET_CONTEXT_FIELD(b, c, TTBCR, N)
 #define GET_PD0(b, c)		GET_CONTEXT_FIELD(b, c, TTBCR, PD0)
 #define GET_PD1(b, c)		GET_CONTEXT_FIELD(b, c, TTBCR, PD1)
-
 
 /* TTBR0 */
 #define GET_TTBR0_IRGNH(b, c)	GET_CONTEXT_FIELD(b, c, TTBR0, TTBR0_IRGNH)
@@ -797,7 +742,6 @@ do { \
 #define GET_TTBR0_IRGNL(b, c)	GET_CONTEXT_FIELD(b, c, TTBR0, TTBR0_IRGNL)
 #define GET_TTBR0_PA(b, c)	GET_CONTEXT_FIELD(b, c, TTBR0, TTBR0_PA)
 
-
 /* TTBR1 */
 #define GET_TTBR1_IRGNH(b, c)	GET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_IRGNH)
 #define GET_TTBR1_SH(b, c)	GET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_SH)
@@ -806,11 +750,9 @@ do { \
 #define GET_TTBR1_IRGNL(b, c)	GET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_IRGNL)
 #define GET_TTBR1_PA(b, c)	GET_CONTEXT_FIELD(b, c, TTBR1, TTBR1_PA)
 
-
 /* V2PSR */
 #define GET_HIT(b, c)		GET_CONTEXT_FIELD(b, c, V2PSR, HIT)
 #define GET_INDEX(b, c)		GET_CONTEXT_FIELD(b, c, V2PSR, INDEX)
-
 
 /* Global Registers */
 #define M2VCBR_N	(0xFF000)
@@ -831,7 +773,6 @@ do { \
 #define REV		(0xFFFF4)
 #define IDR		(0xFFFF8)
 #define RPU_ACR		(0xFFFFC)
-
 
 /* Context Bank Registers */
 #define SCTLR		(0x000)
@@ -863,7 +804,6 @@ do { \
 #define V2PUW		(0x81C)
 #define RESUME		(0x820)
 
-
 /* Global Register Fields */
 /* CBACRn */
 #define RWVMID        (RWVMID_MASK       << RWVMID_SHIFT)
@@ -871,7 +811,6 @@ do { \
 #define RWGE          (RWGE_MASK         << RWGE_SHIFT)
 #define CBVMID        (CBVMID_MASK       << CBVMID_SHIFT)
 #define IRPTNDX       (IRPTNDX_MASK      << IRPTNDX_SHIFT)
-
 
 /* CR */
 #define RPUE          (RPUE_MASK          << RPUE_SHIFT)
@@ -885,12 +824,10 @@ do { \
 #define TLBIVMIDCFG   (TLBIVMIDCFG_MASK   << TLBIVMIDCFG_SHIFT)
 #define CR_HUME       (CR_HUME_MASK       << CR_HUME_SHIFT)
 
-
 /* ESR */
 #define CFG           (CFG_MASK          << CFG_SHIFT)
 #define BYPASS        (BYPASS_MASK       << BYPASS_SHIFT)
 #define ESR_MULTI     (ESR_MULTI_MASK    << ESR_MULTI_SHIFT)
-
 
 /* ESYNR0 */
 #define ESYNR0_AMID   (ESYNR0_AMID_MASK  << ESYNR0_AMID_SHIFT)
@@ -898,7 +835,6 @@ do { \
 #define ESYNR0_ABID   (ESYNR0_ABID_MASK  << ESYNR0_ABID_SHIFT)
 #define ESYNR0_AVMID  (ESYNR0_AVMID_MASK << ESYNR0_AVMID_SHIFT)
 #define ESYNR0_ATID   (ESYNR0_ATID_MASK  << ESYNR0_ATID_SHIFT)
-
 
 /* ESYNR1 */
 #define ESYNR1_AMEMTYPE      (ESYNR1_AMEMTYPE_MASK    << ESYNR1_AMEMTYPE_SHIFT)
@@ -918,7 +854,6 @@ do { \
 #define ESYNR1_AC            (ESYNR1_AC_MASK          << ESYNR1_AC_SHIFT)
 #define ESYNR1_DCD           (ESYNR1_DCD_MASK         << ESYNR1_DCD_SHIFT)
 
-
 /* IDR */
 #define NM2VCBMT      (NM2VCBMT_MASK     << NM2VCBMT_SHIFT)
 #define HTW           (HTW_MASK          << HTW_SHIFT)
@@ -926,7 +861,6 @@ do { \
 #define TLBSIZE       (TLBSIZE_MASK      << TLBSIZE_SHIFT)
 #define NCB           (NCB_MASK          << NCB_SHIFT)
 #define NIRPT         (NIRPT_MASK        << NIRPT_SHIFT)
-
 
 /* M2VCBRn */
 #define VMID          (VMID_MASK         << VMID_SHIFT)
@@ -940,11 +874,9 @@ do { \
 #define BPMTCFG       (BPMTCFG_MASK      << BPMTCFG_SHIFT)
 #define BPMEMTYPE     (BPMEMTYPE_MASK    << BPMEMTYPE_SHIFT)
 
-
 /* REV */
 #define IDR_MINOR     (MINOR_MASK        << MINOR_SHIFT)
 #define IDR_MAJOR     (MAJOR_MASK        << MAJOR_SHIFT)
-
 
 /* TESTBUSCR */
 #define TBE           (TBE_MASK          << TBE_SHIFT)
@@ -957,15 +889,12 @@ do { \
 #define SPDM2SEL      (SPDM2SEL_MASK     << SPDM2SEL_SHIFT)
 #define SPDM3SEL      (SPDM3SEL_MASK     << SPDM3SEL_SHIFT)
 
-
 /* TLBIVMID */
 #define TLBIVMID_VMID (TLBIVMID_VMID_MASK << TLBIVMID_VMID_SHIFT)
-
 
 /* TLBRSW */
 #define TLBRSW_INDEX  (TLBRSW_INDEX_MASK << TLBRSW_INDEX_SHIFT)
 #define TLBBFBS       (TLBBFBS_MASK      << TLBBFBS_SHIFT)
-
 
 /* TLBTR0 */
 #define PR            (PR_MASK           << PR_SHIFT)
@@ -980,11 +909,9 @@ do { \
 #define DPSIZR        (DPSIZR_MASK       << DPSIZR_SHIFT)
 #define DPSIZC        (DPSIZC_MASK       << DPSIZC_SHIFT)
 
-
 /* TLBTR1 */
 #define TLBTR1_VMID   (TLBTR1_VMID_MASK  << TLBTR1_VMID_SHIFT)
 #define TLBTR1_PA     (TLBTR1_PA_MASK    << TLBTR1_PA_SHIFT)
-
 
 /* TLBTR2 */
 #define TLBTR2_ASID   (TLBTR2_ASID_MASK  << TLBTR2_ASID_SHIFT)
@@ -992,7 +919,6 @@ do { \
 #define TLBTR2_NSTID  (TLBTR2_NSTID_MASK << TLBTR2_NSTID_SHIFT)
 #define TLBTR2_NV     (TLBTR2_NV_MASK    << TLBTR2_NV_SHIFT)
 #define TLBTR2_VA     (TLBTR2_VA_MASK    << TLBTR2_VA_SHIFT)
-
 
 /* Context Register Fields */
 /* ACTLR */
@@ -1013,7 +939,6 @@ do { \
 #define PTMTCFG            (PTMTCFG_MASK            << PTMTCFG_SHIFT)
 #define PTMEMTYPE          (PTMEMTYPE_MASK          << PTMEMTYPE_SHIFT)
 
-
 /* BFBCR */
 #define BFBDFE             (BFBDFE_MASK             << BFBDFE_SHIFT)
 #define BFBSFE             (BFBSFE_MASK             << BFBSFE_SHIFT)
@@ -1021,11 +946,9 @@ do { \
 #define FLVIC              (FLVIC_MASK              << FLVIC_SHIFT)
 #define SLVIC              (SLVIC_MASK              << SLVIC_SHIFT)
 
-
 /* CONTEXTIDR */
 #define CONTEXTIDR_ASID    (CONTEXTIDR_ASID_MASK    << CONTEXTIDR_ASID_SHIFT)
 #define PROCID             (PROCID_MASK             << PROCID_SHIFT)
-
 
 /* FSR */
 #define TF                 (TF_MASK                 << TF_SHIFT)
@@ -1039,13 +962,11 @@ do { \
 #define SS                 (SS_MASK                 << SS_SHIFT)
 #define MULTI              (MULTI_MASK              << MULTI_SHIFT)
 
-
 /* FSYNR0 */
 #define AMID               (AMID_MASK               << AMID_SHIFT)
 #define APID               (APID_MASK               << APID_SHIFT)
 #define ABID               (ABID_MASK               << ABID_SHIFT)
 #define ATID               (ATID_MASK               << ATID_SHIFT)
-
 
 /* FSYNR1 */
 #define AMEMTYPE           (AMEMTYPE_MASK           << AMEMTYPE_SHIFT)
@@ -1060,7 +981,6 @@ do { \
 #define FSYNR1_ASIZE       (FSYNR1_ASIZE_MASK       << FSYNR1_ASIZE_SHIFT)
 #define ALOCK              (ALOCK_MASK              << ALOCK_SHIFT)
 #define AFULL              (AFULL_MASK              << AFULL_SHIFT)
-
 
 /* NMRR */
 #define ICPC0              (ICPC0_MASK              << ICPC0_SHIFT)
@@ -1079,7 +999,6 @@ do { \
 #define OCPC5              (OCPC5_MASK              << OCPC5_SHIFT)
 #define OCPC6              (OCPC6_MASK              << OCPC6_SHIFT)
 #define OCPC7              (OCPC7_MASK              << OCPC7_SHIFT)
-
 
 /* PAR */
 #define FAULT              (FAULT_MASK              << FAULT_SHIFT)
@@ -1104,7 +1023,6 @@ same as the fault fields in the FAR */
 #define PAR_NOFAULT_NOS    (PAR_NOFAULT_NOS_MASK    << PAR_NOFAULT_NOS_SHIFT)
 #define PAR_NPFAULT_PA     (PAR_NPFAULT_PA_MASK     << PAR_NPFAULT_PA_SHIFT)
 
-
 /* PRRR */
 #define MTC0               (MTC0_MASK               << MTC0_SHIFT)
 #define MTC1               (MTC1_MASK               << MTC1_SHIFT)
@@ -1127,10 +1045,8 @@ same as the fault fields in the FAR */
 #define NOS6               (NOS6_MASK               << NOS6_SHIFT)
 #define NOS7               (NOS7_MASK               << NOS7_SHIFT)
 
-
 /* RESUME */
 #define TNR                (TNR_MASK                << TNR_SHIFT)
-
 
 /* SCTLR */
 #define M                  (M_MASK                  << M_SHIFT)
@@ -1140,19 +1056,15 @@ same as the fault fields in the FAR */
 #define BE                 (BE_MASK                 << BE_SHIFT)
 #define AFFD               (AFFD_MASK               << AFFD_SHIFT)
 
-
 /* TLBIASID */
 #define TLBIASID_ASID      (TLBIASID_ASID_MASK      << TLBIASID_ASID_SHIFT)
-
 
 /* TLBIVA */
 #define TLBIVA_ASID        (TLBIVA_ASID_MASK        << TLBIVA_ASID_SHIFT)
 #define TLBIVA_VA          (TLBIVA_VA_MASK          << TLBIVA_VA_SHIFT)
 
-
 /* TLBIVAA */
 #define TLBIVAA_VA         (TLBIVAA_VA_MASK         << TLBIVAA_VA_SHIFT)
-
 
 /* TLBLCKR */
 #define LKE                (LKE_MASK                << LKE_SHIFT)
@@ -1162,12 +1074,10 @@ same as the fault fields in the FAR */
 #define FLOOR              (FLOOR_MASK              << FLOOR_SHIFT)
 #define VICTIM             (VICTIM_MASK             << VICTIM_SHIFT)
 
-
 /* TTBCR */
 #define N                  (N_MASK                  << N_SHIFT)
 #define PD0                (PD0_MASK                << PD0_SHIFT)
 #define PD1                (PD1_MASK                << PD1_SHIFT)
-
 
 /* TTBR0 */
 #define TTBR0_IRGNH        (TTBR0_IRGNH_MASK        << TTBR0_IRGNH_SHIFT)
@@ -1177,7 +1087,6 @@ same as the fault fields in the FAR */
 #define TTBR0_IRGNL        (TTBR0_IRGNL_MASK        << TTBR0_IRGNL_SHIFT)
 #define TTBR0_PA           (TTBR0_PA_MASK           << TTBR0_PA_SHIFT)
 
-
 /* TTBR1 */
 #define TTBR1_IRGNH        (TTBR1_IRGNH_MASK        << TTBR1_IRGNH_SHIFT)
 #define TTBR1_SH           (TTBR1_SH_MASK           << TTBR1_SH_SHIFT)
@@ -1186,16 +1095,13 @@ same as the fault fields in the FAR */
 #define TTBR1_IRGNL        (TTBR1_IRGNL_MASK        << TTBR1_IRGNL_SHIFT)
 #define TTBR1_PA           (TTBR1_PA_MASK           << TTBR1_PA_SHIFT)
 
-
 /* V2PSR */
 #define HIT                (HIT_MASK                << HIT_SHIFT)
 #define INDEX              (INDEX_MASK              << INDEX_SHIFT)
 
-
 /* V2Pxx */
 #define V2Pxx_INDEX        (V2Pxx_INDEX_MASK        << V2Pxx_INDEX_SHIFT)
 #define V2Pxx_VA           (V2Pxx_VA_MASK           << V2Pxx_VA_SHIFT)
-
 
 /* Global Register Masks */
 /* CBACRn */
@@ -1204,7 +1110,6 @@ same as the fault fields in the FAR */
 #define RWGE_MASK                 0x01
 #define CBVMID_MASK               0x1F
 #define IRPTNDX_MASK              0xFF
-
 
 /* CR */
 #define RPUE_MASK                 0x01
@@ -1218,12 +1123,10 @@ same as the fault fields in the FAR */
 #define TLBIVMIDCFG_MASK          0x01
 #define CR_HUME_MASK              0x01
 
-
 /* ESR */
 #define CFG_MASK                  0x01
 #define BYPASS_MASK               0x01
 #define ESR_MULTI_MASK            0x01
-
 
 /* ESYNR0 */
 #define ESYNR0_AMID_MASK          0xFF
@@ -1231,7 +1134,6 @@ same as the fault fields in the FAR */
 #define ESYNR0_ABID_MASK          0x07
 #define ESYNR0_AVMID_MASK         0x1F
 #define ESYNR0_ATID_MASK          0xFF
-
 
 /* ESYNR1 */
 #define ESYNR1_AMEMTYPE_MASK             0x07
@@ -1250,7 +1152,6 @@ same as the fault fields in the FAR */
 #define ESYNR1_AC_MASK                   0x01
 #define ESYNR1_DCD_MASK                  0x01
 
-
 /* IDR */
 #define NM2VCBMT_MASK             0x1FF
 #define HTW_MASK                  0x01
@@ -1258,7 +1159,6 @@ same as the fault fields in the FAR */
 #define TLBSIZE_MASK              0x0F
 #define NCB_MASK                  0xFF
 #define NIRPT_MASK                0xFF
-
 
 /* M2VCBRn */
 #define VMID_MASK                 0x1F
@@ -1272,11 +1172,9 @@ same as the fault fields in the FAR */
 #define BPMTCFG_MASK              0x01
 #define BPMEMTYPE_MASK            0x07
 
-
 /* REV */
 #define MINOR_MASK                0x0F
 #define MAJOR_MASK                0x0F
-
 
 /* TESTBUSCR */
 #define TBE_MASK                  0x01
@@ -1289,15 +1187,12 @@ same as the fault fields in the FAR */
 #define SPDM2SEL_MASK             0x0F
 #define SPDM3SEL_MASK             0x0F
 
-
 /* TLBIMID */
 #define TLBIVMID_VMID_MASK        0x1F
-
 
 /* TLBRSW */
 #define TLBRSW_INDEX_MASK         0xFF
 #define TLBBFBS_MASK              0x03
-
 
 /* TLBTR0 */
 #define PR_MASK                   0x01
@@ -1312,11 +1207,9 @@ same as the fault fields in the FAR */
 #define DPSIZR_MASK               0x07
 #define DPSIZC_MASK               0x07
 
-
 /* TLBTR1 */
 #define TLBTR1_VMID_MASK          0x1F
 #define TLBTR1_PA_MASK            0x000FFFFF
-
 
 /* TLBTR2 */
 #define TLBTR2_ASID_MASK          0xFF
@@ -1325,7 +1218,6 @@ same as the fault fields in the FAR */
 #define TLBTR2_NV_MASK            0x01
 #define TLBTR2_VA_MASK            0x000FFFFF
 
-
 /* Global Register Shifts */
 /* CBACRn */
 #define RWVMID_SHIFT             0
@@ -1333,7 +1225,6 @@ same as the fault fields in the FAR */
 #define RWGE_SHIFT               9
 #define CBVMID_SHIFT             16
 #define IRPTNDX_SHIFT            24
-
 
 /* CR */
 #define RPUE_SHIFT               0
@@ -1347,12 +1238,10 @@ same as the fault fields in the FAR */
 #define TLBIVMIDCFG_SHIFT        8
 #define CR_HUME_SHIFT            9
 
-
 /* ESR */
 #define CFG_SHIFT                0
 #define BYPASS_SHIFT             1
 #define ESR_MULTI_SHIFT          31
-
 
 /* ESYNR0 */
 #define ESYNR0_AMID_SHIFT        0
@@ -1360,7 +1249,6 @@ same as the fault fields in the FAR */
 #define ESYNR0_ABID_SHIFT        13
 #define ESYNR0_AVMID_SHIFT       16
 #define ESYNR0_ATID_SHIFT        24
-
 
 /* ESYNR1 */
 #define ESYNR1_AMEMTYPE_SHIFT           0
@@ -1379,7 +1267,6 @@ same as the fault fields in the FAR */
 #define ESYNR1_AC_SHIFT                 30
 #define ESYNR1_DCD_SHIFT                31
 
-
 /* IDR */
 #define NM2VCBMT_SHIFT           0
 #define HTW_SHIFT                9
@@ -1387,7 +1274,6 @@ same as the fault fields in the FAR */
 #define TLBSIZE_SHIFT            12
 #define NCB_SHIFT                16
 #define NIRPT_SHIFT              24
-
 
 /* M2VCBRn */
 #define VMID_SHIFT               0
@@ -1401,11 +1287,9 @@ same as the fault fields in the FAR */
 #define BPMTCFG_SHIFT            24
 #define BPMEMTYPE_SHIFT          25
 
-
 /* REV */
 #define MINOR_SHIFT              0
 #define MAJOR_SHIFT              4
-
 
 /* TESTBUSCR */
 #define TBE_SHIFT                0
@@ -1418,15 +1302,12 @@ same as the fault fields in the FAR */
 #define SPDM2SEL_SHIFT           24
 #define SPDM3SEL_SHIFT           28
 
-
 /* TLBIMID */
 #define TLBIVMID_VMID_SHIFT      0
-
 
 /* TLBRSW */
 #define TLBRSW_INDEX_SHIFT       0
 #define TLBBFBS_SHIFT            8
-
 
 /* TLBTR0 */
 #define PR_SHIFT                 0
@@ -1441,11 +1322,9 @@ same as the fault fields in the FAR */
 #define DPSIZR_SHIFT             16
 #define DPSIZC_SHIFT             20
 
-
 /* TLBTR1 */
 #define TLBTR1_VMID_SHIFT        0
 #define TLBTR1_PA_SHIFT          12
-
 
 /* TLBTR2 */
 #define TLBTR2_ASID_SHIFT        0
@@ -1453,7 +1332,6 @@ same as the fault fields in the FAR */
 #define TLBTR2_NSTID_SHIFT       9
 #define TLBTR2_NV_SHIFT          10
 #define TLBTR2_VA_SHIFT          12
-
 
 /* Context Register Masks */
 /* ACTLR */
@@ -1474,7 +1352,6 @@ same as the fault fields in the FAR */
 #define PTMTCFG_MASK                     0x01
 #define PTMEMTYPE_MASK                   0x07
 
-
 /* BFBCR */
 #define BFBDFE_MASK                      0x01
 #define BFBSFE_MASK                      0x01
@@ -1482,11 +1359,9 @@ same as the fault fields in the FAR */
 #define FLVIC_MASK                       0x0F
 #define SLVIC_MASK                       0x0F
 
-
 /* CONTEXTIDR */
 #define CONTEXTIDR_ASID_MASK             0xFF
 #define PROCID_MASK                      0x00FFFFFF
-
 
 /* FSR */
 #define TF_MASK                          0x01
@@ -1500,13 +1375,11 @@ same as the fault fields in the FAR */
 #define SS_MASK                          0x01
 #define MULTI_MASK                       0x01
 
-
 /* FSYNR0 */
 #define AMID_MASK                        0xFF
 #define APID_MASK                        0x1F
 #define ABID_MASK                        0x07
 #define ATID_MASK                        0xFF
-
 
 /* FSYNR1 */
 #define AMEMTYPE_MASK                    0x07
@@ -1521,7 +1394,6 @@ same as the fault fields in the FAR */
 #define FSYNR1_ASIZE_MASK                0x07
 #define ALOCK_MASK                       0x03
 #define AFULL_MASK                       0x01
-
 
 /* NMRR */
 #define ICPC0_MASK                       0x03
@@ -1540,7 +1412,6 @@ same as the fault fields in the FAR */
 #define OCPC5_MASK                       0x03
 #define OCPC6_MASK                       0x03
 #define OCPC7_MASK                       0x03
-
 
 /* PAR */
 #define FAULT_MASK                       0x01
@@ -1566,7 +1437,6 @@ same as the fault fields in the FAR */
 #define PAR_NOFAULT_NOS_MASK             0x01
 #define PAR_NPFAULT_PA_MASK              0x000FFFFF
 
-
 /* PRRR */
 #define MTC0_MASK                        0x03
 #define MTC1_MASK                        0x03
@@ -1589,10 +1459,8 @@ same as the fault fields in the FAR */
 #define NOS6_MASK                        0x01
 #define NOS7_MASK                        0x01
 
-
 /* RESUME */
 #define TNR_MASK                         0x01
-
 
 /* SCTLR */
 #define M_MASK                           0x01
@@ -1602,19 +1470,15 @@ same as the fault fields in the FAR */
 #define BE_MASK                          0x01
 #define AFFD_MASK                        0x01
 
-
 /* TLBIASID */
 #define TLBIASID_ASID_MASK               0xFF
-
 
 /* TLBIVA */
 #define TLBIVA_ASID_MASK                 0xFF
 #define TLBIVA_VA_MASK                   0x000FFFFF
 
-
 /* TLBIVAA */
 #define TLBIVAA_VA_MASK                  0x000FFFFF
-
 
 /* TLBLCKR */
 #define LKE_MASK                         0x01
@@ -1624,12 +1488,10 @@ same as the fault fields in the FAR */
 #define FLOOR_MASK                       0xFF
 #define VICTIM_MASK                      0xFF
 
-
 /* TTBCR */
 #define N_MASK                           0x07
 #define PD0_MASK                         0x01
 #define PD1_MASK                         0x01
-
 
 /* TTBR0 */
 #define TTBR0_IRGNH_MASK                 0x01
@@ -1639,7 +1501,6 @@ same as the fault fields in the FAR */
 #define TTBR0_IRGNL_MASK                 0x01
 #define TTBR0_PA_MASK                    0x0003FFFF
 
-
 /* TTBR1 */
 #define TTBR1_IRGNH_MASK                 0x01
 #define TTBR1_SH_MASK                    0x01
@@ -1648,16 +1509,13 @@ same as the fault fields in the FAR */
 #define TTBR1_IRGNL_MASK                 0x01
 #define TTBR1_PA_MASK                    0x0003FFFF
 
-
 /* V2PSR */
 #define HIT_MASK                         0x01
 #define INDEX_MASK                       0xFF
 
-
 /* V2Pxx */
 #define V2Pxx_INDEX_MASK                 0xFF
 #define V2Pxx_VA_MASK                    0x000FFFFF
-
 
 /* Context Register Shifts */
 /* ACTLR */
@@ -1678,7 +1536,6 @@ same as the fault fields in the FAR */
 #define PTMTCFG_SHIFT                  20
 #define PTMEMTYPE_SHIFT                21
 
-
 /* BFBCR */
 #define BFBDFE_SHIFT                   0
 #define BFBSFE_SHIFT                   1
@@ -1686,11 +1543,9 @@ same as the fault fields in the FAR */
 #define FLVIC_SHIFT                    4
 #define SLVIC_SHIFT                    8
 
-
 /* CONTEXTIDR */
 #define CONTEXTIDR_ASID_SHIFT          0
 #define PROCID_SHIFT                   8
-
 
 /* FSR */
 #define TF_SHIFT                       1
@@ -1704,13 +1559,11 @@ same as the fault fields in the FAR */
 #define SS_SHIFT                       30
 #define MULTI_SHIFT                    31
 
-
 /* FSYNR0 */
 #define AMID_SHIFT                     0
 #define APID_SHIFT                     8
 #define ABID_SHIFT                     13
 #define ATID_SHIFT                     24
-
 
 /* FSYNR1 */
 #define AMEMTYPE_SHIFT                 0
@@ -1725,7 +1578,6 @@ same as the fault fields in the FAR */
 #define FSYNR1_ASIZE_SHIFT             16
 #define ALOCK_SHIFT                    20
 #define AFULL_SHIFT                    24
-
 
 /* NMRR */
 #define ICPC0_SHIFT                    0
@@ -1744,7 +1596,6 @@ same as the fault fields in the FAR */
 #define OCPC5_SHIFT                    26
 #define OCPC6_SHIFT                    28
 #define OCPC7_SHIFT                    30
-
 
 /* PAR */
 #define FAULT_SHIFT                    0
@@ -1770,7 +1621,6 @@ same as the fault fields in the FAR */
 #define PAR_NOFAULT_NOS_SHIFT          10
 #define PAR_NPFAULT_PA_SHIFT           12
 
-
 /* PRRR */
 #define MTC0_SHIFT                     0
 #define MTC1_SHIFT                     2
@@ -1793,10 +1643,8 @@ same as the fault fields in the FAR */
 #define NOS6_SHIFT                     30
 #define NOS7_SHIFT                     31
 
-
 /* RESUME */
 #define TNR_SHIFT                      0
-
 
 /* SCTLR */
 #define M_SHIFT                        0
@@ -1806,19 +1654,15 @@ same as the fault fields in the FAR */
 #define BE_SHIFT                       4
 #define AFFD_SHIFT                     5
 
-
 /* TLBIASID */
 #define TLBIASID_ASID_SHIFT            0
-
 
 /* TLBIVA */
 #define TLBIVA_ASID_SHIFT              0
 #define TLBIVA_VA_SHIFT                12
 
-
 /* TLBIVAA */
 #define TLBIVAA_VA_SHIFT               12
-
 
 /* TLBLCKR */
 #define LKE_SHIFT                      0
@@ -1828,12 +1672,10 @@ same as the fault fields in the FAR */
 #define FLOOR_SHIFT                    8
 #define VICTIM_SHIFT                   8
 
-
 /* TTBCR */
 #define N_SHIFT                        3
 #define PD0_SHIFT                      4
 #define PD1_SHIFT                      5
-
 
 /* TTBR0 */
 #define TTBR0_IRGNH_SHIFT              0
@@ -1843,7 +1685,6 @@ same as the fault fields in the FAR */
 #define TTBR0_IRGNL_SHIFT              6
 #define TTBR0_PA_SHIFT                 14
 
-
 /* TTBR1 */
 #define TTBR1_IRGNH_SHIFT              0
 #define TTBR1_SH_SHIFT                 1
@@ -1852,11 +1693,9 @@ same as the fault fields in the FAR */
 #define TTBR1_IRGNL_SHIFT              6
 #define TTBR1_PA_SHIFT                 14
 
-
 /* V2PSR */
 #define HIT_SHIFT                      0
 #define INDEX_SHIFT                    8
-
 
 /* V2Pxx */
 #define V2Pxx_INDEX_SHIFT              0

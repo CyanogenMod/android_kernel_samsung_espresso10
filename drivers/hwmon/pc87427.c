@@ -935,7 +935,6 @@ static ssize_t show_name(struct device *dev, struct device_attribute
 }
 static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
 
-
 /*
  * Device detection, attach and detach
  */
@@ -1161,7 +1160,6 @@ static int __devexit pc87427_remove(struct platform_device *pdev)
 
 	return 0;
 }
-
 
 static struct platform_driver pc87427_driver = {
 	.driver = {

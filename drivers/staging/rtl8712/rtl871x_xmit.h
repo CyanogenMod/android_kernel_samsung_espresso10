@@ -258,4 +258,3 @@ void r8712_xmit_bh(void *priv);
 #include "rtl8712_xmit.h"
 
 #endif	/*_RTL871X_XMIT_H_*/
-

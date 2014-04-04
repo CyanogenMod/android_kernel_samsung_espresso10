@@ -9,11 +9,9 @@ extern void svg_sample(int Yslot, int cpu, u64 start, u64 end);
 extern void svg_waiting(int Yslot, u64 start, u64 end);
 extern void svg_cpu_box(int cpu, u64 max_frequency, u64 turbo_frequency);
 
-
 extern void svg_process(int cpu, u64 start, u64 end, const char *type, const char *name);
 extern void svg_cstate(int cpu, u64 start, u64 end, int type);
 extern void svg_pstate(int cpu, u64 start, u64 end, u64 freq);
-
 
 extern void svg_time_grid(void);
 extern void svg_legenda(void);

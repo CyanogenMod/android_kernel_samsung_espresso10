@@ -81,7 +81,6 @@ struct uwb_dev {
  */
 enum { UWB_RC_CTX_MAX = 256 };
 
-
 /** Notification chain head for UWB generated events to listeners */
 struct uwb_notifs_chain {
 	struct list_head list;
@@ -419,7 +418,6 @@ struct uwb_rc {
 	struct uwb_dbg *dbg;
 };
 
-
 /**
  * struct uwb_pal - a UWB PAL
  * @name:    descriptive name for this PAL (wusbhc, wlp, etc.).
@@ -633,7 +631,6 @@ struct uwb_notifs_handler {
 int uwb_notifs_register(struct uwb_rc *, struct uwb_notifs_handler *);
 int uwb_notifs_deregister(struct uwb_rc *, struct uwb_notifs_handler *);
 
-
 /**
  * UWB radio controller Event Size Entry (for creating entry tables)
  *
@@ -726,7 +723,6 @@ static inline int edc_inc(struct edc *err_hist, u16 max_err, u16 timeframe)
 	}
 	return 0;
 }
-
 
 /* Information Element handling */
 

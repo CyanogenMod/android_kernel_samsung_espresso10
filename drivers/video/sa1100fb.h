@@ -4,7 +4,7 @@
  *
  *  Copyright (C) 1999 Eric A. Thomas
  *   Based on acornfb.c Copyright (C) Russell King.
- *  
+ *
  * This file is subject to the terms and conditions of the GNU General Public
  * License.  See the file COPYING in the main directory of this archive
  * for more details.
@@ -130,7 +130,7 @@ struct sa1100fb_info {
 #define SA1100_NAME	"SA1100"
 
 /*
- *  Debug macros 
+ *  Debug macros
  */
 #if DEBUG
 #  define DPRINTK(fmt, args...)	printk("%s: " fmt, __func__ , ## args)
@@ -143,4 +143,3 @@ struct sa1100fb_info {
  */
 #define MIN_XRES	64
 #define MIN_YRES	64
-

@@ -294,7 +294,6 @@ static int mio_cs_resume(struct pcmcia_device *link)
 	return 0;
 }
 
-
 static int mio_pcmcia_config_loop(struct pcmcia_device *p_dev, void *priv_data)
 {
 	int base, ret;
@@ -310,7 +309,6 @@ static int mio_pcmcia_config_loop(struct pcmcia_device *p_dev, void *priv_data)
 	}
 	return -ENODEV;
 }
-
 
 static void mio_cs_config(struct pcmcia_device *link)
 {

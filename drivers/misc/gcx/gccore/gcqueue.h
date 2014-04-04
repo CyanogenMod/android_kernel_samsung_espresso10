@@ -17,7 +17,6 @@
 
 #include <linux/gccore.h>
 
-
 /*******************************************************************************
  * Command queue defines.
  */
@@ -27,7 +26,6 @@
 
 /* Number of command buffers that fit in one storage buffer. */
 #define GC_CMDBUF_FACTOR	2
-
 
 /*******************************************************************************
  * Command queue structures.
@@ -178,7 +176,6 @@ struct gcqueue {
 	struct gcmommuflush *flushlogical;
 	unsigned int flushaddress;
 };
-
 
 /*******************************************************************************
  * Command queue management API.

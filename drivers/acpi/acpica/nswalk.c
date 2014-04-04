@@ -117,7 +117,6 @@ struct acpi_namespace_node *acpi_ns_get_next_node_typed(acpi_object_type type,
 
 	next_node = acpi_ns_get_next_node(parent_node, child_node);
 
-
 	/* If any type is OK, we are done */
 
 	if (type == ACPI_TYPE_ANY) {

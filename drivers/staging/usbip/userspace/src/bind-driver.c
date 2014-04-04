@@ -9,8 +9,6 @@
 #include <getopt.h>
 #include <glib.h>
 
-
-
 static const struct option longopts[] = {
 	{"usbip",	required_argument,	NULL, 'u'},
 	{"other",	required_argument,	NULL, 'o'},
@@ -28,7 +26,6 @@ static const struct option longopts[] = {
 };
 
 static const char match_busid_path[] = "/sys/bus/usb/drivers/usbip/match_busid";
-
 
 static void show_help(void)
 {
@@ -118,7 +115,6 @@ static int unbind_interface(char *busid, int configvalue, int interface)
 
 	return unbind_interface_busid(inf_busid);
 }
-
 
 static const char bind_path_format[] = "/sys/bus/usb/drivers/%s/bind";
 
@@ -243,7 +239,6 @@ static int bind_to_usbip(char *busid)
 		return 0;
 }
 
-
 static int use_device_by_usbip(char *busid)
 {
 	int ret;
@@ -271,8 +266,6 @@ static int use_device_by_usbip(char *busid)
 
 	return 0;
 }
-
-
 
 static int use_device_by_other(char *busid)
 {
@@ -303,15 +296,12 @@ static int use_device_by_other(char *busid)
 	return 0;
 }
 
-
 #include <sys/types.h>
 #include <regex.h>
 
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
-
-
 
 static int is_usb_device(char *busid)
 {
@@ -330,7 +320,6 @@ static int is_usb_device(char *busid)
 
 	return 1;
 }
-
 
 #include <dirent.h>
 static int show_devices(void)
@@ -422,7 +411,6 @@ static int show_devices2(void)
 	return 0;
 }
 
-
 #if 0
 static int export_to(char *host, char *busid) {
 
@@ -440,7 +428,6 @@ static int export_to(char *host, char *busid) {
 		show_help();
 		return -1;
 	}
-
 
 	ret = use_device_by_usbip(busid);
 	if( ret != 0 ) {
@@ -481,7 +468,6 @@ static int unexport_from(char *host, char *busid) {
 
 	return 0;
 }
-
 
 static int allusbip(void)
 {

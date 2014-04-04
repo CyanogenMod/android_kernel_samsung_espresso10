@@ -44,7 +44,6 @@
 #define ADT75_VALUE_FLOAT_OFFSET	4
 #define ADT75_VALUE_FLOAT_MASK		0xF
 
-
 /*
  * struct adt75_chip_info - chip specifc information
  */
@@ -178,7 +177,6 @@ static ssize_t adt75_store_oneshot(struct device *dev,
 	ret = strict_strtoul(buf, 10, &data);
 	if (ret)
 		return -EINVAL;
-
 
 	ret = adt75_i2c_read(chip, ADT75_CONFIG, &chip->config);
 	if (ret)
@@ -497,7 +495,6 @@ static inline ssize_t adt75_set_t_bound(struct device *dev,
 
 	return ret;
 }
-
 
 static IIO_DEVICE_ATTR(oti_mode,
 		       S_IRUGO | S_IWUSR,

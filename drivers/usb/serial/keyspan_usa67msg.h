@@ -112,7 +112,6 @@
 #ifndef	__USA67MSG__
 #define	__USA67MSG__
 
-
 // all things called "ControlMessage" are sent on the 'control' endpoint
 
 typedef struct keyspan_usa67_portControlMessage
@@ -250,5 +249,3 @@ typedef struct keyspan_usa67_globalDebugMessage
 #define	STATUS_RATION	10
 
 #endif
-
-

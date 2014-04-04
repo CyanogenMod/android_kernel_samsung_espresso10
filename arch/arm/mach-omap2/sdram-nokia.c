@@ -276,4 +276,3 @@ struct omap_sdrc_params *nokia_get_sdram_timings(void)
 
 	return err ? NULL : nokia_sdrc_params;
 }
-

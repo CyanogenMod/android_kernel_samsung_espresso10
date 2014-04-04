@@ -3,7 +3,6 @@
 
 /* Written 1997-2000 by Werner Almesberger, EPFL LRC/ICA */
 
-
 #ifndef LINUX_ATM_TCP_H
 #define LINUX_ATM_TCP_H
 
@@ -11,7 +10,6 @@
 #include <linux/atm.h>
 #include <linux/atmioc.h>
 #include <linux/types.h>
-
 
 /*
  * All values in struct atmtcp_hdr are in network byte order
@@ -55,7 +53,6 @@ struct atmtcp_control {
 						   interface */
 #define ATMTCP_REMOVE	_IO('a',ATMIOC_ITF+15)	/* destroy persistent ATMTCP
 						   interface */
-
 
 #ifdef __KERNEL__
 

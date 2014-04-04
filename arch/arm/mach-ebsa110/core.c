@@ -50,7 +50,7 @@ static struct irq_chip ebsa110_irq_chip = {
 	.irq_mask	= ebsa110_mask_irq,
 	.irq_unmask	= ebsa110_unmask_irq,
 };
- 
+
 static void __init ebsa110_init_irq(void)
 {
 	unsigned long flags;
@@ -118,7 +118,6 @@ static void __init ebsa110_map_io(void)
 {
 	iotable_init(ebsa110_io_desc, ARRAY_SIZE(ebsa110_io_desc));
 }
-
 
 #define PIT_CTRL		(PIT_BASE + 0x0d)
 #define PIT_T2			(PIT_BASE + 0x09)

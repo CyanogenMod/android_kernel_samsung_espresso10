@@ -116,7 +116,6 @@
     _flo->bits.sign = X##_s;					\
   } while (0)
 
-
 /*
  * Multiplication algorithms:
  */
@@ -175,7 +174,6 @@
     _FP_FRAC_SRS_2(_z, wfracbits - 1, 2*wfracbits);			\
     R##_f = _z_f0;							\
   } while (0)
-
 
 /*
  * Division algorithms:
@@ -242,14 +240,13 @@
     udiv_qrnnd(_q, _r, _nh, _nl, Y##_f);		\
     R##_f = _q | (_r != 0);				\
   } while (0)
-  
-  
+
 /*
  * Square root algorithms:
  * We have just one right now, maybe Newton approximation
  * should be added for those machines where division is fast.
  */
- 
+
 #define _FP_SQRT_MEAT_1(R, S, T, X, q)			\
   do {							\
     while (q != _FP_WORK_ROUND)				\
@@ -273,13 +270,12 @@
   } while (0)
 
 /*
- * Assembly/disassembly for converting to/from integral types.  
+ * Assembly/disassembly for converting to/from integral types.
  * No shifting or overflow handled here.
  */
 
 #define _FP_FRAC_ASSEMBLE_1(r, X, rsize)	(r = X##_f)
 #define _FP_FRAC_DISASSEMBLE_1(X, r, rsize)	(X##_f = r)
-
 
 /*
  * Convert FP values between word sizes

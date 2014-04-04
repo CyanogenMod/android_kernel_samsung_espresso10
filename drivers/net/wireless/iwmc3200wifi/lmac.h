@@ -194,7 +194,6 @@ struct iwm_ct_kill_cfg_cmd {
 	u32 entry_threshold;
 } __packed;
 
-
 /* LMAC OP CODES */
 #define REPLY_PAD			0x0
 #define REPLY_ALIVE			0x1
@@ -232,7 +231,6 @@ struct iwm_ct_kill_cfg_cmd {
 #define REPLY_TXFIFO_CFG		0x25
 #define REPLY_WRITE_READ		0x26
 #define REPLY_INSTALL_SEC_KEY		0x27
-
 
 #define REPLY_RATE_SCALE		0x47
 #define REPLY_LEDS_CMD			0x48
@@ -377,7 +375,6 @@ struct iwm_ct_kill_cfg_cmd {
 
 #define LMAC_COMMAND_ID_MAX		0xff
 #define LMAC_COMMAND_ID_NUM		(LMAC_COMMAND_ID_MAX + 1)
-
 
 /* Calibration */
 

@@ -209,7 +209,6 @@ void cpld_set_scrambler(struct channel *sc, u32 mode)
 	sc->p.scrambler = mode;
 }
 
-
 void cpld_set_crc(struct channel *sc, u32 crc)
 {
 	if (sc->p.crc == crc)
@@ -230,7 +229,6 @@ void cpld_set_crc(struct channel *sc, u32 crc)
 
 	sc->p.crc = crc;
 }
-
 
 void cpld_select_panel(struct channel *sc, u32 panel)
 {
@@ -253,7 +251,6 @@ void cpld_select_panel(struct channel *sc, u32 panel)
 
 	sc->p.panel = panel;
 }
-
 
 extern void cpld_set_clock(struct channel *sc, u32 mode)
 {

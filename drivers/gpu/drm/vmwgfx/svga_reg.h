@@ -170,7 +170,6 @@ enum {
       the use of the current SVGA driver. */
 };
 
-
 /*
  * Guest memory regions (GMRs):
  *
@@ -279,7 +278,6 @@ struct SVGAGuestPtr {
    uint32 offset;
 } SVGAGuestPtr;
 
-
 /*
  * SVGAGMRImageFormat --
  *
@@ -335,7 +333,6 @@ struct SVGAColorBGRX {
    };
 } SVGAColorBGRX;
 
-
 /*
  * SVGASignedRect --
  * SVGASignedPoint --
@@ -363,7 +360,6 @@ struct SVGASignedPoint {
    int32  y;
 } SVGASignedPoint;
 
-
 /*
  *  Capabilities
  *
@@ -387,7 +383,6 @@ struct SVGASignedPoint {
 #define SVGA_CAP_DISPLAY_TOPOLOGY   0x00080000   // Legacy multi-monitor support
 #define SVGA_CAP_GMR                0x00100000
 #define SVGA_CAP_TRACES             0x00200000
-
 
 /*
  * FIFO register indices.
@@ -522,7 +517,6 @@ enum {
     SVGA_FIFO_NUM_REGS
 };
 
-
 /*
  * Definition of registers included in extended FIFO support.
  *
@@ -546,7 +540,6 @@ enum {
  * affecting driver compatibility; keep it that way?
  */
 #define SVGA_FIFO_EXTENDED_MANDATORY_REGS  (SVGA_FIFO_3D_CAPS_LAST + 1)
-
 
 /*
  * FIFO Synchronization Registers
@@ -650,7 +643,6 @@ enum {
  *            asynchronous wakeup to the MKS thread.
  */
 
-
 /*
  * FIFO Capabilities
  *
@@ -721,7 +713,6 @@ enum {
 #define SVGA_FIFO_CAP_RESERVE           (1<<6)
 #define SVGA_FIFO_CAP_SCREEN_OBJECT     (1<<7)
 
-
 /*
  * FIFO Flags
  *
@@ -738,20 +729,17 @@ enum {
 
 #define SVGA_FIFO_RESERVED_UNKNOWN      0xffffffff
 
-
 /*
  * Video overlay support
  */
 
 #define SVGA_NUM_OVERLAY_UNITS 32
 
-
 /*
  * Video capabilities that the guest is currently using
  */
 
 #define SVGA_VIDEO_FLAG_COLORKEY        0x0001
-
 
 /*
  * Offsets for the video overlay registers
@@ -782,7 +770,6 @@ enum {
    SVGA_VIDEO_NUM_REGS
 };
 
-
 /*
  * SVGA Overlay Units
  *
@@ -812,7 +799,6 @@ typedef struct SVGAOverlayUnit {
    uint32 dataGMRId;
    uint32 dstScreenId;
 } SVGAOverlayUnit;
-
 
 /*
  * SVGAScreenObject --
@@ -849,7 +835,6 @@ struct SVGAScreenObject {
       int32 y;
    } root;              // Only used if SVGA_SCREEN_HAS_ROOT is set.
 } SVGAScreenObject;
-
 
 /*
  *  Commands in the command FIFO:
@@ -890,7 +875,6 @@ typedef enum {
 
 #define SVGA_CMD_MAX_ARGS           64
 
-
 /*
  * SVGA_CMD_UPDATE --
  *
@@ -927,7 +911,6 @@ struct {
    uint32 height;
 } SVGAFifoCmdUpdate;
 
-
 /*
  * SVGA_CMD_RECT_COPY --
  *
@@ -947,7 +930,6 @@ struct {
    uint32 width;
    uint32 height;
 } SVGAFifoCmdRectCopy;
-
 
 /*
  * SVGA_CMD_DEFINE_CURSOR --
@@ -977,7 +959,6 @@ struct {
    */
 } SVGAFifoCmdDefineCursor;
 
-
 /*
  * SVGA_CMD_DEFINE_ALPHA_CURSOR --
  *
@@ -1001,7 +982,6 @@ struct {
    /* Followed by scanline data */
 } SVGAFifoCmdDefineAlphaCursor;
 
-
 /*
  * SVGA_CMD_UPDATE_VERBOSE --
  *
@@ -1022,7 +1002,6 @@ struct {
    uint32 height;
    uint32 reason;
 } SVGAFifoCmdUpdateVerbose;
-
 
 /*
  * SVGA_CMD_FRONT_ROP_FILL --
@@ -1049,7 +1028,6 @@ struct {
    uint32 rop;       // Must be SVGA_ROP_COPY
 } SVGAFifoCmdFrontRopFill;
 
-
 /*
  * SVGA_CMD_FENCE --
  *
@@ -1070,7 +1048,6 @@ struct {
    uint32 fence;
 } SVGAFifoCmdFence;
 
-
 /*
  * SVGA_CMD_ESCAPE --
  *
@@ -1088,7 +1065,6 @@ struct {
    uint32 size;
    /* followed by 'size' bytes of data */
 } SVGAFifoCmdEscape;
-
 
 /*
  * SVGA_CMD_DEFINE_SCREEN --
@@ -1121,7 +1097,6 @@ struct {
    SVGAScreenObject screen;   // Variable-length according to version
 } SVGAFifoCmdDefineScreen;
 
-
 /*
  * SVGA_CMD_DESTROY_SCREEN --
  *
@@ -1136,7 +1111,6 @@ typedef
 struct {
    uint32 screenId;
 } SVGAFifoCmdDestroyScreen;
-
 
 /*
  * SVGA_CMD_DEFINE_GMRFB --
@@ -1192,7 +1166,6 @@ struct {
    SVGAGMRImageFormat  format;
 } SVGAFifoCmdDefineGMRFB;
 
-
 /*
  * SVGA_CMD_BLIT_GMRFB_TO_SCREEN --
  *
@@ -1228,7 +1201,6 @@ struct {
    SVGASignedRect   destRect;
    uint32           destScreenId;
 } SVGAFifoCmdBlitGMRFBToScreen;
-
 
 /*
  * SVGA_CMD_BLIT_SCREEN_TO_GMRFB --
@@ -1277,7 +1249,6 @@ struct {
    uint32           srcScreenId;
 } SVGAFifoCmdBlitScreenToGMRFB;
 
-
 /*
  * SVGA_CMD_ANNOTATION_FILL --
  *
@@ -1309,7 +1280,6 @@ typedef
 struct {
    SVGAColorBGRX  color;
 } SVGAFifoCmdAnnotationFill;
-
 
 /*
  * SVGA_CMD_ANNOTATION_COPY --

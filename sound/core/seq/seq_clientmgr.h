@@ -27,13 +27,12 @@
 #include "seq_ports.h"
 #include "seq_lock.h"
 
-
 /* client manager */
 
 struct snd_seq_user_client {
 	struct file *file;	/* file struct of client */
 	/* ... */
-	
+
 	/* fifo */
 	struct snd_seq_fifo *fifo;	/* queue for incoming events */
 	int fifo_pool_size;
@@ -42,7 +41,6 @@ struct snd_seq_user_client {
 struct snd_seq_kernel_client {
 	/* ... */
 };
-
 
 struct snd_seq_client {
 	snd_seq_client_type_t type;
@@ -75,7 +73,6 @@ struct snd_seq_usage {
 	int cur;
 	int peak;
 };
-
 
 int client_init_data(void);
 int snd_sequencer_device_init(void);

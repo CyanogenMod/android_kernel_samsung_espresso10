@@ -42,7 +42,6 @@
  *
  */
 
-
 #include <linux/module.h>
 #include <linux/types.h>
 #include <linux/init.h>
@@ -79,7 +78,6 @@
 
 #include "via-velocity.h"
 
-
 static int velocity_nics;
 static int msglevel = MSG_LEVEL_INFO;
 
@@ -110,7 +108,6 @@ static void mac_get_cam_mask(struct mac_regs __iomem *regs, u8 *mask)
 	/* Select mar */
 	BYTE_REG_BITS_SET(CAMCR_PS_MAR, CAMCR_PS1 | CAMCR_PS0, &regs->CAMCR);
 }
-
 
 /**
  *	mac_set_cam_mask	-	Set a CAM mask
@@ -208,7 +205,6 @@ static void mac_set_vlan_cam(struct mac_regs __iomem *regs, int idx,
 	/* Select mar */
 	BYTE_REG_BITS_SET(CAMCR_PS_MAR, CAMCR_PS1 | CAMCR_PS0, &regs->CAMCR);
 }
-
 
 /**
  *	mac_wol_reset	-	reset WOL after exiting low power
@@ -710,7 +706,6 @@ static int velocity_mii_read(struct mac_regs __iomem *regs, u8 index, u16 *data)
 	return 0;
 }
 
-
 /**
  *	mii_check_media_mode	-	check media state
  *	@regs: velocity registers
@@ -875,8 +870,6 @@ static u32 check_connection_type(struct mac_regs __iomem *regs)
 
 	return status;
 }
-
-
 
 /**
  *	velocity_set_media_mode		-	set media mode
@@ -1549,7 +1542,6 @@ static int velocity_alloc_rx_buf(struct velocity_info *vptr, int idx)
 	return 0;
 }
 
-
 static int velocity_rx_refill(struct velocity_info *vptr)
 {
 	int dirty = vptr->rx.dirty, done = 0;
@@ -1610,8 +1602,6 @@ static void velocity_free_rd_ring(struct velocity_info *vptr)
 	kfree(vptr->rx.info);
 	vptr->rx.info = NULL;
 }
-
-
 
 /**
  *	velocity_init_rd_ring	-	set up receive ring
@@ -1686,7 +1676,6 @@ static void velocity_free_dma_rings(struct velocity_info *vptr)
 	pci_free_consistent(vptr->pdev, size, vptr->rx.ring, vptr->rx.pool_dma);
 }
 
-
 static int velocity_init_rings(struct velocity_info *vptr, int mtu)
 {
 	int ret;
@@ -1749,7 +1738,6 @@ static void velocity_free_tx_buf(struct velocity_info *vptr,
 	tdinfo->skb = NULL;
 }
 
-
 /*
  *	FIXME: could we merge this with velocity_free_tx_buf ?
  */
@@ -1796,7 +1784,6 @@ static void velocity_free_td_ring(struct velocity_info *vptr)
 		vptr->tx.infos[j] = NULL;
 	}
 }
-
 
 static void velocity_free_rings(struct velocity_info *vptr)
 {
@@ -2035,7 +2022,6 @@ static inline void velocity_iph_realign(struct velocity_info *vptr,
 	}
 }
 
-
 /**
  *	velocity_receive_frame	-	received packet processor
  *	@vptr: velocity we are handling
@@ -2104,7 +2090,6 @@ static int velocity_receive_frame(struct velocity_info *vptr, int idx)
 
 	return 0;
 }
-
 
 /**
  *	velocity_rx_srv		-	service RX interrupt
@@ -2413,7 +2398,6 @@ static int velocity_mii_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd
 	return 0;
 }
 
-
 /**
  *	velocity_ioctl		-	ioctl entry point
  *	@dev: network device
@@ -2446,7 +2430,6 @@ static int velocity_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 	}
 	if (!netif_running(dev))
 		pci_set_power_state(vptr->pdev, PCI_D3hot);
-
 
 	return ret;
 }
@@ -2625,7 +2608,6 @@ out:
 	return NETDEV_TX_OK;
 }
 
-
 static const struct net_device_ops velocity_netdev_ops = {
 	.ndo_open		= velocity_open,
 	.ndo_stop		= velocity_close,
@@ -2724,7 +2706,6 @@ static u32 velocity_get_link(struct net_device *dev)
 	return BYTE_REG_BITS_IS_ON(PHYSR0_LINKGD, &regs->PHYSR0) ? 1 : 0;
 }
 
-
 /**
  *	velocity_found1		-	set up discovered velocity card
  *	@pdev: PCI device
@@ -2763,7 +2744,6 @@ static int __devinit velocity_found1(struct pci_dev *pdev, const struct pci_devi
 
 	SET_NETDEV_DEV(dev, &pdev->dev);
 	vptr = netdev_priv(dev);
-
 
 	if (first) {
 		printk(KERN_INFO "%s Ver. %s\n",
@@ -2809,7 +2789,6 @@ static int __devinit velocity_found1(struct pci_dev *pdev, const struct pci_devi
 
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = readb(&regs->PAR[i]);
-
 
 	drv_string = dev_driver_string(&pdev->dev);
 
@@ -2870,7 +2849,6 @@ err_free_dev:
 	free_netdev(dev);
 	goto out;
 }
-
 
 #ifdef CONFIG_PM
 /**
@@ -3149,7 +3127,6 @@ static struct pci_driver velocity_driver = {
 #endif
 };
 
-
 /**
  *	velocity_ethtool_up	-	pre hook for ethtool
  *	@dev: network device
@@ -3399,7 +3376,6 @@ static void set_pending_timer_val(int *val, u32 us)
 
 	*val = (mult << 6) | ((us >> shift) & 0x3f);
 }
-
 
 static int velocity_get_coalesce(struct net_device *dev,
 		struct ethtool_coalesce *ecmd)

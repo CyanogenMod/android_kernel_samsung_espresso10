@@ -349,7 +349,6 @@ static int sst_platform_pcm_trigger(struct snd_pcm_substream *substream,
 	return ret_val;
 }
 
-
 static snd_pcm_uframes_t sst_platform_pcm_pointer
 			(struct snd_pcm_substream *substream)
 {

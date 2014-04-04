@@ -382,7 +382,6 @@ static void __wa_xfer_abort(struct wa_xfer *xfer)
 		goto error_submit;
 	return;				/* callback frees! */
 
-
 error_submit:
 	if (printk_ratelimit())
 		dev_err(dev, "xfer %p: Can't submit abort request: %d\n",

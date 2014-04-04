@@ -1,6 +1,6 @@
-/******************************************************************* 
+/*******************************************************************
  *
- * Copyright (c) 2000 ATecoM GmbH 
+ * Copyright (c) 2000 ATecoM GmbH
  *
  * The author may be reached at ecd@atecom.com.
  *
@@ -52,15 +52,12 @@
 #include "suni.h"
 #endif /* CONFIG_ATM_IDT77252_USE_SUNI */
 
-
 #include "idt77252.h"
 #include "idt77252_tables.h"
 
 static unsigned int vpibits = 1;
 
-
 #define ATM_IDT77252_SEND_IDLE 1
-
 
 /*
  * Debug HACKs.
@@ -72,9 +69,7 @@ static unsigned int vpibits = 1;
 static unsigned long debug = DBG_GENERAL;
 #endif
 
-
 #define SAR_RX_DELAY	(SAR_CFG_RXINT_NODELAY)
-
 
 /*
  * SCQ Handling.
@@ -113,7 +108,6 @@ static int init_tsq(struct idt77252_dev *);
 static void deinit_tsq(struct idt77252_dev *);
 static void idt77252_tx(struct idt77252_dev *);
 
-
 /*
  * ATM Interface.
  */
@@ -131,7 +125,6 @@ static int idt77252_change_qos(struct atm_vcc *vcc, struct atm_qos *qos,
 static int idt77252_proc_read(struct atm_dev *dev, loff_t * pos,
 			      char *page);
 static void idt77252_softint(struct work_struct *work);
-
 
 static struct atmdev_ops idt77252_ops =
 {
@@ -525,7 +518,6 @@ idt77252_eeprom_init(struct idt77252_dev *card)
 }
 #endif /* HAVE_EEPROM */
 
-
 #ifdef CONFIG_ATM_IDT77252_DEBUG
 static void
 dump_tct(struct idt77252_dev *card, int index)
@@ -569,7 +561,6 @@ idt77252_tx_dump(struct idt77252_dev *card)
 	}
 }
 #endif
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -698,7 +689,6 @@ free_scq(struct idt77252_dev *card, struct scq_info *scq)
 	kfree(scq);
 }
 
-
 static int
 push_on_scq(struct idt77252_dev *card, struct vc_map *vc, struct sk_buff *skb)
 {
@@ -785,7 +775,6 @@ out:
 
 	return -ENOBUFS;
 }
-
 
 static void
 drain_scq(struct idt77252_dev *card, struct vc_map *vc)
@@ -1306,7 +1295,7 @@ idt77252_rx_raw(struct idt77252_dev *card)
 			atomic_inc(&vcc->stats->rx_drop);
 			goto drop;
 		}
-	
+
 		if ((sb = dev_alloc_skb(64)) == NULL) {
 			printk("%s: Can't allocate buffers for AAL0.\n",
 			       card->name);
@@ -1364,7 +1353,6 @@ drop:
 		}
 	}
 }
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -1529,7 +1517,6 @@ idt77252_tx(struct idt77252_dev *card)
 		card->index, readl(SAR_REG_TSQH),
 		readl(SAR_REG_TSQT), card->tsq.next);
 }
-
 
 static void
 tst_timer(unsigned long data)
@@ -1735,7 +1722,6 @@ change_tst(struct idt77252_dev *card, struct vc_map *vc,
 	return res;
 }
 
-
 static int
 set_tct(struct idt77252_dev *card, struct vc_map *vc)
 {
@@ -1886,7 +1872,6 @@ outunmap:
 outfree:
 	dev_kfree_skb(skb);
 }
-
 
 static void
 recycle_rx_skb(struct idt77252_dev *card, struct sk_buff *skb)
@@ -2847,7 +2832,6 @@ idt77252_softint(struct work_struct *work)
 	writel(readl(SAR_REG_CFG) | SAR_CFG_FBIE, SAR_REG_CFG);
 }
 
-
 static int
 open_card_oam(struct idt77252_dev *card)
 {
@@ -3031,13 +3015,11 @@ static void idt77252_dev_close(struct atm_dev *dev)
 	DIPRINTK("%s: closed IDT77252 ABR SAR.\n", card->name);
 }
 
-
 /*****************************************************************************/
 /*                                                                           */
 /* Initialisation and Deinitialization of IDT77252                           */
 /*                                                                           */
 /*****************************************************************************/
-
 
 static void
 deinit_card(struct idt77252_dev *card)
@@ -3106,7 +3088,6 @@ deinit_card(struct idt77252_dev *card)
 	clear_bit(IDT77252_BIT_INIT, &card->flags);
 	DIPRINTK("%s: Card deinitialized.\n", card->name);
 }
-
 
 static void __devinit
 init_sram(struct idt77252_dev *card)
@@ -3497,7 +3478,7 @@ init_card(struct atm_dev *dev)
 		idt77252_eeprom_read_status(card));
 
 	for (i = 0; i < 0x80; i++) {
-		printk(" %02x", 
+		printk(" %02x",
 		idt77252_eeprom_read_byte(card, i)
 		);
 	}
@@ -3527,13 +3508,11 @@ init_card(struct atm_dev *dev)
 	return 0;
 }
 
-
 /*****************************************************************************/
 /*                                                                           */
 /* Probing of IDT77252 ABR SAR                                               */
 /*                                                                           */
 /*****************************************************************************/
-
 
 static int __devinit
 idt77252_preset(struct idt77252_dev *card)
@@ -3576,7 +3555,6 @@ idt77252_preset(struct idt77252_dev *card)
 	return 0;
 }
 
-
 static unsigned long __devinit
 probe_sram(struct idt77252_dev *card)
 {
@@ -3609,7 +3587,6 @@ idt77252_init_one(struct pci_dev *pcidev, const struct pci_device_id *id)
 	struct idt77252_dev *card;
 	struct atm_dev *dev;
 	int i, err;
-
 
 	if ((err = pci_enable_device(pcidev))) {
 		printk("idt77252: can't enable PCI device at %s\n", pci_name(pcidev));

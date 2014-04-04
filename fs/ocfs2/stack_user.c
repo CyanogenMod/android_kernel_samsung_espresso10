@@ -880,7 +880,6 @@ static struct ocfs2_stack_plugin ocfs2_user_plugin = {
 	.sp_owner	= THIS_MODULE,
 };
 
-
 static int __init ocfs2_user_plugin_init(void)
 {
 	int rc;

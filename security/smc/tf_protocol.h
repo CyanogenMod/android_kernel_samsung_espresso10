@@ -127,7 +127,6 @@
  */
 #define TF_SMC_N_YIELD              (0X00000003)
 
-
 /* Possible stop commands for SMC_STOP */
 #define SCSTOP_HIBERNATE           (0xFFFFFFE1)
 #define SCSTOP_SHUTDOWN            (0xFFFFFFE2)
@@ -141,7 +140,6 @@ struct tf_uuid {
 	u16 time_hi_and_version;
 	u8 clock_seq_and_node[8];
 };
-
 
 /**
  * Command parameters.
@@ -227,7 +225,6 @@ union tf_answer_param {
 #define TF_SHARED_MEM_FLAG_OUTPUT  2
 #define TF_SHARED_MEM_FLAG_INOUT   3
 
-
 /*
  * Parameter types
  */
@@ -245,7 +242,6 @@ union tf_answer_param {
 
 #define TF_PARAM_TYPE_MEMREF_FLAG               0x4
 #define TF_PARAM_TYPE_REGISTERED_MEMREF_FLAG    0x8
-
 
 #define TF_MAKE_PARAM_TYPES(t0, t1, t2, t3) \
 	((t0) | ((t1) << 4) | ((t2) << 8) | ((t3) << 12))
@@ -332,13 +328,11 @@ union tf_answer_param {
 #define TF_MESSAGE_TYPE_CANCEL_CLIENT_COMMAND   0xF4
 #define TF_MESSAGE_TYPE_MANAGEMENT              0xFE
 
-
 /*
  * The SChannel error codes.
  */
 #define S_SUCCESS 0x00000000
 #define S_ERROR_OUT_OF_MEMORY 0xFFFF000C
-
 
 struct tf_command_header {
 	u8                       message_size;
@@ -465,7 +459,6 @@ struct tf_answer_close_client_session {
 	u32                      operation_id;
 	u32                      error_code;
 };
-
 
 /*
  * REGISTER_SHARED_MEMORY command message
@@ -667,7 +660,6 @@ struct tf_l1_shared_buffer {
 	u32 answer_queue[TF_S_ANSWER_QUEUE_CAPACITY];
 };
 
-
 /*
  * tf_version_information_buffer structure description
  * Description of the sVersionBuffer handed over from user space to kernel space
@@ -678,7 +670,6 @@ struct tf_version_information_buffer {
 	u8 driver_description[65];
 	u8 secure_world_description[65];
 };
-
 
 /* The IOCTLs the driver supports */
 #include <linux/ioctl.h>

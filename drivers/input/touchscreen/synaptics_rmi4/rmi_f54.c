@@ -306,7 +306,6 @@ struct f54_ad_control_16 {
 		u8 length;
 };
 
-
 /* control 17 */
 struct f54_ad_control_17n {
 	u8 burst_countb10__8:3;
@@ -418,7 +417,6 @@ union f54_ad_control_28 {
 		u16 address;
 	};
 };
-
 
 union f54_ad_control_29 {
 	struct {
@@ -995,7 +993,6 @@ static int rmi_f54_alloc_memory(struct rmi_function_container *fc)
 	}
 	fc->data = f54;
 	f54->fc = fc;
-
 
 	return 0;
 }
@@ -1711,7 +1708,6 @@ error_exit:
 	return data->status;
 }
 
-
 #if F54_WATCHDOG
 static void clear_status_worker(struct work_struct *work)
 {
@@ -2160,7 +2156,6 @@ show_repeated_union_struct_unsigned(control, reg_16, sensor_tx_assignment)
 
 show_repeated_union_struct_unsigned(control, reg_17, filter_bandwidth)
 show_repeated_union_struct_unsigned(control, reg_17, disable)
-
 
 static ssize_t rmi_fn_54_burst_count_show(struct device *dev,
 					struct device_attribute *attr,

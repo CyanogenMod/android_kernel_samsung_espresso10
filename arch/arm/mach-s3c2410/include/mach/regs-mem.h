@@ -206,7 +206,6 @@
 #define S3C2410_REFRESH_TSRC_6clk	(2<<18)
 #define S3C2410_REFRESH_TSRC_7clk	(3<<18)
 
-
 /* mode select register(s) */
 
 #define  S3C2410_MRSRB_CL1		(0x00 << 4)

@@ -120,7 +120,7 @@ void __init clps711x_init_irq(void)
 			irq_set_chip_and_handler(i, &int2_chip,
 						 handle_level_irq);
 			set_irq_flags(i, IRQF_VALID | IRQF_PROBE);
-		}			
+		}
 	}
 
 	/*

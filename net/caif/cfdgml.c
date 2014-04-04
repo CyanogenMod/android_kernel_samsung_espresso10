@@ -13,7 +13,6 @@
 #include <net/caif/cfsrvl.h>
 #include <net/caif/cfpkt.h>
 
-
 #define container_obj(layr) ((struct cfsrvl *) layr)
 
 #define DGM_CMD_BIT  0x80

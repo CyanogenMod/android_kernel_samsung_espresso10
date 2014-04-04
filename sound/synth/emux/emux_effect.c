@@ -227,7 +227,6 @@ snd_emux_send_effect(struct snd_emux_port *port, struct snd_midi_channel *chan,
 	snd_emux_update_channel(port, chan, parm_defs[type].update);
 }
 
-
 /* copy wavetable registers to voice table */
 void
 snd_emux_setup_effect(struct snd_emux_voice *vp)

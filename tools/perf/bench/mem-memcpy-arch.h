@@ -1,4 +1,3 @@
-
 #ifdef ARCH_X86_64
 
 #define MEMCPY_FN(fn, name, desc)		\
@@ -9,4 +8,3 @@
 #undef MEMCPY_FN
 
 #endif
-

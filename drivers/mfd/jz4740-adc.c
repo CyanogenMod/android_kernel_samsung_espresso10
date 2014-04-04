@@ -29,7 +29,6 @@
 
 #include <linux/jz4740-adc.h>
 
-
 #define JZ_REG_ADC_ENABLE	0x00
 #define JZ_REG_ADC_CFG		0x04
 #define JZ_REG_ADC_CTRL		0x08
@@ -123,7 +122,6 @@ static void jz4740_adc_irq_demux(unsigned int irq, struct irq_desc *desc)
 			generic_handle_irq(adc->irq_base + i);
 	}
 }
-
 
 /* Refcounting for the ADC clock is done in here instead of in the clock
  * framework, because it is the only clock which is shared between multiple

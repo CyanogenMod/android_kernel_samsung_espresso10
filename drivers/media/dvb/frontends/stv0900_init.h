@@ -184,7 +184,6 @@ static const struct stv0900_car_loop_optim FE_STV0900_S2CarLoop[14] = {
 				0x0B,	0x39,	0x1A,	0x29,	0x39 }
 };
 
-
 /* Cut 2.0 Tracking carrier loop carrier QPSK 1/2 to 8PSK 9/10 long Frame */
 static const struct stv0900_car_loop_optim FE_STV0900_S2CarLoopCut20[14] = {
 	/* Modcod		2MPon 	2MPoff	5MPon 	5MPoff	10MPon
@@ -219,8 +218,6 @@ static const struct stv0900_car_loop_optim FE_STV0900_S2CarLoopCut20[14] = {
 				0x1e,	0x1d,	0x2d,	0x0d,	0x1d },
 };
 
-
-
 /* Cut 2.0 Tracking carrier loop carrier 16APSK 2/3 to 32APSK 9/10 long Frame */
 static const struct stv0900_car_loop_optim FE_STV0900_S2APSKCarLoopCut20[11] = {
 	/* Modcod		2MPon 	2MPoff	5MPon 	5MPoff	10MPon
@@ -249,7 +246,6 @@ static const struct stv0900_car_loop_optim FE_STV0900_S2APSKCarLoopCut20[11] = {
 				0x0C,	0x0C,	0x0C,	0x0C,	0x0C },
 };
 
-
 /* Cut 2.0 Tracking carrier loop carrier QPSK 1/4 to QPSK 2/5 long Frame */
 static const struct stv0900_car_loop_optim FE_STV0900_S2LowQPCarLoopCut20[3] = {
 	/* Modcod		2MPon 	2MPoff	5MPon 	5MPoff	10MPon
@@ -261,7 +257,6 @@ static const struct stv0900_car_loop_optim FE_STV0900_S2LowQPCarLoopCut20[3] = {
 	{ STV0900_QPSK_25,	0x1F,	0x3F,	0x1E,	0x3F,	0x3D,
 				0x1F,	0x3D,	0x3E,	0x3D,	0x2E }
 };
-
 
 /* Cut 2.0 Tracking carrier loop carrier  short Frame, cut 1.2 and 2.0 */
 static const

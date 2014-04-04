@@ -298,7 +298,6 @@ static int s5h1432_init(struct dvb_frontend *fe)
 	msleep(30);
 	s5h1432_writereg(state, S5H1432_I2C_TOP_ADDR, 0x09, 0x1b);
 
-
 	return 0;
 }
 

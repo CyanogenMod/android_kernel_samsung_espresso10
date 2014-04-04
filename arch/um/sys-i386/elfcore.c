@@ -5,7 +5,6 @@
 
 #include <asm/elf.h>
 
-
 Elf32_Half elf_core_extra_phdrs(void)
 {
 	return vsyscall_ehdr ? (((struct elfhdr *)vsyscall_ehdr)->e_phnum) : 0;

@@ -566,7 +566,6 @@
 #define MXC_EMPGCR_PCR		1
 #define MXC_PGSR_PSR		1
 
-
 #define MXC_CORTEXA8_PLAT_LPC_DSM	(1 << 0)
 #define MXC_CORTEXA8_PLAT_LPC_DBG_DSM	(1 << 1)
 

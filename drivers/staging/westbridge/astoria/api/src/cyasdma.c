@@ -387,7 +387,6 @@ cy_as_dma_completed_callback(cy_as_hal_device_tag tag,
 	cy_as_hal_assert(dev_p->sig == CY_AS_DEVICE_HANDLE_SIGNATURE);
 	cy_as_hal_assert(ep < 16);
 
-
 	/* Get the endpoint ptr */
 	ep_p = CY_AS_NUM_EP(dev_p, ep);
 	cy_as_hal_assert(ep_p->queue_p != 0);
@@ -628,7 +627,6 @@ cy_as_dma_stop_internal(cy_as_device *dev_p)
 
 	return ret;
 }
-
 
 /*
  * CyAsDmaStop()

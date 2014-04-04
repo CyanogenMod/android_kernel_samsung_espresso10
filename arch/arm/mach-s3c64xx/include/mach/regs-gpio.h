@@ -117,7 +117,6 @@
 #define S3C64XX_SPCON_LCD_SEL_RGB		(0x1 << 0)
 #define S3C64XX_SPCON_LCD_SEL_606_656		(0x2 << 0)
 
-
 /* External interrupt registers */
 
 #define S3C64XX_EINT12CON	S3C64XX_GPIOREG(0x200)
@@ -177,11 +176,9 @@
 #define S3C64XX_SPCONSLP_KPCOL_OUT1	(0x1 << 0)
 #define S3C64XX_SPCONSLP_KPCOL_INP	(0x2 << 0)
 
-
 #define S3C64XX_SLPEN		S3C64XX_GPIOREG(0x930)
 
 #define S3C64XX_SLPEN_USE_xSLP		(1 << 0)
 #define S3C64XX_SLPEN_CFG_BYSLPEN	(1 << 1)
 
 #endif /* __ASM_PLAT_S3C64XX_REGS_GPIO_H */
-

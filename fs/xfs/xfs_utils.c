@@ -36,7 +36,6 @@
 #include "xfs_itable.h"
 #include "xfs_utils.h"
 
-
 /*
  * Allocates a new inode from disk and return a pointer to the
  * incore copy. This routine will internally commit the current

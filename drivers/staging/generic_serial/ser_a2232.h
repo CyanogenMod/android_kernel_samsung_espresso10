@@ -7,7 +7,7 @@
 /* This driver is MAINTAINED. Before applying any changes, please contact
  * the author.
  */
-   
+
 /* Copyright (c) 2000-2001 Enver Haase    <ehaase@inf.fu-berlin.de>
  *                   alias The A2232 driver project <A2232@gmx.net>
  * All rights reserved.
@@ -25,7 +25,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *  
+ *
  */
 
 #ifndef _SER_A2232_H_
@@ -40,7 +40,7 @@
 #define MAX_A2232_BOARDS 5
 
 #ifndef A2232_NORMAL_MAJOR
-/* This allows overriding on the compiler commandline, or in a "major.h" 
+/* This allows overriding on the compiler commandline, or in a "major.h"
    include or something like that */
 #define A2232_NORMAL_MAJOR  224	/* /dev/ttyY* */
 #define A2232_CALLOUT_MAJOR 225	/* /dev/cuy*  */
@@ -64,11 +64,9 @@ struct a2232_port{
 #define	A2232_IOBUFLEN		256	/* number of bytes per buffer */
 #define	A2232_IOBUFLENMASK	0xff	/* mask for maximum number of bytes */
 
-
 #define	A2232_UNKNOWN	0	/* crystal not known */
 #define	A2232_NORMAL	1	/* normal A2232 (1.8432 MHz oscillator) */
 #define	A2232_TURBO	2	/* turbo A2232 (3.6864 MHz oscillator) */
-
 
 struct a2232common {
 	char   Crystal;	/* normal (1) or turbo (2) board? */
@@ -168,7 +166,6 @@ struct a2232memory {
 #define	A2232PARAM_6Bit		0x40
 #define	A2232PARAM_5Bit		0x60
 #define	A2232PARAM_BitMask	0x60	/* numbers of bits mask */
-
 
 /* Standard speeds tables, -1 means unavailable, -2 means 0 baud: switch off line */
 #define A2232_BAUD_TABLE_NOAVAIL -1

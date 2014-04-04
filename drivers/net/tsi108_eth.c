@@ -365,7 +365,6 @@ static void tsi108_check_phy(struct net_device *dev)
 		goto out;
 	}
 
-
 out:
 	spin_unlock_irqrestore(&phy_lock, flags);
 }
@@ -1001,7 +1000,6 @@ static void tsi108_tx_int(struct net_device *dev)
 		spin_unlock(&data->txlock);
 	}
 }
-
 
 static irqreturn_t tsi108_irq(int irq, void *dev_id)
 {

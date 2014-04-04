@@ -42,7 +42,6 @@
 
 #include <linux/generic_serial.h>
 
-
 #include "linux_compat.h"
 #include "rio_linux.h"
 #include "pkt.h"
@@ -75,7 +74,6 @@ static int RIOCheckIsolated(struct rio_info *, struct Host *, unsigned int);
 static int RIOIsolate(struct rio_info *, struct Host *, unsigned int);
 static int RIOCheck(struct Host *, unsigned int);
 static void RIOConCon(struct rio_info *, struct Host *, unsigned int, unsigned int, unsigned int, unsigned int, int);
-
 
 /*
 ** Incoming on the ROUTE_RUP
@@ -490,7 +488,6 @@ int RIORouteRup(struct rio_info *p, unsigned int Rup, struct Host *HostP, struct
 	return 1;
 }
 
-
 void RIOFixPhbs(struct rio_info *p, struct Host *HostP, unsigned int unit)
 {
 	unsigned short link, port;
@@ -654,7 +651,7 @@ static int RIOCheck(struct Host *HostP, unsigned int UnitId)
 
 	for (link = 0; link < LINKS_PER_UNIT; link++) {
 		if (HostP->Mapping[UnitId].Topology[link].Unit == HOST_ID) {
-			/* rio_dprint(RIO_DEBUG_ROUTE, ("Unit %d is connected directly to host via link (%c).\n", 
+			/* rio_dprint(RIO_DEBUG_ROUTE, ("Unit %d is connected directly to host via link (%c).\n",
 			   UnitId, 'A'+link)); */
 			return 1;
 		}
@@ -761,7 +758,7 @@ static void RIOConCon(struct rio_info *p,
 **
 ** So - we need to implement it slightly differently - a new member of the
 ** rio_info struct - RIORtaDisCons (RIO RTA connections) keeps track of RTA
-** connections and disconnections. 
+** connections and disconnections.
 */
 	if (Change == CONNECT) {
 		if (p->RIORtaDisCons)
@@ -814,7 +811,6 @@ static int RIORemoveFromSavedTable(struct rio_info *p, struct Map *pMap)
 	return 0;
 }
 
-
 /*
 ** RIOCheckDisconnected :
 **
@@ -824,7 +820,6 @@ static int RIORemoveFromSavedTable(struct rio_info *p, struct Map *pMap)
 static int RIOFreeDisconnected(struct rio_info *p, struct Host *HostP, int unit)
 {
 	int link;
-
 
 	rio_dprintk(RIO_DEBUG_ROUTE, "RIOFreeDisconnect unit %d\n", unit);
 	/*
@@ -874,7 +869,6 @@ static int RIOFreeDisconnected(struct rio_info *p, struct Host *HostP, int unit)
 
 	return 0;
 }
-
 
 /*
 ** RIOFindFreeID :
@@ -1013,7 +1007,6 @@ int RIOFindFreeID(struct rio_info *p, struct Host *HostP, unsigned int * pID1, u
 	return 1;
 }
 
-
 /*
 ** The link switch scenario.
 **
@@ -1026,7 +1019,7 @@ int RIOFindFreeID(struct rio_info *p, struct Host *HostP, unsigned int * pID1, u
 ** Tuw (A) spots the change of unit:link at the other end
 ** of its link and Tuw sends a topology packet reflecting
 ** the change: Tuw (A) now disconnected from Wun (A), and
-** this is closely followed by a packet indicating that 
+** this is closely followed by a packet indicating that
 ** Tuw (A) is now connected to Wun (B).
 **
 ** Wun (B) will spot that it has now become connected, and

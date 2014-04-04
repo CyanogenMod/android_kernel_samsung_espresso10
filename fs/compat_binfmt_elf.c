@@ -60,7 +60,6 @@ static void cputime_to_compat_timeval(const cputime_t cputime,
 #undef cputime_to_timeval
 #define cputime_to_timeval cputime_to_compat_timeval
 
-
 /*
  * To use this file, asm/elf.h must define compat_elf_check_arch.
  * The other following macros can be defined if the compat versions

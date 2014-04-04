@@ -34,7 +34,6 @@
 #define DECLARE_BRLOCK(name)	DECLARE_LGLOCK(name)
 #define DEFINE_BRLOCK(name)	DEFINE_LGLOCK(name)
 
-
 #define lg_lock_init(name)	name##_lock_init()
 #define lg_local_lock(name)	name##_local_lock()
 #define lg_local_unlock(name)	name##_local_unlock()
@@ -58,7 +57,6 @@
 
 #define DEFINE_LGLOCK_LOCKDEP(name)
 #endif
-
 
 #define DECLARE_LGLOCK(name)						\
  extern void name##_lock_init(void);					\

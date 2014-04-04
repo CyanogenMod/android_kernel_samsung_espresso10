@@ -39,7 +39,6 @@
 #include "ipath_verbs.h"
 #include "ipath_common.h"
 
-
 /*
  * Called when we might have an error that is specific to a particular
  * PIO buffer, and may need to cancel that buffer, so it can be re-used.
@@ -86,7 +85,6 @@ void ipath_disarm_senderrbufs(struct ipath_devdata *dd)
 		dd->ipath_lastcancel = jiffies+3;
 	}
 }
-
 
 /* These are all rcv-related errors which we want to count for stats */
 #define E_SUM_PKTERRS \
@@ -801,7 +799,6 @@ static int handle_errors(struct ipath_devdata *dd, ipath_err_t errs)
 	}
 	iserr = errs & ~(E_SUM_PKTERRS | INFINIPATH_E_PKTERRS);
 
-
 	/*
 	 * We don't want to print these two as they happen, or we can make
 	 * the situation even worse, because it takes so long to print
@@ -917,7 +914,6 @@ void ipath_clear_freeze(struct ipath_devdata *dd)
 	ipath_write_kreg(dd, dd->ipath_kregs->kr_intmask, -1LL);
 	ipath_write_kreg(dd, dd->ipath_kregs->kr_intclear, 0ULL);
 }
-
 
 /* this is separate to allow for better optimization of ipath_intr() */
 

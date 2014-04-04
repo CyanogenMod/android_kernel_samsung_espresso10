@@ -33,7 +33,6 @@
 #ifndef	__rio_daemon_h__
 #define	__rio_daemon_h__
 
-
 /*
 ** structures used on /dev/rio
 */
@@ -152,7 +151,6 @@ struct rioVersion {
 	char buildDate[MAX_VERSION_LEN];
 };
 
-
 /*
 **	RIOC commands are for the daemon type operations
 **
@@ -264,7 +262,6 @@ struct rioVersion {
 
 #define	RIO_IDENTIFY_DRIVER	(RIOC | 203)
 #define	RIO_DISPLAY_HOST_CFG	(RIOC | 204)
-
 
 /*
 ** MAKE_DEV / MINOR stuff

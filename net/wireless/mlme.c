@@ -245,7 +245,6 @@ void __cfg80211_send_disassoc(struct net_device *dev,
 	} else
 		WARN_ON(1);
 
-
 	reason_code = le16_to_cpu(mgmt->u.disassoc.reason_code);
 
 	from_ap = memcmp(mgmt->sa, dev->dev_addr, ETH_ALEN) != 0;
@@ -877,6 +876,9 @@ void cfg80211_mlme_unregister_socket(struct wireless_dev *wdev, u32 nlpid)
 	}
 
 	spin_unlock_bh(&wdev->mgmt_registrations_lock);
+
+	if (nlpid == wdev->ap_unexpected_nlpid)
+		wdev->ap_unexpected_nlpid = 0;
 }
 
 void cfg80211_mlme_purge_registrations(struct wireless_dev *wdev)

@@ -18,13 +18,11 @@
 
 */
 
-
 /*
   Define the maximum number of DAC960 Controllers supported by this driver.
 */
 
 #define DAC960_MaxControllers			8
-
 
 /*
   Define the maximum number of Controller Channels supported by DAC960
@@ -34,7 +32,6 @@
 #define DAC960_V1_MaxChannels			3
 #define DAC960_V2_MaxChannels			4
 
-
 /*
   Define the maximum number of Targets per Channel supported by DAC960
   V1 and V2 Firmware Controllers.
@@ -43,14 +40,12 @@
 #define DAC960_V1_MaxTargets			16
 #define DAC960_V2_MaxTargets			128
 
-
 /*
   Define the maximum number of Logical Drives supported by DAC960
   V1 and V2 Firmware Controllers.
 */
 
 #define DAC960_MaxLogicalDrives			32
-
 
 /*
   Define the maximum number of Physical Devices supported by DAC960
@@ -66,13 +61,11 @@
 
 typedef unsigned long DAC960_IO_Address_T;
 
-
 /*
   Define a 32/64 bit PCI Bus Address data type.
 */
 
 typedef unsigned long DAC960_PCI_Address_T;
-
 
 /*
   Define a 32 bit Bus Address data type.
@@ -80,13 +73,11 @@ typedef unsigned long DAC960_PCI_Address_T;
 
 typedef unsigned int DAC960_BusAddress32_T;
 
-
 /*
   Define a 64 bit Bus Address data type.
 */
 
 typedef unsigned long long DAC960_BusAddress64_T;
-
 
 /*
   Define a 32 bit Byte Count data type.
@@ -94,13 +85,11 @@ typedef unsigned long long DAC960_BusAddress64_T;
 
 typedef unsigned int DAC960_ByteCount32_T;
 
-
 /*
   Define a 64 bit Byte Count data type.
 */
 
 typedef unsigned long long DAC960_ByteCount64_T;
-
 
 /*
   dma_loaf is used by helper routines to divide a region of
@@ -150,7 +139,6 @@ typedef struct DAC960_SCSI_Inquiry
 }
 DAC960_SCSI_Inquiry_T;
 
-
 /*
   Define the SCSI INQUIRY Unit Serial Number structure.
 */
@@ -165,7 +153,6 @@ typedef struct DAC960_SCSI_Inquiry_UnitSerialNumber
   unsigned char ProductSerialNumber[28];		/* Bytes 4-31 */
 }
 DAC960_SCSI_Inquiry_UnitSerialNumber_T;
-
 
 /*
   Define the SCSI REQUEST SENSE Sense Key type.
@@ -193,7 +180,6 @@ typedef enum
 __attribute__ ((packed))
 DAC960_SCSI_RequestSenseKey_T;
 
-
 /*
   Define the SCSI REQUEST SENSE structure.
 */
@@ -215,7 +201,6 @@ typedef struct DAC960_SCSI_RequestSense
   unsigned char AdditionalSenseCodeQualifier;		/* Byte 13 */
 }
 DAC960_SCSI_RequestSense_T;
-
 
 /*
   Define the DAC960 V1 Firmware Command Opcodes.
@@ -298,13 +283,11 @@ typedef enum
 __attribute__ ((packed))
 DAC960_V1_CommandOpcode_T;
 
-
 /*
   Define the DAC960 V1 Firmware Command Identifier type.
 */
 
 typedef unsigned char DAC960_V1_CommandIdentifier_T;
-
 
 /*
   Define the DAC960 V1 Firmware Command Status Codes.
@@ -354,7 +337,6 @@ typedef unsigned char DAC960_V1_CommandIdentifier_T;
 #define DAC960_V1_SubsystemBusy			0x0106	/* Subsystem */
 
 typedef unsigned short DAC960_V1_CommandStatus_T;
-
 
 /*
   Define the DAC960 V1 Firmware Enquiry Command reply structure.
@@ -408,7 +390,6 @@ typedef struct DAC960_V1_Enquiry
 }
 __attribute__ ((packed))
 DAC960_V1_Enquiry_T;
-
 
 /*
   Define the DAC960 V1 Firmware Enquiry2 Command reply structure.
@@ -551,7 +532,6 @@ typedef struct DAC960_V1_Enquiry2
 }
 DAC960_V1_Enquiry2_T;
 
-
 /*
   Define the DAC960 V1 Firmware Logical Drive State type.
 */
@@ -564,7 +544,6 @@ typedef enum
 }
 __attribute__ ((packed))
 DAC960_V1_LogicalDriveState_T;
-
 
 /*
   Define the DAC960 V1 Firmware Logical Drive Information structure.
@@ -580,7 +559,6 @@ typedef struct DAC960_V1_LogicalDriveInformation
 }
 DAC960_V1_LogicalDriveInformation_T;
 
-
 /*
   Define the DAC960 V1 Firmware Get Logical Drive Information Command
   reply structure.
@@ -588,7 +566,6 @@ DAC960_V1_LogicalDriveInformation_T;
 
 typedef DAC960_V1_LogicalDriveInformation_T
 	DAC960_V1_LogicalDriveInformationArray_T[DAC960_MaxLogicalDrives];
-
 
 /*
   Define the DAC960 V1 Firmware Perform Event Log Operation Types.
@@ -600,7 +577,6 @@ typedef enum
 }
 __attribute__ ((packed))
 DAC960_V1_PerformEventLogOpType_T;
-
 
 /*
   Define the DAC960 V1 Firmware Get Event Log Entry Command reply structure.
@@ -632,7 +608,6 @@ typedef struct DAC960_V1_EventLogEntry
 }
 DAC960_V1_EventLogEntry_T;
 
-
 /*
   Define the DAC960 V1 Firmware Physical Device State type.
 */
@@ -646,7 +621,6 @@ typedef enum
 }
 __attribute__ ((packed))
 DAC960_V1_PhysicalDeviceState_T;
-
 
 /*
   Define the DAC960 V1 Firmware Get Device State Command reply structure.
@@ -680,7 +654,6 @@ typedef struct DAC960_V1_DeviceState
 }
 DAC960_V1_DeviceState_T;
 
-
 /*
   Define the DAC960 V1 Firmware Get Rebuild Progress Command reply structure.
 */
@@ -692,7 +665,6 @@ typedef struct DAC960_V1_RebuildProgress
   unsigned int RemainingBlocks;				/* Bytes 8-11 */
 }
 DAC960_V1_RebuildProgress_T;
-
 
 /*
   Define the DAC960 V1 Firmware Background Initialization Status Command
@@ -717,7 +689,6 @@ typedef struct DAC960_V1_BackgroundInitializationStatus
 }
 DAC960_V1_BackgroundInitializationStatus_T;
 
-
 /*
   Define the DAC960 V1 Firmware Error Table Entry structure.
 */
@@ -731,7 +702,6 @@ typedef struct DAC960_V1_ErrorTableEntry
 }
 DAC960_V1_ErrorTableEntry_T;
 
-
 /*
   Define the DAC960 V1 Firmware Get Error Table Command reply structure.
 */
@@ -742,7 +712,6 @@ typedef struct DAC960_V1_ErrorTable
     ErrorTableEntries[DAC960_V1_MaxChannels][DAC960_V1_MaxTargets];
 }
 DAC960_V1_ErrorTable_T;
-
 
 /*
   Define the DAC960 V1 Firmware Read Config2 Command reply structure.
@@ -820,7 +789,6 @@ typedef struct DAC960_V1_Config2
 }
 DAC960_V1_Config2_T;
 
-
 /*
   Define the DAC960 V1 Firmware DCDB request structure.
 */
@@ -857,7 +825,6 @@ typedef struct DAC960_V1_DCDB
 }
 DAC960_V1_DCDB_T;
 
-
 /*
   Define the DAC960 V1 Firmware Scatter/Gather List Type 1 32 Bit Address
   32 Bit Byte Count structure.
@@ -869,7 +836,6 @@ typedef struct DAC960_V1_ScatterGatherSegment
   DAC960_ByteCount32_T SegmentByteCount;		/* Bytes 4-7 */
 }
 DAC960_V1_ScatterGatherSegment_T;
-
 
 /*
   Define the 13 Byte DAC960 V1 Firmware Command Mailbox structure.  Bytes 13-15
@@ -978,7 +944,6 @@ typedef union DAC960_V1_CommandMailbox
 }
 DAC960_V1_CommandMailbox_T;
 
-
 /*
   Define the DAC960 V2 Firmware Command Opcodes.
 */
@@ -994,7 +959,6 @@ typedef enum
 }
 __attribute__ ((packed))
 DAC960_V2_CommandOpcode_T;
-
 
 /*
   Define the DAC960 V2 Firmware IOCTL Opcodes.
@@ -1020,13 +984,11 @@ typedef enum
 __attribute__ ((packed))
 DAC960_V2_IOCTL_Opcode_T;
 
-
 /*
   Define the DAC960 V2 Firmware Command Identifier type.
 */
 
 typedef unsigned short DAC960_V2_CommandIdentifier_T;
-
 
 /*
   Define the DAC960 V2 Firmware Command Status Codes.
@@ -1040,7 +1002,6 @@ typedef unsigned short DAC960_V2_CommandIdentifier_T;
 #define DAC960_V2_DeviceRevervationConflict	0x18
 
 typedef unsigned char DAC960_V2_CommandStatus_T;
-
 
 /*
   Define the DAC960 V2 Firmware Memory Type structure.
@@ -1062,7 +1023,6 @@ typedef struct DAC960_V2_MemoryType
 }
 DAC960_V2_MemoryType_T;
 
-
 /*
   Define the DAC960 V2 Firmware Processor Type structure.
 */
@@ -1079,7 +1039,6 @@ typedef enum
 }
 __attribute__ ((packed))
 DAC960_V2_ProcessorType_T;
-
 
 /*
   Define the DAC960 V2 Firmware Get Controller Info reply structure.
@@ -1299,7 +1258,6 @@ typedef struct DAC960_V2_ControllerInfo
 }
 DAC960_V2_ControllerInfo_T;
 
-
 /*
   Define the DAC960 V2 Firmware Logical Device State type.
 */
@@ -1312,7 +1270,6 @@ typedef enum
 }
 __attribute__ ((packed))
 DAC960_V2_LogicalDeviceState_T;
-
 
 /*
   Define the DAC960 V2 Firmware Get Logical Device Info reply structure.
@@ -1399,7 +1356,6 @@ typedef struct DAC960_V2_LogicalDeviceInfo
 }
 DAC960_V2_LogicalDeviceInfo_T;
 
-
 /*
   Define the DAC960 V2 Firmware Physical Device State type.
 */
@@ -1419,7 +1375,6 @@ typedef enum
 }
 __attribute__ ((packed))
 DAC960_V2_PhysicalDeviceState_T;
-
 
 /*
   Define the DAC960 V2 Firmware Get Physical Device Info reply structure.
@@ -1490,7 +1445,6 @@ typedef struct DAC960_V2_PhysicalDeviceInfo
 }
 DAC960_V2_PhysicalDeviceInfo_T;
 
-
 /*
   Define the DAC960 V2 Firmware Health Status Buffer structure.
 */
@@ -1514,7 +1468,6 @@ typedef struct DAC960_V2_HealthStatusBuffer
 }
 DAC960_V2_HealthStatusBuffer_T;
 
-
 /*
   Define the DAC960 V2 Firmware Get Event reply structure.
 */
@@ -1534,7 +1487,6 @@ typedef struct DAC960_V2_Event
 }
 DAC960_V2_Event_T;
 
-
 /*
   Define the DAC960 V2 Firmware Command Control Bits structure.
 */
@@ -1552,7 +1504,6 @@ typedef struct DAC960_V2_CommandControlBits
 }
 DAC960_V2_CommandControlBits_T;
 
-
 /*
   Define the DAC960 V2 Firmware Command Timeout structure.
 */
@@ -1569,7 +1520,6 @@ typedef struct DAC960_V2_CommandTimeout
 }
 DAC960_V2_CommandTimeout_T;
 
-
 /*
   Define the DAC960 V2 Firmware Physical Device structure.
 */
@@ -1584,7 +1534,6 @@ typedef struct DAC960_V2_PhysicalDevice
 __attribute__ ((packed))
 DAC960_V2_PhysicalDevice_T;
 
-
 /*
   Define the DAC960 V2 Firmware Logical Device structure.
 */
@@ -1597,7 +1546,6 @@ typedef struct DAC960_V2_LogicalDevice
 }
 __attribute__ ((packed))
 DAC960_V2_LogicalDevice_T;
-
 
 /*
   Define the DAC960 V2 Firmware Operation Device type.
@@ -1617,7 +1565,6 @@ typedef enum
 __attribute__ ((packed))
 DAC960_V2_OperationDevice_T;
 
-
 /*
   Define the DAC960 V2 Firmware Translate Physical To Logical Device structure.
 */
@@ -1633,8 +1580,6 @@ typedef struct DAC960_V2_PhysicalToLogicalDevice
 }
 DAC960_V2_PhysicalToLogicalDevice_T;
 
-
-
 /*
   Define the DAC960 V2 Firmware Scatter/Gather List Entry structure.
 */
@@ -1645,7 +1590,6 @@ typedef struct DAC960_V2_ScatterGatherSegment
   DAC960_ByteCount64_T SegmentByteCount;		/* Bytes 8-15 */
 }
 DAC960_V2_ScatterGatherSegment_T;
-
 
 /*
   Define the DAC960 V2 Firmware Data Transfer Memory Address structure.
@@ -1665,7 +1609,6 @@ typedef union DAC960_V2_DataTransferMemoryAddress
   } ExtendedScatterGather;
 }
 DAC960_V2_DataTransferMemoryAddress_T;
-
 
 /*
   Define the 64 Byte DAC960 V2 Firmware Command Mailbox structure.
@@ -1858,7 +1801,6 @@ typedef union DAC960_V2_CommandMailbox
 }
 DAC960_V2_CommandMailbox_T;
 
-
 /*
   Define the DAC960 Driver IOCTL requests.
 */
@@ -1868,7 +1810,6 @@ DAC960_V2_CommandMailbox_T;
 #define DAC960_IOCTL_V1_EXECUTE_COMMAND		0xDAC003
 #define DAC960_IOCTL_V2_EXECUTE_COMMAND		0xDAC004
 #define DAC960_IOCTL_V2_GET_HEALTH_STATUS	0xDAC005
-
 
 /*
   Define the DAC960_IOCTL_GET_CONTROLLER_INFO reply structure.
@@ -1890,7 +1831,6 @@ typedef struct DAC960_ControllerInfo
 }
 DAC960_ControllerInfo_T;
 
-
 /*
   Define the User Mode DAC960_IOCTL_V1_EXECUTE_COMMAND request structure.
 */
@@ -1904,7 +1844,6 @@ typedef struct DAC960_V1_UserCommand
   DAC960_V1_DCDB_T __user *DCDB;
 }
 DAC960_V1_UserCommand_T;
-
 
 /*
   Define the Kernel Mode DAC960_IOCTL_V1_EXECUTE_COMMAND request structure.
@@ -1923,7 +1862,6 @@ typedef struct DAC960_V1_KernelCommand
 }
 DAC960_V1_KernelCommand_T;
 
-
 /*
   Define the User Mode DAC960_IOCTL_V2_EXECUTE_COMMAND request structure.
 */
@@ -1938,7 +1876,6 @@ typedef struct DAC960_V2_UserCommand
   void __user *RequestSenseBuffer;
 }
 DAC960_V2_UserCommand_T;
-
 
 /*
   Define the Kernel Mode DAC960_IOCTL_V2_EXECUTE_COMMAND request structure.
@@ -1958,7 +1895,6 @@ typedef struct DAC960_V2_KernelCommand
 }
 DAC960_V2_KernelCommand_T;
 
-
 /*
   Define the User Mode DAC960_IOCTL_V2_GET_HEALTH_STATUS request structure.
 */
@@ -1970,20 +1906,17 @@ typedef struct DAC960_V2_GetHealthStatus
 }
 DAC960_V2_GetHealthStatus_T;
 
-
 /*
   Import the Kernel Mode IOCTL interface.
 */
 
 extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 
-
 /*
   DAC960_DriverVersion protects the private portion of this file.
 */
 
 #ifdef DAC960_DriverVersion
-
 
 /*
   Define the maximum Driver Queue Depth and Controller Queue Depth supported
@@ -1993,7 +1926,6 @@ extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 #define DAC960_MaxDriverQueueDepth		511
 #define DAC960_MaxControllerQueueDepth		512
 
-
 /*
   Define the maximum number of Scatter/Gather Segments supported for any
   DAC960 V1 and V2 Firmware controller.
@@ -2001,7 +1933,6 @@ extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 
 #define DAC960_V1_ScatterGatherLimit		33
 #define DAC960_V2_ScatterGatherLimit		128
-
 
 /*
   Define the number of Command Mailboxes and Status Mailboxes used by the
@@ -2013,13 +1944,11 @@ extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 #define DAC960_V2_CommandMailboxCount		512
 #define DAC960_V2_StatusMailboxCount		512
 
-
 /*
   Define the DAC960 Controller Monitoring Timer Interval.
 */
 
 #define DAC960_MonitoringTimerInterval		(10 * HZ)
-
 
 /*
   Define the DAC960 Controller Secondary Monitoring Interval.
@@ -2027,20 +1956,17 @@ extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 
 #define DAC960_SecondaryMonitoringInterval	(60 * HZ)
 
-
 /*
   Define the DAC960 Controller Health Status Monitoring Interval.
 */
 
 #define DAC960_HealthStatusMonitoringInterval	(1 * HZ)
 
-
 /*
   Define the DAC960 Controller Progress Reporting Interval.
 */
 
 #define DAC960_ProgressReportingInterval	(60 * HZ)
-
 
 /*
   Define the maximum number of Partitions allowed for each Logical Drive.
@@ -2056,7 +1982,6 @@ extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 #define DAC960_BlockSize			512
 #define DAC960_BlockSizeBits			9
 
-
 /*
   Define the number of Command structures that should be allocated as a
   group to optimize kernel memory allocation.
@@ -2064,7 +1989,6 @@ extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 
 #define DAC960_V1_CommandAllocationGroupSize	11
 #define DAC960_V2_CommandAllocationGroupSize	29
-
 
 /*
   Define the Controller Line Buffer, Progress Buffer, User Message, and
@@ -2076,7 +2000,6 @@ extern int DAC960_KernelIOCTL(unsigned int Request, void *Argument);
 #define DAC960_UserMessageSize			200
 #define DAC960_InitialStatusBufferSize		(8192-32)
 
-
 /*
   Define the DAC960 Controller Firmware Types.
 */
@@ -2087,7 +2010,6 @@ typedef enum
   DAC960_V2_Controller =			2
 }
 DAC960_FirmwareType_T;
-
 
 /*
   Define the DAC960 Controller Hardware Types.
@@ -2104,7 +2026,6 @@ typedef enum
   DAC960_GEM_Controller =			7,	/* AcceleRAID 4/5/600 */
 }
 DAC960_HardwareType_T;
-
 
 /*
   Define the Driver Message Levels.
@@ -2127,7 +2048,6 @@ static char
   *DAC960_MessageLevelMap[] =
     { KERN_NOTICE, KERN_NOTICE, KERN_NOTICE, KERN_WARNING,
       KERN_ERR, KERN_CRIT, KERN_CRIT, KERN_CRIT };
-
 
 /*
   Define Driver Message macros.
@@ -2157,14 +2077,12 @@ static char
 #define DAC960_UserCritical(Format, Arguments...) \
   DAC960_Message(DAC960_UserCriticalLevel, Format, ##Arguments)
 
-
 struct DAC960_privdata {
 	DAC960_HardwareType_T	HardwareType;
 	DAC960_FirmwareType_T	FirmwareType;
 	irq_handler_t		InterruptHandler;
 	unsigned int		MemoryWindowSize;
 };
-
 
 /*
   Define the DAC960 V1 Firmware Controller Status Mailbox structure.
@@ -2182,7 +2100,6 @@ typedef union DAC960_V1_StatusMailbox
 }
 DAC960_V1_StatusMailbox_T;
 
-
 /*
   Define the DAC960 V2 Firmware Controller Status Mailbox structure.
 */
@@ -2199,7 +2116,6 @@ typedef union DAC960_V2_StatusMailbox
 }
 DAC960_V2_StatusMailbox_T;
 
-
 /*
   Define the DAC960 Driver Command Types.
 */
@@ -2215,7 +2131,6 @@ typedef enum
   DAC960_QueuedCommand =			7
 }
 DAC960_CommandType_T;
-
 
 /*
   Define the DAC960 Driver Command structure.
@@ -2261,7 +2176,6 @@ typedef struct DAC960_Command
   } FW;
 }
 DAC960_Command_T;
-
 
 /*
   Define the DAC960 Driver Controller structure.
@@ -2480,7 +2394,6 @@ typedef struct DAC960_Controller
   unsigned char UserStatusBuffer[DAC960_UserMessageSize];
 }
 DAC960_Controller_T;
-
 
 /*
   Simplify access to Firmware Version Dependent Data Structure Components
@@ -2859,7 +2772,6 @@ typedef enum
 }
 DAC960_BA_RegisterOffsets_T;
 
-
 /*
   Define the structure of the DAC960 BA Series Inbound Door Bell Register.
 */
@@ -2883,7 +2795,6 @@ typedef union DAC960_BA_InboundDoorBellRegister
 }
 DAC960_BA_InboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 BA Series Outbound Door Bell Register.
 */
@@ -2904,7 +2815,6 @@ typedef union DAC960_BA_OutboundDoorBellRegister
 }
 DAC960_BA_OutboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 BA Series Interrupt Mask Register.
 */
@@ -2921,7 +2831,6 @@ typedef union DAC960_BA_InterruptMaskRegister
 }
 DAC960_BA_InterruptMaskRegister_T;
 
-
 /*
   Define the structure of the DAC960 BA Series Error Status Register.
 */
@@ -2936,7 +2845,6 @@ typedef union DAC960_BA_ErrorStatusRegister
   } Bits;
 }
 DAC960_BA_ErrorStatusRegister_T;
-
 
 /*
   Define inline functions to provide an abstraction for reading and writing the
@@ -3104,7 +3012,6 @@ void DAC960_BA_WriteCommandMailbox(DAC960_V2_CommandMailbox_T
   mb();
 }
 
-
 static inline
 void DAC960_BA_WriteHardwareMailbox(void __iomem *ControllerBaseAddress,
 				    dma_addr_t CommandMailboxDMA)
@@ -3146,7 +3053,6 @@ DAC960_BA_ReadErrorStatus(void __iomem *ControllerBaseAddress,
   return true;
 }
 
-
 /*
   Define the DAC960 LP Series Controller Interface Register Offsets.
 */
@@ -3164,7 +3070,6 @@ typedef enum
   DAC960_LP_ErrorStatusRegisterOffset =		0x2E
 }
 DAC960_LP_RegisterOffsets_T;
-
 
 /*
   Define the structure of the DAC960 LP Series Inbound Door Bell Register.
@@ -3189,7 +3094,6 @@ typedef union DAC960_LP_InboundDoorBellRegister
 }
 DAC960_LP_InboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 LP Series Outbound Door Bell Register.
 */
@@ -3210,7 +3114,6 @@ typedef union DAC960_LP_OutboundDoorBellRegister
 }
 DAC960_LP_OutboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 LP Series Interrupt Mask Register.
 */
@@ -3226,7 +3129,6 @@ typedef union DAC960_LP_InterruptMaskRegister
 }
 DAC960_LP_InterruptMaskRegister_T;
 
-
 /*
   Define the structure of the DAC960 LP Series Error Status Register.
 */
@@ -3241,7 +3143,6 @@ typedef union DAC960_LP_ErrorStatusRegister
   } Bits;
 }
 DAC960_LP_ErrorStatusRegister_T;
-
 
 /*
   Define inline functions to provide an abstraction for reading and writing the
@@ -3448,7 +3349,6 @@ DAC960_LP_ReadErrorStatus(void __iomem *ControllerBaseAddress,
   return true;
 }
 
-
 /*
   Define the DAC960 LA Series Controller Interface Register Offsets.
 */
@@ -3479,7 +3379,6 @@ typedef enum
 }
 DAC960_LA_RegisterOffsets_T;
 
-
 /*
   Define the structure of the DAC960 LA Series Inbound Door Bell Register.
 */
@@ -3503,7 +3402,6 @@ typedef union DAC960_LA_InboundDoorBellRegister
 }
 DAC960_LA_InboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 LA Series Outbound Door Bell Register.
 */
@@ -3524,7 +3422,6 @@ typedef union DAC960_LA_OutboundDoorBellRegister
 }
 DAC960_LA_OutboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 LA Series Interrupt Mask Register.
 */
@@ -3540,7 +3437,6 @@ typedef union DAC960_LA_InterruptMaskRegister
 }
 DAC960_LA_InterruptMaskRegister_T;
 
-
 /*
   Define the structure of the DAC960 LA Series Error Status Register.
 */
@@ -3555,7 +3451,6 @@ typedef union DAC960_LA_ErrorStatusRegister
   } Bits;
 }
 DAC960_LA_ErrorStatusRegister_T;
-
 
 /*
   Define inline functions to provide an abstraction for reading and writing the
@@ -3799,7 +3694,6 @@ typedef enum
 }
 DAC960_PG_RegisterOffsets_T;
 
-
 /*
   Define the structure of the DAC960 PG Series Inbound Door Bell Register.
 */
@@ -3823,7 +3717,6 @@ typedef union DAC960_PG_InboundDoorBellRegister
 }
 DAC960_PG_InboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 PG Series Outbound Door Bell Register.
 */
@@ -3844,7 +3737,6 @@ typedef union DAC960_PG_OutboundDoorBellRegister
 }
 DAC960_PG_OutboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 PG Series Interrupt Mask Register.
 */
@@ -3861,7 +3753,6 @@ typedef union DAC960_PG_InterruptMaskRegister
 }
 DAC960_PG_InterruptMaskRegister_T;
 
-
 /*
   Define the structure of the DAC960 PG Series Error Status Register.
 */
@@ -3876,7 +3767,6 @@ typedef union DAC960_PG_ErrorStatusRegister
   } Bits;
 }
 DAC960_PG_ErrorStatusRegister_T;
-
 
 /*
   Define inline functions to provide an abstraction for reading and writing the
@@ -4124,7 +4014,6 @@ typedef enum
 }
 DAC960_PD_RegisterOffsets_T;
 
-
 /*
   Define the structure of the DAC960 PD Series Inbound Door Bell Register.
 */
@@ -4147,7 +4036,6 @@ typedef union DAC960_PD_InboundDoorBellRegister
 }
 DAC960_PD_InboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 PD Series Outbound Door Bell Register.
 */
@@ -4166,7 +4054,6 @@ typedef union DAC960_PD_OutboundDoorBellRegister
 }
 DAC960_PD_OutboundDoorBellRegister_T;
 
-
 /*
   Define the structure of the DAC960 PD Series Interrupt Enable Register.
 */
@@ -4180,7 +4067,6 @@ typedef union DAC960_PD_InterruptEnableRegister
   } Bits;
 }
 DAC960_PD_InterruptEnableRegister_T;
-
 
 /*
   Define the structure of the DAC960 PD Series Error Status Register.
@@ -4196,7 +4082,6 @@ typedef union DAC960_PD_ErrorStatusRegister
   } Bits;
 }
 DAC960_PD_ErrorStatusRegister_T;
-
 
 /*
   Define inline functions to provide an abstraction for reading and writing the
@@ -4389,14 +4274,13 @@ void DAC960_P_To_PD_TranslateReadWriteCommand(DAC960_V1_CommandMailbox_T
   CommandMailbox->Bytes[3] |= LogicalDriveNumber << 3;
 }
 
-
 /*
   Define prototypes for the forward referenced DAC960 Driver Internal Functions.
 */
 
 static void DAC960_FinalizeController(DAC960_Controller_T *);
 static void DAC960_V1_QueueReadWriteCommand(DAC960_Command_T *);
-static void DAC960_V2_QueueReadWriteCommand(DAC960_Command_T *); 
+static void DAC960_V2_QueueReadWriteCommand(DAC960_Command_T *);
 static void DAC960_RequestFunction(struct request_queue *);
 static irqreturn_t DAC960_BA_InterruptHandler(int, void *);
 static irqreturn_t DAC960_LP_InterruptHandler(int, void *);

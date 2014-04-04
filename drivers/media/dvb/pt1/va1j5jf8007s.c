@@ -123,7 +123,6 @@ va1j5jf8007s_read_status(struct dvb_frontend *fe, fe_status_t *status)
 		*status = 0;
 		return 0;
 
-
 	case VA1J5JF8007S_SET_MODULATION:
 	case VA1J5JF8007S_CHECK_MODULATION:
 		*status |= FE_HAS_SIGNAL;

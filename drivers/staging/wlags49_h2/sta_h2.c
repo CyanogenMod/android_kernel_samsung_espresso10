@@ -24,7 +24,6 @@
  * Commandline:	g:\fw\fupu3.exe /f=4 /n=fw_image /i=r3023600.hex
  */
 
-
 #include "hcfcfg.h"				// to get hcf_16 etc defined as well as
                                 // possible settings which inluence mdd.h or dhf.h
 #include "mdd.h"   				//to get COMP_ID_STA etc defined
@@ -4477,4 +4476,3 @@ memimage fw_image = {
 	(CFG_RANGE20_STRCT *) fw_image_infocompat,
 	(CFG_IDENTITY_STRCT *) fw_image_infoidentity,
 };
-

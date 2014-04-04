@@ -203,7 +203,6 @@ static void __exit opti_exit(void)
 	pci_unregister_driver(&opti_pci_driver);
 }
 
-
 MODULE_AUTHOR("Alan Cox");
 MODULE_DESCRIPTION("low-level driver for Opti 621/621X");
 MODULE_LICENSE("GPL");

@@ -327,7 +327,6 @@ static inline u16 bnx2x_set_lro_mss(struct bnx2x *bp, u16 parsing_flags,
 	 */
 	u16 hdrs_len = ETH_HLEN + sizeof(struct iphdr) + sizeof(struct tcphdr);
 
-
 	/* Check if there was a TCP timestamp, if there is it's will
 	 * always be 12 bytes length: nop nop kind length echo val.
 	 *
@@ -467,7 +466,6 @@ static void bnx2x_tpa_stop(struct bnx2x *bp, struct bnx2x_fastpath *fp,
 			   " - dropping packet!\n");
 			dev_kfree_skb_any(skb);
 		}
-
 
 		/* put new skb in bin */
 		fp->tpa_pool[queue].skb = new_skb;
@@ -701,7 +699,6 @@ reuse_rx:
 			__vlan_hwaccel_put_tag(skb,
 				le16_to_cpu(cqe->fast_path_cqe.vlan_tag));
 		napi_gro_receive(&fp->napi, skb);
-
 
 next_rx:
 		rx_buf->skb = NULL;

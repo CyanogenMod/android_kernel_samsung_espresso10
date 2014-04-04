@@ -42,7 +42,6 @@ static ssize_t sysconf_read_file(struct file *file, char __user *userbuf,
 					big_buffer, s-big_buffer);
 }
 
-
 static ssize_t gsctl_read_file(struct file *file, char __user *userbuf,
 			       size_t count, loff_t *ppos)
 {
@@ -169,7 +168,6 @@ static ssize_t misc_read_file(struct file *file, char __user *userbuf,
 	return  simple_read_from_buffer(userbuf, count, ppos,
 					big_buffer, s-big_buffer);
 }
-
 
 static const struct file_operations sysconf_fops = {
 	.read = sysconf_read_file,

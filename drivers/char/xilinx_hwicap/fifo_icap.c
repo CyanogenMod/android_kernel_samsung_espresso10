@@ -75,13 +75,11 @@
 #define XHI_CR_READ_MASK 0x00000002 /* Read from ICAP to FIFO */
 #define XHI_CR_WRITE_MASK 0x00000001 /* Write from FIFO to ICAP */
 
-
 #define XHI_WFO_MAX_VACANCY 1024 /* Max Write FIFO Vacancy, in words */
 #define XHI_RFO_MAX_OCCUPANCY 256 /* Max Read FIFO Occupancy, in words */
 /* The maximum amount we can request from fifo_icap_get_configuration
    at once, in bytes. */
 #define XHI_MAX_READ_TRANSACTION_WORDS 0xFFF
-
 
 /**
  * fifo_icap_fifo_write - Write data to the write FIFO.
@@ -390,4 +388,3 @@ void fifo_icap_flush_fifo(struct hwicap_drvdata *drvdata)
 	out_be32(drvdata->base_address + XHI_CR_OFFSET,
 				reg_data & (~XHI_CR_FIFO_CLR_MASK));
 }
-

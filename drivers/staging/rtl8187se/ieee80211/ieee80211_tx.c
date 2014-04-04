@@ -54,12 +54,9 @@
 
 #include "ieee80211.h"
 
-
 /*
 
-
 802.11 Data Frame
-
 
 802.11 frame_contorl for data frames - 2 bytes
      ,-----------------------------------------------------------------------------------------.
@@ -105,7 +102,6 @@ Desc. | IV  | Encrypted | ICV |
       |     | IP Packet |     |
       `-----------------------'
 Total: 8 non-data bytes
-
 
 802.3 Ethernet Data Frame
 
@@ -227,7 +223,6 @@ int ieee80211_encrypt_fragment(
 
 	return 0;
 }
-
 
 void ieee80211_txb_free(struct ieee80211_txb *txb) {
 	int i;

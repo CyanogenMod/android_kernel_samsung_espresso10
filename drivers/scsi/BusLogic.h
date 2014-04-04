@@ -28,7 +28,6 @@
 #ifndef _BUSLOGIC_H
 #define _BUSLOGIC_H
 
-
 #ifndef PACKED
 #define PACKED __attribute__((packed))
 #endif
@@ -39,13 +38,11 @@
 
 #define BusLogic_MaxHostAdapters		16
 
-
 /*
   Define the maximum number of Target Devices supported by this driver.
 */
 
 #define BusLogic_MaxTargetDevices		16
-
 
 /*
   Define the maximum number of Scatter/Gather Segments used by this driver.
@@ -54,7 +51,6 @@
 */
 
 #define BusLogic_ScatterGatherLimit		128
-
 
 /*
   Define the maximum, maximum automatic, minimum automatic, and default Queue
@@ -69,7 +65,6 @@
 #define BusLogic_UntaggedQueueDepth		3
 #define BusLogic_UntaggedQueueDepthBB		2
 
-
 /*
   Define the default amount of time in seconds to wait between a Host Adapter
   Hard Reset which initiates a SCSI Bus Reset and issuing any SCSI commands.
@@ -78,7 +73,6 @@
 */
 
 #define BusLogic_DefaultBusSettleTime		2
-
 
 /*
   Define the maximum number of Mailboxes that should be used for MultiMaster
@@ -89,7 +83,6 @@
 
 #define BusLogic_MaxMailboxes			211
 
-
 /*
   Define the number of CCBs that should be allocated as a group to optimize
   Kernel memory allocation.
@@ -97,14 +90,12 @@
 
 #define BusLogic_CCB_AllocationGroupSize	7
 
-
 /*
   Define the Host Adapter Line and Message Buffer Sizes.
 */
 
 #define BusLogic_LineBufferSize			100
 #define BusLogic_MessageBufferSize		9700
-
 
 /*
   Define the Driver Message Levels.
@@ -119,7 +110,6 @@ enum BusLogic_MessageLevel {
 };
 
 static char *BusLogic_MessageLevelMap[] = { KERN_NOTICE, KERN_NOTICE, KERN_NOTICE, KERN_WARNING, KERN_ERR };
-
 
 /*
   Define Driver Message macros.
@@ -140,7 +130,6 @@ static char *BusLogic_MessageLevelMap[] = { KERN_NOTICE, KERN_NOTICE, KERN_NOTIC
 #define BusLogic_Error(Format, Arguments...) \
   BusLogic_Message(BusLogic_ErrorLevel, Format, ##Arguments)
 
-
 /*
   Define the types of BusLogic Host Adapters that are supported and the number
   of I/O Addresses required by each type.
@@ -155,7 +144,6 @@ enum BusLogic_HostAdapterType {
 #define BusLogic_FlashPointAddressCount		256
 
 static int BusLogic_HostAdapterAddressCount[3] = { 0, BusLogic_MultiMasterAddressCount, BusLogic_FlashPointAddressCount };
-
 
 /*
   Define macros for testing the Host Adapter Type.
@@ -178,7 +166,6 @@ static int BusLogic_HostAdapterAddressCount[3] = { 0, BusLogic_MultiMasterAddres
   (false)
 
 #endif
-
 
 /*
   Define the possible Host Adapter Bus Types.
@@ -215,7 +202,6 @@ enum BusLogic_BIOS_DiskGeometryTranslation {
 	BusLogic_BIOS_Disk_Installed_255x63 = 3
 } PACKED;
 
-
 /*
   Define a 10^18 Statistics Byte Counter data type.
 */
@@ -224,7 +210,6 @@ struct BusLogic_ByteCounter {
 	unsigned int Units;
 	unsigned int Billions;
 };
-
 
 /*
   Define the structure for I/O Address and Bus Probing Information.
@@ -479,7 +464,6 @@ struct BusLogic_ExtendedMailboxRequest {
 	u32 BaseMailboxAddress;	/* Bytes 1-4 */
 } PACKED;
 
-
 /*
   Define the Inquire PCI Host Adapter Information reply type.  The ISA
   Compatible I/O Port values are defined here and are also used with
@@ -544,7 +528,6 @@ enum BusLogic_RoundRobinModeRequest {
 	BusLogic_AggressiveRoundRobinMode = 0,
 	BusLogic_StrictRoundRobinMode = 1
 } PACKED;
-
 
 /*
   Define the Fetch Host Adapter Local RAM request type.
@@ -675,7 +658,6 @@ enum BusLogic_ActionCode {
 	BusLogic_MailboxAbortCommand = 0x02
 } PACKED;
 
-
 /*
   Define the Incoming Mailbox Completion Codes.  The MultiMaster Firmware
   only uses codes 0 - 4.  The FlashPoint SCCB Manager has no mailboxes, so
@@ -704,7 +686,6 @@ enum BusLogic_CCB_Opcode {
 	BusLogic_BusDeviceReset = 0x81
 } PACKED;
 
-
 /*
   Define the CCB Data Direction Codes.
 */
@@ -715,7 +696,6 @@ enum BusLogic_DataDirection {
 	BusLogic_DataOutLengthChecked = 2,
 	BusLogic_NoDataTransfer = 3
 };
-
 
 /*
   Define the Host Adapter Status Codes.  The MultiMaster Firmware does not
@@ -750,7 +730,6 @@ enum BusLogic_HostAdapterStatus {
 	BusLogic_SCSIParityErrorDetected = 0x34
 } PACKED;
 
-
 /*
   Define the SCSI Target Device Status Codes.
 */
@@ -780,7 +759,6 @@ enum BusLogic_QueueTag {
 
 typedef unsigned char SCSI_CDB_T[BusLogic_CDB_MaxLength];
 
-
 /*
   Define the Scatter/Gather Segment structure required by the MultiMaster
   Firmware Interface and the FlashPoint SCCB Manager.
@@ -801,7 +779,6 @@ enum BusLogic_CCB_Status {
 	BusLogic_CCB_Completed = 2,
 	BusLogic_CCB_Reset = 3
 } PACKED;
-
 
 /*
   Define the 32 Bit Mode Command Control Block (CCB) structure.  The first 40
@@ -897,7 +874,6 @@ struct BusLogic_IncomingMailbox {
 	enum BusLogic_CompletionCode CompletionCode;	/* Byte 7 */
 };
 
-
 /*
   Define the BusLogic Driver Options structure.
 */
@@ -960,7 +936,6 @@ struct BusLogic_TargetStatistics {
 #define FlashPoint_BadCardHandle		0xFFFFFFFF
 
 typedef unsigned int FlashPoint_CardHandle_T;
-
 
 /*
   Define the FlashPoint Information structure.  This structure is defined
@@ -1141,7 +1116,6 @@ struct SCSI_Inquiry {
 	unsigned char ProductIdentification[16];	/* Bytes 16-31 */
 	unsigned char ProductRevisionLevel[4];	/* Bytes 32-35 */
 };
-
 
 /*
   Define functions to provide an abstraction for reading and writing the

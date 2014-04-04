@@ -51,7 +51,6 @@
 #define IEEE80211_DEFAULT_RATES_MASK (IEEE80211_OFDM_DEFAULT_RATES_MASK | \
 				      IEEE80211_CCK_DEFAULT_RATES_MASK)
 
-
 /* This really should be 8, but not for our firmware */
 #define MAX_SUPPORTED_RATES 32
 #define MAX_COUNTRY_TRIPLETS 32
@@ -101,7 +100,6 @@ struct wl12xx_ie_country {
 	struct country_triplet triplets[MAX_COUNTRY_TRIPLETS];
 } __packed;
 
-
 /* Templates */
 
 struct wl12xx_beacon_template {
@@ -138,7 +136,6 @@ struct wl12xx_probe_req_template {
 	struct wl12xx_ie_rates rates;
 	struct wl12xx_ie_rates ext_rates;
 } __packed;
-
 
 struct wl12xx_probe_resp_template {
 	struct ieee80211_header header;

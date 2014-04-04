@@ -26,7 +26,6 @@ acpi-y				+= wakeup.o
 acpi-y				+= sleep.o
 acpi-$(CONFIG_ACPI_SLEEP)	+= proc.o nvs.o
 
-
 #
 # ACPI Bus and Device Drivers
 #

@@ -714,7 +714,6 @@ struct scb {
 /* This is the ESCB mask */
 #define ESCB_RECVD              0xC0
 
-
 /* This struct done_list_struct defines the done list entry.
  * All fields are LE.
  */
@@ -738,7 +737,6 @@ struct asd_phy {
 
 	u8         frame_rcvd[ASD_EDB_SIZE];
 };
-
 
 #define ASD_SCB_SIZE sizeof(struct scb)
 #define ASD_DDB_SIZE sizeof(struct asd_ddb_ssp_smp_target_port)

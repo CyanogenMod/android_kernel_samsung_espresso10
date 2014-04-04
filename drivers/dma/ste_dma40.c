@@ -801,7 +801,6 @@ static void d40_term_all(struct d40_chan *d40c)
 		d40_desc_free(d40c, d40d);
 	}
 
-
 	d40c->pending_tx = 0;
 	d40c->busy = false;
 }
@@ -1567,7 +1566,6 @@ static int d40_config_memcpy(struct d40_chan *d40c)
 	return 0;
 }
 
-
 static int d40_free_dma(struct d40_chan *d40c)
 {
 
@@ -1577,7 +1575,6 @@ static int d40_free_dma(struct d40_chan *d40c)
 	bool is_src;
 	struct d40_desc *d;
 	struct d40_desc *_d;
-
 
 	/* Terminate all queued and active transfers */
 	d40_term_all(d40c);
@@ -1708,7 +1705,6 @@ _exit:
 
 }
 
-
 static u32 stedma40_residue(struct dma_chan *chan)
 {
 	struct d40_chan *d40c =
@@ -1784,7 +1780,6 @@ d40_prep_sg_phy(struct d40_chan *chan, struct d40_desc *desc,
 	return ret < 0 ? ret : 0;
 }
 
-
 static struct d40_desc *
 d40_prep_desc(struct d40_chan *chan, struct scatterlist *sg,
 	      unsigned int sg_len, unsigned long dma_flags)
@@ -1809,7 +1804,6 @@ d40_prep_desc(struct d40_chan *chan, struct scatterlist *sg,
 		chan_err(chan, "Could not allocate lli\n");
 		goto err;
 	}
-
 
 	desc->lli_current = 0;
 	desc->txd.flags = dma_flags;
@@ -1858,7 +1852,6 @@ d40_prep_sg(struct dma_chan *dchan, struct scatterlist *sg_src,
 		chan_err(chan, "Cannot prepare unallocated channel\n");
 		return NULL;
 	}
-
 
 	spin_lock_irqsave(&chan->lock, flags);
 
@@ -2025,7 +2018,6 @@ static void d40_free_chan_resources(struct dma_chan *chan)
 		chan_err(d40c, "Cannot free unallocated channel\n");
 		return;
 	}
-
 
 	spin_lock_irqsave(&d40c->lock, flags);
 

@@ -55,7 +55,6 @@ usually called from the device driver's exit routine:
 
 	void vme_unregister_driver (struct vme_driver *driver);
 
-
 Resource management
 ===================
 
@@ -103,14 +102,12 @@ during resource allocation:
 
 	void vme_dma_free(struct vme_resource *res);
 
-
 Master windows
 ==============
 
 Master windows provide access from the local processor[s] out onto the VME bus.
 The number of windows available and the available access modes is dependent on
 the underlying chipset. A window must be configured before it can be used.
-
 
 Master window configuration
 ---------------------------
@@ -131,7 +128,6 @@ under resource management, however some of the options are mutually exclusive.
 For example, only one address space may be specified.
 
 These functions return 0 on success or an error code should the call fail.
-
 
 Master window access
 --------------------
@@ -157,7 +153,6 @@ This functions by reading the offset, applying the mask. If the bits selected in
 the mask match with the values of the corresponding bits in the compare field,
 the value of swap is written the specified offset.
 
-
 Slave windows
 =============
 
@@ -165,7 +160,6 @@ Slave windows provide devices on the VME bus access into mapped portions of the
 local memory. The number of windows available and the access modes that can be
 used is dependent on the underlying chipset. A window must be configured before
 it can be used.
-
 
 Slave window configuration
 --------------------------
@@ -187,7 +181,6 @@ For example, only one address space may be specified.
 
 These functions return 0 on success or an error code should the call fail.
 
-
 Slave window buffer allocation
 ------------------------------
 
@@ -202,13 +195,11 @@ taken to ensure that they are contiguous and accessible by the VME bridge:
 	void vme_free_consistent(struct vme_resource *res, size_t size,
 		void *virt,	dma_addr_t mem);
 
-
 Slave window access
 -------------------
 
 Slave windows map local memory onto the VME bus, the standard methods for
 accessing memory should be used.
-
 
 DMA channels
 ============
@@ -217,7 +208,6 @@ The VME DMA transfer provides the ability to run link-list DMA transfers. The
 API introduces the concept of DMA lists. Each DMA list is a link-list which can
 be passed to a DMA controller. Multiple lists can be created, extended,
 executed, reused and destroyed.
-
 
 List Management
 ---------------
@@ -229,7 +219,6 @@ reused for repetitive tasks:
 	struct vme_dma_list *vme_new_dma_list(struct vme_resource *res);
 
 	int vme_dma_list_free(struct vme_dma_list *list);
-
 
 List Population
 ---------------
@@ -275,7 +264,6 @@ The following function should be used to free an attribute:
 
 	void vme_dma_free_attribute(struct vme_dma_attr *attr);
 
-
 List Execution
 --------------
 
@@ -284,14 +272,12 @@ once the list has been executed:
 
 	int vme_dma_list_exec(struct vme_dma_list *list);
 
-
 Interrupts
 ==========
 
 The VME API provides functions to attach and detach callbacks to specific VME
 level and status ID combinations and for the generation of VME interrupts with
 specific VME level and status IDs.
-
 
 Attaching Interrupt Handlers
 ----------------------------
@@ -311,7 +297,6 @@ function, callback functions run in interrupt context:
 
 	void callback(int level, int statid, void *priv);
 
-
 Interrupt Generation
 --------------------
 
@@ -320,13 +305,11 @@ level and VME status ID:
 
 	int vme_irq_generate(struct device *dev, int level, int statid);
 
-
 Location monitors
 =================
 
 The VME API provides the following functionality to configure the location
 monitor.
-
 
 Location Monitor Management
 ---------------------------
@@ -344,7 +327,6 @@ are provided:
 
 	int vme_lm_count(struct vme_resource * res);
 
-
 Location Monitor Configuration
 ------------------------------
 
@@ -356,7 +338,6 @@ are provided to configure the location and mode of the location monitor:
 
 	int vme_lm_get(struct vme_resource *res, unsigned long long *base,
 		vme_address_t *aspace, vme_cycle_t *cycle);
-
 
 Location Monitor Use
 --------------------
@@ -373,7 +354,6 @@ adjacent locations:
 The callback function is declared as follows.
 
 	void callback(int num);
-
 
 Slot Detection
 ==============

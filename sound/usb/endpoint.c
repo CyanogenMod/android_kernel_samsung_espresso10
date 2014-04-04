@@ -52,7 +52,6 @@ static void free_substream(struct snd_usb_substream *subs)
 	kfree(subs->rate_list.list);
 }
 
-
 /*
  * free a usb stream instance
  */
@@ -72,7 +71,6 @@ static void snd_usb_audio_pcm_free(struct snd_pcm *pcm)
 		snd_usb_audio_stream_free(stream);
 	}
 }
-
 
 /*
  * add this endpoint to the chip instance.
@@ -168,10 +166,6 @@ static int parse_uac_endpoint_attributes(struct snd_usb_audio *chip,
 
 	if (!csep || csep->bLength < 7 ||
 	    csep->bDescriptorSubtype != UAC_EP_GENERAL) {
-		snd_printk(KERN_WARNING "%d:%u:%d : no or invalid"
-			   " class specific endpoint descriptor\n",
-			   chip->dev->devnum, iface_no,
-			   altsd->bAlternateSetting);
 		return 0;
 	}
 
@@ -431,7 +425,6 @@ int snd_usb_parse_audio_endpoints(struct snd_usb_audio *chip, int iface_no)
 			continue;
 		}
 
-		snd_printdd(KERN_INFO "%d:%u:%d: add audio endpoint %#x\n", dev->devnum, iface_no, altno, fp->endpoint);
 		err = snd_usb_add_audio_endpoint(chip, stream, fp);
 		if (err < 0) {
 			kfree(fp->rate_table);
@@ -445,4 +438,3 @@ int snd_usb_parse_audio_endpoints(struct snd_usb_audio *chip, int iface_no)
 	}
 	return 0;
 }
-

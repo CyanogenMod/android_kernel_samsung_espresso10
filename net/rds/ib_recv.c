@@ -185,7 +185,6 @@ static void rds_ib_recv_cache_put(struct list_head *new_item,
 				  struct rds_ib_refill_cache *cache);
 static struct list_head *rds_ib_recv_cache_get(struct rds_ib_refill_cache *cache);
 
-
 /* Recycle frag and attached recv buffer f_sg */
 static void rds_ib_frag_free(struct rds_ib_connection *ic,
 			     struct rds_page_frag *frag)
@@ -607,7 +606,6 @@ static u64 rds_ib_get_ack(struct rds_ib_connection *ic)
 	return atomic64_read(&ic->i_ack_next);
 }
 #endif
-
 
 static void rds_ib_send_ack(struct rds_ib_connection *ic, unsigned int adv_credits)
 {

@@ -30,7 +30,6 @@ static long native_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return ret;
 }
 
-
 struct v4l2_clip32 {
 	struct v4l2_rect        c;
 	compat_caddr_t 		next;

@@ -18,7 +18,7 @@ int drm_get_usb_dev(struct usb_interface *interface,
 
 	usbdev = interface_to_usbdev(interface);
 	dev->usbdev = usbdev;
-	dev->dev = &usbdev->dev;
+	dev->dev = &interface->dev;
 
 	mutex_lock(&drm_global_mutex);
 
@@ -93,7 +93,7 @@ static struct drm_bus drm_usb_bus = {
 	.get_name = drm_usb_get_name,
 	.set_busid = drm_usb_set_busid,
 };
-    
+
 int drm_usb_init(struct drm_driver *driver, struct usb_driver *udriver)
 {
 	int res;

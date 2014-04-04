@@ -540,4 +540,3 @@ config SOUND_KAHLUA
 	depends on SOUND_SB
 
 endif	# SOUND_OSS
-

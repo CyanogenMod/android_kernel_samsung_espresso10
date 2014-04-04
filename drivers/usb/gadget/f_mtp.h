@@ -17,7 +17,6 @@
 #ifndef __F_MTP_H
 #define __F_MTP_H
 
-
 #define MTP_MAX_PACKET_LEN_FROM_APP 22
 
 #define	MTP_ACM_ENABLE		0
@@ -32,6 +31,7 @@
 #define SET_ZLP_DATA		9
 #define GET_HIGH_FULL_SPEED	10
 #define SEND_FILE_WITH_HEADER 11
+#define MTP_VBUS_DISABLE 12
 #define SIG_SETUP		44
 
 /*PIMA15740-2000 spec*/
@@ -41,8 +41,6 @@
 #define USB_PTPREQUEST_GETSTATUS  0x67    /* Get Device Status */
 #define USB_PTPREQUEST_CANCELIO_SIZE 6
 #define USB_PTPREQUEST_GETSTATUS_SIZE 12
-
-
 
 int mtp_function_add(struct usb_configuration *c);
 int mtp_function_config_changed(struct usb_composite_dev *cdev,

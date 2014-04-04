@@ -31,13 +31,11 @@ typedef enum {
 	AUDIO_SOURCE_MEMORY /* Select internal memory as the main source */
 } audio_stream_source_t;
 
-
 typedef enum {
 	AUDIO_STOPPED,      /* Device is stopped */
 	AUDIO_PLAYING,      /* Device is currently playing */
 	AUDIO_PAUSED        /* Device is paused */
 } audio_play_state_t;
-
 
 typedef enum {
 	AUDIO_STEREO,
@@ -47,13 +45,11 @@ typedef enum {
 	AUDIO_STEREO_SWAPPED
 } audio_channel_select_t;
 
-
 typedef struct audio_mixer {
 	unsigned int volume_left;
 	unsigned int volume_right;
   // what else do we need? bass, pass-through, ...
 } audio_mixer_t;
-
 
 typedef struct audio_status {
 	int                    AV_sync_state;  /* sync audio and video? */
@@ -65,7 +61,6 @@ typedef struct audio_status {
 	audio_mixer_t	       mixer_state;    /* current mixer state */
 } audio_status_t;                              /* separate decoder hardware */
 
-
 typedef
 struct audio_karaoke{  /* if Vocal1 or Vocal2 are non-zero, they get mixed  */
 	int vocal1;    /* into left and right t at 70% each */
@@ -74,7 +69,6 @@ struct audio_karaoke{  /* if Vocal1 or Vocal2 are non-zero, they get mixed  */
 		       /* Vocal2 into the right channel at 100% each. */
 		       /* if Melody is non-zero, the melody channel gets mixed*/
 } audio_karaoke_t;     /* into left and right  */
-
 
 typedef __u16 audio_attributes_t;
 /*   bits: descr. */
@@ -85,7 +79,6 @@ typedef __u16 audio_attributes_t;
 /*    7- 6 Quantization / DRC (mpeg audio: 1=DRC exists)(lpcm: 0=16bit,  */
 /*    5- 4 Sample frequency fs (0=48kHz, 1=96kHz) */
 /*    2- 0 number of audio channels (n+1 channels) */
-
 
 /* for GET_CAPABILITIES and SET_FORMAT, the latter should only set one bit */
 #define AUDIO_CAP_DTS    1

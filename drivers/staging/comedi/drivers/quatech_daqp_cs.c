@@ -224,7 +224,6 @@ static int daqp_ai_cancel(struct comedi_device *dev, struct comedi_subdevice *s)
 	if (local->stop)
 		return -EIO;
 
-
 	outb(DAQP_COMMAND_STOP, dev->iobase + DAQP_COMMAND);
 
 	/* flush any linguring data in FIFO - superfluous here */
@@ -356,7 +355,6 @@ static int daqp_ai_insn_read(struct comedi_device *dev,
 	if (local->stop)
 		return -EIO;
 
-
 	/* Stop any running conversion */
 	daqp_ai_cancel(dev, s);
 
@@ -372,7 +370,6 @@ static int daqp_ai_insn_read(struct comedi_device *dev,
 
 	if (CR_AREF(insn->chanspec) == AREF_DIFF)
 		v |= DAQP_SCANLIST_DIFFERENTIAL;
-
 
 	v |= DAQP_SCANLIST_START;
 
@@ -591,7 +588,6 @@ static int daqp_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
 
 	if (local->stop)
 		return -EIO;
-
 
 	/* Stop any running conversion */
 	daqp_ai_cancel(dev, s);

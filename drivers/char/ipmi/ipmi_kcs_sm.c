@@ -194,7 +194,6 @@ static inline void write_data(struct si_sm_data *kcs, unsigned char data)
 #define GET_STATUS_IBF(status) ((status) & 0x02)
 #define GET_STATUS_OBF(status) ((status) & 0x01)
 
-
 static inline void write_next_byte(struct si_sm_data *kcs)
 {
 	write_data(kcs, kcs->write_data[kcs->write_pos]);

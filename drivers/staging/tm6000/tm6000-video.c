@@ -469,7 +469,6 @@ static inline void print_err_status(struct tm6000_core *dev,
 	}
 }
 
-
 /*
  * Controls the isoc copy of each urb packet
  */
@@ -757,7 +756,6 @@ buffer_prepare(struct videobuf_queue *vq, struct videobuf_buffer *vb,
 	int rc = 0, urb_init = 0;
 
 	BUG_ON(NULL == fh->fmt);
-
 
 	/* FIXME: It assumes depth=2 */
 	/* The only currently supported format is 16 bits/pixel */
@@ -1809,4 +1807,3 @@ MODULE_PARM_DESC(debug, "activates debug info");
 
 module_param(vid_limit, int, 0644);
 MODULE_PARM_DESC(vid_limit, "capture memory limit in megabytes");
-

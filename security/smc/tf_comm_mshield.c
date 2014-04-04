@@ -603,7 +603,6 @@ int tf_pm_shutdown(struct tf_comm *comm)
 	return answer.header.error_code;
 }
 
-
 int tf_pm_hibernate(struct tf_comm *comm)
 {
 	struct tf_device *dev = tf_get_device();

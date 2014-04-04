@@ -79,7 +79,6 @@
 #include <scsi/scsi_host.h>
 #include <linux/libata.h>
 
-
 #define DRV_NAME "pata_it821x"
 #define DRV_VERSION "0.4.2"
 
@@ -138,7 +137,6 @@ static void it821x_program(struct ata_port *ap, struct ata_device *adev, u16 tim
 		conf = timing & 0xFF;
 	pci_write_config_byte(pdev, 0x54 + 4 * channel, conf);
 }
-
 
 /**
  *	it821x_program_udma	-	program the UDMA registers
@@ -377,7 +375,6 @@ static void it821x_passthru_bmdma_stop(struct ata_queued_cmd *qc)
 	if (itdev->mwdma[unit] != MWDMA_OFF)
 		it821x_program(ap, adev, itdev->pio[unit]);
 }
-
 
 /**
  *	it821x_passthru_dev_select	-	Select master/slave
@@ -721,8 +718,6 @@ static void it821x_probe_firmware(struct ata_port *ap)
 	}
 }
 
-
-
 /**
  *	it821x_port_start	-	port setup
  *	@ap: ATA port being set up
@@ -869,7 +864,6 @@ static void it821x_disable_raid(struct pci_dev *pdev)
 	pci_write_config_byte(pdev, PCI_LATENCY_TIMER, 0x20);
 }
 
-
 static int it821x_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
 {
 	u8 conf;
@@ -987,7 +981,6 @@ MODULE_DESCRIPTION("low-level driver for the IT8211/IT8212 IDE RAID controller")
 MODULE_LICENSE("GPL");
 MODULE_DEVICE_TABLE(pci, it821x);
 MODULE_VERSION(DRV_VERSION);
-
 
 module_param_named(noraid, it8212_noraid, int, S_IRUGO);
 MODULE_PARM_DESC(noraid, "Force card into bypass mode");

@@ -1,4 +1,3 @@
-
 /*
  * DECnet       An implementation of the DECnet protocol suite for the LINUX
  *              operating system.  DECnet is implemented using the  BSD Socket
@@ -47,7 +46,6 @@ struct dn_fib_rule
 	__le16			srcmap;
 	u8			flags;
 };
-
 
 int dn_fib_lookup(struct flowidn *flp, struct dn_fib_res *res)
 {
@@ -250,5 +248,3 @@ void __exit dn_fib_rules_cleanup(void)
 	fib_rules_unregister(dn_fib_rules_ops);
 	rcu_barrier();
 }
-
-

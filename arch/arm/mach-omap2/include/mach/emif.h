@@ -123,7 +123,6 @@
  */
 #define READ_IDLE_INTERVAL_NORMAL	(50*1000)
 
-
 /*
  * Unless voltage is changing due to DVFS one ZQCS command every 50ms should
  * be enough. This shoule be enough also in the case when voltage is changing

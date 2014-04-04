@@ -211,7 +211,6 @@ static const u8 IT87_REG_FANX_MIN[]	= { 0x1b, 0x1c, 0x1d, 0x85, 0x87 };
 #define IT87_REG_AUTO_TEMP(nr, i) (0x60 + (nr) * 8 + (i))
 #define IT87_REG_AUTO_PWM(nr, i)  (0x65 + (nr) * 8 + (i))
 
-
 struct it87_sio_data {
 	enum chips type;
 	/* Values read from Super-I/O config space */
@@ -343,7 +342,6 @@ static int pwm_from_reg(const struct it87_data *data, u8 reg)
 		return (reg & 0x7f) << 1;
 }
 
-
 static int DIV_TO_REG(int val)
 {
 	int answer = 0;
@@ -394,7 +392,6 @@ static void it87_write_value(struct it87_data *data, u8 reg, u8 value);
 static struct it87_data *it87_update_device(struct device *dev);
 static int it87_check_pwm(struct device *dev);
 static void it87_init_device(struct platform_device *pdev);
-
 
 static struct platform_driver it87_driver = {
 	.driver = {
@@ -2057,7 +2054,7 @@ static void __devinit it87_init_device(struct platform_device *pdev)
 
 	/* Start monitoring */
 	it87_write_value(data, IT87_REG_CONFIG,
-			 (it87_read_value(data, IT87_REG_CONFIG) & 0x36)
+			 (it87_read_value(data, IT87_REG_CONFIG) & 0x3e)
 			 | (update_vbat ? 0x41 : 0x01));
 }
 
@@ -2255,7 +2252,6 @@ static void __exit sm_it87_exit(void)
 	platform_device_unregister(pdev);
 	platform_driver_unregister(&it87_driver);
 }
-
 
 MODULE_AUTHOR("Chris Gauthron, "
 	      "Jean Delvare <khali@linux-fr.org>");

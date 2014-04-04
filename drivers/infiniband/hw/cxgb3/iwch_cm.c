@@ -1851,7 +1851,6 @@ int iwch_accept_cr(struct iw_cm_id *cm_id, struct iw_cm_conn_param *conn_param)
 	if (err)
 		goto err1;
 
-
 	state_set(&ep->com, FPDU_MODE);
 	established_upcall(ep);
 	put_ep(&ep->com);
@@ -1977,7 +1976,6 @@ int iwch_create_listen(struct iw_cm_id *cm_id, int backlog)
 	int err = 0;
 	struct iwch_dev *h = to_iwch_dev(cm_id->device);
 	struct iwch_listen_ep *ep;
-
 
 	might_sleep();
 

@@ -89,7 +89,6 @@ typedef unsigned int xfs_alloctype_t;
 #define XFS_ALLOC_AG_MAX_USABLE(mp)	\
 	((mp)->m_sb.sb_agblocks - XFS_BB_TO_FSB(mp, XFS_FSS_TO_BB(mp, 4)) - 7)
 
-
 /*
  * Argument structure for xfs_alloc routines.
  * This is turned into a structure to avoid having 20 arguments passed

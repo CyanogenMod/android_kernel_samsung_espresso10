@@ -41,7 +41,7 @@ static int snd_us428ctls_vm_fault(struct vm_area_struct *area,
 	snd_printdd("ENTER, start %lXh, pgoff %ld\n",
 		   area->vm_start,
 		   vmf->pgoff);
-	
+
 	offset = vmf->pgoff << PAGE_SHIFT;
 	vaddr = (char*)((struct usX2Ydev *)area->vm_private_data)->us428ctls_sharedmem + offset;
 	page = virt_to_page(vaddr);
@@ -68,9 +68,9 @@ static int snd_us428ctls_mmap(struct snd_hwdep * hw, struct file *filp, struct v
  	if (!(us428->chip_status & USX2Y_STAT_CHIP_INIT))
 		return -EBUSY;
 
-	/* if userspace tries to mmap beyond end of our buffer, fail */ 
+	/* if userspace tries to mmap beyond end of our buffer, fail */
         if (size > PAGE_ALIGN(sizeof(struct us428ctls_sharedmem))) {
-		snd_printd( "%lu > %lu\n", size, (unsigned long)sizeof(struct us428ctls_sharedmem)); 
+		snd_printd( "%lu > %lu\n", size, (unsigned long)sizeof(struct us428ctls_sharedmem));
                 return -EINVAL;
 	}
 
@@ -103,7 +103,6 @@ static unsigned int snd_us428ctls_poll(struct snd_hwdep *hw, struct file *file, 
 	return mask;
 }
 
-
 static int snd_usX2Y_hwdep_dsp_status(struct snd_hwdep *hw,
 				      struct snd_hwdep_dsp_status *info)
 {
@@ -132,10 +131,9 @@ static int snd_usX2Y_hwdep_dsp_status(struct snd_hwdep *hw,
 	info->num_dsps = 2;		// 0: Prepad Data, 1: FPGA Code
 	if (us428->chip_status & USX2Y_STAT_CHIP_INIT)
 		info->chip_ready = 1;
- 	info->version = USX2Y_DRIVER_VERSION; 
+ 	info->version = USX2Y_DRIVER_VERSION;
 	return 0;
 }
-
 
 static int usX2Y_create_usbmidi(struct snd_card *card)
 {
@@ -184,7 +182,7 @@ static int usX2Y_create_alsa_devices(struct snd_card *card)
 			snd_printk(KERN_ERR "usX2Y_create_alsa_devices: usX2Y_create_usbmidi error %i \n", err);
 			break;
 		}
-		if ((err = usX2Y_audio_create(card)) < 0) 
+		if ((err = usX2Y_audio_create(card)) < 0)
 			break;
 		if ((err = usX2Y_hwdep_pcm_new(card)) < 0)
 			break;
@@ -193,7 +191,7 @@ static int usX2Y_create_alsa_devices(struct snd_card *card)
 	} while (0);
 
 	return err;
-} 
+}
 
 static int snd_usX2Y_hwdep_dsp_load(struct snd_hwdep *hw,
 				    struct snd_hwdep_dsp_image *dsp)
@@ -237,12 +235,11 @@ static int snd_usX2Y_hwdep_dsp_load(struct snd_hwdep *hw,
 			snd_card_free(hw->card);
 			return err;
 		}
-		priv->chip_status |= USX2Y_STAT_CHIP_INIT; 
+		priv->chip_status |= USX2Y_STAT_CHIP_INIT;
 		snd_printdd("%s: alsa all started\n", hw->name);
 	}
 	return err;
 }
-
 
 int usX2Y_hwdep_new(struct snd_card *card, struct usb_device* device)
 {
@@ -262,4 +259,3 @@ int usX2Y_hwdep_new(struct snd_card *card, struct usb_device* device)
 	sprintf(hw->name, "/proc/bus/usb/%03d/%03d", device->bus->busnum, device->devnum);
 	return 0;
 }
-

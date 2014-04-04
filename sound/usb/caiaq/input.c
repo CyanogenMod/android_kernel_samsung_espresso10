@@ -112,7 +112,6 @@ static unsigned int decode_erp(unsigned char a, unsigned char b)
 		/* 90..270 degrees */
 		pos_b = HIGH_PEAK - b + DEG90;
 
-
 	if (b > mid_value)
 		/* 0..180 degrees */
 		pos_a = a - LOW_PEAK;
@@ -688,4 +687,3 @@ void snd_usb_caiaq_input_free(struct snd_usb_caiaqdev *dev)
 	input_unregister_device(dev->input_dev);
 	dev->input_dev = NULL;
 }
-

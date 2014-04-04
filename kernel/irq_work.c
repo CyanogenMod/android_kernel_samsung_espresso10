@@ -64,7 +64,6 @@ static bool irq_work_claim(struct irq_work *entry)
 	return true;
 }
 
-
 void __weak arch_irq_work_raise(void)
 {
 	/*

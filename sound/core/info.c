@@ -80,7 +80,6 @@ static int snd_info_version_init(void);
 static int snd_info_version_done(void);
 static void snd_info_disconnect(struct snd_info_entry *entry);
 
-
 /* resize the proc r/w buffer */
 static int resize_info_buffer(struct snd_info_buffer *buffer,
 			      unsigned int nsize)
@@ -590,7 +589,6 @@ int __exit snd_info_done(void)
 
  */
 
-
 /*
  * create a card proc file
  * called from init.c
@@ -683,7 +681,6 @@ int snd_info_card_free(struct snd_card *card)
 	card->proc_root = NULL;
 	return 0;
 }
-
 
 /**
  * snd_info_get_line - read one line from the procfs buffer
@@ -890,7 +887,7 @@ static int snd_info_dev_register_entry(struct snd_device *device)
  * The parent is assumed as card->proc_root.
  *
  * For releasing this entry, use snd_device_free() instead of
- * snd_info_free_entry(). 
+ * snd_info_free_entry().
  *
  * Returns zero if successful, or a negative error code on failure.
  */

@@ -28,7 +28,6 @@ db8500_add_ssp(const char *name, resource_size_t base, int irq,
 	return dbx500_add_amba_device(name, base, irq, pdata, 0);
 }
 
-
 #define db8500_add_i2c0(pdata) \
 	dbx500_add_i2c(0, U8500_I2C0_BASE, IRQ_DB8500_I2C0, pdata)
 #define db8500_add_i2c1(pdata) \

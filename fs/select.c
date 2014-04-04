@@ -10,7 +10,7 @@
  *     parameter to reflect time remaining.
  *
  *  24 January 2000
- *     Changed sys_poll()/do_poll() to use PAGE_SIZE chunk-based allocation 
+ *     Changed sys_poll()/do_poll() to use PAGE_SIZE chunk-based allocation
  *     of fds to overcome nfds < 16390 descriptors limit (Tigran Aivazian).
  */
 
@@ -28,7 +28,6 @@
 #include <linux/hrtimer.h>
 
 #include <asm/uaccess.h>
-
 
 /*
  * Estimate expected accuracy in ns from a timeval.
@@ -86,8 +85,6 @@ long select_estimate_accuracy(struct timespec *tv)
 		return current->timer_slack_ns;
 	return ret;
 }
-
-
 
 struct poll_table_page {
 	struct poll_table_page * next;
@@ -543,7 +540,7 @@ int core_sys_select(int n, fd_set __user *inp, fd_set __user *outp,
 	/*
 	 * We need 6 bitmaps (in/out/ex for both incoming and outgoing),
 	 * since we used fdset we need to allocate memory in units of
-	 * long-words. 
+	 * long-words.
 	 */
 	size = FDS_BYTES(n);
 	bits = stack_fds;

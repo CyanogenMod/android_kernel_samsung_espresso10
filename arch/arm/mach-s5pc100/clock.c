@@ -81,7 +81,6 @@ static struct clksrc_clk clk_mout_mpll = {
 	.reg_src        = { .reg = S5P_CLK_SRC0, .shift = 4, .size = 1 },
 };
 
-
 static struct clksrc_clk clk_mout_apll = {
 	.clk    = {
 		.name           = "mout_apll",

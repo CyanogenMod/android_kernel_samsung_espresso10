@@ -613,7 +613,7 @@ static ssize_t dlfb_ops_write(struct fb_info *info, const char __user *buf,
 	result = fb_sys_write(info, buf, count, ppos);
 
 	if (result > 0) {
-		int start = max((int)(offset / info->fix.line_length) - 1, 0);
+		int start = max((int)(offset / info->fix.line_length), 0);
 		int lines = min((u32)((result / info->fix.line_length) + 1),
 				(u32)info->var.yres);
 
@@ -1085,7 +1085,6 @@ static struct fb_ops dlfb_ops = {
 	.fb_check_var = dlfb_ops_check_var,
 	.fb_set_par = dlfb_ops_set_par,
 };
-
 
 /*
  * Assumes &info->lock held by caller
@@ -1894,4 +1893,3 @@ MODULE_AUTHOR("Roberto De Ioris <roberto@unbit.it>, "
 	      "Bernie Thompson <bernie@plugable.com>");
 MODULE_DESCRIPTION("DisplayLink kernel framebuffer driver");
 MODULE_LICENSE("GPL");
-

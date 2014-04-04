@@ -1,4 +1,3 @@
-
 /*
  * snull.h -- definitions for the network module
  *
@@ -147,7 +146,6 @@ typedef struct rx_packet {
 				       /* 000: Initial revision */
 				       /* 001: First revision, Improved TX concatenation */
 
-
 /* DMA control bits */
 #define METH_RX_OFFSET_SHIFT 12 /* Bits 12:14 of DMA control register indicate starting offset of packet data for RX operation */
 #define METH_RX_DEPTH_SHIFT 4 /* Bits 8:4 define RX fifo depth -- when # of RX fifo entries != depth, interrupt is generted */
@@ -226,7 +224,6 @@ typedef struct rx_packet {
 #define METH_TX_ST_EXCCOLL   BIT(26) /* TX abort due to excess collisions */
 #define METH_TX_ST_DEFER     BIT(27) /* TX abort due to excess deferals */
 #define METH_TX_ST_LATECOLL  BIT(28) /* TX abort due to late collision */
-
 
 /* Tx command header bits */
 #define METH_TX_CMD_INT_EN BIT(24) /* Generate TX interrupt when packet is sent */

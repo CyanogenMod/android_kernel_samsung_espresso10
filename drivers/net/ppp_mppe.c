@@ -204,7 +204,6 @@ static void *mppe_alloc(unsigned char *options, int optlen)
 	if (state == NULL)
 		goto out;
 
-
 	state->arc4 = crypto_alloc_blkcipher("ecb(arc4)", 0, CRYPTO_ALG_ASYNC);
 	if (IS_ERR(state->arc4)) {
 		state->arc4 = NULL;

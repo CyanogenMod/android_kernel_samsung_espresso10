@@ -49,7 +49,6 @@ module_param(debug, int, 0644);
 static int bypass;
 module_param(bypass, int, 0644);
 
-
 static int bypass_vidioc_qbuf(
 	struct file *file, void *fh, struct v4l2_buffer *buf) { return 0; }
 

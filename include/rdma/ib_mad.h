@@ -512,7 +512,6 @@ int ib_unregister_mad_agent(struct ib_mad_agent *mad_agent);
 int ib_post_send_mad(struct ib_mad_send_buf *send_buf,
 		     struct ib_mad_send_buf **bad_send_buf);
 
-
 /**
  * ib_free_recv_mad - Returns data buffers used to receive a MAD.
  * @mad_recv_wc: Work completion information for a received MAD.

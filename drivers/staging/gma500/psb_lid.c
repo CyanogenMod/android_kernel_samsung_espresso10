@@ -87,4 +87,3 @@ void psb_lid_timer_takedown(struct drm_psb_private *dev_priv)
 {
 	del_timer_sync(&dev_priv->lid_timer);
 }
-

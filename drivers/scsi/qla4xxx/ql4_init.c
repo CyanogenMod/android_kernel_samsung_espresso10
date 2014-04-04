@@ -1247,7 +1247,6 @@ int qla4xxx_start_firmware(struct scsi_qla_host *ha)
 	return status;
 }
 
-
 /**
  * qla4xxx_initialize_adapter - initiailizes hba
  * @ha: Pointer to host adapter structure.

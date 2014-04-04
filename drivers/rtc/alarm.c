@@ -245,7 +245,6 @@ void alarm_init(struct alarm *alarm,
 	pr_alarm(FLOW, "created alarm, type %d, func %pF\n", type, function);
 }
 
-
 /**
  * alarm_start_range - (re)start an alarm
  * @alarm:	the alarm to be added
@@ -495,18 +494,7 @@ static int alarm_suspend(struct platform_device *pdev, pm_message_t state)
 			rtc_delta).tv_sec;
 
 		rtc_time_to_tm(rtc_alarm_time, &rtc_alarm.time);
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-		rtc_tm_to_time(&rtc_current_rtc_time, &rtc_current_time);
-		if (rtc_alarm_time - rtc_current_time <= 60) {
-			pr_alarm(SUSPEND,
-				"alarm_suspend : power_on_alarm ON\n");
-		} else {
-			rtc_alarm_time -= 60;
-			rtc_time_to_tm(rtc_alarm_time, &rtc_alarm.time);
-			pr_alarm(SUSPEND,
-				"alarm_suspend : power_on_alarm OFF\n");
-		}
-#endif
+
 		rtc_alarm.enabled = 1;
 		rtc_set_alarm(alarm_rtc_dev, &rtc_alarm);
 		rtc_read_time(alarm_rtc_dev, &rtc_current_rtc_time);
@@ -682,4 +670,3 @@ static void  __exit alarm_exit(void)
 late_initcall(alarm_late_init);
 module_init(alarm_driver_init);
 module_exit(alarm_exit);
-

@@ -40,7 +40,6 @@ enum acc_type {
 	P30_TA,
 };
 
-
 struct acc_con_platform_data {
 	int accessory_irq_gpio;
 	int dock_irq_gpio;

@@ -107,7 +107,6 @@
 #define E1000_MRQC_RSS_FIELD_IPV6              0x00100000
 #define E1000_MRQC_RSS_FIELD_IPV6_TCP          0x00200000
 
-
 /* Management Control */
 #define E1000_MANC_SMBUS_EN      0x00000001 /* SMBus Enabled - RO */
 #define E1000_MANC_ASF_EN        0x00000002 /* ASF Enabled - RO */
@@ -241,7 +240,6 @@
 #define SPEED_1000  1000
 #define HALF_DUPLEX 1
 #define FULL_DUPLEX 2
-
 
 #define ADVERTISE_10_HALF                 0x0001
 #define ADVERTISE_10_FULL                 0x0002
@@ -551,7 +549,6 @@
 /* 1000BASE-T Status Register */
 #define SR_1000T_REMOTE_RX_STATUS 0x1000 /* Remote receiver OK */
 #define SR_1000T_LOCAL_RX_STATUS  0x2000 /* Local receiver OK */
-
 
 /* PHY 1000 MII Register/Bit Definitions */
 /* PHY Registers defined by IEEE */

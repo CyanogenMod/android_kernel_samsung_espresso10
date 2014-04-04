@@ -7,12 +7,10 @@
 # Public License ("GPL") version 2 as published by the Free Software
 # Foundation.
 
-
 try:
 	import wx
 except ImportError:
 	raise ImportError, "You need to install the wxpython lib for this script"
-
 
 class RootFrame(wx.Frame):
 	Y_OFFSET = 100
@@ -130,7 +128,6 @@ class RootFrame(wx.Frame):
 			self.txt.Destroy()
 		self.txt = wx.StaticText(self.panel, -1, txt, (0, (self.screen_height / 2) + 50))
 
-
 	def on_mouse_down(self, event):
 		(x, y) = event.GetPositionTuple()
 		rect = self.rect_from_ypixel(y)
@@ -140,7 +137,6 @@ class RootFrame(wx.Frame):
 		t = self.px_to_us(x) + self.ts_start
 
 		self.sched_tracer.mouse_down(rect, t)
-
 
 	def update_width_virtual(self):
 		self.width_virtual = self.us_to_px(self.ts_end - self.ts_start)
@@ -161,7 +157,6 @@ class RootFrame(wx.Frame):
 		x = self.scroll_start_us()
 		self.zoom /= 2
 		self.__zoom(x)
-
 
 	def on_key_press(self, event):
 		key = event.GetRawKeyCode()

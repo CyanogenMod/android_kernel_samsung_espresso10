@@ -221,8 +221,6 @@ static int dib0070_captrim(struct dib0070_state *state, enum frontend_tune_state
 			state->adc_diff = adc;
 			state->fcaptrim = state->captrim;
 
-
-
 		}
 		state->captrim += (step_sign * state->step);
 
@@ -392,9 +390,7 @@ static int dib0070_tune_digital(struct dvb_frontend *fe, struct dvb_frontend_par
 		state->current_rf = freq;
 		state->lo4 = (state->current_tune_table_index->vco_band << 11) | (state->current_tune_table_index->hfdiv << 7);
 
-
 		dib0070_write_reg(state, 0x17, 0x30);
-
 
 		VCOF_kHz = state->current_tune_table_index->vco_multi * freq * 2;
 
@@ -410,8 +406,6 @@ static int dib0070_tune_digital(struct dvb_frontend *fe, struct dvb_frontend_par
 			break;
 		}
 		FREF = state->cfg->clock_khz / REFDIV;
-
-
 
 		switch (state->revision) {
 		case DIB0070S_P1A:
@@ -443,7 +437,6 @@ static int dib0070_tune_digital(struct dvb_frontend *fe, struct dvb_frontend_par
 			state->lo4 |= (1 << 14) | (1 << 12);
 			Den = 255;
 		}
-
 
 		dib0070_write_reg(state, 0x11, (u16)FBDiv);
 		dib0070_write_reg(state, 0x12, (Den << 8) | REFDIV);
@@ -500,10 +493,8 @@ static int dib0070_tune_digital(struct dvb_frontend *fe, struct dvb_frontend_par
 	dib0070_write_reg(state, 0x08, (state->lna_match->lna_band << 10) | (3 << 7) | (127));
 	dib0070_write_reg(state, 0x0d, 0x0d80);
 
-
 	dib0070_write_reg(state, 0x18,   0x07ff);
 	dib0070_write_reg(state, 0x17, 0x0033);
-
 
 	*tune_state = CT_TUNER_STEP_5;
     } else if (*tune_state == CT_TUNER_STEP_5) {
@@ -514,7 +505,6 @@ static int dib0070_tune_digital(struct dvb_frontend *fe, struct dvb_frontend_par
     }
     return ret;
 }
-
 
 static int dib0070_tune(struct dvb_frontend *fe, struct dvb_frontend_parameters *p)
 {
@@ -656,7 +646,6 @@ static int dib0070_reset(struct dvb_frontend *fe)
 
 	HARD_RESET(state);
 
-
 #ifndef FORCE_SBAND_TUNER
 	if ((dib0070_read_reg(state, 0x22) >> 9) & 0x1)
 		state->revision = (dib0070_read_reg(state, 0x1f) >> 8) & 0xff;
@@ -691,7 +680,6 @@ static int dib0070_reset(struct dvb_frontend *fe)
 		r = 1;
 	else
 		r = 2;
-
 
 	r |= state->cfg->osc_buffer_state << 3;
 

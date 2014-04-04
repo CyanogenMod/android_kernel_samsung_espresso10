@@ -71,7 +71,6 @@ typedef struct {
 	unsigned char Reserved:5;	/* 0: Reserved */
 } DSP_ISA_SLAVE_CONTROL;
 
-
 typedef struct {
 	unsigned short EnableDspInt:1;	/* RW: Enable DSP to X86 ISA interrupt 0=mask it, 1=enable it */
 	unsigned short MemAutoInc:1;	/* RW: Memory address auto increment, 0=disable, 1=enable */
@@ -79,7 +78,6 @@ typedef struct {
 	unsigned short DiagnosticMode:1;	/* RW: Disgnostic mode 0=nromal, 1=diagnostic mode */
 	unsigned short IsaPacingTimer:12;	/* R: ISA access pacing timer: count of core cycles stolen */
 } DSP_HBRIDGE_CONTROL;
-
 
 /* DSP register indexes used with the configuration register address (index) register */
 #define DSP_UartCfg1Index          0x0003	/* UART config register 1 */
@@ -118,7 +116,6 @@ typedef struct {
 	unsigned char Reserved:7;	/* 0: Reserved */
 } DSP_HBRIDGE_CFG_2;
 
-
 typedef struct {
 	unsigned char Dma:3;	/* RW: DMA channel selection */
 	unsigned char NumTransfers:2;	/* RW: Maximum # of transfers once being granted the ISA bus */
@@ -130,7 +127,6 @@ typedef struct {
 	unsigned char IsaMemCmdWidth:2;	/* RW: ISA memory command width */
 	unsigned char Reserved:6;	/* 0: Reserved */
 } DSP_BUSMASTER_CFG_2;
-
 
 typedef struct {
 	unsigned char GateIOCHRDY:1;	/* RW: Enable IOCHRDY gating: 0=FALSE, 1=TRUE */
@@ -145,8 +141,6 @@ typedef struct {
 typedef struct {
 	unsigned char LoadValue:8;	/* RW: HBUS timer load value */
 } DSP_HBUS_TIMER_CFG;
-
-
 
 /* DSP registers that exist in MSA I/O space */
 #define DSP_ChipID                 0x80000000
@@ -314,7 +308,6 @@ typedef struct _DSP_3780I_CONFIG_SETTINGS {
 	unsigned char ucDLL;	/* Divisor latch, low byte */
 	unsigned char ucDLM;	/* Divisor latch, high byte */
 } DSP_3780I_CONFIG_SETTINGS;
-
 
 /* 3780i support functions */
 int dsp3780I_EnableDSP(DSP_3780I_CONFIG_SETTINGS * pSettings,

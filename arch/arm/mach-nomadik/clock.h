@@ -1,4 +1,3 @@
-
 /*
  *  linux/arch/arm/mach-nomadik/clock.h
  *

@@ -65,4 +65,3 @@
 #define	AT91_TWI_THR		0x34		/* Transmit Holding Register */
 
 #endif
-

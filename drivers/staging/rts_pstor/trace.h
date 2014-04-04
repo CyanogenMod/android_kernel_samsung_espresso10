@@ -39,7 +39,7 @@ static inline char *filename(char *path)
 	while (*ptr != '\0') {
 		if ((*ptr == '\\') || (*ptr == '/'))
 			path = ptr + 1;
-		
+
 		ptr++;
 	}
 

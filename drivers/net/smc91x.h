@@ -302,7 +302,6 @@ static inline void mcf_outsw(void *a, unsigned char *p, int l)
 
 #endif
 
-
 /* store this information for the driver.. */
 struct smc_local {
 	/*
@@ -451,7 +450,6 @@ smc_pxa_dma_irq(int dma, void *dummy)
 }
 #endif  /* CONFIG_ARCH_PXA */
 
-
 /*
  * Everything a particular hardware setup needs should have been defined
  * at this point.  Add stubs for the undefined cases, mainly to avoid
@@ -529,7 +527,6 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define SMC_INTERRUPT_PREAMBLE
 #endif
 
-
 /* Because of bank switching, the LAN91x uses only 16 I/O ports */
 #define SMC_IO_EXTENT	(16 << SMC_IO_SHIFT)
 #define SMC_DATA_EXTENT (4)
@@ -542,7 +539,6 @@ smc_pxa_dma_irq(int dma, void *dummy)
  .		yyyy yyyy	= 0x33, for identification purposes.
 */
 #define BANK_SELECT		(14 << SMC_IO_SHIFT)
-
 
 // Transmit Control Register
 /* BANK 0  */
@@ -562,7 +558,6 @@ smc_pxa_dma_irq(int dma, void *dummy)
 /* the default settings for the TCR register : */
 #define TCR_DEFAULT	(TCR_ENABLE | TCR_PAD_EN)
 
-
 // EPH Status Register
 /* BANK 0  */
 #define EPH_STATUS_REG(lp)	SMC_REG(lp, 0x0002, 0)
@@ -581,7 +576,6 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define ES_LINK_OK	0x4000	// Driven by inverted value of nLNK pin
 #define ES_TXUNRN	0x8000	// Tx Underrun
 
-
 // Receive Control Register
 /* BANK 0  */
 #define RCR_REG(lp)		SMC_REG(lp, 0x0004, 0)
@@ -598,16 +592,13 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define RCR_DEFAULT	(RCR_STRIP_CRC | RCR_RXEN)
 #define RCR_CLEAR	0x0	// set it to a base state
 
-
 // Counter Register
 /* BANK 0  */
 #define COUNTER_REG(lp)	SMC_REG(lp, 0x0006, 0)
 
-
 // Memory Information Register
 /* BANK 0  */
 #define MIR_REG(lp)		SMC_REG(lp, 0x0008, 0)
-
 
 // Receive/Phy Control Register
 /* BANK 0  */
@@ -627,13 +618,11 @@ smc_pxa_dma_irq(int dma, void *dummy)
 
 #define RPC_DEFAULT (RPC_ANEG | RPC_SPEED | RPC_DPLX)
 
-
 /* Bank 0 0x0C is reserved */
 
 // Bank Select Register
 /* All Banks */
 #define BSR_REG		0x000E
-
 
 // Configuration Reg
 /* BANK 1 */
@@ -646,11 +635,9 @@ smc_pxa_dma_irq(int dma, void *dummy)
 // Default is powered-up, Internal Phy, Wait States, and pin nCNTRL=low
 #define CONFIG_DEFAULT	(CONFIG_EPH_POWER_EN)
 
-
 // Base Address Register
 /* BANK 1 */
 #define BASE_REG(lp)	SMC_REG(lp, 0x0002, 1)
-
 
 // Individual Address Registers
 /* BANK 1 */
@@ -658,11 +645,9 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define ADDR1_REG(lp)	SMC_REG(lp, 0x0006, 1)
 #define ADDR2_REG(lp)	SMC_REG(lp, 0x0008, 1)
 
-
 // General Purpose Register
 /* BANK 1 */
 #define GP_REG(lp)		SMC_REG(lp, 0x000A, 1)
-
 
 // Control Register
 /* BANK 1 */
@@ -675,7 +660,6 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define CTL_EEPROM_SELECT 0x0004 // Controls EEPROM reload & store
 #define CTL_RELOAD	0x0002 // When set reads EEPROM into registers
 #define CTL_STORE	0x0001 // When set stores registers into EEPROM
-
 
 // MMU Command Register
 /* BANK 2 */
@@ -690,17 +674,14 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define MC_ENQUEUE	(6<<5)	// Enqueue the packet for transmit
 #define MC_RSTTXFIFO	(7<<5)	// Reset the TX FIFOs
 
-
 // Packet Number Register
 /* BANK 2 */
 #define PN_REG(lp)		SMC_REG(lp, 0x0002, 2)
-
 
 // Allocation Result Register
 /* BANK 2 */
 #define AR_REG(lp)		SMC_REG(lp, 0x0003, 2)
 #define AR_FAILED	0x80	// Alocation Failed
-
 
 // TX FIFO Ports Register
 /* BANK 2 */
@@ -721,16 +702,13 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define PTR_AUTOINC 	0x4000 // Auto increment the pointer on each access
 #define PTR_READ	0x2000 // When 1 the operation is a read
 
-
 // Data Register
 /* BANK 2 */
 #define DATA_REG(lp)	SMC_REG(lp, 0x0008, 2)
 
-
 // Interrupt Status/Acknowledge Register
 /* BANK 2 */
 #define INT_REG(lp)		SMC_REG(lp, 0x000C, 2)
-
 
 // Interrupt Mask Register
 /* BANK 2 */
@@ -744,14 +722,12 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define IM_TX_INT	0x02 // Transmit Interrupt
 #define IM_RCV_INT	0x01 // Receive Interrupt
 
-
 // Multicast Table Registers
 /* BANK 3 */
 #define MCAST_REG1(lp)	SMC_REG(lp, 0x0000, 3)
 #define MCAST_REG2(lp)	SMC_REG(lp, 0x0002, 3)
 #define MCAST_REG3(lp)	SMC_REG(lp, 0x0004, 3)
 #define MCAST_REG4(lp)	SMC_REG(lp, 0x0006, 3)
-
 
 // Management Interface Register (MII)
 /* BANK 3 */
@@ -762,12 +738,10 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define MII_MDI		0x0002 // MII Input, pin MDI
 #define MII_MDO		0x0001 // MII Output, pin MDO
 
-
 // Revision Register
 /* BANK 3 */
 /* ( hi: chip id   low: rev # ) */
 #define REV_REG(lp)		SMC_REG(lp, 0x000A, 3)
-
 
 // Early RCV Register
 /* BANK 3 */
@@ -776,11 +750,9 @@ smc_pxa_dma_irq(int dma, void *dummy)
 #define ERCV_RCV_DISCRD	0x0080 // When 1 discards a packet being received
 #define ERCV_THRESHOLD	0x001F // ERCV Threshold Mask
 
-
 // External Register
 /* BANK 7 */
 #define EXT_REG(lp)		SMC_REG(lp, 0x0000, 7)
-
 
 #define CHIP_9192	3
 #define CHIP_9194	4
@@ -802,7 +774,6 @@ static const char * chip_ids[ 16 ] =  {
 	NULL, NULL, NULL,
 	NULL, NULL, NULL};
 
-
 /*
  . Receive status bits
 */
@@ -814,7 +785,6 @@ static const char * chip_ids[ 16 ] =  {
 #define RS_TOOSHORT	0x0400
 #define RS_MULTICAST	0x0001
 #define RS_ERRORS	(RS_ALGNERR | RS_BADCRC | RS_TOOLONG | RS_TOOSHORT)
-
 
 /*
  * PHY IDs
@@ -845,7 +815,6 @@ static const char * chip_ids[ 16 ] =  {
 #define PHY_CFG1_TLVL_MASK	0x003C
 #define PHY_CFG1_TRF_MASK	0x0003	// Transmitter Rise/Fall time
 
-
 // PHY Configuration Register 2
 #define PHY_CFG2_REG		0x11
 #define PHY_CFG2_APOLDIS	0x0020	// 1=Auto Polarity Correction disabled
@@ -870,7 +839,6 @@ static const char * chip_ids[ 16 ] =  {
 #define PHY_MASK_REG		0x13	// Interrupt Mask
 // Uses the same bit definitions as PHY_INT_REG
 
-
 /*
  * SMC91C96 ethernet config and status registers.
  * These are in the "attribute" space.
@@ -887,7 +855,6 @@ static const char * chip_ids[ 16 ] =  {
 #define ECSR_INT		0x02
 
 #define ATTRIB_SIZE		((64*1024) << SMC_IO_SHIFT)
-
 
 /*
  * Macros to abstract register access according to the data bus

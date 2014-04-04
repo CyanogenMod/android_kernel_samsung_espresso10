@@ -47,7 +47,6 @@
 #include <linux/usb/usbnet.h>
 #include <linux/usb/rndis_host.h>
 
-
 /* NOTE: All these are settings for Broadcom chipset */
 static char modparam_country[4] = "EU";
 module_param_string(country, modparam_country, 4, 0444);
@@ -90,7 +89,6 @@ module_param_named(workaround_interval, modparam_workaround_interval,
 MODULE_PARM_DESC(workaround_interval,
 	"set stall workaround interval in msecs (0=disabled) (default: 0)");
 
-
 /* various RNDIS OID defs */
 #define OID_GEN_LINK_SPEED			cpu_to_le32(0x00010107)
 #define OID_GEN_RNDIS_CONFIG_PARAMETER		cpu_to_le32(0x0001021b)
@@ -132,11 +130,9 @@ MODULE_PARM_DESC(workaround_interval,
 #define OID_802_11_POWER_MODE			cpu_to_le32(0x0d010216)
 #define OID_802_11_BSSID_LIST			cpu_to_le32(0x0d010217)
 
-
 /* Typical noise/maximum signal level values taken from ndiswrapper iw_ndis.h */
 #define	WL_NOISE	-96	/* typical noise level in dBm */
 #define	WL_SIGMAX	-32	/* typical maximum signal level in dBm */
-
 
 /* Assume that Broadcom 4320 (only chipset at time of writing known to be
  * based on wireless rndis) has default txpower of 13dBm.
@@ -151,17 +147,14 @@ MODULE_PARM_DESC(workaround_interval,
 #define BCM4320_DEFAULT_TXPOWER_DBM_50  10
 #define BCM4320_DEFAULT_TXPOWER_DBM_25  7
 
-
 /* codes for "status" field of completion messages */
 #define RNDIS_STATUS_ADAPTER_NOT_READY		cpu_to_le32(0xc0010011)
 #define RNDIS_STATUS_ADAPTER_NOT_OPEN		cpu_to_le32(0xc0010012)
-
 
 /* Known device types */
 #define RNDIS_UNKNOWN	0
 #define RNDIS_BCM4320A	1
 #define RNDIS_BCM4320B	2
-
 
 /* NDIS data structures. Taken from wpa_supplicant driver_ndis.c
  * slightly modified for datatype endianess, etc
@@ -611,7 +604,6 @@ static const struct cfg80211_ops rndis_config_ops = {
 };
 
 static void *rndis_wiphy_privid = &rndis_wiphy_privid;
-
 
 static struct rndis_wlan_private *get_rndis_wlan_priv(struct usbnet *dev)
 {
@@ -3772,4 +3764,3 @@ MODULE_AUTHOR("Bjorge Dijkstra");
 MODULE_AUTHOR("Jussi Kivilinna");
 MODULE_DESCRIPTION("Driver for RNDIS based USB Wireless adapters");
 MODULE_LICENSE("GPL");
-

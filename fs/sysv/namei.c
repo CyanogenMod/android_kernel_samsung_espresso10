@@ -85,7 +85,7 @@ static int sysv_create(struct inode * dir, struct dentry * dentry, int mode, str
 	return sysv_mknod(dir, dentry, mode, 0);
 }
 
-static int sysv_symlink(struct inode * dir, struct dentry * dentry, 
+static int sysv_symlink(struct inode * dir, struct dentry * dentry,
 	const char * symname)
 {
 	int err = -ENAMETOOLONG;
@@ -99,7 +99,7 @@ static int sysv_symlink(struct inode * dir, struct dentry * dentry,
 	err = PTR_ERR(inode);
 	if (IS_ERR(inode))
 		goto out;
-	
+
 	sysv_set_inode(inode, 0);
 	err = page_symlink(inode, symname, l);
 	if (err)
@@ -116,7 +116,7 @@ out_fail:
 	goto out;
 }
 
-static int sysv_link(struct dentry * old_dentry, struct inode * dir, 
+static int sysv_link(struct dentry * old_dentry, struct inode * dir,
 	struct dentry * dentry)
 {
 	struct inode *inode = old_dentry->d_inode;
@@ -136,7 +136,7 @@ static int sysv_mkdir(struct inode * dir, struct dentry *dentry, int mode)
 	struct inode * inode;
 	int err = -EMLINK;
 
-	if (dir->i_nlink >= SYSV_SB(dir->i_sb)->s_link_max) 
+	if (dir->i_nlink >= SYSV_SB(dir->i_sb)->s_link_max)
 		goto out;
 	inode_inc_link_count(dir);
 

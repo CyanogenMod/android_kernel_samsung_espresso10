@@ -89,7 +89,6 @@ MODULE_LICENSE("GPL");
 #define PMAD_LANCE 2
 #define PMAX_LANCE 3
 
-
 #define LE_CSR0 0
 #define LE_CSR1 1
 #define LE_CSR2 2
@@ -201,7 +200,6 @@ struct lance_tx_desc {
 					   of buffer length */
 	unsigned short misc;
 };
-
 
 /* First part of the LANCE initialization block, described in databook. */
 struct lance_init_block {
@@ -433,7 +431,6 @@ static void cp_from_buf(const int type, void *to, const void *from, int len)
 		while (clen--) {
 			*rtp++ = *rfp++;
 		}
-
 
 	}
 
@@ -1376,7 +1373,6 @@ static void __exit dec_lance_exit(void)
 	dec_lance_platform_remove();
 	tc_unregister_driver(&dec_lance_tc_driver);
 }
-
 
 module_init(dec_lance_init);
 module_exit(dec_lance_exit);

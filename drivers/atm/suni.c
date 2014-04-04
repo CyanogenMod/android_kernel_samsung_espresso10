@@ -6,7 +6,7 @@
  * 	PMC PM5350 S/UNI 155 ULTRA
  * 	PMC PM5355 S/UNI 622
  */
- 
+
 /* Written 1995-2000 by Werner Almesberger, EPFL LRC/ICA */
 
 #include <linux/module.h>
@@ -29,7 +29,6 @@
 
 #include "suni.h"
 
-
 #if 0
 #define DPRINTK(format,args...) printk(KERN_DEBUG format,##args)
 #else
@@ -43,16 +42,13 @@
 #define REG_CHANGE(mask,shift,value,reg) \
   PUT((GET(reg) & ~(mask)) | ((value) << (shift)),reg)
 
-
 static struct timer_list poll_timer;
 static struct suni_priv *sunis = NULL;
 static DEFINE_SPINLOCK(sunis_lock);
 
-
 #define ADD_LIMITED(s,v) \
     atomic_add((v),&stats->s); \
     if (atomic_read(&stats->s) < 0) atomic_set(&stats->s,INT_MAX);
-
 
 static void suni_hz(unsigned long from_timer)
 {
@@ -89,9 +85,7 @@ static void suni_hz(unsigned long from_timer)
 	if (from_timer) mod_timer(&poll_timer,jiffies+HZ);
 }
 
-
 #undef ADD_LIMITED
-
 
 static int fetch_stats(struct atm_dev *dev,struct sonet_stats __user *arg,int zero)
 {
@@ -104,14 +98,12 @@ static int fetch_stats(struct atm_dev *dev,struct sonet_stats __user *arg,int ze
 	return error ? -EFAULT : 0;
 }
 
-
 #define HANDLE_FLAG(flag,reg,bit) \
   if (todo & flag) { \
     if (set) PUT(GET(reg) | bit,reg); \
     else PUT(GET(reg) & ~bit,reg); \
     todo &= ~flag; \
   }
-
 
 static int change_diag(struct atm_dev *dev,void __user *arg,int set)
 {
@@ -129,9 +121,7 @@ static int change_diag(struct atm_dev *dev,void __user *arg,int set)
 	return put_user(todo,(int __user *)arg) ? -EFAULT : 0;
 }
 
-
 #undef HANDLE_FLAG
-
 
 static int get_diag(struct atm_dev *dev,void __user *arg)
 {
@@ -148,7 +138,6 @@ static int get_diag(struct atm_dev *dev,void __user *arg)
 	if (GET(TACP_CS) & SUNI_TACP_CS_DHCS) set |= SONET_INS_HCS;
 	return put_user(set,(int __user *)arg) ? -EFAULT : 0;
 }
-
 
 static int set_loopback(struct atm_dev *dev,int mode)
 {
@@ -221,12 +210,10 @@ static int set_sdh(struct atm_dev *dev)
 	return 0;
 }
 
-
 static int get_framing(struct atm_dev *dev, void __user *arg)
 {
 	int framing;
 	unsigned char s;
-
 
 	s = (GET(TPOP_APM) & SUNI_TPOP_APM_S) >> SUNI_TPOP_APM_S_SHIFT;
 	if (s == SUNI_TPOP_S_SONET)
@@ -251,7 +238,6 @@ static int set_framing(struct atm_dev *dev, void __user *arg)
 
 	return -EINVAL;
 }
-
 
 static int suni_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 {
@@ -288,7 +274,6 @@ static int suni_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 	}
 }
 
-
 static void poll_los(struct atm_dev *dev)
 {
 	atm_dev_signal_change(dev,
@@ -296,14 +281,12 @@ static void poll_los(struct atm_dev *dev)
 		ATM_PHY_SIG_LOST : ATM_PHY_SIG_FOUND);
 }
 
-
 static void suni_int(struct atm_dev *dev)
 {
 	poll_los(dev);
 	printk(KERN_NOTICE "%s(itf %d): signal %s\n",dev->type,dev->number,
 	    dev->signal == ATM_PHY_SIG_LOST ?  "lost" : "detected again");
 }
-
 
 static int suni_start(struct atm_dev *dev)
 {
@@ -339,7 +322,6 @@ printk(KERN_DEBUG "[u] p=0x%lx,n=0x%lx\n",(unsigned long) poll_timer.list.prev,
 	return 0;
 }
 
-
 static int suni_stop(struct atm_dev *dev)
 {
 	struct suni_priv **walk;
@@ -357,14 +339,12 @@ static int suni_stop(struct atm_dev *dev)
 	return 0;
 }
 
-
 static const struct atmphy_ops suni_ops = {
 	.start		= suni_start,
 	.ioctl		= suni_ioctl,
 	.interrupt	= suni_int,
 	.stop		= suni_stop,
 };
-
 
 int suni_init(struct atm_dev *dev)
 {

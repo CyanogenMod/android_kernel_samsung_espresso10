@@ -1,7 +1,7 @@
 /*
-  NinjaSCSI I/O funtions 
+  NinjaSCSI I/O funtions
       By: YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>
- 
+
   This software may be used and distributed according to the terms of
   the GNU General Public License.
 
@@ -39,7 +39,6 @@ static inline unsigned char nsp_read(unsigned int base,
 {
 	return inb(base + index);
 }
-
 
 /**********************************************************************
  * Indexed IO
@@ -172,7 +171,6 @@ static inline void nsp_fifo32_write(unsigned int   base,
 	nsp_multi_write_4(base, FIFODATA, buf, count);
 }
 
-
 /*====================================================================*/
 
 static inline void nsp_mmio_write(unsigned long base,
@@ -267,8 +265,6 @@ static inline void nsp_mmio_fifo32_write(unsigned int   base,
 	//nsp_dbg(NSP_DEBUG_DATA_IO, "buf=0x%p, count=0x%lx*4", buf, count);
 	nsp_mmio_multi_write_4(base, FIFODATA, buf, count);
 }
-
-
 
 #endif
 /* end */

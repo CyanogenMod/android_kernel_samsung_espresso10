@@ -296,7 +296,6 @@ int d40_phy_sg_to_lli(struct scatterlist *sg,
 	return total_size;
 }
 
-
 /* DMA logical lli operations */
 
 static void d40_log_lli_link(struct d40_log_lli *lli_dst,

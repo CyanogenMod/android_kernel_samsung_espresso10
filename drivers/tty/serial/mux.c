@@ -111,7 +111,7 @@ static int __init get_mux_port_count(struct parisc_device *dev)
 static unsigned int mux_tx_empty(struct uart_port *port)
 {
 	return UART_GET_FIFO_CNT(port) ? 0 : TIOCSER_TEMT;
-} 
+}
 
 /**
  * mux_set_mctrl - Set the current state of the modem control inputs.
@@ -133,7 +133,7 @@ static void mux_set_mctrl(struct uart_port *port, unsigned int mctrl)
  * treated as permanently active.
  */
 static unsigned int mux_get_mctrl(struct uart_port *port)
-{ 
+{
 	return TIOCM_CAR | TIOCM_DSR | TIOCM_CTS;
 }
 
@@ -222,7 +222,7 @@ static void mux_write(struct uart_port *port)
 
 	} while(--count > 0);
 
-	while(UART_GET_FIFO_CNT(port)) 
+	while(UART_GET_FIFO_CNT(port))
 		udelay(1);
 
 	if(uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
@@ -267,7 +267,7 @@ static void mux_read(struct uart_port *port)
 
 		tty_insert_flip_char(tty, data & 0xFF, TTY_NORMAL);
 	}
-	
+
 	if (start_count != port->icount.rx) {
 		tty_flip_buffer_push(tty);
 	}
@@ -326,7 +326,7 @@ static const char *mux_type(struct uart_port *port)
 /**
  * mux_release_port - Release memory and IO regions.
  * @port: Ptr to the uart_port.
- * 
+ *
  * Release any memory and IO region resources currently in use by
  * the port.
  */
@@ -386,7 +386,7 @@ static int mux_verify_port(struct uart_port *port, struct serial_struct *ser)
  * This function periodically polls the Serial MUX to check for new data.
  */
 static void mux_poll(unsigned long unused)
-{  
+{
 	int i;
 
 	for(i = 0; i < port_cnt; ++i) {
@@ -399,7 +399,6 @@ static void mux_poll(unsigned long unused)
 
 	mod_timer(&mux_timer, jiffies + MUX_POLL_DELAY);
 }
-
 
 #ifdef CONFIG_SERIAL_MUX_CONSOLE
 static void mux_console_write(struct console *co, const char *s, unsigned count)

@@ -166,8 +166,6 @@ static char *version =
 #include <asm/system.h>
 #include <asm/dma.h>
 
-
-
 /* Few macros */
 #define BITSET(ioaddr, bnum)   ((outb(((inb(ioaddr)) | (bnum)), ioaddr)))
 #define BITCLR(ioaddr, bnum)   ((outb(((inb(ioaddr)) & (~(bnum))), ioaddr)))
@@ -335,7 +333,6 @@ static char *version =
   #define E_PORT_AUTO          0x03
   #define E_PORT_FROM_EPROM    0x04
 #define E_PRODUCT_CFG          0x30
-
 
 /* Macro to slow down io between EEPROM clock transitions */
 #define eeprom_slow_io() do { int _i = 40; while(--_i > 0) { inb(0x80); }}while(0)
@@ -548,7 +545,6 @@ static int __init eth16i_probe1(struct net_device *dev, int ioaddr)
 	printk(KERN_INFO "%s: %s at %#3x, IRQ %d, ",
 	       dev->name, cardname, ioaddr, dev->irq);
 
-
 	/* Now we will have to lock the chip's io address */
 	eth16i_select_regbank(TRANSCEIVER_MODE_RB, ioaddr);
 	outb(0x38, ioaddr + TRANSCEIVER_MODE_REG);
@@ -573,7 +569,6 @@ out:
 	release_region(ioaddr, ETH16I_IO_EXTENT);
 	return retval;
 }
-
 
 static void eth16i_initialize(struct net_device *dev, int boot)
 {
@@ -1407,7 +1402,6 @@ static int debug = -1;
 MODULE_AUTHOR("Mika Kuoppala <miku@iki.fi>");
 MODULE_DESCRIPTION("ICL EtherTeam 16i/32 driver");
 MODULE_LICENSE("GPL");
-
 
 module_param_array(io, int, NULL, 0);
 MODULE_PARM_DESC(io, "eth16i I/O base address(es)");

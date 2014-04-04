@@ -257,7 +257,6 @@ static void __ad7879_disable(struct ad7879 *ts)
 	ad7879_write(ts, AD7879_REG_CTRL2, AD7879_PM(AD7879_PM_SHUTDOWN));
 }
 
-
 static int ad7879_open(struct input_dev *input)
 {
 	struct ad7879 *ts = input_get_drvdata(input);

@@ -56,7 +56,6 @@
 #define EEP_OFS_SETPT_CCK   0x21
 #define EEP_OFS_PWR_OFDMG   0x23
 
-
 #define EEP_OFS_CALIB_TX_IQ 0x24
 #define EEP_OFS_CALIB_TX_DC 0x25
 #define EEP_OFS_CALIB_RX_IQ 0x26

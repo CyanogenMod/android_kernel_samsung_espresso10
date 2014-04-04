@@ -74,7 +74,6 @@
 /* EMIF Configuration Area */
 #define U300_EMIF_CFG_BASE		(U300_AHB_PER_PHYS_BASE+0x4000)
 
-
 /*
  * FAST peripherals
  */
@@ -146,7 +145,6 @@
 
 /* PPM */
 #define U300_PPM_BASE			(U300_SLOW_PER_PHYS_BASE+0xb000)
-
 
 /*
  * REST peripherals

@@ -7,4 +7,3 @@ struct pxa930_trkball_platform_data {
 };
 
 #endif /* __ASM_ARCH_PXA930_TRKBALL_H */
-

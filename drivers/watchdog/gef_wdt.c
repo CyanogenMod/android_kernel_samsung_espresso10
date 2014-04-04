@@ -73,7 +73,6 @@ module_param(nowayout, int, 0);
 MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
 	__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 
-
 static int gef_wdt_toggle_wdc(int enabled_predicate, int field_shift)
 {
 	u32 data;
@@ -131,7 +130,6 @@ static void gef_wdt_set_timeout(unsigned int timeout)
 	gef_wdt_count = (timeout * bus_clk) >> 8;
 	gef_wdt_timeout = timeout;
 }
-
 
 static ssize_t gef_wdt_write(struct file *file, const char __user *data,
 				 size_t len, loff_t *ppos)
@@ -259,7 +257,6 @@ static struct miscdevice gef_wdt_miscdev = {
 	.name = "watchdog",
 	.fops = &gef_wdt_fops,
 };
-
 
 static int __devinit gef_wdt_probe(struct platform_device *dev)
 {

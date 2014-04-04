@@ -15,7 +15,6 @@
 #include <linux/rtc.h>
 #include <linux/slab.h>
 
-
 enum {
 	MSM6242_SECOND1		= 0x0,	/* 1-second digit register */
 	MSM6242_SECOND10	= 0x1,	/* 10-second digit register */
@@ -66,7 +65,6 @@ enum {
 #define MSM6242_CF_24H		(1 << 2)
 #define MSM6242_CF_STOP		(1 << 1)
 #define MSM6242_CF_REST		(1 << 0)	/* reset */
-
 
 struct msm6242_priv {
 	u32 __iomem *regs;

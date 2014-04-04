@@ -157,7 +157,6 @@ static unsigned int ipv6_confirm(unsigned int hooknum,
 	unsigned int extoff = (u8 *)(ipv6_hdr(skb) + 1) - skb->data;
 	unsigned char pnum = ipv6_hdr(skb)->nexthdr;
 
-
 	/* This is where we call the helper: as the packet goes out. */
 	ct = nf_ct_get(skb, &ctinfo);
 	if (!ct || ctinfo == IP_CT_RELATED_REPLY)

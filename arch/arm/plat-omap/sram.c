@@ -13,6 +13,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  */
+
 #undef DEBUG
 
 #include <linux/module.h>
@@ -249,13 +250,7 @@ static void __init omap_map_sram(void)
 		}
 	}
 
-
 	iotable_init(omap_sram_io_desc, nr_desc);
-
-	pr_info("SRAM: Mapped pa 0x%08llx to va 0x%08lx size: 0x%lx\n",
-		(long long) __pfn_to_phys(omap_sram_io_desc[0].pfn),
-		omap_sram_io_desc[0].virtual,
-		omap_sram_io_desc[0].length);
 
 	/*
 	 * Normally devicemaps_init() would flush caches and tlb after
@@ -398,7 +393,7 @@ static u32 (*_omap3_sram_configure_core_dpll)(
 			u32 sdrc_rfr_ctrl_1, u32 sdrc_actim_ctrl_a_1,
 			u32 sdrc_actim_ctrl_b_1, u32 sdrc_mr_1);
 
-u32 omap3_configure_core_dpll(u32 m2, u32 unlock_dll, u32 f, u32 inc,
+	u32 omap3_configure_core_dpll(u32 m2, u32 unlock_dll, u32 f, u32 inc,
 			u32 sdrc_rfr_ctrl_0, u32 sdrc_actim_ctrl_a_0,
 			u32 sdrc_actim_ctrl_b_0, u32 sdrc_mr_0,
 			u32 sdrc_rfr_ctrl_1, u32 sdrc_actim_ctrl_a_1,

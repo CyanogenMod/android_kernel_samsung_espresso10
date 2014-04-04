@@ -186,4 +186,3 @@ MACHINE_START(LOFT, "Giant Shoulder Inc Loft board")
 	.init_machine	= avila_init,
 MACHINE_END
 #endif
-

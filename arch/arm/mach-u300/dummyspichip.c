@@ -153,7 +153,6 @@ static ssize_t dummy_looptest(struct device *dev,
 	else
 		pr_info("Simple test 6: SUCCESS!\n");
 
-
 	/*
 	 * Force chip to 16 bit mode
 	 * WARNING: NEVER DO THIS IN REAL DRIVER CODE, THIS SHOULD BE STATIC!

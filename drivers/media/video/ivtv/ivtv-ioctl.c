@@ -1249,7 +1249,6 @@ static int ivtv_encoder_cmd(struct file *file, void *fh, struct v4l2_encoder_cmd
 	struct ivtv_open_id *id = fh2id(fh);
 	struct ivtv *itv = id->itv;
 
-
 	switch (enc->cmd) {
 	case V4L2_ENC_CMD_START:
 		IVTV_DEBUG_IOCTL("V4L2_ENC_CMD_START\n");

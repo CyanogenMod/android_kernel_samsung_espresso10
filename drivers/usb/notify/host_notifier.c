@@ -290,7 +290,6 @@ static struct platform_driver host_notifier_driver = {
 	},
 };
 
-
 static int __init host_notifier_init(void)
 {
 	return platform_driver_register(&host_notifier_driver);

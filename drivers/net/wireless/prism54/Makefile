@@ -5,4 +5,3 @@ prism54-objs := islpci_eth.o islpci_mgt.o \
 		islpci_hotplug.o oid_mgt.o
 
 obj-$(CONFIG_PRISM54) += prism54.o
-

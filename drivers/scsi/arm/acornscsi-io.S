@@ -135,4 +135,3 @@ acornscsi_out2:	adds	r2, r2, #2
 		mov	r3, r3, lsr #8
 		strplb	r3, [r0], #1
 		LOADREGS(fd, sp!, {r4 - r6, pc})
-

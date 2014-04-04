@@ -174,7 +174,6 @@ xor_pII_mmx_4(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 	kernel_fpu_end();
 }
 
-
 static void
 xor_pII_mmx_5(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 	      unsigned long *p3, unsigned long *p4, unsigned long *p5)
@@ -582,7 +581,6 @@ do {						\
 #define XO4(x, y)	"       xorps   "OFFS(x)"(%5), %%xmm"#y"	;\n"
 #define XO5(x, y)	"       xorps   "OFFS(x)"(%6), %%xmm"#y"	;\n"
 
-
 static void
 xor_sse_2(unsigned long bytes, unsigned long *p1, unsigned long *p2)
 {
@@ -611,7 +609,6 @@ xor_sse_2(unsigned long bytes, unsigned long *p1, unsigned long *p2)
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)
@@ -671,7 +668,6 @@ xor_sse_3(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)
@@ -738,7 +734,6 @@ xor_sse_4(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)
@@ -820,7 +815,6 @@ xor_sse_5(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)

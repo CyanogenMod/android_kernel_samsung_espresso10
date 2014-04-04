@@ -27,7 +27,6 @@
 #define RadioA_ArrayLength 246
 #define RadioB_ArrayLength 78
 
-
 typedef enum _SwChnlCmdID {
 	CmdID_End,
 	CmdID_SetTxPowerLevel,

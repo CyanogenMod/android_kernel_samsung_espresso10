@@ -105,7 +105,6 @@ struct iwl3945_rs_sta {
 	int last_txrate_idx;
 };
 
-
 /*
  * The common struct MUST be first because it is shared between
  * 3945 and 4965!
@@ -197,7 +196,6 @@ struct iwl3945_ibss_seq {
 		       le16_to_cpu(IWL_RX_HDR(x)->len)))
 #define IWL_RX_STATS(x) (&x->u.rx_frame.stats)
 #define IWL_RX_DATA(x) (IWL_RX_HDR(x)->payload)
-
 
 /******************************************************************************
  *

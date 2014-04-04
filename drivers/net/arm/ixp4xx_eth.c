@@ -108,7 +108,6 @@
 #define DEFAULT_RX_CNTRL0	RX_CNTRL0_RX_EN
 #define DEFAULT_CORE_CNTRL	CORE_MDC_EN
 
-
 /* NPE message codes */
 #define NPE_GETSTATUS			0x00
 #define NPE_EDB_SETPORTADDRESS		0x01
@@ -133,7 +132,6 @@
 #define NPE_APPENDFCSCONFIG		0x15
 #define NPE_NOTIFY_MAC_RECOVERY_DONE	0x16
 #define NPE_MAC_RECOVERY_START		0x17
-
 
 #ifdef __ARMEB__
 typedef struct sk_buff buffer_t;
@@ -229,7 +227,6 @@ struct desc {
 	u8 src_mac_5, src_mac_4, src_mac_3, src_mac_2;
 #endif
 };
-
 
 #define rx_desc_phys(port, n)	((port)->desc_tab_phys +		\
 				 (n) * sizeof(struct desc))
@@ -541,7 +538,6 @@ static void ixp4xx_mdio_remove(void)
 	mdiobus_free(mdio_bus);
 }
 
-
 static void ixp4xx_adjust_link(struct net_device *dev)
 {
 	struct port *port = netdev_priv(dev);
@@ -572,7 +568,6 @@ static void ixp4xx_adjust_link(struct net_device *dev)
 	       dev->name, port->speed, port->duplex ? "full" : "half");
 }
 
-
 static inline void debug_pkt(struct net_device *dev, const char *func,
 			     u8 *data, int len)
 {
@@ -590,7 +585,6 @@ static inline void debug_pkt(struct net_device *dev, const char *func,
 	printk("\n");
 #endif
 }
-
 
 static inline void debug_desc(u32 phys, struct desc *desc)
 {
@@ -636,7 +630,6 @@ static inline void queue_put_desc(unsigned int queue, u32 phys,
 	   length and queues >= 32 don't support this check anyway. */
 }
 
-
 static inline void dma_unmap_tx(struct port *port, struct desc *desc)
 {
 #ifdef __ARMEB__
@@ -648,7 +641,6 @@ static inline void dma_unmap_tx(struct port *port, struct desc *desc)
 			 DMA_TO_DEVICE);
 #endif
 }
-
 
 static void eth_rx_irq(void *pdev)
 {
@@ -770,7 +762,6 @@ static int eth_poll(struct napi_struct *napi, int budget)
 #endif
 	return received;		/* not all work done */
 }
-
 
 static void eth_txdone_irq(void *unused)
 {
@@ -912,7 +903,6 @@ static int eth_xmit(struct sk_buff *skb, struct net_device *dev)
 	return NETDEV_TX_OK;
 }
 
-
 static void eth_set_mcast_list(struct net_device *dev)
 {
 	struct port *port = netdev_priv(dev);
@@ -955,7 +945,6 @@ static void eth_set_mcast_list(struct net_device *dev)
 	__raw_writel(DEFAULT_RX_CNTRL0 | RX_CNTRL0_ADDR_FLTR_EN,
 		     &port->regs->rx_control[0]);
 }
-
 
 static int eth_ioctl(struct net_device *dev, struct ifreq *req, int cmd)
 {
@@ -1008,7 +997,6 @@ static const struct ethtool_ops ixp4xx_ethtool_ops = {
 	.nway_reset = ixp4xx_nway_reset,
 	.get_link = ethtool_op_get_link,
 };
-
 
 static int request_queues(struct port *port)
 {

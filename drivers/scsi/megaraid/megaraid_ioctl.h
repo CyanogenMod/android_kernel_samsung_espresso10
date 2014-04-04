@@ -84,7 +84,6 @@
 
 #define MAX_DMA_POOLS		5		/* 4k, 8k, 16k, 32k, 64k*/
 
-
 /**
  * struct uioc_t - the common ioctl packet structure
  *
@@ -153,7 +152,6 @@ typedef struct uioc {
 
 } __attribute__ ((aligned(1024),packed)) uioc_t;
 
-
 /**
  * struct mraid_hba_info - information about the controller
  *
@@ -191,7 +189,6 @@ typedef struct mraid_hba_info {
 	uint8_t		num_ldrv;
 } __attribute__ ((aligned(256), packed)) mraid_hba_info_t;
 
-
 /**
  * mcontroller	: adapter info structure for old mimd_t apps
  *
@@ -221,7 +218,6 @@ typedef struct mcontroller {
 
 } __attribute__ ((packed)) mcontroller_t;
 
-
 /**
  * mm_dmapool_t	: Represents one dma pool with just one buffer
  *
@@ -240,7 +236,6 @@ typedef struct mm_dmapool {
 	spinlock_t	lock;
 	uint8_t		in_use;
 } mm_dmapool_t;
-
 
 /**
  * mraid_mmadp_t: Structure that drivers pass during (un)registration

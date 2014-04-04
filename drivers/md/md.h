@@ -1,15 +1,15 @@
 /*
    md_k.h : kernel internal structure of the Linux MD driver
           Copyright (C) 1996-98 Ingo Molnar, Gadi Oxman
-	  
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
-   
+
    You should have received a copy of the GNU General Public License
    (for example /usr/src/linux/COPYING); if not, write to the Free
-   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  
+   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifndef _MD_MD_H
@@ -133,7 +133,7 @@ struct mddev_s
 						       * are happening, so run/
 						       * takeover/stop are not safe
 						       */
-	int				ready; /* See when safe to pass 
+	int				ready; /* See when safe to pass
 						* IO requests down */
 	struct gendisk			*gendisk;
 
@@ -214,7 +214,7 @@ struct mddev_s
 	int				parallel_resync;
 
 	int				ok_start_degraded;
-	/* recovery/resync flags 
+	/* recovery/resync flags
 	 * NEEDED:   we might need to start a resync/recover
 	 * RUNNING:  a thread is running, or about to be started
 	 * SYNC:     actually doing a resync, not a recovery
@@ -285,10 +285,10 @@ struct mddev_s
 
 	unsigned int			safemode;	/* if set, update "clean" superblock
 							 * when no writes pending.
-							 */ 
+							 */
 	unsigned int			safemode_delay;
 	struct timer_list		safemode_timer;
-	atomic_t			writes_pending; 
+	atomic_t			writes_pending;
 	struct request_queue		*queue;	/* for plugging ... */
 
 	struct bitmap                   *bitmap; /* the bitmap for the device */
@@ -298,7 +298,7 @@ struct mddev_s
 						 * start of bitmap. May be
 						 * negative, but not '0'
 						 * For external metadata, offset
-						 * from start of device. 
+						 * from start of device.
 						 */
 		loff_t			default_offset; /* this is the offset to use when
 							 * hot-adding a bitmap.  It should
@@ -334,7 +334,6 @@ struct mddev_s
 	void (*sync_super)(mddev_t *mddev, mdk_rdev_t *rdev);
 };
 
-
 static inline void rdev_dec_pending(mdk_rdev_t *rdev, mddev_t *mddev)
 {
 	int faulty = test_bit(Faulty, &rdev->flags);
@@ -358,7 +357,7 @@ struct mdk_personality
 	int (*stop)(mddev_t *mddev);
 	void (*status)(struct seq_file *seq, mddev_t *mddev);
 	/* error_handler must set ->faulty and clear ->in_sync
-	 * if appropriate, and should abort recovery if needed 
+	 * if appropriate, and should abort recovery if needed
 	 */
 	void (*error_handler)(mddev_t *mddev, mdk_rdev_t *rdev);
 	int (*hot_add_disk) (mddev_t *mddev, mdk_rdev_t *rdev);
@@ -387,7 +386,6 @@ struct mdk_personality
 	 */
 	void *(*takeover) (mddev_t *mddev);
 };
-
 
 struct md_sysfs_entry {
 	struct attribute attr;
@@ -488,7 +486,7 @@ extern void md_flush_request(mddev_t *mddev, struct bio *bio);
 extern void md_super_write(mddev_t *mddev, mdk_rdev_t *rdev,
 			   sector_t sector, int size, struct page *page);
 extern void md_super_wait(mddev_t *mddev);
-extern int sync_page_io(mdk_rdev_t *rdev, sector_t sector, int size, 
+extern int sync_page_io(mdk_rdev_t *rdev, sector_t sector, int size,
 			struct page *page, int rw, bool metadata_op);
 extern void md_do_sync(mddev_t *mddev);
 extern void md_new_event(mddev_t *mddev);

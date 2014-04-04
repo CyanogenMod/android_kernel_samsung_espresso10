@@ -277,7 +277,6 @@ static int __init atiixp_init(void)
 	return pci_register_driver(&atiixp_pci_driver);
 }
 
-
 static void __exit atiixp_exit(void)
 {
 	pci_unregister_driver(&atiixp_pci_driver);

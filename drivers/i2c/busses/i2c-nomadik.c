@@ -854,7 +854,6 @@ static irqreturn_t i2c_irq_handler(int irq, void *arg)
 	return IRQ_HANDLED;
 }
 
-
 #ifdef CONFIG_PM
 static int nmk_i2c_suspend(struct device *dev)
 {

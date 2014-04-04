@@ -26,8 +26,6 @@
 
 #define trace_eeprom(...) pvr2_trace(PVR2_TRACE_EEPROM,__VA_ARGS__)
 
-
-
 /*
 
    Read and analyze data in the eeprom.  Use tveeprom to figure out
@@ -112,7 +110,6 @@ static u8 *pvr2_eeprom_fetch(struct pvr2_hdw *hdw)
 	}
 	return eeprom;
 }
-
 
 /* Directly call eeprom analysis function within tveeprom. */
 int pvr2_eeprom_analyze(struct pvr2_hdw *hdw)

@@ -245,4 +245,3 @@ int ext4_data_block_valid(struct ext4_sb_info *sbi, ext4_fsblk_t start_blk,
 	}
 	return 1;
 }
-

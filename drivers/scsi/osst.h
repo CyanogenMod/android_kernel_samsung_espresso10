@@ -37,7 +37,7 @@ typedef struct {
  */
 typedef struct {
 	unsigned	reserved0_10	:2;	/* Reserved */
-	unsigned	bpu		:1;	/* Block Position Unknown */	
+	unsigned	bpu		:1;	/* Block Position Unknown */
 	unsigned	reserved0_543	:3;	/* Reserved */
 	unsigned	eop		:1;	/* End Of Partition */
 	unsigned	bop		:1;	/* Beginning Of Partition */
@@ -52,7 +52,7 @@ typedef struct {
 
 /*
  *      Follows structures which are related to the SELECT SENSE / MODE SENSE
- *      packet commands. 
+ *      packet commands.
  */
 #define COMPRESSION_PAGE           0x0f
 #define COMPRESSION_PAGE_LENGTH    16
@@ -79,7 +79,6 @@ typedef struct {
 #define LOCATE_STATUS_PAGE_LENGTH  0
 
 #define MODE_HEADER_LENGTH         4
-
 
 /*
  *	REQUEST SENSE packet command result - Data Format.
@@ -254,7 +253,7 @@ typedef struct {
 #if   defined(__BIG_ENDIAN_BITFIELD)
         unsigned        cmprs           :1;     /* Supports data compression */
         unsigned        ecc             :1;     /* Supports error correction */
-	unsigned        reserved6_45    :2;     /* Reserved */  
+	unsigned        reserved6_45    :2;     /* Reserved */
         unsigned        eject           :1;     /* The device can eject the volume */
         unsigned        prevent         :1;     /* The device defaults in the prevent state after power up */
         unsigned        locked          :1;     /* The volume is locked */
@@ -264,7 +263,7 @@ typedef struct {
         unsigned        locked          :1;     /* The volume is locked */
         unsigned        prevent         :1;     /* The device defaults in the prevent state after power up */
         unsigned        eject           :1;     /* The device can eject the volume */
-	unsigned        reserved6_45    :2;     /* Reserved */  
+	unsigned        reserved6_45    :2;     /* Reserved */
         unsigned        ecc             :1;     /* Supports error correction */
         unsigned        cmprs           :1;     /* Supports data compression */
 #else
@@ -497,7 +496,6 @@ typedef struct os_header_s {
 	os_fm_tab_t	qfa_fm_tab;
 	__u8		reserved25960_32767[6808];
 } os_header_t;
-
 
 /*
  * OnStream ADRL frame

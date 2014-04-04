@@ -39,7 +39,6 @@ struct pcf8583 {
 #define CTRL_ALARM	0x02
 #define CTRL_TIMER	0x01
 
-
 static struct i2c_driver pcf8583_driver;
 
 #define get_ctrl(x)    ((struct pcf8583 *)i2c_get_clientdata(x))->ctrl

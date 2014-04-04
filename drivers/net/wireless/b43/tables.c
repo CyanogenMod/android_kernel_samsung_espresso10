@@ -29,7 +29,6 @@
 #include "tables.h"
 #include "phy_g.h"
 
-
 const u32 b43_tab_rotor[] = {
 	0xFEB93FFD, 0xFEC63FFD,	/* 0 */
 	0xFED23FFD, 0xFEDF3FFD,

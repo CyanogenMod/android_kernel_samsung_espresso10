@@ -72,7 +72,6 @@ extern void xtboard_get_ether_addr(unsigned char *buf);
 #define SONIC_WRITE(reg,val) \
 	*((volatile unsigned int *)dev->base_addr+reg) = val
 
-
 /* Use 0 for production, 1 for verification, and >2 for debug */
 #ifdef SONIC_DEBUG
 static unsigned int sonic_debug = SONIC_DEBUG;
@@ -241,7 +240,6 @@ out:
 	release_region(dev->base_addr, SONIC_MEM_SIZE);
 	return err;
 }
-
 
 /*
  * Probe for a SONIC ethernet controller on an XT2000 board.

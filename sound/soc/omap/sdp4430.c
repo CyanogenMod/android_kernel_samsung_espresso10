@@ -67,7 +67,6 @@ static struct snd_soc_codec *twl6040_codec;
 #endif
 struct regulator *twl6040_clk32kreg;
 
-
 #ifdef CONFIG_MACH_TUNA
 
 static int main_mic_bias_event(struct snd_soc_dapm_widget *w,
@@ -317,7 +316,6 @@ static int sdp4430_mcbsp_hw_params(struct snd_pcm_substream *substream,
 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
 	int ret = 0;
 	unsigned int be_id, fmt, channels;
-
 
         be_id = rtd->dai_link->be_id;
 
@@ -630,7 +628,6 @@ static int sdp4430_twl6040_init(struct snd_soc_pcm_runtime *rtd)
 	struct twl6040 *twl6040 = codec->control_data;
 	struct snd_soc_dapm_context *dapm = &codec->dapm;
 	int hsotrim, left_offset, right_offset, mode, ret;
-
 
 	/* Add SDP4430 specific controls */
 	ret = snd_soc_add_controls(codec, sdp4430_controls,
@@ -1413,4 +1410,3 @@ module_exit(sdp4430_soc_exit);
 MODULE_AUTHOR("Misael Lopez Cruz <x0052729@ti.com>");
 MODULE_DESCRIPTION("ALSA SoC SDP4430");
 MODULE_LICENSE("GPL");
-

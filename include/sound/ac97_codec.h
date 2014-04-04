@@ -331,7 +331,7 @@
 /* S/PDIF input status 2 bit defines */
 #define AC97_ALC650_SOUCE_MASK      0x000f  /* Source number */
 #define AC97_ALC650_CHANNEL_MASK    0x00f0  /* Channel number */
-#define AC97_ALC650_CHANNEL_SHIFT   4 
+#define AC97_ALC650_CHANNEL_SHIFT   4
 #define AC97_ALC650_SPSR_MASK       0x0f00  /* S/PDIF Sample Rate bits */
 #define AC97_ALC650_SPSR_SHIFT      8
 #define AC97_ALC650_SPSR_44K        0x0000  /* Use 44.1kHz Sample rate */
@@ -371,7 +371,6 @@
 #define AC97_WM9704_TEST        0x5a
 #define AC97_WM9704_RPCM_VOL    0x70
 #define AC97_WM9711_OUT3VOL     0x16
-
 
 /* ac97->scaps */
 #define AC97_SCAP_AUDIO		(1<<0)	/* audio codec 97 */

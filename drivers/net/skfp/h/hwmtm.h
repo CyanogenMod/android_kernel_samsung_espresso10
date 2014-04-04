@@ -49,7 +49,6 @@
 #define	RX_DISABLE_LLC_PROMISC	28
 #define	RX_ENABLE_LLC_PROMISC	29
 
-
 #ifndef	DMA_RD
 #define DMA_RD		1	/* memory -> hw */
 #endif
@@ -68,7 +67,6 @@
 #define	LAN_TX		0x20	/* send frame to network if set */
 #define RING_DOWN	0x40	/* error: unable to send, ring down */
 #define OUT_OF_TXD	0x80	/* error: not enough TxDs available */
-
 
 #ifndef NULL
 #define NULL 		0
@@ -157,7 +155,6 @@ struct hw_modul {
 	u_long	rx_len_error ;		/* rx len FORMAC != sum of fragments */
 } ;
 
-
 /*
  * DEBUG structs and macros
  */
@@ -189,7 +186,6 @@ struct os_debug {
 #ifndef	SK_BREAK
 #define	SK_BREAK()
 #endif
-
 
 /*
  * HWM Macros

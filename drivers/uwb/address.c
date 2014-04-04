@@ -32,14 +32,12 @@
 
 #include "uwb-internal.h"
 
-
 /** Device Address Management command */
 struct uwb_rc_cmd_dev_addr_mgmt {
 	struct uwb_rccb rccb;
 	u8 bmOperationType;
 	u8 baAddr[6];
 } __attribute__((packed));
-
 
 /**
  * Low level command for setting/getting UWB radio's addresses
@@ -105,7 +103,6 @@ error_kzalloc:
 	return result;
 }
 
-
 /**
  * Set the UWB RC MAC or device address.
  *
@@ -145,7 +142,6 @@ static int uwb_rc_addr_set(struct uwb_rc *rc,
 	}
 	return uwb_rc_dev_addr_mgmt(rc, bmOperationType, baAddr, &reply);
 }
-
 
 /**
  * Get the UWB radio's MAC or device address.
@@ -198,7 +194,6 @@ static int uwb_rc_addr_get(struct uwb_rc *rc,
 	return result;
 }
 
-
 /** Get @rc's MAC address to @addr */
 int uwb_rc_mac_addr_get(struct uwb_rc *rc,
 			struct uwb_mac_addr *addr) {
@@ -206,14 +201,12 @@ int uwb_rc_mac_addr_get(struct uwb_rc *rc,
 }
 EXPORT_SYMBOL_GPL(uwb_rc_mac_addr_get);
 
-
 /** Get @rc's device address to @addr */
 int uwb_rc_dev_addr_get(struct uwb_rc *rc,
 			struct uwb_dev_addr *addr) {
 	return uwb_rc_addr_get(rc, addr, UWB_ADDR_DEV);
 }
 EXPORT_SYMBOL_GPL(uwb_rc_dev_addr_get);
-
 
 /** Set @rc's address to @addr */
 int uwb_rc_mac_addr_set(struct uwb_rc *rc,
@@ -225,7 +218,6 @@ int uwb_rc_mac_addr_set(struct uwb_rc *rc,
 	mutex_unlock(&rc->uwb_dev.mutex);
 	return result;
 }
-
 
 /** Set @rc's address to @addr */
 int uwb_rc_dev_addr_set(struct uwb_rc *rc,

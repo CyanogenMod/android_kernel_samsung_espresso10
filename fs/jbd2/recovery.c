@@ -52,7 +52,6 @@ static void journal_brelse_array(struct buffer_head *b[], int n)
 		brelse (b[n]);
 }
 
-
 /*
  * When reading from the journal, we are going through the block device
  * layer directly and so there is no readahead being done for us.  We
@@ -123,7 +122,6 @@ failed:
 
 #endif /* __KERNEL__ */
 
-
 /*
  * Read a block from the journal
  */
@@ -173,7 +171,6 @@ static int jread(struct buffer_head **bhp, journal_t *journal,
 	return 0;
 }
 
-
 /*
  * Count the number of in-use tags in a journal descriptor block.
  */
@@ -201,7 +198,6 @@ static int count_tags(journal_t *journal, struct buffer_head *bh)
 
 	return nr;
 }
-
 
 /* Make sure we wrap around the log correctly! */
 #define wrap(journal, var)						\
@@ -297,7 +293,7 @@ int jbd2_journal_skip_recovery(journal_t *journal)
 		++journal->j_transaction_sequence;
 	} else {
 #ifdef CONFIG_JBD2_DEBUG
-		int dropped = info.end_transaction - 
+		int dropped = info.end_transaction -
 			be32_to_cpu(journal->j_superblock->s_sequence);
 		jbd_debug(1,
 			  "JBD: ignoring %d transaction%s from the journal.\n",
@@ -702,7 +698,6 @@ static int do_one_pass(journal_t *journal,
  failed:
 	return err;
 }
-
 
 /* Scan a revoke record, marking all blocks mentioned as revoked. */
 

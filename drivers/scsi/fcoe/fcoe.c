@@ -2144,7 +2144,6 @@ static int fcoe_hostlist_add(const struct fc_lport *lport)
 	return 0;
 }
 
-
 static struct fcoe_transport fcoe_sw_transport = {
 	.name = {FCOE_TRANSPORT_DEFAULT},
 	.attached = false,

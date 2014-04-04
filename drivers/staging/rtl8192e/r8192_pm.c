@@ -20,7 +20,6 @@ int rtl8192E_save_state (struct pci_dev *dev, pm_message_t state)
 	return -EAGAIN;
 }
 
-
 int rtl8192E_suspend (struct pci_dev *pdev, pm_message_t state)
 {
 	struct net_device *dev = pci_get_drvdata(pdev);
@@ -97,8 +96,6 @@ int rtl8192E_resume (struct pci_dev *pdev)
 		pci_write_config_dword(pdev, 0x40, val & 0xffff00ff);
 	}
 
-
-
 	pci_enable_wake(pdev, PCI_D0, 0);
 
 	if(!netif_running(dev))
@@ -113,7 +110,6 @@ out:
         RT_TRACE(COMP_POWER, "<================r8192E resume call.\n");
 	return 0;
 }
-
 
 int rtl8192E_enable_wake (struct pci_dev *dev, pm_message_t state, int enable)
 {

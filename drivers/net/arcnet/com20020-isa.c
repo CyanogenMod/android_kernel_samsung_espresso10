@@ -1,6 +1,6 @@
 /*
  * Linux ARCnet driver - COM20020 chipset support
- * 
+ *
  * Written 1997 by David Woodhouse.
  * Written 1994-1999 by Avery Pennarun.
  * Written 1999-2000 by Martin Mares <mj@ucw.cz>.
@@ -41,7 +41,6 @@
 #include <asm/io.h>
 
 #define VERSION "arcnet: COM20020 ISA support (by David Woodhouse et al.)\n"
-
 
 /*
  * We cannot (yet) probe for an IO mapped card, although we can check that

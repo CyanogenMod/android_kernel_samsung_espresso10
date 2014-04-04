@@ -385,7 +385,6 @@ static struct chips_init_reg chips_init_cr[] =
 	{0x70, 0x00}		/* Interlace control */
 };
 
-
 static struct chips_init_reg chips_init_fr[] =
 {
 	{0x01, 0x02},
@@ -426,7 +425,6 @@ static struct chips_init_reg chips_init_fr[] =
 	{0x17, 0xbd},
 	{0x1a, 0x00},
 };
-
 
 static struct chips_init_reg chips_init_xr[] =
 {

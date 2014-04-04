@@ -38,7 +38,6 @@
 #define AP_CONTROL_3A   isaIO2mem(AP_IOBASE+0xe)	/* Control Register 3a. Read/Write */
 #define AP_CONTROL_2    isaIO2mem(AP_IOBASE+0xc)	/* Control Register 2. Read/Write */
 
-
 #define FRAME_BUFFER_START 0x0FA0000
 #define FRAME_BUFFER_LEN 0x40000
 

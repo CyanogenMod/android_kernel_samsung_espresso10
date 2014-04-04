@@ -171,7 +171,6 @@ config DVB_TUNER_CX24113
 	help
 	  A DVB-S tuner module. Say Y when you want to support this frontend.
 
-
 config DVB_TDA826X
 	tristate "Philips TDA826X silicon tuner"
 	depends on DVB_CORE && I2C

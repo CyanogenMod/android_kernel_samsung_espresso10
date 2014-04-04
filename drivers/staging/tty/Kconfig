@@ -84,4 +84,3 @@ config SERIAL167
 	  This is the driver for the serial ports on the Motorola MVME166,
 	  167, and 172 boards.  Everyone using one of these boards should say
 	  Y here.
-

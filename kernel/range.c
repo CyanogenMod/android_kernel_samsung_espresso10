@@ -80,7 +80,6 @@ void subtract_range(struct range *range, int az, u64 start, u64 end)
 			continue;
 		}
 
-
 		if (start > range[j].start && end >= range[j].end &&
 		    range[j].end > start) {
 			range[j].end = start;

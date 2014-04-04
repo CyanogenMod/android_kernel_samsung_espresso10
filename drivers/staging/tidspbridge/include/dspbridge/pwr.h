@@ -25,7 +25,6 @@
 #define PWR_EMERGENCYDEEPSLEEP  MBX_PM_EMERGENCYSLEEP
 #define PWR_WAKEUP              MBX_PM_DSPWAKEUP
 
-
 /*
  *  ======== pwr_sleep_dsp ========
  *      Signal the DSP to go to sleep.

@@ -356,7 +356,6 @@ int exofs_sync_fs(struct super_block *sb, int wait)
 	else
 		sb->s_dirt = 0;
 
-
 	unlock_super(sb);
 out:
 	EXOFS_DBGMSG("s_nextid=0x%llx ret=%d\n", _LLU(sbi->s_nextid), ret);

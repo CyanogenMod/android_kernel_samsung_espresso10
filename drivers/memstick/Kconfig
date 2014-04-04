@@ -18,7 +18,6 @@ config MEMSTICK_DEBUG
 	  This is an option for use by developers; most people should
 	  say N here.  This enables MemoryStick core and driver debugging.
 
-
 source "drivers/memstick/core/Kconfig"
 
 source "drivers/memstick/host/Kconfig"

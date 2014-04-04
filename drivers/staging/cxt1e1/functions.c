@@ -24,7 +24,6 @@
 #include "libsbew.h"
 #include "pmcc4.h"
 
-
 #ifdef SBE_INCLUDE_SYMBOLS
 #define STATIC
 #else
@@ -48,7 +47,6 @@ extern int  unregister_hdlc_device_v7 (hdlc_device *);
 #define V7(x) x
 #endif
 
-
 #ifndef USE_MAX_INT_DELAY
 static int  dummy = 0;
 
@@ -56,7 +54,6 @@ static int  dummy = 0;
 
 extern int  cxt1e1_log_level;
 extern int  drvr_state;
-
 
 #if 1
 u_int32_t
@@ -95,7 +92,6 @@ pci_write_32 (u_int32_t *p, u_int32_t v)
 }
 #endif
 
-
 void
 pci_flush_write (ci_t * ci)
 {
@@ -109,7 +105,6 @@ pci_flush_write (ci_t * ci)
      * previously written data
      */
 }
-
 
 STATIC void
 watchdog_func (unsigned long arg)
@@ -177,7 +172,6 @@ OS_uwait_dummy (void)
 #endif
 }
 
-
 void
 OS_sem_init (void *sem, int state)
 {
@@ -195,7 +189,6 @@ OS_sem_init (void *sem, int state)
         break;
     }
 }
-
 
 int
 sd_line_is_ok (void *user)
@@ -260,7 +253,6 @@ void sd_recv_consume(void *token, size_t len, void *user)
     netif_rx(skb);
 }
 
-
 /**
  ** Read some reserved location w/in the COMET chip as a usable
  ** VMETRO trigger point or other trace marking event.
@@ -276,7 +268,6 @@ VMETRO_TRACE (void *x)
 
     pci_write_32 ((u_int32_t *) &CI->cpldbase->leds, y);
 }
-
 
 void
 VMETRO_TRIGGER (ci_t * ci, int x)
@@ -351,6 +342,5 @@ VMETRO_TRIGGER (ci_t * ci, int x)
         break;
     }
 }
-
 
 /***  End-of-File  ***/

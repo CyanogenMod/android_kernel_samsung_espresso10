@@ -161,4 +161,3 @@ int omap_vc_bypass_scale_voltage(struct voltagedomain *voltdm,
 int omap_vc_bypass_send_i2c_msg(struct voltagedomain *voltdm,
 		u8 slave_addr, u8 reg_addr, u8 data);
 #endif
-

@@ -122,7 +122,6 @@ static struct device_attribute *atm_attrs[] = {
 	NULL
 };
 
-
 static int atm_uevent(struct device *cdev, struct kobj_uevent_env *env)
 {
 	struct atm_dev *adev;

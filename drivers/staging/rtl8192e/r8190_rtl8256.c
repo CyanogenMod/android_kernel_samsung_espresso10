@@ -64,7 +64,6 @@ void PHY_SetRF8256Bandwidth(struct r8192_priv *priv, HT_CHANNEL_WIDTH Bandwidth)
 					RT_TRACE(COMP_ERR, "PHY_SetRF8256Bandwidth(): unknown hardware version\n");
 				}
 
-
 				break;
 			default:
 				RT_TRACE(COMP_ERR, "PHY_SetRF8256Bandwidth(): unknown Bandwidth: %#X\n",Bandwidth );
@@ -225,7 +224,6 @@ phy_RF8256_Config_ParaFile_Fail:
 	return RT_STATUS_FAILURE;
 }
 
-
 void PHY_SetRF8256CCKTxPower(struct r8192_priv *priv, u8 powerlevel)
 {
 	u32	TxAGC=0;
@@ -242,7 +240,6 @@ void PHY_SetRF8256CCKTxPower(struct r8192_priv *priv, u8 powerlevel)
 		TxAGC = 0x24;
 	rtl8192_setBBreg(priv, rTxAGC_CCK_Mcs32, bTxAGCRateCCK, TxAGC);
 }
-
 
 void PHY_SetRF8256OFDMTxPower(struct r8192_priv *priv, u8 powerlevel)
 {
@@ -396,7 +393,6 @@ static bool SetRFPowerState8190(struct r8192_priv *priv,
 		//
 		r8192e_drain_tx_queues(priv);
 
-
 		if (pPSC->RegRfPsLevel & RT_RF_OFF_LEVL_HALT_NIC && !RT_IN_PS_LEVEL(pPSC, RT_RF_OFF_LEVL_HALT_NIC))
 		{
 			/* Disable all components. */
@@ -425,10 +421,6 @@ static bool SetRFPowerState8190(struct r8192_priv *priv,
 out:
 	return bResult;
 }
-
-
-
-
 
 static void MgntDisconnectIBSS(struct r8192_priv *priv)
 {
@@ -546,7 +538,6 @@ static void MlmeDisassociateRequest(struct r8192_priv *priv, u8 *asSta,
 
 }
 
-
 static void MgntDisconnectAP(struct r8192_priv *priv, u8 asRsn)
 {
 	bool bFilterOutNonAssociatedBSSID = false;
@@ -571,7 +562,6 @@ static void MgntDisconnectAP(struct r8192_priv *priv, u8 asRsn)
 
 	priv->ieee80211->state = IEEE80211_NOLINK;
 }
-
 
 static bool MgntDisconnect(struct r8192_priv *priv, u8 asRsn)
 {
@@ -627,7 +617,6 @@ bool MgntActSet_RF_State(struct r8192_priv *priv, RT_RF_POWER_STATE StateToSet,
 			priv->RfOffReason = 0;
 			bActionAllowed = true;
 
-
 			if(rtState == eRfOff && ChangeSource >=RF_CHANGE_BY_HW )
 			{
 				bConnectBySSID = true;
@@ -673,5 +662,3 @@ bool MgntActSet_RF_State(struct r8192_priv *priv, RT_RF_POWER_STATE StateToSet,
 	RT_TRACE(COMP_POWER, "<===MgntActSet_RF_State()\n");
 	return bActionAllowed;
 }
-
-

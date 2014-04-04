@@ -42,4 +42,3 @@ ENTRY(ecard_loader_reset)
 		mov	lr, pc
 		add	pc, r1, #8
 		ldmfd	sp!, {r4 - r12, pc}
-

@@ -15,7 +15,6 @@
 #ifndef _INET_TIMEWAIT_SOCK_
 #define _INET_TIMEWAIT_SOCK_
 
-
 #include <linux/kmemcheck.h>
 #include <linux/list.h>
 #include <linux/module.h>

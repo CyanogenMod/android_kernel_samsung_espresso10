@@ -1,4 +1,3 @@
-
 #ifdef __KERNEL__
 # include <linux/slab.h>
 #else
@@ -147,5 +146,3 @@ void crush_destroy(struct crush_map *map)
 	kfree(map->device_parents);
 	kfree(map);
 }
-
-

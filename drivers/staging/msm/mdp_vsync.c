@@ -229,7 +229,6 @@ void mdp_config_vsync(struct msm_fb_data_type *mfd)
 				MDP_OUTP(MDP_BASE + MDP_PRIM_VSYNC_OUT_CTRL,
 							BIT(30) | BIT(0));
 
-
 				/* threshold */
 				MDP_OUTP(MDP_BASE + 0x200,
 					 (vsync_above_th << 16) |

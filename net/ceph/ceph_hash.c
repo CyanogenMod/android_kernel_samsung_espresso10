@@ -1,4 +1,3 @@
-
 #include <linux/ceph/types.h>
 #include <linux/module.h>
 
@@ -92,7 +91,6 @@ unsigned ceph_str_hash_linux(const char *str, unsigned length)
 	}
 	return hash;
 }
-
 
 unsigned ceph_str_hash(int type, const char *s, unsigned len)
 {

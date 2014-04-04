@@ -4,7 +4,7 @@
  * Copyright (C) 2008-2010 Nokia Corporation
  *
  * Written by Hiroshi DOYU <Hiroshi.DOYU@nokia.com>,
- *		Paul Mundt and Toshihiro Kobayashi
+ *	      Paul Mundt and Toshihiro Kobayashi
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -261,7 +261,6 @@ int load_iotlb_entry(struct iommu *obj, struct iotlb_entry *e)
 				break;
 
 		if (i == obj->nr_tlb_entries) {
-			dev_dbg(obj->dev, "%s: full: no entry\n", __func__);
 			err = -EBUSY;
 			goto out;
 		}
@@ -319,15 +318,10 @@ void flush_iotlb_page(struct iommu *obj, u32 da)
 		bytes = iopgsz_to_bytes(cr.cam & 3);
 
 		if ((start <= da) && (da < start + bytes)) {
-			dev_dbg(obj->dev, "%s: %08x<=%08x(%x)\n",
-				__func__, start, da, bytes);
 			iotlb_load_cr(obj, &cr);
 			iommu_write_reg(obj, 1, MMU_FLUSH_ENTRY);
 		}
 	}
-
-	if (i == obj->nr_tlb_entries)
-		dev_dbg(obj->dev, "%s: no page for %08x\n", __func__, da);
 }
 EXPORT_SYMBOL_GPL(flush_iotlb_page);
 
@@ -460,7 +454,6 @@ static void flush_iopgd_range(u32 *first, u32 *last)
 	outer_flush_range(virt_to_phys(first), virt_to_phys(last));
 }
 
-
 static void flush_iopte_range(u32 *first, u32 *last)
 {
 	dmac_flush_range(first, last);
@@ -494,8 +487,6 @@ static u32 *iopte_alloc(struct iommu *obj, u32 *iopgd, u32 da)
 
 		*iopgd = virt_to_phys(iopte) | IOPGD_TABLE;
 		flush_iopgd_range(iopgd, iopgd + 1);
-
-		dev_vdbg(obj->dev, "%s: a new pte:%p\n", __func__, iopte);
 	} else {
 		/* We raced, free the reduniovant table */
 		iopte_free(iopte);
@@ -503,10 +494,6 @@ static u32 *iopte_alloc(struct iommu *obj, u32 *iopgd, u32 da)
 
 pte_ready:
 	iopte = iopte_offset(iopgd, da);
-
-	dev_vdbg(obj->dev,
-		 "%s: da:%08x pgd:%p *pgd:%08x pte:%p *pte:%08x\n",
-		 __func__, da, iopgd, *iopgd, iopte, *iopte);
 
 	return iopte;
 }
@@ -553,9 +540,6 @@ static int iopte_alloc_page(struct iommu *obj, u32 da, u32 pa, u32 prot)
 
 	*iopte = (pa & IOPAGE_MASK) | prot | IOPTE_SMALL;
 	flush_iopte_range(iopte, iopte + 1);
-
-	dev_vdbg(obj->dev, "%s: da:%08x pa:%08x pte:%p *pte:%08x\n",
-		 __func__, da, pa, iopte, *iopte);
 
 	return 0;
 }

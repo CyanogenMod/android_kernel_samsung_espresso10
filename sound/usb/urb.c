@@ -93,7 +93,6 @@ static int deactivate_urbs(struct snd_usb_substream *subs, int force, int can_sl
 	return 0;
 }
 
-
 /*
  * release a urb data
  */
@@ -147,8 +146,10 @@ void snd_usb_release_substream_urbs(struct snd_usb_substream *subs, int force)
 	int i;
 
 	/* stop urbs (to be sure) */
-	deactivate_urbs(subs, force, 1);
-	wait_clear_urbs(subs);
+	if (!subs->stream->chip->shutdown) {
+		deactivate_urbs(subs, force, 1);
+		wait_clear_urbs(subs);
+	}
 
 	for (i = 0; i < MAX_URBS; i++)
 		release_urb_ctx(&subs->dataurb[i]);
@@ -182,7 +183,6 @@ static void snd_complete_urb(struct urb *urb)
 	}
 }
 
-
 /*
  * complete callback from sync urb
  */
@@ -204,7 +204,6 @@ static void snd_complete_sync_urb(struct urb *urb)
 		}
 	}
 }
-
 
 /*
  * initialize a substream for plaback/capture
@@ -511,7 +510,6 @@ static int retire_paused_capture_urb(struct snd_usb_substream *subs,
 {
 	return 0;
 }
-
 
 /*
  * prepare urb for playback sync pipe
@@ -835,7 +833,6 @@ static int start_urbs(struct snd_usb_substream *subs, struct snd_pcm_runtime *ru
 	return -EPIPE;
 }
 
-
 /*
  */
 static struct snd_urb_ops audio_urb_ops[2] = {
@@ -870,7 +867,8 @@ void snd_usb_init_substream(struct snd_usb_stream *as,
 	subs->dev = as->chip->dev;
 	subs->txfr_quirk = as->chip->txfr_quirk;
 	subs->ops = audio_urb_ops[stream];
-	if (snd_usb_get_speed(subs->dev) >= USB_SPEED_HIGH)
+	subs->speed = snd_usb_get_speed(subs->dev);
+	if (subs->speed >= USB_SPEED_HIGH)
 		subs->ops.prepare_sync = prepare_capture_sync_urb_hs;
 
 	snd_usb_set_pcm_ops(as->pcm, stream);
@@ -938,4 +936,3 @@ int snd_usb_substream_prepare(struct snd_usb_substream *subs,
 
 	return 0;
 }
-

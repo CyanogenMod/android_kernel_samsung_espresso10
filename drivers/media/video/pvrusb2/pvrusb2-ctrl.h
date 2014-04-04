@@ -29,7 +29,6 @@ enum pvr2_ctl_type {
 	pvr2_ctl_bool = 3,
 };
 
-
 /* Set the given control. */
 int pvr2_ctrl_set_value(struct pvr2_ctrl *,int val);
 

@@ -79,4 +79,3 @@ const struct clkops clkops_omap2_mdmclk_dflt_wait = {
 	.allow_idle	= omap2_clkt_iclk_allow_idle,
 	.deny_idle	= omap2_clkt_iclk_deny_idle,
 };
-

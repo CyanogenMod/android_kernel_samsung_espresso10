@@ -1,4 +1,4 @@
-/* 
+/*
  * madgemc.h: Header for the madgemc tms380tr module
  *
  * Authors:
@@ -13,7 +13,7 @@
 #define MADGEMC16_CARDNAME "Madge Smart 16/4 MC16 Ringnode"
 #define MADGEMC32_CARDNAME "Madge Smart 16/4 MC32 Ringnode"
 
-/* 
+/*
  * Bit definitions for the POS config registers
  */
 #define MC16_POS0_ADDR1 0x20

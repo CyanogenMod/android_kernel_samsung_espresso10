@@ -19,7 +19,6 @@ ext4_xattr_security_list(struct dentry *dentry, char *list, size_t list_size,
 	const size_t prefix_len = sizeof(XATTR_SECURITY_PREFIX)-1;
 	const size_t total_len = prefix_len + name_len + 1;
 
-
 	if (list && total_len <= list_size) {
 		memcpy(list, XATTR_SECURITY_PREFIX, prefix_len);
 		memcpy(list+prefix_len, name, name_len);

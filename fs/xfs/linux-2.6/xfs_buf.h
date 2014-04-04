@@ -165,7 +165,6 @@ typedef struct xfs_buf {
 #endif
 } xfs_buf_t;
 
-
 /* Finding and Reading Buffers */
 extern xfs_buf_t *_xfs_buf_find(xfs_buftarg_t *, xfs_off_t, size_t,
 				xfs_buf_flags_t, xfs_buf_t *);
@@ -231,7 +230,6 @@ extern void xfs_buf_terminate(void);
 
 #define xfs_buf_target_name(target)	\
 	({ char __b[BDEVNAME_SIZE]; bdevname((target)->bt_bdev, __b); __b; })
-
 
 #define XFS_BUF_BFLAGS(bp)	((bp)->b_flags)
 #define XFS_BUF_ZEROFLAGS(bp)	((bp)->b_flags &= \

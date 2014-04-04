@@ -62,9 +62,6 @@
 #ifndef __WL_NETDEV_H__
 #define __WL_NETDEV_H__
 
-
-
-
 /*******************************************************************************
  *  function prototypes
  ******************************************************************************/
@@ -92,7 +89,6 @@ void wl_tx_timeout( struct net_device *dev );
 
 struct net_device_stats *wl_stats( struct net_device *dev );
 
-
 #ifdef ENABLE_DMA
 int wl_send_dma( struct wl_private *lp, struct sk_buff *skb, int port );
 int wl_rx_dma( struct net_device *dev );
@@ -104,9 +100,7 @@ void wl_multicast( struct net_device *dev );
 void wl_multicast( struct net_device *dev, int num_addrs, void *addrs );
 #endif // NEW_MULTICAST
 
-
 int wl_tx_port0( struct sk_buff *skb, struct net_device *dev );
-
 
 #ifdef USE_WDS
 
@@ -126,7 +120,6 @@ void wl_wds_netif_carrier_on( struct wl_private *lp );
 void wl_wds_netif_carrier_off( struct wl_private *lp );
 
 #endif  /* USE_WDS */
-
 
 #ifdef USE_WDS
 
@@ -149,6 +142,5 @@ void wl_wds_netif_carrier_off( struct wl_private *lp );
 #define WL_WDS_NETIF_CARRIER_OFF( ARG )
 
 #endif  /* USE_WDS */
-
 
 #endif  // __WL_NETDEV_H__

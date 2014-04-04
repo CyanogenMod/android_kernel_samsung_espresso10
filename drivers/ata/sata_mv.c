@@ -3127,7 +3127,6 @@ static void mv5_phy_errata(struct mv_host_priv *hpriv, void __iomem *mmio,
 	writel(tmp, phy_mmio + MV5_PHY_MODE);
 }
 
-
 #undef ZERO
 #define ZERO(reg) writel(0, port_mmio + (reg))
 static void mv5_reset_hc_port(struct mv_host_priv *hpriv, void __iomem *mmio,
@@ -4186,14 +4185,12 @@ static struct platform_driver mv_platform_driver = {
 				  },
 };
 
-
 #ifdef CONFIG_PCI
 static int mv_pci_init_one(struct pci_dev *pdev,
 			   const struct pci_device_id *ent);
 #ifdef CONFIG_PM
 static int mv_pci_device_resume(struct pci_dev *pdev);
 #endif
-
 
 static struct pci_driver mv_pci_driver = {
 	.name			= DRV_NAME,

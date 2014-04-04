@@ -34,7 +34,6 @@
 
 /*---------------------  Export Definitions -------------------------*/
 
-
 //
 //  For IO mapped
 //
@@ -45,7 +44,6 @@
 	*(pbyData) = inb(dwIOAddress);                              \
 }
 
-
 #define VNSvInPortW(dwIOAddress, pwData) {                      \
 	    *(pwData) = inw(dwIOAddress);                           \
 }
@@ -54,11 +52,9 @@
 	    *(pdwData) = inl(dwIOAddress);                          \
 }
 
-
 #define VNSvOutPortB(dwIOAddress, byData) {                     \
         outb(byData, dwIOAddress);                              \
 }
-
 
 #define VNSvOutPortW(dwIOAddress, wData) {                      \
         outw(wData, dwIOAddress);                               \
@@ -74,12 +70,10 @@
 //  For memory mapped IO
 //
 
-
 #define VNSvInPortB(dwIOAddress, pbyData) {                     \
 	volatile BYTE* pbyAddr = ((PBYTE)(dwIOAddress));            \
 	*(pbyData) = readb(pbyAddr);                           \
 }
-
 
 #define VNSvInPortW(dwIOAddress, pwData) {                      \
 	volatile WORD* pwAddr = ((PWORD)(dwIOAddress));             \
@@ -91,12 +85,10 @@
 	*(pdwData) = readl(pdwAddr);                           \
 }
 
-
 #define VNSvOutPortB(dwIOAddress, byData) {                     \
     volatile BYTE* pbyAddr = ((PBYTE)(dwIOAddress));            \
     writeb((BYTE)byData, pbyAddr);							\
 }
-
 
 #define VNSvOutPortW(dwIOAddress, wData) {                      \
     volatile WORD* pwAddr = ((PWORD)(dwIOAddress));             \
@@ -109,7 +101,6 @@
 }
 
 #endif
-
 
 //
 // ALWAYS IO-Mapped IO when in 16-bit/32-bit environment
@@ -138,7 +129,6 @@
         outl(dwData, dwIOAddress);              \
 }
 
-
 #define PCAvDelayByIO(uDelayUnit) {             \
     BYTE    byData;                             \
     unsigned long   ii;                                 \
@@ -151,7 +141,6 @@
 		     byData = inb(0x61);				\
     }                                           \
 }
-
 
 /*---------------------  Export Classes  ----------------------------*/
 

@@ -301,7 +301,6 @@ static int dt2814_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		if (inb(dev->iobase + DT2814_CSR) & DT2814_ERR)
 			printk(KERN_DEBUG "error probing irq (bad)\n");
 
-
 		i = inb(dev->iobase + DT2814_DATA);
 		i = inb(dev->iobase + DT2814_DATA);
 	}

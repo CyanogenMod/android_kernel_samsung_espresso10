@@ -68,7 +68,6 @@ static char *version =
 
 /* ======================= end of configuration ======================= */
 
-
 /* Always include 'config.h' first in case the user wants to turn on
    or override something. */
 #include <linux/module.h>
@@ -132,7 +131,6 @@ static void net_rx(struct net_device *dev);
 static int net_close(struct net_device *dev);
 static struct net_device_stats *net_get_stats(struct net_device *dev);
 static int set_mac_address(struct net_device *dev, void *addr);
-
 
 /* Example routines you must write ;->. */
 #define tx_done(dev) 1
@@ -587,7 +585,6 @@ static void set_multicast_list(struct net_device *dev)
 	writereg(dev, PP_RxCFG, lp->curr_rx_cfg |
 	     (lp->rx_mode == RX_ALL_ACCEPT? (RX_CRC_ERROR_ENBL|RX_RUNT_ENBL|RX_EXTRA_DATA_ENBL) : 0));
 }
-
 
 static int set_mac_address(struct net_device *dev, void *addr)
 {

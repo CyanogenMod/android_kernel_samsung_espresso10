@@ -80,7 +80,6 @@
 /* PHY Specific Control Register */
 #define PHYSP_CTRL_ASSERT_CRS_TX  0x0800
 
-
 /* Default value of PHY register */
 #define PHY_CONTROL_DEFAULT         0x1140 /* Control Register */
 #define PHY_AUTONEG_ADV_DEFAULT     0x01e0 /* Autoneg Advertisement */

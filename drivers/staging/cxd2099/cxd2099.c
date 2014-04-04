@@ -133,7 +133,6 @@ static int read_reg(struct cxd *ci, u8 reg, u8 *val)
 	return read_block(ci, reg, val, 1);
 }
 
-
 static int read_pccard(struct cxd *ci, u16 address, u8 *data, u8 n)
 {
 	int status;
@@ -182,7 +181,6 @@ static int write_io(struct cxd *ci, u16 address, u8 val)
 
 	return status;
 }
-
 
 static int write_regm(struct cxd *ci, u8 reg, u8 val, u8 mask)
 {
@@ -263,8 +261,6 @@ static void cam_mode(struct cxd *ci, int mode)
 	ci->cammode = mode;
 }
 
-
-
 #define CHK_ERROR(s) if ((status = s)) break
 
 static int init(struct cxd *ci)
@@ -300,7 +296,6 @@ static int init(struct cxd *ci)
 		CHK_ERROR(write_reg(ci, 0x21, 0x00)); /* MCLKI = TICLK/8 */
 		CHK_ERROR(write_reg(ci, 0x22, 0x07)); /* MCLKI = TICLK/8 */
 
-
 		CHK_ERROR(write_regm(ci, 0x20, 0x80, 0x80)); /* Reset CAM state machine */
 
 		CHK_ERROR(write_regm(ci, 0x03, 0x02, 02));  /* Enable IREQA Interrupt */
@@ -317,7 +312,6 @@ static int init(struct cxd *ci)
 	return 0;
 }
 
-
 static int read_attribute_mem(struct dvb_ca_en50221 *ca,
 			      int slot, int address)
 {
@@ -329,7 +323,6 @@ static int read_attribute_mem(struct dvb_ca_en50221 *ca,
 	mutex_unlock(&ci->lock);
 	return val;
 }
-
 
 static int write_attribute_mem(struct dvb_ca_en50221 *ca, int slot,
 			       int address, u8 value)
@@ -422,7 +415,6 @@ static int slot_ts_enable(struct dvb_ca_en50221 *ca, int slot)
 	return 0;
 }
 
-
 static int campoll(struct cxd *ci)
 {
 	u8 istat;
@@ -465,7 +457,6 @@ static int campoll(struct cxd *ci)
 	}
 	return 0;
 }
-
 
 static int poll_slot_status(struct dvb_ca_en50221 *ca, int slot, int open)
 {

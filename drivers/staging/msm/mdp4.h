@@ -22,7 +22,6 @@ extern boolean mdp_is_in_isr;
 extern uint32 mdp_intr_mask;
 extern spinlock_t mdp_spin_lock;
 
-
 #define MDP4_NONBLOCKING	/* enable non blocking ioctl */
 
 #define MDP4_OVERLAYPROC0_BASE	0x10000
@@ -93,7 +92,6 @@ enum {
 /* histogram interrupts */
 #define INTR_HIST_DONE			BIT(0)
 #define INTR_HIST_RESET_SEQ_DONE	BIT(1)
-
 
 #ifdef CONFIG_FB_MSM_OVERLAY
 #define MDP4_ANY_INTR_MASK	(INTR_OVERLAY0_DONE)
@@ -196,7 +194,6 @@ enum {
 #define MDP4_MAX_VIDEO_PIPE 2
 #define MDP4_MAX_RGB_PIPE 2
 #define MDP4_MAX_OVERLAY_PIPE 	16
-
 
 struct mdp4_overlay_pipe {
 	uint32 pipe_type;		/* rgb, video/graphic */

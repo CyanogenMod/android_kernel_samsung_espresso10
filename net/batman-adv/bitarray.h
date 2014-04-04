@@ -32,7 +32,6 @@ uint8_t get_bit_status(unsigned long *seq_bits, uint32_t last_seqno,
 /* turn corresponding bit on, so we can remember that we got the packet */
 void bit_mark(unsigned long *seq_bits, int32_t n);
 
-
 /* receive and process one packet, returns 1 if received seq_num is considered
  * new, 0 if old  */
 char bit_get_packet(void *priv, unsigned long *seq_bits,

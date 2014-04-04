@@ -1,7 +1,6 @@
 /* atmsvc.h - ATM signaling kernel-demon interface definitions */
- 
+
 /* Written 1995-2000 by Werner Almesberger, EPFL LRC/ICA */
- 
 
 #ifndef _LINUX_ATMSVC_H
 #define _LINUX_ATMSVC_H
@@ -9,7 +8,6 @@
 #include <linux/atmapi.h>
 #include <linux/atm.h>
 #include <linux/atmioc.h>
-
 
 #define ATMSIGD_CTRL _IO('a',ATMIOC_SPECIAL)
 				/* become ATM signaling demon control socket */

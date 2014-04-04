@@ -104,7 +104,6 @@ struct jbd2_revoke_record_s
 	unsigned long long	  blocknr;
 };
 
-
 /* The revoke table is just a simple hash table of revoke records. */
 struct jbd2_revoke_table_s
 {
@@ -114,7 +113,6 @@ struct jbd2_revoke_table_s
 	int		  hash_shift;
 	struct list_head *hash_table;
 };
-
 
 #ifdef __KERNEL__
 static void write_one_revoke_record(journal_t *, transaction_t *,
@@ -303,7 +301,6 @@ void jbd2_journal_destroy_revoke(journal_t *journal)
 	if (journal->j_revoke_table[1])
 		jbd2_journal_destroy_revoke_table(journal->j_revoke_table[1]);
 }
-
 
 #ifdef __KERNEL__
 

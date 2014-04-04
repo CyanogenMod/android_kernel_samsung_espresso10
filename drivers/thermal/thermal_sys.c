@@ -468,7 +468,6 @@ temp_crit_show(struct device *dev, struct device_attribute *attr,
 	return sprintf(buf, "%ld\n", temperature);
 }
 
-
 static int
 thermal_add_hwmon_sysfs(struct thermal_zone_device *tz)
 {
@@ -1319,6 +1318,7 @@ static int __init thermal_init(void)
 		idr_destroy(&thermal_cdev_idr);
 		mutex_destroy(&thermal_idr_lock);
 		mutex_destroy(&thermal_list_lock);
+		return result;
 	}
 	result = genetlink_init();
 	return result;

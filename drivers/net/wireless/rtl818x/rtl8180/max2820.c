@@ -114,7 +114,6 @@ static void max2820_rf_stop(struct ieee80211_hw *dev)
 	write_max2820(dev, 1, 0);
 }
 
-
 static void max2820_rf_init(struct ieee80211_hw *dev)
 {
 	struct rtl8180_priv *priv = dev->priv;

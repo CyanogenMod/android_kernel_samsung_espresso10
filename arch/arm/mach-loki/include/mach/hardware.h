@@ -11,5 +11,4 @@
 
 #include "loki.h"
 
-
 #endif

@@ -36,13 +36,11 @@ struct mpoa_client {
 	struct net_device_ops new_ops;
 };
 
-
 struct atm_mpoa_qos {
 	struct atm_mpoa_qos *next;
 	__be32 ipaddr;
 	struct atm_qos qos;
 };
-
 
 /* MPOA QoS operations */
 struct atm_mpoa_qos *atm_mpoa_add_qos(__be32 dst_ip, struct atm_qos *qos);

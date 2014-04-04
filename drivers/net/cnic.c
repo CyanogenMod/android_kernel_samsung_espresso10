@@ -1803,7 +1803,6 @@ done:
 	return ret;
 }
 
-
 static int cnic_bnx2x_iscsi_update(struct cnic_dev *dev, struct kwqe *kwqe)
 {
 	struct cnic_local *cp = dev->cnic_priv;
@@ -2872,7 +2871,6 @@ static void cnic_ack_igu_sb(struct cnic_dev *dev, u8 igu_sb_id, u8 segment,
 		(segment << IGU_REGULAR_SEGMENT_ACCESS_SHIFT) |
 		(update << IGU_REGULAR_BUPDATE_SHIFT) |
 		(op << IGU_REGULAR_ENABLE_INT_SHIFT);
-
 
 	CNIC_WR(dev, igu_addr, cmd_data.sb_id_and_flags);
 }
@@ -5086,7 +5084,6 @@ static void cnic_stop_bnx2_hw(struct cnic_dev *dev)
 
 	cnic_free_resc(dev);
 }
-
 
 static void cnic_stop_bnx2x_hw(struct cnic_dev *dev)
 {

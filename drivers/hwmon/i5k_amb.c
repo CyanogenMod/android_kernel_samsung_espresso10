@@ -123,7 +123,6 @@ static ssize_t show_name(struct device *dev, struct device_attribute *devattr,
 	return sprintf(buf, "%s\n", DRVNAME);
 }
 
-
 static DEVICE_ATTR(name, S_IRUGO, show_name, NULL);
 
 static struct platform_device *amb_pdev;

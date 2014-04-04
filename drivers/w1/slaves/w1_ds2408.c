@@ -23,7 +23,6 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jean-Francois Dagenais <dagenaisj@sonatest.com>");
 MODULE_DESCRIPTION("w1 family 29 driver for DS2408 8 Pin IO");
 
-
 #define W1_F29_RETRIES		3
 
 #define W1_F29_REG_LOGIG_STATE             0x88 /* R */
@@ -148,9 +147,6 @@ static ssize_t w1_f29_read_status_control(
 		W1_F29_REG_CONTROL_AND_STATUS, buf);
 }
 
-
-
-
 static ssize_t w1_f29_write_output(
 	struct file *filp, struct kobject *kobj,
 	struct bin_attribute *bin_attr,
@@ -212,7 +208,6 @@ error:
 
 	return -EIO;
 }
-
 
 /**
  * Writing to the activity file resets the activity latches.
@@ -294,8 +289,6 @@ error:
 
 	return -EIO;
 }
-
-
 
 #define NB_SYSFS_BIN_FILES 6
 static struct bin_attribute w1_f29_sysfs_bin_files[NB_SYSFS_BIN_FILES] = {

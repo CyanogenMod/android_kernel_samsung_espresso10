@@ -102,7 +102,6 @@ retry:
 	mutex_unlock(&(connection->shmem_mutex));
 }
 
-
 /**
  * Find the first available slot for a new block of shared memory
  * and map the user buffer.
@@ -204,7 +203,6 @@ int tf_map_shmem(
 	dprintk(KERN_DEBUG "tf_map_shmem: success\n");
 	return 0;
 
-
 	/*
 	 * Error handling.
 	 */
@@ -220,8 +218,6 @@ error:
 
 	return error;
 }
-
-
 
 /* This function is a copy of the find_vma() function
 in linux kernel 2.6.15 version with some fixes :
@@ -340,7 +336,6 @@ error:
 	return -EFAULT;
 }
 
-
 static int tf_map_temp_shmem(struct tf_connection *connection,
 	 struct tf_command_param_temp_memref *temp_memref,
 	 u32 param_type,
@@ -432,7 +427,6 @@ static void tf_shared_memory_cleanup_list(
 	}
 }
 
-
 /*
  * Clean up the shared memory information in the connection.
  * Releases all allocated pages.
@@ -462,7 +456,6 @@ static void tf_cleanup_shared_memories(struct tf_connection *connection)
 	mutex_unlock(&(connection->shmem_mutex));
 }
 
-
 /*
  * Initialize the shared memory in a connection.
  * Allocates the minimum memory to be provided
@@ -486,7 +479,6 @@ int tf_init_shared_memory(struct tf_connection *connection)
 
 	tf_init_coarse_page_table_allocator(
 		&(connection->cpt_alloc_context));
-
 
 	/*
 	 * Preallocate 3 pages to increase the chances that a connection
@@ -1022,7 +1014,6 @@ error:
 	return error;
 }
 
-
 /*
  * Closes a client session from the Secure World
  */
@@ -1058,7 +1049,6 @@ int tf_close_client_session(
 
 	return error;
 }
-
 
 /*
  * Registers a shared memory to the Secure World
@@ -1173,7 +1163,6 @@ error:
 	return error;
 }
 
-
 /*
  * Releases a shared memory from the Secure World
  */
@@ -1216,7 +1205,6 @@ int tf_release_shared_memory(
 		connection, answer->release_shared_memory.block_id,
 		command->release_shared_memory.block);
 	return 0;
-
 
 error:
 	if (error != 0)
@@ -1387,7 +1375,6 @@ error:
 	return error;
 }
 
-
 /*
  * Cancels a client command from the Secure World
  */
@@ -1417,7 +1404,6 @@ int tf_cancel_client_command(
 		(answer->cancel_client_operation.error_code != S_SUCCESS))
 		goto error;
 
-
 	/* successful completion */
 	return 0;
 
@@ -1432,8 +1418,6 @@ error:
 
 	return error;
 }
-
-
 
 /*
  * Destroys a device context from the Secure World
@@ -1503,7 +1487,6 @@ error:
 
 	return error;
 }
-
 
 /*----------------------------------------------------------------------------
  * Connection initialization and cleanup operations
@@ -1589,7 +1572,6 @@ error:
 	*connection = NULL;
 	return error;
 }
-
 
 /*
  * Closes the specified connection.

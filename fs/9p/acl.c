@@ -303,7 +303,6 @@ static int v9fs_remote_set_acl(struct dentry *dentry, const char *name,
 	return v9fs_xattr_set(dentry, full_name, value, size, flags);
 }
 
-
 static int v9fs_xattr_set_acl(struct dentry *dentry, const char *name,
 			      const void *value, size_t size,
 			      int flags, int type)

@@ -457,7 +457,6 @@ static int __init omap2_pm_init(void)
 	if (!gfx_clkdm)
 		pr_err("PM: gfx_clkdm not found\n");
 
-
 	osc_ck = clk_get(NULL, "osc_ck");
 	if (IS_ERR(osc_ck)) {
 		printk(KERN_ERR "could not get osc_ck\n");

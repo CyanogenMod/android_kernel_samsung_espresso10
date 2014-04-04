@@ -48,7 +48,6 @@
 #define BIT30	0x40000000
 #define BIT31	0x80000000
 
-
 #define HDLC_MAX_FRAME_SIZE	65535
 #define MAX_ASYNC_TRANSMIT	4096
 #define MAX_ASYNC_BUFFER_SIZE	4096
@@ -204,7 +203,6 @@ typedef struct _MGSL_PARAMS
 #define SerialSignal_RTS            0x20     /* Request to Send */
 #define SerialSignal_DSR            0x40     /* Data Set Ready */
 #define SerialSignal_DTR            0x80     /* Data Terminal Ready */
-
 
 /*
  * Counters of the input lines (CTS, DSR, RI, CD) interrupts

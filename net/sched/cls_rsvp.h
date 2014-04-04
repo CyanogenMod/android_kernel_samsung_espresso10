@@ -32,10 +32,8 @@
    source address and SPI(="Source Port ID" here rather than
    "security parameter index"): triple (key, mask, offset).
 
-
    NOTE 1. All the packets with IPv6 extension headers (but AH and ESP)
    and all fragmented packets go to the best-effort traffic class.
-
 
    NOTE 2. Two "port id"'s seems to be redundant, rfc2207 requires
    only one "Generalized Port Identifier". So that for classic
@@ -46,7 +44,6 @@
    resources. But DPI and SPI add the possibility to assign different
    priorities to GPIs. Look also at note 4 about tunnels below.
 
-
    NOTE 3. One complication is the case of tunneled packets.
    We implement it as following: if the first lookup
    matches a special session with "tunnelhdr" value not zero,
@@ -55,16 +52,13 @@
    with tunnel ID added to the list of keys. Simple and stupid 8)8)
    It's enough for PIMREG and IPIP.
 
-
    NOTE 4. Two GPIs make it possible to parse even GRE packets.
    F.e. DPI can select ETH_P_IP (and necessary flags to make
    tunnelhdr correct) in GRE protocol field and SPI matches
    GRE key. Is it not nice? 8)8)
 
-
    Well, as result, despite its simplicity, we get a pretty
    powerful classification engine.  */
-
 
 struct rsvp_head {
 	u32			tmap[256/32];
@@ -82,7 +76,6 @@ struct rsvp_session {
 	/* 16 (src,sport) hash slots, and one wildcard source slot */
 	struct rsvp_filter	*ht[16 + 1];
 };
-
 
 struct rsvp_filter {
 	struct rsvp_filter	*next;

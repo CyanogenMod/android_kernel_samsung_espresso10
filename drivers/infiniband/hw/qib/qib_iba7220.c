@@ -126,7 +126,6 @@ static void qib_set_ib_7220_lstate(struct qib_pportdata *, u16, u16);
 #define kr_rcvhdraddr KREG_IDX(RcvHdrAddr0)
 #define kr_rcvhdrtailaddr KREG_IDX(RcvHdrTailAddr0)
 
-
 #define CREG_IDX(regname) ((QIB_7220_##regname##_OFFS - \
 			QIB_7220_LBIntCnt_OFFS) / sizeof(u64))
 
@@ -3863,7 +3862,6 @@ static void set_7220_baseaddrs(struct qib_devdata *dd)
 	dd->egrtidbase = (u64 __iomem *)
 		((char __iomem *) dd->kregbase + dd->rcvegrbase);
 }
-
 
 #define SENDCTRL_SHADOWED (SYM_MASK(SendCtrl, SendIntBufAvail) |	\
 			   SYM_MASK(SendCtrl, SPioEnable) |		\

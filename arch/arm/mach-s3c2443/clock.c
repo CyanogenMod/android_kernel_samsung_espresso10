@@ -185,7 +185,6 @@ static struct clksrc_clk clk_hsspi = {
 	.reg_div = { .reg = S3C2443_CLKDIV1, .size = 2, .shift = 4 },
 };
 
-
 /* clk_hsmcc_div
  *
  * this clock is sourced from epll, and is fed through a divider,

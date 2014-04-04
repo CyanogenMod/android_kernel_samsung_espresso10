@@ -78,4 +78,3 @@
 	(IWL60_RTC_DATA_UPPER_BOUND - IWL60_RTC_DATA_LOWER_BOUND)
 
 #endif /* __iwl_6000_hw_h__ */
-

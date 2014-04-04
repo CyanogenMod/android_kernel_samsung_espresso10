@@ -161,7 +161,6 @@ static inline int tuner_afcstatus(const int status)
 	return (status & TUNER_AFC) - 2;
 }
 
-
 static int simple_get_status(struct dvb_frontend *fe, u32 *status)
 {
 	struct tuner_simple_priv *priv = fe->tuner_priv;

@@ -99,7 +99,7 @@ struct ts_config
  *
  * Returns the position of the next occurrence of the pattern or
  * UINT_MAX if not match was found.
- */ 
+ */
 static inline unsigned int textsearch_next(struct ts_config *conf,
 					   struct ts_state *state)
 {
@@ -118,7 +118,7 @@ static inline unsigned int textsearch_next(struct ts_config *conf,
  *
  * Returns the position of first occurrence of the pattern or
  * UINT_MAX if no match was found.
- */ 
+ */
 static inline unsigned int textsearch_find(struct ts_config *conf,
 					   struct ts_state *state)
 {
@@ -152,7 +152,6 @@ extern void textsearch_destroy(struct ts_config *conf);
 extern unsigned int textsearch_find_continuous(struct ts_config *,
 					       struct ts_state *,
 					       const void *, unsigned int);
-
 
 #define TS_PRIV_ALIGNTO	8
 #define TS_PRIV_ALIGN(len) (((len) + TS_PRIV_ALIGNTO-1) & ~(TS_PRIV_ALIGNTO-1))

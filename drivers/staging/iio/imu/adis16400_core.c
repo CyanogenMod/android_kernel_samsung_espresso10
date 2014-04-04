@@ -414,7 +414,6 @@ static int adis16400_initial_setup(struct iio_dev *indio_dev)
 		spi_setup(st->us);
 	}
 
-
 err_ret:
 
 	return ret;

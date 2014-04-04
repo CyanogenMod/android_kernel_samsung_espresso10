@@ -905,6 +905,3 @@ u16  CDMA_Event_Status(void)
 
 	return event;
 }
-
-
-

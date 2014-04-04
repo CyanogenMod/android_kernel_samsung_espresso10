@@ -646,7 +646,6 @@ korina_tx_dma_interrupt(int irq, void *dev_id)
 	return retval;
 }
 
-
 static void korina_check_media(struct net_device *dev, unsigned int init_media)
 {
 	struct korina_private *lp = netdev_priv(dev);
@@ -861,7 +860,6 @@ static int korina_init(struct net_device *dev)
 
 	writel(STATION_ADDRESS_LOW(dev), &lp->eth_regs->ethsal3);
 	writel(STATION_ADDRESS_HIGH(dev), &lp->eth_regs->ethsah3);
-
 
 	/* Frame Length Checking, Pad Enable, CRC Enable, Full Duplex set */
 	writel(ETH_MAC2_PE | ETH_MAC2_CEN | ETH_MAC2_FD,

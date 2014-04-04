@@ -1647,7 +1647,6 @@ static void rtl92c_bt_set_normal(struct ieee80211_hw *hw)
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 	struct rtl_pci_priv *rtlpcipriv = rtl_pcipriv(hw);
 
-
 	if (rtlpcipriv->bt_coexist.bt_service == BT_OTHERBUSY) {
 		rtlpcipriv->bt_coexist.bt_edca_ul = 0x5ea72b;
 		rtlpcipriv->bt_coexist.bt_edca_dl = 0x5ea72b;
@@ -1681,7 +1680,6 @@ static void rtl92c_bt_ant_isolation(struct ieee80211_hw *hw)
 {
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 	struct rtl_pci_priv *rtlpcipriv = rtl_pcipriv(hw);
-
 
 	/* Only enable HW BT coexist when BT in "Busy" state. */
 	if (rtlpriv->mac80211.vendor == PEER_CISCO &&

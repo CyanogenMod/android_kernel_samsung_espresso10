@@ -825,7 +825,6 @@ void usbhs_dcp_control_transfer_done(struct usbhs_pipe *pipe)
 	usbhsp_pipectrl_set(pipe, CCPL, CCPL);
 }
 
-
 /*
  *		pipe module function
  */

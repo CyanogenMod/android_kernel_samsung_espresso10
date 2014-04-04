@@ -362,7 +362,6 @@ xfs_trans_read_buf(
 			return XFS_ERROR(EIO);
 		}
 
-
 		bip = XFS_BUF_FSPRIVATE(bp, xfs_buf_log_item_t*);
 		bip->bli_recur++;
 
@@ -438,7 +437,6 @@ shutdown_abort:
 	*bpp = NULL;
 	return XFS_ERROR(EIO);
 }
-
 
 /*
  * Release the buffer bp which was previously acquired with one of the
@@ -682,7 +680,6 @@ xfs_trans_log_buf(xfs_trans_t	*tp,
 	xfs_buf_item_log(bip, first, last);
 }
 
-
 /*
  * This called to invalidate a buffer that is being used within
  * a transaction.  Typically this is because the blocks in the
@@ -795,7 +792,7 @@ xfs_trans_inode_buf(
 /*
  * This call is used to indicate that the buffer is going to
  * be staled and was an inode buffer. This means it gets
- * special processing during unpin - where any inodes 
+ * special processing during unpin - where any inodes
  * associated with the buffer should be removed from ail.
  * There is also special processing during recovery,
  * any replay of the inodes in the buffer needs to be
@@ -844,7 +841,6 @@ xfs_trans_inode_alloc_buf(
 
 	bip->bli_flags |= XFS_BLI_INODE_ALLOC_BUF;
 }
-
 
 /*
  * Similar to xfs_trans_inode_buf(), this marks the buffer as a cluster of

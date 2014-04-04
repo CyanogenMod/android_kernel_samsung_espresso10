@@ -10,7 +10,6 @@
  * S3C2410 Watchdog timer control
 */
 
-
 #ifndef __ASM_ARCH_REGS_WATCHDOG_H
 #define __ASM_ARCH_REGS_WATCHDOG_H
 
@@ -37,5 +36,3 @@
 #define S3C2410_WTCON_PRESCALE_MASK (0xff00)
 
 #endif /* __ASM_ARCH_REGS_WATCHDOG_H */
-
-

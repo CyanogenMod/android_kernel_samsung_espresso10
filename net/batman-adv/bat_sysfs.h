@@ -19,7 +19,6 @@
  *
  */
 
-
 #ifndef _NET_BATMAN_ADV_SYSFS_H_
 #define _NET_BATMAN_ADV_SYSFS_H_
 

@@ -437,7 +437,6 @@ static int s3c24xx_i2s_resume(struct snd_soc_dai *cpu_dai)
 #define s3c24xx_i2s_resume NULL
 #endif
 
-
 #define S3C24XX_I2S_RATES \
 	(SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_11025 | SNDRV_PCM_RATE_16000 | \
 	SNDRV_PCM_RATE_22050 | SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 | \

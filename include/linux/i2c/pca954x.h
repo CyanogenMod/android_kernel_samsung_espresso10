@@ -21,7 +21,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #ifndef _LINUX_I2C_PCA954X_H
 #define _LINUX_I2C_PCA954X_H
 

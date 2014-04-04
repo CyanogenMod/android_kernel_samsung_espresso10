@@ -1731,7 +1731,6 @@ static int __devinit spacc_probe(struct platform_device *pdev,
 		return err;
 	}
 
-
 	/*
 	 * Use an IRQ threshold of 50% as a default. This seems to be a
 	 * reasonable trade off of latency against throughput but can be

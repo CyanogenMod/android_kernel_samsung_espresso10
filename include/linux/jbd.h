@@ -82,7 +82,6 @@ static inline void jbd_free(void *ptr, size_t size)
 
 #define JFS_MIN_JOURNAL_BLOCKS 1024
 
-
 /**
  * typedef handle_t - The handle_t type represents a single atomic update being performed by some process.
  *
@@ -101,7 +100,6 @@ static inline void jbd_free(void *ptr, size_t size)
  * This is an opaque datatype.
  **/
 typedef struct handle_s		handle_t;	/* Atomic operation type */
-
 
 /**
  * typedef journal_t - The journal_t maintains all of the journaling state information for a single filesystem.
@@ -147,7 +145,6 @@ typedef struct journal_header_s
 	__be32		h_sequence;
 } journal_header_t;
 
-
 /*
  * The block tag: used to describe a single buffer in the journal
  */
@@ -167,13 +164,11 @@ typedef struct journal_revoke_header_s
 	__be32		 r_count;	/* Count of bytes used in the block */
 } journal_revoke_header_t;
 
-
 /* Definitions for the journal tag flags word: */
 #define JFS_FLAG_ESCAPE		1	/* on-disk block is escaped */
 #define JFS_FLAG_SAME_UUID	2	/* block has same uuid as previous */
 #define JFS_FLAG_DELETED	4	/* block deleted by this transaction */
 #define JFS_FLAG_LAST_TAG	8	/* last tag in this descriptor block */
-
 
 /*
  * The journal superblock.  All fields are in big-endian byte order.
@@ -370,7 +365,6 @@ struct handle_s
 	struct lockdep_map	h_lockdep_map;
 #endif
 };
-
 
 /* The transaction_t type is the guts of the journaling mechanism.  It
  * tracks a compound transaction through its various states:

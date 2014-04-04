@@ -57,7 +57,6 @@
 #include <asm/sn/bte.h>
 #include <asm/sn/shubio.h>
 
-
 #define FETCHOP_ID	"SGI Fetchop,"
 #define CACHED_ID	"Cached,"
 #define UNCACHED_ID	"Uncached"
@@ -284,7 +283,7 @@ mspec_mmap(struct file *file, struct vm_area_struct *vma,
 	vdata->flags = flags;
 	vdata->type = type;
 	spin_lock_init(&vdata->lock);
-	vdata->refcnt = ATOMIC_INIT(1);
+	atomic_set(&vdata->refcnt, 1);
 	vma->vm_private_data = vdata;
 
 	vma->vm_flags |= (VM_IO | VM_RESERVED | VM_PFNMAP | VM_DONTEXPAND);

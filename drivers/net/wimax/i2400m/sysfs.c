@@ -27,10 +27,8 @@
 #include <linux/device.h>
 #include "i2400m.h"
 
-
 #define D_SUBMODULE sysfs
 #include "debug-levels.h"
-
 
 /*
  * Set the idle timeout (msecs)

@@ -106,7 +106,6 @@ static const expansioncard_ops_t icside_ops_arcin_v5 = {
 	.irqdisable	= icside_irqdisable_arcin_v5,
 };
 
-
 /* ---------------- Version 6 PCB Support Functions --------------------- */
 /* Prototype: icside_irqenable_arcin_v6 (struct expansion_card *ec, int irqnr)
  * Purpose  : enable interrupts from card

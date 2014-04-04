@@ -202,7 +202,6 @@
 		beq	17f
 		bgt	18f
 
-
 		.macro	forward_copy_shift pull push
 
 		subs	r2, r2, #28
@@ -267,13 +266,11 @@
 
 		.endm
 
-
 		forward_copy_shift	pull=8	push=24
 
 17:		forward_copy_shift	pull=16	push=16
 
 18:		forward_copy_shift	pull=24	push=8
-
 
 /*
  * Abort preamble and completion macros.
@@ -292,4 +289,3 @@
 	.macro	copy_abort_end
 	ldmfd	sp!, {r4, pc}
 	.endm
-

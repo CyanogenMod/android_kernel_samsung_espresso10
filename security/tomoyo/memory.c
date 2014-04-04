@@ -220,7 +220,6 @@ void __init tomoyo_mm_init(void)
 	tomoyo_read_unlock(idx);
 }
 
-
 /* Memory allocated for query lists. */
 unsigned int tomoyo_query_memory_size;
 /* Quota for holding query lists. */

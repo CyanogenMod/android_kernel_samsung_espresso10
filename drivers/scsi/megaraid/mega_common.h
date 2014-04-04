@@ -33,7 +33,6 @@
 #include <scsi/scsi_device.h>
 #include <scsi/scsi_host.h>
 
-
 #define LSI_MAX_CHANNELS		16
 #define LSI_MAX_LOGICAL_DRIVES_64LD	(64+1)
 
@@ -42,7 +41,6 @@
 
 #define MEGA_SCSI_INQ_EVPD		1
 #define MEGA_INVALID_FIELD_IN_CDB	0x24
-
 
 /**
  * scb_t - scsi command control block
@@ -95,7 +93,6 @@ typedef struct {
 #define MRAID_DMA_NONE	0x0000	/* no data transfer for this command */
 #define MRAID_DMA_WSG	0x0001	/* data transfer using a sg list */
 #define MRAID_DMA_WBUF	0x0002	/* data transfer using a contiguous buffer */
-
 
 /**
  * struct adapter_t - driver's initialization structure
@@ -198,7 +195,6 @@ typedef struct {
 #define PENDING_LIST_LOCK(adapter)	(&adapter->pend_list_lock)
 #define COMPLETED_LIST_LOCK(adapter)	(&adapter->completed_list_lock)
 
-
 // conversion from scsi command
 #define SCP2HOST(scp)			(scp)->device->host	// to host
 #define SCP2HOSTDATA(scp)		SCP2HOST(scp)->hostdata	// to soft state
@@ -209,7 +205,6 @@ typedef struct {
 // generic macro to convert scsi command and host to controller's soft state
 #define SCSIHOST2ADAP(host)	(((caddr_t *)(host->hostdata))[0])
 #define SCP2ADAPTER(scp)	(adapter_t *)SCSIHOST2ADAP(SCP2HOST(scp))
-
 
 #define MRAID_IS_LOGICAL(adp, scp)	\
 	(SCP2CHANNEL(scp) == (adp)->max_channel) ? 1 : 0

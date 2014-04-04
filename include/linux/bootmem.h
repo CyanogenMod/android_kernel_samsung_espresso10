@@ -21,7 +21,7 @@ extern unsigned long max_pfn;
 
 #ifndef CONFIG_NO_BOOTMEM
 /*
- * node_bootmem_map is a map pointer - the bits represent all physical 
+ * node_bootmem_map is a map pointer - the bits represent all physical
  * memory pages (including holes) on the node.
  */
 typedef struct bootmem_data {
@@ -169,6 +169,5 @@ extern void *alloc_large_system_hash(const char *tablename,
 #define HASHDIST_DEFAULT 0
 #endif
 extern int hashdist;		/* Distribute hashes across NUMA nodes? */
-
 
 #endif /* _LINUX_BOOTMEM_H */

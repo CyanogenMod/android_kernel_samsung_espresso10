@@ -140,4 +140,3 @@ void __init omap2_set_globals_443x(void)
 	omap2_set_globals_prcm(&omap4_globals);
 }
 #endif
-

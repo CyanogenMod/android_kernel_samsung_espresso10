@@ -24,7 +24,6 @@
 	  linux-mei@linux.intel.com
 	  http://www.intel.com
 
-
   BSD LICENSE
 
   Copyright(c) 2003-2011 Intel Corporation. All rights reserved.
@@ -57,7 +56,6 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-
 
 #ifndef _LINUX_MEI_H
 #define _LINUX_MEI_H

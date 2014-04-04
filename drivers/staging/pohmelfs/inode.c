@@ -452,7 +452,6 @@ static int pohmelfs_wait_on_page_locked(struct page *page)
 	if (!ret)
 		err = -ETIMEDOUT;
 
-
 	if (!err)
 		SetPageUptodate(page);
 

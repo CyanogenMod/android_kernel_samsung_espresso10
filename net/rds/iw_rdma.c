@@ -36,7 +36,6 @@
 #include "rds.h"
 #include "iw.h"
 
-
 /*
  * This is stored as mr->r_trans_private.
  */
@@ -172,7 +171,6 @@ static void rds_iw_remove_cm_id(struct rds_iw_device *rds_iwdev,
 	}
 	spin_unlock_irq(&rds_iwdev->spinlock);
 }
-
 
 int rds_iw_update_cm_id(struct rds_iw_device *rds_iwdev, struct rdma_cm_id *cm_id)
 {
@@ -331,7 +329,6 @@ out_unmap:
 	kfree(dma_pages);
 	return ERR_PTR(ret);
 }
-
 
 struct rds_iw_mr_pool *rds_iw_create_mr_pool(struct rds_iw_device *rds_iwdev)
 {

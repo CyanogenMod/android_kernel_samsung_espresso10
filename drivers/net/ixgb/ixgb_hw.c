@@ -170,7 +170,6 @@ ixgb_adapter_stop(struct ixgb_hw *hw)
 	return ctrl_reg & IXGB_CTRL0_RST;
 }
 
-
 /******************************************************************************
  * Identifies the vendor of the optics module on the adapter.  The SR adapters
  * support two different types of XPAK optics, so it is necessary to determine

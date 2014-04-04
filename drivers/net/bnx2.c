@@ -2351,7 +2351,6 @@ bnx2_init_copper_phy(struct bnx2 *bp, int reset_phy)
 	return 0;
 }
 
-
 static int
 bnx2_init_phy(struct bnx2 *bp, int reset_phy)
 __releases(&bp->phy_lock)
@@ -4022,7 +4021,6 @@ bnx2_release_nvram_lock(struct bnx2 *bp)
 	return 0;
 }
 
-
 static int
 bnx2_enable_nvram_write(struct bnx2 *bp)
 {
@@ -4060,7 +4058,6 @@ bnx2_disable_nvram_write(struct bnx2 *bp)
 	val = REG_RD(bp, BNX2_MISC_CFG);
 	REG_WR(bp, BNX2_MISC_CFG, val & ~BNX2_MISC_CFG_NVM_WR_EN);
 }
-
 
 static void
 bnx2_enable_nvram_access(struct bnx2 *bp)
@@ -4168,7 +4165,6 @@ bnx2_nvram_read_dword(struct bnx2 *bp, u32 offset, u8 *ret_val, u32 cmd_flags)
 
 	return 0;
 }
-
 
 static int
 bnx2_nvram_write_dword(struct bnx2 *bp, u32 offset, u8 *val, u32 cmd_flags)
@@ -5310,7 +5306,7 @@ bnx2_free_tx_skbs(struct bnx2 *bp)
 			int k, last;
 
 			if (skb == NULL) {
-				j++;
+				j = NEXT_TX_BD(j);
 				continue;
 			}
 
@@ -5322,8 +5318,8 @@ bnx2_free_tx_skbs(struct bnx2 *bp)
 			tx_buf->skb = NULL;
 
 			last = tx_buf->nr_frags;
-			j++;
-			for (k = 0; k < last; k++, j++) {
+			j = NEXT_TX_BD(j);
+			for (k = 0; k < last; k++, j = NEXT_TX_BD(j)) {
 				tx_buf = &txr->tx_buf_ring[TX_RING_IDX(j)];
 				dma_unmap_page(&bp->pdev->dev,
 					dma_unmap_addr(tx_buf, mapping),
@@ -8556,6 +8552,3 @@ static void __exit bnx2_cleanup(void)
 
 module_init(bnx2_init);
 module_exit(bnx2_cleanup);
-
-
-

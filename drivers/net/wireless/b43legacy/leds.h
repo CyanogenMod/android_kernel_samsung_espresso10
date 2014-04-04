@@ -8,7 +8,6 @@ struct b43legacy_wldev;
 #include <linux/types.h>
 #include <linux/leds.h>
 
-
 #define B43legacy_LED_MAX_NAME_LEN	31
 
 struct b43legacy_led {

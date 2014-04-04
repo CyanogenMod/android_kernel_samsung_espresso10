@@ -106,7 +106,6 @@ int drm_i2c_encoder_init(struct drm_device *dev,
 			 struct i2c_adapter *adap,
 			 const struct i2c_board_info *info);
 
-
 /**
  * struct drm_i2c_encoder_driver
  *

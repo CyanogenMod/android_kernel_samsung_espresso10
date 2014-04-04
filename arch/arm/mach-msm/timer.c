@@ -85,7 +85,6 @@ enum {
 	NR_TIMERS,
 };
 
-
 static struct msm_clock msm_clocks[];
 static struct clock_event_device *local_clock_event;
 

@@ -32,4 +32,3 @@ config VIRTIO_BALLOON
 	 of memory within a KVM guest.
 
 	 If unsure, say M.
-

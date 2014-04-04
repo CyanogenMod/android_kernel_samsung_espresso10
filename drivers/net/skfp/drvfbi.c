@@ -37,7 +37,6 @@ static const char ID_sccs[] = "@(#)drvfbi.c	1.63 99/02/11 (C) SK " ;
 #define	LED_Y_ON	0x11	/* Used for ring up/down indication */
 #define	LED_Y_OFF	0x10
 
-
 #define MS2BCLK(x)	((x)*12500L)
 
 /*
@@ -77,7 +76,6 @@ const struct s_oem_ids oem_ids[] = {
 #ifdef AIX
 extern int AIX_vpdReadByte() ;
 #endif
-
 
 /* Prototype of a local function. */
 static void smt_stop_watchdog(struct s_smc *smc);
@@ -250,7 +248,6 @@ void plc2_irq(struct s_smc *smc)
 	plc_irq(smc,PA,st) ;
 }
 
-
 /*
  * interrupt source= timer
  */
@@ -376,7 +373,6 @@ void plc_clear_irq(struct s_smc *smc, int p)
 	SK_UNUSED(smc) ;
 }
 
-
 /*
  * led_indication called by rmt_indication() and
  * pcm_state_change()
@@ -390,7 +386,7 @@ void plc_clear_irq(struct s_smc *smc, int p)
  */
 static void led_indication(struct s_smc *smc, int led_event)
 {
-	/* use smc->hw.mac_ring_is_up == TRUE 
+	/* use smc->hw.mac_ring_is_up == TRUE
 	 * as indication for Ring Operational
 	 */
 	u_short			led_state ;
@@ -405,7 +401,7 @@ static void led_indication(struct s_smc *smc, int led_event)
 
 #ifdef	PCI
         led_state = 0 ;
-	
+
 	/* Ring up = yellow led OFF*/
 	if (led_event == LED_Y_ON) {
 		led_state |= LED_MY_ON ;
@@ -415,13 +411,13 @@ static void led_indication(struct s_smc *smc, int led_event)
 	}
 	else {	/* PCM state changed */
 		/* Link at Port A/S = green led A ON */
-		if (mib_a->fddiPORTPCMState == PC8_ACTIVE) {	
+		if (mib_a->fddiPORTPCMState == PC8_ACTIVE) {
 			led_state |= LED_GA_ON ;
 		}
 		else {
 			led_state |= LED_GA_OFF ;
 		}
-		
+
 		/* Link at Port B = green led B ON */
 		if (mib_b->fddiPORTPCMState == PC8_ACTIVE) {
 			led_state |= LED_GB_ON ;
@@ -436,7 +432,6 @@ static void led_indication(struct s_smc *smc, int led_event)
 
 }
 
-
 void pcm_state_change(struct s_smc *smc, int plc, int p_state)
 {
 	/*
@@ -445,10 +440,9 @@ void pcm_state_change(struct s_smc *smc, int plc, int p_state)
 	 * now after led_indication.
 	 */
 	DRV_PCM_STATE_CHANGE(smc,plc,p_state) ;
-	
+
 	led_indication(smc,0) ;
 }
-
 
 void rmt_indication(struct s_smc *smc, int i)
 {
@@ -457,7 +451,6 @@ void rmt_indication(struct s_smc *smc, int i)
 
         led_indication(smc, i ? LED_Y_OFF : LED_Y_ON) ;
 }
-
 
 /*
  * llc_recover_tx called by init_tx (fplus.c)
@@ -488,15 +481,14 @@ static int is_equal_num(char comp1[], char comp2[], int num)
 		return 1;
 }	/* is_equal_num */
 
-
 /*
  * set the OEM ID defaults, and test the contents of the OEM data base
- * The default OEM is the first ACTIVE entry in the OEM data base 
+ * The default OEM is the first ACTIVE entry in the OEM data base
  *
  * returns:	0	success
  *		1	error in data base
  *		2	data base empty
- *		3	no active entry	
+ *		3	no active entry
  */
 int set_oi_id_def(struct s_smc *smc)
 {
@@ -509,7 +501,7 @@ int set_oi_id_def(struct s_smc *smc)
 	act_entries = FALSE ;
 	smc->hw.oem_id = 0 ;
 	smc->hw.oem_min_status = OI_STAT_ACTIVE ;
-	
+
 	/* check OEM data base */
 	while (oem_ids[i].oi_status) {
 		switch (oem_ids[i].oi_status) {
@@ -581,4 +573,3 @@ void mac_do_pci_fix(struct s_smc *smc)
 	SK_UNUSED(smc) ;
 }
 #endif	/* PCI */
-

@@ -266,7 +266,6 @@
 
 /* B-device timing constants */
 
-
 /* Data-Line Pulse Time*/
 #define TB_DATA_PLS	(10)	/* b_srp_init,continue 5~10ms, section:5.3.3 */
 #define TB_DATA_PLS_MIN	(5)	/* minimum 5 ms */

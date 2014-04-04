@@ -41,13 +41,11 @@
 #include "atmel-pcm.h"
 #include "atmel_ssc_dai.h"
 
-
 /*-------------------------------------------------------------------------*\
  * constants
 \*-------------------------------------------------------------------------*/
 #define MCLK_PIN		GPIO_PIN_PA(30)
 #define MCLK_PERIPH		GPIO_PERIPH_A
-
 
 /*-------------------------------------------------------------------------*\
  * data types
@@ -64,7 +62,6 @@ struct ssc_clock_data {
 	unsigned long ssc_rate;
 };
 
-
 /*-------------------------------------------------------------------------*\
  * module data
 \*-------------------------------------------------------------------------*/
@@ -72,7 +69,6 @@ static struct clk *_gclk0;
 static struct clk *_pll0;
 
 #define CODEC_CLK (_gclk0)
-
 
 /*-------------------------------------------------------------------------*\
  * Sound SOC operations
@@ -89,7 +85,6 @@ static struct ssc_clock_data playpaq_wm8510_calc_ssc_clock(
 	unsigned int bitrate, ssc_div;
 	unsigned actual_rate;
 
-
 	/*
 	 * Figure out required bitrate
 	 */
@@ -97,7 +92,6 @@ static struct ssc_clock_data playpaq_wm8510_calc_ssc_clock(
 	channels = params_channels(params);
 	width_bits = snd_pcm_format_physical_width(params_format(params));
 	bitrate = rate * width_bits * channels;
-
 
 	/*
 	 * Figure out required SSC divider and period for required bitrate
@@ -111,7 +105,6 @@ static struct ssc_clock_data playpaq_wm8510_calc_ssc_clock(
 	}
 	cd.period = width_bits - 1;
 
-
 	/*
 	 * Find actual rate, compare to requested rate
 	 */
@@ -119,12 +112,9 @@ static struct ssc_clock_data playpaq_wm8510_calc_ssc_clock(
 	pr_debug("playpaq_wm8510: Request rate = %u, actual rate = %u\n",
 		 rate, actual_rate);
 
-
 	return cd;
 }
 #endif /* CONFIG_SND_AT32_SOC_PLAYPAQ_SLAVE */
-
-
 
 static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 				    struct snd_pcm_hw_params *params)
@@ -136,7 +126,6 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 	struct ssc_device *ssc = ssc_p->ssc;
 	unsigned int pll_out = 0, bclk = 0, mclk_div = 0;
 	int ret;
-
 
 	/* Due to difficulties with getting the correct clocks from the AT32's
 	 * PLL0, we're going to let the CODEC be in charge of all the clocks
@@ -156,7 +145,6 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 		pr_warning("playpaq_wm8510_hw_params: ssc is NULL!\n");
 		return -EINVAL;
 	}
-
 
 	/*
 	 * Figure out PLL and BCLK dividers for WM8510
@@ -204,7 +192,6 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	}
 
-
 	/*
 	 * set CPU and CODEC DAI configuration
 	 */
@@ -222,7 +209,6 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 			   ret);
 		return ret;
 	}
-
 
 	/*
 	 * Set CPU clock configuration
@@ -247,14 +233,12 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 	}
 #endif /* CONFIG_SND_AT32_SOC_PLAYPAQ_SLAVE */
 
-
 	/*
 	 * Set CODEC clock configuration
 	 */
 	pr_debug("playpaq_wm8510: "
 		 "pll_in = %ld, pll_out = %u, bclk = %x, mclk = %x\n",
 		 clk_get_rate(CODEC_CLK), pll_out, bclk, mclk_div);
-
 
 #if !defined CONFIG_SND_AT32_SOC_PLAYPAQ_SLAVE
 	ret = snd_soc_dai_set_clkdiv(codec_dai, WM8510_BCLKDIV, bclk);
@@ -266,7 +250,6 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 	}
 #endif /* CONFIG_SND_AT32_SOC_PLAYPAQ_SLAVE */
 
-
 	ret = snd_soc_dai_set_pll(codec_dai, 0, 0,
 					 clk_get_rate(CODEC_CLK), pll_out);
 	if (ret < 0) {
@@ -275,7 +258,6 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 		return ret;
 	}
 
-
 	ret = snd_soc_dai_set_clkdiv(codec_dai, WM8510_MCLKDIV, mclk_div);
 	if (ret < 0) {
 		pr_warning("playpaq_wm8510: Failed to set CODEC MCLKDIV (%d)\n",
@@ -283,24 +265,17 @@ static int playpaq_wm8510_hw_params(struct snd_pcm_substream *substream,
 		return ret;
 	}
 
-
 	return 0;
 }
-
-
 
 static struct snd_soc_ops playpaq_wm8510_ops = {
 	.hw_params = playpaq_wm8510_hw_params,
 };
 
-
-
 static const struct snd_soc_dapm_widget playpaq_dapm_widgets[] = {
 	SND_SOC_DAPM_MIC("Int Mic", NULL),
 	SND_SOC_DAPM_SPK("Ext Spk", NULL),
 };
-
-
 
 static const struct snd_soc_dapm_route intercon[] = {
 	/* speaker connected to SPKOUT */
@@ -311,8 +286,6 @@ static const struct snd_soc_dapm_route intercon[] = {
 	{"MICN", NULL, "Mic Bias"},
 	{"MICP", NULL, "Mic Bias"},
 };
-
-
 
 static int playpaq_wm8510_init(struct snd_soc_pcm_runtime *rtd)
 {
@@ -326,21 +299,15 @@ static int playpaq_wm8510_init(struct snd_soc_pcm_runtime *rtd)
 	for (i = 0; i < ARRAY_SIZE(playpaq_dapm_widgets); i++)
 		snd_soc_dapm_new_control(dapm, &playpaq_dapm_widgets[i]);
 
-
-
 	/*
 	 * Setup audio path interconnects
 	 */
 	snd_soc_dapm_add_routes(dapm, intercon, ARRAY_SIZE(intercon));
 
-
-
 	/* always connected pins */
 	snd_soc_dapm_enable_pin(dapm, "Int Mic");
 	snd_soc_dapm_enable_pin(dapm, "Ext Spk");
 	snd_soc_dapm_sync(dapm);
-
-
 
 	/* Make CSB show PLL rate */
 	snd_soc_dai_set_clkdiv(rtd->codec_dai, WM8510_OPCLKDIV,
@@ -348,8 +315,6 @@ static int playpaq_wm8510_init(struct snd_soc_pcm_runtime *rtd)
 
 	return 0;
 }
-
-
 
 static struct snd_soc_dai_link playpaq_wm8510_dai = {
 	.name = "WM8510",
@@ -362,8 +327,6 @@ static struct snd_soc_dai_link playpaq_wm8510_dai = {
 	.ops = &playpaq_wm8510_ops,
 };
 
-
-
 static struct snd_soc_card snd_soc_playpaq = {
 	.name = "LRS_PlayPaq_WM8510",
 	.dai_link = &playpaq_wm8510_dai,
@@ -371,7 +334,6 @@ static struct snd_soc_card snd_soc_playpaq = {
 };
 
 static struct platform_device *playpaq_snd_device;
-
 
 static int __init playpaq_asoc_init(void)
 {
@@ -402,7 +364,6 @@ static int __init playpaq_asoc_init(void)
 	at32_select_periph(MCLK_PIN, MCLK_PERIPH, 0);
 #endif
 
-
 	/*
 	 * Create and register platform device
 	 */
@@ -423,7 +384,6 @@ static int __init playpaq_asoc_init(void)
 
 	return 0;
 
-
 err_device_add:
 	if (playpaq_snd_device != NULL) {
 		platform_device_put(playpaq_snd_device);
@@ -442,7 +402,6 @@ err_pll0:
 	}
 	return ret;
 }
-
 
 static void __exit playpaq_asoc_exit(void)
 {

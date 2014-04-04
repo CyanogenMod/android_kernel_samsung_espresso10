@@ -227,7 +227,6 @@ enum ssp_chip_select {
 	SSP_CHIP_DESELECT
 };
 
-
 struct dma_chan;
 /**
  * struct pl022_ssp_master - device.platform_data for SPI controller devices.

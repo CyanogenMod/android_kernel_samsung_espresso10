@@ -51,4 +51,3 @@
 #define RTL818X_EEPROM_CMD_WRITE	(1 << 1)
 #define RTL818X_EEPROM_CMD_CK		(1 << 2)
 #define RTL818X_EEPROM_CMD_CS		(1 << 3)
-

@@ -112,7 +112,6 @@ static int gl861_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
 	struct dvb_usb_device *d = i2c_get_adapdata(adap);
 	int i;
 
-
 	if (num > 2)
 		return -EINVAL;
 
@@ -195,7 +194,6 @@ static int friio_ext_ctl(struct dvb_usb_adapter *adap,
 	kfree(buf);
 	return (ret == 70);
 }
-
 
 static int friio_streaming_ctrl(struct dvb_usb_adapter *adap, int onoff);
 
@@ -444,7 +442,6 @@ static int friio_probe(struct usb_interface *intf,
 	return ret;
 }
 
-
 struct jdvbt90502_config friio_fe_config = {
 	.demod_address = FRIIO_DEMOD_ADDR,
 	.pll_address = FRIIO_PLL_ADDR,
@@ -460,7 +457,6 @@ static struct usb_device_id friio_table[] = {
 	{ }		/* Terminating entry */
 };
 MODULE_DEVICE_TABLE(usb, friio_table);
-
 
 static struct dvb_usb_device_properties friio_properties = {
 	.caps = DVB_USB_IS_AN_I2C_ADAPTER,
@@ -511,7 +507,6 @@ static struct usb_driver friio_driver = {
 	.id_table	= friio_table,
 };
 
-
 /* module stuff */
 static int __init friio_module_init(void)
 {
@@ -523,7 +518,6 @@ static int __init friio_module_init(void)
 
 	return ret;
 }
-
 
 static void __exit friio_module_exit(void)
 {

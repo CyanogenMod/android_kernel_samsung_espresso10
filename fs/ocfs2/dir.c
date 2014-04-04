@@ -442,7 +442,6 @@ static int ocfs2_validate_dir_block(struct super_block *sb,
 	struct ocfs2_dir_block_trailer *trailer =
 		ocfs2_trailer_from_bh(bh, sb);
 
-
 	/*
 	 * We don't validate dirents here, that's handled
 	 * in-place when the code walks them.

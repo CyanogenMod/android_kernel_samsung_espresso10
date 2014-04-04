@@ -35,7 +35,6 @@
 #include "xfs_error.h"
 #include "xfs_trace.h"
 
-
 #define XFS_ABSDIFF(a,b)	(((a) <= (b)) ? ((b) - (a)) : ((a) - (b)))
 
 #define	XFSA_FIXUP_BNO_OK	1
@@ -2739,7 +2738,6 @@ out_force_log:
 	spin_lock(&pag->pagb_lock);
 	return false;
 }
-
 
 /*
  * For a given extent [fbno, flen], make sure we can reuse it safely.

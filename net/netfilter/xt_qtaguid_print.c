@@ -25,7 +25,6 @@
 #include <linux/slab.h>
 #include <linux/spinlock_types.h>
 
-
 #include "xt_qtaguid_internal.h"
 #include "xt_qtaguid_print.h"
 

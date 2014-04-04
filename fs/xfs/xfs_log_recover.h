@@ -30,7 +30,6 @@
 
 #define XLOG_MAX_REGIONS_IN_ITEM   (XFS_MAX_BLOCKSIZE / XFS_BLF_CHUNK / 2 + 1)
 
-
 /*
  * item headers are in ri_buf[0].  Additional buffers follow.
  */

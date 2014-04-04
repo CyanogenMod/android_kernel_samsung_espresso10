@@ -1,7 +1,6 @@
 #ifndef __UM_CACHE_H
 #define __UM_CACHE_H
 
-
 #if defined(CONFIG_UML_X86) && !defined(CONFIG_64BIT)
 # define L1_CACHE_SHIFT		(CONFIG_X86_L1_CACHE_SHIFT)
 #elif defined(CONFIG_UML_X86) /* 64-bit */

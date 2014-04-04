@@ -61,7 +61,6 @@ task_free_notify(struct notifier_block *self, unsigned long val, void *data)
 	return NOTIFY_OK;
 }
 
-
 /* The task is on its way out. A sync of the buffer means we can catch
  * any remaining samples for this task.
  */
@@ -74,7 +73,6 @@ task_exit_notify(struct notifier_block *self, unsigned long val, void *data)
 	sync_buffer(raw_smp_processor_id());
 	return 0;
 }
-
 
 /* The task is about to try a do_munmap(). We peek at what it's going to
  * do, and if it's an executable region, process the samples first, so
@@ -104,7 +102,6 @@ munmap_notify(struct notifier_block *self, unsigned long val, void *data)
 	return 0;
 }
 
-
 /* We need to be told about new modules so we don't attribute to a previously
  * loaded module, or drop the samples on the floor.
  */
@@ -123,7 +120,6 @@ module_load_notify(struct notifier_block *self, unsigned long val, void *data)
 #endif
 	return 0;
 }
-
 
 static struct notifier_block task_free_nb = {
 	.notifier_call	= task_free_notify,
@@ -184,7 +180,6 @@ out1:
 	goto out;
 }
 
-
 void sync_stop(void)
 {
 	end_cpu_work();
@@ -200,7 +195,6 @@ void sync_stop(void)
 	free_cpumask_var(marked_cpus);
 }
 
-
 /* Optimisation. We can manage without taking the dcookie sem
  * because we cannot reach this code without at least one
  * dcookie user still being registered (namely, the reader
@@ -214,7 +208,6 @@ static inline unsigned long fast_get_dcookie(struct path *path)
 	get_dcookie(path, &cookie);
 	return cookie;
 }
-
 
 /* Look up the dcookie for the task's first VM_EXECUTABLE mapping,
  * which corresponds loosely to "application name". This is
@@ -241,7 +234,6 @@ static unsigned long get_exec_dcookie(struct mm_struct *mm)
 out:
 	return cookie;
 }
-
 
 /* Convert the EIP value of a sample into a persistent dentry/offset
  * pair that can then be added to the global event buffer. We make
@@ -309,14 +301,12 @@ add_user_ctx_switch(struct task_struct const *task, unsigned long cookie)
 	add_event_entry(task->tgid);
 }
 
-
 static void add_cookie_switch(unsigned long cookie)
 {
 	add_event_entry(ESCAPE_CODE);
 	add_event_entry(COOKIE_SWITCH_CODE);
 	add_event_entry(cookie);
 }
-
 
 static void add_trace_begin(void)
 {
@@ -367,7 +357,6 @@ static inline void add_sample_entry(unsigned long offset, unsigned long event)
 	add_event_entry(event);
 }
 
-
 /*
  * Add a sample to the global event buffer. If possible the
  * sample is converted into a persistent dentry/offset pair
@@ -408,7 +397,6 @@ add_sample(struct mm_struct *mm, struct op_sample *s, int in_kernel)
 	return 1;
 }
 
-
 static void release_mm(struct mm_struct *mm)
 {
 	if (!mm)
@@ -416,7 +404,6 @@ static void release_mm(struct mm_struct *mm)
 	up_read(&mm->mmap_sem);
 	mmput(mm);
 }
-
 
 static struct mm_struct *take_tasks_mm(struct task_struct *task)
 {
@@ -426,12 +413,10 @@ static struct mm_struct *take_tasks_mm(struct task_struct *task)
 	return mm;
 }
 
-
 static inline int is_code(unsigned long val)
 {
 	return val == ESCAPE_CODE;
 }
-
 
 /* Move tasks along towards death. Any tasks on dead_tasks
  * will definitely have no remaining references in any
@@ -459,7 +444,6 @@ static void process_task_mortuary(void)
 	}
 }
 
-
 static void mark_done(int cpu)
 {
 	int i;
@@ -478,7 +462,6 @@ static void mark_done(int cpu)
 
 	cpumask_clear(marked_cpus);
 }
-
 
 /* FIXME: this is not sufficient if we implement syscall barrier backtrace
  * traversal, the code switch to sb_sample_start at first kernel enter/exit
@@ -595,4 +578,3 @@ void oprofile_put_buff(unsigned long *buf, unsigned int start,
 
 	mutex_unlock(&buffer_mutex);
 }
-

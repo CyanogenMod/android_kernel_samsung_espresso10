@@ -218,4 +218,3 @@ extern void selinux_status_update_setenforce(int enforcing);
 extern void selinux_status_update_policyload(int seqno);
 
 #endif /* _SELINUX_SECURITY_H_ */
-

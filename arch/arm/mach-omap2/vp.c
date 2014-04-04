@@ -187,7 +187,6 @@ static u8 __vp_recover_count = _MAX_RETRIES_BEFORE_RECOVER;
 	}								\
 }
 
-
 /* VP force update method of voltage scaling */
 int omap_vp_forceupdate_scale(struct voltagedomain *voltdm,
 			      struct omap_volt_data *target_v)

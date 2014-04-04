@@ -208,7 +208,6 @@ void dc_reset(struct channel *sc)
 	dc_write(sc->addr, SBE_2T3E3_21143_REG_SIA_AND_GENERAL_PURPOSE_PORT, 0);
 }
 
-
 void dc_receiver_onoff(struct channel *sc, u32 mode)
 {
 	u32 i, state = 0;
@@ -287,8 +286,6 @@ void dc_transmitter_onoff(struct channel *sc, u32 mode)
 	sc->p.transmitter_on = mode;
 }
 
-
-
 void dc_set_loopback(struct channel *sc, u32 mode)
 {
 	u32 val;
@@ -346,7 +343,6 @@ u32 dc_init_descriptor_list(struct channel *sc)
 		dev_err(&sc->pdev->dev, "SBE 2T3E3: no buffer space for RX ring\n");
 		return ENOMEM;
 	}
-
 
 	/*
 	 * Receive ring
@@ -447,7 +443,6 @@ void dc_drop_descriptor_list(struct channel *sc)
 	kfree(sc->ether.tx_ring);
 	sc->ether.tx_ring = NULL;
 }
-
 
 void dc_set_output_port(struct channel *sc)
 {

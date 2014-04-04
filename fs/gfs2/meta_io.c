@@ -456,4 +456,3 @@ struct buffer_head *gfs2_meta_ra(struct gfs2_glock *gl, u64 dblock, u32 extlen)
 out:
 	return first_bh;
 }
-

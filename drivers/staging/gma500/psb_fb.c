@@ -345,7 +345,7 @@ err:
  *	stolen memory or the system has no stolen memory we allocate a range
  *	and back it with a GEM object.
  *
- *	In this case the GEM object has no handle. 
+ *	In this case the GEM object has no handle.
  */
 static struct gtt_range *psbfb_alloc(struct drm_device *dev, int aligned_size)
 {
@@ -366,7 +366,7 @@ static struct gtt_range *psbfb_alloc(struct drm_device *dev, int aligned_size)
 	}
 	return backing;
 }
-	
+
 /**
  *	psbfb_create		-	create a framebuffer
  *	@fbdev: the framebuffer device
@@ -509,7 +509,7 @@ static struct drm_framebuffer *psb_user_framebuffer_create
                 drm_gem_object_unreference_unlocked(obj);
                 return ERR_PTR(-ENOMEM);
         }
-        
+
         /* Let the core code do all the work */
         r = container_of(obj, struct gtt_range, gem);
 	if (psb_framebuffer_create(dev, cmd, r) == NULL) {

@@ -5,7 +5,7 @@
  *  additional internal registers.
  *
  *  Copyright (C) 2001 Thomas Gleixner autronix automation <gleixner@autronix.de>
- *			
+ *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 /*
 *	CS89712 additional registers
 */
-                                  
+
 #define PCDR			0x0002	/* Port C Data register ---------------------------- */
 #define PCDDR			0x0042	/* Port C Data Direction register ------------------ */
 #define SDCONF			0x2300  /* SDRAM Configuration register ---------------------*/

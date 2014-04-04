@@ -15,7 +15,6 @@ use Getopt::Long;
 # Authors:
 # 	Arjan van de Ven <arjan@linux.intel.com>
 
-
 my $cross_compile = "";
 my $vmlinux_name = "";
 my $modulefile = "";
@@ -44,7 +43,6 @@ my $func_offset = 0;
 my $vmaoffset = 0;
 
 my %regs;
-
 
 sub parse_x86_regs
 {
@@ -230,8 +228,6 @@ sub InRange {
 	return 0;
 }
 
-
-
 # first, parse the input into the lines array, but to keep size down,
 # we only do this for 4Kb around the sweet spot
 
@@ -299,7 +295,6 @@ while ($start > 1) {
 	}
 }
 
-
 $finish = $center;
 $codelines = 0;
 $binarylines = 0;
@@ -319,9 +314,7 @@ while ($finish < $counter) {
 	}
 }
 
-
 my $i;
-
 
 # start annotating the registers in the asm.
 # this goes from the oopsing point back, so that the annotator
@@ -367,4 +360,3 @@ OPTION:
 EOT
 	exit;
 }
-

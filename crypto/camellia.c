@@ -306,7 +306,6 @@ static const u32 camellia_sp4404[256] = {
 	0xe3e300e3, 0xf4f400f4, 0xc7c700c7, 0x9e9e009e,
 };
 
-
 #define CAMELLIA_MIN_KEY_SIZE        16
 #define CAMELLIA_MAX_KEY_SIZE        32
 #define CAMELLIA_BLOCK_SIZE          16
@@ -317,7 +316,6 @@ static const u32 camellia_sp4404[256] = {
  * That is, in (xxxL,xxxR) pair xxxL holds most significant digits,
  * _not_ least significant ones!
  */
-
 
 /* key constants */
 
@@ -847,7 +845,6 @@ static void camellia_setup192(const unsigned char *key, u32 *subkey)
 	camellia_setup256(kk, subkey);
 }
 
-
 /*
  * Encrypt/decrypt
  */
@@ -993,7 +990,6 @@ static void camellia_do_decrypt(const u32 *subkey, u32 *io, unsigned i)
 	io[3] ^= SUBKEY_R(0);
 	/* NB: 0,1 should be swapped with 2,3 by caller! */
 }
-
 
 struct camellia_ctx {
 	int key_length;

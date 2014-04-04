@@ -622,7 +622,6 @@ long compat_sys_shmctl(int first, int second, void __user *uptr)
 			err = -EFAULT;
 		break;
 
-
 	case IPC_SET:
 		if (version == IPC_64) {
 			err = get_compat_shmid64_ds(&s64, uptr);

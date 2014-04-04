@@ -18,7 +18,6 @@
 #define KS8695_UART_VA		(KS8695_IO_VA + KS8695_UART_OFFSET)
 #define KS8695_UART_PA		(KS8695_IO_PA + KS8695_UART_OFFSET)
 
-
 /*
  * UART registers
  */
@@ -31,7 +30,6 @@
 #define KS8695_URMS	(0x18)		/* Modem Status Register */
 #define KS8695_URBD	(0x1C)		/* Baud Rate Divisor Register */
 #define KS8695_USR	(0x20)		/* Status Register */
-
 
 /* FIFO Control Register */
 #define URFC_URFRT	(3 << 6)	/* Receive FIFO Trigger Level */
@@ -87,6 +85,5 @@
 
 /* Status Register */
 #define USR_UTI		(1 << 0)	/* Timeout Indication */
-
 
 #endif

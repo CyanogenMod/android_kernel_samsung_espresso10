@@ -172,7 +172,6 @@ static int __devinit matrox_w1_probe(struct pci_dev *pdev, const struct pci_devi
 		return -ENOMEM;
 	}
 
-
 	dev->bus_master = (struct w1_bus_master *)(dev + 1);
 
 	/*

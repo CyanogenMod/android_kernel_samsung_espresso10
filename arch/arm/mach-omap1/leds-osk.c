@@ -13,7 +13,6 @@
 
 #include "leds.h"
 
-
 #define LED_STATE_ENABLED	(1 << 0)
 #define LED_STATE_CLAIMED	(1 << 1)
 static u8 led_state;
@@ -21,7 +20,6 @@ static u8 led_state;
 #define	TIMER_LED		(1 << 3)	/* Mistral board */
 #define	IDLE_LED		(1 << 4)	/* Mistral board */
 static u8 hw_led_state;
-
 
 #ifdef	CONFIG_OMAP_OSK_MISTRAL
 

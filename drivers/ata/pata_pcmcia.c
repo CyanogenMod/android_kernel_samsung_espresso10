@@ -39,7 +39,6 @@
 #include <pcmcia/cisreg.h>
 #include <pcmcia/ciscode.h>
 
-
 #define DRV_NAME "pata_pcmcia"
 #define DRV_VERSION "0.3.5"
 
@@ -165,7 +164,6 @@ static struct ata_port_operations pcmcia_8bit_port_ops = {
 	.set_mode	= pcmcia_set_mode_8bit,
 	.sff_drain_fifo	= pcmcia_8bit_drain_fifo,
 };
-
 
 static int pcmcia_check_one_config(struct pcmcia_device *pdev, void *priv_data)
 {

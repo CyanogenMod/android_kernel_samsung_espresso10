@@ -12,7 +12,6 @@
 #include "vb_init.h"
 #include "vb_ext.h"
 
-
 #include <linux/io.h>
 
 static unsigned char XGINew_ChannelAB, XGINew_DataBusWidth;
@@ -1450,7 +1449,6 @@ unsigned char XGIInitNew(struct xgi_hw_device_info *HwDeviceExtension)
 	pVideoMemory = (unsigned char *) pVBInfo->ROMAddr;
 
 	/* Newdebugcode(0x99); */
-
 
 	/* if (pVBInfo->ROMAddr == 0) */
 	/* return(0); */

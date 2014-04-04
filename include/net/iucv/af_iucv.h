@@ -48,7 +48,6 @@ struct sockaddr_iucv {
 	char		siucv_name[8];		/* Application Name */
 };
 
-
 /* Common socket structures and functions */
 struct sock_msg_q {
 	struct iucv_path	*path;

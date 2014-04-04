@@ -33,7 +33,6 @@ static const u32 edca_setting_UL[HT_IOT_PEER_MAX] =
 #define RTK_UL_EDCA 0xa44f
 #define RTK_DL_EDCA 0x5e4322
 
-
 dig_t	dm_digtable;
 // For Dynamic Rx Path Selection by Signal Strength
 DRxPathSel	DM_RxPathSelTable;
@@ -79,7 +78,6 @@ static void dm_deInit_fsync(struct r8192_priv *priv);
 
 static void dm_check_txrateandretrycount(struct r8192_priv *priv);
 static void dm_check_fsync(struct r8192_priv *priv);
-
 
 /*---------------------Define of Tx Power Control For Near/Far Range --------*/   //Add by Jacken 2008/02/18
 static void dm_init_dynamic_txpower(struct r8192_priv *priv);
@@ -142,7 +140,6 @@ void hal_dm_watchdog(struct r8192_priv *priv)
 	dm_ctstoself(priv);
 }
 
-
 /*
   * Decide Rate Adaptive Set according to distance (signal strength)
   *	01/11/2008	MHC		Modify input arguments and RATR table level.
@@ -168,7 +165,6 @@ void init_rate_adaptive(struct r8192_priv *priv)
 		pra->ping_rssi_enable = 0;
 	pra->ping_rssi_thresh_for_ra = 15;
 
-
 	if (priv->rf_type == RF_2T4R)
 	{
 		// 07/10/08 MH Modify for RA smooth scheme.
@@ -192,7 +188,6 @@ void init_rate_adaptive(struct r8192_priv *priv)
 
 }
 
-
 static void dm_check_rate_adaptive(struct r8192_priv *priv)
 {
 	PRT_HIGH_THROUGHPUT	pHTInfo = priv->ieee80211->pHTInfo;
@@ -201,7 +196,6 @@ static void dm_check_rate_adaptive(struct r8192_priv *priv)
 	u32						LowRSSIThreshForRA = 0, HighRSSIThreshForRA = 0;
 	bool						bshort_gi_enabled = false;
 	static u8					ping_rssi_state=0;
-
 
 	if(!priv->up)
 	{
@@ -226,7 +220,6 @@ static void dm_check_rate_adaptive(struct r8192_priv *priv)
 		//
 		bshort_gi_enabled = (pHTInfo->bCurTxBW40MHz && pHTInfo->bCurShortGI40MHz) ||
 			(!pHTInfo->bCurTxBW40MHz && pHTInfo->bCurShortGI20MHz);
-
 
 		pra->upper_rssi_threshold_ratr =
 				(pra->upper_rssi_threshold_ratr & (~BIT31)) | ((bshort_gi_enabled)? BIT31:0) ;
@@ -336,7 +329,6 @@ static void dm_check_rate_adaptive(struct r8192_priv *priv)
 
 }
 
-
 static void dm_init_bandwidth_autoswitch(struct r8192_priv *priv)
 {
 	priv->ieee80211->bandwidth_auto_switch.threshold_20Mhzto40Mhz = BW_AUTO_SWITCH_LOW_HIGH;
@@ -345,7 +337,6 @@ static void dm_init_bandwidth_autoswitch(struct r8192_priv *priv)
 	priv->ieee80211->bandwidth_auto_switch.bautoswitch_enable = false;
 
 }
-
 
 static void dm_bandwidth_autoswitch(struct r8192_priv *priv)
 {
@@ -654,7 +645,6 @@ static void dm_TXPowerTrackingCallback_TSSI(struct r8192_priv *priv)
 			return;
 		}
 
-
 	}
 		write_nic_byte(priv, Pw_Track_Flag, 0);
 		Avg_TSSI_Meas_from_driver = 0;
@@ -792,7 +782,6 @@ void dm_txpower_trackingcallback(struct work_struct *work)
 		dm_TXPowerTrackingCallback_ThermalMeter(priv);
 }
 
-
 static const txbbgain_struct rtl8192_txbbgain_table[] = {
 	{ 12,	0x7f8001fe },
 	{ 11,	0x788001e2 },
@@ -926,7 +915,6 @@ void dm_initialize_txpower_tracking(struct r8192_priv *priv)
 		dm_InitializeTXPowerTracking_ThermalMeter(priv);
 }
 
-
 static void dm_CheckTXPowerTracking_TSSI(struct r8192_priv *priv)
 {
 	static u32 tx_power_track_counter = 0;
@@ -983,7 +971,6 @@ static void dm_check_txpower_tracking(struct r8192_priv *priv)
 		dm_CheckTXPowerTracking_ThermalMeter(priv);
 }
 
-
 static void dm_CCKTxPowerAdjust_TSSI(struct r8192_priv *priv, bool bInCH14)
 {
 	u32 TempVal;
@@ -1029,7 +1016,6 @@ static void dm_CCKTxPowerAdjust_TSSI(struct r8192_priv *priv, bool bInCH14)
 
 		rtl8192_setBBreg(priv, rCCK0_DebugPort, bMaskLWord, TempVal);
 	}
-
 
 }
 
@@ -1133,7 +1119,6 @@ static void dm_dig_init(struct r8192_priv *priv)
 
 }
 
-
 /*
  * Driver must monitor RSSI and notify firmware to change initial
  * gain according to different threshold. BB team provide the
@@ -1149,7 +1134,6 @@ static void dm_ctrl_initgain_byrssi(struct r8192_priv *priv)
 	else if(dm_digtable.dig_algorithm == DIG_ALGO_BY_RSSI)
 		dm_ctrl_initgain_byrssi_by_driverrssi(priv);
 }
-
 
 static void dm_ctrl_initgain_byrssi_by_driverrssi(struct r8192_priv *priv)
 {
@@ -1381,7 +1365,6 @@ static void dm_ctrl_initgain_byrssi_highpwr(struct r8192_priv *priv)
 
 }
 
-
 static void dm_initial_gain(struct r8192_priv *priv)
 {
 	u8					initial_gain=0;
@@ -1573,7 +1556,6 @@ static void dm_cs_ratio(struct r8192_priv *priv)
 		reset_cnt = priv->reset_count;
 	}
 
-
 	if((dm_digtable.precs_ratio_state != dm_digtable.curcs_ratio_state) ||
 		!initialized || force_write)
 	{
@@ -1698,7 +1680,6 @@ static void dm_check_edca_turbo(struct r8192_priv *priv)
 		}
 	}
 
-
 dm_CheckEdcaTurbo_EXIT:
 	// Set variables for next time.
 	priv->ieee80211->bis_any_nonbepkts = false;
@@ -1748,8 +1729,6 @@ static void dm_ctstoself(struct r8192_priv *priv)
 		lastRxOkCnt = priv->stats.rxbytesunicast;
 	}
 }
-
-
 
 /* Copy 8187B template for 9xseries */
 static void dm_check_rfctrl_gpio(struct r8192_priv *priv)
@@ -1808,7 +1787,6 @@ void dm_rf_pathcheck_workitemcallback(struct work_struct *work)
 	struct delayed_work *dwork = container_of(work,struct delayed_work,work);
 	struct r8192_priv *priv = container_of(dwork,struct r8192_priv,rfpath_check_wq);
 	u8 rfpath = 0, i;
-
 
 	/* 2008/01/30 MH After discussing with SD3 Jerry, 0xc04/0xd04 register will
 	   always be the same. We only read 0xc04 now. */
@@ -2051,7 +2029,6 @@ static void dm_rxpath_sel_byrssi(struct r8192_priv *priv)
 		}
 	}
 
-
 	// Set CCK Rx path
 	// reg0xA07[3:2]=cck default rx path, reg0xa07[1:0]=cck optional rx path.
 	update_cck_rx_path = 0;
@@ -2132,7 +2109,6 @@ static void dm_init_fsync(struct r8192_priv *priv)
 	priv->fsync_timer.data = (unsigned long)priv;
 	priv->fsync_timer.function = dm_fsync_timer_callback;
 }
-
 
 static void dm_deInit_fsync(struct r8192_priv *priv)
 {
@@ -2523,7 +2499,6 @@ static void dm_dynamic_txpower(struct r8192_priv *priv)
 	{
 		RT_TRACE(COMP_TXAGC, "SetTxPowerLevel8190() channel = %d\n", priv->ieee80211->current_network.channel);
 
-
 		rtl8192_phy_setTxPower(priv, priv->ieee80211->current_network.channel);
 
 	}
@@ -2551,4 +2526,3 @@ static void dm_send_rssi_tofw(struct r8192_priv *priv)
 	write_nic_byte(priv, DRIVER_RSSI, (u8)priv->undecorated_smoothed_pwdb);
 	return;
 }
-

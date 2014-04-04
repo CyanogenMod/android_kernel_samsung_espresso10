@@ -26,5 +26,4 @@ config PN544_NFC
 	  To compile this driver as a module, choose m here. The module will
 	  be called pn544.
 
-
 endif # NFC_DEVICES

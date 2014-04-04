@@ -22,7 +22,6 @@
 #include <mach/dma.h>
 #include <asm/system.h>
 
-
 #define to_mcp(d)		container_of(d, struct mcp, attached_device)
 #define to_mcp_driver(d)	container_of(d, struct mcp_driver, drv)
 

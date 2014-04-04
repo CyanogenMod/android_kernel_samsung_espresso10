@@ -75,7 +75,6 @@ static int ac97_touch_slot = 5;
 module_param(ac97_touch_slot, int, 0);
 MODULE_PARM_DESC(ac97_touch_slot, "Touch screen data slot AC97 number");
 
-
 /* flush AC97 slot 5 FIFO machines */
 static void wm97xx_acc_pen_up(struct wm97xx *wm)
 {

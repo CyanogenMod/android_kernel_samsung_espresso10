@@ -2118,4 +2118,3 @@ static void __exit si4713_module_exit(void)
 
 module_init(si4713_module_init);
 module_exit(si4713_module_exit);
-

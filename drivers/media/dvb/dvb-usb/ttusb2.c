@@ -155,7 +155,6 @@ static int tt3650_rc_query(struct dvb_usb_device *d)
 	return 0;
 }
 
-
 /* Callbacks for DVB USB */
 static int ttusb2_identify_state (struct usb_device *udev, struct
 		dvb_usb_device_properties *props, struct dvb_usb_device_description **desc,
@@ -171,7 +170,6 @@ static int ttusb2_power_ctrl(struct dvb_usb_device *d, int onoff)
 	ttusb2_msg(d, CMD_POWER, &b, 0, NULL, 0);
 	return ttusb2_msg(d, CMD_POWER, &b, 1, NULL, 0);
 }
-
 
 static struct tda10086_config tda10086_config = {
 	.demod_address = 0x0e,

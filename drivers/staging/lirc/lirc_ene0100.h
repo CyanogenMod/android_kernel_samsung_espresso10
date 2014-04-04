@@ -93,13 +93,11 @@
 #define ENE_CIR_SAMPLE_PERIOD	0xFEC8	 /* sample period in us */
 #define ENE_CIR_SAMPLE_OVERFLOW	(1 << 7) /* interrupt on overflows if set */
 
-
 /* transmitter - not implemented yet */
 /* KB3926C and higher */
 /* transmission is very similar to receiving, a byte is written to */
 /* ENE_TX_INPUT, in same manner as it is read from sample buffer */
 /* sample period is fixed*/
-
 
 /* transmitter ports */
 #define ENE_TX_PORT1		0xFC01	 /* this enables one or both */
@@ -111,7 +109,6 @@
 #define ENE_TX_SPC_MASK		(1 << 7) /* Transmitted sample is space */
 #define ENE_TX_UNK1		0xFECB	 /* set to 0x63 */
 #define ENE_TX_SMPL_PERIOD	50	 /* transmit sample period */
-
 
 #define ENE_TX_CARRIER		0xFECE	 /* TX carrier * 2 (khz) */
 #define ENE_TX_CARRIER_UNKBIT	0x80	 /* This bit set on transmit */

@@ -287,7 +287,6 @@
 #define		ATOMICWIN		0x02
 #define		ATOMICDONE		0x01
 
-
 #define ALTCIOADR	(REG_BASE_ADDR + 0x828)
 /* 16 bit; bits 8:0 define CIO addr space of CSEQ */
 
@@ -1356,7 +1355,6 @@
 
 #define LmSMDBGCTL(LinkNum) 		LmSEQ_PHY_REG(0, LinkNum, 0xF0)
 
-
 /*
  * LmSEQ CIO Bus Mode 3 Register.
  * Mode 3: Configuration and Setup, IOP Context SCB.
@@ -1390,7 +1388,6 @@
 #define LmBITL_TIMER(LinkNum) 		LmSEQ_PHY_REG(0, LinkNum, 0xA2)
 
 #define LmWWN(LinkNum) 			LmSEQ_PHY_REG(0, LinkNum, 0xA8)
-
 
 /*
  * LmSEQ CIO Bus Mode 5 Registers.
@@ -1565,7 +1562,6 @@
 #define HOT_PLUG_DELAY		0x150
 /* In 5 ms units. 20 = 100 ms. */
 #define	HOTPLUG_DELAY_TIMEOUT		20
-
 
 #define INT_ENABLE_2		0x15A
 
@@ -1826,17 +1822,14 @@
 #define		SEEPROMTYP		0x00000002
 #define		SEEPROMEX		0x00000001
 
-
 #define EXSICNTRLR	(EXSI_REG_BASE_ADR + 0x04)
 
 #define		MODINT_EN		0x00000001
-
 
 #define PMSTATR		(EXSI_REG_BASE_ADR + 0x10)
 
 #define		FLASHRST		0x00000002
 #define		FLASHRDY		0x00000001
-
 
 #define FLCNFGR		(EXSI_REG_BASE_ADR + 0x14)
 
@@ -1891,7 +1884,6 @@
 
 #define 	XRADDRINCEN		0x80000000
 #define 	XREGADD_MASK		0x007FFFFF
-
 
 #define XREGDATAR	(EXSI_REG_BASE_ADR + 0x28)
 

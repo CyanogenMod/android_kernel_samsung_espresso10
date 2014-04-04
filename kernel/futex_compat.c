@@ -14,7 +14,6 @@
 
 #include <asm/uaccess.h>
 
-
 /*
  * Fetch a robust-list pointer. Bit 0 signals PI futexes:
  */

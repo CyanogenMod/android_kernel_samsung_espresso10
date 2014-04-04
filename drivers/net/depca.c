@@ -2,14 +2,12 @@
 
     Written 1994, 1995 by David C. Davies.
 
-
                       Copyright 1994 David C. Davies
 		                   and
 			 United States Government
 	 (as represented by the Director, National Security Agency).
 
                Copyright 1995  Digital Equipment Corporation.
-
 
     This software may be used and distributed according to the terms of
     the GNU General Public License, incorporated herein by reference.
@@ -61,7 +59,6 @@
        Digital Equipment Corporation, 1989
     8) "DEC EtherWORKS Turbo_(TP BNC) Ethernet Controller Owners Manual",
        Digital Equipment corporation, 1991, Pub. #EK-DE202-OM.001
-
 
     Peter Bauer's depca.c (V0.5) was referred to when debugging V0.1 of this
     driver.
@@ -170,7 +167,6 @@
     ************************************************************************
     TO DO:
     ------
-
 
     Revision History
     ----------------
@@ -826,7 +822,6 @@ out_priv:
 	return status;
 }
 
-
 static int depca_open(struct net_device *dev)
 {
 	struct depca_private *lp = netdev_priv(dev);
@@ -911,7 +906,6 @@ static void depca_init_ring(struct net_device *dev)
 	lp->init_block.mode = 0x0000;	/* Enable the Tx and Rx */
 }
 
-
 static void depca_tx_timeout(struct net_device *dev)
 {
 	u_long ioaddr = dev->base_addr;
@@ -925,7 +919,6 @@ static void depca_tx_timeout(struct net_device *dev)
 	netif_wake_queue(dev);
 	InitRestartDepca(dev);
 }
-
 
 /*
 ** Writes a socket buffer to TX descriptor ring and starts transmission
@@ -1292,7 +1285,6 @@ static void SetMulticastFilter(struct net_device *dev)
 				for (j = 0; j < 5; j++) {	/* ... in reverse order. */
 					hashcode = (hashcode << 1) | ((crc >>= 1) & 1);
 				}
-
 
 				byte = hashcode >> 3;	/* bit[3-5] -> byte in filter */
 				bit = 1 << (hashcode & 0x07);	/* bit[0-2] -> bit in byte */

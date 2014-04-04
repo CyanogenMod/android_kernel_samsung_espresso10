@@ -2,7 +2,6 @@
 
 /* Written 1997-2000 by Werner Almesberger, EPFL LRC/ICA */
 
-
 #include <linux/module.h>
 #include <linux/wait.h>
 #include <linux/atmdev.h>
@@ -13,31 +12,25 @@
 #include <asm/uaccess.h>
 #include <asm/atomic.h>
 
-
 extern int atm_init_aal5(struct atm_vcc *vcc); /* "raw" AAL5 transport */
 
-
 #define PRIV(dev) ((struct atmtcp_dev_data *) ((dev)->dev_data))
-
 
 struct atmtcp_dev_data {
 	struct atm_vcc *vcc;	/* control VCC; NULL if detached */
 	int persist;		/* non-zero if persistent */
 };
 
-
 #define DEV_LABEL    "atmtcp"
 
 #define MAX_VPI_BITS  8	/* simplifies life */
 #define MAX_VCI_BITS 16
-
 
 /*
  * Hairy code ahead: the control VCC may be closed while we're still
  * waiting for an answer, so we need to re-validate out_vcc every once
  * in a while.
  */
-
 
 static int atmtcp_send_control(struct atm_vcc *vcc,int type,
     const struct atmtcp_control *msg,int flag)
@@ -84,7 +77,6 @@ static int atmtcp_send_control(struct atm_vcc *vcc,int type,
 	return error;
 }
 
-
 static int atmtcp_recv_control(const struct atmtcp_control *msg)
 {
 	struct atm_vcc *vcc = *(struct atm_vcc **) &msg->vcc;
@@ -109,12 +101,10 @@ static int atmtcp_recv_control(const struct atmtcp_control *msg)
 	return 0;
 }
 
-
 static void atmtcp_v_dev_close(struct atm_dev *dev)
 {
 	/* Nothing.... Isn't this simple :-)  -- REW */
 }
-
 
 static int atmtcp_v_open(struct atm_vcc *vcc)
 {
@@ -139,7 +129,6 @@ static int atmtcp_v_open(struct atm_vcc *vcc)
 	return -sk_atm(vcc)->sk_err;
 }
 
-
 static void atmtcp_v_close(struct atm_vcc *vcc)
 {
 	struct atmtcp_control msg;
@@ -151,7 +140,6 @@ static void atmtcp_v_close(struct atm_vcc *vcc)
 	clear_bit(ATM_VF_READY,&vcc->flags);
 	(void) atmtcp_send_control(vcc,ATMTCP_CTRL_CLOSE,&msg,ATM_VF_ADDR);
 }
-
 
 static int atmtcp_v_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 {
@@ -186,7 +174,6 @@ static int atmtcp_v_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 	dev->ci_range = ci;
 	return 0;
 }
-
 
 static int atmtcp_v_send(struct atm_vcc *vcc,struct sk_buff *skb)
 {
@@ -231,7 +218,6 @@ static int atmtcp_v_send(struct atm_vcc *vcc,struct sk_buff *skb)
 	return 0;
 }
 
-
 static int atmtcp_v_proc(struct atm_dev *dev,loff_t *pos,char *page)
 {
 	struct atmtcp_dev_data *dev_data = PRIV(dev);
@@ -241,7 +227,6 @@ static int atmtcp_v_proc(struct atm_dev *dev,loff_t *pos,char *page)
 	return sprintf(page,"persistent, %sconnected\n",
 	    dev_data->vcc ? "" : "dis");
 }
-
 
 static void atmtcp_c_close(struct atm_vcc *vcc)
 {
@@ -258,7 +243,6 @@ static void atmtcp_c_close(struct atm_vcc *vcc)
 	vcc->dev_data = NULL;
 	module_put(THIS_MODULE);
 }
-
 
 static struct atm_vcc *find_vcc(struct atm_dev *dev, short vpi, int vci)
 {
@@ -279,7 +263,6 @@ static struct atm_vcc *find_vcc(struct atm_dev *dev, short vpi, int vci)
         }
         return NULL;
 }
-
 
 static int atmtcp_c_send(struct atm_vcc *vcc,struct sk_buff *skb)
 {
@@ -321,11 +304,9 @@ done:
 	return result;
 }
 
-
 /*
  * Device operations for the virtual ATM devices created by ATMTCP.
  */
-
 
 static struct atmdev_ops atmtcp_v_dev_ops = {
 	.dev_close	= atmtcp_v_dev_close,
@@ -337,17 +318,14 @@ static struct atmdev_ops atmtcp_v_dev_ops = {
 	.owner		= THIS_MODULE
 };
 
-
 /*
  * Device operations for the ATMTCP control device.
  */
-
 
 static struct atmdev_ops atmtcp_c_dev_ops = {
 	.close		= atmtcp_c_close,
 	.send		= atmtcp_c_send
 };
-
 
 static struct atm_dev atmtcp_control_dev = {
 	.ops		= &atmtcp_c_dev_ops,
@@ -355,7 +333,6 @@ static struct atm_dev atmtcp_control_dev = {
 	.number		= 999,
 	.lock		= __SPIN_LOCK_UNLOCKED(atmtcp_control_dev.lock)
 };
-
 
 static int atmtcp_create(int itf,int persist,struct atm_dev **result)
 {
@@ -379,7 +356,6 @@ static int atmtcp_create(int itf,int persist,struct atm_dev **result)
 	if (result) *result = dev;
 	return 0;
 }
-
 
 static int atmtcp_attach(struct atm_vcc *vcc,int itf)
 {
@@ -414,12 +390,10 @@ static int atmtcp_attach(struct atm_vcc *vcc,int itf)
 	return dev->number;
 }
 
-
 static int atmtcp_create_persistent(int itf)
 {
 	return atmtcp_create(itf,1,NULL);
 }
-
 
 static int atmtcp_remove_persistent(int itf)
 {
@@ -481,7 +455,6 @@ static __init int atmtcp_init(void)
 	register_atm_ioctl(&atmtcp_ioctl_ops);
 	return 0;
 }
-
 
 static void __exit atmtcp_exit(void)
 {

@@ -28,7 +28,6 @@
 #include "xattr.h"
 #include "disk-io.h"
 
-
 ssize_t __btrfs_getxattr(struct inode *inode, const char *name,
 				void *buffer, size_t size)
 {

@@ -79,7 +79,6 @@ MODULE_FIRMWARE(FIRMWARE_NAME);
 */
 INT_MODULE_PARM(if_port, 0);
 
-
 #define DRV_NAME	"smc91c92_cs"
 #define DRV_VERSION	"1.123"
 
@@ -556,10 +555,10 @@ static int mot_setup(struct pcmcia_device *link)
 	    wait = ((CTL_RELOAD | CTL_STORE) & inw(ioaddr + CONTROL));
 	    if (wait == 0) break;
 	}
-	
+
 	if (wait)
 	    return -1;
-	
+
 	addr = inw(ioaddr + GENERAL);
 	dev->dev_addr[2*i]   = addr & 0xff;
 	dev->dev_addr[2*i+1] = (addr >> 8) & 0xff;
@@ -592,7 +591,6 @@ static int smc_config(struct pcmcia_device *link)
 
     return i;
 }
-
 
 static int smc_setup(struct pcmcia_device *link)
 {
@@ -679,7 +677,6 @@ static int pcmcia_osi_mac(struct pcmcia_device *p_dev,
 	return 0;
 };
 
-
 static int osi_setup(struct pcmcia_device *link, u_short manfid, u_short cardid)
 {
     struct net_device *dev = link->priv;
@@ -752,7 +749,6 @@ static int smc91c92_resume(struct pcmcia_device *link)
 
 	return 0;
 }
-
 
 /*======================================================================
 
@@ -1157,12 +1153,12 @@ static void smc_hardware_send_packet(struct net_device * dev)
 	u_int length = skb->len; /* The chip will pad to ethernet min. */
 
 	netdev_dbg(dev, "Trying to xmit packet of length %d\n", length);
-	
+
 	/* send the packet length: +6 for status word, length, and ctl */
 	outw(0, ioaddr + DATA_1);
 	outw(length + 6, ioaddr + DATA_1);
 	outsw(ioaddr + DATA_1, buf, length >> 1);
-	
+
 	/* The odd last byte, if there is one, goes in the control word. */
 	outw((length & 1) ? 0x2000 | buf[length-1] : 0, ioaddr + DATA_1);
     }
@@ -1406,12 +1402,12 @@ static irqreturn_t smc_interrupt(int irq, void *dev_id)
 	if (status & IM_ALLOC_INT) {
 	    /* Clear this interrupt so it doesn't happen again */
 	    mask &= ~IM_ALLOC_INT;
-	
+
 	    smc_hardware_send_packet(dev);
-	
+
 	    /* enable xmit interrupts based on this */
 	    mask |= (IM_TX_EMPTY_INT | IM_TX_INT);
-	
+
 	    /* and let the card send more packets to me */
 	    netif_wake_queue(dev);
 	}
@@ -1495,26 +1491,26 @@ static void smc_rx(struct net_device *dev)
     pr_debug("%s: Receive status %4.4x length %d.\n",
 	  dev->name, rx_status, packet_length);
 
-    if (!(rx_status & RS_ERRORS)) {		
+    if (!(rx_status & RS_ERRORS)) {
 	/* do stuff to make a new packet */
 	struct sk_buff *skb;
-	
+
 	/* Note: packet_length adds 5 or 6 extra bytes here! */
 	skb = dev_alloc_skb(packet_length+2);
-	
+
 	if (skb == NULL) {
 	    pr_debug("%s: Low memory, packet dropped.\n", dev->name);
 	    dev->stats.rx_dropped++;
 	    outw(MC_RELEASE, ioaddr + MMU_CMD);
 	    return;
 	}
-	
+
 	packet_length -= (rx_status & RS_ODDFRAME ? 5 : 6);
 	skb_reserve(skb, 2);
 	insw(ioaddr+DATA_1, skb_put(skb, packet_length),
 	     (packet_length+1)>>1);
 	skb->protocol = eth_type_trans(skb, dev);
-	
+
 	netif_rx(skb);
 	dev->last_rx = jiffies;
 	dev->stats.rx_packets++;
@@ -1524,7 +1520,7 @@ static void smc_rx(struct net_device *dev)
     } else {
 	/* error ... */
 	dev->stats.rx_errors++;
-	
+
 	if (rx_status & RS_ALGNERR)  dev->stats.rx_frame_errors++;
 	if (rx_status & (RS_TOOSHORT | RS_TOOLONG))
 	    dev->stats.rx_length_errors++;
@@ -1855,7 +1851,7 @@ static int smc_netdev_get_ecmd(struct net_device *dev, struct ethtool_cmd *ecmd)
 
     ecmd->supported = (SUPPORTED_TP | SUPPORTED_AUI |
 	SUPPORTED_10baseT_Half | SUPPORTED_10baseT_Full);
-		
+
     SMC_SELECT_BANK(1);
     tmp = inw(ioaddr + CONFIG);
     ecmd->port = (tmp & CFG_AUI_SELECT) ? PORT_AUI : PORT_TP;
@@ -1896,7 +1892,7 @@ static int smc_netdev_set_ecmd(struct net_device *dev, struct ethtool_cmd *ecmd)
     else
 	tmp &= ~TCR_FDUPLX;
     outw(tmp, ioaddr + TCR);
-	
+
     return 0;
 }
 

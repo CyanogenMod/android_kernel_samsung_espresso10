@@ -1,4 +1,3 @@
-
 #include "../sysfs.h"
 
 /* Accelerometer types of attribute */

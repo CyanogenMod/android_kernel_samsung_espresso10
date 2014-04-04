@@ -331,7 +331,7 @@ ip_set_get_hostipaddr4(struct nlattr *nla, u32 *ipaddr)
 {
 	__be32 ip;
 	int ret = ip_set_get_ipaddr4(nla, &ip);
-	
+
 	if (ret)
 		return ret;
 	*ipaddr = ntohl(ip);

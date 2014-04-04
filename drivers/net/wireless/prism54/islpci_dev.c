@@ -210,7 +210,6 @@ islpci_interrupt(int irq, void *config)
 		return IRQ_NONE;
 	}
 
-
 	/* check whether there is any source of interrupt on the device */
 	reg = readl(device + ISL38XX_INT_IDENT_REG);
 

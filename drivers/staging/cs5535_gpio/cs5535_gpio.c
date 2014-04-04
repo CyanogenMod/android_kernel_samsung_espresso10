@@ -21,7 +21,6 @@
 #include <asm/uaccess.h>
 #include <asm/io.h>
 
-
 #define NAME			"cs5535_gpio"
 
 MODULE_AUTHOR("Ben Gardner <bgardner@wabtec.com>");
@@ -70,7 +69,6 @@ static struct gpio_regmap rm[] =
 	{ 0x18, 0x18, 'P', 'p' },	/* GPIOx_OUT_PU_EN */
 	{ 0x1c, 0x1c, 'D', 'd' },	/* GPIOx_OUT_PD_EN */
 };
-
 
 /**
  * Gets the register offset for the GPIO bank.

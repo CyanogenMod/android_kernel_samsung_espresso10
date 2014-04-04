@@ -141,7 +141,6 @@ option_error:
 	| error T_EOL			{ zconf_error("invalid option"); }
 ;
 
-
 /* config/menuconfig entry */
 
 config_entry_start: T_CONFIG T_WORD T_EOL

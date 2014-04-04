@@ -266,7 +266,6 @@ enum dot11_profile_t { /* And set/allowed values */
 		/* Same as MIXED_G_WIFI */
 };
 
-
 /* The dot11d conformance level configures the 802.11d conformance levels.
  * The following conformance levels exist:*/
 enum oid_inl_conformance_t {
@@ -299,7 +298,6 @@ enum oid_inl_phycap_t {
 	INL_PHYCAP_5000MHZ = 2,
 	INL_PHYCAP_FAA = 0x80000000,	/* Means card supports the FAA switch */
 };
-
 
 enum oid_num_t {
 	GEN_OID_MACADDRESS = 0,

@@ -10,7 +10,6 @@ menuconfig THERMAL_FRAMEWORK
 	  a central hub for sensors, governors and cooling devices
 	  to register and pass data to.
 
-
 config THERMAL_FRAMEWORK_DEBUG
 	bool "Thermal Framework Debug support"
 	depends on THERMAL_FRAMEWORK && DEBUG_FS
@@ -25,4 +24,3 @@ config THERMAL_FRAMEWORK_DEBUG
 source "drivers/staging/thermal_framework/Kconfig.omap_thermal"
 
 source "drivers/staging/thermal_framework/Kconfig.duty_cycle"
-

@@ -175,7 +175,6 @@ failed:
 	return result;
 }
 
-
 static int saa7164_vbi_initialize(struct saa7164_port *port)
 {
 	saa7164_vbi_configure(port);

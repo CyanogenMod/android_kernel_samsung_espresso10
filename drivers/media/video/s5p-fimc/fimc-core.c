@@ -187,7 +187,6 @@ static struct v4l2_queryctrl fimc_ctrls[] = {
 	},
 };
 
-
 static struct v4l2_queryctrl *get_ctrl(int id)
 {
 	int i;
@@ -863,7 +862,6 @@ struct fimc_fmt *find_mbus_format(struct v4l2_mbus_framefmt *f,
 	return (i == ARRAY_SIZE(fimc_formats)) ? NULL : fmt;
 }
 
-
 int fimc_vidioc_try_fmt_mplane(struct file *file, void *priv,
 			       struct v4l2_format *f)
 {
@@ -874,7 +872,6 @@ int fimc_vidioc_try_fmt_mplane(struct file *file, void *priv,
 	struct fimc_fmt *fmt;
 	u32 max_width, mod_x, mod_y, mask;
 	int i, is_output = 0;
-
 
 	if (f->type == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE) {
 		if (fimc_ctx_state_is_set(FIMC_CTX_CAP, ctx))
@@ -924,7 +921,6 @@ int fimc_vidioc_try_fmt_mplane(struct file *file, void *priv,
 
 	pix->num_planes = fmt->memplanes;
 	pix->colorspace	= V4L2_COLORSPACE_JPEG;
-
 
 	for (i = 0; i < pix->num_planes; ++i) {
 		u32 bpl = pix->plane_fmt[i].bytesperline;
@@ -1462,7 +1458,6 @@ static unsigned int fimc_m2m_poll(struct file *file,
 
 	return v4l2_m2m_poll(file, ctx->m2m_ctx, wait);
 }
-
 
 static int fimc_m2m_mmap(struct file *file, struct vm_area_struct *vma)
 {

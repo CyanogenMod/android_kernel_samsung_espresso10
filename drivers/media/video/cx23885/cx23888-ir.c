@@ -945,7 +945,6 @@ static int cx23888_ir_tx_s_parameters(struct v4l2_subdev *sd,
 	return 0;
 }
 
-
 /*
  * V4L2 Subdevice Core Ops
  */

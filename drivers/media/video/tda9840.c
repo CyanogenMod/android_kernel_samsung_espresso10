@@ -25,7 +25,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
   */
 
-
 #include <linux/module.h>
 #include <linux/ioctl.h>
 #include <linux/slab.h>
@@ -55,7 +54,6 @@ MODULE_PARM_DESC(debug, "Debug level (0-1)");
 #define TDA9840_SET_BOTH                0x1a
 #define TDA9840_SET_BOTH_R              0x16
 #define TDA9840_SET_EXTERNAL            0x7a
-
 
 static void tda9840_write(struct v4l2_subdev *sd, u8 reg, u8 val)
 {

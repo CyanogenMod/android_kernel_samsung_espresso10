@@ -35,7 +35,6 @@
 #define RD88F5181L_FXO_NOR_BOOT_BASE		0xff800000
 #define RD88F5181L_FXO_NOR_BOOT_SIZE		SZ_8M
 
-
 /*****************************************************************************
  * 8M NOR Flash on Device bus Boot chip select
  ****************************************************************************/
@@ -59,7 +58,6 @@ static struct platform_device rd88f5181l_fxo_nor_boot_flash = {
 	.num_resources		= 1,
 	.resource		= &rd88f5181l_fxo_nor_boot_flash_resource,
 };
-
 
 /*****************************************************************************
  * General Setup

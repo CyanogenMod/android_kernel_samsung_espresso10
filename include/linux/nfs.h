@@ -86,7 +86,7 @@
 	NFSERR_STALE_CLIENTID = 10022,	/*       v4 */
 	NFSERR_STALE_STATEID = 10023,   /*       v4 */
 	NFSERR_OLD_STATEID = 10024,     /*       v4 */
-	NFSERR_BAD_STATEID = 10025,     /*       v4 */  
+	NFSERR_BAD_STATEID = 10025,     /*       v4 */
 	NFSERR_BAD_SEQID = 10026,	/*       v4 */
 	NFSERR_NOT_SAME = 10027,	/*       v4 */
 	NFSERR_LOCK_RANGE = 10028,	/*       v4 */
@@ -154,13 +154,11 @@ static inline void nfs_copy_fh(struct nfs_fh *target, const struct nfs_fh *sourc
 	memcpy(target->data, source->data, source->size);
 }
 
-
 /*
  * This is really a general kernel constant, but since nothing like
  * this is defined in the kernel headers, I have to do it here.
  */
 #define NFS_OFFSET_MAX		((__s64)((~(__u64)0) >> 1))
-
 
 enum nfs3_stable_how {
 	NFS_UNSTABLE = 0,

@@ -92,7 +92,6 @@ int lgtdqcs001f_tuner_set(struct dvb_frontend *fe,
 	u8 buf[4];
 	u32 div;
 
-
 	struct i2c_msg msg = {.addr = 0x61, .flags = 0, .buf = buf, .len = sizeof(buf)};
 
 	div = params->frequency / 250;

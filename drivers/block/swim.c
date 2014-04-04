@@ -503,7 +503,6 @@ static int floppy_read_sectors(struct floppy_state *fs,
 	int side, track, sector;
 	int i, try;
 
-
 	swim_drive(base, fs->location);
 	for (i = req_sector; i < req_sector + sectors_nb; i++) {
 		int x;

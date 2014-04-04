@@ -25,7 +25,6 @@ static struct task_struct *	astd_task;
 static unsigned long		astd_wakeflags;
 static struct mutex		astd_running;
 
-
 static void dlm_dump_lkb_callbacks(struct dlm_lkb *lkb)
 {
 	int i;
@@ -343,4 +342,3 @@ void dlm_astd_resume(void)
 {
 	mutex_unlock(&astd_running);
 }
-

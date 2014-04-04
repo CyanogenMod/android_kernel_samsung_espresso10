@@ -146,7 +146,6 @@ enum {
 	HSI_LL_RX_STATE_SEND_BREAK,
 };
 
-
 int if_hsi_init(void);
 int if_hsi_exit(void);
 

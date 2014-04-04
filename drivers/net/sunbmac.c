@@ -981,7 +981,6 @@ static int bigmac_start_xmit(struct sk_buff *skb, struct net_device *dev)
 	/* Get it going. */
 	sbus_writel(CREG_CTRL_TWAKEUP, bp->creg + CREG_CTRL);
 
-
 	return NETDEV_TX_OK;
 }
 

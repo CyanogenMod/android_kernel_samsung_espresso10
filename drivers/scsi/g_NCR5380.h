@@ -10,9 +10,9 @@
  * NCR53C400 extensions (c) 1994,1995,1996, Kevin Lentin
  *    K.Lentin@cs.monash.edu.au
  *
- * ALPHA RELEASE 1. 
+ * ALPHA RELEASE 1.
  *
- * For more information, please consult 
+ * For more information, please consult
  *
  * NCR 5380 Family
  * SCSI Protocol Controller
@@ -31,7 +31,6 @@
 
 #ifndef GENERIC_NCR5380_H
 #define GENERIC_NCR5380_H
-
 
 #define GENERIC_NCR5380_PUBLIC_RELEASE 1
 
@@ -90,7 +89,7 @@ static const char* generic_NCR5380_info(struct Scsi_Host *);
 #define NCR5380_setup(instance) \
     NCR5380_map_name = (NCR5380_map_type)((instance)->NCR5380_instance_name)
 
-#else 
+#else
 /* therefore SCSI_G_NCR5380_MEM */
 
 #define NCR5380_map_config memory
@@ -134,4 +133,3 @@ static const char* generic_NCR5380_info(struct Scsi_Host *);
 #endif /* else def HOSTS_C */
 #endif /* ndef ASM */
 #endif /* GENERIC_NCR5380_H */
-

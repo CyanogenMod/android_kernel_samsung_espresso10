@@ -194,7 +194,6 @@ static inline void omap_init_spi100k(void)
 }
 #endif
 
-
 #define OMAP1_CAMERA_BASE	0xfffb6800
 #define OMAP1_CAMERA_IOSIZE	0x1c
 
@@ -234,7 +233,6 @@ void __init omap1_camera_init(void *info)
 	if (ret)
 		dev_err(&dev->dev, "unable to register device: %d\n", ret);
 }
-
 
 /*-------------------------------------------------------------------------*/
 

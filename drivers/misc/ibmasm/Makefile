@@ -1,4 +1,3 @@
-
 obj-$(CONFIG_IBM_ASM) := ibmasm.o
 
 ibmasm-y :=	module.o      \
@@ -12,4 +11,3 @@ ibmasm-y :=	module.o      \
 		lowlevel.o
 
 ibmasm-$(CONFIG_SERIAL_8250) += uart.o
-

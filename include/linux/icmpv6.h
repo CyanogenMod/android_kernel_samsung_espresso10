@@ -10,7 +10,6 @@ struct icmp6hdr {
 	__u8		icmp6_code;
 	__sum16		icmp6_cksum;
 
-
 	union {
 		__be32			un_data32[1];
 		__be16			un_data16[2];
@@ -35,7 +34,7 @@ struct icmp6hdr {
                         		reserved:29;
 #else
 #error	"Please fix <asm/byteorder.h>"
-#endif						
+#endif
                 } u_nd_advt;
 
                 struct icmpv6_nd_ra {
@@ -123,6 +122,8 @@ static inline struct icmp6hdr *icmp6_hdr(const struct sk_buff *skb)
 #define ICMPV6_NOT_NEIGHBOUR		2
 #define ICMPV6_ADDR_UNREACH		3
 #define ICMPV6_PORT_UNREACH		4
+#define ICMPV6_POLICY_FAIL		5
+#define ICMPV6_REJECT_ROUTE		6
 
 /*
  *	Codes for Time Exceeded

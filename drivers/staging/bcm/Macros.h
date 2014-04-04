@@ -19,7 +19,6 @@
 
 #define MAC_ADDR_REGISTER 0xbf60d000
 
-
 ///////////Quality of Service///////////////////////////
 #define NO_OF_QUEUES				17
 #define HiPriority                  NO_OF_QUEUES-1
@@ -63,7 +62,6 @@
 #define SYNC_UP_NOTIFICATION    	2
 #define LINK_UP_NOTIFICATION    	4
 
-
 #define LINK_NET_ENTRY              0x0002
 #define HMC_STATUS					0x0004
 #define LINK_UP_CONTROL_REQ         0x83
@@ -104,7 +102,6 @@
 #define MIN(_a, _b) ((_a) < (_b)? (_a): (_b))
 #endif
 
-
 /*Leader related terms */
 #define LEADER_STATUS   				0x00
 #define LEADER_STATUS_TCP_ACK			0x1
@@ -113,7 +110,6 @@
 #define SS_INFO_REQ_SIZE				sizeof(PACKETTOSEND)
 #define	CM_REQUEST_SIZE					LEADER_SIZE + sizeof(stLocalSFChangeRequest)
 #define IDLE_REQ_SIZE					sizeof(PACKETTOSEND)
-
 
 #define MAX_TRANSFER_CTRL_BYTE_USB		2 * 1024
 
@@ -156,20 +152,17 @@
 
 #define BCM_SIGNATURE		"BECEEM"
 
-
 #define GPIO_OUTPUT_REGISTER	 0x0F00003C
 #define BCM_GPIO_OUTPUT_SET_REG  0x0F000040
 #define BCM_GPIO_OUTPUT_CLR_REG  0x0F000044
 #define GPIO_MODE_REGISTER       0x0F000034
 #define GPIO_PIN_STATE_REGISTER  0x0F000038
 
-
 typedef struct _LINK_STATE {
 	UCHAR	ucLinkStatus;
     UCHAR   bIdleMode;
 	UCHAR	bShutdownMode;
 }LINK_STATE, *PLINK_STATE;
-
 
 enum enLinkStatus {
     WAIT_FOR_SYNC = 	1,
@@ -191,7 +184,6 @@ typedef enum _E_PHS_DSC_ACTION
 	eDeleteAllPHSRules
 }E_PHS_DSC_ACTION;
 
-
 #define CM_CONTROL_NEWDSX_MULTICLASSIFIER_REQ		0x89    // Host to Mac
 #define CM_CONTROL_NEWDSX_MULTICLASSIFIER_RESP      0xA9    // Mac to Host
 #define MASK_DISABLE_HEADER_SUPPRESSION 			0x10 //0b000010000
@@ -204,20 +196,14 @@ typedef enum _E_PHS_DSC_ACTION
 #define LINK_SYNC_UP_SUBTYPE		0x0001
 #define LINK_SYNC_DOWN_SUBTYPE		0x0001
 
-
-
 #define CONT_MODE 1
 #define SINGLE_DESCRIPTOR 1
-
 
 #define DESCRIPTOR_LENGTH 0x30
 #define FIRMWARE_DESCS_ADDRESS 0x1F100000
 
-
 #define CLOCK_RESET_CNTRL_REG_1 0x0F00000C
 #define CLOCK_RESET_CNTRL_REG_2 0x0F000840
-
-
 
 #define TX_DESCRIPTOR_HEAD_REGISTER 0x0F010034
 #define RX_DESCRIPTOR_HEAD_REGISTER 0x0F010094
@@ -285,7 +271,6 @@ typedef enum _E_PHS_DSC_ACTION
 #define DEVICE_POWERSAVE_MODE_AS_RESERVED                   3
 #define DEVICE_POWERSAVE_MODE_AS_PROTOCOL_IDLE_MODE         4
 
-
 #define EEPROM_REJECT_REG_1 0x0f003018
 #define EEPROM_REJECT_REG_2 0x0f00301c
 #define EEPROM_REJECT_REG_3 0x0f003008
@@ -325,7 +310,6 @@ typedef enum _E_PHS_DSC_ACTION
 #define BCS250_BC	0xbece3301
 #define BCS220_3	0xbece3321
 
-
 #define HPM_CONFIG_LDO145	0x0F000D54
 #define HPM_CONFIG_MSW		0x0F000D58
 
@@ -353,7 +337,6 @@ enum eAbortPattern {
 	ABORT_IDLE_MODE = 2,
 	ABORT_IDLE_SYNCDOWN = 3
 };
-
 
 /* Offsets used by driver in skb cb variable */
 #define SKB_CB_CLASSIFICATION_OFFSET    0

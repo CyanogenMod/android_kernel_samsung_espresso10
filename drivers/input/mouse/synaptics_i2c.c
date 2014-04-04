@@ -688,4 +688,3 @@ module_exit(synaptics_i2c_exit);
 MODULE_DESCRIPTION("Synaptics I2C touchpad driver");
 MODULE_AUTHOR("Mike Rapoport, Igor Grinberg, Compulab");
 MODULE_LICENSE("GPL");
-

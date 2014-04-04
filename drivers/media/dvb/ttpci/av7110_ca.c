@@ -25,7 +25,7 @@
  * Or, point your browser to http://www.gnu.org/copyleft/gpl.html
  *
  *
- * the project's page is at http://www.linuxtv.org/ 
+ * the project's page is at http://www.linuxtv.org/
  */
 
 #include <linux/kernel.h>
@@ -39,7 +39,6 @@
 #include "av7110.h"
 #include "av7110_hw.h"
 #include "av7110_ca.h"
-
 
 void CI_handle(struct av7110 *av7110, u8 *data, u16 len)
 {
@@ -71,7 +70,6 @@ void CI_handle(struct av7110 *av7110, u8 *data, u16 len)
 	}
 }
 
-
 void ci_get_data(struct dvb_ringbuffer *cibuf, u8 *data, int len)
 {
 	if (dvb_ringbuffer_free(cibuf) < len + 2)
@@ -82,7 +80,6 @@ void ci_get_data(struct dvb_ringbuffer *cibuf, u8 *data, int len)
 	dvb_ringbuffer_write(cibuf, data, len);
 	wake_up_interruptible(&cibuf->queue);
 }
-
 
 /******************************************************************************
  * CI link layer file ops
@@ -363,7 +360,6 @@ static struct dvb_device dvbdev_ca = {
 	.fops		= &dvb_ca_fops,
 	.kernel_ioctl	= dvb_ca_ioctl,
 };
-
 
 int av7110_ca_register(struct av7110 *av7110)
 {

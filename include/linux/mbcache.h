@@ -46,8 +46,8 @@ struct mb_cache_entry *mb_cache_entry_get(struct mb_cache *,
 					  struct block_device *,
 					  sector_t);
 struct mb_cache_entry *mb_cache_entry_find_first(struct mb_cache *cache,
-						 struct block_device *, 
+						 struct block_device *,
 						 unsigned int);
 struct mb_cache_entry *mb_cache_entry_find_next(struct mb_cache_entry *,
-						struct block_device *, 
+						struct block_device *,
 						unsigned int);

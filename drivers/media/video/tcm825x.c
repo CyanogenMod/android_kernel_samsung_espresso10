@@ -247,7 +247,6 @@ static struct vcontrol {
 	},
 };
 
-
 static const struct tcm825x_reg *tcm825x_siz_reg[NUM_IMAGE_SIZES] =
 { &subqcif, &qqvga, &qcif, &qvga, &cif, &vga };
 
@@ -335,7 +334,6 @@ static int __tcm825x_write_reg_mask(struct i2c_client *client,
 #define tcm825x_write_reg_mask(client, regmask, val)			\
 	__tcm825x_write_reg_mask(client, TCM825X_ADDR((regmask)), val,	\
 				 TCM825X_MASK((regmask)))
-
 
 /*
  * Initialize a list of TCM825X registers.

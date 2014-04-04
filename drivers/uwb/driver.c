@@ -56,9 +56,7 @@
 
 #include "uwb-internal.h"
 
-
 /* UWB stack attributes (or 'global' constants) */
-
 
 /**
  * If a beacon disappears for longer than this, then we consider the
@@ -106,7 +104,6 @@ struct class uwb_rc_class = {
 	.name        = "uwb_rc",
 	.class_attrs = uwb_class_attrs,
 };
-
 
 static int __init uwb_subsys_init(void)
 {

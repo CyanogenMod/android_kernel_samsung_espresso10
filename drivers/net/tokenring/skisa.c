@@ -2,7 +2,7 @@
  *  skisa.c: A network driver for SK-NET TMS380-based ISA token ring cards.
  *
  *  Based on tmspci written 1999 by Adam Fritzler
- *  
+ *
  *  Written 2000 by Jochen Friedrich
  *  Dedicated to my girlfriend Steffi Bopp
  *
@@ -54,7 +54,7 @@ static unsigned int portlist[] __initdata = {
 	0
 };
 
-/* A zero-terminated list of IRQs to be probed. 
+/* A zero-terminated list of IRQs to be probed.
  * Used again after initial probe for sktr_chipset_init, called from sktr_open.
  */
 static const unsigned short irqlist[] = {
@@ -93,7 +93,6 @@ static void sk_isa_sifwritew(struct net_device *dev, unsigned short val, unsigne
 {
 	outw(val, dev->base_addr + reg);
 }
-
 
 static int __init sk_isa_probe1(struct net_device *dev, int ioaddr)
 {
@@ -167,21 +166,21 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 	if (tmsdev_init(dev, pdev))
 		goto out4;
 
-	dev->base_addr &= ~3; 
-		
+	dev->base_addr &= ~3;
+
 	sk_isa_read_eeprom(dev);
 
 	printk(KERN_DEBUG "skisa.c:    Ring Station Address: %pM\n",
 	       dev->dev_addr);
-		
+
 	tp = netdev_priv(dev);
 	tp->setnselout = sk_isa_setnselout_pins;
-		
+
 	tp->sifreadb = sk_isa_sifreadb;
 	tp->sifreadw = sk_isa_sifreadw;
 	tp->sifwriteb = sk_isa_sifwriteb;
 	tp->sifwritew = sk_isa_sifwritew;
-	
+
 	memcpy(tp->ProductID, isa_cardname, PROD_ID_SIZE + 1);
 
 	tp->tmspriv = NULL;
@@ -193,11 +192,11 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 		for(j = 0; irqlist[j] != 0; j++)
 		{
 			dev->irq = irqlist[j];
-			if (!request_irq(dev->irq, tms380tr_interrupt, 0, 
+			if (!request_irq(dev->irq, tms380tr_interrupt, 0,
 				isa_cardname, dev))
 				break;
                 }
-		
+
                 if(irqlist[j] == 0)
                 {
                         printk(KERN_INFO "skisa.c: AutoSelect no IRQ available\n");
@@ -215,7 +214,7 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 				dev->irq);
 			goto out3;
 		}
-		if (request_irq(dev->irq, tms380tr_interrupt, 0, 
+		if (request_irq(dev->irq, tms380tr_interrupt, 0,
 			isa_cardname, dev))
 		{
                         printk(KERN_INFO "skisa.c: Selected IRQ %d not available\n",
@@ -280,7 +279,7 @@ out5:
 
 /*
  * Reads MAC address from adapter RAM, which should've read it from
- * the onboard ROM.  
+ * the onboard ROM.
  *
  * Calling this on a board that does not support it can be a very
  * dangerous thing.  The Madge board, for instance, will lock your
@@ -290,11 +289,11 @@ out5:
 static void sk_isa_read_eeprom(struct net_device *dev)
 {
 	int i;
-	
+
 	/* Address: 0000:0000 */
 	sk_isa_sifwritew(dev, 0, SIFADX);
-	sk_isa_sifwritew(dev, 0, SIFADR);	
-	
+	sk_isa_sifwritew(dev, 0, SIFADR);
+
 	/* Read six byte MAC address data */
 	dev->addr_len = 6;
 	for(i = 0; i < 6; i++)
@@ -307,7 +306,7 @@ static unsigned short sk_isa_setnselout_pins(struct net_device *dev)
 }
 
 static int sk_isa_open(struct net_device *dev)
-{  
+{
 	struct net_local *tp = netdev_priv(dev);
 	unsigned short val = 0;
 	unsigned short oldval;

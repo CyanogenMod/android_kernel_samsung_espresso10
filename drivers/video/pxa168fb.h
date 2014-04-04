@@ -477,7 +477,6 @@
 #define     GRA_FF_ALLEMPTY_MASK		0x00000002
 #define     PWRDN_IRQ_LEVEL_MASK		0x00000001
 
-
 /*
  * defined Video Memory Color format for DMA control 0 register
  * DMA0 bit[23:20]

@@ -96,10 +96,6 @@ int ext4_end_io_nolock(ext4_io_end_t *io)
 	wait_queue_head_t *wq;
 	int ret = 0;
 
-	ext4_debug("ext4_end_io_nolock: io 0x%p from inode %lu,list->next 0x%p,"
-		   "list->prev 0x%p\n",
-		   io, inode->i_ino, io->list.next, io->list.prev);
-
 	if (list_empty(&io->list))
 		return ret;
 
@@ -383,9 +379,6 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
 	int ret = 0;
 
 	blocksize = 1 << inode->i_blkbits;
-
-	BUG_ON(!PageLocked(page));
-	BUG_ON(PageWriteback(page));
 
 	io_page = kmem_cache_alloc(io_page_cachep, GFP_NOFS);
 	if (!io_page) {

@@ -76,8 +76,6 @@ static int          msglevel                =MSG_LEVEL_INFO;
 
 /*---------------------  Static Variables  --------------------------*/
 
-
-
 #define CB_VT3253_INIT_FOR_RFMD 446
 unsigned char byVT3253InitTab_RFMD[CB_VT3253_INIT_FOR_RFMD][2] = {
     {0x00, 0x30},
@@ -1250,8 +1248,6 @@ unsigned char byVT3253B0_AIROHA2230[CB_VT3253B0_INIT_FOR_AIROHA2230][2] = {
     {0xff, 0x00},
 };
 
-
-
 #define CB_VT3253B0_INIT_FOR_UW2451 256
 //For UW2451
 unsigned char byVT3253B0_UW2451[CB_VT3253B0_INIT_FOR_UW2451][2] = {
@@ -1715,7 +1711,6 @@ unsigned char byVT3253B0_AGC[CB_VT3253B0_AGC][2] = {
 const unsigned short awcFrameTime[MAX_RATE] =
 {10, 20, 55, 110, 24, 36, 48, 72, 96, 144, 192, 216};
 
-
 /*---------------------  Static Functions  --------------------------*/
 
 static
@@ -1760,7 +1755,6 @@ s_vChangeAntenna (
     }
 }
 
-
 /*---------------------  Export Variables  --------------------------*/
 /*
  * Description: Calculate data frame transmitting time
@@ -1789,7 +1783,6 @@ BBuGetFrameTime (
     unsigned int uTmp;
     unsigned int uRateIdx = (unsigned int) wRate;
     unsigned int uRate = 0;
-
 
     if (uRateIdx > RATE_54M) {
 	    ASSERT(0);
@@ -2043,7 +2036,6 @@ bool BBbReadEmbeded (unsigned long dwIoBase, unsigned char byBBAddr, unsigned ch
     return true;
 }
 
-
 /*
  * Description: Write a Byte to BASEBAND, by embeded programming
  *
@@ -2085,7 +2077,6 @@ bool BBbWriteEmbeded (unsigned long dwIoBase, unsigned char byBBAddr, unsigned c
     return true;
 }
 
-
 /*
  * Description: Test if all bits are set for the Baseband register
  *
@@ -2107,7 +2098,6 @@ bool BBbIsRegBitsOn (unsigned long dwIoBase, unsigned char byBBAddr, unsigned ch
     BBbReadEmbeded(dwIoBase, byBBAddr, &byOrgData);
     return (byOrgData & byTestBits) == byTestBits;
 }
-
 
 /*
  * Description: Test if all bits are clear for the Baseband register
@@ -2306,8 +2296,6 @@ bool BBbVT3253Init (PSDevice pDevice)
     return bResult;
 }
 
-
-
 /*
  * Description: Read All Baseband Registers
  *
@@ -2344,7 +2332,6 @@ void BBvReadAllRegs (unsigned long dwIoBase, unsigned char *pbyBBRegs)
  * Return Value: none
  *
  */
-
 
 void BBvLoopbackOn (PSDevice pDevice)
 {
@@ -2424,8 +2411,6 @@ void BBvLoopbackOff (PSDevice pDevice)
 
 }
 
-
-
 /*
  * Description: Set ShortSlotTime mode
  *
@@ -2480,7 +2465,6 @@ void BBvSetVGAGainOffset(PSDevice pDevice, unsigned char byData)
     pDevice->byBBVGACurrent = byData;
     BBbWriteEmbeded(pDevice->PortOffset, 0x0A, byBBRxConf);//CR10
 }
-
 
 /*
  * Description: Baseband SoftwareReset
@@ -2586,9 +2570,6 @@ BBvSetTxAntennaMode (unsigned long dwIoBase, unsigned char byAntennaMode)
     BBbWriteEmbeded(dwIoBase, 0x09, byBBTxConf);//CR09
 }
 
-
-
-
 /*
  * Description: Set Rx Antenna mode
  *
@@ -2621,7 +2602,6 @@ BBvSetRxAntennaMode (unsigned long dwIoBase, unsigned char byAntennaMode)
     BBbWriteEmbeded(dwIoBase, 0x0A, byBBRxConf);//CR10
 }
 
-
 /*
  * Description: BBvSetDeepSleep
  *
@@ -2647,8 +2627,6 @@ BBvExitDeepSleep (unsigned long dwIoBase, unsigned char byLocalID)
     BBbWriteEmbeded(dwIoBase, 0x0C, 0x00);//CR12
     BBbWriteEmbeded(dwIoBase, 0x0D, 0x01);//CR13
 }
-
-
 
 static
 unsigned long
@@ -2758,7 +2736,6 @@ unsigned long ulPacketNum;
     return ulRatio;
 }
 
-
 void
 BBvClearAntDivSQ3Value (PSDevice pDevice)
 {
@@ -2769,7 +2746,6 @@ BBvClearAntDivSQ3Value (PSDevice pDevice)
         pDevice->uNumSQ3[ii] = 0;
     }
 }
-
 
 /*
  * Description: Antenna Diversity
@@ -2900,11 +2876,9 @@ TimerSQ3CallBack (
     add_timer(&pDevice->TimerSQ3Tmax3);
     add_timer(&pDevice->TimerSQ3Tmax2);
 
-
     spin_unlock_irq(&pDevice->lock);
     return;
 }
-
 
 /*+
  *
@@ -2972,4 +2946,3 @@ TimerState1CallBack (
 
     return;
 }
-

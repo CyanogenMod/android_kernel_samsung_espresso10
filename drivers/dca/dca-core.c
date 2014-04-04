@@ -409,6 +409,11 @@ void unregister_dca_provider(struct dca_provider *dca, struct device *dev)
 
 	spin_lock_irqsave(&dca_lock, flags);
 
+	if (list_empty(&dca_domains)) {
+		spin_unlock_irqrestore(&dca_lock, flags);
+		return;
+	}
+
 	list_del(&dca->node);
 
 	pci_rc = dca_pci_rc_from_dev(dev);
@@ -453,4 +458,3 @@ static void __exit dca_exit(void)
 
 arch_initcall(dca_init);
 module_exit(dca_exit);
-

@@ -167,7 +167,6 @@ static int __exit coh901331_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 static int __init coh901331_probe(struct platform_device *pdev)
 {
 	int ret;

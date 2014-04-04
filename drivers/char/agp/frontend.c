@@ -210,7 +210,6 @@ static void agp_insert_into_pool(struct agp_memory * temp)
 	agp_fe.current_controller->pool = temp;
 }
 
-
 /* File private list routines */
 
 struct agp_file_private *agp_find_private(pid_t pid)
@@ -709,7 +708,6 @@ static int agp_open(struct inode *inode, struct file *file)
 	return 0;
 }
 
-
 static ssize_t agp_read(struct file *file, char __user *buf,
 			size_t count, loff_t * ppos)
 {
@@ -1030,7 +1028,7 @@ static long agp_ioctl(struct file *file,
 	case AGPIOC_UNBIND:
 		ret_val = agpioc_unbind_wrap(curr_priv, (void __user *) arg);
 		break;
-	       
+
 	case AGPIOC_CHIPSET_FLUSH:
 		break;
 	}

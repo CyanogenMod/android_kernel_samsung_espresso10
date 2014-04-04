@@ -80,7 +80,6 @@ struct pv_init_ops {
 			  unsigned long addr, unsigned len);
 };
 
-
 struct pv_lazy_ops {
 	/* Set deferred update mode, used for batching operations. */
 	void (*enter)(void);
@@ -235,7 +234,6 @@ struct pv_mmu_ops {
 	void (*dup_mmap)(struct mm_struct *oldmm,
 			 struct mm_struct *mm);
 	void (*exit_mmap)(struct mm_struct *mm);
-
 
 	/* TLB operations */
 	void (*flush_tlb_user)(void);
@@ -566,7 +564,6 @@ int paravirt_disable_iospace(void);
 		      PVOP_CALLEE_CLOBBERS, ,				\
 		      pre, post, ##__VA_ARGS__)
 
-
 #define ____PVOP_VCALL(op, clbr, call_clbr, extra_clbr, pre, post, ...)	\
 	({								\
 		PVOP_VCALL_ARGS;					\
@@ -591,8 +588,6 @@ int paravirt_disable_iospace(void);
 		      PVOP_VCALLEE_CLOBBERS, ,				\
 		      pre, post, ##__VA_ARGS__)
 
-
-
 #define PVOP_CALL0(rettype, op)						\
 	__PVOP_CALL(rettype, op, "", "")
 #define PVOP_VCALL0(op)							\
@@ -603,7 +598,6 @@ int paravirt_disable_iospace(void);
 #define PVOP_VCALLEE0(op)						\
 	__PVOP_VCALLEESAVE(op, "", "")
 
-
 #define PVOP_CALL1(rettype, op, arg1)					\
 	__PVOP_CALL(rettype, op, "", "", PVOP_CALL_ARG1(arg1))
 #define PVOP_VCALL1(op, arg1)						\
@@ -613,7 +607,6 @@ int paravirt_disable_iospace(void);
 	__PVOP_CALLEESAVE(rettype, op, "", "", PVOP_CALL_ARG1(arg1))
 #define PVOP_VCALLEE1(op, arg1)						\
 	__PVOP_VCALLEESAVE(op, "", "", PVOP_CALL_ARG1(arg1))
-
 
 #define PVOP_CALL2(rettype, op, arg1, arg2)				\
 	__PVOP_CALL(rettype, op, "", "", PVOP_CALL_ARG1(arg1),		\
@@ -628,7 +621,6 @@ int paravirt_disable_iospace(void);
 #define PVOP_VCALLEE2(op, arg1, arg2)					\
 	__PVOP_VCALLEESAVE(op, "", "", PVOP_CALL_ARG1(arg1),		\
 			   PVOP_CALL_ARG2(arg2))
-
 
 #define PVOP_CALL3(rettype, op, arg1, arg2, arg3)			\
 	__PVOP_CALL(rettype, op, "", "", PVOP_CALL_ARG1(arg1),		\

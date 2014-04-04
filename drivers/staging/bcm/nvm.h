@@ -18,7 +18,6 @@
 //
 ****************************************************************************************/
 
-
 #ifndef _NVM_H_
 #define _NVM_H_
 
@@ -41,7 +40,6 @@ typedef struct _FLASH_CS_INFO
 
     // SCSI/Flash BootLoader versioning
     B_UINT32 SCSIFirmwareVersion;
-
 
 	B_UINT32 OffsetFromZeroForPart1ISOImage;
 // typically 0
@@ -98,7 +96,6 @@ typedef struct _FLASH_CS_INFO
 // MSC Timeout after reset to switch from MSC to NW Mode
 	B_UINT32 MassStorageTimeout;
 
-
 }FLASH_CS_INFO,*PFLASH_CS_INFO;
 
 #define FLASH2X_TOTAL_SIZE (64*1024*1024)
@@ -125,7 +122,6 @@ typedef struct _FLASH_2X_CS_INFO
 
 	// ISO Image1 Part2 start offset
 	B_UINT32 OffsetFromZeroForPart2ISOImage;
-
 
 	// DSD0 offset
 	B_UINT32 OffsetFromZeroForDSDStart;
@@ -175,7 +171,6 @@ typedef struct _FLASH_2X_CS_INFO
 	B_UINT32 OffsetISOImage2Part2End;
 	B_UINT32 OffsetISOImage2Part3Start; 	// ISO Image2 Part3 offset
 	B_UINT32 OffsetISOImage2Part3End;
-
 
 	// DSD Header offset from start of DSD
 	B_UINT32 OffsetFromDSDStartForDSDHeader;
@@ -248,9 +243,7 @@ typedef struct _ISO_HEADER
 
 #define MAX_INIT_PARAMS_LENGTH (2048)
 
-
 #define MAC_ADDRESS_OFFSET 0x200
-
 
 #define INIT_PARAMS_1_SIGNATURE_ADDRESS  EEPROM_BEGIN_NON_CIS
 #define INIT_PARAMS_1_DATA_ADDRESS (INIT_PARAMS_1_SIGNATURE_ADDRESS+16)
@@ -305,7 +298,6 @@ typedef struct _ISO_HEADER
 #define MAX_EEPROM_RETRIES						 80
 #define RETRIES_PER_DELAY                        64
 
-
 #define MAX_RW_SIZE                              0x10
 #define MAX_READ_SIZE							 0x10
 #define MAX_SECTOR_SIZE                         (512*1024)
@@ -321,16 +313,11 @@ typedef struct _ISO_HEADER
 
 #define FLASH_AUTO_INIT_BASE_ADDR                0xF00000
 
-
-
-
 #define FLASH_CONTIGIOUS_START_ADDR_AFTER_INIT   0x1C000000
 #define FLASH_CONTIGIOUS_START_ADDR_BEFORE_INIT  0x1F000000
 
 #define FLASH_CONTIGIOUS_START_ADDR_BCS350       0x08000000
 #define FLASH_CONTIGIOUS_END_ADDR_BCS350         0x08FFFFFF
-
-
 
 #define FLASH_SIZE_ADDR                          0xFFFFEC
 
@@ -362,10 +349,7 @@ typedef struct _ISO_HEADER
 #define MAX_FLASH_RETRIES						 4
 #define FLASH_PER_RETRIES_DELAY			         16
 
-
 #define EEPROM_MAX_CAL_AREA_SIZE                 0xF0000
-
-
 
 #define BECM                                     ntohl(0x4245434d)
 
@@ -379,7 +363,6 @@ typedef struct _ISO_HEADER
 #define UNINIT_PTR_IN_CS 0xBBBBDDDD
 
 #define VENDOR_PTR_IN_CS 0xAAAACCCC
-
 
 #define FLASH2X_SECTION_PRESENT 1<<0
 #define FLASH2X_SECTION_VALID 1<<1
@@ -402,8 +385,6 @@ typedef struct _ISO_HEADER
 #define SIGNATURE_SIZE  4
 #define DEFAULT_BUFF_SIZE 0x10000
 
-
 #define FIELD_OFFSET_IN_HEADER(HeaderPointer,Field) ((PUCHAR)&((HeaderPointer)(NULL))->Field - (PUCHAR)(NULL))
 
 #endif
-

@@ -85,7 +85,6 @@ enum {
 	IWMC3200_IOR_TIMEOUT = 10,
 };
 
-
 /**
  * struct i2400ms - descriptor for a SDIO connected i2400m
  *
@@ -130,13 +129,11 @@ struct i2400ms {
 	unsigned iwmc3200:1;
 };
 
-
 static inline
 void i2400ms_init(struct i2400ms *i2400ms)
 {
 	i2400m_init(&i2400ms->i2400m);
 }
-
 
 extern int i2400ms_rx_setup(struct i2400ms *);
 extern void i2400ms_rx_release(struct i2400ms *);

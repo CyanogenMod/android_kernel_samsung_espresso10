@@ -57,13 +57,11 @@ typedef cy_as_usb_desc_type cy_an_usb_desc_type;
 #define cy_an_usb_in_out	cy_as_usb_in_out
 typedef cy_as_usb_end_point_dir cy_an_usb_end_point_dir;
 
-
 #define cy_an_usb_control cy_as_usb_control
 #define cy_an_usb_iso cy_as_usb_iso
 #define cy_an_usb_bulk cy_as_usb_bulk
 #define cy_an_usb_int cy_as_usb_int
 typedef cy_as_usb_end_point_type cy_an_usb_end_point_type;
-
 
 typedef cy_as_usb_enum_control_dep cy_an_usb_enum_control;
 typedef cy_as_usb_end_point_config cy_an_usb_end_point_config;

@@ -91,7 +91,6 @@ static struct lms283gf05_seq disp_pdwnseq[] = {
 	{ 0x10, 0x0000, 0 }
 };
 
-
 static void lms283gf05_reset(unsigned long gpio, bool inverted)
 {
 	gpio_set_value(gpio, !inverted);

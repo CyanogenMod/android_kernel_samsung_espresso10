@@ -59,7 +59,6 @@ static inline void check_##type(void)				\
  * short-lived.
  */
 
-
 /* Magic numbers.  64bit for superblock, 32bit for statfs f_type */
 #define LOGFS_MAGIC		0x7a3a8e5cb9d5bf67ull
 #define LOGFS_MAGIC_U32		0xc97e8168u
@@ -142,7 +141,6 @@ static inline void check_##type(void)				\
 
 /* Maximum number of free/erased/etc. segments in journal entries */
 #define MAX_CACHED_SEGS		(64)
-
 
 /*
  * LOGFS_OBJECT_HEADERSIZE is the size of a single header in the object store,

@@ -21,9 +21,7 @@
 #ifndef __SOUND_USX2Y_COMMON_H
 #define __SOUND_USX2Y_COMMON_H
 
-
 #define USX2Y_DRIVER_VERSION	0x0100	/* 0.1.0 */
-
 
 /* hwdep id string */
 #define SND_USX2Y_LOADER_ID		"USX2Y Loader"

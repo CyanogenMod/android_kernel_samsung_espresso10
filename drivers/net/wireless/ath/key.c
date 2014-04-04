@@ -31,7 +31,6 @@
 	if (common->ops->write_flush)			\
 		common->ops->write_flush((_ah));
 
-
 #define IEEE80211_WEP_NKID      4       /* number of key ids */
 
 /************************/

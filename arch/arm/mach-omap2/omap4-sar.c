@@ -620,7 +620,6 @@ static const u32 omap446x_sar_ram1_layout[][4] = {
 		OMAP4_CM_SDMA_STATICDEP_RESTORE_OFFSET, 1, 0x00000928},
 };
 
-
 /*
  * OMAP4460, OMAP4470
  * SAR_RAM2 register layout consist of SYSCTRL_PADCONF_CORE regsiters

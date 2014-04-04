@@ -1099,7 +1099,6 @@ s32 igb_get_auto_rd_done(struct e1000_hw *hw)
 	s32 i = 0;
 	s32 ret_val = 0;
 
-
 	while (i < AUTO_READ_DONE_TIMEOUT) {
 		if (rd32(E1000_EECD) & E1000_EECD_AUTO_RD)
 			break;

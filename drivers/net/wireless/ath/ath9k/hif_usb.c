@@ -700,7 +700,6 @@ static void ath9k_hif_usb_reg_in_cb(struct urb *urb)
 		ath9k_htc_rx_msg(hif_dev->htc_handle, skb,
 				 skb->len, USB_REG_IN_PIPE);
 
-
 		nskb = alloc_skb(MAX_REG_IN_BUF_SIZE, GFP_ATOMIC);
 		if (!nskb) {
 			dev_err(&hif_dev->udev->dev,

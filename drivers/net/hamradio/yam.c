@@ -35,9 +35,9 @@
  *   0.6 F6FBB 25.08.98  Added 1200Bds format
  *   0.7 F6FBB 12.09.98  Added to the kernel configuration
  *   0.8 F6FBB 14.10.98  Fixed slottime/persistence timing bug
- *       OK1ZIA 2.09.01  Fixed "kfree_skb on hard IRQ" 
+ *       OK1ZIA 2.09.01  Fixed "kfree_skb on hard IRQ"
  *                       using dev_kfree_skb_any(). (important in 2.4 kernel)
- *   
+ *
  */
 
 /*****************************************************************************/
@@ -244,7 +244,6 @@ static DEFINE_TIMER(yam_timer, NULL, 0, 0);
 #define ENABLE_RXINT	IER_RX			/* enable uart rx interrupt during rx */
 #define ENABLE_TXINT	IER_MSR			/* enable uart ms interrupt during tx */
 #define ENABLE_RTXINT	(IER_RX|IER_MSR)	/* full duplex operations */
-
 
 /*************************************************************************
 * CRC Tables
@@ -469,9 +468,8 @@ static int fpga_download(int iobase, int bitrate)
 	return (rc & MSR_DSR) ? 0 : -1;
 }
 
-
 /************************************************************************
-* Serial port init 
+* Serial port init
 ************************************************************************/
 
 static void yam_set_uart(struct net_device *dev)
@@ -496,7 +494,6 @@ static void yam_set_uart(struct net_device *dev)
 
 	outb(ENABLE_RTXINT, IER(dev->base_addr));
 }
-
 
 /* --------------------------------------------------------------------- */
 
@@ -856,7 +853,6 @@ static const struct file_operations yam_info_fops = {
 
 #endif
 
-
 /* --------------------------------------------------------------------- */
 
 static int yam_open(struct net_device *dev)
@@ -899,7 +895,7 @@ static int yam_open(struct net_device *dev)
 	yam_set_uart(dev);
 
 	netif_start_queue(dev);
-	
+
 	yp->slotcnt = yp->slot / 10;
 
 	/* Reset overruns for all ports - FPGA programming makes overruns */
@@ -1147,7 +1143,7 @@ static int __init yam_init_driver(void)
 
 	for (i = 0; i < NR_PORTS; i++) {
 		sprintf(name, "yam%d", i);
-		
+
 		dev = alloc_netdev(sizeof(struct yam_port), name,
 				   yam_setup);
 		if (!dev) {
@@ -1155,7 +1151,7 @@ static int __init yam_init_driver(void)
 			err = -ENOMEM;
 			goto error;
 		}
-		
+
 		err = register_netdev(dev);
 		if (err) {
 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
@@ -1216,4 +1212,3 @@ module_init(yam_init_driver);
 module_exit(yam_cleanup_driver);
 
 /* --------------------------------------------------------------------- */
-

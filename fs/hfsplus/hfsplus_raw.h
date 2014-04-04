@@ -216,7 +216,6 @@ struct hfsp_rect {
 	__be16 right;
 } __packed;
 
-
 /* HFS directory info (stolen from hfs.h */
 struct DInfo {
 	struct hfsp_rect frRect;

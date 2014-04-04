@@ -176,7 +176,6 @@ int mdp_ppp_blit(const struct mdp_info *mdp, struct mdp_blit_req *req,
 #define MDP_LCDC_DMA_IBUF_ADDR           (0xe1008)
 #define MDP_LCDC_DMA_IBUF_Y_STRIDE       (0xe100c)
 
-
 #define MDP_DMA2_TERM 0x1
 #define MDP_DMA3_TERM 0x2
 #define MDP_PPP_TERM 0x3
@@ -295,7 +294,6 @@ int mdp_ppp_blit(const struct mdp_info *mdp, struct mdp_blit_req *req,
 #define PPP_SRC_INTERLVD_2COMPONENTS (1<<13)
 #define PPP_SRC_INTERLVD_3COMPONENTS (1<<14)
 #define PPP_SRC_INTERLVD_4COMPONENTS ((1<<14)|(1<<13))
-
 
 /* RGB666 unpack format
 ** TIGHT means R6+G6+B6 together

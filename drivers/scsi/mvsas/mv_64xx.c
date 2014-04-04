@@ -676,7 +676,6 @@ static void mvs_64xx_clear_active_cmds(struct mvs_info *mvi)
 	mw32(MVS_CTL, tmp);
 }
 
-
 u32 mvs_64xx_spi_read_data(struct mvs_info *mvi)
 {
 	void __iomem *regs = mvi->regs_ex;
@@ -688,7 +687,6 @@ void mvs_64xx_spi_write_data(struct mvs_info *mvi, u32 data)
 	void __iomem *regs = mvi->regs_ex;
 	 iow32(SPI_DATA_REG_64XX, data);
 }
-
 
 int mvs_64xx_spi_buildcmd(struct mvs_info *mvi,
 			u32      *dwCmd,
@@ -712,7 +710,6 @@ int mvs_64xx_spi_buildcmd(struct mvs_info *mvi,
 	*dwCmd = dwTmp;
 	return 0;
 }
-
 
 int mvs_64xx_spi_issuecmd(struct mvs_info *mvi, u32 cmd)
 {
@@ -812,4 +809,3 @@ const struct mvs_dispatch mvs_64xx_dispatch = {
 	mvs_64xx_fix_dma,
 #endif
 };
-

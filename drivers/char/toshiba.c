@@ -92,7 +92,6 @@ static int tosh_fan;
 static long tosh_ioctl(struct file *, unsigned int,
 	unsigned long);
 
-
 static const struct file_operations tosh_fops = {
 	.owner		= THIS_MODULE,
 	.unlocked_ioctl	= tosh_ioctl,
@@ -126,7 +125,6 @@ static int tosh_fn_status(void)
         return (int) scan;
 }
 #endif
-
 
 /*
  * For the Portage 610CT and the Tecra 700CS/700CDT emulate the HCI fan function
@@ -212,7 +210,6 @@ static int tosh_emulate_fan(SMMRegisters *regs)
 	return 0;
 }
 
-
 /*
  * Put the laptop into System Management Mode
  */
@@ -252,7 +249,6 @@ int tosh_smm(SMMRegisters *regs)
 	return eax;
 }
 EXPORT_SYMBOL(tosh_smm);
-
 
 static long tosh_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
 {
@@ -297,7 +293,6 @@ static long tosh_ioctl(struct file *fp, unsigned int cmd, unsigned long arg)
 	return (err==0) ? 0:-EINVAL;
 }
 
-
 /*
  * Print the information for /proc/toshiba
  */
@@ -341,7 +336,6 @@ static const struct file_operations proc_toshiba_fops = {
 };
 #endif
 
-
 /*
  * Determine which port to use for the Fn key status
  */
@@ -364,7 +358,6 @@ static void tosh_set_fn_port(void)
 
 	return;
 }
-
 
 /*
  * Get the machine identification number of the current model
@@ -416,7 +409,6 @@ static int tosh_get_machine_id(void __iomem *bios)
 
 	return id;
 }
-
 
 /*
  * Probe for the presence of a Toshiba laptop
@@ -483,7 +475,6 @@ static int tosh_probe(void)
 	tosh_date = (((year-90) & 0x1f)<<10) | ((month & 0xf)<<6)
 		| ((day & 0x1f)<<1);
 
-
 	/* in theory we should check the ports we are going to use for the
 	   fn key detection (and the fan on the Portage 610/Tecra700), and
 	   then request them to stop other drivers using them. However as
@@ -543,4 +534,3 @@ static void __exit toshiba_exit(void)
 
 module_init(toshiba_init);
 module_exit(toshiba_exit);
-

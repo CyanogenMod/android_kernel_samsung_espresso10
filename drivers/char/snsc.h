@@ -46,7 +46,6 @@ struct sysctl_data_s {
 	nasid_t scd_nasid;	/* Node on which subchannels are opened. */
 };
 
-
 /* argument types */
 #define IR_ARG_INT              0x00    /* 4-byte integer (big-endian)  */
 #define IR_ARG_ASCII            0x01    /* null-terminated ASCII string */
@@ -54,7 +53,6 @@ struct sysctl_data_s {
                                          * 7 bits will contain the data
                                          * length.                      */
 #define IR_ARG_UNKNOWN_LENGTH_MASK	0x7f
-
 
 /* system controller event codes */
 #define EV_CLASS_MASK		0xf000ul

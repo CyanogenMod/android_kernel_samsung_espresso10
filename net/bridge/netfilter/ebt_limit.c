@@ -85,7 +85,6 @@ static int ebt_limit_mt_check(const struct xt_mtchk_param *par)
 	return 0;
 }
 
-
 #ifdef CONFIG_COMPAT
 /*
  * no conversion function needed --

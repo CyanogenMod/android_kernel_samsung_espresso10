@@ -1,4 +1,3 @@
-
 #include <linux/platform_device.h>
 
 #ifndef _SOFTING_DEVICE_H_

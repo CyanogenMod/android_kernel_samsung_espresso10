@@ -77,8 +77,6 @@ extern      "C"
 #define c4_LOG_DEBUG     LOG_DEBUG
 #define c4_LOG_MAX       LOG_DEBUG
 
-
-
 /******************************/
 /**  get driver information  **/
 /******************************/
@@ -91,7 +89,6 @@ extern      "C"
         int         rel_strlen;
         char        release[REL_STRLEN];
     };
-
 
 /*****************************/
 /**  get board information  **/
@@ -214,7 +211,6 @@ extern      "C"
 #define W256T3_CHIP_CPLD_8       0x30000000
 #define W256T3_CHIP_EEPROM_8     0x40000000
 
-
 /**********************************/
 /**  read write port parameters  **/
 /**********************************/
@@ -257,7 +253,6 @@ struct sbecom_port_param
 #define CFG_LBO_SH660     10    /* T1 Short Haul */
 #define CFG_LBO_E75       11    /* E1 75 Ohm */
 #define CFG_LBO_E120      12    /* E1 120 Ohm (default) */
-
 
 /*************************************/
 /**  read write channel parameters  **/
@@ -322,12 +317,10 @@ struct sbecom_port_param
 #define CFG_CH_DINV_RX      0x01
 #define CFG_CH_DINV_TX      0x02
 
-
 /* Posssible resettable chipsets/functions */
 #define RESET_DEV_TEMUX     1
 #define RESET_DEV_TECT3     RESET_DEV_TEMUX
 #define RESET_DEV_PLL       2
-
 
 /*********************************************/
 /**  read reset channel thruput statistics  **/
@@ -361,7 +354,6 @@ struct sbecom_port_param
         unsigned long tx_fifo_errors;
         unsigned long tx_pending;
     };
-
 
 /****************************************/
 /**  read write card level parameters  **/
@@ -432,7 +424,6 @@ struct sbecom_port_param
 #define CFG_DS3_UNCHAN_OFF         0x00
 #define CFG_DS3_UNCHAN_ON          0x01
 
-
 /************************************/
 /**  read write framer parameters  **/
 /************************************/
@@ -499,7 +490,6 @@ struct sbecom_port_param
 #define CFG_FRMR_LOOPBACK_DIAG     1
 #define CFG_FRMR_LOOPBACK_LINE     2
 #define CFG_FRMR_LOOPBACK_PAYLOAD  3
-
 
 /****************************************/
 /**  read reset card error statistics  **/

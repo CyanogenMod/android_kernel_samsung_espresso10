@@ -469,7 +469,6 @@ extern const u8 wme_fifo2ac[];
 
 #define WLC_USE_COREFLAGS	0xffffffff	/* invalid core flags, use the saved coreflags */
 
-
 /* network protection config */
 #define	WLC_PROT_G_SPEC		1	/* SPEC g protection */
 #define	WLC_PROT_G_OVR		2	/* SPEC g prot override */

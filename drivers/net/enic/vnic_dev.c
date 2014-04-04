@@ -112,7 +112,6 @@ static int vnic_dev_discover_res(struct vnic_dev *vdev,
 	else
 		r = (struct vnic_resource __iomem *)(rh + 1);
 
-
 	while ((type = ioread8(&r->type)) != RES_TYPE_EOL) {
 
 		u8 bar_num = ioread8(&r->bar);

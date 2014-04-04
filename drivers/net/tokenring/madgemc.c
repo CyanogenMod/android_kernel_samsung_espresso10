@@ -46,9 +46,9 @@ struct card_info {
 	unsigned int cardtype;
 	unsigned int cardrev;
 	unsigned int ramsize;
-	
+
 	/*
-	 * These are read from the MCA POS registers.  
+	 * These are read from the MCA POS registers.
 	 */
 	unsigned int burstmode:2;
 	unsigned int fairness:1; /* 0 = Fair, 1 = Unfair */
@@ -87,10 +87,10 @@ static irqreturn_t madgemc_interrupt(int irq, void *dev_id);
 static unsigned short madgemc_sifreadb(struct net_device *dev, unsigned short reg)
 {
 	unsigned short ret;
-	if (reg<0x8)	
+	if (reg<0x8)
 		ret = SIFREADB(reg);
 	else {
-		madgemc_setregpage(dev, 1);	
+		madgemc_setregpage(dev, 1);
 		ret = SIFREADB(reg);
 		madgemc_setregpage(dev, 0);
 	}
@@ -117,10 +117,10 @@ static void madgemc_sifwriteb(struct net_device *dev, unsigned short val, unsign
 static unsigned short madgemc_sifreadw(struct net_device *dev, unsigned short reg)
 {
 	unsigned short ret;
-	if (reg<0x8)	
+	if (reg<0x8)
 		ret = SIFREADW(reg);
 	else {
-		madgemc_setregpage(dev, 1);	
+		madgemc_setregpage(dev, 1);
 		ret = SIFREADW(reg);
 		madgemc_setregpage(dev, 0);
 	}
@@ -144,7 +144,7 @@ static void madgemc_sifwritew(struct net_device *dev, unsigned short val, unsign
 static struct net_device_ops madgemc_netdev_ops __read_mostly;
 
 static int __devinit madgemc_probe(struct device *device)
-{	
+{
 	static int versionprinted;
 	struct net_device *dev;
 	struct net_local *tp;
@@ -183,9 +183,9 @@ static int __devinit madgemc_probe(struct device *device)
 	 */
 
 	/*
-	 * Base address 
+	 * Base address
 	 */
-	dev->base_addr = 0x0a20 + 
+	dev->base_addr = 0x0a20 +
 		((mdev->pos[2] & MC16_POS2_ADDR2)?0x0400:0) +
 		((mdev->pos[0] & MC16_POS0_ADDR1)?0x1000:0) +
 		((mdev->pos[3] & MC16_POS3_ADDR3)?0x2000:0);
@@ -206,7 +206,7 @@ static int __devinit madgemc_probe(struct device *device)
 		goto getout2;
 	}
 
-	if (!request_region(dev->base_addr, MADGEMC_IO_EXTENT, 
+	if (!request_region(dev->base_addr, MADGEMC_IO_EXTENT,
 			   "madgemc")) {
 		printk(KERN_INFO "madgemc: unable to setup Smart MC in slot %d because of I/O base conflict at 0x%04lx\n", mdev->slot, dev->base_addr);
 		dev->base_addr += MADGEMC_SIF_OFFSET;
@@ -214,7 +214,7 @@ static int __devinit madgemc_probe(struct device *device)
 		goto getout2;
 	}
 	dev->base_addr += MADGEMC_SIF_OFFSET;
-	
+
 	/*
 	 * Arbitration Level
 	 */
@@ -236,7 +236,7 @@ static int __devinit madgemc_probe(struct device *device)
 	else
 		card->ringspeed = 0; /* 4Mb */
 
-	/* 
+	/*
 	 * Cable type
 	 */
 	if ((mdev->pos[1] >> 6)&0x1)
@@ -244,51 +244,50 @@ static int __devinit madgemc_probe(struct device *device)
 	else
 		card->cabletype = 0; /* UTP/RJ-45 */
 
-
-	/* 
+	/*
 	 * ROM Info. This requires us to actually twiddle
-	 * bits on the card, so we must ensure above that 
+	 * bits on the card, so we must ensure above that
 	 * the base address is free of conflict (request_region above).
 	 */
 	madgemc_read_rom(dev, card);
-		
+
 	if (card->manid != 0x4d) { /* something went wrong */
 		printk(KERN_INFO "%s: Madge MC ROM read failed (unknown manufacturer ID %02x)\n", dev->name, card->manid);
 		goto getout3;
 	}
-		
+
 	if ((card->cardtype != 0x08) && (card->cardtype != 0x0d)) {
 		printk(KERN_INFO "%s: Madge MC ROM read failed (unknown card ID %02x)\n", dev->name, card->cardtype);
 		ret = -EIO;
 		goto getout3;
 	}
-	       
+
 	/* All cards except Rev 0 and 1 MC16's have 256kb of RAM */
 	if ((card->cardtype == 0x08) && (card->cardrev <= 0x01))
 		card->ramsize = 128;
 	else
 		card->ramsize = 256;
 
-	printk("%s: %s Rev %d at 0x%04lx IRQ %d\n", 
-	       dev->name, 
+	printk("%s: %s Rev %d at 0x%04lx IRQ %d\n",
+	       dev->name,
 	       (card->cardtype == 0x08)?MADGEMC16_CARDNAME:
-	       MADGEMC32_CARDNAME, card->cardrev, 
+	       MADGEMC32_CARDNAME, card->cardrev,
 	       dev->base_addr, dev->irq);
 
 	if (card->cardtype == 0x0d)
 		printk("%s:     Warning: MC32 support is experimental and highly untested\n", dev->name);
-	
+
 	if (card->ringspeed==2) { /* Unknown */
 		printk("%s:     Warning: Ring speed not set in POS -- Please run the reference disk and set it!\n", dev->name);
 		card->ringspeed = 1; /* default to 16mb */
 	}
-		
+
 	printk("%s:     RAM Size: %dKB\n", dev->name, card->ramsize);
 
-	printk("%s:     Ring Speed: %dMb/sec on %s\n", dev->name, 
-	       (card->ringspeed)?16:4, 
+	printk("%s:     Ring Speed: %dMb/sec on %s\n", dev->name,
+	       (card->ringspeed)?16:4,
 	       card->cabletype?"STP/DB9":"UTP/RJ-45");
-	printk("%s:     Arbitration Level: %d\n", dev->name, 
+	printk("%s:     Arbitration Level: %d\n", dev->name,
 	       card->arblevel);
 
 	printk("%s:     Burst Mode: ", dev->name);
@@ -300,12 +299,11 @@ static int __devinit madgemc_probe(struct device *device)
 	}
 	printk(" (%s)\n", (card->fairness)?"Unfair":"Fair");
 
-
-	/* 
+	/*
 	 * Enable SIF before we assign the interrupt handler,
 	 * just in case we get spurious interrupts that need
 	 * handling.
-	 */ 
+	 */
 	outb(0, dev->base_addr + MC_CONTROL_REG0); /* sanity */
 	madgemc_setsifsel(dev, 1);
 	if (request_irq(dev->irq, madgemc_interrupt, IRQF_SHARED,
@@ -325,14 +323,14 @@ static int __devinit madgemc_probe(struct device *device)
 	       dev->name, dev->dev_addr);
 
 	if (tmsdev_init(dev, device)) {
-		printk("%s: unable to get memory for dev->priv.\n", 
+		printk("%s: unable to get memory for dev->priv.\n",
 		       dev->name);
 		ret = -ENOMEM;
 		goto getout4;
 	}
 	tp = netdev_priv(dev);
 
-	/* 
+	/*
 	 * The MC16 is physically a 32bit card.  However, Madge
 	 * insists on calling it 16bit, so I'll assume here that
 	 * they know what they're talking about.  Cut off DMA
@@ -358,8 +356,8 @@ static int __devinit madgemc_probe(struct device *device)
 getout4:
 	free_irq(dev->irq, dev);
 getout3:
-	release_region(dev->base_addr-MADGEMC_SIF_OFFSET, 
-		       MADGEMC_IO_EXTENT); 
+	release_region(dev->base_addr-MADGEMC_SIF_OFFSET,
+		       MADGEMC_IO_EXTENT);
 getout2:
 	kfree(card);
 getout1:
@@ -391,7 +389,7 @@ getout:
  *	large performance penalty for doing so: the Madge chips
  *	must request the register from the Eagle, the Eagle must
  *	read them from its internal bus, and then take the route
- *	back out again, for a 16bit read.  
+ *	back out again, for a 16bit read.
  *
  * 2)	Use the MC_CONTROL_REG0_SINTR bit from the Madge ASICs.
  *	The major disadvantage here is that the accuracy of the
@@ -399,11 +397,11 @@ getout:
  *	cycles it takes to read the Eagle's SIF, as its only an
  *	8bit read, and theoretically the Madge bit is directly
  *	connected to the interrupt latch coming out of the Eagle
- *	hardware (that statement is not verified).  
+ *	hardware (that statement is not verified).
  *
  * I can't determine which of these methods has the best win.  For now,
  * we make a compromise.  Use the Madge way for the first interrupt,
- * which should be the fast-path, and then once we hit the first 
+ * which should be the fast-path, and then once we hit the first
  * interrupt, keep on trying using the SIF method until we've
  * exhausted all contiguous interrupts.
  *
@@ -437,7 +435,7 @@ static irqreturn_t madgemc_interrupt(int irq, void *dev_id)
 
 			/* Toggle the interrupt to reset the latch on card */
 			reg1 = inb(dev->base_addr + MC_CONTROL_REG1);
-			outb(reg1 ^ MC_CONTROL_REG1_SINTEN, 
+			outb(reg1 ^ MC_CONTROL_REG1_SINTEN,
 			     dev->base_addr + MC_CONTROL_REG1);
 			outb(reg1, dev->base_addr + MC_CONTROL_REG1);
 
@@ -447,7 +445,7 @@ static irqreturn_t madgemc_interrupt(int irq, void *dev_id)
 			pending = SIFREADW(SIFSTS); /* restart - the SIF way */
 
 		} else
-			return IRQ_HANDLED; 
+			return IRQ_HANDLED;
 	} while (1);
 
 	return IRQ_HANDLED; /* not reachable */
@@ -458,7 +456,7 @@ static irqreturn_t madgemc_interrupt(int irq, void *dev_id)
  *
  * Unlike newer cards, the MC16/32 have their speed selection
  * circuit connected to the Madge ASICs and not to the TMS380
- * NSELOUT pins. Set the ASIC bits correctly here, and return 
+ * NSELOUT pins. Set the ASIC bits correctly here, and return
  * zero to leave the TMS NSELOUT bits unaffected.
  *
  */
@@ -466,7 +464,7 @@ static unsigned short madgemc_setnselout_pins(struct net_device *dev)
 {
 	unsigned char reg1;
 	struct net_local *tp = netdev_priv(dev);
-	
+
 	reg1 = inb(dev->base_addr + MC_CONTROL_REG1);
 
 	if(tp->DataRate == SPEED_16)
@@ -490,16 +488,16 @@ static unsigned short madgemc_setnselout_pins(struct net_device *dev)
  *
  */
 static void madgemc_setregpage(struct net_device *dev, int page)
-{	
+{
 	static int reg1;
 
 	reg1 = inb(dev->base_addr + MC_CONTROL_REG1);
 	if ((page == 0) && (reg1 & MC_CONTROL_REG1_SRSX)) {
-		outb(reg1 ^ MC_CONTROL_REG1_SRSX, 
+		outb(reg1 ^ MC_CONTROL_REG1_SRSX,
 		     dev->base_addr + MC_CONTROL_REG1);
 	}
 	else if (page == 1) {
-		outb(reg1 | MC_CONTROL_REG1_SRSX, 
+		outb(reg1 | MC_CONTROL_REG1_SRSX,
 		     dev->base_addr + MC_CONTROL_REG1);
 	}
 	reg1 = inb(dev->base_addr + MC_CONTROL_REG1);
@@ -516,12 +514,12 @@ static void madgemc_setsifsel(struct net_device *dev, int val)
 
 	reg0 = inb(dev->base_addr + MC_CONTROL_REG0);
 	if ((val == 0) && (reg0 & MC_CONTROL_REG0_SIFSEL)) {
-		outb(reg0 ^ MC_CONTROL_REG0_SIFSEL, 
+		outb(reg0 ^ MC_CONTROL_REG0_SIFSEL,
 		     dev->base_addr + MC_CONTROL_REG0);
 	} else if (val == 1) {
-		outb(reg0 | MC_CONTROL_REG0_SIFSEL, 
+		outb(reg0 | MC_CONTROL_REG0_SIFSEL,
 		     dev->base_addr + MC_CONTROL_REG0);
-	}	
+	}
 	reg0 = inb(dev->base_addr + MC_CONTROL_REG0);
 }
 
@@ -538,10 +536,10 @@ static void madgemc_setint(struct net_device *dev, int val)
 
 	reg1 = inb(dev->base_addr + MC_CONTROL_REG1);
 	if ((val == 0) && (reg1 & MC_CONTROL_REG1_SINTEN)) {
-		outb(reg1 ^ MC_CONTROL_REG1_SINTEN, 
+		outb(reg1 ^ MC_CONTROL_REG1_SINTEN,
 		     dev->base_addr + MC_CONTROL_REG1);
 	} else if (val == 1) {
-		outb(reg1 | MC_CONTROL_REG1_SINTEN, 
+		outb(reg1 | MC_CONTROL_REG1_SINTEN,
 		     dev->base_addr + MC_CONTROL_REG1);
 	}
 }
@@ -558,7 +556,7 @@ static void madgemc_setcabletype(struct net_device *dev, int type)
 
 /*
  * Enable the functions of the Madge chipset needed for
- * full working order. 
+ * full working order.
  */
 static int madgemc_chipset_init(struct net_device *dev)
 {
@@ -572,7 +570,7 @@ static int madgemc_chipset_init(struct net_device *dev)
 	madgemc_setsifsel(dev, 1);
 
 	/* enable SIF interrupts */
-	madgemc_setint(dev, 1); 
+	madgemc_setint(dev, 1);
 
 	return 0;
 }
@@ -630,7 +628,7 @@ static void madgemc_read_rom(struct net_device *dev, struct card_info *card)
 	/* Switch to page zero and unmap SIF */
 	tmpreg0 = reg0 & ~(MC_CONTROL_REG0_PAGE + MC_CONTROL_REG0_SIFSEL);
 	outb(tmpreg0, ioaddr + MC_CONTROL_REG0);
-	
+
 	card->manid = inb(ioaddr + MC_ROM_MANUFACTURERID);
 	card->cardtype = inb(ioaddr + MC_ROM_ADAPTERID);
 	card->cardrev = inb(ioaddr + MC_ROM_REVISION);
@@ -642,16 +640,16 @@ static void madgemc_read_rom(struct net_device *dev, struct card_info *card)
 	dev->addr_len = 6;
 	for (i = 0; i < 6; i++)
 		dev->dev_addr[i] = inb(ioaddr + MC_ROM_BIA_START + i);
-	
+
 	/* Restore original register values */
 	outb(reg0, ioaddr + MC_CONTROL_REG0);
 	outb(reg1, ioaddr + MC_CONTROL_REG1);
 }
 
 static int madgemc_open(struct net_device *dev)
-{  
+{
 	/*
-	 * Go ahead and reinitialize the chipset again, just to 
+	 * Go ahead and reinitialize the chipset again, just to
 	 * make sure we didn't get left in a bad state.
 	 */
 	madgemc_chipset_init(dev);
@@ -669,13 +667,13 @@ static int madgemc_close(struct net_device *dev)
 /*
  * Give some details available from /proc/mca/slotX
  */
-static int madgemc_mcaproc(char *buf, int slot, void *d) 
-{	
+static int madgemc_mcaproc(char *buf, int slot, void *d)
+{
 	struct net_device *dev = (struct net_device *)d;
 	struct net_local *tp = netdev_priv(dev);
 	struct card_info *curcard = tp->tmspriv;
 	int len = 0;
-	
+
 	len += sprintf(buf+len, "-------\n");
 	if (curcard) {
 		len += sprintf(buf+len, "Card Revision: %d\n", curcard->cardrev);
@@ -695,10 +693,10 @@ static int madgemc_mcaproc(char *buf, int slot, void *d)
 		case 3: len += sprintf(buf+len, "Immediate release"); break;
 		}
 		len += sprintf(buf+len, " (%s)\n", (curcard->fairness)?"Unfair":"Fair");
-		
+
 		len += sprintf(buf+len, "Ring Station Address: %pM\n",
 			       dev->dev_addr);
-	} else 
+	} else
 		len += sprintf(buf+len, "Card not configured\n");
 
 	return len;
@@ -760,4 +758,3 @@ module_init(madgemc_init);
 module_exit(madgemc_exit);
 
 MODULE_LICENSE("GPL");
-

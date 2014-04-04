@@ -61,7 +61,6 @@
 #define NFS_readdirres_sz	(1)
 #define NFS_statfsres_sz	(1+NFS_info_sz)
 
-
 /*
  * While encoding arguments, set up the reply buffer in advance to
  * receive reply data directly into the page cache.
@@ -86,7 +85,6 @@ static void print_overflow_msg(const char *func, const struct xdr_stream *xdr)
 		"Remaining buffer length is %tu words.\n",
 		func, xdr->end - xdr->p);
 }
-
 
 /*
  * Encode/decode NFSv2 basic data types
@@ -549,7 +547,6 @@ out:
 out_default:
 	return nfs_stat_to_errno(status);
 }
-
 
 /*
  * NFSv2 XDR encode functions
@@ -1056,7 +1053,6 @@ out:
 out_default:
 	return nfs_stat_to_errno(status);
 }
-
 
 /*
  * We need to translate between nfs status return values and

@@ -177,7 +177,6 @@ static int efficeon_free_gatt_table(struct agp_bridge_data *bridge)
 	return 0;
 }
 
-
 /*
  * Since we don't need contiguous memory we just try
  * to get the gatt table once
@@ -310,7 +309,6 @@ static int efficeon_remove_memory(struct agp_memory * mem, off_t pg_start, int t
 	agp_bridge->driver->tlb_flush(mem);
 	return 0;
 }
-
 
 static const struct agp_bridge_driver efficeon_driver = {
 	.owner			= THIS_MODULE,

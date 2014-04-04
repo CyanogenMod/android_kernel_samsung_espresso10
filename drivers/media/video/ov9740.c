@@ -527,7 +527,6 @@ static int ov9740_reg_write(struct i2c_client *client, u16 reg, u8 val)
 	return 0;
 }
 
-
 /* Read a register, alter its bits, write it back */
 static int ov9740_reg_rmw(struct i2c_client *client, u16 reg, u8 set, u8 unset)
 {

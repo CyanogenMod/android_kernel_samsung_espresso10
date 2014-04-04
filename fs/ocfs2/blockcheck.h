@@ -20,7 +20,6 @@
 #ifndef OCFS2_BLOCKCHECK_H
 #define OCFS2_BLOCKCHECK_H
 
-
 /* Count errors and error correction from blockcheck.c */
 struct ocfs2_blockcheck_stats {
 	spinlock_t b_lock;
@@ -37,7 +36,6 @@ struct ocfs2_blockcheck_stats {
 	struct dentry *b_debug_failure;	/* Exposes b_failure_count */
 	struct dentry *b_debug_recover;	/* Exposes b_recover_count */
 };
-
 
 /* High level block API */
 void ocfs2_compute_meta_ecc(struct super_block *sb, void *data,

@@ -81,14 +81,12 @@ struct ceph_mds_reply_info_parsed {
 	int snapblob_len;
 };
 
-
 /*
  * cap releases are batched and sent to the MDS en masse.
  */
 #define CEPH_CAPS_PER_RELEASE ((PAGE_CACHE_SIZE -			\
 				sizeof(struct ceph_mds_cap_release)) /	\
 			       sizeof(struct ceph_mds_cap_item))
-
 
 /*
  * state associated with each MDS<->client session

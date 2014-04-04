@@ -192,7 +192,6 @@ struct lirc_driver {
  *
  */
 
-
 /* following functions can be called ONLY from user context
  *
  * returns negative value on error or minor number

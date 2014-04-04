@@ -46,7 +46,6 @@
 
 #include "atmel-pcm.h"
 
-
 /*--------------------------------------------------------------------------*\
  * Hardware definition
 \*--------------------------------------------------------------------------*/
@@ -66,7 +65,6 @@ static const struct snd_pcm_hardware atmel_pcm_hardware = {
 	.buffer_bytes_max	= 32 * 1024,
 };
 
-
 /*--------------------------------------------------------------------------*\
  * Data types
 \*--------------------------------------------------------------------------*/
@@ -84,7 +82,6 @@ struct atmel_runtime_data {
 	u32 pdc_xnpr_save;
 	u32 pdc_xncr_save;
 };
-
 
 /*--------------------------------------------------------------------------*\
  * Helper functions
@@ -161,7 +158,6 @@ static void atmel_pcm_dma_irq(u32 ssc_sr,
 
 	snd_pcm_period_elapsed(substream);
 }
-
 
 /*--------------------------------------------------------------------------*\
  * PCM operations
@@ -357,7 +353,6 @@ static struct snd_pcm_ops atmel_pcm_ops = {
 	.pointer	= atmel_pcm_pointer,
 	.mmap		= atmel_pcm_mmap,
 };
-
 
 /*--------------------------------------------------------------------------*\
  * ASoC platform driver

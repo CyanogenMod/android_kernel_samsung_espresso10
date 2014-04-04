@@ -12,7 +12,6 @@
  * published by the Free Software Foundation.
 */
 
-
 #ifdef CONFIG_S3C2410_DMA_DEBUG
 #define DEBUG
 #endif
@@ -43,7 +42,6 @@ static struct kmem_cache *dma_kmem;
 static int dma_channels;
 
 static struct s3c24xx_dma_selection dma_sel;
-
 
 /* debugging functions */
 
@@ -393,7 +391,6 @@ static int s3c2410_dma_start(struct s3c2410_dma_chan *chan)
 		}
 	}
 
-
 	local_irq_restore(flags);
 
 	return 0;
@@ -572,7 +569,6 @@ s3c2410_dma_lastxfer(struct s3c2410_dma_chan *chan)
 	/* hopefully this'll shut the damned thing up after the transfer... */
 	dma_wrreg(chan, S3C2410_DMA_DCON, chan->dcon | S3C2410_DCON_NORELOAD);
 }
-
 
 #define dmadbg2(x...)
 
@@ -875,7 +871,6 @@ static void s3c2410_dma_waitforstop(struct s3c2410_dma_chan *chan)
 	pr_debug("dma%d: failed to stop?\n", chan->number);
 }
 
-
 /* s3c2410_dma_flush
  *
  * stop the channel, and remove all current and pending transfers
@@ -965,7 +960,6 @@ static int s3c2410_dma_started(struct s3c2410_dma_chan *chan)
 			s3c2410_dma_loadbuffer(chan, chan->next);
 		}
 	}
-
 
 	local_irq_restore(flags);
 
@@ -1088,7 +1082,6 @@ int s3c2410_dma_config(enum dma_ch channel,
 }
 
 EXPORT_SYMBOL(s3c2410_dma_config);
-
 
 /* s3c2410_dma_devconfig
  *
@@ -1351,7 +1344,6 @@ static inline int is_channel_valid(unsigned int channel)
 }
 
 static struct s3c24xx_dma_order *dma_order;
-
 
 /* s3c2410_dma_map_channel()
  *

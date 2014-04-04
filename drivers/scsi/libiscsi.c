@@ -616,7 +616,6 @@ void iscsi_complete_scsi_task(struct iscsi_task *task,
 }
 EXPORT_SYMBOL_GPL(iscsi_complete_scsi_task);
 
-
 /*
  * session lock must be held and if not called for a task that is
  * still pending or from the xmit thread, then xmit thread must

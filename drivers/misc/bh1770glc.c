@@ -1134,7 +1134,6 @@ static DEVICE_ATTR(chip_id, S_IRUGO, bh1770_chip_id_show, NULL);
 static DEVICE_ATTR(power_state, S_IRUGO | S_IWUSR, bh1770_power_state_show,
 						 bh1770_power_state_store);
 
-
 static struct attribute *sysfs_attrs[] = {
 	&dev_attr_lux0_calibscale.attr,
 	&dev_attr_lux0_calibscale_default.attr,

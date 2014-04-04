@@ -16,7 +16,6 @@
 #ifndef __MODEM_LINK_DEVICE_MIPI_H__
 #define __MODEM_LINK_DEVICE_MIPI_H__
 
-
 #define HSI_MAX_CHANNELS	16
 #define CHANNEL_MASK	0xFF
 
@@ -90,7 +89,6 @@ enum {
 	STEP_SEND_TO_CONN_CLOSED,
 };
 
-
 struct if_hsi_channel {
 	struct hsi_device *dev;
 	unsigned int channel_id;
@@ -154,7 +152,6 @@ struct mipi_link_device {
 /* converts from struct link_device* to struct xxx_link_device* */
 #define to_mipi_link_device(linkdev) \
 			container_of(linkdev, struct mipi_link_device, ld)
-
 
 enum {
 	HSI_INIT_MODE_NORMAL,

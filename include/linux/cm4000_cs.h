@@ -19,7 +19,6 @@ typedef struct atreq {
 	unsigned char bIFSC;
 } atreq_t;
 
-
 /* what is particularly stupid in the original driver is the arch-dependent
  * member sizes. This leads to CONFIG_COMPAT breakage, since 32bit userspace
  * will lay out the structure members differently than the 64bit kernel.
@@ -57,7 +56,6 @@ typedef struct ptsreq {
 /* extra info only from CM4000 */
 #define	CM_NO_READER			0x10
 #define	CM_BAD_CARD			0x20
-
 
 #ifdef __KERNEL__
 

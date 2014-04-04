@@ -55,7 +55,6 @@ struct nilfs_recovery_block {
 	struct list_head list;
 };
 
-
 static int nilfs_warn_segment_error(int err)
 {
 	switch (err) {

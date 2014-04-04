@@ -1,5 +1,5 @@
 /* Copyright (c) 2007 Coraid, Inc.  See COPYING for GPL terms. */
-#define VERSION "47"
+#define VERSION "47q"
 #define AOE_MAJOR 152
 #define DEVICE_NAME "aoe"
 
@@ -156,7 +156,7 @@ struct aoedev {
 	struct work_struct work;/* disk create work struct */
 	struct gendisk *gd;
 	struct request_queue *blkq;
-	struct hd_geometry geo; 
+	struct hd_geometry geo;
 	sector_t ssize;
 	struct timer_list timer;
 	spinlock_t lock;
@@ -169,7 +169,6 @@ struct aoedev {
 	struct aoetgt **tgt;	/* target in use when working */
 	struct aoetgt **htgt;	/* target needing rexmit assistance */
 };
-
 
 int aoeblk_init(void);
 void aoeblk_exit(void);
@@ -200,4 +199,3 @@ void aoenet_exit(void);
 void aoenet_xmit(struct sk_buff_head *);
 int is_aoe_netif(struct net_device *ifp);
 int set_aoe_iflist(const char __user *str, size_t size);
-

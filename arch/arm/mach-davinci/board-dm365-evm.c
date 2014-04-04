@@ -93,7 +93,6 @@ static inline int have_tvp7002(void)
 
 static void __iomem *cpld;
 
-
 /* NOTE:  this is geared for the standard config, with a socketed
  * 2 GByte Micron NAND (MT29F16G08FAA) using 128KB sectors.  If you
  * swap chips with a different block size, partitioning will
@@ -464,7 +463,6 @@ static int __init cpld_leds_init(void)
 /* run after subsys_initcall() for LEDs */
 fs_initcall(cpld_leds_init);
 
-
 static void __init evm_init_cpld(void)
 {
 	u8 mux, resets;
@@ -618,4 +616,3 @@ MACHINE_START(DAVINCI_DM365_EVM, "DaVinci DM365 EVM")
 	.timer		= &davinci_timer,
 	.init_machine	= dm365_evm_init,
 MACHINE_END
-

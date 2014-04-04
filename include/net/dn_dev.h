@@ -1,7 +1,6 @@
 #ifndef _NET_DN_DEV_H
 #define _NET_DN_DEV_H
 
-
 struct dn_dev;
 
 struct dn_ifaddr {
@@ -23,7 +22,6 @@ struct dn_ifaddr {
 #define DN_DEV_S_RC  5 /* Routing Layer Complete   */
 #define DN_DEV_S_OF  6 /* Off                      */
 #define DN_DEV_S_HA  7 /* Halt                     */
-
 
 /*
  * The dn_dev_parms structure contains the set of parameters
@@ -60,7 +58,7 @@ struct dn_ifaddr {
  *        device with DECnet.
  * down() - Called to turn device off when it goes down
  * timer3() - Called once for each ifaddr when timer 3 goes off
- * 
+ *
  * sysctl - Hook for sysctl things
  *
  */
@@ -81,7 +79,6 @@ struct dn_dev_parms {
 	void (*timer3)(struct net_device *, struct dn_ifaddr *ifa);
 	void *sysctl;
 };
-
 
 struct dn_dev {
 	struct dn_ifaddr __rcu *ifa_list;
@@ -146,7 +143,6 @@ struct rtnode_hello_message {
 	__le16  timer;
 	__u8   mpd;
 } __packed;
-
 
 extern void dn_dev_init(void);
 extern void dn_dev_cleanup(void);

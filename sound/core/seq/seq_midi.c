@@ -18,13 +18,12 @@
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  *
  */
- 
-/* 
+
+/*
 Possible options for midisynth module:
 	- automatic opening of midi ports on first received event or subscription
 	  (close will be performed when client leaves)
 */
-
 
 #include <linux/init.h>
 #include <linux/slab.h>
@@ -161,7 +160,6 @@ static int event_process_midi(struct snd_seq_event *ev, int direct,
 	}
 	return 0;
 }
-
 
 static int snd_seq_midisynth_new(struct seq_midisynth *msynth,
 				 struct snd_card *card,
@@ -434,7 +432,7 @@ snd_seq_midisynth_unregister_port(struct snd_seq_device *dev)
 	struct seq_midisynth *msynth;
 	struct snd_card *card = dev->card;
 	int device = dev->device, p, ports;
-	
+
 	mutex_lock(&register_mutex);
 	client = synths[card->number];
 	if (client == NULL || client->ports[device] == NULL) {
@@ -457,7 +455,6 @@ snd_seq_midisynth_unregister_port(struct snd_seq_device *dev)
 	mutex_unlock(&register_mutex);
 	return 0;
 }
-
 
 static int __init alsa_seq_midi_init(void)
 {

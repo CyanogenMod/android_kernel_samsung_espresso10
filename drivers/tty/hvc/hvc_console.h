@@ -106,7 +106,6 @@ extern int notifier_add_irq(struct hvc_struct *hp, int data);
 extern void notifier_del_irq(struct hvc_struct *hp, int data);
 extern void notifier_hangup_irq(struct hvc_struct *hp, int data);
 
-
 #if defined(CONFIG_XMON) && defined(CONFIG_SMP)
 #include <asm/xmon.h>
 #else

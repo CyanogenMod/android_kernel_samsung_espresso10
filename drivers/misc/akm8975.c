@@ -115,7 +115,6 @@ static int akmd_copy_out(unsigned int cmd, void __user *argp,
 	return 0;
 }
 
-
 static int akm8975_wait_for_data_ready(struct akm8975_data *akm)
 {
 	int err;
@@ -274,7 +273,6 @@ static const struct file_operations akmd_fops = {
 	.unlocked_ioctl = akmd_ioctl,
 };
 
-
 static void ak8975c_selftest(struct akm8975_data *ak_data)
 {
 	int err;
@@ -394,7 +392,6 @@ static ssize_t ak8975c_check_registers(struct device *dev,
 	buf[12] = i2c_smbus_read_byte_data(ak_data->this_client,
 					AK8975_REG_I2CDIS);
 
-
 	return sprintf(strbuf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
 			buf[0], buf[1], buf[2], buf[3], buf[4], buf[5],
 			buf[6], buf[7], buf[8], buf[9], buf[10], buf[11],
@@ -414,7 +411,6 @@ static ssize_t ak8975c_check_cntl(struct device *dev,
 
 	buf = i2c_smbus_read_byte_data(ak_data->this_client,
 					AK8975_REG_CNTL);
-
 
 	return sprintf(strbuf, "%s\n", (!buf ? "OK" : "NG"));
 }
@@ -637,7 +633,6 @@ exit_check_functionality_failed:
 exit_platform_data_null:
 	return err;
 }
-
 
 static int akm8975_suspend(struct device *dev)
 {

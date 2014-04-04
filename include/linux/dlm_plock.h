@@ -51,4 +51,3 @@ int dlm_posix_get(dlm_lockspace_t *lockspace, u64 number, struct file *file,
 #endif /* __KERNEL__ */
 
 #endif
-

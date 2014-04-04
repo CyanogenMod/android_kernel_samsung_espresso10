@@ -444,7 +444,6 @@ edd_show_sectors(struct edd_device *edev, char *buf)
 	return (p - buf);
 }
 
-
 /*
  * Some device instances may not have all the above attributes,
  * or the attribute values may be meaningless (i.e. if
@@ -544,7 +543,6 @@ edd_has_edd30(struct edd_device *edev)
 		return 0;
 	}
 
-
 	/* We support only T13 spec */
 	if (info->params.device_path_info_length != 44)
 		return 0;
@@ -557,7 +555,6 @@ edd_has_edd30(struct edd_device *edev)
 
 	return 1;
 }
-
 
 static EDD_DEVICE_ATTR(raw_data, 0444, edd_show_raw_data, edd_has_edd_info);
 static EDD_DEVICE_ATTR(version, 0444, edd_show_version, edd_has_edd_info);
@@ -582,7 +579,6 @@ static EDD_DEVICE_ATTR(default_sectors_per_track, 0444,
 static EDD_DEVICE_ATTR(interface, 0444, edd_show_interface, edd_has_edd30);
 static EDD_DEVICE_ATTR(host_bus, 0444, edd_show_host_bus, edd_has_edd30);
 static EDD_DEVICE_ATTR(mbr_signature, 0444, edd_show_mbr_signature, edd_has_mbr_signature);
-
 
 /* These are default attributes that are added for every edd
  * device discovered.  There are none.
@@ -632,7 +628,6 @@ static struct kobj_type edd_ktype = {
 };
 
 static struct kset *edd_kset;
-
 
 /**
  * edd_dev_is_type() - is this EDD device a 'type' device?

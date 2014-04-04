@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wmi_api.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -29,13 +29,13 @@
 extern "C" {
 #endif
 
-    /* WMI converts a dix frame with an ethernet payload (up to 1500 bytes) 
+    /* WMI converts a dix frame with an ethernet payload (up to 1500 bytes)
      * to an 802.3 frame (adds SNAP header) and adds on a WMI data header */
 #define WMI_MAX_TX_DATA_FRAME_LENGTH (1500 + sizeof(WMI_DATA_HDR) + sizeof(ATH_MAC_HDR) + sizeof(ATH_LLC_SNAP_HDR))
 
     /* A normal WMI data frame */
 #define WMI_MAX_NORMAL_RX_DATA_FRAME_LENGTH (1500 + sizeof(WMI_DATA_HDR) + sizeof(ATH_MAC_HDR) + sizeof(ATH_LLC_SNAP_HDR))
-    
+
     /* An AMSDU frame */ /* The MAX AMSDU length of AR6003 is 3839 */
 #define WMI_MAX_AMSDU_RX_DATA_FRAME_LENGTH  (3840 + sizeof(WMI_DATA_HDR) + sizeof(ATH_MAC_HDR) + sizeof(ATH_LLC_SNAP_HDR))
 
@@ -89,7 +89,6 @@ void wmi_iterate_nodes(struct wmi_t *wmip, wlan_node_iter_func *f, void *arg);
 void wmi_free_allnodes(struct wmi_t *wmip);
 bss_t *wmi_find_node(struct wmi_t *wmip, const u8 *macaddr);
 void wmi_free_node(struct wmi_t *wmip, const u8 *macaddr);
-
 
 typedef enum {
     NO_SYNC_WMIFLAG = 0,
@@ -257,7 +256,6 @@ int wmi_set_btcoex_sco_config_cmd(struct wmi_t *wmip,
 int wmi_set_btcoex_a2dp_config_cmd(struct wmi_t *wmip,
 		                                 WMI_SET_BTCOEX_A2DP_CONFIG_CMD* cmd);
 
-
 int wmi_set_btcoex_aclcoex_config_cmd(struct wmi_t *wmip, WMI_SET_BTCOEX_ACLCOEX_CONFIG_CMD* cmd);
 
 int wmi_set_btcoex_debug_cmd(struct wmi_t *wmip, WMI_SET_BTCOEX_DEBUG_CMD * cmd);
@@ -325,7 +323,6 @@ bss_t *
 wmi_find_Ssidnode (struct wmi_t *wmip, u8 *pSsid,
                    u32 ssidLength, bool bIsWPA2, bool bMatchSSID);
 
-
 void
 wmi_node_return (struct wmi_t *wmip, bss_t *bss);
 
@@ -348,7 +345,6 @@ wmi_set_target_event_report_cmd(struct wmi_t *wmip, WMI_SET_TARGET_EVENT_REPORT_
 
 bss_t   *wmi_rm_current_bss (struct wmi_t *wmip, u8 *id);
 int wmi_add_current_bss (struct wmi_t *wmip, u8 *id, bss_t *bss);
-
 
 /*
  * AP mode

@@ -28,7 +28,6 @@
 
 #include <mach/assabet.h>
 
-
 struct mcp_sa11x0 {
 	u32	mccr0;
 	u32	mccr1;

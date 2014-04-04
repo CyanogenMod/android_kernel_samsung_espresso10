@@ -887,7 +887,6 @@ static void vhci_shutdown_connection(struct usbip_device *ud)
 	pr_info("disconnect device\n");
 }
 
-
 static void vhci_device_reset(struct usbip_device *ud)
 {
 	struct vhci_device *vdev = container_of(ud, struct vhci_device, ud);

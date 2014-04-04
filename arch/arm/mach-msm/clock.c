@@ -181,4 +181,3 @@ static int __init clock_late_init(void)
 }
 
 late_initcall(clock_late_init);
-

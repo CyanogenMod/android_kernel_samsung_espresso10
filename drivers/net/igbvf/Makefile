@@ -35,4 +35,3 @@ igbvf-objs := vf.o \
               mbx.o \
               ethtool.o \
               netdev.o
-

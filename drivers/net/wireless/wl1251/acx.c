@@ -40,7 +40,6 @@ out:
 	return ret;
 }
 
-
 int wl1251_acx_station_id(struct wl1251 *wl)
 {
 	struct acx_dot11_station_id *mac;

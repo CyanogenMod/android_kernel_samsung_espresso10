@@ -43,7 +43,6 @@
 #include <asm/uaccess.h>
 #include <asm/io.h>
 
-
 #define SMART2_DRIVER_VERSION(maj,min,submin) ((maj<<16)|(min<<8)|(submin))
 
 #define DRIVER_NAME "Compaq SMART2 Driver (v 2.6.0)"
@@ -194,7 +193,6 @@ static inline ctlr_info_t *get_host(struct gendisk *disk)
 	return disk->queue->queuedata;
 }
 
-
 static const struct block_device_operations ida_fops  = {
 	.owner		= THIS_MODULE,
 	.open		= ida_unlocked_open,
@@ -203,7 +201,6 @@ static const struct block_device_operations ida_fops  = {
 	.getgeo		= ida_getgeo,
 	.revalidate_disk= ida_revalidate,
 };
-
 
 #ifdef CONFIG_PROC_FS
 
@@ -249,7 +246,7 @@ static int ida_proc_show(struct seq_file *m, void *v)
 		"       Physical drives: %d\n\n"
 		"       Current Q depth: %d\n"
 		"       Max Q depth since init: %d\n\n",
-		h->devname, 
+		h->devname,
 		h->product_name,
 		(unsigned long)h->board_id,
 		h->firm_rev[0], h->firm_rev[1], h->firm_rev[2], h->firm_rev[3],
@@ -267,7 +264,7 @@ static int ida_proc_show(struct seq_file *m, void *v)
 	}
 
 #ifdef CPQ_PROC_PRINT_QUEUES
-	spin_lock_irqsave(IDA_LOCK(h->ctlr), flags); 
+	spin_lock_irqsave(IDA_LOCK(h->ctlr), flags);
 	seq_puts(m, "\nCurrent Queues:\n");
 
 	c = h->reqQ;
@@ -287,7 +284,7 @@ static int ida_proc_show(struct seq_file *m, void *v)
 	}
 
 	seq_putc(m, '\n');
-	spin_unlock_irqrestore(IDA_LOCK(h->ctlr), flags); 
+	spin_unlock_irqrestore(IDA_LOCK(h->ctlr), flags);
 #endif
 	seq_printf(m, "nr_allocs = %d\nnr_frees = %d\n",
 			h->nr_allocs, h->nr_frees);
@@ -393,7 +390,7 @@ static int __devinit cpqarray_register_ctlr( int i, struct pci_dev *pdev)
 	struct request_queue *q;
 	int j;
 
-	/* 
+	/*
 	 * register block devices
 	 * Find disks and fill in structs
 	 * Get an interrupt, set the Q depth and get into /proc
@@ -412,7 +409,7 @@ static int __devinit cpqarray_register_ctlr( int i, struct pci_dev *pdev)
 				hba[i]->intr, hba[i]->devname);
 		goto Enomem3;
 	}
-		
+
 	for (j=0; j<NWD; j++) {
 		ida_gendisk[i][j] = alloc_disk(1 << NWD_SHIFT);
 		if (!ida_gendisk[i][j])
@@ -481,10 +478,10 @@ static int __devinit cpqarray_register_ctlr( int i, struct pci_dev *pdev)
 	return(i);
 
 Enomem1:
-	nr_ctlr = i; 
+	nr_ctlr = i;
 	kfree(hba[i]->cmd_pool_bits);
 	if (hba[i]->cmd_pool)
-		pci_free_consistent(hba[i]->pci_dev, NR_CMDS*sizeof(cmdlist_t), 
+		pci_free_consistent(hba[i]->pci_dev, NR_CMDS*sizeof(cmdlist_t),
 				    hba[i]->cmd_pool, hba[i]->cmd_pool_dhandle);
 Enomem2:
 	while (j--) {
@@ -557,7 +554,7 @@ static int __init cpqarray_init(void)
 	if (rc)
 		return rc;
 	cpqarray_eisa_detect();
-	
+
 	for (i=0; i < MAX_CTLR; i++) {
 		if (hba[i] != NULL)
 			num_cntlrs_reg++;
@@ -700,7 +697,7 @@ DBGINFO(
 	}
 	if (i == NR_PRODUCTS) {
 		printk(KERN_WARNING "cpqarray: Sorry, I don't know how"
-			" to access the SMART Array controller %08lx\n", 
+			" to access the SMART Array controller %08lx\n",
 				(unsigned long)board_id);
 		return -1;
 	}
@@ -756,7 +753,7 @@ static int __devinit cpqarray_eisa_detect(void)
 			break;
 		board_id = inl(eisa[i]+0xC80);
 		for(j=0; j < NR_PRODUCTS; j++)
-			if (board_id == products[j].board_id) 
+			if (board_id == products[j].board_id)
 				break;
 
 		if (j == NR_PRODUCTS) {
@@ -788,7 +785,7 @@ static int __devinit cpqarray_eisa_detect(void)
 		else if (intr & 2) intr = 10;
 		else if (intr & 4) intr = 14;
 		else if (intr & 8) intr = 15;
-		
+
 		hba[ctlr]->intr = intr;
 		sprintf(hba[ctlr]->devname, "ida%d", nr_ctlr);
 		hba[ctlr]->product_name = products[j].product_name;
@@ -959,7 +956,7 @@ DBGPX(	printk("Submitting %u sectors in %d segments\n", blk_rq_sectors(creq), se
 	/* Put the request on the tail of the request queue */
 	addQ(&h->reqQ, c);
 	h->Qdepth++;
-	if (h->Qdepth > h->maxQsinceinit) 
+	if (h->Qdepth > h->maxQsinceinit)
 		h->maxQsinceinit = h->Qdepth;
 
 	goto queue_next;
@@ -968,7 +965,7 @@ startio:
 	start_io(h);
 }
 
-/* 
+/*
  * start_io submits everything on a controller's request queue
  * and moves it to the completion queue.
  *
@@ -986,7 +983,7 @@ static void start_io(ctlr_info_t *h)
 		/* Get the first entry from the request Q */
 		removeQ(&h->reqQ, c);
 		h->Qdepth--;
-	
+
 		/* Tell the controller to do our bidding */
 		h->access.submit_command(h, c);
 
@@ -1064,13 +1061,13 @@ static irqreturn_t do_ida_intr(int irq, void *dev_id)
 		while((a = h->access.command_completed(h))) {
 			a1 = a; a &= ~3;
 			if ((c = h->cmpQ) == NULL)
-			{  
+			{
 				printk(KERN_WARNING "cpqarray: Completion of %08lx ignored\n", (unsigned long)a1);
-				continue;	
-			} 
+				continue;
+			}
 			while(c->busaddr != a) {
 				c = c->next;
-				if (c == h->cmpQ) 
+				if (c == h->cmpQ)
 					break;
 			}
 			/*
@@ -1103,7 +1100,7 @@ static irqreturn_t do_ida_intr(int irq, void *dev_id)
 	 * See if we can queue up some more IO
 	 */
 	do_ida_request(h->queue);
-	spin_unlock_irqrestore(IDA_LOCK(h->ctlr), flags); 
+	spin_unlock_irqrestore(IDA_LOCK(h->ctlr), flags);
 	return IRQ_HANDLED;
 }
 
@@ -1191,23 +1188,24 @@ out_passthru:
 		return 0;
 	case IDAGETPCIINFO:
 	{
-		
+
 		ida_pci_info_struct pciinfo;
 
 		if (!arg) return -EINVAL;
+		memset(&pciinfo, 0, sizeof(pciinfo));
 		pciinfo.bus = host->pci_dev->bus->number;
 		pciinfo.dev_fn = host->pci_dev->devfn;
 		pciinfo.board_id = host->board_id;
-		if(copy_to_user((void __user *) arg, &pciinfo,  
+		if(copy_to_user((void __user *) arg, &pciinfo,
 			sizeof( ida_pci_info_struct)))
 				return -EFAULT;
 		return(0);
-	}	
+	}
 
 	default:
 		return -EINVAL;
 	}
-		
+
 }
 
 static int ida_ioctl(struct block_device *bdev, fmode_t mode,
@@ -1261,11 +1259,11 @@ static int ida_ctlr_ioctl(ctlr_info_t *h, int dsk, ida_ioctl_t *io)
 			cmd_free(h, c, 0);
 			return error;
 		}
-		c->req.hdr.blk = pci_map_single(h->pci_dev, &(io->c), 
-				sizeof(ida_ioctl_t), 
+		c->req.hdr.blk = pci_map_single(h->pci_dev, &(io->c),
+				sizeof(ida_ioctl_t),
 				PCI_DMA_BIDIRECTIONAL);
 		c->req.sg[0].size = io->sg[0].size;
-		c->req.sg[0].addr = pci_map_single(h->pci_dev, p, 
+		c->req.sg[0].addr = pci_map_single(h->pci_dev, p,
 			c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL);
 		c->req.hdr.sg_cnt = 1;
 		break;
@@ -1273,16 +1271,16 @@ static int ida_ctlr_ioctl(ctlr_info_t *h, int dsk, ida_ioctl_t *io)
 	case READ_FLASH_ROM:
 	case SENSE_CONTROLLER_PERFORMANCE:
 		p = kmalloc(io->sg[0].size, GFP_KERNEL);
-		if (!p) 
-		{ 
-                        error = -ENOMEM; 
+		if (!p)
+		{
+                        error = -ENOMEM;
                         cmd_free(h, c, 0);
                         return(error);
                 }
 
 		c->req.sg[0].size = io->sg[0].size;
-		c->req.sg[0].addr = pci_map_single(h->pci_dev, p, 
-			c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL); 
+		c->req.sg[0].addr = pci_map_single(h->pci_dev, p,
+			c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL);
 		c->req.hdr.sg_cnt = 1;
 		break;
 	case IDA_WRITE:
@@ -1297,17 +1295,17 @@ static int ida_ctlr_ioctl(ctlr_info_t *h, int dsk, ida_ioctl_t *io)
 			return error;
                 }
 		c->req.sg[0].size = io->sg[0].size;
-		c->req.sg[0].addr = pci_map_single(h->pci_dev, p, 
-			c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL); 
+		c->req.sg[0].addr = pci_map_single(h->pci_dev, p,
+			c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL);
 		c->req.hdr.sg_cnt = 1;
 		break;
 	default:
 		c->req.sg[0].size = sizeof(io->c);
-		c->req.sg[0].addr = pci_map_single(h->pci_dev,&io->c, 
+		c->req.sg[0].addr = pci_map_single(h->pci_dev,&io->c,
 			c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL);
 		c->req.hdr.sg_cnt = 1;
 	}
-	
+
 	/* Put the request on the tail of the request queue */
 	spin_lock_irqsave(IDA_LOCK(ctlr), flags);
 	addQ(&h->reqQ, c);
@@ -1320,7 +1318,7 @@ static int ida_ctlr_ioctl(ctlr_info_t *h, int dsk, ida_ioctl_t *io)
 		schedule();
 
 	/* Unmap the DMA  */
-	pci_unmap_single(h->pci_dev, c->req.sg[0].addr, c->req.sg[0].size, 
+	pci_unmap_single(h->pci_dev, c->req.sg[0].addr, c->req.sg[0].size,
 		PCI_DMA_BIDIRECTIONAL);
 	/* Post submit processing */
 	switch(io->cmd) {
@@ -1365,7 +1363,7 @@ static cmdlist_t * cmd_alloc(ctlr_info_t *h, int get_from_pool)
 	dma_addr_t cmd_dhandle;
 
 	if (!get_from_pool) {
-		c = (cmdlist_t*)pci_alloc_consistent(h->pci_dev, 
+		c = (cmdlist_t*)pci_alloc_consistent(h->pci_dev,
 			sizeof(cmdlist_t), &cmd_dhandle);
 		if(c==NULL)
 			return NULL;
@@ -1381,7 +1379,7 @@ static cmdlist_t * cmd_alloc(ctlr_info_t *h, int get_from_pool)
 	}
 
 	memset(c, 0, sizeof(cmdlist_t));
-	c->busaddr = cmd_dhandle; 
+	c->busaddr = cmd_dhandle;
 	return c;
 }
 
@@ -1402,7 +1400,7 @@ static void cmd_free(ctlr_info_t *h, cmdlist_t *c, int got_from_pool)
 /***********************************************************************
     name:        sendcmd
     Send a command to an IDA using the memory mapped FIFO interface
-    and wait for it to complete.  
+    and wait for it to complete.
     This routine should only be called at init time.
 ***********************************************************************/
 static int sendcmd(
@@ -1435,7 +1433,7 @@ static int sendcmd(
 	c->req.bp = 0;
 	c->req.hdr.sg_cnt = 1;
 	c->req.hdr.reserved = 0;
-	
+
 	if (size == 0)
 		c->req.sg[0].size = 512;
 	else
@@ -1444,7 +1442,7 @@ static int sendcmd(
 	c->req.hdr.blk = blk;
 	c->req.hdr.blk_cnt = blkcnt;
 	c->req.hdr.cmd = (unsigned char) cmd;
-	c->req.sg[0].addr = (__u32) pci_map_single(info_p->pci_dev, 
+	c->req.sg[0].addr = (__u32) pci_map_single(info_p->pci_dev,
 		buff, c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL);
 	/*
 	 * Disable interrupt
@@ -1462,14 +1460,14 @@ DBG(
 		printk(KERN_WARNING "cpqarray ida%d: idaSendPciCmd FIFO full,"
 			" waiting!\n", ctlr);
 );
-	} 
+	}
 	/*
 	 * Send the cmd
 	 */
 	info_p->access.submit_command(info_p, c);
 	complete = pollcomplete(ctlr);
-	
-	pci_unmap_single(info_p->pci_dev, (dma_addr_t) c->req.sg[0].addr, 
+
+	pci_unmap_single(info_p->pci_dev, (dma_addr_t) c->req.sg[0].addr,
 		c->req.sg[0].size, PCI_DMA_BIDIRECTIONAL);
 	if (complete != 1) {
 		if (complete != c->busaddr) {
@@ -1602,14 +1600,14 @@ static int pollcomplete(int ctlr)
 }
 /*****************************************************************
     start_fwbk
-    Starts controller firmwares background processing. 
+    Starts controller firmwares background processing.
     Currently only the Integrated Raid controller needs this done.
-    If the PCI mem address registers are written to after this, 
+    If the PCI mem address registers are written to after this,
 	 data corruption may occur
 *****************************************************************/
 static void start_fwbk(int ctlr)
 {
-		id_ctlr_t *id_ctlr_buf; 
+		id_ctlr_t *id_ctlr_buf;
 	int ret_code;
 
 	if(	(hba[ctlr]->board_id != 0x40400E11)
@@ -1619,7 +1617,7 @@ static void start_fwbk(int ctlr)
 		return;
 	printk(KERN_DEBUG "cpqarray: Starting firmware's background"
 		" processing\n");
-	/* Command does not return anything, but idasend command needs a 
+	/* Command does not return anything, but idasend command needs a
 		buffer */
 	id_ctlr_buf = kmalloc(sizeof(id_ctlr_t), GFP_KERNEL);
 	if(id_ctlr_buf==NULL)
@@ -1627,8 +1625,8 @@ static void start_fwbk(int ctlr)
 		printk(KERN_WARNING "cpqarray: Out of memory. "
 			"Unable to start background processing.\n");
 		return;
-	}		
-	ret_code = sendcmd(RESUME_BACKGROUND_ACTIVITY, ctlr, 
+	}
+	ret_code = sendcmd(RESUME_BACKGROUND_ACTIVITY, ctlr,
 		id_ctlr_buf, 0, 0, 0, 0);
 	if(ret_code != IO_OK)
 		printk(KERN_WARNING "cpqarray: Unable to start"
@@ -1638,12 +1636,12 @@ static void start_fwbk(int ctlr)
 }
 /*****************************************************************
     getgeometry
-    Get ida logical volume geometry from the controller 
+    Get ida logical volume geometry from the controller
     This is a large bit of code which once existed in two flavors,
     It is used only at init time.
 *****************************************************************/
 static void getgeometry(int ctlr)
-{				
+{
 	id_log_drv_t *id_ldrive;
 	id_ctlr_t *id_ctlr_buf;
 	sense_log_drv_stat_t *id_lstatus_buf;
@@ -1654,8 +1652,8 @@ static void getgeometry(int ctlr)
 	ctlr_info_t *info_p = hba[ctlr];
 	int i;
 
-	info_p->log_drv_map = 0;	
-	
+	info_p->log_drv_map = 0;
+
 	id_ldrive = kzalloc(sizeof(id_log_drv_t), GFP_KERNEL);
 	if (!id_ldrive)	{
 		printk( KERN_ERR "cpqarray:  out of memory.\n");
@@ -1732,9 +1730,9 @@ static void getgeometry(int ctlr)
 			   If can't get logical drive status, set
 			   the logical drive map to 0, so the
 			   idastubopen will fail for all logical drives
-			   on the controller. 
+			   on the controller.
 			 */
-			info_p->log_drv_map = 0;	
+			info_p->log_drv_map = 0;
 			printk( KERN_WARNING
 			     "cpqarray ida%d: idaGetGeometry - Controller"
 				" failed to report status of logical drive %d\n"
@@ -1751,7 +1749,7 @@ static void getgeometry(int ctlr)
 			/*
 			   If error, the bit for this
 			   logical drive won't be set and
-			   idastubopen will return error. 
+			   idastubopen will return error.
 			 */
 			if (ret_code != IO_ERROR) {
 				drv = &info_p->drv[log_unit];

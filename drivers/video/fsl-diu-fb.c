@@ -221,7 +221,6 @@ struct mfb_info {
 	u8 *edid_data;
 };
 
-
 static struct mfb_info mfb_template[] = {
 	{		/* AOI 0 for plane 0 */
 	.index = 0,
@@ -1649,7 +1648,6 @@ error2:
 	return ret;
 }
 
-
 static int fsl_diu_remove(struct platform_device *ofdev)
 {
 	struct fsl_diu_data *machine_data;
@@ -1815,4 +1813,3 @@ MODULE_PARM_DESC(bpp, "Specify bit-per-pixel if not specified mode");
 module_param_named(monitor, monitor_port, int, 0);
 MODULE_PARM_DESC(monitor,
 	"Specify the monitor port (0, 1 or 2) if supported by the platform");
-

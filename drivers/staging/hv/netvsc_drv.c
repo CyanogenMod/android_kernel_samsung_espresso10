@@ -49,7 +49,6 @@ struct net_device_context {
 	struct work_struct work;
 };
 
-
 #define PACKET_PAGES_LOWATER  8
 /* Need this many pages to handle worst case fragmented packet */
 #define PACKET_PAGES_HIWATER  (MAX_SKB_FRAGS + 2)
@@ -332,7 +331,6 @@ static void netvsc_send_garp(struct work_struct *w)
 	netif_notify_peers(net);
 }
 
-
 static int netvsc_probe(struct hv_device *dev)
 {
 	struct net_device *net = NULL;
@@ -438,7 +436,6 @@ static void __exit netvsc_drv_exit(void)
 	vmbus_child_driver_unregister(&netvsc_drv.driver);
 }
 
-
 static const struct dmi_system_id __initconst
 hv_netvsc_dmi_table[] __maybe_unused  = {
 	{
@@ -462,7 +459,6 @@ static int __init netvsc_drv_init(void)
 
 	if (!dmi_check_system(hv_netvsc_dmi_table))
 		return -ENODEV;
-
 
 	/* Callback to client driver to complete the initialization */
 	netvsc_initialize(drv);

@@ -76,7 +76,6 @@ struct hfs_find_data {
 	int entryoffset, entrylength;
 };
 
-
 /* btree.c */
 extern struct hfs_btree *hfs_btree_open(struct super_block *, u32, btree_keycmp);
 extern void hfs_btree_close(struct hfs_btree *);
@@ -119,7 +118,6 @@ extern int __hfs_brec_find(struct hfs_bnode *, struct hfs_find_data *);
 extern int hfs_brec_find(struct hfs_find_data *);
 extern int hfs_brec_read(struct hfs_find_data *, void *, int);
 extern int hfs_brec_goto(struct hfs_find_data *, int);
-
 
 struct hfs_bnode_desc {
 	__be32 next;		/* (V) Number of the next node at this level */

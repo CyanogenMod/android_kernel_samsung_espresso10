@@ -613,7 +613,6 @@ iscsi_iser_ep_disconnect(struct iscsi_endpoint *ep)
 		 */
 		iscsi_suspend_tx(ib_conn->iser_conn->iscsi_conn);
 
-
 	iser_err("ib conn %p state %d\n",ib_conn, ib_conn->state);
 	iser_conn_terminate(ib_conn);
 }

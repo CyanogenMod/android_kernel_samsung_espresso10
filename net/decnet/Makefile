@@ -1,4 +1,3 @@
-
 obj-$(CONFIG_DECNET) += decnet.o
 
 decnet-y := af_decnet.o dn_nsp_in.o dn_nsp_out.o \
@@ -7,4 +6,3 @@ decnet-$(CONFIG_DECNET_ROUTER) += dn_fib.o dn_rules.o dn_table.o
 decnet-y += sysctl_net_decnet.o
 
 obj-$(CONFIG_NETFILTER) += netfilter/
-

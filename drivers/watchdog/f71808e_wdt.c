@@ -582,7 +582,6 @@ static long watchdog_ioctl(struct file *file, unsigned int cmd,
 		if (new_options & WDIOS_ENABLECARD)
 			return watchdog_start();
 
-
 	case WDIOC_KEEPALIVE:
 		watchdog_keepalive();
 		return 0;

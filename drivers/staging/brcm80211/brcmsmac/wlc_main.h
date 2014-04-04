@@ -455,7 +455,6 @@ struct wlc_hw_info {
 
 	bool ucode_loaded;	/* true after ucode downloaded */
 
-
 	u8 hw_stf_ss_opmode;	/* STF single stream operation mode */
 	u8 antsel_type;	/* Type of boardlevel mimo antenna switch-logic
 				 * 0 = N/A, 1 = 2x4 board, 2 = 2x3 CB2 board
@@ -522,7 +521,6 @@ struct wlc_info {
 	/* Regulatory power limits */
 	s8 txpwr_local_max;	/* regulatory local txpwr max */
 	u8 txpwr_local_constraint;	/* local power contraint in dB */
-
 
 	struct ampdu_info *ampdu;	/* ampdu module handler */
 	struct antsel_info *asi;	/* antsel module handler */

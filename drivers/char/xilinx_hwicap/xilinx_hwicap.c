@@ -724,7 +724,6 @@ static int __devinit hwicap_of_probe(struct platform_device *op,
 	int rc;
 	const struct config_registers *regs;
 
-
 	rc = of_address_to_resource(op->dev.of_node, 0, &res);
 	if (rc) {
 		dev_err(&op->dev, "invalid address\n");

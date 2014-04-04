@@ -36,5 +36,4 @@ config H7202_SERIAL23
 	  Say Y here if you wish to use serial ports 2+3. They share their
 	  pins with the keyboard matrix controller, so you have to decide.
 
-
 endif

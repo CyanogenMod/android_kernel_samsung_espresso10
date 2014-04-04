@@ -7,7 +7,7 @@
  ****************************************************************
  **
  **  WARNING:
- **  The values in this file are exported to user space via 
+ **  The values in this file are exported to user space via
  **  the sysctl() binary interface.  Do *NOT* change the
  **  numbering of any existing values here, and do not change
  **  any numbers within any one set of values.  If you have to
@@ -109,7 +109,7 @@ enum
 
 	KERN_RTSIGNR=32,	/* Number of rt sigs queued */
 	KERN_RTSIGMAX=33,	/* Max queuable */
-	
+
 	KERN_SHMMAX=34,         /* long: Maximum shared memory segment */
 	KERN_MSGMAX=35,         /* int: Maximum size of a messege */
 	KERN_MSGMNB=36,         /* int: Maximum message queue size */
@@ -155,8 +155,6 @@ enum
 	KERN_PANIC_ON_NMI=76, /* int: whether we will panic on an unrecovered */
 };
 
-
-
 /* CTL_VM names: */
 enum
 {
@@ -196,7 +194,6 @@ enum
 	VM_VDSO_ENABLED=34,	/* map VDSO into new processes? */
 	VM_MIN_SLAB=35,		 /* Percent pages ignored by zone reclaim */
 };
-
 
 /* CTL_NET names: */
 enum
@@ -515,7 +512,7 @@ enum
 	NET_IPV4_NF_CONNTRACK_COUNT=27,
 	NET_IPV4_NF_CONNTRACK_CHECKSUM=28,
 };
- 
+
 /* /proc/sys/net/ipv6 */
 enum {
 	NET_IPV6_CONF=16,
@@ -640,7 +637,6 @@ enum {
 	NET_ATALK_AARP_RETRANSMIT_LIMIT=3,
 	NET_ATALK_AARP_RESOLVE_TIME=4
 };
-
 
 /* /proc/sys/net/netrom */
 enum {
@@ -795,7 +791,6 @@ enum {
 	NET_IRDA_WARN_NOREPLY_TIME=13,
 	NET_IRDA_LAP_KEEPALIVE_TIME=14,
 };
-
 
 /* CTL_FS names: */
 enum
@@ -986,7 +981,7 @@ extern int proc_do_large_bitmap(struct ctl_table *, int,
 
 /*
  * Register a set of sysctl names by calling register_sysctl_table
- * with an initialised array of struct ctl_table's.  An entry with 
+ * with an initialised array of struct ctl_table's.  An entry with
  * NULL procname terminates the table.  table->de will be
  * set up by the registration and need not be initialised in advance.
  *
@@ -1004,7 +999,7 @@ extern int proc_do_large_bitmap(struct ctl_table *, int,
  * the sysctl table.  The data and maxlen fields of the ctl_table
  * struct enable minimal validation of the values being written to be
  * performed, and the mode field allows minimal authentication.
- * 
+ *
  * There must be a proc_handler routine for any terminal nodes
  * mirrored under /proc/sys (non-terminals are handled by a built-in
  * directory handler).  Several default handlers are available to
@@ -1012,7 +1007,7 @@ extern int proc_do_large_bitmap(struct ctl_table *, int,
  */
 
 /* A sysctl table is an array of struct ctl_table: */
-struct ctl_table 
+struct ctl_table
 {
 	const char *procname;		/* Text ID for /proc/sys, or zero */
 	void *data;

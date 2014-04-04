@@ -37,7 +37,6 @@ BOOLEAN MatchSrcPort(S_CLASSIFIER_RULE *pstClassifierRule,USHORT ushSrcPort);
 BOOLEAN MatchDestPort(S_CLASSIFIER_RULE *pstClassifierRule,USHORT ushSrcPort);
 BOOLEAN MatchProtocol(S_CLASSIFIER_RULE *pstClassifierRule,UCHAR ucProtocol);
 
-
 INT SetupNextSend(PMINI_ADAPTER Adapter, /**<Logical Adapter*/
 					struct sk_buff *Packet, /**<data buffer*/
 					USHORT Vcid)	;
@@ -49,7 +48,6 @@ VOID transmit_packets(PMINI_ADAPTER Adapter);
 INT SendControlPacket(PMINI_ADAPTER Adapter, /**<Logical Adapter*/
 							char *pControlPacket/**<Control Packet*/
 							);
-
 
 int register_networkdev(PMINI_ADAPTER Adapter);
 void unregister_networkdev(PMINI_ADAPTER Adapter);
@@ -68,7 +66,6 @@ int run_card_proc(PMINI_ADAPTER Adapter );
 
 int InitCardAndDownloadFirmware(PMINI_ADAPTER ps_adapter);
 
-
 INT ReadMacAddressFromNVM(PMINI_ADAPTER Adapter);
 
 int register_control_device_interface(PMINI_ADAPTER ps_adapter);
@@ -86,7 +83,6 @@ int rdmalt (PMINI_ADAPTER Adapter, UINT uiAddress, PUINT pucBuff, size_t sSize);
 int get_dsx_sf_data_to_application(PMINI_ADAPTER Adapter, UINT uiSFId, void __user * user_buffer);
 
 void SendIdleModeResponse(PMINI_ADAPTER Adapter);
-
 
 int  ProcessGetHostMibs(PMINI_ADAPTER Adapter, S_MIBS_HOST_STATS_MIBS *buf);
 void GetDroppedAppCntrlPktMibs(S_MIBS_HOST_STATS_MIBS *ioBuffer, PPER_TARANG_DATA pTarang);
@@ -113,12 +109,9 @@ void update_per_sf_desc_cnts( PMINI_ADAPTER Adapter);
 
 void ClearTargetDSXBuffer(PMINI_ADAPTER Adapter,B_UINT16 TID,BOOLEAN bFreeAll);
 
-
 void flush_queue(PMINI_ADAPTER Adapter, UINT iQIndex);
 
-
 INT flushAllAppQ(VOID);
-
 
 INT BeceemEEPROMBulkRead(
 	PMINI_ADAPTER Adapter,
@@ -126,12 +119,9 @@ INT BeceemEEPROMBulkRead(
 	UINT uiOffset,
 	UINT uiNumBytes);
 
-
-
 INT WriteBeceemEEPROM(PMINI_ADAPTER Adapter,UINT uiEEPROMOffset, UINT uiData);
 
 INT PropagateCalParamsFromFlashToMemory(PMINI_ADAPTER Adapter);
-
 
 INT BeceemEEPROMBulkWrite(
 	PMINI_ADAPTER Adapter,
@@ -140,9 +130,7 @@ INT BeceemEEPROMBulkWrite(
 	UINT uiNumBytes,
 	BOOLEAN bVerify);
 
-
 INT ReadBeceemEEPROM(PMINI_ADAPTER Adapter,UINT dwAddress, UINT *pdwData);
-
 
 INT BeceemNVMRead(
 	PMINI_ADAPTER Adapter,
@@ -156,7 +144,6 @@ INT BeceemNVMWrite(
 	UINT uiOffset,
 	UINT uiNumBytes,
 	BOOLEAN bVerify);
-
 
 INT BcmInitNVM(PMINI_ADAPTER Adapter);
 
@@ -197,9 +184,7 @@ INT	BcmCopySection(PMINI_ADAPTER Adapter,
 						UINT offset,
 						UINT numOfBytes);
 
-
 BOOLEAN IsNonCDLessDevice(PMINI_ADAPTER Adapter);
-
 
 VOID OverrideServiceFlowParams(PMINI_ADAPTER Adapter,PUINT puiBuffer);
 
@@ -210,13 +195,7 @@ int wrmWithLock(PMINI_ADAPTER Adapter, UINT uiAddress, PCHAR pucBuff, size_t siz
 INT buffDnldVerify(PMINI_ADAPTER Adapter, unsigned char *mappedbuffer, unsigned int u32FirmwareLength,
 		unsigned long u32StartingAddress);
 
-
 VOID putUsbSuspend(struct work_struct *work);
 BOOLEAN IsReqGpioIsLedInNVM(PMINI_ADAPTER Adapter, UINT gpios);
 
-
 #endif
-
-
-
-

@@ -120,7 +120,6 @@
 #define ALI15X3_STS_TERM	0x80	/* terminated by abort */
 #define ALI15X3_STS_ERR		0xE0	/* all the bad error bits */
 
-
 /* If force_addr is set to anything different from 0, we forcibly enable
    the device at the given address. */
 static u16 force_addr;
@@ -430,7 +429,6 @@ static s32 ali15x3_access(struct i2c_adapter * adap, u16 addr,
 
 	if ((read_write == I2C_SMBUS_WRITE) || (size == ALI15X3_QUICK))
 		return 0;
-
 
 	switch (size) {
 	case ALI15X3_BYTE:	/* Result put in SMBHSTDAT0 */

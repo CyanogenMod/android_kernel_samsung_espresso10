@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wmix.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -138,12 +138,10 @@ typedef PREPACK struct {
     u8 buf[1];
 } POSTPACK WMIX_DSETDATA_REPLY_CMD;
 
-
-/* 
+/*
  * =============GPIO support=================
  * All masks are 18-bit masks with bit N operating on GPIO pin N.
  */
-
 
 /*
  * Set GPIO pin output state.
@@ -161,7 +159,7 @@ typedef PREPACK struct {
     u32 disable_mask;         /* pins to disable/tristate */
 } POSTPACK WMIX_GPIO_OUTPUT_SET_CMD;
 
-/* 
+/*
  * Set a GPIO register.  For debug/exceptional cases.
  * Values for gpioreg_id are GPIO_REGISTER_IDs, defined in a
  * platform-dependent header.
@@ -201,7 +199,7 @@ typedef PREPACK struct {
  * using a GPIO_DATA_EVENT with
  *   value set to the mask of GPIO pin inputs and
  *   reg_id set to GPIO_ID_NONE
- * 
+ *
  *
  * Target responds to Hosts's earlier WMIX_GPIO_REGISTER_GET_CMDID request
  * using a GPIO_DATA_EVENT with
@@ -262,7 +260,6 @@ typedef PREPACK struct {
     u32 addr;
     u32 count;
 } POSTPACK WMIX_PROF_COUNT_EVENT;
-
 
 #ifdef __cplusplus
 }

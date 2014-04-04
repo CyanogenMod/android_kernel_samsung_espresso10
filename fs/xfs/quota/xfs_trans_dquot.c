@@ -65,7 +65,6 @@ xfs_trans_dqjoin(
 	dqp->q_transp = tp;
 }
 
-
 /*
  * This is called to mark the dquot as needing
  * to be logged when the transaction is committed.  The dquot must
@@ -292,7 +291,6 @@ xfs_trans_mod_dquot(
 	tp->t_flags |= XFS_TRANS_DQ_DIRTY;
 }
 
-
 /*
  * Given an array of dqtrx structures, lock all the dquots associated
  * and join them to the transaction, provided they have been modified.
@@ -316,7 +314,6 @@ xfs_trans_dqlockedjoin(
 		xfs_trans_dqjoin(tp, q[1].qt_dquot);
 	}
 }
-
 
 /*
  * Called by xfs_trans_commit() and similar in spirit to
@@ -609,7 +606,6 @@ xfs_trans_dqresv(
 	xfs_qcnt_t	*resbcountp;
 	xfs_quotainfo_t	*q = mp->m_quotainfo;
 
-
 	xfs_dqlock(dqp);
 
 	if (flags & XFS_TRANS_DQ_RES_BLKS) {
@@ -739,7 +735,6 @@ error_return:
 	return EDQUOT;
 }
 
-
 /*
  * Given dquot(s), make disk block and/or inode reservations against them.
  * The fact that this does the reservation against both the usr and
@@ -801,7 +796,6 @@ xfs_trans_reserve_quota_bydquots(
 	return 0;
 }
 
-
 /*
  * Lock the dquot and change the reservation if we can.
  * This doesn't change the actual usage, just the reservation.
@@ -861,7 +855,6 @@ xfs_trans_get_qoff_item(
 	xfs_trans_add_item(tp, &q->qql_item);
 	return q;
 }
-
 
 /*
  * This is called to mark the quotaoff logitem as needing

@@ -1,4 +1,3 @@
-
 /*
  * MTD driver for the 28F160F3 Flash Memory (non-CFI) on LART.
  *
@@ -17,7 +16,7 @@
  *           - January 2000
  *
  *    [2] MTD internal API documentation
- *           - http://www.linux-mtd.infradead.org/ 
+ *           - http://www.linux-mtd.infradead.org/
  *
  * Limitations:
  *

@@ -16,7 +16,6 @@
 #include "wd33c93.h"
 #include "a3000.h"
 
-
 struct a3000_hostdata {
 	struct WD33C93_hostdata wh;
 	struct a3000_scsiregs *regs;

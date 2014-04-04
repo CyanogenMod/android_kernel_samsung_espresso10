@@ -22,7 +22,7 @@
  * Prototype: int find_first_zero_bit(void *addr, unsigned int maxbit);
  */
 ENTRY(_find_first_zero_bit_le)
-		teq	r1, #0	
+		teq	r1, #0
 		beq	3f
 		mov	r2, #0
 1:
@@ -63,7 +63,7 @@ ENDPROC(_find_next_zero_bit_le)
  * Prototype: int find_first_bit(const unsigned long *addr, unsigned int maxbit);
  */
 ENTRY(_find_first_bit_le)
-		teq	r1, #0	
+		teq	r1, #0
 		beq	3f
 		mov	r2, #0
 1:
@@ -193,4 +193,3 @@ ENDPROC(_find_next_bit_be)
 		cmp	r1, r0			@ Clamp to maxbit
 		movlo	r0, r1
 		mov	pc, lr
-

@@ -44,9 +44,7 @@
 #include <linux/mmc/sdio_func.h>
 #include <linux/mmc/sdio_ids.h>
 
-
 #define UART_NR		8	/* Number of UARTs this driver can handle */
-
 
 #define FIFO_SIZE	PAGE_SIZE
 #define WAKEUP_CHARS	256

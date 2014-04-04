@@ -2,13 +2,13 @@
  * Broadcom AMBA Interconnect definitions.
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -27,11 +27,9 @@
 #ifndef	_AIDMP_H
 #define	_AIDMP_H
 
-
 #define	MFGID_ARM		0x43b
 #define	MFGID_BRCM		0x4bf
 #define	MFGID_MIPS		0x4a7
-
 
 #define	CC_SIM			0
 #define	CC_EROM			1
@@ -41,14 +39,12 @@
 #define	CC_GEN			0xe
 #define	CC_PRIMECELL		0xf
 
-
 #define	ER_EROMENTRY		0x000
 #define	ER_REMAPCONTROL		0xe00
 #define	ER_REMAPSELECT		0xe04
 #define	ER_MASTERSELECT		0xe10
 #define	ER_ITCR			0xf00
 #define	ER_ITIP			0xf04
-
 
 #define	ER_TAG			0xe
 #define	ER_TAG1			0x6
@@ -59,14 +55,12 @@
 #define	ER_END			0xe
 #define	ER_BAD			0xffffffff
 
-
 #define	CIA_MFG_MASK		0xfff00000
 #define	CIA_MFG_SHIFT		20
 #define	CIA_CID_MASK		0x000fff00
 #define	CIA_CID_SHIFT		8
 #define	CIA_CCL_MASK		0x000000f0
 #define	CIA_CCL_SHIFT		4
-
 
 #define	CIB_REV_MASK		0xff000000
 #define	CIB_REV_SHIFT		24
@@ -79,12 +73,10 @@
 #define	CIB_NMP_MASK		0x000001f0
 #define	CIB_NMP_SHIFT		4
 
-
 #define	MPD_MUI_MASK		0x0000ff00
 #define	MPD_MUI_SHIFT		8
 #define	MPD_MP_MASK		0x000000f0
 #define	MPD_MP_SHIFT		4
-
 
 #define	AD_ADDR_MASK		0xfffff000
 #define	AD_SP_MASK		0x00000f00
@@ -103,136 +95,133 @@
 #define	AD_SZ_SZD		0x00000030
 #define	AD_AG32			0x00000008
 #define	AD_ADDR_ALIGN		0x00000fff
-#define	AD_SZ_BASE		0x00001000	
-
+#define	AD_SZ_BASE		0x00001000
 
 #define	SD_SZ_MASK		0xfffff000
 #define	SD_SG32			0x00000008
 #define	SD_SZ_ALIGN		0x00000fff
 
-
 #ifndef _LANGUAGE_ASSEMBLY
 
 typedef volatile struct _aidmp {
-	uint32	oobselina30;	
-	uint32	oobselina74;	
+	uint32	oobselina30;
+	uint32	oobselina74;
 	uint32	PAD[6];
-	uint32	oobselinb30;	
-	uint32	oobselinb74;	
+	uint32	oobselinb30;
+	uint32	oobselinb74;
 	uint32	PAD[6];
-	uint32	oobselinc30;	
-	uint32	oobselinc74;	
+	uint32	oobselinc30;
+	uint32	oobselinc74;
 	uint32	PAD[6];
-	uint32	oobselind30;	
-	uint32	oobselind74;	
+	uint32	oobselind30;
+	uint32	oobselind74;
 	uint32	PAD[38];
-	uint32	oobselouta30;	
-	uint32	oobselouta74;	
+	uint32	oobselouta30;
+	uint32	oobselouta74;
 	uint32	PAD[6];
-	uint32	oobseloutb30;	
-	uint32	oobseloutb74;	
+	uint32	oobseloutb30;
+	uint32	oobseloutb74;
 	uint32	PAD[6];
-	uint32	oobseloutc30;	
-	uint32	oobseloutc74;	
+	uint32	oobseloutc30;
+	uint32	oobseloutc74;
 	uint32	PAD[6];
-	uint32	oobseloutd30;	
-	uint32	oobseloutd74;	
+	uint32	oobseloutd30;
+	uint32	oobseloutd74;
 	uint32	PAD[38];
-	uint32	oobsynca;	
-	uint32	oobseloutaen;	
+	uint32	oobsynca;
+	uint32	oobseloutaen;
 	uint32	PAD[6];
-	uint32	oobsyncb;	
-	uint32	oobseloutben;	
+	uint32	oobsyncb;
+	uint32	oobseloutben;
 	uint32	PAD[6];
-	uint32	oobsyncc;	
-	uint32	oobseloutcen;	
+	uint32	oobsyncc;
+	uint32	oobseloutcen;
 	uint32	PAD[6];
-	uint32	oobsyncd;	
-	uint32	oobseloutden;	
+	uint32	oobsyncd;
+	uint32	oobseloutden;
 	uint32	PAD[38];
-	uint32	oobaextwidth;	
-	uint32	oobainwidth;	
-	uint32	oobaoutwidth;	
+	uint32	oobaextwidth;
+	uint32	oobainwidth;
+	uint32	oobaoutwidth;
 	uint32	PAD[5];
-	uint32	oobbextwidth;	
-	uint32	oobbinwidth;	
-	uint32	oobboutwidth;	
+	uint32	oobbextwidth;
+	uint32	oobbinwidth;
+	uint32	oobboutwidth;
 	uint32	PAD[5];
-	uint32	oobcextwidth;	
-	uint32	oobcinwidth;	
-	uint32	oobcoutwidth;	
+	uint32	oobcextwidth;
+	uint32	oobcinwidth;
+	uint32	oobcoutwidth;
 	uint32	PAD[5];
-	uint32	oobdextwidth;	
-	uint32	oobdinwidth;	
-	uint32	oobdoutwidth;	
+	uint32	oobdextwidth;
+	uint32	oobdinwidth;
+	uint32	oobdoutwidth;
 	uint32	PAD[37];
-	uint32	ioctrlset;	
-	uint32	ioctrlclear;	
-	uint32	ioctrl;		
+	uint32	ioctrlset;
+	uint32	ioctrlclear;
+	uint32	ioctrl;
 	uint32	PAD[61];
-	uint32	iostatus;	
+	uint32	iostatus;
 	uint32	PAD[127];
-	uint32	ioctrlwidth;	
-	uint32	iostatuswidth;	
+	uint32	ioctrlwidth;
+	uint32	iostatuswidth;
 	uint32	PAD[62];
-	uint32	resetctrl;	
-	uint32	resetstatus;	
-	uint32	resetreadid;	
-	uint32	resetwriteid;	
+	uint32	resetctrl;
+	uint32	resetstatus;
+	uint32	resetreadid;
+	uint32	resetwriteid;
 	uint32	PAD[60];
-	uint32	errlogctrl;	
-	uint32	errlogdone;	
-	uint32	errlogstatus;	
-	uint32	errlogaddrlo;	
-	uint32	errlogaddrhi;	
-	uint32	errlogid;	
-	uint32	errloguser;	
-	uint32	errlogflags;	
+	uint32	errlogctrl;
+	uint32	errlogdone;
+	uint32	errlogstatus;
+	uint32	errlogaddrlo;
+	uint32	errlogaddrhi;
+	uint32	errlogid;
+	uint32	errloguser;
+	uint32	errlogflags;
 	uint32	PAD[56];
-	uint32	intstatus;	
+	uint32	intstatus;
 	uint32	PAD[255];
-	uint32	config;		
+	uint32	config;
 	uint32	PAD[63];
-	uint32	itcr;		
+	uint32	itcr;
 	uint32	PAD[3];
-	uint32	itipooba;	
-	uint32	itipoobb;	
-	uint32	itipoobc;	
-	uint32	itipoobd;	
+	uint32	itipooba;
+	uint32	itipoobb;
+	uint32	itipoobc;
+	uint32	itipoobd;
 	uint32	PAD[4];
-	uint32	itipoobaout;	
-	uint32	itipoobbout;	
-	uint32	itipoobcout;	
-	uint32	itipoobdout;	
+	uint32	itipoobaout;
+	uint32	itipoobbout;
+	uint32	itipoobcout;
+	uint32	itipoobdout;
 	uint32	PAD[4];
-	uint32	itopooba;	
-	uint32	itopoobb;	
-	uint32	itopoobc;	
-	uint32	itopoobd;	
+	uint32	itopooba;
+	uint32	itopoobb;
+	uint32	itopoobc;
+	uint32	itopoobd;
 	uint32	PAD[4];
-	uint32	itopoobain;	
-	uint32	itopoobbin;	
-	uint32	itopoobcin;	
-	uint32	itopoobdin;	
+	uint32	itopoobain;
+	uint32	itopoobbin;
+	uint32	itopoobcin;
+	uint32	itopoobdin;
 	uint32	PAD[4];
-	uint32	itopreset;	
+	uint32	itopreset;
 	uint32	PAD[15];
-	uint32	peripherialid4;	
-	uint32	peripherialid5;	
-	uint32	peripherialid6;	
-	uint32	peripherialid7;	
-	uint32	peripherialid0;	
-	uint32	peripherialid1;	
-	uint32	peripherialid2;	
-	uint32	peripherialid3;	
-	uint32	componentid0;	
-	uint32	componentid1;	
-	uint32	componentid2;	
-	uint32	componentid3;	
+	uint32	peripherialid4;
+	uint32	peripherialid5;
+	uint32	peripherialid6;
+	uint32	peripherialid7;
+	uint32	peripherialid0;
+	uint32	peripherialid1;
+	uint32	peripherialid2;
+	uint32	peripherialid3;
+	uint32	componentid0;
+	uint32	componentid1;
+	uint32	componentid2;
+	uint32	componentid3;
 } aidmp_t;
 
-#endif 
-
+#endif
 
 #define	OOB_BUSCONFIG		0x020
 #define	OOB_STATUSA		0x100
@@ -264,7 +253,6 @@ typedef volatile struct _aidmp {
 #define	OOB_ITOPOOBB		0xf34
 #define	OOB_ITOPOOBC		0xf38
 #define	OOB_ITOPOOBD		0xf3c
-
 
 #define	AI_OOBSELINA30		0x000
 #define	AI_OOBSELINA74		0x004
@@ -302,7 +290,6 @@ typedef volatile struct _aidmp {
 #define	AI_OOBDEXTWIDTH		0x360
 #define	AI_OOBDINWIDTH		0x364
 #define	AI_OOBDOUTWIDTH		0x368
-
 
 #define	AI_IOCTRLSET		0x400
 #define	AI_IOCTRLCLEAR		0x404
@@ -357,9 +344,7 @@ typedef volatile struct _aidmp {
 #define	AI_COMPONENTID2		0xff8
 #define	AI_COMPONENTID3		0xffc
 
-
 #define	AIRC_RESET		1
-
 
 #define	AICFG_OOB		0x00000020
 #define	AICFG_IOS		0x00000010
@@ -368,8 +353,7 @@ typedef volatile struct _aidmp {
 #define	AICFG_ERRL		0x00000002
 #define	AICFG_RST		0x00000001
 
-
 #define OOB_SEL_OUTEN_B_5	15
 #define OOB_SEL_OUTEN_B_6	23
 
-#endif	
+#endif

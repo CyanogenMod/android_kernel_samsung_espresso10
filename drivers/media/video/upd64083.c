@@ -39,7 +39,6 @@ module_param(debug, bool, 0644);
 
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
 
-
 enum {
 	R00 = 0, R01, R02, R03, R04,
 	R05, R06, R07, R08, R09,

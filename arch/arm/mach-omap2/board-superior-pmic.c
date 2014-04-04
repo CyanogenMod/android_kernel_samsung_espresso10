@@ -222,13 +222,13 @@ static struct regulator_init_data superior_ldo2 = {
 };
 
 static struct regulator_consumer_supply superior_ldo3_supply[] = {
-	REGULATOR_SUPPLY("2TOUCH_3.3V", NULL),
+	REGULATOR_SUPPLY("2TOUCH_2.8V", NULL),
 };
 
 static struct regulator_init_data superior_ldo3 = {
 	.constraints = {
-		.min_uV			= 3300000,
-		.max_uV			= 3300000,
+		.min_uV			= 2800000,
+		.max_uV			= 2800000,
 		.apply_uV		= true,
 		.valid_modes_mask	= REGULATOR_MODE_NORMAL
 					| REGULATOR_MODE_STANDBY,
@@ -409,13 +409,13 @@ static struct regulator_init_data superior_ldon15 = {
 };
 
 static struct regulator_consumer_supply superior_ldon16_supply[] = {
-	REGULATOR_SUPPLY("KEYLED_3.3V", NULL),
+	REGULATOR_SUPPLY("KEYLED_3.0V", NULL),
 };
 
 static struct regulator_init_data superior_ldon16 = {
 	.constraints = {
-		.min_uV			= 3300000,
-		.max_uV			= 3300000,
+		.min_uV			= 3000000,
+		.max_uV			= 3000000,
 		.apply_uV		= true,
 		.valid_modes_mask	= REGULATOR_MODE_NORMAL
 					| REGULATOR_MODE_STANDBY,
@@ -722,7 +722,6 @@ static void superior_twl6034_init(void)
 	if (ret)
 		pr_err("%s:PHOENIX_MSK_TRANSITION write fail!\n", __func__);
 
-
 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID0, &val, TWL6030_BBSPOR_CFG);
 
 	/* enable backkup battery charge and set charging voltage to 3.15V */
@@ -734,7 +733,6 @@ static void superior_twl6034_init(void)
 	ret |= twl_i2c_write_u8(TWL6030_MODULE_ID0, val, TWL6030_BBSPOR_CFG);
 	if (ret)
 		pr_err("%s:TWL6034 BBSPOR_CFG write fail!\n", __func__);
-
 
 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID0,
 			&val, TWL6030_CFG_LDO_PD1);

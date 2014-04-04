@@ -213,7 +213,6 @@ static int iser_sg_to_page_vec(struct iser_data_buf *data,
 	return cur_page;
 }
 
-
 /**
  * iser_data_buf_aligned_len - Tries to determine the maximal correctly aligned
  * for RDMA sub-list of a scatter-gather list of memory buffers, and  returns

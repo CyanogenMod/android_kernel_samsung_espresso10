@@ -139,4 +139,3 @@ void set_sense_data(struct rtsx_chip *chip, unsigned int lun, u8 err_code, u8 se
 int rtsx_scsi_handler(struct scsi_cmnd *srb, struct rtsx_chip *chip);
 
 #endif   /* __REALTEK_RTSX_SCSI_H */
-

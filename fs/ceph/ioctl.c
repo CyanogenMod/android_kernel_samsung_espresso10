@@ -6,7 +6,6 @@
 
 #include "ioctl.h"
 
-
 /*
  * ioctls
  */

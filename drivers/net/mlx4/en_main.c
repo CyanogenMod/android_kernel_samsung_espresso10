@@ -57,11 +57,9 @@ static const char mlx4_en_version[] =
 	module_param(X , uint, 0444); \
 	MODULE_PARM_DESC(X, desc);
 
-
 /*
  * Device scope module parameters
  */
-
 
 /* Enable RSS TCP traffic */
 MLX4_EN_PARM_INT(tcp_rss, 1,
@@ -311,4 +309,3 @@ static void __exit mlx4_en_cleanup(void)
 
 module_init(mlx4_en_init);
 module_exit(mlx4_en_cleanup);
-

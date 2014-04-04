@@ -318,4 +318,3 @@ config REGULATOR_TPS65910
 	  This driver supports TPS65910 voltage regulator chips.
 
 endif
-

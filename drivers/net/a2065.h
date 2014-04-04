@@ -32,7 +32,6 @@
  *	  both 10BASE-2 (thin coax) and AUI (DB-15) connectors
  */
 
-
 /*
  *		Am7990 Local Area Network Controller for Ethernet (LANCE)
  */
@@ -42,7 +41,6 @@ struct lance_regs {
 	unsigned short rap;		/* Register Address Port */
 };
 
-
 /*
  *		Am7990 Control and Status Registers
  */
@@ -51,7 +49,6 @@ struct lance_regs {
 #define LE_CSR1		0x0001		/* IADR[15:0] */
 #define LE_CSR2		0x0002		/* IADR[23:16] */
 #define LE_CSR3		0x0003		/* Misc */
-
 
 /*
  *		Bit definitions for CSR0 (LANCE Controller Status)
@@ -74,7 +71,6 @@ struct lance_regs {
 #define LE_C0_STRT	0x0002		/* Start */
 #define LE_C0_INIT	0x0001		/* Initialize */
 
-
 /*
  *		Bit definitions for CSR3
  */
@@ -84,7 +80,6 @@ struct lance_regs {
 #define LE_C3_ACON	0x0002		/* ALE Control
 					   (on for active low ALE) */
 #define LE_C3_BCON	0x0001		/* Byte Control */
-
 
 /*
  *		Mode Flags
@@ -98,7 +93,6 @@ struct lance_regs {
 #define LE_MO_LOOP	0x0004		/* Loopback Enable */
 #define LE_MO_DTX	0x0002		/* Disable Transmitter */
 #define LE_MO_DRX	0x0001		/* Disable Receiver */
-
 
 struct lance_rx_desc {
 	unsigned short rmd0;        /* low address of packet */
@@ -118,7 +112,6 @@ struct lance_tx_desc {
 	unsigned short misc;
 };
 
-
 /*
  *		Receive Flags
  */
@@ -132,7 +125,6 @@ struct lance_tx_desc {
 #define LE_R1_SOP	0x02		/* Start of Packet */
 #define LE_R1_EOP	0x01		/* End of Packet */
 #define LE_R1_POK       0x03		/* Packet is complete: SOP + EOP */
-
 
 /*
  *		Transmit Flags
@@ -149,7 +141,6 @@ struct lance_tx_desc {
 #define LE_T1_EOP	0x01		/* End of Packet */
 #define LE_T1_POK	0x03		/* Packet is complete: SOP + EOP */
 
-
 /*
  *		Error Flags
  */
@@ -161,7 +152,6 @@ struct lance_tx_desc {
 #define LE_T3_RTY 	0x0400		/* Retry Error */
 #define LE_T3_TDR	0x03ff		/* Time Domain Reflectometry */
 
-
 /*
  *		A2065 Expansion Board Structure
  */
@@ -170,4 +160,3 @@ struct lance_tx_desc {
 
 #define A2065_RAM		0x8000
 #define A2065_RAM_SIZE		0x8000
-

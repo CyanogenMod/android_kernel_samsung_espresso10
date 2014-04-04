@@ -31,7 +31,6 @@
 
 #include "drbd_int.h"
 
-
 /* OPAQUE outside this file!
  * interface defined in drbd_int.h
 
@@ -39,7 +38,6 @@
  * function name drbd_bm_... => used elsewhere, "public".
  * function name      bm_... => internal to implementation, "private".
  */
-
 
 /*
  * LIMITATIONS:
@@ -328,7 +326,6 @@ static void bm_unmap(unsigned long *p_addr)
  * struct drbd_conf*, but for the debug macros I like to have the mdev around
  * to be able to report device specific.
  */
-
 
 static void bm_free_pages(struct page **pages, unsigned long number)
 {
@@ -902,7 +899,6 @@ static void bm_async_io_complete(struct bio *bio, int error)
 	unsigned int idx = bm_page_to_idx(bio->bi_io_vec[0].bv_page);
 	int uptodate = bio_flagged(bio, BIO_UPTODATE);
 
-
 	/* strange behavior of some lower level drivers...
 	 * fail the request by clearing the uptodate flag,
 	 * but do not return any error?!
@@ -1116,7 +1112,6 @@ int drbd_bm_write_lazy(struct drbd_conf *mdev, unsigned upper_idx) __must_hold(l
 	return bm_rw(mdev, WRITE, upper_idx);
 }
 
-
 /**
  * drbd_bm_write_page: Writes a PAGE_SIZE aligned piece of bitmap
  * @mdev:	DRBD device.
@@ -1170,7 +1165,6 @@ static unsigned long __bm_find_next(struct drbd_conf *mdev, unsigned long bm_fo,
 	unsigned long *p_addr;
 	unsigned long bit_offset;
 	unsigned i;
-
 
 	if (bm_fo > b->bm_bits) {
 		dev_err(DEV, "bm_fo=%lu bm_bits=%lu\n", bm_fo, b->bm_bits);
@@ -1497,7 +1491,6 @@ int drbd_bm_count_bits(struct drbd_conf *mdev, const unsigned long s, const unsi
 	spin_unlock_irqrestore(&b->bm_lock, flags);
 	return c;
 }
-
 
 /* inherently racy...
  * return value may be already out-of-date when this function returns.

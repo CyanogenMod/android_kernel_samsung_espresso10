@@ -453,7 +453,6 @@ static int tps65910_disable(struct regulator_dev *dev)
 	return tps65910_clear_bits(mfd, reg, TPS65910_SUPPLY_STATE_ENABLED);
 }
 
-
 static int tps65910_set_mode(struct regulator_dev *dev, unsigned int mode)
 {
 	struct tps65910_reg *pmic = rdev_get_drvdata(dev);
@@ -746,7 +745,6 @@ static int tps65911_set_voltage(struct regulator_dev *dev, unsigned selector)
 
 	return -EINVAL;
 }
-
 
 static int tps65910_list_voltage_dcdc(struct regulator_dev *dev,
 					unsigned selector)

@@ -31,7 +31,6 @@
 #include "servicesint.h"
 #include "sgxapi_km.h"
 
-
 #if !defined (SGX_MP_CORE_SELECT)
 #if defined(SGX_FEATURE_MP)
 	#define SGX_REG_BANK_SHIFT			(14)
@@ -45,7 +44,6 @@
 #endif
 #endif
 
-
 typedef struct _SGXMKIF_COMMAND_
 {
 	IMG_UINT32				ui32ServiceAddress;
@@ -53,19 +51,16 @@ typedef struct _SGXMKIF_COMMAND_
 	IMG_UINT32				ui32Data[6];
 } SGXMKIF_COMMAND;
 
-
 typedef struct _PVRSRV_SGX_KERNEL_CCB_
 {
 	SGXMKIF_COMMAND		asCommands[256];
 } PVRSRV_SGX_KERNEL_CCB;
-
 
 typedef struct _PVRSRV_SGX_CCB_CTL_
 {
 	IMG_UINT32				ui32WriteOffset;
 	IMG_UINT32				ui32ReadOffset;
 } PVRSRV_SGX_CCB_CTL;
-
 
 typedef struct _SGXMKIF_HOST_CTL_
 {
@@ -119,18 +114,15 @@ typedef struct _SGXMKIF_CMDTA_SHARED_
 	IMG_UINT32			ui32NumTAStatusVals;
 	IMG_UINT32			ui32Num3DStatusVals;
 
-
 	IMG_UINT32			ui32TATQSyncWriteOpsPendingVal;
 	IMG_DEV_VIRTADDR	sTATQSyncWriteOpsCompleteDevVAddr;
 	IMG_UINT32			ui32TATQSyncReadOpsPendingVal;
 	IMG_DEV_VIRTADDR	sTATQSyncReadOpsCompleteDevVAddr;
 
-
 	IMG_UINT32			ui323DTQSyncWriteOpsPendingVal;
 	IMG_DEV_VIRTADDR	s3DTQSyncWriteOpsCompleteDevVAddr;
 	IMG_UINT32			ui323DTQSyncReadOpsPendingVal;
 	IMG_DEV_VIRTADDR	s3DTQSyncReadOpsCompleteDevVAddr;
-
 
 #if defined(SUPPORT_SGX_GENERALISED_SYNCOBJECTS)
 
@@ -145,7 +137,6 @@ typedef struct _SGXMKIF_CMDTA_SHARED_
 	IMG_UINT32			ui32NumSrcSyncs;
 	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS];
 #endif
-
 
 	PVRSRV_DEVICE_SYNC_OBJECT	sTA3DDependency;
 
@@ -168,7 +159,6 @@ typedef struct _SGXMKIF_CMDTA_SHARED_
 typedef struct _SGXMKIF_TRANSFERCMD_SHARED_
 {
 
-
 	IMG_UINT32			ui32NumSrcSyncs;
 	PVRSRV_DEVICE_SYNC_OBJECT	asSrcSyncs[SGX_MAX_SRC_SYNCS];
 
@@ -179,7 +169,6 @@ typedef struct _SGXMKIF_TRANSFERCMD_SHARED_
 	IMG_UINT32		ui32TASyncReadOpsPendingVal;
 	IMG_DEV_VIRTADDR	sTASyncReadOpsCompleteDevVAddr;
 
-
 	IMG_UINT32		ui323DSyncWriteOpsPendingVal;
 	IMG_DEV_VIRTADDR	s3DSyncWriteOpsCompleteDevVAddr;
 	IMG_UINT32		ui323DSyncReadOpsPendingVal;
@@ -189,24 +178,19 @@ typedef struct _SGXMKIF_TRANSFERCMD_SHARED_
 	CTL_STATUS	sCtlStatusInfo[SGXTQ_MAX_STATUS];
 } SGXMKIF_TRANSFERCMD_SHARED, *PSGXMKIF_TRANSFERCMD_SHARED;
 
-
 #if defined(SGX_FEATURE_2D_HARDWARE)
 typedef struct _SGXMKIF_2DCMD_SHARED_ {
 
 	IMG_UINT32			ui32NumSrcSync;
 	PVRSRV_DEVICE_SYNC_OBJECT	sSrcSyncData[SGX_MAX_2D_SRC_SYNC_OPS];
 
-
 	PVRSRV_DEVICE_SYNC_OBJECT	sDstSyncData;
 
-
 	PVRSRV_DEVICE_SYNC_OBJECT	sTASyncData;
-
 
 	PVRSRV_DEVICE_SYNC_OBJECT	s3DSyncData;
 } SGXMKIF_2DCMD_SHARED, *PSGXMKIF_2DCMD_SHARED;
 #endif
-
 
 typedef struct _SGXMKIF_HWDEVICE_SYNC_LIST_
 {
@@ -215,7 +199,6 @@ typedef struct _SGXMKIF_HWDEVICE_SYNC_LIST_
 
 	PVRSRV_DEVICE_SYNC_OBJECT	asSyncData[1];
 } SGXMKIF_HWDEVICE_SYNC_LIST, *PSGXMKIF_HWDEVICE_SYNC_LIST;
-
 
 #define PVRSRV_USSE_EDM_INIT_COMPLETE			(1UL << 0)
 
@@ -244,7 +227,6 @@ typedef struct _SGXMKIF_HWDEVICE_SYNC_LIST_
 #endif
 #endif
 
-
 #define	PVRSRV_CLEANUPCMD_RT		0x1U
 #define	PVRSRV_CLEANUPCMD_RC		0x2U
 #define	PVRSRV_CLEANUPCMD_TC		0x3U
@@ -258,7 +240,6 @@ typedef struct _SGXMKIF_HWDEVICE_SYNC_LIST_
 #define PVRSRV_CTXSUSPCMD_SUSPEND	0x1U
 #define PVRSRV_CTXSUSPCMD_RESUME	0x2U
 
-
 #if defined(SGX_FEATURE_MULTIPLE_MEM_CONTEXTS)
 #define SGX_BIF_DIR_LIST_INDEX_EDM	(SGX_FEATURE_BIF_NUM_DIRLISTS - 1)
 #else
@@ -269,7 +250,6 @@ typedef struct _SGXMKIF_HWDEVICE_SYNC_LIST_
 #define	SGXMKIF_CC_INVAL_BIF_PD	0x2
 #define SGXMKIF_CC_INVAL_BIF_SL	0x4
 #define SGXMKIF_CC_INVAL_DATA	0x8
-
 
 typedef struct _SGX_MISCINFO_STRUCT_SIZES_
 {
@@ -291,7 +271,6 @@ typedef struct _SGX_MISCINFO_STRUCT_SIZES_
 	IMG_UINT32	ui32Sizeof_HOST_CTL;
 	IMG_UINT32	ui32Sizeof_COMMAND;
 } SGX_MISCINFO_STRUCT_SIZES;
-
 
 #if defined(SUPPORT_SGX_EDM_MEMORY_DEBUG)
 typedef struct _PVRSRV_SGX_MISCINFO_MEMACCESS
@@ -340,6 +319,5 @@ typedef struct _SGXMKIF_HWPERF_CB_
 	IMG_UINT32				ui32Ordinal;
 	SGXMKIF_HWPERF_CB_ENTRY psHWPerfCBData[SGXMKIF_HWPERF_CB_SIZE];
 } SGXMKIF_HWPERF_CB;
-
 
 #endif

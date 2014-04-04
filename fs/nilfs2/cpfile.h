@@ -27,7 +27,6 @@
 #include <linux/buffer_head.h>
 #include <linux/nilfs2_fs.h>
 
-
 int nilfs_cpfile_get_checkpoint(struct inode *, __u64, int,
 				struct nilfs_checkpoint **,
 				struct buffer_head **);

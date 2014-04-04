@@ -18,7 +18,6 @@ static struct rc_map_table pixelview[] = {
 	{ 0x07, KEY_VIDEO },	/* source */
 	{ 0x1c, KEY_SEARCH },	/* scan */
 
-
 	{ 0x03, KEY_TUNER },		/* TV/FM */
 
 	{ 0x00, KEY_RECORD },

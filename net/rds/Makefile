@@ -10,10 +10,8 @@ rds_rdma-y :=	rdma_transport.o \
 			iw.o iw_cm.o iw_recv.o iw_ring.o iw_send.o iw_stats.o \
 			iw_sysctl.o iw_rdma.o
 
-
 obj-$(CONFIG_RDS_TCP) += rds_tcp.o
 rds_tcp-y :=		tcp.o tcp_connect.o tcp_listen.o tcp_recv.o \
 			tcp_send.o tcp_stats.o
 
 ccflags-$(CONFIG_RDS_DEBUG)	:=	-DDEBUG
-

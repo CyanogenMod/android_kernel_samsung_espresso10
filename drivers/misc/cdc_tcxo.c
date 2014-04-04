@@ -1,6 +1,6 @@
 /*
  * Clock Divider Chip (TCXO) support
- * 
+ *
  * Copyright (C) 2010 Texas Instruments, Inc.
  * Written by Rajendra Nayak <rnayak@ti.com>
  *
@@ -162,7 +162,6 @@ static void __exit cdc_tcxo_exit(void)
 {
 	i2c_del_driver(&cdc_tcxo_i2c_driver);
 }
-
 
 module_init(cdc_tcxo_init);
 module_exit(cdc_tcxo_exit);

@@ -5,7 +5,6 @@
 
 struct b43_wldev;
 
-
 #ifdef CONFIG_B43_SDIO
 
 struct b43_sdio {
@@ -21,9 +20,7 @@ void b43_sdio_free_irq(struct b43_wldev *dev);
 int b43_sdio_init(void);
 void b43_sdio_exit(void);
 
-
 #else /* CONFIG_B43_SDIO */
-
 
 int b43_sdio_request_irq(struct b43_wldev *dev,
 			 void (*handler)(struct b43_wldev *dev))

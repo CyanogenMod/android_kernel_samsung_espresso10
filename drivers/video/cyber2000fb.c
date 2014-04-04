@@ -1176,7 +1176,6 @@ static void cyber2000fb_disable_ddc(struct cfb_info *cfb)
 	spin_unlock(&cfb->reg_b0_lock);
 }
 
-
 static void cyber2000fb_ddc_setscl(void *data, int val)
 {
 	struct cfb_info *cfb = data;
@@ -1413,7 +1412,6 @@ static struct cfb_info __devinit *cyberpro_alloc_fb_info(unsigned int id,
 	cfb = kzalloc(sizeof(struct cfb_info), GFP_KERNEL);
 	if (!cfb)
 		return NULL;
-
 
 	cfb->id			= id;
 

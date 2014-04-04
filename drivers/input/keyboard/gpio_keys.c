@@ -573,7 +573,6 @@ static int __devexit gpio_keys_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 #ifdef CONFIG_PM
 static int gpio_keys_suspend(struct device *dev)
 {

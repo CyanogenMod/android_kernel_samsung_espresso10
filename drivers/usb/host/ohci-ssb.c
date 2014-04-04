@@ -17,7 +17,6 @@
  */
 #include <linux/ssb/ssb.h>
 
-
 #define SSB_OHCI_TMSLOW_HOSTMODE	(1 << 29)
 
 struct ssb_ohci_device {
@@ -31,7 +30,6 @@ struct ssb_ohci_device *hcd_to_ssb_ohci(struct usb_hcd *hcd)
 {
 	return (struct ssb_ohci_device *)(hcd->hcd_priv);
 }
-
 
 static int ssb_ohci_reset(struct usb_hcd *hcd)
 {

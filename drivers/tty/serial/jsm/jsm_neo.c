@@ -116,7 +116,6 @@ static void neo_set_rts_flow_control(struct jsm_channel *ch)
 	ch->ch_mostat |= (UART_MCR_RTS);
 }
 
-
 static void neo_set_ixon_flow_control(struct jsm_channel *ch)
 {
 	u8 ier, efr;
@@ -659,7 +658,6 @@ static void neo_flush_uart_write(struct jsm_channel *ch)
 
 	ch->ch_flags |= (CH_TX_FIFO_EMPTY | CH_TX_FIFO_LWM);
 }
-
 
 /*
  * Flush the READ FIFO on the Neo.
@@ -1257,7 +1255,6 @@ static void neo_disable_receiver(struct jsm_channel *ch)
 	/* flush write operation */
 	neo_pci_posting_flush(ch->ch_bd);
 }
-
 
 /*
  * Neo specific way of turning on the receiver.

@@ -24,7 +24,6 @@ static inline struct bnx2i_hba *bnx2i_dev_to_hba(struct device *dev)
 	return iscsi_host_priv(shost);
 }
 
-
 /**
  * bnx2i_show_sq_info - return(s currently configured send queue (SQ) size
  * @dev:	device pointer
@@ -40,7 +39,6 @@ static ssize_t bnx2i_show_sq_info(struct device *dev,
 
 	return sprintf(buf, "0x%x\n", hba->max_sqes);
 }
-
 
 /**
  * bnx2i_set_sq_info - update send queue (SQ) size parameter
@@ -81,7 +79,6 @@ skip_config:
 	return 0;
 }
 
-
 /**
  * bnx2i_show_ccell_info - returns command cell (HQ) size
  * @dev:	device pointer
@@ -96,7 +93,6 @@ static ssize_t bnx2i_show_ccell_info(struct device *dev,
 
 	return sprintf(buf, "0x%x\n", hba->num_ccell);
 }
-
 
 /**
  * bnx2i_get_link_state - set command cell (HQ) size
@@ -129,7 +125,6 @@ skip_config:
 	printk(KERN_ERR "bnx2i: device busy, cannot change CCELL size\n");
 	return 0;
 }
-
 
 static DEVICE_ATTR(sq_size, S_IRUGO | S_IWUSR,
 		   bnx2i_show_sq_info, bnx2i_set_sq_info);

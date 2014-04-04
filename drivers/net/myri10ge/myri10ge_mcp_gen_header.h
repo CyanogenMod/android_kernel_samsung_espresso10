@@ -1,7 +1,6 @@
 #ifndef __MYRI10GE_MCP_GEN_HEADER_H__
 #define __MYRI10GE_MCP_GEN_HEADER_H__
 
-
 #define MCP_HEADER_PTR_OFFSET  0x3c
 
 #define MCP_TYPE_MX 0x4d582020	/* "MX  " */

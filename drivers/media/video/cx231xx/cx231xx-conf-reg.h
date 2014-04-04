@@ -98,7 +98,6 @@ enum AV_MODE{
 #define FLD_PWRDN_PD_BIAS	0x02
 #define FLD_PWRDN_PD_TUNECK	0x01
 
-
 #define ADC_STATUS_CH1          0x20
 #define ADC_STATUS_CH2          0x40
 #define ADC_STATUS_CH3          0x60

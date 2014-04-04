@@ -206,7 +206,6 @@ static int iwmct_download_section(struct iwmct_priv *priv, const u8 *p_sec,
 
 		memcpy(hdr->data, cur_block, data_size);
 
-
 		if (cmd & CMD_HDR_USE_CHECKSUM_MSK) {
 
 			chksm = data_size + le32_to_cpu(addr) + cmd;
@@ -224,7 +223,6 @@ static int iwmct_download_section(struct iwmct_priv *priv, const u8 *p_sec,
 
 		if (priv->dbg.dump)
 			LOG_HEXDUMP(FW_DOWNLOAD, parser->buf, trans_size);
-
 
 		hdr->cmd = cpu_to_le32(cmd);
 		/* send it down */
@@ -298,7 +296,6 @@ int iwmct_fw_load(struct iwmct_priv *priv)
 	__le32 addr;
 	int ret;
 
-
 	LOG_INFO(priv, FW_DOWNLOAD, "barker download request 0x%x is:\n",
 			priv->barker);
 	LOG_INFO(priv, FW_DOWNLOAD, "*******  Top FW %s requested ********\n",
@@ -307,7 +304,6 @@ int iwmct_fw_load(struct iwmct_priv *priv)
 			(priv->barker & BARKER_DNLOAD_GPS_MSK) ? "was" : "not");
 	LOG_INFO(priv, FW_DOWNLOAD, "*******  BT FW %s requested ********\n",
 			(priv->barker & BARKER_DNLOAD_BT_MSK) ? "was" : "not");
-
 
 	/* get the firmware */
 	ret = request_firmware(&raw, fw_name, &priv->func->dev);

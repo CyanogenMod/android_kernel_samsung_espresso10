@@ -179,7 +179,6 @@ static void mpu_accel_data_work_fcn(struct work_struct *work)
 			      mldl_cfg->accel,
 			      &mldl_cfg->pdata->accel, rbuff);
 
-
 	/* @todo add other data formats here as well */
 	if (EXT_SLAVE_BIG_ENDIAN == mldl_cfg->accel->endian) {
 		for (ii = 0; ii < 3; ii++) {

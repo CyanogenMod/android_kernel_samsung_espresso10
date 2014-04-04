@@ -23,7 +23,6 @@
 static u64 first_time, last_time;
 static u64 turbo_frequency, max_freq;
 
-
 #define SLOT_MULT 30.0
 #define SLOT_HEIGHT 25.0
 
@@ -262,7 +261,6 @@ void svg_process(int cpu, u64 start, u64 end, const char *type, const char *name
 	if (!svgfile)
 		return;
 
-
 	fprintf(svgfile, "<g transform=\"translate(%4.8f,%4.8f)\">\n", time2pixels(start), cpu2y(cpu));
 	fprintf(svgfile, "<rect x=\"0\" width=\"%4.8f\" y=\"0\" height=\"%4.1f\" class=\"%s\"/>\n",
 		time2pixels(end)-time2pixels(start), SLOT_MULT+SLOT_HEIGHT, type);
@@ -286,7 +284,6 @@ void svg_cstate(int cpu, u64 start, u64 end, int type)
 
 	if (!svgfile)
 		return;
-
 
 	if (type > 6)
 		type = 6;
@@ -349,14 +346,12 @@ void svg_pstate(int cpu, u64 start, u64 end, u64 freq)
 
 }
 
-
 void svg_partial_wakeline(u64 start, int row1, char *desc1, int row2, char *desc2)
 {
 	double height;
 
 	if (!svgfile)
 		return;
-
 
 	if (row1 < row2) {
 		if (row1) {
@@ -403,7 +398,6 @@ void svg_wakeline(u64 start, int row1, int row2)
 
 	if (!svgfile)
 		return;
-
 
 	if (row1 < row2)
 		fprintf(svgfile, "<line x1=\"%4.8f\" y1=\"%4.2f\" x2=\"%4.8f\" y2=\"%4.2f\" style=\"stroke:rgb(32,255,32);stroke-width:0.009\"/>\n",

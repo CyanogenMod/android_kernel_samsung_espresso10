@@ -673,8 +673,6 @@ struct amap_sol_cqe_ring {
 	u8 valid;		/* dword 3 */
 } __packed;
 
-
-
 /**
  * Post WRB Queue Doorbell Register used by the host Storage
  * stack to notify the

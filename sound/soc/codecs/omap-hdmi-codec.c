@@ -16,7 +16,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA
- *
  */
 
 #include <linux/module.h>
@@ -55,7 +54,6 @@ struct hdmi_params {
 	int channels_nr;
 };
 
-
 /* codec private data */
 struct hdmi_codec_data {
 	struct hdmi_audio_format audio_fmt;
@@ -71,7 +69,6 @@ struct hdmi_codec_data {
 	struct workqueue_struct *workqueue;
 	int active;
 } hdmi_data;
-
 
 static int hdmi_audio_set_configuration(struct hdmi_codec_data *priv)
 {
@@ -117,7 +114,6 @@ static int hdmi_audio_set_configuration(struct hdmi_codec_data *priv)
 	default:
 		return -EINVAL;
 	}
-
 
 	switch (priv->params.sample_freq) {
 	case 32000:
@@ -271,7 +267,7 @@ int hdmi_audio_notifier_callback(struct notifier_block *nb,
 				msecs_to_jiffies(1));
 		}
 	} else {
-		cancel_delayed_work(&hdmi_data.delayed_work);
+		cancel_delayed_work_sync(&hdmi_data.delayed_work);
 	}
 	return 0;
 }
@@ -327,7 +323,7 @@ static int hdmi_audio_trigger(struct snd_pcm_substream *substream, int cmd,
 	case SNDRV_PCM_TRIGGER_STOP:
 	case SNDRV_PCM_TRIGGER_SUSPEND:
 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-		cancel_delayed_work(&hdmi_data.delayed_work);
+		cancel_delayed_work_sync(&hdmi_data.delayed_work);
 		priv->active = 0;
 		hdmi_ti_4xxx_audio_transfer_en(&priv->ip_data, 0);
 		hdmi_ti_4xxx_wp_audio_enable(&priv->ip_data, 0);
@@ -369,7 +365,6 @@ static int hdmi_probe(struct snd_soc_codec *codec)
 		goto res_err;
 	}
 
-
 	hdmi_data.oh = omap_hwmod_lookup("dss_hdmi");
 
 	if (!hdmi_data.oh) {
@@ -396,9 +391,10 @@ static int hdmi_probe(struct snd_soc_codec *codec)
 	hdmi_data.dssdev = omap_dss_find_device(NULL, hdmi_audio_match);
 
 	if (!hdmi_data.dssdev) {
-		dev_err(&pdev->dev, "can't find HDMI device\n");
 		ret = -ENODEV;
 		goto dssdev_err;
+	}else{
+		dev_err(&pdev->dev, "found HDMI device\n");
 	}
 
 	hdmi_data.notifier.notifier_call = hdmi_audio_notifier_callback;
@@ -428,7 +424,6 @@ static int hdmi_remove(struct snd_soc_codec *codec)
 	kfree(priv);
 	return 0;
 }
-
 
 static struct snd_soc_codec_driver hdmi_audio_codec_drv = {
 	.probe = hdmi_probe,
@@ -475,7 +470,6 @@ static int __devexit hdmi_codec_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 static struct platform_driver hdmi_codec_driver = {
 	.probe          = hdmi_codec_probe,
 	.remove         = __devexit_p(hdmi_codec_remove),
@@ -484,7 +478,6 @@ static struct platform_driver hdmi_codec_driver = {
 		.owner  = THIS_MODULE,
 	},
 };
-
 
 static int __init hdmi_codec_init(void)
 {
@@ -497,7 +490,6 @@ static void __exit hdmi_codec_exit(void)
 	platform_driver_unregister(&hdmi_codec_driver);
 }
 module_exit(hdmi_codec_exit);
-
 
 MODULE_AUTHOR("Ricardo Neri <ricardo.neri@ti.com>");
 MODULE_DESCRIPTION("ASoC HDMI codec driver");

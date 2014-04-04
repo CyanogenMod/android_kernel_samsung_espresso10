@@ -64,7 +64,6 @@ static __init int efika_fabric_init(void)
 	card.dai_link = efika_fabric_dai;
 	card.num_links = ARRAY_SIZE(efika_fabric_dai);
 
-
 	pdev = platform_device_alloc("soc-audio", 1);
 	if (!pdev) {
 		pr_err("efika_fabric_init: platform_device_alloc() failed\n");
@@ -84,8 +83,6 @@ static __init int efika_fabric_init(void)
 
 module_init(efika_fabric_init);
 
-
 MODULE_AUTHOR("Jon Smirl <jonsmirl@gmail.com>");
 MODULE_DESCRIPTION(DRV_NAME ": mpc5200 Efika fabric driver");
 MODULE_LICENSE("GPL");
-

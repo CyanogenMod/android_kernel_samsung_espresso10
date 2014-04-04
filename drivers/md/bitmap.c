@@ -1852,7 +1852,6 @@ int bitmap_create(mddev_t *mddev)
 
 	mddev->bitmap = bitmap;
 
-
 	return (bitmap->flags & BITMAP_WRITE_ERROR) ? -EIO : 0;
 
  error:
@@ -2196,4 +2195,3 @@ struct attribute_group md_bitmap_group = {
 	.name = "bitmap",
 	.attrs = md_bitmap_attrs,
 };
-

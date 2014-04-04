@@ -111,7 +111,6 @@ static struct isapnp_device_id ultra_device_ids[] __initdata = {
 MODULE_DEVICE_TABLE(isapnp, ultra_device_ids);
 #endif
 
-
 #define START_PG		0x00	/* First page of TX buffer */
 
 #define ULTRA_CMDREG	0		/* Offset to ASIC command register. */
@@ -546,7 +545,6 @@ ultra_close_card(struct net_device *dev)
 
 	return 0;
 }
-
 
 #ifdef MODULE
 #define MAX_ULTRA_CARDS	4	/* Max number of Ultra cards per module */

@@ -596,7 +596,6 @@ static struct clk ssi_l4_ick = {
 	.recalc		= &followparent_recalc,
 };
 
-
 /*
  * GFX clock domain
  *	Clocks:
@@ -1844,7 +1843,6 @@ static struct clk virt_prcm_set = {
 	.round_rate	= &omap2_round_to_table_rate,
 };
 
-
 /*
  * clkdev integration
  */
@@ -2103,4 +2101,3 @@ int __init omap2430_clk_init(void)
 
 	return 0;
 }
-

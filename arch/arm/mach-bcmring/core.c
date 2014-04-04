@@ -71,7 +71,6 @@ static struct amba_device name##_device = {     \
    }                                            \
 }
 
-
 AMBA_DEVICE(uartA, "uarta", UARTA, NULL, SZ_4K);
 AMBA_DEVICE(uartB, "uartb", UARTB, NULL, SZ_4K);
 

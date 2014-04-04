@@ -45,8 +45,6 @@
 #define CYASBLKDEV_QUEUE_SUSPENDED	(1 << 1)
 #define CY_AS_USE_ASYNC_API
 
-
-
 /* print flags by name */
 const char *rq_flag_bit_names[] = {
 	"REQ_RW",			/* not set, read. set, write */
@@ -82,7 +80,6 @@ void verbose_rq_flags(int flags)
 		j = j << 1;
 	}
 }
-
 
 /*
  * Prepare a -BLK_DEV  request.  Essentially, this means passing the
@@ -239,7 +236,6 @@ static int cyasblkdev_queue_thread(void *d)
 			__func__);
 		#endif
 
-
 	} while (1);
 
 	set_current_state(TASK_RUNNING);
@@ -364,7 +360,6 @@ void cyasblkdev_cleanup_queue(struct cyasblkdev_queue *bq)
 	blk_cleanup_queue(bq->queue);
 }
 EXPORT_SYMBOL(cyasblkdev_cleanup_queue);
-
 
 /**
  * cyasblkdev_queue_suspend - suspend a CyAsBlkDev request queue

@@ -25,7 +25,6 @@
 #define MSM_SMI_BASE 0x00000000
 #endif
 
-
 #define TOUCHPAD_SUSPEND 	34
 #define TOUCHPAD_IRQ 		38
 
@@ -134,7 +133,6 @@ static int msm_fb_allow_set_offset(void)
 		machine_is_qsd8x50a_st1_5()) ? 1 : 0;
 }
 
-
 static struct msm_fb_platform_data msm_fb_pdata = {
 	.detect_client = msm_fb_detect_panel,
 	.allow_set_offset = msm_fb_allow_set_offset,
@@ -162,7 +160,6 @@ static void __init qsd8x50_allocate_memory_regions(void)
 	addr = alloc_bootmem(size); // (void *)MSM_FB_BASE;
 	if (!addr)
 		printk("Failed to allocate bootmem for framebuffer\n");
-
 
 	msm_fb_resources[0].start = __pa(addr);
 	msm_fb_resources[0].end = msm_fb_resources[0].start + size - 1;
@@ -210,7 +207,6 @@ static int msm_fb_lcdc_gpio_config(int on)
 	return 0;
 }
 
-
 static struct lcdc_platform_data lcdc_pdata = {
 	.lcdc_gpio_config = msm_fb_lcdc_gpio_config,
 };
@@ -232,7 +228,6 @@ static struct msm_panel_common_pdata mdp_pdata = {
 static struct platform_device *devices[] __initdata = {
 	&msm_fb_device,
 };
-
 
 static void __init msm_register_device(struct platform_device *pdev, void *data)
 {

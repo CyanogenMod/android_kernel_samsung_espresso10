@@ -375,7 +375,6 @@ static void iwlagn_tx_cmd_build_basic(struct iwl_priv *priv,
 		 skb->protocol == cpu_to_be16(ETH_P_PAE)))
 		tx_flags |= TX_CMD_FLG_IGNORE_BT;
 
-
 	tx_cmd->sta_id = std_id;
 	if (ieee80211_has_morefrags(fc))
 		tx_flags |= TX_CMD_FLG_MORE_FRAG_MSK;
@@ -684,7 +683,6 @@ int iwlagn_tx_skb(struct iwl_priv *priv, struct sk_buff *skb)
 
 	/* Copy MAC header from skb into command buffer */
 	memcpy(tx_cmd->hdr, hdr, hdr_len);
-
 
 	/* Total # bytes to be transmitted */
 	len = (u16)skb->len;

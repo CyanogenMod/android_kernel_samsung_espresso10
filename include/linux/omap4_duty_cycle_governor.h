@@ -53,5 +53,4 @@ static inline int omap4_duty_cycle_register(struct duty_cycle *tduty)
 }
 #endif
 
-
 #endif /*__OMAP4_DUTY_CYCLE_GOVERNOR_H__*/

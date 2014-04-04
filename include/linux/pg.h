@@ -1,7 +1,6 @@
 /* 	pg.h (c) 1998  Grant R. Guenther <grant@torque.net>
  		       Under the terms of the GNU General Public License
 
-
 	pg.h defines the user interface to the generic ATAPI packet
         command driver for parallel port ATAPI devices (pg). The
 	driver is loosely modelled after the generic SCSI driver, sg,

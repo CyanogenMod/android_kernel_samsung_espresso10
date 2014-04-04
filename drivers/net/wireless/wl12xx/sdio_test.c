@@ -166,7 +166,6 @@ static void wl1271_sdio_enable_interrupts(struct wl1271 *wl)
 {
 }
 
-
 static struct wl1271_if_operations sdio_ops = {
 	.read		= wl1271_sdio_raw_read,
 	.write		= wl1271_sdio_raw_write,
@@ -433,7 +432,6 @@ static int __devinit wl1271_probe(struct sdio_func *func,
 
 	sdio_set_drvdata(func, wl_test);
 
-
 	/* power up the device */
 	ret = wl1271_chip_wakeup(wl);
 	if (ret) {
@@ -531,4 +529,3 @@ module_exit(wl1271_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Roger Quadros <roger.quadros@nokia.com>");
-

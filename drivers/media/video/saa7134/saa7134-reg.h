@@ -152,7 +152,6 @@
 #define   SAA7134_IRQ_REPORT_DONE_RA0           (1 <<  0)
 #define SAA7134_IRQ_STATUS                      (0x2d0 >> 2)
 
-
 /* ------------------------------------------------------------------ */
 /*
  *  registers -- 8 bit
@@ -375,4 +374,3 @@
  * c-basic-offset: 8
  * End:
  */
-

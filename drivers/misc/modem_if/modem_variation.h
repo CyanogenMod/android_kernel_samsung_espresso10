@@ -116,4 +116,3 @@ static struct link_device *call_link_init_func(struct platform_device *pdev,
 }
 
 #endif
-

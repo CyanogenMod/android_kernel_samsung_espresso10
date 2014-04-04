@@ -911,7 +911,6 @@ store_sf2_level(struct device *dev, struct device_attribute *attr,
 	return count;
 }
 
-
 static int
 w83792d_detect_subclients(struct i2c_client *new_client)
 {
@@ -1659,4 +1658,3 @@ MODULE_LICENSE("GPL");
 
 module_init(sensors_w83792d_init);
 module_exit(sensors_w83792d_exit);
-

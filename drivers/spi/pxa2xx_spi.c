@@ -35,7 +35,6 @@
 #include <asm/irq.h>
 #include <asm/delay.h>
 
-
 MODULE_AUTHOR("Stephen Street");
 MODULE_DESCRIPTION("PXA2xx SSP SPI Controller");
 MODULE_LICENSE("GPL");
@@ -391,7 +390,6 @@ static int map_dma_buffers(struct driver_data *drv_data)
 		drv_data->rx_map_len = 4;
 	} else
 		drv_data->rx_map_len = drv_data->len;
-
 
 	/* Modify setup if tx buffer is null */
 	if (drv_data->tx == NULL) {

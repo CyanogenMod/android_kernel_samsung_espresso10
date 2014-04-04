@@ -2,13 +2,13 @@
  * WPS IE definitions
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -126,7 +126,6 @@ extern "C" {
 #define WPS_WFA_SUBID_NW_KEY_SHAREABLE    0x02
 #define WPS_WFA_SUBID_REQ_TO_ENROLL       0x03
 #define WPS_WFA_SUBID_SETTINGS_DELAY_TIME 0x04
-
 
 /* WCN-NET Windows Rally Vertical Pairing Vendor Extensions */
 #define MS_VENDOR_EXT_ID           "\x00\x01\x37"
@@ -248,7 +247,6 @@ extern "C" {
 					  */
 #define WPS_ENCRTYPE_AES     0x0008
 
-
 /* WPS Message Types */
 #define WPS_ID_BEACON            0x01
 #define WPS_ID_PROBE_REQ         0x02
@@ -273,7 +271,6 @@ extern "C" {
 #define WPS_PRIVATE_ID_FRAG		(WPS_ID_MESSAGE_DONE + 4)
 #define WPS_PRIVATE_ID_FRAG_ACK		(WPS_ID_MESSAGE_DONE + 5)
 #define WPS_PRIVATE_ID_EAPOL_START	(WPS_ID_MESSAGE_DONE + 6)
-
 
 /* Device Type categories for primary and secondary device types */
 #define WPS_DEVICE_TYPE_CAT_COMPUTER        1
@@ -348,7 +345,6 @@ extern "C" {
 #define WPS_DEVICE_TYPE_SUB_CAT_AUDIO_HPHONE    5	/* WSC 2.0 */
 #define WPS_DEVICE_TYPE_SUB_CAT_AUDIO_MPHONE    6	/* WSC 2.0 */
 #define WPS_DEVICE_TYPE_SUB_CAT_AUDIO_HTS       7	/* WSC 2.0 */
-
 
 /* Device request/response type */
 #define WPS_MSGTYPE_ENROLLEE_INFO_ONLY    0x00

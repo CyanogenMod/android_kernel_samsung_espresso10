@@ -19,7 +19,6 @@
 
 static struct proc_dir_entry *proc_afs;
 
-
 static int afs_proc_cells_open(struct inode *inode, struct file *file);
 static void *afs_proc_cells_start(struct seq_file *p, loff_t *pos);
 static void *afs_proc_cells_next(struct seq_file *p, void *v, loff_t *pos);

@@ -41,7 +41,6 @@ static struct resource smbus_sch_resource = {
 		.flags = IORESOURCE_IO,
 };
 
-
 static struct resource gpio_sch_resource = {
 		.flags = IORESOURCE_IO,
 };

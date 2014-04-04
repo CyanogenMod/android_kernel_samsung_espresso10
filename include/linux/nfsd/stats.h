@@ -40,7 +40,6 @@ struct nfsd_stats {
 
 };
 
-
 extern struct nfsd_stats	nfsdstats;
 extern struct svc_stat		nfsd_svcstats;
 

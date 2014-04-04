@@ -58,7 +58,6 @@ struct platform_device iop3xx_i2c0_device = {
 	.resource	= iop3xx_i2c0_resources,
 };
 
-
 static struct resource iop3xx_i2c1_resources[] = {
 	[0] = {
 		.start	= 0xfffff6a0,

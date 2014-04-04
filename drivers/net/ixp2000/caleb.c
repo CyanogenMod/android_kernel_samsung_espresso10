@@ -42,7 +42,6 @@
 #define CALEB_DEBUG0		0x1E
 #define CALEB_DEBUG1		0x1F
 
-
 static u8 caleb_reg_read(int reg)
 {
 	u8 value;
@@ -65,7 +64,6 @@ static void caleb_reg_write(int reg, u8 value)
 	dummy = *((volatile u8 *)ENP2611_CALEB_VIRT_BASE);
 	__asm__ __volatile__("mov %0, %0" : "+r" (dummy));
 }
-
 
 void caleb_reset(void)
 {

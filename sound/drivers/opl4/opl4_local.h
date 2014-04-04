@@ -125,11 +125,9 @@
 #define OPL4_STATUS_BUSY		0x01
 #define OPL4_STATUS_LOAD		0x02
 
-
 #define OPL4_MAX_VOICES 24
 
 #define SNDRV_SEQ_DEV_ID_OPL4 "opl4-synth"
-
 
 struct opl4_sound {
 	u16 tone;

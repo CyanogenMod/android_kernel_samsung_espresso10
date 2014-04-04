@@ -133,7 +133,6 @@ static const struct file_operations fops_tx_chainmask = {
 	.llseek = default_llseek,
 };
 
-
 static ssize_t read_file_rx_chainmask(struct file *file, char __user *user_buf,
 			     size_t count, loff_t *ppos)
 {
@@ -175,7 +174,6 @@ static const struct file_operations fops_rx_chainmask = {
 	.owner = THIS_MODULE,
 	.llseek = default_llseek,
 };
-
 
 static ssize_t read_file_dma(struct file *file, char __user *user_buf,
 			     size_t count, loff_t *ppos)
@@ -277,7 +275,6 @@ static const struct file_operations fops_dma = {
 	.owner = THIS_MODULE,
 	.llseek = default_llseek,
 };
-
 
 void ath_debug_stat_interrupt(struct ath_softc *sc, enum ath9k_int status)
 {
@@ -385,7 +382,6 @@ static ssize_t read_file_interrupt(struct file *file, char __user *user_buf,
 		"%8s: %10u\n", "TSFOOR", sc->debug.stats.istats.tsfoor);
 	len += snprintf(buf + len, sizeof(buf) - len,
 		"%8s: %10u\n", "TOTAL", sc->debug.stats.istats.total);
-
 
 	if (len > sizeof(buf))
 		len = sizeof(buf);
@@ -704,7 +700,7 @@ static ssize_t read_file_misc(struct file *file, char __user *user_buf,
 	struct ath9k_vif_iter_data iter_data;
 
 	ath9k_calculate_iter_data(hw, NULL, &iter_data);
-	
+
 	buf = kzalloc(size, GFP_KERNEL);
 	if (buf == NULL)
 		return -ENOMEM;

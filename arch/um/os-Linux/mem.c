@@ -254,7 +254,6 @@ int __init create_mem_file(unsigned long long len)
 	return fd;
 }
 
-
 void __init check_tmpexec(void)
 {
 	void *addr;

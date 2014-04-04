@@ -291,7 +291,6 @@ int rds_iw_cm_initiate_connect(struct rdma_cm_id *cm_id);
 void rds_iw_cm_connect_complete(struct rds_connection *conn,
 				struct rdma_cm_event *event);
 
-
 #define rds_iw_conn_error(conn, fmt...) \
 	__rds_iw_conn_error(conn, KERN_WARNING "RDS/IW: " fmt)
 

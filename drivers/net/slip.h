@@ -22,7 +22,6 @@
 #ifndef _LINUX_SLIP_H
 #define _LINUX_SLIP_H
 
-
 #if defined(CONFIG_INET) && defined(CONFIG_SLIP_COMPRESSED)
 # define SL_INCLUDE_CSLIP
 #endif
@@ -44,7 +43,6 @@
 #define ESC             0333		/* indicates byte stuffing	*/
 #define ESC_END         0334		/* ESC ESC_END means END 'data'	*/
 #define ESC_ESC         0335		/* ESC ESC_ESC means ESC 'data'	*/
-
 
 struct slip {
   int			magic;

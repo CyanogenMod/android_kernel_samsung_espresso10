@@ -1886,7 +1886,6 @@ out:
 	return ret;
 }
 
-
 /**
  * nand_write_page_raw - [Intern] raw page write function
  * @mtd:	mtd info structure
@@ -3259,7 +3258,6 @@ static int nand_panic_write(struct mtd_info *mtd, loff_t to, size_t len,
 	*retlen = chip->ops.retlen;
 	return ret;
 }
-
 
 /**
  * nand_scan_tail - [NAND Interface] Scan for the NAND device

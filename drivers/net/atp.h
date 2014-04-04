@@ -47,7 +47,6 @@ enum page0_regs
 enum eepage_regs
 { PROM_CMD = 6, PROM_DATA = 7 };	/* Note that PROM_CMD is in the "high" bits. */
 
-
 #define ISR_TxOK	0x01
 #define ISR_RxOK	0x04
 #define ISR_TxErr	0x02

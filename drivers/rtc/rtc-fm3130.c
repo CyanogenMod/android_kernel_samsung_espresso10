@@ -150,7 +150,6 @@ static int fm3130_get_time(struct device *dev, struct rtc_time *t)
 	return rtc_valid_tm(t);
 }
 
-
 static int fm3130_set_time(struct device *dev, struct rtc_time *t)
 {
 	struct fm3130 *fm3130 = dev_get_drvdata(dev);
@@ -580,4 +579,3 @@ module_exit(fm3130_exit);
 MODULE_DESCRIPTION("RTC driver for FM3130");
 MODULE_AUTHOR("Sergey Lapin <slapin@ossfans.org>");
 MODULE_LICENSE("GPL");
-

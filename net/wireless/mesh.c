@@ -33,7 +33,6 @@
 
 #define MESH_MAX_PREQ_RETRIES	4
 
-
 const struct mesh_config default_mesh_config = {
 	.dot11MeshRetryTimeout = MESH_RET_T,
 	.dot11MeshConfirmTimeout = MESH_CONF_T,

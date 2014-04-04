@@ -45,7 +45,6 @@
 
 #include <linux/types.h>
 
-
 #if !defined(__doxygen__)
 typedef int cy_bool;
 #define cy_true				(1)

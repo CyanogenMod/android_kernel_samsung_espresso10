@@ -136,7 +136,6 @@ static ssize_t ieee80211_if_write_##name(struct file *file,		\
 }									\
 __IEEE80211_IF_FILE(name, ieee80211_if_write_##name)
 
-
 #define IEEE80211_IF_FILE(name, field, format)				\
 		IEEE80211_IF_FMT_##format(name, field)			\
 		__IEEE80211_IF_FILE(name, NULL)
@@ -373,7 +372,6 @@ IEEE80211_IF_FILE(min_discovery_timeout,
 IEEE80211_IF_FILE(dot11MeshHWMPRootMode,
 		u.mesh.mshcfg.dot11MeshHWMPRootMode, DEC);
 #endif
-
 
 #define DEBUGFS_ADD(name) \
 	debugfs_create_file(#name, 0400, sdata->debugfs.dir, \

@@ -29,7 +29,6 @@
 
 #define SOURCE_VERSION "next"
 
-
 /* B.A.T.M.A.N. parameters */
 
 #define TQ_MAX_VALUE 255
@@ -93,7 +92,6 @@
 /* route or tt entry added / changed / deleted */
 #define DBG_ROUTES 2
 #define DBG_ALL 3
-
 
 /*
  *  Vis

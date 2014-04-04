@@ -20,7 +20,6 @@ struct XGI_LCDDataStruct {
 	unsigned short LCDVT;
 };
 
-
 struct XGI_LVDSCRT1HDataStruct {
 	unsigned char Reg[8];
 };
@@ -113,7 +112,6 @@ struct XGI_Ext2Struct {
 	/* unsigned short ROM_OFFSET; */
 };
 
-
 struct XGI_MCLKDataStruct {
 	unsigned char SR28, SR29, SR2A;
 	unsigned short CLOCK;
@@ -178,7 +176,6 @@ struct XGI330_LCDDataDesStruct {
 	unsigned short LCDVRS;
 };
 
-
 struct XGI330_LVDSDataStruct {
 	unsigned short VGAHT;
 	unsigned short VGAVT;
@@ -204,7 +201,6 @@ struct XGI330_LCDDataStruct {
 	unsigned short LCDVT;
 };
 
-
 struct XGI330_TVDataStruct {
 	unsigned short RVBHCMAX;
 	unsigned short RVBHCFACT;
@@ -229,7 +225,6 @@ struct XGI330_TVDataTablStruct {
 	unsigned short CAP;
 	unsigned short DATAPTR;
 };
-
 
 struct XGI330_CHTVDataStruct {
 	unsigned short VGAHT;
@@ -312,7 +307,6 @@ struct XGI21_LVDSCapStruct {
 struct XGI_CRT1TableStruct {
 	unsigned char CR[16];
 };
-
 
 struct XGI330_VCLKDataStruct {
 	unsigned char SR2B, SR2C;
@@ -461,7 +455,6 @@ struct vb_device_info {
 	struct XGI_ModeResInfoStruct *ModeResInfo;
 	struct XGI_XG21CRT1Struct	  *UpdateCRT1;
 };  /* _struct vb_device_info */
-
 
 struct TimingInfo {
 	unsigned short Horizontal_ACTIVE;

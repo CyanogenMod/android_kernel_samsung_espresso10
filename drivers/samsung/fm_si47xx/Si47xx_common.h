@@ -37,7 +37,6 @@
 #define GPIO_FM_INT	"FM_INT"
 #define GPIO_FM_RST	"FM_RST"
 
-
 /* VNVS:7-JUNE'10 : RDS Interrupt ON Always */
 /* (Enabling interrupt when RDS is enabled) */
 #define RDS_INTERRUPT_ON_ALWAYS
@@ -54,6 +53,5 @@
 #endif
 
 extern wait_queue_head_t Si47xx_waitq;
-
 
 #endif

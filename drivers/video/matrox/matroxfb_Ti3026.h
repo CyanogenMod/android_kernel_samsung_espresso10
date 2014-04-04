@@ -1,7 +1,6 @@
 #ifndef __MATROXFB_TI3026_H__
 #define __MATROXFB_TI3026_H__
 
-
 #include "matroxfb_base.h"
 
 #ifdef CONFIG_FB_MATROX_MILLENIUM

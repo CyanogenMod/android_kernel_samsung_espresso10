@@ -304,7 +304,6 @@ static void carl9170_debugfs_format_frame(struct ar9170 *ar,
 	    jiffies_to_msecs(jiffies - arinfo->timeout));
 }
 
-
 static char *carl9170_debugfs_ampdu_state_read(struct ar9170 *ar, char *buf,
 					       size_t bufsize, ssize_t *len)
 {

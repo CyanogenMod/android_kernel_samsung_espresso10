@@ -1,10 +1,8 @@
-
 		------------------------------
 		****** perf by examples ******
 		------------------------------
 
 [ From an e-mail by Ingo Molnar, http://lkml.org/lkml/2009/8/4/346 ]
-
 
 First, discovery/enumeration of available counters can be done via
 'perf list':
@@ -221,5 +219,3 @@ All that the above results needed were those new tracepoints
 in include/tracing/events/kmem.h.
 
 	Ingo
-
-

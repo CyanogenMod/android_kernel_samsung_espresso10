@@ -33,7 +33,6 @@
 #include <asm/io.h>
 #include <asm/irq.h>
 
-
 #include "b44.h"
 
 #define DRV_MODULE_NAME		"b44"
@@ -101,7 +100,6 @@ MODULE_VERSION(DRV_MODULE_VERSION);
 static int b44_debug = -1;	/* -1 == use B44_DEF_MSG_ENABLE as value */
 module_param(b44_debug, int, 0);
 MODULE_PARM_DESC(b44_debug, "B44 bitmapped debugging message enable value");
-
 
 #ifdef CONFIG_B44_PCI
 static DEFINE_PCI_DEVICE_TABLE(b44_pci_tbl) = {
@@ -2139,7 +2137,6 @@ static int __devinit b44_init_one(struct ssb_device *sdev,
 	if (b44_version_printed++ == 0)
 		pr_info("%s", version);
 
-
 	dev = alloc_etherdev(sizeof(*bp));
 	if (!dev) {
 		dev_err(sdev->dev, "Etherdev alloc failed, aborting\n");
@@ -2376,4 +2373,3 @@ static void __exit b44_cleanup(void)
 
 module_init(b44_init);
 module_exit(b44_cleanup);
-

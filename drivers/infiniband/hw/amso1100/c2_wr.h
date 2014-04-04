@@ -120,11 +120,7 @@ enum c2wr_ids {
 	CCWR_FLASH_WRITE,
 	CCWR_INIT,		/* WARNING: Don't move this ever again! */
 
-
-
 	/* Add new IDs here */
-
-
 
 	/*
 	 * WARNING: CCWR_LAST must always be the last verbs id defined!
@@ -733,7 +729,6 @@ struct c2wr_qp_connect {
 	/* no synchronous reply.         */
 } __attribute__((packed)) ;
 
-
 /*
  *------------------------ MM ------------------------
  */
@@ -843,7 +838,6 @@ union c2wr_mw_query {
 	struct c2wr_mw_query_rep rep;
 } __attribute__((packed)) ;
 
-
 struct c2wr_stag_dealloc_req {
 	struct c2wr_hdr hdr;
 	u32 rnic_handle;
@@ -952,7 +946,6 @@ struct c2wr_ce {
 	__be32 bytes_rcvd;		/* valid for RECV WCs */
 	u32 stag;
 } __attribute__((packed)) ;
-
 
 /*
  * Flags used for all post-sq WRs.  These must fit in the flags
@@ -1080,7 +1073,6 @@ union c2wr_sqwr {
 	struct c2wr_nsmr_fastreg_req nsmr_fastreg;
 	struct c2wr_stag_invalidate_req stag_inv;
 } __attribute__((packed));
-
 
 /*
  * RQ WRs
@@ -1329,7 +1321,6 @@ union c2wr_ep_query {
 	struct c2wr_ep_query_rep rep;
 } __attribute__((packed));
 
-
 /*
  * The host passes this down to indicate acceptance of a pending iWARP
  * connection.  The cr_handle was obtained from the CONNECTION_REQUEST
@@ -1422,7 +1413,6 @@ union c2wr_console {
 	struct c2wr_console_rep rep;
 } __attribute__((packed));
 
-
 /*
  * Giant union with all WRs.  Makes life easier...
  */
@@ -1468,7 +1458,6 @@ union c2wr {
 	union c2wr_buf_free buf_free;
 	union c2wr_flash_write flash_write;
 } __attribute__((packed));
-
 
 /*
  * Accessors for the wr fields that are packed together tightly to

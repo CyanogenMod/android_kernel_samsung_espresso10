@@ -92,4 +92,3 @@ error:
 	abort_creds(new);
 	return ret;
 }
-

@@ -24,7 +24,6 @@
  * layer on OMAP3430 talking to the West Bridge Astoria device
  */
 
-
 #ifndef _INCLUDED_CYASHALOMAP_KERNEL_H_
 #define _INCLUDED_CYASHALOMAP_KERNEL_H_
 
@@ -62,7 +61,6 @@ typedef struct cy_as_hal_sleep_channel_t {
  * really an OMAP device pointer
  */
 typedef void *cy_as_hal_device_tag;
-
 
 /* This must be included after the CyAsHalDeviceTag type is defined */
 
@@ -155,7 +153,6 @@ cy_as_hal_set_wakeup_pin(cy_as_hal_device_tag tag, cy_bool state);
 void
 cy_as_hal_pll_lock_loss_handler(cy_as_hal_device_tag tag);
 
-
 /**********************************************************************
  *
  * Below are the functions that must be defined to provide the basic
@@ -213,7 +210,6 @@ cy_as_hal_create_sleep_channel(cy_as_hal_sleep_channel *channel);
  * the pointer in the argument.
  */
 
-
 cy_bool
 cy_as_hal_destroy_sleep_channel(cy_as_hal_sleep_channel *channel);
 
@@ -248,7 +244,6 @@ cy_bool cy_as_hal_sync_device_clocks(cy_as_hal_device_tag tag);
 
 void cy_as_hal_read_regs_before_standby(cy_as_hal_device_tag tag);
 
-
 #ifndef NDEBUG
 #define cy_as_hal_assert(cond) if (!(cond))\
 	printk(KERN_WARNING"assertion failed at %s:%d\n", __FILE__, __LINE__);
@@ -264,7 +259,6 @@ void cy_as_hal_read_regs_before_standby(cy_as_hal_device_tag tag);
 #endif
 
 /*#define MBOX_ACCESS_DBG_PRINT_ENABLED*/
-
 
 #ifdef DBG_PRINT_ENABLED
  /* Debug printing enabled */
@@ -295,7 +289,6 @@ cy_as_log_debug_message(int level, const char *str)
 		cy_as_hal_print_message("log %d: %s\n", level, str);
 }
 */
-
 
 /*
  * print buffer helper

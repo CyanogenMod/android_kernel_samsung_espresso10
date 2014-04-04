@@ -16,7 +16,6 @@
 #include <asm/unaligned.h>
 #include "ieee80211_i.h"
 
-
 /* Data structures */
 
 /**
@@ -165,7 +164,6 @@ struct mesh_rmc {
 	struct rmc_entry bucket[RMC_BUCKETS];
 	u32 idx_mask;
 };
-
 
 #define MESH_DEFAULT_BEACON_INTERVAL		1000 	/* in 1024 us units */
 

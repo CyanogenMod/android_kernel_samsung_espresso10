@@ -26,7 +26,6 @@
 #include "psb_intel_reg.h"
 #include "psb_intel_bios.h"
 
-
 static void *find_section(struct bdb_header *bdb, int section_id)
 {
 	u8 *base = (u8 *)bdb;

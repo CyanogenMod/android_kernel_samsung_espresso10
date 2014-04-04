@@ -158,7 +158,6 @@ static void omap_rpmsg_notify(struct virtqueue *vq)
 	int ret;
 	int count = 15;
 
-	pr_debug("sending mailbox msg: %d\n", rpvq->vq_id);
 	do {
 		rproc_last_busy(rpvq->rpdev->rproc);
 		mutex_lock(&rpvq->rpdev->lock);
@@ -187,15 +186,12 @@ static int omap_rpmsg_mbox_callback(struct notifier_block *this,
 
 	rpdev = container_of(this, struct omap_rpmsg_vproc, nb);
 
-	pr_debug("mbox msg: 0x%x\n", msg);
-
 	switch (msg) {
 	case RP_MBOX_CRASH:
 		pr_err("%s has just crashed !\n", rpdev->rproc_name);
 		rproc_error_notify(rpdev->rproc);
 		break;
 	case RP_MBOX_ECHO_REPLY:
-		pr_info("received echo reply from %s !\n", rpdev->rproc_name);
 		break;
 	case RP_MSG_BOOTINIT_DONE:
 		if (rpdev->bootcstr_set) {
@@ -319,9 +315,6 @@ static int rpmsg_rproc_preload(struct omap_rpmsg_vproc *rpdev)
 	if (rpdev->bootcstr_freq) {
 		rpdev->bootcstr_set = !rproc_set_constraints(rpdev->rproc,
 				rpdev->bootcstr_type, rpdev->bootcstr_freq);
-		if (!rpdev->bootcstr_set)
-			pr_debug("bumping the frequency for rproc %s failed\n",
-							rpdev->rproc_name);
 	}
 	mutex_unlock(&rpdev->lock);
 	return NOTIFY_DONE;
@@ -375,9 +368,6 @@ static struct virtqueue *rp_find_vq(struct virtio_device *vdev,
 	}
 
 	memset(rpvq->addr, 0, RPMSG_RING_SIZE);
-
-	pr_debug("vring%d: phys 0x%x, virt 0x%x\n", index, rpdev->vring[index],
-					(unsigned int) rpvq->addr);
 
 	vq = vring_new_virtqueue(RPMSG_NUM_BUFS / 2, RPMSG_VRING_ALIGN, vdev,
 				rpvq->addr, omap_rpmsg_notify, callback, name);
@@ -475,9 +465,6 @@ static int omap_rpmsg_find_vqs(struct virtio_device *vdev, unsigned nvqs,
 		err = -EINVAL;
 		goto unmap_buf;
 	}
-
-	pr_debug("buf: phys 0x%x, virt 0x%x\n", rpdev->buf_addr,
-					(unsigned int) rpdev->buf_mapped);
 
 	/* tell the M3 we're ready. hmm. do we really need this msg */
 	err = omap_mbox_msg_send(rpdev->mbox, RP_MBOX_READY);
@@ -702,9 +689,6 @@ static int __init omap_rpmsg_ini(void)
 
 		paddr += RPMSG_IPC_MEM;
 		psize -= RPMSG_IPC_MEM;
-
-		pr_debug("rpdev%d: buf 0x%x, vring0 0x%x, vring1 0x%x\n", i,
-			rpdev->buf_addr, rpdev->vring[0], rpdev->vring[1]);
 
 		rpdev->vdev.dev.release = omap_rpmsg_vproc_release;
 

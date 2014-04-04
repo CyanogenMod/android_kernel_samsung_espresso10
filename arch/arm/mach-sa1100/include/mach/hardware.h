@@ -12,9 +12,7 @@
 #ifndef __ASM_ARCH_HARDWARE_H
 #define __ASM_ARCH_HARDWARE_H
 
-
 #define UNCACHEABLE_ADDR	0xfa050000
-
 
 /*
  * SA1100 internal I/O mappings
@@ -82,6 +80,5 @@ static inline unsigned long get_clock_tick_rate(void)
 #define pcibios_assign_all_busses()	1
 #define HAVE_ARCH_PCI_SET_DMA_MASK	1
 #endif
-
 
 #endif  /* _ASM_ARCH_HARDWARE_H */

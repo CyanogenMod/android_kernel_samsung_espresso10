@@ -229,7 +229,6 @@ out:
 	sock_put(sk);
 }
 
-
 static int dccp_v6_send_response(struct sock *sk, struct request_sock *req,
 				 struct request_values *rv_unused)
 {

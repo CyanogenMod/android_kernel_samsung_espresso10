@@ -369,7 +369,6 @@ static void __wl1271_op_remove_interface(struct wl1271 *wl,
 					 bool reset_tx_queues);
 static void wl1271_free_ap_keys(struct wl1271 *wl);
 
-
 static void wl1271_device_release(struct device *dev)
 {
 
@@ -489,7 +488,6 @@ static void wl1271_conf_init(struct wl1271 *wl)
 	/* apply driver default configuration */
 	memcpy(&wl->conf, &default_conf, sizeof(default_conf));
 }
-
 
 static int wl1271_plt_init(struct wl1271 *wl)
 {
@@ -1345,7 +1343,6 @@ static struct sk_buff *wl12xx_alloc_dummy_packet(struct wl1271 *wl)
 
 	return skb;
 }
-
 
 static struct notifier_block wl1271_dev_notifier = {
 	.notifier_call = wl1271_dev_notify,
@@ -3677,7 +3674,6 @@ static const struct ieee80211_ops wl1271_ops = {
 	.tx_frames_pending = wl1271_tx_frames_pending,
 	CFG80211_TESTMODE_CMD(wl1271_tm_cmd)
 };
-
 
 u8 wl1271_rate_to_idx(int rate, enum ieee80211_band band)
 {

@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -19,7 +19,6 @@
 //===================================================================
 // Author(s): ="Atheros"
 //===================================================================
-
 
 #ifndef _MBOX_WLAN_HOST_REG_REG_H_
 #define _MBOX_WLAN_HOST_REG_REG_H_
@@ -466,6 +465,5 @@
 #define CIS_WINDOW_DATA_MASK                     0x000000ff
 #define CIS_WINDOW_DATA_GET(x)                   (((x) & CIS_WINDOW_DATA_MASK) >> CIS_WINDOW_DATA_LSB)
 #define CIS_WINDOW_DATA_SET(x)                   (((x) << CIS_WINDOW_DATA_LSB) & CIS_WINDOW_DATA_MASK)
-
 
 #endif /* _MBOX_WLAN_HOST_REG_H_ */

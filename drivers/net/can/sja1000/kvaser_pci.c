@@ -95,7 +95,6 @@ struct kvaser_pci {
 #define S5920_PTCR                0x60
 #define INTCSR_ADDON_INTENABLE_M  0x2000
 
-
 #define KVASER_PCI_PORT_BYTES     0x20
 
 #define PCI_CONFIG_PORT_SIZE      0x80      /* size of the config io-memory */

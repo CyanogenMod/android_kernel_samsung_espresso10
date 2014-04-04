@@ -181,7 +181,6 @@ out:
 	authenc_esn_request_complete(req, err);
 }
 
-
 static void authenc_esn_geniv_ahash_done(struct crypto_async_request *areq,
 					 int err)
 {
@@ -201,7 +200,6 @@ static void authenc_esn_geniv_ahash_done(struct crypto_async_request *areq,
 out:
 	aead_request_complete(req, err);
 }
-
 
 static void authenc_esn_verify_ahash_update_done(struct crypto_async_request *areq,
 						 int err)
@@ -312,7 +310,6 @@ static void authenc_esn_verify_ahash_update_done2(struct crypto_async_request *a
 out:
 	authenc_esn_request_complete(req, err);
 }
-
 
 static void authenc_esn_verify_ahash_done(struct crypto_async_request *areq,
 					  int err)
@@ -465,7 +462,6 @@ static int crypto_authenc_esn_genicv(struct aead_request *req, u8 *iv,
 				 crypto_aead_authsize(authenc_esn), 1);
 	return 0;
 }
-
 
 static void crypto_authenc_esn_encrypt_done(struct crypto_async_request *req,
 					    int err)

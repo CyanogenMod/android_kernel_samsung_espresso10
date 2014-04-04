@@ -59,7 +59,6 @@
 #define HSI_FLAGS_TASKLET_LOCK		0 /* prevents to disable IRQ and */
 					  /* schedule tasklet more than once */
 
-
 #define LOG_NAME		"OMAP HSI: "
 
 /* SW strategies for HSI FIFO mapping */
@@ -333,7 +332,6 @@ static inline int hsi_runtime_suspend(struct device *dev) { return -ENOSYS; }
 void hsi_save_ctx(struct hsi_dev *hsi_ctrl);
 void hsi_restore_ctx(struct hsi_dev *hsi_ctrl);
 
-
 #ifdef CONFIG_DEBUG_FS
 int hsi_debug_init(void);
 void hsi_debug_exit(void);
@@ -430,7 +428,6 @@ static inline int is_hsi_errata(struct hsi_dev *hsi_ctrl, unsigned int id)
 
 	return IS_HSI_ERRATA(pdata->errata, id);
 }
-
 
 #if defined(CONFIG_PM) && defined(CONFIG_ARCH_OMAP4)
 extern void omap_pm_clear_dsp_wake_up(void);

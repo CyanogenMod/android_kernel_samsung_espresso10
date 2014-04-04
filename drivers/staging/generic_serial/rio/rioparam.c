@@ -43,7 +43,6 @@
 
 #include <linux/generic_serial.h>
 
-
 #include "linux_compat.h"
 #include "rio_linux.h"
 #include "pkt.h"
@@ -71,8 +70,6 @@
 #include "cirrus.h"
 #include "rioioctl.h"
 #include "param.h"
-
-
 
 /*
 ** The Scam, based on email from jeremyr@bugs.specialix.co.uk....
@@ -109,26 +106,26 @@
 ** The rest of the data fields contain approximations to the Cirrus registers
 ** that are used to program number of bits etc. Each registers bit fields is
 ** defined in cirrus.h.
-** 
+**
 ** NB. Only use those bits that are defined as being driver specific
 ** or common to the RTA and the driver.
-** 
+**
 ** All commands going from RTA->Host will be dealt with by the Host code - you
 ** will never see them. As with the SI there will be three fields to look out
 ** for in each phb (not yet defined - needs defining a.s.a.p).
-** 
+**
 ** modem_status	- current state of handshake pins.
 **
 ** port_status	 - current port status - equivalent to hi_stat for SI, indicates
 ** if port is IDLE_OPEN, IDLE_CLOSED etc.
 **
 ** break_status	- bit X set if break has been received.
-** 
+**
 ** Happy hacking.
-** 
+**
 */
 
-/* 
+/*
 ** RIOParam is used to open or configure a port. You pass it a PortP,
 ** which will have a tty struct attached to it. You also pass a command,
 ** either OPEN or CONFIG. The port's setup is taken from the t_ fields
@@ -231,7 +228,6 @@ int RIOParam(struct Port *PortP, int cmd, int Modem, int SleepFlag)
 
 	phb_param_ptr = (struct phb_param __iomem *) PacketP->data;
 
-
 	switch (TtyP->termios->c_cflag & CSIZE) {
 	case CS5:
 		{
@@ -323,7 +319,6 @@ int RIOParam(struct Port *PortP, int cmd, int Modem, int SleepFlag)
 		Cor2 &= ~RIOC_COR2_CTSFLOW;
 		Cor2 &= ~RIOC_COR2_RTSFLOW;
 	}
-
 
 	if (TtyP->termios->c_cflag & CLOCAL) {
 		rio_dprintk(RIO_DEBUG_PARAM, "Local line\n");
@@ -456,7 +451,6 @@ int RIOParam(struct Port *PortP, int cmd, int Modem, int SleepFlag)
 
 	rio_dprintk(RIO_DEBUG_PARAM, "tx baud 0x%x, rx baud 0x%x\n", TxBaud, RxBaud);
 
-
 	/*
 	 ** Leftovers
 	 */
@@ -568,7 +562,6 @@ int RIOParam(struct Port *PortP, int cmd, int Modem, int SleepFlag)
 
 	return 0;
 }
-
 
 /*
 ** We can add another packet to a transmit queue if the packet pointer pointed

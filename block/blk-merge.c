@@ -168,7 +168,6 @@ new_segment:
 		bvprv = bvec;
 	} /* segments in rq */
 
-
 	if (unlikely(rq->cmd_flags & REQ_COPY_USER) &&
 	    (blk_rq_bytes(rq) & q->dma_pad_mask)) {
 		unsigned int pad_len =
@@ -258,7 +257,6 @@ int ll_front_merge_fn(struct request_queue *q, struct request *req,
 		max_sectors = queue_max_hw_sectors(q);
 	else
 		max_sectors = queue_max_sectors(q);
-
 
 	if (blk_rq_sectors(req) + bio_sectors(bio) > max_sectors) {
 		req->cmd_flags |= REQ_NOMERGE;

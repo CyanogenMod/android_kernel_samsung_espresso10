@@ -63,7 +63,7 @@ struct sort_entry sort_parent = {
 	.se_snprintf	= hist_entry__parent_snprintf,
 	.se_width_idx	= HISTC_PARENT,
 };
- 
+
 struct sort_entry sort_cpu = {
 	.se_header      = "CPU",
 	.se_cmp	        = sort__cpu_cmp,

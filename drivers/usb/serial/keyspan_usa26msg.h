@@ -33,15 +33,15 @@
 	CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 	OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-	SUCH DAMAGE.    
+	SUCH DAMAGE.
 
 	Third revision: USA28X version (aka USA26)
 
 	Buffer formats for RX/TX data messages are not defined by
 	a structure, but are described here:
 
-	USB OUT (host -> USAxx, transmit) messages contain a 
-	REQUEST_ACK indicator (set to 0xff to request an ACK at the 
+	USB OUT (host -> USAxx, transmit) messages contain a
+	REQUEST_ACK indicator (set to 0xff to request an ACK at the
 	completion of transmit; 0x00 otherwise), followed by data:
 
 		RQSTACK DAT DAT DAT ...
@@ -112,7 +112,6 @@
 #ifndef	__USA26MSG__
 #define	__USA26MSG__
 
-
 struct keyspan_usa26_portControlMessage
 {
 	/*
@@ -129,7 +128,6 @@ struct keyspan_usa26_portControlMessage
 					// USA26: 0=internal, other=external
 					// USA17: 0=internal, other=external/RI
 		rxClocking,		// USA17: 0=internal, 1=external/RI, other=external/DSR
-
 
 		setLcr,			// BOTH: host requests lcr be set
 		lcr,			// BOTH: use PARITY, STOPBITS, DATABITS below
@@ -183,7 +181,7 @@ struct keyspan_usa26_portControlMessage
 		rxForward,		// BOTH: forward all inbound data, NOW (as if fwdLen==1)
 		returnStatus,	// BOTH: return current status (even if it hasn't changed)
 		resetDataToggle;// BOTH: reset data toggle state to DATA0
-	
+
 };
 
 // defines for bits in lcr
@@ -256,5 +254,3 @@ struct keyspan_usa26_globalDebugMessage
 #define	STATUS_RATION	10
 
 #endif
-
-

@@ -61,7 +61,6 @@ config EEPROM_MAX6875
 	  This driver can also be built as a module.  If so, the module
 	  will be called max6875.
 
-
 config EEPROM_93CX6
 	tristate "EEPROM 93CX6 support"
 	help

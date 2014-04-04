@@ -91,7 +91,6 @@ unsigned s3c_gpio_getcfg(unsigned int pin)
 }
 EXPORT_SYMBOL(s3c_gpio_getcfg);
 
-
 int s3c_gpio_setpull(unsigned int pin, s3c_gpio_pull_t pull)
 {
 	struct s3c_gpio_chip *chip = s3c_gpiolib_getchip(pin);

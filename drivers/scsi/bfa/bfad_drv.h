@@ -287,7 +287,6 @@ do {                                            \
 	(*x) = (*x) >> 1;			\
 } while (0)
 
-
 #define BFA_LOG(level, bfad, mask, fmt, arg...)				\
 do {									\
 	if (((mask) == 4) || (level[1] <= '4'))				\

@@ -1,4 +1,3 @@
-
 /*
  * Radio tuning for RTL8225 on RTL8180
  *

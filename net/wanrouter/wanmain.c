@@ -91,8 +91,6 @@ static void lock_adapter_irq(spinlock_t *lock, unsigned long *smp_flags)
 static void unlock_adapter_irq(spinlock_t *lock, unsigned long *smp_flags)
 	__releases(lock);
 
-
-
 /*
  *	Global Data
  */
@@ -160,7 +158,6 @@ module_exit(wanrouter_cleanup);
  * 	Context:	process
  */
 
-
 int register_wan_device(struct wan_device *wandev)
 {
 	int err, namelen;
@@ -216,7 +213,6 @@ int register_wan_device(struct wan_device *wandev)
  *	Context:	process
  */
 
-
 int unregister_wan_device(char *name)
 {
 	struct wan_device *wandev, *prev;
@@ -260,7 +256,6 @@ int unregister_wan_device(char *name)
  *	1. This function may be called on interrupt context.
  */
 
-
 int wanrouter_encapsulate(struct sk_buff *skb, struct net_device *dev,
 			  unsigned short type)
 {
@@ -293,7 +288,6 @@ int wanrouter_encapsulate(struct sk_buff *skb, struct net_device *dev,
 	return hdr_len;
 }
 
-
 /*
  *	Decapsulate packet.
  *
@@ -303,7 +297,6 @@ int wanrouter_encapsulate(struct sk_buff *skb, struct net_device *dev,
  *	Notes:
  *	1. This function may be called on interrupt context.
  */
-
 
 __be16 wanrouter_type_trans(struct sk_buff *skb, struct net_device *dev)
 {
@@ -602,36 +595,26 @@ static int wanrouter_device_new_if(struct wan_device *wandev,
 		 * successfully, add it to the interface list.
 		 */
 
-		if (dev->name == NULL) {
-			err = -EINVAL;
-		} else {
+		err = register_netdev(dev);
+		if (!err) {
+			struct net_device *slave = NULL;
+			unsigned long smp_flags=0;
 
-			#ifdef WANDEBUG
-			printk(KERN_INFO "%s: registering interface %s...\n",
-				wanrouter_modname, dev->name);
-			#endif
+			lock_adapter_irq(&wandev->lock, &smp_flags);
 
-			err = register_netdev(dev);
-			if (!err) {
-				struct net_device *slave = NULL;
-				unsigned long smp_flags=0;
-
-				lock_adapter_irq(&wandev->lock, &smp_flags);
-
-				if (wandev->dev == NULL) {
-					wandev->dev = dev;
-				} else {
-					for (slave=wandev->dev;
-					     DEV_TO_SLAVE(slave);
-					     slave = DEV_TO_SLAVE(slave))
-						DEV_TO_SLAVE(slave) = dev;
-				}
-				++wandev->ndev;
-
-				unlock_adapter_irq(&wandev->lock, &smp_flags);
-				err = 0;	/* done !!! */
-				goto out;
+			if (wandev->dev == NULL) {
+				wandev->dev = dev;
+			} else {
+				for (slave=wandev->dev;
+				     DEV_TO_SLAVE(slave);
+				     slave = DEV_TO_SLAVE(slave))
+					DEV_TO_SLAVE(slave) = dev;
 			}
+			++wandev->ndev;
+
+			unlock_adapter_irq(&wandev->lock, &smp_flags);
+			err = 0;	/* done !!! */
+			goto out;
 		}
 		if (wandev->del_if)
 			wandev->del_if(wandev, dev);
@@ -642,7 +625,6 @@ out:
 	kfree(cnf);
 	return err;
 }
-
 
 /*
  *	Delete WAN logical channel.
@@ -769,7 +751,6 @@ static void lock_adapter_irq(spinlock_t *lock, unsigned long *smp_flags)
 {
 	spin_lock_irqsave(lock, *smp_flags);
 }
-
 
 static void unlock_adapter_irq(spinlock_t *lock, unsigned long *smp_flags)
 	__releases(lock)

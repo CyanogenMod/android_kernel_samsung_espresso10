@@ -38,13 +38,11 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("SGI (prarit@sgi.com, dickie@sgi.com, habeck@sgi.com)");
 MODULE_DESCRIPTION("SGI Altix Hot Plug PCI Controller Driver");
 
-
 /* SAL call error codes. Keep in sync with prom header io/include/pcibr.h */
 #define PCI_SLOT_ALREADY_UP		2	/* slot already up */
 #define PCI_SLOT_ALREADY_DOWN		3	/* slot already down */
 #define PCI_L1_ERR			7	/* L1 console command error */
 #define PCI_EMPTY_33MHZ			15	/* empty 33 MHz bus */
-
 
 #define PCIIO_ASIC_TYPE_TIOCA		4
 #define PCI_L1_QSIZE			128	/* our L1 message buffer size */
@@ -242,7 +240,6 @@ static int sn_slot_enable(struct hotplug_slot *bss_hotplug_slot,
 	 * PCI infrastructure.
 	 */
 	rc = sal_pcibr_slot_enable(pcibus_info, device_num, &resp, ssdt);
-
 
 	if (rc == PCI_SLOT_ALREADY_UP) {
 		dev_dbg(&slot->pci_bus->self->dev, "is already active\n");

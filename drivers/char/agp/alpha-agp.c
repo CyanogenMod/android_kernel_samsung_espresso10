@@ -44,7 +44,6 @@ static const struct vm_operations_struct alpha_core_agp_vm_ops = {
 	.fault = alpha_core_agp_vm_fault,
 };
 
-
 static int alpha_core_agp_fetch_size(void)
 {
 	return alpha_core_agp_sizes[0].size;

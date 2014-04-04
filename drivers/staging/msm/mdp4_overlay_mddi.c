@@ -101,7 +101,6 @@ void mdp4_overlay_update_lcd(struct msm_fb_data_type *mfd)
 		pipe = mddi_pipe;
 	}
 
-
 	src = (uint8 *) iBuf->buf;
 
 #ifdef WHOLESCREEN

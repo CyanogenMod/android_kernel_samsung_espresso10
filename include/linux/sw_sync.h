@@ -54,5 +54,4 @@ struct sw_sync_create_fence_data {
 		struct sw_sync_create_fence_data)
 #define SW_SYNC_IOC_INC			_IOW(SW_SYNC_IOC_MAGIC, 1, __u32)
 
-
 #endif /* _LINUX_SW_SYNC_H */

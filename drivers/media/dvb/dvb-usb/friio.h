@@ -88,7 +88,6 @@ extern int dvb_usb_friio_debug;
 #define PLL_STATUS_TESTMODE   0x07 /* digital output level (5 level) */
   /* 0.15Vcc step   0x00: < 0.15Vcc, ..., 0x04: >= 0.6Vcc (<= 1Vcc) */
 
-
 struct jdvbt90502_config {
 	u8 demod_address; /* i2c addr for demodulator IC */
 	u8 pll_address;   /* PLL addr on the secondary i2c*/

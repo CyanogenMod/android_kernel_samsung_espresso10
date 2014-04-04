@@ -24,7 +24,6 @@
 #include <linux/notifier.h>
 #include <asm/atomic.h>
 
-
 /*
  *	Tunable parameters first
  */
@@ -426,7 +425,6 @@ struct i2o_sys_tbl
 #define TEN_WORD_MSG_SIZE	0x000A0000
 #define I2O_MESSAGE_SIZE(x)	((x)<<16)
 
-
 /* Special TID Assignments */
 
 #define ADAPTER_TID		0
@@ -439,7 +437,6 @@ struct i2o_sys_tbl
 
 #define I2O_POST_WAIT_OK	0
 #define I2O_POST_WAIT_TIMEOUT	-ETIMEDOUT
-
 
 #endif /* __KERNEL__ */
 

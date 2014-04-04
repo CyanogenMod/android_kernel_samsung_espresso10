@@ -4,7 +4,6 @@
 u8 r8712_fw_cmd(struct _adapter *pAdapter, u32 cmd);
 void r8712_fw_cmd_data(struct _adapter *pAdapter, u32 *value, u8 flag);
 
-
 enum rtl8712_h2c_cmd {
 	GEN_CMD_CODE(_Read_MACREG),	/*0*/
 	GEN_CMD_CODE(_Write_MACREG),
@@ -74,7 +73,6 @@ enum rtl8712_h2c_cmd {
 	GEN_CMD_CODE(_SetMacAddress), /*58*/
 	MAX_H2CCMD
 };
-
 
 #define _GetBBReg_CMD_		_Read_BBREG_CMD_
 #define _SetBBReg_CMD_		_Write_BBREG_CMD_

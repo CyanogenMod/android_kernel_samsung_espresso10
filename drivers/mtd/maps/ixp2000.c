@@ -107,7 +107,6 @@ static void ixp2000_flash_copy_to(struct map_info *map, unsigned long to,
 	}
 }
 
-
 static int ixp2000_flash_remove(struct platform_device *dev)
 {
 	struct flash_platform_data *plat = dev->dev.platform_data;
@@ -137,7 +136,6 @@ static int ixp2000_flash_remove(struct platform_device *dev)
 
 	return 0;
 }
-
 
 static int ixp2000_flash_probe(struct platform_device *dev)
 {

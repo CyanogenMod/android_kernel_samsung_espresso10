@@ -134,4 +134,3 @@ int bcm_mhz2channel(uint freq, uint start_factor)
 	return ch;
 }
 EXPORT_SYMBOL(bcm_mhz2channel);
-

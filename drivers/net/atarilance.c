@@ -185,7 +185,6 @@ static unsigned char OldRieblDefHwaddr[6] = {
 	0x00, 0x00, 0x36, 0x04, 0x00, 0x00
 };
 
-
 /* I/O registers of the Lance chip */
 
 struct lance_ioreg {
@@ -263,7 +262,6 @@ static struct lance_addr {
 
 #define	N_LANCE_ADDR	ARRAY_SIZE(lance_addr_list)
 
-
 /* Definitions for the Lance */
 
 /* tx_head flags */
@@ -331,8 +329,6 @@ static struct lance_addr {
 #define CSR3_ACON	0x0002		/* ALE control */
 #define CSR3_BSWP	0x0004		/* byte swap (1=big endian) */
 
-
-
 /***************************** Prototypes *****************************/
 
 static unsigned long lance_probe1( struct net_device *dev, struct lance_addr
@@ -349,10 +345,6 @@ static void lance_tx_timeout (struct net_device *dev);
 
 /************************* End of Prototypes **************************/
 
-
-
-
-
 static void *slow_memcpy( void *dst, const void *src, size_t len )
 
 {	char *cto = dst;
@@ -364,7 +356,6 @@ static void *slow_memcpy( void *dst, const void *src, size_t len )
 	}
 	return dst;
 }
-
 
 struct net_device * __init atarilance_probe(int unit)
 {
@@ -399,7 +390,6 @@ struct net_device * __init atarilance_probe(int unit)
 	free_netdev(dev);
 	return ERR_PTR(err);
 }
-
 
 /* Derived from hwreg_present() in atari/config.c: */
 
@@ -640,7 +630,6 @@ static unsigned long __init lance_probe1( struct net_device *dev,
 	return 1;
 }
 
-
 static int lance_open( struct net_device *dev )
 {
 	struct lance_private *lp = netdev_priv(dev);
@@ -678,7 +667,6 @@ static int lance_open( struct net_device *dev )
 
 	return 0;
 }
-
 
 /* Initialize the LANCE Rx and Tx rings. */
 
@@ -726,9 +714,7 @@ static void lance_init_ring( struct net_device *dev )
 	}
 }
 
-
 /* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
-
 
 static void lance_tx_timeout (struct net_device *dev)
 {
@@ -784,7 +770,6 @@ static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev )
 	DPRINTK( 2, ( "%s: lance_start_xmit() called, csr0 %4.4x.\n",
 				  dev->name, DREG ));
 
-
 	/* The old LANCE chips doesn't automatically pad buffers to min. size. */
 	len = skb->len;
 	if (len < ETH_ZLEN)
@@ -820,7 +805,6 @@ static int lance_start_xmit( struct sk_buff *skb, struct net_device *dev )
 	/* Caution: the write order is important here, set the "ownership" bits
 	 * last.
 	 */
-
 
 	head->length = -len;
 	head->misc = 0;
@@ -960,7 +944,6 @@ static irqreturn_t lance_interrupt( int irq, void *dev_id )
 	return IRQ_RETVAL(handled);
 }
 
-
 static int lance_rx( struct net_device *dev )
 {
 	struct lance_private *lp = netdev_priv(dev);
@@ -1049,7 +1032,6 @@ static int lance_rx( struct net_device *dev )
 	return 0;
 }
 
-
 static int lance_close( struct net_device *dev )
 {
 	struct lance_private *lp = netdev_priv(dev);
@@ -1068,7 +1050,6 @@ static int lance_close( struct net_device *dev )
 
 	return 0;
 }
-
 
 /* Set or clear the multicast filter for this adaptor.
    num_addrs == -1		Promiscuous mode, receive all packets
@@ -1116,7 +1097,6 @@ static void set_multicast_list( struct net_device *dev )
 	REGA( CSR0 ) = CSR0_IDON | CSR0_INEA | CSR0_STRT;
 }
 
-
 /* This is needed for old RieblCards and possible for new RieblCards */
 
 static int lance_set_mac_address( struct net_device *dev, void *addr )
@@ -1145,7 +1125,6 @@ static int lance_set_mac_address( struct net_device *dev, void *addr )
 	return 0;
 }
 
-
 #ifdef MODULE
 static struct net_device *atarilance_dev;
 
@@ -1166,7 +1145,6 @@ static void __exit atarilance_module_exit(void)
 module_init(atarilance_module_init);
 module_exit(atarilance_module_exit);
 #endif /* MODULE */
-
 
 /*
  * Local variables:

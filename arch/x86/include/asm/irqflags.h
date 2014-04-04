@@ -146,7 +146,6 @@ static inline unsigned long arch_local_irq_save(void)
 #define GET_CR0_INTO_EAX		movl %cr0, %eax
 #endif
 
-
 #endif /* __ASSEMBLY__ */
 #endif /* CONFIG_PARAVIRT */
 

@@ -92,7 +92,6 @@ struct af9013_config {
 	u8 gpio[4];
 };
 
-
 #if defined(CONFIG_DVB_AF9013) || \
 	(defined(CONFIG_DVB_AF9013_MODULE) && defined(MODULE))
 extern struct dvb_frontend *af9013_attach(const struct af9013_config *config,

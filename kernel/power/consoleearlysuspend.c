@@ -75,4 +75,3 @@ static void  __exit console_early_suspend_exit(void)
 
 module_init(console_early_suspend_init);
 module_exit(console_early_suspend_exit);
-

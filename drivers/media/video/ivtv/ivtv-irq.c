@@ -38,7 +38,6 @@ static const int ivtv_stream_map[] = {
 	IVTV_ENC_STREAM_TYPE_VBI,
 };
 
-
 static void ivtv_pio_work_handler(struct ivtv *itv)
 {
 	struct ivtv_stream *s = &itv->streams[itv->cur_pio_stream];

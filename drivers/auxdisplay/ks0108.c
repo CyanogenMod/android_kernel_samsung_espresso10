@@ -175,4 +175,3 @@ module_exit(ks0108_exit);
 MODULE_LICENSE("GPL v2");
 MODULE_AUTHOR("Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>");
 MODULE_DESCRIPTION("ks0108 LCD Controller driver");
-

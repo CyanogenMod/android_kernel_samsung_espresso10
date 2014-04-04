@@ -29,7 +29,6 @@
  *  $Id: aic7xxx_proc.c,v 4.1 1997/06/97 08:23:42 deang Exp $
  *-M*************************************************************************/
 
-
 #define	BLS	(&aic7xxx_buffer[size])
 #define HDRB \
 "               0 - 4K   4 - 16K   16 - 64K  64 - 256K  256K - 1M        1M+"
@@ -55,7 +54,6 @@ proc_debug(const char *fmt, ...)
 static int aic7xxx_buffer_size = 0;
 static char *aic7xxx_buffer = NULL;
 
-
 /*+F*************************************************************************
  * Function:
  *   aic7xxx_set_info
@@ -70,7 +68,6 @@ aic7xxx_set_info(char *buffer, int length, struct Scsi_Host *HBAptr)
   return (-ENOSYS);  /* Currently this is a no-op */
 }
 
-
 /*+F*************************************************************************
  * Function:
  *   aic7xxx_proc_info
@@ -79,7 +76,7 @@ aic7xxx_set_info(char *buffer, int length, struct Scsi_Host *HBAptr)
  *   Return information to handle /proc support for the driver.
  *-F*************************************************************************/
 int
-aic7xxx_proc_info ( struct Scsi_Host *HBAptr, char *buffer, char **start, off_t offset, int length, 
+aic7xxx_proc_info ( struct Scsi_Host *HBAptr, char *buffer, char **start, off_t offset, int length,
                     int inout)
 {
   struct aic7xxx_host *p;
@@ -105,7 +102,7 @@ aic7xxx_proc_info ( struct Scsi_Host *HBAptr, char *buffer, char **start, off_t 
     }
   }
 
-  if (inout == TRUE) /* Has data been written to the file? */ 
+  if (inout == TRUE) /* Has data been written to the file? */
   {
     return (aic7xxx_set_info(buffer, length, HBAptr));
   }
@@ -129,7 +126,7 @@ aic7xxx_proc_info ( struct Scsi_Host *HBAptr, char *buffer, char **start, off_t 
     size += 512;
   if (aic7xxx_buffer_size != size)
   {
-    if (aic7xxx_buffer != NULL) 
+    if (aic7xxx_buffer != NULL)
     {
       kfree(aic7xxx_buffer);
       aic7xxx_buffer_size = 0;

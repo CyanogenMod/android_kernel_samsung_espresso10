@@ -1,4 +1,3 @@
-
 menu "Motion Sensors Support"
 
 choice
@@ -9,16 +8,13 @@ choice
 config MPU_NONE
     bool "None"
 
-
 config MPU_SENSORS_MPU3050_V333
     tristate "MPU3050"
     depends on I2C
 
-
 config MPU_SENSORS_MPU6000_V333
     tristate "MPU6000"
     depends on I2C
-
 
 endchoice
 
@@ -159,4 +155,3 @@ config MPU_SENSORS_DEBUG_V333
     depends on MPU_SENSORS_MPU3050_V333 || MPU_SENSORS_MPU6000_V333 || MPU_SENSORS_TIMERIRQ_V333
 
 endmenu
-

@@ -753,7 +753,6 @@ static int btrfs_set_super(struct super_block *s, void *data)
 	return set_anon_super(s, data);
 }
 
-
 /*
  * Find a superblock for the given device / mount point.
  *

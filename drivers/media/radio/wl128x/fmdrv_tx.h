@@ -34,4 +34,3 @@ u32 fm_tx_set_preemph_filter(struct fmdev *, u32);
 u32 fm_tx_get_tune_cap_val(struct fmdev *);
 
 #endif
-

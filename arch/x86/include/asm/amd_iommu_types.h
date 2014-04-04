@@ -75,7 +75,6 @@
 #define MMIO_EVT_TAIL_OFFSET	0x2018
 #define MMIO_STATUS_OFFSET	0x2020
 
-
 /* Extended Feature Bits */
 #define FEATURE_PREFETCH	(1ULL<<0)
 #define FEATURE_PPR		(1ULL<<1)

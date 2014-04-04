@@ -31,7 +31,6 @@
 #define CR_VALUE_OFFSET				0x08
 #define SCU_POWER_SECURE_INDEX			0x108
 
-
 /*
  * Macro to call PPA svc when MMU is OFF
  * Caller must setup r0 and r3 before calling this macro
@@ -66,7 +65,6 @@
  */
 POR_params:
 .word 1, 0
-
 
 ppa_zero_params:
 	.word		0x0
@@ -222,7 +220,6 @@ skip_scu_gp_set:
 	bicne	r0, r0, #(1 << 6)
 	mcrne	p15, 0, r0, c1, c0, 1
 	isb
-
 
 #ifdef CONFIG_CACHE_L2X0
 	/*
@@ -504,7 +501,7 @@ check_por:
 	ldr	r0, =OMAP44XX_SAR_RAM_BASE  @ Check DEVICE type
 	ldr	r1, [r0, #OMAP_TYPE_OFFSET]
 	cmp	r1, #0x1                   @ Check for HS device
-	bne	check_por_gp	
+	bne	check_por_gp
 	ldr	r0, =PPA_SERVICE_PL310_POR @ Setup PPA HAL call
 	ldr	r1, =OMAP44XX_SAR_RAM_BASE
 	ldr	r4, [r1, #L2X0_PREFETCHCTRL_OFFSET]

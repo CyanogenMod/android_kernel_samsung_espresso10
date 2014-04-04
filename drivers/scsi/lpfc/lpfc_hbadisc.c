@@ -1063,7 +1063,6 @@ out:
 	return;
 }
 
-
 static void
 lpfc_mbx_cmpl_local_config_link(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
 {
@@ -2676,7 +2675,6 @@ lpfc_mbx_cmpl_read_sparam(struct lpfc_hba *phba, LPFC_MBOXQ_t *pmb)
 	struct lpfc_dmabuf *mp = (struct lpfc_dmabuf *) pmb->context1;
 	struct lpfc_vport  *vport = pmb->vport;
 
-
 	/* Check for error */
 	if (mb->mbxStatus) {
 		/* READ_SPARAM mbox error <mbxStatus> state <hba_state> */
@@ -2931,7 +2929,6 @@ lpfc_mbx_issue_link_down(struct lpfc_hba *phba)
 	lpfc_unregister_unused_fcf(phba);
 	/* turn on Link Attention interrupts - no CLEAR_LA needed */
 }
-
 
 /*
  * This routine handles processing a READ_TOPOLOGY mailbox
@@ -3321,7 +3318,6 @@ lpfc_create_static_vport(struct lpfc_hba *phba)
 
 	} while (byte_count &&
 		offset < sizeof(struct static_vport_info));
-
 
 	if ((le32_to_cpu(vport_info->signature) != VPORT_INFO_SIG) ||
 		((le32_to_cpu(vport_info->rev) & VPORT_INFO_REV_MASK)
@@ -3928,7 +3924,6 @@ lpfc_set_disctmo(struct lpfc_vport *vport)
 		 */
 		tmo = ((phba->fc_ratov * 3) + 3);
 	}
-
 
 	if (!timer_pending(&vport->fc_disctmo)) {
 		lpfc_debugfs_disc_trc(vport, LPFC_DISC_TRC_ELS_CMD,

@@ -11,7 +11,6 @@
 
 #include <media/rc-map.h>
 
-
 static struct rc_map_table lme2510_rc[] = {
 	/* Type 1 - 26 buttons */
 	{ 0x10ed45, KEY_0 },

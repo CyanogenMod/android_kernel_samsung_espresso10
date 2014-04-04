@@ -459,7 +459,6 @@ static int lis331dlh_init(void *mlsl_handle,
 			  FALSE, 80);
 	lis331dlh_set_ths(mlsl_handle, pdata, &private_data->resume, FALSE, 40);
 
-
 	lis331dlh_set_dur(mlsl_handle, pdata, &private_data->suspend,
 			  FALSE, 1000);
 	lis331dlh_set_dur(mlsl_handle, pdata, &private_data->resume,

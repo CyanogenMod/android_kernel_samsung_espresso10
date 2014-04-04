@@ -203,7 +203,6 @@ static int sh_mobile_ceu_soft_reset(struct sh_mobile_ceu_dev *pcdev)
 		udelay(1);
 	}
 
-
 	if (2 != success) {
 		dev_warn(&icd->dev, "soft reset time out\n");
 		return -EIO;
@@ -253,7 +252,6 @@ static int sh_mobile_ceu_videobuf_setup(struct vb2_queue *vq,
 #define CEU_CEIER_VBP   (1 << 20) /* vbp error */
 #define CEU_CAPCR_CTNCP (1 << 16) /* continuous capture mode (if set) */
 #define CEU_CEIER_MASK (CEU_CEIER_CPEIE | CEU_CEIER_VBP)
-
 
 /*
  * return value doesn't reflex the success/failure to queue the new buffer,

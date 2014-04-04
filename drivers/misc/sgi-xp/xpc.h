@@ -185,7 +185,6 @@ struct xpc_vars_part_sn2 {
 				 (XPC_RP_MACH_NASIDS(_rp) + \
 				  xpc_nasid_mask_nlongs))
 
-
 /*
  * The following structure describes the partition's heartbeat info which
  * will be periodically read by other partitions to determine whether this
@@ -323,7 +322,6 @@ struct xpc_openclose_args {
 #define XPC_OPENCLOSE_ARGS_SIZE \
 	      L1_CACHE_ALIGN(sizeof(struct xpc_openclose_args) * \
 	      XPC_MAX_NCHANNELS)
-
 
 /*
  * Structures to define a fifo singly-linked list.

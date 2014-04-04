@@ -80,9 +80,7 @@ s_vCheckKeyTableValid (PSKeyManagement pTable, unsigned long dwIoBase)
     }
 }
 
-
 /*---------------------  Export Functions  --------------------------*/
-
 
 /*
  * Description: Init Key management table
@@ -115,7 +113,6 @@ void KeyvInitTable (PSKeyManagement pTable, unsigned long dwIoBase)
         MACvDisableKeyEntry(dwIoBase, i);
     }
 }
-
 
 /*
  * Description: Get Key from table
@@ -170,7 +167,6 @@ bool KeybGetKey (
     }
     return (false);
 }
-
 
 /*
  * Description: Set Key to table
@@ -347,7 +343,6 @@ bool KeybSetKey (
     return (false);
 }
 
-
 /*
  * Description: Remove Key from table
  *
@@ -420,7 +415,6 @@ bool KeybRemoveKey (
     }
     return (false);
 }
-
 
 /*
  * Description: Remove Key from table
@@ -543,7 +537,6 @@ bool KeybGetTransmitKey (
                     }
                     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"\n");
 
-
                     return (true);
                 }
                 else {
@@ -583,7 +576,6 @@ bool KeybGetTransmitKey (
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"\n");
     return (false);
 }
-
 
 /*
  * Description: Check Pairewise Key
@@ -648,7 +640,6 @@ bool KeybSetDefaultKey (
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Enter KeybSetDefaultKey: %1x, %d \n", (int)dwKeyIndex, (int)uKeyLength);
 
-
     if ((dwKeyIndex & PAIRWISE_KEY) != 0) {                  // Pairwise key
         return (false);
     } else if ((dwKeyIndex & 0x000000FF) >= MAX_GROUP_KEY) {
@@ -704,7 +695,6 @@ bool KeybSetDefaultKey (
     pKey->dwTSC47_16 = 0;
     pKey->wTSC15_0 = 0;
 
-
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"KeybSetKey(R): \n");
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"pKey->bKeyValid: %d\n", pKey->bKeyValid);
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"pKey->uKeyLength: %d\n", (int)pKey->uKeyLength);
@@ -720,7 +710,6 @@ bool KeybSetDefaultKey (
 
     return (true);
 }
-
 
 /*
  * Description: Set Key to table
@@ -755,7 +744,6 @@ bool KeybSetAllGroupKey (
     unsigned int uKeyIdx;
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Enter KeybSetAllGroupKey: %lX\n", dwKeyIndex);
-
 
     if ((dwKeyIndex & PAIRWISE_KEY) != 0) {                  // Pairwise key
         return (false);

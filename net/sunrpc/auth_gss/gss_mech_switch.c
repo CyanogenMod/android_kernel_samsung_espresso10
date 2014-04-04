@@ -357,7 +357,6 @@ gss_unwrap(struct gss_ctx	*ctx_id,
 		->gss_unwrap(ctx_id, offset, buf);
 }
 
-
 /* gss_delete_sec_context: free all resources associated with context_handle.
  * Note this differs from the RFC 2744-specified prototype in that we don't
  * bother returning an output token, since it would never be used anyway. */

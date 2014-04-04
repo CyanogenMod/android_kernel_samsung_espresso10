@@ -668,7 +668,6 @@ static void interrupt_pci1710_every_sample(void *d)
 		if (s->async->cur_chan >= devpriv->ai_n_chan)
 			s->async->cur_chan = 0;
 
-
 		if (s->async->cur_chan == 0) {	/*  one scan done */
 			devpriv->ai_act_scan++;
 			DPRINTK
@@ -1123,7 +1122,6 @@ static int pci171x_ai_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
 		devpriv->ai_scans = cmd->stop_arg;
 	else
 		devpriv->ai_scans = 0;
-
 
 	if (cmd->scan_begin_src == TRIG_FOLLOW) {	/*  mode 1, 2, 3 */
 		if (cmd->convert_src == TRIG_TIMER) {	/*  mode 1 and 2 */

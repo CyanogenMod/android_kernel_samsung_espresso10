@@ -747,7 +747,6 @@ static __devinit int max8998_pmic_probe(struct platform_device *pdev)
 		gpio_direction_output(pdata->buck1_set1,
 				      max8998->buck1_idx & 0x1);
 
-
 		gpio_request(pdata->buck1_set2, "MAX8998 BUCK1_SET2");
 		gpio_direction_output(pdata->buck1_set2,
 				      (max8998->buck1_idx >> 1) & 0x1);
@@ -855,7 +854,6 @@ static __devinit int max8998_pmic_probe(struct platform_device *pdev)
 			goto err;
 		}
 	}
-
 
 	return 0;
 err:

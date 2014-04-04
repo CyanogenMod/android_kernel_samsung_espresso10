@@ -85,7 +85,7 @@ typedef struct _i2ChanStr
 							// initialized, really exists (or is a missing
 							// channel, e.g. channel 9 on an 8-port box.)
 
-	i2eBordStrPtr  pMyBord; // Back-pointer to this channel's board structure 
+	i2eBordStrPtr  pMyBord; // Back-pointer to this channel's board structure
 
 	int      wopen;			// waiting fer carrier
 
@@ -180,7 +180,7 @@ typedef struct _i2ChanStr
 
 	// The state of outcoming data-set signals (as far as we can tell!)
 	//
-	USHORT   dataSetOut;     // Bit-mapped according to below. 
+	USHORT   dataSetOut;     // Bit-mapped according to below.
 
 	// Most recent hot-key identifier detected
 	//
@@ -213,7 +213,7 @@ typedef struct _i2ChanStr
 	void (*trace)(unsigned short,unsigned char,unsigned char,unsigned long,...);
 
 	/*
-	 * Kernel counters for the 4 input interrupts 
+	 * Kernel counters for the 4 input interrupts
 	 */
 	struct async_icount icount;
 
@@ -275,16 +275,16 @@ typedef struct _i2ChanStr
 // i2GetStatus() can optionally clear these bits
 //
 #define I2_BRK    0x10  // A break was detected
-#define I2_PAR    0x20  // A parity error was received 
+#define I2_PAR    0x20  // A parity error was received
 #define I2_FRA    0x40  // A framing error was received
-#define I2_OVR    0x80  // An overrun error was received 
+#define I2_OVR    0x80  // An overrun error was received
 
 // i2GetStatus() automatically clears these bits */
 //
 #define I2_DDCD   0x100 // DCD changed from its  former value
-#define I2_DCTS   0x200 // CTS changed from its former value 
-#define I2_DDSR   0x400 // DSR changed from its former value 
-#define I2_DRI    0x800 // RI changed from its former value 
+#define I2_DCTS   0x200 // CTS changed from its former value
+#define I2_DDSR   0x400 // DSR changed from its former value
+#define I2_DRI    0x800 // RI changed from its former value
 
 // hotKeyIn
 //

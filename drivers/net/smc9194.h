@@ -31,11 +31,9 @@ typedef unsigned char			byte;
 typedef unsigned short			word;
 typedef unsigned long int 		dword;
 
-
 /* Because of bank switching, the SMC91xxx uses only 16 I/O ports */
 
 #define SMC_IO_EXTENT	16
-
 
 /*---------------------------------------------------------------
  .
@@ -72,7 +70,6 @@ typedef unsigned long int 		dword;
 /* the normal settings for the TCR register : */
 /* QUESTION: do I want to enable padding of short packets ? */
 #define	TCR_NORMAL  	TCR_ENABLE
-
 
 #define EPH_STATUS	2
 #define ES_LINK_OK	0x4000	/* is the link integrity ok ? */
@@ -152,7 +149,6 @@ typedef unsigned long int 		dword;
 #define	MULTICAST4	6
 #define	MGMT		8
 #define	REVISION	10 /* ( hi: chip id   low: rev # ) */
-
 
 /* this is NOT on SMC9192 */
 #define	ERCV		12
@@ -238,4 +234,3 @@ static const char * interfaces[ 2 ] = { "TP", "AUI" };
 #define SMC_INTERRUPT_MASK   (IM_EPH_INT | IM_RX_OVRN_INT | IM_RCV_INT)
 
 #endif  /* _SMC_9194_H_ */
-

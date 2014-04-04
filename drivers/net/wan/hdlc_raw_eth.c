@@ -42,14 +42,12 @@ static netdev_tx_t eth_tx(struct sk_buff *skb, struct net_device *dev)
 	return dev_to_hdlc(dev)->xmit(skb, dev);
 }
 
-
 static struct hdlc_proto proto = {
 	.type_trans	= eth_type_trans,
 	.xmit		= eth_tx,
 	.ioctl		= raw_eth_ioctl,
 	.module		= THIS_MODULE,
 };
-
 
 static int raw_eth_ioctl(struct net_device *dev, struct ifreq *ifr)
 {
@@ -109,20 +107,16 @@ static int raw_eth_ioctl(struct net_device *dev, struct ifreq *ifr)
 	return -EINVAL;
 }
 
-
 static int __init mod_init(void)
 {
 	register_hdlc_protocol(&proto);
 	return 0;
 }
 
-
-
 static void __exit mod_exit(void)
 {
 	unregister_hdlc_protocol(&proto);
 }
-
 
 module_init(mod_init);
 module_exit(mod_exit);

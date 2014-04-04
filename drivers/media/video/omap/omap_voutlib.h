@@ -31,4 +31,3 @@ extern void omap_vout_new_format(struct v4l2_pix_format *pix,
 		struct v4l2_framebuffer *fbuf, struct v4l2_rect *crop,
 		struct v4l2_window *win);
 #endif	/* #ifndef OMAP_VOUTLIB_H */
-

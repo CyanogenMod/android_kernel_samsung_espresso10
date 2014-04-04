@@ -190,7 +190,6 @@
 #define	TxUIE	0x40	/* Tx Underrun/EOM IE */
 #define	BRKIE	0x80	/* Break/Abort IE */
 
-
 /* Read Register 0 */
 #define	Rx_CH_AV	0x1	/* Rx Character Available */
 #define	ZCOUNT		0x2	/* Zero count */
@@ -242,13 +241,12 @@
 
 /* Read Register 15 (value of WR 15) */
 
-
 /*
  *	Interrupt handling functions for this SCC
  */
 
 struct z8530_channel;
- 
+
 struct z8530_irqhandler
 {
 	void (*rx)(struct z8530_channel *);
@@ -278,7 +276,7 @@ struct z8530_channel
 
 	u8		regs[32];	/* Register map for the chip */
 	u8		pendregs[32];	/* Pending register values */
-	
+
 	struct sk_buff 	*tx_skb;	/* Buffer being transmitted */
 	struct sk_buff  *tx_next_skb;	/* Next transmit buffer */
 	u8		*tx_ptr;	/* Byte pointer into the buffer */
@@ -286,33 +284,33 @@ struct z8530_channel
 	u8		*tx_dma_buf[2];	/* TX flip buffers for DMA */
 	u8		tx_dma_used;	/* Flip buffer usage toggler */
 	u16		txcount;	/* Count of bytes to transmit */
-	
+
 	void		(*rx_function)(struct z8530_channel *, struct sk_buff *);
-	
+
 	/*
 	 *	Sync DMA
 	 */
-	
+
 	u8		rxdma;		/* DMA channels */
-	u8		txdma;		
+	u8		txdma;
 	u8		rxdma_on;	/* DMA active if flag set */
 	u8		txdma_on;
 	u8		dma_num;	/* Buffer we are DMAing into */
 	u8		dma_ready;	/* Is the other buffer free */
 	u8		dma_tx;		/* TX is to use DMA */
 	u8		*rx_buf[2];	/* The flip buffers */
-	
+
 	/*
 	 *	System
 	 */
-	 
+
 	struct z8530_dev *dev;		/* Z85230 chip instance we are from */
 	unsigned long	ctrlio;		/* I/O ports */
 	unsigned long	dataio;
 
 	/*
 	 *	For PC we encode this way.
-	 */	
+	 */
 #define Z8530_PORT_SLEEP	0x80000000
 #define Z8530_PORT_OF(x)	((x)&0xFFFF)
 
@@ -342,7 +340,7 @@ struct z8530_channel
 	int			xmit_head;	/* Transmit ring */
 	int			xmit_tail;
 	int			xmit_cnt;
-	int			flags;	
+	int			flags;
 	int			timeout;
 	int			xmit_fifo_size;	/* Transmit FIFO info */
 
@@ -361,7 +359,6 @@ struct z8530_channel
 	int			baud_base;		/* Baud parameters */
 	int			custom_divisor;
 
-
 	unsigned char		tx_active; /* character is being xmitted */
 	unsigned char		tx_stopped; /* output is suspended */
 
@@ -378,20 +375,19 @@ struct z8530_dev
 	struct z8530_channel chanA;	/* SCC channel A */
 	struct z8530_channel chanB;	/* SCC channel B */
 	int type;
-#define Z8530	0	/* NMOS dinosaur */	
+#define Z8530	0	/* NMOS dinosaur */
 #define Z85C30	1	/* CMOS - better */
 #define Z85230	2	/* CMOS with real FIFO */
 	int irq;	/* Interrupt for the device */
-	int active;	/* Soft interrupt enable - the Mac doesn't 
+	int active;	/* Soft interrupt enable - the Mac doesn't
 			   always have a hard disable on its 8530s... */
 	spinlock_t lock;
 };
 
-
 /*
  *	Functions
  */
- 
+
 extern u8 z8530_dead_port[];
 extern u8 z8530_hdlc_kilostream_85230[];
 extern u8 z8530_hdlc_kilostream[];
@@ -410,11 +406,10 @@ extern netdev_tx_t z8530_queue_xmit(struct z8530_channel *c,
 					  struct sk_buff *skb);
 extern void z8530_null_rx(struct z8530_channel *c, struct sk_buff *skb);
 
-
 /*
  *	Standard interrupt vector sets
  */
- 
+
 extern struct z8530_irqhandler z8530_sync, z8530_async, z8530_nop;
 
 /*

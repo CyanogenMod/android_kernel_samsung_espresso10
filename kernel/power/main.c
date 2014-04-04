@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2003 Patrick Mochel
  * Copyright (c) 2003 Open Source Development Lab
- * 
+ *
  * This file is released under the GPLv2
  *
  */
@@ -12,7 +12,6 @@
 #include <linux/string.h>
 #include <linux/resume-trace.h>
 #include <linux/workqueue.h>
-
 
 #include <mach/cpufreq_limits.h>
 #ifdef CONFIG_DVFS_LIMIT
@@ -147,7 +146,7 @@ struct kobject *power_kobj;
  *	'standby' (Power-On Suspend), 'mem' (Suspend-to-RAM), and
  *	'disk' (Suspend-to-Disk).
  *
- *	store() accepts one of those strings, translates it into the 
+ *	store() accepts one of those strings, translates it into the
  *	proper enumerated value, and initiates a suspend transition.
  */
 static ssize_t state_show(struct kobject *kobj, struct kobj_attribute *attr,
@@ -355,9 +354,6 @@ static void cpufreq_min_limit(const char *buf, size_t count)
 		goto out;
 	}
 
-	pr_debug("%s: current max freq=%d req max freq=%d\n",
-		__func__, cpufreq_max_limit_val, cpufreq_min_limit_val);
-
 	if (cpufreq_min_locked)
 		omap_cpufreq_min_limit_free(DVFS_LOCK_ID_USER);
 
@@ -386,7 +382,6 @@ static ssize_t cpufreq_min_limit_store(struct kobject *kobj,
 	return n;
 }
 
-
 static void cpufreq_max_limit(const char *buf)
 {
 	int ret, temp;
@@ -412,9 +407,6 @@ static void cpufreq_max_limit(const char *buf)
 		}
 		goto out;
 	}
-
-	pr_debug("%s: current min freq=%d req max freq=%d\n",
-		__func__, cpufreq_min_limit_val, cpufreq_max_limit_val);
 
 	if (cpufreq_max_locked)
 		omap_cpufreq_max_limit_free(DVFS_LOCK_ID_USER);
@@ -482,7 +474,6 @@ power_attr(cpufreq_max_limit);
 power_attr(cpufreq_min_limit);
 power_attr(cpufreq_table);
 #endif
-
 
 static struct attribute * g[] = {
 	&state_attr.attr,

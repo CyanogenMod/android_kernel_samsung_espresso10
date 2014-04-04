@@ -46,4 +46,3 @@ MACHINE_START(AT91EB01, "Atmel AT91 EB01")
 	.init_early	= at91eb01_init_early,
 	.init_irq	= at91eb01_init_irq,
 MACHINE_END
-

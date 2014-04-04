@@ -1542,7 +1542,6 @@ static int fcoe_ctlr_flogi_retry(struct fcoe_ctlr *fip)
 	return error;
 }
 
-
 /**
  * fcoe_ctlr_flogi_send() - Handle sending of FIP FLOGI.
  * @fip: The FCoE controller that timed out

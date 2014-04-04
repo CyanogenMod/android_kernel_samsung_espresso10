@@ -85,7 +85,6 @@
  *#define DBGPRN_DMA_SETUP_WR
  */
 
-
 /*
  * For performance reasons, we handle storage endpoint transfers up to 4 KB
  * within the HAL itself.
@@ -117,7 +116,6 @@ static uint8_t pnand_16bit;
  */
 #define PROCESS_MULTIPLE_DRQ_IN_ISR (1)
 
-
 /*
  * ASTORIA PNAND IF COMMANDS, CASDO - READ, CASDI - WRITE
  */
@@ -136,7 +134,6 @@ typedef enum cy_as_hal_dma_type {
 	cy_as_hal_write,
 	cy_as_hal_none
 } cy_as_hal_dma_type;
-
 
 /*
  * SG list halpers defined in scaterlist.h
@@ -708,7 +705,6 @@ static void cy_as_hal_init_user_pads(user_pad_cfg_t *pad_cfg_tab)
 
 	cy_as_hal_print_message(KERN_INFO"pads configured\n");
 }
-
 
 /*
  * release gpios taken by the module
@@ -1386,7 +1382,6 @@ static inline void ast_p_nand_casdi_write(u8 reg_addr8, u16 data)
 	local_irq_restore(flags);
 }
 
-
 /*
  * read astoria register via pNAND interface
  */
@@ -1457,7 +1452,6 @@ static inline u16 ast_p_nand_casdo_read(u8 reg_addr8)
 
 	return data;
 }
-
 
 /*
  * This function must be defined to write a register within the WestBridge

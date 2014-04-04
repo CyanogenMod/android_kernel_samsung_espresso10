@@ -108,7 +108,6 @@ int usbhs_status_get_ctrl_stage(struct usbhs_irq_state *irq_state);
  */
 void usbhs_irq_callback_update(struct usbhs_priv *priv, struct usbhs_mod *mod);
 
-
 #define usbhs_mod_call(priv, func, param...)		\
 	({						\
 		struct usbhs_mod *mod;			\

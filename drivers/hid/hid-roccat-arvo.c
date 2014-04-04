@@ -236,7 +236,6 @@ static ssize_t arvo_sysfs_read_info(struct file *fp,
 			sizeof(struct arvo_info), ARVO_USB_COMMAND_INFO);
 }
 
-
 static struct device_attribute arvo_attributes[] = {
 	__ATTR(mode_key, 0660,
 			arvo_sysfs_show_mode_key, arvo_sysfs_set_mode_key),

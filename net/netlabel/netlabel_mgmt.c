@@ -702,7 +702,6 @@ version_failure:
 	return ret_val;
 }
 
-
 /*
  * NetLabel Generic NETLINK Command Definitions
  */

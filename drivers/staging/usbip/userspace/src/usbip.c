@@ -18,7 +18,6 @@
 
 static const char version[] = PACKAGE_STRING;
 
-
 /* /sys/devices/platform/vhci_hcd/usb6/6-1/6-1:1.1  -> 1 */
 static int get_interface_number(char *path)
 {
@@ -54,10 +53,8 @@ static int get_interface_number(char *path)
 	c++;
 	/* -> 1 */
 
-
 	return atoi(c);
 }
-
 
 static struct sysfs_device *open_usb_interface(struct usb_device *udev, int i)
 {
@@ -73,7 +70,6 @@ static struct sysfs_device *open_usb_interface(struct usb_device *udev, int i)
 
 	return suinf;
 }
-
 
 #define MAX_BUFF 100
 static int record_connection(char *host, char *port, char *busid, int rhport)
@@ -128,7 +124,6 @@ static int read_record(int rhport, char *host, char *port, char *busid)
 
 	return 0;
 }
-
 
 int usbip_vhci_imported_device_dump(struct usbip_imported_device *idev)
 {
@@ -186,9 +181,6 @@ int usbip_vhci_imported_device_dump(struct usbip_imported_device *idev)
 
 	return 0;
 }
-
-
-
 
 static int query_exported_devices(int sockfd)
 {
@@ -295,7 +287,6 @@ static int import_device(int sockfd, struct usb_device *udev)
 	return port;
 }
 
-
 static int query_import_device(int sockfd, char *busid)
 {
 	int ret;
@@ -305,7 +296,6 @@ static int query_import_device(int sockfd, char *busid)
 
 	bzero(&request, sizeof(request));
 	bzero(&reply, sizeof(reply));
-
 
 	/* send a request */
 	ret = usbip_send_op_common(sockfd, OP_REQ_IMPORT, 0);
@@ -324,7 +314,6 @@ static int query_import_device(int sockfd, char *busid)
 		return -1;
 	}
 
-
 	/* recieve a reply */
 	ret = usbip_recv_op_common(sockfd, &code);
 	if (ret < 0) {
@@ -340,13 +329,11 @@ static int query_import_device(int sockfd, char *busid)
 
 	PACK_OP_IMPORT_REPLY(0, &reply);
 
-
 	/* check the reply */
 	if (strncmp(reply.udev.busid, busid, SYSFS_BUS_ID_SIZE)) {
 		err("recv different busid %s", reply.udev.busid);
 		return -1;
 	}
-
 
 	/* import a device */
 	return import_device(sockfd, &reply.udev);
@@ -529,7 +516,6 @@ static int attach_devices_all(char *host)
 	close(sockfd);
 	return 0;
 }
-
 
 const char help_message[] = "\
 Usage: usbip [options]				\n\
@@ -715,7 +701,6 @@ int main(int argc, char *argv[])
 		default:
 			show_help();
 	}
-
 
 	usbip_names_free();
 

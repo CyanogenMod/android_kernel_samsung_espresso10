@@ -117,7 +117,6 @@ static void cmd640_set_piomode(struct ata_port *ap, struct ata_device *adev)
 	}
 }
 
-
 /**
  *	cmd640_qc_issue	-	command preparation hook
  *	@qc: Command to be issued

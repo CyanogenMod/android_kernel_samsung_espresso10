@@ -1627,7 +1627,6 @@ out:
 	return ret;
 }
 
-
 void core_dev_release_virtual_lun0(void)
 {
 	struct se_hba *hba = se_global->g_lun0_hba;

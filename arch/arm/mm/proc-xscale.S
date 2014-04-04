@@ -579,7 +579,7 @@ __xscale_setup:
 	 *  R
 	 * .RVI ZFRS BLDP WCAM
 	 * ..11 1.01 .... .101
-	 * 
+	 *
 	 */
 	.type	xscale_crval, #object
 xscale_crval:
@@ -876,7 +876,7 @@ __ixp2400_proc_info:
 	.long	v4wbi_tlb_fns
 	.long	xscale_mc_user_fns
 	.long	xscale_cache_fns
-	.size   __ixp2400_proc_info, . - __ixp2400_proc_info                
+	.size   __ixp2400_proc_info, . - __ixp2400_proc_info
 
 	.type	__ixp2800_proc_info, #object
 __ixp2800_proc_info:
@@ -899,7 +899,7 @@ __ixp2800_proc_info:
 	.long	v4wbi_tlb_fns
 	.long	xscale_mc_user_fns
 	.long	xscale_cache_fns
-	.size   __ixp2800_proc_info, . - __ixp2800_proc_info                
+	.size   __ixp2800_proc_info, . - __ixp2800_proc_info
 
 	.type	__ixp42x_proc_info, #object
 __ixp42x_proc_info:
@@ -922,7 +922,7 @@ __ixp42x_proc_info:
 	.long	v4wbi_tlb_fns
 	.long	xscale_mc_user_fns
 	.long	xscale_cache_fns
-	.size   __ixp42x_proc_info, . - __ixp42x_proc_info                
+	.size   __ixp42x_proc_info, . - __ixp42x_proc_info
 
 	.type   __ixp43x_proc_info, #object
 __ixp43x_proc_info:
@@ -1015,4 +1015,3 @@ __pxa270_proc_info:
 	.long	xscale_mc_user_fns
 	.long	xscale_cache_fns
 	.size	__pxa270_proc_info, . - __pxa270_proc_info
-

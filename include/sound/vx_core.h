@@ -50,7 +50,7 @@ struct vx_rmh {
 	u32	Stat[SIZE_MAX_STATUS];
 	u16	DspStat;	/* status type, RMP_SSIZE_XXX */
 };
-	
+
 typedef u64 pcx_time_t;
 
 #define VX_MAX_PIPES	16
@@ -212,7 +212,6 @@ struct vx_core {
 	const struct firmware *firmware[4]; /* loaded firmware data */
 };
 
-
 /*
  * constructor
  */
@@ -290,7 +289,6 @@ int snd_vx_check_reg_bit(struct vx_core *chip, int reg, int mask, int bit, int t
 #define vx_wait_isr_bit(chip,bit) vx_check_isr(chip, bit, bit, 200)
 #define vx_wait_for_rx_full(chip) vx_wait_isr_bit(chip, ISR_RX_FULL)
 
-
 /*
  * pseudo-DMA transfer
  */
@@ -306,14 +304,11 @@ static inline void vx_pseudo_dma_read(struct vx_core *chip, struct snd_pcm_runti
 	chip->ops->dma_read(chip, runtime, pipe, count);
 }
 
-
-
 /* error with hardware code,
  * the return value is -(VX_ERR_MASK | actual-hw-error-code)
  */
 #define VX_ERR_MASK	0x1000000
 #define vx_get_error(err)	(-(err) & ~VX_ERR_MASK)
-
 
 /*
  * pcm stuff
@@ -336,7 +331,6 @@ void vx_set_iec958_status(struct vx_core *chip, unsigned int bits);
 int vx_set_clock(struct vx_core *chip, unsigned int freq);
 void vx_set_internal_clock(struct vx_core *chip, unsigned int freq);
 int vx_change_frequency(struct vx_core *chip);
-
 
 /*
  * PM
@@ -441,7 +435,6 @@ enum {
 	RMH_SSIZE_MASK = 2,	/* status size given in bitmask */
 };
 
-
 /* bits for ICR register */
 #define ICR_HF1		0x10
 #define ICR_HF0		0x08
@@ -479,7 +472,6 @@ enum {
 
 #define XX_UER_CBITS_OFFSET_MASK	0x1f
 
-
 /* bits for audio_info */
 #define VX_AUDIO_INFO_REAL_TIME	(1<<0)	/* real-time processing available */
 #define VX_AUDIO_INFO_OFFLINE	(1<<1)	/* offline processing available */
@@ -512,7 +504,7 @@ enum {
 #define END_OF_BUFFER_EVENTS_PENDING    0x000400
 #define FATAL_DSP_ERROR                 0xff0000
 
-/* Stream Format Header Defines */ 
+/* Stream Format Header Defines */
 #define HEADER_FMT_BASE			0xFED00000
 #define HEADER_FMT_MONO			0x000000C0
 #define HEADER_FMT_INTEL		0x00008000
@@ -552,6 +544,5 @@ enum {
 #define VALID_AUDIO_IO_MUTE_LEVEL		0x04
 #define VALID_AUDIO_IO_MUTE_MONITORING_1	0x08
 #define VALID_AUDIO_IO_MUTE_MONITORING_2	0x10
-
 
 #endif /* __SOUND_VX_COMMON_H */

@@ -152,7 +152,6 @@ static struct qtouch_ts_platform_data atmel_mxt224_ts_platform_data = {
 	},
 };
 
-
 static struct i2c_board_info __initdata omap4xx_i2c_bus4_touch_info[] = {
 	{
 		I2C_BOARD_INFO(QTOUCH_TS_NAME, 0x4b),

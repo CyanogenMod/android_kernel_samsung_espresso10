@@ -393,7 +393,6 @@ int iwl_queue_space(const struct iwl_queue *q)
 	return s;
 }
 
-
 /**
  * iwl_queue_init - Initialize queue's high/low-water and read/write indexes
  */

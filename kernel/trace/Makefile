@@ -1,4 +1,3 @@
-
 # Do not instrument the tracer itself:
 
 ifdef CONFIG_FUNCTION_TRACER

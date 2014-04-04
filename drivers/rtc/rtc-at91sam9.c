@@ -24,7 +24,6 @@
 #include <mach/at91_rtt.h>
 #include <mach/cpu.h>
 
-
 /*
  * This driver uses two configurable hardware resources that live in the
  * AT91SAM9 backup power domain (intended to be powered at all times)
@@ -51,7 +50,6 @@
  * It's also the reset value for that field.
  */
 #define ALARM_DISABLED	((u32)~0)
-
 
 struct sam9_rtc {
 	void __iomem		*rtt;
@@ -498,7 +496,6 @@ static void __exit at91_rtc_exit(void)
 	platform_driver_unregister(&at91_rtc_driver);
 }
 module_exit(at91_rtc_exit);
-
 
 MODULE_AUTHOR("Michel Benoit");
 MODULE_DESCRIPTION("RTC driver for Atmel AT91SAM9x");

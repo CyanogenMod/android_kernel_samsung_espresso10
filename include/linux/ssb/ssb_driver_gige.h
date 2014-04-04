@@ -5,9 +5,7 @@
 #include <linux/pci.h>
 #include <linux/spinlock.h>
 
-
 #ifdef CONFIG_SSB_DRIVER_GIGE
-
 
 #define SSB_GIGE_PCIIO			0x0000 /* PCI I/O Registers (1024 bytes) */
 #define SSB_GIGE_RESERVED		0x0400 /* Reserved (1024 bytes) */
@@ -28,7 +26,6 @@
 
 /* Boardflags (low) */
 #define SSB_GIGE_BFL_ROBOSWITCH		0x0010
-
 
 #define SSB_GIGE_MEM_RES_NAME		"SSB Broadcom 47xx GigE memory"
 #define SSB_GIGE_IO_RES_NAME		"SSB Broadcom 47xx GigE I/O"
@@ -127,10 +124,8 @@ static inline void ssb_gige_exit(void)
 	BUG();
 }
 
-
 #else /* CONFIG_SSB_DRIVER_GIGE */
 /* Gigabit Ethernet driver disabled */
-
 
 static inline int ssb_gige_pcibios_plat_dev_init(struct ssb_device *sdev,
 						 struct pci_dev *pdev)

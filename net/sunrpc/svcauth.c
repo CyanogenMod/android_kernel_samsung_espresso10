@@ -20,7 +20,6 @@
 
 #define RPCDBG_FACILITY	RPCDBG_AUTH
 
-
 /*
  * Table of authenticators
  */

@@ -9,12 +9,10 @@
 #include <asm/byteorder.h>
 #include "usb.h"
 
-
 #define USB_MAXALTSETTING		128	/* Hard limit */
 #define USB_MAXENDPOINTS		30	/* Hard limit */
 
 #define USB_MAXCONFIG			8	/* Arbitrary limit */
-
 
 static inline const char *plural(int n)
 {
@@ -424,7 +422,8 @@ static int usb_parse_configuration(struct usb_device *dev, int cfgidx,
 
 	memcpy(&config->desc, buffer, USB_DT_CONFIG_SIZE);
 	if (config->desc.bDescriptorType != USB_DT_CONFIG ||
-	    config->desc.bLength < USB_DT_CONFIG_SIZE) {
+	    config->desc.bLength < USB_DT_CONFIG_SIZE ||
+	    config->desc.bLength > size) {
 		dev_err(ddev, "invalid descriptor for config index %d: "
 		    "type = 0x%X, length = %d\n", cfgidx,
 		    config->desc.bDescriptorType, config->desc.bLength);
@@ -643,7 +642,6 @@ void usb_destroy_configuration(struct usb_device *dev)
 	kfree(dev->config);
 	dev->config = NULL;
 }
-
 
 /*
  * Get the USB config descriptors, cache and parse'em

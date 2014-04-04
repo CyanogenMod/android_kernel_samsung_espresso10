@@ -11,7 +11,6 @@
 #ifndef __ASM_ARM_FPSTATE_H
 #define __ASM_ARM_FPSTATE_H
 
-
 #ifndef __ASSEMBLY__
 
 /*
@@ -19,7 +18,7 @@
  *  - FPEXC, FPSCR, FPINST and FPINST2.
  *  - 16 or 32 double precision data registers
  *  - an implementation-dependent word of state for FLDMX/FSTMX (pre-ARMv6)
- * 
+ *
  *  FPEXC will always be non-zero once the VFP has been used in this process.
  */
 

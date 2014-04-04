@@ -106,7 +106,6 @@ static irqreturn_t migor_ts_isr(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 static int migor_ts_open(struct input_dev *dev)
 {
 	struct migor_ts_priv *priv = input_get_drvdata(dev);

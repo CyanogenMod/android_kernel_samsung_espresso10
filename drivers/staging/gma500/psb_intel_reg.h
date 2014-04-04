@@ -127,7 +127,6 @@
 
 #define PFIT_AUTO_RATIOS	0x61238
 
-
 #define DPLL_A		0x06014
 #define DPLL_B		0x06018
 # define DPLL_VCO_ENABLE			(1 << 31)
@@ -266,7 +265,6 @@
 # define FP_M2_DIV_MASK				0x0000003f
 # define FP_M2_DIV_SHIFT			0
 
-
 #define PORT_HOTPLUG_EN		0x61110
 # define SDVOB_HOTPLUG_INT_EN			(1 << 26)
 # define SDVOC_HOTPLUG_INT_EN			(1 << 25)
@@ -378,7 +376,6 @@
 #define PIPECONF_INTERLACE_FIELD_0_ONLY		(7 << 21)
 #define PIPECONF_PLANE_OFF 	(1<<19)
 #define PIPECONF_CURSOR_OFF 	(1<<18)
-
 
 #define PIPEBCONF 0x71008
 #define PIPEBCONF_ENABLE	(1<<31)
@@ -616,7 +613,6 @@ struct dpst_guardband {
 #define SWF30			0x72414
 #define SWF31			0x72418
 #define SWF32			0x7241c
-
 
 /*
  * Palette registers
@@ -962,7 +958,7 @@ No status bits are changed.
 /*
  *	This command defines the page extent of the frame memory accessed by
  *	the host processor with the write_memory_continue and
- *	read_memory_continue command. 
+ *	read_memory_continue command.
  *	No status bits are changed.
  */
 #define write_mem_start              0x2c
@@ -1127,7 +1123,7 @@ No status bits are changed.
 						 */
 #define DBI_CB_TIME_OUT 0xFFFF
 
-#define GEN_FB_TIME_OUT 2000 
+#define GEN_FB_TIME_OUT 2000
 #define ALIGNMENT_32BYTE_MASK		(~((1 << 0)|(1 << 1)|(1 << 2)|(1 << 3)|(1 << 4)))
 #define SKU_83 						0x01
 #define SKU_100 					0x02

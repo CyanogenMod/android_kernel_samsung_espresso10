@@ -185,7 +185,6 @@ ssize_t lis3l02dq_read_accel_from_ring(struct iio_ring_buffer *ring,
 				       int index,
 				       int *val);
 
-
 int lis3l02dq_configure_ring(struct iio_dev *indio_dev);
 void lis3l02dq_unconfigure_ring(struct iio_dev *indio_dev);
 

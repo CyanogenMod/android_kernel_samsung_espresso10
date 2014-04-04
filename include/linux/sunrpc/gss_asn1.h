@@ -37,7 +37,6 @@
  *
  */
 
-
 #include <linux/sunrpc/gss_api.h>
 
 #define SIZEOF_INT 4

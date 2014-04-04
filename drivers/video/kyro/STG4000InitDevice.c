@@ -156,7 +156,6 @@ u32 ProgramClock(u32 refClock,
 			if (F > STG4K3_PLL_MIN_F)
 				F--;
 
-
 			/*
 			 * We should be close to our target frequency (if it's
 			 * achievable with current OD & R) let's iterate

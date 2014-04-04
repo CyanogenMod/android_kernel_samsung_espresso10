@@ -5,4 +5,3 @@ config VT6655
    select WEXT_PRIV
    ---help---
    This is a vendor-written driver for VIA VT6655.
-

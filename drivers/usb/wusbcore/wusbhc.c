@@ -147,7 +147,6 @@ static ssize_t wusb_chid_store(struct device *dev,
 }
 static DEVICE_ATTR(wusb_chid, 0644, wusb_chid_show, wusb_chid_store);
 
-
 static ssize_t wusb_phy_rate_show(struct device *dev,
 				  struct device_attribute *attr,
 				  char *buf)

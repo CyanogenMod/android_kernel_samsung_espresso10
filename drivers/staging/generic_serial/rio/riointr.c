@@ -73,9 +73,7 @@
 #include "cirrus.h"
 #include "rioioctl.h"
 
-
 static void RIOReceive(struct rio_info *, struct Port *);
-
 
 static char *firstchars(char *p, int nch)
 {
@@ -86,7 +84,6 @@ static char *firstchars(char *p, int nch)
 	buf[t][nch] = 0;
 	return buf[t];
 }
-
 
 #define	INCR( P, I )	((P) = (((P)+(I)) & p->RIOBufferMask))
 /* Enable and start the transmission of packets */
@@ -103,12 +100,10 @@ void RIOTxEnable(char *en)
 	p = (struct rio_info *) PortP->p;
 	tty = PortP->gs.port.tty;
 
-
 	rio_dprintk(RIO_DEBUG_INTR, "tx port %d: %d chars queued.\n", PortP->PortNum, PortP->gs.xmit_cnt);
 
 	if (!PortP->gs.xmit_cnt)
 		return;
-
 
 	/* This routine is an order of magnitude simpler than the specialix
 	   version. One of the disadvantages is that this version will send
@@ -160,7 +155,6 @@ void RIOTxEnable(char *en)
 		tty_wakeup(PortP->gs.port.tty);
 
 }
-
 
 /*
 ** RIO Host Service routine. Does all the work traditionally associated with an
@@ -490,7 +484,6 @@ void RIOServiceHost(struct rio_info *p, struct Host *HostP)
 				}
 			}
 
-
 			/*
 			 ** If we can't add anything to the transmit queue, then
 			 ** we need do none of the remaining processing.
@@ -621,8 +614,6 @@ static void RIOReceive(struct rio_info *p, struct Port *PortP)
 			writeb(readb(&PacketP->len)-transCount, &PacketP->len);
 			copied += transCount;
 
-
-
 			if (readb(&PacketP->len) == 0) {
 				/*
 				 ** If we have emptied the packet, then we can
@@ -642,4 +633,3 @@ static void RIOReceive(struct rio_info *p, struct Port *PortP)
 
 	return;
 }
-

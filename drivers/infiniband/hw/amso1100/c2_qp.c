@@ -784,7 +784,6 @@ static int qp_wr_post(struct c2_mq *q, union c2wr * wr, struct c2_qp *qp, u32 si
 	return 0;
 }
 
-
 int c2_post_send(struct ib_qp *ibqp, struct ib_send_wr *ib_wr,
 		 struct ib_send_wr **bad_wr)
 {

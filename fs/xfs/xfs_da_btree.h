@@ -213,7 +213,6 @@ struct xfs_nameops {
 					const unsigned char *, int);
 };
 
-
 /*========================================================================
  * Function prototypes.
  *========================================================================*/
@@ -262,7 +261,6 @@ int	xfs_da_shrink_inode(xfs_da_args_t *args, xfs_dablk_t dead_blkno,
 uint xfs_da_hashname(const __uint8_t *name_string, int name_length);
 enum xfs_dacmp xfs_da_compname(struct xfs_da_args *args,
 				const unsigned char *name, int len);
-
 
 xfs_da_state_t *xfs_da_state_alloc(void);
 void xfs_da_state_free(xfs_da_state_t *state);

@@ -58,11 +58,6 @@ config LINK_DEVICE_DPRAM
 	depends on SEC_MODEM_V2
 	default n
 
-config LINK_DEVICE_USB
-	bool "modem driver link device USB"
-	depends on SEC_MODEM_V2
-	default n
-
 config LINK_DEVICE_HSIC
 	bool "modem driver link device HSIC"
 	depends on SEC_MODEM_V2

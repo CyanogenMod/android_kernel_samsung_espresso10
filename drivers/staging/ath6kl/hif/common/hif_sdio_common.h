@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -43,12 +43,12 @@
 
     /* extended MBOX address for larger MBOX writes to MBOX 0*/
 #define HIF_MBOX0_EXTENDED_BASE_ADDR       0x2800
-#define HIF_MBOX0_EXTENDED_WIDTH_AR6002    (6*1024)           
-#define HIF_MBOX0_EXTENDED_WIDTH_AR6003    (18*1024)   
+#define HIF_MBOX0_EXTENDED_WIDTH_AR6002    (6*1024)
+#define HIF_MBOX0_EXTENDED_WIDTH_AR6003    (18*1024)
 
     /* version 1 of the chip has only a 12K extended mbox range */
 #define HIF_MBOX0_EXTENDED_BASE_ADDR_AR6003_V1  0x4000
-#define HIF_MBOX0_EXTENDED_WIDTH_AR6003_V1      (12*1024)  
+#define HIF_MBOX0_EXTENDED_WIDTH_AR6003_V1      (12*1024)
 
     /* GMBOX addresses */
 #define HIF_GMBOX_BASE_ADDR                0x7000
@@ -60,15 +60,15 @@
     /* set extended MBOX window information for SDIO interconnects */
 static INLINE void SetExtendedMboxWindowInfo(u16 Manfid, struct hif_device_mbox_info *pInfo)
 {
-    switch (Manfid & MANUFACTURER_ID_AR6K_BASE_MASK) {                   
+    switch (Manfid & MANUFACTURER_ID_AR6K_BASE_MASK) {
         case MANUFACTURER_ID_AR6002_BASE :
                 /* MBOX 0 has an extended range */
-            pInfo->MboxProp[0].ExtendedAddress = HIF_MBOX0_EXTENDED_BASE_ADDR;             
+            pInfo->MboxProp[0].ExtendedAddress = HIF_MBOX0_EXTENDED_BASE_ADDR;
             pInfo->MboxProp[0].ExtendedSize = HIF_MBOX0_EXTENDED_WIDTH_AR6002;
             break;
         case MANUFACTURER_ID_AR6003_BASE :
                 /* MBOX 0 has an extended range */
-            pInfo->MboxProp[0].ExtendedAddress = HIF_MBOX0_EXTENDED_BASE_ADDR_AR6003_V1;             
+            pInfo->MboxProp[0].ExtendedAddress = HIF_MBOX0_EXTENDED_BASE_ADDR_AR6003_V1;
             pInfo->MboxProp[0].ExtendedSize = HIF_MBOX0_EXTENDED_WIDTH_AR6003_V1;
             pInfo->GMboxAddress = HIF_GMBOX_BASE_ADDR;
             pInfo->GMboxSize = HIF_GMBOX_WIDTH;
@@ -78,10 +78,10 @@ static INLINE void SetExtendedMboxWindowInfo(u16 Manfid, struct hif_device_mbox_
             break;
     }
 }
-             
+
 /* special CCCR (func 0) registers */
 
 #define CCCR_SDIO_IRQ_MODE_REG         0xF0        /* interrupt mode register */
-#define SDIO_IRQ_MODE_ASYNC_4BIT_IRQ   (1 << 0)    /* mode to enable special 4-bit interrupt assertion without clock*/ 
-                        
+#define SDIO_IRQ_MODE_ASYNC_4BIT_IRQ   (1 << 0)    /* mode to enable special 4-bit interrupt assertion without clock*/
+
 #endif /*HIF_SDIO_COMMON_H_*/

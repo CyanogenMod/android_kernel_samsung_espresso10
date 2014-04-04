@@ -37,8 +37,6 @@ static void dma_reset_output(int dev);
 static void dma_reset_input(int dev);
 static int local_start_dma(struct audio_operations *adev, unsigned long physaddr, int count, int dma_mode);
 
-
-
 static int debugmem;    	/* switched off by default */
 static int dma_buffsize = DSP_BUFFSIZE;
 
@@ -69,14 +67,14 @@ static int sound_alloc_dmap(struct dma_buffparms *dmap)
 	if (dma_buffsize < 4096)
 		dma_buffsize = 4096;
 	dma_pagesize = (dmap->dma < 4) ? (64 * 1024) : (128 * 1024);
-	
+
 	/*
 	 *	Now check for the Cyrix problem.
 	 */
-	 
+
 	if(isa_dma_bridge_buggy==2)
 		dma_pagesize=32768;
-	 
+
 	dmap->raw_buf = NULL;
 	dmap->buffsize = dma_buffsize;
 	if (dmap->buffsize > dma_pagesize)
@@ -104,7 +102,7 @@ static int sound_alloc_dmap(struct dma_buffparms *dmap)
 
 		if (debugmem)
 			printk(KERN_DEBUG "sound: start 0x%lx, end 0x%lx\n", (long) start_addr, (long) end_addr);
-		
+
 		/* now check if it fits into the same dma-pagesize */
 
 		if (((long) start_addr & ~(dma_pagesize - 1)) != ((long) end_addr & ~(dma_pagesize - 1))
@@ -142,7 +140,6 @@ static void sound_free_dmap(struct dma_buffparms *dmap)
 	free_pages((unsigned long) dmap->raw_buf, sz);
 	dmap->raw_buf = NULL;
 }
-
 
 /* Intel version !!!!!!!!! */
 
@@ -185,7 +182,7 @@ static void dma_init_buffers(struct dma_buffparms *dmap)
 static int open_dmap(struct audio_operations *adev, int mode, struct dma_buffparms *dmap)
 {
 	int err;
-	
+
 	if (dmap->flags & DMA_BUSY)
 		return -EBUSY;
 	if ((err = sound_alloc_dmap(dmap)) < 0)
@@ -217,7 +214,7 @@ static int open_dmap(struct audio_operations *adev, int mode, struct dma_buffpar
 static void close_dmap(struct audio_operations *adev, struct dma_buffparms *dmap)
 {
 	unsigned long flags;
-	
+
 	if (dmap->dma >= 0) {
 		sound_close_dma(dmap->dma);
 		flags=claim_dma_lock();
@@ -227,11 +224,10 @@ static void close_dmap(struct audio_operations *adev, struct dma_buffparms *dmap
 	if (dmap->flags & DMA_BUSY)
 		dmap->dma_mode = DMODE_NONE;
 	dmap->flags &= ~DMA_BUSY;
-	
+
 	if (sound_dmap_flag == DMAP_FREE_ON_CLOSE)
 		sound_free_dmap(dmap);
 }
-
 
 static unsigned int default_set_bits(int dev, unsigned int bits)
 {
@@ -316,7 +312,7 @@ int DMAbuf_open(int dev, int mode)
 	adev->d->set_bits(dev, 8);
 	adev->d->set_channels(dev, 1);
 	adev->d->set_speed(dev, DSP_DEFAULT_SPEED);
-	if (adev->dmap_out->dma_mode == DMODE_OUTPUT) 
+	if (adev->dmap_out->dma_mode == DMODE_OUTPUT)
 		memset(adev->dmap_out->raw_buf, adev->dmap_out->neutral_byte,
 		       adev->dmap_out->bytes_in_use);
 	return 0;
@@ -347,7 +343,7 @@ static void dma_reset_output(int dev)
 	adev->dmap_out->flags |= DMA_SYNCING;
 
 	adev->dmap_out->underrun_count = 0;
-	if (!signal_pending(current) && adev->dmap_out->qlen && 
+	if (!signal_pending(current) && adev->dmap_out->qlen &&
 	    adev->dmap_out->underrun_count == 0){
 		spin_unlock_irqrestore(&dmap->lock,flags);
 		interruptible_sleep_on_timeout(&adev->out_sleeper,
@@ -364,12 +360,12 @@ static void dma_reset_output(int dev)
 	else
 		adev->d->halt_output(dev);
 	adev->dmap_out->flags &= ~DMA_STARTED;
-	
+
 	f=claim_dma_lock();
 	clear_dma_ff(dmap->dma);
 	disable_dma(dmap->dma);
 	release_dma_lock(f);
-	
+
 	dmap->byte_counter = 0;
 	reorganize_buffers(dev, adev->dmap_out, 0);
 	dmap->qlen = dmap->qhead = dmap->qtail = dmap->user_counter = 0;
@@ -454,7 +450,7 @@ int DMAbuf_sync(int dev)
 			}
 		}
 		adev->dmap_out->flags &= ~(DMA_SYNCING | DMA_ACTIVE);
-		
+
 		/*
 		 * Some devices such as GUS have huge amount of on board RAM for the
 		 * audio data. We have to wait until the device has finished playing.
@@ -645,15 +641,15 @@ int DMAbuf_get_buffer_pointer(int dev, struct dma_buffparms *dmap, int direction
 		pos = 0;
 	else {
 		int chan = dmap->dma;
-		
+
 		f=claim_dma_lock();
 		clear_dma_ff(chan);
-		
+
 		if(!isa_dma_bridge_buggy)
 			disable_dma(dmap->dma);
-		
+
 		pos = get_dma_residue(chan);
-		
+
 		pos = dmap->bytes_in_use - pos;
 
 		if (!(dmap->mapping_flags & DMA_MAP_MAPPED)) {
@@ -671,10 +667,10 @@ int DMAbuf_get_buffer_pointer(int dev, struct dma_buffparms *dmap, int direction
 			pos = 0;
 		if (pos >= dmap->bytes_in_use)
 			pos = 0;
-		
+
 		if(!isa_dma_bridge_buggy)
 			enable_dma(dmap->dma);
-			
+
 		release_dma_lock(f);
 	}
 	/* printk( "%04x ",  pos); */
@@ -764,7 +760,7 @@ static int output_sleep(int dev, int dontblock)
 	if (signal_pending(current))
 		return -EINTR;
 	timeout = (adev->go && !(dmap->flags & DMA_NOTIMEOUT));
-	if (timeout) 
+	if (timeout)
 		timeout_value = dmabuf_timeout(dmap);
 	else
 		timeout_value = MAX_SCHEDULE_TIMEOUT;
@@ -1004,12 +1000,12 @@ static void do_outputintr(int dev, int dummy)
 	}
 	if (!(adev->flags & DMA_AUTOMODE))
 		dmap->flags &= ~DMA_ACTIVE;
-		
+
 	/*
 	 *	This is  dmap->qlen <= 0 except when closing when
 	 *	dmap->qlen < 0
 	 */
-	 
+
 	while (dmap->qlen <= -dmap->closing) {
 		dmap->underrun_count++;
 		dmap->qlen++;
@@ -1036,9 +1032,9 @@ void DMAbuf_outputintr(int dev, int notify_only)
 	if (!(dmap->flags & DMA_NODMA)) {
 		int chan = dmap->dma, pos, n;
 		unsigned long f;
-		
+
 		f=claim_dma_lock();
-		
+
 		if(!isa_dma_bridge_buggy)
 			disable_dma(dmap->dma);
 		clear_dma_ff(chan);
@@ -1046,7 +1042,7 @@ void DMAbuf_outputintr(int dev, int notify_only)
 		if(!isa_dma_bridge_buggy)
 			enable_dma(dmap->dma);
 		release_dma_lock(f);
-		
+
 		pos = pos / dmap->fragment_size;	/* Actual qhead */
 		if (pos < 0 || pos >= dmap->nbufs)
 			pos = 0;
@@ -1138,7 +1134,7 @@ void DMAbuf_inputintr(int dev)
 	if (!(dmap->flags & DMA_NODMA)) {
 		int chan = dmap->dma, pos, n;
 		unsigned long f;
-		
+
 		f=claim_dma_lock();
 		if(!isa_dma_bridge_buggy)
 			disable_dma(dmap->dma);
@@ -1212,7 +1208,7 @@ static unsigned int poll_input(struct file * file, int dev, poll_table *wait)
 		    adev->enable_bits & PCM_ENABLE_INPUT &&
 		    !dmap->qlen && adev->go) {
 			unsigned long flags;
-			
+
 			spin_lock_irqsave(&dmap->lock,flags);
 			DMAbuf_activate_recording(dev, dmap);
 			spin_unlock_irqrestore(&dmap->lock,flags);
@@ -1228,7 +1224,7 @@ static unsigned int poll_output(struct file * file, int dev, poll_table *wait)
 {
 	struct audio_operations *adev = audio_devs[dev];
 	struct dma_buffparms *dmap = adev->dmap_out;
-	
+
 	if (!(adev->open_mode & OPEN_WRITE))
 		return 0;
 	if (dmap->mapping_flags & DMA_MAP_MAPPED) {

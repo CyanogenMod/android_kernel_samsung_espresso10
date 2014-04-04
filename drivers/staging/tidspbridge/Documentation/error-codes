@@ -1,6 +1,5 @@
 			DSP/Bridge Error Code Guide
 
-
 Success code is always taken as 0, except for one case where a success status
 different than 0 can be possible, this is when enumerating a series of dsp
 objects, if the enumeration doesn't have any more objects it is considered as a

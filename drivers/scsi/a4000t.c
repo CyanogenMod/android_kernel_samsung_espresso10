@@ -20,14 +20,12 @@
 
 #include "53c700.h"
 
-
 static struct scsi_host_template a4000t_scsi_driver_template = {
 	.name		= "A4000T builtin SCSI",
 	.proc_name	= "A4000t",
 	.this_id	= 7,
 	.module		= THIS_MODULE,
 };
-
 
 #define A4000T_SCSI_OFFSET	0x40
 

@@ -70,7 +70,6 @@ struct CmdHdr {
 	} U0;
 };
 
-
 struct PktCmd {
 	union {
 		struct {

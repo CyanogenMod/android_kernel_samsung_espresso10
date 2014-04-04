@@ -278,7 +278,6 @@ static __init int qdi_init(void)
 		unsigned long port = qd_port[i];
 		u8 r, res;
 
-
 		if (request_region(port, 2, "pata_qdi")) {
 			/* Check for a card */
 			local_irq_save(flags);
@@ -363,4 +362,3 @@ module_init(qdi_init);
 module_exit(qdi_exit);
 
 module_param(probe_qdi, int, 0);
-

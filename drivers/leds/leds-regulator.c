@@ -61,7 +61,6 @@ static int led_regulator_get_voltage(struct regulator *supply,
 	return regulator_list_voltage(supply, brightness - 1);
 }
 
-
 static void regulator_led_enable(struct regulator_led *led)
 {
 	int ret;

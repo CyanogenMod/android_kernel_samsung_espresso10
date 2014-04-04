@@ -115,4 +115,3 @@ void qlogicfas408_setup(int qbase, int id, int int_type);
 int qlogicfas408_detect(int qbase, int int_type);
 void qlogicfas408_disable_ints(struct qlogicfas408_priv *priv);
 #endif	/* __QLOGICFAS408_H */
-

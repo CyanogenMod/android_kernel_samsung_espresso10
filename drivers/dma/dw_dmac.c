@@ -674,7 +674,6 @@ dwc_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dest, dma_addr_t src,
 		prev = desc;
 	}
 
-
 	if (flags & DMA_PREP_INTERRUPT)
 		/* Trigger interrupt after last block */
 		prev->lli.ctllo |= DWC_CTLL_INT_EN;

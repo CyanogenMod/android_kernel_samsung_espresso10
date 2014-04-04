@@ -37,4 +37,3 @@ config SCSI_DH_ALUA
 	help
 	  SCSI Device handler for generic SPC-3 Asymmetric Logical Unit
 	  Access (ALUA).
-

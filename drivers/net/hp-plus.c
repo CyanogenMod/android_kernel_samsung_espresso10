@@ -112,7 +112,6 @@ static void hpp_io_block_output(struct net_device *dev, int count,
 static void hpp_io_get_8390_hdr(struct net_device *dev, struct e8390_pkt_hdr *hdr,
 						  int ring_page);
 
-
 /*	Probe a list of addresses for an HP LAN+ adaptor.
 	This routine is almost boilerplate. */
 
@@ -172,7 +171,6 @@ static const struct net_device_ops hpp_netdev_ops = {
 	.ndo_poll_controller	= eip_poll,
 #endif
 };
-
 
 /* Do the interesting part of the probe at a single address. */
 static int __init hpp_probe1(struct net_device *dev, int ioaddr)
@@ -346,7 +344,6 @@ hpp_reset_8390(struct net_device *dev)
 
 	udelay(5);
 
-
 	if ((inb_p(ioaddr+NIC_OFFSET+EN0_ISR) & ENISR_RESET) == 0)
 		printk("%s: hp_reset_8390() did not complete.\n", dev->name);
 
@@ -435,7 +432,6 @@ hpp_mem_block_output(struct net_device *dev, int count,
 	memcpy_toio(ei_status.mem, buf, (count + 3) & ~3);
 	outw(option_reg, ioaddr + HPP_OPTION);
 }
-
 
 #ifdef MODULE
 #define MAX_HPP_CARDS	4	/* Max number of HPP cards per module */

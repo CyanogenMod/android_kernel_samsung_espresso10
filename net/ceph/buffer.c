@@ -1,4 +1,3 @@
-
 #include <linux/ceph/ceph_debug.h>
 
 #include <linux/module.h>

@@ -92,7 +92,6 @@ static struct timer_list watchdog_ticktock =
 static unsigned long driver_open, orphan_timer;
 static char expect_close;
 
-
 /*
  *	If the timer expires..
  */

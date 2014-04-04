@@ -37,4 +37,3 @@ struct dm9000_plat_data {
 };
 
 #endif /* __DM9000_PLATFORM_DATA */
-

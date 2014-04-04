@@ -291,12 +291,10 @@ static int __init hpt3x3_init(void)
 	return pci_register_driver(&hpt3x3_pci_driver);
 }
 
-
 static void __exit hpt3x3_exit(void)
 {
 	pci_unregister_driver(&hpt3x3_pci_driver);
 }
-
 
 MODULE_AUTHOR("Alan Cox");
 MODULE_DESCRIPTION("low-level driver for the Highpoint HPT343/363");

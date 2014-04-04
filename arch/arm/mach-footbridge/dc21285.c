@@ -298,7 +298,7 @@ void __init dc21285_preinit(void)
 	mem_size = (unsigned int)high_memory - PAGE_OFFSET;
 	for (mem_mask = 0x00100000; mem_mask < 0x10000000; mem_mask <<= 1)
 		if (mem_mask >= mem_size)
-			break;		
+			break;
 
 	/*
 	 * These registers need to be set up whether we're the

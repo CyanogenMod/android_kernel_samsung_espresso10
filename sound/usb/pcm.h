@@ -7,5 +7,4 @@ int snd_usb_init_pitch(struct snd_usb_audio *chip, int iface,
 		       struct usb_host_interface *alts,
 		       struct audioformat *fmt);
 
-
 #endif /* __USBAUDIO_PCM_H */

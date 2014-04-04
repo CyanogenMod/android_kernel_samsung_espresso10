@@ -13,7 +13,6 @@ enum {
 	SH_MOBILE_MERAM_PF_NV24
 };
 
-
 struct sh_mobile_meram_priv;
 struct sh_mobile_meram_ops;
 

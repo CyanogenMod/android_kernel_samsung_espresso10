@@ -22,7 +22,6 @@
 #define ERROR(fmt, args...) printk(KERN_ERR "block2mtd: " fmt "\n" , ## args)
 #define INFO(fmt, args...) printk(KERN_INFO "block2mtd: " fmt "\n" , ## args)
 
-
 /* Info for the block device */
 struct block2mtd_dev {
 	struct list_head list;
@@ -31,10 +30,8 @@ struct block2mtd_dev {
 	struct mutex write_mutex;
 };
 
-
 /* Static info about the MTD, used in cleanup_module */
 static LIST_HEAD(blkmtd_device_list);
-
 
 static struct page *page_read(struct address_space *mapping, int index)
 {
@@ -95,7 +92,6 @@ static int block2mtd_erase(struct mtd_info *mtd, struct erase_info *instr)
 	return err;
 }
 
-
 static int block2mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
 		size_t *retlen, u_char *buf)
 {
@@ -137,7 +133,6 @@ static int block2mtd_read(struct mtd_info *mtd, loff_t from, size_t len,
 	}
 	return 0;
 }
-
 
 /* write data to the underlying device */
 static int _block2mtd_write(struct block2mtd_dev *dev, const u_char *buf,
@@ -182,7 +177,6 @@ static int _block2mtd_write(struct block2mtd_dev *dev, const u_char *buf,
 	return 0;
 }
 
-
 static int block2mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
 		size_t *retlen, const u_char *buf)
 {
@@ -204,7 +198,6 @@ static int block2mtd_write(struct mtd_info *mtd, loff_t to, size_t len,
 	return err;
 }
 
-
 /* sync the device - wait until the write queue is empty */
 static void block2mtd_sync(struct mtd_info *mtd)
 {
@@ -212,7 +205,6 @@ static void block2mtd_sync(struct mtd_info *mtd)
 	sync_blockdev(dev->blkdev);
 	return;
 }
-
 
 static void block2mtd_free_device(struct block2mtd_dev *dev)
 {
@@ -229,7 +221,6 @@ static void block2mtd_free_device(struct block2mtd_dev *dev)
 
 	kfree(dev);
 }
-
 
 /* FIXME: ensure that mtd->size % erase_size == 0 */
 static struct block2mtd_dev *add_device(char *devname, int erase_size)
@@ -310,7 +301,6 @@ devinit_err:
 	return NULL;
 }
 
-
 /* This function works similar to reguler strtoul.  In addition, it
  * allows some suffixes for a more human-readable number format:
  * ki, Ki, kiB, KiB	- multiply result with 1024
@@ -339,7 +329,6 @@ static int ustrtoul(const char *cp, char **endp, unsigned int base)
 	return result;
 }
 
-
 static int parse_num(size_t *num, const char *token)
 {
 	char *endp;
@@ -353,14 +342,12 @@ static int parse_num(size_t *num, const char *token)
 	return 0;
 }
 
-
 static inline void kill_final_newline(char *str)
 {
 	char *newline = strrchr(str, '\n');
 	if (newline && !newline[1])
 		*newline = 0;
 }
-
 
 #define parse_err(fmt, args...) do {	\
 	ERROR(fmt, ## args);		\
@@ -371,7 +358,6 @@ static inline void kill_final_newline(char *str)
 static int block2mtd_init_called = 0;
 static char block2mtd_paramline[80 + 12]; /* 80 for device, 12 for erase size */
 #endif
-
 
 static int block2mtd_setup2(const char *val)
 {
@@ -413,7 +399,6 @@ static int block2mtd_setup2(const char *val)
 	return 0;
 }
 
-
 static int block2mtd_setup(const char *val, struct kernel_param *kp)
 {
 #ifdef MODULE
@@ -440,7 +425,6 @@ static int block2mtd_setup(const char *val, struct kernel_param *kp)
 #endif
 }
 
-
 module_param_call(block2mtd, block2mtd_setup, NULL, NULL, 0200);
 MODULE_PARM_DESC(block2mtd, "Device to use. \"block2mtd=<dev>[,<erasesize>]\"");
 
@@ -457,7 +441,6 @@ static int __init block2mtd_init(void)
 	return ret;
 }
 
-
 static void __devexit block2mtd_exit(void)
 {
 	struct list_head *pos, *next;
@@ -473,7 +456,6 @@ static void __devexit block2mtd_exit(void)
 		block2mtd_free_device(dev);
 	}
 }
-
 
 module_init(block2mtd_init);
 module_exit(block2mtd_exit);

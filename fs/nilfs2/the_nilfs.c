@@ -35,7 +35,6 @@
 #include "dat.h"
 #include "segbuf.h"
 
-
 static int nilfs_valid_sb(struct nilfs_super_block *sbp);
 
 void nilfs_set_last_segment(struct the_nilfs *nilfs,
@@ -76,6 +75,7 @@ struct the_nilfs *alloc_nilfs(struct block_device *bdev)
 	nilfs->ns_bdev = bdev;
 	atomic_set(&nilfs->ns_ndirtyblks, 0);
 	init_rwsem(&nilfs->ns_sem);
+	mutex_init(&nilfs->ns_snapshot_mount_mutex);
 	INIT_LIST_HEAD(&nilfs->ns_dirty_files);
 	INIT_LIST_HEAD(&nilfs->ns_gc_inodes);
 	spin_lock_init(&nilfs->ns_inode_lock);

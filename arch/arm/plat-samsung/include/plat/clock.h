@@ -117,4 +117,3 @@ extern int s3c64xx_sclk_ctrl(struct clk *clk, int enable);
 /* Init for pwm clock code */
 
 extern void s3c_pwmclk_init(void);
-

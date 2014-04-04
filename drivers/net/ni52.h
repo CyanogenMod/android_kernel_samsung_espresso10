@@ -11,7 +11,6 @@
  *   Garret A. Wollman's i82586-driver for BSD
  */
 
-
 #define NI52_RESET     0  /* writing to this address, resets the i82586 */
 #define NI52_ATTENTION 1  /* channel attention, kick the 586 */
 #define NI52_TENA      3  /* 2-5 possibly wrong, Xmit enable */
@@ -29,7 +28,6 @@
  */
 #define SCP_DEFAULT_ADDRESS 0xfffff4
 
-
 /*
  * System Configuration Pointer Struct
  */
@@ -43,7 +41,6 @@ struct scp_struct
 	u16 zero_dum3;
 	u32 iscp;		/* pointer to the iscp-block */
 };
-
 
 /*
  * Intermediate System Configuration Pointer (ISCP)
@@ -304,7 +301,3 @@ struct tbd_struct
 };
 
 #define TBD_LAST 0x8000         /* EOF-Flag, indicates last buffer in list */
-
-
-
-

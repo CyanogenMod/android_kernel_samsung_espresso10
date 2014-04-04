@@ -417,7 +417,6 @@ static void wl1251_tx_packet_cb(struct wl1251 *wl,
 		     result->id, skb, result->ack_failures, result->rate,
 		     result->status, wl1251_tx_parse_status(result->status));
 
-
 	ieee80211_tx_status(wl->hw, skb);
 
 	wl->tx_frames[result->id] = NULL;
@@ -490,7 +489,6 @@ void wl1251_tx_complete(struct wl1251 *wl)
 					 &result[wl->next_tx_complete],
 					 num_complete *
 					 sizeof(struct tx_result));
-
 
 		} else if (result_index < wl->next_tx_complete) {
 			/* 2 writes are needed */

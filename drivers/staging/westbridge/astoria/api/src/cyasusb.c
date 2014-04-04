@@ -1053,7 +1053,6 @@ destroy:
 	return ret;
 }
 
-
 /*
 * This method asks the West Bridge device to connect the
 * internal USB D+ and D- signals to the USB pins, thus
@@ -1333,7 +1332,6 @@ my_usb_set_enum_config(cy_as_device *dev_p,
 	*/
 	if (mtp_interface != 0 && bus_mask != 2)
 		return CY_AS_ERROR_INVALID_CONFIGURATION;
-
 
 	/* Create the request to send to the West Bridge device */
 	req_p = cy_as_ll_create_request(dev_p,
@@ -3017,7 +3015,6 @@ cy_as_usb_nak_stall_request(cy_as_device_handle handle,
 		} else
 			cy_as_insert_c_b_node(queue, cbnode);
 
-
 		if (cy_as_device_is_setup_packet(dev_p)) {
 			/* No Ack is needed on a stall request on EP0 */
 			if ((state == cy_true) && (ep == 0)) {
@@ -3087,7 +3084,6 @@ my_handle_response_get_stall(cy_as_device *dev_p,
 	*state_p = (cy_bool)cy_as_ll_request_response__get_word(reply_p, 0);
 	ret = CY_AS_ERROR_SUCCESS;
 
-
 destroy:
 		cy_as_ll_destroy_request(dev_p, req_p);
 		cy_as_ll_destroy_response(dev_p, reply_p);
@@ -3114,7 +3110,6 @@ my_handle_response_get_nak(cy_as_device *dev_p,
 
 	*state_p = (cy_bool)cy_as_ll_request_response__get_word(reply_p, 0);
 	ret = CY_AS_ERROR_SUCCESS;
-
 
 destroy:
 		cy_as_ll_destroy_request(dev_p, req_p);
@@ -3735,6 +3730,5 @@ cy_as_usb_func_callback(
 				usb_ack_callback, 0);
 	}
 }
-
 
 /*[]*/

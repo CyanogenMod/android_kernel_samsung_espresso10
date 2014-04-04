@@ -33,7 +33,6 @@
 
 #include "b43legacy.h"
 
-
 #define B43legacy_RADIO_DEFAULT_CHANNEL_BG	6
 
 /* Force antenna 0. */
@@ -50,7 +49,6 @@
 #define B43legacy_RADIO_INTERFMODE_NONWLAN	1
 #define B43legacy_RADIO_INTERFMODE_MANUALWLAN	2
 #define B43legacy_RADIO_INTERFMODE_AUTOWLAN	3
-
 
 void b43legacy_radio_lock(struct b43legacy_wldev *dev);
 void b43legacy_radio_unlock(struct b43legacy_wldev *dev);

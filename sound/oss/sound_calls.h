@@ -72,7 +72,6 @@ int MIDIbuf_avail(int dev);
 
 void MIDIbuf_bytes_received(int dev, unsigned char *buf, int count);
 
-
 /*	From soundcard.c	*/
 void request_sound_timer (int count);
 void sound_stop_timer(void);

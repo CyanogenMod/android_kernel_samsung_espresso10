@@ -46,7 +46,6 @@ For 32-bit we have the following conventions - kernel is built with
 
 */
 
-
 /*
  * 64-bit system call stack frame layout defines and helpers, for
  * assembly code (note that the seemingly unnecessary parentheses

@@ -70,7 +70,6 @@ static int xmm6260_off(struct modem_ctl *mc)
 	return 0;
 }
 
-
 static int xmm6260_reset(struct modem_ctl *mc)
 {
 	int ret;

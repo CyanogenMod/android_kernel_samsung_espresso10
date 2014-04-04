@@ -226,7 +226,6 @@ static unsigned int sync_fence_poll(struct file *file, poll_table *wait);
 static long sync_fence_ioctl(struct file *file, unsigned int cmd,
 			     unsigned long arg);
 
-
 static const struct file_operations sync_fence_fops = {
 	.release = sync_fence_release,
 	.poll = sync_fence_poll,
@@ -595,7 +594,6 @@ int sync_fill_pt_info(struct sync_pt *pt, void *data, int size)
 
 	return info->len;
 }
-
 
 static long sync_fence_ioctl_fence_info(struct sync_fence *fence,
 					unsigned long arg)

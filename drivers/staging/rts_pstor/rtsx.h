@@ -86,7 +86,6 @@ do {							\
 } while (0)
 #define wait_timeout(msecs)	wait_timeout_x(TASK_INTERRUPTIBLE, (msecs))
 
-
 #define STATE_TRANS_NONE	0
 #define STATE_TRANS_CMD		1
 #define STATE_TRANS_BUF		2

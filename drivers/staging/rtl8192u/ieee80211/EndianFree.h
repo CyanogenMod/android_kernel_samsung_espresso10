@@ -128,7 +128,6 @@
 	( (((u32)__Value) & BIT_LEN_MASK_32(__BitLen)) << (__BitOffset) ) \
        );
 
-
 #define BIT_LEN_MASK_16(__BitLen) \
 	(0xFFFF >> (16 - (__BitLen)))
 

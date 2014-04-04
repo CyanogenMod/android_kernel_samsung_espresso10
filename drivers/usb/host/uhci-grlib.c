@@ -84,7 +84,6 @@ static const struct hc_driver uhci_grlib_hc_driver = {
 	.hub_control =		uhci_hub_control,
 };
 
-
 static int __devinit uhci_hcd_grlib_probe(struct platform_device *op)
 {
 	struct device_node *dn = op->dev.of_node;
@@ -194,7 +193,6 @@ static const struct of_device_id uhci_hcd_grlib_of_match[] = {
 	{},
 };
 MODULE_DEVICE_TABLE(of, uhci_hcd_grlib_of_match);
-
 
 static struct platform_driver uhci_grlib_driver = {
 	.probe		= uhci_hcd_grlib_probe,

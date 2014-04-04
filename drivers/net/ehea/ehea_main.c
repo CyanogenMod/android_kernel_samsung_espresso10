@@ -49,12 +49,10 @@
 #include "ehea_qmr.h"
 #include "ehea_phyp.h"
 
-
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Christoph Raisch <raisch@de.ibm.com>");
 MODULE_DESCRIPTION("IBM eServer HEA Driver");
 MODULE_VERSION(DRV_VERSION);
-
 
 static int msg_level = -1;
 static int rq1_entries = EHEA_DEF_ENTRIES_RQ1;
@@ -107,7 +105,6 @@ static unsigned long ehea_driver_flags;
 static DEFINE_MUTEX(dlpar_mem_lock);
 struct ehea_fw_handle_array ehea_fw_handles;
 struct ehea_bcmc_reg_array ehea_bcmc_regs;
-
 
 static int __devinit ehea_probe_adapter(struct platform_device *dev,
 					const struct of_device_id *id);
@@ -515,14 +512,12 @@ out:
 	return ret;
 }
 
-
 static int ehea_refill_rq2(struct ehea_port_res *pr, int nr_of_wqes)
 {
 	return ehea_refill_rq_def(pr, &pr->rq2_skba, 2,
 				  nr_of_wqes, EHEA_RWQE2_TYPE,
 				  EHEA_RQ2_PKT_SIZE);
 }
-
 
 static int ehea_refill_rq3(struct ehea_port_res *pr, int nr_of_wqes)
 {
@@ -849,7 +844,6 @@ static void check_sqs(struct ehea_port *port)
 		}
 	}
 }
-
 
 static struct ehea_cqe *ehea_proc_cqes(struct ehea_port_res *pr, int my_quota)
 {
@@ -1324,7 +1318,6 @@ static irqreturn_t ehea_interrupt_neq(int irq, void *param)
 	return IRQ_HANDLED;
 }
 
-
 static int ehea_fill_port_res(struct ehea_port_res *pr)
 {
 	int ret;
@@ -1345,7 +1338,6 @@ static int ehea_reg_interrupts(struct net_device *dev)
 	struct ehea_port_res *pr;
 	int i, ret;
 
-
 	snprintf(port->int_aff_name, EHEA_IRQ_NAME_SIZE - 1, "%s-aff",
 		 dev->name);
 
@@ -1361,7 +1353,6 @@ static int ehea_reg_interrupts(struct net_device *dev)
 	netif_info(port, ifup, dev,
 		   "irq_handle 0x%X for function qp_aff_irq_handler registered\n",
 		   port->qp_eq->attr.ist1);
-
 
 	for (i = 0; i < port->num_def_qps + port->num_add_tx_qps; i++) {
 		pr = &port->port_res[i];
@@ -1382,7 +1373,6 @@ static int ehea_reg_interrupts(struct net_device *dev)
 	}
 out:
 	return ret;
-
 
 out_free_req:
 	while (--i >= 0) {
@@ -1723,7 +1713,6 @@ static inline void write_udp_offset_end(struct ehea_swqe *swqe,
 
 	swqe->tcp_end = (u16)skb->len - 1;
 }
-
 
 static void write_swqe2_TSO(struct sk_buff *skb,
 			    struct ehea_swqe *swqe, u32 lkey)
@@ -2851,7 +2840,6 @@ void ehea_update_rqs(struct ehea_qp *orig_qp, struct ehea_port_res *pr)
 	struct sk_buff *skb;
 	u32 lkey = pr->recv_mr.lkey;
 
-
 	int i;
 	int index;
 
@@ -3531,7 +3519,6 @@ static int __devinit ehea_probe_adapter(struct platform_device *dev,
 	adapter->pd = EHEA_PD_ID;
 
 	dev_set_drvdata(&dev->dev, adapter);
-
 
 	/* initialize adapter and ports */
 	/* get adapter properties */

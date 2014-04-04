@@ -225,7 +225,6 @@ static int __devinit mantis_pci_probe(struct pci_dev *pdev, const struct pci_dev
 
 	return err;
 
-
 	dprintk(MANTIS_ERROR, 1, "ERROR: Mantis UART exit! <%d>", err);
 	mantis_uart_exit(mantis);
 

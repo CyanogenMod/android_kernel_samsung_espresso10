@@ -35,7 +35,6 @@
 #include "tables.h"
 #include "main.h"
 
-
 /* Get the freq, as it has to be written to the device. */
 static inline u16 channel2freq_a(u8 channel)
 {

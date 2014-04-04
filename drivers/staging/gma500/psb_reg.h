@@ -95,7 +95,6 @@
 #define _PSB_CE_DPM_OUT_OF_MEMORY_MT     (1 << 1)
 #define _PSB_CE_DPM_3D_MEM_FREE          (1 << 0)
 
-
 #define PSB_USE_OFFSET_MASK              0x0007FFFF
 #define PSB_USE_OFFSET_SIZE              (PSB_USE_OFFSET_MASK + 1)
 #define PSB_CR_USE_CODE_BASE0            0x0A0C
@@ -134,7 +133,6 @@
 
 #define PSB_CR_EVENT_KICK                0x0AC8
 #define _PSB_CE_KICK_NOW                 (1 << 0)
-
 
 #define PSB_CR_BIF_DIR_LIST_BASE1        0x0C38
 
@@ -411,7 +409,6 @@
 #define PSB_2D_SRC_RESERVED              (0x00070000)
 #define PSB_2D_SRC_1555ARGB_LOOKUP       (0x00078000)
 
-
 #define PSB_2D_SRC_STRIDE_MASK           (0x00007FFF)
 #define PSB_2D_SRC_STRIDE_CLRMASK        (0xFFFF8000)
 #define PSB_2D_SRC_STRIDE_SHIFT          (0)
@@ -531,7 +528,6 @@
 #define PSB_2D_ROP3_PAT                  (0xF0)
 #define PSB_2D_ROP3_DST                  (0xAA)
 
-
 /*
  * Sizes.
  */
@@ -553,7 +549,6 @@
 #define PSB_RASTER       1
 #define PSB_RETURN       2
 #define PSB_TA       3
-
 
 /*Power management*/
 #define PSB_PUNIT_PORT		    0x04

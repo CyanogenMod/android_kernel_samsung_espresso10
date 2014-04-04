@@ -129,7 +129,6 @@ static int wm831x_wdt_kick(struct wm831x *wm831x)
 		goto out;
 	}
 
-
 	reg = wm831x_reg_read(wm831x, WM831X_WATCHDOG);
 
 	if (!(reg & WM831X_WDOG_RST_SRC)) {

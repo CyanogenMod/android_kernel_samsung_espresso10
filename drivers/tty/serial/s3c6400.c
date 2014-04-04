@@ -48,7 +48,6 @@ static int s3c6400_serial_setsource(struct uart_port *port,
 	return 0;
 }
 
-
 static int s3c6400_serial_getsource(struct uart_port *port,
 				    struct s3c24xx_uart_clksrc *clk)
 {

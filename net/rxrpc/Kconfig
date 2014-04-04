@@ -19,7 +19,6 @@ config AF_RXRPC
 
 	  See Documentation/networking/rxrpc.txt.
 
-
 config AF_RXRPC_DEBUG
 	bool "RxRPC dynamic debugging"
 	depends on AF_RXRPC
@@ -27,7 +26,6 @@ config AF_RXRPC_DEBUG
 	  Say Y here to make runtime controllable debugging messages appear.
 
 	  See Documentation/networking/rxrpc.txt.
-
 
 config RXKAD
 	tristate "RxRPC Kerberos security"

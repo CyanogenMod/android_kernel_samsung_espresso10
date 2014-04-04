@@ -181,4 +181,3 @@ int __init imx53_register_gpios(void)
 {
 	return mxc_gpio_init(mxc_gpio_ports, ARRAY_SIZE(mxc_gpio_ports));
 }
-

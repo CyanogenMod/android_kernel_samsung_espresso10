@@ -28,7 +28,7 @@
     and other provisions required by the GPL.  If you do not delete
     the provisions above, a recipient may use your version of this
     file under either the MPL or the GPL.
-    
+
 ======================================================================*/
 
 #include <linux/module.h>
@@ -63,7 +63,6 @@ typedef struct scsi_info_t {
 	struct pcmcia_device	*p_dev;
     struct Scsi_Host	*host;
 } scsi_info_t;
-
 
 static void fdomain_release(struct pcmcia_device *link);
 static void fdomain_detach(struct pcmcia_device *p_dev);
@@ -109,7 +108,6 @@ static int fdomain_config_check(struct pcmcia_device *p_dev, void *priv_data)
 	p_dev->resource[0]->flags |= IO_DATA_PATH_WIDTH_AUTO;
 	return pcmcia_request_io(p_dev);
 }
-
 
 static int fdomain_config(struct pcmcia_device *link)
 {

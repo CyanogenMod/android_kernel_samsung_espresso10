@@ -8,7 +8,6 @@
  * published by the Free Software Foundation.
 */
 
-
 #ifndef __ASM_ARCH_IRQS_H
 #define __ASM_ARCH_IRQS_H __FILE__
 
@@ -115,7 +114,6 @@
 #define IRQ_S3C2412_SDI		S3C2410_IRQSUB(13)
 #define IRQ_S3C2412_CF		S3C2410_IRQSUB(14)
 
-
 #define IRQ_S3C2416_EINT8t15	S3C2410_IRQ(5)
 #define IRQ_S3C2416_DMA		S3C2410_IRQ(17)
 #define IRQ_S3C2416_UART3	S3C2410_IRQ(18)
@@ -133,7 +131,6 @@
 #define IRQ_S3C2416_DMA5	S3C2410_IRQSUB(23)
 #define IRQ_S32416_WDT		S3C2410_IRQSUB(27)
 #define IRQ_S32416_AC97		S3C2410_IRQSUB(28)
-
 
 /* extra irqs for s3c2440 */
 

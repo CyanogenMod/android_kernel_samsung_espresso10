@@ -296,7 +296,6 @@ struct ov2640_win_size {
 	const struct regval_list	*regs;
 };
 
-
 struct ov2640_priv {
 	struct v4l2_subdev		subdev;
 	struct ov2640_camera_info	*info;
@@ -946,7 +945,6 @@ static int ov2640_s_fmt(struct v4l2_subdev *sd,
 {
 	struct i2c_client *client = v4l2_get_subdevdata(sd);
 	int ret;
-
 
 	switch (mf->code) {
 	case V4L2_MBUS_FMT_RGB565_2X8_LE:

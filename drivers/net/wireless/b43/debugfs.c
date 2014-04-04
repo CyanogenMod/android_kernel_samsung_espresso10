@@ -36,7 +36,6 @@
 #include "dma.h"
 #include "xmit.h"
 
-
 /* The root directory. */
 static struct dentry *rootdir;
 
@@ -60,7 +59,6 @@ struct b43_dfs_file *fops_to_dfs_file(struct b43_wldev *dev,
 	return p;
 }
 
-
 #define fappend(fmt, x...)	\
 	do {							\
 		if (bufsize - count)				\
@@ -70,7 +68,6 @@ struct b43_dfs_file *fops_to_dfs_file(struct b43_wldev *dev,
 		else						\
 			printk(KERN_ERR "b43: fappend overflow\n"); \
 	} while (0)
-
 
 /* The biggest address values for SHM access from the debugfs files. */
 #define B43_MAX_SHM_ROUTING	4
@@ -618,7 +615,6 @@ out_unlock:
 	return err ? err : count;
 }
 
-
 #define B43_DEBUGFS_FOPS(name, _read, _write)			\
 	static struct b43_debugfs_fops fops_##name = {		\
 		.read	= _read,				\
@@ -644,7 +640,6 @@ B43_DEBUGFS_FOPS(mmio32write, NULL, mmio32write__write_file);
 B43_DEBUGFS_FOPS(txstat, txstat_read_file, NULL);
 B43_DEBUGFS_FOPS(restart, NULL, restart_write_file);
 B43_DEBUGFS_FOPS(loctls, loctls_read_file, NULL);
-
 
 bool b43_debug(struct b43_wldev *dev, enum b43_dyndbg feature)
 {
@@ -753,7 +748,6 @@ void b43_debugfs_add_device(struct b43_wldev *dev)
 		if (!IS_ERR(d))					\
 			e->file_##name.dentry = d;		\
 	} while (0)
-
 
 	ADD_FILE(shm16read, 0600);
 	ADD_FILE(shm16write, 0200);

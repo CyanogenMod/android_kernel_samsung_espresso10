@@ -39,4 +39,3 @@ void __init nuc93x_board_init(struct platform_device **device, int size)
 	platform_add_devices(device, size);
 	platform_add_devices(nuc93x_public_dev, ARRAY_SIZE(nuc93x_public_dev));
 }
-

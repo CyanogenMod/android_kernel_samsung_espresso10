@@ -54,7 +54,6 @@ static inline int xfs_ialloc_find_free(xfs_inofree_t *fp)
 	return xfs_lowbit64(*fp);
 }
 
-
 /*
  * Allocate an inode on disk.
  * Mode is used to tell whether the new inode will need space, and whether

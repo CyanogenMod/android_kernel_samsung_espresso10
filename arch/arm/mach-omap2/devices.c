@@ -645,7 +645,6 @@ static void omap_init_pmu(void)
 	platform_device_register(&omap_pmu_device);
 }
 
-
 #if defined(CONFIG_CRYPTO_DEV_OMAP_SHAM) || defined(CONFIG_CRYPTO_DEV_OMAP_SHAM_MODULE)
 
 #ifdef CONFIG_ARCH_OMAP2

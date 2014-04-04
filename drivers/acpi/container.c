@@ -80,7 +80,6 @@ static int is_device_present(acpi_handle handle)
 	acpi_status status;
 	unsigned long long sta;
 
-
 	status = acpi_get_handle(handle, "_STA", &temp);
 	if (ACPI_FAILURE(status))
 		return 1;	/* _STA not found, assume device present */
@@ -96,7 +95,6 @@ static int is_device_present(acpi_handle handle)
 static int acpi_container_add(struct acpi_device *device)
 {
 	struct acpi_container *container;
-
 
 	if (!device) {
 		printk(KERN_ERR PREFIX "device is NULL\n");
@@ -134,7 +132,6 @@ static int container_device_add(struct acpi_device **device, acpi_handle handle)
 	struct acpi_device *pdev;
 	int result;
 
-
 	if (acpi_get_parent(handle, &phandle)) {
 		return -ENODEV;
 	}
@@ -158,7 +155,6 @@ static void container_notify_cb(acpi_handle handle, u32 type, void *context)
 	int result;
 	int present;
 	acpi_status status;
-
 
 	present = is_device_present(handle);
 
@@ -267,7 +263,6 @@ static int __init acpi_container_init(void)
 static void __exit acpi_container_exit(void)
 {
 	int action = UNINSTALL_NOTIFY_HANDLER;
-
 
 	acpi_walk_namespace(ACPI_TYPE_DEVICE,
 			    ACPI_ROOT_OBJECT,

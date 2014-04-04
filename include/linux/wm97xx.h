@@ -1,4 +1,3 @@
-
 /*
  * Register bits and API for Wolfson WM97xx series of codecs
  */
@@ -68,7 +67,6 @@
 #define WM97XX_AUX_ID3		0x8003
 #define WM97XX_AUX_ID4		0x8004
 
-
 /* WM9712 Bits */
 #define WM9712_45W		0x1000	/* set for 5-wire touchscreen */
 #define WM9712_PDEN		0x0800	/* measure only when pen down */
@@ -96,7 +94,6 @@
 #define WM9705_MASK_EDGE	0x0020	/* rising/falling edge on pin delays sample */
 #define	WM9705_MASK_SYNC	0x0030	/* rising/falling edge on mask initiates sample */
 #define WM9705_PDD(i)		(i & 0x000f)	/* pen detect comparator threshold */
-
 
 /* WM9713 Bits */
 #define WM9713_PDPOL		0x0400	/* Pen down polarity */
@@ -141,9 +138,7 @@
 #define WM97XX_GPIO_14		(1 << 14)
 #define WM97XX_GPIO_15		(1 << 15)
 
-
 #define AC97_LINK_FRAME		21	/* time in uS for AC97 link frame */
-
 
 /*---------------- Return codes from sample reading functions ---------------*/
 
@@ -244,7 +239,6 @@ struct wm97xx_codec_drv {
 	void (*dig_restore) (struct wm97xx *);
 	void (*aux_prepare) (struct wm97xx *);
 };
-
 
 /* Machine specific and accelerated touch operations */
 struct wm97xx_mach_ops {

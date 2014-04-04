@@ -221,7 +221,6 @@ struct statusArea {
 
 struct icom_adapter;
 
-
 #define ICOM_MAJOR       243
 #define ICOM_MINOR_START 0
 

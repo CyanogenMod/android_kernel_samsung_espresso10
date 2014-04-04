@@ -199,7 +199,6 @@ svc_pool_map_init_percpu(struct svc_pool_map *m)
 	return pidx;
 };
 
-
 /*
  * Initialise the pool map for SVC_POOL_PERNODE mode.
  * Returns number of pools or <0 on error.
@@ -227,7 +226,6 @@ svc_pool_map_init_pernode(struct svc_pool_map *m)
 
 	return pidx;
 }
-
 
 /*
  * Add a reference to the global map of cpus to pools (and
@@ -270,7 +268,6 @@ svc_pool_map_get(void)
 	return m->npools;
 }
 
-
 /*
  * Drop a reference to the global map of cpus to pools.
  * When the last reference is dropped, the map data is
@@ -296,7 +293,6 @@ svc_pool_map_put(void)
 
 	mutex_unlock(&svc_pool_map_mutex);
 }
-
 
 /*
  * Set the given thread's cpus_allowed mask so that it
@@ -356,7 +352,6 @@ svc_pool_for_cpu(struct svc_serv *serv, int cpu)
 	}
 	return &serv->sv_pools[pidx % serv->sv_nrpools];
 }
-
 
 /*
  * Create an RPC service
@@ -1302,7 +1297,8 @@ bc_svc_process(struct svc_serv *serv, struct rpc_rqst *req,
 						sizeof(req->rq_snd_buf));
 		return bc_send(req);
 	} else {
-		/* Nothing to do to drop request */
+		/* drop request */
+		xprt_free_bc_request(req);
 		return 0;
 	}
 }

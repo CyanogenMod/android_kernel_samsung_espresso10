@@ -46,7 +46,6 @@
 #define DRV_NAME "pata_ninja32"
 #define DRV_VERSION "0.1.5"
 
-
 /**
  *	ninja32_set_piomode	-	set initial PIO mode data
  *	@ap: ATA interface
@@ -65,7 +64,6 @@ static void ninja32_set_piomode(struct ata_port *ap, struct ata_device *adev)
 		 ap->ioaddr.bmdma_addr + 0x1f);
 	ap->private_data = adev;
 }
-
 
 static void ninja32_dev_select(struct ata_port *ap, unsigned int device)
 {

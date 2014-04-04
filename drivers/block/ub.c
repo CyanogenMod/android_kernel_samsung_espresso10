@@ -310,7 +310,7 @@ struct ub_lun {
 	int cmda[1];
 	struct ub_scsi_cmd cmdv[1];
 
-	struct ub_capacity capacity; 
+	struct ub_capacity capacity;
 };
 
 /*
@@ -1723,7 +1723,6 @@ static int ub_bd_unlocked_open(struct block_device *bdev, fmode_t mode)
 	return ret;
 }
 
-
 /*
  */
 static int ub_bd_release(struct gendisk *disk, fmode_t mode)
@@ -2179,7 +2178,7 @@ static int ub_get_pipes(struct ub_dev *sc, struct usb_device *dev,
 	sc->recv_ctrl_pipe = usb_rcvctrlpipe(dev, 0);
 	sc->send_bulk_pipe = usb_sndbulkpipe(dev,
 		usb_endpoint_num(ep_out));
-	sc->recv_bulk_pipe = usb_rcvbulkpipe(dev, 
+	sc->recv_bulk_pipe = usb_rcvbulkpipe(dev,
 		usb_endpoint_num(ep_in));
 
 	return 0;

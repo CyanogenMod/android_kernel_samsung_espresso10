@@ -64,7 +64,6 @@
 //static int          msglevel                =MSG_LEVEL_DEBUG;
 static int          msglevel                =MSG_LEVEL_INFO;
 
-
 /*---------------------  Static Definitions -------------------------*/
 #define CB_TXPOWER_LEVEL            6
 
@@ -99,7 +98,6 @@ BOOL CARDbSetMediaChannel(void *pDeviceHandler, unsigned int uConnectionChannel)
 {
 PSDevice            pDevice = (PSDevice) pDeviceHandler;
 BOOL                bResult = TRUE;
-
 
     if (pDevice->byBBType == BB_TYPE_11A) { // 15 ~ 38
         if ((uConnectionChannel < (CB_MAX_CHANNEL_24G+1)) || (uConnectionChannel > CB_MAX_CHANNEL))
@@ -647,7 +645,6 @@ BYTE CARDbyGetPktType(void *pDeviceHandler)
     }
 }
 
-
 /*
  * Description: Caculate TSF offset of two TSF input
  *              Get TSF Offset from RxBCN's TSF and local TSF
@@ -687,8 +684,6 @@ QWORD CARDqGetTSFOffset (BYTE byRxRate, QWORD qwTSF1, QWORD qwTSF2)
     return (qwTSFOffset);
 }
 
-
-
 /*
  * Description: Sync. TSF counter to BSS
  *              Get TSF offset and write to HW
@@ -721,7 +716,6 @@ void CARDvAdjustTSF(void *pDeviceHandler, BYTE byRxRate,
     // HW's TSF add TSF Offset reg
     dwTSFOffset1 = LODWORD(qwTSFOffset);
     dwTSFOffset2 = HIDWORD(qwTSFOffset);
-
 
     pbyData[0] = (BYTE)dwTSFOffset1;
     pbyData[1] = (BYTE)(dwTSFOffset1>>8);
@@ -763,7 +757,6 @@ BOOL CARDbGetCurrentTSF(void *pDeviceHandler, PQWORD pqwCurrTSF)
 
     return(TRUE);
 }
-
 
 /*
  * Description: Clear NIC TSF counter
@@ -827,7 +820,6 @@ QWORD CARDqGetNextTBTT (QWORD qwTSF, WORD wBeaconInterval)
     return (qwTSF);
 }
 
-
 /*
  * Description: Set NIC TSF counter for first Beacon time
  *              Get NEXTTBTT from adjusted TSF and Beacon Interval
@@ -880,7 +872,6 @@ void CARDvSetFirstNextTBTT(void *pDeviceHandler, WORD wBeaconInterval)
     return;
 }
 
-
 /*
  * Description: Sync NIC TSF counter for Beacon time
  *              Get NEXTTBTT and write to HW
@@ -925,7 +916,6 @@ void CARDvUpdateNextTBTT(void *pDeviceHandler, QWORD qwTSF,
                         8,
                         pbyData
                         );
-
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"Card:Update Next TBTT[%8xh:%8xh] \n",(int)HIDWORD(qwTSF), (int)LODWORD(qwTSF));
 
@@ -972,7 +962,6 @@ BOOL bResult = TRUE;
     return bResult;
 }
 
-
 /*
  * Description: Turn on Radio power
  *
@@ -989,7 +978,6 @@ BOOL CARDbRadioPowerOn(void *pDeviceHandler)
 {
 PSDevice    pDevice = (PSDevice) pDeviceHandler;
 BOOL bResult = TRUE;
-
 
     if ((pDevice->bHWRadioOff == TRUE) || (pDevice->bRadioControlOff == TRUE)) {
         return FALSE;
@@ -1104,9 +1092,3 @@ CARDbChannelSwitch (
     }
 	return bResult;
 }
-
-
-
-
-
-

@@ -59,6 +59,18 @@ static void max17050_init_regs(struct i2c_client *client)
 	data[0] &= 0x8f;
 
 	max17050_write_reg(client, MAX17050_REG_FILTERCFG, data);
+
+	data[1] = 0x00;
+	data[0] = 0x00;
+	max17050_write_reg(client, MAX17050_REG_CGAIN, data);
+
+	data[1] = 0x00;
+	data[0] = 0x03;
+	max17050_write_reg(client, MAX17050_REG_MISCCFG, data);
+
+	data[1] = 0x00;
+	data[0] = 0x07;
+	max17050_write_reg(client, MAX17050_REG_LEARNCFG, data);
 }
 
 static void max17050_get_version(struct i2c_client *client)
@@ -838,7 +850,6 @@ static int fg_check_battery_present(struct i2c_client *client)
 	return ret;
 }
 
-
 static int fg_read_temp(struct i2c_client *client)
 {
 	struct sec_fuelgauge_info *fuelgauge = i2c_get_clientdata(client);
@@ -1171,7 +1182,6 @@ int fg_reset_soc(struct i2c_client *client)
 
 	return 0;
 }
-
 
 int fg_reset_capacity_by_jig_connection(struct i2c_client *client)
 {
@@ -2329,4 +2339,3 @@ ssize_t sec_hal_fg_store_attrs(struct device *dev,
 	return ret;
 }
 #endif
-

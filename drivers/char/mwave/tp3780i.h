@@ -52,14 +52,12 @@
 #include <asm/io.h>
 #include "mwavepub.h"
 
-
 /* DSP abilities constants for 3780i based Thinkpads */
 #define TP_ABILITIES_INTS_PER_SEC       39160800
 #define TP_ABILITIES_DATA_SIZE          32768
 #define TP_ABILITIES_INST_SIZE          32768
 #define TP_ABILITIES_MWAVEOS_NAME       "mwaveos0700.dsp"
 #define TP_ABILITIES_BIOSTASK_NAME      "mwbio701.dsp"
-
 
 /* DSP configuration values for 3780i based Thinkpads */
 #define TP_CFG_NumTransfers     3	/* 16 transfers */
@@ -98,6 +96,5 @@ int tp3780I_ReadWriteDspDStore(THINKPAD_BD_DATA * pBDData, unsigned int uOpcode,
 int tp3780I_ReadWriteDspIStore(THINKPAD_BD_DATA * pBDData, unsigned int uOpcode,
                                void __user *pvBuffer, unsigned int uCount,
                                unsigned long ulDSPAddr);
-
 
 #endif

@@ -126,7 +126,6 @@ static int slave_configure(struct scsi_device *sdev)
 	return 0;
 }
 
-
 /***********************************************************************
  * /proc/scsi/ functions
  ***********************************************************************/
@@ -252,7 +251,6 @@ static int bus_reset(struct scsi_cmnd *srb)
 	return result < 0 ? FAILED : SUCCESS;
 }
 
-
 /*
  * this defines our host template, with which we'll allocate hosts
  */
@@ -304,7 +302,6 @@ static struct scsi_host_template rtsx_host_template = {
 	.module =			THIS_MODULE
 };
 
-
 static int rtsx_acquire_irq(struct rtsx_dev *dev)
 {
 	struct rtsx_chip *chip = dev->chip;
@@ -325,7 +322,6 @@ static int rtsx_acquire_irq(struct rtsx_dev *dev)
 
 	return 0;
 }
-
 
 int rtsx_read_pci_cfg_byte(u8 bus, u8 dev, u8 func, u8 offset, u8 *val)
 {
@@ -576,7 +572,6 @@ SkipForAbort:
 	complete_and_exit(&threads_gone, 0);
 }
 
-
 static int rtsx_polling_thread(void *__dev)
 {
 	struct rtsx_dev *dev = (struct rtsx_dev *)__dev;
@@ -692,7 +687,6 @@ Exit:
 	spin_unlock(&dev->reg_lock);
 	return IRQ_HANDLED;
 }
-
 
 /* Release all our dynamic resources */
 static void rtsx_release_resources(struct rtsx_dev *dev)
@@ -1059,7 +1053,6 @@ errout:
 	return err;
 }
 
-
 static void __devexit rtsx_remove(struct pci_dev *pci)
 {
 	struct rtsx_dev *dev = (struct rtsx_dev *)pci_get_drvdata(pci);
@@ -1123,4 +1116,3 @@ static void __exit rtsx_exit(void)
 
 module_init(rtsx_init)
 module_exit(rtsx_exit)
-

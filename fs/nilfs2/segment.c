@@ -42,7 +42,6 @@
 #include "ifile.h"
 #include "segbuf.h"
 
-
 /*
  * Segment constructor
  */
@@ -1406,7 +1405,6 @@ static void nilfs_segctor_truncate_segments(struct nilfs_sc_info *sci,
 	nilfs_truncate_logs(&sci->sc_segbufs, last);
 }
 
-
 static int nilfs_segctor_collect(struct nilfs_sc_info *sci,
 				 struct the_nilfs *nilfs, int mode)
 {
@@ -2309,6 +2307,8 @@ nilfs_remove_written_gcinodes(struct the_nilfs *nilfs, struct list_head *head)
 		if (!test_bit(NILFS_I_UPDATED, &ii->i_state))
 			continue;
 		list_del_init(&ii->i_dirty);
+		truncate_inode_pages(&ii->vfs_inode.i_data, 0);
+		nilfs_btnode_cache_clear(&ii->i_btnode_cache);
 		iput(&ii->vfs_inode);
 	}
 }
@@ -2466,7 +2466,6 @@ static int nilfs_segctor_thread(void *arg)
 		spin_lock(&sci->sc_state_lock);
 		timeout = 0;
 	}
-
 
 	if (freezing(current)) {
 		spin_unlock(&sci->sc_state_lock);

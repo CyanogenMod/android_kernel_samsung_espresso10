@@ -589,7 +589,6 @@ they don't exist.
 
   autodict() - returns an autovivifying dictionary instance
 
-
 perf_trace_context Module
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

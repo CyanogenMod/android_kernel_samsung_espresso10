@@ -75,7 +75,6 @@ typedef struct tag_cmd_pkt_interrupt_status
 	u32	interrupt_status;				/* Interrupt Status. */
 }cmpk_intr_sta_t;
 
-
 /* 3. TX side: Set configuration packet. */
 typedef struct tag_cmd_pkt_set_configuration
 {
@@ -202,6 +201,5 @@ typedef enum tag_command_packet_directories
 }cmpk_element_e;
 
 u32 cmpk_message_handle_rx(struct r8192_priv *priv, struct ieee80211_rx_stats *pstats);
-
 
 #endif

@@ -7,7 +7,7 @@
 /* AC97 1.0 */
 #define  AC97_RESET               0x0000      //
 #define  AC97_MASTER_VOL_STEREO   0x0002      // Line Out
-#define  AC97_HEADPHONE_VOL       0x0004      // 
+#define  AC97_HEADPHONE_VOL       0x0004      //
 #define  AC97_MASTER_VOL_MONO     0x0006      // TAD Output
 #define  AC97_MASTER_TONE         0x0008      //
 #define  AC97_PCBEEP_VOL          0x000a      // none
@@ -219,7 +219,6 @@
 /* Total number of defined registers.  */
 #define AC97_REG_CNT 64
 
-
 /* OSS interface to the ac97s.. */
 #define AC97_STEREO_MASK (SOUND_MASK_VOLUME|SOUND_MASK_PCM|\
 	SOUND_MASK_LINE|SOUND_MASK_CD|\
@@ -255,7 +254,7 @@ struct ac97_codec {
 
 	char *name;
 	int id;
-	int dev_mixer; 
+	int dev_mixer;
 	int type;
 	u32 model;
 
@@ -273,12 +272,12 @@ struct ac97_codec {
 
 	/* callback used by helper drivers for interesting ac97 setups */
 	void  (*codec_unregister) (struct ac97_codec *codec);
-	
+
 	struct ac97_driver *driver;
 	void *driver_private;	/* Private data for the driver */
-	
+
 	spinlock_t lock;
-	
+
 	/* OSS mixer masks */
 	int modcnt;
 	int supported_mixers;
@@ -307,7 +306,7 @@ struct ac97_codec {
 /*
  *	Operation structures for each known AC97 chip
  */
- 
+
 struct ac97_ops
 {
 	/* Initialise */
@@ -320,7 +319,7 @@ struct ac97_ops
 #define AUDIO_PRO		0x4000
 #define AUDIO_DRS		0x2000
 #define AUDIO_CCMASK		0x003F
-	
+
 #define AC97_DELUDED_MODEM	1	/* Audio codec reports its a modem */
 #define AC97_NO_PCM_VOLUME	2	/* Volume control is missing 	   */
 #define AC97_DEFAULT_POWER_OFF 4 /* Needs warm reset to power up */

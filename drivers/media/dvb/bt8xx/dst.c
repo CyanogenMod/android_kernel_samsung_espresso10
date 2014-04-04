@@ -541,7 +541,6 @@ static fe_modulation_t dst_get_modulation(struct dst_state *state)
 	return state->modulation;
 }
 
-
 u8 dst_check_sum(u8 *buf, u32 len)
 {
 	u32 i;
@@ -578,7 +577,6 @@ static void dst_type_flags_print(struct dst_state *state)
 		dprintk(verbose, DST_ERROR, 0, " 0x%x firmware version = 3", DST_TYPE_HAS_FW_3);
 	dprintk(verbose, DST_ERROR, 0, "\n");
 }
-
 
 static int dst_type_print(struct dst_state *state, u8 type)
 {
@@ -1542,7 +1540,6 @@ static int dst_send_burst(struct dvb_frontend *fe, fe_sec_mini_cmd_t minicmd)
 	}
 	return dst_tone_power_cmd(state);
 }
-
 
 static int dst_init(struct dvb_frontend *fe)
 {

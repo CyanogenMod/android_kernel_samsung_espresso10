@@ -16,7 +16,6 @@ extern const struct imx_imx_uart_1irq_data imx53_imx_uart_data[];
 #define imx53_add_imx_uart(id, pdata)	\
 	imx_add_imx_uart_1irq(&imx53_imx_uart_data[id], pdata)
 
-
 extern const struct imx_imx_i2c_data imx53_imx_i2c_data[];
 #define imx53_add_imx_i2c(id, pdata)	\
 	imx_add_imx_i2c(&imx53_imx_i2c_data[id], pdata)

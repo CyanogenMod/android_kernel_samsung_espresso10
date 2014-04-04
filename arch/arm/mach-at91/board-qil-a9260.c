@@ -47,7 +47,6 @@
 #include "sam9_smc.h"
 #include "generic.h"
 
-
 static void __init ek_init_early(void)
 {
 	/* Initialize processor: 12.000 MHz crystal */
@@ -76,7 +75,6 @@ static void __init ek_init_irq(void)
 {
 	at91sam9260_init_interrupts(NULL);
 }
-
 
 /*
  * USB Host port

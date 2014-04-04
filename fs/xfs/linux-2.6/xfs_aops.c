@@ -38,7 +38,6 @@
 #include <linux/pagevec.h>
 #include <linux/writeback.h>
 
-
 /*
  * Prime number of hash buckets since address is used as the key.
  */

@@ -131,4 +131,3 @@ module_exit(cleanup_soleng_maps);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
 MODULE_DESCRIPTION("MTD map driver for Hitachi SolutionEngine (and similar) boards");
-

@@ -88,4 +88,3 @@ davinci_uart_virt:	.word	0
 		beq	1001b
 #endif
 		.endm
-

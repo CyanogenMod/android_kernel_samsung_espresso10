@@ -565,7 +565,6 @@ static void indirect_free_block(struct super_block *sb,
 	__free_block(sb, block);
 }
 
-
 static struct logfs_block_ops inode_block_ops = {
 	.write_block = inode_write_block,
 	.free_block = inode_free_block,

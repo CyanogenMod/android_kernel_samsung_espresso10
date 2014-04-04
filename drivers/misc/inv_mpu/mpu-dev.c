@@ -49,7 +49,6 @@
 #include "mldl_cfg.h"
 #include <linux/mpu.h>
 
-
 /* Platform data for the MPU */
 struct mpu_private_data {
 	struct miscdevice dev;

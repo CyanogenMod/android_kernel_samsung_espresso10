@@ -36,13 +36,10 @@
 #include "intelmid_snd_control.h"
 #include "intelmid.h"
 
-
 void period_elapsed(void *mad_substream)
 {
 	struct snd_pcm_substream *substream = mad_substream;
 	struct mad_stream_pvt *stream;
-
-
 
 	if (!substream || !substream->runtime)
 		return;
@@ -56,7 +53,6 @@ void period_elapsed(void *mad_substream)
 	snd_pcm_period_elapsed(substream);
 	return;
 }
-
 
 int snd_intelmad_alloc_stream(struct snd_pcm_substream *substream)
 {
@@ -125,7 +121,6 @@ int snd_intelmad_init_stream(struct snd_pcm_substream *substream)
 	return ret_val;
 
 }
-
 
 /**
  * sst_sc_reg_access - IPC read/write wrapper

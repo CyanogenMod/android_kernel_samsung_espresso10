@@ -174,7 +174,6 @@ static inline int i2s_sf_sclkdiv(int div, int *out)
 #	define I2S_DWS_DATA_OUT_16BIT		(0<<I2S_DWS_DATA_OUT_SIZE_SHIFT)
 #	define I2S_DWS_DATA_OUT_24BIT		(3<<I2S_DWS_DATA_OUT_SIZE_SHIFT)
 
-
 /* unknown */
 #define I2S_REG_PEAK_LEVEL_SEL		0x70
 

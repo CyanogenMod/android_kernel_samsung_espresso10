@@ -28,7 +28,6 @@
 
 #include "power.h"
 
-
 static int nocompress = 0;
 static int noresume = 0;
 static char resume_file[256] = CONFIG_PM_STD_PARTITION;
@@ -676,7 +675,6 @@ int hibernate(void)
 	return error;
 }
 
-
 /**
  * software_resume - Resume from a saved hibernation image.
  *
@@ -811,7 +809,6 @@ close_finish:
 }
 
 late_initcall(software_resume);
-
 
 static const char * const hibernation_modes[] = {
 	[HIBERNATION_PLATFORM]	= "platform",
@@ -1010,11 +1007,9 @@ static struct attribute * g[] = {
 	NULL,
 };
 
-
 static struct attribute_group attr_group = {
 	.attrs = g,
 };
-
 
 static int __init pm_disk_init(void)
 {
@@ -1022,7 +1017,6 @@ static int __init pm_disk_init(void)
 }
 
 core_initcall(pm_disk_init);
-
 
 static int __init resume_setup(char *str)
 {

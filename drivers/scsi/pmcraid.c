@@ -135,8 +135,6 @@ static struct pci_device_id pmcraid_pci_table[] __devinitdata = {
 
 MODULE_DEVICE_TABLE(pci, pmcraid_pci_table);
 
-
-
 /**
  * pmcraid_slave_alloc - Prepare for commands to a device
  * @scsi_dev: scsi device struct
@@ -336,7 +334,6 @@ static int pmcraid_change_queue_type(struct scsi_device *scsi_dev, int tag)
 
 	return tag;
 }
-
 
 /**
  * pmcraid_init_cmdblk - initializes a command block
@@ -1265,7 +1262,6 @@ static void pmcraid_send_hcam(struct pmcraid_instance *pinstance, u8 type)
 	pmcraid_send_hcam_cmd(cmd);
 }
 
-
 /**
  * pmcraid_prepare_cancel_cmd - prepares a command block to abort another
  *
@@ -1478,7 +1474,6 @@ static int pmcraid_notify_aen(
 		 + NLMSG_HDRLEN);
 	skb = genlmsg_new(nla_genl_hdr_total_size, GFP_ATOMIC);
 
-
 	if (!skb) {
 		pmcraid_err("Failed to allocate aen data SKB of size: %x\n",
 			     total_size);
@@ -1614,7 +1609,6 @@ static void pmcraid_handle_config_change(struct pmcraid_instance *pinstance)
 					cfg_entry->array_id & 0xFF) :
 			RES_TARGET(cfg_entry->resource_address),
 		 RES_LUN(cfg_entry->resource_address));
-
 
 	/* If this HCAM indicates a lost notification, read the config table */
 	if (pinstance->ccn.hcam->notification_lost) {
@@ -3147,7 +3141,6 @@ static int pmcraid_eh_host_reset_handler(struct scsi_cmnd *scmd)
 	struct pmcraid_instance *pinstance =
 		(struct pmcraid_instance *)(scmd->device->host->hostdata);
 
-
 	/* wait for an additional 150 seconds just in case firmware could come
 	 * up and if it could complete all the pending commands excluding the
 	 * two HCAM (CCN and LDN).
@@ -3192,7 +3185,6 @@ static u8 pmcraid_task_attributes(struct scsi_cmnd *scsi_cmd)
 
 	return rc;
 }
-
 
 /**
  * pmcraid_init_ioadls - initializes IOADL related fields in IOARCB
@@ -3631,7 +3623,6 @@ static int pmcraid_chr_fasync(int fd, struct file *filep, int mode)
 	return rc;
 }
 
-
 /**
  * pmcraid_build_passthrough_ioadls - builds SG elements for passthrough
  * commands sent over IOCTL interface
@@ -3690,7 +3681,6 @@ static int pmcraid_build_passthrough_ioadls(
 
 	return 0;
 }
-
 
 /**
  * pmcraid_release_passthrough_ioadls - release passthrough ioadls
@@ -3998,9 +3988,6 @@ out_free_buffer:
 	return rc;
 }
 
-
-
-
 /**
  * pmcraid_ioctl_driver - ioctl handler for commands handled by driver itself
  *
@@ -4177,9 +4164,6 @@ static const struct file_operations pmcraid_fops = {
 	.llseek = noop_llseek,
 };
 
-
-
-
 /**
  * pmcraid_show_log_level - Display adapter's error logging level
  * @dev: class device struct
@@ -4308,7 +4292,6 @@ static struct device_attribute *pmcraid_host_attrs[] = {
 	NULL,
 };
 
-
 /* host template structure for pmcraid driver */
 static struct scsi_host_template pmcraid_host_template = {
 	.module = THIS_MODULE,
@@ -4395,7 +4378,6 @@ static irqreturn_t pmcraid_isr_msix(int irq, void *dev_id)
 				pinstance->int_regs.host_ioa_interrupt_reg);
 			ioread32(pinstance->int_regs.host_ioa_interrupt_reg);
 
-
 		}
 	}
 
@@ -4474,7 +4456,6 @@ static irqreturn_t pmcraid_isr(int irq, void *dev_id)
 
 	return IRQ_HANDLED;
 }
-
 
 /**
  * pmcraid_worker_function -  worker thread function
@@ -4826,7 +4807,6 @@ pmcraid_allocate_cmd_blocks(struct pmcraid_instance *pinstance)
 
 	sprintf(pinstance->cmd_pool_name, "pmcraid_cmd_pool_%d",
 		pinstance->host->unique_id);
-
 
 	pinstance->cmd_cachep = kmem_cache_create(
 					pinstance->cmd_pool_name,
@@ -5238,7 +5218,6 @@ static int __devinit pmcraid_init_buffers(struct pmcraid_instance *pinstance)
 		return -ENOMEM;
 	}
 
-
 	/* Initialize all the command blocks and add them to free pool. No
 	 * need to lock (free_pool_lock) as this is done in initialization
 	 * itself
@@ -5371,7 +5350,6 @@ static void pmcraid_shutdown(struct pci_dev *pdev)
 	struct pmcraid_instance *pinstance = pci_get_drvdata(pdev);
 	pmcraid_reset_bringdown(pinstance);
 }
-
 
 /**
  * pmcraid_get_minor - returns unused minor number from minor number bitmap
@@ -5704,7 +5682,6 @@ static void pmcraid_set_timestamp(struct pmcraid_cmd *cmd)
 	}
 }
 
-
 /**
  * pmcraid_init_res_table - Initialize the resource table
  * @cmd:  pointer to pmcraid command struct
@@ -5873,7 +5850,6 @@ static void pmcraid_querycfg(struct pmcraid_cmd *cmd)
 	pmcraid_send_cmd(cmd, pmcraid_init_res_table,
 			 PMCRAID_INTERNAL_TIMEOUT, pmcraid_timeout_handler);
 }
-
 
 /**
  * pmcraid_probe - PCI probe entry pointer for PMC MaxRAID controller driver

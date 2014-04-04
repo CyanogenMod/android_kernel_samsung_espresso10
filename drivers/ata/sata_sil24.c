@@ -52,7 +52,6 @@ struct sil24_sge {
 	__le32	flags;
 };
 
-
 enum {
 	SIL24_HOST_BAR		= 0,
 	SIL24_PORT_BAR		= 2,
@@ -1243,7 +1242,6 @@ static void sil24_init_controller(struct ata_host *host)
 	for (i = 0; i < host->n_ports; i++) {
 		struct ata_port *ap = host->ports[i];
 		void __iomem *port = sil24_port_base(ap);
-
 
 		/* Initial PHY setting */
 		writel(0x20c, port + PORT_PHY_CFG);

@@ -1,4 +1,4 @@
-/* 
+/*
  * linux/mtio.h header file for Linux. Written by H. Bergman
  *
  * Modified for special ioctls provided by zftape in September 1997
@@ -24,7 +24,7 @@ struct	mtop {
 /* Magnetic Tape operations [Not all operations supported by all drivers]: */
 #define MTRESET 0	/* +reset drive in case of problems */
 #define MTFSF	1	/* forward space over FileMark,
-			 * position at first record of next file 
+			 * position at first record of next file
 			 */
 #define MTBSF	2	/* backward space FileMark (position before FM) */
 #define MTFSR	3	/* forward space record */
@@ -83,8 +83,6 @@ struct	mtget {
 	__kernel_daddr_t mt_blkno;	/* current block number */
 };
 
-
-
 /*
  * Constants for mt_type. Not all of these are supported,
  * and these are not all of the ones that are supported.
@@ -116,19 +114,16 @@ struct	mtget {
 #define MT_ISFTAPE_UNKNOWN	0x800000 /* obsolete */
 #define MT_ISFTAPE_FLAG	0x800000
 
-
 /* structure for MTIOCPOS - mag tape get position command */
 
 struct	mtpos {
 	long 	mt_blkno;	/* current block number */
 };
 
-
 /* mag tape io control commands */
 #define	MTIOCTOP	_IOW('m', 1, struct mtop)	/* do a mag tape op */
 #define	MTIOCGET	_IOR('m', 2, struct mtget)	/* get tape status */
 #define	MTIOCPOS	_IOR('m', 3, struct mtpos)	/* get tape position */
-
 
 /* Generic Mag Tape (device independent) status macros for examining
  * mt_gstat -- HP-UX compatible.
@@ -154,7 +149,6 @@ struct	mtpos {
 #define GMT_IM_REP_EN(x)        ((x) & 0x00010000)  /* immediate report mode */
 #define GMT_CLN(x)              ((x) & 0x00008000)  /* cleaning requested */
 /* 15 generic status bits unused */
-
 
 /* SCSI-tape specific definitions */
 /* Bitfield shifts in the status  */

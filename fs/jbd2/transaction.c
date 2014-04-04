@@ -184,7 +184,7 @@ repeat:
 			goto repeat;
 		}
 
-		if (!journal->j_running_transaction) {
+		if (!journal->j_running_transaction && !journal->j_barrier_count) {
 			jbd2_get_transaction(journal, new_transaction);
 			new_transaction = NULL;
 		}
@@ -276,7 +276,7 @@ repeat:
 	}
 
 	/* OK, account for the buffers that this operation expects to
-	 * use and add the handle to the running transaction. 
+	 * use and add the handle to the running transaction.
 	 */
 	update_t_max_wait(transaction, ts);
 	handle->h_transaction = transaction;
@@ -356,13 +356,11 @@ handle_t *jbd2__journal_start(journal_t *journal, int nblocks, int gfp_mask)
 }
 EXPORT_SYMBOL(jbd2__journal_start);
 
-
 handle_t *jbd2_journal_start(journal_t *journal, int nblocks)
 {
 	return jbd2__journal_start(journal, nblocks, GFP_NOFS);
 }
 EXPORT_SYMBOL(jbd2_journal_start);
-
 
 /**
  * int jbd2_journal_extend() - extend buffer credits.
@@ -434,7 +432,6 @@ out:
 	return result;
 }
 
-
 /**
  * int jbd2_journal_restart() - restart a handle .
  * @handle:  handle to restart
@@ -474,10 +471,10 @@ int jbd2__journal_restart(handle_t *handle, int nblocks, int gfp_mask)
 		   &transaction->t_outstanding_credits);
 	if (atomic_dec_and_test(&transaction->t_updates))
 		wake_up(&journal->j_wait_updates);
+	tid = transaction->t_tid;
 	spin_unlock(&transaction->t_handle_lock);
 
 	jbd_debug(2, "restarting handle %p\n", handle);
-	tid = transaction->t_tid;
 	need_to_start = !tid_geq(journal->j_commit_request, tid);
 	read_unlock(&journal->j_state_lock);
 	if (need_to_start)
@@ -489,7 +486,6 @@ int jbd2__journal_restart(handle_t *handle, int nblocks, int gfp_mask)
 	return ret;
 }
 EXPORT_SYMBOL(jbd2__journal_restart);
-
 
 int jbd2_journal_restart(handle_t *handle, int nblocks)
 {
@@ -522,12 +518,12 @@ void jbd2_journal_lock_updates(journal_t *journal)
 			break;
 
 		spin_lock(&transaction->t_handle_lock);
+		prepare_to_wait(&journal->j_wait_updates, &wait, TASK_UNINTERRUPTIBLE);
 		if (!atomic_read(&transaction->t_updates)) {
 			spin_unlock(&transaction->t_handle_lock);
+			finish_wait(&journal->j_wait_updates, &wait);
 			break;
 		}
-		prepare_to_wait(&journal->j_wait_updates, &wait,
-				TASK_UNINTERRUPTIBLE);
 		spin_unlock(&transaction->t_handle_lock);
 		write_unlock(&journal->j_state_lock);
 		schedule();
@@ -762,7 +758,6 @@ repeat:
 		jh->b_next_transaction = transaction;
 	}
 
-
 	/*
 	 * Finally, if the buffer is not journaled right now, we need to make
 	 * sure it doesn't get written to disk before the caller actually
@@ -839,7 +834,6 @@ int jbd2_journal_get_write_access(handle_t *handle, struct buffer_head *bh)
 	jbd2_journal_put_journal_head(jh);
 	return rc;
 }
-
 
 /*
  * When the user wants to journal a newly created buffer_head
@@ -1044,8 +1038,6 @@ void jbd2_buffer_abort_trigger(struct journal_head *jh,
 
 	triggers->t_abort(triggers, jh2bh(jh));
 }
-
-
 
 /**
  * int jbd2_journal_dirty_metadata() -  mark a buffer as containing dirty metadata
@@ -1680,8 +1672,20 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
 		__journal_try_to_free_buffer(journal, bh);
 		jbd2_journal_put_journal_head(jh);
 		jbd_unlock_bh_state(bh);
+#ifndef CONFIG_CMA
 		if (buffer_jbd(bh))
 			goto busy;
+#else
+		if (buffer_jbd(bh)) {
+			/*
+			 * Workaround: In case of CMA page, just commit journal.
+			 */
+			if (is_cma_pageblock(page))
+				jbd2_journal_force_commit(journal);
+			else
+				goto busy;
+		}
+#endif
 	} while ((bh = bh->b_this_page) != head);
 
 	ret = try_to_free_buffers(page);

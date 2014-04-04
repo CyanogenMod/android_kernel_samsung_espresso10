@@ -44,11 +44,11 @@ static void dump_ipu_registers(struct rproc *rproc)
 	char buf[64];
 	struct pt_regs regs;
 
-	if (!rproc->cdump1.buf)
+	if (!rproc->cdump_buf1)
 		return;
 
 	remoteproc_fill_pt_regs(&regs,
-			(struct exc_regs *)rproc->cdump1.buf);
+			(struct exc_regs *)rproc->cdump_buf1);
 
 	pr_info("REGISTER DUMP FOR REMOTEPROC %s\n", rproc->name);
 	pr_info("PC is at %08lx\n", instruction_pointer(&regs));
@@ -83,7 +83,7 @@ static void dump_dsp_registers(struct rproc *rproc)
 {
 	struct exc_dspRegs *regs;
 
-	regs = (struct exc_dspRegs *)rproc->cdump0.buf;
+	regs = (struct exc_dspRegs *)rproc->cdump_buf0;
 
 	pr_info("REGISTER DUMP FOR REMOTEPROC %s\n", rproc->name);
 	pr_info("PC is at %08x\n", regs->IRP);
@@ -182,17 +182,6 @@ static struct rproc_mem_pool *omap_rproc_get_pool(const char *name)
 		len2 = omap_dsp_get_mempool_tsize(OMAP_RPROC_MEMPOOL_DYNAMIC);
 	} else
 		return pool;
-
-	if (!paddr1 && !paddr2) {
-		pr_err("%s - no carveout memory is available at all\n", name);
-		return pool;
-	}
-	if (!paddr1 || !len1)
-		pr_warn("%s - static memory is unavailable: 0x%x, 0x%x\n",
-			name, paddr1, len1);
-	if (!paddr2 || !len2)
-		pr_warn("%s - carveout memory is unavailable: 0x%x, 0x%x\n",
-			name, paddr2, len2);
 
 	pool = kzalloc(sizeof(*pool), GFP_KERNEL);
 	if (pool) {

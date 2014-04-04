@@ -38,7 +38,6 @@
 #include "vxfs_extern.h"
 #include "vxfs_inode.h"
 
-
 static void *	vxfs_immed_follow_link(struct dentry *, struct nameidata *);
 
 static int	vxfs_immed_readpage(struct file *, struct page *);
@@ -106,7 +105,7 @@ vxfs_immed_readpage(struct file *fp, struct page *pp)
 	kaddr = kmap(pp);
 	memcpy(kaddr, vip->vii_immed.vi_immed + offset, PAGE_CACHE_SIZE);
 	kunmap(pp);
-	
+
 	flush_dcache_page(pp);
 	SetPageUptodate(pp);
         unlock_page(pp);

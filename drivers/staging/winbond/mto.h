@@ -74,7 +74,6 @@ struct wb35_mto_params {
 	s32	RSSI_low;
 };
 
-
 #define MTO_DATA()		(adapter->sMtoPara)
 #define MTO_HAL()		(&adapter->sHwData)
 #define MTO_SET_PREAMBLE_TYPE(x) /* Turbo mark LM_PREAMBLE_TYPE(&pcore_data->lm_data) = (x) */
@@ -121,7 +120,6 @@ struct wb35_mto_params {
 #define MTOPARA_TXPOWER_INDEX()			MTO_DATA().DTO_TxPowerIndex
 /* ------------------------------------------------ */
 
-
 extern u16 MTO_Frag_Th_Tbl[];
 
 #define MTO_DATA_RATE()			MTO_Data_Rate_Tbl[MTO_RATE_LEVEL()]
@@ -135,4 +133,3 @@ extern u8 MTO_GetTxFallbackRate(struct wbsoft_priv *adapter);
 extern void MTO_SetTxCount(struct wbsoft_priv *adapter, u8 t0, u8 index);
 
 #endif /* __MTO_H__ */
-

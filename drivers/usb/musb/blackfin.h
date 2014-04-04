@@ -69,7 +69,6 @@ static void dump_fifo_data(u8 *buf, u16 len)
 #define dump_fifo_data(buf, len)	do {} while (0)
 #endif
 
-
 #define USB_DMA_BASE		USB_DMA_INTERRUPT
 #define USB_DMAx_CTRL		0x04
 #define USB_DMAx_ADDR_LOW	0x08

@@ -25,7 +25,6 @@
 #include <sound/control.h>
 #include <sound/initval.h>
 
-
 #include "tm6000.h"
 #include "tm6000-regs.h"
 
@@ -49,7 +48,6 @@ MODULE_PARM_DESC(enable, "Enable tm6000x soundcard. default enabled.");
 
 module_param_array(index, int, NULL, 0444);
 MODULE_PARM_DESC(index, "Index value for tm6000x capture interface(s).");
-
 
 /****************************************************************************
 				Module macros
@@ -83,7 +81,6 @@ static int _tm6000_start_audio_dma(struct snd_tm6000_card *chip)
 	tm6000_set_reg_mask(core, TM6010_REQ07_RCC_ACTIVE_VIDEO_IF, 0x40, 0x40);
 
 	tm6000_set_audio_bitrate(core, 48000);
-
 
 	return 0;
 }
@@ -134,7 +131,6 @@ static int dsp_buffer_alloc(struct snd_pcm_substream *substream, int size)
 
 	return 0;
 }
-
 
 /****************************************************************************
 				ALSA PCM Interface
@@ -323,7 +319,6 @@ static int snd_tm6000_prepare(struct snd_pcm_substream *substream)
 
 	return 0;
 }
-
 
 /*
  * trigger callback

@@ -213,6 +213,4 @@ phys_addr_t omaprpc_buffer_lookup(struct omaprpc_instance_t *rpc,
  */
 long omaprpc_recalc_off(phys_addr_t lpa, long uoff);
 
-
 #endif
-

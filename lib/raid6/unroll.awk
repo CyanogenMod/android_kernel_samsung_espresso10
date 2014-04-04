@@ -1,4 +1,3 @@
-
 # This filter requires one command line option of form -vN=n
 # where n must be a decimal number.
 #

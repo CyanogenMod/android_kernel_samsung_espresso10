@@ -76,7 +76,7 @@ static int send_converted_effect(struct nrpn_conv_table *table, int num_tables,
 /* effect sensitivities for GS NRPN:
  *  adjusted for chaos 8MB soundfonts
  */
-static int gs_sense[] = 
+static int gs_sense[] =
 {
 	DEF_FX_CUTOFF, DEF_FX_RESONANCE, DEF_FX_ATTACK, DEF_FX_RELEASE,
 	DEF_FX_VIBRATE, DEF_FX_VIBDEPTH, DEF_FX_VIBDELAY
@@ -85,12 +85,11 @@ static int gs_sense[] =
 /* effect sensitivies for XG controls:
  * adjusted for chaos 8MB soundfonts
  */
-static int xg_sense[] = 
+static int xg_sense[] =
 {
 	DEF_FX_CUTOFF, DEF_FX_RESONANCE, DEF_FX_ATTACK, DEF_FX_RELEASE,
 	DEF_FX_VIBRATE, DEF_FX_VIBDEPTH, DEF_FX_VIBDELAY
 };
-
 
 /*
  * AWE32 NRPN effects
@@ -178,7 +177,6 @@ static int fx_conv_Q(int val)
 	return (unsigned short)((val / 8) & 0xff);
 }
 
-
 static struct nrpn_conv_table awe_effects[] =
 {
 	{ 0, EMUX_FX_LFO1_DELAY,	fx_lfo1_delay},
@@ -212,7 +210,6 @@ static struct nrpn_conv_table awe_effects[] =
 	{25, EMUX_FX_CHORUS,		fx_chorus},
 	{26, EMUX_FX_REVERB,		fx_reverb},
 };
-
 
 /*
  * GS(SC88) NRPN effects; still experimental
@@ -278,7 +275,6 @@ static struct nrpn_conv_table gs_effects[] =
 	{10, EMUX_FX_LFO1_DELAY, gs_vib_delay},
 };
 
-
 /*
  * NRPN events
  */
@@ -298,7 +294,7 @@ snd_emux_nrpn(void *p, struct snd_midi_channel *chan,
 		/* Win/DOS AWE32 specific NRPNs */
 		/* both MSB/LSB necessary */
 		val = (chan->control[MIDI_CTL_MSB_DATA_ENTRY] << 7) |
-			chan->control[MIDI_CTL_LSB_DATA_ENTRY]; 
+			chan->control[MIDI_CTL_LSB_DATA_ENTRY];
 		val -= 8192;
 		send_converted_effect
 			(awe_effects, ARRAY_SIZE(awe_effects),
@@ -320,7 +316,6 @@ snd_emux_nrpn(void *p, struct snd_midi_channel *chan,
 		return;
 	}
 }
-
 
 /*
  * XG control effects; still experimental
@@ -393,4 +388,3 @@ snd_emux_sysex(void *p, unsigned char *buf, int len, int parsed,
 		break;
 	}
 }
-

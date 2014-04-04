@@ -33,7 +33,6 @@ typedef enum cy_as_physical_endpoint_state {
 	cy_as_e_p_iso_out
 } cy_as_physical_endpoint_state;
 
-
 /*
 * This map is used to map an index between 1 and 10
 * to a logical endpoint number.  This is used to map
@@ -254,7 +253,6 @@ create_register_settings(cy_as_device *dev_p,
 		dev_p->usb_lepcfg[i] = v;
 	}
 }
-
 
 cy_as_return_status_t
 cy_as_usb_map_logical2_physical(cy_as_device *dev_p)

@@ -144,7 +144,6 @@ struct lmc_regfile_t {
 	| LMC_RDES_REPORT_ON_MII_ERR \
         | LMC_RDES_COLLISION_SEEN ) )
 
-
 /*
  * Ioctl info
  */
@@ -177,7 +176,6 @@ struct lmc___ctl {
 	} cardspec;
 	u32       circuit_type;   /* T1 or E1 */
 };
-
 
 /*
  * Careful, look at the data sheet, there's more to this
@@ -218,7 +216,6 @@ struct lmc___media {
         void    (* set_circuit_type)(lmc_softc_t * const, int);
         void	(* watchdog)(lmc_softc_t * const);
 };
-
 
 #define STATCHECK     0xBEEFCAFE
 
@@ -286,7 +283,6 @@ typedef struct lmc_xinfo {
 
 	u32       Magic1;                         /* DEADBEEF */
 } LMC_XINFO;
-
 
 /*
  * forward decl

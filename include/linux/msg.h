@@ -40,13 +40,13 @@ struct msgbuf {
 /* buffer for msgctl calls IPC_INFO, MSG_INFO */
 struct msginfo {
 	int msgpool;
-	int msgmap; 
-	int msgmax; 
-	int msgmnb; 
-	int msgmni; 
-	int msgssz; 
-	int msgtql; 
-	unsigned short  msgseg; 
+	int msgmap;
+	int msgmax;
+	int msgmnb;
+	int msgmni;
+	int msgssz;
+	int msgtql;
+	unsigned short  msgseg;
 };
 
 /*
@@ -76,8 +76,8 @@ struct msginfo {
 
 /* one msg_msg structure for each message */
 struct msg_msg {
-	struct list_head m_list; 
-	long  m_type;          
+	struct list_head m_list;
+	long  m_type;
 	int m_ts;           /* message text size */
 	struct msg_msgseg* next;
 	void *security;

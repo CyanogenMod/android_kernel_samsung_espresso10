@@ -251,7 +251,6 @@ static void raid10_end_read_request(struct bio *bio, int error)
 	int slot, dev;
 	conf_t *conf = r10_bio->mddev->private;
 
-
 	slot = r10_bio->read_slot;
 	dev = r10_bio->devs[slot].devnum;
 	/*
@@ -335,7 +334,6 @@ static void raid10_end_write_request(struct bio *bio, int error)
 
 	rdev_dec_pending(conf->mirrors[dev].rdev, conf->mddev);
 }
-
 
 /*
  * RAID10 layout manager
@@ -1085,7 +1083,6 @@ static int raid10_spare_active(mddev_t *mddev)
 	return count;
 }
 
-
 static int raid10_add_disk(mddev_t *mddev, mdk_rdev_t *rdev)
 {
 	conf_t *conf = mddev->private;
@@ -1181,7 +1178,6 @@ abort:
 	print_conf(conf);
 	return err;
 }
-
 
 static void end_sync_read(struct bio *bio, int error)
 {
@@ -1375,7 +1371,6 @@ static void recovery_request_write(mddev_t *mddev, r10bio_t *r10_bio)
 	int i, d;
 	struct bio *bio, *wbio;
 
-
 	/* move the pages across to the second bio
 	 * and submit the write request
 	 */
@@ -1395,7 +1390,6 @@ static void recovery_request_write(mddev_t *mddev, r10bio_t *r10_bio)
 	else
 		bio_endio(wbio, -EIO);
 }
-
 
 /*
  * Used by fix_read_error() to decay the per rdev read_errors.
@@ -1703,7 +1697,6 @@ static void raid10d(mddev_t *mddev)
 	blk_finish_plug(&plug);
 }
 
-
 static int init_resync(conf_t *conf)
 {
 	int buffs;
@@ -1851,13 +1844,19 @@ static sector_t sync_request(mddev_t *mddev, sector_t sector_nr,
 			int must_sync;
 
 			if (conf->mirrors[i].rdev == NULL ||
-			    test_bit(In_sync, &conf->mirrors[i].rdev->flags)) 
+			    test_bit(In_sync, &conf->mirrors[i].rdev->flags))
 				continue;
 
 			still_degraded = 0;
 			/* want to reconstruct this device */
 			rb2 = r10_bio;
 			sect = raid10_find_virt(conf, sector_nr, i);
+			if (sect >= mddev->resync_max_sectors) {
+				/* last stripe is not complete - don't
+				 * try to recover this sector.
+				 */
+				continue;
+			}
 			/* Unless we are doing a full sync, we only need
 			 * to recover the block if it is set in the bitmap
 			 */
@@ -2122,7 +2121,6 @@ raid10_size(mddev_t *mddev, sector_t sectors, int raid_disks)
 	return size << conf->chunk_shift;
 }
 
-
 static conf_t *setup_conf(mddev_t *mddev)
 {
 	conf_t *conf = NULL;
@@ -2163,7 +2161,6 @@ static conf_t *setup_conf(mddev_t *mddev)
 	if (!conf->tmppage)
 		goto out;
 
-
 	conf->raid_disks = mddev->raid_disks;
 	conf->near_copies = nc;
 	conf->far_copies = fc;
@@ -2198,7 +2195,6 @@ static conf_t *setup_conf(mddev_t *mddev)
 	else
 		sector_div(stride, fc);
 	conf->stride = stride << conf->chunk_shift;
-
 
 	spin_lock_init(&conf->device_lock);
 	INIT_LIST_HEAD(&conf->retry_list);

@@ -564,7 +564,6 @@
 #define DINTRE_HBLNK1_EN	(1 << 1)
 #define DINTRE_HBLNK0_EN	(1 << 0)
 
-
 /* DLSTS - display load status register */
 #define DLSTS_RLD_ADONE	(1 << 23)
 /* #define DLSTS_RLD_ADOUT	Fld(23,0) */

@@ -862,7 +862,6 @@ int NUM_TOTAL_VX855_ModeXregs = ARRAY_SIZE(VX855_ModeXregs);
 int NUM_TOTAL_CLE266_ModeXregs = ARRAY_SIZE(CLE266_ModeXregs);
 int NUM_TOTAL_PATCH_MODE = ARRAY_SIZE(res_patch_table);
 
-
 struct VideoModeTable *viafb_get_mode(int hres, int vres)
 {
 	u32 i;

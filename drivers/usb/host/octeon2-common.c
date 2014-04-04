@@ -27,7 +27,6 @@ void octeon2_usb_clocks_start(void)
 	int i;
 	unsigned long io_clk_64_to_ns;
 
-
 	mutex_lock(&octeon2_usb_clocks_mutex);
 
 	octeon2_usb_clock_start_cnt++;

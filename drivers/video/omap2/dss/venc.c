@@ -513,10 +513,6 @@ static void venc_power_off(struct omap_dss_device *dssdev)
 	regulator_disable(venc.vdda_dac_reg);
 }
 
-
-
-
-
 /* driver */
 static int venc_panel_probe(struct omap_dss_device *dssdev)
 {

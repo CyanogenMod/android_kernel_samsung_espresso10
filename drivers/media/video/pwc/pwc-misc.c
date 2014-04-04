@@ -24,7 +24,6 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 #include "pwc.h"
 
 const struct pwc_coord pwc_image_sizes[PSZ_MAX] =
@@ -129,5 +128,3 @@ void pwc_construct(struct pwc_device *pdev)
 	/* length of image, in YUV format; always allocate enough memory. */
 	pdev->len_per_image = PAGE_ALIGN((pdev->abs_max.x * pdev->abs_max.y * 3) / 2);
 }
-
-

@@ -44,7 +44,6 @@ static int vlandev_seq_show(struct seq_file *seq, void *v);
  *	Global Data
  */
 
-
 /*
  *	Names of the proc directory entries
  */

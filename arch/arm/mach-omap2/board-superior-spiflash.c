@@ -46,7 +46,6 @@ static struct spi_board_info palau_flash_rom[] __initdata = {
 	},
 };
 
-
 void omap4_superior_spiflash_init(void)
 {
 	int err = 0;

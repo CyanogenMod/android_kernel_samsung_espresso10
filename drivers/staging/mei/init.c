@@ -61,7 +61,6 @@ void mei_flush_queues(struct mei_device *dev, struct mei_cl *cl)
 	}
 }
 
-
 /**
  * mei_flush_list - removes list entry belonging to cl.
  *
@@ -354,8 +353,6 @@ void mei_reset(struct mei_device *dev, int interrupts_enabled)
 	}
 }
 
-
-
 /**
  * host_start_message - mei host sends start message.
  *
@@ -429,7 +426,6 @@ void host_enum_clients_message(struct mei_device *dev)
 	return ;
 }
 
-
 /**
  * allocate_me_clients_storage - allocates storage for me clients
  *
@@ -448,7 +444,6 @@ void allocate_me_clients_storage(struct mei_device *dev)
 
 	if (dev->num_mei_me_clients <= 0)
 		return ;
-
 
 	if (dev->me_clients != NULL) {
 		kfree(dev->me_clients);
@@ -515,7 +510,6 @@ void host_client_properties(struct mei_device *dev)
 		return;
 	}
 
-
 	/*
 	 * Clear Map for indicating now ME clients
 	 * with associated host client
@@ -561,7 +555,6 @@ int mei_find_me_client_index(const struct mei_device *dev, uuid_le cuuid)
 
 	return res;
 }
-
 
 /**
  * mei_find_me_client_update_filext - searches for ME client guid
@@ -668,8 +661,6 @@ struct mei_cl *mei_alloc_file_private(struct mei_device *dev)
 
 	return priv;
 }
-
-
 
 /**
  * mei_disconnect_host_client - sends disconnect message to fw from host client.

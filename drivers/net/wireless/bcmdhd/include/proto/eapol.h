@@ -186,7 +186,6 @@ typedef BWL_PRE_PACKED_STRUCT struct {
 
 #define WPA2_KEY_DATA_PAD	0xdd
 
-
 /* This marks the end of a packed structure section. */
 #include <packed_section_end.h>
 

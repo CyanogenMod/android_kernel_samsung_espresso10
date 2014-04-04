@@ -61,5 +61,4 @@
 
 #define NR_IRQS			(IRQ_KIRKWOOD_GPIO_START + NR_GPIO_IRQS)
 
-
 #endif

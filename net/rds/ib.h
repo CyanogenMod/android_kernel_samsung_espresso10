@@ -262,7 +262,6 @@ static inline void rds_ib_dma_sync_sg_for_device(struct ib_device *dev,
 }
 #define ib_dma_sync_sg_for_device	rds_ib_dma_sync_sg_for_device
 
-
 /* ib.c */
 extern struct rds_transport rds_ib_transport;
 struct rds_ib_device *rds_ib_get_client_data(struct ib_device *device);
@@ -289,7 +288,6 @@ int rds_ib_cm_handle_connect(struct rdma_cm_id *cm_id,
 int rds_ib_cm_initiate_connect(struct rdma_cm_id *cm_id);
 void rds_ib_cm_connect_complete(struct rds_connection *conn,
 				struct rdma_cm_event *event);
-
 
 #define rds_ib_conn_error(conn, fmt...) \
 	__rds_ib_conn_error(conn, KERN_WARNING "RDS/IB: " fmt)

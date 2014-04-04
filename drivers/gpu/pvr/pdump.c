@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -30,7 +30,7 @@
 #include <asm/atomic.h>
 #include <stdarg.h>
 #if defined (SUPPORT_SGX)
-#include "sgxdefs.h" 
+#include "sgxdefs.h"
 #endif
 #include "services_headers.h"
 
@@ -45,8 +45,8 @@
 #include "pdump_km.h"
 #include "pdump_int.h"
 
-#include <linux/kernel.h> 
-#include <linux/string.h> 
+#include <linux/kernel.h>
+#include <linux/string.h>
 
 static IMG_BOOL PDumpWriteString2		(IMG_CHAR * pszString, IMG_UINT32 ui32Flags);
 static IMG_BOOL PDumpWriteILock			(PDBG_STREAM psStream, IMG_UINT8 *pui8Data, IMG_UINT32 ui32Count, IMG_UINT32 ui32Flags);
@@ -61,8 +61,6 @@ static IMG_VOID DbgSetMarker			(PDBG_STREAM psStream, IMG_UINT32 ui32Marker);
 static atomic_t gsPDumpSuspended = ATOMIC_INIT(0);
 
 static PDBGKM_SERVICE_TABLE gpfnDbgDrv = IMG_NULL;
-
-
 
 IMG_CHAR *pszStreamName[PDUMP_NUM_STREAMS] = {	"ParamStream2",
 												"ScriptStream2",
@@ -83,9 +81,6 @@ static PDBG_PDUMP_STATE gsDBGPdumpState = {{IMG_NULL}, 0, IMG_NULL, IMG_NULL, IM
 #define SZ_MSG_SIZE_MAX			PVRSRV_PDUMP_MAX_COMMENT_SIZE-1
 #define SZ_SCRIPT_SIZE_MAX		PVRSRV_PDUMP_MAX_COMMENT_SIZE-1
 #define SZ_FILENAME_SIZE_MAX	PVRSRV_PDUMP_MAX_COMMENT_SIZE-1
-
-
-
 
 IMG_VOID DBGDrvGetServiceTable(IMG_VOID **fn_table);
 
@@ -147,7 +142,7 @@ PVRSRV_ERROR PDumpOSBufprintf(IMG_HANDLE hBuf, IMG_UINT32 ui32ScriptSizeMax, IMG
 
 	va_end(vaArgs);
 
-	if (n>=(IMG_INT32)ui32ScriptSizeMax || n==-1)	
+	if (n>=(IMG_INT32)ui32ScriptSizeMax || n==-1)
 	{
 		PVR_DPF((PVR_DBG_ERROR, "Buffer overflow detected, pdump output may be incomplete."));
 
@@ -166,7 +161,7 @@ PVRSRV_ERROR PDumpOSVSprintf(IMG_CHAR *pszComment, IMG_UINT32 ui32ScriptSizeMax,
 
 	n = vsnprintf(pszComment, ui32ScriptSizeMax, pszFormat, vaArgs);
 
-	if (n>=(IMG_INT32)ui32ScriptSizeMax || n==-1)	
+	if (n>=(IMG_INT32)ui32ScriptSizeMax || n==-1)
 	{
 		PVR_DPF((PVR_DBG_ERROR, "Buffer overflow detected, pdump output may be incomplete."));
 
@@ -180,7 +175,6 @@ IMG_VOID PDumpOSDebugPrintf(IMG_CHAR* pszFormat, ...)
 {
 	PVR_UNREFERENCED_PARAMETER(pszFormat);
 
-	
 }
 
 PVRSRV_ERROR PDumpOSSprintf(IMG_CHAR *pszComment, IMG_UINT32 ui32ScriptSizeMax, IMG_CHAR *pszFormat, ...)
@@ -194,7 +188,7 @@ PVRSRV_ERROR PDumpOSSprintf(IMG_CHAR *pszComment, IMG_UINT32 ui32ScriptSizeMax, 
 
 	va_end(vaArgs);
 
-	if (n>=(IMG_INT32)ui32ScriptSizeMax || n==-1)	
+	if (n>=(IMG_INT32)ui32ScriptSizeMax || n==-1)
 	{
 		PVR_DPF((PVR_DBG_ERROR, "Buffer overflow detected, pdump output may be incomplete."));
 
@@ -221,10 +215,8 @@ IMG_VOID PDumpOSVerifyLineEnding(IMG_HANDLE hBuffer, IMG_UINT32 ui32BufferSizeMa
 	IMG_UINT32 ui32Count;
 	IMG_CHAR* pszBuf = hBuffer;
 
-	
 	ui32Count = PDumpOSBuflen(hBuffer, ui32BufferSizeMax);
 
-	
 	if ((ui32Count >= 1) && (pszBuf[ui32Count-1] != '\n') && (ui32Count<ui32BufferSizeMax))
 	{
 		pszBuf[ui32Count] = '\n';
@@ -270,7 +262,7 @@ IMG_BOOL PDumpOSWriteString(IMG_HANDLE hStream,
 
 IMG_VOID PDumpOSCheckForSplitting(IMG_HANDLE hStream, IMG_UINT32 ui32Size, IMG_UINT32 ui32Flags)
 {
-	
+
 	PVR_UNREFERENCED_PARAMETER(hStream);
 	PVR_UNREFERENCED_PARAMETER(ui32Size);
 	PVR_UNREFERENCED_PARAMETER(ui32Flags);
@@ -300,16 +292,13 @@ IMG_VOID PDumpOSCPUVAddrToDevPAddr(PVRSRV_DEVICE_TYPE eDeviceType,
 	IMG_CPU_PHYADDR	sCpuPAddr;
 
 	PVR_UNREFERENCED_PARAMETER(pui8LinAddr);
-	PVR_UNREFERENCED_PARAMETER(ui32PageSize);   
+	PVR_UNREFERENCED_PARAMETER(ui32PageSize);
 
-	
-	   
 	PVR_ASSERT (hOSMemHandle != IMG_NULL);
-	
+
 	sCpuPAddr = OSMemHandleToCpuPAddr(hOSMemHandle, ui32Offset);
 	PVR_ASSERT((sCpuPAddr.uiAddr & (ui32PageSize - 1)) == 0);
 
-	
 	*psDevPAddr = SysCpuPAddrToDevPAddr(eDeviceType, sCpuPAddr);
 }
 
@@ -321,7 +310,7 @@ IMG_VOID PDumpOSCPUVAddrToPhysPages(IMG_HANDLE hOSMemHandle,
 {
 	if(hOSMemHandle)
 	{
-		
+
 		IMG_CPU_PHYADDR     sCpuPAddr;
 
 		PVR_UNREFERENCED_PARAMETER(pui8LinAddr);
@@ -375,19 +364,15 @@ IMG_VOID PDumpInit(IMG_VOID)
 	IMG_UINT32 i;
 	DBGKM_CONNECT_NOTIFIER sConnectNotifier;
 
-	
 	if (!gpfnDbgDrv)
 	{
 		DBGDrvGetServiceTable((IMG_VOID **)&gpfnDbgDrv);
 
-
-		
 		if (gpfnDbgDrv == IMG_NULL)
 		{
 			return;
 		}
-		
-		
+
 		sConnectNotifier.pfnConnectNotifier = &PDumpConnectionNotify;
 		gpfnDbgDrv->pfnSetConnectNotifier(sConnectNotifier);
 
@@ -457,13 +442,11 @@ init_failed:
 		gsDBGPdumpState.pszMsg = IMG_NULL;
 	}
 
-	
 	sConnectNotifier.pfnConnectNotifier = 0;
 	gpfnDbgDrv->pfnSetConnectNotifier(sConnectNotifier);
 
 	gpfnDbgDrv = IMG_NULL;
 }
-
 
 IMG_VOID PDumpDeInit(IMG_VOID)
 {
@@ -493,7 +476,6 @@ IMG_VOID PDumpDeInit(IMG_VOID)
 		gsDBGPdumpState.pszMsg = IMG_NULL;
 	}
 
-	
 	sConnectNotifier.pfnConnectNotifier = 0;
 	gpfnDbgDrv->pfnSetConnectNotifier(sConnectNotifier);
 
@@ -536,7 +518,6 @@ IMG_BOOL PDumpIsLastCaptureFrameKM(IMG_VOID)
 	return gpfnDbgDrv->pfnIsLastCaptureFrame(gsDBGPdumpState.psStream[PDUMP_STREAM_SCRIPT2]);
 }
 
-
 IMG_BOOL PDumpOSIsCaptureFrameKM(IMG_VOID)
 {
 	if (PDumpSuspended())
@@ -561,12 +542,10 @@ PVRSRV_ERROR PDumpOSSetFrameKM(IMG_UINT32 ui32Frame)
 	return PVRSRV_OK;
 }
 
-
 static IMG_BOOL PDumpWriteString2(IMG_CHAR * pszString, IMG_UINT32 ui32Flags)
 {
 	return PDumpWriteILock(gsDBGPdumpState.psStream[PDUMP_STREAM_SCRIPT2], (IMG_UINT8 *) pszString, strlen(pszString), ui32Flags);
 }
-
 
 static IMG_BOOL PDumpWriteILock(PDBG_STREAM psStream, IMG_UINT8 *pui8Data, IMG_UINT32 ui32Count, IMG_UINT32 ui32Flags)
 {
@@ -576,9 +555,6 @@ static IMG_BOOL PDumpWriteILock(PDBG_STREAM psStream, IMG_UINT8 *pui8Data, IMG_U
 		PVR_DPF((PVR_DBG_MESSAGE, "PDumpWriteILock: Failed to write 0x%x bytes to stream 0x%x", ui32Count, (IMG_UINT32)psStream));
 		return IMG_TRUE;
 	}
-
-
-	
 
 	if (psStream == gsDBGPdumpState.psStream[PDUMP_STREAM_PARAM2])
 	{
@@ -624,5 +600,5 @@ IMG_VOID PDumpResumeKM(IMG_VOID)
 	atomic_dec(&gsPDumpSuspended);
 }
 
-#endif 
-#endif 
+#endif
+#endif

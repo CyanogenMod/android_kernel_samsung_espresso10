@@ -1856,7 +1856,6 @@ static int reg_write(struct usb_device *dev,
 	return ret;
 }
 
-
 static int write_vector(struct gspca_dev *gspca_dev,
 			const __u16 data[][3])
 {

@@ -150,7 +150,6 @@ struct zr36050 {
 #define ZR050_OP_NSCN_8              0xE0
 #define ZR050_OP_OVF                 0x10
 
-
 /* zr36050 markers-enable register bits */
 
 #define ZR050_ME_APP                 0x80

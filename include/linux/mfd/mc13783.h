@@ -122,7 +122,6 @@ static inline int mc13783_irq_ack(struct mc13783 *mc13783, int irq)
 int mc13783_adc_do_conversion(struct mc13783 *mc13783, unsigned int mode,
 		unsigned int channel, unsigned int *sample);
 
-
 #define	MC13783_REG_SW1A		0
 #define	MC13783_REG_SW1B		1
 #define	MC13783_REG_SW2A		2

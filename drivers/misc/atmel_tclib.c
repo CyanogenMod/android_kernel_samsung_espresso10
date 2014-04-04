@@ -11,7 +11,6 @@
 /* Number of bytes to reserve for the iomem resource */
 #define ATMEL_TC_IOMEM_SIZE	256
 
-
 /*
  * This is a thin library to solve the problem of how to portably allocate
  * one of the TC blocks.  For simplicity, it doesn't currently expect to

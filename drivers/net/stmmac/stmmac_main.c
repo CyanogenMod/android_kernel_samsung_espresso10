@@ -731,7 +731,6 @@ static void stmmac_tx_err(struct stmmac_priv *priv)
 	netif_wake_queue(priv->dev);
 }
 
-
 static void stmmac_dma_interrupt(struct stmmac_priv *priv)
 {
 	int status;

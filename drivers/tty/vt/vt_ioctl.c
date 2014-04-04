@@ -286,7 +286,7 @@ do_kdsk_ioctl(int cmd, struct kbentry __user *user_kbe, int perm, struct kbd_str
 #undef s
 #undef v
 
-static inline int 
+static inline int
 do_kbkeycode_ioctl(int cmd, struct kbkeycode __user *user_kbkc, int perm)
 {
 	struct kbkeycode tmp;
@@ -365,7 +365,7 @@ do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
 
 		q = func_table[i];
 		first_free = funcbufptr + (funcbufsize - funcbufleft);
-		for (j = i+1; j < MAX_NR_FUNC && !func_table[j]; j++) 
+		for (j = i+1; j < MAX_NR_FUNC && !func_table[j]; j++)
 			;
 		if (j < MAX_NR_FUNC)
 			fj = func_table[j];
@@ -422,15 +422,15 @@ reterr:
 	return ret;
 }
 
-static inline int 
+static inline int
 do_fontx_ioctl(int cmd, struct consolefontdesc __user *user_cfd, int perm, struct console_font_op *op)
 {
 	struct consolefontdesc cfdarg;
 	int i;
 
-	if (copy_from_user(&cfdarg, user_cfd, sizeof(struct consolefontdesc))) 
+	if (copy_from_user(&cfdarg, user_cfd, sizeof(struct consolefontdesc)))
 		return -EFAULT;
- 	
+
 	switch (cmd) {
 	case PIO_FONTX:
 		if (!perm)
@@ -462,7 +462,7 @@ do_fontx_ioctl(int cmd, struct consolefontdesc __user *user_cfd, int perm, struc
 	return -EINVAL;
 }
 
-static inline int 
+static inline int
 do_unimap_ioctl(int cmd, struct unimapdesc __user *user_ud, int perm, struct vc_data *vc)
 {
 	struct unimapdesc tmp;
@@ -486,11 +486,9 @@ do_unimap_ioctl(int cmd, struct unimapdesc __user *user_ud, int perm, struct vc_
 	return 0;
 }
 
-
-
 /*
  * We handle the console-specific ioctl's here.  We allow the
- * capability to modify any console, not just the fg_console. 
+ * capability to modify any console, not just the fg_console.
  */
 int vt_ioctl(struct tty_struct *tty,
 	     unsigned int cmd, unsigned long arg)
@@ -514,7 +512,6 @@ int vt_ioctl(struct tty_struct *tty,
 		goto out;
 	}
 
-
 	/*
 	 * To have permissions to do most of the vt ioctls, we either have
 	 * to be the owner of the tty, or have CAP_SYS_TTY_CONFIG.
@@ -522,7 +519,7 @@ int vt_ioctl(struct tty_struct *tty,
 	perm = 0;
 	if (current->signal->tty == tty || capable(CAP_SYS_TTY_CONFIG))
 		perm = 1;
- 
+
 	kbd = kbd_table + console;
 	switch (cmd) {
 	case TIOCLINUX:
@@ -547,7 +544,7 @@ int vt_ioctl(struct tty_struct *tty,
 			goto eperm;
 	{
 		unsigned int ticks, count;
-		
+
 		/*
 		 * Generate the tone for the appropriate number of ticks.
 		 * If the time is zero, turn off sound ourselves.
@@ -595,11 +592,11 @@ int vt_ioctl(struct tty_struct *tty,
 #endif
 
 	/* Linux m68k/i386 interface for setting the keyboard delay/repeat rate */
-		
+
 	case KDKBDREP:
 	{
 		struct kbd_repeat kbrep;
-		
+
 		if (!capable(CAP_SYS_TTY_CONFIG))
 			goto eperm;
 
@@ -964,7 +961,7 @@ int vt_ioctl(struct tty_struct *tty,
 			if (! VT_IS_IN_USE(i))
 				break;
 		uival = i < MAX_NR_CONSOLES ? (i+1) : -1;
-		goto setint;		 
+		goto setint;
 
 	/*
 	 * ioctl(fd, VT_ACTIVATE, num) will cause us to switch to vt # num,
@@ -1180,7 +1177,7 @@ int vt_ioctl(struct tty_struct *tty,
 					ret = -EINVAL;
 					break;
 				}
-			} else 
+			} else
 				ll = vlin/clin;
 		}
 		if (vcol && ccol) {
@@ -1197,7 +1194,7 @@ int vt_ioctl(struct tty_struct *tty,
 			ret =  -EINVAL;
 			break;
 		}
-		    
+
 		for (i = 0; i < MAX_NR_CONSOLES; i++) {
 			if (!vc_cons[i].d)
 				continue;
@@ -1591,9 +1588,7 @@ fallback:
 	return vt_ioctl(tty, cmd, arg);
 }
 
-
 #endif /* CONFIG_COMPAT */
-
 
 /*
  * Performs the back end of a vt switch. Called under the console

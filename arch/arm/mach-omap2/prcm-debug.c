@@ -80,7 +80,6 @@ static struct d_dpll_derived derived_dpll_per_m7 = {
 	.gatemask = 0x200,
 };
 
-
 static struct d_dpll_info dpll_per = {
 	.name = "DPLL_PER",
 	.idlestreg = OMAP4430_CM_IDLEST_DPLL_PER,
@@ -162,7 +161,6 @@ static struct d_dpll_info dpll_usb = {
 	.derived = {/* &derived_dpll_usb_m2, */ NULL},
 };
 
-
 /* Other internal generators */
 
 struct d_intgen_info {
@@ -176,8 +174,6 @@ static struct d_intgen_info intgen_cm1_abe = {
 	.gatereg = OMAP4430_CM_CLKSEL_ABE,
 	.gatemask = 0x500,
 };
-
-
 
 /* Modules */
 
@@ -422,7 +418,6 @@ static struct d_mod_info mod_c2c_fw = {
 	.flags = MOD_MODE | MOD_SLAVE,
 	.optclk = 0x0,
 };
-
 
 static struct d_mod_info mod_sdma = {
 	.name = "sDMA",
@@ -1344,7 +1339,6 @@ static struct d_vdd_info d_vdd[N_VDDS] =  {
 	},
 };
 
-
 /* Display strings */
 
 static char *vddauto_s[] = {"disabled", "SLEEP", "RET", "reserved"};
@@ -1415,7 +1409,6 @@ static void prcmdebug_dump_dpll(struct seq_file *sf,
 		derived++;
 	}
 }
-
 
 static void prcmdebug_dump_intgen(struct seq_file *sf,
 				  struct d_intgen_info *intgen,
@@ -1654,7 +1647,6 @@ static int prcmdebug_all_open(struct inode *inode, struct file *file)
 {
         return single_open(file, prcmdebug_all_dump, NULL);
 }
-
 
 static struct file_operations prcmdebug_all_fops = {
         .open = prcmdebug_all_open,

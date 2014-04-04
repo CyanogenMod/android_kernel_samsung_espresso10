@@ -13,7 +13,6 @@
 /* used in debug.c */
 #define BEFS_VERSION "0.9.3"
 
-
 typedef u64 befs_blocknr_t;
 /*
  * BeFS in memory structures
@@ -85,7 +84,6 @@ enum befs_err {
 	BEFS_BT_NOT_FOUND
 };
 
-
 /****************************/
 /* debug.c */
 void befs_error(const struct super_block *sb, const char *fmt, ...);
@@ -97,7 +95,6 @@ void befs_dump_inode(const struct super_block *sb, befs_inode *);
 void befs_dump_index_entry(const struct super_block *sb, befs_disk_btree_super *);
 void befs_dump_index_node(const struct super_block *sb, befs_btree_nodehead *);
 /****************************/
-
 
 /* Gets a pointer to the private portion of the super_block
  * structure from the public part

@@ -301,7 +301,6 @@ static struct attribute *dmi_sysfs_sel_attrs[] = {
 	NULL,
 };
 
-
 static struct kobj_type dmi_system_event_log_ktype = {
 	.release = dmi_entry_free,
 	.sysfs_ops = &dmi_sysfs_specialize_attr_ops,

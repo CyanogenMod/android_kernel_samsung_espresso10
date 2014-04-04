@@ -11,7 +11,6 @@
 /* kernel module name */
 static const char *usbip_stub_driver_name = "usbip-host";
 
-
 struct usbip_stub_driver *stub_driver;
 
 static struct sysfs_driver *open_sysfs_stub_driver(void)
@@ -21,7 +20,6 @@ static struct sysfs_driver *open_sysfs_stub_driver(void)
 	char sysfs_mntpath[SYSFS_PATH_MAX];
 	char stub_driver_path[SYSFS_PATH_MAX];
 	struct sysfs_driver *stub_driver;
-
 
 	ret = sysfs_get_mnt_path(sysfs_mntpath, SYSFS_PATH_MAX);
 	if (ret < 0) {
@@ -41,7 +39,6 @@ static struct sysfs_driver *open_sysfs_stub_driver(void)
 
 	return stub_driver;
 }
-
 
 #define SYSFS_OPEN_RETRIES 100
 
@@ -114,7 +111,6 @@ static int32_t read_attr_usbip_status(struct usb_device *udev)
 	return value;
 }
 
-
 static void usbip_exported_device_delete(void *dev)
 {
 	struct usbip_exported_device *edev =
@@ -123,7 +119,6 @@ static void usbip_exported_device_delete(void *dev)
 	sysfs_close_device(edev->sudev);
 	free(dev);
 }
-
 
 static struct usbip_exported_device *usbip_exported_device_new(char *sdevpath)
 {
@@ -168,7 +163,6 @@ err:
 	return NULL;
 }
 
-
 static int check_new(struct dlist *dlist, struct sysfs_device *target)
 {
 	struct sysfs_device *dev;
@@ -194,7 +188,6 @@ static int refresh_exported_devices(void)
 
 	struct sysfs_device	*sudev;  /* sysfs_device of usb_device */
 	struct dlist		*sudev_list;
-
 
 	sudev_list = dlist_new_with_delete(sizeof(struct sysfs_device), delete_nothing);
 
@@ -232,7 +225,6 @@ static int refresh_exported_devices(void)
 		stub_driver->ndevs++;
 	}
 
-
 	dlist_destroy(sudev_list);
 
 bye:
@@ -267,7 +259,6 @@ int usbip_stub_driver_open(void)
 {
 	int ret;
 
-
 	stub_driver = (struct usbip_stub_driver *) calloc(1, sizeof(*stub_driver));
 	if (!stub_driver) {
 		err("alloc stub_driver");
@@ -293,7 +284,6 @@ int usbip_stub_driver_open(void)
 
 	return 0;
 
-
 err:
 	if (stub_driver->sysfs_driver)
 		sysfs_close_driver(stub_driver->sysfs_driver);
@@ -304,7 +294,6 @@ err:
 	stub_driver = NULL;
 	return -1;
 }
-
 
 void usbip_stub_driver_close(void)
 {
@@ -326,7 +315,6 @@ int usbip_stub_export_device(struct usbip_exported_device *edev, int sockfd)
 	struct sysfs_attribute *attr;
 	char sockfd_buff[30];
 	int ret;
-
 
 	if (edev->status != SDEV_ST_AVAILABLE) {
 		info("device not available, %s", edev->udev.busid);

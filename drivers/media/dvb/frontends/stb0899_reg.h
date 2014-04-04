@@ -2023,5 +2023,4 @@
 #define STB0899_S2DEMOD				0xf3fc
 #define STB0899_S2FEC				0xfafc
 
-
 #endif

@@ -59,7 +59,6 @@
 #define JZ_MMC_STRPCL_CLOCK_STOP BIT(0)
 #define JZ_MMC_STRPCL_CLOCK_START BIT(1)
 
-
 #define JZ_MMC_STATUS_IS_RESETTING BIT(15)
 #define JZ_MMC_STATUS_SDIO_INT_ACTIVE BIT(14)
 #define JZ_MMC_STATUS_PRG_DONE BIT(13)
@@ -80,7 +79,6 @@
 #define JZ_MMC_STATUS_READ_ERROR_MASK (BIT(4) | BIT(0))
 #define JZ_MMC_STATUS_WRITE_ERROR_MASK (BIT(3) | BIT(2))
 
-
 #define JZ_MMC_CMDAT_IO_ABORT BIT(11)
 #define JZ_MMC_CMDAT_BUS_WIDTH_4BIT BIT(10)
 #define JZ_MMC_CMDAT_DMA_EN BIT(8)
@@ -100,7 +98,6 @@
 #define JZ_MMC_IRQ_END_CMD_RES BIT(2)
 #define JZ_MMC_IRQ_PRG_DONE BIT(1)
 #define JZ_MMC_IRQ_DATA_TRAN_DONE BIT(0)
-
 
 #define JZ_MMC_CLK_RATE 24000000
 
@@ -459,7 +456,6 @@ static void jz_mmc_prepare_data_transfer(struct jz4740_mmc_host *host)
 
 	sg_miter_start(&host->miter, data->sg, data->sg_len, direction);
 }
-
 
 static irqreturn_t jz_mmc_irq_worker(int irq, void *devid)
 {

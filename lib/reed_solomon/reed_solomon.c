@@ -162,7 +162,6 @@ errrs:
 	return NULL;
 }
 
-
 /**
  *  free_rs - Free the rs control structure, if it is no longer used
  *  @rs:	the control structure which is not longer used by the
@@ -381,4 +380,3 @@ EXPORT_SYMBOL_GPL(free_rs);
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Reed Solomon encoder/decoder");
 MODULE_AUTHOR("Phil Karn, Thomas Gleixner");
-

@@ -22,7 +22,6 @@
  * Christoph Hellwig : Some cleanup work (2000/03/01)
  */
 
-
 #include "sound_config.h"
 #include <linux/init.h>
 #include <linux/types.h>
@@ -72,7 +71,6 @@ static char     dma_alloc_map[MAX_DMA_CHANNELS];
 #define DMA_MAP_FREE		1
 #define DMA_MAP_BUSY		2
 
-
 unsigned long seq_time = 0;	/* Time for /dev/sequencer */
 extern struct class *sound_class;
 
@@ -115,7 +113,7 @@ EXPORT_SYMBOL(load_mixer_volumes);
 static int set_mixer_levels(void __user * arg)
 {
         /* mixer_vol_table is 174 bytes, so IMHO no reason to not allocate it on the stack */
-	mixer_vol_table buf;   
+	mixer_vol_table buf;
 
 	if (__copy_from_user(&buf, arg, sizeof(buf)))
 		return -EFAULT;
@@ -151,9 +149,9 @@ static ssize_t sound_read(struct file *file, char __user *buf, size_t count, lof
 	 *	and unless someone fixes them when they are about to bite the
 	 *	big one anyway, we might as well bandage here..
 	 */
-	 
+
 	mutex_lock(&soundcard_mutex);
-	
+
 	DEB(printk("sound_read(dev=%d, count=%d)\n", dev, count));
 	switch (dev & 0x0f) {
 	case SND_DEV_DSP:
@@ -178,7 +176,7 @@ static ssize_t sound_write(struct file *file, const char __user *buf, size_t cou
 {
 	int dev = iminor(file->f_path.dentry->d_inode);
 	int ret = -EINVAL;
-	
+
 	mutex_lock(&soundcard_mutex);
 	DEB(printk("sound_write(dev=%d, count=%d)\n", dev, count));
 	switch (dev & 0x0f) {
@@ -221,7 +219,7 @@ static int sound_open(struct inode *inode, struct file *file)
 		retval = -ENXIO;
 		if (dev && (dev >= num_mixers || mixer_devs[dev] == NULL))
 			break;
-	
+
 		if (!try_module_get(mixer_devs[dev]->owner))
 			break;
 
@@ -262,7 +260,7 @@ static int sound_release(struct inode *inode, struct file *file)
 	case SND_DEV_CTL:
 		module_put(mixer_devs[dev >> 4]->owner);
 		break;
-		
+
 	case SND_DEV_SEQ:
 	case SND_DEV_SEQ2:
 		sequencer_release(dev, file);
@@ -354,10 +352,10 @@ static long sound_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	DEB(printk("sound_ioctl(dev=%d, cmd=0x%x, arg=0x%x)\n", dev, cmd, arg));
 	if (cmd == OSS_GETVERSION)
 		return __put_user(SOUND_VERSION, (int __user *)p);
-	
+
 	mutex_lock(&soundcard_mutex);
 	if (_IOC_TYPE(cmd) == 'M' && num_mixers > 0 &&   /* Mixer ioctl */
-	    (dev & 0x0f) != SND_DEV_CTL) {              
+	    (dev & 0x0f) != SND_DEV_CTL) {
 		dtype = dev & 0x0f;
 		switch (dtype) {
 		case SND_DEV_DSP:
@@ -365,7 +363,7 @@ static long sound_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		case SND_DEV_AUDIO:
 			ret = sound_mixer_ioctl(audio_devs[dev >> 4]->mixer_dev,
 						 cmd, p);
-			break;			
+			break;
 		default:
 			ret = sound_mixer_ioctl(dev >> 4, cmd, p);
 			break;
@@ -510,7 +508,7 @@ const struct file_operations oss_sound_fops = {
 /*
  *	Create the required special subdevices
  */
- 
+
 static int create_special_devices(void)
 {
 	int seq1,seq2;
@@ -524,7 +522,6 @@ static int create_special_devices(void)
 bad:
 	return -1;
 }
-
 
 static int dmabuf;
 static int dmabug;
@@ -545,7 +542,7 @@ static int __init oss_init(void)
 {
 	int             err;
 	int i, j;
-	
+
 #ifdef CONFIG_PCI
 	if(dmabug)
 		isa_dma_bridge_buggy = dmabug;
@@ -571,7 +568,7 @@ static int __init oss_init(void)
 
 	if (sound_nblocks >= MAX_MEM_BLOCKS - 1)
 		printk(KERN_ERR "Sound warning: Deallocation table was too small.\n");
-	
+
 	return 0;
 }
 
@@ -586,7 +583,7 @@ static void __exit oss_cleanup(void)
 				unregister_sound_special(dev_list[i].minor);
 		} while (++j < num_audiodevs);
 	}
-	
+
 	unregister_sound_special(1);
 	unregister_sound_special(8);
 
@@ -610,7 +607,6 @@ module_exit(oss_cleanup);
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("OSS Sound subsystem");
 MODULE_AUTHOR("Hannu Savolainen, et al.");
-
 
 int sound_alloc_dma(int chn, char *deviceID)
 {
@@ -666,7 +662,6 @@ static void do_sequencer_timer(unsigned long dummy)
 {
 	sequencer_timer(0);
 }
-
 
 static DEFINE_TIMER(seq_timer, do_sequencer_timer, 0, 0);
 
@@ -736,4 +731,3 @@ void conf_printf2(char *name, int base, int irq, int dma, int dma2)
 #endif
 }
 EXPORT_SYMBOL(conf_printf2);
-

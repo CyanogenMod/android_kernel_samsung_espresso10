@@ -78,7 +78,6 @@
  *
  */
 
-
 #include "matroxfb_Ti3026.h"
 #include "matroxfb_misc.h"
 #include "matroxfb_accel.h"

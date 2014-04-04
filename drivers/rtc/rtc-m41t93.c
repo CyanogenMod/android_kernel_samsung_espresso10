@@ -25,7 +25,6 @@
 #define M41T93_REG_MON			6
 #define M41T93_REG_YEAR			7
 
-
 #define M41T93_REG_ALM_HOUR_HT		0xc
 #define M41T93_REG_FLAGS		0xf
 
@@ -74,7 +73,6 @@ static int m41t93_set_time(struct device *dev, struct rtc_time *tm)
 
 	return spi_write(spi, buf, sizeof(buf));
 }
-
 
 static int m41t93_get_time(struct device *dev, struct rtc_time *tm)
 {
@@ -154,7 +152,6 @@ static int m41t93_get_time(struct device *dev, struct rtc_time *tm)
 	return ret < 0 ? ret : rtc_valid_tm(tm);
 }
 
-
 static const struct rtc_class_ops m41t93_rtc_ops = {
 	.read_time	= m41t93_get_time,
 	.set_time	= m41t93_set_time,
@@ -185,7 +182,6 @@ static int __devinit m41t93_probe(struct spi_device *spi)
 
 	return 0;
 }
-
 
 static int __devexit m41t93_remove(struct spi_device *spi)
 {

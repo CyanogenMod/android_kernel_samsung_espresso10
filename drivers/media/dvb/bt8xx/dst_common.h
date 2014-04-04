@@ -29,7 +29,6 @@
 
 #include "dst_ca.h"
 
-
 #define NO_DELAY		0
 #define LONG_DELAY		1
 #define DEVICE_INIT		2
@@ -78,7 +77,6 @@
 
 /*	ATSC		*/
 #define TUNER_TYPE_NXT200x	64
-
 
 #define RDC_8820_PIO_0_DISABLE	0
 #define RDC_8820_PIO_0_ENABLE	1
@@ -177,6 +175,5 @@ int read_dst(struct dst_state *state, u8 * ret, u8 len);
 u8 dst_check_sum(u8 * buf, u32 len);
 struct dst_state* dst_attach(struct dst_state* state, struct dvb_adapter *dvb_adapter);
 struct dvb_device *dst_ca_attach(struct dst_state *state, struct dvb_adapter *dvb_adapter);
-
 
 #endif // DST_COMMON_H

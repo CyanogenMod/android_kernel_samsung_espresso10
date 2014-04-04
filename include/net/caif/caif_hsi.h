@@ -89,7 +89,6 @@ struct cfhsi_desc {
 #define CFHSI_WAKEUP_TOUT			(3 * HZ)
 #endif /* CFHSI_WAKEUP_TOUT */
 
-
 /* Structure implemented by the CAIF HSI driver. */
 struct cfhsi_drv {
 	void (*tx_done_cb) (struct cfhsi_drv *drv);

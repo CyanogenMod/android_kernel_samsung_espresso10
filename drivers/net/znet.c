@@ -462,7 +462,6 @@ static int __init znet_probe (void)
 	return err;
 }
 
-
 static int znet_open(struct net_device *dev)
 {
 	int ioaddr = dev->base_addr;
@@ -503,7 +502,6 @@ static int znet_open(struct net_device *dev)
 
 	return 0;
 }
-
 
 static void znet_tx_timeout (struct net_device *dev)
 {

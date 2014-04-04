@@ -430,7 +430,6 @@ static int cx88_risc_decode(u32 risc)
 	return incr[risc >> 28] ? incr[risc >> 28] : 1;
 }
 
-
 void cx88_sram_channel_dump(struct cx88_core *core,
 			    const struct sram_channel *ch)
 {
@@ -894,8 +893,6 @@ static int set_tvaudio(struct cx88_core *core)
 	cx88_start_audio_dma(core);
 	return 0;
 }
-
-
 
 int cx88_set_tvnorm(struct cx88_core *core, v4l2_std_id norm)
 {

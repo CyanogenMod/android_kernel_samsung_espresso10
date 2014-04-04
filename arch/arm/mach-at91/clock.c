@@ -31,7 +31,6 @@
 #include "clock.h"
 #include "generic.h"
 
-
 /*
  * There's a lot more which can be done with clocks, including cpufreq
  * integration, slow clock mode support (for system suspend), letting
@@ -42,7 +41,6 @@
 #define clk_is_programmable(x)	((x)->type & CLK_TYPE_PROGRAMMABLE)
 #define clk_is_peripheral(x)	((x)->type & CLK_TYPE_PERIPHERAL)
 #define clk_is_sys(x)		((x)->type & CLK_TYPE_SYSTEM)
-
 
 /*
  * Chips have some kind of clocks : group them by functionality
@@ -175,7 +173,6 @@ static struct clk uhpck = {
 	/*.parent		= ... we choose parent at runtime */
 	.mode		= pmc_sys_mode,
 };
-
 
 /*
  * The master clock is divided from the CPU clock (by 1-4).  It's used for
@@ -677,7 +674,6 @@ int __init at91_clock_init(unsigned long main_clock)
 		utmi_clk.type |= CLK_TYPE_PRIMARY;
 		utmi_clk.id = 3;
 	}
-
 
 	/*
 	 * USB HS clock init

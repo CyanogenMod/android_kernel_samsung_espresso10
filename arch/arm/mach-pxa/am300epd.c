@@ -205,7 +205,6 @@ static void am300_set_hdb(struct broadsheetfb_par *par, u16 data)
 		gpio_set_value(DB0_GPIO_PIN + i, (data >> i) & 0x01);
 }
 
-
 static void am300_set_ctl(struct broadsheetfb_par *par, unsigned char bit,
 				u8 state)
 {

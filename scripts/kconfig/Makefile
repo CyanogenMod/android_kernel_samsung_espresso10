@@ -194,7 +194,6 @@ ifeq ($(MAKECMDGOALS),gconfig)
 	gconf-target := 1
 endif
 
-
 ifeq ($(qconf-target),1)
 	hostprogs-y += qconf
 endif

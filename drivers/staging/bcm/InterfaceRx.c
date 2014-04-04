@@ -11,7 +11,6 @@ static int SearchVcid(PMINI_ADAPTER Adapter,unsigned short usVcid)
 
 }
 
-
 static PUSB_RCB
 GetBulkInRcb(PS_INTERFACE_ADAPTER psIntfAdapter)
 {
@@ -234,8 +233,6 @@ Description:			This is the hardware specific Function for Recieveing
 
 Input parameters:		IN PMINI_ADAPTER Adapter   - Miniport Adapter Context
 
-
-
 Return:				TRUE  - If Rx was successful.
 					Other - If an error occurred.
 */
@@ -261,4 +258,3 @@ BOOLEAN InterfaceRx (PS_INTERFACE_ADAPTER psIntfAdapter)
     }
 	return TRUE;
 }
-

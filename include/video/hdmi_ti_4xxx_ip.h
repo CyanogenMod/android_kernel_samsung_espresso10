@@ -117,7 +117,6 @@ struct hdmi_core_audio_i2s_config {
 	u8 active_sds;
 };
 
-
 enum hdmi_audio_i2s_config {
 	HDMI_AUDIO_I2S_WS_POLARITY_LOW_IS_LEFT = 0,
 	HDMI_AUDIO_I2S_WS_POLARIT_YLOW_IS_RIGHT = 1,
@@ -168,7 +167,6 @@ enum hdmi_audio_mclk_mode {
 	HDMI_AUDIO_MCLK_1152FS = 6,
 	HDMI_AUDIO_MCLK_192FS = 7
 };
-
 
 enum hdmi_core_audio_sample_freq {
 	HDMI_AUDIO_FS_32000 = 0x3,
@@ -234,7 +232,6 @@ enum hdmi_audio_blk_strt_end_sig {
 	HDMI_AUDIO_BLOCK_SIG_STARTEND_OFF = 1
 };
 
-
 struct hdmi_core_audio_config {
 	struct hdmi_core_audio_i2s_config	i2s_cfg;
 	enum hdmi_core_audio_sample_freq	freq_sample;
@@ -251,8 +248,6 @@ struct hdmi_core_audio_config {
 	bool					en_parallel_aud_input;
 	bool					en_spdif;
 };
-
-
 
 struct hdmi_audio_format {
 	enum hdmi_stereo_channels		stereo_channels;
@@ -434,6 +429,5 @@ int hdmi_ti_4xxx_cec_add_listening_device(struct hdmi_ip_data *ip_data,
 		int device_id, int clear);
 int hdmi_ti_4xxx_cec_set_listening_mask(struct hdmi_ip_data *ip_data,
 		int mask);
-
 
 #endif

@@ -132,4 +132,3 @@ void __init nuc93x_init_clocks(void)
 {
 	clks_register(nuc932_clkregs, ARRAY_SIZE(nuc932_clkregs));
 }
-

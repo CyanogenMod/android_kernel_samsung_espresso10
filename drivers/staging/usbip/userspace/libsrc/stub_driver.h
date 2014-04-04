@@ -7,7 +7,6 @@
 
 #include "usbip.h"
 
-
 struct usbip_stub_driver {
 	int ndevs;
 	struct sysfs_driver *sysfs_driver;
@@ -22,7 +21,6 @@ struct usbip_exported_device {
 	struct usb_device    udev;
 	struct usb_interface uinf[];
 };
-
 
 extern struct usbip_stub_driver *stub_driver;
 

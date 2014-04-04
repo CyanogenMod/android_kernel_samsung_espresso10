@@ -73,7 +73,7 @@ extern struct kmem_cache *mvs_task_list_cache;
 #define DEV_IS_EXPANDER(type)	\
 	((type == EDGE_DEV) || (type == FANOUT_DEV))
 
-#define bit(n) ((u32)1 << n)
+#define bit(n) ((u64)1 << n)
 
 #define for_each_phy(__lseq_mask, __mc, __lseq)			\
 	for ((__mc) = (__lseq_mask), (__lseq) = 0;		\
@@ -98,7 +98,6 @@ enum dev_status {
 	MVS_DEV_NORMAL = 0x0,
 	MVS_DEV_EH	= 0x1,
 };
-
 
 struct mvs_info;
 
@@ -375,7 +374,6 @@ struct mvs_task_list {
 	struct list_head list;
 };
 
-
 /******************** function prototype *********************/
 void mvs_get_sas_addr(void *buf, u32 buflen);
 void mvs_tag_clear(struct mvs_info *mvi, u32 tag);
@@ -417,4 +415,3 @@ void mvs_update_phyinfo(struct mvs_info *mvi, int i, int get_st);
 int mvs_int_rx(struct mvs_info *mvi, bool self_clear);
 void mvs_hexdump(u32 size, u8 *data, u32 baseaddr);
 #endif
-

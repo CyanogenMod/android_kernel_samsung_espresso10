@@ -328,7 +328,6 @@
    IN[3] - Pointer to ID buffer */
 #define CX18_CPU_SET_USERDATA_PLACE_HOLDER	(CPU_CMD_MASK_CAPTURE | 0x0021)
 
-
 /* Description:
    In[0] Task Handle
    return parameter:

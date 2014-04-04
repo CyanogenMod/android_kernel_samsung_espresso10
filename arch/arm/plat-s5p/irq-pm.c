@@ -87,4 +87,3 @@ void s3c24xx_irq_resume(void)
 {
 	s3c_pm_do_restore(eint_save, ARRAY_SIZE(eint_save));
 }
-

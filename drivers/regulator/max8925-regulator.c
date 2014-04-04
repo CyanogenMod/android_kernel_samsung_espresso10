@@ -311,4 +311,3 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Haojian Zhuang <haojian.zhuang@marvell.com>");
 MODULE_DESCRIPTION("Regulator Driver for Maxim 8925 PMIC");
 MODULE_ALIAS("platform:max8925-regulator");
-

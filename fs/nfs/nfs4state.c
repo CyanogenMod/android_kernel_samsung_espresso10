@@ -784,7 +784,7 @@ static void nfs4_free_lock_state(struct nfs4_lock_state *lsp)
 static struct nfs4_lock_state *nfs4_get_lock_state(struct nfs4_state *state, fl_owner_t owner, pid_t pid, unsigned int type)
 {
 	struct nfs4_lock_state *lsp, *new = NULL;
-	
+
 	for(;;) {
 		spin_lock(&state->state_lock);
 		lsp = __nfs4_find_lock_state(state, owner, pid, type);
@@ -1095,7 +1095,6 @@ void nfs_inode_find_state_and_recover(struct inode *inode,
 		nfs4_schedule_state_manager(clp);
 }
 
-
 static int nfs4_reclaim_locks(struct nfs4_state *state, const struct nfs4_state_recovery_ops *ops)
 {
 	struct inode *inode = state->inode;
@@ -1156,7 +1155,7 @@ static int nfs4_reclaim_open_state(struct nfs4_state_owner *sp, const struct nfs
 	struct nfs4_lock_state *lock;
 	int status = 0;
 
-	/* Note: we rely on the sp->so_states list being ordered 
+	/* Note: we rely on the sp->so_states list being ordered
 	 * so that we always reclaim open(O_RDWR) and/or open(O_WRITE)
 	 * states first.
 	 * This is needed to ensure that the server won't give us any
@@ -1731,7 +1730,6 @@ static void nfs4_state_manager(struct nfs_client *clp)
 				goto out_error;
 			continue;
 		}
-
 
 		nfs4_clear_state_manager_bit(clp);
 		/* Did we race with an attempt to give us more work? */

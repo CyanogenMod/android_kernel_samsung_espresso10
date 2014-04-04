@@ -34,7 +34,6 @@
  * e[c-f]000000					per-platform mappings
  */
 
-
 /****************************************************************************
  * Static mappings.
  ****************************************************************************/
@@ -78,7 +77,6 @@
 #define IXP23XX_PCI_MEM_VIRT		0xf0000000
 #define IXP23XX_PCI_MEM_SIZE		0x04000000
 
-
 /****************************************************************************
  * XSI2CPP CSRs.
  ****************************************************************************/
@@ -87,7 +85,6 @@
 #define IXP23XX_CPP2XSI_ADDR_31		(1 << 19)
 #define IXP23XX_CPP2XSI_PSH_OFF		(1 << 20)
 #define IXP23XX_CPP2XSI_COH_OFF		(1 << 21)
-
 
 /****************************************************************************
  * Expansion Bus Config.
@@ -138,7 +135,6 @@
 #define IXP23XX_EXP_BUS_CS6_BASE	(IXP23XX_EXP_BUS_PHYS + 0x06000000)
 #define IXP23XX_EXP_BUS_CS7_BASE	(IXP23XX_EXP_BUS_PHYS + 0x07000000)
 
-
 /****************************************************************************
  * Peripherals.
  ****************************************************************************/
@@ -172,7 +168,6 @@
 #define IXP23XX_GIG1_PHYS		(IXP23XX_PERIPHERAL_PHYS + 0xC000)
 #define IXP23XX_DDRS_PHYS		(IXP23XX_PERIPHERAL_PHYS + 0xD000)
 
-
 /****************************************************************************
  * Interrupt controller.
  ****************************************************************************/
@@ -195,7 +190,6 @@
 #define IXP23XX_INTR_IRQ_ST4		IXP23XX_INTC_REG(0x3c)
 #define IXP23XX_INTR_IRQ_ENC_ST_OFFSET	0x54
 
-
 /****************************************************************************
  * GPIO.
  ****************************************************************************/
@@ -217,7 +211,6 @@
 #define IXP23XX_GPIO_STYLE_TRANSITIONAL	0x4
 
 #define IXP23XX_GPIO_STYLE_SIZE		3
-
 
 /****************************************************************************
  * Timer.
@@ -247,7 +240,6 @@
 #define IXP23XX_TIMER_STATUS_WDOG_PEND	(1 << 3)
 #define IXP23XX_TIMER_STATUS_WARM_RESET	(1 << 4)
 
-
 /****************************************************************************
  * CAP CSRs.
  ****************************************************************************/
@@ -268,7 +260,6 @@
 
 #define IXP23XX_UENGINE_CSR_VIRT_BASE	(IXP23XX_CAP_CSR_VIRT + 0x18000)
 
-
 /****************************************************************************
  * PCI CSRs.
  ****************************************************************************/
@@ -276,7 +267,6 @@
 #define IXP23XX_PCI_CMDSTAT		IXP23XX_PCI_CREG(0x04)
 #define IXP23XX_PCI_SRAM_BAR		IXP23XX_PCI_CREG(0x14)
 #define IXP23XX_PCI_SDRAM_BAR		IXP23XX_PCI_CREG(0x18)
-
 
 #define IXP23XX_PCI_CSR(x)		((volatile unsigned long *)(IXP23XX_PCI_CREG_VIRT + 0x01000000 + (x)))
 #define IXP23XX_PCI_OUT_INT_STATUS	IXP23XX_PCI_CSR(0x0030)
@@ -293,6 +283,5 @@
 #define IXP23XX_PCI_XSCALE_INT_STATUS	IXP23XX_PCI_CSR(0x0158)
 #define IXP23XX_PCI_XSCALE_INT_ENABLE	IXP23XX_PCI_CSR(0x015c)
 #define IXP23XX_PCI_CPP_ADDR_BITS	IXP23XX_PCI_CSR(0x0160)
-
 
 #endif

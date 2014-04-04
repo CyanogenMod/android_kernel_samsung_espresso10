@@ -41,7 +41,6 @@
 #define MLOG_MASK_PREFIX ML_DLMFS
 #include "cluster/masklog.h"
 
-
 static inline struct user_lock_res *user_lksb_to_lock_res(struct ocfs2_dlm_lksb *lksb)
 {
 	return container_of(lksb, struct user_lock_res, l_lksb);

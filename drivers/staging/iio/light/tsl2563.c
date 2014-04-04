@@ -464,7 +464,6 @@ static unsigned int adc_to_lux(u32 adc0, u32 adc1)
 /*                      Sysfs interface                         */
 /*--------------------------------------------------------------*/
 
-
 /* Apply calibration coefficient to ADC count. */
 static u32 calib_adc(u32 adc, u32 calib)
 {

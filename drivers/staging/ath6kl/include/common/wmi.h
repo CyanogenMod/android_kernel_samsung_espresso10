@@ -93,7 +93,6 @@ typedef enum {
     OPT_MSGTYPE,
 } WMI_MSG_TYPE;
 
-
 /*
  * Macros for operating on WMI_DATA_HDR (info) field
  */
@@ -205,7 +204,6 @@ typedef PREPACK struct {
     u8 ratePolicyID;    /* The rate policy to be used for the tx of this frame */
 } POSTPACK WMI_TX_META_V1;
 
-
 #define WMI_CSUM_DIR_TX (0x1)
 #define TX_CSUM_CALC_FILL (0x1)
 typedef PREPACK struct {
@@ -213,7 +211,6 @@ typedef PREPACK struct {
     u8 csumDest;        /*Offset from start of WMI header where final csum goes*/
     u8 csumFlags;    /*number of bytes over which csum is calculated*/
 } POSTPACK WMI_TX_META_V2;
-
 
 /*
  *  RX META VERSION DEFINITIONS
@@ -261,8 +258,6 @@ typedef PREPACK struct {
     u8 csumFlags;/* bit 0 set -partial csum valid
                              bit 1 set -test mode */
 } POSTPACK WMI_RX_META_V2;
-
-
 
 #define WMI_GET_DEVICE_ID(info1) ((info1) & 0xF)
 /* Macros for operating on WMI_CMD_HDR (info1) field */
@@ -355,7 +350,7 @@ typedef enum {
     WMI_SET_WMM_TXOP_CMDID,
     WMI_TEST_CMDID,
     /* COEX AR6002 only*/
-    WMI_SET_BT_STATUS_CMDID,                
+    WMI_SET_BT_STATUS_CMDID,
     WMI_SET_BT_PARAMS_CMDID,                /* 60 */
 
     WMI_SET_KEEPALIVE_CMDID,
@@ -385,7 +380,6 @@ typedef enum {
     WMI_SET_BITRATE_CMDID = 0xF000,
     WMI_GET_BITRATE_CMDID,
     WMI_SET_WHALPARAM_CMDID,
-
 
     /*Should add the new command to the tail for compatible with
      * etna.
@@ -718,8 +712,8 @@ typedef PREPACK struct {
  * WMI_SET_SCAN_PARAMS_CMDID
  */
 #define WMI_SHORTSCANRATIO_DEFAULT      3
-/* 
- *  Warning: ScanCtrlFlag value of 0xFF is used to disable all flags in WMI_SCAN_PARAMS_CMD 
+/*
+ *  Warning: ScanCtrlFlag value of 0xFF is used to disable all flags in WMI_SCAN_PARAMS_CMD
  *  Do not add any more flags to WMI_SCAN_CTRL_FLAG_BITS
  */
 typedef enum {
@@ -743,7 +737,6 @@ typedef enum {
 #define SCAN_ABORT_EVENT_ENABLED(flags) (flags & ENABLE_SCAN_ABORT_EVENT)
 
 #define DEFAULT_SCAN_CTRL_FLAGS         (CONNECT_SCAN_CTRL_FLAGS| SCAN_CONNECTED_CTRL_FLAGS| ACTIVE_SCAN_CTRL_FLAGS| ROAM_SCAN_CTRL_FLAGS | ENABLE_AUTO_CTRL_FLAGS)
-
 
 typedef PREPACK struct {
     u16 fg_start_period;        /* seconds */
@@ -1042,7 +1035,7 @@ typedef enum {
     WMI_11G_MODE  = 0x2,
     WMI_11AG_MODE = 0x3,
     WMI_11B_MODE  = 0x4,
-    WMI_11GONLY_MODE = 0x5,    
+    WMI_11GONLY_MODE = 0x5,
 } WMI_PHY_MODE;
 
 #define WMI_MAX_CHANNELS        32
@@ -1054,7 +1047,6 @@ typedef PREPACK struct {
     u8 numChannels;            /* how many channels follow */
     u16 channelList[1];         /* channels in Mhz */
 } POSTPACK WMI_CHANNEL_PARAMS_CMD;
-
 
 /*
  *  WMI_RSSI_THRESHOLD_PARAMS_CMDID
@@ -1170,7 +1162,6 @@ typedef PREPACK struct {
     u8 assocInfo[1];       /* up to WMI_MAX_ASSOC_INFO_LEN */
 } POSTPACK WMI_SET_ASSOC_INFO_CMD;
 
-
 /*
  * WMI_GET_TX_PWR_CMDID does not take any parameters
  */
@@ -1208,7 +1199,6 @@ typedef PREPACK struct {
     u8 aifsn;
     u8 ac;
 } POSTPACK WMI_SET_ACCESS_PARAMS_CMD;
-
 
 /*
  * WMI_SET_RETRY_LIMITS_CMDID
@@ -1385,7 +1375,6 @@ typedef enum {
     BT_PARAM_11A_SEPARATE_ANT,
     BT_PARAM_MAX
 } BT_PARAM_TYPE;
-
 
 #define BT_SCO_ALLOW_CLOSE_RANGE_OPT    (1 << 0)
 #define BT_SCO_FORCE_AWAKE_OPT          (1 << 1)
@@ -1811,7 +1800,6 @@ typedef PREPACK struct {
 
 }POSTPACK BTCOEX_PSPOLLMODE_ACLCOEX_CONFIG;
 
-
 /* Not implemented yet*/
 typedef PREPACK struct {
 	u32 aclCoexMinlowRateMbps;
@@ -1915,7 +1903,6 @@ typedef PREPACK struct {
 	BTCOEX_ACLCOEX_STATS aclCoexStats;
 }WMI_BTCOEX_STATS_EVENT;
 
-
 /*--------------------------END OF BTCOEX -------------------------------------*/
 typedef PREPACK struct {
     u32 sleepState;
@@ -1933,7 +1920,6 @@ typedef enum {
 typedef PREPACK struct {
     u32 evtConfig;
 } POSTPACK WMI_SET_TARGET_EVENT_REPORT_CMD;
-
 
 typedef PREPACK struct {
     u16 cmd_buf_sz;     /* HCI cmd buffer size */
@@ -2068,7 +2054,6 @@ typedef enum {
 	WMI_REPORT_WMM_PARAMS_EVENTID
 } WMI_EVENT_ID;
 
-
 typedef enum {
     WMI_11A_CAPABILITY   = 1,
     WMI_11G_CAPABILITY   = 2,
@@ -2101,7 +2086,6 @@ typedef PREPACK struct {
 #else
 #define WMI_READY_EVENT WMI_READY_EVENT_2 /* host code */
 #endif
-
 
 /*
  * Connect Event
@@ -2512,7 +2496,6 @@ typedef PREPACK struct {
     u8 reserved; /* For alignment */
 } POSTPACK WMI_BSS_ROAM_INFO;
 
-
 typedef PREPACK struct {
     u16 roamMode;
     u16 numEntries;
@@ -2616,11 +2599,9 @@ typedef PREPACK struct {
     s8 ctlRateIndex;
 } POSTPACK WMI_BIT_RATE_CMD;
 
-
 typedef PREPACK struct {
     s8 rateIndex;          /* see WMI_BIT_RATE */
 } POSTPACK  WMI_BIT_RATE_REPLY;
-
 
 /*
  * WMI_SET_FIXRATES_CMDID
@@ -2778,7 +2759,6 @@ typedef PREPACK struct {
     u8 data[1];
 } POSTPACK WHAL_PARAMCMD;
 
-
 #define WOW_MAX_FILTER_LISTS 1 /*4*/
 #define WOW_MAX_FILTERS_PER_LIST 4
 #define WOW_PATTERN_SIZE 64
@@ -2795,7 +2775,6 @@ typedef PREPACK struct {
     u8 wow_filter_pattern[WOW_PATTERN_SIZE];
 } POSTPACK WOW_FILTER;
 
-
 typedef PREPACK struct {
     u8 wow_valid_list;
     u8 wow_list_id;
@@ -2808,7 +2787,6 @@ typedef PREPACK struct {
     u8 valid_filter;
     u8 mac_addr[ATH_MAC_LEN];
 } POSTPACK MAC_FILTER;
-
 
 typedef PREPACK struct {
     u8 total_list_size;
@@ -2910,7 +2888,6 @@ typedef PREPACK struct {
     u32 version;
 } POSTPACK WMI_WLAN_VERSION_EVENT;
 
-
 /* WMI_ADDBA_REQ_EVENTID */
 typedef PREPACK struct {
     u8 tid;
@@ -2936,7 +2913,6 @@ typedef PREPACK struct {
     u16 reason_code;
 } POSTPACK WMI_DELBA_EVENT;
 
-
 #ifdef WAPI_ENABLE
 #define WAPI_REKEY_UCAST    1
 #define WAPI_REKEY_MCAST    2
@@ -2945,7 +2921,6 @@ typedef PREPACK struct {
     u8 macAddr[ATH_MAC_LEN];
 } POSTPACK WMI_WAPIREKEY_EVENT;
 #endif
-
 
 /* WMI_ALLOW_AGGR_CMDID
  * Configures tid's to allow ADDBA negotiations
@@ -2990,7 +2965,6 @@ typedef PREPACK struct {
  * Transmit complete event data structure(s)
  */
 
-
 typedef PREPACK struct {
 #define TX_COMPLETE_STATUS_SUCCESS 0
 #define TX_COMPLETE_STATUS_RETRIES 1
@@ -3016,7 +2990,6 @@ typedef PREPACK struct {
 } POSTPACK WMI_TX_COMPLETE_EVENT;
 
 #define WMI_TXCOMPLETE_VERSION_1 (0x01)
-
 
 /*
  * ------- AP Mode definitions --------------
@@ -3169,7 +3142,6 @@ typedef PREPACK struct {
     u8 defragOnHost; /* 1 == defragmentation is performed by host, 0 == performed by target <default> */
     u8 reserved[1]; /* alignment */
 } POSTPACK WMI_RX_FRAME_FORMAT_CMD;
-
 
 typedef PREPACK struct {
     u8 enable;     /* 1 == device operates in thin mode , 0 == normal mode <default> */

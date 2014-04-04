@@ -96,7 +96,6 @@
 #	define	UDC_DMA_RX_SRC(x)	(((x)>>8) & 0xf)
 #	define	UDC_DMA_TX_SRC(x)	(((x)>>0) & 0xf)
 
-
 /* DMA configuration registers:  up to three channels in each direction.  */
 #define	UDC_RXDMA_CFG			(UDC_BASE + 0x40)	/* 3 eps for RX DMA */
 #	define	UDC_DMA_REQ		(1 << 12)
@@ -111,7 +110,6 @@
 #define	UDC_RXDMA(chan)			(UDC_BASE + 0x60 - 4 + 4 * (chan))
 #	define UDC_RXN_STOP		(1 << 15)	/* enable EOT irq */
 #	define UDC_RXN_TC		0x00ff		/* packets in xfer */
-
 
 /*
  * Endpoint configuration registers (used before CFG_LOCK is set)
@@ -204,4 +202,3 @@ struct omap_udc {
 #define	HMC_1510	((omap_readl(MOD_CONF_CTRL_0) >> 1) & 0x3f)
 #define	HMC_1610	(omap_readl(OTG_SYSCON_2) & 0x3f)
 #define	HMC		(cpu_is_omap15xx() ? HMC_1510 : HMC_1610)
-

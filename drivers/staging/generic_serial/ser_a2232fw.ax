@@ -73,9 +73,7 @@
 ;
 ;
 
-
 CODE		equ	$3800		; start address for program code
-
 
 CTL_CHAR	equ	$00		; byte in ibuf is a character
 CTL_EVENT	equ	$01		; byte in ibuf is an event
@@ -88,7 +86,6 @@ EVENT_SYNC	equ	$04
 XON		equ	$11
 XOFF		equ	$13
 
-
 VARBASE		macro	*starting_address	; was VARINIT
 _varbase	set	\1
 		endm
@@ -98,7 +95,6 @@ VARDEF		macro	*name space_needs
 _varbase	set	_varbase+\2
 		endm
 
-
 stz		macro	* address
 		 db	$64,\1
 		endm
@@ -106,7 +102,6 @@ stz		macro	* address
 stzax		macro	* address
 		 db	$9e,<\1,>\1
 		endm
-
 
 biti		macro	* immediate value
 		db	$89,\1
@@ -136,8 +131,6 @@ smb6		macro	* address
 smb7		macro	* address
 		db	$f7,\1
 		endm
-
-
 
 ;-----------------------------------------------------------------------;
 ;									;
@@ -173,7 +166,6 @@ DO_SLOW		macro	* port_number					;
 									;
 ;-----------------------------------------------------------------------;
 
-
 ; port specific stuff (no data transfer)
 
 DO_PORT		macro	* port_number
@@ -208,7 +200,6 @@ DO_PORT		macro	* port_number
 		.end
 		.end	local
 		endm
-
 
 DO_DATA		macro	* port number
 		.local
@@ -281,8 +272,6 @@ DO_DATA		macro	* port number
 =DONE		.end	local
 		endm
 
-
-
 PORTVAR		macro	* port number
 		VARDEF	InHead\1 1
 		VARDEF	InTail\1 1
@@ -299,7 +288,6 @@ PORTVAR		macro	* port number
 		VARDEF	XonOff\1 1
 		endm
 
-
  VARBASE 0	; start variables at address $0000
  PORTVAR 0	; define variables for port 0
  PORTVAR 1	; define variables for port 1
@@ -308,8 +296,6 @@ PORTVAR		macro	* port number
  PORTVAR 4	; define variables for port 4
  PORTVAR 5	; define variables for port 5
  PORTVAR 6	; define variables for port 6
-
-
 
  VARDEF	Crystal	1	; 0 = unknown, 1 = normal, 2 = turbo
  VARDEF	Pad_a	1
@@ -323,7 +309,6 @@ PORTVAR		macro	* port number
  VARDEF	CommonCDo 1	; for carrier detect optimization
  VARDEF	CommonCDc 1	; for carrier detect debouncing
  VARDEF	CommonCDb 1	; for carrier detect debouncing
-
 
  VARBASE $0200
  VARDEF	obuf0 256	; output data (characters only)
@@ -351,7 +336,6 @@ PORTVAR		macro	* port number
  VARDEF	ictl6 256
 
  VARDEF	cdbuf 256	; CD event queue
-
 
 ACIA0		equ	$4400
 ACIA1		equ	$4c00
@@ -386,10 +370,6 @@ C_DATA		equ	$18		; serial data register
 C_INTCTRL	equ	$1a		; interrupt control register
 C_CTRLA		equ	$1c		; control register A
 C_CTRLB		equ	$1e		; control register B
-
-
-
-
 
 		section	main,code,CODE-2
 
@@ -503,7 +483,6 @@ LOOP		DO_SLOW			; do non-critical things	;
 		jsr	do_input
 		jmp	LOOP
 
-
 do_input	DO_DATA	0
 		DO_DATA	1
 		DO_DATA	2
@@ -513,7 +492,6 @@ do_input	DO_DATA	0
 		DO_DATA	6
 		rts
 
-
 ;-----------------------------------------------------------------------;
 		section	vectors,data,$3ffa
 		dw	$d0d0
@@ -521,9 +499,4 @@ do_input	DO_DATA	0
 		dw	$c0ce
 ;-----------------------------------------------------------------------;
 
-
-
 		end
-
-
-

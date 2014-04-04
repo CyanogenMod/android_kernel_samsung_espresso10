@@ -100,8 +100,8 @@
  */
 #ifdef __KERNEL__
 
-enum { R3964_IDLE, 
-	   R3964_TX_REQUEST, R3964_TRANSMITTING, 
+enum { R3964_IDLE,
+	   R3964_TX_REQUEST, R3964_TRANSMITTING,
 	   R3964_WAIT_ZVZ_BEFORE_TX_RETRY, R3964_WAIT_FOR_TX_ACK,
 	   R3964_WAIT_FOR_RX_BUF,
 	   R3964_RECEIVING, R3964_WAIT_FOR_BCC, R3964_WAIT_FOR_RX_REPEAT
@@ -126,7 +126,6 @@ struct r3964_client_info {
 	int            msg_count;
 };
 
-
 #endif
 
 /* types for msg_id: */
@@ -148,7 +147,6 @@ struct r3964_client_message {
 
 #define R3964_MTU      256
 
-
 #ifdef __KERNEL__
 
 struct r3964_block_header;
@@ -166,13 +164,13 @@ struct r3964_message {
  * Header of received block in rx_buf/tx_buf:
  */
 
-struct r3964_block_header 
+struct r3964_block_header
 {
 	unsigned int length;             /* length in chars without header */
-	unsigned char *data;             /* usually data is located 
+	unsigned char *data;             /* usually data is located
                                         immediately behind this struct */
 	unsigned int locks;              /* only used in rx_buffer */
-	  
+
     struct r3964_block_header *next;
 	struct r3964_client_info *owner;  /* =NULL in rx_buffer */
 };
@@ -196,7 +194,6 @@ struct r3964_block_header
 #define R3964_BCC   0x4000
 #define R3964_DEBUG 0x8000
 
-
 struct r3964_info {
 	spinlock_t     lock;
 	struct tty_struct *tty;
@@ -216,8 +213,7 @@ struct r3964_info {
 	unsigned char last_rx;
 	unsigned char bcc;
         unsigned int  blocks_in_rx_queue;
-	  
-	
+
 	struct r3964_client_info *firstClient;
 	unsigned int state;
 	unsigned int flags;
@@ -226,6 +222,6 @@ struct r3964_info {
 	int nRetry;
 };
 
-#endif	
+#endif
 
 #endif

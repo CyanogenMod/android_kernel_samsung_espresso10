@@ -83,7 +83,6 @@ n	[A-Za-z0-9_]
 }
 [ \t]*#.*
 
-
 [ \t]+	{
 	BEGIN(COMMAND);
 }
@@ -92,7 +91,6 @@ n	[A-Za-z0-9_]
 	unput(yytext[0]);
 	BEGIN(COMMAND);
 }
-
 
 <COMMAND>{
 	{n}+	{
@@ -255,7 +253,6 @@ static void zconf_endhelp(void)
 	zconflval.string = text;
 	BEGIN(INITIAL);
 }
-
 
 /*
  * Try to open specified file with following names:

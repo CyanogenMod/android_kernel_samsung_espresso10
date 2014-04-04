@@ -10,7 +10,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  */
 
 #include <linux/kernel.h>
@@ -64,13 +63,6 @@ static enum hrtimer_restart gpio_event_input_timer_func(struct hrtimer *timer)
 	uint8_t debounce;
 	bool sync_needed;
 
-#if 0
-	key_entry = kp->keys_info->keymap;
-	key_state = kp->key_state;
-	for (i = 0; i < nkeys; i++, key_entry++, key_state++)
-		pr_info("gpio_read_detect_status %d %d\n", key_entry->gpio,
-			gpio_read_detect_status(key_entry->gpio));
-#endif
 	key_entry = ds->info->keymap;
 	key_state = ds->key_state;
 	sync_needed = false;
@@ -82,11 +74,6 @@ static enum hrtimer_restart gpio_event_input_timer_func(struct hrtimer *timer)
 		if (key_state->debounce & DEBOUNCE_UNSTABLE) {
 			debounce = key_state->debounce = DEBOUNCE_UNKNOWN;
 			enable_irq(gpio_to_irq(key_entry->gpio));
-			if (gpio_flags & GPIOEDF_PRINT_KEY_UNSTABLE)
-				pr_info("gpio_keys_scan_keys: key %x-%x, %d "
-					"(%d) continue debounce\n",
-					ds->info->type, key_entry->code,
-					i, key_entry->gpio);
 		}
 		npolarity = !(gpio_flags & GPIOEDF_ACTIVE_HIGH);
 		pressed = gpio_get_value(key_entry->gpio) ^ npolarity;
@@ -94,29 +81,14 @@ static enum hrtimer_restart gpio_event_input_timer_func(struct hrtimer *timer)
 			if (pressed == !(debounce & DEBOUNCE_PRESSED)) {
 				ds->debounce_count++;
 				key_state->debounce = DEBOUNCE_UNKNOWN;
-				if (gpio_flags & GPIOEDF_PRINT_KEY_DEBOUNCE)
-					pr_info("gpio_keys_scan_keys: key %x-"
-						"%x, %d (%d) start debounce\n",
-						ds->info->type, key_entry->code,
-						i, key_entry->gpio);
 			}
 			continue;
 		}
 		if (pressed && (debounce & DEBOUNCE_NOTPRESSED)) {
-			if (gpio_flags & GPIOEDF_PRINT_KEY_DEBOUNCE)
-				pr_info("gpio_keys_scan_keys: key %x-%x, %d "
-					"(%d) debounce pressed 1\n",
-					ds->info->type, key_entry->code,
-					i, key_entry->gpio);
 			key_state->debounce = DEBOUNCE_PRESSED;
 			continue;
 		}
 		if (!pressed && (debounce & DEBOUNCE_PRESSED)) {
-			if (gpio_flags & GPIOEDF_PRINT_KEY_DEBOUNCE)
-				pr_info("gpio_keys_scan_keys: key %x-%x, %d "
-					"(%d) debounce pressed 0\n",
-					ds->info->type, key_entry->code,
-					i, key_entry->gpio);
 			key_state->debounce = DEBOUNCE_NOTPRESSED;
 			continue;
 		}
@@ -126,10 +98,6 @@ static enum hrtimer_restart gpio_event_input_timer_func(struct hrtimer *timer)
 			key_state->debounce |= DEBOUNCE_WAIT_IRQ;
 		else
 			key_state->debounce |= DEBOUNCE_POLL;
-		if (gpio_flags & GPIOEDF_PRINT_KEYS)
-			pr_info("gpio_keys_scan_keys: key %x-%x, %d (%d) "
-				"changed to %d\n", ds->info->type,
-				key_entry->code, i, key_entry->gpio, pressed);
 		input_event(ds->input_devs->dev[key_entry->dev], ds->info->type,
 			    key_entry->code, pressed);
 		sync_needed = true;
@@ -138,15 +106,6 @@ static enum hrtimer_restart gpio_event_input_timer_func(struct hrtimer *timer)
 		for (i = 0; i < ds->input_devs->count; i++)
 			input_sync(ds->input_devs->dev[i]);
 	}
-
-#if 0
-	key_entry = kp->keys_info->keymap;
-	key_state = kp->key_state;
-	for (i = 0; i < nkeys; i++, key_entry++, key_state++) {
-		pr_info("gpio_read_detect_status %d %d\n", key_entry->gpio,
-			gpio_read_detect_status(key_entry->gpio));
-	}
-#endif
 
 	if (ds->debounce_count)
 		hrtimer_start(timer, ds->info->debounce_time, HRTIMER_MODE_REL);
@@ -184,11 +143,6 @@ static irqreturn_t gpio_event_input_irq_handler(int irq, void *dev_id)
 					&ds->timer, ds->info->debounce_time,
 					HRTIMER_MODE_REL);
 			}
-			if (ds->info->flags & GPIOEDF_PRINT_KEY_DEBOUNCE)
-				pr_info("gpio_event_input_irq_handler: "
-					"key %x-%x, %d (%d) start debounce\n",
-					ds->info->type, key_entry->code,
-					keymap_index, key_entry->gpio);
 		} else {
 			disable_irq_nosync(irq);
 			ks->debounce = DEBOUNCE_UNSTABLE;
@@ -197,11 +151,6 @@ static irqreturn_t gpio_event_input_irq_handler(int irq, void *dev_id)
 	} else {
 		pressed = gpio_get_value(key_entry->gpio) ^
 			!(ds->info->flags & GPIOEDF_ACTIVE_HIGH);
-		if (ds->info->flags & GPIOEDF_PRINT_KEYS)
-			pr_info("gpio_event_input_irq_handler: key %x-%x, %d "
-				"(%d) changed to %d\n",
-				ds->info->type, key_entry->code, keymap_index,
-				key_entry->gpio, pressed);
 		input_event(ds->input_devs->dev[key_entry->dev], ds->info->type,
 			    key_entry->code, pressed);
 		input_sync(ds->input_devs->dev[key_entry->dev]);
@@ -338,11 +287,6 @@ int gpio_event_input_func(struct gpio_event_input_devs *input_devs,
 
 		spin_lock_irqsave(&ds->irq_lock, irqflags);
 		ds->use_irq = ret == 0;
-
-		pr_info("GPIO Input Driver: Start gpio inputs for %s%s in %s "
-			"mode\n", input_devs->dev[0]->name,
-			(input_devs->count > 1) ? "..." : "",
-			ret == 0 ? "interrupt" : "polling");
 
 		hrtimer_init(&ds->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 		ds->timer.function = gpio_event_input_timer_func;

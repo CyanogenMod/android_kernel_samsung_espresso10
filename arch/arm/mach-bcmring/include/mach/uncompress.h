@@ -27,7 +27,6 @@ static inline void putc(int c)
 	BCMRING_UART_0_DR = c;
 }
 
-
 static inline void flush(void)
 {
 	/* Wait for the tx fifo to be empty */

@@ -213,5 +213,4 @@ extern void ixgb_free_rx_resources(struct ixgb_adapter *adapter);
 extern void ixgb_free_tx_resources(struct ixgb_adapter *adapter);
 extern void ixgb_update_stats(struct ixgb_adapter *adapter);
 
-
 #endif /* _IXGB_H_ */

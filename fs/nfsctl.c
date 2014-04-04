@@ -87,7 +87,7 @@ SYSCALL_DEFINE3(nfsservctl, int, cmd, struct nfsctl_arg __user *, arg,
 	if (cmd < 0 || cmd >= ARRAY_SIZE(map) || !map[cmd].name)
 		return -EINVAL;
 
-	file = do_open(map[cmd].name, map[cmd].rsize ? O_RDWR : O_WRONLY);	
+	file = do_open(map[cmd].name, map[cmd].rsize ? O_RDWR : O_WRONLY);
 	if (IS_ERR(file))
 		return PTR_ERR(file);
 	err = file->f_op->write(file, p, map[cmd].wsize, &file->f_pos);

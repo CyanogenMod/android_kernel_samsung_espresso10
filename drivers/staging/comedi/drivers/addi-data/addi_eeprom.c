@@ -81,7 +81,6 @@ struct str_DigitalOutputHeader {
 	unsigned short w_Nchannel;
 };
 
-
 /* used for timer as well as watchdog */
 
 struct str_TimerDetails {
@@ -95,11 +94,9 @@ struct str_TimerDetails {
 
 struct str_TimerMainHeader {
 
-
 	unsigned short w_Ntimer;
 	struct str_TimerDetails s_TimerDetails[4];	/*   supports 4 timers */
 };
-
 
 struct str_AnalogOutputHeader {
 	unsigned short w_Nchannel;
@@ -113,7 +110,6 @@ struct str_AnalogInputHeader {
 	unsigned char b_HasDma;
 	unsigned char b_Resolution;
 };
-
 
 		/*****************************************/
 		/*            Read Header Functions              */

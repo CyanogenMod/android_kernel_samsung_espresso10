@@ -4,10 +4,8 @@
 #ifndef	__PROTOCOL_H__
 #define	__PROTOCOL_H__
 
-
 #define IPV4				4
 #define IPV6                6
-
 
 struct ArpHeader {
     struct arphdr       arp;
@@ -16,7 +14,6 @@ struct ArpHeader {
     unsigned char       ar_tha[ETH_ALEN];   /* target hardware address  */
     unsigned char       ar_tip[4];      /* target IP address        */
 }/*__attribute__((packed))*/;
-
 
 struct TransportHeaderT
 {
@@ -27,7 +24,6 @@ struct TransportHeaderT
 	};
 } __attribute__((packed));
 typedef struct TransportHeaderT xporthdr;
-
 
 typedef enum _E_NWPKT_IPFRAME_TYPE
 {
@@ -104,19 +100,14 @@ typedef enum _E_SERVICEFLOW_CS_SPEC_
 	eCSPacketUnsupported
 }E_SERVICEFLOW_CS_SPEC;
 
-
 #define	IP6_HEADER_LEN	40
 
 #define IP_VERSION(byte)        (((byte&0xF0)>>4))
-
-
 
 #define MAC_ADDRESS_SIZE	6
 #define	ETH_AND_IP_HEADER_LEN	14 + 20
 #define L4_SRC_PORT_LEN 2
 #define L4_DEST_PORT_LEN 2
-
-
 
 #define	CTRL_PKT_LEN		8 + ETH_AND_IP_HEADER_LEN
 
@@ -146,6 +137,5 @@ typedef struct _TCP_HEADER
 #define TCP_HEADER_LEN  	sizeof(TCP_HEADER)
 #define TCP_ACK             0x10  //Bit 4 in tcpflags field.
 #define GET_TCP_HEADER_LEN(byte) ((byte&0xF0)>>4)
-
 
 #endif //__PROTOCOL_H__

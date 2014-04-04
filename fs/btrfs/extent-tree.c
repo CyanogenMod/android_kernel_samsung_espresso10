@@ -1774,14 +1774,12 @@ static int btrfs_discard_extent(struct btrfs_root *root, u64 bytenr,
 	u64 discarded_bytes = 0;
 	struct btrfs_multi_bio *multi = NULL;
 
-
 	/* Tell the block device(s) that the sectors can be discarded */
 	ret = btrfs_map_block(&root->fs_info->mapping_tree, REQ_DISCARD,
 			      bytenr, &num_bytes, &multi, 0);
 	if (!ret) {
 		struct btrfs_bio_stripe *stripe = multi->stripes;
 		int i;
-
 
 		for (i = 0; i < multi->num_stripes; i++, stripe++) {
 			if (!stripe->dev->can_discard)
@@ -1807,7 +1805,6 @@ static int btrfs_discard_extent(struct btrfs_root *root, u64 bytenr,
 
 	if (actual_bytes)
 		*actual_bytes = discarded_bytes;
-
 
 	return ret;
 }
@@ -3786,7 +3783,7 @@ static void update_global_block_rsv(struct btrfs_fs_info *fs_info)
 	spin_lock(&block_rsv->lock);
 	spin_lock(&sinfo->lock);
 
-	block_rsv->size = num_bytes;
+	block_rsv->size = min_t(u64, num_bytes, 512 * 1024 * 1024);
 
 	num_bytes = sinfo->bytes_used + sinfo->bytes_pinned +
 		    sinfo->bytes_reserved + sinfo->bytes_readonly +
@@ -5732,7 +5729,6 @@ struct extent_buffer *btrfs_alloc_free_block(struct btrfs_trans_handle *trans,
 	struct extent_buffer *buf;
 	u64 flags = 0;
 	int ret;
-
 
 	block_rsv = use_block_rsv(trans, root, blocksize);
 	if (IS_ERR(block_rsv))

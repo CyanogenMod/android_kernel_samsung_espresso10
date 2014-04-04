@@ -7,7 +7,6 @@
 #include <linux/list.h>
 #include <linux/skbuff.h>
 
-
 #define B43legacy_PIO_TXCTL		0x00
 #define B43legacy_PIO_TXDATA		0x02
 #define B43legacy_PIO_TXQBUFSIZE	0x04
@@ -30,10 +29,7 @@
 /* PIO tuning knobs */
 #define B43legacy_PIO_MAXTXPACKETS	256
 
-
-
 #ifdef CONFIG_B43LEGACY_PIO
-
 
 struct b43legacy_pioqueue;
 struct b43legacy_xmitstatus;
@@ -93,7 +89,6 @@ void b43legacy_pio_write(struct b43legacy_pioqueue *queue,
 	b43legacy_write16(queue->dev, queue->mmio_base + offset, value);
 	mmiowb();
 }
-
 
 int b43legacy_pio_init(struct b43legacy_wldev *dev);
 void b43legacy_pio_free(struct b43legacy_wldev *dev);

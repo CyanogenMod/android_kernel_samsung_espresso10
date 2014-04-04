@@ -72,7 +72,6 @@ enum RXSTATE {
 	EXPECT_HDR3 = 3,    /* Expect header byte 3 (for status hdrs only) */
 };
 
-
 /* Transmit Fifo
  * This Transmit queue is an extension of the edgeport Rx buffer.
  * The maximum amount of data buffered in both the edgeport
@@ -119,7 +118,6 @@ struct edgeport_port {
 	struct async_icount	icount;
 	struct usb_serial_port	*port;			/* loop back to the owner of this object */
 };
-
 
 /* This structure holds all of the individual device information */
 struct edgeport_serial {
@@ -195,7 +193,6 @@ static int debug;
 
 static atomic_t CmdUrbs;	/* Number of outstanding Command Write Urbs */
 
-
 /* local function prototypes */
 
 /* function prototypes for all URB callbacks */
@@ -269,7 +266,6 @@ static void load_application_firmware(struct edgeport_serial *edge_serial);
 static void unicode_to_ascii(char *string, int buflen,
 				__le16 *unicode, int unicode_size);
 
-
 /* ************************************************************************ */
 /* ************************************************************************ */
 /* ************************************************************************ */
@@ -333,7 +329,6 @@ static void update_edgeport_E2PROM(struct edgeport_serial *edge_serial)
 	    edge_serial->boot_descriptor.MajorVersion,
 	    edge_serial->boot_descriptor.MinorVersion,
 	    le16_to_cpu(edge_serial->boot_descriptor.BuildNumber));
-
 
 	if (BootNewVer > BootCurVer) {
 		dbg("**Update Boot Image from %d.%d.%d to %d.%d.%d",
@@ -461,7 +456,7 @@ static void get_product_info(struct edgeport_serial *edge_serial)
 		product_info->iDownloadFile = EDGE_DOWNLOAD_FILE_80251;
 	else
 		product_info->iDownloadFile = EDGE_DOWNLOAD_FILE_I930;
- 
+
 	/* Determine Product type and set appropriate flags */
 	switch (DEVICE_ID_FROM_USB_PRODUCT_ID(product_info->ProductId)) {
 	case ION_DEVICE_ID_EDGEPORT_COMPATIBLE:
@@ -544,7 +539,6 @@ static int get_epic_descriptor(struct edgeport_serial *ep)
 
 	return result;
 }
-
 
 /************************************************************************/
 /************************************************************************/
@@ -664,7 +658,6 @@ exit:
 						__func__, result);
 }
 
-
 /*****************************************************************************
  * edge_bulk_in_callback
  *	this is the callback function for when we have received data on the
@@ -726,7 +719,6 @@ static void edge_bulk_in_callback(struct urb *urb)
 	spin_unlock(&edge_serial->es_lock);
 }
 
-
 /*****************************************************************************
  * edge_bulk_out_data_callback
  *	this is the callback function for when we have finished sending
@@ -762,7 +754,6 @@ static void edge_bulk_out_data_callback(struct urb *urb)
 		(usb_get_serial_data(edge_port->port->serial)), edge_port);
 }
 
-
 /*****************************************************************************
  * BulkOutCmdCallback
  *	this is the callback function for when we have finished sending a
@@ -779,7 +770,6 @@ static void edge_bulk_out_cmd_callback(struct urb *urb)
 	atomic_dec(&CmdUrbs);
 	dbg("%s - FREE URB %p (outstanding %d)", __func__,
 					urb, atomic_read(&CmdUrbs));
-
 
 	/* clean up the transfer buffer */
 	kfree(urb->transfer_buffer);
@@ -805,7 +795,6 @@ static void edge_bulk_out_cmd_callback(struct urb *urb)
 	edge_port->commandPending = false;
 	wake_up(&edge_port->wait_command);
 }
-
 
 /*****************************************************************************
  * Driver tty interface functions
@@ -951,7 +940,6 @@ static int edge_open(struct tty_struct *tty, struct usb_serial_port *port)
 	return 0;
 }
 
-
 /************************************************************************
  *
  * block_until_chase_response
@@ -1007,7 +995,6 @@ static void block_until_chase_response(struct edgeport_port *edge_port)
 	}
 }
 
-
 /************************************************************************
  *
  * block_until_tx_empty
@@ -1057,7 +1044,6 @@ static void block_until_tx_empty(struct edgeport_port *edge_port)
 		}
 	}
 }
-
 
 /*****************************************************************************
  * edge_close
@@ -1219,7 +1205,6 @@ finish_write:
 	return copySize;
 }
 
-
 /************************************************************************
  *
  * send_more_port_data()
@@ -1350,7 +1335,6 @@ exit_send:
 	spin_unlock_irqrestore(&edge_port->ep_lock, flags);
 }
 
-
 /*****************************************************************************
  * edge_write_room
  *	this function is called by the tty driver when it wants to know how
@@ -1387,7 +1371,6 @@ static int edge_write_room(struct tty_struct *tty)
 	dbg("%s - returns %d", __func__, room);
 	return room;
 }
-
 
 /*****************************************************************************
  * edge_chars_in_buffer
@@ -1429,7 +1412,6 @@ static int edge_chars_in_buffer(struct tty_struct *tty)
 	return num_chars;
 }
 
-
 /*****************************************************************************
  * SerialThrottle
  *	this function is called by the tty driver when it wants to stop the data
@@ -1469,7 +1451,6 @@ static void edge_throttle(struct tty_struct *tty)
 	}
 }
 
-
 /*****************************************************************************
  * edge_unthrottle
  *	this function is called by the tty driver when it wants to resume the
@@ -1506,7 +1487,6 @@ static void edge_unthrottle(struct tty_struct *tty)
 	}
 }
 
-
 /*****************************************************************************
  * SerialSetTermios
  *	this function is called by the tty driver when it wants to change
@@ -1537,7 +1517,6 @@ static void edge_set_termios(struct tty_struct *tty,
 	/* change the port settings to the new ones specified */
 	change_port_settings(tty, edge_port, old_termios);
 }
-
 
 /*****************************************************************************
  * get_lsr_info - get line status register info
@@ -1618,7 +1597,6 @@ static int edge_tiocmget(struct tty_struct *tty)
 		  | ((msr & EDGEPORT_MSR_RI)	? TIOCM_RI:  0)   /* 0x080 */
 		  | ((msr & EDGEPORT_MSR_DSR)	? TIOCM_DSR: 0);  /* 0x100 */
 
-
 	dbg("%s -- %x", __func__, result);
 
 	return result;
@@ -1674,7 +1652,6 @@ static int get_serial_info(struct edgeport_port *edge_port,
 	return 0;
 }
 
-
 /*****************************************************************************
  * SerialIoctl
  *	this function handles any ioctl calls to the driver
@@ -1729,7 +1706,6 @@ static int edge_ioctl(struct tty_struct *tty,
 	return -ENOIOCTLCMD;
 }
 
-
 /*****************************************************************************
  * SerialBreak
  *	this function sends a break to the port
@@ -1774,7 +1750,6 @@ static void edge_break(struct tty_struct *tty, int break_state)
 				__func__);
 	}
 }
-
 
 /*****************************************************************************
  * process_rcvd_data
@@ -1925,7 +1900,6 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
 	}
 }
 
-
 /*****************************************************************************
  * process_rcvd_status
  *	this function handles the any status messages received on the
@@ -2045,7 +2019,6 @@ static void process_rcvd_status(struct edgeport_serial *edge_serial,
 	}
 }
 
-
 /*****************************************************************************
  * edge_tty_recv
  *	this function passes data on to the tty flip buffer
@@ -2065,7 +2038,6 @@ static void edge_tty_recv(struct device *dev, struct tty_struct *tty,
 
 	tty_flip_buffer_push(tty);
 }
-
 
 /*****************************************************************************
  * handle_new_msr
@@ -2096,7 +2068,6 @@ static void handle_new_msr(struct edgeport_port *edge_port, __u8 newMsr)
 	/* Save the new modem status */
 	edge_port->shadowMSR = newMsr & 0xf0;
 }
-
 
 /*****************************************************************************
  * handle_new_lsr
@@ -2142,7 +2113,6 @@ static void handle_new_lsr(struct edgeport_port *edge_port, __u8 lsrData,
 	if (newLsr & LSR_FRM_ERR)
 		icount->frame++;
 }
-
 
 /****************************************************************************
  * sram_write
@@ -2194,7 +2164,6 @@ static int sram_write(struct usb_serial *serial, __u16 extAddr, __u16 addr,
 	return result;
 }
 
-
 /****************************************************************************
  * rom_write
  *	writes a number of bytes to the Edgeport device's ROM starting at the
@@ -2243,7 +2212,6 @@ static int rom_write(struct usb_serial *serial, __u16 extAddr, __u16 addr,
 	kfree(transfer_buffer);
 	return result;
 }
-
 
 /****************************************************************************
  * rom_read
@@ -2294,7 +2262,6 @@ static int rom_read(struct usb_serial *serial, __u16 extAddr,
 	return result;
 }
 
-
 /****************************************************************************
  * send_iosp_ext_cmd
  *	Is used to send a IOSP message to the Edgeport device
@@ -2330,7 +2297,6 @@ static int send_iosp_ext_cmd(struct edgeport_port *edge_port,
 
 	return status;
 }
-
 
 /*****************************************************************************
  * write_cmd_usb
@@ -2386,7 +2352,6 @@ static int write_cmd_usb(struct edgeport_port *edge_port,
 #endif
 	return status;
 }
-
 
 /*****************************************************************************
  * send_cmd_write_baud_rate
@@ -2452,7 +2417,6 @@ static int send_cmd_write_baud_rate(struct edgeport_port *edge_port,
 	return status;
 }
 
-
 /*****************************************************************************
  * calc_baud_rate_divisor
  *	this function calculates the proper baud rate divisor for the specified
@@ -2462,7 +2426,6 @@ static int calc_baud_rate_divisor(int baudrate, int *divisor)
 {
 	int i;
 	__u16 custom;
-
 
 	dbg("%s - %d", __func__, baudrate);
 
@@ -2488,7 +2451,6 @@ static int calc_baud_rate_divisor(int baudrate, int *divisor)
 
 	return -1;
 }
-
 
 /*****************************************************************************
  * send_cmd_write_uart_register
@@ -2541,7 +2503,6 @@ static int send_cmd_write_uart_register(struct edgeport_port *edge_port,
 
 	return status;
 }
-
 
 /*****************************************************************************
  * change_port_settings
@@ -2677,7 +2638,6 @@ static void change_port_settings(struct tty_struct *tty,
 	     (edge_serial->epic_descriptor.Supports.IOSPSetTxFlow)))
 		send_iosp_ext_cmd(edge_port, IOSP_CMD_SET_TX_FLOW, txFlow);
 
-
 	edge_port->shadowLCR &= ~(LCR_BITS_MASK | LCR_STOP_MASK | LCR_PAR_MASK);
 	edge_port->shadowLCR |= (lData | lParity | lStop);
 
@@ -2715,7 +2675,6 @@ static void change_port_settings(struct tty_struct *tty,
 	}
 }
 
-
 /****************************************************************************
  * unicode_to_ascii
  *	Turns a string from Unicode into ASCII.
@@ -2739,7 +2698,6 @@ static void unicode_to_ascii(char *string, int buflen,
 	}
 	string[i] = 0x00;
 }
-
 
 /****************************************************************************
  * get_manufacturing_desc
@@ -2799,7 +2757,6 @@ static void get_manufacturing_desc(struct edgeport_serial *edge_serial)
 	}
 }
 
-
 /****************************************************************************
  * get_boot_desc
  *	reads in the bootloader descriptor and stores it into the serial
@@ -2838,7 +2795,6 @@ static void get_boot_desc(struct edgeport_serial *edge_serial)
 			edge_serial->boot_descriptor.UConfig1);
 	}
 }
-
 
 /****************************************************************************
  * load_application_firmware
@@ -2908,14 +2864,13 @@ static void load_application_firmware(struct edgeport_serial *edge_serial)
 	}
 
 	dbg("sending exec_dl_code");
-	response = usb_control_msg (edge_serial->serial->dev, 
-				    usb_sndctrlpipe(edge_serial->serial->dev, 0), 
-				    USB_REQUEST_ION_EXEC_DL_CODE, 
+	response = usb_control_msg (edge_serial->serial->dev,
+				    usb_sndctrlpipe(edge_serial->serial->dev, 0),
+				    USB_REQUEST_ION_EXEC_DL_CODE,
 				    0x40, 0x4000, 0x0001, NULL, 0, 3000);
 
 	release_firmware(fw);
 }
-
 
 /****************************************************************************
  * edge_startup
@@ -3141,7 +3096,6 @@ static int edge_startup(struct usb_serial *serial)
 	return response;
 }
 
-
 /****************************************************************************
  * edge_disconnect
  *	This function is called whenever the device is removed from the usb bus.
@@ -3165,7 +3119,6 @@ static void edge_disconnect(struct usb_serial *serial)
 	}
 }
 
-
 /****************************************************************************
  * edge_release
  *	This function is called when the device structure is deallocated.
@@ -3182,7 +3135,6 @@ static void edge_release(struct usb_serial *serial)
 
 	kfree(edge_serial);
 }
-
 
 /****************************************************************************
  * edgeport_init
@@ -3223,7 +3175,6 @@ failed_4port_device_register:
 failed_2port_device_register:
 	return retval;
 }
-
 
 /****************************************************************************
  * edgeport_exit

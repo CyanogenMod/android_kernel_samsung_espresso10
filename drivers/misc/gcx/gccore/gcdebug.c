@@ -138,7 +138,6 @@ struct gc_gpu_status gc_gpu_status_last_error = {
 /* By default we don't cache the status on every irq */
 static int gc_cache_status_every_irq;
 
-
 static bool gc_dma_addr_changing(void)
 {
 	static const unsigned int detectcount = 1000;
@@ -259,7 +258,6 @@ static const char *gc_when_string(enum gc_debug_when when)
 
 	return "unknown";
 }
-
 
 static void gc_dump_status_internal(struct seq_file *s,
 				    struct gc_gpu_status *status)

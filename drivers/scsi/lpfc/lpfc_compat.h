@@ -41,7 +41,6 @@ lpfc_memcpy_to_slim(void __iomem *dest, void *src, unsigned int bytes)
 	uint32_t *src32;
 	unsigned int four_bytes;
 
-
 	dest32  = (uint32_t __iomem *) dest;
 	src32  = (uint32_t *) src;
 
@@ -62,7 +61,6 @@ lpfc_memcpy_from_slim( void *dest, void __iomem *src, unsigned int bytes)
 	uint32_t *dest32;
 	uint32_t __iomem *src32;
 	unsigned int four_bytes;
-
 
 	dest32  = (uint32_t *) dest;
 	src32  = (uint32_t __iomem *) src;

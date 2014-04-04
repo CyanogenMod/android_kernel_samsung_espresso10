@@ -27,12 +27,10 @@
 #include <linux/pm.h>
 #include <linux/workqueue.h>
 
-
 #ifdef CONFIG_TEMP_BLOCK_FOR_CAM_RECORDING
 #include <linux/proc_fs.h>
 #include <linux/uaccess.h>
 #endif
-
 
 #define MAX17040_VCELL_MSB	0x02
 #define MAX17040_VCELL_LSB	0x03
@@ -250,7 +248,6 @@ static void max17040_get_vcell(struct i2c_client *client)
 	else
 		dev_warn(&client->dev, "i2c error, not updating vcell\n");
 }
-
 
 static void max17040_get_soc(struct i2c_client *client)
 {
@@ -889,7 +886,6 @@ static int proc_write_cam_recording(struct file *filp,
 	if (copy_from_user(chip->cam_recording_value, buffer, len))
 		return -EFAULT;
 
-
 	chip->cam_recording_value[1] = '\0';
 
 	if (kstrtoul(chip->cam_recording_value, 10, &value))
@@ -1094,7 +1090,6 @@ create_attrs_failed:
 succeed:
 	return rc;
 }
-
 
 static int __devinit max17040_probe(struct i2c_client *client,
 			const struct i2c_device_id *id)

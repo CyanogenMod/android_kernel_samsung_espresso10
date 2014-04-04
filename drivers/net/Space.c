@@ -321,7 +321,6 @@ static void __init trif_probe2(int unit)
 }
 #endif
 
-
 /*  Statically configured drivers -- order matters here. */
 static int __init net_olddevs_init(void)
 {

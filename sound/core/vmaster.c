@@ -207,7 +207,10 @@ static int slave_put(struct snd_kcontrol *kcontrol,
 	}
 	if (!changed)
 		return 0;
-	return slave_put_val(slave, ucontrol);
+	err = slave_put_val(slave, ucontrol);
+	if (err < 0)
+		return err;
+	return 1;
 }
 
 static int slave_tlv_cmd(struct snd_kcontrol *kcontrol,
@@ -338,7 +341,6 @@ static void master_free(struct snd_kcontrol *kcontrol)
 		slave->master = NULL;
 	kfree(master);
 }
-
 
 /**
  * snd_ctl_make_virtual_master - Create a virtual master control

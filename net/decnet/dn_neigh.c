@@ -55,7 +55,6 @@ static int dn_long_output(struct sk_buff *);
 static int dn_short_output(struct sk_buff *);
 static int dn_phase3_output(struct sk_buff *);
 
-
 /*
  * For talking to broadcast devices: Ethernet & PPP
  */
@@ -197,7 +196,6 @@ static void dn_long_error_report(struct neighbour *neigh, struct sk_buff *skb)
 	kfree_skb(skb);
 }
 
-
 static void dn_short_error_report(struct neighbour *neigh, struct sk_buff *skb)
 {
 	printk(KERN_DEBUG "dn_short_error_report: called\n");
@@ -233,7 +231,6 @@ static int dn_long_output(struct sk_buff *skb)
 	unsigned char *data;
 	struct dn_long_packet *lp;
 	struct dn_skb_cb *cb = DN_SKB_CB(skb);
-
 
 	if (skb_headroom(skb) < headroom) {
 		struct sk_buff *skb2 = skb_realloc_headroom(skb, headroom);
@@ -280,7 +277,6 @@ static int dn_short_output(struct sk_buff *skb)
 	struct dn_short_packet *sp;
 	unsigned char *data;
 	struct dn_skb_cb *cb = DN_SKB_CB(skb);
-
 
 	if (skb_headroom(skb) < headroom) {
 		struct sk_buff *skb2 = skb_realloc_headroom(skb, headroom);
@@ -536,7 +532,6 @@ int dn_neigh_elist(struct net_device *dev, unsigned char *ptr, int n)
 
 	return state.t;
 }
-
 
 #ifdef CONFIG_PROC_FS
 

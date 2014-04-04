@@ -226,7 +226,6 @@ static int __devinit qt2160_write(struct i2c_client *client, u8 reg, u8 data)
 	return error;
 }
 
-
 static bool __devinit qt2160_identify(struct i2c_client *client)
 {
 	int id, ver, rev;

@@ -33,7 +33,6 @@
 #include <linux/sched.h>
 #include <linux/slab.h>
 
-
 /* DMA Registers */
 
 #define KS_DMA_TX_CTRL			0x0000

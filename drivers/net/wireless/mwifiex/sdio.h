@@ -20,7 +20,6 @@
 #ifndef	_MWIFIEX_SDIO_H
 #define	_MWIFIEX_SDIO_H
 
-
 #include <linux/mmc/sdio.h>
 #include <linux/mmc/sdio_ids.h>
 #include <linux/mmc/sdio_func.h>
@@ -251,7 +250,6 @@
 	a->mpa_rx.ports = 0;						\
 	a->mpa_rx.start_port = 0;					\
 } while (0);
-
 
 /* data structure for SDIO MPA TX */
 struct mwifiex_sdio_mpa_tx {

@@ -458,8 +458,6 @@ static void tx_restart(struct net_device *dev)
 	scc_cr_cmd(fep, CPM_CR_RESTART_TX);
 }
 
-
-
 /*************************************************************************/
 
 const struct fs_ops fs_scc_ops = {

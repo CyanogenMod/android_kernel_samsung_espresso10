@@ -24,7 +24,6 @@
 #include "dtc.h"
 #include "srcpos.h"
 
-
 static char *dirname(const char *path)
 {
 	const char *slash = strrchr(path, '/');
@@ -164,8 +163,6 @@ srcpos_copy(struct srcpos *pos)
 	return pos_new;
 }
 
-
-
 void
 srcpos_dump(struct srcpos *pos)
 {
@@ -178,7 +175,6 @@ srcpos_dump(struct srcpos *pos)
 	printf("file        : %s\n", pos->file->name);
 }
 
-
 char *
 srcpos_string(struct srcpos *pos)
 {
@@ -188,7 +184,6 @@ srcpos_string(struct srcpos *pos)
 
 	if (pos)
 		fname = pos->file->name;
-
 
 	if (pos->first_line != pos->last_line)
 		rc = asprintf(&pos_str, "%s:%d.%d-%d.%d", fname,
@@ -229,7 +224,6 @@ srcpos_error(struct srcpos *pos, char const *fmt, ...)
 	srcpos_verror(pos, fmt, va);
 	va_end(va);
 }
-
 
 void
 srcpos_warn(struct srcpos *pos, char const *fmt, ...)

@@ -690,4 +690,3 @@ fail:
 		kfree(efx_mtd);
 	return rc;
 }
-

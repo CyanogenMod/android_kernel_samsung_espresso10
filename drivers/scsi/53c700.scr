@@ -2,7 +2,7 @@
 ;
 ; Copyright (C) 2001 James.Bottomley@HansenPartnership.com
 ;;-----------------------------------------------------------------------------
-;;  
+;;
 ;;  This program is free software; you can redistribute it and/or modify
 ;;  it under the terms of the GNU General Public License as published by
 ;;  the Free Software Foundation; either version 2 of the License, or
@@ -39,7 +39,7 @@ ABSOLUTE	ReceiveMsgAddress = 0	; Addr to receive msg
 ABSOLUTE	SGScriptStartAddress = 0
 
 ; The following represent status interrupts we use 3 hex digits for
-; this: 0xPRS where 
+; this: 0xPRS where
 
 ; P:
 ABSOLUTE	AFTER_SELECTION 	= 0x100
@@ -92,7 +92,7 @@ ABSOLUTE	DISCONNECT_DURING_DATA = 0x780
 
 ;
 ; Other interrupt conditions
-; 
+;
 ABSOLUTE	RESELECTED_DURING_SELECTION = 0x1000
 ABSOLUTE	COMPLETED_SELECTION_AS_TARGET = 0x1001
 ABSOLUTE	RESELECTION_IDENTIFIED = 0x1003
@@ -113,7 +113,6 @@ ABSOLUTE	DEBUG_INTERRUPT3 = 0x3003
 ABSOLUTE	DEBUG_INTERRUPT4 = 0x3004
 ABSOLUTE	DEBUG_INTERRUPT5 = 0x3005
 ABSOLUTE	DEBUG_INTERRUPT6 = 0x3006
-
 
 ;
 ; SCSI Messages we interpret in the script
@@ -157,7 +156,7 @@ GetReselectionData:
 GetReselectionWithTag:
 	MOVE	3, ReceiveMsgAddress, WHEN MSG_IN
 	INT	RESELECTION_IDENTIFIED
-	
+
 	ENTRY	SelectedAsTarget
 SelectedAsTarget:
 ; Basically tell the selecting device that there's nothing here
@@ -352,7 +351,6 @@ Disconnect4:
 	CLEAR	ACK
 	JUMP	ResumeSendCommand
 
-
 DisconnectAfterDataIn:
 	CLEAR	ACK
 	WAIT	DISCONNECT
@@ -408,4 +406,3 @@ Finish1:
 	INT	GOOD_STATUS_AFTER_STATUS
 	ENTRY	Finish2
 Finish2:
-

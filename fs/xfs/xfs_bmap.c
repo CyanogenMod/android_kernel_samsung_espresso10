@@ -53,7 +53,6 @@
 #include "xfs_vnodeops.h"
 #include "xfs_trace.h"
 
-
 #ifdef DEBUG
 STATIC void
 xfs_bmap_check_leaf_extents(xfs_btree_cur_t *cur, xfs_inode_t *ip, int whichfork);
@@ -64,7 +63,6 @@ kmem_zone_t		*xfs_bmap_free_item_zone;
 /*
  * Prototypes for internal bmap routines.
  */
-
 
 /*
  * Called from xfs_bmap_add_attrfork to handle extents format files.
@@ -4154,7 +4152,6 @@ xfs_bmap_read_extents(
 		xfs_extnum_t	num_recs;
 		xfs_extnum_t	start;
 
-
 		num_recs = xfs_btree_get_numrecs(block);
 		if (unlikely(i + num_recs > room)) {
 			ASSERT(i + num_recs <= room);
@@ -4285,7 +4282,6 @@ xfs_bmap_validate_ret(
 	}
 }
 #endif /* DEBUG */
-
 
 /*
  * Map file blocks to filesystem blocks.
@@ -5443,7 +5439,6 @@ xfs_getbmap(
 		return XFS_ERROR(EINVAL);
 	bmvend = bmv->bmv_offset + bmv->bmv_length;
 
-
 	if (bmv->bmv_count > ULONG_MAX / sizeof(struct getbmapx))
 		return XFS_ERROR(ENOMEM);
 	out = kmem_zalloc(bmv->bmv_count * sizeof(struct getbmapx), KM_MAYFAIL);
@@ -5833,7 +5828,6 @@ xfs_bmap_check_leaf_extents(
 	for (;;) {
 		xfs_fsblock_t	nextbno;
 		xfs_extnum_t	num_recs;
-
 
 		num_recs = xfs_btree_get_numrecs(block);
 

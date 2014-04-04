@@ -76,7 +76,6 @@ typedef unsigned int sigINT;
 #pragma options align=mac68k
 #endif
 
-
 /* Current Signature Version - sigBYTE dsSigVersion; */
 /* ------------------------------------------------------------------ */
 #define SIG_VERSION 1

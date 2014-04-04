@@ -57,7 +57,6 @@
 #define TMODE_WAQ2	RQ_WA2
 #define	HSRA		HSR(0)
 
-
 #define FMA_FM_ST1L	FMA_ST1L
 #define FMA_FM_ST1U	FMA_ST1U
 #define FMA_FM_ST2L	FMA_ST2L
@@ -94,4 +93,3 @@
 #endif
 
 #endif	/* n_SKFBIINC_ */
-

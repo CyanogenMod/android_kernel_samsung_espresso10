@@ -60,7 +60,6 @@ xp_remote_mmr_read(unsigned long dst_gpa, const unsigned long src_gpa,
 	return xpGruCopyError;
 }
 
-
 static enum xp_retval
 xp_remote_memcpy_uv(unsigned long dst_gpa, const unsigned long src_gpa,
 		    size_t len)

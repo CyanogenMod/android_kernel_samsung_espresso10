@@ -71,7 +71,6 @@ static int umcast_open(void *data)
 	struct ip_mreq mreq;
 	int fd, yes = 1, err = -EINVAL;
 
-
 	if ((!pri->unicast && lsin->sin_addr.s_addr == 0) ||
 	    (rsin->sin_addr.s_addr == 0) ||
 	    (lsin->sin_port == 0) || (rsin->sin_port == 0))

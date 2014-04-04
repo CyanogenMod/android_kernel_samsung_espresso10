@@ -132,9 +132,8 @@ __acquires(&sdp->sd_ail_lock)
 	return 0;
 }
 
-
 /**
- * gfs2_ail1_flush - start writeback of some ail1 entries 
+ * gfs2_ail1_flush - start writeback of some ail1 entries
  * @sdp: The super block
  * @wbc: The writeback control structure
  *
@@ -400,15 +399,15 @@ static inline unsigned int log_distance(struct gfs2_sbd *sdp, unsigned int newer
  * @sdp: The GFS2 superblock
  *
  * This is complex.  We need to reserve room for all our currently used
- * metadata buffers (e.g. normal file I/O rewriting file time stamps) and 
- * all our journaled data buffers for journaled files (e.g. files in the 
+ * metadata buffers (e.g. normal file I/O rewriting file time stamps) and
+ * all our journaled data buffers for journaled files (e.g. files in the
  * meta_fs like rindex, or files for which chattr +j was done.)
  * If we don't reserve enough space, gfs2_log_refund and gfs2_log_flush
  * will count it as free space (sd_log_blks_free) and corruption will follow.
  *
  * We can have metadata bufs and jdata bufs in the same journal.  So each
  * type gets its own log header, for which we need to reserve a block.
- * In fact, each type has the potential for needing more than one header 
+ * In fact, each type has the potential for needing more than one header
  * in cases where we have more buffers than will fit on a journal page.
  * Metadata journal entries take up half the space of journaled buffer entries.
  * Thus, metadata entries have buf_limit (502) and journaled buffers have
@@ -519,7 +518,7 @@ struct buffer_head *gfs2_log_get_buf(struct gfs2_sbd *sdp)
 }
 
 /**
- * gfs2_fake_write_endio - 
+ * gfs2_fake_write_endio -
  * @bh: The buffer head
  * @uptodate: The I/O Status
  *
@@ -887,7 +886,6 @@ void gfs2_log_shutdown(struct gfs2_sbd *sdp)
 	up_write(&sdp->sd_log_flush_lock);
 }
 
-
 /**
  * gfs2_meta_syncfs - sync all the buffers in a filesystem
  * @sdp: the filesystem
@@ -969,4 +967,3 @@ int gfs2_logd(void *data)
 
 	return 0;
 }
-

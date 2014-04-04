@@ -33,4 +33,3 @@ struct clk clk_##_name = {				\
 		.dev_id		= _devname,		\
 		.con_id		= _conname,		\
 	}
-

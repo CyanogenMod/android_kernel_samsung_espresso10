@@ -670,7 +670,6 @@ static void cx23885_reset(struct cx23885_dev *dev)
 	cx23885_gpio_setup(dev);
 }
 
-
 static int cx23885_pci_quirks(struct cx23885_dev *dev)
 {
 	dprintk(1, "%s()\n", __func__);

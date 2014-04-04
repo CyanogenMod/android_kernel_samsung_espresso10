@@ -62,7 +62,6 @@ struct rmi_fn_34_data {
 static ssize_t rmi_fn_34_status_show(struct device *dev,
 				     struct device_attribute *attr, char *buf);
 
-
 static ssize_t rmi_fn_34_status_store(struct device *dev,
 				  struct device_attribute *attr,
 				  const char *buf, size_t count);
@@ -125,7 +124,6 @@ static ssize_t rmi_fn_34_rescanPDT_store(struct device *dev,
 					struct device_attribute *attr,
 					const char *buf, size_t count);
 
-
 static int rmi_f34_alloc_memory(struct rmi_function_container *fc);
 
 static void rmi_f34_free_memory(struct rmi_function_container *fc);
@@ -137,8 +135,6 @@ static int rmi_f34_config(struct rmi_function_container *fc);
 static int rmi_f34_reset(struct rmi_function_container *fc);
 
 static int rmi_f34_create_sysfs(struct rmi_function_container *fc);
-
-
 
 static struct device_attribute attrs[] = {
 	__ATTR(status, RMI_RW_ATTR,
@@ -170,7 +166,6 @@ struct bin_attribute dev_attr_data = {
 	.read = rmi_fn_34_data_read,
 	.write = rmi_fn_34_data_write,
 };
-
 
 static int rmi_f34_init(struct rmi_function_container *fc)
 {
@@ -333,7 +328,6 @@ static int rmi_f34_config(struct rmi_function_container *fc)
 	/* for this function we should do nothing here */
 	return 0;
 }
-
 
 static int rmi_f34_reset(struct rmi_function_container *fc)
 {
@@ -533,7 +527,6 @@ static ssize_t rmi_fn_34_status_show(struct device *dev,
 	return snprintf(buf, PAGE_SIZE, "%u\n", instance_data->status);
 }
 
-
 static ssize_t rmi_fn_34_status_store(struct device *dev,
 				struct device_attribute *attr,
 				const char *buf, size_t count)
@@ -548,7 +541,6 @@ static ssize_t rmi_fn_34_status_store(struct device *dev,
 
 	return 0;
 }
-
 
 static ssize_t rmi_fn_34_cmd_show(struct device *dev,
 				struct device_attribute *attr,

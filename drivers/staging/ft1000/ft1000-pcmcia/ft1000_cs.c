@@ -110,7 +110,6 @@ static void ft1000_reset(struct pcmcia_device * link)
 
 /*======================================================================
 
-
 ======================================================================*/
 
 static int ft1000_attach(struct pcmcia_device *link)
@@ -279,8 +278,6 @@ static int ft1000_resume(struct pcmcia_device *link)
  */
 	return 0;
 }
-
-
 
 /*====================================================================*/
 

@@ -53,9 +53,7 @@
 #include "mltypes.h"
 #include <stdarg.h>
 
-
 #include <linux/kernel.h>
-
 
 /* --------------------------------------------------------------------- */
 
@@ -80,8 +78,6 @@
 #define MPL_LOG_WARN    KERN_WARNING
 #define MPL_LOG_ERROR   KERN_ERR
 #define MPL_LOG_SILENT  MPL_LOG_VERBOSE
-
-
 
 /*
  * This is the local tag used for the following simplified
@@ -282,6 +278,5 @@ static inline void __print_result_location(int result,
 		__print_result_location((int)(condition), __FILE__,	\
 					__func__, __LINE__);		\
 	} while (0)
-
 
 #endif				/* _LIBS_CUTILS_MPL_LOG_H */

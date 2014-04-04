@@ -59,11 +59,9 @@ struct hostap_ieee80211_mgmt {
 	} u;
 } __packed;
 
-
 #define IEEE80211_MGMT_HDR_LEN 24
 #define IEEE80211_DATA_HDR3_LEN 24
 #define IEEE80211_DATA_HDR4_LEN 30
-
 
 struct hostap_80211_rx_status {
 	u32 mac_time;

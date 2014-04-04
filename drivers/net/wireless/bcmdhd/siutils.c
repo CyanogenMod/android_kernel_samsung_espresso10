@@ -3,13 +3,13 @@
  * of the SiliconBackplane-based Broadcom chips.
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -56,8 +56,6 @@ static si_info_t *si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs
 static bool si_buscore_prep(si_info_t *sii, uint bustype, uint devid, void *sdh);
 static bool si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 	uint *origidx, void *regs);
-
-
 
 /* global variable to indicate reservation/release of gpio's */
 static uint32 si_gpioreservation = 0;
@@ -138,14 +136,12 @@ si_kattach(osl_t *osh)
 	return &ksii.pub;
 }
 
-
 static bool
 si_buscore_prep(si_info_t *sii, uint bustype, uint devid, void *sdh)
 {
 	/* need to set memseg flag for CF card first before any sb registers access */
 	if (BUSTYPE(bustype) == PCMCIA_BUS)
 		sii->memseg = TRUE;
-
 
 	if (BUSTYPE(bustype) == SDIO_BUS) {
 		int err;
@@ -309,7 +305,6 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 	    (sii->pub.chippkg != BCM4712LARGE_PKG_ID) && (CHIPREV(sii->pub.chiprev) <= 3))
 		OR_REG(sii->osh, &cc->slow_clk_ctl, SCC_SS_XTAL);
 
-
 	/* Make sure any on-chip ARM is off (in case strapping is wrong), or downloaded code was
 	 * already running.
 	 */
@@ -324,9 +319,6 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 
 	return TRUE;
 }
-
-
-
 
 static si_info_t *
 si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
@@ -349,8 +341,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 	sii->curmap = regs;
 	sii->sdh = sdh;
 	sii->osh = osh;
-
-
 
 	/* find Chipcommon address */
 	if (bustype == PCI_BUS) {
@@ -462,8 +452,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 	pvars = NULL;
 	BCM_REFERENCE(pvars);
 
-
-
 		if (sii->pub.ccrev >= 20) {
 			uint32 gpiopullup = 0, gpiopulldown = 0;
 			cc = (chipcregs_t *)si_setcore(sih, CC_CORE_ID, 0);
@@ -480,7 +468,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 			W_REG(osh, &cc->gpiopulldown, gpiopulldown);
 			si_setcoreidx(sih, origidx);
 		}
-
 
 	/* clear any previous epidiag-induced target abort */
 	ASSERT(!si_taclear(sih, FALSE));
@@ -499,7 +486,6 @@ si_detach(si_t *sih)
 	si_info_t *sii;
 	uint idx;
 
-
 	sii = SI_INFO(sih);
 
 	if (sii == NULL)
@@ -511,8 +497,6 @@ si_detach(si_t *sih)
 				REG_UNMAP(sii->regs[idx]);
 				sii->regs[idx] = NULL;
 			}
-
-
 
 #if !defined(BCMBUSTYPE) || (BCMBUSTYPE == SI_BUS)
 	if (sii != &ksii)
@@ -1104,7 +1088,6 @@ si_clock_rate(uint32 pll_type, uint32 n, uint32 m)
 	}
 }
 
-
 /* set chip watchdog reset timer to fire in 'ticks' */
 void
 si_watchdog(si_t *sih, uint ticks)
@@ -1162,8 +1145,6 @@ si_taclear(si_t *sih, bool details)
 {
 	return FALSE;
 }
-
-
 
 /* return the slow clock source - LPO, XTAL, or PCI */
 static uint
@@ -1284,7 +1265,6 @@ si_clkctl_init(si_t *sih)
 	if (!fast)
 		si_setcoreidx(sih, origidx);
 }
-
 
 /* change logical "focus" to the gpio core for optimized access */
 void *
@@ -1618,7 +1598,6 @@ si_gpio_int_enable(si_t *sih, bool enable)
 	return (si_corereg(sih, SI_CC_IDX, offs, CI_GPIO, (enable ? CI_GPIO : 0)));
 }
 
-
 /* Return the size of the specified SOCRAM bank */
 static uint
 socram_banksize(si_info_t *sii, sbsocramregs_t *regs, uint8 idx, uint8 mem_type)
@@ -1948,7 +1927,6 @@ done:
 	return memsize;
 }
 
-
 /* Return the TCM-RAM size of the ARMCR4 core. */
 uint32
 si_tcm_size(si_t *sih)
@@ -2066,7 +2044,6 @@ done:
 
 	return memsize;
 }
-
 
 void
 si_btcgpiowar(si_t *sih)
@@ -2442,7 +2419,6 @@ si_is_sprom_available(si_t *sih)
 		return TRUE;
 	}
 }
-
 
 uint32 si_get_sromctl(si_t *sih)
 {

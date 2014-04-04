@@ -399,7 +399,6 @@ static int sctp_v4_available(union sctp_addr *addr, struct sctp_sock *sp)
 {
 	int ret = inet_addr_type(&init_net, addr->v4.sin_addr.s_addr);
 
-
 	if (addr->v4.sin_addr.s_addr != htonl(INADDR_ANY) &&
 	   ret != RTN_LOCAL &&
 	   !sp->inet.freebind &&

@@ -229,4 +229,3 @@ module_exit(tef6862_exit);
 MODULE_DESCRIPTION("TEF6862 Car Radio Enhanced Selectivity Tuner");
 MODULE_AUTHOR("Mocean Laboratories");
 MODULE_LICENSE("GPL v2");
-

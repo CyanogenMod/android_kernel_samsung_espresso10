@@ -39,7 +39,7 @@ PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  
+
 */ /**************************************************************************/
 
 #if !defined (__SERVICESEXT_H__)
@@ -295,7 +295,6 @@ typedef enum _PVRSRV_ERROR_
 
 } PVRSRV_ERROR;
 
-
 /*!
  *****************************************************************************
  * List of known device classes.
@@ -310,7 +309,6 @@ typedef enum _PVRSRV_DEVICE_CLASS_
 	PVRSRV_DEVICE_CLASS_FORCE_I32 		= 0x7fffffff
 
 } PVRSRV_DEVICE_CLASS;
-
 
 /*!
  *****************************************************************************
@@ -329,7 +327,6 @@ typedef enum _PVRSRV_SYS_POWER_STATE_
 
 } PVRSRV_SYS_POWER_STATE, *PPVRSRV_SYS_POWER_STATE;
 
-
 typedef enum _PVRSRV_DEV_POWER_STATE_
 {
 	PVRSRV_DEV_POWER_STATE_DEFAULT	= -1,	/*!< Default state for the device */
@@ -340,7 +337,6 @@ typedef enum _PVRSRV_DEV_POWER_STATE_
 	PVRSRV_DEV_POWER_STATE_FORCE_I32 = 0x7fffffff
 
 } PVRSRV_DEV_POWER_STATE, *PPVRSRV_DEV_POWER_STATE;	/* PRQA S 3205 */
-
 
 /* Power transition handler prototypes */
 typedef PVRSRV_ERROR (*PFN_PRE_POWER) (IMG_HANDLE				hDevHandle,
@@ -357,7 +353,6 @@ typedef PVRSRV_ERROR (*PFN_PRE_CLOCKSPEED_CHANGE) (IMG_HANDLE				hDevHandle,
 typedef PVRSRV_ERROR (*PFN_POST_CLOCKSPEED_CHANGE) (IMG_HANDLE				hDevHandle,
 													IMG_BOOL				bIdleDevice,
 													PVRSRV_DEV_POWER_STATE	eCurrentPowerState);
-
 
 /*****************************************************************************
  * Enumeration of all possible pixel types. Where applicable, Ordering of name
@@ -627,18 +622,18 @@ typedef enum _PVRSRV_PIXEL_FORMAT_ {
 	PVRSRV_PIXEL_FORMAT_A2B10G10R10F		= 209,
 	PVRSRV_PIXEL_FORMAT_B8G8R8_SINT			= 210,
 	PVRSRV_PIXEL_FORMAT_PVRF32SIGNMASK		= 211,
-	
-	PVRSRV_PIXEL_FORMAT_ABGR4444			= 212,	
+
+	PVRSRV_PIXEL_FORMAT_ABGR4444			= 212,
 	PVRSRV_PIXEL_FORMAT_ABGR1555			= 213,
-	PVRSRV_PIXEL_FORMAT_BGR565				= 214,			
+	PVRSRV_PIXEL_FORMAT_BGR565				= 214,
 
 	/* 4k aligned planar YUV */
 	PVRSRV_PIXEL_FORMAT_C0_4KYUV420_2P_UV	= 215,
 	PVRSRV_PIXEL_FORMAT_C0_4KYUV420_2P_VU	= 216,
 	PVRSRV_PIXEL_FORMAT_C1_4KYUV420_2P_UV	= 217,
 	PVRSRV_PIXEL_FORMAT_C1_4KYUV420_2P_VU	= 218,
-	PVRSRV_PIXEL_FORMAT_P208				= 219,			
-	PVRSRV_PIXEL_FORMAT_A8P8				= 220,			
+	PVRSRV_PIXEL_FORMAT_P208				= 219,
+	PVRSRV_PIXEL_FORMAT_A8P8				= 220,
 
 	PVRSRV_PIXEL_FORMAT_A4					= 221,
 	PVRSRV_PIXEL_FORMAT_AYUV8888			= 222,
@@ -671,7 +666,6 @@ typedef enum _PVRSRV_COLOURSPACE_FORMAT_ {
 	PVRSRV_COLOURSPACE_FORMAT_NONLINEAR		=  0x00020000,
 	PVRSRV_COLOURSPACE_FORMAT_MASK			=  0x000F0000,
 } PVRSRV_COLOURSPACE_FORMAT;
-
 
 /*
  * Drawable orientation (in degrees clockwise).
@@ -770,7 +764,6 @@ typedef struct PVRSRV_RESOURCE_TAG
 }PVRSRV_RESOURCE;
 typedef PVRSRV_RESOURCE PVRSRV_RES_HANDLE;
 
-
 /* command complete callback pfn prototype */
 typedef IMG_VOID (*PFN_CMD_COMPLETE) (IMG_HANDLE);
 typedef IMG_VOID (**PPFN_CMD_COMPLETE) (IMG_HANDLE);
@@ -778,7 +771,6 @@ typedef IMG_VOID (**PPFN_CMD_COMPLETE) (IMG_HANDLE);
 /* private command handler prototype */
 typedef IMG_BOOL (*PFN_CMD_PROC) (IMG_HANDLE, IMG_UINT32, IMG_VOID*);
 typedef IMG_BOOL (**PPFN_CMD_PROC) (IMG_HANDLE, IMG_UINT32, IMG_VOID*);
-
 
 /*
 	rectangle structure required by Lock API
@@ -799,7 +791,6 @@ typedef struct _IMG_RECT_16_
 	IMG_INT16	y1;
 }IMG_RECT_16;
 
-
 /* common pfn between BC/DC */
 typedef PVRSRV_ERROR (*PFN_GET_BUFFER_ADDR)(IMG_HANDLE,
 											IMG_HANDLE,
@@ -810,7 +801,6 @@ typedef PVRSRV_ERROR (*PFN_GET_BUFFER_ADDR)(IMG_HANDLE,
 											IMG_BOOL*,
 											IMG_UINT32*);
 
-
 /*
 	Display dimension structure definition
 */
@@ -820,7 +810,6 @@ typedef struct DISPLAY_DIMS_TAG
 	IMG_UINT32	ui32Width;
 	IMG_UINT32	ui32Height;
 } DISPLAY_DIMS;
-
 
 /*
 	Display format structure definition
@@ -842,7 +831,6 @@ typedef struct DISPLAY_SURF_ATTRIBUTES_TAG
 	DISPLAY_DIMS			sDims;
 } DISPLAY_SURF_ATTRIBUTES;
 
-
 /*
 	Display Mode information structure definition
 */
@@ -857,8 +845,6 @@ typedef struct DISPLAY_MODE_INFO_TAG
 	/* OEM specific flags */
 	IMG_UINT32				ui32OEMFlags;
 } DISPLAY_MODE_INFO;
-
-
 
 #define MAX_DISPLAY_NAME_SIZE	(50) /* arbitrary choice! */
 
@@ -897,8 +883,6 @@ typedef struct ACCESS_INFO_TAG
 	IMG_UINT32		ui32DevIRQ;
 }ACCESS_INFO;
 
-
-
 #if defined(PDUMP_SUSPEND_IS_PER_THREAD)
 /** Present only on WinMobile 6.5 */
 
@@ -911,7 +895,6 @@ typedef struct {
 #define PVRSRV_PDUMP_SUSPEND_Q_LENGTH 8
 
 #endif /* defined(PDUMP_SUSPEND_IS_PER_THREAD) */
-
 
 /*!
  *****************************************************************************
@@ -926,10 +909,8 @@ typedef struct _PVRSRV_REGISTRY_INFO_
     IMG_UINT32		ui32BufSize;
 } PVRSRV_REGISTRY_INFO, *PPVRSRV_REGISTRY_INFO;
 
-
 PVRSRV_ERROR IMG_CALLCONV PVRSRVReadRegistryString (PPVRSRV_REGISTRY_INFO psRegInfo);
 PVRSRV_ERROR IMG_CALLCONV PVRSRVWriteRegistryString (PPVRSRV_REGISTRY_INFO psRegInfo);
-
 
 #define PVRSRV_BC_FLAGS_YUVCSC_CONFORMANT_RANGE	(0 << 0)
 #define PVRSRV_BC_FLAGS_YUVCSC_FULL_RANGE		(1 << 0)

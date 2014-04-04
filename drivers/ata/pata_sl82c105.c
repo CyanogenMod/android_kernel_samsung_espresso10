@@ -62,7 +62,6 @@ static int sl82c105_pre_reset(struct ata_link *link, unsigned long deadline)
 	return ata_sff_prereset(link, deadline);
 }
 
-
 /**
  *	sl82c105_configure_piomode	-	set chip PIO timing
  *	@ap: ATA interface
@@ -288,7 +287,6 @@ static int sl82c105_bridge_revision(struct pci_dev *pdev)
 	pci_dev_put(bridge);
 	return bridge->revision;
 }
-
 
 static int sl82c105_init_one(struct pci_dev *dev, const struct pci_device_id *id)
 {

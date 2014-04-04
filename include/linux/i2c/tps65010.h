@@ -202,4 +202,3 @@ struct tps65010_board {
 };
 
 #endif /*  __LINUX_I2C_TPS65010_H */
-

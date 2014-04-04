@@ -76,7 +76,6 @@ extern int sec_bootmode;
 #define MBD_RES_ACK_RAW		0x0004
 #define MBD_RES_ACK_RFS			0x0200
 
-
 #define FMT_OUT 0x0FE000
 #define FMT_IN		0x10E000
 #define FMT_SZ		0x10000   /* 65536 bytes */

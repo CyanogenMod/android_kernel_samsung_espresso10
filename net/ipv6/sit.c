@@ -484,7 +484,6 @@ static void ipip6_tunnel_uninit(struct net_device *dev)
 	dev_put(dev);
 }
 
-
 static int ipip6_err(struct sk_buff *skb, u32 info)
 {
 

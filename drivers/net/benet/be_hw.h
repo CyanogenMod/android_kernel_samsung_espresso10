@@ -44,7 +44,6 @@
 #define POST_STAGE_BE_RESET		0x3 /* Host wants to reset chip */
 #define POST_STAGE_ARMFW_RDY		0xc000	/* FW is done with POST */
 
-
 /* Lancer SLIPORT_CONTROL SLIPORT_STATUS registers */
 #define SLIPORT_STATUS_OFFSET		0x404
 #define SLIPORT_CONTROL_OFFSET		0x408
@@ -52,7 +51,6 @@
 #define SLIPORT_STATUS_ERR_MASK		0x80000000
 #define SLIPORT_STATUS_RN_MASK		0x01000000
 #define SLIPORT_STATUS_RDY_MASK		0x00800000
-
 
 #define SLI_PORT_CONTROL_IP_MASK	0x08000000
 
@@ -96,11 +94,9 @@
 #define SLI_INTF_REV_SHIFT			4
 #define SLI_INTF_FT_MASK			0x00000001
 
-
 /* SLI family */
 #define BE_SLI_FAMILY		0x0
 #define LANCER_A0_SLI_FAMILY	0xA
-
 
 /********* ISR0 Register offset **********/
 #define CEV_ISR0_OFFSET 			0xC18

@@ -207,7 +207,6 @@ enum sci_port_states {
 	 */
 	SCI_PORT_FAILED,
 
-
 };
 
 static inline void sci_port_decrement_request_count(struct isci_port *iport)

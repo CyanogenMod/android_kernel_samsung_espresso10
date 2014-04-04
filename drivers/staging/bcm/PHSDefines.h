@@ -6,8 +6,6 @@
 /************************* MACROS **********************************************/
 #define PHS_MEM_TAG "_SHP"
 
-
-
 //PHS Defines
 #define STATUS_PHS_COMPRESSED       0xa1
 #define STATUS_PHS_NOCOMPRESSION    0xa2
@@ -25,7 +23,6 @@
 #define PHSI_LEN					 1
 #define ERROR_LEN					 0
 #define PHS_BUFFER_SIZE				 1532
-
 
 //#define MAX_PHS_LENGTHS 100
 #define MAX_PHSRULE_PER_SF       20
@@ -70,7 +67,6 @@ typedef struct _S_PHS_RULE
 	ULONG           			PHSErrorNumPackets;
 }S_PHS_RULE;
 
-
 typedef enum _E_CLASSIFIER_ENTRY_CONTEXT
 {
 	eActiveClassifierRuleContext,
@@ -87,7 +83,6 @@ typedef struct _S_CLASSIFIER_ENTRY
 
 }S_CLASSIFIER_ENTRY;
 
-
 typedef struct _S_CLASSIFIER_TABLE
 {
 	B_UINT16 uiTotalClassifiers;
@@ -96,7 +91,6 @@ typedef struct _S_CLASSIFIER_TABLE
 	B_UINT16    uiOldestPhsRuleIndex;
 
 }S_CLASSIFIER_TABLE;
-
 
 typedef struct _S_SERVICEFLOW_ENTRY
 {
@@ -112,7 +106,6 @@ typedef struct _S_SERVICEFLOW_TABLE
 
 }S_SERVICEFLOW_TABLE;
 
-
 typedef struct _PHS_DEVICE_EXTENSION
 {
 	/* PHS Specific data*/
@@ -120,6 +113,5 @@ typedef struct _PHS_DEVICE_EXTENSION
 	void   *CompressedTxBuffer;
 	void   *UnCompressedRxBuffer;
 }PHS_DEVICE_EXTENSION,*PPHS_DEVICE_EXTENSION;
-
 
 #endif

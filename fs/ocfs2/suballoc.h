@@ -49,7 +49,7 @@ struct ocfs2_alloc_context {
 
 	/* these are used by the chain search */
 	u16    ac_chain;
-	int    ac_allow_chain_relink;
+	int    ac_disable_chain_relink;
 	group_search_t *ac_group_search;
 
 	u64    ac_last_group;
@@ -200,8 +200,6 @@ int ocfs2_lock_allocators(struct inode *inode, struct ocfs2_extent_tree *et,
 			  struct ocfs2_alloc_context **meta_ac);
 
 int ocfs2_test_inode_bit(struct ocfs2_super *osb, u64 blkno, int *res);
-
-
 
 /*
  * The following two interfaces are for ocfs2_create_inode_in_orphan().

@@ -1092,7 +1092,6 @@ static int __init pvr2fb_init(void)
 		return -ENOMEM;
 	}
 
-
 	currentpar = fb_info->par;
 
 	for (i = 0; i < ARRAY_SIZE(board_driver); i++) {

@@ -752,7 +752,6 @@ extern ssize_t afs_file_write(struct kiocb *, const struct iovec *,
 extern int afs_writeback_all(struct afs_vnode *);
 extern int afs_fsync(struct file *, int);
 
-
 /*****************************************************************************/
 /*
  * debug tracing
@@ -765,7 +764,6 @@ extern unsigned afs_debug;
 #define kenter(FMT,...)	dbgprintk("==> %s("FMT")",__func__ ,##__VA_ARGS__)
 #define kleave(FMT,...)	dbgprintk("<== %s()"FMT"",__func__ ,##__VA_ARGS__)
 #define kdebug(FMT,...)	dbgprintk("    "FMT ,##__VA_ARGS__)
-
 
 #if defined(__KDEBUG)
 #define _enter(FMT,...)	kenter(FMT,##__VA_ARGS__)

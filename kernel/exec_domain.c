@@ -20,12 +20,10 @@
 #include <linux/types.h>
 #include <linux/fs_struct.h>
 
-
 static void default_handler(int, struct pt_regs *);
 
 static struct exec_domain *exec_domains = &default_exec_domain;
 static DEFINE_RWLOCK(exec_domains_lock);
-
 
 static unsigned long ident_map[32] = {
 	0,	1,	2,	3,	4,	5,	6,	7,
@@ -42,7 +40,6 @@ struct exec_domain default_exec_domain = {
 	.signal_map	= ident_map,		/* Identity map signals. */
 	.signal_invmap	= ident_map,		/*  - both ways. */
 };
-
 
 static void
 default_handler(int segment, struct pt_regs *regp)
@@ -188,7 +185,6 @@ SYSCALL_DEFINE1(personality, unsigned int, personality)
 
 	return old;
 }
-
 
 EXPORT_SYMBOL(register_exec_domain);
 EXPORT_SYMBOL(unregister_exec_domain);

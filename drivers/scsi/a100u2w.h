@@ -67,7 +67,6 @@ struct orc_sgent {
 #define DISC_NOT_ALLOW          0x80	/* Disconnect is not allowed    */
 #define DISC_ALLOW              0xC0	/* Disconnect is allowed        */
 
-
 #define ORC_OFFSET_SCB			16
 #define ORC_MAX_SCBS		    250
 #define MAX_CHANNELS       2
@@ -199,12 +198,10 @@ struct orc_scb {	/* Scsi_Ctrl_Blk                */
 #define HOST_SCSI_RST	0x1B
 #define HOST_DEV_RST	0x1C
 
-
 /* Error Codes for ORCSCB_TaStat */
 #define TARGET_CHK_COND	0x02
 #define TARGET_BUSY	0x08
 #define TARGET_TAG_FULL	0x28
-
 
 /***********************************************************************
 		Target Device Control Structure
@@ -221,7 +218,6 @@ struct orc_target {
 /* Bit Definition for TCF_DrvFlags */
 #define	TCS_DF_NODASD_SUPT	0x20	/* Suppress OS/2 DASD Mgr support */
 #define	TCS_DF_NOSCSI_SUPT	0x40	/* Suppress OS/2 SCSI Mgr support */
-
 
 /***********************************************************************
               Host Adapter Control Structure
@@ -368,4 +364,3 @@ struct orc_nvram {
 #define NCC_MAX_TAGS    0x20    /* Maximum tags per target        */
 #define NCC_RESET_TIME  0x0A    /* SCSI RESET recovering time     */
 #define NTC_DEFAULT     (NTC_1GIGA | NTC_NO_WIDESYNC | NTC_DISC_ENABLE)
-

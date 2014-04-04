@@ -205,7 +205,6 @@ static struct cdce_freq cdce_y5_freqs[] = {
 	CDCE_FREQ_TABLE_ENTRY(5, 81000),
 };
 
-
 static struct cdce_output output_list[] = {
 	[1]	= { cdce_y1_freqs, ARRAY_SIZE(cdce_y1_freqs) },
 	[5]	= { cdce_y5_freqs, ARRAY_SIZE(cdce_y5_freqs) },

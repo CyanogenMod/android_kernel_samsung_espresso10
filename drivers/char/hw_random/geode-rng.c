@@ -31,7 +31,6 @@
 #include <linux/delay.h>
 #include <asm/io.h>
 
-
 #define PFX	KBUILD_MODNAME ": "
 
 #define GEODE_RNG_DATA_REG   0x50
@@ -50,7 +49,6 @@ static const struct pci_device_id pci_tbl[] = {
 	{ 0, },	/* terminate list */
 };
 MODULE_DEVICE_TABLE(pci, pci_tbl);
-
 
 static int geode_rng_data_read(struct hwrng *rng, u32 *data)
 {
@@ -75,13 +73,11 @@ static int geode_rng_data_present(struct hwrng *rng, int wait)
 	return data;
 }
 
-
 static struct hwrng geode_rng = {
 	.name		= "geode",
 	.data_present	= geode_rng_data_present,
 	.data_read	= geode_rng_data_read,
 };
-
 
 static int __init mod_init(void)
 {

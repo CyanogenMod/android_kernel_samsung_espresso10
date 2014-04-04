@@ -10,4 +10,3 @@ config IRNET
 	  IrNET is an alternate way to transfer TCP/IP traffic over IrDA.  It
 	  uses synchronous PPP over a set of point to point IrDA sockets.  You
 	  can use it between Linux machine or with W2k.
-

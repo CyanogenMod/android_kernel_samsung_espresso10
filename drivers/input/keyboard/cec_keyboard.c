@@ -202,7 +202,6 @@ static int on_hdmi_connect(unsigned char status)
 		/*HDMI is connected*/
 		pr_debug("CEC_KEYBOARD:HDMI connected\n");
 
-
 		r = cec_keyboard_register();
 		if (r)
 			return r;

@@ -63,7 +63,6 @@ void mlx4_en_fill_qp_context(struct mlx4_en_priv *priv, int size, int stride,
 	context->db_rec_addr = cpu_to_be64(priv->res.db.dma << 2);
 }
 
-
 int mlx4_en_map_buffer(struct mlx4_buf *buf)
 {
 	struct page **pages;
@@ -99,4 +98,3 @@ void mlx4_en_sqp_event(struct mlx4_qp *qp, enum mlx4_event event)
 {
     return;
 }
-

@@ -127,7 +127,6 @@ static void sil_bmdma_stop(struct ata_queued_cmd *qc);
 static void sil_freeze(struct ata_port *ap);
 static void sil_thaw(struct ata_port *ap);
 
-
 static const struct pci_device_id sil_pci_tbl[] = {
 	{ PCI_VDEVICE(CMD, 0x3112), sil_3112 },
 	{ PCI_VDEVICE(CMD, 0x0240), sil_3112 },
@@ -139,7 +138,6 @@ static const struct pci_device_id sil_pci_tbl[] = {
 
 	{ }	/* terminate list */
 };
-
 
 /* TODO firmware versions should be added - eric */
 static const struct sil_drivelist {
@@ -262,7 +260,6 @@ MODULE_VERSION(DRV_VERSION);
 static int slow_down;
 module_param(slow_down, int, 0444);
 MODULE_PARM_DESC(slow_down, "Sledgehammer used to work around random problems, by limiting commands to 15 sectors (0=off, 1=on)");
-
 
 static void sil_bmdma_stop(struct ata_queued_cmd *qc)
 {
@@ -831,7 +828,6 @@ static void __exit sil_exit(void)
 {
 	pci_unregister_driver(&sil_pci_driver);
 }
-
 
 module_init(sil_init);
 module_exit(sil_exit);

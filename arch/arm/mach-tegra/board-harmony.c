@@ -165,7 +165,6 @@ static __initdata struct tegra_clk_init_table harmony_clk_init_table[] = {
 	{ NULL,		NULL,		0,		0},
 };
 
-
 static struct tegra_sdhci_platform_data sdhci_pdata1 = {
 	.cd_gpio	= -1,
 	.wp_gpio	= -1,

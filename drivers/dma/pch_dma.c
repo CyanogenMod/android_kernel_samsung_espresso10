@@ -319,7 +319,6 @@ static bool pdc_is_idle(struct pch_dma_chan *pd_chan)
 	else
 		sts = pdc_get_status2(pd_chan);
 
-
 	if (sts == DMA_STATUS_IDLE)
 		return true;
 	else
@@ -489,7 +488,7 @@ static struct pch_dma_desc *pdc_desc_get(struct pch_dma_chan *pd_chan)
 	dev_dbg(chan2dev(&pd_chan->chan), "scanned %d descriptors\n", i);
 
 	if (!ret) {
-		ret = pdc_alloc_desc(&pd_chan->chan, GFP_NOIO);
+		ret = pdc_alloc_desc(&pd_chan->chan, GFP_ATOMIC);
 		if (ret) {
 			spin_lock(&pd_chan->lock);
 			pd_chan->descs_allocated++;

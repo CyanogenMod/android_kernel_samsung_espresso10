@@ -183,7 +183,6 @@ coh901318_lli_fill_single(struct coh901318_pool *pool,
 	dma_addr_t src;
 	dma_addr_t dst;
 
-
 	if (dir == DMA_TO_DEVICE) {
 		src = buf;
 		dst = dev_addr;
@@ -267,7 +266,6 @@ coh901318_lli_fill_sg(struct coh901318_pool *pool,
 			ctrl_sg = ctrl_last;
 		else
 			ctrl_sg = ctrl ? ctrl : ctrl_last;
-
 
 		if (dir == DMA_TO_DEVICE)
 			/* increment source address */

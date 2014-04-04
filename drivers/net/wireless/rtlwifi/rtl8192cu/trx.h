@@ -246,7 +246,6 @@ struct rx_drv_info_92c {
 #define SET_TX_DESC_OWN(__txdesc, __value)		\
 	SET_BITS_OFFSET_LE(__txdesc, 31, 1, __value)
 
-
 /* Dword 1 */
 #define SET_TX_DESC_MACID(__txdesc, __value)		\
 	SET_BITS_OFFSET_LE(__txdesc+4, 0, 5, __value)
@@ -402,7 +401,6 @@ struct rx_drv_info_92c {
 	SET_BITS_OFFSET_LE(__txdesc+28, 24, 4, __value)
 #define SET_TX_DESC_MCSG15_MAX_LEN(__txdesc, __value)	\
 	SET_BITS_OFFSET_LE(__txdesc+28, 28, 4, __value)
-
 
 int  rtl8192cu_endpoint_mapping(struct ieee80211_hw *hw);
 u16 rtl8192cu_mq_to_hwq(__le16 fc, u16 mac80211_queue_index);

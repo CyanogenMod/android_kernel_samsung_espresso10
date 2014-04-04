@@ -49,14 +49,12 @@ struct sas_host_attrs {
 };
 #define to_sas_host_attrs(host)	((struct sas_host_attrs *)(host)->shost_data)
 
-
 /*
  * Hack to allow attributes of the same name in different objects.
  */
 #define SAS_DEVICE_ATTR(_prefix,_name,_mode,_show,_store) \
 	struct device_attribute dev_attr_##_prefix##_##_name = \
 	__ATTR(_name,_mode,_show,_store)
-
 
 /*
  * Pretty printing helpers
@@ -127,7 +125,6 @@ static struct {
 	{ SAS_FANOUT_EXPANDER_DEVICE,	"fanout expander" },
 };
 sas_bitfield_name_search(device_type, sas_device_type_names)
-
 
 static struct {
 	u32		value;
@@ -522,7 +519,6 @@ static DEVICE_ATTR(field, S_IRUGO, show_sas_phy_##field,		\
 	sas_phy_show_linkspeed(field)					\
 static DEVICE_ATTR(field, S_IRUGO, show_sas_phy_##field, NULL)
 
-
 #define sas_phy_show_linkerror(field)					\
 static ssize_t								\
 show_sas_phy_##field(struct device *dev, 				\
@@ -542,7 +538,6 @@ show_sas_phy_##field(struct device *dev, 				\
 #define sas_phy_linkerror_attr(field)					\
 	sas_phy_show_linkerror(field)					\
 static DEVICE_ATTR(field, S_IRUGO, show_sas_phy_##field, NULL)
-
 
 static ssize_t
 show_sas_device_type(struct device *dev,
@@ -651,7 +646,6 @@ sas_phy_linkerror_attr(invalid_dword_count);
 sas_phy_linkerror_attr(running_disparity_error_count);
 sas_phy_linkerror_attr(loss_of_dword_sync_count);
 sas_phy_linkerror_attr(phy_reset_problem_count);
-
 
 static DECLARE_TRANSPORT_CLASS(sas_phy_class,
 		"sas_phy", NULL, NULL, NULL);
@@ -836,7 +830,6 @@ static int sas_port_match(struct attribute_container *cont, struct device *dev)
 	i = to_sas_internal(shost->transportt);
 	return &i->port_attr_cont.ac == cont;
 }
-
 
 static void sas_port_release(struct device *dev)
 {
@@ -1532,7 +1525,6 @@ int sas_rphy_add(struct sas_rphy *rphy)
 	if (sas_bsg_initialize(shost, rphy))
 		printk("fail to a bsg device %s\n", dev_name(&rphy->dev));
 
-
 	mutex_lock(&sas_host->lock);
 	list_add_tail(&rphy->list, &sas_host->rphy_list);
 	if (identify->device_type == SAS_END_DEVICE &&
@@ -1641,7 +1633,6 @@ int scsi_is_sas_rphy(const struct device *dev)
 }
 EXPORT_SYMBOL(scsi_is_sas_rphy);
 
-
 /*
  * SCSI scan helper
  */
@@ -1668,7 +1659,6 @@ static int sas_user_scan(struct Scsi_Host *shost, uint channel,
 
 	return 0;
 }
-
 
 /*
  * Setup / Teardown code

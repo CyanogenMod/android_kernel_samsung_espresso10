@@ -249,7 +249,6 @@ typedef struct xfs_mount {
 						   allocator */
 #define XFS_MOUNT_NOATTR2	(1ULL << 25)	/* disable use of attr2 format */
 
-
 /*
  * Default minimum read and write sizes.
  */

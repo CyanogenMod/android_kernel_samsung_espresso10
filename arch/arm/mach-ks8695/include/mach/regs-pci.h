@@ -15,7 +15,6 @@
 #define KS8695_PCI_VA		(KS8695_IO_VA + KS8695_PCI_OFFSET)
 #define KS8695_PCI_PA		(KS8695_IO_PA + KS8695_PCI_OFFSET)
 
-
 #define KS8695_CRCFID		(0x000)		/* Configuration: Identification */
 #define KS8695_CRCFCS		(0x004)		/* Configuration: Command and Status */
 #define KS8695_CRCFRV		(0x008)		/* Configuration: Revision */
@@ -36,18 +35,13 @@
 #define KS8695_PIOBAM		(0x220)		/* Bridge I/O Base Address Mask */
 #define KS8695_PIOBAT		(0x224)		/* Bridge I/O Base Address Translation */
 
-
 /* Configuration: Identification */
 
 /* Configuration: Command and Status */
 
 /* Configuration: Revision */
 
-
-
 #define CFRV_GUEST		(1 << 23)
 
 #define PBCA_TYPE1		(1)
 #define PBCA_ENABLE		(1 << 31)
-
-

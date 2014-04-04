@@ -879,4 +879,3 @@ MODULE_AUTHOR("Daniel Stone");
 MODULE_AUTHOR("Felipe Balbi <felipe.balbi@nokia.com>");
 MODULE_DESCRIPTION("LM8323 keypad driver");
 MODULE_LICENSE("GPL");
-

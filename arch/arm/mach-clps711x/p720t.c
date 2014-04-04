@@ -120,4 +120,3 @@ static int p720t_hw_init(void)
 }
 
 __initcall(p720t_hw_init);
-

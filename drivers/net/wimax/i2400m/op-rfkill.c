@@ -36,8 +36,6 @@
 #include <linux/wimax/i2400m.h>
 #include <linux/slab.h>
 
-
-
 #define D_SUBMODULE rfkill
 #include "debug-levels.h"
 
@@ -60,7 +58,6 @@ int i2400m_radio_is(struct i2400m *i2400m, enum wimax_rf_state state)
 		return -EINVAL;	/* shut gcc warnings on certain arches */
 	}
 }
-
 
 /*
  * WiMAX stack operation: implement SW RFKill toggling
@@ -149,7 +146,6 @@ error_alloc:
 		wimax_dev, state, result);
 	return result;
 }
-
 
 /*
  * Inform the WiMAX stack of changes in the RF Kill switches reported

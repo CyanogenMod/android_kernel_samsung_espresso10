@@ -109,7 +109,6 @@ void c2_mq_free(struct c2_mq *q)
 	}
 }
 
-
 void c2_mq_lconsume(struct c2_mq *q, u32 wqe_count)
 {
 	BUG_ON(q->magic != C2_MQ_MAGIC);

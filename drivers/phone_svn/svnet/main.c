@@ -317,7 +317,6 @@ static const struct attribute_group svnet_group = {
 	.attrs = svnet_attributes,
 };
 
-
 int vnet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
 {
 	struct svnet *sn;
@@ -560,7 +559,6 @@ static const struct net_device_ops svnet_ops = {
 	.ndo_start_xmit = svnet_xmit,
 	.ndo_do_ioctl = svnet_ioctl,
 };
-
 
 static void svnet_setup(struct net_device *ndev)
 {

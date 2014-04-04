@@ -175,7 +175,6 @@ out:
 	return entry;
 }
 
-
 /*
  * Release cache entry, once usage count is zero it can be reused.
  */
@@ -221,7 +220,6 @@ void squashfs_cache_delete(struct squashfs_cache *cache)
 	kfree(cache->entry);
 	kfree(cache);
 }
-
 
 /*
  * Initialise cache allocating the specified number of entries, each of
@@ -284,7 +282,6 @@ cleanup:
 	return NULL;
 }
 
-
 /*
  * Copy up to length bytes from cache entry to buffer starting at offset bytes
  * into the cache entry.  If there's not length bytes then copy the number of
@@ -320,7 +317,6 @@ int squashfs_copy_data(void *buffer, struct squashfs_cache_entry *entry,
 
 	return length - remaining;
 }
-
 
 /*
  * Read length bytes from metadata position <block, offset> (block is the
@@ -361,7 +357,6 @@ int squashfs_read_metadata(struct super_block *sb, void *buffer,
 	return copied;
 }
 
-
 /*
  * Look-up in the fragmment cache the fragment located at <start_block> in the
  * filesystem.  If necessary read and decompress it from disk.
@@ -375,7 +370,6 @@ struct squashfs_cache_entry *squashfs_get_fragment(struct super_block *sb,
 		length);
 }
 
-
 /*
  * Read and decompress the datablock located at <start_block> in the
  * filesystem.  The cache is used here to avoid duplicating locking and
@@ -388,7 +382,6 @@ struct squashfs_cache_entry *squashfs_get_datablock(struct super_block *sb,
 
 	return squashfs_cache_get(sb, msblk->read_page, start_block, length);
 }
-
 
 /*
  * Read a filesystem table (uncompressed sequence of bytes) from disk

@@ -314,7 +314,7 @@ static void __ieee80211_scan_completed(struct ieee80211_hw *hw, bool aborted,
 		if (on_oper_chan2 && (on_oper_chan != on_oper_chan2))
 			enable_beacons = true;
 
-		ieee80211_offchannel_return(local, enable_beacons, true);
+		ieee80211_offchannel_return(local, enable_beacons);
 	}
 
 	ieee80211_recalc_idle(local);
@@ -376,7 +376,6 @@ static int ieee80211_start_sw_scan(struct ieee80211_local *local)
 
 	return 0;
 }
-
 
 static int __ieee80211_start_scan(struct ieee80211_sub_if_data *sdata,
 				  struct cfg80211_scan_request *req)
@@ -563,7 +562,7 @@ static void ieee80211_scan_state_leave_oper_channel(struct ieee80211_local *loca
 	/* PS will already be in off-channel mode,
 	 * we do that once at the beginning of scanning.
 	 */
-	ieee80211_offchannel_stop_vifs(local, false);
+	ieee80211_offchannel_stop_vifs(local);
 
 	/*
 	 * What if the nullfunc frames didn't arrive?
@@ -594,7 +593,7 @@ static void ieee80211_scan_state_enter_oper_channel(struct ieee80211_local *loca
 	 * in off-channel state..will put that back
 	 * on-channel at the end of scanning.
 	 */
-	ieee80211_offchannel_return(local, true, false);
+	ieee80211_offchannel_return(local, true);
 
 	*next_delay = HZ / 5;
 	local->next_scan_state = SCAN_DECISION;

@@ -548,7 +548,6 @@ struct bnx2fc_rport *bnx2fc_tgt_lookup(struct fcoe_port *port,
 	return NULL;
 }
 
-
 /**
  * bnx2fc_alloc_conn_id - allocates FCOE Connection id
  *
@@ -741,7 +740,6 @@ static int bnx2fc_alloc_session_resc(struct bnx2fc_hba *hba,
 		goto mem_alloc_failure;
 	}
 	memset(tgt->conn_db, 0, tgt->conn_db_mem_size);
-
 
 	/* Allocate and map LCQ */
 	tgt->lcq_mem_size = (tgt->max_sqes + 8) * BNX2FC_SQ_WQE_SIZE;

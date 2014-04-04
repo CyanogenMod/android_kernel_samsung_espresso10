@@ -79,13 +79,12 @@ static int riscix_partition(struct parsed_partitions *state,
 {
 	Sector sect;
 	struct riscix_record *rr;
-	
+
 	rr = read_part_sector(state, first_sect, &sect);
 	if (!rr)
 		return -1;
 
 	strlcat(state->pp_buf, " [RISCiX]", PAGE_SIZE);
-
 
 	if (rr->magic == RISCIX_MAGIC) {
 		unsigned long size = nr_sects > 2 ? 2 : nr_sects;

@@ -189,8 +189,6 @@ static int max17042_get_vcell(struct i2c_client *client)
 
 	vcell = (data & 0xFFF) * 78125 / 1000000;
 	vcell += ((((data & 0xF000) >> 4) * 78125) / 1000000) << 4;
-	dev_info(&client->dev, "VCELL : %d, data : 0x%x\n",
-			vcell, data);
 
 	return vcell * 1000;
 }
@@ -198,12 +196,12 @@ static int max17042_get_vcell(struct i2c_client *client)
 static int max17042_get_soc(struct i2c_client *client)
 {
 	u16 data;
+	u16 raw_soc;
 	u16 soc;
 
 	data = max17042_read_reg(client, MAX17042_RepSOC);
-	soc = clamp((data/256), 0, 100);
-	dev_info(&client->dev, "SOC : %d, data : 0x%x\n",
-			soc, data);
+	raw_soc = ((data >> 8) * 100) + ((data & 0xFF) * 100) / 256;
+	soc = min((raw_soc * 100) / 9800, 100);
 
 	return soc;
 }
@@ -257,9 +255,6 @@ static int max17042_get_temperature(struct i2c_client *client)
 			temper = ((7 * temper) / 10 + 7) + 20;
 	}
 
-	dev_info(&client->dev, "TEMPERATURE : %d, data :0x%x\n",
-		temper, data);
-
 	return temper;
 }
 
@@ -274,8 +269,6 @@ static int max17042_get_avg_current(struct i2c_client *client)
 		((((~data & 0xFFFF) + 1) * 15625) / 100000) * (-1) :
 		(data * 15625) / 100000;
 
-	dev_info(&client->dev, "AVG Current : %d, data :0x%x\n",
-		avg_current, data);
 	return avg_current;
 }
 
@@ -289,8 +282,6 @@ static int max17042_get_current(struct i2c_client *client)
 	fg_current = (data & (0x1 << 15)) ?
 		((((~data & 0xFFFF) + 1) * 15625) / 100000) * (-1) :
 		(data * 15625) / 100000;
-	dev_info(&client->dev, "Current : %d, data :0x%x\n",
-		fg_current, data);
 
 	return fg_current;
 }
@@ -416,10 +407,12 @@ static void max17042_set_battery_type(struct max17042_chip *chip)
 		chip->info.battery_type = SDI_BATTERY_TYPE;
 	}
 
+#if 0
 	pr_info("%s : DesignCAP(0x%04x), Battery type(%s)\n",
 			__func__, data,
 			chip->info.battery_type == SDI_BATTERY_TYPE ?
 			"SDI_TYPE_BATTERY" : "BYD_TYPE_BATTERY");
+#endif
 
 	switch (chip->info.battery_type) {
 	case BYD_BATTERY_TYPE:
@@ -1016,32 +1009,18 @@ static void max17042_fullcharged_compensation(
 	struct max17042_chip *chip =
 		container_of(ptr, struct max17042_chip, callbacks);
 
-	dev_info(&chip->client->dev,
-			"%s: is_recharging(%d), pre_update(%d)\n",
-			__func__, is_recharging, pre_update);
-
 	new_fullcap = max17042_read_reg(chip->client, MAX17402_FullCAP);
 
 	if (new_fullcap < 0)
 		new_fullcap = chip->info.capacity;
 
 	if (new_fullcap > (chip->info.capacity * 110 / 100)) {
-		dev_info(&chip->client->dev,
-			"%s: [Case 1] previous_fullcap = 0x%04x,"
-			" NewFullCap = 0x%04x\n",
-			__func__, chip->info.previous_fullcap, new_fullcap);
-
 		new_fullcap = (chip->info.capacity * 110) / 100;
 		max17042_write_reg(chip->client,
 			MAX17042_RepCap, (u16)(new_fullcap));
 		max17042_write_reg(chip->client,
 			MAX17402_FullCAP, (u16)(new_fullcap));
 	} else if (new_fullcap < (chip->info.capacity * 50 / 100)) {
-		dev_info(&chip->client->dev,
-			"%s : [Case 5] previous_fullcap = 0x%04x,"
-			" NewFullCap = 0x%04x\n",
-			__func__, chip->info.previous_fullcap, new_fullcap);
-
 		new_fullcap = (chip->info.capacity * 50) / 100;
 		max17042_write_reg(chip->client,
 			MAX17042_RepCap, (u16)(new_fullcap));
@@ -1049,32 +1028,18 @@ static void max17042_fullcharged_compensation(
 			MAX17402_FullCAP, (u16)(new_fullcap));
 	} else {
 		if (new_fullcap > (chip->info.previous_fullcap * 110 / 100)) {
-			dev_info(&chip->client->dev,
-				"%s : [Case 2] previous_fullcap = 0x%04x,"
-				" NewFullCap = 0x%04x\n", __func__,
-				chip->info.previous_fullcap, new_fullcap);
-
 			new_fullcap = (chip->info.previous_fullcap * 110) / 100;
 			max17042_write_reg(chip->client,
 				MAX17042_RepCap, (u16)(new_fullcap));
 			max17042_write_reg(chip->client,
 				MAX17402_FullCAP, (u16)(new_fullcap));
 		} else if (new_fullcap < (chip->info.previous_fullcap*90/100)) {
-			dev_info(&chip->client->dev,
-				"%s : [Case 3] previous_fullcap = 0x%04x,"
-				" NewFullCap = 0x%04x\n", __func__,
-				chip->info.previous_fullcap, new_fullcap);
-
 			new_fullcap = (chip->info.previous_fullcap * 90) / 100;
 			max17042_write_reg(chip->client,
 				MAX17042_RepCap, (u16)(new_fullcap));
 			max17042_write_reg(chip->client,
 				MAX17402_FullCAP, (u16)(new_fullcap));
 		} else {
-			dev_info(&chip->client->dev,
-				"%s : [Case 4] previous_fullcap = 0x%04x,"
-				" NewFullCap = 0x%04x\n", __func__,
-				chip->info.previous_fullcap, new_fullcap);
 		}
 	}
 
@@ -1095,11 +1060,6 @@ static void max17042_fullcharged_compensation(
 		chip->info.previous_fullcap =
 			max17042_read_reg(chip->client, MAX17402_FullCAP);
 
-	dev_info(&chip->client->dev, "%s : (A) FullCap = 0x%04x, RemCap = 0x%04x\n",
-		 __func__,
-		max17042_read_reg(chip->client, MAX17402_FullCAP),
-		max17042_read_reg(chip->client, MAX17042_RepCap));
-
 	max17042_periodic_read(chip->client);
 }
 
@@ -1117,22 +1077,12 @@ static void max17042_check_vf_fullcap_range(
 		new_vffullcap = chip->info.vfcapacity;
 
 	if (new_vffullcap > (chip->info.vfcapacity * 110 / 100)) {
-		dev_info(&chip->client->dev,
-			"%s : [Case 1] previous_vffullcap = 0x%04x,"
-			" NewVfFullCap = 0x%04x\n", __func__,
-			chip->info.previous_vffullcap, new_vffullcap);
-
 		new_vffullcap = (chip->info.vfcapacity * 110) / 100;
 
 		max17042_write_reg(chip->client, MAX17042_DQACC,
 			(u16)(new_vffullcap / 4));
 		max17042_write_reg(chip->client, MAX17042_DPACC, (u16)0x3200);
 	} else if (new_vffullcap < (chip->info.vfcapacity * 50 / 100)) {
-		dev_info(&chip->client->dev,
-			"%s : [Case 5] previous_vffullcap = 0x%04x,"
-			" NewVfFullCap = 0x%04x\n", __func__,
-			chip->info.previous_vffullcap, new_vffullcap);
-
 		new_vffullcap = (chip->info.vfcapacity * 50) / 100;
 
 		max17042_write_reg(chip->client, MAX17042_DQACC,
@@ -1140,11 +1090,6 @@ static void max17042_check_vf_fullcap_range(
 		max17042_write_reg(chip->client, MAX17042_DPACC, (u16)0x3200);
 	} else {
 		if (new_vffullcap > (chip->info.previous_vffullcap*110 / 100)) {
-			dev_info(&chip->client->dev,
-				"%s : [Case 2] previous_vffullcap = 0x%04x,"
-				" NewVfFullCap = 0x%04x\n", __func__,
-				chip->info.previous_vffullcap, new_vffullcap);
-
 			new_vffullcap =
 				(chip->info.previous_vffullcap * 110) / 100;
 			max17042_write_reg(chip->client, MAX17042_DQACC,
@@ -1153,11 +1098,6 @@ static void max17042_check_vf_fullcap_range(
 				MAX17042_DPACC, (u16)0x3200);
 		} else if (new_vffullcap <
 				(chip->info.previous_vffullcap * 90 / 100)) {
-			dev_info(&chip->client->dev,
-				"%s : [Case 3] previous_vffullcap = 0x%04x,"
-				" NewVfFullCap = 0x%04x\n", __func__,
-				chip->info.previous_vffullcap, new_vffullcap);
-
 			new_vffullcap = (chip->info.previous_vffullcap*90)/100;
 
 			max17042_write_reg(chip->client, MAX17042_DQACC,
@@ -1165,11 +1105,6 @@ static void max17042_check_vf_fullcap_range(
 			max17042_write_reg(chip->client,
 				MAX17042_DPACC, (u16)0x3200);
 		} else {
-			dev_info(&chip->client->dev,
-				"%s : [Case 4] previous_vffullcap = 0x%04x,"
-				" NewVfFullCap = 0x%04x\n", __func__,
-				chip->info.previous_vffullcap,
-					new_vffullcap);
 			print_flag = 0;
 		}
 	}
@@ -1180,14 +1115,6 @@ static void max17042_check_vf_fullcap_range(
 
 	chip->info.previous_vffullcap =
 			max17042_read_reg(chip->client, MAX17042_FullCAP_Nom);
-
-	if (print_flag)
-		dev_info(&chip->client->dev,
-			"%s:VfFullCap(0x%04x), dQacc(0x%04x), dPacc(0x%04x)\n",
-			__func__,
-			max17042_read_reg(chip->client, MAX17042_FullCAP_Nom),
-			max17042_read_reg(chip->client, MAX17042_DQACC),
-			max17042_read_reg(chip->client, MAX17042_DPACC));
 
 }
 

@@ -154,7 +154,6 @@ static void kobject_init_internal(struct kobject *kobj)
 	kobj->state_initialized = 1;
 }
 
-
 static int kobject_add_internal(struct kobject *kobj)
 {
 	int error = 0;
@@ -889,7 +888,6 @@ struct kset *kset_create_and_add(const char *name,
 }
 EXPORT_SYMBOL_GPL(kset_create_and_add);
 
-
 static DEFINE_SPINLOCK(kobj_ns_type_lock);
 static const struct kobj_ns_type_operations *kobj_ns_ops_tbl[KOBJ_NS_TYPES];
 
@@ -946,7 +944,6 @@ const struct kobj_ns_type_operations *kobj_ns_ops(struct kobject *kobj)
 {
 	return kobj_child_ns_ops(kobj->parent);
 }
-
 
 void *kobj_ns_grab_current(enum kobj_ns_type type)
 {

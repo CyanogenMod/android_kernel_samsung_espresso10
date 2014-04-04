@@ -296,7 +296,7 @@ _copy_to_pages(struct page **pages, size_t pgbase, const char *p, size_t len)
  * Copies data into an arbitrary memory location from an array of pages
  * The copy is assumed to be non-overlapping.
  */
-static void
+void
 _copy_from_pages(char *p, struct page **pages, size_t pgbase, size_t len)
 {
 	struct page **pgfrom;
@@ -324,6 +324,7 @@ _copy_from_pages(char *p, struct page **pages, size_t pgbase, size_t len)
 
 	} while ((len -= copy) != 0);
 }
+EXPORT_SYMBOL_GPL(_copy_from_pages);
 
 /*
  * xdr_shrink_bufhead
@@ -877,7 +878,7 @@ static void __read_bytes_from_xdr_buf(struct xdr_buf *subbuf, void *obj, unsigne
 /* obj is assumed to point to allocated memory of size at least len: */
 int read_bytes_from_xdr_buf(struct xdr_buf *buf, unsigned int base, void *obj, unsigned int len)
 {
-	struct xdr_buf subbuf;
+	struct xdr_buf subbuf = {.pages=NULL};
 	int status;
 
 	status = xdr_buf_subsegment(buf, &subbuf, base, len);
@@ -908,7 +909,7 @@ static void __write_bytes_to_xdr_buf(struct xdr_buf *subbuf, void *obj, unsigned
 /* obj is assumed to point to allocated memory of size at least len: */
 int write_bytes_to_xdr_buf(struct xdr_buf *buf, unsigned int base, void *obj, unsigned int len)
 {
-	struct xdr_buf subbuf;
+	struct xdr_buf subbuf = {.pages=NULL};
 	int status;
 
 	status = xdr_buf_subsegment(buf, &subbuf, base, len);
@@ -948,7 +949,7 @@ EXPORT_SYMBOL_GPL(xdr_encode_word);
  * set obj to point to it. */
 int xdr_buf_read_netobj(struct xdr_buf *buf, struct xdr_netobj *obj, unsigned int offset)
 {
-	struct xdr_buf subbuf;
+	struct xdr_buf subbuf = {.pages=NULL};
 
 	if (xdr_decode_word(buf, offset, &obj->len))
 		return -EFAULT;
@@ -1264,4 +1265,3 @@ out:
 	return ret;
 }
 EXPORT_SYMBOL_GPL(xdr_process_buf);
-

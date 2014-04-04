@@ -298,7 +298,6 @@ static void bcm_uart_do_rx(struct uart_port *port)
 		if (uart_handle_sysrq_char(port, c))
 			continue;
 
-
 		if ((cstat & port->ignore_status_mask) == 0)
 			tty_insert_flip_char(tty, c, flag);
 
@@ -664,8 +663,6 @@ static struct uart_ops bcm_uart_ops = {
 	.config_port	= bcm_uart_config_port,
 	.verify_port	= bcm_uart_verify_port,
 };
-
-
 
 #ifdef CONFIG_SERIAL_BCM63XX_CONSOLE
 static inline void wait_for_xmitr(struct uart_port *port)

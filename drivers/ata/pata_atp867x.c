@@ -282,7 +282,6 @@ static struct ata_port_operations atp867x_ops = {
 	.set_dmamode		= atp867x_set_dmamode,
 };
 
-
 #ifdef	ATP867X_DEBUG
 static void atp867x_check_res(struct pci_dev *pdev)
 {

@@ -90,7 +90,6 @@ twl4030_divider_ratios[16] = {
 	{5, 11},	/* CHANNEL 15 */
 };
 
-
 /*
  * Conversion table from -3 to 55 degree Celcius
  */

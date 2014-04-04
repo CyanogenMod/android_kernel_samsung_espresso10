@@ -2066,4 +2066,3 @@ MODULE_PARM_DESC(v86d, "Path to the v86d userspace helper.");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Michal Januszewski <spock@gentoo.org>");
 MODULE_DESCRIPTION("Framebuffer driver for VBE2.0+ compliant graphics boards");
-

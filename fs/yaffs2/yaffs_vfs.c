@@ -105,7 +105,6 @@ module_param(yaffs_auto_checkpoint, uint, 0644);
 module_param(yaffs_gc_control, uint, 0644);
 module_param(yaffs_bg_enable, uint, 0644);
 
-
 #define yaffs_inode_to_obj_lv(iptr) ((iptr)->i_private)
 #define yaffs_inode_to_obj(iptr) ((struct yaffs_obj *)(yaffs_inode_to_obj_lv(iptr)))
 #define yaffs_dentry_to_obj(dptr) yaffs_inode_to_obj((dptr)->d_inode)
@@ -114,7 +113,6 @@ module_param(yaffs_bg_enable, uint, 0644);
 #define update_dir_time(dir) do {\
 			(dir)->i_ctime = (dir)->i_mtime = CURRENT_TIME; \
 		} while(0)
-
 
 static unsigned yaffs_gc_control_callback(struct yaffs_dev *dev)
 {
@@ -909,8 +907,6 @@ static const struct file_operations yaffs_dir_operations = {
 	.llseek = generic_file_llseek,
 };
 
-
-
 static int yaffs_file_flush(struct file *file, fl_owner_t id)
 {
 	struct yaffs_obj *obj = yaffs_dentry_to_obj(file->f_dentry);
@@ -942,7 +938,6 @@ static const struct file_operations yaffs_file_operations = {
 	.splice_write = generic_file_splice_write,
 	.llseek = generic_file_llseek,
 };
-
 
 /* ExportFS support */
 static struct inode *yaffs2_nfs_get_inode(struct super_block *sb, uint64_t ino,
@@ -1010,7 +1005,6 @@ static struct export_operations yaffs_export_ops = {
 	.get_parent = yaffs2_get_parent,
 };
 
-
 /*-----------------------------------------------------------------*/
 
 static int yaffs_readlink(struct dentry *dentry, char __user * buffer,
@@ -1061,7 +1055,6 @@ void yaffs_put_link(struct dentry *dentry, struct nameidata *nd, void *alias)
 {
 	kfree(alias);
 }
-
 
 static void yaffs_unstitch_obj(struct inode *inode, struct yaffs_obj *obj)
 {
@@ -1273,7 +1266,7 @@ static int yaffs_writepage(struct page *page, struct writeback_control *wbc)
 	return (n_written == n_bytes) ? 0 : -ENOSPC;
 }
 
-/* Space holding and freeing is done to ensure we have space available for 
+/* Space holding and freeing is done to ensure we have space available for
  * write_begin/end.
  * For now we just assume few parallel writes and check against a small
  * number.
@@ -1604,7 +1597,7 @@ static int yaffs_do_sync_fs(struct super_block *sb, int request_checkpoint)
  * yaffs_bg_start() launches the background thread.
  * yaffs_bg_stop() cleans up the background thread.
  *
- * NB: 
+ * NB:
  * The thread should only run after the yaffs is initialised
  * The thread should be stopped before yaffs is unmounted.
  * The thread should not do any writing while the fs is in read only.
@@ -1747,11 +1740,8 @@ static int yaffs_sync_fs(struct super_block *sb, int wait)
 	return 0;
 }
 
-
 static LIST_HEAD(yaffs_context_list);
 struct mutex yaffs_context_lock;
-
-
 
 struct yaffs_options {
 	int inband_tags;
@@ -1836,8 +1826,6 @@ static struct address_space_operations yaffs_file_address_operations = {
 	.write_begin = yaffs_write_begin,
 	.write_end = yaffs_write_end,
 };
-
-
 
 static const struct inode_operations yaffs_file_inode_operations = {
 	.setattr = yaffs_setattr,
@@ -2262,7 +2250,7 @@ static struct super_block *yaffs_internal_read_super(int yaffs_version,
 		param->read_chunk_tags_fn = nandmtd2_read_chunk_tags;
 		param->bad_block_fn = nandmtd2_mark_block_bad;
 		param->query_block_fn = nandmtd2_query_block;
-		yaffs_dev_to_lc(dev)->spare_buffer = 
+		yaffs_dev_to_lc(dev)->spare_buffer =
 		                kmalloc(mtd->oobsize, GFP_NOFS);
 		param->is_yaffs2 = 1;
 		param->total_bytes_per_chunk = mtd->writesize;
@@ -2551,7 +2539,6 @@ static int yaffs_proc_read(char *page,
 	return buf - page < count ? buf - page : count;
 }
 
-
 /**
  * Set the verbosity of the warnings and error messages.
  *
@@ -2562,7 +2549,7 @@ static struct {
 	char *mask_name;
 	unsigned mask_bitfield;
 } mask_flags[] = {
-	{"allocate", YAFFS_TRACE_ALLOCATE}, 
+	{"allocate", YAFFS_TRACE_ALLOCATE},
 	{"always", YAFFS_TRACE_ALWAYS},
 	{"background", YAFFS_TRACE_BACKGROUND},
 	{"bad_blocks", YAFFS_TRACE_BAD_BLOCKS},
@@ -2734,7 +2721,6 @@ static int __init init_yaffs_fs(void)
 	} else {
 		return -ENOMEM;
         }
-
 
 	/* Now add the file system entries */
 

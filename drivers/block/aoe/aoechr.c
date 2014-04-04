@@ -280,7 +280,7 @@ aoechr_init(void)
 	int n, i;
 
 	n = register_chrdev(AOE_MAJOR, "aoechr", &aoe_fops);
-	if (n < 0) { 
+	if (n < 0) {
 		printk(KERN_ERR "aoe: can't register char device\n");
 		return n;
 	}
@@ -311,4 +311,3 @@ aoechr_exit(void)
 	class_destroy(aoe_class);
 	unregister_chrdev(AOE_MAJOR, "aoechr");
 }
-

@@ -100,7 +100,6 @@ int sst_wait_interruptible(struct intel_sst_drv *sst_drv_ctx,
 
 }
 
-
 /*
  * sst_wait_interruptible_timeout - wait on event interruptable
  *
@@ -139,7 +138,6 @@ int sst_wait_interruptible_timeout(
 	return retval;
 
 }
-
 
 /*
  * sst_wait_timeout - wait on event for timeout
@@ -310,4 +308,3 @@ int sst_enable_rx_timeslot(int status)
 				&sst_drv_ctx->hs_info_blk, SST_BLOCK_TIMEOUT);
 	return retval;
 }
-

@@ -328,7 +328,6 @@
 #ifndef MPI_CNFG_H
 #define MPI_CNFG_H
 
-
 /*****************************************************************************
 *
 *       C o n f i g    M e s s a g e    a n d    S t r u c t u r e s
@@ -365,8 +364,6 @@ typedef struct _CONFIG_EXTENDED_PAGE_HEADER
 } CONFIG_EXTENDED_PAGE_HEADER, MPI_POINTER PTR_CONFIG_EXTENDED_PAGE_HEADER,
   ConfigExtendedPageHeader_t, MPI_POINTER pConfigExtendedPageHeader_t;
 
-
-
 /****************************************************************************
 *   PageType field values
 ****************************************************************************/
@@ -393,7 +390,6 @@ typedef struct _CONFIG_EXTENDED_PAGE_HEADER
 
 #define MPI_CONFIG_TYPENUM_MASK                     (0x0FFF)
 
-
 /****************************************************************************
 *   ExtPageType field values
 ****************************************************************************/
@@ -403,7 +399,6 @@ typedef struct _CONFIG_EXTENDED_PAGE_HEADER
 #define MPI_CONFIG_EXTPAGETYPE_SAS_PHY              (0x13)
 #define MPI_CONFIG_EXTPAGETYPE_LOG                  (0x14)
 #define MPI_CONFIG_EXTPAGETYPE_ENCLOSURE            (0x15)
-
 
 /****************************************************************************
 *   PageAddress field values
@@ -494,8 +489,6 @@ typedef struct _CONFIG_EXTENDED_PAGE_HEADER
 #define MPI_SAS_ENCLOS_PGAD_H_HANDLE_MASK           (0x0000FFFF)
 #define MPI_SAS_ENCLOS_PGAD_H_HANDLE_SHIFT          (0)
 
-
-
 /****************************************************************************
 *   Config Request Message
 ****************************************************************************/
@@ -516,7 +509,6 @@ typedef struct _MSG_CONFIG
 } MSG_CONFIG, MPI_POINTER PTR_MSG_CONFIG,
   Config_t, MPI_POINTER pConfig_t;
 
-
 /****************************************************************************
 *   Action field values
 ****************************************************************************/
@@ -527,7 +519,6 @@ typedef struct _MSG_CONFIG
 #define MPI_CONFIG_ACTION_PAGE_WRITE_NVRAM          (0x04)
 #define MPI_CONFIG_ACTION_PAGE_READ_DEFAULT         (0x05)
 #define MPI_CONFIG_ACTION_PAGE_READ_NVRAM           (0x06)
-
 
 /* Config Reply Message */
 typedef struct _MSG_CONFIG_REPLY
@@ -546,8 +537,6 @@ typedef struct _MSG_CONFIG_REPLY
     CONFIG_PAGE_HEADER      Header;                     /* 14h */
 } MSG_CONFIG_REPLY, MPI_POINTER PTR_MSG_CONFIG_REPLY,
   ConfigReply_t, MPI_POINTER pConfigReply_t;
-
-
 
 /*****************************************************************************
 *
@@ -585,7 +574,6 @@ typedef struct _MSG_CONFIG_REPLY
 #define MPI_MANUFACTPAGE_DEVID_SAS1068E             (0x0058)
 #define MPI_MANUFACTPAGE_DEVID_SAS1078              (0x0062)
 
-
 typedef struct _CONFIG_PAGE_MANUFACTURING_0
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -600,7 +588,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_0
 
 #define MPI_MANUFACTURING0_PAGEVERSION                 (0x00)
 
-
 typedef struct _CONFIG_PAGE_MANUFACTURING_1
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -610,7 +597,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_1
 
 #define MPI_MANUFACTURING1_PAGEVERSION                 (0x00)
 
-
 typedef struct _MPI_CHIP_REVISION_ID
 {
     U16 DeviceID;                                       /* 00h */
@@ -618,7 +604,6 @@ typedef struct _MPI_CHIP_REVISION_ID
     U8  Reserved;                                       /* 03h */
 } MPI_CHIP_REVISION_ID, MPI_POINTER PTR_MPI_CHIP_REVISION_ID,
   MpiChipRevisionId_t, MPI_POINTER pMpiChipRevisionId_t;
-
 
 /*
  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to
@@ -638,7 +623,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_2
 
 #define MPI_MANUFACTURING2_PAGEVERSION                  (0x00)
 
-
 /*
  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to
  * one and check Header.PageLength at runtime.
@@ -656,7 +640,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_3
   ManufacturingPage3_t, MPI_POINTER pManufacturingPage3_t;
 
 #define MPI_MANUFACTURING3_PAGEVERSION                  (0x00)
-
 
 typedef struct _CONFIG_PAGE_MANUFACTURING_4
 {
@@ -713,7 +696,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_4
 #define MPI_MANPAGE4_EXTFLAGS_SATA_CACHE_DISABLE        (0x0002)
 #define MPI_MANPAGE4_EXTFLAGS_LEGACY_MODE               (0x0001)
 
-
 #ifndef MPI_MANPAGE5_NUM_FORCEWWID
 #define MPI_MANPAGE5_NUM_FORCEWWID      (1)
 #endif
@@ -736,7 +718,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_5
 /* defines for the Flags field */
 #define MPI_MANPAGE5_TWO_WWID_PER_PHY                   (0x01)
 
-
 typedef struct _CONFIG_PAGE_MANUFACTURING_6
 {
     CONFIG_PAGE_HEADER              Header;             /* 00h */
@@ -745,7 +726,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_6
   ManufacturingPage6_t, MPI_POINTER pManufacturingPage6_t;
 
 #define MPI_MANUFACTURING6_PAGEVERSION                  (0x00)
-
 
 typedef struct _MPI_MANPAGE7_CONNECTOR_INFO
 {
@@ -806,7 +786,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_7
 /* defines for the Flags field */
 #define MPI_MANPAGE7_FLAG_USE_SLOT_INFO                 (0x00000001)
 
-
 typedef struct _CONFIG_PAGE_MANUFACTURING_8
 {
     CONFIG_PAGE_HEADER              Header;             /* 00h */
@@ -815,7 +794,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_8
   ManufacturingPage8_t, MPI_POINTER pManufacturingPage8_t;
 
 #define MPI_MANUFACTURING8_PAGEVERSION                  (0x00)
-
 
 typedef struct _CONFIG_PAGE_MANUFACTURING_9
 {
@@ -826,7 +804,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_9
 
 #define MPI_MANUFACTURING9_PAGEVERSION                  (0x00)
 
-
 typedef struct _CONFIG_PAGE_MANUFACTURING_10
 {
     CONFIG_PAGE_HEADER              Header;             /* 00h */
@@ -835,7 +812,6 @@ typedef struct _CONFIG_PAGE_MANUFACTURING_10
   ManufacturingPage10_t, MPI_POINTER pManufacturingPage10_t;
 
 #define MPI_MANUFACTURING10_PAGEVERSION                 (0x00)
-
 
 /****************************************************************************
 *   IO Unit Config Pages
@@ -849,7 +825,6 @@ typedef struct _CONFIG_PAGE_IO_UNIT_0
   IOUnitPage0_t, MPI_POINTER pIOUnitPage0_t;
 
 #define MPI_IOUNITPAGE0_PAGEVERSION                     (0x00)
-
 
 typedef struct _CONFIG_PAGE_IO_UNIT_1
 {
@@ -905,7 +880,6 @@ typedef struct _CONFIG_PAGE_IO_UNIT_2
 #define MPI_IOUNITPAGE2_FLAGS_ADAPTER_DISPLAY           (0x00000020)
 #define MPI_IOUNITPAGE2_FLAGS_ADAPTER_DEV_DISPLAY       (0x00000040)
 
-
 /*
  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to
  * one and check Header.PageLength at runtime.
@@ -931,7 +905,6 @@ typedef struct _CONFIG_PAGE_IO_UNIT_3
 #define MPI_IOUNITPAGE3_GPIO_SETTING_OFF                (0x00)
 #define MPI_IOUNITPAGE3_GPIO_SETTING_ON                 (0x01)
 
-
 typedef struct _CONFIG_PAGE_IO_UNIT_4
 {
     CONFIG_PAGE_HEADER      Header;                                   /* 00h */
@@ -941,7 +914,6 @@ typedef struct _CONFIG_PAGE_IO_UNIT_4
   IOUnitPage4_t, MPI_POINTER pIOUnitPage4_t;
 
 #define MPI_IOUNITPAGE4_PAGEVERSION                     (0x00)
-
 
 /****************************************************************************
 *   IOC Config Pages
@@ -963,7 +935,6 @@ typedef struct _CONFIG_PAGE_IOC_0
   IOCPage0_t, MPI_POINTER pIOCPage0_t;
 
 #define MPI_IOCPAGE0_PAGEVERSION                        (0x01)
-
 
 typedef struct _CONFIG_PAGE_IOC_1
 {
@@ -987,7 +958,6 @@ typedef struct _CONFIG_PAGE_IOC_1
 #define MPI_IOCPAGE1_REPLY_COALESCING                   (0x00000001)
 
 #define MPI_IOCPAGE1_PCISLOTNUM_UNKNOWN                 (0xFF)
-
 
 typedef struct _CONFIG_PAGE_IOC_2_RAID_VOL
 {
@@ -1052,7 +1022,6 @@ typedef struct _CONFIG_PAGE_IOC_2
 #define MPI_IOCPAGE2_CAP_FLAGS_SAFTE_SUPPORT            (0x40000000)
 #define MPI_IOCPAGE2_CAP_FLAGS_CROSS_CHANNEL_SUPPORT    (0x80000000)
 
-
 typedef struct _IOC_3_PHYS_DISK
 {
     U8                          PhysDiskID;             /* 00h */
@@ -1082,7 +1051,6 @@ typedef struct _CONFIG_PAGE_IOC_3
 
 #define MPI_IOCPAGE3_PAGEVERSION                        (0x00)
 
-
 typedef struct _IOC_4_SEP
 {
     U8                          SEPTargetID;            /* 00h */
@@ -1110,7 +1078,6 @@ typedef struct _CONFIG_PAGE_IOC_4
   IOCPage4_t, MPI_POINTER pIOCPage4_t;
 
 #define MPI_IOCPAGE4_PAGEVERSION                        (0x00)
-
 
 typedef struct _IOC_5_HOT_SPARE
 {
@@ -1190,7 +1157,6 @@ typedef struct _CONFIG_PAGE_IOC_6
 #define MPI_IOCPAGE6_CAP_FLAGS_512MB_METADATA_SIZE      (0x00000002)
 
 #define MPI_IOCPAGE6_CAP_FLAGS_GLOBAL_HOT_SPARE         (0x00000001)
-
 
 /****************************************************************************
 *   BIOS Config Pages
@@ -1461,7 +1427,6 @@ typedef struct _CONFIG_PAGE_BIOS_4
 
 #define MPI_BIOSPAGE4_PAGEVERSION                       (0x00)
 
-
 /****************************************************************************
 *   SCSI Port Config Pages
 ****************************************************************************/
@@ -1514,7 +1479,6 @@ typedef struct _CONFIG_PAGE_SCSI_PORT_0
 #define MPI_SCSIPORTPAGE0_PHY_BUS_FREE_CONNECTED_ID     (0xFE)
 #define MPI_SCSIPORTPAGE0_PHY_UNKNOWN_CONNECTED_ID      (0xFF)
 
-
 typedef struct _CONFIG_PAGE_SCSI_PORT_1
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -1536,7 +1500,6 @@ typedef struct _CONFIG_PAGE_SCSI_PORT_1
 /* TargetConfig values */
 #define MPI_SCSIPORTPAGE1_TARGCONFIG_TARG_ONLY        (0x01)
 #define MPI_SCSIPORTPAGE1_TARGCONFIG_INIT_TARG        (0x02)
-
 
 typedef struct _MPI_DEVICE_INFO
 {
@@ -1568,7 +1531,6 @@ typedef struct _CONFIG_PAGE_SCSI_PORT_2
 #define MPI_SCSIPORTPAGE2_PORT_FLAGS_BASIC_DV_ONLY          (0x00000020)
 #define MPI_SCSIPORTPAGE2_PORT_FLAGS_OFF_DV                 (0x00000060)
 
-
 /* PortSettings values */
 #define MPI_SCSIPORTPAGE2_PORT_HOST_ID_MASK                 (0x0000000F)
 #define MPI_SCSIPORTPAGE2_PORT_MASK_INIT_HBA                (0x00000030)
@@ -1593,7 +1555,6 @@ typedef struct _CONFIG_PAGE_SCSI_PORT_2
 #define MPI_SCSIPORTPAGE2_DEVICE_TAG_QUEUE_ENABLE           (0x0008)
 #define MPI_SCSIPORTPAGE2_DEVICE_WIDE_DISABLE               (0x0010)
 #define MPI_SCSIPORTPAGE2_DEVICE_BOOT_CHOICE                (0x0020)
-
 
 /****************************************************************************
 *   SCSI Target Device Config Pages
@@ -1630,7 +1591,6 @@ typedef struct _CONFIG_PAGE_SCSI_DEVICE_0
 #define MPI_SCSIDEVPAGE0_INFO_WDTR_REJECTED             (0x00000004)
 #define MPI_SCSIDEVPAGE0_INFO_PPR_REJECTED              (0x00000008)
 
-
 typedef struct _CONFIG_PAGE_SCSI_DEVICE_1
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -1662,7 +1622,6 @@ typedef struct _CONFIG_PAGE_SCSI_DEVICE_1
 #define MPI_SCSIDEVPAGE1_CONF_SDTR_DISALLOWED           (0x00000004)
 #define MPI_SCSIDEVPAGE1_CONF_EXTENDED_PARAMS_ENABLE    (0x00000008)
 #define MPI_SCSIDEVPAGE1_CONF_FORCE_PPR_MSG             (0x00000010)
-
 
 typedef struct _CONFIG_PAGE_SCSI_DEVICE_2
 {
@@ -1704,7 +1663,6 @@ typedef struct _CONFIG_PAGE_SCSI_DEVICE_2
 #define MPI_SCSIDEVPAGE2_DPS_BIT_14_PL_SELECT_MASK      (0x30000000)
 #define MPI_SCSIDEVPAGE2_DPS_BIT_15_PL_SELECT_MASK      (0xC0000000)
 
-
 typedef struct _CONFIG_PAGE_SCSI_DEVICE_3
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -1719,7 +1677,6 @@ typedef struct _CONFIG_PAGE_SCSI_DEVICE_3
 
 #define MPI_SCSIDEVPAGE3_MAX_COUNTER                    (0xFFFE)
 #define MPI_SCSIDEVPAGE3_UNSUPPORTED_COUNTER            (0xFFFF)
-
 
 /****************************************************************************
 *   FC Port Config Pages
@@ -1813,7 +1770,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_0
 #define MPI_FCPORTPAGE0_CURRENT_SPEED_4GBIT             MPI_FCPORTPAGE0_SUPPORT_4GBIT_SPEED
 #define MPI_FCPORTPAGE0_CURRENT_SPEED_NOT_NEGOTIATED    (0x00008000)        /* (SNIA)HBA_PORTSPEED_NOT_NEGOTIATED (1<<15) Speed not established */
 
-
 typedef struct _CONFIG_PAGE_FC_PORT_1
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -1879,7 +1835,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_1
 #define MPI_FCPORTPAGE1_INITIATOR_DEV_TIMEOUT_MASK      (0x7F)
 #define MPI_FCPORTPAGE1_INITIATOR_DEV_UNIT_16           (0x80)
 
-
 typedef struct _CONFIG_PAGE_FC_PORT_2
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -1889,7 +1844,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_2
   FCPortPage2_t, MPI_POINTER pFCPortPage2_t;
 
 #define MPI_FCPORTPAGE2_PAGEVERSION                     (0x01)
-
 
 typedef struct _WWN_FORMAT
 {
@@ -1938,7 +1892,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_3
 
 #define MPI_FCPORTPAGE3_PAGEVERSION                     (0x01)
 
-
 typedef struct _CONFIG_PAGE_FC_PORT_4
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -1958,7 +1911,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_4
 #define MPI_FCPORTPAGE4_PORT_BIOS_OS_INIT_HBA           (0x00000030)
 #define MPI_FCPORTPAGE4_PORT_REMOVABLE_MEDIA            (0x000000C0)
 #define MPI_FCPORTPAGE4_PORT_SPINUP_DELAY_MASK          (0x00000F00)
-
 
 typedef struct _CONFIG_PAGE_FC_PORT_5_ALIAS_INFO
 {
@@ -2011,7 +1963,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_6
 
 #define MPI_FCPORTPAGE6_PAGEVERSION                     (0x00)
 
-
 typedef struct _CONFIG_PAGE_FC_PORT_7
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -2022,7 +1973,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_7
 
 #define MPI_FCPORTPAGE7_PAGEVERSION                     (0x00)
 
-
 typedef struct _CONFIG_PAGE_FC_PORT_8
 {
     CONFIG_PAGE_HEADER      Header;                     /* 00h */
@@ -2031,7 +1981,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_8
   FCPortPage8_t, MPI_POINTER pFCPortPage8_t;
 
 #define MPI_FCPORTPAGE8_PAGEVERSION                     (0x00)
-
 
 typedef struct _CONFIG_PAGE_FC_PORT_9
 {
@@ -2051,7 +2000,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_9
   FCPortPage9_t, MPI_POINTER pFCPortPage9_t;
 
 #define MPI_FCPORTPAGE9_PAGEVERSION                     (0x00)
-
 
 typedef struct _CONFIG_PAGE_FC_PORT_10_BASE_SFP_DATA
 {
@@ -2124,7 +2072,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_10_BASE_SFP_DATA
 #define MPI_FCPORT10_BASE_ENCODE_NRZ        (0x03)
 #define MPI_FCPORT10_BASE_ENCODE_MANCHESTER (0x04)
 
-
 typedef struct _CONFIG_PAGE_FC_PORT_10_EXTENDED_SFP_DATA
 {
     U8                      Options[2];                 /* 50h */
@@ -2145,7 +2092,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_10_EXTENDED_SFP_DATA
 #define MPI_FCPORT10_EXT_OPTION1_TX_FAULT   (0x08)
 #define MPI_FCPORT10_EXT_OPTION1_LOS_INVERT (0x04)
 #define MPI_FCPORT10_EXT_OPTION1_LOS        (0x02)
-
 
 typedef struct _CONFIG_PAGE_FC_PORT_10
 {
@@ -2179,7 +2125,6 @@ typedef struct _CONFIG_PAGE_FC_PORT_10
 
 #define MPI_FCPORTPAGE10_FLAGS_CC_BASE_OK               (0x00000010)
 #define MPI_FCPORTPAGE10_FLAGS_CC_EXT_OK                (0x00000020)
-
 
 /****************************************************************************
 *   FC Device Config Pages
@@ -2334,7 +2279,6 @@ typedef struct _CONFIG_PAGE_RAID_VOL_0
 #define MPI_RAIDVOLPAGE0_INSUFFICIENT_METADATA_INACTIVE (0x05)
 #define MPI_RAIDVOLPAGE0_PREVIOUSLY_DELETED             (0x06)
 
-
 typedef struct _CONFIG_PAGE_RAID_VOL_1
 {
     CONFIG_PAGE_HEADER      Header;         /* 00h */
@@ -2351,7 +2295,6 @@ typedef struct _CONFIG_PAGE_RAID_VOL_1
   RaidVolumePage1_t, MPI_POINTER pRaidVolumePage1_t;
 
 #define MPI_RAIDVOLPAGE1_PAGEVERSION                    (0x01)
-
 
 /****************************************************************************
 *   RAID Physical Disk Config Pages
@@ -2434,7 +2377,6 @@ typedef struct _CONFIG_PAGE_RAID_PHYS_DISK_0
 
 #define MPI_RAIDPHYSDISKPAGE0_PAGEVERSION           (0x02)
 
-
 typedef struct _RAID_PHYS_DISK1_PATH
 {
     U8                              PhysDiskID;         /* 00h */
@@ -2451,7 +2393,6 @@ typedef struct _RAID_PHYS_DISK1_PATH
 /* RAID Physical Disk Page 1 Flags field defines */
 #define MPI_RAID_PHYSDISK1_FLAG_BROKEN          (0x0002)
 #define MPI_RAID_PHYSDISK1_FLAG_INVALID         (0x0001)
-
 
 /*
  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to
@@ -2473,7 +2414,6 @@ typedef struct _CONFIG_PAGE_RAID_PHYS_DISK_1
   RaidPhysDiskPage1_t, MPI_POINTER pRaidPhysDiskPage1_t;
 
 #define MPI_RAIDPHYSDISKPAGE1_PAGEVERSION       (0x00)
-
 
 /****************************************************************************
 *   LAN Config Pages
@@ -2518,7 +2458,6 @@ typedef struct _CONFIG_PAGE_LAN_1
 #define MPI_LAN_PAGE1_DEV_STATE_RESET                   (0x00)
 #define MPI_LAN_PAGE1_DEV_STATE_OPERATIONAL             (0x01)
 
-
 /****************************************************************************
 *   Inband Config Pages
 ****************************************************************************/
@@ -2533,8 +2472,6 @@ typedef struct _CONFIG_PAGE_INBAND_0
   InbandPage0_t, MPI_POINTER pInbandPage0_t;
 
 #define MPI_INBAND_PAGEVERSION          (0x00)
-
-
 
 /****************************************************************************
 *   SAS IO Unit Config Pages
@@ -2612,7 +2549,6 @@ typedef struct _CONFIG_PAGE_SAS_IO_UNIT_0
 #define MPI_SAS_IOUNIT0_DS_UNSUPPORTED_DEVICE               (0x00000800)
 #define MPI_SAS_IOUNIT0_DS_MAX_SATA_TARGETS                 (0x00001000)
 #define MPI_SAS_IOUNIT0_DS_MULTI_PORT_DOMAIN                (0x00002000)
-
 
 typedef struct _MPI_SAS_IO_UNIT1_PHY_DATA
 {
@@ -2708,7 +2644,6 @@ typedef struct _CONFIG_PAGE_SAS_IO_UNIT_1
 
 /* see mpi_sas.h for values for SAS IO Unit Page 1 ControllerPhyDeviceInfo values */
 
-
 typedef struct _CONFIG_PAGE_SAS_IO_UNIT_2
 {
     CONFIG_EXTENDED_PAGE_HEADER         Header;                 /* 00h */
@@ -2744,7 +2679,6 @@ typedef struct _CONFIG_PAGE_SAS_IO_UNIT_2
 #define MPI_SAS_IOUNIT2_FLAGS_RESERVE_ID_0_FOR_BOOT         (0x10)
 #define MPI_SAS_IOUNIT2_FLAGS_DA_STARTING_SLOT              (0x20)
 
-
 typedef struct _CONFIG_PAGE_SAS_IO_UNIT_3
 {
     CONFIG_EXTENDED_PAGE_HEADER Header;                         /* 00h */
@@ -2761,7 +2695,6 @@ typedef struct _CONFIG_PAGE_SAS_IO_UNIT_3
   SasIOUnitPage3_t, MPI_POINTER pSasIOUnitPage3_t;
 
 #define MPI_SASIOUNITPAGE3_PAGEVERSION      (0x00)
-
 
 /****************************************************************************
 *   SAS Expander Config Pages
@@ -2806,7 +2739,6 @@ typedef struct _CONFIG_PAGE_SAS_EXPANDER_0
 #define MPI_SAS_EXPANDER0_FLAGS_CONNECTOR_END_DEVICE    (0x04)
 #define MPI_SAS_EXPANDER0_FLAGS_ROUTE_TABLE_CONFIG      (0x02)
 #define MPI_SAS_EXPANDER0_FLAGS_CONFIG_IN_PROGRESS      (0x01)
-
 
 typedef struct _CONFIG_PAGE_SAS_EXPANDER_1
 {
@@ -2855,7 +2787,6 @@ typedef struct _CONFIG_PAGE_SAS_EXPANDER_1
 #define MPI_SAS_EXPANDER1_NEG_RATE_SATA_OOB_COMPLETE    (0x03)
 #define MPI_SAS_EXPANDER1_NEG_RATE_1_5                  (0x08)
 #define MPI_SAS_EXPANDER1_NEG_RATE_3_0                  (0x09)
-
 
 /****************************************************************************
 *   SAS Device Config Pages
@@ -2916,7 +2847,6 @@ typedef struct _CONFIG_PAGE_SAS_DEVICE_0
 
 /* see mpi_sas.h for values for SAS Device Page 0 DeviceInfo values */
 
-
 typedef struct _CONFIG_PAGE_SAS_DEVICE_1
 {
     CONFIG_EXTENDED_PAGE_HEADER         Header;                 /* 00h */
@@ -2931,7 +2861,6 @@ typedef struct _CONFIG_PAGE_SAS_DEVICE_1
   SasDevicePage1_t, MPI_POINTER pSasDevicePage1_t;
 
 #define MPI_SASDEVICE1_PAGEVERSION          (0x00)
-
 
 typedef struct _CONFIG_PAGE_SAS_DEVICE_2
 {
@@ -2950,7 +2879,6 @@ typedef struct _CONFIG_PAGE_SAS_DEVICE_2
 #define MPI_SASDEVICE2_ENC_MAP_SHIFT_NUM_SLOTS          (4)
 #define MPI_SASDEVICE2_ENC_MAP_MASK_START_INDEX         (0x001FF800)
 #define MPI_SASDEVICE2_ENC_MAP_SHIFT_START_INDEX        (11)
-
 
 /****************************************************************************
 *   SAS PHY Config Pages
@@ -3018,7 +2946,6 @@ typedef struct _CONFIG_PAGE_SAS_PHY_0
 #define MPI_SAS_PHY0_PHYINFO_RATE_1_5                           (0x00000008)
 #define MPI_SAS_PHY0_PHYINFO_RATE_3_0                           (0x00000009)
 
-
 typedef struct _CONFIG_PAGE_SAS_PHY_1
 {
     CONFIG_EXTENDED_PAGE_HEADER Header;                     /* 00h */
@@ -3031,7 +2958,6 @@ typedef struct _CONFIG_PAGE_SAS_PHY_1
   SasPhyPage1_t, MPI_POINTER pSasPhyPage1_t;
 
 #define MPI_SASPHY1_PAGEVERSION             (0x00)
-
 
 /****************************************************************************
 *   SAS Enclosure Config Pages
@@ -3068,7 +2994,6 @@ typedef struct _CONFIG_PAGE_SAS_ENCLOSURE_0
 #define MPI_SAS_ENCLS0_FLAGS_MNG_EXP_SGPIO          (0x0003)
 #define MPI_SAS_ENCLS0_FLAGS_MNG_SES_ENCLOSURE      (0x0004)
 #define MPI_SAS_ENCLS0_FLAGS_MNG_IOC_GPIO           (0x0005)
-
 
 /****************************************************************************
 *   Log Config Pages
@@ -3110,6 +3035,4 @@ typedef struct _CONFIG_PAGE_LOG_0
 
 #define MPI_LOG_0_PAGEVERSION               (0x01)
 
-
 #endif
-

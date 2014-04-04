@@ -61,7 +61,6 @@ extern void omap242x_sram_reprogram_sdrc(u32 perf_level, u32 dll_val,
 						u32 mem_type);
 extern unsigned long omap242x_sram_reprogram_sdrc_sz;
 
-
 extern void omap243x_sram_ddr_init(u32 *slow_dll_ctrl, u32 fast_dll_ctrl,
 						u32 base_cs, u32 force_unlock);
 extern unsigned long omap243x_sram_ddr_init_sz;

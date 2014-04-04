@@ -1,4 +1,3 @@
-
 /*
 
     cx88-i2c.c  --  all the i2c code is here
@@ -141,7 +140,6 @@ int cx88_i2c_init(struct cx88_core *core, struct pci_dev *pci)
 
 	memcpy(&core->i2c_algo, &cx8800_i2c_algo_template,
 	       sizeof(core->i2c_algo));
-
 
 	core->i2c_adap.dev.parent = &pci->dev;
 	strlcpy(core->i2c_adap.name,core->name,sizeof(core->i2c_adap.name));

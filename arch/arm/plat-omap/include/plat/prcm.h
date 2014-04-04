@@ -32,6 +32,3 @@ int omap2_cm_wait_idlest(void __iomem *reg, u32 mask, u8 idlest,
 			 const char *name);
 
 #endif
-
-
-

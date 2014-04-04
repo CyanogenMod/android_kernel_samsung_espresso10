@@ -96,7 +96,6 @@ static int dccp_transmit_skb(struct sock *sk, struct sk_buff *skb)
 			return -EPROTO;
 		}
 
-
 		/* Build DCCP header and checksum it. */
 		dh = dccp_zeroed_hdr(skb, dccp_header_size);
 		dh->dccph_type	= dcb->dccpd_type;

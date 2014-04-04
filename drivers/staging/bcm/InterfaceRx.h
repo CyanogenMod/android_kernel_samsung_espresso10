@@ -4,4 +4,3 @@
 BOOLEAN InterfaceRx(PS_INTERFACE_ADAPTER Adapter);
 
 #endif
-

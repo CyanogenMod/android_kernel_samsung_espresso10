@@ -7,7 +7,6 @@
 #include <linux/platform_device.h>
 #include <linux/atmel_pwm.h>
 
-
 /*
  * This is a simple driver for the PWM controller found in various newer
  * Atmel SOCs, including the AVR32 series and the AT91sam9263.
@@ -29,7 +28,6 @@ struct pwm {
 	struct pwm_channel	*channel[PWM_NCHAN];
 	void			(*handler[PWM_NCHAN])(struct pwm_channel *);
 };
-
 
 /* global PWM controller registers */
 #define PWM_MR		0x00
@@ -75,7 +73,6 @@ static void pwm_dumpregs(struct pwm_channel *ch, char *tag)
 		pwm_channel_readl(ch, PWM_CPRD),
 		pwm_channel_readl(ch, PWM_CCNT));
 }
-
 
 /**
  * pwm_channel_alloc - allocate an unused PWM channel

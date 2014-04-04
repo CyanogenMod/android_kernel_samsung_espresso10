@@ -133,7 +133,6 @@ static void rd_release_device_space(struct rd_dev *rd_dev)
 	rd_dev->sg_table_count = 0;
 }
 
-
 /*	rd_build_device_space():
  *
  *

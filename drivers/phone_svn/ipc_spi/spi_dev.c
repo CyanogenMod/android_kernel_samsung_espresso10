@@ -22,7 +22,6 @@
 
 ***************************************************************/
 
-
 /**************************************************************
 
 	Preprocessor by common
@@ -32,8 +31,6 @@
 #include "spi_main.h"
 #include "spi_dev.h"
 #include "spi_os.h"
-
-
 
 /**************************************************************
 
@@ -60,7 +57,6 @@ static int spi_dev_gpio_subsrdy;
 
 static int spi_is_restart;
 
-
 /**********************************************************
 
 Prototype		void  spi_set_is_restart(int spi_set_restart)
@@ -76,7 +72,6 @@ void  spi_set_is_restart(int spi_set_restart)
 {
 	spi_is_restart = spi_set_restart;
 }
-
 
 /**********************************************************
 
@@ -94,7 +89,6 @@ int spi_get_is_restart(void)
 	return spi_is_restart;
 }
 
-
 /**********************************************************
 
 Prototype		void spi_dev_init ( void * data)
@@ -110,9 +104,7 @@ void spi_dev_init(void *data)
 {
 	struct ipc_spi_platform_data *pdata;
 
-
 	pr_info("[SPI] spi_dev_init\n");
-
 
 	pdata = (struct ipc_spi_platform_data *)data;
 
@@ -126,7 +118,6 @@ void spi_dev_init(void *data)
 		spi_dev_set_gpio(SPI_DEV_GPIOPIN_SUBMRDY,
 			SPI_DEV_GPIOLEVEL_LOW);
 }
-
 
 /**********************************************************
 
@@ -143,8 +134,6 @@ void spi_dev_destroy(void)
 	spi_dev_unreigster_irq_handler(spi_dev_gpio_srdy, 0);
 	spi_dev_unreigster_irq_handler(spi_dev_gpio_subsrdy, 0);
 }
-
-
 
 /**********************************************************
 
@@ -168,7 +157,6 @@ int spi_dev_send(void *buf, unsigned int length)
 	return ipc_spi_tx_rx_sync(buf, 0, length);
 }
 
-
 /**********************************************************
 
 Prototype		int spi_dev_receive ( void * buf, unsigned int length )
@@ -190,7 +178,6 @@ int spi_dev_receive(void *buf, unsigned int length)
 {
 	return ipc_spi_tx_rx_sync(0, buf, length);
 }
-
 
 /**********************************************************
 
@@ -237,8 +224,6 @@ void spi_dev_set_gpio(enum SPI_DEV_GPIOPIN_T gpio_pin,
 	gpio_set_value((unsigned int) gpio_id,
 		(value == SPI_DEV_GPIOLEVEL_HIGH ? 1 : 0));
 }
-
-
 
 /**********************************************************
 
@@ -287,7 +272,6 @@ int spi_dev_get_gpio(enum SPI_DEV_GPIOPIN_T gpio_pin)
 
 	return value;
 }
-
 
 /**********************************************************
 
@@ -358,7 +342,6 @@ int spi_dev_reigster_irq_handler(enum SPI_DEV_GPIOPIN_T gpio_pin,
 
 	return 1;
 }
-
 
 /**********************************************************
 

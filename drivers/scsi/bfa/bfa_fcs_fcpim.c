@@ -221,7 +221,6 @@ bfa_fcs_itnim_sm_prli_retry(struct bfa_fcs_itnim_s *itnim,
 		}
 		break;
 
-
 	case BFA_FCS_ITNIM_SM_OFFLINE:
 		bfa_sm_set_state(itnim, bfa_fcs_itnim_sm_offline);
 		bfa_timer_stop(&itnim->timer);
@@ -491,8 +490,6 @@ bfa_fcs_itnim_free(struct bfa_fcs_itnim_s *itnim)
 	bfa_itnim_delete(itnim->bfa_itnim);
 	bfa_fcb_itnim_free(itnim->fcs->bfad, itnim->itnim_drv);
 }
-
-
 
 /*
  *  itnim_public FCS ITNIM public interfaces

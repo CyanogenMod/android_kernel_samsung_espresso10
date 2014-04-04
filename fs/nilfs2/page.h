@@ -43,7 +43,6 @@ BUFFER_FNS(NILFS_Volatile, nilfs_volatile)
 BUFFER_FNS(NILFS_Checked, nilfs_checked)	/* buffer is verified */
 BUFFER_FNS(NILFS_Redirected, nilfs_redirected)	/* redirected to a copy */
 
-
 int __nilfs_clear_page_dirty(struct page *);
 
 struct buffer_head *nilfs_grab_buffer(struct inode *, struct address_space *,

@@ -809,7 +809,6 @@ void __init orion_xor1_init(unsigned long mapbase_low,
 static struct orion_ehci_data orion_ehci_data;
 static u64 ehci_dmamask = DMA_BIT_MASK(32);
 
-
 /*****************************************************************************
  * EHCI0
  ****************************************************************************/

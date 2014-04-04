@@ -794,7 +794,6 @@ static void carl9170_ps_work(struct work_struct *work)
 	mutex_unlock(&ar->mutex);
 }
 
-
 static int carl9170_op_config(struct ieee80211_hw *hw, u32 changed)
 {
 	struct ar9170 *ar = hw->priv;
@@ -918,7 +917,6 @@ static void carl9170_op_configure_filter(struct ieee80211_hw *hw,
 
 	mutex_unlock(&ar->mutex);
 }
-
 
 static void carl9170_op_bss_info_changed(struct ieee80211_hw *hw,
 					 struct ieee80211_vif *vif,

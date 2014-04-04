@@ -104,7 +104,6 @@
 #define S3C2410_UDC_USBINTE_RESET	(1<<2) // R/W
 #define S3C2410_UDC_USBINTE_SUSPEND	(1<<0) // R/W
 
-
 #define S3C2410_UDC_INDEX_EP0		(0x00)
 #define S3C2410_UDC_INDEX_EP1		(0x01) // ??
 #define S3C2410_UDC_INDEX_EP2		(0x02) // ??
@@ -148,6 +147,5 @@
 #define S3C2410_UDC_MAXP_16		(1<<1)
 #define S3C2410_UDC_MAXP_32		(1<<2)
 #define S3C2410_UDC_MAXP_64		(1<<3)
-
 
 #endif

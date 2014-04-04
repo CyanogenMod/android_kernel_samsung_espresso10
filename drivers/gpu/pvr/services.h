@@ -35,7 +35,6 @@ extern "C" {
 #include "servicesext.h"
 #include "pdumpdefs.h"
 
-
 #define PVRSRV_4K_PAGE_SIZE		4096UL
 
 #define PVRSRV_MAX_CMD_SIZE		1024
@@ -56,7 +55,6 @@ extern "C" {
 #define PVRSRV_MEM_RAM_BACKED_ALLOCATION	(1U<<9)
 #define PVRSRV_MEM_NO_RESMAN				(1U<<10)
 #define PVRSRV_MEM_EXPORTED					(1U<<11)
-
 
 #define PVRSRV_HAP_CACHED					(1U<<12)
 #define PVRSRV_HAP_UNCACHED					(1U<<13)
@@ -88,9 +86,7 @@ extern "C" {
 #define PVRSRV_SEVERE_LOSS_OF_CONTEXT			1
 #define PVRSRV_PRE_STATE_CHANGE_MASK			0x80
 
-
 #define PVRSRV_DEFAULT_DEV_COOKIE			(1)
-
 
 #define PVRSRV_MISC_INFO_TIMER_PRESENT				(1U<<0)
 #define PVRSRV_MISC_INFO_CLOCKGATE_PRESENT			(1U<<1)
@@ -106,7 +102,6 @@ extern "C" {
 #define PVRSRV_PDUMP_MAX_FILENAME_SIZE			20
 #define PVRSRV_PDUMP_MAX_COMMENT_SIZE			200
 
-
 #define PVRSRV_CHANGEDEVMEM_ATTRIBS_CACHECOHERENT		0x00000001
 
 #define PVRSRV_MAPEXTMEMORY_FLAGS_ALTERNATEVA			0x00000001
@@ -119,7 +114,6 @@ extern "C" {
 #define SRV_FLAGS_PDUMP_ACTIVE	0x2
 
 #define PVRSRV_PDUMP_FLAGS_CONTINUOUS		0x1
-
 
 typedef enum _PVRSRV_DEVICE_TYPE_
 {
@@ -135,7 +129,6 @@ typedef enum _PVRSRV_DEVICE_TYPE_
 	PVRSRV_DEVICE_TYPE_SGX				= 7,
 
 	PVRSRV_DEVICE_TYPE_VGX				= 8,
-
 
 	PVRSRV_DEVICE_TYPE_EXT				= 9,
 
@@ -175,7 +168,6 @@ typedef enum
 
 } IMG_MODULE_ID;
 
-
 #define APPHINT_MAX_STRING_SIZE	256
 
 typedef enum
@@ -186,7 +178,6 @@ typedef enum
 	IMG_INT_TYPE		,
 	IMG_FLAG_TYPE
 }IMG_DATA_TYPE;
-
 
 typedef struct _PVRSRV_DEV_DATA_ *PPVRSRV_DEV_DATA;
 
@@ -200,7 +191,6 @@ typedef struct _PVRSRV_DEVICE_IDENTIFIER_
 
 } PVRSRV_DEVICE_IDENTIFIER;
 
-
 typedef struct _PVRSRV_CLIENT_DEV_DATA_
 {
 	IMG_UINT32		ui32NumDevices;
@@ -210,7 +200,6 @@ typedef struct _PVRSRV_CLIENT_DEV_DATA_
 
 } PVRSRV_CLIENT_DEV_DATA;
 
-
 typedef struct _PVRSRV_CONNECTION_
 {
 	IMG_HANDLE hServices;
@@ -218,7 +207,6 @@ typedef struct _PVRSRV_CONNECTION_
 	PVRSRV_CLIENT_DEV_DATA	sClientDevData;
 	IMG_UINT32 ui32SrvFlags;
 }PVRSRV_CONNECTION;
-
 
 typedef struct _PVRSRV_DEV_DATA_
 {
@@ -261,31 +249,17 @@ typedef struct _PVRSRV_CLIENT_MEM_INFO_
 
 	IMG_PVOID				pvLinAddr;
 
-
 	IMG_PVOID				pvLinAddrKM;
-
 
 	IMG_DEV_VIRTADDR		sDevVAddr;
 
-
-
-
-
-
 	IMG_CPU_PHYADDR			sCpuPAddr;
-
 
 	IMG_UINT32				ui32Flags;
 
-
-
-
 	IMG_UINT32				ui32ClientFlags;
 
-
 	IMG_SIZE_T				uAllocSize;
-
-
 
 	struct _PVRSRV_CLIENT_SYNC_INFO_	*psClientSyncInfo;
 
@@ -293,18 +267,14 @@ typedef struct _PVRSRV_CLIENT_MEM_INFO_
 
 	IMG_SID								hMappingInfo;
 
-
 	IMG_SID								hKernelMemInfo;
-
 
 	IMG_SID								hResItem;
 #else
 
 	IMG_HANDLE							hMappingInfo;
 
-
 	IMG_HANDLE							hKernelMemInfo;
-
 
 	IMG_HANDLE							hResItem;
 #endif
@@ -319,13 +289,9 @@ typedef struct _PVRSRV_CLIENT_MEM_INFO_
 	#endif
 #endif
 
-
-
-
 	struct _PVRSRV_CLIENT_MEM_INFO_		*psNext;
 
 } PVRSRV_CLIENT_MEM_INFO, *PPVRSRV_CLIENT_MEM_INFO;
-
 
 #define PVRSRV_MAX_CLIENT_HEAPS (32)
 typedef struct _PVRSRV_HEAP_INFO_
@@ -341,9 +307,6 @@ typedef struct _PVRSRV_HEAP_INFO_
 	IMG_UINT32			ui32Attribs;
 	IMG_UINT32			ui32XTileStride;
 }PVRSRV_HEAP_INFO;
-
-
-
 
 typedef struct _PVRSRV_EVENTOBJECT_
 {
@@ -370,7 +333,6 @@ typedef struct _PVRSRV_MISC_INFO_
 	IMG_UINT32	ui32StateRequest;
 	IMG_UINT32	ui32StatePresent;
 
-
 	IMG_VOID	*pvSOCTimerRegisterKM;
 	IMG_VOID	*pvSOCTimerRegisterUM;
 #if defined (SUPPORT_SID_INTERFACE)
@@ -381,14 +343,11 @@ typedef struct _PVRSRV_MISC_INFO_
 	IMG_HANDLE	hSOCTimerRegisterMappingInfo;
 #endif
 
-
 	IMG_VOID	*pvSOCClockGateRegs;
 	IMG_UINT32	ui32SOCClockGateRegsSize;
 
-
 	IMG_CHAR	*pszMemoryStr;
 	IMG_UINT32	ui32MemoryStrLen;
-
 
 	PVRSRV_EVENTOBJECT	sGlobalEventObject;
 #if defined (SUPPORT_SID_INTERFACE)
@@ -397,18 +356,14 @@ typedef struct _PVRSRV_MISC_INFO_
 	IMG_HANDLE			hOSGlobalEvent;
 #endif
 
-
 	IMG_UINT32	aui32DDKVersion[4];
-
 
 	struct
 	{
 
 		IMG_BOOL bDeferOp;
 
-
 		PVRSRV_MISC_INFO_CPUCACHEOP_TYPE eCacheOpType;
-
 
 #if !defined (SUPPORT_SID_INTERFACE)
 		union
@@ -416,11 +371,9 @@ typedef struct _PVRSRV_MISC_INFO_
 
 			PVRSRV_CLIENT_MEM_INFO *psClientMemInfo;
 
-
 			struct _PVRSRV_KERNEL_MEM_INFO_ *psKernelMemInfo;
 		} u;
 #endif
-
 
 		IMG_VOID *pvBaseVAddr;
 		IMG_UINT32	ui32Length;
@@ -432,7 +385,6 @@ typedef struct _PVRSRV_MISC_INFO_
 		IMG_UINT32 ui32Stride;
 	} sCacheOpCtl;
 
-
 	struct
 	{
 
@@ -442,11 +394,9 @@ typedef struct _PVRSRV_MISC_INFO_
 
 			PVRSRV_CLIENT_MEM_INFO *psClientMemInfo;
 
-
 			struct _PVRSRV_KERNEL_MEM_INFO_ *psKernelMemInfo;
 		} u;
 #endif
-
 
 		IMG_UINT32 ui32RefCount;
 	} sGetRefCountCtl;
@@ -454,7 +404,6 @@ typedef struct _PVRSRV_MISC_INFO_
 
 typedef struct _PVRSRV_SYNC_TOKEN_
 {
-
 
 	struct
 	{
@@ -468,7 +417,6 @@ typedef struct _PVRSRV_SYNC_TOKEN_
 		IMG_UINT32 ui32ReadOps2PendingSnapshot;
 	} sPrivate;
 } PVRSRV_SYNC_TOKEN;
-
 
 typedef enum _PVRSRV_CLIENT_EVENT_
 {
@@ -564,7 +512,6 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVGetDeviceMemHeapInfo(IMG_CONST PVRSRV_DEV_DATA *
 	#define PVRSRVAllocDeviceMem_log(psDevData, hDevMemHeap, ui32Attribs, ui32Size, ui32Alignment, ppsMemInfo, logStr) \
 		PVRSRVAllocDeviceMem(psDevData, hDevMemHeap, ui32Attribs, ui32Size, ui32Alignment, ppsMemInfo)
 #endif
-
 
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVAllocDeviceMem2(IMG_CONST PVRSRV_DEV_DATA	*psDevData,
@@ -758,7 +705,6 @@ IMG_IMPORT IMG_BOOL PVRSRVTestAllOpsNotComplete(PPVRSRV_CLIENT_MEM_INFO psMemInf
 IMG_IMPORT PVRSRV_SYNCVAL PVRSRVGetPendingOpSyncVal(PPVRSRV_CLIENT_MEM_INFO psMemInfo,
 	PVRSRV_SYNCVAL_MODE eMode);
 
-
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVEnumerateDeviceClass(IMG_CONST PVRSRV_CONNECTION *psConnection,
 													PVRSRV_DEVICE_CLASS DeviceClass,
@@ -939,7 +885,6 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVGetBCBuffer(IMG_HANDLE hDevice,
 #endif
 	);
 
-
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpInit(IMG_CONST PVRSRV_CONNECTION *psConnection);
 
@@ -1107,7 +1052,6 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVPDumpRegRead(IMG_CONST PVRSRV_DEV_DATA *psDevDat
 											IMG_UINT32 ui32Size,
 											IMG_UINT32 ui32PDumpFlags);
 
-
 IMG_IMPORT
 IMG_BOOL IMG_CALLCONV PVRSRVPDumpIsCapturingTest(IMG_CONST PVRSRV_CONNECTION *psConnection);
 
@@ -1125,10 +1069,6 @@ IMG_IMPORT IMG_VOID PVRSRVWaitus (IMG_UINT32 ui32Timeus);
 IMG_IMPORT IMG_VOID PVRSRVReleaseThreadQuanta (void);
 IMG_IMPORT IMG_UINT32 IMG_CALLCONV PVRSRVGetCurrentProcessID(void);
 IMG_IMPORT IMG_CHAR * IMG_CALLCONV PVRSRVSetLocale(const IMG_CHAR *pszLocale);
-
-
-
-
 
 IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVCreateAppHintState(IMG_MODULE_ID eModuleID,
 														const IMG_CHAR *pszAppName,
@@ -1152,8 +1092,6 @@ IMG_IMPORT IMG_VOID PVRSRVMemSet(IMG_VOID *pvDest, IMG_UINT8 ui8Value, IMG_SIZE_
 struct _PVRSRV_MUTEX_OPAQUE_STRUCT_;
 typedef	struct  _PVRSRV_MUTEX_OPAQUE_STRUCT_ *PVRSRV_MUTEX_HANDLE;
 
-
-
 IMG_IMPORT PVRSRV_ERROR IMG_CALLCONV PVRSRVCreateMutex(PVRSRV_MUTEX_HANDLE *phMutex);
 IMG_IMPORT PVRSRV_ERROR IMG_CALLCONV PVRSRVDestroyMutex(PVRSRV_MUTEX_HANDLE hMutex);
 IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVLockMutex(PVRSRV_MUTEX_HANDLE hMutex);
@@ -1162,13 +1100,10 @@ IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVUnlockMutex(PVRSRV_MUTEX_HANDLE hMutex);
 IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVLockProcessGlobalMutex(void);
 IMG_IMPORT IMG_VOID IMG_CALLCONV PVRSRVUnlockProcessGlobalMutex(void);
 
-
 struct _PVRSRV_SEMAPHORE_OPAQUE_STRUCT_;
 typedef	struct  _PVRSRV_SEMAPHORE_OPAQUE_STRUCT_ *PVRSRV_SEMAPHORE_HANDLE;
 
-
 	#define IMG_SEMAPHORE_WAIT_INFINITE       ((IMG_UINT64)0xFFFFFFFFFFFFFFFFull)
-
 
 #if !defined(USE_CODE)
 
@@ -1212,7 +1147,6 @@ static INLINE IMG_VOID PVRSRVPostSemaphore(PVRSRV_SEMAPHORE_HANDLE hSemaphore, I
 
 #endif
 
-
 #if (defined(DEBUG) && defined(__linux__))
 IMG_IMPORT IMG_PVOID IMG_CALLCONV PVRSRVAllocUserModeMemTracking(IMG_SIZE_T ui32Size, IMG_CHAR *pszFileName, IMG_UINT32 ui32LineNumber);
 
@@ -1249,8 +1183,6 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVDestroySyncInfoModObj(const PVRSRV_CONNECTION *p
 													  IMG_HANDLE hKernelSyncInfoModObj
 #endif
 	);
-
-
 
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVModifyPendingSyncOps(const PVRSRV_CONNECTION *psConnection,
@@ -1315,7 +1247,6 @@ PVRSRV_ERROR IMG_CALLCONV PVRSRVFreeSyncInfo(IMG_CONST PVRSRV_DEV_DATA *psDevDat
 
 IMG_IMPORT
 const IMG_CHAR *PVRSRVGetErrorString(PVRSRV_ERROR eError);
-
 
 #define TIME_NOT_PASSED_UINT32(a,b,c)		(((a) - (b)) < (c))
 

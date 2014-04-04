@@ -196,7 +196,6 @@ enum ext_slave_bus {
 	EXT_SLAVE_BUS_SECONDARY = 1
 };
 
-
 /**
  *  struct ext_slave_platform_data - Platform data for mpu3050 slave devices
  *
@@ -226,7 +225,6 @@ struct ext_slave_platform_data {
 	void *irq_data;
 	void *private_data;
 };
-
 
 struct tFixPntRange {
 	long mantissa;
@@ -314,7 +312,6 @@ struct mpu3050_platform_data {
 	struct ext_slave_platform_data pressure;
 };
 
-
 /*
     Accelerometer
 */
@@ -362,7 +359,6 @@ struct ext_slave_descr *lis331dlh_get_slave_descr(void);
 #define get_accel_slave_descr lis331dlh_get_slave_descr
 #endif
 
-
 #ifdef CONFIG_MPU_SENSORS_LIS3DH_V333	/* ST accelerometer */
 struct ext_slave_descr *lis3dh_get_slave_descr(void);
 #undef get_accel_slave_descr
@@ -394,7 +390,6 @@ struct ext_slave_descr *mma845x_get_slave_descr(void);
 #undef get_accel_slave_descr
 #define get_accel_slave_descr mma845x_get_slave_descr
 #endif
-
 
 /*
     Compass
@@ -467,7 +462,6 @@ struct ext_slave_descr *ams0303_get_slave_descr(void);
 #define get_compass_slave_descr ams0303_get_slave_descr
 #endif
 
-
 /*
     Pressure
 */
@@ -480,4 +474,3 @@ struct ext_slave_descr *bma085_get_slave_descr(void);
 #endif
 
 #endif				/* __MPU_H_ */
-

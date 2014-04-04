@@ -96,7 +96,6 @@
 		trace_hardirqs_off();			\
 	} while (0)
 
-
 #define local_irq_restore(flags)			\
 	do {						\
 		if (raw_irqs_disabled_flags(flags)) {	\
@@ -129,7 +128,6 @@
 		trace_hardirqs_on();		\
 		raw_safe_halt();		\
 	} while (0)
-
 
 #else /* !CONFIG_TRACE_IRQFLAGS_SUPPORT */
 

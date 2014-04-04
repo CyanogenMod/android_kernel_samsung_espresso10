@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
  * Licensed under the GPL
  */
@@ -8,4 +8,3 @@
 
 extern void save_console_flags(void);
 #endif
-

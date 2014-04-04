@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_debug.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -33,6 +33,5 @@
 #define  ATH_DEBUG_SYNC ATH_DEBUG_MAKE_MODULE_MASK(2)
 #define  ATH_DEBUG_DUMP ATH_DEBUG_MAKE_MODULE_MASK(3)
 #define  ATH_DEBUG_IRQ  ATH_DEBUG_MAKE_MODULE_MASK(4)
-
 
 #endif /*HTC_DEBUG_H_*/

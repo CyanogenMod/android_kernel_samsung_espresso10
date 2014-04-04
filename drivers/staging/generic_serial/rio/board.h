@@ -2,7 +2,7 @@
 ** -----------------------------------------------------------------------------
 **
 **  Perle Specialix driver for Linux
-**  Ported from existing RIO Driver for SCO sources. 
+**  Ported from existing RIO Driver for SCO sources.
  *
  *  (C) 1990 - 2000 Specialix International Ltd., Byfleet, Surrey, UK.
  *

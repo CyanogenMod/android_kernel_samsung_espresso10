@@ -1630,7 +1630,6 @@ void *wlc_attach(struct wl_info *wl, u16 vendor, u16 device, uint unit,
 	/* propagate *vars* from BMAC driver to high driver */
 	wlc_bmac_copyfrom_vars(wlc->hw, &pub->vars, &wlc->vars_size);
 
-
 	/* set maximum allowed duty cycle */
 	wlc->tx_duty_cycle_ofdm =
 	    (u16) getintvar(pub->vars, "tx_duty_cycle_ofdm");
@@ -1899,7 +1898,6 @@ static bool wlc_attach_stf_ant_init(struct wlc_info *wlc)
 	return true;
 }
 
-
 static void wlc_timers_deinit(struct wlc_info *wlc)
 {
 	/* free timer state */
@@ -1958,7 +1956,6 @@ uint wlc_detach(struct wlc_info *wlc)
 	wlc_detach_module(wlc);
 
 	/* free other state */
-
 
 #ifdef BCMDBG
 	kfree(wlc->country_ie_override);
@@ -2611,7 +2608,7 @@ int wlc_set_gmode(struct wlc_info *wlc, u8 gmode, bool config)
 
 	/* Set default bss rateset */
 	wlc->default_bss->rateset.count = rs.count;
-	memcpy(wlc->default_bss->rateset.rates, rs.rates, 
+	memcpy(wlc->default_bss->rateset.rates, rs.rates,
 	       sizeof(wlc->default_bss->rateset.rates));
 
 	return ret;
@@ -4818,7 +4815,6 @@ wlc_txfifo(struct wlc_info *wlc, uint fifo, struct sk_buff *p, bool commit,
 
 	if (WLC_WAR16165(wlc))
 		wlc_war16165(wlc, true);
-
 
 	/* Bump up pending count for if not using rpc. If rpc is used, this will be handled
 	 * in wlc_bmac_txfifo()

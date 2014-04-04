@@ -125,7 +125,6 @@ const BYTE TKIP_Sbox_Upper[256] = {
     0x82,0x29,0x5A,0x1E,0x7B,0xA8,0x6D,0x2C
 };
 
-
 //STKIPKeyManagement  sTKIPKeyTable[MAX_TKIP_KEY];
 
 /*---------------------  Static Functions  --------------------------*/
@@ -152,7 +151,6 @@ static unsigned int tkip_sbox(unsigned int index)
     return (left ^ right);
 };
 
-
 static unsigned int rotr1(unsigned int a)
 {
     unsigned int b;
@@ -165,7 +163,6 @@ static unsigned int rotr1(unsigned int a)
     b = b % 65536;
     return b;
 }
-
 
 /*
  * Description: Caculate RC4Key fom TK, TA, and TSC
@@ -221,7 +218,7 @@ void TKIPvMixKey(
         p1k[4] = (p1k[4] + tkip_sbox((p1k[3] ^ (((256*pbyTKey[1+j]) + pbyTKey[j]))) % 65536)) % 65536;
         p1k[4] = (p1k[4] + i) % 65536;
     }
- 
+
     /* Phase 2, Step 1 */
     ppk0 = p1k[0];
     ppk1 = p1k[1];

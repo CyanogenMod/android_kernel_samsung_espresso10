@@ -179,7 +179,6 @@ static void __devinit sis_get_driver(struct agp_bridge_data *bridge)
 	}
 }
 
-
 static int __devinit agp_sis_probe(struct pci_dev *pdev,
 				   const struct pci_device_id *ent)
 {
@@ -189,7 +188,6 @@ static int __devinit agp_sis_probe(struct pci_dev *pdev,
 	cap_ptr = pci_find_capability(pdev, PCI_CAP_ID_AGP);
 	if (!cap_ptr)
 		return -ENODEV;
-
 
 	dev_info(&pdev->dev, "SiS chipset [%04x/%04x]\n",
 		 pdev->vendor, pdev->device);

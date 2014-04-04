@@ -83,7 +83,6 @@
 #define ICH_FLASH_SEG_SIZE_8K		8192
 #define ICH_FLASH_SEG_SIZE_64K		65536
 
-
 #define E1000_ICH_FWSM_RSPCIPHY	0x00000040 /* Reset PHY on PCI Reset */
 /* FW established a valid mode */
 #define E1000_ICH_FWSM_FW_VALID		0x00008000
@@ -1288,7 +1287,6 @@ out:
 
 	return ret_val;
 }
-
 
 /**
  *  e1000_set_mdio_slow_mode_hv - Set slow MDIO access mode

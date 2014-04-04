@@ -36,7 +36,6 @@ struct hdcp hdcp;
 struct hdcp_sha_in sha_input;
 
 /* State machine / workqueue */
-static void hdcp_wq_disable(void);
 static void hdcp_wq_start_authentication(void);
 static void hdcp_wq_check_r0(void);
 static void hdcp_wq_step2_authentication(void);
@@ -111,19 +110,6 @@ static void hdcp_release_dss(void)
 }
 
 /*-----------------------------------------------------------------------------
- * Function: hdcp_wq_disable
- *-----------------------------------------------------------------------------
- */
-static void hdcp_wq_disable(void)
-{
-	printk(KERN_INFO "HDCP: disabled\n");
-
-	hdcp_cancel_work(&hdcp.pending_wq_event);
-	hdcp_lib_disable();
-	hdcp.pending_disable = 0;
-}
-
-/*-----------------------------------------------------------------------------
  * Function: hdcp_wq_start_authentication
  *-----------------------------------------------------------------------------
  */
@@ -194,7 +180,6 @@ static void hdcp_wq_check_r0(void)
 		}
 	}
 }
-
 
 /*-----------------------------------------------------------------------------
  * Function: hdcp_wq_step2_authentication
@@ -462,7 +447,6 @@ static void hdcp_cancel_work(struct delayed_work **work)
 	}
 }
 
-
 /******************************************************************************
  * HDCP callbacks
  *****************************************************************************/
@@ -582,7 +566,6 @@ static void hdcp_irq_cb(int status)
  * HDCP control from ioctl
  *****************************************************************************/
 
-
 /*-----------------------------------------------------------------------------
  * Function: hdcp_enable_ctl
  *-----------------------------------------------------------------------------
@@ -616,7 +599,6 @@ static long hdcp_enable_ctl(void __user *argp)
 	/* Post event to workqueue */
 	if (hdcp_submit_work(HDCP_ENABLE_CTL, 0) == 0)
 		return -EFAULT;
-
 
 	return 0;
 }
@@ -835,7 +817,6 @@ long hdcp_ioctl(struct file *fd, unsigned int cmd, unsigned long arg)
 		return -ENOTTY;
 	} /* End switch */
 }
-
 
 /******************************************************************************
  * HDCP driver init/exit

@@ -44,7 +44,6 @@
 #ifndef __HCP_PHYP_H__
 #define __HCP_PHYP_H__
 
-
 /*
  * eHCA page (mapped into memory)
  * resource to access eHCA register pages in CPU address space

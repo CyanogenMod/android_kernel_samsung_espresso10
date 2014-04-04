@@ -143,7 +143,6 @@ extern void warning(const char *err, ...) __attribute__((format (printf, 1, 2)))
 		    __stringify(cnd) "\n");				\
 	} while (0)
 
-
 extern void set_die_routine(void (*routine)(const char *err, va_list params) NORETURN);
 
 extern int prefixcmp(const char *str, const char *prefix);
@@ -177,7 +176,6 @@ static inline char *gitstrchrnul(const char *s, int c)
  */
 extern char *xstrdup(const char *str);
 extern void *xrealloc(void *ptr, size_t size) __attribute__((weak));
-
 
 static inline void *zalloc(size_t size)
 {

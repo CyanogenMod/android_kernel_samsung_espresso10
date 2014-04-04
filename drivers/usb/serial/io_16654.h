@@ -29,7 +29,6 @@
 	// Driver must not access registers that affect operation of the
 	// the EdgePort firmware -- that includes THR, RHR, IER, FCR.
 
-
 #define THR			0	// ! Transmit Holding Register (Write)
 #define RDR			0	// ! Receive Holding Register (Read)
 #define IER			1	// ! Interrupt Enable Register
@@ -67,7 +66,6 @@
 #define IER_CTS			0x80	// Enable CTS interrupt
 #define IER_ENABLE_ALL		0xFF	// Enable all ints
 
-
 #define FCR_FIFO_EN		0x01	// Enable FIFOs
 #define FCR_RXCLR		0x02	// Reset Rx FIFO
 #define FCR_TXCLR		0x04	// Reset Tx FIFO
@@ -83,7 +81,6 @@
 #define FCR_RX_LEVEL_56		0x80	// Rx FIFO Level = 56 bytes
 #define FCR_RX_LEVEL_60		0xC0	// Rx FIFO Level = 60 bytes
 
-
 #define ISR_INT_MDM_STATUS	0x00	// Modem status int pending
 #define ISR_INT_NONE		0x01	// No interrupt pending
 #define ISR_INT_TXRDY		0x02	// Tx ready int pending
@@ -94,7 +91,6 @@
 #define ISR_INT_RTS_CTS		0x20	// RTS/CTS change int pending
 #define ISR_FIFO_ENABLED	0xC0	// Bits set if FIFOs enabled
 #define ISR_INT_BITS_MASK	0x3E	// Mask to isolate valid int causes
-
 
 #define LCR_BITS_5		0x00	// 5 bits/char
 #define LCR_BITS_6		0x01	// 6 bits/char
@@ -121,7 +117,6 @@
 					// and also the '654-only registers
 					// EFR, XON1, XON2, XOFF1, XOFF2
 
-
 #define MCR_DTR			0x01	// Assert DTR
 #define MCR_RTS			0x02	// Assert RTS
 #define MCR_OUT1		0x04	// Loopback only: Sets state of RI
@@ -130,7 +125,6 @@
 #define MCR_XON_ANY		0x20	// Enable any char to exit XOFF mode
 #define MCR_IR_ENABLE		0x40	// Enable IrDA functions
 #define MCR_BRG_DIV_4		0x80	// Divide baud rate clk by /4 instead of /1
-
 
 #define LSR_RX_AVAIL		0x01	// Rx data available
 #define LSR_OVER_ERR		0x02	// Rx overrun
@@ -141,7 +135,6 @@
 #define LSR_TX_ALL_EMPTY	0x40	// Tx Fifo and shift register empty
 #define LSR_FIFO_ERR		0x80	// Rx Fifo contains at least 1 erred char
 
-
 #define EDGEPORT_MSR_DELTA_CTS	0x01	// CTS changed from last read
 #define EDGEPORT_MSR_DELTA_DSR	0x02	// DSR changed from last read
 #define EDGEPORT_MSR_DELTA_RI	0x04	// RI  changed from 0 -> 1
@@ -150,8 +143,6 @@
 #define EDGEPORT_MSR_DSR	0x20	// Current state of DSR
 #define EDGEPORT_MSR_RI		0x40	// Current state of RI
 #define EDGEPORT_MSR_CD		0x80	// Current state of CD
-
-
 
 					//	Tx		Rx
 					//-------------------------------
@@ -184,7 +175,6 @@
 #define EFR_RX_FC_X2		0x01	// Receiver compares Xon2/Xoff2
 #define EFR_RX_FC_X1_2		0x03	// Receiver compares Xon1&2/Xoff1&2
 
-
 #define EFR_SWFC_MASK		0x0F	// Mask for software flow control field
 #define EFR_ENABLE_16654	0x10	// Enable 16C654 features
 #define EFR_SPEC_DETECT		0x20	// Enable special character detect interrupt
@@ -192,4 +182,3 @@
 #define EFR_AUTO_CTS		0x80	// Use CTS for Tx flow control
 
 #endif	// if !defined(_16654_H)
-

@@ -30,14 +30,12 @@
 #include "xfs_error.h"
 #include "xfs_trace.h"
 
-
 kmem_zone_t	*xfs_buf_item_zone;
 
 static inline struct xfs_buf_log_item *BUF_ITEM(struct xfs_log_item *lip)
 {
 	return container_of(lip, struct xfs_buf_log_item, bli_item);
 }
-
 
 #ifdef XFS_TRANS_DEBUG
 /*
@@ -672,7 +670,6 @@ static struct xfs_item_ops xfs_buf_item_ops = {
 	.iop_committing = xfs_buf_item_committing
 };
 
-
 /*
  * Allocate a new buf log item to go with the given buffer.
  * Set the buffer's b_fsprivate field to point to the new
@@ -747,7 +744,6 @@ xfs_buf_item_init(
 	}
 	XFS_BUF_SET_FSPRIVATE(bp, bip);
 }
-
 
 /*
  * Mark bytes first through last inclusive as dirty in the buf
@@ -838,7 +834,6 @@ xfs_buf_item_log(
 	xfs_buf_item_log_debug(bip, first, last);
 }
 
-
 /*
  * Return 1 if the buffer has some data that has been logged (at any
  * point, not just the current transaction) and 0 if not.
@@ -886,7 +881,6 @@ xfs_buf_item_relse(
 	xfs_buf_rele(bp);
 	xfs_buf_item_free(bip);
 }
-
 
 /*
  * Add the given log item with its callback to the list of callbacks

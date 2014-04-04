@@ -3,13 +3,13 @@
  * of the SiliconBackplane-based Broadcom chips.
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -39,7 +39,6 @@
 STATIC uint32
 get_asd(si_t *sih, uint32 *eromptr, uint sp, uint ad, uint st,
 	uint32 *addrl, uint32 *addrh, uint32 *sizel, uint32 *sizeh);
-
 
 /* EROM parsing */
 
@@ -341,7 +340,6 @@ ai_setcoreidx(si_t *sih, uint coreidx)
 		sii->curwrap = sii->common_info->wrappers[coreidx];
 		break;
 
-
 	case SPI_BUS:
 	case SDIO_BUS:
 		sii->curmap = regs = (void *)((uintptr)addr);
@@ -621,7 +619,6 @@ ai_core_reset(si_t *sih, uint32 bits, uint32 resetbits)
 	dummy = R_REG(sii->osh, &ai->ioctrl);
 	OSL_DELAY(1);
 }
-
 
 void
 ai_core_cflags_wo(si_t *sih, uint32 mask, uint32 val)

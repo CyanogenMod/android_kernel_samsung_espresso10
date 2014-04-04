@@ -1093,7 +1093,6 @@ static void setcontrast(struct gspca_dev *gspca_dev)
 	sensor_write1(gspca_dev, 0x1c, sd->contrast);
 }
 
-
 static int sd_setbrightness(struct gspca_dev *gspca_dev, __s32 val)
 {
 	struct sd *sd = (struct sd *) gspca_dev;
@@ -1157,7 +1156,6 @@ static int sd_setcontrast(struct gspca_dev *gspca_dev, __s32 val)
 		setcontrast(gspca_dev);
 	return 0;
 }
-
 
 static int sd_getcontrast(struct gspca_dev *gspca_dev, __s32 *val)
 {

@@ -29,7 +29,6 @@
 static const u32 rtl8180_rates[] = {1000000,2000000,5500000,11000000,
 	6000000,9000000,12000000,18000000,24000000,36000000,48000000,54000000};
 
-
 #ifndef ENETDOWN
 #define ENETDOWN 1
 #endif
@@ -42,7 +41,6 @@ static int r8192_wx_get_freq(struct net_device *dev,
 	return ieee80211_wx_get_freq(priv->ieee80211,a,wrqu,b);
 }
 
-
 static int r8192_wx_get_mode(struct net_device *dev, struct iw_request_info *a,
 			     union iwreq_data *wrqu, char *b)
 {
@@ -51,8 +49,6 @@ static int r8192_wx_get_mode(struct net_device *dev, struct iw_request_info *a,
 	return ieee80211_wx_get_mode(priv->ieee80211,a,wrqu,b);
 }
 
-
-
 static int r8192_wx_get_rate(struct net_device *dev,
 			     struct iw_request_info *info,
 			     union iwreq_data *wrqu, char *extra)
@@ -60,8 +56,6 @@ static int r8192_wx_get_rate(struct net_device *dev,
 	struct r8192_priv *priv = ieee80211_priv(dev);
 	return ieee80211_wx_get_rate(priv->ieee80211,info,wrqu,extra);
 }
-
-
 
 static int r8192_wx_set_rate(struct net_device *dev,
 			     struct iw_request_info *info,
@@ -81,7 +75,6 @@ static int r8192_wx_set_rate(struct net_device *dev,
 
 	return ret;
 }
-
 
 static int r8192_wx_set_rts(struct net_device *dev,
 			     struct iw_request_info *info,
@@ -171,7 +164,6 @@ static int r8192_wx_force_reset(struct net_device *dev,
 	return 0;
 
 }
-
 
 static int r8192_wx_set_crcmon(struct net_device *dev,
 			       struct iw_request_info *info,
@@ -341,7 +333,6 @@ static int rtl8180_wx_get_range(struct net_device *dev,
 //	range->min_r_time;	/* Minimal retry lifetime */
 //	range->max_r_time;	/* Maximal retry lifetime */
 
-
 	for (i = 0, val = 0; i < 14; i++) {
 
 		// Include only legal frequencies for some countries
@@ -371,7 +362,6 @@ static int rtl8180_wx_get_range(struct net_device *dev,
 	tmp->scan_capa = 0x01;
 	return 0;
 }
-
 
 static int r8192_wx_set_scan(struct net_device *dev, struct iw_request_info *a,
 			     union iwreq_data *wrqu, char *b)
@@ -442,7 +432,6 @@ static int r8192_wx_set_scan(struct net_device *dev, struct iw_request_info *a,
 	return ret;
 }
 
-
 static int r8192_wx_get_scan(struct net_device *dev, struct iw_request_info *a,
 			     union iwreq_data *wrqu, char *b)
 {
@@ -490,9 +479,6 @@ static int r8192_wx_set_essid(struct net_device *dev,
 	return ret;
 }
 
-
-
-
 static int r8192_wx_get_essid(struct net_device *dev,
 			      struct iw_request_info *a,
 			      union iwreq_data *wrqu, char *b)
@@ -508,7 +494,6 @@ static int r8192_wx_get_essid(struct net_device *dev,
 
 	return ret;
 }
-
 
 static int r8192_wx_set_freq(struct net_device *dev, struct iw_request_info *a,
 			     union iwreq_data *wrqu, char *b)
@@ -535,7 +520,6 @@ static int r8192_wx_get_name(struct net_device *dev,
 	return ieee80211_wx_get_name(priv->ieee80211, info, wrqu, extra);
 }
 
-
 static int r8192_wx_set_frag(struct net_device *dev,
 			     struct iw_request_info *info,
 			     union iwreq_data *wrqu, char *extra)
@@ -558,7 +542,6 @@ static int r8192_wx_set_frag(struct net_device *dev,
 	return 0;
 }
 
-
 static int r8192_wx_get_frag(struct net_device *dev,
 			     struct iw_request_info *info,
 			     union iwreq_data *wrqu, char *extra)
@@ -571,7 +554,6 @@ static int r8192_wx_get_frag(struct net_device *dev,
 
 	return 0;
 }
-
 
 static int r8192_wx_set_wap(struct net_device *dev,
 			 struct iw_request_info *info,
@@ -601,7 +583,6 @@ static int r8192_wx_set_wap(struct net_device *dev,
 
 }
 
-
 static int r8192_wx_get_wap(struct net_device *dev,
 			    struct iw_request_info *info,
 			    union iwreq_data *wrqu, char *extra)
@@ -610,7 +591,6 @@ static int r8192_wx_get_wap(struct net_device *dev,
 
 	return ieee80211_wx_get_wap(priv->ieee80211,info,wrqu,extra);
 }
-
 
 static int r8192_wx_get_enc(struct net_device *dev,
 			    struct iw_request_info *info,
@@ -704,7 +684,6 @@ static int r8192_wx_set_enc(struct net_device *dev,
 	return ret;
 }
 
-
 static int r8192_wx_set_scan_type(struct net_device *dev, struct iw_request_info *aa, union
  iwreq_data *wrqu, char *p){
 
@@ -716,8 +695,6 @@ static int r8192_wx_set_scan_type(struct net_device *dev, struct iw_request_info
 
 	return 1;
 }
-
-
 
 static int r8192_wx_set_retry(struct net_device *dev,
 				struct iw_request_info *info,
@@ -781,7 +758,6 @@ static int r8192_wx_get_retry(struct net_device *dev,
 {
 	struct r8192_priv *priv = ieee80211_priv(dev);
 
-
 	wrqu->retry.disabled = 0; /* can't be disabled */
 
 	if ((wrqu->retry.flags & IW_RETRY_TYPE) ==
@@ -797,7 +773,6 @@ static int r8192_wx_get_retry(struct net_device *dev,
 	}
 	//DMESG("returning %d",wrqu->retry.value);
 
-
 	return 0;
 }
 
@@ -811,7 +786,6 @@ static int r8192_wx_get_sens(struct net_device *dev,
 	wrqu->sens.value = priv->sens;
 	return 0;
 }
-
 
 static int r8192_wx_set_sens(struct net_device *dev,
 				struct iw_request_info *info,
@@ -914,7 +888,6 @@ static int r8192_wx_set_enc_ext(struct net_device *dev,
 			setKey(priv, 4, idx, alg,
 			       (u8*)ieee->ap_mac_addr, 0, key);
 		}
-
 
 	}
 
@@ -1019,7 +992,6 @@ static int r8192_wx_adapter_power_status(struct net_device *dev,
 
 }
 
-
 static iw_handler r8192_wx_handlers[] =
 {
         NULL,                     /* SIOCSIWCOMMIT */
@@ -1081,7 +1053,6 @@ static iw_handler r8192_wx_handlers[] =
 
 };
 
-
 static const struct iw_priv_args r8192_private_args[] = {
 
 	{
@@ -1112,7 +1083,6 @@ static const struct iw_priv_args r8192_private_args[] = {
 	}
 
 };
-
 
 static iw_handler r8192_private_handler[] = {
 	r8192_wx_set_crcmon,   /*SIOCIWSECONDPRIV*/
@@ -1150,7 +1120,6 @@ static struct iw_statistics *r8192_get_wireless_stats(struct net_device *dev)
 	wstats->qual.updated = IW_QUAL_ALL_UPDATED | IW_QUAL_DBM;
 	return wstats;
 }
-
 
 struct iw_handler_def  r8192_wx_handlers_def={
 	.standard = r8192_wx_handlers,

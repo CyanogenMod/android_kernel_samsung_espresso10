@@ -63,7 +63,6 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR ("Hans-Frieder Vogt <hfvogt@gmx.net>");
 MODULE_DESCRIPTION("nForce2/3/4/5xx SMBus driver");
 
-
 struct nforce2_smbus {
 	struct i2c_adapter adapter;
 	int base;
@@ -72,14 +71,12 @@ struct nforce2_smbus {
 	int can_abort;
 };
 
-
 /*
  * nVidia nForce2 SMBus control register definitions
  * (Newer incarnations use standard BARs 4 and 5 instead)
  */
 #define NFORCE_PCI_SMB1	0x50
 #define NFORCE_PCI_SMB2	0x54
-
 
 /*
  * ACPI 2.0 chapter 13 SMBus 2.0 EC register model
@@ -292,7 +289,6 @@ static s32 nforce2_access(struct i2c_adapter * adap, u16 addr,
 	return 0;
 }
 
-
 static u32 nforce2_func(struct i2c_adapter *adapter)
 {
 	/* other functionality might be possible, but is not tested */
@@ -307,7 +303,6 @@ static struct i2c_algorithm smbus_algorithm = {
 	.smbus_xfer	= nforce2_access,
 	.functionality	= nforce2_func,
 };
-
 
 static const struct pci_device_id nforce2_ids[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_NVIDIA, PCI_DEVICE_ID_NVIDIA_NFORCE2_SMBUS) },
@@ -328,7 +323,6 @@ static const struct pci_device_id nforce2_ids[] = {
 };
 
 MODULE_DEVICE_TABLE (pci, nforce2_ids);
-
 
 static int __devinit nforce2_probe_smb (struct pci_dev *dev, int bar,
 	int alt_reg, struct nforce2_smbus *smbus, const char *name)
@@ -381,7 +375,6 @@ static int __devinit nforce2_probe_smb (struct pci_dev *dev, int bar,
 	return 0;
 }
 
-
 static int __devinit nforce2_probe(struct pci_dev *dev, const struct pci_device_id *id)
 {
 	struct nforce2_smbus *smbuses;
@@ -429,7 +422,6 @@ static int __devinit nforce2_probe(struct pci_dev *dev, const struct pci_device_
 	return 0;
 }
 
-
 static void __devexit nforce2_remove(struct pci_dev *dev)
 {
 	struct nforce2_smbus *smbuses = pci_get_drvdata(dev);
@@ -465,4 +457,3 @@ static void __exit nforce2_exit(void)
 
 module_init(nforce2_init);
 module_exit(nforce2_exit);
-

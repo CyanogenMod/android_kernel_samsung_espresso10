@@ -24,7 +24,6 @@
 #include <linux/dvb/frontend.h>
 #include "dvb_frontend.h"
 
-
 static int debug;
 module_param(debug, int, 0644);
 MODULE_PARM_DESC(debug, "enable verbose debug messages");
@@ -812,7 +811,6 @@ check_device:
 		  "firmware version %d.%d\n",
 		  hwmodel, (version & 0xf000) >> 12, (version & 0xf00) >> 8,
 		  (version & 0xf0) >> 4, version & 0xf);
-
 
 	if (priv->ctrl.read_not_reliable)
 		goto read_not_reliable;

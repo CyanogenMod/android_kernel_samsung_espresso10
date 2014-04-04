@@ -1236,5 +1236,4 @@ int init_flow_control_params(u32 automatic_flow_control_mode,
 		u32 __iomem *upsmr_register, u32 __iomem *uempr_register,
 		u32 __iomem *maccfg1_register);
 
-
 #endif				/* __UCC_GETH_H__ */

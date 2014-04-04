@@ -33,7 +33,6 @@
 #define OMAP44XX_PRM_REGADDR(inst, reg)				\
 	OMAP2_L4_IO_ADDRESS(OMAP4430_PRM_BASE +	(inst) + (reg))
 
-
 /* PRM instances */
 #define OMAP4430_PRM_OCP_SOCKET_INST	0x0000
 #define OMAP4430_PRM_CKGEN_INST		0x0100
@@ -78,7 +77,6 @@
 #define OMAP4_RM_RSTTIME				0x0008
 #define OMAP4_PM_PWSTCTRL				0x0000
 #define OMAP4_PM_PWSTST					0x0004
-
 
 /* PRM */
 

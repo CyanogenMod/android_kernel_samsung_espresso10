@@ -263,7 +263,6 @@ static void ptd_write(void __iomem *base, u32 ptd_offset, u32 slot,
 							sizeof(ptd->dw0));
 }
 
-
 /* memory management of the 60kb on the chip from 0x1000 to 0xffff */
 static void init_memory(struct isp1760_hcd *priv)
 {
@@ -1845,7 +1844,6 @@ static int isp1760_hub_control(struct usb_hcd *hcd, u16 typeReq,
 		/* wPortChange bits */
 		if (temp & PORT_CSC)
 			status |= USB_PORT_STAT_C_CONNECTION << 16;
-
 
 		/* whoever resumes must GetPortStatus to complete it!! */
 		if (temp & PORT_RESUME) {

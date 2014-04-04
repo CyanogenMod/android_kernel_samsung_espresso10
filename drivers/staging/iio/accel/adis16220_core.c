@@ -475,7 +475,6 @@ static ssize_t adis16220_adc2_bin_read(struct file *filp, struct kobject *kobj,
 					ADIS16220_CAPT_BUF2);
 }
 
-
 static struct bin_attribute adc2_bin = {
 	.attr = {
 		.name = "in1_bin",

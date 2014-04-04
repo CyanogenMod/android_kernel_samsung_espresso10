@@ -302,7 +302,6 @@ static int upload_firmware(struct zd_usb *usb)
 			"actual device id\n", fw_bcdDevice);
 	}
 
-
 	r = request_fw_file(&uph_fw,
 		get_fw_name(usb, fw_name, sizeof(fw_name), "uphr"),
 		&udev->dev);

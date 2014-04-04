@@ -21,7 +21,6 @@
 #define DRIVER_AUTHOR "Thomas Hergenhahn@web.de http://libnodave.sf.net"
 #define DRIVER_DESC "Driver for Siemens USB/MPI adapter"
 
-
 static const struct usb_device_id id_table[] = {
 	/* Vendor and product id for 6ES7-972-0CB20-0XA0 */
 	{ USB_DEVICE(0x908, 0x0004) },

@@ -173,7 +173,6 @@ struct nes_timer_entry {
 #define NES_CM_DEF_LOCAL_ID2 0xb807
 #define	MAX_CM_BUFFER	(IETF_MPA_FRAME_SIZE + IETF_MAX_PRIV_DATA_LEN)
 
-
 typedef u32 nes_addr_t;
 
 #define nes_cm_tsa_context nes_qp_context
@@ -213,7 +212,6 @@ enum nes_tcpip_pkt_type {
 	NES_PKT_TYPE_RST
 };
 
-
 /* type of nes connection */
 enum nes_cm_conn_type {
 	NES_CM_IWARP_CONN_TYPE,
@@ -242,7 +240,6 @@ struct nes_cm_tcp_context {
 	struct nes_cm_tsa_context tsa_cntxt;
 	struct timeval            sent_ts;
 };
-
 
 enum nes_cm_listener_state {
 	NES_CM_LISTENER_PASSIVE_STATE=1,
@@ -384,7 +381,6 @@ struct nes_cm_core {
 
 	struct nes_cm_node      *current_listen_node;
 };
-
 
 #define NES_CM_SET_PKT_SIZE        (1 << 1)
 #define NES_CM_SET_FREE_PKT_Q_SIZE (1 << 2)

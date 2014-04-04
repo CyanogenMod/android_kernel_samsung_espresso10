@@ -49,4 +49,3 @@ ENTRY(__aeabi_ulcmp)
 ENDPROC(__aeabi_ulcmp)
 
 #endif
-

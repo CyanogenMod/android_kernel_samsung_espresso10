@@ -152,7 +152,6 @@ if ((do_hd = (x)) != NULL) \
 else \
 	del_timer(&device_timer);
 
-
 #if (HD_DELAY > 0)
 
 #include <asm/i8253.h>

@@ -73,7 +73,6 @@
 #define ATAPI_OFFSET_ULTRA_TIM_2	0x68
 #define ATAPI_OFFSET_ULTRA_TIM_3	0x6c
 
-
 #define ATAPI_GET_CONTROL(base)\
 	bfin_read16(base + ATAPI_OFFSET_CONTROL)
 #define ATAPI_SET_CONTROL(base, val)\
@@ -243,7 +242,6 @@ static const u32 udma_tdvsmin[]  = { 70,  48,  31,  20,  7,   5  };
 static const u32 udma_tenvmax[]  = { 70,  70,  70,  55,  55,  50 };
 static const u32 udma_trpmin[]   = { 160, 125, 100, 100, 100, 85 };
 static const u32 udma_tmin[]     = { 5,   5,   5,   5,   3,   3  };
-
 
 static const u32 udma_tmlimin = 20;
 static const u32 udma_tzahmin = 20;
@@ -1412,7 +1410,6 @@ static irqreturn_t bfin_ata_interrupt(int irq, void *dev_instance)
 
 	return IRQ_RETVAL(handled);
 }
-
 
 static struct scsi_host_template bfin_sht = {
 	ATA_BASE_SHT(DRV_NAME),

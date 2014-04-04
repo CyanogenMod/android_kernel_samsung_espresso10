@@ -878,7 +878,6 @@
 #define ARTCSR0_ACK_CTS_2MBS		FIELD32(0x00ff0000)
 #define ARTCSR0_ACK_CTS_1MBS		FIELD32(0xff000000)
 
-
 /*
  * ARTCSR1: OFDM ACK/CTS payload consumed time for 6/9/12/18 mbps.
  */

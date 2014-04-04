@@ -232,5 +232,4 @@ static inline void via_write_misc_reg_mask(u8 data, u8 mask)
 	outb((data & mask) | (old & ~mask), VIA_MISC_REG_WRITE);
 }
 
-
 #endif /* __VIA_CORE_H__ */

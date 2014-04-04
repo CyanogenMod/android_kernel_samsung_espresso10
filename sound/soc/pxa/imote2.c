@@ -1,4 +1,3 @@
-
 #include <linux/module.h>
 #include <sound/soc.h>
 

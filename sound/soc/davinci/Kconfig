@@ -83,4 +83,3 @@ config  SND_DA850_SOC_EVM
 	help
 	  Say Y if you want to add support for SoC audio on TI
 	  DA850/OMAP-L138 EVM
-

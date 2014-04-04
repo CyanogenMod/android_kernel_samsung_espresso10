@@ -536,7 +536,6 @@ struct drm_sigdata {
 	struct drm_hw_lock *lock;
 };
 
-
 /**
  * Kernel side of a mapping
  */
@@ -932,7 +931,6 @@ struct drm_driver {
 #define DRM_MINOR_CONTROL 2
 #define DRM_MINOR_RENDER 3
 
-
 /**
  * debugfs node list. This structure represents a debugfs file to
  * be created by the drm core
@@ -1008,7 +1006,6 @@ struct drm_cmdline_mode {
 	bool margins;
 	enum drm_connector_force force;
 };
-
 
 struct drm_pending_vblank_event {
 	struct drm_pending_event base;
@@ -1181,7 +1178,6 @@ static inline int drm_dev_to_irq(struct drm_device *dev)
 {
 	return dev->driver->bus->get_irq(dev);
 }
-
 
 #if __OS_HAS_AGP
 static inline int drm_core_has_AGP(struct drm_device *dev)
@@ -1673,19 +1669,16 @@ static __inline__ int drm_pci_device_is_agp(struct drm_device *dev)
 	return pci_find_capability(dev->pdev, PCI_CAP_ID_AGP);
 }
 
-
 static __inline__ int drm_pci_device_is_pcie(struct drm_device *dev)
 {
 	return pci_find_capability(dev->pdev, PCI_CAP_ID_EXP);
 }
-
 
 extern int drm_pci_init(struct drm_driver *driver, struct pci_driver *pdriver);
 extern void drm_pci_exit(struct drm_driver *driver, struct pci_driver *pdriver);
 extern int drm_get_pci_dev(struct pci_dev *pdev,
 			   const struct pci_device_id *ent,
 			   struct drm_driver *driver);
-
 
 /* platform section */
 extern int drm_platform_init(struct drm_driver *driver, struct platform_device *platform_device);

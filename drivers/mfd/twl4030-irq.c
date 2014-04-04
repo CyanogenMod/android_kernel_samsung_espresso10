@@ -60,7 +60,6 @@
 #define REG_PIH_ISR_P2			0x02
 #define REG_PIH_SIR			0x03	/* for testing */
 
-
 /* Linux could (eventually) use either IRQ line */
 static int irq_line;
 
@@ -110,7 +109,6 @@ static int nr_sih_modules;
 #define TWL4030_INT_PWR_EDR		TWL4030_INT_PWR_EDR1
 #define TWL4030_MODULE_KEYPAD_KEYP	TWL4030_MODULE_KEYPAD
 #define TWL4030_MODULE_INT_PWR		TWL4030_MODULE_INT
-
 
 /* Order in this table matches order in PIH_ISR.  That is,
  * BIT(n) in PIH_ISR is sih_modules[n].
@@ -288,7 +286,6 @@ static int twl4030_irq_thread(void *data)
 	long irq = (long)data;
 	static unsigned i2c_errors;
 	static const unsigned max_i2c_errors = 100;
-
 
 	current->flags |= PF_NOFREEZE;
 
@@ -746,7 +743,6 @@ int twl4030_sih_setup(int module)
 
 /* FIXME need a call to reverse twl4030_sih_setup() ... */
 
-
 /*----------------------------------------------------------------------*/
 
 /* FIXME pass in which interrupt line we'll use ... */
@@ -801,7 +797,6 @@ int twl4030_init_irq(int irq_num, unsigned irq_base, unsigned irq_end)
 	}
 
 	/* install an irq handler to demultiplex the TWL4030 interrupt */
-
 
 	init_completion(&irq_event);
 

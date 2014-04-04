@@ -2,13 +2,11 @@
 
 /* Written 1995-2000 by Werner Almesberger, EPFL LRC/ICA */
 
-
 #ifndef NET_ATM_COMMON_H
 #define NET_ATM_COMMON_H
 
 #include <linux/net.h>
 #include <linux/poll.h> /* for poll_table */
-
 
 int vcc_create(struct net *net, struct socket *sock, int protocol, int family);
 int vcc_release(struct socket *sock);

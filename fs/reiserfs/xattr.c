@@ -54,7 +54,6 @@
 #define PRIVROOT_NAME ".reiserfs_priv"
 #define XAROOT_NAME   "xattrs"
 
-
 /* Helpers for inode ops. We do this so that we don't have all the VFS
  * overhead and also for proper i_mutex annotation.
  * dir->i_mutex must be held for all of them. */
@@ -187,8 +186,8 @@ fill_with_dentries(void *buf, const char *name, int namelen, loff_t offset,
 	if (dbuf->count == ARRAY_SIZE(dbuf->dentries))
 		return -ENOSPC;
 
-	if (name[0] == '.' && (name[1] == '\0' ||
-			       (name[1] == '.' && name[2] == '\0')))
+	if (name[0] == '.' && (namelen < 2 ||
+			       (namelen == 2 && name[1] == '.')))
 		return 0;
 
 	dentry = lookup_one_len(name, dbuf->xadir, namelen);
@@ -457,7 +456,6 @@ out_dput:
 	dput(xadir);
 	return err;
 }
-
 
 /* Generic extended attribute operations that can be used by xa plugins */
 
@@ -734,7 +732,6 @@ find_xattr_handler_prefix(const struct xattr_handler **handlers,
 
 	return xah;
 }
-
 
 /*
  * Inode operation getxattr()

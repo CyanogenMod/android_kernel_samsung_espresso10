@@ -50,7 +50,6 @@ static const struct via_port_cfg olpc_adap_configs[] = {
  */
 static struct viafb_dev global_dev;
 
-
 /*
  * Basic register access; spinlock required.
  */
@@ -220,7 +219,6 @@ void viafb_release_dma(void)
 	mutex_unlock(&viafb_dma_lock);
 }
 EXPORT_SYMBOL_GPL(viafb_release_dma);
-
 
 #if 0
 /*
@@ -470,7 +468,6 @@ static int viafb_get_fb_size_from_pci(int chip_type)
 
 	return VideoMemSize;
 }
-
 
 /*
  * Figure out and map our MMIO regions.
@@ -723,7 +720,6 @@ static void __devexit via_pci_remove(struct pci_dev *pdev)
 	via_pci_teardown_mmio(&global_dev);
 	pci_disable_device(pdev);
 }
-
 
 static struct pci_device_id via_pci_table[] __devinitdata = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_VIA, UNICHROME_CLE266_DID),

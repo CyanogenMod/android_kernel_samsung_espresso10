@@ -12,7 +12,6 @@ struct uio;
 struct xfs_inode;
 struct xfs_iomap;
 
-
 int xfs_setattr(struct xfs_inode *ip, struct iattr *vap, int flags);
 #define	XFS_ATTR_DMI		0x01	/* invocation from a DMI function */
 #define	XFS_ATTR_NONBLOCK	0x02	/* return EAGAIN if operation would block */

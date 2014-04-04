@@ -66,4 +66,3 @@ config HDQ_MASTER_OMAP
 	  on an OMAP processor.
 
 endmenu
-

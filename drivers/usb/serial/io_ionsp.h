@@ -34,7 +34,6 @@ Header format, first byte:
 
 This gives 2 possible formats:
 
-
     Data header:		0LLLLPPP	LLLLLLLL
     ============
 
@@ -46,7 +45,6 @@ This gives 2 possible formats:
     the length must always be <= the current TxCredits for a given
     port due to buffering limitations on the peripheral.
 
-
     Cmd/Status header:		1ccccPPP	[ CCCCCCCC,	 Params ]...
     ==================
 
@@ -55,7 +53,6 @@ This gives 2 possible formats:
     (cccc,CCCCCCCC). Subsequent bytes are optional parameters and are
     specific to the cmd or status code. This may include a length
     for command and status codes that need variable-length parameters.
-
 
 In addition, we use another interrupt pipe (endpoint) which the host polls
 periodically for flow control information. The peripheral, when there has
@@ -95,10 +92,7 @@ struct int_status_pkt {
 						// given port's TxBuffer
 };
 
-
 #define GET_INT_STATUS_SIZE(NumPorts) (sizeof(__u16) + (sizeof(__u16) * (NumPorts)))
-
-
 
 //
 // Define cmd/status header values and macros to extract them.
@@ -121,19 +115,16 @@ struct int_status_pkt {
 #define	IOSP_GET_HDR_DATA_LEN(Byte1, Byte2)	((__u16) (((__u16)((Byte1) & 0x78)) << 5) | (Byte2))
 #define	IOSP_GET_STATUS_CODE(Byte1)		((__u8) (((Byte1) &  0x78) >> 3))
 
-
 //
 // These macros build the 1st and 2nd bytes for a data header
 //
 #define	IOSP_BUILD_DATA_HDR1(Port, Len)		((__u8) (((Port) | ((__u8) (((__u16) (Len)) >> 5) & 0x78))))
 #define	IOSP_BUILD_DATA_HDR2(Port, Len)		((__u8) (Len))
 
-
 //
 // These macros build the 1st and 2nd bytes for a command header
 //
 #define	IOSP_BUILD_CMD_HDR1(Port, Cmd)		((__u8) (IOSP_CMD_STAT_BIT | (Port) | ((__u8) ((Cmd) << 3))))
-
 
 //--------------------------------------------------------------
 //
@@ -189,7 +180,6 @@ struct int_status_pkt {
 #define IOSP_CMD_SET_BREAK		0x08		// Turn on the BREAK (LCR bit 6)
 #define IOSP_CMD_CLEAR_BREAK		0x09		// Turn off the BREAK (LCR bit 6)
 
-
 //
 // Define macros to simplify building of IOSP cmds
 //
@@ -213,8 +203,6 @@ do {									\
 	*ppBuf += 3;							\
 	*pLen  += 3;							\
 } while (0)
-
-
 
 //--------------------------------------------------------------
 //
@@ -294,7 +282,6 @@ do {									\
 //  P1 = IOSP_CMD_SET_XON_CHAR
 //  P2 = 0x11
 
-
 //
 //	IOSP_CMD_SET_XOFF_CHAR
 //
@@ -306,7 +293,6 @@ do {									\
 //	P0 = 11001000
 //  P1 = IOSP_CMD_SET_XOFF_CHAR
 //  P2 = 0x13
-
 
 //
 //	IOSP_CMD_RX_CHECK_REQ
@@ -328,12 +314,9 @@ do {									\
 //  P1 = IOSP_CMD_RX_CHECK_REQ
 //  P2 = Sequence number
 
-
 //  Response will be:
 //  P1 = IOSP_EXT_RX_CHECK_RSP
 //  P2 = Request Sequence number
-
-
 
 //--------------------------------------------------------------
 //
@@ -393,7 +376,6 @@ do {									\
 //					0x06	//
 //					0x07	//
 
-
 /****************************************************
  *	SSSS values for 3-byte status messages (8-A)
  ****************************************************/
@@ -405,7 +387,6 @@ do {									\
 
 #define	IOSP_EXT_STATUS			0x09	// P1 is status/response code, param in P2.
 
-
 // Response Codes (P1 values) for 3-byte status messages
 
 #define	IOSP_EXT_STATUS_CHASE_RSP	0	// Reply to CHASE_PORT cmd. P2 is outcome:
@@ -416,7 +397,6 @@ do {									\
 
 #define	IOSP_EXT_STATUS_RX_CHECK_RSP	1	// Reply to RX_CHECK cmd. P2 is sequence number
 
-
 #define IOSP_STATUS_OPEN_RSP		0x0A	// Reply to OPEN_PORT cmd.
 
 // P1 is Initial MSR value
@@ -426,9 +406,6 @@ do {									\
 //					0x0B	// Available for future expansion
 
 #define GET_TX_BUFFER_SIZE(P2) (((P2) + 1) * 64)
-
-
-
 
 /****************************************************
  *	SSSS values for 4-byte status messages
@@ -441,8 +418,6 @@ do {									\
 
 //					0x0D	// Currently unused, available.
 
-
-
 //
 // Macros to parse status messages
 //
@@ -452,4 +427,3 @@ do {									\
 #define	IOSP_STATUS_IS_2BYTE(code)	((code) < 0x08)
 #define	IOSP_STATUS_IS_3BYTE(code)	(((code) >= 0x08) && ((code) <= 0x0B))
 #define	IOSP_STATUS_IS_4BYTE(code)	(((code) >= 0x0C) && ((code) <= 0x0D))
-

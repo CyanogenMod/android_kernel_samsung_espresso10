@@ -42,7 +42,6 @@ static int debug;
 module_param(debug, int, 0);
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
 
-
 /* ----------------------------------------------------------------------- */
 
 struct saa7185 {
@@ -217,7 +216,6 @@ static const unsigned char init_ntsc[] = {
 	0x66, 0x21,		/* FSC3 */
 };
 
-
 static int saa7185_init(struct v4l2_subdev *sd, u32 val)
 {
 	struct saa7185 *encoder = to_saa7185(sd);
@@ -308,7 +306,6 @@ static const struct v4l2_subdev_ops saa7185_ops = {
 	.core = &saa7185_core_ops,
 	.video = &saa7185_video_ops,
 };
-
 
 /* ----------------------------------------------------------------------- */
 

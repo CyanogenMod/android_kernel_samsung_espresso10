@@ -158,5 +158,4 @@ void wm831x_otp_exit(struct wm831x *wm831x);
 #define WM831X_DBE_VALID_DATA_SHIFT                  0  /* DBE_VALID_DATA - [15:0] */
 #define WM831X_DBE_VALID_DATA_WIDTH                 16  /* DBE_VALID_DATA - [15:0] */
 
-
 #endif

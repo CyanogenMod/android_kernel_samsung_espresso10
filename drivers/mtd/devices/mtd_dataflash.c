@@ -24,7 +24,6 @@
 #include <linux/mtd/mtd.h>
 #include <linux/mtd/partitions.h>
 
-
 /*
  * DataFlash is a kind of SPI flash.  Most AT45 chips have two buffers in
  * each chip, which may be used for double buffered I/O; but this driver
@@ -81,7 +80,6 @@
 #define OP_READ_SECURITY	0x77
 #define OP_WRITE_SECURITY_REVC	0x9A
 #define OP_WRITE_SECURITY	0x9B	/* revision D */
-
 
 struct dataflash {
 	uint8_t			command[4];
@@ -399,7 +397,6 @@ static int dataflash_write(struct mtd_info *mtd, loff_t to, size_t len,
 				dev_name(&spi->dev), addr, writelen, status);
 
 		(void) dataflash_waitready(priv->spi);
-
 
 #ifdef CONFIG_MTD_DATAFLASH_WRITE_VERIFY
 
@@ -965,7 +962,6 @@ static void __exit dataflash_exit(void)
 	spi_unregister_driver(&dataflash_driver);
 }
 module_exit(dataflash_exit);
-
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Andrew Victor, David Brownell");

@@ -221,7 +221,6 @@ static void __init tegra_wario_init(void)
 	seaboard_i2c_init();
 }
 
-
 MACHINE_START(SEABOARD, "seaboard")
 	.boot_params    = 0x00000100,
 	.map_io         = tegra_map_common_io,

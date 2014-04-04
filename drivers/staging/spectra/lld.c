@@ -226,7 +226,6 @@ u16 GLOB_LLD_Erase_Block(u32 block_add)
 	return NAND_Erase_Block(block_add);
 }
 
-
 u16 GLOB_LLD_Write_Page_Main(u8 *write_data, u32 block, u16 Page,
 				u16 PageCount)
 {

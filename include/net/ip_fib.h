@@ -94,7 +94,6 @@ struct fib_info {
 #define fib_dev		fib_nh[0].nh_dev
 };
 
-
 #ifdef CONFIG_IP_MULTIPLE_TABLES
 struct fib_rule;
 #endif
@@ -125,22 +124,20 @@ struct fib_result_nl {
 	unsigned char	nh_sel;
 	unsigned char	type;
 	unsigned char	scope;
-	int             err;      
+	int             err;
 };
 
 #ifdef CONFIG_IP_ROUTE_MULTIPATH
-
 #define FIB_RES_NH(res)		((res).fi->fib_nh[(res).nh_sel])
-
-#define FIB_TABLE_HASHSZ 2
-
 #else /* CONFIG_IP_ROUTE_MULTIPATH */
-
 #define FIB_RES_NH(res)		((res).fi->fib_nh[0])
-
-#define FIB_TABLE_HASHSZ 256
-
 #endif /* CONFIG_IP_ROUTE_MULTIPATH */
+
+#ifdef CONFIG_IP_MULTIPLE_TABLES
+#define FIB_TABLE_HASHSZ 256
+#else
+#define FIB_TABLE_HASHSZ 2
+#endif
 
 extern __be32 fib_info_update_nh_saddr(struct net *net, struct fib_nh *nh);
 
@@ -172,8 +169,6 @@ extern int fib_table_dump(struct fib_table *table, struct sk_buff *skb,
 			  struct netlink_callback *cb);
 extern int fib_table_flush(struct fib_table *table);
 extern void fib_free_table(struct fib_table *tb);
-
-
 
 #ifndef CONFIG_IP_MULTIPLE_TABLES
 

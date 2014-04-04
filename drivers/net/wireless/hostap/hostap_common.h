@@ -172,7 +172,6 @@
 #define HFA384X_RID_BUILDSEQ 0xFFFE
 #define HFA384X_RID_FWID 0xFFFF
 
-
 struct hfa384x_comp_ident
 {
 	__le16 id;
@@ -194,7 +193,6 @@ struct hfa384x_sup_range
 	__le16 top;
 } __packed;
 
-
 struct hfa384x_build_id
 {
 	__le16 pri_seq;
@@ -215,7 +213,6 @@ struct hfa384x_comms_quality {
 	__le16 signal_level; /* 27 .. 154 */
 	__le16 noise_level; /* 27 .. 154 */
 } __packed;
-
 
 /* netdevice private ioctls (used, e.g., with iwpriv from user space) */
 
@@ -241,7 +238,6 @@ struct hfa384x_comms_quality {
  */
 #define PRISM2_IOCTL_DOWNLOAD (SIOCDEVPRIVATE + 13)
 #define PRISM2_IOCTL_HOSTAPD (SIOCDEVPRIVATE + 14)
-
 
 /* PRISM2_IOCTL_PRISM2_PARAM ioctl() subtypes: */
 enum {
@@ -290,12 +286,10 @@ enum {
 enum { HOSTAP_ANTSEL_DO_NOT_TOUCH = 0, HOSTAP_ANTSEL_DIVERSITY = 1,
        HOSTAP_ANTSEL_LOW = 2, HOSTAP_ANTSEL_HIGH = 3 };
 
-
 /* PRISM2_IOCTL_MACCMD ioctl() subcommands: */
 enum { AP_MAC_CMD_POLICY_OPEN = 0, AP_MAC_CMD_POLICY_ALLOW = 1,
        AP_MAC_CMD_POLICY_DENY = 2, AP_MAC_CMD_FLUSH = 3,
        AP_MAC_CMD_KICKALL = 4 };
-
 
 /* PRISM2_IOCTL_DOWNLOAD ioctl() dl_cmd: */
 enum {
@@ -327,7 +321,6 @@ struct prism2_download_param {
 #define PRISM2_MAX_DOWNLOAD_AREA_LEN 131072
 #define PRISM2_MAX_DOWNLOAD_LEN 262144
 
-
 /* PRISM2_IOCTL_HOSTAPD ioctl() cmd: */
 enum {
 	PRISM2_HOSTAPD_FLUSH = 1,
@@ -356,7 +349,6 @@ offsetof(struct prism2_hostapd_param, u.generic_elem.data)
 /* Maximum length for algorithm names (-1 for nul termination) used in ioctl()
  */
 #define HOSTAP_CRYPT_ALG_NAME_LEN 16
-
 
 struct prism2_hostapd_param {
 	u32 cmd;
@@ -414,6 +406,5 @@ struct prism2_hostapd_param {
 #define HOSTAP_CRYPT_ERR_KEY_SET_FAILED 5
 #define HOSTAP_CRYPT_ERR_TX_KEY_SET_FAILED 6
 #define HOSTAP_CRYPT_ERR_CARD_CONF_FAILED 7
-
 
 #endif /* HOSTAP_COMMON_H */

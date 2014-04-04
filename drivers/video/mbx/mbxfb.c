@@ -417,12 +417,10 @@ static int mbxfb_setupOverlay(struct mbxfb_overlaySetup *set)
 	vvbase |= Vvbase_Vbase_Adr(
 			(0x60000 + set->mem_offset + set->V_offset)>>3);
 
-
 	vscadr |= Vscadr_Vbase_Adr((0x60000 + set->mem_offset)>>4);
 
 	if (set->enable)
 		vscadr |= VSCADR_STR_EN;
-
 
 	vsadr = Vsadr_Srcstride((set->Y_stride)/16-1) |
 		Vsadr_Xstart(set->x) | Vsadr_Ystart(set->y);
@@ -905,7 +903,6 @@ static int __devinit mbxfb_probe(struct platform_device *dev)
 
 	mfbi = fbi->par;
 	fbi->pseudo_palette = mfbi->pseudo_palette;
-
 
 	if (pdata->probe)
 		mfbi->platform_probe = pdata->probe;

@@ -528,13 +528,11 @@ enum jme_iomap_regs {
 	JME_GHC		= JME_MAC | 0x54, /* Global Host Control */
 	JME_PMCS	= JME_MAC | 0x60, /* Power Management Control/Stat */
 
-
 	JME_PHY_PWR	= JME_PHY | 0x24, /* New PHY Power Ctrl Register */
 	JME_PHY_CS	= JME_PHY | 0x28, /* PHY Ctrl and Status Register */
 	JME_PHY_LINK	= JME_PHY | 0x30, /* PHY Link Status Register */
 	JME_SMBCSR	= JME_PHY | 0x40, /* SMB Control and Status */
 	JME_SMBINTF	= JME_PHY | 0x44, /* SMB Interface */
-
 
 	JME_TMCSR	= JME_MISC | 0x00, /* Timer Control/Status Register */
 	JME_GPREG0	= JME_MISC | 0x08, /* General purpose REG-0 */

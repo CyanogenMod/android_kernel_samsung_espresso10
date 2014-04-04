@@ -37,7 +37,6 @@
 #define SEP_DRIVER_SRC_REQ		2
 #define SEP_DRIVER_SRC_PRINTF		3
 
-
 /*-------------------------------------------
     TYPEDEFS
 ----------------------------------------------*/
@@ -148,7 +147,6 @@ struct sep_dma_resource {
 	/* number of entries of the output mapp array */
 	u32 out_map_num_entries;
 };
-
 
 /* command struct for translating rar handle to bus address
    and setting it at predefined location */

@@ -33,7 +33,6 @@
  * when a file system is mounted (see ext2_fill_super).
  */
 
-
 #define in_range(b, first, len)	((b) >= (first) && (b) <= (first) + (len) - 1)
 
 struct ext2_group_desc * ext2_get_group_desc(struct super_block * sb,
@@ -615,7 +614,7 @@ find_next_usable_block(int start, struct buffer_head *bh, int maxblocks)
 
 	if (start > 0) {
 		/*
-		 * The goal was occupied; search forward for a free 
+		 * The goal was occupied; search forward for a free
 		 * block within the next XX blocks.
 		 *
 		 * end_goal is more or less random, but it has to be
@@ -1209,7 +1208,7 @@ static int ext2_has_free_blocks(struct ext2_sb_info *sbi)
  *
  * ext2_new_blocks uses a goal block to assist allocation.  If the goal is
  * free, or there is a free block within 32 blocks of the goal, that block
- * is allocated.  Otherwise a forward search is made for a free block; within 
+ * is allocated.  Otherwise a forward search is made for a free block; within
  * each block group the search first looks for an entire free byte in the block
  * bitmap, and then for any free bit if that fails.
  * This function also updates quota and i_blocks field.
@@ -1484,7 +1483,7 @@ unsigned long ext2_count_free_blocks (struct super_block * sb)
 		bitmap_bh = read_block_bitmap(sb, i);
 		if (!bitmap_bh)
 			continue;
-		
+
 		x = ext2_count_free(bitmap_bh, sb->s_blocksize);
 		printk ("group %d: stored = %d, counted = %lu\n",
 			i, le16_to_cpu(desc->bg_free_blocks_count), x);
@@ -1552,4 +1551,3 @@ unsigned long ext2_bg_num_gdb(struct super_block *sb, int group)
 {
 	return ext2_bg_has_super(sb, group) ? EXT2_SB(sb)->s_gdb_count : 0;
 }
-

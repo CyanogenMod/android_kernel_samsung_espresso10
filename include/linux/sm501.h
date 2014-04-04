@@ -46,7 +46,6 @@ extern unsigned long sm501_modify_reg(struct device *dev,
 				      unsigned long set,
 				      unsigned long clear);
 
-
 /* Platform data definitions */
 
 #define SM501FB_FLAG_USE_INIT_MODE	(1<<0)

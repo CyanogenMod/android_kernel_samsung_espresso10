@@ -578,7 +578,6 @@ static int sst_create_sg_list(struct stream_info *stream,
 	return i;
 }
 
-
 /**
  * sst_play_frame - Send msg for sending stream frames
  *
@@ -677,7 +676,6 @@ int sst_capture_frame(int str_id)
 	struct sst_stream_bufs *kbufs = NULL, *_kbufs;
 	struct stream_info *stream;
 
-
 	pr_debug("capture frame for %d\n", str_id);
 	retval = sst_validate_strid(str_id);
 	if (retval)
@@ -725,7 +723,6 @@ int sst_capture_frame(int str_id)
 	list_add_tail(&msg->node, &sst_drv_ctx->ipc_dispatch_list);
 	spin_unlock(&sst_drv_ctx->list_spin_lock);
 	sst_post_message(&sst_drv_ctx->ipc_post_msg_wq);
-
 
 	/*update bytes recevied*/
 	stream->cumm_bytes += stream->curr_bytes;
@@ -835,7 +832,6 @@ static int sst_send_decode_mess(int str_id, struct stream_info *str_info,
 					str_info->decode_ibuf);
 		dec_info->frames_in.addr[0].size = str_info->decode_isize;
 	}
-
 
 	if (str_info->decode_obuf_type == SST_BUF_RAR) {
 #ifdef CONFIG_MRST_RAR_HANDLER
@@ -1163,7 +1159,6 @@ int sst_decode(int str_id, struct snd_sst_dbufs *dbufs)
 						str_info->decode_isize);
 			}
 		}
-
 
 		retval = sst_send_decode_mess(str_id, str_info, &dec_info);
 		if (retval || dec_info.input_bytes_consumed == 0) {

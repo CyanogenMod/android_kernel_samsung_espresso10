@@ -54,7 +54,6 @@ enum {
 	WUSB_REQ_CHAN_STOP      = 28,
 };
 
-
 /* Wireless Adapter WUSB Channel Time types ([WUSB] table 8-52) */
 enum {
 	WUSB_TIME_ADJ   = 0,

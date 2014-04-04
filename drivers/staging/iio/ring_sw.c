@@ -87,7 +87,6 @@ static void iio_unmark_sw_rb_in_use(struct iio_ring_buffer *r)
 	spin_unlock(&ring->use_lock);
 }
 
-
 /* Ring buffer related functionality */
 /* Store to ring is typically called in the bh of a data ready interrupt handler
  * in the device driver */

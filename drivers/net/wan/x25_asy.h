@@ -5,14 +5,13 @@
 #define SL_NRUNIT	256		/* MAX number of X.25 channels;
 					   This can be overridden with
 					   insmod -ox25_asy_maxdev=nnn	*/
-#define SL_MTU		256	
+#define SL_MTU		256
 
 /* X25 async protocol characters. */
 #define X25_END         0x7E		/* indicates end of frame	*/
 #define X25_ESC         0x7D		/* indicates byte stuffing	*/
 #define X25_ESCAPE(x)	((x)^0x20)
 #define X25_UNESCAPE(x)	((x)^0x20)
-
 
 struct x25_asy {
   int			magic;
@@ -36,8 +35,6 @@ struct x25_asy {
 #define SLF_ERROR	2               /* Parity, etc. error           */
 #define SLF_OUTWAIT	4		/* Waiting for output		*/
 };
-
-
 
 #define X25_ASY_MAGIC 0x5303
 

@@ -32,7 +32,6 @@
 
 */
 
-
 #define PVR2_CLIENT_ID_NULL 0
 #define PVR2_CLIENT_ID_MSP3400 1
 #define PVR2_CLIENT_ID_CX25840 2
@@ -59,7 +58,6 @@ struct pvr2_device_client_table {
 	const struct pvr2_device_client_desc *lst;
 	unsigned char cnt;
 };
-
 
 struct pvr2_string_table {
 	const char **lst;

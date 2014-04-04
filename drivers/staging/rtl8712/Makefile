@@ -31,4 +31,3 @@ r8712u-y :=				\
 		rtl8712_xmit.o
 
 obj-$(CONFIG_R8712U)	:= r8712u.o
-

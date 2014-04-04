@@ -63,7 +63,6 @@ static void all_notes_off(struct snd_midi_op *ops, void *private,
 static void snd_midi_reset_controllers(struct snd_midi_channel *chan);
 static void reset_all_channels(struct snd_midi_channel_set *chset);
 
-
 /*
  * Process an event in a driver independent way.  This means dealing
  * with RPN, NRPN, SysEx etc that are defined for common midi applications
@@ -236,7 +235,6 @@ snd_midi_process_event(struct snd_midi_op *ops,
 	}
 }
 
-
 /*
  * release note
  */
@@ -374,7 +372,6 @@ do_control(struct snd_midi_op *ops, void *drv, struct snd_midi_channel_set *chse
 	}
 }
 
-
 /*
  * initialize the MIDI status
  */
@@ -427,7 +424,7 @@ rpn(struct snd_midi_op *ops, void *drv, struct snd_midi_channel *chan,
 			/* MSB only / 1 semitone per 128 */
 			chan->gm_rpn_pitch_bend_range = val;
 			break;
-					
+
 		case 0x0001: /* fine tuning: */
 			/* MSB/LSB, 8192=center, 100/8192 cent step */
 			chan->gm_rpn_fine_tuning = val - 8192;
@@ -458,7 +455,6 @@ nrpn(struct snd_midi_op *ops, void *drv, struct snd_midi_channel *chan,
 		ops->nrpn(drv, chan, chset);
 }
 
-
 /*
  * convert channel parameter in GS sysex
  */
@@ -472,7 +468,6 @@ get_channel(unsigned char cmd)
 		p--;
 	return p;
 }
-
 
 /*
  * Process a sysex message.
@@ -681,7 +676,6 @@ reset_all_channels(struct snd_midi_channel_set *chset)
 	}
 }
 
-
 /*
  * Allocate and initialise a midi channel set.
  */
@@ -708,7 +702,6 @@ static void snd_midi_reset_controllers(struct snd_midi_channel *chan)
 	chan->gm_expression = 127;
 	chan->gm_pan = 64;
 }
-
 
 /*
  * Free a midi channel set.

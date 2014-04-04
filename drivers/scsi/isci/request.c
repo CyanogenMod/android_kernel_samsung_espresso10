@@ -481,8 +481,6 @@ static void sci_stp_optimized_request_construct(struct isci_request *ireq,
 	}
 }
 
-
-
 static enum sci_status
 sci_io_request_construct_sata(struct isci_request *ireq,
 			       u32 len,
@@ -1693,7 +1691,7 @@ sci_io_request_frame_handler(struct isci_request *ireq,
 								      frame_index,
 								      (void **)&frame_buffer);
 
-			sci_controller_copy_sata_response(&ireq->stp.req,
+			sci_controller_copy_sata_response(&ireq->stp.rsp,
 							       frame_header,
 							       frame_buffer);
 
@@ -2198,7 +2196,6 @@ static void isci_request_handle_controller_specific_errors(
 		*complete_to_host_ptr = isci_perform_normal_io_completion;
 		break;
 
-
 	/* Note that the only open reject completion codes seen here will be
 	 * abandon-class codes; all others are automatically retried in the SCU.
 	 */
@@ -2699,7 +2696,6 @@ static void isci_request_io_request_complete(struct isci_host *ihost,
 			complete_to_host = isci_perform_normal_io_completion;
 			set_bit(IREQ_COMPLETE_IN_TARGET, &request->flags);
 			break;
-
 
 		default:
 			/* Catch any otherwise unhandled error codes here. */

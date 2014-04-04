@@ -44,7 +44,6 @@
 #define PRINT_ERROR(format, ...)
 #endif
 
-
 /**
  * __cvmx_interrupt_gmxx_rxx_int_en_enable enables all interrupt bits in cvmx_gmxx_rxx_int_en_t
  */

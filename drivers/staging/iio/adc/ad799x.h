@@ -133,7 +133,6 @@ int ad799x_single_channel_from_ring(struct ad799x_state *st, long mask)
 	return -EINVAL;
 }
 
-
 static inline int
 ad799x_register_ring_funcs_and_init(struct iio_dev *indio_dev)
 {

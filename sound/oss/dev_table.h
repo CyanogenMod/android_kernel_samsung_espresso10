@@ -11,7 +11,6 @@
  * for more info.
  */
 
-
 #ifndef _DEV_TABLE_H_
 #define _DEV_TABLE_H_
 
@@ -44,7 +43,7 @@
  *	NOTE! 	NOTE!	NOTE!	NOTE!
  */
 
-struct driver_info 
+struct driver_info
 {
 	char *driver_id;
 	int card_subtype;	/* Driver specific. Usually 0 */
@@ -55,14 +54,13 @@ struct driver_info
 	void (*unload) (struct address_info *hw_config);
 };
 
-struct card_info 
+struct card_info
 {
 	int card_type;	/* Link (search key) to the driver list */
 	struct address_info config;
 	int enabled;
 	void *for_driver_use;
 };
-
 
 /*
  * Device specific parameters (used only by dmabuf.c)
@@ -73,7 +71,7 @@ struct card_info
 #define DMODE_OUTPUT		PCM_ENABLE_OUTPUT
 #define DMODE_INPUT		PCM_ENABLE_INPUT
 
-struct dma_buffparms 
+struct dma_buffparms
 {
 	int      dma_mode;	/* DMODE_INPUT, DMODE_OUTPUT or DMODE_NONE */
 	int	 closing;
@@ -95,7 +93,7 @@ struct dma_buffparms
 #define DMA_RESTART	0x00000002
 #define DMA_ACTIVE	0x00000004
 #define DMA_STARTED	0x00000008
-#define DMA_EMPTY	0x00000010	
+#define DMA_EMPTY	0x00000010
 #define DMA_ALLOC_DONE	0x00000020
 #define DMA_SYNCING	0x00000040
 #define DMA_DIRTY	0x00000080
@@ -112,7 +110,7 @@ struct dma_buffparms
 	int      qhead;
 	int      qtail;
 	spinlock_t lock;
-		
+
 	int	 cfrag;	/* Current incomplete fragment (write) */
 
 	int      nbufs;
@@ -147,10 +145,10 @@ struct dma_buffparms
 };
 
 /*
- * Structure for use with various microcontrollers and DSP processors 
+ * Structure for use with various microcontrollers and DSP processors
  * in the recent sound cards.
  */
-typedef struct coproc_operations 
+typedef struct coproc_operations
 {
 	char name[64];
 	struct module *owner;
@@ -162,14 +160,14 @@ typedef struct coproc_operations
 	void *devc;		/* Driver specific info */
 } coproc_operations;
 
-struct audio_driver 
+struct audio_driver
 {
 	struct module *owner;
 	int (*open) (int dev, int mode);
 	void (*close) (int dev);
-	void (*output_block) (int dev, unsigned long buf, 
+	void (*output_block) (int dev, unsigned long buf,
 			      int count, int intrflag);
-	void (*start_input) (int dev, unsigned long buf, 
+	void (*start_input) (int dev, unsigned long buf,
 			     int count, int intrflag);
 	int (*ioctl) (int dev, unsigned int cmd, void __user * arg);
 	int (*prepare_for_input) (int dev, int bufsize, int nbufs);
@@ -193,7 +191,7 @@ struct audio_driver
 	void (*mmap)(int dev);
 };
 
-struct audio_operations 
+struct audio_operations
 {
         char name[128];
 	int flags;
@@ -242,18 +240,18 @@ struct audio_operations
 
 int *load_mixer_volumes(char *name, int *levels, int present);
 
-struct mixer_operations 
+struct mixer_operations
 {
 	struct module *owner;
 	char id[16];
 	char name[64];
 	int (*ioctl) (int dev, unsigned int cmd, void __user * arg);
-	
+
 	void *devc;
 	int modify_counter;
 };
 
-struct synth_operations 
+struct synth_operations
 {
 	struct module *owner;
 	char *id;	/* Unique identifier (ASCII) max 29 char */
@@ -291,7 +289,7 @@ struct synth_operations
 	int sysex_ptr;
 };
 
-struct midi_input_info 
+struct midi_input_info
 {
 	/* MIDI input scanner variables */
 #define MI_MAX	10
@@ -306,7 +304,7 @@ struct midi_input_info
     	int             m_left;
 };
 
-struct midi_operations 
+struct midi_operations
 {
 	struct module *owner;
 	struct midi_info info;
@@ -329,7 +327,7 @@ struct midi_operations
 	void *devc;
 };
 
-struct sound_lowlev_timer 
+struct sound_lowlev_timer
 {
 	int dev;
 	int priority;
@@ -338,7 +336,7 @@ struct sound_lowlev_timer
 	void (*tmr_restart)(int dev);
 };
 
-struct sound_timer_operations 
+struct sound_timer_operations
 {
 	struct module *owner;
 	struct sound_timer_info info;
@@ -387,4 +385,3 @@ int sound_alloc_timerdev(void);
 int sound_alloc_synthdev(void);
 int sound_alloc_mididev(void);
 #endif	/* _DEV_TABLE_H_ */
-

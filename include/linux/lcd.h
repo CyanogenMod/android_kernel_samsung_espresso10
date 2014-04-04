@@ -111,5 +111,4 @@ static inline void * lcd_get_data(struct lcd_device *ld_dev)
 	return dev_get_drvdata(&ld_dev->dev);
 }
 
-
 #endif

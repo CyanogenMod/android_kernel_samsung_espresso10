@@ -73,7 +73,6 @@
 #define S3C24XX_VA_GPIO	   ((S3C24XX_PA_GPIO - S3C24XX_PA_UART) + S3C24XX_VA_UART)
 #define S3C24XX_SZ_GPIO	   SZ_1M
 
-
 /* ISA style IO, for each machine to sort out mappings for, if it
  * implements it. We reserve two 16M regions for ISA.
  */

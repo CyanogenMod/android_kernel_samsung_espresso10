@@ -245,7 +245,6 @@
 #define UDCCONR_DE	(1 << 1)	/* Double Buffering Enable */
 #define UDCCONR_EE	(1 << 0)	/* Endpoint Enable */
 
-
 #define UDC_INT_FIFOERROR  (0x2)
 #define UDC_INT_PACKETCMP  (0x1)
 

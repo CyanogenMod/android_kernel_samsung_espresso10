@@ -200,7 +200,6 @@ static int usbh2_init(struct platform_device *pdev)
 
 	mxc_iomux_set_gpr(MUX_PGP_UH2, true);
 
-
 	/* Enable the chip */
 	err = gpio_request(USBH2_CS, "USB-H2-CS");
 	if (err) {

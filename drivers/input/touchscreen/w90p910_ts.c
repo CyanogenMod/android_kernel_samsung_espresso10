@@ -126,7 +126,6 @@ static irqreturn_t w90p910_ts_interrupt(int irq, void *dev_id)
 		w90p910_prepare_x_reading(w90p910_ts);
 		break;
 
-
 	case TS_WAIT_X_COORD:
 		w90p910_prepare_y_reading(w90p910_ts);
 		break;

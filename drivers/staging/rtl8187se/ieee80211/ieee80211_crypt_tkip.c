@@ -31,7 +31,6 @@ MODULE_AUTHOR("Jouni Malinen");
 MODULE_DESCRIPTION("Host AP crypt: TKIP");
 MODULE_LICENSE("GPL");
 
-
 struct ieee80211_tkip_data {
 #define TKIP_KEY_LEN 32
 	u8 key[TKIP_KEY_LEN];
@@ -129,7 +128,6 @@ fail:
 	return NULL;
 }
 
-
 static void ieee80211_tkip_deinit(void *priv)
 {
 	struct ieee80211_tkip_data *_priv = priv;
@@ -147,48 +145,40 @@ static void ieee80211_tkip_deinit(void *priv)
 	kfree(priv);
 }
 
-
 static inline u16 RotR1(u16 val)
 {
 	return (val >> 1) | (val << 15);
 }
-
 
 static inline u8 Lo8(u16 val)
 {
 	return val & 0xff;
 }
 
-
 static inline u8 Hi8(u16 val)
 {
 	return val >> 8;
 }
-
 
 static inline u16 Lo16(u32 val)
 {
 	return val & 0xffff;
 }
 
-
 static inline u16 Hi16(u32 val)
 {
 	return val >> 16;
 }
-
 
 static inline u16 Mk16(u8 hi, u8 lo)
 {
 	return lo | (((u16) hi) << 8);
 }
 
-
 static inline u16 Mk16_le(u16 *v)
 {
 	return le16_to_cpu(*v);
 }
-
 
 static const u16 Sbox[256] =
 {
@@ -226,7 +216,6 @@ static const u16 Sbox[256] =
 	0x82C3, 0x29B0, 0x5A77, 0x1E11, 0x7BCB, 0xA8FC, 0x6DD6, 0x2C3A,
 };
 
-
 static inline u16 _S_(u16 v)
 {
 	u16 t = Sbox[Hi8(v)];
@@ -255,7 +244,6 @@ static void tkip_mixing_phase1(u16 *TTAK, const u8 *TK, const u8 *TA, u32 IV32)
 		TTAK[4] += _S_(TTAK[3] ^ Mk16(TK[1 + j], TK[0 + j])) + i;
 	}
 }
-
 
 static void tkip_mixing_phase2(u8 *WEPSeed, const u8 *TK, const u16 *TTAK,
 			       u16 IV16)
@@ -521,7 +509,6 @@ static void michael_mic_hdr(struct sk_buff *skb, u8 *hdr)
 	hdr[13] = hdr[14] = hdr[15] = 0; /* reserved */
 }
 
-
 static int ieee80211_michael_mic_add(struct sk_buff *skb, int hdr_len, void *priv)
 {
 	struct ieee80211_tkip_data *tkey = priv;
@@ -622,7 +609,6 @@ static int ieee80211_michael_mic_verify(struct sk_buff *skb, int keyidx,
 	return 0;
 }
 
-
 static int ieee80211_tkip_set_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct ieee80211_tkip_data *tkey = priv;
@@ -658,7 +644,6 @@ static int ieee80211_tkip_set_key(void *key, int len, u8 *seq, void *priv)
 	return 0;
 }
 
-
 static int ieee80211_tkip_get_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct ieee80211_tkip_data *tkey = priv;
@@ -688,7 +673,6 @@ static int ieee80211_tkip_get_key(void *key, int len, u8 *seq, void *priv)
 	return TKIP_KEY_LEN;
 }
 
-
 static char * ieee80211_tkip_print_stats(char *p, void *priv)
 {
 	struct ieee80211_tkip_data *tkip = priv;
@@ -715,7 +699,6 @@ static char * ieee80211_tkip_print_stats(char *p, void *priv)
 	return p;
 }
 
-
 static struct ieee80211_crypto_ops ieee80211_crypt_tkip = {
 	.name			= "TKIP",
 	.init			= ieee80211_tkip_init,
@@ -732,18 +715,15 @@ static struct ieee80211_crypto_ops ieee80211_crypt_tkip = {
 	.owner		        = THIS_MODULE,
 };
 
-
 int ieee80211_crypto_tkip_init(void)
 {
 	return ieee80211_register_crypto_ops(&ieee80211_crypt_tkip);
 }
 
-
 void ieee80211_crypto_tkip_exit(void)
 {
 	ieee80211_unregister_crypto_ops(&ieee80211_crypt_tkip);
 }
-
 
 void ieee80211_tkip_null(void)
 {

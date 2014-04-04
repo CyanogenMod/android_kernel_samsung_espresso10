@@ -17,7 +17,6 @@
 #define KS8695_WAN_VA		(KS8695_IO_VA + KS8695_WAN_OFFSET)
 #define KS8695_WAN_PA		(KS8695_IO_PA + KS8695_WAN_OFFSET)
 
-
 /*
  * WAN registers
  */
@@ -31,7 +30,6 @@
 #define KS8695_WMAH		(0x1c)		/* MAC Station Address High */
 #define KS8695_WMAAL(n)		(0x80 + ((n)*8))	/* MAC Additional Station Address (0..15) Low */
 #define KS8695_WMAAH(n)		(0x84 + ((n)*8))	/* MAC Additional Station Address (0..15) High */
-
 
 /* DMA Transmit Control Register */
 #define WMDTXC_WMTRST		(1    << 31)	/* Soft Reset */
@@ -60,6 +58,5 @@
 
 /* Additional Station Address High */
 #define WMAAH_E			(1    << 31)	/* Address Enabled */
-
 
 #endif

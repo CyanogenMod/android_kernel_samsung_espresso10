@@ -39,8 +39,6 @@ struct vt8623fb_info {
 	u32 pseudo_palette[16];
 };
 
-
-
 /* ------------------------------------------------------------------------- */
 
 static const struct svga_fb_format vt8623fb_formats[] = {
@@ -92,9 +90,7 @@ static struct svga_timing_regs vt8623_timing_regs     = {
 	vt8623_v_blank_end_regs, vt8623_v_sync_start_regs, vt8623_v_sync_end_regs,
 };
 
-
 /* ------------------------------------------------------------------------- */
-
 
 /* Module parameters */
 
@@ -118,7 +114,6 @@ module_param(mtrr, int, 0444);
 MODULE_PARM_DESC(mtrr, "Enable write-combining with MTRR (1=enable, 0=disable, default=1)");
 #endif
 
-
 /* ------------------------------------------------------------------------- */
 
 static void vt8623fb_tilecursor(struct fb_info *info, struct fb_tilecursor *cursor)
@@ -137,9 +132,7 @@ static struct fb_tile_ops vt8623fb_tile_ops = {
 	.fb_get_tilemax = svga_get_tilemax,
 };
 
-
 /* ------------------------------------------------------------------------- */
-
 
 /* image data is MSB-first, fb structure is MSB-first too */
 static inline u32 expand_color(u32 c)
@@ -194,7 +187,6 @@ static void vt8623fb_iplan_fillrect(struct fb_info *info, const struct fb_fillre
 		dst1 += info->fix.line_length;
 	}
 }
-
 
 /* image data is MSB-first, fb structure is high-nibble-in-low-byte-first */
 static inline u32 expand_pixel(u32 c)
@@ -253,9 +245,7 @@ static void vt8623fb_fillrect(struct fb_info *info, const struct fb_fillrect *re
 		cfb_fillrect(info, rect);
 }
 
-
 /* ------------------------------------------------------------------------- */
-
 
 static void vt8623_set_pixclock(struct fb_info *info, u32 pixclock)
 {
@@ -284,7 +274,6 @@ static void vt8623_set_pixclock(struct fb_info *info, u32 pixclock)
 	svga_wseq_mask(par->state.vgabase, 0x40, 0x02, 0x02);
 	svga_wseq_mask(par->state.vgabase, 0x40, 0x00, 0x02);
 }
-
 
 static int vt8623fb_open(struct fb_info *info, int user)
 {
@@ -378,7 +367,6 @@ static int vt8623fb_check_var(struct fb_var_screeninfo *var, struct fb_info *inf
 
 	return 0;
 }
-
 
 static int vt8623fb_set_par(struct fb_info *info)
 {
@@ -522,7 +510,6 @@ static int vt8623fb_set_par(struct fb_info *info)
 	return 0;
 }
 
-
 static int vt8623fb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 				u_int transp, struct fb_info *fb)
 {
@@ -577,7 +564,6 @@ static int vt8623fb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 	return 0;
 }
 
-
 static int vt8623fb_blank(int blank_mode, struct fb_info *info)
 {
 	struct vt8623fb_info *par = info->par;
@@ -613,7 +599,6 @@ static int vt8623fb_blank(int blank_mode, struct fb_info *info)
 	return 0;
 }
 
-
 static int vt8623fb_pan_display(struct fb_var_screeninfo *var, struct fb_info *info)
 {
 	struct vt8623fb_info *par = info->par;
@@ -635,9 +620,7 @@ static int vt8623fb_pan_display(struct fb_var_screeninfo *var, struct fb_info *i
 	return 0;
 }
 
-
 /* ------------------------------------------------------------------------- */
-
 
 /* Frame buffer operations */
 
@@ -655,7 +638,6 @@ static struct fb_ops vt8623fb_ops = {
 	.fb_imageblit	= vt8623fb_imageblit,
 	.fb_get_caps    = svga_get_caps,
 };
-
 
 /* PCI probe */
 
@@ -833,7 +815,6 @@ static void __devexit vt8623_pci_remove(struct pci_dev *dev)
 	}
 }
 
-
 #ifdef CONFIG_PM
 /* PCI suspend */
 
@@ -864,7 +845,6 @@ static int vt8623_pci_suspend(struct pci_dev* dev, pm_message_t state)
 
 	return 0;
 }
-
 
 /* PCI resume */
 

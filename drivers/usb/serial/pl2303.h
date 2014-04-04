@@ -148,4 +148,3 @@
 /* SMART USB Serial Adapter */
 #define SMART_VENDOR_ID	0x0b8c
 #define SMART_PRODUCT_ID	0x2303
-

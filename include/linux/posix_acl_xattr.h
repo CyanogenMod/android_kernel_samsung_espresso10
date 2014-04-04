@@ -18,7 +18,6 @@
 /* Supported ACL a_version fields */
 #define POSIX_ACL_XATTR_VERSION	0x0002
 
-
 /* An undefined entry e_id value */
 #define ACL_UNDEFINED_ID	(-1)
 
@@ -32,7 +31,6 @@ typedef struct {
 	__le32			a_version;
 	posix_acl_xattr_entry	a_entries[0];
 } posix_acl_xattr_header;
-
 
 static inline size_t
 posix_acl_xattr_size(int count)

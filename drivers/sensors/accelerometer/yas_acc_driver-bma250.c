@@ -32,7 +32,6 @@
 #define YAS_BMA250_ABSMIN_2G	(-YAS_BMA250_GRAVITY_EARTH * 2)
 #define YAS_BMA250_ABSMAX_2G	(YAS_BMA250_GRAVITY_EARTH * 2)
 
-
 /* Default parameters */
 #define YAS_BMA250_DEFAULT_DELAY	100
 #define YAS_BMA250_DEFAULT_POSITION	0
@@ -44,7 +43,6 @@
 #define YAS_BMA250_CHIP_ID_REG	0x00
 #define YAS_BMA250_CHIP_ID	0x03
 #define YAS_BMA254_CHIP_ID	0xFA
-
 
 #define YAS_BMA250_SOFT_RESET_REG	0x14
 #define YAS_BMA250_SOFT_RESET_VAL	0xb6
@@ -621,7 +619,6 @@ static int yas_bma250_set_filter_enable(int enable)
 	if (acc_data.initialize == 0)
 		return YAS_ERROR_NOT_INITIALIZED;
 
-
 	acc_data.filter_enable = enable;
 
 	return YAS_NO_ERROR;
@@ -720,7 +717,6 @@ static int yas_bma250_measure(int *out_data, int *out_raw)
 						| (buf[i*2] & 0xfe)) >> 4;
 	}
 
-
 	/* for X, Y, Z axis */
 	for (i = 0; i < 3; i++) {
 		data[i] = 0;
@@ -756,7 +752,6 @@ static int yas_init(void)
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
 
-
 	yas_bma250_lock();
 	err = yas_bma250_init();
 	yas_bma250_unlock();
@@ -771,7 +766,6 @@ static int yas_term(void)
 	/* Check intialize */
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_term();
@@ -788,7 +782,6 @@ static int yas_get_delay(void)
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
 
-
 	yas_bma250_lock();
 	ret = yas_bma250_get_delay();
 	yas_bma250_unlock();
@@ -804,11 +797,12 @@ static int yas_set_delay(int delay)
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
 
-
-	if (delay < 0 || delay > YAS_BMA250_MAX_DELAY)
+	if (delay < 0)
 		return YAS_ERROR_ARG;
 	else if (delay < YAS_BMA250_MIN_DELAY)
 		delay = YAS_BMA250_MIN_DELAY;
+	else if (delay > YAS_BMA250_MAX_DELAY)
+		delay = YAS_BMA250_MAX_DELAY;
 
 	yas_bma250_lock();
 	err = yas_bma250_set_delay(delay);
@@ -827,7 +821,6 @@ static int yas_get_offset(struct yas_vector *offset)
 
 	if (unlikely(!offset))
 		return YAS_ERROR_ARG;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_get_offset(offset);
@@ -853,7 +846,6 @@ static int yas_set_offset(struct yas_vector *offset)
 		YAS_BMA250_ABSMAX_2G < offset->v[2])
 			return YAS_ERROR_ARG;
 
-
 	yas_bma250_lock();
 	err = yas_bma250_set_offset(offset);
 	yas_bma250_unlock();
@@ -867,7 +859,6 @@ static int yas_get_enable(void)
 	/* Check intialize */
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_get_enable();
@@ -886,7 +877,6 @@ static int yas_set_enable(int enable)
 
 	if (enable != 0)
 		enable = 1;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_set_enable(enable);
@@ -920,11 +910,9 @@ static int yas_set_filter(struct yas_acc_filter *filter)
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
 
-
 	if (filter == NULL || filter->threshold < 0 ||
 		filter->threshold > YAS_BMA250_ABSMAX_2G)
 			return YAS_ERROR_ARG;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_set_filter(filter);
@@ -941,7 +929,6 @@ static int yas_get_filter_enable(void)
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
 
-
 	yas_bma250_lock();
 	err = yas_bma250_get_filter_enable();
 	yas_bma250_unlock();
@@ -957,10 +944,8 @@ static int yas_set_filter_enable(int enable)
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
 
-
 	if (enable != 0)
 		enable = 1;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_set_filter_enable(enable);
@@ -976,7 +961,6 @@ static int yas_get_position(void)
 	/* Check intialize */
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_get_position();
@@ -995,7 +979,6 @@ static int yas_set_position(int position)
 
 	if (!((position >= 0) && (position <= 7)))
 		return YAS_ERROR_ARG;
-
 
 	yas_bma250_lock();
 	err = yas_bma250_set_position(position);
@@ -1093,7 +1076,6 @@ static int yas_get_register(uint8_t adr, uint8_t *val)
 {
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
-
 
 	/* Check initialize */
 	if (acc_data.initialize == 0)

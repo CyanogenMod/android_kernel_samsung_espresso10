@@ -20,7 +20,6 @@
 #include <linux/spi/spi.h>
 #include <linux/spi/eeprom.h>
 
-
 /*
  * NOTE: this is an *EEPROM* driver.  The vagaries of product naming
  * mean that some AT25 products are EEPROMs, and others are FLASH.
@@ -49,7 +48,6 @@ struct at25_data {
 #define	AT25_SR_BP0	0x04		/* BP for software writeprotect */
 #define	AT25_SR_BP1	0x08
 #define	AT25_SR_WPEN	0x80		/* writeprotect enable */
-
 
 #define EE_MAXADDRLEN	3		/* 24 bit addresses, up to 2 MBytes */
 
@@ -138,7 +136,6 @@ at25_bin_read(struct file *filp, struct kobject *kobj,
 
 	return at25_ee_read(at25, buf, off, count);
 }
-
 
 static ssize_t
 at25_ee_write(struct at25_data *at25, const char *buf, loff_t off,

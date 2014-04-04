@@ -35,7 +35,6 @@
  *-----------------------------------------------------------------------------
  */
 
-
 #if defined(__FreeBSD__) || defined(__NetBSD__)
 #include <sys/types.h>
 #else
@@ -50,7 +49,6 @@
 extern      "C"
 {
 #endif
-
 
 /********************************/
 /* iSPLD control chip registers */

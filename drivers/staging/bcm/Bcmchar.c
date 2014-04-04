@@ -414,7 +414,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 				break;
 			}
 
-
 			if(uiOperation)//Set - setting 1
 			{
 				//Set the gpio output register
@@ -1144,7 +1143,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 					break;
 				}
 
-
 				uiTempVar = pBulkBuffer->Register & EEPROM_REJECT_MASK;
 				if(!((Adapter->pstargetparams->m_u32Customize)&VSG_MODE)
 				&& 	((uiTempVar == EEPROM_REJECT_REG_1)||
@@ -1245,7 +1243,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 
 				if (copy_from_user(&sUserDebugState, IoBuffer.InputBuffer, sizeof(USER_BCM_DBG_STATE)))
 					return -EFAULT;
-
 
 				BCM_DEBUG_PRINT (Adapter, DBG_TYPE_PRINTK, 0, 0, "IOCTL_BCM_SET_DEBUG: OnOff=%d Type = 0x%x ",
 				sUserDebugState.OnOff, sUserDebugState.Type);
@@ -1390,7 +1387,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 							 This restriction has been put assuming that if DSD sig is corrupted, DSD
 							 data won't be considered valid.
 
-
 						*/
 						Status = BcmFlash2xCorruptSig(Adapter,Adapter->eActiveDSD);
 						if(Status != STATUS_SUCCESS)
@@ -1423,7 +1419,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 
 					up(&Adapter->NVMRdmWrmLock);
 
-
 					if(Status != STATUS_SUCCESS)
 					{
 						kfree(pReadData);
@@ -1432,7 +1427,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 				}
 				do_gettimeofday(&tv1);
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL, " timetaken by Write/read :%ld msec\n",(tv1.tv_sec - tv0.tv_sec)*1000 +(tv1.tv_usec - tv0.tv_usec)/1000);
-
 
 				kfree(pReadData);
 				Status = STATUS_SUCCESS;
@@ -1463,7 +1457,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 				if (copy_from_user(&sFlash2xRead, IoBuffer.InputBuffer,sizeof(FLASH2X_READWRITE)))
 					return -EFAULT;
 
-
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL,"\nsFlash2xRead.Section :%x" ,sFlash2xRead.Section);
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL,"\nsFlash2xRead.offset :%x" ,sFlash2xRead.offset);
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL,"\nsFlash2xRead.numOfBytes :%x" ,sFlash2xRead.numOfBytes);
@@ -1481,7 +1474,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 
 				ReadOffset = sFlash2xRead.offset ;
 				OutPutBuff = IoBuffer.OutputBuffer;
-
 
 				pReadBuff = (PCHAR)kzalloc(BuffSize , GFP_KERNEL);
 				if(pReadBuff == NULL)
@@ -1508,7 +1500,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 						ReadBytes = Adapter->uiSectorSize;
 					else
 						ReadBytes = NOB;
-
 
 					//Reading the data from Flash 2.x
 
@@ -1559,7 +1550,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 				//First make this False so that we can enable the Sector Permission Check in BeceemFlashBulkWrite
 				Adapter->bAllDSDWriteAllow = FALSE;
 
-
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL, " IOCTL_BCM_FLASH2X_SECTION_WRITE Called");
 				if (copy_from_user(&IoBuffer, argp, sizeof(IOCTL_BUFFER)))
 					return -EFAULT;
@@ -1594,7 +1584,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 				pWriteBuff = kmalloc(BuffSize, GFP_KERNEL);
 				if(pWriteBuff == NULL)
 					return -ENOMEM;
-
 
 				//extracting the remainder of the given offset.
 				WriteBytes = Adapter->uiSectorSize ;
@@ -1644,7 +1633,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 						else
 							WriteBytes = NOB;
 					}
-
 
 				}	while(NOB > 0);
 				BcmFlash2xWriteSig(Adapter,sFlash2xWrite.Section);
@@ -1774,7 +1762,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL, "Destination SEction :%x", sCopySectStrut.DstSection);
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL, "offset :%x", sCopySectStrut.offset);
 				BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, OSAL_DBG, DBG_LVL_ALL, "NOB :%x", sCopySectStrut.numOfBytes);
-
 
 				if(IsSectionExistInFlash(Adapter,sCopySectStrut.SrcSection) == FALSE)
 				{
@@ -2096,7 +2083,6 @@ static long bcm_char_ioctl(struct file *filp, UINT cmd, ULONG arg)
 	}
 	return Status;
 }
-
 
 static const struct file_operations bcm_fops = {
 	.owner    = THIS_MODULE,

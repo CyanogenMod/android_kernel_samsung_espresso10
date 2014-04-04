@@ -10,7 +10,6 @@
  * S3C2440/S3C2412 Signal Drive Strength Control
 */
 
-
 #ifndef __ASM_ARCH_REGS_DSC_H
 #define __ASM_ARCH_REGS_DSC_H "2440-dsc"
 
@@ -217,4 +216,3 @@
 #endif /* CONFIG_CPU_S3C2440 */
 
 #endif	/* __ASM_ARCH_REGS_DSC_H */
-

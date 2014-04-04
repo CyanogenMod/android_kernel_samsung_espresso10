@@ -115,25 +115,6 @@ static int smb347_i2c_write(struct i2c_client *client, u8 reg, u8 data)
 	return ret;
 }
 
-static void smb347_test_read(struct smb347_chg_data *chg)
-{
-	u8 data = 0;
-	u32 addr = 0;
-	pr_info("%s\n", __func__);
-
-	for (addr = 0; addr <= 0x0E; addr++) {
-		smb347_i2c_read(chg->client, addr, &data);
-		dev_info(&chg->client->dev,
-			"smb347 addr : 0x%02x data : 0x%02x\n",	addr, data);
-	}
-
-	for (addr = 0x30; addr <= 0x3F; addr++) {
-		smb347_i2c_read(chg->client, addr, &data);
-		dev_info(&chg->client->dev,
-			"smb347 addr : 0x%02x data : 0x%02x\n",	addr, data);
-	}
-}
-
 static void smb347_charger_init(struct smb347_chg_data *chg)
 {
 	/* Allow volatile writes to CONFIG registers */
@@ -188,6 +169,7 @@ static void smb347_charger_init(struct smb347_chg_data *chg)
 
 	/* STATUS ingerrupt : Clear */
 	smb347_i2c_write(chg->client, SMB347_STATUS_INTERRUPT, 0x00);
+	msleep(50);
 }
 
 static int smb347_read_status(struct smb_charger_callbacks *ptr)
@@ -358,7 +340,6 @@ static const struct i2c_device_id smb347_id[] = {
 	{ "smb347-charger", 0 },
 };
 
-
 static struct i2c_driver smb347_i2c_driver = {
 	.driver = {
 		.owner	= THIS_MODULE,
@@ -368,7 +349,6 @@ static struct i2c_driver smb347_i2c_driver = {
 	.remove		= smb347_remove,
 	.id_table	= smb347_id,
 };
-
 
 MODULE_DEVICE_TABLE(i2c, smb347_id);
 

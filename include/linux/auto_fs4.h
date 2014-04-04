@@ -160,5 +160,4 @@ union autofs_v5_packet_union {
 #define AUTOFS_IOC_PROTOSUBVER		_IOR(0x93,0x67,int)
 #define AUTOFS_IOC_ASKUMOUNT		_IOR(0x93,0x70,int)
 
-
 #endif /* _LINUX_AUTO_FS4_H */

@@ -20,7 +20,6 @@
 
 #include "sound_config.h"
 
-
 /*
  * Don't make MAX_QUEUE_SIZE larger than 4000
  */
@@ -48,7 +47,6 @@ static struct midi_buf *midi_in_buf[MAX_MIDI_DEV] = {NULL};
 static struct midi_parms parms[MAX_MIDI_DEV];
 
 static void midi_poll(unsigned long dummy);
-
 
 static DEFINE_TIMER(poll_timer, midi_poll, 0, 0);
 
@@ -86,7 +84,7 @@ static void drain_midi_queue(int dev)
 	 */
 
 	if (midi_devs[dev]->buffer_status != NULL)
-		while (!signal_pending(current) && midi_devs[dev]->buffer_status(dev)) 
+		while (!signal_pending(current) && midi_devs[dev]->buffer_status(dev))
 			interruptible_sleep_on_timeout(&midi_sleeper[dev],
 						       HZ/10);
 }
@@ -283,7 +281,7 @@ int MIDIbuf_write(int dev, struct file *file, const char __user *buf, int count)
 			}
 
 			interruptible_sleep_on(&midi_sleeper[dev]);
-			if (signal_pending(current)) 
+			if (signal_pending(current))
 			{
 				c = -EINTR;
 				goto out;
@@ -296,7 +294,7 @@ int MIDIbuf_write(int dev, struct file *file, const char __user *buf, int count)
 		for (i = 0; i < n; i++)
 		{
 			/* BROKE BROKE BROKE - CAN'T DO THIS WITH CLI !! */
-			/* yes, think the same, so I removed the cli() brackets 
+			/* yes, think the same, so I removed the cli() brackets
 				QUEUE_BYTE is protected against interrupts */
 			if (copy_from_user((char *) &tmp_data, &(buf)[c], 1)) {
 				c = -EFAULT;
@@ -309,7 +307,6 @@ int MIDIbuf_write(int dev, struct file *file, const char __user *buf, int count)
 out:
 	return c;
 }
-
 
 int MIDIbuf_read(int dev, struct file *file, char __user *buf, int count)
 {
@@ -365,8 +362,8 @@ int MIDIbuf_ioctl(int dev, struct file *file,
 	int val;
 
 	dev = dev >> 4;
-	
-	if (((cmd >> 8) & 0xff) == 'C') 
+
+	if (((cmd >> 8) & 0xff) == 'C')
 	{
 		if (midi_devs[dev]->coproc)	/* Coprocessor ioctl */
 			return midi_devs[dev]->coproc->ioctl(midi_devs[dev]->coproc->devc, cmd, arg, 0);
@@ -375,7 +372,7 @@ int MIDIbuf_ioctl(int dev, struct file *file,
 	}
 	else
 	{
-		switch (cmd) 
+		switch (cmd)
 		{
 			case SNDCTL_MIDI_PRETIME:
 				if (get_user(val, (int __user *)arg))
@@ -385,7 +382,7 @@ int MIDIbuf_ioctl(int dev, struct file *file,
 				val = (HZ * val) / 10;
 				parms[dev].prech_timeout = val;
 				return put_user(val, (int __user *)arg);
-			
+
 			default:
 				if (!midi_devs[dev]->ioctl)
 					return -EINVAL;
@@ -410,10 +407,9 @@ unsigned int MIDIbuf_poll(int dev, struct file *file, poll_table * wait)
 	poll_wait(file, &midi_sleeper[dev], wait);
 	if (!SPACE_AVAIL(midi_out_buf[dev]))
 		mask |= POLLOUT | POLLWRNORM;
-	
+
 	return mask;
 }
-
 
 int MIDIbuf_avail(int dev)
 {
@@ -422,4 +418,3 @@ int MIDIbuf_avail(int dev)
 	return 0;
 }
 EXPORT_SYMBOL(MIDIbuf_avail);
-

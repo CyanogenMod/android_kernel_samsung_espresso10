@@ -80,7 +80,6 @@
  * means "IP packet".
  */
 
-
 #include <linux/ip.h>
 #include <linux/tcp.h>
 

@@ -21,7 +21,6 @@
 #include <linux/pci_ids.h>
 #include <linux/list.h>
 
-
 #define MOD_NAME KBUILD_BASENAME
 
 #define ADDRESS_NAME_LEN 18
@@ -63,7 +62,7 @@ struct ck804xrom_map_info {
  * 64KiB window.
  *
  * The following applies to mcp55 only:
- * The 15 bits controlling the window size are distributed as follows: 
+ * The 15 bits controlling the window size are distributed as follows:
  * byte @0x88: bit 0..7
  * byte @0x8c: bit 8..15
  * word @0x90: bit 16..30
@@ -110,7 +109,6 @@ static void ck804xrom_cleanup(struct ck804xrom_window *window)
 	}
 	pci_dev_put(window->pdev);
 }
-
 
 static int __devinit ck804xrom_init_one (struct pci_dev *pdev,
 					 const struct pci_device_id *ent)
@@ -181,7 +179,6 @@ static int __devinit ck804xrom_init_one (struct pci_dev *pdev,
 		       " %s(): Unable to register resource %pR - kernel bug?\n",
 			__func__, &window->rsrc);
 	}
-
 
 	/* Enable writes through the rom window */
 	pci_read_config_byte(pdev, 0x6d, &byte);
@@ -297,7 +294,6 @@ static int __devinit ck804xrom_init_one (struct pci_dev *pdev,
 			goto out;
 		}
 
-
 		/* Calculate the new value of map_top */
 		map_top += map->mtd->size;
 
@@ -318,7 +314,6 @@ static int __devinit ck804xrom_init_one (struct pci_dev *pdev,
 	}
 	return 0;
 }
-
 
 static void __devexit ck804xrom_remove_one (struct pci_dev *pdev)
 {
@@ -385,4 +380,3 @@ module_exit(cleanup_ck804xrom);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Eric Biederman <ebiederman@lnxi.com>, Dave Olsen <dolsen@lnxi.com>");
 MODULE_DESCRIPTION("MTD map driver for BIOS chips on the Nvidia ck804 southbridge");
-

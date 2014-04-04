@@ -371,7 +371,6 @@ int iwlagn_send_bt_env(struct iwl_priv *priv, u8 action, u8 type)
 	return ret;
 }
 
-
 static int iwlagn_alive_notify(struct iwl_priv *priv)
 {
 	const struct queue_to_fifo_ac *queue_to_fifo;
@@ -488,7 +487,6 @@ static int iwlagn_alive_notify(struct iwl_priv *priv)
 
 	return iwl_send_calib_results(priv);
 }
-
 
 /**
  * iwl_verify_inst_sparse - verify runtime uCode image in card vs. host,

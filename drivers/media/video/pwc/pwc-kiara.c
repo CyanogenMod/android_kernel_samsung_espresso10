@@ -22,7 +22,6 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
 /* This tables contains entries for the 730/740/750 (Kiara) camera, with
    4 different qualities (no compression, low, medium, high).
    It lists the bandwidth requirements for said mode by its alternate interface
@@ -37,7 +36,6 @@
    will be chosen (unless the decompressor is absent). Sometimes there are only
    1 or 2 compressed modes available; in that case entries are duplicated.
 */
-
 
 #include "pwc-kiara.h"
 #include "pwc-uncompress.h"
@@ -317,7 +315,6 @@ const struct Kiara_table_entry Kiara_table[PSZ_MAX][6][4] =
       },
    },
 };
-
 
 /*
  * Rom table for kiara chips
@@ -890,4 +887,3 @@ const unsigned int KiaraRomTable [8][2][16][8] =
   }
  }
 };
-

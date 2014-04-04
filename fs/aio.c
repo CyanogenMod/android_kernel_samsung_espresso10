@@ -135,7 +135,7 @@ static int aio_setup_ring(struct kioctx *ctx)
 	info->mmap_size = nr_pages * PAGE_SIZE;
 	dprintk("attempting mmap of %lu bytes\n", info->mmap_size);
 	down_write(&ctx->mm->mmap_sem);
-	info->mmap_base = do_mmap(NULL, 0, info->mmap_size, 
+	info->mmap_base = do_mmap(NULL, 0, info->mmap_size,
 				  PROT_READ|PROT_WRITE, MAP_ANONYMOUS|MAP_PRIVATE,
 				  0);
 	if (IS_ERR((void *)info->mmap_base)) {
@@ -147,7 +147,7 @@ static int aio_setup_ring(struct kioctx *ctx)
 
 	dprintk("mmap address: 0x%08lx\n", info->mmap_base);
 	info->nr_pages = get_user_pages(current, ctx->mm,
-					info->mmap_base, nr_pages, 
+					info->mmap_base, nr_pages,
 					1, 0, info->ring_pages, NULL);
 	up_write(&ctx->mm->mmap_sem);
 
@@ -172,7 +172,6 @@ static int aio_setup_ring(struct kioctx *ctx)
 
 	return 0;
 }
-
 
 /* aio_ring_event: returns a pointer to the event at the given index from
  * kmap_atomic(, km).  Release the pointer with put_aio_ring_event();
@@ -323,8 +322,8 @@ out_freectx:
 }
 
 /* aio_cancel_all
- *	Cancels all outstanding aio requests on an aio context.  Used 
- *	when the processes owning a context have all exited to encourage 
+ *	Cancels all outstanding aio requests on an aio context.  Used
+ *	when the processes owning a context have all exited to encourage
  *	the rapid destruction of the kioctx.
  */
 static void aio_cancel_all(struct kioctx *ctx)
@@ -389,10 +388,10 @@ ssize_t wait_on_sync_kiocb(struct kiocb *iocb)
 }
 EXPORT_SYMBOL(wait_on_sync_kiocb);
 
-/* exit_aio: called when the last user of mm goes away.  At this point, 
- * there is no way for any new requests to be submited or any of the 
- * io_* syscalls to be called on the context.  However, there may be 
- * outstanding requests which hold references to the context; as they 
+/* exit_aio: called when the last user of mm goes away.  At this point,
+ * there is no way for any new requests to be submited or any of the
+ * io_* syscalls to be called on the context.  However, there may be
+ * outstanding requests which hold references to the context; as they
  * go away, they will call put_ioctx and release any pinned memory
  * associated with the request (held via struct page * references).
  */
@@ -477,8 +476,8 @@ static struct kiocb *__aio_get_req(struct kioctx *ctx)
 static inline struct kiocb *aio_get_req(struct kioctx *ctx)
 {
 	struct kiocb *req;
-	/* Handle a potential starvation case -- should be exceedingly rare as 
-	 * requests will be stuck on fput_head only if the aio_fput_routine is 
+	/* Handle a potential starvation case -- should be exceedingly rare as
+	 * requests will be stuck on fput_head only if the aio_fput_routine is
 	 * delayed and the requests were the last user of the struct file.
 	 */
 	req = __aio_get_req(ctx);
@@ -844,7 +843,6 @@ static void aio_kick_handler(struct work_struct *work)
 		queue_delayed_work(aio_wq, &ctx->wq, 0);
 }
 
-
 /*
  * Called by kick_iocb to queue the kiocb for retry
  * and if required activate the aio work queue to process
@@ -875,7 +873,7 @@ static void try_queue_kicked_iocb(struct kiocb *iocb)
  */
 void kick_iocb(struct kiocb *iocb)
 {
-	/* sync iocbs are easy: they can only ever be executing from a 
+	/* sync iocbs are easy: they can only ever be executing from a
 	 * single context. */
 	if (is_sync_kiocb(iocb)) {
 		kiocbSetKicked(iocb);
@@ -889,7 +887,7 @@ EXPORT_SYMBOL(kick_iocb);
 
 /* aio_complete
  *	Called when the io request on the given iocb is complete.
- *	Returns true if this is the last user of the request.  The 
+ *	Returns true if this is the last user of the request.  The
  *	only other user of the request can be the cancellation code.
  */
 int aio_complete(struct kiocb *iocb, long res, long res2)
@@ -995,7 +993,7 @@ put_rq:
 EXPORT_SYMBOL(aio_complete);
 
 /* aio_read_evt
- *	Pull an event off of the ioctx's event ring.  Returns the number of 
+ *	Pull an event off of the ioctx's event ring.  Returns the number of
  *	events fetched (0 or 1 ;-)
  *	FIXME: make this use cmpxchg.
  *	TODO: make the ringbuffer user mmap()able (requires FIXME).
@@ -1086,7 +1084,7 @@ static int read_events(struct kioctx *ctx,
 	struct aio_timeout	to;
 	int			retry = 0;
 
-	/* needed to zero any padding within an entry (there shouldn't be 
+	/* needed to zero any padding within an entry (there shouldn't be
 	 * any, but C is fun!
 	 */
 	memset(&ent, 0, sizeof(ent));
@@ -1189,7 +1187,7 @@ out:
 	return i ? i : ret;
 }
 
-/* Take an ioctx and remove it from the list of ioctx's.  Protects 
+/* Take an ioctx and remove it from the list of ioctx's.  Protects
  * against races with itself via ->dead.
  */
 static void io_destroy(struct kioctx *ioctx)
@@ -1224,10 +1222,10 @@ static void io_destroy(struct kioctx *ioctx)
  *	Create an aio_context capable of receiving at least nr_events.
  *	ctxp must not point to an aio_context that already exists, and
  *	must be initialized to 0 prior to the call.  On successful
- *	creation of the aio_context, *ctxp is filled in with the resulting 
+ *	creation of the aio_context, *ctxp is filled in with the resulting
  *	handle.  May fail with -EINVAL if *ctxp is not initialized,
- *	if the specified nr_events exceeds internal limits.  May fail 
- *	with -EAGAIN if the specified nr_events exceeds the user's limit 
+ *	if the specified nr_events exceeds internal limits.  May fail
+ *	with -EAGAIN if the specified nr_events exceeds the user's limit
  *	of available events.  May fail with -ENOMEM if insufficient kernel
  *	resources are available.  May fail with -EFAULT if an invalid
  *	pointer is passed for ctxp.  Will fail with -ENOSYS if not
@@ -1266,7 +1264,7 @@ out:
 }
 
 /* sys_io_destroy:
- *	Destroy the aio_context specified.  May cancel any outstanding 
+ *	Destroy the aio_context specified.  May cancel any outstanding
  *	AIOs and block on completion.  Will fail with -ENOSYS if not
  *	implemented.  May fail with -EINVAL if the context pointed to
  *	is invalid.
@@ -1395,6 +1393,10 @@ static ssize_t aio_setup_vectored_rw(int type, struct kiocb *kiocb, bool compat)
 	if (ret < 0)
 		goto out;
 
+	ret = rw_verify_area(type, kiocb->ki_filp, &kiocb->ki_pos, ret);
+	if (ret < 0)
+		goto out;
+
 	kiocb->ki_nr_segs = kiocb->ki_nbytes;
 	kiocb->ki_cur_seg = 0;
 	/* ki_nbytes/left now reflect bytes instead of segs */
@@ -1406,11 +1408,17 @@ out:
 	return ret;
 }
 
-static ssize_t aio_setup_single_vector(struct kiocb *kiocb)
+static ssize_t aio_setup_single_vector(int type, struct file * file, struct kiocb *kiocb)
 {
+	int bytes;
+
+	bytes = rw_verify_area(type, file, &kiocb->ki_pos, kiocb->ki_left);
+	if (bytes < 0)
+		return bytes;
+
 	kiocb->ki_iovec = &kiocb->ki_inline_vec;
 	kiocb->ki_iovec->iov_base = kiocb->ki_buf;
-	kiocb->ki_iovec->iov_len = kiocb->ki_left;
+	kiocb->ki_iovec->iov_len = bytes;
 	kiocb->ki_nr_segs = 1;
 	kiocb->ki_cur_seg = 0;
 	return 0;
@@ -1435,10 +1443,7 @@ static ssize_t aio_setup_iocb(struct kiocb *kiocb, bool compat)
 		if (unlikely(!access_ok(VERIFY_WRITE, kiocb->ki_buf,
 			kiocb->ki_left)))
 			break;
-		ret = security_file_permission(file, MAY_READ);
-		if (unlikely(ret))
-			break;
-		ret = aio_setup_single_vector(kiocb);
+		ret = aio_setup_single_vector(READ, file, kiocb);
 		if (ret)
 			break;
 		ret = -EINVAL;
@@ -1453,10 +1458,7 @@ static ssize_t aio_setup_iocb(struct kiocb *kiocb, bool compat)
 		if (unlikely(!access_ok(VERIFY_READ, kiocb->ki_buf,
 			kiocb->ki_left)))
 			break;
-		ret = security_file_permission(file, MAY_WRITE);
-		if (unlikely(ret))
-			break;
-		ret = aio_setup_single_vector(kiocb);
+		ret = aio_setup_single_vector(WRITE, file, kiocb);
 		if (ret)
 			break;
 		ret = -EINVAL;
@@ -1466,9 +1468,6 @@ static ssize_t aio_setup_iocb(struct kiocb *kiocb, bool compat)
 	case IOCB_CMD_PREADV:
 		ret = -EBADF;
 		if (unlikely(!(file->f_mode & FMODE_READ)))
-			break;
-		ret = security_file_permission(file, MAY_READ);
-		if (unlikely(ret))
 			break;
 		ret = aio_setup_vectored_rw(READ, kiocb, compat);
 		if (ret)
@@ -1480,9 +1479,6 @@ static ssize_t aio_setup_iocb(struct kiocb *kiocb, bool compat)
 	case IOCB_CMD_PWRITEV:
 		ret = -EBADF;
 		if (unlikely(!(file->f_mode & FMODE_WRITE)))
-			break;
-		ret = security_file_permission(file, MAY_WRITE);
-		if (unlikely(ret))
 			break;
 		ret = aio_setup_vectored_rw(WRITE, kiocb, compat);
 		if (ret)

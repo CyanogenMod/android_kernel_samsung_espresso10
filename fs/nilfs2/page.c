@@ -34,7 +34,6 @@
 #include "page.h"
 #include "mdt.h"
 
-
 #define NILFS_BUFFER_INHERENT_BITS  \
 	((1UL << BH_Uptodate) | (1UL << BH_Mapped) | (1UL << BH_NILFS_Node) | \
 	 (1UL << BH_NILFS_Volatile) | (1UL << BH_NILFS_Checked))

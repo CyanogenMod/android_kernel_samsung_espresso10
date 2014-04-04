@@ -22,7 +22,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-
 #include <linux/input.h>
 #include <linux/usb.h>
 #include <linux/hid.h>
@@ -87,7 +86,6 @@ static void hid_lg4ff_set_autocenter(struct input_dev *dev, u16 magnitude)
 	usbhid_submit_report(hid, report, USB_DIR_OUT);
 }
 
-
 int lg4ff_init(struct hid_device *hid)
 {
 	struct hid_input *hidinput = list_entry(hid->inputs.next, struct hid_input, list);
@@ -132,4 +130,3 @@ int lg4ff_init(struct hid_device *hid)
 	hid_info(hid, "Force feedback for Logitech Speed Force Wireless by Simon Wood <simon@mungewell.org>\n");
 	return 0;
 }
-

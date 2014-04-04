@@ -1,4 +1,3 @@
-
 /*	From pas_card.c	*/
 int pas_set_intr(int mask);
 int pas_remove_intr(int mask);

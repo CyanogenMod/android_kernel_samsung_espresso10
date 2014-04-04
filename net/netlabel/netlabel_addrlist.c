@@ -95,7 +95,6 @@ struct netlbl_af4list *netlbl_af4list_search_exact(__be32 addr,
 	return NULL;
 }
 
-
 #if defined(CONFIG_IPV6) || defined(CONFIG_IPV6_MODULE)
 /**
  * netlbl_af6list_search - Search for a matching IPv6 address entry

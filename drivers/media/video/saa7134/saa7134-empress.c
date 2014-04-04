@@ -148,7 +148,6 @@ ts_poll(struct file *file, struct poll_table_struct *wait)
 	return videobuf_poll_stream(file, &dev->empress_tsq, wait);
 }
 
-
 static int
 ts_mmap(struct file *file, struct vm_area_struct * vma)
 {
@@ -508,7 +507,6 @@ static void empress_signal_change(struct saa7134_dev *dev)
 {
 	schedule_work(&dev->empress_workqueue);
 }
-
 
 static int empress_init(struct saa7134_dev *dev)
 {

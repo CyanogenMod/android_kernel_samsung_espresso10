@@ -68,7 +68,6 @@ const char *ceph_osd_op_name(int op)
 	return "???";
 }
 
-
 const char *ceph_pool_op_name(int op)
 {
 	switch (op) {

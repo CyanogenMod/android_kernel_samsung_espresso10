@@ -29,7 +29,6 @@
 #define mxs_mxs_mmc_data_entry(soc, _id, hwid)				\
 	[_id] = mxs_mxs_mmc_data_entry_single(soc, _id, hwid)
 
-
 #ifdef CONFIG_SOC_IMX23
 const struct mxs_mxs_mmc_data mx23_mxs_mmc_data[] __initconst = {
 	mxs_mxs_mmc_data_entry(MX23, 0, 1),

@@ -90,7 +90,6 @@ def trace_flag_str(value):
 
     return string
 
-
 def taskState(state):
 	states = {
 		0 : "R",
@@ -103,7 +102,6 @@ def taskState(state):
 		return "Unknown"
 
 	return states[state]
-
 
 class EventHeaders:
 	def __init__(self, common_cpu, common_secs, common_nsecs,

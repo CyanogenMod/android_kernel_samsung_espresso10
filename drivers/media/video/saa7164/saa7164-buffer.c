@@ -319,4 +319,3 @@ void saa7164_buffer_dealloc_user(struct saa7164_user_buffer *buf)
 
 	kfree(buf);
 }
-

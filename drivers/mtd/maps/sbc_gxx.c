@@ -110,7 +110,6 @@ static inline void sbc_gxx_page(struct map_info *map, unsigned long ofs)
 	}
 }
 
-
 static map_word sbc_gxx_read8(struct map_info *map, unsigned long ofs)
 {
 	map_word ret;
@@ -206,7 +205,6 @@ static int __init init_sbc_gxx(void)
 		iounmap(iomapadr);
 		return -EAGAIN;
 	}
-
 
 	printk( KERN_INFO"%s: IO:0x%x-0x%x MEM:0x%x-0x%x\n",
 		sbc_gxx_map.name,

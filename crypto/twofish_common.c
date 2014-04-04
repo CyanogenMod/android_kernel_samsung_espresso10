@@ -48,7 +48,6 @@
 #include <linux/module.h>
 #include <linux/types.h>
 
-
 /* The large precomputed tables for the Twofish cipher (twofish.c)
  * Taken from the same source as twofish.c
  * Marc Mutz <Marc@Mutz.com>
@@ -403,7 +402,6 @@ static const u8 exp_to_poly[492] = {
 	0x82, 0x49, 0x92, 0x69, 0xD2, 0xE9, 0x9F, 0x73, 0xE6, 0x81, 0x4F, 0x9E,
 	0x71, 0xE2, 0x89, 0x5F, 0xBE, 0x31, 0x62, 0xC4, 0xC5, 0xC7, 0xC3, 0xCB
 };
-
 
 /* The table constants are indices of
  * S-box entries, preprocessed through q0 and q1. */

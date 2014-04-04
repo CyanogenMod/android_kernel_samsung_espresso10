@@ -54,7 +54,6 @@ void v4l2_prio_close(struct v4l2_prio_state *global, enum v4l2_priority local);
 enum v4l2_priority v4l2_prio_max(struct v4l2_prio_state *global);
 int v4l2_prio_check(struct v4l2_prio_state *global, enum v4l2_priority local);
 
-
 struct v4l2_file_operations {
 	struct module *owner;
 	ssize_t (*read) (struct file *, char __user *, size_t, loff_t *);

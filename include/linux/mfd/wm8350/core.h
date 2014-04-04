@@ -552,7 +552,6 @@
 #define WM8350_WALL_FB_OVRDE			0x4000
 #define WM8350_BATT_FB_OVRDE			0x2000
 
-
 /*
  * R233 (0xE9) - State Machinine Status
  */
@@ -655,7 +654,6 @@ struct wm8350_platform_data {
 	int irq_base;
 	int gpio_base;
 };
-
 
 /*
  * WM8350 device initialisation and exit.

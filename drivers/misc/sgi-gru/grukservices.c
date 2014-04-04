@@ -94,7 +94,6 @@
  *
  */
 
-
 #define ASYNC_HAN_TO_BID(h)	((h) - 1)
 #define ASYNC_BID_TO_HAN(b)	((b) + 1)
 #define ASYNC_HAN_TO_BS(h)	gru_base[ASYNC_HAN_TO_BID(h)]
@@ -521,12 +520,10 @@ void gru_wait_abort_proc(void *cb)
 		gru_abort(ret, cb, "gru_wait_abort");
 }
 
-
 /*------------------------------ MESSAGE QUEUES -----------------------------*/
 
 /* Internal status . These are NOT returned to the user. */
 #define MQIE_AGAIN		-1	/* try again */
-
 
 /*
  * Save/restore the "present" flag that is in the second line of 2-line
@@ -921,7 +918,6 @@ int gru_read_gpa(unsigned long *value, unsigned long gpa)
 }
 EXPORT_SYMBOL_GPL(gru_read_gpa);
 
-
 /*
  * Copy a block of data using the GRU resources
  */
@@ -1158,4 +1154,3 @@ void gru_kservices_exit(void)
 	if (gru_free_kernel_contexts())
 		BUG();
 }
-

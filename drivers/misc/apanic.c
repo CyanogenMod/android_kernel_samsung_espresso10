@@ -181,7 +181,6 @@ static int apanic_proc_read(char *buffer, char **start, off_t offset,
 	page_no = (file_offset + offset) / ctx->mtd->writesize;
 	page_offset = (file_offset + offset) % ctx->mtd->writesize;
 
-
 	if (phy_offset(ctx->mtd, (page_no * ctx->mtd->writesize))
 		== APANIC_INVALID_OFFSET) {
 		pr_err("apanic: reading an invalid address\n");

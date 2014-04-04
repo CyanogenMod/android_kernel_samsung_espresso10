@@ -17,7 +17,6 @@
  #define __u64 unsigned long long
 #endif
 
-
 static inline __u16  ___swab16(__u16 x)
 {
 	__u16 __x = x;
@@ -76,7 +75,6 @@ static inline __u64 __arch__swab64(__u64 x)
 	return ___swab64(__tmp);
 }
 
-
 #endif
 
 #define __swab16(x) __fswab16(x)
@@ -103,4 +101,3 @@ static inline const __u32 __fswab32(__u32 x)
 #define swab64s __swab64s
 
 #endif /* _LINUX_BYTEORDER_SWAB_H */
-

@@ -31,11 +31,9 @@
  * See the included documentation for usage instructions and details
  * of the protocol involved. */
 
-
 /* Version 0.5, August 4, 1996 */
 /* Version 0.7, August 27, 1996 */
 /* Version 0.9, November 17, 1996 */
-
 
 /******************************************************************
 
@@ -167,7 +165,6 @@ static void write_lpcontrol(struct qcam *q, int d)
 	parport_write_control(q->pport, d);
 }
 
-
 /* qc_waithand busy-waits for a handshake signal from the QuickCam.
  * Almost all communication with the camera requires handshaking. */
 
@@ -274,7 +271,6 @@ static int qc_readparam(struct qcam *q)
 	return cmd;
 }
 
-
 /* Try to detect a QuickCam.  It appears to flash the upper 4 bits of
    the status register at 5-10 Hz.  This is only used in the autoprobe
    code.  Be aware that this isn't the way Connectix detects the
@@ -300,7 +296,6 @@ static int qc_detect(struct qcam *q)
 		lastreg = reg;
 		mdelay(2);
 	}
-
 
 #if 0
 	/* Force camera detection during testing. Sometimes the camera
@@ -371,7 +366,6 @@ static int qc_setscanmode(struct qcam *q)
 	return 0;
 }
 
-
 /* Reset the QuickCam.  This uses the same sequence the Windows
  * QuickPic program uses.  Someone with a bi-directional port should
  * check that bi-directional mode is detected right, and then
@@ -404,8 +398,6 @@ static void qc_reset(struct qcam *q)
 	write_lpcontrol(q, 0xe);
 	qc_setscanmode(q);		/* in case port_mode changed */
 }
-
-
 
 /* Reset the QuickCam and program for brightness, contrast,
  * white-balance, and resolution. */

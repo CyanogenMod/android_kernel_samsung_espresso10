@@ -342,4 +342,3 @@ BOOL PSbIsNextTBTTWakeUp(void *hDeviceContext)
 	}
 	return bWakeUp;
 }
-

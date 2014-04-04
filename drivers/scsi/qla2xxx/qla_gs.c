@@ -1798,7 +1798,6 @@ qla24xx_prep_ms_fm_iocb(scsi_qla_host_t *vha, uint32_t req_size,
 	return ct_pkt;
 }
 
-
 static inline struct ct_sns_req *
 qla24xx_prep_ct_fm_req(struct ct_sns_req *ct_req, uint16_t cmd,
     uint16_t rsp_size)

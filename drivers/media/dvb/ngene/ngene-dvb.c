@@ -42,7 +42,6 @@
 
 #include "ngene.h"
 
-
 /****************************************************************************/
 /* COMMAND API interface ****************************************************/
 /****************************************************************************/
@@ -104,7 +103,6 @@ struct dvb_device ngene_dvbdev_ci = {
 	.fops    = &ci_fops,
 };
 
-
 /****************************************************************************/
 /* DVB functions and API interface ******************************************/
 /****************************************************************************/
@@ -122,7 +120,6 @@ void *tsin_exchange(void *priv, void *buf, u32 len, u32 clock, u32 flags)
 {
 	struct ngene_channel *chan = priv;
 	struct ngene *dev = chan->dev;
-
 
 	if (flags & DF_SWAP32)
 		swap_buffer(buf, len);
@@ -160,8 +157,6 @@ void *tsout_exchange(void *priv, void *buf, u32 len, u32 clock, u32 flags)
 	wake_up_interruptible(&dev->tsout_rbuf.queue);
 	return buf;
 }
-
-
 
 int ngene_start_feed(struct dvb_demux_feed *dvbdmxfeed)
 {

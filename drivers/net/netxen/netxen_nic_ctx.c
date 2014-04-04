@@ -231,7 +231,6 @@ nx_fw_cmd_create_rx_ctx(struct netxen_adapter *adapter)
 		goto out_free_rsp;
 	}
 
-
 	prsp_rds = ((nx_cardrsp_rds_ring_t *)
 			 &prsp->data[le32_to_cpu(prsp->rds_ring_offset)]);
 
@@ -568,7 +567,6 @@ netxen_init_old_ctx(struct netxen_adapter *adapter)
 	hwctx->cmd_ring_addr = cpu_to_le64(tx_ring->phys_addr);
 	hwctx->cmd_ring_size = cpu_to_le32(tx_ring->num_desc);
 
-
 	for (ring = 0; ring < adapter->max_rds_rings; ring++) {
 		rds_ring = &recv_ctx->rds_rings[ring];
 
@@ -696,7 +694,6 @@ int netxen_alloc_hw_resources(struct netxen_adapter *adapter)
 		}
 	}
 
-
 	if (!NX_IS_REVISION_P2(adapter->ahw.revision_id)) {
 		if (test_and_set_bit(__NX_FW_ATTACHED, &adapter->state))
 			goto done;
@@ -790,4 +787,3 @@ done:
 		}
 	}
 }
-

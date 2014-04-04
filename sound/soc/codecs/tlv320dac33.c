@@ -904,7 +904,6 @@ static int dac33_prepare_chip(struct snd_pcm_substream *substream)
 		return -EINVAL;
 	}
 
-
 	aictrl_a = dac33_read_reg_cache(codec, DAC33_SER_AUDIOIF_CTRL_A);
 	aictrl_a &= ~(DAC33_NCYCL_MASK | DAC33_WLEN_MASK);
 	/* Read FIFO control A, and clear FIFO flush bit */
@@ -1655,7 +1654,6 @@ static void __exit dac33_module_exit(void)
 	i2c_del_driver(&tlv320dac33_i2c_driver);
 }
 module_exit(dac33_module_exit);
-
 
 MODULE_DESCRIPTION("ASoC TLV320DAC33 codec driver");
 MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");

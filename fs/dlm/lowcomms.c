@@ -153,7 +153,6 @@ static struct kmem_cache *con_cache;
 static void process_recv_sockets(struct work_struct *work);
 static void process_send_sockets(struct work_struct *work);
 
-
 /* This is deliberately very simple because most clusters have simple
    sequential nodeids, so we should be able to go straight to a connection
    struct in the array */
@@ -1223,8 +1222,6 @@ static int tcp_listen_for_all(void)
 	return result;
 }
 
-
-
 static struct writequeue_entry *new_writequeue_entry(struct connection *con,
 						     gfp_t allocation)
 {
@@ -1452,7 +1449,6 @@ static void process_send_sockets(struct work_struct *work)
 	if (test_and_clear_bit(CF_WRITE_PENDING, &con->flags))
 		send_to_sock(con);
 }
-
 
 /* Discard all entries on the write queues */
 static void clean_writequeues(void)

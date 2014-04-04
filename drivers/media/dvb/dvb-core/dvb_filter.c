@@ -24,8 +24,6 @@ static u32 ac3_frames[3][32] =
      {96,120,144,168,192,240,288,336,384,480,576,672,768,960,1152,1344,
       1536,1728,1920,0,0,0,0,0,0,0,0,0,0,0,0,0}};
 
-
-
 #if 0
 static void setup_ts2pes(ipack *pa, ipack *pv, u16 *pida, u16 *pidv,
 		  void (*pes_write)(u8 *buf, int count, void *data),
@@ -91,7 +89,6 @@ static int read_picture_header(u8 *headr, struct mpg_picture *pic, int field, in
 				break;
 		}
 	}
-
 
 	pic->vinfo.vbv_delay  = (( headr[1] >> 5 ) | ( headr[2] << 3) |
 				 ( (headr[3] & 0x1F) << 11) ) & 0xffff;
@@ -256,7 +253,6 @@ static int read_sequence_header(u8 *headr, struct dvb_video_info *vi, int pr)
 }
 #endif
 
-
 #if 0
 static int get_vinfo(u8 *mbuf, int count, struct dvb_video_info *vi, int pr)
 {
@@ -284,7 +280,6 @@ static int get_vinfo(u8 *mbuf, int count, struct dvb_video_info *vi, int pr)
 	return 0;
 }
 #endif
-
 
 #if 0
 static int get_ainfo(u8 *mbuf, int count, struct dvb_audio_info *ai, int pr)
@@ -315,7 +310,6 @@ static int get_ainfo(u8 *mbuf, int count, struct dvb_audio_info *ai, int pr)
 	if (pr)
 		printk("Audiostream: Layer: %d", 4-ai->layer);
 
-
 	ai->bit_rate = bitrates[(3-ai->layer)][(headr[2] >> 4 )]*1000;
 
 	if (pr){
@@ -340,7 +334,6 @@ static int get_ainfo(u8 *mbuf, int count, struct dvb_audio_info *ai, int pr)
 	return 0;
 }
 #endif
-
 
 int dvb_filter_get_ac3info(u8 *mbuf, int count, struct dvb_audio_info *ai, int pr)
 {
@@ -381,17 +374,14 @@ int dvb_filter_get_ac3info(u8 *mbuf, int count, struct dvb_audio_info *ai, int p
 	ai->frequency = freq[fr]*100;
 	if (pr) printk ("  Freq: %d Hz\n", (int) ai->frequency);
 
-
 	ai->framesize = ac3_frames[fr][frame >> 1];
 	if ((frame & 1) &&  (fr == 1)) ai->framesize++;
 	ai->framesize = ai->framesize << 1;
 	if (pr) printk ("  Framesize %d\n",(int) ai->framesize);
 
-
 	return 0;
 }
 EXPORT_SYMBOL(dvb_filter_get_ac3info);
-
 
 #if 0
 static u8 *skip_pes_header(u8 **bufp)
@@ -405,7 +395,6 @@ static u8 *skip_pes_header(u8 **bufp)
 		1, 0xffff,      5,     10, 0xffff, 0xffff, 0xffff, 0xffff,
 		0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff
 	};
-
 
 	if ((inbuf[6] & 0xc0) == 0x80){ /* mpeg2 */
 		if (buf[7] & PTS_ONLY)

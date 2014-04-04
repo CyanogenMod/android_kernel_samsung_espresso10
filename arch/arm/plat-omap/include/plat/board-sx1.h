@@ -31,7 +31,6 @@
 #define SOFIA_KEYLIGHT_REG	0x07
 #define SOFIA_DIMMING_REG	0x09
 
-
 /* Function Prototypes for SX1 devices control on I2C bus */
 
 int sx1_setbacklight(u8 backlight);

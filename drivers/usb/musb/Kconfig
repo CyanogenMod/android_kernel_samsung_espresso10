@@ -139,7 +139,6 @@ config USB_MUSB_HDRC_HCD
 	select USB_OTG if USB_GADGET_MUSB_HDRC
 	default y
 
-
 config USB_SAMSUNG_OMAP_NORPM
 	bool 'Disable musb omap2430 runtime pm'
 	depends on USB_MUSB_HDRC
@@ -147,6 +146,11 @@ config USB_SAMSUNG_OMAP_NORPM
 
 config USB_SAMSUNG_OMAP_NOSRQ
 	bool 'Disable musb session request interrupt'
+	depends on USB_MUSB_HDRC
+	default n
+
+config USB_SAMSUNG_OMAP_HCD_RESET_SUPPORT
+	bool 'reset hcd when usb phy is stucked'
 	depends on USB_MUSB_HDRC
 	default n
 
@@ -192,4 +196,3 @@ config USB_TUSB_OMAP_DMA
 	default y
 	help
 	  Enable DMA transfers on TUSB 6010 when OMAP DMA is available.
-

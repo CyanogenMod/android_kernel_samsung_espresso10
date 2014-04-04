@@ -461,7 +461,6 @@ static void vio_handle_cd_event(struct HvLpEvent *event)
 	unsigned long flags;
 	struct request *req;
 
-
 	if (event == NULL)
 		/* Notification that a partition went away! */
 		return;

@@ -1,4 +1,3 @@
-
 #include <linux/ceph/ceph_debug.h>
 
 #include <linux/module.h>
@@ -929,9 +928,6 @@ bad:
 		crush_destroy(newcrush);
 	return ERR_PTR(err);
 }
-
-
-
 
 /*
  * calculate file layout from given offset, length.

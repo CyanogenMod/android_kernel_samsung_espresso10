@@ -535,7 +535,6 @@ static int pcl816_ai_cmdtest(struct comedi_device *dev,
 	if (err)
 		return 1;
 
-
 	/*
 	 * step 2: make sure trigger sources
 	 * are unique and mutually compatible
@@ -566,7 +565,6 @@ static int pcl816_ai_cmdtest(struct comedi_device *dev,
 
 	if (err)
 		return 2;
-
 
 	/* step 3: make sure arguments are trivially compatible */
 	if (cmd->start_arg != 0) {
@@ -609,7 +607,6 @@ static int pcl816_ai_cmdtest(struct comedi_device *dev,
 	if (err)
 		return 3;
 
-
 	/* step 4: fix up any arguments */
 	if (cmd->convert_src == TRIG_TIMER) {
 		tmp = cmd->convert_arg;
@@ -625,7 +622,6 @@ static int pcl816_ai_cmdtest(struct comedi_device *dev,
 
 	if (err)
 		return 4;
-
 
 	/* step 5: complain about special chanlist considerations */
 

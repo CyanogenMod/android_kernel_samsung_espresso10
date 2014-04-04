@@ -119,4 +119,3 @@ void __init pnx4008_init_irq(void)
 	__raw_writel(0, INTC_ER(SIC1_BASE_INT));
 	__raw_writel(0, INTC_ER(SIC2_BASE_INT));
 }
-

@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -33,7 +33,6 @@
 #include "bmi_msg.h"
 
 #define ATH_DEBUG_BMI  ATH_DEBUG_MAKE_MODULE_MASK(0)
-
 
 #define BMI_COMMUNICATION_TIMEOUT       100000
 

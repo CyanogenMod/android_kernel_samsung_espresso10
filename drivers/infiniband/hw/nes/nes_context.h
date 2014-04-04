@@ -189,5 +189,4 @@ enum nes_iwarp_qp_state {
 	NES_QPCONTEXT_IWARP_STATE_ERROR     = 6
 };
 
-
 #endif		/* NES_CONTEXT_H */

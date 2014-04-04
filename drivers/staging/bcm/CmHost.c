@@ -259,7 +259,6 @@ CopyIpAddrToClassifier(S_CLASSIFIER_RULE *pstClassifierEntry ,
 	}
 }
 
-
 void ClearTargetDSXBuffer(PMINI_ADAPTER Adapter,B_UINT16 TID,BOOLEAN bFreeAll)
 {
     ULONG ulIndex;
@@ -289,11 +288,9 @@ static inline VOID CopyClassifierRuleToSF(PMINI_ADAPTER Adapter,stConvergenceSLT
 	//UCHAR   ucProtocolLength=0;
 	//ULONG   ulPhsStatus;
 
-
 	if(Adapter->PackInfo[uiSearchRuleIndex].usVCID_Value == 0 ||
 		nClassifierIndex > (MAX_CLASSIFIERS-1))
 		return;
-
 
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_OTHERS, CONN_MSG, DBG_LVL_ALL,"Storing Classifier Rule Index : %X",ntohs(psfCSType->cCPacketClassificationRule.u16PacketClassificationRuleIndex));
 
@@ -434,7 +431,6 @@ static inline VOID CopyClassifierRuleToSF(PMINI_ADAPTER Adapter,stConvergenceSLT
 	}
 }
 
-
 /**
 @ingroup ctrl_pkt_functions
 */
@@ -455,7 +451,6 @@ static inline VOID DeleteClassifierRuleFromSF(PMINI_ADAPTER Adapter,UINT uiSearc
 		return;
 
 	u16PacketClassificationRuleIndex = Adapter->astClassifierTable[nClassifierIndex].uiClassifierRuleIndex;
-
 
 	pstClassifierEntry = &Adapter->astClassifierTable[nClassifierIndex];
 	if(pstClassifierEntry)
@@ -489,7 +484,6 @@ VOID DeleteAllClassifiersForSF(PMINI_ADAPTER Adapter,UINT uiSearchRuleIndex)
 	if(ulVCID == 0)
 		return;
 
-
 	for(nClassifierIndex =0 ; nClassifierIndex < MAX_CLASSIFIERS ; nClassifierIndex++)
 	{
 		if(Adapter->astClassifierTable[nClassifierIndex].usVCID_Value == ulVCID)
@@ -508,7 +502,6 @@ VOID DeleteAllClassifiersForSF(PMINI_ADAPTER Adapter,UINT uiSearchRuleIndex)
 			ulVCID);
 
 }
-
 
 /**
 This routinue  copies the Connection Management
@@ -532,7 +525,6 @@ static VOID CopyToAdapter( register PMINI_ADAPTER Adapter,		/**<Pointer to the A
 	S_PHS_RULE sPhsRule;
 	USHORT uVCID = Adapter->PackInfo[uiSearchRuleIndex].usVCID_Value;
 	UINT UGIValue = 0;
-
 
 	Adapter->PackInfo[uiSearchRuleIndex].bValid=TRUE;
 	BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, CONN_MSG, DBG_LVL_ALL, "Search Rule Index = %d\n", uiSearchRuleIndex);
@@ -648,7 +640,6 @@ static VOID CopyToAdapter( register PMINI_ADAPTER Adapter,		/**<Pointer to the A
 		{
 			Adapter->PackInfo[uiSearchRuleIndex].bClassifierPriority=TRUE;
 		}
-
 
 		if(ucDsxType== DSA_ACK)
 		{
@@ -923,7 +914,6 @@ static VOID CopyToAdapter( register PMINI_ADAPTER Adapter,		/**<Pointer to the A
 	if(Adapter->PackInfo[uiSearchRuleIndex].uiMaxLatency == 0) /* 0 should be treated as infinite */
 		Adapter->PackInfo[uiSearchRuleIndex].uiMaxLatency = MAX_LATENCY_ALLOWED;
 
-
 	if(( Adapter->PackInfo[uiSearchRuleIndex].u8QueueType == ERTPS ||
 			Adapter->PackInfo[uiSearchRuleIndex].u8QueueType == UGS ) )
 			UGIValue = ntohs(psfLocalSet->u16UnsolicitedGrantInterval);
@@ -959,7 +949,6 @@ static VOID CopyToAdapter( register PMINI_ADAPTER Adapter,		/**<Pointer to the A
 			Adapter->PackInfo[uiSearchRuleIndex].uiMaxBucketSize = WIMAX_MAX_MTU*8;
 	}
 
-
 	BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, CONN_MSG, DBG_LVL_ALL,"LAT: %d, UGI: %d \n", Adapter->PackInfo[uiSearchRuleIndex].uiMaxLatency, UGIValue);
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_OTHERS, CONN_MSG, DBG_LVL_ALL,"uiMaxAllowedRate: 0x%x, u32MaxSustainedTrafficRate: 0x%x ,uiMaxBucketSize: 0x%x",
 		Adapter->PackInfo[uiSearchRuleIndex].uiMaxAllowedRate,
@@ -988,7 +977,6 @@ static VOID CopyToAdapter( register PMINI_ADAPTER Adapter,		/**<Pointer to the A
 
 	BCM_DEBUG_PRINT(Adapter,DBG_TYPE_OTHERS, CONN_MSG, DBG_LVL_ALL,"%s <=====", __FUNCTION__);
 }
-
 
 /***********************************************************************
 * Function	  -	DumpCmControlPacket
@@ -1301,7 +1289,6 @@ static VOID DumpCmControlPacket(PVOID pvBuffer)
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_OTHERS, DUMP_CONTROL, DBG_LVL_ALL,  "u8PagingPreference		: 0x%X",
 		pstAddIndication->sfAdmittedSet.u8PagingPreference);
 
-
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_OTHERS, DUMP_CONTROL, DBG_LVL_ALL,  "u8TrafficIndicationPreference	: 0x%02X",
 		pstAddIndication->sfAdmittedSet.u8TrafficIndicationPreference);
 
@@ -1313,7 +1300,6 @@ static VOID DumpCmControlPacket(PVOID pvBuffer)
 	{
 		nCurClassifierCnt = MAX_CLASSIFIERS_IN_SF;
 	}
-
 
 	for(nIndex = 0 ; nIndex < nCurClassifierCnt ; nIndex++)
 	{
@@ -1498,7 +1484,6 @@ static VOID DumpCmControlPacket(PVOID pvBuffer)
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_OTHERS, DUMP_CONTROL, DBG_LVL_ALL,  " u8PagingPreference		: 0x%X",
 		pstAddIndication->sfActiveSet.u8PagingPreference);
 
-
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_OTHERS, DUMP_CONTROL, DBG_LVL_ALL,  " u8TrafficIndicationPreference	: 0x%X",
 		pstAddIndication->sfActiveSet.u8TrafficIndicationPreference);
 
@@ -1516,7 +1501,6 @@ static VOID DumpCmControlPacket(PVOID pvBuffer)
 
 		stConvergenceSLTypes *psfCSType = NULL;
 		psfCSType =  &pstAddIndication->sfActiveSet.cConvergenceSLTypes[nIndex];
-
 
 		BCM_DEBUG_PRINT( Adapter,DBG_TYPE_OTHERS, DUMP_CONTROL, DBG_LVL_ALL,  " CCPacketClassificationRuleSI====>");
 
@@ -1641,7 +1625,6 @@ static inline ULONG RestoreSFParam(PMINI_ADAPTER Adapter, ULONG ulAddrSFParamSet
 	return 1;
 }
 
-
 static ULONG StoreSFParam(PMINI_ADAPTER Adapter,PUCHAR pucSrcBuffer,ULONG  ulAddrSFParamSet)
 {
     UINT	nBytesToWrite = sizeof(stServiceFlowParamSI);
@@ -1688,7 +1671,6 @@ ULONG StoreCmControlResponseMessage(PMINI_ADAPTER Adapter,PVOID pvBuffer,UINT *p
 		}
 		return 1;
 	}
-
 
 	if(	(pstAddIndicationAlt->u8Type == DSD_RSP) ||
 		(pstAddIndicationAlt->u8Type == DSD_ACK))
@@ -1751,7 +1733,6 @@ ULONG StoreCmControlResponseMessage(PMINI_ADAPTER Adapter,PVOID pvBuffer,UINT *p
 
 	pstAddIndication->psfAdmittedSet = (stServiceFlowParamSI *)ntohl((ULONG)pstAddIndication->psfAdmittedSet);
 
-
 	/* ACTIVE SET */
 	pstAddIndication->psfActiveSet = (stServiceFlowParamSI *)
 		GetNextTargetBufferLocation(Adapter, pstAddIndicationAlt->u16TID);
@@ -1767,7 +1748,6 @@ ULONG StoreCmControlResponseMessage(PMINI_ADAPTER Adapter,PVOID pvBuffer,UINT *p
 	kfree(pstAddIndication);
 	return 1;
 }
-
 
 static inline stLocalSFAddIndicationAlt
 *RestoreCmControlResponseMessage(register PMINI_ADAPTER Adapter,register PVOID pvBuffer)
@@ -1936,13 +1916,11 @@ static ULONG GetNextTargetBufferLocation(PMINI_ADAPTER Adapter,B_UINT16 tid)
 		return 0;
 	}
 
-
 	ulTargetDSXBufferAddress =
 		Adapter->astTargetDsxBuffer[ulTargetDsxBufferIndexToUse].ulTargetDsxBuffer;
 	Adapter->astTargetDsxBuffer[ulTargetDsxBufferIndexToUse].valid=0;
 	Adapter->astTargetDsxBuffer[ulTargetDsxBufferIndexToUse].tid=tid;
 	Adapter->ulFreeTargetBufferCnt--;
-
 
 	ulTargetDsxBufferIndexToUse =
 		(ulTargetDsxBufferIndexToUse+1)%Adapter->ulTotalTargetBuffersAvailable;
@@ -1951,7 +1929,6 @@ static ULONG GetNextTargetBufferLocation(PMINI_ADAPTER Adapter,B_UINT16 tid)
 		ulTargetDSXBufferAddress,tid);
 	return ulTargetDSXBufferAddress;
 }
-
 
 INT AllocAdapterDsxBuffer(PMINI_ADAPTER Adapter)
 {
@@ -2352,6 +2329,3 @@ VOID OverrideServiceFlowParams(PMINI_ADAPTER Adapter,PUINT puiBuffer)
 		}
 	}
 }
-
-
-

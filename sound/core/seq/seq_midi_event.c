@@ -38,7 +38,6 @@ MODULE_LICENSE("GPL");
 #define ST_SYSEX	ST_SPECIAL
 /* from 8 to 15 are events for 0xf0-0xf7 */
 
-
 /*
  * prototypes
  */
@@ -378,7 +377,6 @@ long snd_midi_event_decode(struct snd_midi_event *dev, unsigned char *buf, long 
 		/* data.note.channel and data.control.channel is identical */
 		cmd = 0x80 | (type << 4) | (ev->data.note.channel & 0x0f);
 
-
 	if (cmd == MIDI_CMD_COMMON_SYSEX) {
 		snd_midi_event_reset_decode(dev);
 		return snd_seq_expand_var_event(ev, count, buf, 1, 0);
@@ -407,7 +405,6 @@ long snd_midi_event_decode(struct snd_midi_event *dev, unsigned char *buf, long 
 		return qlen;
 	}
 }
-
 
 /* decode note event */
 static void note_decode(struct snd_seq_event *ev, unsigned char *buf)
@@ -526,7 +523,7 @@ static int extra_decode_xrpn(struct snd_midi_event *dev, unsigned char *buf,
 /*
  *  exports
  */
- 
+
 EXPORT_SYMBOL(snd_midi_event_new);
 EXPORT_SYMBOL(snd_midi_event_free);
 EXPORT_SYMBOL(snd_midi_event_reset_encode);

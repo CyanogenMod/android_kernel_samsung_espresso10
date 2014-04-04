@@ -25,7 +25,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #include <linux/module.h>
 #include <linux/if_vlan.h>
 #include <linux/inet_lro.h>
@@ -386,7 +385,6 @@ out2: /* send aggregated SKBs to stack */
 out:
 	return 1;
 }
-
 
 static struct sk_buff *lro_gen_skb(struct net_lro_mgr *lro_mgr,
 				   struct skb_frag_struct *frags,

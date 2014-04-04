@@ -33,7 +33,6 @@ static void eprom_cs(struct r8192_priv *priv, short bit)
 	udelay(EPROM_DELAY);
 }
 
-
 static void eprom_ck_cycle(struct r8192_priv *priv)
 {
 	write_nic_byte(priv, EPROM_CMD,
@@ -43,7 +42,6 @@ static void eprom_ck_cycle(struct r8192_priv *priv)
 		       read_nic_byte(priv, EPROM_CMD) & ~(1<<EPROM_CK_SHIFT));
 	udelay(EPROM_DELAY);
 }
-
 
 static void eprom_w(struct r8192_priv *priv, short bit)
 {
@@ -57,7 +55,6 @@ static void eprom_w(struct r8192_priv *priv, short bit)
 	udelay(EPROM_DELAY);
 }
 
-
 static short eprom_r(struct r8192_priv *priv)
 {
 	short bit;
@@ -70,7 +67,6 @@ static short eprom_r(struct r8192_priv *priv)
 	return 0;
 }
 
-
 static void eprom_send_bits_string(struct r8192_priv *priv, short b[], int len)
 {
 	int i;
@@ -80,7 +76,6 @@ static void eprom_send_bits_string(struct r8192_priv *priv, short b[], int len)
 		eprom_ck_cycle(priv);
 	}
 }
-
 
 u32 eprom_read(struct r8192_priv *priv, u32 addr)
 {

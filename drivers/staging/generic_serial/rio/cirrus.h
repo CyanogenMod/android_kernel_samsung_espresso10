@@ -26,7 +26,6 @@
 
  Version : 0.01
 
-
                             Mods
  ----------------------------------------------------------------------------
   Date     By                Description
@@ -99,7 +98,6 @@
 #define RIOC_COR4_NBRKINT	0x08	/* No interrupt on break (-BRKINT) */
 #define RIOC_COR4_RAISEMOD	0x01	/* Raise modem output lines on non-zero baud */
 
-
 /* COR4 driver only */
 #define RIOC_COR4_IGNPAR	0x04	/* IGNPAR (ignore characters with errors) */
 #define RIOC_COR4_PARMRK	0x02	/* PARMRK */
@@ -170,7 +168,7 @@
 
 /* Packet types going from Host to remote - with the exception of OPEN, MOPEN,
    CONFIG, SBREAK and MEMDUMP the remaining bytes of the data array will not
-   be used 
+   be used
 */
 #define RIOC_OPEN		0x00	/* Open a port */
 #define RIOC_CONFIG		0x01	/* Configure a port */

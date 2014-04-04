@@ -8,12 +8,9 @@
 #define SMALL_BUFFER_SIZE    384     /* size of small buffers (multiple of 48 (PCA) and 64 (SBA) bytes) */
 #define LARGE_BUFFER_SIZE    4032    /* size of large buffers (multiple of 48 (PCA) and 64 (SBA) bytes) */
 
-
 #define RBD_BLK_SIZE	     32      /* nbr of supplied rx buffers per rbd */
 
-
 #define MAX_PDU_SIZE	     65535   /* maximum PDU size supported by AALs */
-
 
 #define BUFFER_S1_SIZE       SMALL_BUFFER_SIZE    /* size of small buffers, scheme 1 */
 #define BUFFER_L1_SIZE       LARGE_BUFFER_SIZE    /* size of large buffers, scheme 1 */
@@ -27,7 +24,6 @@
 #define BUFFER_S2_NBR        (RBD_BLK_SIZE * 6)
 #define BUFFER_L2_NBR        (RBD_BLK_SIZE * 4)
 
-
 #define QUEUE_SIZE_CMD       16	     /* command queue capacity       */
 #define QUEUE_SIZE_RX	     64	     /* receive queue capacity       */
 #define QUEUE_SIZE_TX	     256     /* transmit queue capacity      */
@@ -37,15 +33,13 @@
 #define FORE200E_VCI_BITS    10
 #define NBR_CONNECT          (1 << (FORE200E_VPI_BITS + FORE200E_VCI_BITS)) /* number of connections */
 
-
 #define TSD_FIXED            2
 #define TSD_EXTENSION        0
 #define TSD_NBR              (TSD_FIXED + TSD_EXTENSION)
 
-
 /* the cp starts putting a received PDU into one *small* buffer,
-   then it uses a number of *large* buffers for the trailing data. 
-   we compute here the total number of receive segment descriptors 
+   then it uses a number of *large* buffers for the trailing data.
+   we compute here the total number of receive segment descriptors
    required to hold the largest possible PDU */
 
 #define RSD_REQUIRED  (((MAX_PDU_SIZE - SMALL_BUFFER_SIZE + LARGE_BUFFER_SIZE) / LARGE_BUFFER_SIZE) + 1)
@@ -54,12 +48,11 @@
 
 /* RSD_REQUIRED receive segment descriptors are enough to describe a max-sized PDU,
    but we have to keep the size of the receive PDU descriptor multiple of 32 bytes,
-   so we add one extra RSD to RSD_EXTENSION 
+   so we add one extra RSD to RSD_EXTENSION
    (WARNING: THIS MAY CHANGE IF BUFFER SIZES ARE MODIFIED) */
 
 #define RSD_EXTENSION  ((RSD_REQUIRED - RSD_FIXED) + 1)
 #define RSD_NBR         (RSD_FIXED + RSD_EXTENSION)
-
 
 #define FORE200E_DEV(d)          ((struct fore200e*)((d)->dev_data))
 #define FORE200E_VCC(d)          ((struct fore200e_vcc*)((d)->dev_data))
@@ -82,11 +75,10 @@
 #error unknown bitfield endianess
 #endif
 
- 
 /* ATM cell header (minus HEC byte) */
 
 typedef struct atm_header {
-    BITFIELD5( 
+    BITFIELD5(
         u32 clp :  1,    /* cell loss priority         */
         u32 plt :  3,    /* payload type               */
         u32 vci : 16,    /* virtual channel identifier */
@@ -95,7 +87,6 @@ typedef struct atm_header {
    )
 } atm_header_t;
 
-
 /* ATM adaptation layer id */
 
 typedef enum fore200e_aal {
@@ -103,7 +94,6 @@ typedef enum fore200e_aal {
     FORE200E_AAL34 = 4,
     FORE200E_AAL5  = 5,
 } fore200e_aal_t;
-
 
 /* transmit PDU descriptor specification */
 
@@ -116,17 +106,15 @@ typedef struct tpd_spec {
     )
 } tpd_spec_t;
 
-
 /* transmit PDU rate control */
 
 typedef struct tpd_rate
 {
-    BITFIELD2( 
+    BITFIELD2(
         u32 idle_cells : 16,    /* number of idle cells to insert   */
         u32 data_cells : 16     /* number of data cells to transmit */
     )
 } tpd_rate_t;
-
 
 /* transmit segment descriptor */
 
@@ -134,7 +122,6 @@ typedef struct tsd {
     u32 buffer;    /* transmit buffer DMA address */
     u32 length;    /* number of bytes in buffer   */
 } tsd_t;
-
 
 /* transmit PDU descriptor */
 
@@ -146,14 +133,12 @@ typedef struct tpd {
     struct tsd        tsd[ TSD_NBR ];    /* transmit segment descriptors */
 } tpd_t;
 
-
 /* receive segment descriptor */
 
 typedef struct rsd {
     u32 handle;    /* host supplied receive buffer handle */
     u32 length;    /* number of bytes in buffer           */
 } rsd_t;
-
 
 /* receive PDU descriptor */
 
@@ -163,7 +148,6 @@ typedef struct rpd {
     struct rsd        rsd[ RSD_NBR ];    /* receive segment descriptors */
 } rpd_t;
 
-
 /* buffer scheme */
 
 typedef enum buffer_scheme {
@@ -171,7 +155,6 @@ typedef enum buffer_scheme {
     BUFFER_SCHEME_TWO,
     BUFFER_SCHEME_NBR    /* always last */
 } buffer_scheme_t;
-
 
 /* buffer magnitude */
 
@@ -181,7 +164,6 @@ typedef enum buffer_magn {
     BUFFER_MAGN_NBR    /* always last */
 } buffer_magn_t;
 
-
 /* receive buffer descriptor */
 
 typedef struct rbd {
@@ -189,18 +171,16 @@ typedef struct rbd {
     u32 buffer_haddr;    /* host DMA address of host buffer */
 } rbd_t;
 
-
 /* receive buffer descriptor block */
 
 typedef struct rbd_block {
     struct rbd rbd[ RBD_BLK_SIZE ];    /* receive buffer descriptor */
 } rbd_block_t;
 
-
 /* tpd DMA address */
 
 typedef struct tpd_haddr {
-    BITFIELD3( 
+    BITFIELD3(
         u32 size  :  4,    /* tpd size expressed in 32 byte blocks     */
         u32 pad   :  1,    /* reserved                                 */
         u32 haddr : 27     /* tpd DMA addr aligned on 32 byte boundary */
@@ -216,7 +196,6 @@ typedef struct cp_txq_entry {
     u32              status_haddr;    /* host DMA address of completion status  */
 } cp_txq_entry_t;
 
-
 /* cp resident receive queue entry */
 
 typedef struct cp_rxq_entry {
@@ -224,14 +203,12 @@ typedef struct cp_rxq_entry {
     u32 status_haddr;    /* host DMA address of completion status  */
 } cp_rxq_entry_t;
 
-
 /* cp resident buffer supply queue entry */
 
 typedef struct cp_bsq_entry {
     u32 rbd_block_haddr;    /* host DMA address of rbd block          */
     u32 status_haddr;       /* host DMA address of completion status  */
 } cp_bsq_entry_t;
-
 
 /* completion status */
 
@@ -241,7 +218,6 @@ typedef volatile enum status {
     STATUS_FREE     = (1<<2),    /* initial status (written by host)  */
     STATUS_ERROR    = (1<<3)     /* completion status (written by cp) */
 } status_t;
-
 
 /* cp operation code */
 
@@ -262,7 +238,6 @@ typedef enum opcode {
     OPCODE_REQUEST_INTR = (1<<7)    /* request interrupt                      */
 } opcode_t;
 
-
 /* virtual path / virtual channel identifiers */
 
 typedef struct vpvc {
@@ -273,18 +248,16 @@ typedef struct vpvc {
     )
 } vpvc_t;
 
-
 /* activate VC command opcode */
 
 typedef struct activate_opcode {
-    BITFIELD4( 
+    BITFIELD4(
         enum opcode        opcode : 8,    /* cp opcode        */
         enum fore200e_aal  aal    : 8,    /* adaptation layer */
         enum buffer_scheme scheme : 8,    /* buffer scheme    */
         u32  pad                  : 8     /* reserved         */
    )
 } activate_opcode_t;
-
 
 /* activate VC command block */
 
@@ -295,7 +268,6 @@ typedef struct activate_block {
 
 } activate_block_t;
 
-
 /* deactivate VC command opcode */
 
 typedef struct deactivate_opcode {
@@ -305,14 +277,12 @@ typedef struct deactivate_opcode {
     )
 } deactivate_opcode_t;
 
-
 /* deactivate VC command block */
 
 typedef struct deactivate_block {
     struct deactivate_opcode opcode;    /* deactivate VC command opcode */
     struct vpvc              vpvc;      /* VPI/VCI                      */
 } deactivate_block_t;
-
 
 /* OC-3 registers */
 
@@ -321,7 +291,6 @@ typedef struct oc3_regs {
 			  Saturn User Network Interface documentation
 			  for a description of the OC-3 chip registers */
 } oc3_regs_t;
-
 
 /* set/get OC-3 regs command opcode */
 
@@ -336,14 +305,12 @@ typedef struct oc3_opcode {
     )
 } oc3_opcode_t;
 
-
 /* set/get OC-3 regs command block */
 
 typedef struct oc3_block {
     struct oc3_opcode opcode;        /* set/get OC-3 regs command opcode     */
     u32               regs_haddr;    /* host DMA address of OC-3 regs buffer */
 } oc3_block_t;
-
 
 /* physical encoding statistics */
 
@@ -352,7 +319,6 @@ typedef struct stats_phy {
     __be32 framing_errors;       /* cells received with bad framing    */
     __be32 pad[ 2 ];             /* i960 padding                       */
 } stats_phy_t;
-
 
 /* OC-3 statistics */
 
@@ -366,7 +332,6 @@ typedef struct stats_oc3 {
     __be32 ucorr_hcs_errors;       /* uncorrectable header check sequence */
     __be32 pad[ 1 ];               /* i960 padding                        */
 } stats_oc3_t;
-
 
 /* ATM statistics */
 
@@ -389,7 +354,6 @@ typedef struct stats_aal0 {
     __be32	pad[ 1 ];             /* i960 padding      */
 } stats_aal0_t;
 
-
 /* AAL3/4 statistics */
 
 typedef struct stats_aal34 {
@@ -404,7 +368,6 @@ typedef struct stats_aal34 {
     __be32	cspdus_dropped;            /* reassembled PDUs drop'd (in cells)    */
     __be32	pad[ 3 ];                  /* i960 padding                          */
 } stats_aal34_t;
-
 
 /* AAL5 statistics */
 
@@ -421,7 +384,6 @@ typedef struct stats_aal5 {
     __be32	pad[ 3 ];                  /* i960 padding                          */
 } stats_aal5_t;
 
-
 /* auxiliary statistics */
 
 typedef struct stats_aux {
@@ -433,7 +395,6 @@ typedef struct stats_aux {
     __be32	receive_carrier;     /* no carrier = 0, carrier = 1     */
     __be32	pad[ 2 ];            /* i960 padding                    */
 } stats_aux_t;
-
 
 /* whole statistics buffer */
 
@@ -447,7 +408,6 @@ typedef struct stats {
     struct stats_aux   aux;      /* auxiliary statistics         */
 } stats_t;
 
-
 /* get statistics command opcode */
 
 typedef struct stats_opcode {
@@ -457,14 +417,12 @@ typedef struct stats_opcode {
     )
 } stats_opcode_t;
 
-
 /* get statistics command block */
 
 typedef struct stats_block {
     struct stats_opcode opcode;         /* get statistics command opcode    */
     u32                 stats_haddr;    /* host DMA address of stats buffer */
 } stats_block_t;
-
 
 /* expansion PROM data (PCI specific) */
 
@@ -473,7 +431,6 @@ typedef struct prom_data {
     u32 serial_number;    /* board serial number */
     u8  mac_addr[ 8 ];    /* board MAC address   */
 } prom_data_t;
-
 
 /* get expansion PROM data command opcode */
 
@@ -484,14 +441,12 @@ typedef struct prom_opcode {
     )
 } prom_opcode_t;
 
-
 /* get expansion PROM data command block */
 
 typedef struct prom_block {
     struct prom_opcode opcode;        /* get PROM data command opcode    */
     u32                prom_haddr;    /* host DMA address of PROM buffer */
 } prom_block_t;
-
 
 /* cp command */
 
@@ -505,7 +460,6 @@ typedef union cmd {
     u32                     pad[ 4 ];         /* i960 padding            */
 } cmd_t;
 
-
 /* cp resident command queue */
 
 typedef struct cp_cmdq_entry {
@@ -513,7 +467,6 @@ typedef struct cp_cmdq_entry {
     u32       status_haddr;    /* host DMA address of completion status */
     u32       pad[ 3 ];        /* i960 padding                          */
 } cp_cmdq_entry_t;
-
 
 /* host resident transmit queue entry */
 
@@ -529,7 +482,6 @@ typedef struct host_txq_entry {
 
 } host_txq_entry_t;
 
-
 /* host resident receive queue entry */
 
 typedef struct host_rxq_entry {
@@ -538,7 +490,6 @@ typedef struct host_rxq_entry {
     struct rpd*          rpd;         /* addr of receive PDU descriptor     */
     u32                  rpd_dma;     /* DMA address of rpd                 */
 } host_rxq_entry_t;
-
 
 /* host resident buffer supply queue entry */
 
@@ -549,14 +500,12 @@ typedef struct host_bsq_entry {
     u32                  rbd_block_dma;    /* DMA address od rdb                            */
 } host_bsq_entry_t;
 
-
 /* host resident command queue entry */
 
 typedef struct host_cmdq_entry {
     struct cp_cmdq_entry __iomem *cp_entry;    /* addr of cp resident cmd queue entry */
     enum status *status;	       /* addr of host resident status        */
 } host_cmdq_entry_t;
-
 
 /* chunk of memory */
 
@@ -571,7 +520,6 @@ typedef struct chunk {
 
 #define dma_size align_size             /* DMA useable size */
 
-
 /* host resident receive buffer */
 
 typedef struct buffer {
@@ -585,7 +533,6 @@ typedef struct buffer {
 #endif
 } buffer_t;
 
-
 #if (BITS_PER_LONG == 32)
 #define FORE200E_BUF2HDL(buffer)    ((u32)(buffer))
 #define FORE200E_HDL2BUF(handle)    ((struct buffer*)(handle))
@@ -594,7 +541,6 @@ typedef struct buffer {
 #define FORE200E_HDL2BUF(handle)    ((struct buffer*)(((u64)(handle)) | PAGE_OFFSET))
 #endif
 
-
 /* host resident command queue */
 
 typedef struct host_cmdq {
@@ -602,7 +548,6 @@ typedef struct host_cmdq {
     int                    head;                            /* head of cmd queue                      */
     struct chunk           status;                          /* array of completion status      */
 } host_cmdq_t;
-
 
 /* host resident transmit queue */
 
@@ -615,7 +560,6 @@ typedef struct host_txq {
     int                   txing;                          /* number of pending PDUs in tx queue     */
 } host_txq_t;
 
-
 /* host resident receive queue */
 
 typedef struct host_rxq {
@@ -624,7 +568,6 @@ typedef struct host_rxq {
     struct chunk           rpd;                            /* array of rpds                          */
     struct chunk           status;                         /* array of completion status             */
 } host_rxq_t;
-
 
 /* host resident buffer supply queues */
 
@@ -638,7 +581,6 @@ typedef struct host_bsq {
     volatile int          freebuf_count;                  /* count of free rx buffers                  */
 } host_bsq_t;
 
-
 /* header of the firmware image */
 
 typedef struct fw_header {
@@ -650,7 +592,6 @@ typedef struct fw_header {
 
 #define FW_HEADER_MAGIC  0x65726f66    /* 'fore' */
 
-
 /* receive buffer supply queues scheme specification */
 
 typedef struct bs_spec {
@@ -660,7 +601,6 @@ typedef struct bs_spec {
     u32	supply_blksize;    /* num of rbds in I/O block (multiple
 			      of 4 between 4 and 124 inclusive)	 */
 } bs_spec_t;
-
 
 /* initialization command block (one-time command, not in cmd queue) */
 
@@ -679,7 +619,6 @@ typedef struct init_block {
     struct bs_spec bs_spec[ BUFFER_SCHEME_NBR ][ BUFFER_MAGN_NBR ];      /* buffer supply queues spec */
 } init_block_t;
 
-
 typedef enum media_type {
     MEDIA_TYPE_CAT5_UTP  = 0x06,    /* unshielded twisted pair */
     MEDIA_TYPE_MM_OC3_ST = 0x16,    /* multimode fiber ST      */
@@ -689,7 +628,6 @@ typedef enum media_type {
 } media_type_t;
 
 #define FORE200E_MEDIA_INDEX(media_type)   ((media_type)>>4)
-
 
 /* cp resident queues */
 
@@ -713,7 +651,6 @@ typedef struct cp_queues {
     u32               oc3_revision;      /* OC-3 revision number             */
 } cp_queues_t;
 
-
 /* boot status */
 
 typedef enum boot_status {
@@ -723,7 +660,6 @@ typedef enum boot_status {
     BSTAT_CP_RUNNING    = (u32) 0xce11feed,    /* cp is running           */
     BSTAT_MON_TOO_BIG   = (u32) 0x10aded00     /* i960 monitor is too big */
 } boot_status_t;
-
 
 /* software UART */
 
@@ -735,7 +671,6 @@ typedef struct soft_uart {
 #define FORE200E_CP_MONITOR_UART_FREE     0x00000000
 #define FORE200E_CP_MONITOR_UART_AVAIL    0x01000000
 
-
 /* i960 monitor */
 
 typedef struct cp_monitor {
@@ -744,7 +679,6 @@ typedef struct cp_monitor {
     u32			app_base;       /* application base offset */
     u32			mon_version;    /* i960 monitor version    */
 } cp_monitor_t;
-
 
 /* device state */
 
@@ -765,7 +699,6 @@ typedef enum fore200e_state {
     FORE200E_STATE_COMPLETE       /* initialization completed          */
 } fore200e_state;
 
-
 /* PCA-200E registers */
 
 typedef struct fore200e_pca_regs {
@@ -773,7 +706,6 @@ typedef struct fore200e_pca_regs {
     volatile u32 __iomem * imr;    /* address of host interrupt mask register */
     volatile u32 __iomem * psr;    /* address of PCI specific register        */
 } fore200e_pca_regs_t;
-
 
 /* SBA-200E registers */
 
@@ -783,14 +715,12 @@ typedef struct fore200e_sba_regs {
     u32 __iomem *isr;    /* address of interrupt level selection register */
 } fore200e_sba_regs_t;
 
-
 /* model-specific registers */
 
 typedef union fore200e_regs {
     struct fore200e_pca_regs pca;    /* PCA-200E registers */
     struct fore200e_sba_regs sba;    /* SBA-200E registers */
 } fore200e_regs;
-
 
 struct fore200e;
 
@@ -810,8 +740,8 @@ typedef struct fore200e_bus {
     void                 (*dma_sync_for_device)(struct fore200e*, u32, int, int);
     int                  (*dma_chunk_alloc)(struct fore200e*, struct chunk*, int, int, int);
     void                 (*dma_chunk_free)(struct fore200e*, struct chunk*);
-    int                  (*configure)(struct fore200e*); 
-    int                  (*map)(struct fore200e*); 
+    int                  (*configure)(struct fore200e*);
+    int                  (*map)(struct fore200e*);
     void                 (*reset)(struct fore200e*);
     int                  (*prom_read)(struct fore200e*, struct prom_data*);
     void                 (*unmap)(struct fore200e*);
@@ -831,7 +761,6 @@ typedef struct fore200e_vc_map {
 #define FORE200E_VC_MAP(fore200e, vpi, vci)  \
         (& (fore200e)->vc_map[ ((vpi) << FORE200E_VCI_BITS) | (vci) ])
 
-
 /* per-device data */
 
 typedef struct fore200e {
@@ -847,7 +776,7 @@ typedef struct fore200e {
     int                        irq;                    /* irq number                         */
     unsigned long              phys_base;              /* physical base address              */
     void __iomem *             virt_base;              /* virtual base address               */
-    
+
     unsigned char              esi[ ESI_LEN ];         /* end system identifier              */
 
     struct cp_monitor __iomem *         cp_monitor;    /* i960 monitor address               */
@@ -856,14 +785,14 @@ typedef struct fore200e {
     struct host_txq            host_txq;               /* host resident tx queue             */
     struct host_rxq            host_rxq;               /* host resident rx queue             */
                                                        /* host resident buffer supply queues */
-    struct host_bsq            host_bsq[ BUFFER_SCHEME_NBR ][ BUFFER_MAGN_NBR ];       
+    struct host_bsq            host_bsq[ BUFFER_SCHEME_NBR ][ BUFFER_MAGN_NBR ];
 
     u32                        available_cell_rate;    /* remaining pseudo-CBR bw on link    */
 
     int                        loop_mode;              /* S/UNI loopback mode                */
 
     struct stats*              stats;                  /* last snapshot of the stats         */
-    
+
     struct mutex               rate_mtx;               /* protects rate reservation ops      */
     spinlock_t                 q_lock;                 /* protects queue ops                 */
 #ifdef FORE200E_USE_TASKLET
@@ -875,7 +804,6 @@ typedef struct fore200e {
     unsigned long              incarn_count;
     struct fore200e_vc_map     vc_map[ NBR_CONNECT ];  /* vc mapping                         */
 } fore200e_t;
-
 
 /* per-vcc data */
 
@@ -890,13 +818,10 @@ typedef struct fore200e_vcc {
     unsigned long          rx_pdu;             /* nbr of rx pdus                     */
 } fore200e_vcc_t;
 
-
-
 /* 200E-series common memory layout */
 
 #define FORE200E_CP_MONITOR_OFFSET	0x00000400    /* i960 monitor interface */
 #define FORE200E_CP_QUEUES_OFFSET	0x00004d40    /* cp resident queues     */
-
 
 /* PCA-200E memory layout */
 
@@ -905,7 +830,6 @@ typedef struct fore200e_vcc {
 #define PCA200E_HCR_OFFSET		0x00100000    /* board control register */
 #define PCA200E_IMR_OFFSET		0x00100004    /* host IRQ mask register */
 #define PCA200E_PSR_OFFSET		0x00100008    /* PCI specific register  */
-
 
 /* PCA-200E host control register */
 
@@ -920,7 +844,6 @@ typedef struct fore200e_vcc {
 #define PCA200E_HCR_ESPHOLD   (1<<5)    /* read         */
 #define PCA200E_HCR_INFULL    (1<<6)    /* read         */
 #define PCA200E_HCR_TESTMODE  (1<<7)    /* read         */
-
 
 /* PCA-200E PCI bus interface regs (offsets in PCI config space) */
 
@@ -938,10 +861,7 @@ typedef struct fore200e_vcc {
 #define PCA200E_CTRL_LARGE_PCI_BURSTS  (1<<5)    /* force large PCI bus bursts                       */
 #define PCA200E_CTRL_CONVERT_ENDIAN    (1<<6)    /* convert endianess of slave RAM accesses          */
 
-
-
 #define SBA200E_PROM_NAME  "FORE,sba-200e"    /* device name in openprom tree */
-
 
 /* size of SBA-200E registers */
 
@@ -950,13 +870,11 @@ typedef struct fore200e_vcc {
 #define SBA200E_ISR_LENGTH        4
 #define SBA200E_RAM_LENGTH  0x40000
 
-
 /* SBA-200E SBUS burst transfer size register */
 
 #define SBA200E_BSR_BURST4   0x04
 #define SBA200E_BSR_BURST8   0x08
 #define SBA200E_BSR_BURST16  0x10
-
 
 /* SBA-200E host control register */
 
@@ -973,7 +891,6 @@ typedef struct fore200e_vcc {
 #define SBA200E_HCR_INTR_REQ     (1<<8)    /* read                  */
 
 #define SBA200E_HCR_STICKY       (SBA200E_HCR_RESET | SBA200E_HCR_HOLD_LOCK | SBA200E_HCR_INTR_ENA)
-
 
 #endif /* __KERNEL__ */
 #endif /* _FORE200E_H */

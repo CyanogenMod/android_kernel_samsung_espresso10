@@ -363,7 +363,6 @@ cy_as_misc_func_callback(cy_as_device *dev_p,
 						cy_as_ll_request_response *resp,
 						cy_as_return_status_t ret);
 
-
 static void
 my_misc_callback(cy_as_device *dev_p, uint8_t context,
 		cy_as_ll_request_response *req_p,
@@ -814,7 +813,6 @@ cy_as_misc_download_firmware(cy_as_device_handle handle,
 	return CY_AS_ERROR_SUCCESS;
 }
 
-
 static cy_as_return_status_t
 my_handle_response_get_firmware_version(cy_as_device *dev_p,
 				cy_as_ll_request_response *req_p,
@@ -975,7 +973,6 @@ my_handle_response_get_gpio_value(cy_as_device *dev_p,
 	return ret;
 }
 
-
 cy_as_return_status_t cy_as_misc_set_sd_power_polarity(
 	cy_as_device_handle handle,
 	cy_as_misc_signal_polarity polarity,
@@ -1041,7 +1038,6 @@ destroy:
 	cy_as_ll_destroy_response(dev_p, reply_p);
 	return ret;
 }
-
 
 cy_as_return_status_t
 cy_as_misc_read_m_c_u_register(cy_as_device_handle handle,
@@ -1434,14 +1430,12 @@ cy_as_misc_acquire_resource(cy_as_device_handle handle,
 		cy_as_bus_0 && *resource != cy_as_bus_1)
 			return CY_AS_ERROR_INVALID_RESOURCE;
 
-
 	/* Make sure the device is ready to accept the command. */
 	dev_p = (cy_as_device *)handle;
 	cy_as_check_device_ready(dev_p);
 
 	if (cy_as_device_is_in_suspend_mode(dev_p))
 		return CY_AS_ERROR_IN_SUSPEND;
-
 
 	ret = get_unallocated_resource(dev_p, *resource);
 
@@ -3266,7 +3260,6 @@ void my_print_c_b_queue(cy_as_c_b_queue *queue_p)
 	cy_as_hal_print_message("|----------\n");
 }
 
-
 /* Removes and frees all pending callbacks */
 void
 cy_as_clear_c_b_queue(cy_as_c_b_queue *queue_p)
@@ -3317,7 +3310,6 @@ cy_as_misc_cancel_ex_requests(cy_as_device *dev_p)
 	for (i = 0; i < CY_RQT_CONTEXT_COUNT; i++)
 		cy_as_ll_remove_all_requests(dev_p, dev_p->context[i]);
 }
-
 
 static void
 cy_as_misc_func_callback(cy_as_device *dev_p,
@@ -3482,7 +3474,5 @@ cy_as_misc_func_callback(cy_as_device *dev_p,
 		cy_as_remove_c_b_node(dev_p->func_cbs_res);
 
 }
-
-
 
 /*[]*/

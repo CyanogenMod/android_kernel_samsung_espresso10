@@ -46,7 +46,6 @@ GCDBG_FILTERDEF(ioctl, GCZONE_NONE,
 		"ioctl",
 		"callback")
 
-
 /*******************************************************************************
  * Command buffer copy management.
  */
@@ -147,7 +146,6 @@ static void destroy_buffer(void)
 	}
 }
 
-
 /*******************************************************************************
  * Unmap list management.
  */
@@ -192,7 +190,6 @@ static void destroy_unmap(void)
 		kfree(gcschedunmap);
 	}
 }
-
 
 /*******************************************************************************
  * Callback managemnent.
@@ -376,7 +373,6 @@ static void destroy_callback(void)
 		kfree(gccallbackinfo);
 	}
 }
-
 
 /*******************************************************************************
  * API user wrappers.
@@ -813,7 +809,6 @@ exit:
 	return ret;
 }
 
-
 /*******************************************************************************
  * Device definitions/operations.
  */
@@ -891,7 +886,6 @@ static const struct file_operations dev_operations = {
 	.release	= dev_release,
 	.unlocked_ioctl	= dev_ioctl,
 };
-
 
 /*******************************************************************************
  * Device init/cleanup.

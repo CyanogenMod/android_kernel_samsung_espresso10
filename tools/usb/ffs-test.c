@@ -21,7 +21,6 @@
 
 /* $(CROSS_COMPILE)cc -Wall -Wextra -g -o ffs-test ffs-test.c -lpthread */
 
-
 #define _BSD_SOURCE /* for endian.h */
 
 #include <endian.h>
@@ -38,7 +37,6 @@
 #include <unistd.h>
 
 #include "../../include/linux/usb/functionfs.h"
-
 
 /******************** Little Endian Handling ********************************/
 
@@ -74,7 +72,6 @@ static inline void put_unaligned_le32(__u32 val, void *_ptr)
 	*ptr++ = val >> 16;
 	*ptr++ = val >> 24;
 }
-
 
 /******************** Messages and Errors ***********************************/
 
@@ -128,7 +125,6 @@ static void _msg(unsigned level, const char *fmt, ...)
 	if (cond) \
 		die(__VA_ARGS__); \
 	} while (0)
-
 
 /******************** Descriptors and Strings *******************************/
 
@@ -195,7 +191,6 @@ static const struct {
 	},
 };
 
-
 #define STR_INTERFACE_ "Source/Sink"
 
 static const struct {
@@ -219,7 +214,6 @@ static const struct {
 
 #define STR_INTERFACE strings.lang0.str1
 
-
 /******************** Files and Threads Handling ****************************/
 
 struct thread;
@@ -229,7 +223,6 @@ static ssize_t write_wrap(struct thread *t, const void *buf, size_t nbytes);
 static ssize_t ep0_consume(struct thread *t, const void *buf, size_t nbytes);
 static ssize_t fill_in_buf(struct thread *t, void *buf, size_t nbytes);
 static ssize_t empty_out_buf(struct thread *t, const void *buf, size_t nbytes);
-
 
 static struct thread {
 	const char *const filename;
@@ -265,7 +258,6 @@ static struct thread {
 		0, 0, NULL, 0
 	},
 };
-
 
 static void init_thread(struct thread *t)
 {
@@ -324,7 +316,7 @@ static void *start_thread_helper(void *arg)
 
 		ret = t->in(t, t->buf, t->buf_size);
 		if (ret > 0) {
-			ret = t->out(t, t->buf, t->buf_size);
+			ret = t->out(t, t->buf, ret);
 			name = out_name;
 			op = "write";
 		} else {
@@ -370,7 +362,6 @@ static void join_thread(struct thread *t)
 		debug("%s: joined\n", t->filename);
 }
 
-
 static ssize_t read_wrap(struct thread *t, void *buf, size_t nbytes)
 {
 	return read(t->fd, buf, nbytes);
@@ -380,7 +371,6 @@ static ssize_t write_wrap(struct thread *t, const void *buf, size_t nbytes)
 {
 	return write(t->fd, buf, nbytes);
 }
-
 
 /******************** Empty/Fill buffer routines ****************************/
 
@@ -463,7 +453,6 @@ invalid:
 	return len;
 }
 
-
 /******************** Endpoints routines ************************************/
 
 static void handle_setup(const struct usb_ctrlrequest *setup)
@@ -526,7 +515,6 @@ static void ep0_init(struct thread *t)
 	ret = write(t->fd, &strings, sizeof strings);
 	die_on(ret < 0, "%s: write: strings", t->filename);
 }
-
 
 /******************** Main **************************************************/
 

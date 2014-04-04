@@ -33,18 +33,15 @@ module_param(debug, bool, 0644);
 			printk(KERN_DEBUG "%s: " fmt, __func__, ## arg);\
 	} while (0)
 
-
 /* Instance is already queued on the job_queue */
 #define TRANS_QUEUED		(1 << 0)
 /* Instance is currently running in hardware */
 #define TRANS_RUNNING		(1 << 1)
 
-
 /* Offset base for buffers on the destination queue - used to distinguish
  * between source and destination buffers when mmapping - they receive the same
  * offsets but for different queues */
 #define DST_QUEUE_OFF_BASE	(1 << 30)
-
 
 /**
  * struct v4l2_m2m_dev - per-device context
@@ -626,4 +623,3 @@ void v4l2_m2m_buf_queue(struct v4l2_m2m_ctx *m2m_ctx, struct vb2_buffer *vb)
 	spin_unlock_irqrestore(&q_ctx->rdy_spinlock, flags);
 }
 EXPORT_SYMBOL_GPL(v4l2_m2m_buf_queue);
-

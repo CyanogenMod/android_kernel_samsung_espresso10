@@ -86,7 +86,6 @@ netdev_tx_t lbs_hard_start_xmit(struct sk_buff *skb, struct net_device *dev)
 		goto free;
 	}
 
-
 	netif_stop_queue(priv->dev);
 	if (priv->mesh_dev)
 		netif_stop_queue(priv->mesh_dev);

@@ -5,5 +5,3 @@ i1480-dfu-usb-objs := \
 	mac.o	\
 	phy.o	\
 	usb.o
-
-

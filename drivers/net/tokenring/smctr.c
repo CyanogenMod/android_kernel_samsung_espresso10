@@ -64,7 +64,6 @@ static const char version[] __initdata =
 	KERN_INFO "smctr.c: v1.4 7/12/00 by jschlst@samba.org\n";
 static const char cardname[] = "smctr";
 
-
 #define SMCTR_IO_EXTENT   20
 
 #ifdef CONFIG_MCA_LEGACY
@@ -85,8 +84,8 @@ static char *smctr_model = "Unknown";
 #endif
 static unsigned int smctr_debug = SMCTR_DEBUG;
 
-/* smctr.c prototypes and functions are arranged alphabeticly 
- * for clearity, maintainability and pure old fashion fun. 
+/* smctr.c prototypes and functions are arranged alphabeticly
+ * for clearity, maintainability and pure old fashion fun.
  */
 /* A */
 static int smctr_alloc_shared_memory(struct net_device *dev);
@@ -720,7 +719,7 @@ static int smctr_close(struct net_device *dev)
         int err;
 
 	netif_stop_queue(dev);
-	
+
 	tp->cleanup = 1;
 
         /* Check to see if adapter is already in a closed state. */
@@ -744,7 +743,6 @@ static int smctr_close(struct net_device *dev)
                 tp->QueueSkb++;
                 dev_kfree_skb(skb);
         }
-
 
         return 0;
 }
@@ -2000,7 +1998,7 @@ static irqreturn_t smctr_interrupt(int irq, void *dev_id)
                 return IRQ_NONE;
 
         spin_lock(&tp->lock);
-        
+
         smctr_disable_bic_int(dev);
         smctr_enable_16bit(dev);
 
@@ -2119,7 +2117,6 @@ static irqreturn_t smctr_interrupt(int irq, void *dev_id)
                         case ISB_IMC_MAC_TYPE_2:
                                 err = smctr_issue_read_ring_status_cmd(dev);
                                 break;
-
 
                         /* Type 0x05 - TX Frame Interrupt (FI). */
                         case ISB_IMC_TX_FRAME:
@@ -3490,7 +3487,7 @@ static int smctr_open_tr(struct net_device *dev)
 	/* FIXME: it would work a lot better if we masked the irq sources
 	   on the card here, then we could skip the locking and poll nicely */
 	spin_lock_irqsave(&tp->lock, flags);
-	
+
         smctr_set_page(dev, (__u8 *)tp->ram_access);
 
         if((err = smctr_issue_resume_rx_fcb_cmd(dev, (short)MAC_QUEUE)))
@@ -3565,7 +3562,7 @@ out:
         return err;
 }
 
-/* Check for a network adapter of this type, 
+/* Check for a network adapter of this type,
  * and return device structure if one exists.
  */
 struct net_device __init *smctr_probe(int unit)
@@ -4162,7 +4159,7 @@ static int smctr_rcv_tx_forward(struct net_device *dev, MAC_HEADER *rmf)
                 {
                         case FRAME_FORWARD:
                                 svectors |= F_FRAME_FORWARD;
-                                rcode = smctr_set_frame_forward(dev, rsv, 
+                                rcode = smctr_set_frame_forward(dev, rsv,
 					rmf->dc_sc);
                                 break;
 
@@ -4246,7 +4243,7 @@ static int smctr_rcv_rq_addr_state_attch(struct net_device *dev,
                 else
 		{
                 	/* Let Sender Know if Expected SVID Missing */
-                	if((svectors & R_RQ_ATTCH_STATE_ADDR) 
+                	if((svectors & R_RQ_ATTCH_STATE_ADDR)
 				^ R_RQ_ATTCH_STATE_ADDR)
                         	rcode = E_MISSING_SUB_VECTOR;
 			}
@@ -4582,7 +4579,7 @@ static netdev_tx_t smctr_send_packet(struct sk_buff *skb,
         /*
          * Block a transmit overlap
          */
-         
+
         netif_stop_queue(dev);
 
         if(tp->QueueSkb == 0)
@@ -4593,7 +4590,7 @@ static netdev_tx_t smctr_send_packet(struct sk_buff *skb,
         smctr_hardware_send_packet(dev, tp);
         if(tp->QueueSkb > 0)
 		netif_wake_queue(dev);
-		
+
         return NETDEV_TX_OK;
 }
 
@@ -4948,7 +4945,7 @@ static int smctr_send_rq_init(struct net_device *dev)
                         return err;
 
                 /* Wait for Transmit to Complete */
-      		for(i = 0; i < 10000; i++) 
+      		for(i = 0; i < 10000; i++)
 		{
           		if(fcb->frame_status & FCB_COMMAND_DONE)
               			break;
@@ -4999,9 +4996,9 @@ static int smctr_send_tx_forward(struct net_device *dev, MAC_HEADER *rmf,
          * sure to skip over the Vector Code (vc) and Vector
          * length (vl).
          */
-        fcb->bdb_ptr->trc_data_block_ptr = TRC_POINTER((__u32)rmf 
+        fcb->bdb_ptr->trc_data_block_ptr = TRC_POINTER((__u32)rmf
 		+ sizeof(MAC_HEADER) + 2);
-        fcb->bdb_ptr->data_block_ptr     = (__u16 *)((__u32)rmf 
+        fcb->bdb_ptr->data_block_ptr     = (__u16 *)((__u32)rmf
 		+ sizeof(MAC_HEADER) + 2);
 
         fcb->frame_length                = rmf->vl - 4 - 2;
@@ -5011,7 +5008,7 @@ static int smctr_send_tx_forward(struct net_device *dev, MAC_HEADER *rmf,
                 return err;
 
         /* Wait for Transmit to Complete */
-   	for(i = 0; i < 10000; i++) 
+   	for(i = 0; i < 10000; i++)
 	{
        		if(fcb->frame_status & FCB_COMMAND_DONE)
            		break;
@@ -5024,7 +5021,7 @@ static int smctr_send_tx_forward(struct net_device *dev, MAC_HEADER *rmf,
                 if((err = smctr_issue_resume_tx_fcb_cmd(dev, MAC_QUEUE)))
                         return err;
 
-      		for(i = 0; i < 10000; i++) 
+      		for(i = 0; i < 10000; i++)
 		{
           		if(fcb->frame_status & FCB_COMMAND_DONE)
               			break;
@@ -5123,7 +5120,7 @@ static int smctr_set_local_ring_num(struct net_device *dev,
                 return E_SUB_VECTOR_LENGTH_ERROR;
 
         if(tp->ptr_local_ring_num)
-                *(__u16 *)(tp->ptr_local_ring_num) 
+                *(__u16 *)(tp->ptr_local_ring_num)
 			= (rsv->svv[0] << 8 | rsv->svv[1]);
 
         return POSITIVE_ACK;
@@ -5648,15 +5645,15 @@ static struct net_device * __init setup_card(int n)
 {
 	struct net_device *dev = alloc_trdev(sizeof(struct net_local));
 	int err;
-	
+
 	if (!dev)
 		return ERR_PTR(-ENOMEM);
 
 	dev->irq = irq[n];
 	err = smctr_probe1(dev, io[n]);
-	if (err) 
+	if (err)
 		goto out;
-		
+
 	err = register_netdev(dev);
 	if (err)
 		goto out1;

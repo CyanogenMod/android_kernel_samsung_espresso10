@@ -142,7 +142,6 @@ static inline void pxa_irda_enable_sirclk(struct pxa_irda *si)
 	clk_enable(si->sir_clk);
 }
 
-
 #define IS_FIR(si)		((si)->speed >= 4000000)
 #define IRDA_FRAME_SIZE_LIMIT	2047
 
@@ -801,7 +800,6 @@ static int pxa_irda_resume(struct platform_device *_dev)
 
 	return 0;
 }
-
 
 static int pxa_irda_init_iobuf(iobuff_t *io, int size)
 {

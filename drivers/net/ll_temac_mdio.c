@@ -119,4 +119,3 @@ void temac_mdio_teardown(struct temac_local *lp)
 	mdiobus_free(lp->mii_bus);
 	lp->mii_bus = NULL;
 }
-

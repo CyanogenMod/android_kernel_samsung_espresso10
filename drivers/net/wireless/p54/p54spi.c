@@ -81,7 +81,6 @@ static void p54spi_spi_read(struct p54s_priv *priv, u8 address,
 	spi_sync(priv->spi, &m);
 }
 
-
 static void p54spi_spi_write(struct p54s_priv *priv, u8 address,
 			     const void *buf, size_t len)
 {
@@ -392,7 +391,6 @@ static int p54spi_rx(struct p54s_priv *priv)
 
 	return 0;
 }
-
 
 static irqreturn_t p54spi_interrupt(int irq, void *config)
 {
@@ -706,7 +704,6 @@ static int __devexit p54spi_remove(struct spi_device *spi)
 
 	return 0;
 }
-
 
 static struct spi_driver p54spi_driver = {
 	.driver = {

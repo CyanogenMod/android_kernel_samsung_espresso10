@@ -249,7 +249,6 @@ enum {
 	PSM_CONFIG_REG4_RST_PHY_LINK_DETECT = 1<<0, /* Reset GPHY Link Detect */
 };
 
-
 #define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY | \
 			       PCI_STATUS_SIG_SYSTEM_ERROR | \
 			       PCI_STATUS_REC_MASTER_ABORT | \
@@ -584,7 +583,6 @@ enum yukon_supr_rev {
 	CHIP_REV_YU_SU_B1    = 3,
 };
 
-
 /*	B2_Y2_CLK_GATE	 8 bit	Clock Gating (Yukon-2 only) */
 enum {
 	Y2_STATUS_LNK2_INAC	= 1<<7, /* Status Link 2 inactive (0 = active) */
@@ -605,7 +603,6 @@ enum {
 };
 #define CFG_LED_MODE(x)		(((x) & CFG_LED_MODE_MSK) >> 2)
 #define CFG_DUAL_MAC_MSK	(CFG_LINK_2_AVAIL | CFG_LINK_1_AVAIL)
-
 
 /* B2_Y2_CLK_CTRL	32 bit	Clock Frequency Control Register (Yukon-2/EC) */
 enum {
@@ -657,7 +654,6 @@ enum {
 };
 
 #define SK_RI_TO_53	36		/* RAM interface timeout */
-
 
 /* Port related registers FIFO, and Arbiter */
 #define SK_REG(port,reg)	(((port)<<7)+(reg))
@@ -815,7 +811,6 @@ enum {
 
 #define RB_ADDR(offs, queue) ((u16) B16_RAM_REGS + (queue) + (offs))
 
-
 enum {
 	LNK_SYNC_INI	= 0x0c30,/* 32 bit	Link Sync Cnt Init Value */
 	LNK_SYNC_VAL	= 0x0c34,/* 32 bit	Link Sync Cnt Current Value */
@@ -844,7 +839,6 @@ enum {
 
 	RX_GMF_RLEV	= 0x0c78,/* 32 bit	Rx GMAC FIFO Read Level */
 };
-
 
 /*	Q_BC			32 bit	Current Byte Counter */
 
@@ -967,7 +961,6 @@ enum {
 	RB_RST_CLR	= 1<<1,	/* Clear RAM Buf STM Reset */
 	RB_RST_SET	= 1<<0,	/* Set   RAM Buf STM Reset */
 };
-
 
 /* Transmit GMAC FIFO (YUKON only) */
 enum {
@@ -1400,7 +1393,6 @@ enum {
 	PHY_M_AN_MSK	       = PHY_M_IS_AN_ERROR | PHY_M_IS_AN_COMPL,
 };
 
-
 /*****  PHY_MARV_EXT_CTRL	16 bit r/w	Ext. PHY Specific Ctrl *****/
 enum {
 	PHY_M_EC_ENA_BC_EXT = 1<<15, /* Enable Block Carr. Ext. (88E1111 only) */
@@ -1665,7 +1657,6 @@ enum {
 	GM_MIB_CNT_END	= 0x025C,	/* Last MIB counter */
 };
 
-
 /*
  * MIB Counters base address definitions (low word) -
  * use offset 4 for access to high word	(32 bit r/o)
@@ -1792,7 +1783,6 @@ enum {
 #define TX_JAM_IPG_VAL(x)	(((x)<<9)  & GM_TXPA_JAMIPG_MSK)
 #define TX_IPG_JAM_DATA(x)	(((x)<<4)  & GM_TXPA_JAMDAT_MSK)
 #define TX_BACK_OFF_LIM(x)	((x) & GM_TXPA_BO_LIM_MSK)
-
 
 /*	GM_SERIAL_MODE			16 bit r/w	Serial Mode Register */
 enum {
@@ -2064,7 +2054,7 @@ enum {
 	GM_IS_RX_FF_OR	= 1<<1,	/* Receive FIFO Overrun */
 	GM_IS_RX_COMPL	= 1<<0,	/* Frame Reception Complete */
 
-#define GMAC_DEF_MSK     GM_IS_TX_FF_UR
+#define GMAC_DEF_MSK     (GM_IS_TX_FF_UR | GM_IS_RX_FF_OR)
 };
 
 /*	GMAC_LINK_CTRL	16 bit	GMAC Link Control Reg (YUKON only) */
@@ -2072,7 +2062,6 @@ enum {						/* Bits 15.. 2:	reserved */
 	GMLC_RST_CLR	= 1<<1,	/* Clear GMAC Link Reset */
 	GMLC_RST_SET	= 1<<0,	/* Set   GMAC Link Reset */
 };
-
 
 /*	WOL_CTRL_STAT	16 bit	WOL Control/Status Reg */
 enum {
@@ -2093,7 +2082,6 @@ enum {
 	WOL_CTL_ENA_PATTERN_UNIT	= 1<<1,
 	WOL_CTL_DIS_PATTERN_UNIT	= 1<<0,
 };
-
 
 /* Control flags */
 enum {
@@ -2236,7 +2224,6 @@ struct sky2_port {
 	u16		     rx_pending;
 	u16		     rx_data_size;
 	u16		     rx_nfrags;
-	u16		     rx_tag;
 
 	struct {
 		unsigned long last;

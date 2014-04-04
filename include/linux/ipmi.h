@@ -67,8 +67,6 @@
  * #ifdef __KERNEL__ below is the in-kernel interface.  The userland
  * interface is defined later in the file.  */
 
-
-
 /*
  * This is an overlay for all the address types, so it's easy to
  * determine the actual address type.  This is kind of like addresses
@@ -135,7 +133,6 @@ struct ipmi_lan_addr {
 	unsigned char lun;
 };
 
-
 /*
  * Channel for talking directly with the BMC.  When using this
  * channel, This is for the system interface address type only.  FIXME
@@ -150,7 +147,6 @@ struct ipmi_lan_addr {
  * will cover us if the number of channels is extended.
  */
 #define IPMI_CHAN_ALL     (~0)
-
 
 /*
  * A raw IPMI message without any addressing.  This covers both
@@ -179,7 +175,6 @@ struct kernel_ipmi_msg {
 #define IPMI_TIMEOUT_COMPLETION_CODE		0xC3
 #define IPMI_UNKNOWN_ERR_COMPLETION_CODE	0xff
 
-
 /*
  * Receive types for messages coming from the receive interface.  This
  * is used for the receive in-kernel interface and in the receive
@@ -202,7 +197,6 @@ struct kernel_ipmi_msg {
 
 /* Note that async events and received commands do not have a completion
    code as the first byte of the incoming data, unlike a response. */
-
 
 /*
  * Modes for ipmi_set_maint_mode() and the userland IOCTL.  The AUTO
@@ -494,7 +488,6 @@ extern int ipmi_get_smi_info(int if_num, struct ipmi_smi_info *data);
 
 #endif /* __KERNEL__ */
 
-
 /*
  * The userland interface
  */
@@ -530,10 +523,8 @@ extern int ipmi_get_smi_info(int if_num, struct ipmi_smi_info *data);
  * commands, and pass those up to the proper user.
  */
 
-
 /* The magic IOCTL value for this interface. */
 #define IPMI_IOC_MAGIC 'i'
-
 
 /* Messages sent to the interface are this format. */
 struct ipmi_req {

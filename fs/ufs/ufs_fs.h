@@ -93,7 +93,6 @@ typedef __u16 __bitwise __fs16;
 #define SBLOCKSEARCH \
         { SBLOCK_UFS2, SBLOCK_UFS1, SBLOCK_FLOPPY, SBLOCK_PIGGY, -1 }
 
-
 /* HP specific MAGIC values */
 
 #define UFS_MAGIC_LFN   0x00095014 /* fs supports filenames > 14 chars */
@@ -115,7 +114,6 @@ typedef __u16 __bitwise __fs16;
 #define UFS_FSF_LUID    0x00000004 /* large UIDs */
 
 /* End of HP stuff */
-
 
 #define UFS_BSIZE	8192
 #define UFS_MINBSIZE	4096
@@ -178,7 +176,6 @@ typedef __u16 __bitwise __fs16;
 #define UFS_TYPE_MASK		0x00010000	/* mask for the following */
 #define UFS_TYPE_UFS1		0x00000000
 #define UFS_TYPE_UFS2		0x00010000
-
 
 /* fs_inodefmt options */
 #define UFS_42INODEFMT	-1
@@ -677,7 +674,6 @@ struct ufs2_inode {
 	__fs64     ui_spare[3];    /* 232: Reserved; currently unused */
 };
 
-
 /* FreeBSD has these in sys/stat.h */
 /* ui_flags that can be set by a file owner */
 #define UFS_UF_SETTABLE   0x0000ffff
@@ -721,7 +717,6 @@ struct ufs_cg_private_info {
 	__u32	c_clusteroff;	/* (u_int8) free cluster map */
 	__u32	c_nclusterblks;	/* number of clusters this cg */
 };
-
 
 struct ufs_sb_private_info {
 	struct ufs_buffer_head s_ubh; /* buffer containing super block */

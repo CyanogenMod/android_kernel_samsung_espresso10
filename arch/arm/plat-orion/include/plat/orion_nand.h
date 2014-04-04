@@ -22,5 +22,4 @@ struct orion_nand_data {
 	u8 chip_delay;
 };
 
-
 #endif

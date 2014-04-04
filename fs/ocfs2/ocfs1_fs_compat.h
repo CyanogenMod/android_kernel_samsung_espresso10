@@ -72,7 +72,6 @@ struct ocfs1_vol_disk_hdr
 /*1B0*/
 };
 
-
 struct ocfs1_disk_lock
 {
 /*00*/	__u32 curr_master;
@@ -104,6 +103,4 @@ struct ocfs1_vol_label
 /*A6*/
 };
 
-
 #endif /* _OCFS1_FS_COMPAT_H */
-

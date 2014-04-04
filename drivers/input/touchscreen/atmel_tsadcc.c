@@ -365,8 +365,6 @@ static void __exit atmel_tsadcc_exit(void)
 module_init(atmel_tsadcc_init);
 module_exit(atmel_tsadcc_exit);
 
-
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Atmel TouchScreen Driver");
 MODULE_AUTHOR("Dan Liang <dan.liang@atmel.com>");
-

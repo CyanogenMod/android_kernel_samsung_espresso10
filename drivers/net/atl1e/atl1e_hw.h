@@ -112,7 +112,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 #define     SPI_FLASH_CONFIG_VPD_ADDR_SHIFT 24
 #define     SPI_FLASH_CONFIG_LD_EXIST       0x4000000
 
-
 #define REG_SPI_FLASH_OP_PROGRAM    0x210
 #define REG_SPI_FLASH_OP_SC_ERASE   0x211
 #define REG_SPI_FLASH_OP_CHIP_ERASE 0x212
@@ -141,7 +140,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 #define     TWSI_CTRL_SMB_SLV_ADDR
 #define     TWSI_CTRL_WRITE_FREQ_SEL_MASK   0x3
 #define     TWSI_CTRL_WRITE_FREQ_SEL_SHIFT  24
-
 
 #define REG_PCIE_DEV_MISC_CTRL      0x21C
 #define     PCIE_DEV_MISC_CTRL_EXT_PIPE     0x2
@@ -173,11 +171,9 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 /* Timer Initial Value Register */
 #define REG_MANUAL_TIMER_INIT       0x1404
 
-
 /* IRQ ModeratorTimer Initial Value Register */
 #define REG_IRQ_MODU_TIMER_INIT     0x1408   /* w */
 #define REG_IRQ_MODU_TIMER2_INIT    0x140A   /* w */
-
 
 #define REG_GPHY_CTRL               0x140C
 #define     GPHY_CTRL_EXT_RESET         1
@@ -212,7 +208,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 
 /* IRQ Anti-Lost Timer Initial Value Register */
 #define REG_CMBDISDMA_TIMER         0x140E
-
 
 /* Block IDLE Status Register */
 #define REG_IDLE_STATUS  	0x1410
@@ -320,7 +315,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 /* Hash table for multicast address */
 #define REG_RX_HASH_TABLE           0x1490
 
-
 /* MAC Half-Duplex Control Register */
 #define REG_MAC_HALF_DUPLX_CTRL     0x1498
 #define     MAC_HALF_DUPLX_CTRL_LCOL_SHIFT   0      /* Collision Window */
@@ -424,7 +418,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 #define REG_RSS_HASH_FLAG               0x1574
 #define REG_BASE_CPU_NUMBER             0x157C
 
-
 /* TXQ Control Register */
 #define REG_TXQ_CTRL                0x1580
 #define     TXQ_CTRL_NUM_TPD_BURST_MASK     0xF
@@ -439,7 +432,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 /* JUMBO_TASK_OFFLOAD_THRESHOLD will not be task offloaded. */
 #define     TX_TX_EARLY_TH_MASK             0x7ff
 #define     TX_TX_EARLY_TH_SHIFT            0
-
 
 /* RXQ Control Register */
 #define REG_RXQ_CTRL                0x15A0
@@ -485,7 +477,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 #define     RXQ_RXF_PAUSE_TH_LO_SHIFT       16
 #define     RXQ_RXF_PAUSE_TH_LO_MASK        0xfff
 
-
 /* DMA Engine Control Register */
 #define REG_DMA_CTRL                0x15C0
 #define     DMA_CTRL_DMAR_IN_ORDER          0x1
@@ -503,7 +494,6 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 #define     DMA_CTRL_DMAW_DLY_CNT_SHIFT     16
 #define     DMA_CTRL_TXCMB_EN               0x100000
 #define     DMA_CTRL_RXCMB_EN				0x200000
-
 
 /* CMB/SMB Control Register */
 #define REG_SMB_STAT_TIMER                      0x15C4
@@ -575,10 +565,8 @@ s32 atl1e_restart_autoneg(struct atl1e_hw *hw);
 #define  ISR_PHY_LINKDOWN       0x10000000
 #define  ISR_DIS_INT            0x80000000
 
-
 /* Interrupt Mask Register */
 #define REG_IMR 0x1604
-
 
 #define IMR_NORMAL_MASK (\
 		ISR_SMB	        |\

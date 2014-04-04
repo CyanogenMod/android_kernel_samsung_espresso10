@@ -41,7 +41,6 @@
 #include "radio.h"
 #include "ilt.h"
 
-
 static const s8 b43legacy_tssi2dbm_b_table[] = {
 	0x4D, 0x4C, 0x4B, 0x4A,
 	0x4A, 0x49, 0x48, 0x47,
@@ -81,7 +80,6 @@ static const s8 b43legacy_tssi2dbm_g_table[] = {
 };
 
 static void b43legacy_phy_initg(struct b43legacy_wldev *dev);
-
 
 static inline
 void b43legacy_voluntary_preempt(void)

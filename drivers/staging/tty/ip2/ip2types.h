@@ -44,9 +44,9 @@ typedef unsigned int          UINT;
 typedef unsigned short        USHORT;
 typedef unsigned long         ULONG;
 
-typedef struct 
+typedef struct
 {
-	short irq[IP2_MAX_BOARDS]; 
+	short irq[IP2_MAX_BOARDS];
 	unsigned short addr[IP2_MAX_BOARDS];
 	int type[IP2_MAX_BOARDS];
 #ifdef CONFIG_PCI

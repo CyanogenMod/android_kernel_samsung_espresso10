@@ -27,7 +27,6 @@
 #include <asm/amigahw.h>
 #include <asm/amigaints.h>
 
-
     /*
      *  The Buddha has 2 IDE interfaces, the Catweasel has 3, X-Surf has 2
      */
@@ -83,7 +82,6 @@ static int xsurf_irqports[XSURF_NUM_HWIFS] __initdata = {
 };
 
 #define BUDDHA_IRQ_MR	0xfc0		/* master interrupt enable */
-
 
     /*
      *  Board information
@@ -177,9 +175,9 @@ static int __init buddha_init(void)
 			buddha_num_hwifs = XSURF_NUM_HWIFS;
 			type=BOARD_XSURF;
 			d.port_ops = &xsurf_port_ops;
-		} else 
+		} else
 			continue;
-		
+
 		board = z->resource.start;
 
 		if(type != BOARD_XSURF) {
@@ -196,9 +194,9 @@ fail_base2:
 				release_mem_region(board+XSURF_BASE1, 0x1000);
 				continue;
 			}
-		}	  
+		}
 		buddha_board = ZTWO_VADDR(board);
-		
+
 		/* write to BUDDHA_IRQ_MR to enable the board IRQ */
 		/* X-Surf doesn't have this.  IRQs are always on */
 		if (type != BOARD_XSURF)

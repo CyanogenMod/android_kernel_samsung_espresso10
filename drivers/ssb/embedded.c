@@ -16,7 +16,6 @@
 
 #include "ssb_private.h"
 
-
 int ssb_watchdog_timer_set(struct ssb_bus *bus, u32 ticks)
 {
 	if (ssb_chipco_available(&bus->chipco)) {

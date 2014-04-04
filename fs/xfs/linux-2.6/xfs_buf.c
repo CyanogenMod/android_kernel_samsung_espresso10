@@ -883,7 +883,6 @@ xfs_buf_rele(
 	}
 }
 
-
 /*
  *	Lock a buffer object, if it is not already locked.
  *
@@ -1138,7 +1137,6 @@ xfs_bioerror_relse(
 	return EIO;
 }
 
-
 /*
  * All xfs metadata buffers except log state machine buffers
  * get this attached as their b_bdstrat callback function.
@@ -1239,7 +1237,6 @@ _xfs_buf_ioapply(
 		     (bp->b_flags & XBF_READ_AHEAD) ? READA : READ;
 	}
 
-
 next_chunk:
 	atomic_inc(&bp->b_io_remaining);
 	nr_pages = BIO_MAX_SECTORS >> (PAGE_SHIFT - BBSHIFT);
@@ -1251,7 +1248,6 @@ next_chunk:
 	bio->bi_sector = sector;
 	bio->bi_end_io = xfs_buf_bio_end_io;
 	bio->bi_private = bp;
-
 
 	for (; size && nr_pages; nr_pages--, map_i++) {
 		int	rbytes, nbytes = PAGE_SIZE - offset;
@@ -1574,7 +1570,6 @@ error:
 	kmem_free(btp);
 	return NULL;
 }
-
 
 /*
  *	Delayed write buffer handling

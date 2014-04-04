@@ -43,8 +43,6 @@
 #include "bonding.h"
 #include "bond_alb.h"
 
-
-
 #ifndef __long_aligned
 #define __long_aligned __attribute__((aligned((sizeof(long)))))
 #endif
@@ -1682,4 +1680,3 @@ void bond_alb_clear_vlan(struct bonding *bond, unsigned short vlan_id)
 		rlb_clear_vlan(bond, vlan_id);
 	}
 }
-

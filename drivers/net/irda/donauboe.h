@@ -1,5 +1,5 @@
 /*********************************************************************
- *                
+ *
  * Filename:      toshoboe.h
  * Version:       2.16
  * Description:   Driver for the Toshiba OBOE (or type-O or 701)
@@ -13,40 +13,40 @@
  * Modified: 2.16 Sat Jun 22 18:54:29 2002 (sync headers)
  * Modified: 2.17 Christian Gennerat <christian.gennerat@polytechnique.org>
  * Modified: 2.17 jeu sep 12 08:50:20 2002 (add lock to be used by spinlocks)
- * 
+ *
  *     Copyright (c) 1999 James McKenzie, All Rights Reserved.
- *      
- *     This program is free software; you can redistribute it and/or 
- *     modify it under the terms of the GNU General Public License as 
- *     published by the Free Software Foundation; either version 2 of 
+ *
+ *     This program is free software; you can redistribute it and/or
+ *     modify it under the terms of the GNU General Public License as
+ *     published by the Free Software Foundation; either version 2 of
  *     the License, or (at your option) any later version.
- *  
+ *
  *     Neither James McKenzie nor Cambridge University admit liability nor
- *     provide warranty for any of this software. This material is 
+ *     provide warranty for any of this software. This material is
  *     provided "AS-IS" and at no charge.
- * 
+ *
  *     Applicable Models : Libretto 100/110CT and many more.
  *     Toshiba refers to this chip as the type-O IR port,
  *     or the type-DO IR port.
  *
  * IrDA chip set list from Toshiba Computer Engineering Corp.
- * model			method	maker	controller		Version 
- * Portege 320CT	FIR,SIR Toshiba Oboe(Triangle) 
- * Portege 3010CT	FIR,SIR Toshiba Oboe(Sydney) 
- * Portege 3015CT	FIR,SIR Toshiba Oboe(Sydney) 
- * Portege 3020CT	FIR,SIR Toshiba Oboe(Sydney) 
+ * model			method	maker	controller		Version
+ * Portege 320CT	FIR,SIR Toshiba Oboe(Triangle)
+ * Portege 3010CT	FIR,SIR Toshiba Oboe(Sydney)
+ * Portege 3015CT	FIR,SIR Toshiba Oboe(Sydney)
+ * Portege 3020CT	FIR,SIR Toshiba Oboe(Sydney)
  * Portege 7020CT	FIR,SIR ?		?
- * 
+ *
  * Satell. 4090XCDT	FIR,SIR ?		?
- * 
- * Libretto 100CT	FIR,SIR Toshiba Oboe 
- * Libretto 1000CT	FIR,SIR Toshiba Oboe 
- * 
- * TECRA750DVD		FIR,SIR Toshiba Oboe(Triangle)	REV ID=14h 
- * TECRA780			FIR,SIR Toshiba Oboe(Sandlot)	REV ID=32h,33h 
- * TECRA750CDT		FIR,SIR Toshiba Oboe(Triangle)	REV ID=13h,14h 
- * TECRA8000		FIR,SIR Toshiba Oboe(ISKUR)		REV ID=23h 
- * 
+ *
+ * Libretto 100CT	FIR,SIR Toshiba Oboe
+ * Libretto 1000CT	FIR,SIR Toshiba Oboe
+ *
+ * TECRA750DVD		FIR,SIR Toshiba Oboe(Triangle)	REV ID=14h
+ * TECRA780			FIR,SIR Toshiba Oboe(Sandlot)	REV ID=32h,33h
+ * TECRA750CDT		FIR,SIR Toshiba Oboe(Triangle)	REV ID=13h,14h
+ * TECRA8000		FIR,SIR Toshiba Oboe(ISKUR)		REV ID=23h
+ *
  ********************************************************************/
 
 /* The documentation for this chip is allegedly released         */
@@ -57,7 +57,6 @@
 /* http://www.madingley.org/james/resources/toshoboe/TMPR3922.pdf */
 /* The mapping between the registers in that document and the    */
 /* Registers in the 701 oboe chip are as follows    */
-
 
 /* 3922 reg     701 regs, by bit numbers                        */
 /*               7- 0  15- 8  24-16  31-25                      */
@@ -123,7 +122,6 @@
 /* 7. While the core obviously expects 32 bit accesses all the  */
 /*    M$ drivers do 8 bit accesses, infact the Miniport ones    */
 /*    write and read back the byte serveral times (why?)        */
-
 
 #ifndef TOSHOBOE_H
 #define TOSHOBOE_H
@@ -194,7 +192,6 @@
 #define OBOE_STATUS_FIRRX	0x04
 #define OBOE_STATUS_MIRRX	0x02
 #define OBOE_STATUS_SIRRX	0x01
-
 
 /*Speed control registers */
 #define OBOE_CONFIG0L	OBOE_REG(0x10)
@@ -285,7 +282,6 @@ struct OboeRing
 
 #define OBOE_RING_LEN (sizeof(struct OboeRing))
 
-
 #define OBOE_CTL_TX_HW_OWNS	0x80 /*W/R This slot owned by the hardware */
 #define OBOE_CTL_TX_DISTX_CRC	0x40 /*W Disable CRC generation for [FM]IR */
 #define OBOE_CTL_TX_BAD_CRC     0x20 /*W Generate bad CRC */
@@ -295,7 +291,6 @@ struct OboeRing
      /*  After this slot is processed        */
 #define OBOE_CTL_TX_UNDER	0x01  /*R Set by hardware to indicate underrun */
 
-
 #define OBOE_CTL_RX_HW_OWNS	0x80 /*W/R This slot owned by hardware */
 #define OBOE_CTL_RX_PHYERR	0x40 /*R Decoder error on receiption */
 #define OBOE_CTL_RX_CRCERR	0x20 /*R CRC error only set for [FM]IR */
@@ -303,7 +298,6 @@ struct OboeRing
 #define OBOE_CTL_RX_OVER	0x08   /*R set to indicate an overflow */
 #define OBOE_CTL_RX_SIRBAD	0x04 /*R SIR had BOF in packet or ABORT sequence */
 #define OBOE_CTL_RX_RXEOF	0x02  /*R Finished receiving on this slot */
-
 
 struct toshoboe_cb
 {
@@ -320,13 +314,11 @@ struct toshoboe_cb
   struct pci_dev *pdev;         /*PCI device */
   int base;                     /*IO base */
 
-
   int txpending;                /*how many tx's are pending */
   int txs, rxs;                 /*Which slots are we at  */
 
   int irdad;                    /*Driver under control of netdev end  */
   int async;                    /*Driver under control of async end   */
-
 
   int stopped;                  /*Stopped by some or other APM stuff */
 
@@ -339,7 +331,6 @@ struct toshoboe_cb
   void *tx_bufs[OBOE_RING_MAX_SIZE]; /*The buffers   */
   void *rx_bufs[OBOE_RING_MAX_SIZE];
 
-
   int speed;                    /*Current setting of the speed */
   int new_speed;                /*Set to request a speed change */
 
@@ -349,7 +340,7 @@ struct toshoboe_cb
  *	Releasing the lock :
  *		spin_unlock_irqrestore(&self->spinlock, flags);
  */
-  spinlock_t spinlock;		
+  spinlock_t spinlock;
   /* Used for the probe and diagnostics code */
   int int_rx;
   int int_tx;
@@ -357,6 +348,5 @@ struct toshoboe_cb
   int int_rxover;
   int int_sip;
 };
-
 
 #endif

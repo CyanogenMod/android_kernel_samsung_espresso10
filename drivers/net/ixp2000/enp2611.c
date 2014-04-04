@@ -176,7 +176,7 @@ static void enp2611_set_port_admin_status(int port, int up)
 }
 
 static int __init enp2611_init_module(void)
-{ 
+{
 	int ports;
 	int i;
 

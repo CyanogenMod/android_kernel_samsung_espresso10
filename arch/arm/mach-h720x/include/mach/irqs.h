@@ -49,7 +49,6 @@
 #define IRQ_ENA_MUX	(1<<IRQ_GPIOA) | (1<<IRQ_GPIOB) \
 			| (1<<IRQ_GPIOC) | (1<<IRQ_GPIOD)
 
-
 #elif defined (CONFIG_CPU_H7202)
 
 #define IRQ_PMU		0		/* 0x00000001 */

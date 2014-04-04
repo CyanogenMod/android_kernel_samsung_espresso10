@@ -26,7 +26,6 @@
 #include <dspbridge/devdefs.h>
 #include <dspbridge/io.h>
 
-
 extern int bridge_io_create(struct io_mgr **io_man,
 				   struct dev_object *hdev_obj,
 				   const struct io_attrs *mgr_attrts);

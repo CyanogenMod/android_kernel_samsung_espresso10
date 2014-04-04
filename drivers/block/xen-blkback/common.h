@@ -49,7 +49,6 @@
 	pr_debug(DRV_PFX "(%s:%d) " fmt ".\n",	\
 		 __func__, __LINE__, ##args)
 
-
 /* Not a real protocol.  Used to generate ring structs which contain
  * the elements common to all protocols only.  This way we get a
  * compiler-checkable way to use common struct elements, so we can
@@ -167,7 +166,6 @@ struct xen_blkif {
 	grant_handle_t		shmem_handle;
 	grant_ref_t		shmem_ref;
 };
-
 
 #define vbd_sz(_v)	((_v)->bdev->bd_part ? \
 			 (_v)->bdev->bd_part->nr_sects : \

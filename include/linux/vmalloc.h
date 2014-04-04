@@ -72,7 +72,7 @@ extern void vunmap(const void *addr);
 extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
 							unsigned long pgoff);
 void vmalloc_sync_all(void);
- 
+
 /*
  *	Lowlevel-APIs (not for driver use!)
  */

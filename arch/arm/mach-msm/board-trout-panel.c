@@ -32,7 +32,6 @@
 #define SYSTEM_BLOCK1_BASE     0x160000
 #define SYSTEM_BLOCK2_BASE     0x170000
 
-
 #define	DPSUS       (MDDI_CLIENT_CORE_BASE|0x24)
 #define	SYSCLKENA   (MDDI_CLIENT_CORE_BASE|0x2C)
 #define	PWM0OFF	      (PWM_BLOCK_BASE|0x1C)
@@ -168,7 +167,6 @@ static struct mddi_table mddi_toshiba_init_table[] = {
 
 #define GPIOSEL_VWAKEINT (1U << 0)
 #define INTMASK_VWAKEOUT (1U << 0)
-
 
 static struct clk *gp_clk;
 static int trout_new_backlight = 1;

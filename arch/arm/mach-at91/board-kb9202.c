@@ -41,7 +41,6 @@
 
 #include "generic.h"
 
-
 static void __init kb9202_init_early(void)
 {
 	/* Set cpu type: PQFP */

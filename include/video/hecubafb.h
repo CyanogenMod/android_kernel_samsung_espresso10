@@ -47,5 +47,4 @@ struct hecuba_board {
 	int (*init)(struct hecubafb_par *);
 };
 
-
 #endif

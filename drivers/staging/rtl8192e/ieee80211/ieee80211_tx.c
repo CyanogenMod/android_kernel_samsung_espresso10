@@ -54,12 +54,9 @@
 
 #include "ieee80211.h"
 
-
 /*
 
-
 802.11 Data Frame
-
 
 802.11 frame_contorl for data frames - 2 bytes
      ,-----------------------------------------------------------------------------------------.
@@ -105,7 +102,6 @@ Desc. | IV  | Encrypted | ICV |
       |     | IP Packet |     |
       `-----------------------'
 Total: 8 non-data bytes
-
 
 802.3 Ethernet Data Frame
 
@@ -229,7 +225,6 @@ int ieee80211_encrypt_fragment(
 	return 0;
 }
 
-
 void ieee80211_txb_free(struct ieee80211_txb *txb) {
 	if (unlikely(!txb))
 		return;
@@ -327,7 +322,6 @@ void ieee80211_tx_query_agg_cap(struct ieee80211_device* ieee, struct sk_buff* s
         {
                 return;
         }
-
 
 #if 1
 	if (!ieee->GetNmodeSupportBySecCfg(ieee))
@@ -553,7 +547,6 @@ NO_PROTECTION:
 	tcb_desc->bRTSBW		= false;
 }
 
-
 void ieee80211_txrate_selectmode(struct ieee80211_device* ieee, cb_desc* tcb_desc)
 {
 #ifdef TO_DO_LIST
@@ -633,7 +626,6 @@ int ieee80211_rtl_xmit(struct sk_buff *skb, struct net_device *dev)
 		       ieee->dev->name);
 		goto success;
 	}
-
 
 	if(likely(ieee->raw_tx == 0)){
 		if (unlikely(skb->len < SNAP_SIZE + sizeof(u16))) {
@@ -795,8 +787,6 @@ int ieee80211_rtl_xmit(struct sk_buff *skb, struct net_device *dev)
 			txb->queue_index = WME_AC_BK;
 		}
 
-
-
 		for (i = 0; i < nr_frags; i++) {
 			skb_frag = txb->fragments[i];
 			tcb_desc = (cb_desc *)(skb_frag->cb + MAX_DEV_ADDR_SIZE);
@@ -921,7 +911,6 @@ int ieee80211_rtl_xmit(struct sk_buff *skb, struct net_device *dev)
 			tcb_desc->bdhcp = 1;
 		}
 
-
 		ieee80211_qurey_ShortPreambleMode(ieee, tcb_desc);
 		ieee80211_tx_query_agg_cap(ieee, txb->fragments[0], tcb_desc);
 		ieee80211_query_HTCapShortGI(ieee, tcb_desc);
@@ -953,4 +942,3 @@ int ieee80211_rtl_xmit(struct sk_buff *skb, struct net_device *dev)
 	return 1;
 
 }
-

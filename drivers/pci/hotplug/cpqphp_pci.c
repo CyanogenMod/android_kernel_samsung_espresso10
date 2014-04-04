@@ -38,7 +38,6 @@
 #include "cpqphp.h"
 #include "cpqphp_nvram.h"
 
-
 u8 cpqhp_nic_irq;
 u8 cpqhp_disk_irq;
 
@@ -80,7 +79,6 @@ static void __iomem *detect_HRT_floating_pointer(void __iomem *begin, void __iom
 	return fp;
 }
 
-
 int cpqhp_configure_device (struct controller* ctrl, struct pci_func* func)
 {
 	unsigned char bus;
@@ -116,7 +114,6 @@ int cpqhp_configure_device (struct controller* ctrl, struct pci_func* func)
 	return 0;
 }
 
-
 int cpqhp_unconfigure_device(struct pci_func* func)
 {
 	int j;
@@ -143,7 +140,6 @@ static int PCI_RefinedAccessConfig(struct pci_bus *bus, unsigned int devfn, u8 o
 		return -1;
 	return pci_bus_read_config_dword (bus, devfn, offset, value);
 }
-
 
 /*
  * cpqhp_set_irq
@@ -196,7 +192,6 @@ int cpqhp_set_irq (u8 bus_num, u8 dev_num, u8 int_pin, u8 irq_num)
 	return rc;
 }
 
-
 static int PCI_ScanBusForNonBridge(struct controller *ctrl, u8 bus_num, u8 * dev_num)
 {
 	u16 tdevice;
@@ -233,7 +228,6 @@ static int PCI_ScanBusForNonBridge(struct controller *ctrl, u8 bus_num, u8 * dev
 
 	return -1;
 }
-
 
 static int PCI_GetBusDevHelper(struct controller *ctrl, u8 *bus_num, u8 *dev_num, u8 slot, u8 nobridge)
 {
@@ -273,18 +267,15 @@ static int PCI_GetBusDevHelper(struct controller *ctrl, u8 *bus_num, u8 *dev_num
 	return -1;
 }
 
-
 int cpqhp_get_bus_dev (struct controller *ctrl, u8 * bus_num, u8 * dev_num, u8 slot)
 {
 	/* plain (bridges allowed) */
 	return PCI_GetBusDevHelper(ctrl, bus_num, dev_num, slot, 0);
 }
 
-
 /* More PCI configuration routines; this time centered around hotplug
  * controller
  */
-
 
 /*
  * cpqhp_save_config
@@ -450,7 +441,6 @@ int cpqhp_save_config(struct controller *ctrl, int busnumber, int is_hot_plug)
 	return 0;
 }
 
-
 /*
  * cpqhp_save_slot_config
  *
@@ -533,7 +523,6 @@ int cpqhp_save_slot_config (struct controller *ctrl, struct pci_func * new_slot)
 
 	return 0;
 }
-
 
 /*
  * cpqhp_save_base_addr_length
@@ -669,7 +658,6 @@ int cpqhp_save_base_addr_length(struct controller *ctrl, struct pci_func * func)
 
 	return(0);
 }
-
 
 /*
  * cpqhp_save_used_resources
@@ -933,7 +921,6 @@ int cpqhp_save_used_resources (struct controller *ctrl, struct pci_func * func)
 	return 0;
 }
 
-
 /*
  * cpqhp_configure_board
  *
@@ -1010,7 +997,6 @@ int cpqhp_configure_board(struct controller *ctrl, struct pci_func * func)
 
 	return 0;
 }
-
 
 /*
  * cpqhp_valid_replace
@@ -1149,10 +1135,8 @@ int cpqhp_valid_replace(struct controller *ctrl, struct pci_func * func)
 		func = cpqhp_slot_find(func->bus, func->device, index++);
 	}
 
-
 	return 0;
 }
-
 
 /*
  * cpqhp_find_available_resources
@@ -1292,7 +1276,6 @@ int cpqhp_find_available_resources(struct controller *ctrl, void __iomem *rom_st
 			bridged_slot = 0;
 		}
 
-
 		/* If we've got a valid IO base, use it */
 
 		temp_dword = io_base + io_length;
@@ -1404,7 +1387,6 @@ int cpqhp_find_available_resources(struct controller *ctrl, void __iomem *rom_st
 	return rc;
 }
 
-
 /*
  * cpqhp_return_board_resources
  *
@@ -1463,7 +1445,6 @@ int cpqhp_return_board_resources(struct pci_func * func, struct resource_lists *
 	return rc;
 }
 
-
 /*
  * cpqhp_destroy_resource_list
  *
@@ -1510,7 +1491,6 @@ void cpqhp_destroy_resource_list (struct resource_lists * resources)
 	}
 }
 
-
 /*
  * cpqhp_destroy_board_resources
  *
@@ -1556,4 +1536,3 @@ void cpqhp_destroy_board_resources (struct pci_func * func)
 		kfree(tres);
 	}
 }
-

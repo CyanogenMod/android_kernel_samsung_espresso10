@@ -61,9 +61,7 @@
 #ifndef __WL_WEXT_H__
 #define __WL_WEXT_H__
 
-
 #ifdef WIRELESS_EXT
-
 
 /*******************************************************************************
  *  function protoypes
@@ -91,6 +89,5 @@ extern const struct iw_handler_def wl_iw_handler_def;
 #else
 #error WIRELESS_EXT
 #endif // WIRELESS_EXT
-
 
 #endif  // __WL_WEXT_H__

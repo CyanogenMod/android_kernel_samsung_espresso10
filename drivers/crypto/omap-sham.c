@@ -691,7 +691,6 @@ static int omap_sham_handle_queue(struct omap_sham_dev *dd,
 	dev_dbg(dd->dev, "handling new req, op: %lu, nbytes: %d\n",
 						ctx->op, req->nbytes);
 
-
 	err = omap_sham_hw_init(dd);
 	if (err)
 		goto err1;

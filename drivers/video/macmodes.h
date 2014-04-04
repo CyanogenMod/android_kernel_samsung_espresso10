@@ -49,7 +49,6 @@
 #define CMODE_16		1	/* 16 (actually 15) bits/pixel */
 #define CMODE_32		2	/* 32 (actually 24) bits/pixel */
 
-
 extern int mac_vmode_to_var(int vmode, int cmode,
 			    struct fb_var_screeninfo *var);
 extern int mac_var_to_vmode(const struct fb_var_screeninfo *var, int *vmode,
@@ -59,7 +58,6 @@ extern int mac_find_mode(struct fb_var_screeninfo *var,
 			 struct fb_info *info,
 			 const char *mode_option,
 			 unsigned int default_bpp);
-
 
     /*
      *  Addresses in NVRAM where video mode and pixel size are stored.

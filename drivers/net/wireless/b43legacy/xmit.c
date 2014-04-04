@@ -35,7 +35,6 @@
 #include "dma.h"
 #include "pio.h"
 
-
 /* Extract the bitrate out of a CCK PLCP header. */
 static u8 b43legacy_plcp_get_bitrate_idx_cck(struct b43legacy_plcp_hdr6 *plcp)
 {
@@ -673,7 +672,6 @@ return;
 	/* FIXME kill magic */
 	b43legacy_write16(dev, 0x688,
 			  b43legacy_read16(dev, 0x688) | 0x4);
-
 
 	/*TODO: We might need some stack support here to get the values. */
 }

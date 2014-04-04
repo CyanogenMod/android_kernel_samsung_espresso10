@@ -38,7 +38,6 @@
 #include "intel_sst_fw_ipc.h"
 #include "intel_sst_common.h"
 
-
 /*
  * sst_download_fw - download the audio firmware to DSP
  *
@@ -76,7 +75,6 @@ end_restore:
 	sst_drv_ctx->alloc_block[0].sst_id = BLOCK_UNINIT;
 	return retval;
 }
-
 
 /*
  * sst_stalled - this function checks if the lpe is in stalled state
@@ -435,7 +433,6 @@ int sst_device_control(int cmd, void *arg)
 		struct snd_sst_tstamp fw_tstamp = {0,};
 		struct stream_info *stream;
 
-
 		stream_info = (struct pcm_stream_info *)arg;
 		str_id = stream_info->str_id;
 		retval = sst_validate_strid(str_id);
@@ -475,7 +472,6 @@ int sst_device_control(int cmd, void *arg)
 
 	return retval;
 }
-
 
 struct intel_sst_pcm_control pcm_ops = {
 	.open = sst_open_pcm_stream,

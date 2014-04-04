@@ -15,7 +15,6 @@
 #if !defined(_IO_EDGEPORT_H_)
 #define	_IO_EDGEPORT_H_
 
-
 #define MAX_RS232_PORTS		8	/* Max # of RS-232 ports per device */
 
 /* typedefs that the insideout headers need */
@@ -32,8 +31,6 @@
 
 #include "io_usbvend.h"
 
-
-
 /* The following table is used to map the USBx port number to
  * the device serial number (or physical USB path), */
 #define MAX_EDGEPORTS	64
@@ -44,7 +41,6 @@ struct comMapper {
 	int	Original[MAX_RS232_PORTS];		/* Port numbers set by IOCTL */
 	int	Port[MAX_RS232_PORTS];			/* Actual used port numbers */
 };
-
 
 #define EDGEPORT_CONFIG_DEVICE "/proc/edgeport"
 
@@ -62,11 +58,9 @@ struct comMapper {
 /* The parameters to the lseek() for the read is: */
 #define PROC_READ_SETUP(Command, Argument)	((Command) + ((Argument)<<8))
 
-
 /* the following write functions are supported: */
 #define PROC_SET_COM_MAPPING		1
 #define PROC_SET_COM_ENTRY		2
-
 
 /* The following structure is passed to the write */
 struct procWrite {
@@ -128,7 +122,5 @@ struct string_block {
 	__u16	NumStrings;			/* Number of strings in block */
 	__u16	Strings[1];			/* Start of string block */
 };
-
-
 
 #endif

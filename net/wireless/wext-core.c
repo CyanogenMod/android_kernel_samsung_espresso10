@@ -23,7 +23,6 @@ typedef int (*wext_ioctl_func)(struct net_device *, struct iwreq *,
 			       unsigned int, struct iw_request_info *,
 			       iw_handler);
 
-
 /*
  * Meta-data about all the standard Wireless Extension request we
  * know about.
@@ -338,7 +337,6 @@ static const int compat_event_type_size[] = {
 };
 #endif
 
-
 /* IW event code */
 
 static int __net_init wext_pernet_init(struct net *net)
@@ -408,7 +406,6 @@ static struct nlmsghdr *rtnetlink_ifinfo_prep(struct net_device *dev,
 	nlmsg_cancel(skb, nlh);
 	return NULL;
 }
-
 
 /*
  * Main event dispatcher. Called from other parts and drivers.
@@ -599,8 +596,6 @@ void wireless_send_event(struct net_device *	dev,
 	schedule_work(&wireless_nlevent_work);
 }
 EXPORT_SYMBOL(wireless_send_event);
-
-
 
 /* IW handlers */
 
@@ -1000,7 +995,6 @@ static int ioctl_standard_call(struct net_device *	dev,
 
 	return ret;
 }
-
 
 int wext_handle_ioctl(struct net *net, struct ifreq *ifr, unsigned int cmd,
 		      void __user *arg)

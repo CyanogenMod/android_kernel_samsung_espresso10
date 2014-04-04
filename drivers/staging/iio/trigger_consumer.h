@@ -1,4 +1,3 @@
-
 /* The industrial I/O core, trigger consumer handling functions
  *
  * Copyright (c) 2008 Jonathan Cameron
@@ -42,6 +41,3 @@ static int iio_device_unregister_trigger_consumer(struct iio_dev *dev_info)
 };
 
 #endif /* CONFIG_TRIGGER_CONSUMER */
-
-
-

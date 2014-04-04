@@ -164,6 +164,26 @@ const char *pm_mode_text[] = {
 	"Off", "On"
 };
 
+#ifdef CONFIG_SND_FORCE_BIAS_MUTE_CONTROL
+
+#define MIC_DISABLE	0
+#define MIC_ENABLE	1
+#define MIC_FORCE_DISABLE	2
+#define MIC_FORCE_ENABLE	3
+
+static int aif2_digital_mute;
+static int main_mic_bias_mode;
+static int sub_mic_bias_mode;
+
+const char *switch_mode_text[] = {
+	"Off", "On"
+};
+
+const char *mic_bias_mode_text[] = {
+	"Disable", "Force Disable", "Enable", "Force Enable"
+};
+#endif /* CONFIG_SND_FORCE_BIAS_MUTE_CONTROL */
+
 static void set_mclk(bool on)
 {
 	if (on)
@@ -236,8 +256,6 @@ static int set_lineout_mode(struct snd_kcontrol *kcontrol,
 
 	gpio_set_value(lineout_select.gpio, lineout_mode);
 
-	dev_dbg(codec->dev, "set lineout mode : %s\n",
-		lineout_mode_text[lineout_mode]);
 	return 0;
 
 }
@@ -246,8 +264,6 @@ static int omap_lineout_switch(struct snd_soc_dapm_widget *w,
 			     struct snd_kcontrol *kcontrol, int event)
 {
 	struct snd_soc_codec *codec = w->codec;
-
-	dev_dbg(codec->dev, "%s event is %02X", w->name, event);
 
 	switch (event) {
 	case SND_SOC_DAPM_POST_PMU:
@@ -345,6 +361,136 @@ static int set_pm_mode(struct snd_kcontrol *kcontrol,
 	return 0;
 }
 
+#ifdef CONFIG_SND_FORCE_BIAS_MUTE_CONTROL
+static const struct soc_enum switch_mode_enum[] = {
+	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(switch_mode_text), switch_mode_text),
+};
+
+static const struct soc_enum mic_bias_mode_enum[] = {
+	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(mic_bias_mode_text), mic_bias_mode_text),
+};
+
+static const struct soc_enum sub_bias_mode_enum[] = {
+	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(mic_bias_mode_text), mic_bias_mode_text),
+};
+
+static int get_aif2_mute_status(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	ucontrol->value.integer.value[0] = aif2_digital_mute;
+	return 0;
+}
+
+static int set_aif2_mute_status(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	struct snd_soc_codec *codec = snd_kcontrol_chip(kcontrol);
+	int reg, i, min, max;
+
+	aif2_digital_mute = ucontrol->value.integer.value[0];
+
+	if (snd_soc_read(codec, WM8994_POWER_MANAGEMENT_6)
+		& WM8994_AIF2_DACDAT_SRC)
+		aif2_digital_mute = 0;
+
+	if (aif2_digital_mute)
+		reg = WM8994_AIF1DAC1_MUTE;
+	else
+		reg = 0;
+
+	snd_soc_update_bits(codec, WM8994_AIF2_DAC_FILTERS_1,
+				WM8994_AIF2DAC_MUTE, reg);
+
+	return 0;
+}
+
+static int get_sub_mic_bias_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	ucontrol->value.integer.value[0] = sub_mic_bias_mode;
+	return 0;
+}
+
+static int set_sub_mic_bias_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	struct snd_soc_codec *codec = snd_kcontrol_chip(kcontrol);
+	struct wm1811_machine_priv *wm1811
+		= snd_soc_card_get_drvdata(codec->card);
+	int status = 0;
+
+	status = ucontrol->value.integer.value[0];
+
+	switch (status) {
+	case MIC_FORCE_ENABLE:
+		sub_mic_bias_mode = status;
+		gpio_set_value(sub_mic_bias.gpio, 1);
+		break;
+	case MIC_ENABLE:
+		gpio_set_value(sub_mic_bias.gpio, 1);
+		if (sub_mic_bias_mode != MIC_FORCE_ENABLE)
+			msleep(100);
+		break;
+	case MIC_FORCE_DISABLE:
+		sub_mic_bias_mode = status;
+		gpio_set_value(sub_mic_bias.gpio, 0);
+		break;
+	case MIC_DISABLE:
+		if (sub_mic_bias_mode != MIC_FORCE_ENABLE)
+			gpio_set_value(sub_mic_bias.gpio, 0);
+		break;
+	default:
+		break;
+	}
+
+	return 0;
+
+}
+
+static int get_main_mic_bias_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	ucontrol->value.integer.value[0] = main_mic_bias_mode;
+	return 0;
+}
+
+static int set_main_mic_bias_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	struct snd_soc_codec *codec = snd_kcontrol_chip(kcontrol);
+	struct wm1811_machine_priv *wm1811
+		= snd_soc_card_get_drvdata(codec->card);
+	int status = 0;
+
+	status = ucontrol->value.integer.value[0];
+
+	switch (status) {
+	case MIC_FORCE_ENABLE:
+		main_mic_bias_mode = status;
+		gpio_set_value(main_mic_bias.gpio, 1);
+		break;
+	case MIC_ENABLE:
+		gpio_set_value(main_mic_bias.gpio, 1);
+		if (main_mic_bias_mode != MIC_FORCE_ENABLE)
+			msleep(100);
+		break;
+	case MIC_FORCE_DISABLE:
+		main_mic_bias_mode = status;
+		gpio_set_value(main_mic_bias.gpio, 0);
+		break;
+	case MIC_DISABLE:
+		if (main_mic_bias_mode != MIC_FORCE_ENABLE)
+			gpio_set_value(main_mic_bias.gpio, 0);
+		break;
+	default:
+		break;
+	}
+
+	return 0;
+
+}
+#endif /* #ifdef CONFIG_SND_FORCE_BIAS_MUTE_CONTROL */
+
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) \
 	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
 	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
@@ -426,7 +572,6 @@ static void wm1811_micdet(u16 status, void *data)
 	if (!(status & WM8958_MICD_STS)) {
 		if (!wm8994->jackdet) {
 			/* If nothing present then clear our statuses */
-			dev_dbg(wm1811->codec->dev, "Detected open circuit\n");
 			wm8994->jack_mic = false;
 			wm8994->mic_detecting = true;
 
@@ -502,9 +647,6 @@ static void wm1811_micdet(u16 status, void *data)
 		if (status & WM8994_JACKDET_BTN2)
 			report |= SND_JACK_BTN_2;
 
-		dev_dbg(wm1811->codec->dev, "Detected Button: %08x (%08X)\n",
-			report, status);
-
 		snd_soc_jack_report(wm8994->micdet[0].jack, report,
 				    wm8994->btn_mask);
 	}
@@ -514,8 +656,6 @@ static void wm1811_micdet(u16 status, void *data)
 static int omap4_wm8994_start_fll1(struct snd_soc_dai *aif1_dai)
 {
 	int ret;
-
-	dev_info(aif1_dai->dev, "Moving to audio clocking settings\n");
 
 	/* Switch the FLL */
 	ret = snd_soc_dai_set_pll(aif1_dai,
@@ -690,6 +830,17 @@ static const struct snd_kcontrol_new omap4_controls[] = {
 		get_aif2_mode, set_aif2_mode),
 	SOC_ENUM_EXT("PM Constraints Mode", pm_mode_enum[0],
 		get_pm_mode, set_pm_mode),
+
+#ifdef CONFIG_SND_FORCE_BIAS_MUTE_CONTROL
+	SOC_ENUM_EXT("MainMicBias Mode", mic_bias_mode_enum[0],
+		get_main_mic_bias_mode, set_main_mic_bias_mode),
+
+	SOC_ENUM_EXT("SubMicBias Mode", mic_bias_mode_enum[0],
+		get_sub_mic_bias_mode, set_sub_mic_bias_mode),
+
+	SOC_ENUM_EXT("AIF2 digital mute", switch_mode_enum[0],
+		get_aif2_mute_status, set_aif2_mute_status),
+#endif /* CONFIG_SND_FORCE_BIAS_MUTE_CONTROL */
 };
 
 const struct snd_soc_dapm_widget omap4_dapm_widgets[] = {
@@ -702,11 +853,17 @@ const struct snd_soc_dapm_widget omap4_dapm_widgets[] = {
 	SND_SOC_DAPM_LINE("LINEOUT", NULL),
 #endif /* not CONFIG_SND_USE_LINEOUT_SWITCH */
 
+#ifdef CONFIG_SND_FORCE_BIAS_MUTE_CONTROL
+	SND_SOC_DAPM_MIC("Main Mic", NULL),
+#ifdef CONFIG_SND_USE_SUB_MIC
+	SND_SOC_DAPM_MIC("Sub Mic", NULL),
+#endif /* CONFIG_SND_USE_SUB_MIC */
+#else
 	SND_SOC_DAPM_MIC("Main Mic", main_mic_bias_event),
-
 #ifdef CONFIG_SND_USE_SUB_MIC
 	SND_SOC_DAPM_MIC("Sub Mic", sub_mic_bias_event),
 #endif /* CONFIG_SND_USE_SUB_MIC */
+#endif /* CONFIG_SND_FORCE_BIAS_MUTE_CONTROL */
 
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
 
@@ -1124,10 +1281,11 @@ static int wm8994_resume_post(struct snd_soc_card *card)
 static int wm8994_suspend_post(struct snd_soc_card *card)
 {
 	struct snd_soc_codec *codec = card->rtd->codec;
+#ifndef CONFIG_SAMSUNG_JACK
 	struct snd_soc_dai *aif1_dai = card->rtd[0].codec_dai;
 	struct snd_soc_dai *aif2_dai = card->rtd[1].codec_dai;
 	int ret;
-
+#endif
 	if (!codec->active) {
 
 #ifndef CONFIG_SAMSUNG_JACK
@@ -1165,11 +1323,12 @@ static int wm8994_suspend_post(struct snd_soc_card *card)
 
 static int wm8994_resume_pre(struct snd_soc_card *card)
 {
+#ifndef CONFIG_SAMSUNG_JACK
 	struct snd_soc_codec *codec = card->rtd->codec;
 	struct snd_soc_dai *aif1_dai = card->rtd[0].codec_dai;
 	int ret;
 	int reg = 0;
-
+#endif
 	set_mclk(true); /* enable 26M CLK */
 
 #ifndef CONFIG_SAMSUNG_JACK

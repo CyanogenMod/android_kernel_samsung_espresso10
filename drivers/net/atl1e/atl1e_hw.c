@@ -376,7 +376,6 @@ static int atl1e_phy_setup_autoneg_adv(struct atl1e_hw *hw)
 	return 0;
 }
 
-
 /*
  * Resets the PHY and make all config validate
  *
@@ -560,7 +559,6 @@ int atl1e_reset_hw(struct atl1e_hw *hw)
 	return 0;
 }
 
-
 /*
  * Performs basic configuration of the adapter.
  *
@@ -648,4 +646,3 @@ int atl1e_restart_autoneg(struct atl1e_hw *hw)
 			BMCR_RESET | BMCR_ANENABLE | BMCR_ANRESTART);
 	return err;
 }
-

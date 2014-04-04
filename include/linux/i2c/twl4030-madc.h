@@ -32,7 +32,6 @@ struct twl4030_madc_conversion_method {
 
 #define TWL4030_MADC_MAX_CHANNELS 16
 
-
 /*
  * twl4030_madc_request- madc request packet for channel conversion
  * @channels:	16 bit bitmap for individual channels

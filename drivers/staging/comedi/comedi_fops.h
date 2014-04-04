@@ -1,4 +1,3 @@
-
 #ifndef _COMEDI_FOPS_H
 #define _COMEDI_FOPS_H
 

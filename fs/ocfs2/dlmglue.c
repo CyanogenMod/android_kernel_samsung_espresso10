@@ -143,7 +143,6 @@ static void ocfs2_dump_meta_lvb_info(u64 level,
 	     be32_to_cpu(lvb->lvb_iattr));
 }
 
-
 /*
  * OCFS2 Lock Resource Operations
  *
@@ -388,7 +387,6 @@ static int ocfs2_prepare_cancel_convert(struct ocfs2_super *osb,
 				        struct ocfs2_lock_res *lockres);
 static int ocfs2_cancel_convert(struct ocfs2_super *osb,
 				struct ocfs2_lock_res *lockres);
-
 
 static void ocfs2_build_lock_name(enum ocfs2_lock_type type,
 				  u64 blkno,
@@ -1552,7 +1550,6 @@ static inline int ocfs2_cluster_lock(struct ocfs2_super *osb,
 				    0, _RET_IP_);
 }
 
-
 static void __ocfs2_cluster_unlock(struct ocfs2_super *osb,
 				   struct ocfs2_lock_res *lockres,
 				   int level,
@@ -2539,6 +2536,7 @@ int ocfs2_super_lock(struct ocfs2_super *osb,
 	 * everything is up to the caller :) */
 	status = ocfs2_should_refresh_lock_res(lockres);
 	if (status < 0) {
+		ocfs2_cluster_unlock(osb, lockres, level);
 		mlog_errno(status);
 		goto bail;
 	}
@@ -2547,8 +2545,10 @@ int ocfs2_super_lock(struct ocfs2_super *osb,
 
 		ocfs2_complete_lock_res_refresh(lockres, status);
 
-		if (status < 0)
+		if (status < 0) {
+			ocfs2_cluster_unlock(osb, lockres, level);
 			mlog_errno(status);
+		}
 		ocfs2_track_lock_refresh(lockres);
 	}
 bail:
@@ -3849,7 +3849,6 @@ int ocfs2_refcount_lock(struct ocfs2_refcount_tree *ref_tree, int ex)
 	int level = ex ? DLM_LOCK_EX : DLM_LOCK_PR;
 	struct ocfs2_lock_res *lockres = &ref_tree->rf_lockres;
 	struct ocfs2_super *osb = lockres->l_priv;
-
 
 	if (ocfs2_is_hard_readonly(osb))
 		return -EROFS;

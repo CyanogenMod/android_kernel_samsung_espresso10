@@ -22,8 +22,6 @@
 #include <net/irda/irlap.h>
 #include <net/genetlink.h>
 
-
-
 static struct genl_family irda_nl_family = {
 	.id = GENL_ID_GENERATE,
 	.name = IRDA_NL_NAME,

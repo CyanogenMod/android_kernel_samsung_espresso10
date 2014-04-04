@@ -8,7 +8,6 @@
  * the Free Software Foundation.
  */
 
-
 #include <linux/kernel.h>
 #include <linux/slab.h>
 #include <linux/module.h>

@@ -167,7 +167,6 @@ static void pm8001_tasklet(unsigned long opaque)
 }
 #endif
 
-
  /**
   * pm8001_interrupt - when HBA originate a interrupt,we should invoke this
   * dispatcher to handle each case.
@@ -367,7 +366,6 @@ pm8001_pci_alloc(struct pci_dev *pdev, u32 chip_id, struct Scsi_Host *shost)
 {
 	struct pm8001_hba_info *pm8001_ha;
 	struct sas_ha_struct *sha = SHOST_TO_SAS_HA(shost);
-
 
 	pm8001_ha = sha->lldd_ha;
 	if (!pm8001_ha)
@@ -907,4 +905,3 @@ MODULE_DESCRIPTION("PMC-Sierra PM8001 SAS/SATA controller driver");
 MODULE_VERSION(DRV_VERSION);
 MODULE_LICENSE("GPL");
 MODULE_DEVICE_TABLE(pci, pm8001_pci_table);
-

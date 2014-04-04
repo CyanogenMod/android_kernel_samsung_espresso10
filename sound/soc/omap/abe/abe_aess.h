@@ -69,7 +69,6 @@
 #define EVENT_GENERATOR_START		0x6C
 #define EVENT_SOURCE_SELECTION		0x70
 #define AUDIO_ENGINE_SCHEDULER		0x74
-#define AESS_AUTO_GATING_ENABLE		0x7C
 
 /*
  * AESS_MCU_IRQSTATUS bit field
@@ -103,7 +102,6 @@
 #define EVENT_GENERATOR_COUNTER_DEFAULT	(2048-1)
 /* PLL output/desired sampling rate = (32768 * 6000)/88200 */
 #define EVENT_GENERATOR_COUNTER_44100	(2228-1)
-
 
 int omap_abe_start_event_generator(struct omap_abe *abe);
 int omap_abe_stop_event_generator(struct omap_abe *abe);

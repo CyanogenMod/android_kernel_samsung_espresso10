@@ -1,5 +1,4 @@
-
-/* rio_linux.c -- Linux driver for the Specialix RIO series cards. 
+/* rio_linux.c -- Linux driver for the Specialix RIO series cards.
  *
  *
  *   (C) 1999 R.E.Wolff@BitWizard.nl
@@ -80,7 +79,6 @@
 #include "protsts.h"
 #include "rioboard.h"
 
-
 #include "rio_linux.h"
 
 /* I don't think that this driver can handle more than 512 ports on
@@ -90,7 +88,7 @@ of boards in rio.h.  You'll have to allocate more majors if you need
 more than 512 ports.... */
 
 #ifndef RIO_NORMAL_MAJOR0
-/* This allows overriding on the compiler commandline, or in a "major.h" 
+/* This allows overriding on the compiler commandline, or in a "major.h"
    include or something like that */
 #define RIO_NORMAL_MAJOR0  154
 #define RIO_NORMAL_MAJOR1  156
@@ -104,22 +102,19 @@ more than 512 ports.... */
 #define RIO_WINDOW_LEN 0x10000
 #endif
 
-
-/* Configurable options: 
+/* Configurable options:
    (Don't be too sure that it'll work if you toggle them) */
 
 /* Am I paranoid or not ? ;-) */
 #undef RIO_PARANOIA_CHECK
 
-
 /* 20 -> 2000 per second. The card should rate-limit interrupts at 1000
    Hz, but it is user configurable. I don't recommend going above 1000
    Hz. The interrupt ratelimit might trigger if the interrupt is
-   shared with a very active other device. 
+   shared with a very active other device.
    undef this if you want to disable the check....
 */
 #define IRQ_RATE_LIMIT 200
-
 
 /* These constants are derived from SCO Source */
 static DEFINE_MUTEX(rio_fw_mutex);
@@ -166,9 +161,6 @@ static struct Conf
 				/* how long a close command may take */
 };
 
-
-
-
 /* Function prototypes */
 
 static void rio_disable_tx_interrupts(void *ptr);
@@ -194,13 +186,11 @@ struct rio_info *p;
 
 int rio_debug;
 
-
-/* You can have the driver poll your card. 
-    - Set rio_poll to 1 to poll every timer tick (10ms on Intel). 
+/* You can have the driver poll your card.
+    - Set rio_poll to 1 to poll every timer tick (10ms on Intel).
       This is used when the card cannot use an interrupt for some reason.
 */
 static int rio_poll = 1;
-
 
 /* These are the only open spaces in my computer. Yours may have more
    or less.... */
@@ -208,8 +198,7 @@ static int rio_probe_addrs[] = { 0xc0000, 0xd0000, 0xe0000 };
 
 #define NR_RIO_ADDRS ARRAY_SIZE(rio_probe_addrs)
 
-
-/* Set the mask to all-ones. This alas, only supports 32 interrupts. 
+/* Set the mask to all-ones. This alas, only supports 32 interrupts.
    Some architectures may need more. -- Changed to LONG to
    support up to 64 bits on 64bit architectures. -- REW 20/06/99 */
 static long rio_irqmask = -1;
@@ -234,7 +223,7 @@ static struct real_driver rio_real_driver = {
 	NULL
 };
 
-/* 
+/*
  *  Firmware loader driver specific routines
  *
  */
@@ -248,10 +237,6 @@ static const struct file_operations rio_fw_fops = {
 static struct miscdevice rio_fw_device = {
 	RIOCTL_MISC_MINOR, "rioctl", &rio_fw_fops
 };
-
-
-
-
 
 #ifdef RIO_PARANOIA_CHECK
 
@@ -278,7 +263,6 @@ static inline int rio_paranoia_check(struct rio_port const *port, char *name, co
 #define rio_paranoia_check(a,b,c) 0
 #endif
 
-
 #ifdef DEBUG
 static void my_hd(void *ad, int len)
 {
@@ -301,7 +285,6 @@ static void my_hd(void *ad, int len)
 #define my_hd(ad,len) do{/* nothing*/ } while (0)
 #endif
 
-
 /* Delay a number of jiffies, allowing a signal to interrupt */
 int RIODelay(struct Port *PortP, int njiffies)
 {
@@ -316,7 +299,6 @@ int RIODelay(struct Port *PortP, int njiffies)
 	else
 		return !RIO_FAIL;
 }
-
 
 /* Delay a number of jiffies, disallowing a signal to interrupt */
 int RIODelay_ni(struct Port *PortP, int njiffies)
@@ -344,7 +326,6 @@ static int rio_set_real_termios(void *ptr)
 	return RIOParam((struct Port *) ptr, RIOC_CONFIG, 1, 1);
 }
 
-
 static void rio_reset_interrupt(struct Host *HostP)
 {
 	func_enter();
@@ -358,7 +339,6 @@ static void rio_reset_interrupt(struct Host *HostP)
 
 	func_exit();
 }
-
 
 static irqreturn_t rio_interrupt(int irq, void *ptr)
 {
@@ -409,7 +389,6 @@ static irqreturn_t rio_interrupt(int irq, void *ptr)
 	return IRQ_HANDLED;
 }
 
-
 static void rio_pollfunc(unsigned long data)
 {
 	func_enter();
@@ -420,13 +399,12 @@ static void rio_pollfunc(unsigned long data)
 	func_exit();
 }
 
-
 /* ********************************************************************** *
  *                Here are the routines that actually                     *
  *              interface with the generic_serial driver                  *
  * ********************************************************************** */
 
-/* Ehhm. I don't know how to fiddle with interrupts on the Specialix 
+/* Ehhm. I don't know how to fiddle with interrupts on the Specialix
    cards. ....   Hmm. Ok I figured it out. You don't.  -- REW */
 
 static void rio_disable_tx_interrupts(void *ptr)
@@ -437,7 +415,6 @@ static void rio_disable_tx_interrupts(void *ptr)
 
 	func_exit();
 }
-
 
 static void rio_enable_tx_interrupts(void *ptr)
 {
@@ -462,7 +439,6 @@ static void rio_enable_tx_interrupts(void *ptr)
 	func_exit();
 }
 
-
 static void rio_disable_rx_interrupts(void *ptr)
 {
 	func_enter();
@@ -475,7 +451,6 @@ static void rio_enable_rx_interrupts(void *ptr)
 	func_enter();
 	func_exit();
 }
-
 
 /* Jeez. Isn't this simple?  */
 static int rio_carrier_raised(struct tty_port *port)
@@ -492,7 +467,6 @@ static int rio_carrier_raised(struct tty_port *port)
 	return rv;
 }
 
-
 /* Jeez. Isn't this simple? Actually, we can sync with the actual port
    by just pushing stuff into the queue going to the port... */
 static int rio_chars_in_buffer(void *ptr)
@@ -502,7 +476,6 @@ static int rio_chars_in_buffer(void *ptr)
 	func_exit();
 	return 0;
 }
-
 
 /* Nothing special here... */
 static void rio_shutdown_port(void *ptr)
@@ -515,7 +488,6 @@ static void rio_shutdown_port(void *ptr)
 	PortP->gs.port.tty = NULL;
 	func_exit();
 }
-
 
 /* I haven't the foggiest why the decrement use count has to happen
    here. The whole linux serial drivers stuff needs to be redesigned.
@@ -536,9 +508,8 @@ static void rio_hungup(void *ptr)
 	func_exit();
 }
 
-
 /* The standard serial_close would become shorter if you'd wrap it like
-   this. 
+   this.
    rs_close (...){save_flags;cli;real_close();dec_use_count;restore_flags;}
  */
 static void rio_close(void *ptr)
@@ -559,8 +530,6 @@ static void rio_close(void *ptr)
 	PortP->gs.port.tty = NULL;
 	func_exit();
 }
-
-
 
 static long rio_fw_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
@@ -642,16 +611,15 @@ static int rio_ioctl(struct tty_struct *tty, struct file *filp, unsigned int cmd
 	return rc;
 }
 
-
 /* The throttle/unthrottle scheme for the Specialix card is different
- * from other drivers and deserves some explanation. 
+ * from other drivers and deserves some explanation.
  * The Specialix hardware takes care of XON/XOFF
  * and CTS/RTS flow control itself.  This means that all we have to
  * do when signalled by the upper tty layer to throttle/unthrottle is
  * to make a note of it here.  When we come to read characters from the
  * rx buffers on the card (rio_receive_chars()) we look to see if the
- * upper layer can accept more (as noted here in rio_rx_throt[]). 
- * If it can't we simply don't remove chars from the cards buffer. 
+ * upper layer can accept more (as noted here in rio_rx_throt[]).
+ * If it can't we simply don't remove chars from the cards buffer.
  * When the tty layer can accept chars, we again note that here and when
  * rio_receive_chars() is called it will remove them from the cards buffer.
  * The card will notice that a ports buffer has drained below some low
@@ -675,7 +643,6 @@ static void rio_throttle(struct tty_struct *tty)
 	func_exit();
 }
 
-
 static void rio_unthrottle(struct tty_struct *tty)
 {
 	struct Port *port = (struct Port *) tty->driver_data;
@@ -692,14 +659,9 @@ static void rio_unthrottle(struct tty_struct *tty)
 	return;
 }
 
-
-
-
-
 /* ********************************************************************** *
  *                    Here are the initialization routines.               *
  * ********************************************************************** */
-
 
 static struct vpd_prom *get_VPD_PROM(struct Host *hp)
 {
@@ -850,12 +812,9 @@ static int rio_init_datastructures(void)
 	/* We could postpone initializing them to when they are configured. */
 #endif
 
-
-
 	if (rio_debug & RIO_DEBUG_INIT) {
 		my_hd(&rio_real_driver, sizeof(rio_real_driver));
 	}
-
 
 	func_exit();
 	return 0;
@@ -883,18 +842,17 @@ static void __exit rio_release_drivers(void)
 	func_exit();
 }
 
-
 #ifdef CONFIG_PCI
  /* This was written for SX, but applies to RIO too...
     (including bugs....)
 
     There is another bit besides Bit 17. Turning that bit off
-    (on boards shipped with the fix in the eeprom) results in a 
-    hang on the next access to the card. 
+    (on boards shipped with the fix in the eeprom) results in a
+    hang on the next access to the card.
   */
 
- /******************************************************** 
- * Setting bit 17 in the CNTRL register of the PLX 9050  * 
+ /********************************************************
+ * Setting bit 17 in the CNTRL register of the PLX 9050  *
  * chip forces a retry on writes while a read is pending.*
  * This is to prevent the card locking up on Intel Xeon  *
  * multiprocessor systems with the NX chipset.    -- NV  *
@@ -923,7 +881,6 @@ static void fix_rio_pci(struct pci_dev *pdev)
 	iounmap(rebase);
 }
 #endif
-
 
 static int __init rio_init(void)
 {
@@ -1114,7 +1071,6 @@ static int __init rio_init(void)
 		}
 	}
 
-
 	for (i = 0; i < p->RIONumHosts; i++) {
 		hp = &p->RIOHosts[i];
 		if (hp->Ivec) {
@@ -1161,7 +1117,6 @@ static int __init rio_init(void)
 	return found ? 0 : -EIO;
 }
 
-
 static void __exit rio_exit(void)
 {
 	int i;
@@ -1186,7 +1141,6 @@ static void __exit rio_exit(void)
 	if (misc_deregister(&rio_fw_device) < 0) {
 		printk(KERN_INFO "rio: couldn't deregister control-device\n");
 	}
-
 
 	rio_dprintk(RIO_DEBUG_CLEANUP, "Cleaning up drivers\n");
 

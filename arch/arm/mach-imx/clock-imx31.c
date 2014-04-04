@@ -588,7 +588,6 @@ int __init mx31_clocks_init(unsigned long fref)
 		if (clk_set_parent(&csi_clk, &usb_pll_clk))
 			pr_err("%s: error changing csi_clk parent\n", __func__);
 
-
 	/* Turn off all possible clocks */
 	__raw_writel((3 << 4), MXC_CCM_CGR0);
 	__raw_writel(0, MXC_CCM_CGR1);

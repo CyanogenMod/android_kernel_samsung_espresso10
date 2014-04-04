@@ -178,7 +178,6 @@ static struct miscdevice uv_mmtimer_miscdev = {
 	&uv_mmtimer_fops
 };
 
-
 /**
  * uv_mmtimer_init - device initialization routine
  *

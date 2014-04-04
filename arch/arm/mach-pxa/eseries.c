@@ -818,7 +818,6 @@ static struct w100_mode e800_lcd_mode[2] = {
 	}
 };
 
-
 static struct w100_gpio_regs e800_w100_gpio_info = {
 	.init_data1 = 0xc13fc019,
 	.gpio_dir1  = 0x3e40df7f,
@@ -895,7 +894,6 @@ static struct platform_device e800_gpio_vbus = {
 		.platform_data	= &e800_udc_info,
 	},
 };
-
 
 /* ----------------- e800 tc6393xb parameters ------------------ */
 

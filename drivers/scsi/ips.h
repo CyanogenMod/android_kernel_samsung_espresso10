@@ -801,7 +801,6 @@ typedef struct
    uint8_t   reserved[4];
 } IPS_VERSION_DATA;
 
-
 typedef struct _IPS_SUBSYS {
    uint32_t  param[128];
 } IPS_SUBSYS, *PIPS_SUBSYS;
@@ -1238,7 +1237,6 @@ typedef struct {
       IPS_COMPAT_TAMPA, \
       IPS_COMPAT_KEYWEST \
    }
-
 
 /*
  * Overrides for Emacs so that we almost follow Linus's tabbing style.

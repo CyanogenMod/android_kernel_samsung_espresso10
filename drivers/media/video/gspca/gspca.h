@@ -45,7 +45,6 @@ extern int gspca_debug;
 /* image transfers */
 #define MAX_NURBS 4		/* max number of URBs */
 
-
 /* used to list framerates supported by a camera mode (resolution) */
 struct framerates {
 	const u8 *rates;

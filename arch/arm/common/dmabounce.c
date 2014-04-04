@@ -99,7 +99,6 @@ static ssize_t dmabounce_show(struct device *dev, struct device_attribute *attr,
 static DEVICE_ATTR(dmabounce_stats, 0400, dmabounce_show, NULL);
 #endif
 
-
 /* allocate a 'safe' buffer and keep track of it */
 static inline struct safe_buffer *
 alloc_safe_buffer(struct dmabounce_device_info *device_info, void *ptr,

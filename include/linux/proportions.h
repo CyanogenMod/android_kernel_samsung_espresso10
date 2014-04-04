@@ -93,7 +93,6 @@ void prop_inc_percpu(struct prop_descriptor *pd, struct prop_local_percpu *pl)
 void __prop_inc_percpu_max(struct prop_descriptor *pd,
 			   struct prop_local_percpu *pl, long frac);
 
-
 /*
  * ----- SINGLE ------
  */

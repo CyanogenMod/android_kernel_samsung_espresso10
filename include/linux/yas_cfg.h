@@ -53,7 +53,6 @@
 /*                               Configuration                                */
 /*----------------------------------------------------------------------------*/
 
-
 #ifdef CONFIG_ACC_DRIVER_LIS3DH
 #define YAS_ACC_DRIVER                      (YAS_ACC_DRIVER_LIS3DH)
 #else
@@ -70,7 +69,6 @@
 /*----------------------------------------------------------------------------*/
 /*                   Acceleration Calibration Configuration                   */
 /*----------------------------------------------------------------------------*/
-
 
 #define YAS_DEFAULT_ACCCALIB_LENGTH         (20)
 

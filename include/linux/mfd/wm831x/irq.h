@@ -760,5 +760,4 @@
 #define WM831X_IM_GP1_EINT_SHIFT                     0  /* IM_GP1_EINT */
 #define WM831X_IM_GP1_EINT_WIDTH                     1  /* IM_GP1_EINT */
 
-
 #endif

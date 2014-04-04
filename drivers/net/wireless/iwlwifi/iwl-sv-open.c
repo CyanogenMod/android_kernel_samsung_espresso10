@@ -69,7 +69,6 @@
 #include <net/mac80211.h>
 #include <net/netlink.h>
 
-
 #include "iwl-dev.h"
 #include "iwl-core.h"
 #include "iwl-debug.h"
@@ -77,7 +76,6 @@
 #include "iwl-io.h"
 #include "iwl-agn.h"
 #include "iwl-testmode.h"
-
 
 /* The TLVs used in the gnl message policy between the kernel module and
  * user space application. iwl_testmode_gnl_msg_policy is to be carried
@@ -118,7 +116,6 @@ static inline int get_event_length(struct iwl_rx_mem_buffer *rxb)
 	else
 		return 0;
 }
-
 
 /*
  * This function multicasts the spontaneous messages from the device to the
@@ -195,7 +192,6 @@ static void iwl_trace_cleanup(struct iwl_priv *priv)
 	}
 }
 
-
 void iwl_testmode_cleanup(struct iwl_priv *priv)
 {
 	iwl_trace_cleanup(priv);
@@ -238,7 +234,6 @@ static int iwl_testmode_ucode(struct ieee80211_hw *hw, struct nlattr **tb)
 	/* ok, let's submit the command to ucode */
 	return iwl_send_cmd(priv, &cmd);
 }
-
 
 /*
  * This function handles the user application commands for register access.
@@ -320,7 +315,6 @@ nla_put_failure:
 	kfree_skb(skb);
 	return -EMSGSIZE;
 }
-
 
 static int iwl_testmode_cfg_init_calib(struct iwl_priv *priv)
 {
@@ -463,7 +457,6 @@ nla_put_failure:
 	kfree_skb(skb);
 	return -EMSGSIZE;
 }
-
 
 /*
  * This function handles the user application commands for uCode trace

@@ -15,7 +15,6 @@
  *
  */
 
-
 #ifndef __ASM_ARM_W90X900_REGS_LDM_H
 #define __ASM_ARM_W90X900_REGS_LDM_H
 
@@ -42,7 +41,6 @@ enum LCM_DCCS_VA_SRC {
 	LCM_DCCS_VA_SRC_RGB444LOW	= (5 << 8),
 	LCM_DCCS_VA_SRC_RGB444HIGH 	= (7 << 8)
 };
-
 
 /* Display Device Control Register */
 #define REG_LCM_DEV_CTRL		(0x04)

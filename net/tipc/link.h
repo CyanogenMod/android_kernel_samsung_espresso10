@@ -276,7 +276,6 @@ static inline u32 lesser(u32 left, u32 right)
 	return less_eq(left, right) ? left : right;
 }
 
-
 /*
  * Link status checking routines
  */

@@ -32,7 +32,6 @@ do { \
 #define udf_info(f, a...) \
 	printk(KERN_INFO "UDF-fs INFO " f, ##a);
 
-
 #define udf_fixed_to_variable(x) ( ( ( (x) >> 5 ) * 39 ) + ( (x) & 0x0000001F ) )
 #define udf_variable_to_fixed(x) ( ( ( (x) / 39 ) << 5 ) + ( (x) % 39 ) )
 

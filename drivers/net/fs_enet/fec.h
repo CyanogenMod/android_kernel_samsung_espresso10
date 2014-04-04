@@ -33,8 +33,6 @@
 #define FEC_TCNTRL_HBC		0x00000002
 #define FEC_TCNTRL_GTS		0x00000001
 
-
-
 /*
  * Delay to wait for FEC reset command to complete (in us)
  */

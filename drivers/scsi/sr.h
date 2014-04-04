@@ -1,11 +1,11 @@
 /*
  *      sr.h by David Giller
  *      CD-ROM disk driver header file
- *      
+ *
  *      adapted from:
- *      sd.h Copyright (C) 1992 Drew Eckhardt 
+ *      sd.h Copyright (C) 1992 Drew Eckhardt
  *      SCSI disk driver header file by
- *              Drew Eckhardt 
+ *              Drew Eckhardt
  *
  *      <drew@colorado.edu>
  *
@@ -28,7 +28,6 @@ struct scsi_device;
 /* The CDROM is fairly slow, so we need a little extra time */
 /* In fact, it is very slow if it has to spin up first */
 #define IOCTL_TIMEOUT 30*HZ
-
 
 typedef struct scsi_cd {
 	struct scsi_driver *driver;

@@ -23,9 +23,7 @@
 #define PERFECT_HASH_THRESHOLD	64	/* use perfect hash if not bigger */
 #define DEFAULT_HASH_SIZE	64	/* optimized for diffserv */
 
-
 #define	PRIV(tp)	((struct tcindex_data *) (tp)->root)
-
 
 struct tcindex_filter_result {
 	struct tcf_exts		exts;
@@ -37,7 +35,6 @@ struct tcindex_filter {
 	struct tcindex_filter_result result;
 	struct tcindex_filter *next;
 };
-
 
 struct tcindex_data {
 	struct tcindex_filter_result *perfect; /* perfect hash; NULL if none */
@@ -78,7 +75,6 @@ tcindex_lookup(struct tcindex_data *p, u16 key)
 	return NULL;
 }
 
-
 static int tcindex_classify(struct sk_buff *skb, struct tcf_proto *tp,
 			    struct tcf_result *res)
 {
@@ -104,7 +100,6 @@ static int tcindex_classify(struct sk_buff *skb, struct tcf_proto *tp,
 	return tcf_exts_exec(skb, &f->exts, res);
 }
 
-
 static unsigned long tcindex_get(struct tcf_proto *tp, u32 handle)
 {
 	struct tcindex_data *p = PRIV(tp);
@@ -117,12 +112,10 @@ static unsigned long tcindex_get(struct tcf_proto *tp, u32 handle)
 	return r && tcindex_filter_is_set(r) ? (unsigned long) r : 0UL;
 }
 
-
 static void tcindex_put(struct tcf_proto *tp, unsigned long f)
 {
 	pr_debug("tcindex_put(tp %p,f 0x%lx)\n", tp, f);
 }
-
 
 static int tcindex_init(struct tcf_proto *tp)
 {
@@ -140,7 +133,6 @@ static int tcindex_init(struct tcf_proto *tp)
 	tp->root = p;
 	return 0;
 }
-
 
 static int
 __tcindex_delete(struct tcf_proto *tp, unsigned long arg, int lock)
@@ -266,7 +258,6 @@ tcindex_set_parms(struct tcf_proto *tp, unsigned long base, u32 handle,
 		if (handle >= cp.alloc_hash)
 			goto errout;
 
-
 	err = -ENOMEM;
 	if (!cp.perfect && !cp.h) {
 		if (valid_perfect_hash(&cp)) {
@@ -355,7 +346,6 @@ tcindex_change(struct tcf_proto *tp, unsigned long base, u32 handle,
 	return tcindex_set_parms(tp, base, handle, p, r, tb, tca[TCA_RATE]);
 }
 
-
 static void tcindex_walk(struct tcf_proto *tp, struct tcf_walker *walker)
 {
 	struct tcindex_data *p = PRIV(tp);
@@ -395,13 +385,11 @@ static void tcindex_walk(struct tcf_proto *tp, struct tcf_walker *walker)
 	}
 }
 
-
 static int tcindex_destroy_element(struct tcf_proto *tp,
     unsigned long arg, struct tcf_walker *walker)
 {
 	return __tcindex_delete(tp, arg, 0);
 }
-
 
 static void tcindex_destroy(struct tcf_proto *tp)
 {
@@ -418,7 +406,6 @@ static void tcindex_destroy(struct tcf_proto *tp)
 	kfree(p);
 	tp->root = NULL;
 }
-
 
 static int tcindex_dump(struct tcf_proto *tp, unsigned long fh,
     struct sk_buff *skb, struct tcmsg *t)

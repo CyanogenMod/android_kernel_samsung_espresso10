@@ -126,7 +126,7 @@
 #define _FP_MAXFRAC_2		(~(_FP_WS_TYPE)0), (~(_FP_WS_TYPE)0)
 
 /*
- * Internals 
+ * Internals
  */
 
 #define __FP_FRAC_SET_2(X,I1,I0)	(X##_f0 = I0, X##_f1 = I1)
@@ -203,7 +203,6 @@
     X##_s  = _flo->bits.sign;				\
   } while (0)
 
-
 /*
  * Repack the raw bits of a native fp value.
  */
@@ -230,7 +229,6 @@
     _flo->bits.exp   = X##_e;				\
     _flo->bits.sign  = X##_s;				\
   } while (0)
-
 
 /*
  * Multiplication algorithms:
@@ -329,7 +327,7 @@
    point multiplication.  This is useful if floating point
    multiplication has much bigger throughput than integer multiply.
    It is supposed to work for _FP_W_TYPE_SIZE 64 and wfracbits
-   between 106 and 120 only.  
+   between 106 and 120 only.
    Caller guarantees that X and Y has (1LLL << (wfracbits - 1)) set.
    SETFETZ is a macro which will disable all FPU exceptions and set rounding
    towards zero,  RESETFE should optionally reset it back.  */
@@ -492,7 +490,6 @@
       }									\
   } while (0)
 
-
 #define _FP_DIV_MEAT_2_gmp(fs, R, X, Y)					\
   do {									\
     _FP_W_TYPE _x[4], _y[2], _z[4];					\
@@ -519,13 +516,12 @@
     R##_f0 = _z[0] | ((_x[0] | _x[1]) != 0);				\
   } while (0)
 
-
 /*
  * Square root algorithms:
  * We have just one right now, maybe Newton approximation
  * should be added for those machines where division is fast.
  */
- 
+
 #define _FP_SQRT_MEAT_2(R, S, T, X, q)			\
   do {							\
     while (q)						\
@@ -565,9 +561,8 @@
       }							\
   } while (0)
 
-
 /*
- * Assembly/disassembly for converting to/from integral types.  
+ * Assembly/disassembly for converting to/from integral types.
  * No shifting or overflow handled here.
  */
 

@@ -45,7 +45,6 @@
 #include "hcp_phyp.h"
 #include "ipz_pt_fn.h"
 
-
 struct ehca_pfqp {
 	struct ipz_qpt sqpt;
 	struct ipz_qpt rqpt;

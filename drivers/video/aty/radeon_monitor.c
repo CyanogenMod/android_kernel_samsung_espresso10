@@ -54,7 +54,6 @@ static char *radeon_get_mon_name(int type)
 	return pret;
 }
 
-
 #if defined(CONFIG_PPC_OF) || defined(CONFIG_SPARC)
 /*
  * Try to find monitor informations & EDID data out of the Open Firmware
@@ -70,8 +69,8 @@ static int __devinit radeon_parse_montype_prop(struct device_node *dp, u8 **out_
 	const u8 *pedid = NULL;
 	const u8 *pmt = NULL;
 	u8 *tmp;
-        int i, mt = MT_NONE;  
-	
+        int i, mt = MT_NONE;
+
 	pr_debug("analyzing OF properties...\n");
 	pmt = of_get_property(dp, "display-type", NULL);
 	if (!pmt)
@@ -162,7 +161,6 @@ static int __devinit radeon_probe_OF_head(struct radeonfb_info *rinfo, int head_
 }
 #endif /* CONFIG_PPC_OF || CONFIG_SPARC */
 
-
 static int __devinit radeon_get_panel_info_BIOS(struct radeonfb_info *rinfo)
 {
 	unsigned long tmp, tmp0;
@@ -238,7 +236,7 @@ static int __devinit radeon_get_panel_info_BIOS(struct radeonfb_info *rinfo)
 			pr_debug("  vOver_plus: %d\n", rinfo->panel_info.vOver_plus);
 			pr_debug("  vSync_width: %d\n", rinfo->panel_info.vSync_width);
 			pr_debug("  clock: %d\n", rinfo->panel_info.clock);
-				
+
 			return 1;
 		}
 	}
@@ -291,7 +289,6 @@ static void __devinit radeon_parse_connector_info(struct radeonfb_info *rinfo)
 	}
 }
 
-
 /*
  * Probe physical connection of a CRT. This code comes from XFree
  * as well and currently is only implemented for the CRT DAC, the
@@ -325,7 +322,7 @@ static int __devinit radeon_crt_is_connected(struct radeonfb_info *rinfo, int is
 	ulData              = ulOrigCRTC_EXT_CNTL;
 	ulData             |= CRTC_CRT_ON;
 	OUTREG(CRTC_EXT_CNTL, ulData);
-   
+
 	ulOrigDAC_EXT_CNTL = INREG(DAC_EXT_CNTL);
 	ulData             = ulOrigDAC_EXT_CNTL;
 	ulData            &= ~DAC_FORCE_DATA_MASK;
@@ -352,7 +349,7 @@ static int __devinit radeon_crt_is_connected(struct radeonfb_info *rinfo, int is
 
 	ulData     = INREG(DAC_CNTL);
 	connected =  (DAC_CMP_OUTPUT & ulData) ? 1 : 0;
-  
+
 	ulData    = ulOrigVCLK_ECP_CNTL;
 	ulMask    = 0xFFFFFFFFL;
 	OUTPLLP(VCLK_ECP_CNTL, ulData, ulMask);
@@ -437,7 +434,7 @@ void __devinit radeon_probe_screens(struct radeonfb_info *rinfo,
 				    const char *monitor_layout, int ignore_edid)
 {
 #ifdef CONFIG_FB_RADEON_I2C
-	int ddc_crt2_used = 0;	
+	int ddc_crt2_used = 0;
 #endif
 	int tmp, i;
 
@@ -481,7 +478,7 @@ void __devinit radeon_probe_screens(struct radeonfb_info *rinfo,
 		/*
 		 * Auto-detecting display type (well... trying to ...)
 		 */
-		
+
 		pr_debug("Starting monitor auto detection...\n");
 
 #if defined(DEBUG) && defined(CONFIG_FB_RADEON_I2C)
@@ -516,7 +513,7 @@ void __devinit radeon_probe_screens(struct radeonfb_info *rinfo,
 			if (rinfo->mon1_type == MT_NONE)
 				rinfo->mon1_type =
 					radeon_probe_i2c_connector(rinfo, ddc_crt2,
-								   &rinfo->mon1_EDID);	
+								   &rinfo->mon1_EDID);
 #endif /* CONFIG_FB_RADEON_I2C */
 			if (rinfo->mon1_type == MT_NONE)
 				rinfo->mon1_type = MT_CRT;
@@ -644,7 +641,6 @@ void __devinit radeon_probe_screens(struct radeonfb_info *rinfo,
 		printk(KERN_INFO "radeonfb: EDID probed\n");
 }
 
-
 /*
  * This functions applyes any arch/model/machine specific fixups
  * to the panel info. It may eventually alter EDID block as
@@ -679,7 +675,6 @@ static void radeon_fixup_panel_info(struct radeonfb_info *rinfo)
 #endif /* CONFIG_PPC_OF */
 }
 
-
 /*
  * Fill up panel infos from a mode definition, either returned by the EDID
  * or from the default mode when we can't do any better
@@ -702,7 +697,7 @@ static void radeon_var_to_panel_info(struct radeonfb_info *rinfo, struct fb_var_
 	rinfo->panel_info.vAct_high =
 		(var->sync & FB_SYNC_VERT_HIGH_ACT) != 0;
 	rinfo->panel_info.valid = 1;
-	/* We use a default of 200ms for the panel power delay, 
+	/* We use a default of 200ms for the panel power delay,
 	 * I need to have a real schedule() instead of mdelay's in the panel code.
 	 * we might be possible to figure out a better power delay either from
 	 * MacOS OF tree or from the EDID block (proprietary extensions ?)
@@ -816,7 +811,6 @@ void __devinit radeon_check_modes(struct radeonfb_info *rinfo, const char *mode_
 		rinfo->mon1_dbsize = info->monspecs.modedb_len;
 	}
 
-	
 	/*
 	 * Finally, if we don't have panel infos we need to figure some (or
 	 * we try to read it from card), we try to pick a default mode
@@ -982,7 +976,7 @@ int  radeon_match_mode(struct radeonfb_info *rinfo,
 			int d;
 
 			if (db[i].yres < src->yres)
-				continue;	
+				continue;
 			if (db[i].xres < src->xres)
 				continue;
 			d = radeon_compare_modes(src, &db[i]);

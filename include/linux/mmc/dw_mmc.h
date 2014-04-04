@@ -177,7 +177,6 @@ struct dw_mci_dma_ops {
 /* Unreliable card detection */
 #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
 
-
 struct dma_pdata;
 
 struct block_settings {

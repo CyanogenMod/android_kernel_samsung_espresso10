@@ -120,7 +120,6 @@ static struct ipmi_recv_msg halt_recv_msg = {
 	.done = dummy_recv_free
 };
 
-
 /*
  * Code to send a message and wait for the response.
  */
@@ -136,7 +135,6 @@ static void receive_handler(struct ipmi_recv_msg *recv_msg, void *handler_data)
 static struct ipmi_user_hndl ipmi_poweroff_handler = {
 	.ipmi_recv_hndl = receive_handler
 };
-
 
 static int ipmi_request_wait_for_response(ipmi_user_t            user,
 					  struct ipmi_addr       *addr,
@@ -515,7 +513,6 @@ static void ipmi_poweroff_chassis(ipmi_user_t user)
 	}
 }
 
-
 /* Table of possible power off functions. */
 struct poweroff_function {
 	char *platform_type;
@@ -541,7 +538,6 @@ static struct poweroff_function poweroff_functions[] = {
 };
 #define NUM_PO_FUNCS (sizeof(poweroff_functions) \
 		      / sizeof(struct poweroff_function))
-
 
 /* Called on a powerdown request. */
 static void ipmi_poweroff_function(void)
@@ -614,7 +610,6 @@ static void ipmi_po_new_smi(int if_num, struct device *device)
 	capabilities = halt_recv_msg.msg.data[6];
 	ipmi_version = halt_recv_msg.msg.data[5];
 
-
 	/* Scan for a poweroff method */
 	for (i = 0; i < NUM_PO_FUNCS; i++) {
 		if (poweroff_functions[i].detect(ipmi_user))
@@ -654,7 +649,6 @@ static struct ipmi_smi_watcher smi_watcher = {
 	.new_smi  = ipmi_po_new_smi,
 	.smi_gone = ipmi_po_smi_gone
 };
-
 
 #ifdef CONFIG_PROC_FS
 #include <linux/sysctl.h>

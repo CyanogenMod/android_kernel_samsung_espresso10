@@ -15,5 +15,3 @@ config R8712_AP
 	default N
 	---help---
 	This option allows the Realtek RTL8712 USB device to be an Access Point.
-
-

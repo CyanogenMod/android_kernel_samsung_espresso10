@@ -124,7 +124,6 @@ struct gianfar_ptp_registers {
 #define PRSC_OCK_SHIFT        (0) /* Output clock division/prescale factor. */
 #define PRSC_OCK_MASK         (0xffff)
 
-
 #define DRIVER		"gianfar_ptp"
 #define DEFAULT_CKSEL	1
 #define N_ALARM		1 /* first alarm is used internally to reset fipers */
@@ -521,6 +520,7 @@ static int gianfar_ptp_probe(struct platform_device *dev)
 	return 0;
 
 no_clock:
+	iounmap(etsects->regs);
 no_ioremap:
 	release_resource(etsects->rsrc);
 no_resource:

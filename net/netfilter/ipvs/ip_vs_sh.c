@@ -43,7 +43,6 @@
 
 #include <net/ip_vs.h>
 
-
 /*
  *      IPVS SH bucket
  */
@@ -61,7 +60,6 @@ struct ip_vs_sh_bucket {
 #define IP_VS_SH_TAB_SIZE               (1 << IP_VS_SH_TAB_BITS)
 #define IP_VS_SH_TAB_MASK               (IP_VS_SH_TAB_SIZE - 1)
 
-
 /*
  *	Returns hash value for IPVS SH entry
  */
@@ -77,7 +75,6 @@ static inline unsigned ip_vs_sh_hashkey(int af, const union nf_inet_addr *addr)
 	return (ntohl(addr_fold)*2654435761UL) & IP_VS_SH_TAB_MASK;
 }
 
-
 /*
  *      Get ip_vs_dest associated with supplied parameters.
  */
@@ -87,7 +84,6 @@ ip_vs_sh_get(int af, struct ip_vs_sh_bucket *tbl,
 {
 	return (tbl[ip_vs_sh_hashkey(af, addr)]).dest;
 }
-
 
 /*
  *      Assign all the hash buckets of the specified table with the service.
@@ -120,7 +116,6 @@ ip_vs_sh_assign(struct ip_vs_sh_bucket *tbl, struct ip_vs_service *svc)
 	return 0;
 }
 
-
 /*
  *      Flush all the hash buckets of the specified table.
  */
@@ -138,7 +133,6 @@ static void ip_vs_sh_flush(struct ip_vs_sh_bucket *tbl)
 		b++;
 	}
 }
-
 
 static int ip_vs_sh_init_svc(struct ip_vs_service *svc)
 {
@@ -162,7 +156,6 @@ static int ip_vs_sh_init_svc(struct ip_vs_service *svc)
 	return 0;
 }
 
-
 static int ip_vs_sh_done_svc(struct ip_vs_service *svc)
 {
 	struct ip_vs_sh_bucket *tbl = svc->sched_data;
@@ -178,7 +171,6 @@ static int ip_vs_sh_done_svc(struct ip_vs_service *svc)
 	return 0;
 }
 
-
 static int ip_vs_sh_update_svc(struct ip_vs_service *svc)
 {
 	struct ip_vs_sh_bucket *tbl = svc->sched_data;
@@ -192,7 +184,6 @@ static int ip_vs_sh_update_svc(struct ip_vs_service *svc)
 	return 0;
 }
 
-
 /*
  *      If the dest flags is set with IP_VS_DEST_F_OVERLOAD,
  *      consider that the server is overloaded here.
@@ -201,7 +192,6 @@ static inline int is_overloaded(struct ip_vs_dest *dest)
 {
 	return dest->flags & IP_VS_DEST_F_OVERLOAD;
 }
-
 
 /*
  *      Source Hashing scheduling
@@ -235,7 +225,6 @@ ip_vs_sh_schedule(struct ip_vs_service *svc, const struct sk_buff *skb)
 	return dest;
 }
 
-
 /*
  *      IPVS SH Scheduler structure
  */
@@ -251,18 +240,15 @@ static struct ip_vs_scheduler ip_vs_sh_scheduler =
 	.schedule =		ip_vs_sh_schedule,
 };
 
-
 static int __init ip_vs_sh_init(void)
 {
 	return register_ip_vs_scheduler(&ip_vs_sh_scheduler);
 }
 
-
 static void __exit ip_vs_sh_cleanup(void)
 {
 	unregister_ip_vs_scheduler(&ip_vs_sh_scheduler);
 }
-
 
 module_init(ip_vs_sh_init);
 module_exit(ip_vs_sh_cleanup);

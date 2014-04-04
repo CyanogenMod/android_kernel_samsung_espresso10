@@ -4,7 +4,6 @@
  * management codes for pgdats and zones.
  */
 
-
 #include <linux/stddef.h>
 #include <linux/mm.h>
 #include <linux/mmzone.h>

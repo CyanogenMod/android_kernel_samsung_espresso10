@@ -25,7 +25,7 @@ struct raid_internal {
 	struct raid_function_template *f;
 	/* The actual attributes */
 	struct device_attribute private_attrs[RAID_NUM_ATTRS];
-	/* The array of null terminated pointers to attributes 
+	/* The array of null terminated pointers to attributes
 	 * needed by scsi_sysfs.c */
 	struct device_attribute *attrs[RAID_NUM_ATTRS + 1];
 };
@@ -55,7 +55,6 @@ struct raid_component {
 		attribute_container_classdev_to_container(dev);	\
 	ac_to_raid_internal(ac);					\
 })
-	
 
 static int raid_match(struct attribute_container *cont, struct device *dev)
 {
@@ -90,7 +89,7 @@ static int raid_setup(struct transport_container *tc, struct device *dev,
 
 	INIT_LIST_HEAD(&rd->component_list);
 	dev_set_drvdata(cdev, rd);
-		
+
 	return 0;
 }
 
@@ -191,7 +190,6 @@ raid_attr_show_internal(attr, %s, name,					\
 )									\
 static DEVICE_ATTR(attr, S_IRUGO, raid_show_##attr, NULL)
 
-
 #define raid_attr_ro_internal(attr, code)				\
 raid_attr_show_internal(attr, %d, rd->attr, code)			\
 static DEVICE_ATTR(attr, S_IRUGO, raid_show_##attr, NULL)
@@ -205,7 +203,6 @@ static DEVICE_ATTR(attr, S_IRUGO, raid_show_##attr, NULL)
 #define raid_attr_ro_fn(attr)	raid_attr_ro_internal(attr, ATTR_CODE(attr))
 #define raid_attr_ro_state(attr)	raid_attr_ro_states(attr, attr, )
 #define raid_attr_ro_state_fn(attr)	raid_attr_ro_states(attr, attr, ATTR_CODE(attr))
-
 
 raid_attr_ro_state(level);
 raid_attr_ro_fn(resync);
@@ -314,4 +311,3 @@ MODULE_LICENSE("GPL");
 
 module_init(raid_init);
 module_exit(raid_exit);
-

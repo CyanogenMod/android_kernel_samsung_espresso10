@@ -21,7 +21,6 @@
 #include <linux/hwmon-sysfs.h>
 #include <linux/err.h>
 
-
 /* Addresses scanned */
 static const unsigned short normal_i2c[] = { 0x48, 0x49, 0x4a, 0x4c,
 					0x4d, 0x4e, I2C_CLIENT_END };
@@ -40,7 +39,6 @@ static const unsigned short normal_i2c[] = { 0x48, 0x49, 0x4a, 0x4c,
 #define LM73_TEMP_MAX		150
 
 /*-----------------------------------------------------------------------*/
-
 
 static ssize_t set_temp(struct device *dev, struct device_attribute *da,
 			const char *buf, size_t count)
@@ -73,7 +71,6 @@ static ssize_t show_temp(struct device *dev, struct device_attribute *da,
 	return sprintf(buf, "%d\n", temp);
 }
 
-
 /*-----------------------------------------------------------------------*/
 
 /* sysfs attributes for hwmon */
@@ -84,7 +81,6 @@ static SENSOR_DEVICE_ATTR(temp1_min, S_IWUSR | S_IRUGO,
 			show_temp, set_temp, LM73_REG_MIN);
 static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO,
 			show_temp, NULL, LM73_REG_INPUT);
-
 
 static struct attribute *lm73_attributes[] = {
 	&sensor_dev_attr_temp1_input.dev_attr.attr,

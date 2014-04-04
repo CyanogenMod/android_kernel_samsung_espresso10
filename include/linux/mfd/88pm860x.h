@@ -50,7 +50,6 @@ enum {
 	PM8607_LED_VIBRATOR,
 };
 
-
 /* 8606 Registers */
 #define PM8606_DCM_BOOST		(0x00)
 #define PM8606_PWM			(0x01)

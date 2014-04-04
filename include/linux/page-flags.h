@@ -131,6 +131,54 @@ enum pageflags {
 
 #ifndef __GENERATING_BOUNDS_H
 
+#ifdef CONFIG_CMA
+struct page;
+extern struct page *migrate_pages_current;
+
+/*
+ * Macros to create function definitions for page flags
+ */
+#define TESTPAGEFLAG(uname, lname)					\
+static inline int Page##uname(struct page *page)			\
+	{ do { } while (0); return test_bit(PG_##lname, &page->flags); }
+
+#define SETPAGEFLAG(uname, lname)					\
+static inline void SetPage##uname(struct page *page)			\
+	{ WARN_ON(0 && page == migrate_pages_current);			\
+		set_bit(PG_##lname, &page->flags); }
+
+#define CLEARPAGEFLAG(uname, lname)					\
+static inline void ClearPage##uname(struct page *page)			\
+	{ WARN_ON(0 && page == migrate_pages_current);			\
+		clear_bit(PG_##lname, &page->flags); }
+
+#define __SETPAGEFLAG(uname, lname)					\
+static inline void __SetPage##uname(struct page *page)			\
+	{ WARN_ON(0 && page == migrate_pages_current);			\
+		 __set_bit(PG_##lname, &page->flags); }
+
+#define __CLEARPAGEFLAG(uname, lname)					\
+static inline void __ClearPage##uname(struct page *page)		\
+	{ WARN_ON(0 && page == migrate_pages_current);			\
+		 __clear_bit(PG_##lname, &page->flags); }
+
+#define TESTSETFLAG(uname, lname)					\
+static inline int TestSetPage##uname(struct page *page)			\
+	{ WARN_ON(0 && page == migrate_pages_current);			\
+		 return test_and_set_bit(PG_##lname, &page->flags); }
+
+#define TESTCLEARFLAG(uname, lname)					\
+static inline int TestClearPage##uname(struct page *page)		\
+	{ WARN_ON(0 && page == migrate_pages_current);			\
+		 return test_and_clear_bit(PG_##lname, &page->flags); }
+
+#define __TESTCLEARFLAG(uname, lname)					\
+static inline int __TestClearPage##uname(struct page *page)		\
+	{ WARN_ON(0 && page == migrate_pages_current);			\
+		 return __test_and_clear_bit(PG_##lname, &page->flags); }
+
+#else
+
 /*
  * Macros to create function definitions for page flags
  */
@@ -165,6 +213,8 @@ static inline int TestClearPage##uname(struct page *page)		\
 #define __TESTCLEARFLAG(uname, lname)					\
 static inline int __TestClearPage##uname(struct page *page)		\
 		{ return __test_and_clear_bit(PG_##lname, &page->flags); }
+
+#endif
 
 #define PAGEFLAG(uname, lname) TESTPAGEFLAG(uname, lname)		\
 	SETPAGEFLAG(uname, lname) CLEARPAGEFLAG(uname, lname)
@@ -365,7 +415,7 @@ static inline void ClearPageCompound(struct page *page)
  * pages on the LRU and/or pagecache.
  */
 TESTPAGEFLAG(Compound, compound)
-__PAGEFLAG(Head, compound)
+__SETPAGEFLAG(Head, compound)  __CLEARPAGEFLAG(Head, compound)
 
 /*
  * PG_reclaim is used in combination with PG_compound to mark the
@@ -377,7 +427,13 @@ __PAGEFLAG(Head, compound)
  * PG_compound & PG_reclaim	=> Tail page
  * PG_compound & ~PG_reclaim	=> Head page
  */
+#define PG_head_mask ((1L << PG_compound))
 #define PG_head_tail_mask ((1L << PG_compound) | (1L << PG_reclaim))
+
+static inline int PageHead(struct page *page)
+{
+	return ((page->flags & PG_head_tail_mask) == PG_head_mask);
+}
 
 static inline int PageTail(struct page *page)
 {

@@ -6,7 +6,6 @@
  * Export hfs data via xattr
  */
 
-
 #include <linux/fs.h>
 #include <linux/xattr.h>
 

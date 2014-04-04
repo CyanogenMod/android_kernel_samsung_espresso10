@@ -41,7 +41,6 @@
 #include "discover.h"
 #include "config.h"
 
-
 /*
  * Out-of-range value for link session numbers
  */
@@ -602,7 +601,6 @@ void tipc_link_reset(struct link *l_ptr)
 		link_send_event(tipc_disc_link_event, l_ptr, 0);
 }
 
-
 static void link_activate(struct link *l_ptr)
 {
 	l_ptr->next_in_no = l_ptr->stats.recv_info = 1;
@@ -1053,7 +1051,6 @@ int tipc_send_buf_fast(struct sk_buff *buf, u32 destnode)
 	return res;
 }
 
-
 /*
  * tipc_link_send_sections_fast: Entry for messages where the
  * destination processor is known and the header is complete,
@@ -1119,7 +1116,6 @@ exit:
 			sender->max_pkt = l_ptr->max_pkt;
 			tipc_node_unlock(node);
 			read_unlock_bh(&tipc_net_lock);
-
 
 			if ((msg_hdr_sz(hdr) + res) <= sender->max_pkt)
 				goto again;
@@ -2143,7 +2139,6 @@ exit:
 	buf_discard(buf);
 }
 
-
 /*
  * tipc_link_tunnel(): Send one message via a link belonging to
  * another bearer. Owner node is locked.
@@ -2174,8 +2169,6 @@ static void tipc_link_tunnel(struct link *l_ptr,
 	skb_copy_to_linear_data_offset(buf, INT_H_SIZE, msg, length);
 	tipc_link_send_buf(tunnel, buf);
 }
-
-
 
 /*
  * changeover(): Send whole message queue via the remaining link
@@ -2280,8 +2273,6 @@ void tipc_link_send_duplicate(struct link *l_ptr, struct link *tunnel)
 		iter = iter->next;
 	}
 }
-
-
 
 /**
  * buf_extract - extracts embedded TIPC message from another message
@@ -2406,7 +2397,6 @@ void tipc_link_recv_bundle(struct sk_buff *buf)
 /*
  *  Fragmentation/defragmentation:
  */
-
 
 /*
  * link_send_long_buf: Entry for buffers needing fragmentation.
@@ -2637,8 +2627,6 @@ static void link_check_defragm_bufs(struct link *l_ptr)
 	}
 }
 
-
-
 static void link_set_supervision_props(struct link *l_ptr, u32 tolerance)
 {
 	if ((tolerance < TIPC_MIN_LINK_TOL) || (tolerance > TIPC_MAX_LINK_TOL))
@@ -2649,7 +2637,6 @@ static void link_set_supervision_props(struct link *l_ptr, u32 tolerance)
 		((tolerance / 4) > 500) ? 500 : tolerance / 4;
 	l_ptr->abort_limit = tolerance / (l_ptr->continuity_interval / 4);
 }
-
 
 void tipc_link_set_queue_limits(struct link *l_ptr, u32 window)
 {
@@ -3039,4 +3026,3 @@ print_state:
 	tipc_printbuf_validate(buf);
 	info("%s", print_area);
 }
-

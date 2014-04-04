@@ -91,7 +91,7 @@ static int domU_write_console(uint32_t vtermno, const char *data, int len)
 	 */
 	while (len) {
 		int sent = __write_console(data, len);
-		
+
 		data += sent;
 		len -= sent;
 

@@ -83,7 +83,6 @@ __proc_device_tree_add_prop(struct proc_dir_entry *de, struct property *pp,
 	return ent;
 }
 
-
 void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop)
 {
 	__proc_device_tree_add_prop(pde, prop, prop->name);

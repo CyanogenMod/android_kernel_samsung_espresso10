@@ -13,7 +13,6 @@
  * for more details.
  */
 
-
 /* Is the keyboard an RDI PrecisionBook? */
 #ifndef CONFIG_KEYBOARD_ATKBD_RDI_KEYCODES
 # define CONFLICT(x,y) x
@@ -107,4 +106,3 @@
 #undef C_14
 #undef C_58
 #undef C_61
-

@@ -56,7 +56,6 @@ module_param_named(perms, quota_list_perms, uint, S_IRUGO | S_IWUSR);
 module_param_named(uid, quota_list_uid, uint, S_IRUGO | S_IWUSR);
 module_param_named(gid, quota_list_gid, uint, S_IRUGO | S_IWUSR);
 
-
 #ifdef CONFIG_NETFILTER_XT_MATCH_QUOTA2_LOG
 static void quota2_log(unsigned int hooknum,
 		       const struct sk_buff *skb,

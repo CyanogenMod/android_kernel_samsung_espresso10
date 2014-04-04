@@ -372,7 +372,7 @@ int psbfb_sync(struct fb_info *info)
 	        PSB_2D_FENCE_BH,
         };
 	psbfb_2d_submit(dev_priv, test, 1);
-#endif	
+#endif
 	/*
 	 * First idle the 2D engine.
 	 */

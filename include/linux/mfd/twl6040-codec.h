@@ -32,7 +32,6 @@
 #define TWL6040_VIO_SUPPLY		1
 #define TWL6040_VDD_SUPPLY		2
 
-
 #define TWL6040_REG_ASICID		0x01
 #define TWL6040_REG_ASICREV		0x02
 #define TWL6040_REG_INTID		0x03
@@ -170,7 +169,6 @@
 /* HFRCTL (0x16) fields */
 
 #define TWL6040_HFDRVENAR               0x10
-
 
 /* VIBCTLL (0x18) fields */
 

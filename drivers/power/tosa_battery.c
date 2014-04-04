@@ -202,7 +202,6 @@ static void tosa_bat_work(struct work_struct *work)
 	tosa_bat_update(&tosa_bat_jacket);
 }
 
-
 static enum power_supply_property tosa_bat_main_props[] = {
 	POWER_SUPPLY_PROP_STATUS,
 	POWER_SUPPLY_PROP_TECHNOLOGY,

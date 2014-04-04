@@ -62,7 +62,6 @@
 #define DIRECT_BLOCK ((inode->i_size + uspi->s_bsize - 1) >> uspi->s_bshift)
 #define DIRECT_FRAGMENT ((inode->i_size + uspi->s_fsize - 1) >> uspi->s_fshift)
 
-
 static int ufs_trunc_direct(struct inode *inode)
 {
 	struct ufs_inode_info *ufsi = UFS_I(inode);
@@ -73,16 +72,16 @@ static int ufs_trunc_direct(struct inode *inode)
 	unsigned frag_to_free, free_count;
 	unsigned i, tmp;
 	int retry;
-	
+
 	UFSD("ENTER: ino %lu\n", inode->i_ino);
 
 	sb = inode->i_sb;
 	uspi = UFS_SB(sb)->s_uspi;
-	
+
 	frag_to_free = 0;
 	free_count = 0;
 	retry = 0;
-	
+
 	frag1 = DIRECT_FRAGMENT;
 	frag4 = min_t(u64, UFS_NDIR_FRAGMENT, ufsi->i_lastfrag);
 	frag2 = ((frag1 & uspi->s_fpbmask) ? ((frag1 | uspi->s_fpbmask) + 1) : frag1);
@@ -103,7 +102,7 @@ static int ufs_trunc_direct(struct inode *inode)
 	     (unsigned long long)frag3, (unsigned long long)frag4);
 
 	if (frag1 >= frag2)
-		goto next1;		
+		goto next1;
 
 	/*
 	 * Free first free fragments
@@ -142,7 +141,7 @@ next1:
 		}
 		mark_inode_dirty(inode);
 	}
-	
+
 	if (free_count > 0)
 		ufs_free_blocks (inode, frag_to_free, free_count);
 
@@ -167,7 +166,6 @@ next1:
 	return retry;
 }
 
-
 static int ufs_trunc_indirect(struct inode *inode, u64 offset, void *p)
 {
 	struct super_block * sb;
@@ -182,14 +180,14 @@ static int ufs_trunc_indirect(struct inode *inode, u64 offset, void *p)
 	     inode->i_ino, (unsigned long long)offset, p);
 
 	BUG_ON(!p);
-		
+
 	sb = inode->i_sb;
 	uspi = UFS_SB(sb)->s_uspi;
 
 	frag_to_free = 0;
 	free_count = 0;
 	retry = 0;
-	
+
 	tmp = ufs_data_ptr_to_cpu(sb, p);
 	if (!tmp)
 		return 0;
@@ -245,9 +243,9 @@ static int ufs_trunc_indirect(struct inode *inode, u64 offset, void *p)
 	if (IS_SYNC(inode) && ind_ubh && ubh_buffer_dirty(ind_ubh))
 		ubh_sync_block(ind_ubh);
 	ubh_brelse (ind_ubh);
-	
+
 	UFSD("EXIT: ino %lu\n", inode->i_ino);
-	
+
 	return retry;
 }
 
@@ -259,16 +257,16 @@ static int ufs_trunc_dindirect(struct inode *inode, u64 offset, void *p)
 	u64 i, tmp, dindirect_block;
 	void *dind;
 	int retry = 0;
-	
+
 	UFSD("ENTER: ino %lu\n", inode->i_ino);
-	
+
 	sb = inode->i_sb;
 	uspi = UFS_SB(sb)->s_uspi;
 
-	dindirect_block = (DIRECT_BLOCK > offset) 
+	dindirect_block = (DIRECT_BLOCK > offset)
 		? ((DIRECT_BLOCK - offset) >> uspi->s_apbshift) : 0;
 	retry = 0;
-	
+
 	tmp = ufs_data_ptr_to_cpu(sb, p);
 	if (!tmp)
 		return 0;
@@ -307,9 +305,9 @@ static int ufs_trunc_dindirect(struct inode *inode, u64 offset, void *p)
 	if (IS_SYNC(inode) && dind_bh && ubh_buffer_dirty(dind_bh))
 		ubh_sync_block(dind_bh);
 	ubh_brelse (dind_bh);
-	
+
 	UFSD("EXIT: ino %lu\n", inode->i_ino);
-	
+
 	return retry;
 }
 
@@ -322,11 +320,11 @@ static int ufs_trunc_tindirect(struct inode *inode)
 	u64 tindirect_block, tmp, i;
 	void *tind, *p;
 	int retry;
-	
+
 	UFSD("ENTER: ino %lu\n", inode->i_ino);
 
 	retry = 0;
-	
+
 	tindirect_block = (DIRECT_BLOCK > (UFS_NDADDR + uspi->s_apb + uspi->s_2apb))
 		? ((DIRECT_BLOCK - UFS_NDADDR - uspi->s_apb - uspi->s_2apb) >> uspi->s_2apbshift) : 0;
 
@@ -345,7 +343,7 @@ static int ufs_trunc_tindirect(struct inode *inode)
 
 	for (i = tindirect_block ; i < uspi->s_apb ; i++) {
 		tind = ubh_get_data_ptr(uspi, tind_bh, i);
-		retry |= ufs_trunc_dindirect(inode, UFS_NDADDR + 
+		retry |= ufs_trunc_dindirect(inode, UFS_NDADDR +
 			uspi->s_apb + ((i + 1) << uspi->s_2apbshift), tind);
 		ubh_mark_buffer_dirty(tind_bh);
 	}
@@ -365,7 +363,7 @@ static int ufs_trunc_tindirect(struct inode *inode)
 	if (IS_SYNC(inode) && tind_bh && ubh_buffer_dirty(tind_bh))
 		ubh_sync_block(tind_bh);
 	ubh_brelse (tind_bh);
-	
+
 	UFSD("EXIT: ino %lu\n", inode->i_ino);
 	return retry;
 }
@@ -400,7 +398,6 @@ static int ufs_alloc_lastblock(struct inode *inode)
        bh = page_buffers(lastpage);
        for (i = 0; i < end; ++i)
                bh = bh->b_this_page;
-
 
        err = ufs_getfrag_block(inode, lastfrag, bh, 1);
 
@@ -446,7 +443,7 @@ int ufs_truncate(struct inode *inode, loff_t old_i_size)
 	struct super_block *sb = inode->i_sb;
 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
 	int retry, err = 0;
-	
+
 	UFSD("ENTER: ino %lu, i_size: %llu, old_i_size: %llu\n",
 	     inode->i_ino, (unsigned long long)i_size_read(inode),
 	     (unsigned long long)old_i_size);

@@ -30,7 +30,6 @@ do {						\
 
 #ifdef BCMDBG
 
-
 /* Extra message control for AMPDU debugging */
 #define   WL_AMPDU_UPDN_VAL	0x00000001	/* Config up/down related  */
 #define   WL_AMPDU_ERR_VAL	0x00000002	/* Calls to beaocn update  */
@@ -71,7 +70,6 @@ do {						\
 #define WL_AMPDU_HWTXS_ON() (wl_ampdu_dbg & WL_AMPDU_HWTXS_VAL)
 
 #else				/* BCMDBG */
-
 
 #define WL_AMPDU_UPDN(fmt, args...)	no_printk(fmt, ##args)
 #define WL_AMPDU_RX(fmt, args...)	no_printk(fmt, ##args)

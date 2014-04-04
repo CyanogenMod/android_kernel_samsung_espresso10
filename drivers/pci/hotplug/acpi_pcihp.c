@@ -253,8 +253,6 @@ exit:
 	return status;
 }
 
-
-
 /* acpi_run_oshp - get control of hotplug from the firmware
  *
  * @handle - the handle of the hotplug controller.

@@ -78,7 +78,11 @@ void vm_events_fold_cpu(int cpu)
  *
  * vm_stat contains the global counters
  */
+#ifndef CONFIG_CMA
 atomic_long_t vm_stat[NR_VM_ZONE_STAT_ITEMS];
+#else
+atomic_long_t vm_stat[NR_VM_ZONE_STAT_ITEMS] __cacheline_aligned_in_smp;
+#endif
 EXPORT_SYMBOL(vm_stat);
 
 #ifdef CONFIG_SMP
@@ -613,6 +617,9 @@ static char * const migratetype_names[MIGRATE_TYPES] = {
 	"Reclaimable",
 	"Movable",
 	"Reserve",
+#ifdef CONFIG_CMA
+	"CMA",
+#endif
 	"Isolate",
 };
 
@@ -708,7 +715,6 @@ const char * const vmstat_text[] = {
 	"nr_shmem",
 	"nr_dirtied",
 	"nr_written",
-
 #ifdef CONFIG_NUMA
 	"numa_hit",
 	"numa_miss",
@@ -718,6 +724,9 @@ const char * const vmstat_text[] = {
 	"numa_other",
 #endif
 	"nr_anon_transparent_hugepages",
+#ifdef CONFIG_CMA
+	"nr_free_cma",
+#endif
 	"nr_dirty_threshold",
 	"nr_dirty_background_threshold",
 
@@ -789,7 +798,6 @@ const char * const vmstat_text[] = {
 #endif /* CONFIG_VM_EVENTS_COUNTERS */
 };
 #endif /* CONFIG_PROC_FS || CONFIG_SYSFS */
-
 
 #ifdef CONFIG_PROC_FS
 static void frag_show_print(struct seq_file *m, pg_data_t *pgdat,

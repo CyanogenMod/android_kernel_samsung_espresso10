@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
  * Licensed under the GPL
  */
@@ -49,4 +49,3 @@
 #define SEGV_IS_FIXABLE(sc) (1)
 
 #endif
-

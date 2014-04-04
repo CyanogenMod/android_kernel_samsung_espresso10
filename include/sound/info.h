@@ -98,7 +98,6 @@ int snd_info_minor_unregister(void);
 #define snd_info_minor_unregister() /* NOP */
 #endif
 
-
 #ifdef CONFIG_PROC_FS
 
 extern struct snd_info_entry *snd_seq_root;
@@ -138,7 +137,7 @@ int snd_info_register(struct snd_info_entry *entry);
 int snd_card_proc_new(struct snd_card *card, const char *name,
 		      struct snd_info_entry **entryp);
 
-static inline void snd_info_set_text_ops(struct snd_info_entry *entry, 
+static inline void snd_info_set_text_ops(struct snd_info_entry *entry,
 	void *private_data,
 	void (*read)(struct snd_info_entry *, struct snd_info_buffer *))
 {

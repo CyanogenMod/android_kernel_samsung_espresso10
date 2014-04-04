@@ -760,4 +760,3 @@ int __init mx27_clocks_init(unsigned long fref)
 
 	return 0;
 }
-

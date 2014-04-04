@@ -968,7 +968,6 @@
 
 #define CY_AS_ERROR_INVALID_COMMAND (67)
 
-
 /* Summary
    This error is returned when an invalid function /uninitialized
    function is passed to an SDIO function.

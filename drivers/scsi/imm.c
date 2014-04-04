@@ -1,8 +1,8 @@
 /* imm.c   --  low level driver for the IOMEGA MatchMaker
  * parallel port SCSI host adapter.
- * 
+ *
  * (The IMM is the embedded controller in the ZIP Plus drive.)
- * 
+ *
  * My unofficial company acronym list is 21 pages long:
  *      FLA:    Four letter acronym with built in facility for
  *              future expansion to five letters.
@@ -29,7 +29,6 @@
 #define IMM_PROBE_ECR   0x0010
 #define IMM_PROBE_EPP17 0x0100
 #define IMM_PROBE_EPP19 0x0200
-
 
 typedef struct {
 	struct pardevice *dev;	/* Parport device entry         */
@@ -181,10 +180,10 @@ imm_fail(imm_struct *dev, int error_code)
 
 /*
  * Wait for the high bit to be set.
- * 
+ *
  * In principle, this could be tied to an interrupt, but the adapter
  * doesn't appear to be designed to support interrupts.  We spin on
- * the 0x80 ready bit. 
+ * the 0x80 ready bit.
  */
 static unsigned char imm_wait(imm_struct *dev)
 {
@@ -279,8 +278,8 @@ static int imm_negotiate(imm_struct * tmp)
 	return a;
 }
 
-/* 
- * Clear EPP timeout bit. 
+/*
+ * Clear EPP timeout bit.
  */
 static inline void epp_reset(unsigned short ppb)
 {
@@ -291,7 +290,7 @@ static inline void epp_reset(unsigned short ppb)
 	w_str(ppb, i & 0xfe);
 }
 
-/* 
+/*
  * Wait for empty ECP fifo (if we are in ECP fifo mode only)
  */
 static inline void ecp_sync(imm_struct *dev)
@@ -630,7 +629,7 @@ static inline int imm_send_command(struct scsi_cmnd *cmd)
  * The bulk flag enables some optimisations in the data transfer loops,
  * it should be true for any command that transfers data in integral
  * numbers of sectors.
- * 
+ *
  * The driver appears to remain stable if we speed up the parallel port
  * i/o in this function, but not elsewhere.
  */
@@ -952,7 +951,7 @@ static int imm_queuecommand_lck(struct scsi_cmnd *cmd,
 static DEF_SCSI_QCMD(imm_queuecommand)
 
 /*
- * Apparently the disk->capacity attribute is off by 1 sector 
+ * Apparently the disk->capacity attribute is off by 1 sector
  * for all disk drives.  We add the one here, but it should really
  * be done in sd.c.  Even if it gets fixed there, this will still
  * work.
@@ -1155,7 +1154,6 @@ static int __imm_attach(struct parport *pb)
 	if (!dev)
 		return -ENOMEM;
 
-
 	dev->base = -1;
 	dev->mode = IMM_AUTODETECT;
 	INIT_LIST_HEAD(&dev->list);
@@ -1165,7 +1163,6 @@ static int __imm_attach(struct parport *pb)
 
 	if (!dev->dev)
 		goto out;
-
 
 	/* Claim the bus so it remembers what we do to the control
 	 * registers. [ CTR and ECP ]

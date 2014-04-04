@@ -364,7 +364,6 @@ static void fsi_stream_pop(struct fsi_priv *fsi, int is_play)
 	struct fsi_stream *io = fsi_get_stream(fsi, is_play);
 	struct snd_soc_dai *dai = fsi_get_dai(io->substream);
 
-
 	if (io->oerr_num > 0)
 		dev_err(dai->dev, "over_run = %d\n", io->oerr_num);
 
@@ -466,7 +465,6 @@ static void fsi_dma_soft_pop16(struct fsi_priv *fsi, int num)
 
 	start  = (u16 *)fsi_dma_get_area(fsi, SNDRV_PCM_STREAM_CAPTURE);
 
-
 	for (i = 0; i < num; i++)
 		*(start + i) = (u16)(fsi_reg_read(fsi, DIDT) >> 8);
 }
@@ -477,7 +475,6 @@ static void fsi_dma_soft_push32(struct fsi_priv *fsi, int num)
 	int i;
 
 	start  = (u32 *)fsi_dma_get_area(fsi, SNDRV_PCM_STREAM_PLAYBACK);
-
 
 	for (i = 0; i < num; i++)
 		fsi_reg_write(fsi, DODT, *(start + i));
@@ -797,7 +794,6 @@ static int fsi_dai_startup(struct snd_pcm_substream *substream,
 	int is_play = fsi_is_play(substream);
 
 	pm_runtime_get_sync(dai->dev);
-
 
 	/* clock inversion (CKG2) */
 	data = 0;

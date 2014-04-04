@@ -50,7 +50,6 @@ static const char *block_name[] = {
 
 static unsigned int debugs_on;	/* default 0 - DEBUG_REG */
 
-
 /******************************************************************************
  *
  *  Forward Declarations
@@ -1318,7 +1317,6 @@ static int config_sensor_410(struct camera_data *cam,
 	return i;
 }
 
-
 /******************************************************************************
  *
  *  config_sensor_500(cam)
@@ -1523,7 +1521,6 @@ static int config_sensor_500(struct camera_data *cam,
 
 	return i;
 }
-
 
 /******************************************************************************
  *
@@ -2238,7 +2235,6 @@ struct camera_data *cpia2_init_camera_struct(void)
 		ERR("couldn't kmalloc cpia2 struct\n");
 		return NULL;
 	}
-
 
 	cam->present = 1;
 	mutex_init(&cam->v4l2_lock);

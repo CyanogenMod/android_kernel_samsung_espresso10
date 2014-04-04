@@ -244,7 +244,6 @@ struct sched {
 };
 static void restart_sched(unsigned long);
 
-
 /*
  * Main SGE data structure
  *
@@ -366,7 +365,6 @@ void t1_sched_set_drain_bits_per_us(struct sge *sge, unsigned int port,
 }
 
 #endif  /*  0  */
-
 
 /*
  * get_clock() implements a ns clock (see ktime_get)
@@ -2113,7 +2111,6 @@ struct sge * __devinit t1_sge_create(struct adapter *adapter,
 		if (adapter->params.nports > 1)
 			sge->espibug_timeout = HZ/100;
 	}
-
 
 	p->cmdQ_size[0] = SGE_CMDQ0_E_N;
 	p->cmdQ_size[1] = SGE_CMDQ1_E_N;

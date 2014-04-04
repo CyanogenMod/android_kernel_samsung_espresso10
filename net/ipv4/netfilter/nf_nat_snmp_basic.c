@@ -79,7 +79,6 @@ struct oct1_map
 	u_int8_t to;
 };
 
-
 /*****************************************************************************
  *
  * Basic ASN.1 decoding routines (gxsnmp author Dirk Wisse)

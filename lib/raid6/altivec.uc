@@ -64,7 +64,6 @@ static inline __attribute_const__ unative_t MASK(unative_t v)
 	return (unative_t)vec_cmpgt(zv, v);
 }
 
-
 /* This is noinline to make damned sure that gcc doesn't move any of the
    Altivec code around the enable/disable code */
 static void noinline

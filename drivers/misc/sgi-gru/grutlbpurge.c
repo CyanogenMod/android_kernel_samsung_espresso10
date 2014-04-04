@@ -267,7 +267,6 @@ static void gru_release(struct mmu_notifier *mn, struct mm_struct *mm)
 	gru_dbg(grudev, "gms %p\n", gms);
 }
 
-
 static const struct mmu_notifier_ops gru_mmuops = {
 	.invalidate_page	= gru_invalidate_page,
 	.invalidate_range_start	= gru_invalidate_range_start,

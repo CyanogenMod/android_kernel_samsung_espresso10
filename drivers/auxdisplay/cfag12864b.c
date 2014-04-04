@@ -39,7 +39,6 @@
 #include <linux/ks0108.h>
 #include <linux/cfag12864b.h>
 
-
 #define CFAG12864B_NAME "cfag12864b"
 
 /*

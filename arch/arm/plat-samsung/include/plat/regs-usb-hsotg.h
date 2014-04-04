@@ -153,7 +153,6 @@
 #define S3C_GNPTXSTS_NPTxFSpcAvail_SHIFT	(0)
 #define S3C_GNPTXSTS_NPTxFSpcAvail_GET(_v)	(((_v) >> 0) & 0xffff)
 
-
 #define S3C_HPTXFSIZ				S3C_HSOTG_REG(0x100)
 
 #define S3C_DPTXFSIZn(_a)			S3C_HSOTG_REG(0x104 + (((_a) - 1) * 4))
@@ -338,7 +337,6 @@
 #define S3C_DIEPTSIZ0_XferSize_LIMIT		(0x7f)
 #define S3C_DIEPTSIZ0_XferSize(_x)		((_x) << 0)
 
-
 #define DOEPTSIZ0				S3C_HSOTG_REG(0xB10)
 #define S3C_DOEPTSIZ0_SUPCnt_MASK		(0x3 << 29)
 #define S3C_DOEPTSIZ0_SUPCnt_SHIFT		(29)
@@ -368,7 +366,6 @@
 #define S3C_DxEPTSIZ_XferSize_GET(_v)		(((_v) >> 0) & 0x7ffff)
 #define S3C_DxEPTSIZ_XferSize_LIMIT		(0x7ffff)
 #define S3C_DxEPTSIZ_XferSize(_x)		((_x) << 0)
-
 
 #define S3C_DIEPDMA(_a)				S3C_HSOTG_REG(0x914 + ((_a) * 0x20))
 #define S3C_DOEPDMA(_a)				S3C_HSOTG_REG(0xB14 + ((_a) * 0x20))

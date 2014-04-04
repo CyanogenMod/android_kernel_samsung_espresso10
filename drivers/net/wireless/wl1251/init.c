@@ -325,7 +325,6 @@ static int wl1251_hw_init_data_path_config(struct wl1251 *wl)
 	return 0;
 }
 
-
 int wl1251_hw_init(struct wl1251 *wl)
 {
 	struct wl1251_acx_mem_map *wl_mem_map;

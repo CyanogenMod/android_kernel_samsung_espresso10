@@ -331,7 +331,6 @@ omap3_do_wfi:
  */
 	ldmfd	sp!, {r0-r12, pc}	@ restore regs and return
 
-
 /*
  * ==============================
  * == Resume path for OFF mode ==
@@ -498,7 +497,6 @@ skipl2reen:
 	mcr	p15, 0, r5, c10, c2, 0	@ PRRR
 	mcr	p15, 0, r6, c10, c2, 1	@ NMRR
 
-
 	ldmia	r3!,{r4-r7}
 	mcr	p15, 0, r4, c13, c0, 1	@ Context ID
 	mcr	p15, 0, r5, c13, c0, 2	@ User r/w thread and process ID
@@ -573,7 +571,6 @@ usettbr0:
  */
 restoremmu_on:
 	ldmfd	sp!, {r0-r12, pc}	@ restore regs and return
-
 
 /*
  * Internal functions

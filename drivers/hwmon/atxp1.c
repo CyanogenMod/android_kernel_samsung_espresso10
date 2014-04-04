@@ -271,7 +271,6 @@ static const struct attribute_group atxp1_group = {
 	.attrs = atxp1_attributes,
 };
 
-
 /* Return 0 if detection is successful, -ENODEV otherwise */
 static int atxp1_detect(struct i2c_client *new_client,
 			struct i2c_board_info *info)

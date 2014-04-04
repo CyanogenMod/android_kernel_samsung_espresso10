@@ -84,7 +84,6 @@ struct st_proto_s {
 extern long st_register(struct st_proto_s *);
 extern long st_unregister(struct st_proto_s *);
 
-
 /*
  * header information used by st_core.c
  */

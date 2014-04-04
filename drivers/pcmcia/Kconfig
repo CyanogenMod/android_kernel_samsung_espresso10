@@ -283,7 +283,6 @@ config BFIN_CFPCMCIA
 	help
 	  Say Y here to support the CompactFlash PCMCIA driver for Blackfin.
 
-
 config AT91_CF
 	tristate "AT91 CompactFlash Controller"
 	depends on PCMCIA && ARCH_AT91RM9200

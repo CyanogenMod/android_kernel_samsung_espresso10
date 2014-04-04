@@ -68,11 +68,9 @@
 
 #define MAX_WPA_IE_LEN      64
 
-
 /*---------------------  Export Classes  ----------------------------*/
 
 /*---------------------  Export Variables  --------------------------*/
-
 
 /*---------------------  Export Types  ------------------------------*/
 
@@ -85,14 +83,12 @@ typedef struct tagSERPObject {
     BYTE    byERP;
 } ERPObject, *PERPObject;
 
-
 typedef struct tagSRSNCapObject {
     BOOL    bRSNCapExist;
     WORD    wRSNCap;
 } SRSNCapObject, *PSRSNCapObject;
 
 // BSS info(AP)
-#pragma pack(1)
 typedef struct tagKnownBSS {
     // BSS info
     BOOL            bActive;
@@ -156,8 +152,6 @@ typedef struct tagKnownBSS {
 } __attribute__ ((__packed__))
 KnownBSS , *PKnownBSS;
 
-
-
 typedef enum tagNODE_STATE {
     NODE_FREE,
     NODE_AGED,
@@ -165,7 +159,6 @@ typedef enum tagNODE_STATE {
     NODE_AUTH,
     NODE_ASSOC
 } NODE_STATE, *PNODE_STATE;
-
 
 // STA node info
 typedef struct tagKnownNodeDB {

@@ -461,4 +461,3 @@ int elf_core_copy_fpregs(struct task_struct *t, elf_fpregset_t *fpu)
 
 	return save_fp_registers(userspace_pid[cpu], (unsigned long *) fpu);
 }
-

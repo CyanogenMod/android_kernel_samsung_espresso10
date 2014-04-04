@@ -50,7 +50,6 @@
 #define WIN_REMAP_LO_OFF	0x0008
 #define WIN_REMAP_HI_OFF	0x000c
 
-
 struct mbus_dram_target_info kirkwood_mbus_dram_info;
 
 static int __init cpu_win_can_remap(int win)

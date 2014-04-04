@@ -259,7 +259,6 @@ static int kirkwood_dma_prepare(struct snd_pcm_substream *substream)
 		writel(size, priv->io + KIRKWOOD_REC_BUF_SIZE);
 	}
 
-
 	return 0;
 }
 

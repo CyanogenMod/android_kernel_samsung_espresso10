@@ -35,7 +35,6 @@
 #include <linux/io.h>
 #include <linux/netdevice.h>
 
-
 #include "vf.h"
 
 /* Forward declarations */

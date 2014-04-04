@@ -290,7 +290,6 @@ qlcnic_fw_cmd_create_rx_ctx(struct qlcnic_adapter *adapter)
 		goto out_free_rsp;
 	}
 
-
 	prsp_rds = ((struct qlcnic_cardrsp_rds_ring *)
 			 &prsp->data[le32_to_cpu(prsp->rds_ring_offset)]);
 
@@ -532,7 +531,6 @@ err_out_free:
 	return err;
 }
 
-
 int qlcnic_fw_create_ctx(struct qlcnic_adapter *adapter)
 {
 	int err;
@@ -617,7 +615,6 @@ void qlcnic_free_hw_resources(struct qlcnic_adapter *adapter)
 		}
 	}
 }
-
 
 /* Get MAC address of a NIC partition */
 int qlcnic_get_mac_address(struct qlcnic_adapter *adapter, u8 *mac)

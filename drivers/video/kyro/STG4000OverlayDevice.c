@@ -171,7 +171,6 @@ int CreateOverlaySurface(volatile STG4000REG __iomem *pSTGReg,
 		}
 	}
 
-
 	/* Set Overlay address and Format mode */
 	tmp = STG_READ_REG(DACOverlayAddr);
 	CLEAR_BITS_FRM_TO(0, 20);
@@ -220,7 +219,6 @@ int CreateOverlaySurface(volatile STG4000REG __iomem *pSTGReg,
 
 		*retUVStride = uvStride * 16;
 	}
-
 
 	/* Set Overlay YUV pixel format
 	 * Make sure that LUT not used - ??????
@@ -341,7 +339,6 @@ int SetOverlayViewPort(volatile STG4000REG __iomem *pSTGReg,
 	u32 ulsAdd = 0;
 	u32 tmp, ulStride;
 	u32 ulExcessPixels, ulClip, ulExtraLines;
-
 
 	srcDest.ulSrcX1 = 0;
 	srcDest.ulSrcY1 = 0;
@@ -543,7 +540,6 @@ int SetOverlayViewPort(volatile STG4000REG __iomem *pSTGReg,
 	ulHeight += ulExtraLines;
 
 	ulDacXScale = ulScale;
-
 
 	tmp = STG_READ_REG(DACVerticalScal);
 	CLEAR_BITS_FRM_TO(0, 11);

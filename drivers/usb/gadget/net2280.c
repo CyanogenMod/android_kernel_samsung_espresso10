@@ -71,7 +71,6 @@
 #include <asm/system.h>
 #include <asm/unaligned.h>
 
-
 #define	DRIVER_DESC		"PLX NET228x USB Peripheral Controller"
 #define	DRIVER_VERSION		"2005 Sept 27"
 
@@ -79,7 +78,6 @@
 #define	EP_DONTUSE		13	/* nonzero */
 
 #define USE_RDK_LEDS		/* GPIO pins control three LEDs */
-
 
 static const char driver_name [] = "net2280";
 static const char driver_desc [] = DRIVER_DESC;
@@ -106,7 +104,6 @@ static int use_dma_chaining = 0;
 module_param (use_dma, bool, S_IRUGO);
 module_param (use_dma_chaining, bool, S_IRUGO);
 
-
 /* mode 0 == ep-{a,b,c,d} 1K fifo each
  * mode 1 == ep-{a,b} 2K fifo each, ep-{c,d} unavailable
  * mode 2 == ep-a 2K fifo, ep-{b,c} 1K each, ep-d unavailable
@@ -125,7 +122,6 @@ static int enable_suspend = 0;
 
 /* "modprobe net2280 enable_suspend=1" etc */
 module_param (enable_suspend, bool, S_IRUGO);
-
 
 #define	DIR_STRING(bAddress) (((bAddress) & USB_DIR_IN) ? "in" : "out")
 
@@ -1695,7 +1691,6 @@ done:
 }
 static DEVICE_ATTR (queues, S_IRUGO, show_queues, NULL);
 
-
 #else
 
 #define device_create_file(a,b)	(0)
@@ -2050,7 +2045,6 @@ int usb_gadget_unregister_driver (struct usb_gadget_driver *driver)
 	return 0;
 }
 EXPORT_SYMBOL (usb_gadget_unregister_driver);
-
 
 /*-------------------------------------------------------------------------*/
 
@@ -2939,7 +2933,6 @@ static void net2280_shutdown (struct pci_dev *pdev)
 	/* disable the pullup so the host will think we're gone */
 	writel (0, &dev->usb->usbctl);
 }
-
 
 /*-------------------------------------------------------------------------*/
 

@@ -42,7 +42,6 @@ struct westwood {
 	u8     reset_rtt_min;    /* Reset RTT min to next RTT sample*/
 };
 
-
 /* TCP Westwood functions and constants */
 #define TCP_WESTWOOD_RTT_MIN   (HZ/20)	/* 50ms */
 #define TCP_WESTWOOD_INIT_RTT  (20*HZ)	/* maybe too conservative?! */
@@ -153,7 +152,6 @@ static inline void update_rtt_min(struct westwood *w)
 		w->rtt_min = min(w->rtt, w->rtt_min);
 }
 
-
 /*
  * @westwood_fast_bw
  * It is called when we are in fast path. In particular it is called when
@@ -208,7 +206,6 @@ static inline u32 westwood_acked_count(struct sock *sk)
 	return w->cumul_ack;
 }
 
-
 /*
  * TCP Westwood
  * Here limit is evaluated as Bw estimation*RTTmin (for obtaining it
@@ -254,7 +251,6 @@ static void tcp_westwood_event(struct sock *sk, enum tcp_ca_event event)
 	}
 }
 
-
 /* Extract info for Tcp socket info provided via netlink. */
 static void tcp_westwood_info(struct sock *sk, u32 ext,
 			      struct sk_buff *skb)
@@ -270,7 +266,6 @@ static void tcp_westwood_info(struct sock *sk, u32 ext,
 		nla_put(skb, INET_DIAG_VEGASINFO, sizeof(info), &info);
 	}
 }
-
 
 static struct tcp_congestion_ops tcp_westwood __read_mostly = {
 	.init		= tcp_westwood_init,

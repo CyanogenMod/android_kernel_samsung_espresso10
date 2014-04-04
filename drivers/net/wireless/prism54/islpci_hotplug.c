@@ -264,7 +264,6 @@ prism54_suspend(struct pci_dev *pdev, pm_message_t state)
 	islpci_private *priv = ndev ? netdev_priv(ndev) : NULL;
 	BUG_ON(!priv);
 
-
 	pci_save_state(pdev);
 
 	/* tell the device not to trigger interrupts for now... */

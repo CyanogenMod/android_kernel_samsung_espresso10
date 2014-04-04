@@ -387,7 +387,6 @@ static struct drm_encoder_slave_funcs ch7006_encoder_funcs = {
 	.set_property = ch7006_encoder_set_property,
 };
 
-
 /* I2C driver functions */
 
 static int ch7006_probe(struct i2c_client *client, const struct i2c_device_id *id)
@@ -516,7 +515,6 @@ static struct drm_i2c_encoder_driver ch7006_driver = {
 
 	.encoder_init = ch7006_encoder_init,
 };
-
 
 /* Module initialization */
 

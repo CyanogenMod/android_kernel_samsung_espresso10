@@ -25,7 +25,6 @@
 #include "wmm.h"
 #include "11n.h"
 
-
 /*
  * This function handles the command response error case.
  *

@@ -22,4 +22,3 @@ int r8712_usbctrl_vendorreq(struct intf_priv *pintfpriv, u8 request, u16 value,
 		      u16 index, void *pdata, u16 len, u8 requesttype);
 
 #endif
-

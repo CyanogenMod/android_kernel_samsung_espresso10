@@ -20,7 +20,6 @@
 #ifndef R8180_HW
 #define R8180_HW
 
-
 #define BIT0	0x00000001
 #define BIT1	0x00000002
 #define BIT2	0x00000004
@@ -162,8 +161,6 @@
 #define CONFIG0_WEP104_SHIFT 6
 #define AGCRESET_SHIFT 5
 
-
-
 /*
  * Operational registers offsets in PCI (I/O) space.
  * RealTek names are used.
@@ -263,8 +260,6 @@
 #define FFER 0x00FC
 #define FFER_END 0x00FF
 
-
-
 /*
  * Bitmasks for specific register functions.
  * Names are derived from the register name and function name.
@@ -346,7 +341,6 @@
 #define ISR_TNPDOK  ISR_TVODOK
 #define ISR_TimeOut ISR_TimeOut1
 #define ISR_RXFOVW ISR_FOVW
-
 
 #define HW_VERID_R8180_F 3
 #define HW_VERID_R8180_ABCD 2
@@ -518,7 +512,6 @@
 #define VIQ_ACM_CTL				(0x01 << 1)	/*BIT1	*/	/* Set to 1 when AC_VI used time reaches or exceeds the admitted time	*/
 #define BEQ_ACM_CTL				(0x01 << 0)	/*BIT0	*/	/* Set to 1 when AC_BE used time reaches or exceeds the admitted time	*/
 
-
 /*
 ----------------------------------------------------------------------------
 		8185B SW_3W_CMD bits					(Offset 0x27C-0x27D, 16bit)
@@ -543,7 +536,6 @@
 #define RATE_FALLBACK_CTL_AUTO_STEP1	0x01
 #define RATE_FALLBACK_CTL_AUTO_STEP2	0x02
 #define RATE_FALLBACK_CTL_AUTO_STEP3	0x03
-
 
 #define RTL8225z2_ANAPARAM_OFF	0x55480658
 #define RTL8225z2_ANAPARAM2_OFF	0x72003f70

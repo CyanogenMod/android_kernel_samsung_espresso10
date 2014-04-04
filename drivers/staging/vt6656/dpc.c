@@ -67,7 +67,6 @@ static int          msglevel                =MSG_LEVEL_INFO;
 const BYTE acbyRxRate[MAX_RATE] =
 {2, 4, 11, 22, 12, 18, 24, 36, 48, 72, 96, 108};
 
-
 /*---------------------  Static Functions  --------------------------*/
 
 /*---------------------  Static Definitions -------------------------*/
@@ -101,8 +100,6 @@ static BOOL s_bAPModeRxCtl(
      signed int      iSANodeIndex
     );
 
-
-
 static BOOL s_bAPModeRxData (
      PSDevice pDevice,
      struct sk_buff *skb,
@@ -111,7 +108,6 @@ static BOOL s_bAPModeRxData (
      signed int      iSANodeIndex,
      signed int      iDANodeIndex
     );
-
 
 static BOOL s_bHandleRxEncryption(
      PSDevice     pDevice,
@@ -176,7 +172,6 @@ s_vProcessRxMACHeader (
     PS802_11Header  pMACHeader;
     int             ii;
 
-
     pMACHeader = (PS802_11Header) (pbyRxBufferAddr + cbHeaderSize);
 
     s_vGetDASA((PBYTE)pMACHeader, &cbHeaderSize, &pDevice->sRxEthHeader);
@@ -200,7 +195,7 @@ s_vProcessRxMACHeader (
     } else if (!compare_ether_addr(pbyRxBuffer, &pDevice->abySNAP_RFC1042[0])) {
         cbHeaderSize += 6;
         pwType = (PWORD) (pbyRxBufferAddr + cbHeaderSize);
-	if ((*pwType == cpu_to_le16(ETH_P_IPX)) ||
+	if ((*pwType == cpu_to_be16(ETH_P_IPX)) ||
 	    (*pwType == cpu_to_le16(0xF380))) {
 		cbHeaderSize -= 8;
             pwType = (PWORD) (pbyRxBufferAddr + cbHeaderSize);
@@ -241,9 +236,6 @@ s_vProcessRxMACHeader (
     *pcbHeadSize = cbHeaderSize;
 }
 
-
-
-
 static BYTE s_byGetRateIdx(BYTE byRate)
 {
     BYTE    byRateIdx;
@@ -254,7 +246,6 @@ static BYTE s_byGetRateIdx(BYTE byRate)
     }
     return 0;
 }
-
 
 static
 void
@@ -309,9 +300,6 @@ s_vGetDASA (
     *pcbHeaderSize = cbHeaderSize;
 }
 
-
-
-
 BOOL
 RXbBulkInProcessData (
      PSDevice         pDevice,
@@ -359,8 +347,6 @@ RXbBulkInProcessData (
     WORD            wPLCPwithPadding;
     PS802_11Header  pMACHeader;
     BOOL            bRxeapol_key = FALSE;
-
-
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"---------- RXbBulkInProcessData---\n");
 
@@ -438,7 +424,6 @@ RXbBulkInProcessData (
                             FrameSize
                             );
 
-
     pMACHeader = (PS802_11Header) pbyFrame;
 
 //mike add: to judge if current AP is activated?
@@ -464,7 +449,6 @@ RXbBulkInProcessData (
         }
     }
 
-
     // Use for TKIP MIC
     s_vGetDASA(pbyFrame, &cbHeaderSize, &pDevice->sRxEthHeader);
 
@@ -488,7 +472,6 @@ RXbBulkInProcessData (
             return FALSE;
         }
     }
-
 
     if (IS_FC_WEP(pbyFrame)) {
         BOOL     bRxDecryOK = FALSE;
@@ -557,7 +540,6 @@ RXbBulkInProcessData (
         else
             FrameSize -= 4;         // 4 is ICV
     }
-
 
     //
     // RX OK
@@ -715,9 +697,7 @@ RXbBulkInProcessData (
         }
     }
 
-
 // Data frame Handle
-
 
     if (pDevice->bEnablePSMode) {
         if (IS_FC_MOREDATA((pbyFrame))) {
@@ -761,7 +741,6 @@ RXbBulkInProcessData (
     }
 */
 
-
     // -----------------------------------------------
 
     if ((pMgmt->eCurrMode == WMAC_MODE_ESS_AP) && (pDevice->bEnable8021x == TRUE)){
@@ -801,7 +780,6 @@ RXbBulkInProcessData (
             return FALSE;
     }
 
-
     if ((pKey != NULL) && (pKey->byCipherSuite == KEY_CTL_TKIP)) {
         if (bIsWEP) {
             FrameSize -= 8;  //MIC
@@ -819,7 +797,6 @@ RXbBulkInProcessData (
             DWORD           dwLocalMIC_L = 0;
             DWORD           dwLocalMIC_R = 0;
             viawget_wpa_header *wpahdr;
-
 
             if (pMgmt->eCurrMode == WMAC_MODE_ESS_AP) {
                 dwMICKey0 = cpu_to_le32(*(PDWORD)(&pKey->abyKey[24]));
@@ -850,7 +827,6 @@ RXbBulkInProcessData (
 
             pdwMIC_L = (PDWORD)(skb->data + 8 + FrameSize);
             pdwMIC_R = (PDWORD)(skb->data + 8 + FrameSize + 4);
-
 
             if ((cpu_to_le32(*pdwMIC_L) != dwLocalMIC_L) || (cpu_to_le32(*pdwMIC_R) != dwLocalMIC_R) ||
                 (pDevice->bRxMICFail == TRUE)) {
@@ -890,7 +866,6 @@ RXbBulkInProcessData (
 
 				}
          #endif
-
 
                 if ((pDevice->bWPADEVUp) && (pDevice->skb != NULL)) {
                      wpahdr = (viawget_wpa_header *)pDevice->skb->data;
@@ -965,7 +940,6 @@ RXbBulkInProcessData (
         }
     } // ----- End of Reply Counter Check --------------------------
 
-
     s_vProcessRxMACHeader(pDevice, (PBYTE)(skb->data+8), FrameSize, bIsWEP, bExtIV, &cbHeaderOffset);
     FrameSize -= cbHeaderOffset;
     cbHeaderOffset += 8;        // 8 is Rcv buffer header
@@ -1013,7 +987,6 @@ RXbBulkInProcessData (
     return TRUE;
 }
 
-
 static BOOL s_bAPModeRxCtl (
      PSDevice pDevice,
      PBYTE    pbyFrame,
@@ -1023,7 +996,6 @@ static BOOL s_bAPModeRxCtl (
     PS802_11Header      p802_11Header;
     CMD_STATUS          Status;
     PSMgmtObject        pMgmt = &(pDevice->sMgmtObj);
-
 
     if (IS_CTL_PSPOLL(pbyFrame) || !IS_TYPE_CONTROL(pbyFrame)) {
 
@@ -1161,7 +1133,6 @@ static BOOL s_bHandleRxEncryption (
     BYTE            byDecMode = KEY_CTL_WEP;
     PSMgmtObject    pMgmt = &(pDevice->sMgmtObj);
 
-
     *pwRxTSC15_0 = 0;
     *pdwRxTSC47_16 = 0;
 
@@ -1256,7 +1227,7 @@ static BOOL s_bHandleRxEncryption (
 
         PayloadLen -= (WLAN_HDR_ADDR3_LEN + 8 + 4); // 24 is 802.11 header, 8 is IV&ExtIV, 4 is crc
         *pdwRxTSC47_16 = cpu_to_le32(*(PDWORD)(pbyIV + 4));
-        DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"ExtIV: %lx\n",*pdwRxTSC47_16);
+	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"ExtIV: %x\n", *pdwRxTSC47_16);
         if (byDecMode == KEY_CTL_TKIP) {
             *pwRxTSC15_0 = cpu_to_le16(MAKEWORD(*(pbyIV+2), *pbyIV));
         } else {
@@ -1287,7 +1258,6 @@ static BOOL s_bHandleRxEncryption (
     return TRUE;
 }
 
-
 static BOOL s_bHostWepRxEncryption (
      PSDevice     pDevice,
      PBYTE        pbyFrame,
@@ -1308,8 +1278,6 @@ static BOOL s_bHostWepRxEncryption (
     BYTE            byDecMode = KEY_CTL_WEP;
     PS802_11Header  pMACHeader;
 
-
-
     *pwRxTSC15_0 = 0;
     *pdwRxTSC47_16 = 0;
 
@@ -1322,7 +1290,6 @@ static BOOL s_bHostWepRxEncryption (
     byKeyIdx = (*(pbyIV+3) & 0xc0);
     byKeyIdx >>= 6;
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"\nKeyIdx: %d\n", byKeyIdx);
-
 
     if (pMgmt->byCSSGK == KEY_CTL_TKIP)
         byDecMode = KEY_CTL_TKIP;
@@ -1367,7 +1334,7 @@ static BOOL s_bHostWepRxEncryption (
 
         PayloadLen -= (WLAN_HDR_ADDR3_LEN + 8 + 4); // 24 is 802.11 header, 8 is IV&ExtIV, 4 is crc
         *pdwRxTSC47_16 = cpu_to_le32(*(PDWORD)(pbyIV + 4));
-        DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"ExtIV: %lx\n",*pdwRxTSC47_16);
+	DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"ExtIV: %x\n", *pdwRxTSC47_16);
 
         if (byDecMode == KEY_CTL_TKIP) {
             *pwRxTSC15_0 = cpu_to_le16(MAKEWORD(*(pbyIV+2), *pbyIV));
@@ -1418,8 +1385,6 @@ static BOOL s_bHostWepRxEncryption (
     return TRUE;
 }
 
-
-
 static BOOL s_bAPModeRxData (
      PSDevice pDevice,
      struct sk_buff *skb,
@@ -1435,7 +1400,6 @@ static BOOL s_bAPModeRxData (
     BOOL                bRelayOnly = FALSE;
     BYTE                byMask[8] = {1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80};
     WORD                wAID;
-
 
     struct sk_buff* skbcpy = NULL;
 
@@ -1511,9 +1475,6 @@ static BOOL s_bAPModeRxData (
     return TRUE;
 }
 
-
-
-
 void RXvWorkItem(void *Context)
 {
     PSDevice pDevice = (PSDevice) Context;
@@ -1537,7 +1498,6 @@ void RXvWorkItem(void *Context)
 
 }
 
-
 void
 RXvFreeRCB(
      PRCB pRCB,
@@ -1545,7 +1505,6 @@ RXvFreeRCB(
     )
 {
     PSDevice pDevice = (PSDevice)pRCB->pDevice;
-
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"---->RXvFreeRCB\n");
 
@@ -1567,7 +1526,6 @@ RXvFreeRCB(
     EnqueueRCB(pDevice->FirstRecvFreeList, pDevice->LastRecvFreeList, pRCB);
     pDevice->NumRecvFreeList++;
 
-
     if ((pDevice->Flags & fMP_POST_READS) && MP_IS_READY(pDevice) &&
         (pDevice->bIsRxWorkItemQueued == FALSE) ) {
 
@@ -1576,7 +1534,6 @@ RXvFreeRCB(
     }
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"<----RXFreeRCB %d %d\n",pDevice->NumRecvFreeList, pDevice->NumRecvMngList);
 }
-
 
 void RXvMngWorkItem(void *Context)
 {
@@ -1612,5 +1569,3 @@ void RXvMngWorkItem(void *Context)
 	spin_unlock_irq(&pDevice->lock);
 
 }
-
-

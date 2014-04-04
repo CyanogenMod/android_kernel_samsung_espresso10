@@ -140,4 +140,3 @@ static inline int context_cmp(struct context *c1, struct context *c2)
 }
 
 #endif	/* _SS_CONTEXT_H_ */
-

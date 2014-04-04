@@ -96,7 +96,6 @@ extern void jbd2_free(void *ptr, size_t size);
  **/
 typedef struct jbd2_journal_handle handle_t;	/* Atomic operation type */
 
-
 /**
  * typedef journal_t - The journal_t maintains all of the journaling state information for a single filesystem.
  *
@@ -192,13 +191,11 @@ typedef struct jbd2_journal_revoke_header_s
 	__be32		 r_count;	/* Count of bytes used in the block */
 } jbd2_journal_revoke_header_t;
 
-
 /* Definitions for the journal tag flags word: */
 #define JBD2_FLAG_ESCAPE		1	/* on-disk block is escaped */
 #define JBD2_FLAG_SAME_UUID	2	/* block has same uuid as previous */
 #define JBD2_FLAG_DELETED	4	/* block deleted by this transaction */
 #define JBD2_FLAG_LAST_TAG	8	/* last tag in this descriptor block */
-
 
 /*
  * The journal superblock.  All fields are in big-endian byte order.
@@ -445,7 +442,6 @@ struct jbd2_journal_handle
 	 * (counts only buffers dirtied when !h_cowing) */
 	unsigned int	h_user_credits:14;
 
-
 #ifdef CONFIG_DEBUG_LOCK_ALLOC
 	struct lockdep_map	h_lockdep_map;
 #endif
@@ -462,7 +458,6 @@ struct jbd2_journal_handle
 	unsigned int h_cow_excluded; /* blocks set in exclude bitmap */
 #endif
 };
-
 
 /*
  * Some stats for checkpoint phase
@@ -848,7 +843,7 @@ struct journal_s
 	 * j_checkpoint_mutex.  [j_checkpoint_mutex]
 	 */
 	struct buffer_head	*j_chkpt_bhs[JBD2_NR_BATCH];
-	
+
 	/*
 	 * Journal head: identifies the first unused block in the journal.
 	 * [j_state_lock]
@@ -1042,7 +1037,6 @@ extern void jbd2_journal_commit_transaction(journal_t *);
 int __jbd2_journal_clean_checkpoint_list(journal_t *journal);
 int __jbd2_journal_remove_checkpoint(struct journal_head *);
 void __jbd2_journal_insert_checkpoint(struct journal_head *, transaction_t *);
-
 
 /*
  * Triggers
@@ -1329,8 +1323,8 @@ extern int jbd_blocks_per_page(struct inode *inode);
 #define BUFFER_TRACE2(bh, bh2, info)	do {} while (0)
 #define JBUFFER_TRACE(jh, info)	do {} while (0)
 
-/* 
- * jbd2_dev_to_name is a utility function used by the jbd2 and ext4 
+/*
+ * jbd2_dev_to_name is a utility function used by the jbd2 and ext4
  * tracing infrastructure to map a dev_t to a device name.
  */
 extern const char *jbd2_dev_to_name(dev_t device);

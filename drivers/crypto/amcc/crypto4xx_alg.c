@@ -290,5 +290,3 @@ int crypto4xx_sha1_alg_init(struct crypto_tfm *tfm)
 	return crypto4xx_hash_alg_init(tfm, SA_HASH160_LEN, SA_HASH_ALG_SHA1,
 				       SA_HASH_MODE_HASH);
 }
-
-

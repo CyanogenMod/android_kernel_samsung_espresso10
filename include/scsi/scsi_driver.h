@@ -9,7 +9,6 @@ struct scsi_device;
 struct request;
 struct request_queue;
 
-
 struct scsi_driver {
 	struct module		*owner;
 	struct device_driver	gendrv;

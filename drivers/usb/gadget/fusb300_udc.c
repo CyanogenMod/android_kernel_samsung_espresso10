@@ -63,7 +63,6 @@ static void fusb300_disable_bit(struct fusb300 *fusb300, u32 offset,
 	iowrite32(reg, fusb300->reg + offset);
 }
 
-
 static void fusb300_ep_setting(struct fusb300_ep *ep,
 			       struct fusb300_ep_info info)
 {
@@ -1195,7 +1194,6 @@ static void check_device_mode(struct fusb300 *fusb300)
 	printk(KERN_INFO "dev_mode = %d\n", (reg & FUSB300_GCR_DEVEN_MSK));
 }
 
-
 static void fusb300_ep0out(struct fusb300 *fusb300)
 {
 	struct fusb300_ep *ep = fusb300->ep[0];
@@ -1403,7 +1401,6 @@ static irqreturn_t fusb300_irq(int irq, void *_fusb300)
 
 	if (int_grp1 & FUSB300_IGR1_CX_CMDEND_INT)
 		printk(KERN_INFO "fusb300_cmdend\n");
-
 
 	if (int_grp1 & FUSB300_IGR1_CX_OUT_INT) {
 		printk(KERN_INFO "fusb300_cxout\n");

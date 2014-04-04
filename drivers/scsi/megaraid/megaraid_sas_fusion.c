@@ -256,7 +256,6 @@ megasas_free_cmds_fusion(struct megasas_instance *instance)
 
 	u32 max_cmds, req_sz, reply_sz, io_frames_sz;
 
-
 	req_sz = fusion->request_alloc_sz;
 	reply_sz = fusion->reply_alloc_sz;
 	io_frames_sz = fusion->io_frames_alloc_sz;

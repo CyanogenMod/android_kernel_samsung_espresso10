@@ -143,7 +143,6 @@ adm1031_write_value(struct i2c_client *client, u8 reg, unsigned int value)
 	return i2c_smbus_write_byte_data(client, reg, value);
 }
 
-
 #define TEMP_TO_REG(val)		(((val) < 0 ? ((val - 500) / 1000) : \
 					((val + 500) / 1000)))
 
@@ -480,7 +479,6 @@ static int trust_fan_readings(struct adm1031_data *data, int chan)
 	return res;
 }
 
-
 static ssize_t show_fan(struct device *dev,
 			struct device_attribute *attr, char *buf)
 {
@@ -581,7 +579,6 @@ static SENSOR_DEVICE_ATTR(fan##offset##_div, S_IRUGO | S_IWUSR,		\
 
 fan_offset(1);
 fan_offset(2);
-
 
 /* Temps */
 static ssize_t show_temp(struct device *dev,

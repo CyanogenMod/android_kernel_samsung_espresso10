@@ -131,7 +131,6 @@ static const match_table_t tokens = {
 	{Opt_err, NULL}
 };
 
-
 STATIC unsigned long
 suffix_strtoul(char *s, char **endp, unsigned int base)
 {

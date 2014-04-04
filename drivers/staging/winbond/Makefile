@@ -8,8 +8,4 @@ w35und-y :=			\
 	wb35tx.o		\
 	wbusb.o			\
 
-
 obj-$(CONFIG_W35UND) += w35und.o
-
-
-

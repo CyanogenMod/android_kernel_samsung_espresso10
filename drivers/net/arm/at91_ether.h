@@ -15,7 +15,6 @@
 #ifndef AT91_ETHERNET
 #define AT91_ETHERNET
 
-
 /* Davicom 9161 PHY */
 #define MII_DM9161_ID		0x0181b880
 #define MII_DM9161A_ID		0x0181b8a0

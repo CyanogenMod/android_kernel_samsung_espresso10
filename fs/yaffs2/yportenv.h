@@ -38,7 +38,6 @@
 #define YAFFS_LOSTNFOUND_NAME		"lost+found"
 #define YAFFS_LOSTNFOUND_PREFIX		"obj"
 
-
 #define YAFFS_ROOT_MODE			0755
 #define YAFFS_LOSTNFOUND_MODE		0700
 
@@ -47,7 +46,6 @@
 
 #define compile_time_assertion(assertion) \
 	({ int x = __builtin_choose_expr(assertion, 0, (void)0); (void) x; })
-
 
 #ifndef Y_DUMP_STACK
 #define Y_DUMP_STACK() dump_stack()

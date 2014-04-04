@@ -36,7 +36,6 @@ MODULE_DESCRIPTION("Virtual device for mem2mem framework testing");
 MODULE_AUTHOR("Pawel Osciak, <pawel@osciak.com>");
 MODULE_LICENSE("GPL");
 
-
 #define MIN_W 32
 #define MIN_H 32
 #define MAX_W 640
@@ -63,7 +62,6 @@ MODULE_LICENSE("GPL");
 
 #define dprintk(dev, fmt, arg...) \
 	v4l2_dbg(1, 1, &dev->v4l2_dev, "%s: " fmt, __func__, ## arg)
-
 
 void m2mtest_dev_release(struct device *dev)
 {}
@@ -313,7 +311,6 @@ static void m2mtest_unlock(void *priv)
 	struct m2mtest_dev *dev = ctx->dev;
 	mutex_unlock(&dev->dev_mutex);
 }
-
 
 /* device_run() - prepares and starts the device
  *
@@ -707,7 +704,6 @@ static int vidioc_s_ctrl(struct file *file, void *priv,
 	return 0;
 }
 
-
 static const struct v4l2_ioctl_ops m2mtest_ioctl_ops = {
 	.vidioc_querycap	= vidioc_querycap,
 
@@ -734,7 +730,6 @@ static const struct v4l2_ioctl_ops m2mtest_ioctl_ops = {
 	.vidioc_g_ctrl		= vidioc_g_ctrl,
 	.vidioc_s_ctrl		= vidioc_s_ctrl,
 };
-
 
 /*
  * Queue operations
@@ -1034,4 +1029,3 @@ static int __init m2mtest_init(void)
 
 module_init(m2mtest_init);
 module_exit(m2mtest_exit);
-

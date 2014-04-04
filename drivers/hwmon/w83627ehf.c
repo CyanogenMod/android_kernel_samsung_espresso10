@@ -31,7 +31,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-
     Supports the following chips:
 
     Chip        #vin    #fan    #pwm    #temp  chip IDs       man ID
@@ -1387,7 +1386,6 @@ store_pwm_enable(struct device *dev, struct device_attribute *attr,
 	return count;
 }
 
-
 #define show_tol_temp(reg) \
 static ssize_t show_##reg(struct device *dev, struct device_attribute *attr, \
 				char *buf) \
@@ -1633,7 +1631,6 @@ static struct sensor_device_attribute sda_sf3_arrays[] = {
 		    store_fan_stop_output, 2),
 };
 
-
 /*
  * pwm1 and pwm3 don't support max and step settings on all chips.
  * Need to check support while generating/removing attribute files.
@@ -1834,6 +1831,7 @@ static int __devinit w83627ehf_probe(struct platform_device *pdev)
 	mutex_init(&data->lock);
 	mutex_init(&data->update_lock);
 	data->name = w83627ehf_device_names[sio_data->kind];
+	data->bank = 0xff;		/* Force initial bank selection */
 	platform_set_drvdata(pdev, data);
 
 	/* 627EHG and 627EHF have 10 voltage inputs; 627DHG and 667HG have 9 */

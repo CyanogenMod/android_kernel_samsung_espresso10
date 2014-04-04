@@ -37,7 +37,6 @@
  *-----------------------------------------------------------------------------
  */
 
-
 #define MAX_BOARDS          8
 #define MAX_CHANS_USED      128
 
@@ -59,7 +58,6 @@
 
 #define MAX_DEFAULT_IFQLEN  32    /* network qlen */
 
-
 #define SBE_IFACETMPL        "pmcc4-%d"
 #ifdef IFNAMSIZ
 #define SBE_IFACETMPL_SIZE    IFNAMSIZ
@@ -79,4 +77,3 @@
 #endif
 
 #endif   /*** _INC_PMCC4_DEFS_H_ ***/
-

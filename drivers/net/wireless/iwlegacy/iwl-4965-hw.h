@@ -655,7 +655,6 @@ static inline int iwl4965_hw_valid_rtc_data_addr(u32 addr)
  *  98         78         0x00
  */
 
-
 /**
  * Sanity checks and default values for EEPROM regulatory levels.
  * If EEPROM values fall outside MIN/MAX range, use default values.
@@ -739,7 +738,6 @@ enum {
 
 /********************* END TXPOWER *****************************************/
 
-
 /**
  * Tx/Rx Queues
  *
@@ -765,7 +763,6 @@ enum {
 #define IWL49_NUM_QUEUES	16
 #define IWL49_NUM_AMPDU_QUEUES	8
 
-
 /**
  * struct iwl4965_schedq_bc_tbl
  *
@@ -789,7 +786,6 @@ struct iwl4965_scd_bc_tbl {
 	u8 pad[1024 - (TFD_QUEUE_BC_SIZE) * sizeof(__le16)];
 } __packed;
 
-
 #define IWL4965_RTC_INST_LOWER_BOUND		(0x000000)
 
 /* RSSI to dBm */
@@ -806,6 +802,5 @@ struct iwl4965_scd_bc_tbl {
 
 /* EEPROM */
 #define IWL4965_FIRST_AMPDU_QUEUE	10
-
 
 #endif /* !__iwl_4965_hw_h__ */

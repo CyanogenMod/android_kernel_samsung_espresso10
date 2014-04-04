@@ -74,7 +74,6 @@ do {									\
 #define ctrl_warn(ctrl, format, arg...)					\
 	dev_warn(&ctrl->pci_dev->dev, format, ## arg)
 
-
 #define SLOT_NAME_SIZE 10
 struct slot {
 	u8 bus;

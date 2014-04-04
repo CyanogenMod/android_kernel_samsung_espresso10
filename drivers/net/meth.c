@@ -48,7 +48,6 @@
 #define MFE_RX_DEBUG 0
 #endif
 
-
 static const char *meth_str="SGI O2 Fast Ethernet";
 
 /* The maximum time waited (in jiffies) before assuming a Tx failed. (400ms) */
@@ -196,7 +195,6 @@ static void meth_check_link(struct net_device *dev)
 		mace->eth.mac_ctrl = priv->mac_ctrl;
 	}
 }
-
 
 static int meth_init_tx_ring(struct meth_private *priv)
 {

@@ -12,7 +12,6 @@
 #include <sound/pcm.h>
 #include <linux/list.h>
 
-
 /* When switching from master to slave or the other way around,
  * you don't want to have the codec chip acting as clock source
  * while the bus still is.

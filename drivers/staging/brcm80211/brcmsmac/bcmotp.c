@@ -681,7 +681,6 @@ static int hndotp_read_region(void *oh, int region, u16 *data, uint *wlen)
 	chipcregs_t *cc;
 	int i;
 
-
 	if (region != OTP_HW_REGION) {
 		/*
 		 * Only support HW region

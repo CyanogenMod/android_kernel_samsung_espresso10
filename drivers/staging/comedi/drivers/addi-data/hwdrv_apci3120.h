@@ -1,4 +1,3 @@
-
 /* hwdrv_apci3120.h */
 
 /*
@@ -175,7 +174,6 @@ struct str_AnalogReadInformation {
 	unsigned int ui_RangeList[MAX_ANALOGINPUT_CHANNELS];	/* Gain of each channel                    */
 
 };
-
 
 /* Function Declaration For APCI-3120 */
 

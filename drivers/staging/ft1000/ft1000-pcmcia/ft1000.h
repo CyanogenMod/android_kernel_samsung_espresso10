@@ -30,7 +30,6 @@
 #ifndef _FT1000H_
 #define _FT1000H_
 
-
 #define FT1000_DRV_VER       0x01010300
 
 #define DSPVERSZ                4

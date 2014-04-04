@@ -42,4 +42,3 @@ const struct dentry_operations hfs_dentry_operations =
 	.d_hash		= hfs_hash_dentry,
 	.d_compare	= hfs_compare_dentry,
 };
-

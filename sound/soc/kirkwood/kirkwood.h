@@ -19,7 +19,6 @@
 #define KIRKWOOD_AUDIO_WIN_BASE_REG(win)	(0xA00 + ((win)<<3))
 #define KIRKWOOD_AUDIO_WIN_CTRL_REG(win)	(0xA04 + ((win)<<3))
 
-
 #define KIRKWOOD_RECCTL			0x1000
 #define KIRKWOOD_RECCTL_SPDIF_EN		(1<<11)
 #define KIRKWOOD_RECCTL_I2S_EN			(1<<10)

@@ -1179,7 +1179,6 @@ static int load_superblock(journal_t *journal)
 	return 0;
 }
 
-
 /**
  * int journal_load() - Read journal from disk.
  * @journal: Journal to act on.
@@ -1244,7 +1243,6 @@ int journal_destroy(journal_t *journal)
 {
 	int err = 0;
 
-	
 	/* Wait for the commit thread to wake up and die. */
 	journal_kill_thread(journal);
 
@@ -1289,7 +1287,6 @@ int journal_destroy(journal_t *journal)
 
 	return err;
 }
-
 
 /**
  *int journal_check_used_features () - Check if features specified are used.
@@ -1389,7 +1386,6 @@ int journal_set_features (journal_t *journal, unsigned long compat,
 	return 1;
 }
 
-
 /**
  * int journal_update_format () - Update on-disk journal structure.
  * @journal: Journal to act on.
@@ -1443,7 +1439,6 @@ static int journal_convert_superblock_v1(journal_t *journal,
 	sync_dirty_buffer(bh);
 	return 0;
 }
-
 
 /**
  * int journal_flush () - Flush journal
@@ -2086,4 +2081,3 @@ static void __exit journal_exit(void)
 MODULE_LICENSE("GPL");
 module_init(journal_init);
 module_exit(journal_exit);
-

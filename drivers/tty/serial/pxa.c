@@ -22,7 +22,6 @@
  * with the serial core maintainer satisfaction to appear soon.
  */
 
-
 #if defined(CONFIG_SERIAL_PXA_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 #define SUPPORT_SYSRQ
 #endif
@@ -205,7 +204,6 @@ static void transmit_chars(struct uart_pxa_port *up)
 
 	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
 		uart_write_wakeup(&up->port);
-
 
 	if (uart_circ_empty(xmit))
 		serial_pxa_stop_tx(&up->port);

@@ -98,7 +98,6 @@ static struct ctl_path rds_sysctl_path[] = {
 	{ }
 };
 
-
 void rds_sysctl_exit(void)
 {
 	if (rds_sysctl_reg_table)

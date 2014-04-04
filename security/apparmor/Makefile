@@ -8,7 +8,6 @@ apparmor-y := apparmorfs.o audit.o capability.o context.o ipc.o lib.o match.o \
 
 clean-files := capability_names.h rlim_names.h
 
-
 # Build a lower case string table of capability names
 # Transforms lines from
 #    #define CAP_DAC_OVERRIDE     1
@@ -19,7 +18,6 @@ cmd_make-caps = echo "static const char *capability_names[] = {" > $@ ;\
 	sed $< >>$@ -r -n -e '/CAP_FS_MASK/d' \
 	-e 's/^\#define[ \t]+CAP_([A-Z0-9_]+)[ \t]+([0-9]+)/[\2] = "\L\1",/p';\
 	echo "};" >> $@
-
 
 # Build a lower case string table of rlimit names.
 # Transforms lines from
@@ -34,7 +32,7 @@ cmd_make-caps = echo "static const char *capability_names[] = {" > $@ ;\
 # Transforms lines from
 #    #define RLIMIT_STACK		3	/* max stack size */
 # to
-# RLIMIT_STACK, 
+# RLIMIT_STACK,
 quiet_cmd_make-rlim = GEN     $@
 cmd_make-rlim = echo "static const char *rlim_names[] = {" > $@ ;\
 	sed $< >> $@ -r -n \

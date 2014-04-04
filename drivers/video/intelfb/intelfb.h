@@ -16,7 +16,6 @@
 #define INTELFB_MODULE_NAME		"intelfb"
 #define SUPPORTED_CHIPSETS		"830M/845G/852GM/855GM/865G/915G/915GM/945G/945GM/945GME/965G/965GM"
 
-
 /*** Debug/feature defines ***/
 
 #ifndef DEBUG
@@ -70,7 +69,6 @@
 #define STRIDE_ALIGNMENT_I9XX		64
 
 #define PALETTE_8_ENTRIES		256
-
 
 /*** Macros ***/
 

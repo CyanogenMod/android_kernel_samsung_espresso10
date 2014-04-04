@@ -746,7 +746,6 @@ static int dvb_init(struct cx231xx *dev)
 	if (result < 0)
 		goto out_free;
 
-
 	printk(KERN_INFO "Successfully loaded cx231xx-dvb\n");
 
 ret:

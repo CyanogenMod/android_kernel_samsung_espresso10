@@ -290,4 +290,3 @@ void omap_vout_new_format(struct v4l2_pix_format *pix,
 	win->w.top = ((fbuf->fmt.height - win->w.height) >> 1) & ~1;
 }
 EXPORT_SYMBOL_GPL(omap_vout_new_format);
-

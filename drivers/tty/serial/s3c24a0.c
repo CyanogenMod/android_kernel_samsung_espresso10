@@ -114,4 +114,3 @@ static void __exit s3c24a0_serial_exit(void)
 
 module_init(s3c24a0_serial_init);
 module_exit(s3c24a0_serial_exit);
-

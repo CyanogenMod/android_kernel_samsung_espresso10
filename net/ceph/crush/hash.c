@@ -1,4 +1,3 @@
-
 #include <linux/types.h>
 #include <linux/crush/hash.h>
 
@@ -86,7 +85,6 @@ static __u32 crush_hash32_rjenkins1_5(__u32 a, __u32 b, __u32 c, __u32 d,
 	crush_hashmix(y, e, hash);
 	return hash;
 }
-
 
 __u32 crush_hash32(int type, __u32 a)
 {

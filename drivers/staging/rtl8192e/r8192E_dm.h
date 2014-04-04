@@ -34,7 +34,6 @@
 
 #define		DM_check_fsync_time_interval				500
 
-
 #define		DM_DIG_BACKOFF				12
 #define		DM_DIG_MAX					0x36
 #define		DM_DIG_MIN					0x1c
@@ -105,7 +104,6 @@ typedef enum tag_dynamic_init_gain_state_definition
 	DM_STA_DIG_ON,
 	DM_STA_DIG_MAX
 }dm_dig_sta_e;
-
 
 /* 2007/10/08 MH Define RATR state. */
 typedef enum tag_dynamic_ratr_state_definition
@@ -208,7 +206,6 @@ typedef struct tag_Tx_Config_Cmd_Format
 	u32	Value;
 }DCMD_TXCMD_T, *PDCMD_TXCMD_T;
 
-
 extern dig_t dm_digtable;
 extern DRxPathSel DM_RxPathSelTable;
 
@@ -223,6 +220,4 @@ void dm_rf_pathcheck_workitemcallback(struct work_struct *work);
 void dm_initialize_txpower_tracking(struct r8192_priv *priv);
 void dm_cck_txpower_adjust(struct r8192_priv *priv, bool binch14);
 
-
 #endif	/*__R8192UDM_H__ */
-

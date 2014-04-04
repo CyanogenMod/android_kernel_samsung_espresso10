@@ -85,7 +85,6 @@
 #define OMAP343X_CTRL_REGADDR(reg) \
 	OMAP2_L4_IO_ADDRESS(OMAP343X_CTRL_BASE + (reg))
 
-
 /* Forward Declarations: */
 static int bridge_brd_monitor(struct bridge_dev_context *dev_ctxt);
 static int bridge_brd_read(struct bridge_dev_context *dev_ctxt,

@@ -38,7 +38,6 @@
 #include "hyperv.h"
 #include "hyperv_vmbus.h"
 
-
 static struct pci_dev *hv_pci_dev;
 
 static struct tasklet_struct msg_dpc;
@@ -232,7 +231,6 @@ static struct device_attribute vmbus_device_attrs[] = {
 	__ATTR_NULL
 };
 
-
 /*
  * vmbus_uevent - add uevent for our device
  *
@@ -292,7 +290,6 @@ static int vmbus_uevent(struct device *device, struct kobj_uevent_env *env)
 
 	return 0;
 }
-
 
 /*
  * vmbus_match - Attempt to match the specified device to the specified driver
@@ -360,7 +357,6 @@ static int vmbus_remove(struct device *child_device)
 	return 0;
 }
 
-
 /*
  * vmbus_shutdown - Shutdown a vmbus device
  */
@@ -368,7 +364,6 @@ static void vmbus_shutdown(struct device *child_device)
 {
 	struct hv_driver *drv;
 	struct hv_device *dev = device_to_hv_device(child_device);
-
 
 	/* The device may not be attached yet */
 	if (!child_device->driver)
@@ -381,7 +376,6 @@ static void vmbus_shutdown(struct device *child_device)
 
 	return;
 }
-
 
 /*
  * vmbus_device_release - Final callback release of the vmbus child device
@@ -406,7 +400,6 @@ static struct bus_type  hv_bus = {
 };
 
 static const char *driver_name = "hyperv";
-
 
 struct onmessage_work_context {
 	struct work_struct work;
@@ -498,7 +491,6 @@ static int vmbus_on_isr(void)
 	return ret;
 }
 
-
 static irqreturn_t vmbus_isr(int irq, void *dev_id)
 {
 	int ret;
@@ -580,7 +572,6 @@ static int vmbus_bus_init(struct pci_dev *pdev)
 		goto cleanup;
 	}
 
-
 	vmbus_request_offers();
 
 cleanup:
@@ -657,7 +648,6 @@ struct hv_device *vmbus_child_device_create(struct hv_guid *type,
 	memcpy(&child_device_obj->dev_instance, instance,
 	       sizeof(struct hv_guid));
 
-
 	return child_device_obj;
 }
 
@@ -709,7 +699,6 @@ void vmbus_child_device_unregister(struct hv_device *device_obj)
 	pr_info("child device %s unregistered\n",
 		dev_name(&device_obj->device));
 }
-
 
 /*
  * VMBUS is an acpi enumerated device. Get the the IRQ information
@@ -763,7 +752,6 @@ static int vmbus_acpi_init(void)
 {
 	int result;
 
-
 	result = acpi_bus_register_driver(&vmbus_acpi_driver);
 	if (result < 0)
 		return result;
@@ -777,7 +765,6 @@ static void vmbus_acpi_exit(void)
 
 	return;
 }
-
 
 static int __devinit hv_pci_probe(struct pci_dev *pdev,
 				const struct pci_device_id *ent)
@@ -861,7 +848,6 @@ static int __init hv_pci_init(void)
 		pci_unregister_driver(&hv_bus_driver);
 	return pci_probe_error;
 }
-
 
 MODULE_LICENSE("GPL");
 MODULE_VERSION(HV_DRV_VERSION);

@@ -158,7 +158,6 @@ static void __exit remove_legacy(void)
 }
 module_exit(remove_legacy);
 
-
 MODULE_AUTHOR("Trent Piepho <xyzzy@speakeasy.org>");
 MODULE_DESCRIPTION("Legacy version of the fakephp interface");
 MODULE_LICENSE("GPL");

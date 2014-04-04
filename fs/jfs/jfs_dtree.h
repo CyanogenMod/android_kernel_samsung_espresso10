@@ -33,7 +33,6 @@ typedef union {
 	pxd_t xd;
 } ddata_t;
 
-
 /*
  *	entry segment/slot
  *
@@ -49,7 +48,6 @@ struct dtslot {
 	s8 cnt;			/* 1: */
 	__le16 name[15];	/* 30: */
 };				/* (32) */
-
 
 #define DATASLOTSIZE	16
 #define L2DATASLOTSIZE	4
@@ -75,7 +73,6 @@ struct idtentry {
 
 /* compute number of slots for entry */
 #define	NDTINTERNAL(klen) (DIV_ROUND_UP((4 + (klen)), 15))
-
 
 /*
  *	leaf node entry head/only segment
@@ -136,7 +133,6 @@ struct dir_table_slot {
 #define	NDTLEAF_LEGACY(klen)	(DIV_ROUND_UP((2 + (klen)), 15))
 #define	NDTLEAF	NDTINTERNAL
 
-
 /*
  *	directory root page (in-line in on-disk inode):
  *
@@ -165,7 +161,6 @@ typedef union {
 #define DTROOTMAXSLOT	9
 
 #define	dtEmpty(IP) (JFS_IP(IP)->i_dtroot.header.nextindex == 0)
-
 
 /*
  *	directory regular page:

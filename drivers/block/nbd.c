@@ -3,7 +3,7 @@
  *
  * Note that you can not swap over this thing, yet. Seems to work but
  * deadlocks sometimes - you can not swap over TCP in general.
- * 
+ *
  * Copyright 1997-2000, 2008 Pavel Machek <pavel@ucw.cz>
  * Parts copyright 2001 Steven Whitehouse <steve@chygwyn.com>
  *
@@ -447,7 +447,6 @@ static void nbd_clear_que(struct nbd_device *lo)
 	}
 }
 
-
 static void nbd_handle_req(struct nbd_device *lo, struct request *req)
 {
 	if (req->cmd_type != REQ_TYPE_FS)
@@ -535,7 +534,7 @@ static int nbd_thread(void *data)
 static void do_nbd_request(struct request_queue *q)
 {
 	struct request *req;
-	
+
 	while ((req = blk_fetch_request(q)) != NULL) {
 		struct nbd_device *lo;
 
@@ -586,7 +585,7 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *lo,
 		nbd_send_req(lo, &sreq);
                 return 0;
 	}
- 
+
 	case NBD_CLEAR_SOCK: {
 		struct file *file;
 
@@ -658,7 +657,8 @@ static int __nbd_ioctl(struct block_device *bdev, struct nbd_device *lo,
 
 		mutex_unlock(&lo->tx_lock);
 
-		thread = kthread_create(nbd_thread, lo, lo->disk->disk_name);
+		thread = kthread_create(nbd_thread, lo, "%s",
+					lo->disk->disk_name);
 		if (IS_ERR(thread)) {
 			mutex_lock(&lo->tx_lock);
 			return PTR_ERR(thread);
@@ -732,7 +732,7 @@ static const struct block_device_operations nbd_fops =
 };
 
 /*
- * And here should be modules and kernel interface 
+ * And here should be modules and kernel interface
  *  (Just smiley confuses emacs :-)
  */
 

@@ -134,4 +134,3 @@ unsigned int rds_trans_stats_info_copy(struct rds_info_iterator *iter,
 
 	return total;
 }
-

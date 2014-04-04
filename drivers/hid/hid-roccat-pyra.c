@@ -325,7 +325,6 @@ static ssize_t pyra_sysfs_write_settings(struct file *fp,
 	return sizeof(struct pyra_settings);
 }
 
-
 static ssize_t pyra_sysfs_show_actual_cpi(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {

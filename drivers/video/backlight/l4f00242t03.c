@@ -30,7 +30,6 @@ struct l4f00242t03_priv {
 	struct regulator *core_reg;
 };
 
-
 static void l4f00242t03_reset(unsigned int gpio)
 {
 	pr_debug("l4f00242t03_reset.\n");

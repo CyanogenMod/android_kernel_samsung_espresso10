@@ -142,7 +142,6 @@ struct asic3_platform_data {
 #define ASIC3_GPIOD12_nCWAIT		ASIC3_CONFIG_GPIO(60, 1, 0, 0)
 #define ASIC3_GPIOD15_nPIOW		ASIC3_CONFIG_GPIO(63, 1, 0, 0)
 
-
 #define ASIC3_SPI_Base		      0x0400
 #define ASIC3_SPI_Control               0x0000
 #define ASIC3_SPI_TxData                0x0004
@@ -211,7 +210,6 @@ struct asic3_platform_data {
 /* R/W: INT clock source control (32.768 kHz) */
 #define CLOCK_SEL_CX            (1 << 2)
 
-
 #define ASIC3_INTR_BASE		0x0B00
 
 #define ASIC3_INTR_INT_MASK       0x00  /* Interrupt mask control */
@@ -241,7 +239,6 @@ struct asic3_platform_data {
 
 #define ASIC3_INTR_CPS(x)         ((x)&0x0f)    /* 4 bits, max 14 */
 #define ASIC3_INTR_CPS_SET        (1 << 4)    /* Time base enable */
-
 
 /* Basic control of the SD ASIC */
 #define ASIC3_SDHWCTRL_BASE     0x0E00

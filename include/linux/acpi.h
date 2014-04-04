@@ -69,7 +69,6 @@ enum acpi_address_range_id {
 	ACPI_ADDRESS_RANGE_COUNT
 };
 
-
 /* Table Handlers */
 
 typedef int (*acpi_table_handler) (struct acpi_table_header *table);

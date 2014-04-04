@@ -56,4 +56,3 @@ struct mpu_rate omap1_rate_table[] = {
 #endif
 	{ 0, 0, 0, 0, 0 },
 };
-

@@ -1,4 +1,3 @@
-
 Performance Counters for Linux
 ------------------------------
 
@@ -145,12 +144,10 @@ Counters of the type PERF_TYPE_TRACEPOINT are available when the ftrace event
 tracer is available, and event_id values can be obtained from
 /debug/tracing/events/*/*/id
 
-
 Counters come in two flavours: counting counters and sampling
 counters.  A "counting" counter is one that is used for counting the
 number of events that occur, and is characterised by having
 irq_period = 0.
-
 
 A read() on a counter returns the current value of the counter and possible
 additional values as specified by 'read_format', each value is a u64 (8 bytes)
@@ -169,7 +166,6 @@ enum perf_event_read_format {
 Using these additional values one can establish the overcommit ratio for a
 particular counter allowing one to take the round-robin scheduling effect
 into account.
-
 
 A "sampling" counter is one that is set up to generate an interrupt
 every N events, where N is given by 'irq_period'.  A sampling counter
@@ -272,7 +268,6 @@ put onto the CPU.  This means that the values of the member counters
 can be meaningfully compared, added, divided (to get ratios), etc.,
 with each other, since they have counted events for the same set of
 executed instructions.
-
 
 Like stated, asynchronous events, like counter overflow or PROT_EXEC mmap
 tracking are logged into a ring-buffer. This ring-buffer is created and
@@ -404,7 +399,6 @@ so many counter overflow events.
 
 Future work will include a splice() interface to the ring-buffer.
 
-
 Counters can be enabled and disabled in two ways: via ioctl and via
 prctl.  When a counter is disabled, it doesn't count or generate
 events but does continue to exist and maintain its count value.
@@ -441,7 +435,6 @@ This applies to all counters on the current process, whether created
 by this process or by another, and doesn't affect any counters that
 this process has created on other processes.  It only enables or
 disables the group leaders, not any other members in the groups.
-
 
 Arch requirements
 -----------------

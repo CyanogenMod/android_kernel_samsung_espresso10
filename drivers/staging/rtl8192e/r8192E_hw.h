@@ -64,11 +64,8 @@ typedef enum _BaseBand_Config_Type{
 
 #define EEPROM_TxPowerDiff	0x1F
 
-
 #define EEPROM_PwDiff		0x21	//0x21
 #define EEPROM_CrystalCap	0x22	//0x22
-
-
 
 #define EEPROM_TxPwIndex_CCK_V1		0x29	//0x29~0x2B
 #define EEPROM_TxPwIndex_OFDM_24G_V1	0x2C	//0x2C~0x2E
@@ -468,7 +465,6 @@ enum _RTL8192Pci_HW {
 									RATR_MCS4|RATR_MCS5|RATR_MCS6	|RATR_MCS7
 #define RATE_ALL_OFDM_2SS	RATR_MCS8|RATR_MCS9	|RATR_MCS10|RATR_MCS11| \
 									RATR_MCS12|RATR_MCS13|RATR_MCS14|RATR_MCS15
-
 
 	DRIVER_RSSI		= 0x32c,	// Driver tell Firmware current RSSI
 	MCS_TXAGC		= 0x340, // MCS AGC

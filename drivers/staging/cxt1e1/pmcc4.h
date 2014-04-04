@@ -42,7 +42,6 @@
  *-----------------------------------------------------------------------------
  */
 
-
 #if defined(__FreeBSD__) || defined(__NetBSD__)
 #include <sys/types.h>
 #else
@@ -53,8 +52,6 @@
 #endif
 #endif
 
-
-
 typedef int status_t;
 
 #define SBE_DRVR_FAIL     0
@@ -64,7 +61,6 @@ typedef int status_t;
 extern      "C"
 {
 #endif
-
 
 /********************/
 /* PMCC4 memory Map */

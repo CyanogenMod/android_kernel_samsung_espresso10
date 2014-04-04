@@ -59,8 +59,6 @@ static inline void netpoll_send_skb(struct netpoll *np, struct sk_buff *skb)
 	netpoll_send_skb_on_dev(np, skb, np->dev);
 }
 
-
-
 #ifdef CONFIG_NETPOLL
 static inline bool netpoll_rx(struct sk_buff *skb)
 {

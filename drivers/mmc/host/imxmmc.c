@@ -359,7 +359,6 @@ static void imxmci_start_cmd(struct imxmci_host *host, struct mmc_command *cmd, 
 	atomic_set(&host->stuck_timeout, 0);
 	set_bit(IMXMCI_PEND_WAIT_RESP_b, &host->pending_events);
 
-
 	imask = IMXMCI_INT_MASK_DEFAULT;
 	imask &= ~INT_MASK_END_CMD_RES;
 	if (cmdat & CMD_DAT_CONT_DATA_ENABLE) {
@@ -899,7 +898,6 @@ static int imxmci_get_ro(struct mmc_host *mmc)
 	 */
 	return -ENOSYS;
 }
-
 
 static const struct mmc_host_ops imxmci_ops = {
 	.request	= imxmci_request,

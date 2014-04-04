@@ -39,7 +39,6 @@ static inline u32 __dcc_getstatus(void)
 	return __ret;
 }
 
-
 static inline char __dcc_getchar(void)
 {
 	char __c;

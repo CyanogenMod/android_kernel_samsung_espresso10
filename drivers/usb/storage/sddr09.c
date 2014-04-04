@@ -61,7 +61,6 @@ static int usb_stor_sddr09_dpcm_init(struct us_data *us);
 static int sddr09_transport(struct scsi_cmnd *srb, struct us_data *us);
 static int usb_stor_sddr09_init(struct us_data *us);
 
-
 /*
  * The table of devices
  */
@@ -99,7 +98,6 @@ static struct us_unusual_dev sddr09_unusual_dev_list[] = {
 };
 
 #undef UNUSUAL_DEV
-
 
 #define short_pack(lsb,msb) ( ((u16)(lsb)) | ( ((u16)(msb))<<8 ) )
 #define LSB_of(s) ((s)&0xFF)
@@ -410,9 +408,9 @@ sddr09_readX(struct us_data *us, int x, unsigned long fromaddress,
 	command[0] = 0xE8;
 	command[1] = LUNBITS | x;
 	command[2] = MSB_of(fromaddress>>16);
-	command[3] = LSB_of(fromaddress>>16); 
+	command[3] = LSB_of(fromaddress>>16);
 	command[4] = MSB_of(fromaddress & 0xFFFF);
-	command[5] = LSB_of(fromaddress & 0xFFFF); 
+	command[5] = LSB_of(fromaddress & 0xFFFF);
 	command[6] = 0;
 	command[7] = 0;
 	command[8] = 0;
@@ -528,7 +526,7 @@ sddr09_read23(struct us_data *us, unsigned long fromaddress,
  * Erase Command: 12 bytes.
  * byte 0: opcode: EA
  * bytes 6-9: erase address (big-endian, counting shorts, sector aligned).
- * 
+ *
  * Always precisely one block is erased; bytes 2-5 and 10-11 are ignored.
  * The byte address being erased is 2*Eaddress.
  * The CIS cannot be erased.
@@ -815,7 +813,7 @@ sddr09_read_data(struct us_data *us,
 				  " (LBA %d) page %d\n",
 				  pages, pba, lba, page);
 
-			address = ((pba << info->blockshift) + page) << 
+			address = ((pba << info->blockshift) + page) <<
 				info->pageshift;
 
 			result = sddr09_read20(us, address>>1,
@@ -1447,7 +1445,6 @@ sddr09_common_init(struct us_data *us) {
 	return 0;
 }
 
-
 /*
  * This is needed at a very early stage. If this is not listed in the
  * unusual devices list but called from here then LUN 0 of the combo reader
@@ -1540,7 +1537,6 @@ static int dpcm_transport(struct scsi_cmnd *srb, struct us_data *us)
 	}
 	return ret;
 }
-
 
 /*
  * Transport for the Sandisk SDDR-09
@@ -1736,7 +1732,7 @@ static int sddr09_transport(struct scsi_cmnd *srb, struct us_data *us)
 
 		return (result == USB_STOR_XFER_GOOD ?
 			USB_STOR_TRANSPORT_GOOD : USB_STOR_TRANSPORT_ERROR);
-	} 
+	}
 
 	return USB_STOR_TRANSPORT_GOOD;
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000, 2001, 2002 Jeff Dike (jdike@karaya.com)
  * Copyright 2003 PathScale, Inc.
  * Derived from include/asm-i386/pgalloc.h and include/asm-i386/pgtable.h
@@ -59,4 +59,3 @@ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
 #define check_pgt_cache()	do { } while (0)
 
 #endif
-

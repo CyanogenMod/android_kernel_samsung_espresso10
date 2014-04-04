@@ -126,7 +126,6 @@ static void mmtimer_setup_int_0(int cpu, u64 expires)
 	/* Initialize comparator value */
 	HUB_S((u64 *)LOCAL_MMR_ADDR(SH_INT_CMPB), expires);
 
-
 }
 
 /* Setup timer on comparator RTC2 */
@@ -671,7 +670,6 @@ static void sgi_timer_get(struct k_itimer *timr, struct itimerspec *cur_setting)
 	cur_setting->it_interval = ns_to_timespec(timr->it.mmtimer.incr * sgi_clock_period);
 	cur_setting->it_value = ns_to_timespec((timr->it.mmtimer.expires - rtc_time()) * sgi_clock_period);
 }
-
 
 static int sgi_timer_set(struct k_itimer *timr, int flags,
 	struct itimerspec * new_setting,

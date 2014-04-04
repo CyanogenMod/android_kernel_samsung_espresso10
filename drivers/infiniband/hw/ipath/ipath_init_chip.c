@@ -605,7 +605,6 @@ static int init_housekeeping(struct ipath_devdata *dd, int reinit)
 		goto done;
 	}
 
-
 	/* clear diagctrl register, in case diags were running and crashed */
 	ipath_write_kreg (dd, dd->ipath_kregs->kr_hwdiagctrl, 0);
 

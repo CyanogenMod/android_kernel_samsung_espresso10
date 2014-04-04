@@ -34,7 +34,6 @@
 #include "b43.h"
 #include "main.h"
 
-
 int b43_phy_allocate(struct b43_wldev *dev)
 {
 	struct b43_phy *phy = &(dev->phy);
@@ -428,7 +427,6 @@ void b43_phyop_switch_analog_generic(struct b43_wldev *dev, bool on)
 {
 	b43_write16(dev, B43_MMIO_PHY0, on ? 0 : 0xF4);
 }
-
 
 bool b43_channel_type_is_40mhz(enum nl80211_channel_type channel_type)
 {

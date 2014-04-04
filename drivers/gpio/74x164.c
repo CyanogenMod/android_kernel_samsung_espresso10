@@ -18,7 +18,6 @@
 
 #define GEN_74X164_GPIO_COUNT	8
 
-
 struct gen_74x164_chip {
 	struct spi_device	*spi;
 	struct gpio_chip	gpio_chip;

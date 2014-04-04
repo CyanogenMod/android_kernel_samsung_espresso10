@@ -72,7 +72,6 @@ int kvm_iommu_map_pages(struct kvm *kvm, struct kvm_memory_slot *slot)
 	if (kvm->arch.iommu_flags & KVM_IOMMU_CACHE_COHERENCY)
 		flags |= IOMMU_CACHE;
 
-
 	while (gfn < end_gfn) {
 		unsigned long page_size;
 
@@ -113,7 +112,6 @@ int kvm_iommu_map_pages(struct kvm *kvm, struct kvm_memory_slot *slot)
 		}
 
 		gfn += page_size >> PAGE_SHIFT;
-
 
 	}
 

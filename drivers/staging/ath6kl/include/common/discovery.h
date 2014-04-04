@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="discovery.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -66,7 +66,7 @@ typedef enum {
 typedef enum {
     DC_IGNORE_WPAx_GROUP_CIPHER = 0x01,
     DC_PROFILE_MATCH_DONE = 0x02,
-    DC_IGNORE_AAC_BEACON = 0x04, 
+    DC_IGNORE_AAC_BEACON = 0x04,
     DC_CSA_FOLLOW_BSS = 0x08,
 } DC_PROFILE_FILTER;
 

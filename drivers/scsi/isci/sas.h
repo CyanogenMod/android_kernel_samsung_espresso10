@@ -109,7 +109,6 @@ struct ssp_task_iu {
 	u8 _r_c[12];
 }  __packed;
 
-
 /*
  * struct smp_req_phy_id - This structure defines the contents of
  *    an SMP Request that is comprised of the struct smp_request_header and a

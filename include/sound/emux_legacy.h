@@ -51,7 +51,6 @@
 #define _EMUX_OSS_COOKED_FLAG		0x40	/* not supported */
 #define _EMUX_OSS_MODE_VALUE_MASK	0x3F
 
-
 /*
  * mode type definitions
  */
@@ -80,7 +79,6 @@ enum {
 	EMUX_MD_END,
 };
 
-
 /*
  * effect parameters
  */
@@ -103,7 +101,7 @@ enum {
 /*11*/	EMUX_FX_ENV2_DECAY,	/* BYTE: lw DCYSUSV */
 /*12*/	EMUX_FX_ENV2_RELEASE,	/* BYTE: lw DCYSUSV */
 /*13*/	EMUX_FX_ENV2_SUSTAIN,	/* BYTE: up DCYSUSV */
-	
+
 /* LFO1 (tremolo & vibrato) parameters */
 /*14*/	EMUX_FX_LFO1_DELAY,	/* WORD: LFO1VAL */
 /*15*/	EMUX_FX_LFO1_FREQ,	/* BYTE: lo TREMFRQ */
@@ -141,6 +139,5 @@ enum {
 #define EMUX_FX_FLAG_OFF	0
 #define EMUX_FX_FLAG_SET	1
 #define EMUX_FX_FLAG_ADD	2
-
 
 #endif /* __SOUND_EMUX_LEGACY_H */

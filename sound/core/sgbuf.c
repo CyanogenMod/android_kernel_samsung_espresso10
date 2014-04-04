@@ -24,7 +24,6 @@
 #include <linux/vmalloc.h>
 #include <sound/memalloc.h>
 
-
 /* table entries are align to 32 */
 #define SGBUF_TBL_ALIGN		32
 #define sgbuf_align_table(tbl)	ALIGN((tbl), SGBUF_TBL_ALIGN)
@@ -57,7 +56,7 @@ int snd_free_sgbuf_pages(struct snd_dma_buffer *dmab)
 	kfree(sgbuf->page_table);
 	kfree(sgbuf);
 	dmab->private_data = NULL;
-	
+
 	return 0;
 }
 

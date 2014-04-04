@@ -126,4 +126,3 @@ module_exit(bf5xx_ad1836_exit);
 MODULE_AUTHOR("Barry Song");
 MODULE_DESCRIPTION("ALSA SoC AD1836 board driver");
 MODULE_LICENSE("GPL");
-

@@ -430,7 +430,6 @@ static ssize_t sysfs_show_reg(struct device *dev,
 			test_bit(DPOT_RDAC_MASK & reg, data->otp_en_mask) ?
 			"enabled" : "disabled");
 
-
 	mutex_lock(&data->update_lock);
 	value = dpot_read(data, reg);
 	mutex_unlock(&data->update_lock);
@@ -764,7 +763,6 @@ __devexit int ad_dpot_remove(struct device *dev)
 	return 0;
 }
 EXPORT_SYMBOL(ad_dpot_remove);
-
 
 MODULE_AUTHOR("Chris Verges <chrisv@cyberswitching.com>, "
 	      "Michael Hennerich <hennerich@blackfin.uclinux.org>");

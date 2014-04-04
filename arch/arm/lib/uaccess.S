@@ -451,7 +451,6 @@ USER(		T(ldr)	r7, [r1], #4)			@ May fault
 		subs	ip, ip, #16
 		blt	.Lcfu_2rem8lp
 
-
 .Lcfu_2cpy8lp:	mov	r3, r7, pull #16
 		ldmia	r1!, {r4 - r7}			@ Shouldnt fault
 		subs	ip, ip, #16
@@ -561,4 +560,3 @@ ENDPROC(__copy_from_user)
 		mov	r0, r4
 		ldmfd	sp!, {r4 - r7, pc}
 		.popsection
-

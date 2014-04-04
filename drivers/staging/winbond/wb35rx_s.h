@@ -11,7 +11,6 @@
 #define MAX_PACKET_SIZE				1600 //1568	// 8 + 1532 + 4 + 24(IV EIV MIC ICV CRC) for check DMA data 931130.4.g
 #define RX_END_TAG					0x0badbeef
 
-
 //====================================
 // Internal variable for module
 //====================================

@@ -53,7 +53,6 @@ struct c2_buf_list {
 	DEFINE_DMA_UNMAP_ADDR(mapping);
 };
 
-
 /* The user context keeps track of objects allocated for a
  * particular user-mode client. */
 struct c2_ucontext {
@@ -143,7 +142,6 @@ static inline struct c2_mr *to_c2mr(struct ib_mr *ibmr)
 {
 	return container_of(ibmr, struct c2_mr, ibmr);
 }
-
 
 static inline struct c2_ah *to_c2ah(struct ib_ah *ibah)
 {

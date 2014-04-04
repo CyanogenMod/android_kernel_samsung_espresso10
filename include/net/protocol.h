@@ -20,7 +20,7 @@
  *		Alan Cox	:	Cleaned up, and sorted types.
  *		Pedro Roque	:	inet6 protocols
  */
- 
+
 #ifndef _PROTOCOL_H
 #define _PROTOCOL_H
 
@@ -30,7 +30,6 @@
 #endif
 
 #define MAX_INET_PROTOS	256		/* Must be a power of 2		*/
-
 
 /* This is used to register protocols. */
 struct net_protocol {
@@ -81,7 +80,7 @@ struct inet_protosw {
 
 	struct proto	 *prot;
 	const struct proto_ops *ops;
-  
+
 	char             no_check;   /* checksum on rcv/xmit/none? */
 	unsigned char	 flags;      /* See INET_PROTOSW_* below.  */
 };

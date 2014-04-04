@@ -34,7 +34,6 @@
 #include "prm.h"
 
 #ifdef CONFIG_CPU_IDLE
-
 /* C1 is a single-cpu C-state, it can be entered by each cpu independently */
 /* C1 - CPUx WFI + MPU ON + CORE ON */
 #define OMAP4_STATE_C1		0
@@ -110,6 +109,9 @@ static struct clockdomain *cpu1_cd;
  * C4		769		1323
  */
 
+#if defined (CONFIG_MACH_SAMSUNG_ESPRESSO) \
+	|| defined (CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
 static struct cpuidle_params cpuidle_params_table[] = {
 	/* C1 - CPUx WFI + MPU ON  + CORE ON */
 	{.exit_latency = 2 + 2,	.target_residency = 4, .valid = 1},
@@ -124,6 +126,37 @@ static struct cpuidle_params cpuidle_params_table[] = {
 	{.exit_latency = 1200, .target_residency = 35000, .valid = 0},
 #endif
 };
+#else	/* SAMSUGN_ESPRESSO */
+static __initdata struct cpuidle_params omap446x_cpuidle_params_table[] = {
+	/* C1 - CPUx WFI + MPU ON  + CORE ON */
+	{.exit_latency = 2 + 2,	.target_residency = 4, .valid = 1},
+	/* C2 - CPU0 INA + CPU1 INA + MPU INA  + CORE INA */
+	{.exit_latency = 300, .target_residency = 1800, .valid = 1},
+	/* C3 - CPU0 OFF + CPU1 OFF + MPU CSWR + CORE CSWR */
+	{.exit_latency = 1000, .target_residency = 4000, .valid = 1},
+#ifdef CONFIG_OMAP_ALLOW_OSWR
+	/* C4 - CPU0 OFF + CPU1 OFF + MPU CSWR + CORE OSWR */
+	{.exit_latency = 1200, .target_residency = 8000, .valid = 1},
+#else
+	{.exit_latency = 1200, .target_residency = 8000, .valid = 0},
+#endif
+};
+
+static __initdata struct cpuidle_params omap447x_cpuidle_params_table[] = {
+	/* C1 - CPUx WFI + MPU ON  + CORE ON */
+	{.exit_latency = 2 + 2,	.target_residency = 4, .valid = 1},
+	/* C2 - CPU0 INA + CPU1 INA + MPU INA  + CORE INA */
+	{.exit_latency = 300, .target_residency = 1200, .valid = 1},
+	/* C3 - CPU0 OFF + CPU1 OFF + MPU CSWR + CORE CSWR */
+	{.exit_latency = 1300, .target_residency = 3000, .valid = 1},
+#ifdef CONFIG_OMAP_ALLOW_OSWR
+	/* C4 - CPU0 OFF + CPU1 OFF + MPU CSWR + CORE OSWR */
+	{.exit_latency = 1500, .target_residency = 15000, .valid = 1},
+#else
+	{.exit_latency = 1500, .target_residency = 15000, .valid = 0},
+#endif
+};
+#endif	/* SAMSUGN_ESPRESSO */
 
 static void omap4_update_actual_state(struct cpuidle_device *dev,
 	struct omap4_processor_cx *cx)
@@ -327,14 +360,10 @@ static void omap4_enter_idle_primary(struct omap4_processor_cx *cx)
 		omap_set_pwrdm_state(core_pd, cx->core_state);
 	}
 
-	pr_debug("%s: cpu0 down\n", __func__);
-
 	if (cx->type == OMAP4_STATE_C2)
 		omap4_enter_sleep(0, PWRDM_POWER_INACTIVE, false);
 	else
 		omap4_enter_sleep(0, PWRDM_POWER_OFF, false);
-
-	pr_debug("%s: cpu0 up\n", __func__);
 
 	/* restore the MPU and CORE states to ON */
 	omap_set_pwrdm_state(mpu_pd, PWRDM_POWER_ON);
@@ -383,7 +412,6 @@ static void omap4_enter_idle_secondary(int cpu)
 
 	cpu_pm_enter();
 
-	pr_debug("%s: cpu1 down\n", __func__);
 	flush_cache_all();
 	dsb();
 
@@ -396,8 +424,6 @@ static void omap4_enter_idle_secondary(int cpu)
 
 	omap_wakeupgen_irqmask_all(cpu, 0);
 	gic_cpu_enable();
-
-	pr_debug("%s: cpu1 up\n", __func__);
 
 	cpu_pm_exit();
 
@@ -424,8 +450,7 @@ static int omap4_enter_idle(struct cpuidle_device *dev,
 	int cpu = dev->cpu;
 
 	/*
-	 * If disallow_smp_idle is set, revert to the old hotplug governor
-	 * behavior
+	 * If disallow_smp_idle is set, revert to the old hotplug governor behavior
 	 */
 	if (dev->cpu != 0 && disallow_smp_idle)
 		return omap4_enter_idle_wfi(dev, state);
@@ -513,9 +538,6 @@ static int omap4_enter_idle(struct cpuidle_device *dev,
 
 		if (omap4_idle_ready_count != num_online_cpus() ||
 		    !omap4_all_cpus_idle()) {
-			pr_debug("%s: cpu1 aborted: %d %p\n", __func__,
-				omap4_idle_ready_count,
-				omap4_idle_requested_cx[1]);
 			omap4_idle_ready_count = 0;
 			omap4_cpu_update_state(cpu, NULL);
 			spin_unlock(&omap4_idle_lock);
@@ -542,15 +564,11 @@ static int omap4_enter_idle(struct cpuidle_device *dev,
 		}
 
 		if (!omap4_all_cpus_idle()) {
-			pr_debug("%s: cpu0 aborted: %d %p\n", __func__,
-				omap4_idle_ready_count,
-				omap4_idle_requested_cx[0]);
 			omap4_cpu_update_state(cpu, NULL);
 			spin_unlock(&omap4_idle_lock);
 			goto out;
 		}
 
-		pr_debug("%s: cpu1 acks\n", __func__);
 		/* ack shared-OFF */
 		if (omap4_idle_ready_count > 0)
 			omap4_idle_ready_count++;
@@ -564,16 +582,12 @@ static int omap4_enter_idle(struct cpuidle_device *dev,
 		}
 
 		if (omap4_idle_ready_count == 0) {
-			pr_debug("%s: cpu0 aborted: %d %p\n", __func__,
-				omap4_idle_ready_count,
-				omap4_idle_requested_cx[0]);
 			omap4_cpu_update_state(cpu, NULL);
 			spin_unlock(&omap4_idle_lock);
 			goto out;
 		}
 
 		/* cpu1 can no longer abort shared-OFF */
-
 		actual_cx = omap4_get_idle_state();
 		spin_unlock(&omap4_idle_lock);
 
@@ -590,7 +604,6 @@ static int omap4_enter_idle(struct cpuidle_device *dev,
 
 out:
 	postidle = ktime_get();
-
 	omap4_update_actual_state(dev, actual_cx);
 
 	local_irq_enable();
@@ -607,7 +620,15 @@ DEFINE_PER_CPU(struct cpuidle_device, omap4_idle_dev);
  * Below is the desciption of each C state.
  * C1 : CPUx wfi + MPU inative + Core inactive
  */
+
+#if defined (CONFIG_MACH_SAMSUNG_ESPRESSO) \
+	|| defined (CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
 void omap4_init_power_states(void)
+#else
+void omap4_init_power_states(
+	const struct cpuidle_params *cpuidle_params_table)
+#endif
 {
 	/*
 	 * C1 - CPU0 WFI + CPU1 OFF + MPU ON + CORE ON
@@ -667,8 +688,7 @@ void omap4_init_power_states(void)
 	omap4_power_states[OMAP4_STATE_C4].mpu_logic_state = PWRDM_POWER_RET;
 	omap4_power_states[OMAP4_STATE_C4].core_state = PWRDM_POWER_RET;
 	omap4_power_states[OMAP4_STATE_C4].core_logic_state = PWRDM_POWER_OFF;
-	omap4_power_states[OMAP4_STATE_C4].desc =
-		"CPUs OFF, MPU CSWR + CORE OSWR";
+	omap4_power_states[OMAP4_STATE_C4].desc = "CPUs OFF, MPU CSWR + CORE OSWR";
 
 }
 
@@ -689,6 +709,11 @@ int __init omap4_idle_init(void)
 	struct omap4_processor_cx *cx;
 	struct cpuidle_state *state;
 	struct cpuidle_device *dev;
+#if defined (CONFIG_MACH_SAMSUNG_ESPRESSO) \
+	|| defined (CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
+	const struct cpuidle_params *idle_params;
+#endif
 
 	mpu_pd = pwrdm_lookup("mpu_pwrdm");
 	BUG_ON(!mpu_pd);
@@ -699,7 +724,19 @@ int __init omap4_idle_init(void)
 	core_pd = pwrdm_lookup("core_pwrdm");
 	BUG_ON(!core_pd);
 
+#if defined (CONFIG_MACH_SAMSUNG_ESPRESSO) \
+	|| defined (CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
 	omap4_init_power_states();
+#else
+	if (cpu_is_omap446x())
+		idle_params = omap446x_cpuidle_params_table;
+	else
+		idle_params = omap447x_cpuidle_params_table;
+
+	omap4_init_power_states(idle_params);
+#endif
+
 	cpuidle_register_driver(&omap4_idle_driver);
 
 	for_each_possible_cpu(cpu_id) {

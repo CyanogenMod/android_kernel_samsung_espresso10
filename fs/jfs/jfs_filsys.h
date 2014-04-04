@@ -263,7 +263,6 @@
 #define JFS_NAME_MAX	255
 #define JFS_PATH_MAX	BPSIZE
 
-
 /*
  *	file system state (superblock state)
  */

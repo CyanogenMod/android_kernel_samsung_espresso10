@@ -37,7 +37,6 @@ static int do_unlink_socket(struct notifier_block *notifier,
 	return mconsole_unlink_socket();
 }
 
-
 static struct notifier_block reboot_notifier = {
 	.notifier_call		= do_unlink_socket,
 	.priority		= 0,

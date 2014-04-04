@@ -856,7 +856,6 @@ static void atkbd_cleanup(struct serio *serio)
 	ps2_command(&atkbd->ps2dev, NULL, ATKBD_CMD_RESET_DEF);
 }
 
-
 /*
  * atkbd_disconnect() closes and frees.
  */
@@ -1380,7 +1379,6 @@ static ssize_t atkbd_set_force_release(struct atkbd *atkbd,
 	return count;
 }
 
-
 static ssize_t atkbd_show_scroll(struct atkbd *atkbd, char *buf)
 {
 	return sprintf(buf, "%d\n", atkbd->scroll ? 1 : 0);
@@ -1524,7 +1522,6 @@ static ssize_t atkbd_set_softrepeat(struct atkbd *atkbd, const char *buf, size_t
 	}
 	return count;
 }
-
 
 static ssize_t atkbd_show_softraw(struct atkbd *atkbd, char *buf)
 {

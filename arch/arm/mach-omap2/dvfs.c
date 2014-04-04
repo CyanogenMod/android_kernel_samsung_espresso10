@@ -486,7 +486,6 @@ static int _remove_freq_request(struct omap_vdd_dvfs_info *dvfs_info,
 		return -EINVAL;
 	}
 
-
 	list_for_each_entry(temp_dev, &dvfs_info->dev_list, node) {
 		if (temp_dev->dev == target_dev)
 			break;

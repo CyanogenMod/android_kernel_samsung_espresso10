@@ -232,7 +232,6 @@ static int wm8776_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	}
 
-
 	/* Set word length */
 	switch (params_format(params)) {
 	case SNDRV_PCM_FORMAT_S16_LE:
@@ -323,7 +322,6 @@ static int wm8776_set_bias_level(struct snd_soc_codec *codec,
 #define WM8776_RATES (SNDRV_PCM_RATE_32000 | SNDRV_PCM_RATE_44100 |\
 		      SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_88200 |\
 		      SNDRV_PCM_RATE_96000)
-
 
 #define WM8776_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
 			SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)

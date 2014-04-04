@@ -177,7 +177,6 @@ int sas_notify_lldd_dev_found(struct domain_device *dev)
 	return res;
 }
 
-
 void sas_notify_lldd_dev_gone(struct domain_device *dev)
 {
 	struct sas_ha_struct *sas_ha = dev->port->ha;
@@ -189,7 +188,6 @@ void sas_notify_lldd_dev_gone(struct domain_device *dev)
 }
 
 /* ---------- Common/dispatchers ---------- */
-
 
 /**
  * sas_discover_end_dev -- discover an end device (SSP, etc)

@@ -52,7 +52,6 @@ static struct fb_ops cg3_ops = {
 #endif
 };
 
-
 /* Control Register Constants */
 #define CG3_CR_ENABLE_INTS      0x80
 #define CG3_CR_ENABLE_VIDEO     0x40

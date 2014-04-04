@@ -255,4 +255,3 @@ static void __exit nokia_cleanup(void)
 	usb_composite_unregister(&nokia_driver);
 }
 module_exit(nokia_cleanup);
-

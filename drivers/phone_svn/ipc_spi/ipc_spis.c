@@ -225,14 +225,12 @@ static ssize_t show_debug(struct device *d,
 	return p - buf;
 }
 
-
 #ifdef CONFIG_FEATURE_SAMSUNG_SPI
 void *ipc_spi_get_queue_buff(void)
 {
 	return (void *)p_virtual_buff;
 }
 #endif
-
 
 static DEVICE_ATTR(debug, S_IRUGO, show_debug, NULL);
 
@@ -502,7 +500,6 @@ void onedram_get_vbase(void **vbase)
 	*vbase = (void *)ipc_spi->mmio;
 }
 EXPORT_SYMBOL(onedram_get_vbase);
-
 
 static int ipc_spi_irq_log_flag;
 /* SRDY Rising EDGE ISR */
@@ -1938,7 +1935,6 @@ int encode_msg(struct sprd_image_buf *img, int bcrc)
 	default:
 		*(dest_ptr + dest_len++) = low_crc;
 	}
-
 
 	*(dest_ptr + dest_len++) = HDLC_FLAG;
 

@@ -50,7 +50,6 @@
  * 4) AFAICT, hardware flow control isn't supported by the controller --MAG.
  */
 
-
 #if defined(CONFIG_SERIAL_MPSC_CONSOLE) && defined(CONFIG_MAGIC_SYSRQ)
 #define SUPPORT_SYSRQ
 #endif
@@ -1643,7 +1642,6 @@ static int mpsc_get_poll_char(struct uart_port *port)
 
 	return 0;
 }
-
 
 static void mpsc_put_poll_char(struct uart_port *port,
 			 unsigned char c)

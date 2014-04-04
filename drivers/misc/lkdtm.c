@@ -227,7 +227,6 @@ static const char *cp_name_to_str(enum cname name)
 	return cp_name[name - 1];
 }
 
-
 static int lkdtm_parse_commandline(void)
 {
 	int i;
@@ -490,7 +489,6 @@ static int lkdtm_debugfs_open(struct inode *inode, struct file *file)
 {
 	return 0;
 }
-
 
 static ssize_t int_hardware_entry(struct file *f, const char __user *buf,
 		size_t count, loff_t *off)

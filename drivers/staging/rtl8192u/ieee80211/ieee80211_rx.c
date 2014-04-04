@@ -20,7 +20,6 @@
 
 ******************************************************************************/
 
-
 #include <linux/compiler.h>
 //#include <linux/config.h>
 #include <linux/errno.h>
@@ -61,7 +60,6 @@ static inline void ieee80211_monitor_rx(struct ieee80211_device *ieee,
 	memset(skb->cb, 0, sizeof(skb->cb));
 	netif_rx(skb);
 }
-
 
 /* Called only as a tasklet (software IRQ) */
 static struct ieee80211_frag_entry *
@@ -162,7 +160,6 @@ ieee80211_frag_cache_get(struct ieee80211_device *ieee,
 	return skb;
 }
 
-
 /* Called only as a tasklet (software IRQ) */
 static int ieee80211_frag_cache_invalidate(struct ieee80211_device *ieee,
 					   struct ieee80211_hdr_4addr *hdr)
@@ -202,8 +199,6 @@ static int ieee80211_frag_cache_invalidate(struct ieee80211_device *ieee,
 	entry->skb = NULL;
 	return 0;
 }
-
-
 
 /* ieee80211_rx_frame_mgtmt
  *
@@ -282,8 +277,6 @@ ieee80211_rx_frame_mgmt(struct ieee80211_device *ieee, struct sk_buff *skb,
 	return -1;
 	#endif
 }
-
-
 
 /* See IEEE 802.1H for LLC/SNAP encapsulation/decapsulation */
 /* Ethernet-II snap header (RFC1042 for most EtherTypes) */
@@ -383,7 +376,6 @@ ieee80211_rx_frame_decrypt(struct ieee80211_device* ieee, struct sk_buff *skb,
 	return res;
 }
 
-
 /* Called only as a tasklet (software IRQ), by ieee80211_rx */
 static inline int
 ieee80211_rx_frame_decrypt_msdu(struct ieee80211_device* ieee, struct sk_buff *skb,
@@ -416,7 +408,6 @@ ieee80211_rx_frame_decrypt_msdu(struct ieee80211_device* ieee, struct sk_buff *s
 	return 0;
 }
 
-
 /* this function is stolen from ipw2200 driver*/
 #define IEEE_PACKET_RETRY_TIME (5*HZ)
 static int is_duplicate_packet(struct ieee80211_device *ieee,
@@ -431,7 +422,6 @@ static int is_duplicate_packet(struct ieee80211_device *ieee,
 	struct ieee80211_hdr_3addrqos *hdr_3addrqos;
 	struct ieee80211_hdr_4addrqos *hdr_4addrqos;
 	u8 tid;
-
 
 	//TO2DS and QoS
 	if(((fc & IEEE80211_FCTL_DSTODS) == IEEE80211_FCTL_DSTODS)&&IEEE80211_QOS_HAS_SEQ(fc)) {
@@ -601,7 +591,6 @@ void ieee80211_indicate_packets(struct ieee80211_device *ieee, struct ieee80211_
 		prxb = NULL;
 	}
 }
-
 
 void RxReorderIndicatePacket( struct ieee80211_device *ieee,
 		struct ieee80211_rxb* prxb,
@@ -1064,7 +1053,6 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 	}
 	if (type == IEEE80211_FTYPE_MGMT) {
 
-
 	//IEEE80211_DEBUG_DATA(IEEE80211_DL_DATA, skb->data, skb->len);
 		if (ieee80211_rx_frame_mgmt(ieee, skb, rx_stats, type, stype))
 			goto rx_dropped;
@@ -1166,7 +1154,6 @@ int ieee80211_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 		printk("decrypt frame error\n");
 		goto rx_dropped;
 	}
-
 
 	hdr = (struct ieee80211_hdr_4addr *) skb->data;
 
@@ -1418,7 +1405,6 @@ static int ieee80211_verify_qos_info(struct ieee80211_qos_information_element
         return 0;
 }
 
-
 /*
  * Parse a QoS parameter element
  */
@@ -1474,7 +1460,6 @@ static int ieee80211_read_qos_info_element(struct
                                                 QOS_OUI_INFO_SUB_TYPE);
         return ret;
 }
-
 
 /*
  * Write QoS parameters from the ac parameters.
@@ -1853,7 +1838,6 @@ int ieee80211_parse_info_param(struct ieee80211_device *ieee,
 					network->bssht.bdSupportHT = false;
 			}
 
-
 			if(tmp_htinfo_len == 0){
 				if(info_element->len >= 4 &&
 					info_element->data[0] == 0x00 &&
@@ -2034,7 +2018,6 @@ int ieee80211_parse_info_param(struct ieee80211_device *ieee,
 			else
 				network->bssht.bdSupportHT = false;
 			break;
-
 
 		case MFIE_TYPE_HT_INFO:
 			IEEE80211_DEBUG_SCAN("MFIE_TYPE_HT_INFO: %d bytes\n",
@@ -2570,7 +2553,6 @@ static inline void ieee80211_process_probe_response(
 					    struct ieee80211_network, list);
 			list_del(ieee->network_free_list.next);
 		}
-
 
 #ifdef CONFIG_IEEE80211_DEBUG
 		IEEE80211_DEBUG_SCAN("Adding '%s' (%pM) via %s.\n",

@@ -71,7 +71,6 @@ struct tasklet_completion_status {
 		.tag = 0, \
 	}
 
-
 static void asd_clear_nexus_tasklet_complete(struct asd_ascb *ascb,
 					     struct done_list_struct *dl)
 {

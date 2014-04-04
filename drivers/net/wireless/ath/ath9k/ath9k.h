@@ -472,7 +472,6 @@ static inline void ath_deinit_leds(struct ath_softc *sc)
 }
 #endif
 
-
 /* Antenna diversity/combining */
 #define ATH_ANT_RX_CURRENT_SHIFT 4
 #define ATH_ANT_RX_MAIN_SHIFT 2
@@ -703,6 +702,5 @@ extern void ath9k_rfkill_poll_state(struct ieee80211_hw *hw);
 void ath9k_calculate_iter_data(struct ieee80211_hw *hw,
 			       struct ieee80211_vif *vif,
 			       struct ath9k_vif_iter_data *iter_data);
-
 
 #endif /* ATH9K_H */

@@ -53,7 +53,6 @@
  * console).
  */
 
-
 /*
  * increase ref count for the realm
  *
@@ -278,7 +277,6 @@ static int adjust_snap_realm_parent(struct ceph_mds_client *mdsc,
 	return 1;
 }
 
-
 static int cmpu64_rev(const void *a, const void *b)
 {
 	if (*(u64 *)a < *(u64 *)b)
@@ -397,7 +395,6 @@ static void rebuild_snap_realms(struct ceph_snap_realm *realm)
 		rebuild_snap_realms(child);
 }
 
-
 /*
  * helper to allocate and decode an array of snapids.  free prior
  * instance, if any.
@@ -418,7 +415,6 @@ static int dup_array(u64 **dst, __le64 *src, int num)
 	}
 	return 0;
 }
-
 
 /*
  * When a snapshot is applied, the size/mtime inode metadata is queued
@@ -703,7 +699,6 @@ fail:
 	return err;
 }
 
-
 /*
  * Send any cap_snaps that are queued for flush.  Try to carry
  * s_mutex across multiple snap flushes to avoid locking overhead.
@@ -738,7 +733,6 @@ static void flush_snaps(struct ceph_mds_client *mdsc)
 	}
 	dout("flush_snaps done\n");
 }
-
 
 /*
  * Handle a snap notification from the MDS.
@@ -911,6 +905,3 @@ out:
 		up_write(&mdsc->snap_rwsem);
 	return;
 }
-
-
-

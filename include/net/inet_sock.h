@@ -16,7 +16,6 @@
 #ifndef _INET_SOCK_H
 #define _INET_SOCK_H
 
-
 #include <linux/kmemcheck.h>
 #include <linux/string.h>
 #include <linux/types.h>
@@ -199,6 +198,7 @@ static inline void inet_sk_copy_descendant(struct sock *sk_to,
 extern int inet_sk_rebuild_header(struct sock *sk);
 
 extern u32 inet_ehash_secret;
+extern u32 ipv6_hash_secret;
 extern void build_ehash_secret(void);
 
 static inline unsigned int inet_ehashfn(struct net *net,

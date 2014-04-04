@@ -115,7 +115,6 @@ __regwrite_out :							\
 	__err;								\
 } while (0);
 
-
 #define carl9170_async_regwrite_get_buf()				\
 do {									\
 	__nreg = 0;							\

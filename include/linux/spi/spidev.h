@@ -109,7 +109,6 @@ struct spi_ioc_transfer {
 		? ((N)*(sizeof (struct spi_ioc_transfer))) : 0)
 #define SPI_IOC_MESSAGE(N) _IOW(SPI_IOC_MAGIC, 0, char[SPI_MSGSIZE(N)])
 
-
 /* Read / Write of SPI mode (SPI_MODE_0..SPI_MODE_3) */
 #define SPI_IOC_RD_MODE			_IOR(SPI_IOC_MAGIC, 1, __u8)
 #define SPI_IOC_WR_MODE			_IOW(SPI_IOC_MAGIC, 1, __u8)
@@ -125,7 +124,5 @@ struct spi_ioc_transfer {
 /* Read / Write SPI device default max speed hz */
 #define SPI_IOC_RD_MAX_SPEED_HZ		_IOR(SPI_IOC_MAGIC, 4, __u32)
 #define SPI_IOC_WR_MAX_SPEED_HZ		_IOW(SPI_IOC_MAGIC, 4, __u32)
-
-
 
 #endif /* SPIDEV_H */

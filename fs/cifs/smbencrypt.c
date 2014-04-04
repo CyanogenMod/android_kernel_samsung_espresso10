@@ -364,7 +364,6 @@ SMBNTencrypt(unsigned char *passwd, unsigned char *c8, unsigned char *p24)
 	return rc;
 }
 
-
 /* Does the md5 encryption from the NT hash for NTLMv2. */
 /* These routines will be needed later */
 #if 0

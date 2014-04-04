@@ -69,4 +69,3 @@ void ps3_sys_manager_halt(void)
 	while (1)
 		lv1_pause(1);
 }
-

@@ -203,7 +203,6 @@ static void __blk_queue_bounce(struct request_queue *q, struct bio **bio_orig,
 			bio = bio_alloc(GFP_NOIO, cnt);
 			memset(bio->bi_io_vec, 0, cnt * sizeof(struct bio_vec));
 		}
-			
 
 		to = bio->bi_io_vec + i;
 

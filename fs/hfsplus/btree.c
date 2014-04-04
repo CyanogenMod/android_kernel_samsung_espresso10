@@ -15,7 +15,6 @@
 #include "hfsplus_fs.h"
 #include "hfsplus_raw.h"
 
-
 /* Get a reference to a B*Tree and do some initial checks */
 struct hfs_btree *hfs_btree_open(struct super_block *sb, u32 id)
 {

@@ -13,10 +13,8 @@
 #define COMPATIBILITY_SECTION_LENGTH         42
 #define COMPATIBILITY_SECTION_LENGTH_MAP5    84
 
-
 #define EEPROM_MAP5_MAJORVERSION             5
 #define EEPROM_MAP5_MINORVERSION             0
-
 
 #define MAX_NUM_OF_BLINKS 					10
 #define NUM_OF_GPIO_PINS 					16
@@ -44,7 +42,6 @@
 
 /*******************************************************/
 
-
 typedef enum _LEDColors{
 	RED_LED = 1,
 	BLUE_LED = 2,
@@ -68,7 +65,6 @@ typedef enum LedEvents {
 
 #define DRIVER_HALT 0xff
 
-
 /*Structure which stores the information of different LED types
  *  and corresponding LED state information of driver states*/
 typedef struct LedStateInfo_t
@@ -80,7 +76,6 @@ typedef struct LedStateInfo_t
 	UCHAR 			BitPolarity;				/*To represent whether H/W is normal polarity or reverse
 											  polarity*/
 }LEDStateInfo, *pLEDStateInfo;
-
 
 typedef struct _LED_INFO_STRUCT
 {
@@ -100,7 +95,4 @@ typedef struct _LED_INFO_STRUCT
 #define BCM_LED_THREAD_RUNNING_ACTIVELY  	 1 //LED thread is running.
 #define BCM_LED_THREAD_RUNNING_INACTIVELY	 2 //LED thread has been put on hold
 
-
-
 #endif
-

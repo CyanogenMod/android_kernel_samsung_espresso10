@@ -83,7 +83,6 @@ static inline unsigned ceph_file_layout_period(struct ceph_file_layout *l)
 		le32_to_cpu(l->fl_stripe_count);
 }
 
-
 static inline int ceph_osd_is_up(struct ceph_osdmap *map, int osd)
 {
 	return (osd < map->max_osd) && (map->osd_state[osd] & CEPH_OSD_UP);

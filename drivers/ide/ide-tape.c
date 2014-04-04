@@ -1068,7 +1068,6 @@ static int idetape_space_over_filemarks(ide_drive_t *drive, short mt_op,
 	int retval, count = 0;
 	int sprev = !!(tape->caps[4] & 0x20);
 
-
 	ide_debug_log(IDE_DBG_FUNC, "mt_op: %d, mt_count: %d", mt_op, mt_count);
 
 	if (mt_count == 0)
@@ -1489,7 +1488,6 @@ static int idetape_chrdev_open(struct inode *inode, struct file *filp)
 	 * fails.  So we disallow pread() and pwrite(), but permit lseeks.
 	 */
 	filp->f_mode &= ~(FMODE_PREAD | FMODE_PWRITE);
-
 
 	if (test_and_set_bit(ilog2(IDE_AFLAG_BUSY), &drive->atapi_flags)) {
 		retval = -EBUSY;

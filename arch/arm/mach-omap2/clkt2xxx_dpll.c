@@ -53,11 +53,9 @@ static void _deny_idle(struct clk *clk)
 	omap2xxx_cm_set_dpll_disable_autoidle();
 }
 
-
 /* Public data */
 
 const struct clkops clkops_omap2xxx_dpll_ops = {
 	.allow_idle	= _allow_idle,
 	.deny_idle	= _deny_idle,
 };
-

@@ -94,5 +94,4 @@
 #define XPRINT_CPS_OUT_OF_RANGE		52
 #define	NOT_ENOUGH_CORE_FOR_PCI_COPY	53
 
-
 #endif				/* __rio_errors_h__ */

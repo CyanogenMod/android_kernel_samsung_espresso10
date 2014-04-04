@@ -7,7 +7,6 @@
  * Licensed under the GPL-2 or later.
  */
 
-
 #ifndef __LINUX_MFD_ADP5520_H
 #define __LINUX_MFD_ADP5520_H
 
@@ -173,7 +172,6 @@ struct adp5520_keys_platform_data {
 	unsigned short keymapsize;	/* Keymap size */
 	unsigned repeat:1;		/* Enable key repeat */
 };
-
 
 /*
  * LEDs subdevice platform data

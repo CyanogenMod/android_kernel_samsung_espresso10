@@ -1,4 +1,3 @@
-
 /*
  * drivers/mtd/maps/dmv182.c
  *

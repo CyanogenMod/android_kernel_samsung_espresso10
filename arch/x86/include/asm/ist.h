@@ -16,7 +16,6 @@
  * General Public License for more details.
  */
 
-
 #include <linux/types.h>
 
 struct ist_info {

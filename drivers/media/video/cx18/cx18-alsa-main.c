@@ -165,7 +165,6 @@ static int snd_cx18_init(struct v4l2_device *v4l2_dev)
 	/* (4) Set the driver ID and name strings */
 	snd_cx18_card_set_names(cxsc);
 
-
 	ret = snd_cx18_pcm_create(cxsc);
 	if (ret) {
 		CX18_ALSA_ERR("%s: snd_cx18_pcm_create() failed with err %d\n",

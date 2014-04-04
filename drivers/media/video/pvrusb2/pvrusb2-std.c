@@ -28,7 +28,6 @@ struct std_name {
 	v4l2_std_id id;
 };
 
-
 #define CSTD_PAL \
 	(V4L2_STD_PAL_B| \
 	 V4L2_STD_PAL_B1| \
@@ -112,7 +111,6 @@ static const struct std_name std_items[] = {
 	{"16VSB",V4L2_STD_ATSC_16_VSB},
 };
 
-
 // Search an array of std_name structures and return a pointer to the
 // element with the matching name.
 static const struct std_name *find_std_name(const struct std_name *arrPtr,
@@ -129,7 +127,6 @@ static const struct std_name *find_std_name(const struct std_name *arrPtr,
 	}
 	return NULL;
 }
-
 
 int pvr2_std_str_to_id(v4l2_std_id *idPtr,const char *bufPtr,
 		       unsigned int bufSize)
@@ -182,7 +179,6 @@ int pvr2_std_str_to_id(v4l2_std_id *idPtr,const char *bufPtr,
 	return !0;
 }
 
-
 unsigned int pvr2_std_id_to_str(char *bufPtr, unsigned int bufSize,
 				v4l2_std_id id)
 {
@@ -224,7 +220,6 @@ unsigned int pvr2_std_id_to_str(char *bufPtr, unsigned int bufSize,
 	}
 	return c1;
 }
-
 
 // Template data for possible enumerated video standards.  Here we group
 // standards which share common frame rates and resolution.
@@ -398,7 +393,6 @@ v4l2_std_id pvr2_std_get_usable(void)
 {
 	return CSTD_ALL;
 }
-
 
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:

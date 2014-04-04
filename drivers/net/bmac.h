@@ -14,7 +14,6 @@
  * (HME) controller.  See sunhme.h
  */
 
-
 /* register offsets */
 
 /* global status and control */

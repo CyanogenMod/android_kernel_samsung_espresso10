@@ -384,7 +384,6 @@ void ceph_osdc_build_request(struct ceph_osd_request *req,
 		ceph_encode_timespec(&head->mtime, mtime);
 	head->num_ops = cpu_to_le16(num_op);
 
-
 	/* fill in oid */
 	head->object_len = cpu_to_le32(oid_len);
 	memcpy(p, oid, oid_len);
@@ -1325,7 +1324,6 @@ static void kick_requests(struct ceph_osd_client *osdc)
 	}
 }
 
-
 /*
  * Process updated osd map.
  *
@@ -1570,7 +1568,6 @@ void ceph_osdc_cancel_event(struct ceph_osd_event *event)
 }
 EXPORT_SYMBOL(ceph_osdc_cancel_event);
 
-
 static void do_event_work(struct work_struct *work)
 {
 	struct ceph_osd_event_work *event_work =
@@ -1587,7 +1584,6 @@ static void do_event_work(struct work_struct *work)
 	ceph_osdc_put_event(event);
 	kfree(event_work);
 }
-
 
 /*
  * Process osd watch notifications
@@ -2127,7 +2123,6 @@ static int get_authorizer(struct ceph_connection *con,
 	*reply_len = o->o_authorizer_reply_buf_len;
 	return 0;
 }
-
 
 static int verify_authorizer_reply(struct ceph_connection *con, int len)
 {

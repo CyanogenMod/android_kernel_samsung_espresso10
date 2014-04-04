@@ -682,7 +682,6 @@ static const u32 ar9340Modes_ub124_tx_gain_table_1p0[][5] = {
 	{0x00016448, 0x69b65266, 0x69b65266, 0x69b65266, 0x69b65266},
 };
 
-
 static const u32 ar9340Common_rx_gain_table_1p0[][2] = {
 	/*   Addr     allmodes */
 	{0x0000a000, 0x00010000},

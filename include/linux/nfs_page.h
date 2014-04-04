@@ -9,7 +9,6 @@
 #ifndef _LINUX_NFS_PAGE_H
 #define _LINUX_NFS_PAGE_H
 
-
 #include <linux/list.h>
 #include <linux/pagemap.h>
 #include <linux/wait.h>
@@ -80,7 +79,6 @@ extern	struct nfs_page *nfs_create_request(struct nfs_open_context *ctx,
 					    unsigned int count);
 extern	void nfs_release_request(struct nfs_page *req);
 
-
 extern	int nfs_scan_list(struct nfs_inode *nfsi, struct list_head *dst,
 			  pgoff_t idx_start, unsigned int npages, int tag);
 extern	void nfs_pageio_init(struct nfs_pageio_descriptor *desc,
@@ -99,7 +97,6 @@ extern  int nfs_wait_on_request(struct nfs_page *);
 extern	void nfs_unlock_request(struct nfs_page *req);
 extern	int nfs_set_page_tag_locked(struct nfs_page *req);
 extern  void nfs_clear_page_tag_locked(struct nfs_page *req);
-
 
 /*
  * Lock the page of an asynchronous request without getting a new reference
@@ -120,7 +117,6 @@ nfs_list_add_request(struct nfs_page *req, struct list_head *head)
 {
 	list_add_tail(&req->wb_list, head);
 }
-
 
 /**
  * nfs_list_remove_request - Remove a request from its wb_list

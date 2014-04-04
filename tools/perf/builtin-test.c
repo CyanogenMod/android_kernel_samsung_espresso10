@@ -312,7 +312,7 @@ static int test__open_syscall_event(void)
 			 nr_open_calls, evsel->counts->cpu[0].val);
 		goto out_close_fd;
 	}
-	
+
 	err = 0;
 out_close_fd:
 	perf_evsel__close_fd(evsel, 1, threads->nr);
@@ -352,7 +352,6 @@ static int test__open_syscall_event_on_all_cpus(void)
 		pr_debug("cpu_map__new\n");
 		goto out_thread_map_delete;
 	}
-
 
 	CPU_ZERO(&cpu_set);
 

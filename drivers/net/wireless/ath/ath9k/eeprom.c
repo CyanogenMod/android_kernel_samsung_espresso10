@@ -420,7 +420,6 @@ void ath9k_hw_get_gain_boundaries_pdadcs(struct ath_hw *ah,
 				min(pPwrL[intercepts - 1],
 				    pPwrR[intercepts - 1]);
 
-
 			ath9k_hw_fill_vpd_table(minPwrT4[i], maxPwrT4[i],
 						pPwrL, pVpdL,
 						intercepts,

@@ -558,7 +558,6 @@ static const struct pcmcia_device_id dio700_cs_ids[] = {
 	PCMCIA_DEVICE_NULL
 };
 
-
 MODULE_DEVICE_TABLE(pcmcia, dio700_cs_ids);
 MODULE_AUTHOR("Fred Brooks <nsaspook@nsaspook.com>");
 MODULE_DESCRIPTION("Comedi driver for National Instruments "

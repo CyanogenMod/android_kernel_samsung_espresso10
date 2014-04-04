@@ -22,12 +22,10 @@
 #define R592_TPC_EXEC_BIG_FIFO		(1 << 26)	/* If bit 26 is set, large fifo is used (reg 48) */
 #define R592_TPC_EXEC_TPC_SHIFT		28		/* Bits 28..31 are the TPC number */
 
-
 /* Window for small TPC fifo (big endian)*/
 /* reads and writes always are done in  8 byte chunks */
 /* Not used in driver, because large fifo does better job */
 #define R592_SFIFO			0x08
-
 
 /* Status register (ms int, small fifo, IO)*/
 #define R592_STATUS			0x10
@@ -64,7 +62,6 @@
 #define	R592_IO_SERIAL2			(1 << 30)	/* Set by default, can be cleared (cleared on parallel), serial doesn't work if unset */
 #define R592_IO_RESET			(1 << 31)	/* Reset, sets defaults*/
 
-
 /* Turns hardware on/off */
 #define R592_POWER			0x20		/* bits 0-7 writeable */
 #define R592_POWER_0			(1 << 0)	/* set on start, cleared on stop - must be set*/
@@ -76,7 +73,6 @@
 #define R592_IO_MODE			0x24
 #define R592_IO_MODE_SERIAL		1
 #define R592_IO_MODE_PARALLEL		3
-
 
 /* IRQ,card detection,large fifo (first word irq status, second enable) */
 /* IRQs are ACKed by clearing the bits */
@@ -106,7 +102,6 @@
 /* PIO access to large FIFO (512 bytes) (big endian)*/
 #define R592_FIFO_PIO			0x30
 #define R592_LFIFO_SIZE			512		/* large fifo size */
-
 
 /* large FIFO DMA settings */
 #define R592_FIFO_DMA_SETTINGS		0x34
@@ -156,7 +151,6 @@ struct r592_device {
 
 #define DRV_NAME "r592"
 
-
 #define message(format, ...) \
 	printk(KERN_INFO DRV_NAME ": " format "\n", ## __VA_ARGS__)
 
@@ -166,7 +160,6 @@ struct r592_device {
 			printk(KERN_DEBUG DRV_NAME \
 				": " format "\n", ## __VA_ARGS__); \
 	} while (0)
-
 
 #define dbg(format, ...)		__dbg(1, format, ## __VA_ARGS__)
 #define dbg_verbose(format, ...)	__dbg(2, format, ## __VA_ARGS__)

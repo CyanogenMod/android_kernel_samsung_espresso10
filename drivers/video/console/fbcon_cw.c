@@ -45,7 +45,6 @@ static void cw_update_attr(u8 *dst, u8 *src, int attribute,
 	}
 }
 
-
 static void cw_bmove(struct vc_data *vc, struct fb_info *info, int sy,
 		     int sx, int dy, int dx, int height, int width)
 {

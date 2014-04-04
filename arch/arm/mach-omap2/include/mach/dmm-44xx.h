@@ -20,7 +20,6 @@
 #ifndef __ARCH_ARM_MACH_OMAP2_DMM_CORE_44XX_H
 #define __ARCH_ARM_MACH_OMAP2_DMM_CORE_44XX_H
 
-
 /* Base address */
 #define OMAP44XX_DMM__DMM		0x4e000000
 

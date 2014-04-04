@@ -326,7 +326,6 @@ struct emac_instance {
  */
 #define EMAC_FTR_460EX_PHY_CLK_FIX	0x00000400
 
-
 /* Right now, we don't quite handle the always/possible masks on the
  * most optimal way as we don't have a way to say something like
  * always EMAC4. Patches welcome.

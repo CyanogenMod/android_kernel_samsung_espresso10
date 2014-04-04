@@ -18,7 +18,6 @@
  *    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #include "cxd2820r_priv.h"
 
 int cxd2820r_debug;
@@ -672,7 +671,6 @@ static enum dvbfe_search cxd2820r_search(struct dvb_frontend *fe,
 	if (ret)
 		goto error;
 
-
 	/* frontend lock wait loop count */
 	switch (priv->delivery_system) {
 	case SYS_DVBT:
@@ -908,7 +906,6 @@ static struct dvb_frontend_ops cxd2820r_ops[2] = {
 		.read_signal_strength = cxd2820r_read_signal_strength,
 	},
 };
-
 
 MODULE_AUTHOR("Antti Palosaari <crope@iki.fi>");
 MODULE_DESCRIPTION("Sony CXD2820R demodulator driver");

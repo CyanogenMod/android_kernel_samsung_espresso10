@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ar6k.c" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -239,7 +239,6 @@ int DevEnableInterrupts(struct ar6k_device *pDev)
         pDev->IrqEnableRegisters.int_status_enable &= ~INT_STATUS_ENABLE_MBOX_DATA_SET(0x01);
     }
 
-
     /* Set up the CPU Interrupt Status Register */
     pDev->IrqEnableRegisters.cpu_int_status_enable = CPU_INT_STATUS_ENABLE_BIT_SET(0x00);
 
@@ -468,7 +467,6 @@ static int DevDoEnableDisableRecvNormal(struct ar6k_device *pDev, bool EnableRec
     return status;
 }
 
-
 int DevStopRecv(struct ar6k_device *pDev, bool AsyncMode)
 {
     if (NULL == pDev->HifMaskUmaskRecvEvent) {
@@ -583,7 +581,6 @@ void DevDumpRegisters(struct ar6k_device               *pDev,
     AR_DEBUG_PRINTF(ATH_DEBUG_ANY, ("<------------------------------->\n"));
 }
 
-
 #define DEV_GET_VIRT_DMA_INFO(p)  ((struct dev_scatter_dma_virtual_info *)((p)->HIFPrivate[0]))
 
 static struct hif_scatter_req *DevAllocScatterReq(struct hif_device *Context)
@@ -651,9 +648,9 @@ static void DevReadWriteScatterAsyncHandler(void *Context, struct htc_packet *pP
 {
     struct ar6k_device     *pDev = (struct ar6k_device *)Context;
     struct hif_scatter_req *pReq = (struct hif_scatter_req *)pPacket->pPktContext;
-    
+
     AR_DEBUG_PRINTF(ATH_DEBUG_RECV,("+DevReadWriteScatterAsyncHandler: (dev: 0x%lX)\n", (unsigned long)pDev));
-    
+
     pReq->CompletionStatus = pPacket->Status;
 
     AR6KFreeIOPacket(pDev,pPacket);
@@ -731,7 +728,6 @@ static int DevReadWriteScatter(struct hif_device *Context, struct hif_scatter_re
 
     return status;
 }
-
 
 static void DevCleanupVirtualScatterSupport(struct ar6k_device *pDev)
 {
@@ -951,9 +947,7 @@ int DevSubmitScatterRequest(struct ar6k_device *pDev, struct hif_scatter_req *pS
     return status;
 }
 
-
 #ifdef MBOXHW_UNIT_TEST
-
 
 /* This is a mailbox hardware unit test that must be called in a schedulable context
  * This test is very simple, it will send a list of buffers with a counting pattern
@@ -1021,7 +1015,6 @@ struct buffer_proc_list {
     u32 length;
 };
 
-
 #define PUSH_BUFF_PROC_ENTRY(pList,len,pCurrpos) \
 {                                                   \
     (pList)->pBuffer = (pCurrpos);                  \
@@ -1062,7 +1055,6 @@ static void InitBuffers(bool Zero)
         }
     }
 }
-
 
 static bool CheckOneBuffer(u16 *pBuffer16, int Length)
 {
@@ -1222,7 +1214,6 @@ static int GetCredits(struct ar6k_device *pDev, int mbox, int *pCredits)
     return status;
 }
 
-
 /* wait for the buffers to come back */
 static int RecvBuffers(struct ar6k_device *pDev, int mbox)
 {
@@ -1299,7 +1290,6 @@ static int RecvBuffers(struct ar6k_device *pDev, int mbox)
 
     return status;
 
-
 }
 
 static int DoOneMboxHWTest(struct ar6k_device *pDev, int mbox)
@@ -1347,7 +1337,6 @@ int DoMboxHWTest(struct ar6k_device *pDev)
     int      numBufs;
     int      bufferSize;
     u16 temp;
-
 
     AR_DEBUG_PRINTF(ATH_PRINT_OUT_ZONE, (" DoMboxHWTest START -  \n"));
 
@@ -1474,6 +1463,3 @@ int DoMboxHWTest(struct ar6k_device *pDev)
     return A_ERROR;
 }
 #endif
-
-
-

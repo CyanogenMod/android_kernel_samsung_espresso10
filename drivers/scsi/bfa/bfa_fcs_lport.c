@@ -591,7 +591,6 @@ bfa_fcs_lport_deleted(struct bfa_fcs_lport_s *port)
 	}
 }
 
-
 /*
  * Unsolicited frame receive handling.
  */
@@ -2186,7 +2185,6 @@ bfa_fcs_fdmi_get_portattr(struct bfa_fcs_lport_fdmi_s *fdmi,
 
 }
 
-
 void
 bfa_fcs_lport_fdmi_init(struct bfa_fcs_lport_ms_s *ms)
 {
@@ -2904,7 +2902,6 @@ bfa_fcs_lport_ms_timeout(void *arg)
 	bfa_sm_send_event(ms, MSSM_EVENT_TIMEOUT);
 }
 
-
 void
 bfa_fcs_lport_ms_init(struct bfa_fcs_lport_s *port)
 {
@@ -3555,8 +3552,6 @@ bfa_fcs_lport_ns_sm_online(struct bfa_fcs_lport_ns_s *ns,
 		bfa_sm_fault(ns->port->fcs, event);
 	}
 }
-
-
 
 /*
  *  ns_pvt Nameserver local functions
@@ -4310,8 +4305,6 @@ bfa_fcs_lport_scn_sm_online(struct bfa_fcs_lport_scn_s *scn,
 	}
 }
 
-
-
 /*
  *  fcs_scn_private FCS SCN private functions
  */
@@ -4450,8 +4443,6 @@ bfa_fcs_lport_scn_timeout(void *arg)
 	bfa_sm_send_event(scn, SCNSM_EVENT_TIMEOUT);
 }
 
-
-
 /*
  *  fcs_scn_public FCS state change notification public interfaces
  */
@@ -4542,7 +4533,6 @@ bfa_fcs_lport_scn_multiport_rscn(struct bfa_fcs_lport_s *port,
 	}
 }
 
-
 void
 bfa_fcs_lport_scn_process_rscn(struct bfa_fcs_lport_s *port,
 			struct fchs_s *fchs, u32 len)
@@ -4613,7 +4603,6 @@ bfa_fcs_lport_scn_process_rscn(struct bfa_fcs_lport_s *port,
 							rscn->event[i].format,
 							rscn_pid);
 			break;
-
 
 		default:
 			WARN_ON(1);
@@ -4744,7 +4733,6 @@ bfa_fcs_lport_get_rport_max_speed(bfa_fcs_lport_t *port)
 	struct bfa_port_attr_s port_attr;
 	bfa_port_speed_t port_speed, rport_speed;
 	bfa_boolean_t trl_enabled = bfa_fcport_is_ratelim(port->fcs->bfa);
-
 
 	if (port == NULL)
 		return 0;
@@ -5057,7 +5045,6 @@ bfa_fcs_vport_sm_offline(struct bfa_fcs_vport_s *vport,
 	}
 }
 
-
 /*
  * FDISC is sent and awaiting reply from fabric.
  */
@@ -5276,8 +5263,6 @@ bfa_fcs_vport_sm_logo(struct bfa_fcs_vport_s *vport,
 	}
 }
 
-
-
 /*
  *  fcs_vport_private FCS virtual port private functions
  */
@@ -5341,7 +5326,6 @@ bfa_fcs_vport_do_logo(struct bfa_fcs_vport_s *vport)
 	bfa_lps_fdisclogo(vport->lps);
 }
 
-
 /*
  *     This routine will be called by bfa_timer on timer timeouts.
  *
@@ -5377,8 +5361,6 @@ bfa_fcs_vport_free(struct bfa_fcs_vport_s *vport)
 
 	bfa_lps_delete(vport->lps);
 }
-
-
 
 /*
  *  fcs_vport_public FCS virtual port public interfaces
@@ -5429,8 +5411,6 @@ bfa_fcs_vport_delete_comp(struct bfa_fcs_vport_s *vport)
 {
 	bfa_sm_send_event(vport, BFA_FCS_VPORT_SM_DELCOMP);
 }
-
-
 
 /*
  *  fcs_vport_api Virtual port API
@@ -5608,7 +5588,6 @@ bfa_fcs_vport_get_attr(struct bfa_fcs_vport_s *vport,
 	bfa_fcs_lport_get_attr(&vport->lport, &attr->port_attr);
 	attr->vport_state = bfa_sm_to_state(vport_sm_table, vport->sm);
 }
-
 
 /*
  *	Lookup a virtual port. Excludes base port from lookup.

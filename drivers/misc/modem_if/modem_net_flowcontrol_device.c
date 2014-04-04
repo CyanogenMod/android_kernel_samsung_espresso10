@@ -26,7 +26,6 @@
 
 #include "modem_prj.h"
 
-
 #define NET_FLOWCONTROL_DEV_NAME_LEN 8
 
 static int modem_net_flowcontrol_device_open(

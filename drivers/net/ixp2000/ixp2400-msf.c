@@ -169,7 +169,6 @@ static void ixp2400_msf_enable_tx(struct ixp2400_msf_parameters *mp)
 	ixp2000_reg_write(IXP2000_MSF_TX_CONTROL, value);
 }
 
-
 void ixp2400_msf_init(struct ixp2400_msf_parameters *mp)
 {
 	u32 value;

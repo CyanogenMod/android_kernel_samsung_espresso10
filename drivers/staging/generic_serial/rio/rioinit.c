@@ -43,7 +43,6 @@
 
 #include <linux/generic_serial.h>
 
-
 #include "linux_compat.h"
 #include "pkt.h"
 #include "daemon.h"
@@ -74,7 +73,6 @@
 int RIOPCIinit(struct rio_info *p, int Mode);
 
 static int RIOScrub(int, u8 __iomem *, int);
-
 
 /**
 ** RIOAssignAT :
@@ -135,14 +133,14 @@ int RIOAssignAT(struct rio_info *p, int	Base, void __iomem *virtAddr, int mode)
 static	u8	val[] = {
 #ifdef VERY_LONG_TEST
 	  0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80,
-	  0xa5, 0xff, 0x5a, 0x00, 0xff, 0xc9, 0x36, 
+	  0xa5, 0xff, 0x5a, 0x00, 0xff, 0xc9, 0x36,
 #endif
 	  0xff, 0x00, 0x00 };
 
 #define	TEST_END sizeof(val)
 
 /*
-** RAM test a board. 
+** RAM test a board.
 ** Nothing too complicated, just enough to check it out.
 */
 int RIOBoardTest(unsigned long paddr, void __iomem *caddr, unsigned char type, int slot)
@@ -180,7 +178,6 @@ int RIOBoardTest(unsigned long paddr, void __iomem *caddr, unsigned char type, i
 	if (nbanks == 4)
 		ram[3] = DpRam->DpScratch;
 
-
 	if (nbanks == 3) {
 		rio_dprintk (RIO_DEBUG_INIT, "RIO-init: Memory: %p(0x%x), %p(0x%x), %p(0x%x)\n",
 				ram[0], size[0], ram[1], size[1], ram[2], size[2]);
@@ -197,7 +194,7 @@ int RIOBoardTest(unsigned long paddr, void __iomem *caddr, unsigned char type, i
 	for (op=0; op<TEST_END; op++) {
 		for (bank=0; bank<nbanks; bank++) {
 			if (RIOScrub(op, ram[bank], size[bank]) == RIO_FAIL) {
-				rio_dprintk (RIO_DEBUG_INIT, "RIO-init: RIOScrub band %d, op %d failed\n", 
+				rio_dprintk (RIO_DEBUG_INIT, "RIO-init: RIOScrub band %d, op %d failed\n",
 							bank, op);
 				return RIO_FAIL;
 			}
@@ -207,7 +204,6 @@ int RIOBoardTest(unsigned long paddr, void __iomem *caddr, unsigned char type, i
 	rio_dprintk (RIO_DEBUG_INIT, "Test completed\n");
 	return 0;
 }
-
 
 /*
 ** Scrub an area of RAM.
@@ -355,7 +351,6 @@ static int RIOScrub(int op, u8 __iomem *ram, int size)
 	}
 	return 0;
 }
-
 
 int RIODefaultName(struct rio_info *p, struct Host *HostP, unsigned int	UnitId)
 {

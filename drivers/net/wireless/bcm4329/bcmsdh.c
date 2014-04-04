@@ -3,13 +3,13 @@
  *  implement bcmsdh API for SDIOH driver
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -42,7 +42,6 @@
 
 #define SDIOH_API_ACCESS_RETRY_LIMIT	2
 const uint bcmsdh_msglevel = BCMSDH_ERROR_VAL;
-
 
 struct bcmsdh_info
 {
@@ -191,7 +190,6 @@ bcmsdh_intr_pending(void *sdh)
 }
 #endif
 
-
 int
 bcmsdh_devremove_reg(void *sdh, bcmsdh_cb_fn_t fn, void *argh)
 {
@@ -309,7 +307,6 @@ bcmsdh_cfg_write_word(void *sdh, uint fnc_num, uint32 addr, uint32 data, int *er
 	             addr, data));
 }
 
-
 int
 bcmsdh_cis_read(void *sdh, uint func, uint8 *cis, uint length)
 {
@@ -348,7 +345,6 @@ bcmsdh_cis_read(void *sdh, uint func, uint8 *cis, uint length)
 	return (SDIOH_API_SUCCESS(status) ? 0 : BCME_ERROR);
 }
 
-
 static int
 bcmsdhsdio_set_sbaddr_window(void *sdh, uint32 address)
 {
@@ -362,7 +358,6 @@ bcmsdhsdio_set_sbaddr_window(void *sdh, uint32 address)
 	if (!err)
 		bcmsdh_cfg_write(bcmsdh, SDIO_FUNC_1, SBSDIO_FUNC1_SBADDRHIGH,
 		                 (address >> 24) & SBSDIO_SBADDRHIGH_MASK, &err);
-
 
 	return err;
 }
@@ -593,7 +588,6 @@ bcmsdh_stop(void *sdh)
 
 	return sdioh_stop(bcmsdh->sdioh);
 }
-
 
 int
 bcmsdh_query_device(void *sdh)

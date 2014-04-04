@@ -405,7 +405,7 @@ static struct platform_driver nvec_power_driver = {
 	}
 };
 
-static int __init nvec_power_init(void) 
+static int __init nvec_power_init(void)
 {
 	return platform_driver_register(&nvec_power_driver);
 }

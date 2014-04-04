@@ -47,7 +47,6 @@
 #define M_DTX		0x0002	/* Disable the Transmitter */
 #define M_DRX		0x0001	/* Disable the Receiver */
 
-
 /*
  * 	Receive message descriptor bit definitions.
  */
@@ -60,7 +59,6 @@
 #define RCV_BUF_ERR	0x04	/* Buffer Error */
 #define RCV_START	0x02	/* Start of Packet */
 #define RCV_END		0x01	/* End of Packet */
-
 
 /*
  *	Transmit  message descriptor bit definitions.

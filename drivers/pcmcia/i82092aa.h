@@ -14,17 +14,12 @@
 #define dprintk(fmt, args...) do {} while (0)
 #endif
 
-
-
 /* prototypes */
 
 static int  i82092aa_pci_probe(struct pci_dev *dev, const struct pci_device_id *id);
 static void i82092aa_pci_remove(struct pci_dev *dev);
 static int card_present(int socketno);
 static irqreturn_t i82092aa_interrupt(int irq, void *dev);
-
-
-
 
 static int i82092aa_get_status(struct pcmcia_socket *socket, u_int *value);
 static int i82092aa_set_socket(struct pcmcia_socket *socket, socket_state_t *state);
@@ -33,4 +28,3 @@ static int i82092aa_set_mem_map(struct pcmcia_socket *socket, struct pccard_mem_
 static int i82092aa_init(struct pcmcia_socket *socket);
 
 #endif
-

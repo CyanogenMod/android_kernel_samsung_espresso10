@@ -46,7 +46,7 @@ static inline void arch_reset(char mode, const char *cmd)
 			 */
 			outb(0xc4, 0x338);
 		} else {
-			/* 
+			/*
 			 * Force the watchdog to do a CPU reset.
 			 *
 			 * After making sure that the watchdog is disabled

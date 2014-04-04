@@ -297,7 +297,6 @@ enum ipmi_stat_indexes {
 	IPMI_NUM_STATS
 };
 
-
 #define IPMI_IPMB_NUM_SEQ	64
 #define IPMI_MAX_CHANNELS       16
 struct ipmi_smi {
@@ -445,7 +444,6 @@ static DEFINE_MUTEX(ipmi_interfaces_mutex);
  */
 static LIST_HEAD(smi_watchers);
 static DEFINE_MUTEX(smi_watchers_mutex);
-
 
 #define ipmi_inc_stat(intf, stat) \
 	atomic_inc(&(intf)->stats[IPMI_STAT_ ## stat])
@@ -810,7 +808,6 @@ static int intf_find_seq(ipmi_smi_t           intf,
 	return rv;
 }
 
-
 /* Start the timer for a specific sequence table entry. */
 static int intf_start_seq_timer(ipmi_smi_t intf,
 				long       msgid)
@@ -819,7 +816,6 @@ static int intf_start_seq_timer(ipmi_smi_t intf,
 	unsigned long flags;
 	unsigned char seq;
 	unsigned long seqid;
-
 
 	GET_SEQ_FROM_MSGID(msgid, seq, seqid);
 
@@ -850,7 +846,6 @@ static int intf_err_seq(ipmi_smi_t   intf,
 	unsigned long        seqid;
 	struct ipmi_recv_msg *msg = NULL;
 
-
 	GET_SEQ_FROM_MSGID(msgid, seq, seqid);
 
 	spin_lock_irqsave(&(intf->seq_lock), flags);
@@ -873,7 +868,6 @@ static int intf_err_seq(ipmi_smi_t   intf,
 
 	return rv;
 }
-
 
 int ipmi_create_user(unsigned int          if_num,
 		     struct ipmi_user_hndl *handler,
@@ -1266,7 +1260,6 @@ int ipmi_register_for_cmd(ipmi_user_t   user,
 	struct cmd_rcvr *rcvr;
 	int             rv = 0;
 
-
 	rcvr = kmalloc(sizeof(*rcvr), GFP_KERNEL);
 	if (!rcvr)
 		return -ENOMEM;
@@ -1451,7 +1444,6 @@ static int i_ipmi_request(ipmi_user_t          user,
 	unsigned long            flags;
 	struct ipmi_smi_handlers *handlers;
 
-
 	if (supplied_recv)
 		recv_msg = supplied_recv;
 	else {
@@ -1583,7 +1575,6 @@ static int i_ipmi_request(ipmi_user_t          user,
 		    addr->addr_type = IPMI_IPMB_ADDR_TYPE;
 		    broadcast = 1;
 		}
-
 
 		/* Default to 1 second retries. */
 		if (retry_time_ms == 0)
@@ -3191,7 +3182,6 @@ static int handle_lan_get_msg_rsp(ipmi_smi_t          intf,
 	struct ipmi_lan_addr  lan_addr;
 	struct ipmi_recv_msg  *recv_msg;
 
-
 	/*
 	 * This is 13, not 12, because the response must contain a
 	 * completion code.
@@ -3792,7 +3782,6 @@ void ipmi_smi_msg_received(ipmi_smi_t          intf,
 	int           rv;
 	int           run_to_completion;
 
-
 	if ((msg->data_size >= 2)
 	    && (msg->data[0] == (IPMI_NETFN_APP_REQUEST << 2))
 	    && (msg->data[1] == IPMI_SEND_MSG_CMD)
@@ -4119,7 +4108,6 @@ static void ipmi_timeout(unsigned long data)
 
 	mod_timer(&ipmi_timer, jiffies + IPMI_TIMEOUT_JIFFIES);
 }
-
 
 static atomic_t smi_msg_inuse_count = ATOMIC_INIT(0);
 static atomic_t recv_msg_inuse_count = ATOMIC_INIT(0);

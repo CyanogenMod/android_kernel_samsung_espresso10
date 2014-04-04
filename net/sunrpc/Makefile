@@ -2,7 +2,6 @@
 # Makefile for Linux kernel SUN RPC
 #
 
-
 obj-$(CONFIG_SUNRPC) += sunrpc.o
 obj-$(CONFIG_SUNRPC_GSS) += auth_gss/
 obj-$(CONFIG_SUNRPC_XPRT_RDMA) += xprtrdma/

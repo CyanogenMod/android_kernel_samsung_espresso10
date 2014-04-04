@@ -631,7 +631,6 @@ int em28xx_capture_start(struct em28xx *dev, int start)
 		return rc;
 	}
 
-
 	/* FIXME: which is the best order? */
 	/* video registers are sampled by VREF */
 	rc = em28xx_write_reg_bits(dev, EM28XX_R0C_USBSUSP,
@@ -779,7 +778,6 @@ int em28xx_resolution_set(struct em28xx *dev)
 		height >>= norm_maxh(dev);
 
 	em28xx_set_outfmt(dev);
-
 
 	em28xx_accumulator_set(dev, 1, (width - 4) >> 2, 1, (height - 4) >> 2);
 

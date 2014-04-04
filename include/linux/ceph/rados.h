@@ -42,7 +42,6 @@ struct ceph_timespec {
 	__le32 tv_nsec;
 } __attribute__ ((packed));
 
-
 /*
  * object layout - how objects are mapped into PGs
  */
@@ -149,7 +148,6 @@ struct ceph_eversion {
 /* osd weights.  fixed point value: 0x10000 == 1.0 ("in"), 0 == "out" */
 #define CEPH_OSD_IN  0x10000
 #define CEPH_OSD_OUT 0
-
 
 /*
  * osd map flag bits
@@ -296,7 +294,6 @@ static inline int ceph_osd_op_mode_modify(int op)
 
 extern const char *ceph_osd_op_name(int op);
 
-
 /*
  * osd op flags
  *
@@ -420,7 +417,5 @@ struct ceph_osd_reply_head {
 	__le32 num_ops;
 	struct ceph_osd_op ops[0];  /* ops[], object */
 } __attribute__ ((packed));
-
-
 
 #endif

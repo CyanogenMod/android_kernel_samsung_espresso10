@@ -336,7 +336,6 @@ bail:
 	drbd_force_state(mdev, NS(conn, C_PROTOCOL_ERROR));
 }
 
-
 /**
  * _tl_restart() - Walks the transfer log, and applies an action to all requests
  * @mdev:	DRBD device.
@@ -412,7 +411,6 @@ static void _tl_restart(struct drbd_conf *mdev, enum drbd_req_event what)
 		list_splice(&carry_reads, &b->requests);
 	}
 }
-
 
 /**
  * tl_clear() - Clears all requests and &struct drbd_tl_epoch objects out of the TL
@@ -678,7 +676,6 @@ void print_st_err(struct drbd_conf *mdev, union drbd_state os,
 	print_st(mdev, " state", os);
 	print_st(mdev, "wanted", ns);
 }
-
 
 /**
  * is_valid_state() - Returns an SS_ error code if ns is not valid
@@ -1626,7 +1623,6 @@ static void after_state_ch(struct drbd_conf *mdev, union drbd_state os,
 	drbd_md_sync(mdev);
 }
 
-
 static int drbd_thread_setup(void *arg)
 {
 	struct drbd_thread *thi = (struct drbd_thread *) arg;
@@ -1742,7 +1738,6 @@ int drbd_thread_start(struct drbd_thread *thi)
 
 	return true;
 }
-
 
 void _drbd_thread_stop(struct drbd_thread *thi, int restart, int wait)
 {
@@ -3112,7 +3107,6 @@ void drbd_mdev_cleanup(struct drbd_conf *mdev)
 	drbd_set_defaults(mdev);
 }
 
-
 static void drbd_destroy_mempools(void)
 {
 	struct page *page;
@@ -3495,7 +3489,6 @@ void drbd_free_mdev(struct drbd_conf *mdev)
 	kfree(mdev);
 }
 
-
 int __init drbd_init(void)
 {
 	int err;
@@ -3604,7 +3597,6 @@ void drbd_free_sock(struct drbd_conf *mdev)
 		mutex_unlock(&mdev->meta.mutex);
 	}
 }
-
 
 void drbd_free_resources(struct drbd_conf *mdev)
 {
@@ -3833,7 +3825,6 @@ void _drbd_uuid_set(struct drbd_conf *mdev, int idx, u64 val) __must_hold(local)
 	mdev->ldev->md.uuid[idx] = val;
 	drbd_md_mark_dirty(mdev);
 }
-
 
 void drbd_uuid_set(struct drbd_conf *mdev, int idx, u64 val) __must_hold(local)
 {

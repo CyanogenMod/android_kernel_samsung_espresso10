@@ -13,18 +13,17 @@ config FLATMEM_MANUAL
 	bool "Flat Memory"
 	depends on !(ARCH_DISCONTIGMEM_ENABLE || ARCH_SPARSEMEM_ENABLE) || ARCH_FLATMEM_ENABLE
 	help
-	  This option allows you to change some of the ways that
-	  Linux manages its memory internally.  Most users will
-	  only have one option here: FLATMEM.  This is normal
-	  and a correct option.
+	  This option allows you to change some of the ways that Linux
+	  manages its memory internally.  Most users will only have one
+	  option here: FLATMEM.  This is normal and a correct option.
 
-	  Some users of more advanced features like NUMA and
-	  memory hotplug may have different options here.
-	  DISCONTIGMEM is an more mature, better tested system,
-	  but is incompatible with memory hotplug and may suffer
-	  decreased performance over SPARSEMEM.  If unsure between
-	  "Sparse Memory" and "Discontiguous Memory", choose
-	  "Discontiguous Memory".
+	  Some users of more advanced features like NUMA and memory hotplug
+	  may have different options here.
+	  DISCONTIGMEM is an more mature, better tested system, but is incompatible
+	  with memory hotplug and may suffer decreased performance over SPARSEMEM.
+
+	  If unsure between "Sparse Memory" and "Discontiguous Memory",
+	  choose "Discontiguous Memory".
 
 	  If unsure, choose this option (Flat Memory) over any other.
 
@@ -349,7 +348,7 @@ config NEED_PER_CPU_KM
 	default y
 
 config CLEANCACHE
-	bool "Enable cleancache driver to cache clean pages if tmem is present"
+	bool "Enable cleancache driver to cache clean pages"
 	default n
 	help
 	  Cleancache can be thought of as a page-granularity victim cache
@@ -369,4 +368,37 @@ config CLEANCACHE
 	  are reduced to a single pointer-compare-against-NULL resulting
 	  in a negligible performance hit.
 
-	  If unsure, say Y to enable cleancache
+config FRONTSWAP
+	bool "Enable frontswap to cache swap pages"
+	depends on SWAP
+	default n
+	help
+	  Frontswap is so named because it can be thought of as the opposite
+	  of a "backing" store for a swap device.  The data is stored into
+	  "transcendent memory", memory that is not directly accessible or
+	  addressable by the kernel and is of unknown and possibly
+	  time-varying size.  When space in transcendent memory is available,
+	  a significant swap I/O reduction may be achieved.  When none is
+	  available, all frontswap calls are reduced to a single pointer-
+	  compare-against-NULL resulting in a negligible performance hit
+	  and swap data is stored as normal on the matching swap device.
+
+config COMPACTION_RETRY
+	bool "Retry compaction once more after direct reclaim fails"
+	default n
+	depends on COMPACTION
+	help
+	  This enables compaction retry in android.
+	  If fails to get pages even with direct reclaim, we give try to allocate pages
+	  with forced compaction.
+	  This might avoid oom-killer invocation with many free pages being already there.
+
+config COMPACTION_RETRY_DEBUG
+	bool "debug information for COMPACTION_RETRY"
+	default n
+	depends on COMPACTION_RETRY
+	help
+	  This enables debug feature for compaction retry.
+	  This shows us the buddy information
+	  before and after compation retrial.
+	  This should be turned off later.

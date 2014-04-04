@@ -68,7 +68,6 @@ MODULE_VERSION(DRV_VERSION);
 int max_mtu = 9000;
 int interrupt_mod_interval = 0;
 
-
 /* Interoperability */
 int mpa_version = 1;
 module_param(mpa_version, int, 0644);
@@ -82,7 +81,6 @@ MODULE_PARM_DESC(disable_mpa_crc, "Disable checking of MPA CRC");
 unsigned int send_first = 0;
 module_param(send_first, int, 0644);
 MODULE_PARM_DESC(send_first, "Send RDMA Message First on Active Connection");
-
 
 unsigned int nes_drv_opt = 0;
 module_param(nes_drv_opt, int, 0644);
@@ -121,7 +119,6 @@ static int nes_inetaddr_event(struct notifier_block *, unsigned long, void *);
 static int nes_net_event(struct notifier_block *, unsigned long, void *);
 static int nes_notifiers_registered;
 
-
 static struct notifier_block nes_inetaddr_notifier = {
 	.notifier_call = nes_inetaddr_event
 };
@@ -129,9 +126,6 @@ static struct notifier_block nes_inetaddr_notifier = {
 static struct notifier_block nes_net_notifier = {
 	.notifier_call = nes_net_event
 };
-
-
-
 
 /**
  * nes_inetaddr_event
@@ -212,7 +206,6 @@ static int nes_inetaddr_event(struct notifier_block *notifier,
 	return NOTIFY_DONE;
 }
 
-
 /**
  * nes_net_event
  */
@@ -254,7 +247,6 @@ static int nes_net_event(struct notifier_block *notifier,
 
 	return NOTIFY_DONE;
 }
-
 
 /**
  * nes_add_ref
@@ -348,7 +340,6 @@ void nes_rem_ref(struct ib_qp *ibqp)
 	}
 }
 
-
 /**
  * nes_get_qp
  */
@@ -363,7 +354,6 @@ struct ib_qp *nes_get_qp(struct ib_device *device, int qpn)
 
 	return &nesadapter->qp_table[qpn - NES_FIRST_QPN]->ibqp;
 }
-
 
 /**
  * nes_print_macaddr
@@ -444,7 +434,6 @@ static irqreturn_t nes_interrupt(int irq, void *dev_id)
 		return IRQ_NONE;
 	}
 }
-
 
 /**
  * nes_probe - Device initialization
@@ -750,7 +739,6 @@ static int __devinit nes_probe(struct pci_dev *pcidev, const struct pci_device_i
 	return ret;
 }
 
-
 /**
  * nes_remove - unload from kernel
  */
@@ -809,7 +797,6 @@ static void __devexit nes_remove(struct pci_dev *pcidev)
 	pci_disable_device(pcidev);
 	pci_set_drvdata(pcidev, NULL);
 }
-
 
 static struct pci_driver nes_pci_driver = {
 	.name = DRV_NAME,
@@ -1105,7 +1092,6 @@ static ssize_t nes_store_idx_data(struct device_driver *ddp,
 	return strnlen(buf, count);
 }
 
-
 /**
  * nes_show_wqm_quanta
  */
@@ -1125,7 +1111,6 @@ static ssize_t nes_show_wqm_quanta(struct device_driver *ddp, char *buf)
 
 	return  snprintf(buf, PAGE_SIZE, "0x%X\n", wqm_quanta_value);
 }
-
 
 /**
  * nes_store_wqm_quanta
@@ -1229,7 +1214,6 @@ static int __init nes_init_module(void)
 	return retval;
 }
 
-
 /**
  * nes_exit_module - module unload entry point
  */
@@ -1240,7 +1224,6 @@ static void __exit nes_exit_module(void)
 
 	pci_unregister_driver(&nes_pci_driver);
 }
-
 
 module_init(nes_init_module);
 module_exit(nes_exit_module);

@@ -181,7 +181,6 @@ static int cx22702_get_tps(struct cx22702_state *state,
 		break;
 	}
 
-
 	val = cx22702_readreg(state, 0x02);
 	switch ((val & 0x38) >> 3) {
 	case 0:

@@ -17,7 +17,6 @@
 #include <mach/hardware.h>
 #include <asm/mach/irq.h>
 
-
 /* selected INTC register offsets */
 
 #define INTC_REVISION		0x0000

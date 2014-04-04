@@ -114,7 +114,6 @@
 #define SSP_CR0_MASK_CSS_ST	(0x1FUL << 16)
 #define SSP_CR0_MASK_FRF_ST	(0x3UL << 21)
 
-
 /*
  * SSP Control Register 0  - SSP_CR1
  */
@@ -283,7 +282,6 @@
 #define CLEAR_ALL_INTERRUPTS  0x3
 
 #define SPI_POLLING_TIMEOUT 1000
-
 
 /*
  * The type of reading going on on this chip
@@ -749,7 +747,6 @@ static void readwriter(struct pl022 *pl022)
 	 * should be empty
 	 */
 }
-
 
 /**
  * next_transfer - Move to the Next transfer in the current spi message
@@ -1508,7 +1505,6 @@ static void pump_messages(struct work_struct *work)
 		do_interrupt_dma_transfer(pl022);
 }
 
-
 static int __init init_queue(struct pl022 *pl022)
 {
 	INIT_LIST_HEAD(&pl022->queue);
@@ -1528,7 +1524,6 @@ static int __init init_queue(struct pl022 *pl022)
 
 	return 0;
 }
-
 
 static int start_queue(struct pl022 *pl022)
 {
@@ -1551,7 +1546,6 @@ static int start_queue(struct pl022 *pl022)
 
 	return 0;
 }
-
 
 static int stop_queue(struct pl022 *pl022)
 {
@@ -1772,7 +1766,6 @@ static int calculate_effective_freq(struct pl022 *pl022,
 	return 0;
 }
 
-
 /*
  * A piece of default chip info unless the platform
  * supplies it.
@@ -1789,7 +1782,6 @@ static const struct pl022_config_chip pl022_default_chip_info = {
 	.duplex = SSP_MICROWIRE_CHANNEL_FULL_DUPLEX,
 	.cs_control = null_cs_control,
 };
-
 
 /**
  * pl022_setup - setup function registered to SPI master framework
@@ -1866,7 +1858,6 @@ static int pl022_setup(struct spi_device *spi)
 			"cpsdvsr is configured incorrectly\n");
 		goto err_config_params;
 	}
-
 
 	status = verify_controller_parameters(pl022, chip_info);
 	if (status) {
@@ -2029,7 +2020,6 @@ static void pl022_cleanup(struct spi_device *spi)
 	spi_set_ctldata(spi, NULL);
 	kfree(chip);
 }
-
 
 static int __devinit
 pl022_probe(struct amba_device *adev, const struct amba_id *id)
@@ -2247,7 +2237,6 @@ static struct vendor_data vendor_arm = {
 	.loopback = true,
 };
 
-
 static struct vendor_data vendor_st = {
 	.fifodepth = 32,
 	.max_bpw = 32,
@@ -2324,7 +2313,6 @@ static struct amba_driver pl022_driver = {
 	.suspend        = pl022_suspend,
 	.resume         = pl022_resume,
 };
-
 
 static int __init pl022_init(void)
 {

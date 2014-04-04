@@ -21,7 +21,6 @@
 /* Use Google Vendor ID when in accessory mode */
 #define USB_ACCESSORY_VENDOR_ID 0x18D1
 
-
 /* Product ID to use when in accessory mode */
 #define USB_ACCESSORY_PRODUCT_ID 0x2D00
 

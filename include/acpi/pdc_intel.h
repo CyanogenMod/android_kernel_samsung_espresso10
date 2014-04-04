@@ -1,4 +1,3 @@
-
 /* _PDC bit definition for Intel processors */
 
 #ifndef __PDC_INTEL_H__

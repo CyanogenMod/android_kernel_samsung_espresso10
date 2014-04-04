@@ -102,5 +102,3 @@ sub trace_unhandled
 
     $unhandled{$event_name}++;
 }
-
-

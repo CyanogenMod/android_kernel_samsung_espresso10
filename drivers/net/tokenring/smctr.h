@@ -110,7 +110,6 @@
 #define R_CHG_PARM                              0x00
 #define R_TX_FORWARD                            F_FRAME_FORWARD
 
-
 #define      UPSTREAM_NEIGHBOR_ADDRESS       0x02
 #define      ADDRESS_MODIFER                 0x21
 #define      RING_STATION_VERSION_NUMBER     0x23
@@ -239,15 +238,12 @@
 #define IDR_DCS_MASK	0x007
 #define IDR_RWS		0x008
 
-
 #define r587_BIO	0x003
 #define BIO_ENB		0x080
 #define BIO_MASK	0x03F
 
 #define r587_PCR	0x005
 #define PCR_RAMS	0x040
-
-
 
 #define NUM_ADDR_BITS	8
 
@@ -308,7 +304,7 @@
 
 #define BID_BOARD_ID_BYTE       0x0E
 #define BID_CHCKSM_BYTE         0x0F
-#define BID_LAR_OFFSET          0x08  
+#define BID_LAR_OFFSET          0x08
 
 #define BID_MSZ_583_BIT         0x08
 #define BID_SIXTEEN_BIT_BIT     0x01
@@ -1047,7 +1043,7 @@ typedef struct net_local {
         __u16 QueueSkb;
 
 	struct tr_statistics MacStat;   /* MAC statistics structure */
-	
+
 	spinlock_t	lock;
 } NET_LOCAL;
 
@@ -1244,15 +1240,14 @@ routine */
 #define ERX_DISABLED         	0x0400       	/* EARLY_RX_ENABLE rcv_mask */
 #define ENABLE_TX_PENDING       0x0800
 #define ENABLE_RX_PENDING       0x1000
-#define PERM_CLOSE              0x2000  
+#define PERM_CLOSE              0x2000
 #define IO_MAPPED               0x4000  	/* IOmapped bus interface 795 */
 #define ETX_DISABLED            0x8000
-
 
 /*
  * Definitions for adapter_flags1
  */
-#define TX_PHY_RX_VIRT          0x0001 
+#define TX_PHY_RX_VIRT          0x0001
 #define NEEDS_HOST_RAM          0x0002
 #define NEEDS_MEDIA_TYPE        0x0004
 #define EARLY_RX_DONE           0x0008
@@ -1266,8 +1261,8 @@ routine */
 #define TX_PHY                  0x0100  /* Uses physical address for tx bufs */
 #define RX_PHY                  0x0200  /* Uses physical address for rx bufs */
 #define TX_VIRT                 0x0400  /* Uses virtual addr for tx bufs */
-#define RX_VIRT                 0x0800 
-#define NEEDS_SERVICE           0x1000 
+#define RX_VIRT                 0x0800
+#define NEEDS_SERVICE           0x1000
 
 /*
  * Adapter Status Codes
@@ -1305,7 +1300,7 @@ routine */
 #define AUTO_MEDIA_DETECT       0x0008
 #define MANUAL_CRC              0x0010
 #define EARLY_TOKEN_REL         0x0020  /* Early Token Release for Token Ring */
-#define UMAC               0x0040 
+#define UMAC               0x0040
 #define UTP2_PORT               0x0080  /* For 8216T2, 0=port A, 1=Port B. */
 #define BNC_10BT_INTERFACE      0x0600  /* BNC and UTP current media set */
 #define UTP_INTERFACE           0x0500  /* Ethernet UTP Only. */
@@ -1348,7 +1343,6 @@ routine */
 #define MEDIA_STP100_UTP100     0x0020  /* Ethernet STP-100Mbps/UTP-100Mbps */
 #define MEDIA_UTP100FD          0x0021  /* Ethernet UTP-100Mbps, full duplex */
 #define MEDIA_UTP100            0x0022  /* Ethernet UTP-100Mbps */
-
 
 #define MEDIA_UNKNOWN           0xFFFF  /* Unknown adapter/media type   */
 

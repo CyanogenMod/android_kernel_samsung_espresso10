@@ -41,7 +41,6 @@ static unsigned int panel_id;
 struct regulator *tuna_oled_reg;
 struct regulator *tuna_oled_reg_iovcc;
 
-
 static void tuna_oled_set_power(bool enable)
 {
 	if (IS_ERR_OR_NULL(tuna_oled_reg)) {
@@ -954,4 +953,3 @@ static int __init get_panel_id(char *str)
 	return 0;
 }
 __setup("mms_ts.panel_id=", get_panel_id);
-

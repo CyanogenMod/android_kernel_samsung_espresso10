@@ -20,9 +20,7 @@
 
 #include "hostap_wlan.h"
 
-
 static char *dev_info = "hostap_pci";
-
 
 MODULE_AUTHOR("Jouni Malinen");
 MODULE_DESCRIPTION("Support for Intersil Prism2.5-based 802.11 wireless LAN "
@@ -30,15 +28,12 @@ MODULE_DESCRIPTION("Support for Intersil Prism2.5-based 802.11 wireless LAN "
 MODULE_SUPPORTED_DEVICE("Intersil Prism2.5-based WLAN PCI cards");
 MODULE_LICENSE("GPL");
 
-
 /* struct local_info::hw_priv */
 struct hostap_pci_priv {
 	void __iomem *mem_start;
 };
 
-
 /* FIX: do we need mb/wmb/rmb with memory operations? */
-
 
 static DEFINE_PCI_DEVICE_TABLE(prism2_pci_id_table) = {
 	/* Intersil Prism3 ISL3872 11Mb/s WLAN Controller */
@@ -49,7 +44,6 @@ static DEFINE_PCI_DEVICE_TABLE(prism2_pci_id_table) = {
 	{ 0x167d, 0xa000, PCI_ANY_ID, PCI_ANY_ID },
 	{ 0 }
 };
-
 
 #ifdef PRISM2_IO_DEBUG
 
@@ -179,7 +173,6 @@ static inline u16 hfa384x_inw(struct net_device *dev, int a)
 
 #endif /* PRISM2_IO_DEBUG */
 
-
 static int hfa384x_from_bap(struct net_device *dev, u16 bap, void *buf,
 			    int len)
 {
@@ -198,7 +191,6 @@ static int hfa384x_from_bap(struct net_device *dev, u16 bap, void *buf,
 	return 0;
 }
 
-
 static int hfa384x_to_bap(struct net_device *dev, u16 bap, void *buf, int len)
 {
 	u16 d_off;
@@ -215,7 +207,6 @@ static int hfa384x_to_bap(struct net_device *dev, u16 bap, void *buf, int len)
 
 	return 0;
 }
-
 
 /* FIX: This might change at some point.. */
 #include "hostap_hw.c"
@@ -264,7 +255,6 @@ static void prism2_pci_cor_sreset(local_info_t *local)
 	}
 }
 
-
 static void prism2_pci_genesis_reset(local_info_t *local, int hcr)
 {
 	struct net_device *dev = local->dev;
@@ -277,7 +267,6 @@ static void prism2_pci_genesis_reset(local_info_t *local, int hcr)
 	mdelay(10);
 }
 
-
 static struct prism2_helper_functions prism2_pci_funcs =
 {
 	.card_present	= NULL,
@@ -285,7 +274,6 @@ static struct prism2_helper_functions prism2_pci_funcs =
 	.genesis_reset	= prism2_pci_genesis_reset,
 	.hw_type	= HOSTAP_HW_PCI,
 };
-
 
 static int prism2_pci_probe(struct pci_dev *pdev,
 			    const struct pci_device_id *id)
@@ -373,7 +361,6 @@ static int prism2_pci_probe(struct pci_dev *pdev,
 	return -ENODEV;
 }
 
-
 static void prism2_pci_remove(struct pci_dev *pdev)
 {
 	struct net_device *dev;
@@ -402,7 +389,6 @@ static void prism2_pci_remove(struct pci_dev *pdev)
 			   pci_resource_len(pdev, 0));
 	pci_disable_device(pdev);
 }
-
 
 #ifdef CONFIG_PM
 static int prism2_pci_suspend(struct pci_dev *pdev, pm_message_t state)
@@ -443,7 +429,6 @@ static int prism2_pci_resume(struct pci_dev *pdev)
 }
 #endif /* CONFIG_PM */
 
-
 MODULE_DEVICE_TABLE(pci, prism2_pci_id_table);
 
 static struct pci_driver prism2_pci_driver = {
@@ -457,18 +442,15 @@ static struct pci_driver prism2_pci_driver = {
 #endif /* CONFIG_PM */
 };
 
-
 static int __init init_prism2_pci(void)
 {
 	return pci_register_driver(&prism2_pci_driver);
 }
 
-
 static void __exit exit_prism2_pci(void)
 {
 	pci_unregister_driver(&prism2_pci_driver);
 }
-
 
 module_init(init_prism2_pci);
 module_exit(exit_prism2_pci);

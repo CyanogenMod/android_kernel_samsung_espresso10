@@ -81,7 +81,6 @@ struct abe {
 	/* spinlock */
 	spinlock_t lock;
 
-
 #ifdef CONFIG_DEBUG_FS
 	struct dentry *debugfs_root;
 #endif

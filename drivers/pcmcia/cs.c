@@ -38,7 +38,6 @@
 #include <pcmcia/ds.h>
 #include "cs_internal.h"
 
-
 /* Module parameters */
 
 MODULE_AUTHOR("David Hinds <dahinds@users.sourceforge.net>");
@@ -59,12 +58,10 @@ INT_MODULE_PARM(unreset_limit,	30);		/* unreset_check's */
 /* Access speed for attribute memory windows */
 INT_MODULE_PARM(cis_speed,	300);		/* ns */
 
-
 socket_state_t dead_socket = {
 	.csc_mask	= SS_DETECT,
 };
 EXPORT_SYMBOL(dead_socket);
-
 
 /* List of all sockets, protected by a rwsem */
 LIST_HEAD(pcmcia_socket_list);
@@ -72,7 +69,6 @@ EXPORT_SYMBOL(pcmcia_socket_list);
 
 DECLARE_RWSEM(pcmcia_socket_list_rwsem);
 EXPORT_SYMBOL(pcmcia_socket_list_rwsem);
-
 
 struct pcmcia_socket *pcmcia_get_socket(struct pcmcia_socket *skt)
 {
@@ -83,13 +79,11 @@ struct pcmcia_socket *pcmcia_get_socket(struct pcmcia_socket *skt)
 }
 EXPORT_SYMBOL(pcmcia_get_socket);
 
-
 void pcmcia_put_socket(struct pcmcia_socket *skt)
 {
 	put_device(&skt->dev);
 }
 EXPORT_SYMBOL(pcmcia_put_socket);
-
 
 static void pcmcia_release_socket(struct device *dev)
 {
@@ -202,7 +196,6 @@ int pcmcia_register_socket(struct pcmcia_socket *socket)
 } /* pcmcia_register_socket */
 EXPORT_SYMBOL(pcmcia_register_socket);
 
-
 /**
  * pcmcia_unregister_socket - remove a pcmcia socket device
  * @socket: the &socket to unregister
@@ -231,7 +224,6 @@ void pcmcia_unregister_socket(struct pcmcia_socket *socket)
 	wait_for_completion(&socket->socket_released);
 } /* pcmcia_unregister_socket */
 EXPORT_SYMBOL(pcmcia_unregister_socket);
-
 
 struct pcmcia_socket *pcmcia_get_socket_by_nr(unsigned int nr)
 {
@@ -723,7 +715,6 @@ void pcmcia_parse_uevents(struct pcmcia_socket *s, u_int events)
 }
 EXPORT_SYMBOL(pcmcia_parse_uevents);
 
-
 /* register pcmcia_callback */
 int pccard_register_pcmcia(struct pcmcia_socket *s, struct pcmcia_callback *c)
 {
@@ -751,7 +742,6 @@ int pccard_register_pcmcia(struct pcmcia_socket *s, struct pcmcia_callback *c)
 	return ret;
 }
 EXPORT_SYMBOL(pccard_register_pcmcia);
-
 
 /* I'm not sure which "reset" function this is supposed to use,
  * but for now, it uses the low-level interface's reset, not the
@@ -798,7 +788,6 @@ int pcmcia_reset_card(struct pcmcia_socket *skt)
 } /* reset_card */
 EXPORT_SYMBOL(pcmcia_reset_card);
 
-
 static int pcmcia_socket_uevent(struct device *dev,
 				struct kobj_uevent_env *env)
 {
@@ -810,14 +799,12 @@ static int pcmcia_socket_uevent(struct device *dev,
 	return 0;
 }
 
-
 static struct completion pcmcia_unload;
 
 static void pcmcia_release_socket_class(struct class *data)
 {
 	complete(&pcmcia_unload);
 }
-
 
 #ifdef CONFIG_PM
 
@@ -882,7 +869,6 @@ struct class pcmcia_socket_class = {
 };
 EXPORT_SYMBOL(pcmcia_socket_class);
 
-
 static int __init init_pcmcia_cs(void)
 {
 	init_completion(&pcmcia_unload);
@@ -897,4 +883,3 @@ static void __exit exit_pcmcia_cs(void)
 
 subsys_initcall(init_pcmcia_cs);
 module_exit(exit_pcmcia_cs);
-

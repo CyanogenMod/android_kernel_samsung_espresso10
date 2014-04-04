@@ -226,6 +226,8 @@ void _clkdm_del_autodeps(struct clockdomain *clkdm)
 	}
 }
 
+/* commenting unused function */
+#if 0
 /**
  * _resolve_clkdm_deps() - resolve clkdm_names in @clkdm_deps to clkdms
  * @clkdm: clockdomain that we are resolving dependencies for
@@ -251,6 +253,7 @@ static void _resolve_clkdm_deps(struct clockdomain *clkdm,
 		     clkdm->name, cd->clkdm_name);
 	}
 }
+#endif
 
 /* Public functions */
 

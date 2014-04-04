@@ -28,7 +28,6 @@ Status: works
 Devices: [National Instruments] PCI-6527 (ni6527), PXI-6527
 Updated: Sat, 25 Jan 2003 13:24:40 -0800
 
-
 */
 
 /*

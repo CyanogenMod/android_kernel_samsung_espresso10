@@ -26,7 +26,6 @@
 #include <net/netlink.h>
 #include <net/pkt_sched.h>
 
-
 /*	Stochastic Fairness Queuing algorithm.
 	=======================================
 
@@ -37,11 +36,9 @@
 	Paul E. McKenney "Stochastic Fairness Queuing",
 	"Interworking: Research and Experience", v.2, 1991, p.113-131.
 
-
 	See also:
 	M. Shreedhar and George Varghese "Efficient Fair
 	Queuing using Deficit Round Robin", Proc. SIGCOMM 95.
-
 
 	This is not the thing that is usually called (W)FQ nowadays.
 	It does not use any timestamp mechanism, but instead
@@ -250,7 +247,6 @@ static inline void sfq_link(struct sfq_sched_data *q, sfq_index x)
 	p = q->slots[x].dep.prev;		\
 	sfq_dep_head(q, p)->next = n;		\
 	sfq_dep_head(q, n)->prev = p
-
 
 static inline void sfq_dec(struct sfq_sched_data *q, sfq_index x)
 {

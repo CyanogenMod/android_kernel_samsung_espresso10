@@ -175,7 +175,6 @@ static struct pnp_option *pnp_clone_dependent_set(struct pnp_dev *dev,
 	return first_new_option;
 }
 
-
 static void quirk_add_irq_optional_dependent_sets(struct pnp_dev *dev)
 {
 	struct pnp_option *new_option;

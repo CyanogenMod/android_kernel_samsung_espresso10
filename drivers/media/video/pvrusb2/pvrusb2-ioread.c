@@ -500,7 +500,6 @@ int pvr2_ioread_read(struct pvr2_ioread *cp,void __user *buf,unsigned int cnt)
 	return ret;
 }
 
-
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:
   *** Local Variables: ***

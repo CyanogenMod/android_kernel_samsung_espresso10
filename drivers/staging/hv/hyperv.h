@@ -32,7 +32,6 @@
 #include <linux/completion.h>
 #include <linux/device.h>
 
-
 #include <asm/hyperv.h>
 
 struct hv_guid {
@@ -65,7 +64,6 @@ struct hv_multipage_buffer {
 					 MAX_PAGE_BUFFER_COUNT))
 #define MAX_MULTIPAGE_BUFFER_PACKET	(0x18 +			\
 					 sizeof(struct hv_multipage_buffer))
-
 
 #pragma pack(pop)
 
@@ -130,7 +128,6 @@ struct hv_ring_buffer_debug_info {
  * 3.1 - Added completed hv_utils driver. Shutdown/Heartbeat/Timesync
  */
 #define HV_DRV_VERSION           "3.1"
-
 
 /*
  * A revision number of vmbus that is used for ensuring both ends on a
@@ -327,7 +324,6 @@ enum vmbus_packet_type {
 };
 
 #define VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED	1
-
 
 /* Version 1 messages */
 enum vmbus_channel_message_type {
@@ -609,7 +605,6 @@ struct vmbus_channel_msginfo {
 	unsigned char msg[0];
 };
 
-
 void free_channel(struct vmbus_channel *channel);
 
 void vmbus_onmessage(void *context);
@@ -639,7 +634,6 @@ struct vmbus_channel_packet_multipage_buffer {
 	u32 rangecount;		/* Always 1 in this case */
 	struct hv_multipage_buffer range;
 } __packed;
-
 
 extern int vmbus_open(struct vmbus_channel *channel,
 			    u32 send_ringbuffersize,
@@ -698,10 +692,8 @@ extern void vmbus_get_debug_info(struct vmbus_channel *channel,
 
 extern void vmbus_ontimer(unsigned long data);
 
-
 #define LOWORD(dw) ((unsigned short)(dw))
 #define HIWORD(dw) ((unsigned short)(((unsigned int) (dw) >> 16) & 0xFFFF))
-
 
 #define VMBUS				0x0001
 #define STORVSC				0x0002
@@ -766,8 +758,6 @@ extern unsigned int vmbus_loglevel;
 		       __func__, ## args);\
 	} while (0)
 
-
-
 struct hv_driver;
 struct hv_device;
 
@@ -828,7 +818,6 @@ struct hv_device {
 	void *ext;
 };
 
-
 static inline struct hv_device *device_to_hv_device(struct device *d)
 {
 	return container_of(d, struct hv_device, device);
@@ -838,7 +827,6 @@ static inline struct hv_driver *drv_to_hv_drv(struct device_driver *d)
 {
 	return container_of(d, struct hv_driver, driver);
 }
-
 
 /* Vmbus interface */
 int vmbus_child_driver_register(struct device_driver *drv);

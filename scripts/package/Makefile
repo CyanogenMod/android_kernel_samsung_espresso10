@@ -101,7 +101,6 @@ deb-pkg: FORCE
 
 clean-dirs += $(objtree)/debian/
 
-
 # tarball targets
 # ---------------------------------------------------------------------------
 tar%pkg: FORCE
@@ -109,7 +108,6 @@ tar%pkg: FORCE
 	$(CONFIG_SHELL) $(srctree)/scripts/package/buildtar $@
 
 clean-dirs += $(objtree)/tar-install/
-
 
 # perf-pkg - generate a source tarball with perf source
 # ---------------------------------------------------------------------------
@@ -148,4 +146,3 @@ help: FORCE
 	@echo '  perf-targz-src-pkg  - Build $(perf-tar).tar.gz source tarball'
 	@echo '  perf-tarbz2-src-pkg - Build $(perf-tar).tar.bz2 source tarball'
 	@echo '  perf-tarxz-src-pkg  - Build $(perf-tar).tar.xz source tarball'
-

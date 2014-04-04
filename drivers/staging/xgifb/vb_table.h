@@ -236,7 +236,6 @@ static struct XGI_StStruct XGI330_SModeIDTable[] = {
 	{0xff, 0x0000, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 };
 
-
 static struct XGI_ExtStruct XGI330_EModeIDTable[] = {
 	{0x6a, 0x2212, 0x0407, 0x3a81, 0x0102, 0x08,
 		0x07, 0x00, 0x00, 0x07, 0x0e},
@@ -2108,7 +2107,6 @@ static struct XGI330_LVDSDataStruct  XGI_LVDS1024x768Data_1[] = {
 	{1344, 806, 1344, 806}	/* 06 (512x384,1024x768) */
 };
 
-
 static struct XGI330_LVDSDataStruct  XGI_LVDS1024x768Data_2[] = {
 	{1344, 806, 1344, 806},
 	{1344, 806, 1344, 806},
@@ -2277,7 +2275,6 @@ static struct XGI330_LVDSDataStruct XGI_LVDS1024x768Data_1x75[] = {
 	{1088, 632, 1312, 800}, /* 05 (400x300,800x600) */
 	{1312, 800, 1312, 800}, /* 06 (512x384,1024x768) */
 };
-
 
 static struct XGI330_LVDSDataStruct XGI_LVDS1024x768Data_2x75[] = {
 	{1312, 800, 1312, 800}, /* ; 00 (320x200,320x400,640x200,640x400) */
@@ -3384,7 +3381,6 @@ static struct XGI_Ext2Struct XGI330_RefIndex[] = {
 	0x30, 0x47, 0x37, 1024, 768},/* 48 1024x768x160Hz */
 };
 
-
 #if 0
 static struct XGI330_VCLKDataStruct XGI330_VCLKData[] = {
 	{0x1b, 0xe1,  25}, /* 0x0 */
@@ -4003,7 +3999,6 @@ static unsigned char XGI301TVDelayList2[] = {
 	0x22  /* ; B StYPbPrDealy(750p) */
 };
 
-
 static unsigned char TVAntiFlickList[] = {/* NTSCAntiFlicker */
 	0x04, /* ; 0 Adaptive */
 	0x00, /* ; 1 new anti-flicker ? */
@@ -4014,7 +4009,6 @@ static unsigned char TVAntiFlickList[] = {/* NTSCAntiFlicker */
 	0x04, /* ; 0 ? */
 	0x00  /* ; 1 new anti-flicker ? */
 };
-
 
 static unsigned char TVEdgeList[] = {
 	0x00, /* ; 0 NTSC No Edge enhance */

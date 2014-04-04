@@ -144,7 +144,6 @@ static inline u32 jhash2(const u32 *k, u32 length, u32 initval)
 	return c;
 }
 
-
 /* jhash_3words - hash exactly 3, 2 or 1 word(s) */
 static inline u32 jhash_3words(u32 a, u32 b, u32 c, u32 initval)
 {

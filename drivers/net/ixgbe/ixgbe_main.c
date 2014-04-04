@@ -129,6 +129,12 @@ static DEFINE_PCI_DEVICE_TABLE(ixgbe_pci_tbl) = {
 	 board_82599 },
 	{PCI_VDEVICE(INTEL, IXGBE_DEV_ID_82599_LS),
 	 board_82599 },
+	{PCI_VDEVICE(INTEL, IXGBE_DEV_ID_82599EN_SFP),
+	 board_82599 },
+	{PCI_VDEVICE(INTEL, IXGBE_DEV_ID_82599_SFP_SF_QP),
+	 board_82599 },
+	{PCI_VDEVICE(INTEL, IXGBE_DEV_ID_X540T1),
+	 board_X540 },
 
 	/* required last entry */
 	{0, }
@@ -246,7 +252,6 @@ static const struct ixgbe_reg_info ixgbe_reg_info_tbl[] = {
 	/* List Terminator */
 	{}
 };
-
 
 /*
  * ixgbe_regdump - register printout routine
@@ -1688,7 +1693,6 @@ static u8 ixgbe_update_itr(struct ixgbe_adapter *adapter,
 
 	if (packets == 0)
 		goto update_itr_done;
-
 
 	/* simple throttlerate management
 	 *    0-20MB/s lowest (100000 ints/s)
@@ -3731,7 +3735,6 @@ static void ixgbe_configure_dcb(struct ixgbe_adapter *adapter)
 
 	if (hw->mac.type == ixgbe_mac_82598EB)
 		netif_set_gso_max_size(adapter->netdev, 32768);
-
 
 	/* Enable VLAN tag insert/strip */
 	adapter->netdev->features |= NETIF_F_HW_VLAN_RX;
@@ -7197,7 +7200,6 @@ static struct rtnl_link_stats64 *ixgbe_get_stats64(struct net_device *netdev,
 	stats->rx_missed_errors	= netdev->stats.rx_missed_errors;
 	return stats;
 }
-
 
 static const struct net_device_ops ixgbe_netdev_ops = {
 	.ndo_open		= ixgbe_open,

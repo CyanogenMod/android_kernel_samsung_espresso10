@@ -39,7 +39,7 @@ PURPOSE AND NONINFRINGEMENT; AND (B) IN NO EVENT SHALL THE AUTHORS OR
 COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  
+
 */ /**************************************************************************/
 #if !defined (__IMG_DEFS_H__)
 #define __IMG_DEFS_H__
@@ -73,7 +73,6 @@ typedef		enum	img_tag_TriStateSwitch
 #endif
 #endif
 
-
 /* Use this in any file, or use attributes under GCC - see below */
 #ifndef PVR_UNREFERENCED_PARAMETER
 #define	PVR_UNREFERENCED_PARAMETER(param) (param) = (param)
@@ -101,7 +100,6 @@ typedef char				TCHAR, *PTCHAR, *PTSTR;
 #endif	/* #if defined(UNICODE) */
 #define _TCHAR_DEFINED
 #endif /* #ifndef _TCHAR_DEFINED */
-
 
 			#if defined(__linux__) || defined(__QNXNTO__) || defined(__METAG)
 

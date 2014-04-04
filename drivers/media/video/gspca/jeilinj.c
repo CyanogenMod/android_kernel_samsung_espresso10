@@ -534,7 +534,6 @@ static int sd_get_jcomp(struct gspca_dev *gspca_dev,
 	return 0;
 }
 
-
 /* sub-driver description */
 static const struct sd_desc sd_desc_sakar_57379 = {
 	.name   = MODULE_NAME,

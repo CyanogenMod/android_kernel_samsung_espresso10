@@ -224,7 +224,6 @@ int snd_wss_put_single(struct snd_kcontrol *kcontrol,
 		   (shift_right << 19) | (mask << 24) | (invert << 22), \
   .tlv = { .p = (xtlv) } }
 
-
 int snd_wss_info_double(struct snd_kcontrol *kcontrol,
 			struct snd_ctl_elem_info *uinfo);
 int snd_wss_get_double(struct snd_kcontrol *kcontrol,

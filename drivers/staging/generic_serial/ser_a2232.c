@@ -116,7 +116,7 @@ static irqreturn_t a2232_vbl_inter(int irq, void *data);
 static void a2232_init_portstructs(void);
 /* Initialize and register TTY drivers. */
 /* returns 0 IFF successful */
-static int a2232_init_drivers(void); 
+static int a2232_init_drivers(void);
 
 /* BEGIN GENERIC_SERIAL PROTOTYPES */
 static void a2232_disable_tx_interrupts(void *ptr);
@@ -166,10 +166,10 @@ static struct a2232_port a2232_ports[MAX_A2232_BOARDS*NUMLINES];
 static struct tty_driver *a2232_driver;
 
 /* nr of cards completely (all ports) and correctly configured */
-static int nr_a2232; 
+static int nr_a2232;
 
 /* zorro_dev structs for the A2232's */
-static struct zorro_dev *zd_a2232[MAX_A2232_BOARDS]; 
+static struct zorro_dev *zd_a2232[MAX_A2232_BOARDS];
 /***************************** End of Global variables **************/
 
 /* Helper functions */
@@ -219,7 +219,7 @@ static void a2232_disable_tx_interrupts(void *ptr)
 	struct a2232_port *port;
 	volatile struct a2232status *stat;
 	unsigned long flags;
-  
+
 	port = ptr;
 	stat = a2232stat(port->which_a2232, port->which_port_on_a2232);
 	stat->OutDisable = -1;
@@ -278,18 +278,18 @@ static void a2232_shutdown_port(void *ptr)
 	local_irq_save(flags);
 
 	port->gs.port.flags &= ~GS_ACTIVE;
-	
+
 	if (port->gs.port.tty && port->gs.port.tty->termios->c_cflag & HUPCL) {
 		/* Set DTR and RTS to Low, flush output.
 		   The NetBSD driver "msc.c" does it this way. */
-		stat->Command = (	(stat->Command & ~A2232CMD_CMask) | 
+		stat->Command = (	(stat->Command & ~A2232CMD_CMask) |
 					A2232CMD_Close );
 		stat->OutFlush = -1;
 		stat->Setup = -1;
 	}
 
 	local_irq_restore(flags);
-	
+
 	/* After analyzing control flow, I think a2232_shutdown_port
 		is actually the last call from the system when at application
 		level someone issues a "echo Hello >>/dev/ttyY0".
@@ -314,7 +314,7 @@ static int  a2232_set_real_termios(void *ptr)
 
 	status = a2232stat(port->which_a2232, port->which_port_on_a2232);
 	mem = a2232mem(port->which_a2232);
-	
+
 	a2232_param = a2232_cmd = 0;
 
 	// get baud rate
@@ -327,11 +327,11 @@ static int  a2232_set_real_termios(void *ptr)
 					A2232CMD_Close );
 		status->OutFlush = -1;
 		status->Setup = -1;
-		
+
 		local_irq_restore(flags);
 		return 0;
 	}
-	
+
 	rate = A2232_BAUD_TABLE_NOAVAIL;
 	for (i=0; i < A2232_BAUD_TABLE_NUM_RATES * 3; i += 3){
 		if (a2232_baud_table[i] == baud){
@@ -397,14 +397,12 @@ static int  a2232_set_real_termios(void *ptr)
 	}
 	else a2232_cmd |= A2232CMD_NoParity;
 
-
 	/*	Hmm. Maybe an own a2232_port structure
 		member would be cleaner?	*/
 	if (cflag & CLOCAL)
 		port->gs.port.flags &= ~ASYNC_CHECK_CD;
 	else
 		port->gs.port.flags |= ASYNC_CHECK_CD;
-
 
 	/* Now we have all parameters and can go to set them: */
 	local_irq_save(flags);
@@ -422,7 +420,7 @@ static int  a2232_set_real_termios(void *ptr)
 static int  a2232_chars_in_buffer(void *ptr)
 {
 	struct a2232_port *port;
-	volatile struct a2232status *status; 
+	volatile struct a2232status *status;
 	unsigned char ret; /* we need modulo-256 arithmetics */
 	port = ptr;
 	status = a2232stat(port->which_a2232, port->which_port_on_a2232);
@@ -481,7 +479,7 @@ static int  a2232_open(struct tty_struct * tty, struct file * filp)
 
 	line = tty->index;
 	port = &a2232_ports[line];
-	
+
 	tty->driver_data = port;
 	port->gs.port.tty = tty;
 	port->gs.port.count++;
@@ -499,7 +497,7 @@ static int  a2232_open(struct tty_struct * tty, struct file * filp)
 	}
 
 	a2232_enable_rx_interrupts(port);
-	
+
 	return 0;
 }
 /*** END OF FUNCTIONS EXPECTED BY TTY DRIVER STRUCTS ***/
@@ -535,10 +533,10 @@ int ch, err, n, p;
 					if (newhead != bufpos) {
 						/* buffer for input chars/events */
 						ibuf = mem->InBuf[p];
- 
+
 						/* data types of bytes in ibuf */
 						cbuf = mem->InCtl[p];
- 
+
 						/* do for all chars */
 						while (bufpos != newhead) {
 							/* which type of input data? */
@@ -570,8 +568,8 @@ int ch, err, n, p;
 						} /* while there's something in the buffer */
 
 						status->InTail = bufpos;            /* tell 65EC02 what we've read */
-						
-					} /* if there was something in the buffer */                          
+
+					} /* if there was something in the buffer */
 				} /* If input is not disabled */
 
 				/* Now check if there's something to output */
@@ -588,17 +586,17 @@ int ch, err, n, p;
 					}
 					else{																									/* If A2232 the buffer is full */
 						break;																							/* simply stop filling it. */
-					}													
-				}					
+					}
+				}
 				status->OutHead = bufpos;
-					
+
 				/* WakeUp if output buffer runs low */
 				if ((port->gs.xmit_cnt <= port->gs.wakeup_chars) && port->gs.port.tty) {
 					tty_wakeup(port->gs.port.tty);
 				}
 			} // if the port is used
 		} // for every port on the board
-			
+
 		/* Now check the CD message queue */
 		newhead = mem->Common.CDHead;
 		bufpos = mem->Common.CDTail;
@@ -617,7 +615,7 @@ int ch, err, n, p;
 						if (!(port->gs.port.flags & ASYNC_CHECK_CD))
 							;	/* Don't report DCD changes */
 						else if (port->cd_status) { // if DCD on: DCD went UP!
-							
+
 							/* Are we blocking in open?*/
 							wake_up_interruptible(&port->gs.port.open_wait);
 						}
@@ -625,7 +623,7 @@ int ch, err, n, p;
 							if (port->gs.port.tty)
 								tty_hangup (port->gs.port.tty);
 						}
-						
+
 					} // if CD changed for this port
 					ccd >>= 1;
 					ncd >>= 1;									/* Shift bits for next line */
@@ -634,7 +632,7 @@ int ch, err, n, p;
 			mem->Common.CDStatus = ocd; /* save new status */
 			mem->Common.CDTail = bufpos; /* remove events */
 		} // if events in CD queue
-		
+
 	} // for every completely initialized A2232 board
 	return IRQ_HANDLED;
 }
@@ -734,7 +732,7 @@ static int __init a2232board_init(void)
 	z = NULL;
 	nr_a2232 = 0;
 	while ( (z = zorro_find_device(ZORRO_WILDCARD, z)) ){
-		if (	(z->id != ZORRO_PROD_CBM_A2232_PROTOTYPE) && 
+		if (	(z->id != ZORRO_PROD_CBM_A2232_PROTOTYPE) &&
 			(z->id != ZORRO_PROD_CBM_A2232)	){
 			continue;	// The board found was no A2232
 		}
@@ -757,13 +755,13 @@ static int __init a2232board_init(void)
 		to += start;
 		while(bcount--) *to++ = *from++;
 		printk("65EC02 software uploaded to the A2232 memory.\n");
-  
+
 		mem->Common.Crystal = A2232_UNKNOWN;  /* use automatic speed check */
-  
+
 		/* start 6502 running */
 		(void) mem->ResetBoard;
 		printk("A2232's 65EC02 CPU up and running.\n");
-  
+
 		/* wait until speed detector has finished */
 		for (bcount = 0; bcount < 2000; bcount++) {
 			udelay(1000);
@@ -787,7 +785,7 @@ static int __init a2232board_init(void)
 
 		nr_a2232++;
 
-	}	
+	}
 
 	printk("Total: %d A2232 boards initialized.\n", nr_a2232); /* Some status report if no card was found */
 

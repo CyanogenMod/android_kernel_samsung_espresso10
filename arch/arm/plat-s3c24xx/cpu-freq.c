@@ -487,7 +487,6 @@ static struct cpufreq_driver s3c24xx_driver = {
 	.name		= "s3c24xx",
 };
 
-
 int __init s3c_cpufreq_register(struct s3c_cpufreq_info *info)
 {
 	if (!info || !info->name) {

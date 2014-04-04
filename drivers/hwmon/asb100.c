@@ -79,7 +79,6 @@ static const u16 asb100_reg_temp_hyst[]	= {0, 0x3a, 0x153, 0x253, 0x19};
 #define ASB100_REG_TEMP2_CONFIG	0x0152
 #define ASB100_REG_TEMP3_CONFIG	0x0252
 
-
 #define ASB100_REG_CONFIG	0x40
 #define ASB100_REG_ALARM1	0x41
 #define ASB100_REG_ALARM2	0x42

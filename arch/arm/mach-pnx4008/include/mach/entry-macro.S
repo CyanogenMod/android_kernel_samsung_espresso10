@@ -111,7 +111,6 @@
 		cmp	\irqstat,#1<<1
 		addhs	\irqnr,\irqnr,#1
 
-
 /* is irqstat not zero */
 
 1002:
@@ -120,8 +119,5 @@
 1003:
 		.endm
 
-
 		.macro	irq_prio_table
 		.endm
-
-

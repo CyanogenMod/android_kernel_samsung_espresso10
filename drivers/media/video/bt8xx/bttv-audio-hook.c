@@ -161,7 +161,6 @@ void avermedia_tvphone_audio(struct bttv *btv, struct v4l2_tuner *t, int set)
 	}
 }
 
-
 void avermedia_tv_stereo_audio(struct bttv *btv, struct v4l2_tuner *t, int set)
 {
 	int val = 0;
@@ -230,7 +229,6 @@ void terratv_audio(struct bttv *btv,  struct v4l2_tuner *t, int set)
 			V4L2_TUNER_MODE_LANG1 | V4L2_TUNER_MODE_LANG2;
 	}
 }
-
 
 void winfast2000_audio(struct bttv *btv, struct v4l2_tuner *t, int set)
 {

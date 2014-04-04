@@ -38,7 +38,6 @@
 #define MEMDUMP_SIZE	32
 #define	MOD_DISABLE	(RIO_NOREAD|RIO_NOWRITE|RIO_NOXPRINT)
 
-
 struct rio_info {
 	int mode;		/* Intr or polled, word/byte */
 	spinlock_t RIOIntrSem;	/* Interrupt thread sem */
@@ -107,7 +106,6 @@ struct rio_info {
 	int intr_tid;		/* iointset return value */
 	int TxEnSem;		/* TxEnable Semaphore */
 
-
 	struct Error RIOError;	/* to Identify what went wrong */
 	struct Conf RIOConf;	/* Configuration ??? */
 	struct ttystatics channel[RIO_PORTS];	/* channel information */
@@ -124,14 +122,11 @@ struct rio_info {
 
 };
 
-
 #ifdef linux
 #define debug(x)        printk x
 #else
 #define debug(x)	kkprintf x
 #endif
-
-
 
 #define RIO_RESET_INT	0x7d80
 

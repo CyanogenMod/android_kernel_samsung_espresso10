@@ -315,7 +315,6 @@ static u32 reg_init_initialize[] =
 	0x454, 0x0425b9, /* Sound Easy programming(reset) */
 	0x454, 0x042539, /* Sound Easy programming(reset) */
 
-
 	/**** common setting( of DVD play, including scaler commands) ****/
 	0x042, 0x003, /* Data path configuration for VBI (TASK A) */
 
@@ -450,7 +449,6 @@ static u32 reg_init_initialize[] =
 	0x464, 0x000,
 	0x46c, 0xbbbb10,
 	0x470, 0x101010,
-
 
 	0x478, 0x000,
 	0x474, 0x018,
@@ -688,7 +686,6 @@ static u32 reg_set_audio_template[4][2] =
 	}
 };
 
-
 /* Get detected audio flags (from saa7134 driver) */
 static void get_inf_dev_status(struct v4l2_subdev *sd,
 		int *dual_flag, int *stereo_flag)
@@ -722,7 +719,6 @@ static void get_inf_dev_status(struct v4l2_subdev *sd,
 		[0x13 ... 0x1e] = "unknown",
 		[0x1f] = "??? [in progress]",
 	};
-
 
 	*dual_flag = *stereo_flag = 0;
 
@@ -1244,7 +1240,6 @@ static const struct v4l2_subdev_ops saa717x_ops = {
 };
 
 /* ----------------------------------------------------------------------- */
-
 
 /* i2c implementation */
 

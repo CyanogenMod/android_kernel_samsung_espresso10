@@ -732,9 +732,6 @@ static int __init init_log(struct logger_log *log)
 		return ret;
 	}
 
-	printk(KERN_INFO "logger: created %luK log '%s'\n",
-	       (unsigned long) log->size >> 10, log->misc.name);
-
 	return 0;
 }
 

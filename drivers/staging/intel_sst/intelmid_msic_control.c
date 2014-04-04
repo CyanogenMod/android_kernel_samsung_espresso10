@@ -331,7 +331,6 @@ static int msic_set_selected_lineout_dev(u8 value)
 	return retval;
 }
 
-
 static int msic_power_up_pb(unsigned int device)
 {
 	struct sc_reg_access vaud[] = {
@@ -612,8 +611,6 @@ static int msic_power_down_pb(unsigned int device)
 		{0x381, 0x00, 0x10},
 	};
 
-
-
 	pr_debug("powering dn pb for device %d\n", device);
 	switch (device) {
 	case SND_SST_DEVICE_HEADSET:
@@ -775,7 +772,6 @@ static int msic_set_hw_dmic_route(u8 hw_ch_index)
 
 	return retval;
 }
-
 
 static int msic_set_pcm_voice_params(void)
 {
@@ -1018,8 +1014,6 @@ static void msic_pmic_irq_cb(void *cb_data, u8 intsts)
 		sst_mad_send_jack_report(&mjack->jack,
 					buttonpressflag, present);
 }
-
-
 
 struct snd_pmic_ops snd_msic_ops = {
 	.set_input_dev	=	msic_set_selected_input_dev,

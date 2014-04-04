@@ -54,7 +54,6 @@
 #define MLOG_MASK_PREFIX ML_DLMFS
 #include "cluster/masklog.h"
 
-
 static const struct super_operations dlmfs_ops;
 static const struct file_operations dlmfs_file_operations;
 static const struct inode_operations dlmfs_dir_inode_operations;
@@ -63,8 +62,6 @@ static const struct inode_operations dlmfs_file_inode_operations;
 static struct kmem_cache *dlmfs_inode_cache;
 
 struct workqueue_struct *user_dlm_worker;
-
-
 
 /*
  * These are the ABI capabilities of dlmfs.
@@ -103,7 +100,6 @@ static int param_get_dlmfs_capabilities(char *buffer,
 module_param_call(capabilities, param_set_dlmfs_capabilities,
 		  param_get_dlmfs_capabilities, NULL, 0444);
 MODULE_PARM_DESC(capabilities, DLMFS_CAPABILITIES);
-
 
 /*
  * decodes a set of open flags into a valid lock level and a set of flags.

@@ -46,7 +46,6 @@
 #include "musb_core.h"
 #include "musb_host.h"
 
-
 /* MUSB HOST status 22-mar-2006
  *
  * - There's still lots of partial code duplication for fault paths, so
@@ -81,7 +80,6 @@
  *   although ARP RX wins.  (That test was done with a full speed link.)
  */
 
-
 /*
  * NOTE on endpoint usage:
  *
@@ -96,7 +94,6 @@
  * of transfers between endpoints, or anything clever.
  */
 
-
 static void musb_ep_program(struct musb *musb, u8 epnum,
 			struct urb *urb, int is_out,
 			u8 *buf, u32 offset, u32 len);
@@ -110,7 +107,7 @@ static void musb_h_tx_flush_fifo(struct musb_hw_ep *ep)
 	void __iomem	*epio = ep->regs;
 	u16		csr;
 	u16		lastcsr = 0;
-	int		retries = 1000;
+	int		retries = 500;
 
 	csr = musb_readw(epio, MUSB_TXCSR);
 	while (csr & MUSB_TXCSR_FIFONOTEMPTY) {
@@ -884,7 +881,6 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
 	}
 }
 
-
 /*
  * Service the default endpoint (ep0) as host.
  * Return true until it's time to start the status stage.
@@ -1085,7 +1081,6 @@ irqreturn_t musb_h_ep0_irq(struct musb *musb)
 done:
 	return retval;
 }
-
 
 #ifdef CONFIG_USB_INVENTRA_DMA
 
@@ -1342,7 +1337,6 @@ void musb_host_tx(struct musb *musb, u8 epnum)
 	musb_writew(epio, MUSB_TXCSR,
 			MUSB_TXCSR_H_WZC_BITS | MUSB_TXCSR_TXPKTRDY);
 }
-
 
 #ifdef CONFIG_USB_INVENTRA_DMA
 
@@ -2082,7 +2076,6 @@ done:
 	return ret;
 }
 
-
 /*
  * abort a transfer that's at the head of a hardware queue.
  * called with controller locked, irqs blocked
@@ -2327,12 +2320,28 @@ static int musb_bus_resume(struct usb_hcd *hcd)
 	return 0;
 }
 
-static int musb_vbus_reset(struct usb_hcd *hcd, int portnum)
+static void musb_vbus_reset(struct usb_hcd *hcd, int portnum)
 {
 	struct musb     *musb = hcd_to_musb(hcd);
-	int ret = 0;
 
-	ret = musb_platform_vbus_reset(musb);
+	musb_platform_vbus_reset(musb);
+}
+
+static int musb_hcd_reset(struct usb_hcd *hcd)
+{
+	int ret = -EINVAL;
+#ifdef CONFIG_USB_SAMSUNG_OMAP_HCD_RESET_SUPPORT
+	struct musb     *musb = hcd_to_musb(hcd);
+
+	musb->vbus_reset_count = -1;
+	if (musb->xceiv->last_event == USB_EVENT_ID)
+		ret = musb_platform_otg_notifications
+			(musb, USB_EVENT_HOST_NONE);
+	musb->otg_enum_delay += 500;
+	if (musb->xceiv->last_event == USB_EVENT_ID)
+		ret = musb_platform_otg_notifications
+			(musb, USB_EVENT_ID);
+#endif
 
 	return ret;
 }
@@ -2393,7 +2402,6 @@ static int musb_alloc_temp_buffer(struct urb *urb, gfp_t mem_flags)
 	/* Position our struct temp_buffer such that data is aligned */
 	temp = PTR_ALIGN(kmalloc_ptr, MUSB_USB_DMA_ALIGN);
 
-
 	temp->kmalloc_ptr = kmalloc_ptr;
 	temp->old_xfer_buffer = urb->transfer_buffer;
 	if (dir == DMA_TO_DEVICE)
@@ -2428,7 +2436,6 @@ static void musb_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
 	musb_free_temp_buffer(urb);
 }
 
-
 const struct hc_driver musb_hc_driver = {
 	.description		= "musb-hcd",
 	.product_desc		= "MUSB HDRC host driver",
@@ -2457,6 +2464,7 @@ const struct hc_driver musb_hc_driver = {
 	.bus_resume		= musb_bus_resume,
 /* relinquish_port function is used for vbus reset */
 	.relinquish_port	= musb_vbus_reset,
+	.hcd_reset		= musb_hcd_reset,
 	/* .start_port_reset	= NULL, */
 	/* .hub_irq_enable	= NULL, */
 };

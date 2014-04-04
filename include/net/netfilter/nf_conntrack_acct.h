@@ -38,7 +38,6 @@ struct nf_conn_counter *nf_ct_acct_ext_add(struct nf_conn *ct, gfp_t gfp)
 	if (!acct)
 		pr_debug("failed to add accounting extension area");
 
-
 	return acct;
 };
 

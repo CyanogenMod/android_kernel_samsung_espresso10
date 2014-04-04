@@ -70,12 +70,10 @@ static inline xfs_lsn_t	_lsn_cmp(xfs_lsn_t lsn1, xfs_lsn_t lsn2)
 
 #endif	/* __KERNEL__ */
 
-
 /* Log Clients */
 #define XFS_TRANSACTION		0x69
 #define XFS_VOLUME		0x2
 #define XFS_LOG			0xaa
-
 
 /* Region types for iovec's i_type */
 #define XLOG_REG_TYPE_BFORMAT		1
@@ -123,7 +121,6 @@ typedef struct xfs_log_callback {
 	void			(*cb_func)(void *, int);
 	void			*cb_arg;
 } xfs_log_callback_t;
-
 
 #ifdef __KERNEL__
 /* Log manager interfaces */

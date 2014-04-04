@@ -35,14 +35,12 @@
 	/* user -> kernel */
 /* none */
 
-
 /*
  * Message Structures :
  */
 
 /* macro to round up message lengths to 8byte boundary */
 #define FC_NL_MSGALIGN(len)		(((len) + 7) & ~7)
-
 
 /*
  * FC Transport Broadcast Event Message :
@@ -66,6 +64,4 @@ struct fc_nl_event {
 	uint32_t event_data;
 } __attribute__((aligned(sizeof(uint64_t))));
 
-
 #endif /* SCSI_NETLINK_FC_H */
-

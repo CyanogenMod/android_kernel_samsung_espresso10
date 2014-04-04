@@ -32,5 +32,4 @@ static inline void arch_reset(char mode, const char *cmd)
 		;
 }
 
-
 #endif

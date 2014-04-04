@@ -65,7 +65,6 @@ int drm_buffer_alloc(struct drm_buffer **buf, int size)
 			kmalloc(min(PAGE_SIZE, size - idx * PAGE_SIZE),
 				GFP_KERNEL);
 
-
 		if ((*buf)->data[idx] == NULL) {
 			DRM_ERROR("Failed to allocate %dth page for drm"
 					" buffer with %d bytes and %d pages.\n",

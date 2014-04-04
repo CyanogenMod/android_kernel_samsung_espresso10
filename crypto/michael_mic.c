@@ -16,7 +16,6 @@
 #include <linux/string.h>
 #include <linux/types.h>
 
-
 struct michael_mic_ctx {
 	u32 l, r;
 };
@@ -33,7 +32,6 @@ static inline u32 xswap(u32 val)
 	return ((val & 0x00ff00ff) << 8) | ((val & 0xff00ff00) >> 8);
 }
 
-
 #define michael_block(l, r)	\
 do {				\
 	r ^= rol32(l, 17);	\
@@ -46,7 +44,6 @@ do {				\
 	l += r;			\
 } while (0)
 
-
 static int michael_init(struct shash_desc *desc)
 {
 	struct michael_mic_desc_ctx *mctx = shash_desc_ctx(desc);
@@ -57,7 +54,6 @@ static int michael_init(struct shash_desc *desc)
 
 	return 0;
 }
-
 
 static int michael_update(struct shash_desc *desc, const u8 *data,
 			   unsigned int len)
@@ -99,7 +95,6 @@ static int michael_update(struct shash_desc *desc, const u8 *data,
 	return 0;
 }
 
-
 static int michael_final(struct shash_desc *desc, u8 *out)
 {
 	struct michael_mic_desc_ctx *mctx = shash_desc_ctx(desc);
@@ -131,7 +126,6 @@ static int michael_final(struct shash_desc *desc, u8 *out)
 
 	return 0;
 }
-
 
 static int michael_setkey(struct crypto_shash *tfm, const u8 *key,
 			  unsigned int keylen)
@@ -171,12 +165,10 @@ static int __init michael_mic_init(void)
 	return crypto_register_shash(&alg);
 }
 
-
 static void __exit michael_mic_exit(void)
 {
 	crypto_unregister_shash(&alg);
 }
-
 
 module_init(michael_mic_init);
 module_exit(michael_mic_exit);

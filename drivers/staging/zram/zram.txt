@@ -67,7 +67,6 @@ Following shows a typical sequence of steps for using zram.
 
 	(This frees all the memory allocated for the given device).
 
-
 Please report any problems at:
  - Mailing list: linux-mm-cc at laptop dot org
  - Issue tracker: http://code.google.com/p/compcache/issues/list

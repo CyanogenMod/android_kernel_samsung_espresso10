@@ -23,4 +23,3 @@ extern int pcmcia_badge4_init(struct device *);
 extern int pcmcia_jornada720_init(struct device *);
 extern int pcmcia_lubbock_init(struct sa1111_dev *);
 extern int pcmcia_neponset_init(struct sa1111_dev *);
-

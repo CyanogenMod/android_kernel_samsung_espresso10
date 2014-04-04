@@ -55,7 +55,6 @@ static inline struct device *wl1271_wl_to_dev(struct wl1271 *wl)
 	return wl->if_ops->dev(wl);
 }
 
-
 /* Raw target IO, address is not translated */
 static inline void wl1271_raw_write(struct wl1271 *wl, int addr, void *buf,
 				    size_t len, bool fixed)
@@ -152,7 +151,6 @@ static inline int wl1271_power_on(struct wl1271 *wl)
 
 	return ret;
 }
-
 
 /* Top Register IO */
 void wl1271_top_reg_write(struct wl1271 *wl, int addr, u16 val);

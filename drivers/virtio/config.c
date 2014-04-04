@@ -10,4 +10,3 @@
 #include <linux/virtio_config.h>
 #include <linux/bug.h>
 #include <asm/system.h>
-

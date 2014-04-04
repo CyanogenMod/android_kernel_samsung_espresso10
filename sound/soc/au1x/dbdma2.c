@@ -12,7 +12,6 @@
  *
  */
 
-
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/platform_device.h>
@@ -404,7 +403,6 @@ static void __exit au1xpsc_audio_dbdma_unload(void)
 
 module_init(au1xpsc_audio_dbdma_load);
 module_exit(au1xpsc_audio_dbdma_unload);
-
 
 struct platform_device *au1xpsc_pcm_add(struct platform_device *pdev)
 {

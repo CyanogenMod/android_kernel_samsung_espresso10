@@ -166,4 +166,3 @@
 	do { etb_writel((t), UNLOCK_MAGIC, CSMR_LOCKACCESS); } while (0)
 
 #endif /* __ASM_HARDWARE_CORESIGHT_H */
-

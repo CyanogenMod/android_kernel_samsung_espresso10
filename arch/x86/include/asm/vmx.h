@@ -61,7 +61,6 @@
 #define SECONDARY_EXEC_UNRESTRICTED_GUEST	0x00000080
 #define SECONDARY_EXEC_PAUSE_LOOP_EXITING	0x00000400
 
-
 #define PIN_BASED_EXT_INTR_MASK                 0x00000001
 #define PIN_BASED_NMI_EXITING                   0x00000008
 #define PIN_BASED_VIRTUAL_NMIS                  0x00000020
@@ -345,7 +344,6 @@ enum vmcs_field {
 #define TYPE_MOV_FROM_DR                (1 << 4)
 #define DEBUG_REG_ACCESS_REG(eq)        (((eq) >> 8) & 0xf) /* 11:8, general purpose reg. */
 
-
 /* segment AR */
 #define SEGMENT_AR_L_MASK (1 << 13)
 
@@ -406,7 +404,6 @@ enum vmcs_field {
 #define VMX_EPT_IPAT_BIT    			(1ull << 6)
 
 #define VMX_EPT_IDENTITY_PAGETABLE_ADDR		0xfffbc000ul
-
 
 #define ASM_VMX_VMCLEAR_RAX       ".byte 0x66, 0x0f, 0xc7, 0x30"
 #define ASM_VMX_VMLAUNCH          ".byte 0x0f, 0x01, 0xc2"

@@ -3,7 +3,6 @@
 #include <linux/pci.h>
 #include "pci.h"
 
-
 unsigned int __devinit pci_do_scan_bus(struct pci_bus *bus)
 {
 	unsigned int max;

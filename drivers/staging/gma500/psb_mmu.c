@@ -331,7 +331,6 @@ static struct psb_mmu_pt *psb_mmu_alloc_pt(struct psb_mmu_pd *pd)
 	for (i = 0; i < (PAGE_SIZE / sizeof(uint32_t)); ++i)
 		*ptes++ = pd->invalid_pte;
 
-
 	if (pd->driver->has_clflush && pd->hw_context != -1) {
 		mb();
 		for (i = 0; i < clflush_count; ++i) {
@@ -443,7 +442,6 @@ static inline void psb_mmu_invalidate_pte(struct psb_mmu_pt *pt,
 {
 	pt->v[psb_mmu_pt_index(addr)] = pt->pd->invalid_pte;
 }
-
 
 void psb_mmu_mirror_gtt(struct psb_mmu_pd *pd,
 			uint32_t mmu_offset, uint32_t gtt_start,

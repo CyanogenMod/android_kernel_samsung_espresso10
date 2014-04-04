@@ -47,7 +47,6 @@ static int cfvei_receive(struct cflayer *layr, struct cfpkt *pkt)
 	caif_assert(layr->receive != NULL);
 	caif_assert(layr->ctrlcmd != NULL);
 
-
 	if (cfpkt_extr_head(pkt, &cmd, 1) < 0) {
 		pr_err("Packet is erroneous!\n");
 		cfpkt_destroy(pkt);

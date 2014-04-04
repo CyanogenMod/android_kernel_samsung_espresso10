@@ -531,7 +531,6 @@ int cx25821_video_register(struct cx25821_dev *dev)
 #endif
 	mutex_unlock(&dev->lock);
 
-
     return 0;
 
 fail_unreg:
@@ -720,7 +719,6 @@ int cx25821_video_mmap(struct file *file, struct vm_area_struct *vma)
 
 	return videobuf_mmap_mapper(get_queue(fh), vma);
 }
-
 
 static void buffer_queue(struct videobuf_queue *vq, struct videobuf_buffer *vb)
 {

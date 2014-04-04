@@ -207,7 +207,6 @@ struct iio_const_attr {
 #define IIO_UNMOD_EVENT_CODE(channelclass, number, type, direction)	\
 	IIO_EVENT_CODE(channelclass, 0, number, 0, type, direction)
 
-
 #define IIO_BUFFER_EVENT_CODE(code)		\
 	(IIO_EV_CLASS_BUFFER | (code << 8))
 

@@ -205,7 +205,6 @@ extern void kgdb_roundup_cpus(unsigned long flags);
  */
 extern void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc);
 
-
 /* Optional functions. */
 extern int kgdb_validate_break_address(unsigned long addr);
 extern int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt);
@@ -220,7 +219,6 @@ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
  *	default implementation does nothing.
  */
 extern void kgdb_arch_late(void);
-
 
 /**
  * struct kgdb_arch - Describe architecture specific values.

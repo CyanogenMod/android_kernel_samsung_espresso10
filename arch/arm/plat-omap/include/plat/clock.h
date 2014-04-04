@@ -70,7 +70,6 @@ struct clkops {
 /* RATE_IN_3430ES2PLUS_36XX includes 34xx/35xx with ES >=2, and all 36xx/37xx */
 #define RATE_IN_3430ES2PLUS_36XX	(RATE_IN_3430ES2PLUS | RATE_IN_36XX)
 
-
 /**
  * struct clksel_rate - register bitfield values corresponding to clk divisors
  * @val: register bitfield value (shifted to bit 0)
@@ -379,7 +378,8 @@ extern int omap_clk_enable_autoidle_all(void);
 extern int omap_clk_disable_autoidle_all(void);
 
 extern const struct clkops clkops_null;
-
+extern long clk_dummy_round_rate(struct clk *clk, unsigned long rate);
+extern int clk_dummy_set_rate(struct clk *clk, unsigned long rate);
 extern struct clk dummy_ck;
 
 #endif

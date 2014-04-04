@@ -250,5 +250,4 @@ struct eeprom_data {
 	};
 };
 
-
 #endif	/* _QL4XNVRM_H_ */

@@ -58,7 +58,6 @@
 /* Resolution: 1200x900,  Channel: single, Dithering: Disable */
 #define     LCD_PANEL_IDD_1200X900      0x0D
 
-
 extern int viafb_LCD2_ON;
 extern int viafb_LCD_ON;
 extern int viafb_DVI_ON;

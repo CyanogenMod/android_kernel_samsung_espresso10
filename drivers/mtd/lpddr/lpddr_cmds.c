@@ -633,7 +633,6 @@ static int lpddr_write_buffers(struct mtd_info *mtd, loff_t to, size_t len,
 	return lpddr_writev(mtd, &vec, 1, to, retlen);
 }
 
-
 static int lpddr_writev(struct mtd_info *mtd, const struct kvec *vecs,
 				unsigned long count, loff_t to, size_t *retlen)
 {

@@ -1,9 +1,7 @@
 /* $Id: applicom.h,v 1.2 1999/08/28 15:09:49 dwmw2 Exp $ */
 
-
 #ifndef __LINUX_APPLICOM_H__
 #define __LINUX_APPLICOM_H__
-
 
 #define DATA_TO_PC_READY      0x00
 #define TIC_OWNER_TO_PC       0x01
@@ -20,9 +18,9 @@
 #define NUMCARD_ACK_FROM_PC   0x010
 #define TYP_ACK_FROM_PC       0x011
 #define CONF_END_TEST         0x012
-#define ERROR_CODE            0x016 
-#define PARAMETER_ERROR       0x018 
-#define VERS                  0x01E 
+#define ERROR_CODE            0x016
+#define PARAMETER_ERROR       0x018
+#define VERS                  0x01E
 #define RAM_TO_PC             0x040
 #define RAM_FROM_PC           0x0170
 #define TYPE_CARD             0x03C0
@@ -51,7 +49,7 @@ struct mailbox{
 	u8   stjb_data[256];		/* offset 30 */
 	};
 
-struct st_ram_io 
+struct st_ram_io
 {
 	unsigned char data_to_pc_ready;
 	unsigned char tic_owner_to_pc;
@@ -80,6 +78,5 @@ struct st_ram_io
 	unsigned char num_card;
 	unsigned char reserv1[32];
 };
-
 
 #endif /* __LINUX_APPLICOM_H__ */

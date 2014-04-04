@@ -69,7 +69,6 @@ void exar7250_set_frame_type(struct channel *sc, u32 type)
 	exar7250_start_intr(sc, type);
 }
 
-
 void exar7250_start_intr(struct channel *sc, u32 type)
 {
 	u32 val;
@@ -150,7 +149,6 @@ void exar7250_start_intr(struct channel *sc, u32 type)
 		       SBE_2T3E3_FRAMER_VAL_TX_INTERRUPT_ENABLE);
 }
 
-
 void exar7250_stop_intr(struct channel *sc, u32 type)
 {
 	exar7250_write(sc, SBE_2T3E3_FRAMER_REG_BLOCK_INTERRUPT_ENABLE, 0);
@@ -184,9 +182,6 @@ void exar7250_stop_intr(struct channel *sc, u32 type)
 		break;
 	}
 }
-
-
-
 
 void exar7250_unipolar_onoff(struct channel *sc, u32 mode)
 {

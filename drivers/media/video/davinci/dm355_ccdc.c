@@ -118,7 +118,6 @@ static struct ccdc_oper_config {
 	},
 };
 
-
 /* Raw Bayer formats */
 static u32 ccdc_raw_bayer_pix_formats[] =
 		{V4L2_PIX_FMT_SBGGR8, V4L2_PIX_FMT_SBGGR16};

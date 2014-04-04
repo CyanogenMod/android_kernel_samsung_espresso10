@@ -20,7 +20,7 @@ struct hdlcdrv_params {
 	int seriobase;
 	int pariobase;
 	int midiiobase;
-};	
+};
 
 struct hdlcdrv_channel_params {
 	int tx_delay;  /* the transmitter keyup delay in 10ms units */
@@ -29,7 +29,7 @@ struct hdlcdrv_channel_params {
 	int ppersist;  /* the p-persistence 0..255 */
 	int fulldup;   /* some driver do not support full duplex, setting */
 	               /* this just makes them send even if DCD is on */
-};	
+};
 
 struct hdlcdrv_old_channel_state {
   	int ptt;
@@ -115,8 +115,7 @@ struct hdlcdrv_ioctl {
 #define HDLCDRV_DEBUG
 
 /* maximum packet length, excluding CRC */
-#define HDLCDRV_MAXFLEN             400	
-
+#define HDLCDRV_MAXFLEN             400
 
 struct hdlcdrv_hdlcbuffer {
 	spinlock_t lock;
@@ -132,7 +131,7 @@ struct hdlcdrv_bitbuffer {
 	unsigned char buffer[HDLCDRV_BITBUFFER];
 };
 
-static inline void hdlcdrv_add_bitbuffer(struct hdlcdrv_bitbuffer *buf, 
+static inline void hdlcdrv_add_bitbuffer(struct hdlcdrv_bitbuffer *buf,
 					 unsigned int bit)
 {
 	unsigned char new;
@@ -147,7 +146,7 @@ static inline void hdlcdrv_add_bitbuffer(struct hdlcdrv_bitbuffer *buf,
 	}
 }
 
-static inline void hdlcdrv_add_bitbuffer_word(struct hdlcdrv_bitbuffer *buf, 
+static inline void hdlcdrv_add_bitbuffer_word(struct hdlcdrv_bitbuffer *buf,
 					      unsigned int bits)
 {
 	buf->buffer[buf->wr] = bits & 0xff;
@@ -160,7 +159,7 @@ static inline void hdlcdrv_add_bitbuffer_word(struct hdlcdrv_bitbuffer *buf,
 
 /* -------------------------------------------------------------------- */
 /*
- * Information that need to be kept for each driver. 
+ * Information that need to be kept for each driver.
  */
 
 struct hdlcdrv_ops {
@@ -174,7 +173,7 @@ struct hdlcdrv_ops {
 	 */
 	int (*open)(struct net_device *);
 	int (*close)(struct net_device *);
-	int (*ioctl)(struct net_device *, struct ifreq *, 
+	int (*ioctl)(struct net_device *, struct ifreq *,
 		     struct hdlcdrv_ioctl *, int);
 };
 
@@ -202,12 +201,12 @@ struct hdlcdrv_state {
 		struct hdlcdrv_hdlcbuffer hbuf;
 		unsigned long in_hdlc_rx;
 		/* 0 = sync hunt, != 0 receiving */
-		int rx_state;	
+		int rx_state;
 		unsigned int bitstream;
 		unsigned int bitbuf;
 		int numbits;
 		unsigned char dcd;
-		
+
 		int len;
 		unsigned char *bp;
 		unsigned char buffer[HDLCDRV_MAXFLEN+2];
@@ -221,7 +220,7 @@ struct hdlcdrv_state {
 		 * 1 = send txtail (flags)
 		 * 2 = send packet
 		 */
-		int tx_state;	
+		int tx_state;
 		int numflags;
 		unsigned int bitstream;
 		unsigned char ptt;
@@ -230,7 +229,7 @@ struct hdlcdrv_state {
 
 		unsigned int bitbuf;
 		int numbits;
-		
+
 		int len;
 		unsigned char *bp;
 		unsigned char buffer[HDLCDRV_MAXFLEN+2];
@@ -247,14 +246,13 @@ struct hdlcdrv_state {
 	struct sk_buff *skb;
 };
 
-
 /* -------------------------------------------------------------------- */
 
-static inline int hdlcdrv_hbuf_full(struct hdlcdrv_hdlcbuffer *hb) 
+static inline int hdlcdrv_hbuf_full(struct hdlcdrv_hdlcbuffer *hb)
 {
 	unsigned long flags;
 	int ret;
-	
+
 	spin_lock_irqsave(&hb->lock, flags);
 	ret = !((HDLCDRV_HDLCBUFFER - 1 + hb->rd - hb->wr) % HDLCDRV_HDLCBUFFER);
 	spin_unlock_irqrestore(&hb->lock, flags);
@@ -267,7 +265,7 @@ static inline int hdlcdrv_hbuf_empty(struct hdlcdrv_hdlcbuffer *hb)
 {
 	unsigned long flags;
 	int ret;
-	
+
 	spin_lock_irqsave(&hb->lock, flags);
 	ret = (hb->rd == hb->wr);
 	spin_unlock_irqrestore(&hb->lock, flags);
@@ -296,15 +294,15 @@ static inline unsigned short hdlcdrv_hbuf_get(struct hdlcdrv_hdlcbuffer *hb)
 
 /* -------------------------------------------------------------------- */
 
-static inline void hdlcdrv_hbuf_put(struct hdlcdrv_hdlcbuffer *hb, 
+static inline void hdlcdrv_hbuf_put(struct hdlcdrv_hdlcbuffer *hb,
 				    unsigned short val)
 {
 	unsigned newp;
 	unsigned long flags;
-	
+
 	spin_lock_irqsave(&hb->lock, flags);
 	newp = (hb->wr+1) % HDLCDRV_HDLCBUFFER;
-	if (newp != hb->rd) { 
+	if (newp != hb->rd) {
 		hb->buf[hb->wr] = val & 0xffff;
 		hb->wr = newp;
 	}
@@ -328,7 +326,7 @@ static inline unsigned int hdlcdrv_getbits(struct hdlcdrv_state *s)
 		else
 			s->hdlctx.ptt = 0;
 		ret = 0;
-	} else 
+	} else
 		ret = hdlcdrv_hbuf_get(&s->hdlctx.hbuf);
 #ifdef HDLCDRV_LOOPBACK
 	hdlcdrv_hbuf_put(&s->hdlcrx.hbuf, ret);
@@ -360,13 +358,11 @@ void hdlcdrv_transmitter(struct net_device *, struct hdlcdrv_state *);
 void hdlcdrv_arbitrate(struct net_device *, struct hdlcdrv_state *);
 struct net_device *hdlcdrv_register(const struct hdlcdrv_ops *ops,
 				    unsigned int privsize, const char *ifname,
-				    unsigned int baseaddr, unsigned int irq, 
+				    unsigned int baseaddr, unsigned int irq,
 				    unsigned int dma);
 void hdlcdrv_unregister(struct net_device *dev);
 
 /* -------------------------------------------------------------------- */
-
-
 
 #endif /* __KERNEL__ */
 

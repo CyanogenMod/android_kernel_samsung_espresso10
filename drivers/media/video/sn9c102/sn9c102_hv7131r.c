@@ -22,7 +22,6 @@
 #include "sn9c102_sensor.h"
 #include "sn9c102_devtable.h"
 
-
 static int hv7131r_init(struct sn9c102_device* cam)
 {
 	int err = 0;
@@ -136,7 +135,6 @@ static int hv7131r_init(struct sn9c102_device* cam)
 	return err;
 }
 
-
 static int hv7131r_get_ctrl(struct sn9c102_device* cam,
 			    struct v4l2_control* ctrl)
 {
@@ -169,7 +167,6 @@ static int hv7131r_get_ctrl(struct sn9c102_device* cam,
 		return -EINVAL;
 	}
 }
-
 
 static int hv7131r_set_ctrl(struct sn9c102_device* cam,
 			    const struct v4l2_control* ctrl)
@@ -205,7 +202,6 @@ static int hv7131r_set_ctrl(struct sn9c102_device* cam,
 	return err ? -EIO : 0;
 }
 
-
 static int hv7131r_set_crop(struct sn9c102_device* cam,
 			    const struct v4l2_rect* rect)
 {
@@ -219,7 +215,6 @@ static int hv7131r_set_crop(struct sn9c102_device* cam,
 
 	return err;
 }
-
 
 static int hv7131r_set_pix_format(struct sn9c102_device* cam,
 				  const struct v4l2_pix_format* pix)
@@ -252,7 +247,6 @@ static int hv7131r_set_pix_format(struct sn9c102_device* cam,
 
 	return err;
 }
-
 
 static const struct sn9c102_sensor hv7131r = {
 	.name = "HV7131R",
@@ -340,7 +334,6 @@ static const struct sn9c102_sensor hv7131r = {
 	},
 	.set_pix_format = &hv7131r_set_pix_format
 };
-
 
 int sn9c102_probe_hv7131r(struct sn9c102_device* cam)
 {

@@ -139,7 +139,7 @@ static bool falcon_xmac_link_ok(struct efx_nic *efx)
 	return (efx->loopback_mode == LOOPBACK_XGMII ||
 		falcon_xgxs_link_ok(efx)) &&
 		(!(efx->mdio.mmds & (1 << MDIO_MMD_PHYXS)) ||
-		 LOOPBACK_INTERNAL(efx) || 
+		 LOOPBACK_INTERNAL(efx) ||
 		 efx_mdio_phyxgxs_lane_sync(efx));
 }
 
@@ -242,7 +242,6 @@ static void falcon_reconfigure_xgxs_core(struct efx_nic *efx)
 	EFX_SET_OWORD_FIELD(reg, FRF_AB_XX_LPBKA, xaui_loopback);
 	efx_writeo(efx, &reg, FR_AB_XX_SD_CTL);
 }
-
 
 /* Try to bring up the Falcon side of the Falcon-Phy XAUI link */
 static bool falcon_xmac_link_ok_retry(struct efx_nic *efx, int tries)

@@ -28,7 +28,6 @@
 
 #include "l2tp_core.h"
 
-
 static struct genl_family l2tp_nl_family = {
 	.id		= GENL_ID_GENERATE,
 	.name		= L2TP_GENL_NAME,

@@ -222,7 +222,6 @@ static int vx_hwdep_dsp_load(struct snd_hwdep *hw,
 	return 0;
 }
 
-
 /* exported */
 int snd_vx_setup_firmware(struct vx_core *chip)
 {

@@ -2,7 +2,7 @@
 #define _NET_DN_NSP_H
 /******************************************************************************
     (c) 1995-1998 E.M. Serrat		emserrat@geocities.com
-    
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -20,7 +20,7 @@ extern void dn_nsp_send_oth_ack(struct sock *sk);
 extern void dn_nsp_delayed_ack(struct sock *sk);
 extern void dn_send_conn_ack(struct sock *sk);
 extern void dn_send_conn_conf(struct sock *sk, gfp_t gfp);
-extern void dn_nsp_send_disc(struct sock *sk, unsigned char type, 
+extern void dn_nsp_send_disc(struct sock *sk, unsigned char type,
 			unsigned short reason, gfp_t gfp);
 extern void dn_nsp_return_disc(struct sk_buff *skb, unsigned char type,
 				unsigned short reason);
@@ -87,7 +87,6 @@ struct nsp_data_opt_msg1 {
 	__le16 segnum;
 } __packed;
 
-
 /* Acknowledgment Message (data/other data)                             */
 struct nsp_data_ack_msg {
 	__u8   msgflg;
@@ -101,7 +100,6 @@ struct  nsp_conn_ack_msg {
 	__u8 msgflg;
 	__le16 dstaddr;
 } __packed;
-
 
 /* Connect Initiate/Retransmit Initiate/Connect Confirm */
 struct  nsp_conn_init_msg {
@@ -127,8 +125,6 @@ struct  nsp_disconn_init_msg {
 	__le16 reason;
 } __packed;
 
-
-
 struct  srcobj_fmt {
 	__u8   format;
 	__u8   task;
@@ -149,7 +145,6 @@ static __inline__ int dn_before(__u16 seq1, __u16 seq2)
 
         return (int)((seq1 - seq2) & 0x0fff) > 2048;
 }
-
 
 static __inline__ int dn_after(__u16 seq1, __u16 seq2)
 {

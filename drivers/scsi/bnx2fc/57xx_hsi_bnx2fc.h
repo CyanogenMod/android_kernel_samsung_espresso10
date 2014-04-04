@@ -31,12 +31,10 @@ struct b577xx_doorbell_set_prod {
 #endif
 };
 
-
 struct regpair {
 	__le32 lo;
 	__le32 hi;
 };
-
 
 /*
  * Fixed size structure in order to plant it in Union structure
@@ -45,7 +43,6 @@ struct fcoe_abts_rsp_union {
 	u32 r_ctl;
 	u32 abts_rsp_payload[7];
 };
-
 
 /*
  * 4 regs size
@@ -69,7 +66,6 @@ struct fcoe_bd_ctx {
 #endif
 };
 
-
 struct fcoe_cleanup_flow_info {
 #if defined(__BIG_ENDIAN)
 	u16 reserved1;
@@ -80,7 +76,6 @@ struct fcoe_cleanup_flow_info {
 #endif
 	u32 reserved2[7];
 };
-
 
 struct fcoe_fcp_cmd_payload {
 	u32 opaque[8];
@@ -137,8 +132,6 @@ union fcoe_cmd_flow_info {
 	struct fcoe_fc_frame mp_fc_frame;
 };
 
-
-
 struct fcoe_fcp_rsp_flags {
 	u8 flags;
 #define FCOE_FCP_RSP_FLAGS_FCP_RSP_LEN_VALID (0x1<<0)
@@ -154,7 +147,6 @@ struct fcoe_fcp_rsp_flags {
 #define FCOE_FCP_RSP_FLAGS_FCP_BIDI_FLAGS (0x7<<5)
 #define FCOE_FCP_RSP_FLAGS_FCP_BIDI_FLAGS_SHIFT 5
 };
-
 
 struct fcoe_fcp_rsp_payload {
 	struct regpair reserved0;
@@ -172,7 +164,6 @@ struct fcoe_fcp_rsp_payload {
 	u32 fcp_sns_len;
 };
 
-
 /*
  * Fixed size structure in order to plant it in Union structure
  */
@@ -180,7 +171,6 @@ struct fcoe_fcp_rsp_union {
 	struct fcoe_fcp_rsp_payload payload;
 	struct regpair reserved0;
 };
-
 
 struct fcoe_fcp_xfr_rdy_payload {
 	u32 burst_len;
@@ -213,7 +203,6 @@ union fcoe_general_task_ctx {
 	struct fcoe_cleanup_flow_info cleanup_info;
 	u32 comp_info[8];
 };
-
 
 /*
  * FCoE KCQ CQE parameters
@@ -714,7 +703,6 @@ struct fcoe_seq_ctx {
 	u32 high_exp_ro;
 };
 
-
 struct fcoe_single_sge_ctx {
 	struct regpair cur_buf_addr;
 #if defined(__BIG_ENDIAN)
@@ -731,8 +719,6 @@ union fcoe_sgl_ctx {
 	struct fcoe_mul_sges_ctx mul_sges;
 };
 
-
-
 /*
  * FCoE SQ element
  */
@@ -743,8 +729,6 @@ struct fcoe_sqe {
 #define FCOE_SQE_TOGGLE_BIT (0x1<<15)
 #define FCOE_SQE_TOGGLE_BIT_SHIFT 15
 };
-
-
 
 struct fcoe_task_ctx_entry_tx_only {
 	union fcoe_sgl_ctx sgl_ctx;
@@ -869,7 +853,6 @@ struct fcoe_task_ctx_entry {
 	u32 reserved[4];
 };
 
-
 /*
  * FCoE XFRQ element
  */
@@ -880,7 +863,6 @@ struct fcoe_xfrqe {
 #define FCOE_XFRQE_TOGGLE_BIT (0x1<<15)
 #define FCOE_XFRQE_TOGGLE_BIT_SHIFT 15
 };
-
 
 /*
  * FCoE CONFQ element
@@ -895,7 +877,6 @@ struct fcoe_confqe {
 #endif
 	u32 param;
 };
-
 
 /*
  * FCoE connection data base
@@ -912,7 +893,6 @@ struct fcoe_conn_db {
 	struct regpair cq_arm;
 };
 
-
 /*
  * FCoE CQ element
  */
@@ -926,7 +906,6 @@ struct fcoe_cqe {
 #define FCOE_CQE_TOGGLE_BIT_SHIFT 15
 };
 
-
 /*
  * FCoE error/warning resporting entry
  */
@@ -937,7 +916,6 @@ struct fcoe_err_report_entry {
 	u32 rx_buf_off;
 	struct fcoe_fc_hdr fc_hdr;
 };
-
 
 /*
  * FCoE hash table entry (32 bytes)
@@ -1004,7 +982,6 @@ struct fcoe_pend_wq_cqe {
 #define FCOE_PEND_WQ_CQE_TOGGLE_BIT_SHIFT 15
 };
 
-
 /*
  * FCoE RX statistics parameters section#0
  */
@@ -1014,7 +991,6 @@ struct fcoe_rx_stat_params_section0 {
 	u32 fcoe_rx_byte_cnt;
 	u32 fcoe_rx_drop_pkt_cnt;
 };
-
 
 /*
  * FCoE RX statistics parameters section#1
@@ -1029,7 +1005,6 @@ struct fcoe_rx_stat_params_section1 {
 	u32 fcp_rx_pkt_cnt;
 	u32 reserved0;
 };
-
 
 /*
  * FCoE TX statistics parameters
@@ -1049,7 +1024,6 @@ struct fcoe_statistics_params {
 	struct fcoe_rx_stat_params_section0 rx_stat0;
 	struct fcoe_rx_stat_params_section1 rx_stat1;
 };
-
 
 /*
  * FCoE t2 hash table entry (64 bytes)
@@ -1074,7 +1048,5 @@ struct fcoe_unsolicited_cqe {
 #define FCOE_UNSOLICITED_CQE_TOGGLE_BIT (0x1<<15)
 #define FCOE_UNSOLICITED_CQE_TOGGLE_BIT_SHIFT 15
 };
-
-
 
 #endif /* __57XX_FCOE_HSI_LINUX_LE__ */

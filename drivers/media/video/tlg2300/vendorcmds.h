@@ -78,7 +78,6 @@ enum  _tag_tune_atv_audio_mode_caps {
 	TLG_TUNE_TVAUDIO_MODE_LANG_C	= 0x00000040
 };
 
-
 enum   _tag_tuner_atv_audio_rates {
 	ATV_AUDIO_RATE_NONE	= 0x00,/* Audio not supported*/
 	ATV_AUDIO_RATE_32K	= 0x01,/* Audio rate = 32 KHz*/

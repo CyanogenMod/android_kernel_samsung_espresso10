@@ -380,7 +380,6 @@ static struct pci_driver rdc_pci_driver = {
 	.remove			= rdc_remove_one,
 };
 
-
 static int __init rdc_init(void)
 {
 	return pci_register_driver(&rdc_pci_driver);

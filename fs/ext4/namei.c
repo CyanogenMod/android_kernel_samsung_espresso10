@@ -130,7 +130,6 @@ struct dx_node
 	struct dx_entry	entries[0];
 };
 
-
 struct dx_frame
 {
 	struct buffer_head *bh;
@@ -557,7 +556,6 @@ static int ext4_htree_next_block(struct inode *dir, __u32 hash,
 	return 1;
 }
 
-
 /*
  * This function fills a red-black tree with information from a
  * directory block.  It returns the number directory entries loaded
@@ -585,11 +583,8 @@ static int htree_dirblock_to_tree(struct file *dir_file,
 		if (ext4_check_dir_entry(dir, NULL, de, bh,
 				(block<<EXT4_BLOCK_SIZE_BITS(dir->i_sb))
 					 + ((char *)de - bh->b_data))) {
-			/* On error, skip the f_pos to the next block. */
-			dir_file->f_pos = (dir_file->f_pos |
-					(dir->i_sb->s_blocksize - 1)) + 1;
-			brelse(bh);
-			return count;
+			/* silently ignore the rest of the block */
+			break;
 		}
 		ext4fs_dirhash(de->name, de->name_len, hinfo);
 		if ((hinfo->hash < start_hash) ||
@@ -608,7 +603,6 @@ static int htree_dirblock_to_tree(struct file *dir_file,
 	brelse(bh);
 	return count;
 }
-
 
 /*
  * This function fills a red-black tree with information from a
@@ -699,7 +693,6 @@ errout:
 	dx_release(frames);
 	return (err);
 }
-
 
 /*
  * Directory block splitting, compacting
@@ -836,7 +829,6 @@ static inline int search_dirblock(struct buffer_head *bh,
 	}
 	return 0;
 }
-
 
 /*
  *	ext4_find_entry()
@@ -1032,11 +1024,6 @@ static struct dentry *ext4_lookup(struct inode *dir, struct dentry *dentry, stru
 	if (bh) {
 		__u32 ino = le32_to_cpu(de->inode);
 		if (!ext4_valid_inum(dir->i_sb, ino)) {
-			/* for debugging, sangwoo2.lee */
-			printk(KERN_ERR "Name of directory entry has "
-					"bad inode# : %s\n", de->name);
-			print_bh(dir->i_sb, bh, 0, EXT4_BLOCK_SIZE(dir->i_sb));
-			/* for debugging */
 			brelse(bh);
 
 			EXT4_ERROR_INODE(dir, "bad inode number: %u", ino);
@@ -1061,7 +1048,6 @@ static struct dentry *ext4_lookup(struct inode *dir, struct dentry *dentry, stru
 	}
 	return d_splice_alias(inode, dentry);
 }
-
 
 struct dentry *ext4_get_parent(struct dentry *child)
 {
@@ -1726,7 +1712,6 @@ static void ext4_dec_count(handle_t *handle, struct inode *inode)
 		inc_nlink(inode);
 }
 
-
 static int ext4_add_nondir(handle_t *handle,
 		struct dentry *dentry, struct inode *inode)
 {
@@ -1810,9 +1795,7 @@ retry:
 	err = PTR_ERR(inode);
 	if (!IS_ERR(inode)) {
 		init_special_inode(inode, inode->i_mode, rdev);
-#ifdef CONFIG_EXT4_FS_XATTR
 		inode->i_op = &ext4_special_inode_operations;
-#endif
 		err = ext4_add_nondir(handle, dentry, inode);
 	}
 	ext4_journal_stop(handle);
@@ -2075,7 +2058,8 @@ int ext4_orphan_del(handle_t *handle, struct inode *inode)
 	int err = 0;
 
 	/* ext4_handle_valid() assumes a valid handle_t pointer */
-	if (handle && !ext4_handle_valid(handle))
+	if (handle && !ext4_handle_valid(handle) &&
+	    !(EXT4_SB(inode->i_sb)->s_mount_state & EXT4_ORPHAN_FS))
 		return 0;
 
 	mutex_lock(&EXT4_SB(inode->i_sb)->s_orphan_lock);
@@ -2314,7 +2298,7 @@ retry:
 		 * for transaction commit if we are running out of space
 		 * and thus we deadlock. So we have to stop transaction now
 		 * and restart it when symlink contents is written.
-		 * 
+		 *
 		 * To keep fs consistent in case of crash, we have to put inode
 		 * to orphan list in the mean time.
 		 */

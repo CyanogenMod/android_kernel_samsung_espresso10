@@ -103,7 +103,6 @@ enum aa_ops {
 	OP_PROF_RM,
 };
 
-
 /* define a short hand for apparmor_audit_data portion of common_audit_data */
 #define aad apparmor_audit_data
 

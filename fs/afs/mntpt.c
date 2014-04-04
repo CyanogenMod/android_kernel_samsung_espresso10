@@ -19,7 +19,6 @@
 #include <linux/gfp.h>
 #include "internal.h"
 
-
 static struct dentry *afs_mntpt_lookup(struct inode *dir,
 				       struct dentry *dentry,
 				       struct nameidata *nd);

@@ -65,7 +65,6 @@ acpi_extract_package(union acpi_object *package,
 	u8 *head = NULL;
 	u8 *tail = NULL;
 
-
 	if (!package || (package->type != ACPI_TYPE_PACKAGE)
 	    || (package->package.count < 1)) {
 		printk(KERN_WARNING PREFIX "Invalid package argument\n");
@@ -301,7 +300,6 @@ acpi_evaluate_reference(acpi_handle handle,
 	union acpi_object *element = NULL;
 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
 	u32 i = 0;
-
 
 	if (!list) {
 		return AE_BAD_PARAMETER;

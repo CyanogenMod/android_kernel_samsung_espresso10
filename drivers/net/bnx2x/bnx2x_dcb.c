@@ -27,7 +27,6 @@
 #include "bnx2x_cmn.h"
 #include "bnx2x_dcb.h"
 
-
 /* forward declarations of dcbx related functions */
 static void bnx2x_dcbx_stop_hw_tx(struct bnx2x *bp);
 static void bnx2x_pfc_set_pfc(struct bnx2x *bp);
@@ -49,7 +48,6 @@ static void bnx2x_dcbx_separate_pauseable_from_non(struct bnx2x *bp,
 				struct dcbx_ets_feature *ets);
 static void bnx2x_pfc_fw_struct_e2(struct bnx2x *bp);
 
-
 static void bnx2x_pfc_set(struct bnx2x *bp)
 {
 	struct bnx2x_nig_brb_pfc_port_params pfc_params = {0};
@@ -63,7 +61,6 @@ static void bnx2x_pfc_set(struct bnx2x *bp)
 	if (bp->dcbx_port_params.ets.cos_params[1].pauseable)
 		pfc_params.rx_cos1_priority_mask =
 			bp->dcbx_port_params.ets.cos_params[1].pri_bitmask;
-
 
 	/**
 	 * Rx COS configuration
@@ -247,10 +244,8 @@ static void bnx2x_dcbx_get_ets_feature(struct bnx2x *bp,
 
 	memset(&pg_help_data, 0, sizeof(struct pg_help_data));
 
-
 	if (GET_FLAGS(error, DCBX_LOCAL_ETS_ERROR))
 		DP(NETIF_MSG_LINK, "DCBX_LOCAL_ETS_ERROR\n");
-
 
 	/* Clean up old settings of ets on COS */
 	for (i = 0; i < E2_NUM_OF_COS ; i++) {
@@ -329,7 +324,6 @@ static int bnx2x_dcbx_read_mib(struct bnx2x *bp,
 	u32 *buff, mib_size, prefix_seq_num, suffix_seq_num;
 	struct lldp_remote_mib *remote_mib ;
 	struct lldp_local_mib  *local_mib;
-
 
 	switch (read_mib_type) {
 	case DCBX_READ_LOCAL_MIB:
@@ -541,7 +535,6 @@ static int bnx2x_dcbx_read_shmem_neg_results(struct bnx2x *bp)
 	return 0;
 }
 
-
 #ifdef BCM_DCBNL
 static inline
 u8 bnx2x_dcbx_dcbnl_app_up(struct dcbx_app_priority_entry *ent)
@@ -687,7 +680,6 @@ void bnx2x_dcbx_set_params(struct bnx2x *bp, u32 state)
 	}
 }
 
-
 #define LLDP_STATS_OFFSET(bp)		(BP_PORT(bp)*\
 					sizeof(struct lldp_dcbx_stat))
 
@@ -728,7 +720,6 @@ static void bnx2x_dcbx_lldp_updated_params(struct bnx2x *bp,
 		buff = (u32 *)&lldp_params;
 		for (i = 0; i < sizeof(struct lldp_params); i += 4, buff++)
 			REG_WR(bp, (offset + i) , *buff);
-
 
 	} else if (BNX2X_DCBX_OVERWRITE_SETTINGS_ENABLE ==
 				bp->lldp_config_params.overwrite_settings)
@@ -1007,7 +998,6 @@ void bnx2x_dcb_init_intmem_pfc(struct bnx2x *bp)
 				 traffic_type_to_priority_cos);
 	__storm_memset_struct(bp, addr, sizeof(pricos), (u32 *)pricos);
 
-
 	/* LLFC disabled.*/
 	REG_WR8(bp , BAR_XSTRORM_INTMEM +
 		    XSTORM_CMNG_PER_PORT_VARS_OFFSET(BP_PORT(bp)) +
@@ -1177,7 +1167,6 @@ static void bnx2x_dcbx_separate_pauseable_from_non(struct bnx2x *bp,
 	    (0 == cos_data->data[1].pri_join_mask))
 		BNX2X_ERR("dcbx error: Both groups must have priorities\n");
 }
-
 
 #ifndef POWER_OF_2
 #define POWER_OF_2(x)	((0 != x) && (0 == (x & (x-1))))
@@ -1464,7 +1453,6 @@ static void bnx2x_dcbx_three_pg_to_cos_params(
 		}
 	}
 }
-
 
 static void bnx2x_dcbx_fill_cos_params(struct bnx2x *bp,
 				       struct pg_help_data *help_data,

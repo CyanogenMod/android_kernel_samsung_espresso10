@@ -139,7 +139,6 @@ static void s3c2416_irq_demux_dma(unsigned int irq, struct irq_desc *desc)
 #define INTMSK_DMA	(1UL << (IRQ_S3C2443_DMA - IRQ_EINT0))
 #define SUBMSK_DMA	INTMSK(IRQ_S3C2443_DMA0, IRQ_S3C2443_DMA5)
 
-
 static void s3c2416_irq_dma_mask(struct irq_data *data)
 {
 	s3c_irqsub_mask(data->irq, INTMSK_DMA, SUBMSK_DMA);
@@ -244,4 +243,3 @@ static int __init s3c2416_irq_init(void)
 }
 
 arch_initcall(s3c2416_irq_init);
-

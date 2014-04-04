@@ -169,7 +169,6 @@ static inline struct hfsplus_sb_info *HFSPLUS_SB(struct super_block *sb)
 	return sb->s_fs_info;
 }
 
-
 struct hfsplus_inode_info {
 	atomic_t opencnt;
 
@@ -314,7 +313,6 @@ static inline unsigned short hfsplus_min_io_size(struct super_block *sb)
  * chattr/lsattr */
 #define HFSPLUS_IOC_EXT2_GETFLAGS	FS_IOC_GETFLAGS
 #define HFSPLUS_IOC_EXT2_SETFLAGS	FS_IOC_SETFLAGS
-
 
 /*
  * Functions in any *.c used in other files

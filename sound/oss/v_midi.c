@@ -39,7 +39,6 @@ static void *midi_mem = NULL;
  * future version of this driver.
  */
 
-
 static int v_midi_open (int dev, int mode,
 	      void            (*input) (int dev, unsigned char data),
 	      void            (*output) (int dev)
@@ -125,7 +124,6 @@ static inline int v_midi_ioctl (int dev, unsigned cmd, void __user *arg)
 	return -EPERM;
 }
 
-
 #define MIDI_SYNTH_NAME	"Loopback MIDI"
 #define MIDI_SYNTH_CAPS	SYNTH_CAP_INPUT
 
@@ -163,7 +161,7 @@ static struct midi_operations v_midi_operations2 =
  *	We kmalloc just one of these - it makes life simpler and the code
  *	cleaner and the memory handling far more efficient
  */
- 
+
 struct vmidi_memory
 {
 	/* Must be first */
@@ -183,7 +181,7 @@ static void __init attach_v_midi (struct address_info *hw_config)
 		printk(KERN_ERR "v_midi: Too many midi devices detected\n");
 		return;
 	}
-	
+
 	m = kmalloc(sizeof(struct vmidi_memory), GFP_KERNEL);
 	if (m == NULL)
 	{
@@ -191,11 +189,10 @@ static void __init attach_v_midi (struct address_info *hw_config)
 		sound_unload_mididev(midi1);
 		return;
 	}
-	
+
 	midi_mem = m;
-	
+
 	midi_devs[midi1] = &m->m_ops[0];
-	
 
 	midi2 = sound_alloc_mididev();
 	if (midi2 == -1)
@@ -259,7 +256,6 @@ static inline int __init probe_v_midi(struct address_info *hw_config)
 {
 	return(1);	/* always OK */
 }
-
 
 static void __exit unload_v_midi(struct address_info *hw_config)
 {

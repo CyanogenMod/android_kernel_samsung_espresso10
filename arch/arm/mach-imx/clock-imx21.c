@@ -320,7 +320,6 @@ static void _clk_spll_disable(struct clk *clk)
 	__raw_writel(reg, CCM_CSCR);
 }
 
-
 #define CSCR() (__raw_readl(CCM_CSCR))
 #define PCDR0() (__raw_readl(CCM_PCDR0))
 #define PCDR1() (__raw_readl(CCM_PCDR1))
@@ -471,7 +470,6 @@ static unsigned long get_low_reference_clock_rate(struct clk *clk)
 static struct clk ckil_clk = {
 	.get_rate = get_low_reference_clock_rate,
 };
-
 
 static unsigned long _clk_fpm_recalc(struct clk *clk)
 {
@@ -918,7 +916,6 @@ static struct clk ssi_ipg_clk[] = {
 	},
 };
 
-
 static struct clk nfc_clk = {
 	.parent = &fclk_clk,
 	.get_rate = _clk_nfc_recalc,
@@ -1138,7 +1135,6 @@ static struct clk clko_clk = {
 	.round_rate = _clk_clko_round_rate,
 	.set_parent = _clk_clko_set_parent,
 };
-
 
 #define _REGISTER_CLOCK(d, n, c) \
 	{ \

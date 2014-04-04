@@ -301,7 +301,6 @@ static struct max3107_plat aava_plat_data = {
 	.poll_time              = 0,
 };
 
-
 static int __devinit max3107_probe_aava(struct spi_device *spi)
 {
 	int err = max3107_aava_reset(spi);

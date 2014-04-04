@@ -43,12 +43,12 @@
 
 /* Every cache item has a common header that is used
  * for expiring and refreshing entries.
- * 
+ *
  */
 struct cache_head {
 	struct cache_head * next;
 	time_t		expiry_time;	/* After time time, don't use the data */
-	time_t		last_refresh;   /* If CACHE_PENDING, this is when upcall 
+	time_t		last_refresh;   /* If CACHE_PENDING, this is when upcall
 					 * was sent, else this is when update was received
 					 */
 	struct kref	ref;
@@ -119,7 +119,6 @@ struct cache_detail {
 	} u;
 };
 
-
 /* this must be embedded in any request structure that
  * identifies an object that will want a callback on
  * a cache fill
@@ -143,7 +142,6 @@ struct cache_deferred_req {
 					   int too_many);
 };
 
-
 extern const struct file_operations cache_file_operations_pipefs;
 extern const struct file_operations content_file_operations_pipefs;
 extern const struct file_operations cache_flush_operations_pipefs;
@@ -162,7 +160,6 @@ sunrpc_cache_pipe_upcall(struct cache_detail *detail, struct cache_head *h,
 				      char **,
 				      int *));
 
-
 extern void cache_clean_deferred(void *owner);
 
 static inline struct cache_head  *cache_get(struct cache_head *h)
@@ -170,7 +167,6 @@ static inline struct cache_head  *cache_get(struct cache_head *h)
 	kref_get(&h->ref);
 	return h;
 }
-
 
 static inline void cache_put(struct cache_head *h, struct cache_detail *cd)
 {
@@ -221,6 +217,22 @@ static inline int get_int(char **bpp, int *anint)
 	rv = simple_strtol(buf, &ep, 0);
 	if (*ep) return -EINVAL;
 	*anint = rv;
+	return 0;
+}
+
+static inline int get_uint(char **bpp, unsigned int *anint)
+{
+	char buf[50];
+	int len = qword_get(bpp, buf, sizeof(buf));
+
+	if (len < 0)
+		return -EINVAL;
+	if (len == 0)
+		return -ENOENT;
+
+	if (kstrtouint(buf, 0, anint))
+		return -EINVAL;
+
 	return 0;
 }
 

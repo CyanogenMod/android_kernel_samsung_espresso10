@@ -1181,7 +1181,6 @@ int ehca_reg_mr_rpages(struct ehca_shca *shca,
 			ret = 0;
 	} /* end for(i) */
 
-
 ehca_reg_mr_rpages_exit1:
 	ehca_free_fw_ctrlblock(kpage);
 ehca_reg_mr_rpages_exit0:
@@ -2265,7 +2264,6 @@ void ehca_mrmw_reverse_map_acl(const u32 *hipz_acl,
 		*ib_acl |= IB_ACCESS_MW_BIND;
 } /* end ehca_mrmw_reverse_map_acl() */
 
-
 /*----------------------------------------------------------------------*/
 
 /*
@@ -2645,7 +2643,6 @@ static void ehca_dma_free_coherent(struct ib_device *dev, size_t size,
 	if (cpu_addr && size)
 		free_pages((unsigned long)cpu_addr, get_order(size));
 }
-
 
 struct ib_dma_mapping_ops ehca_dma_mapping_ops = {
 	.mapping_error          = ehca_dma_mapping_error,

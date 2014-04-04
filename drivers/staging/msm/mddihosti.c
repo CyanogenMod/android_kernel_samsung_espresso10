@@ -1306,7 +1306,6 @@ static void mddi_host_isr(void)
 	int_reg = int_reg & int_en;
 	pmhctl->int_type.count++;
 
-
 #ifndef FEATURE_MDDI_DISABLE_REVERSE
 	status_reg = mddi_host_reg_in(STAT);
 

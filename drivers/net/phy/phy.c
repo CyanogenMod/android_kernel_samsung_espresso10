@@ -55,7 +55,6 @@ void phy_print_status(struct phy_device *phydev)
 }
 EXPORT_SYMBOL(phy_print_status);
 
-
 /**
  * phy_clear_interrupt - Ack the phy device's interrupt
  * @phydev: the phy_device struct
@@ -92,7 +91,6 @@ static int phy_config_interrupt(struct phy_device *phydev, u32 interrupts)
 
 	return err;
 }
-
 
 /**
  * phy_aneg_done - return auto-negotiation status
@@ -416,7 +414,6 @@ out_unlock:
 }
 EXPORT_SYMBOL(phy_start_aneg);
 
-
 static void phy_change(struct work_struct *work);
 
 /**
@@ -474,7 +471,7 @@ static void phy_force_reduction(struct phy_device *phydev)
 	int idx;
 
 	idx = phy_find_setting(phydev->speed, phydev->duplex);
-	
+
 	idx++;
 
 	idx = phy_find_valid(idx, phydev->supported);
@@ -486,7 +483,6 @@ static void phy_force_reduction(struct phy_device *phydev)
 			DUPLEX_FULL == phydev->duplex ?
 			"FULL" : "HALF");
 }
-
 
 /**
  * phy_error - enter HALTED state for this PHY device
@@ -645,7 +641,6 @@ int phy_stop_interrupts(struct phy_device *phydev)
 }
 EXPORT_SYMBOL(phy_stop_interrupts);
 
-
 /**
  * phy_change - Scheduled by the phy_interrupt/timer to handle PHY changes
  * @work: work_struct that describes the work to be done
@@ -728,7 +723,6 @@ out_unlock:
 	 * will not reenable interrupts.
 	 */
 }
-
 
 /**
  * phy_start - start or restart a PHY device

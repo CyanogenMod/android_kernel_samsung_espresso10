@@ -173,7 +173,6 @@ static inline int compute_score(struct sock *sk, struct net *net,
  * wildcarded during the search since they can never be otherwise.
  */
 
-
 struct sock *__inet_lookup_listener(struct net *net,
 				    struct inet_hashinfo *hashinfo,
 				    const __be32 daddr, const unsigned short hnum,

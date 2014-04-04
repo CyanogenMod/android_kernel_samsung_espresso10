@@ -1,7 +1,6 @@
 #ifndef _IPV6_PROTOCOL_DEFINES_
 #define _IPV6_PROTOCOL_DEFINES_
 
-
 #define IPV6HDR_TYPE_HOPBYHOP 0x0
 #define IPV6HDR_TYPE_ROUTING 0x2B
 #define IPV6HDR_TYPE_FRAGMENTATION 0x2C
@@ -9,7 +8,6 @@
 #define IPV6HDR_TYPE_AUTHENTICATION 0x33
 #define IPV6HDR_TYPE_ENCRYPTEDSECURITYPAYLOAD 0x34
 #define MASK_IPV6_CS_SPEC 0x2
-
 
 #define TCP_HEADER_TYPE 0x6
 #define UDP_HEADER_TYPE 0x11
@@ -98,8 +96,6 @@ typedef enum _E_IPADDR_CONTEXT
 
 }E_IPADDR_CONTEXT;
 
-
-
 //Function Prototypes
 
 USHORT	IpVersion6(PMINI_ADAPTER Adapter, /**< Pointer to the driver control structure */
@@ -111,6 +107,5 @@ VOID DumpIpv6Address(ULONG *puIpv6Address);
 extern BOOLEAN MatchSrcPort(S_CLASSIFIER_RULE *pstClassifierRule,USHORT ushSrcPort);
 extern BOOLEAN MatchDestPort(S_CLASSIFIER_RULE *pstClassifierRule,USHORT ushSrcPort);
 extern BOOLEAN MatchProtocol(S_CLASSIFIER_RULE *pstClassifierRule,UCHAR ucProtocol);
-
 
 #endif

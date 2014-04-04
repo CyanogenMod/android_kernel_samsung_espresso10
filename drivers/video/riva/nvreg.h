@@ -137,7 +137,6 @@
 #define PMC_Val(mask,value)             DEVICE_VALUE(PMC,mask,value)
 #define PMC_Mask(mask)                  DEVICE_MASK(PMC,mask)
 
-
 #define PBUS_Write(reg,value)         DEVICE_WRITE(PBUS,reg,value)
 #define PBUS_Read(reg)                DEVICE_READ(PBUS,reg)
 #define PBUS_Print(reg)               DEVICE_PRINT(PBUS,reg)
@@ -145,14 +144,12 @@
 #define PBUS_Val(mask,value)          DEVICE_VALUE(PBUS,mask,value)
 #define PBUS_Mask(mask)               DEVICE_MASK(PBUS,mask)
 
-
 #define PRAMDAC_Write(reg,value)         DEVICE_WRITE(PRAMDAC,reg,value)
 #define PRAMDAC_Read(reg)                DEVICE_READ(PRAMDAC,reg)
 #define PRAMDAC_Print(reg)               DEVICE_PRINT(PRAMDAC,reg)
 #define PRAMDAC_Def(mask,value)          DEVICE_DEF(PRAMDAC,mask,value)
 #define PRAMDAC_Val(mask,value)          DEVICE_VALUE(PRAMDAC,mask,value)
 #define PRAMDAC_Mask(mask)               DEVICE_MASK(PRAMDAC,mask)
-
 
 #define PDAC_ReadExt(reg) \
   ((PDAC_Write(INDEX_LO,(NV_PDAC_EXT_##reg) & 0xff)),\
@@ -184,5 +181,3 @@ typedef enum {NV1,NV3,NV4,NumNVChips} NVChipType;
 NVChipType GetChipType(void);
 
 #endif
-
-

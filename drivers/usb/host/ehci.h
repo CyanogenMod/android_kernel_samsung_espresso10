@@ -184,7 +184,6 @@ static inline struct usb_hcd *ehci_to_hcd (struct ehci_hcd *ehci)
 	return container_of ((void *) ehci, struct usb_hcd, hcd_priv);
 }
 
-
 static inline void
 iaa_watchdog_start(struct ehci_hcd *ehci)
 {

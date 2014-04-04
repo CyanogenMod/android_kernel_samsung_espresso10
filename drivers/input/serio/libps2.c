@@ -318,7 +318,6 @@ int ps2_handle_ack(struct ps2dev *ps2dev, unsigned char data)
 			return 0;
 	}
 
-
 	if (!ps2dev->nak) {
 		ps2dev->flags &= ~PS2_FLAG_NAK;
 		if (ps2dev->cmdcnt)

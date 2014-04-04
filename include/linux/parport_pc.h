@@ -97,7 +97,7 @@ static inline void dump_parport_state (char *str, struct parport *p)
 	for (i=0; i<2; i++) {
 		printk ("]  dcr(%s)=[", i ? "soft" : "hard");
 		dcr = i ? priv->ctr : inb (CONTROL (p));
-	
+
 		if (dcr & 0x20) {
 			printk ("rev");
 		} else {
@@ -211,7 +211,6 @@ static __inline__ unsigned char parport_pc_read_status(struct parport *p)
 {
 	return inb(STATUS(p));
 }
-
 
 static __inline__ void parport_pc_disable_irq(struct parport *p)
 {

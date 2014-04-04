@@ -521,7 +521,6 @@ static void mlx4_free_irqs(struct mlx4_dev *dev)
 		}
 	}
 
-
 	kfree(eq_table->irq_names);
 }
 
@@ -634,7 +633,6 @@ int mlx4_init_eq_table(struct mlx4_dev *dev)
 			goto err_out_unmap;
 		}
 	}
-
 
 	if (dev->flags & MLX4_FLAG_MSI_X) {
 		const char *eq_name;
@@ -839,4 +837,3 @@ void mlx4_release_eq(struct mlx4_dev *dev, int vec)
 
 }
 EXPORT_SYMBOL(mlx4_release_eq);
-

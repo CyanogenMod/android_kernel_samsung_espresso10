@@ -43,7 +43,6 @@
 #include "iwl-dev.h"
 #include "iwl-3945-led.h"
 
-
 /* Send led command */
 static int iwl3945_send_led_cmd(struct iwl_priv *priv,
 				struct iwl_led_cmd *led_cmd)

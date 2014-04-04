@@ -1,7 +1,7 @@
 config FUSE_FS
-	tristate "FUSE (Filesystem in Userspace) support"
+	tristate "Filesystem in Userspace support (Fuse)"
 	help
-	  With FUSE it is possible to implement a fully functional filesystem
+	  With Fuse it is possible to implement a fully functional filesystem
 	  in a userspace program.
 
 	  There's also companion library: libfuse.  This library along with

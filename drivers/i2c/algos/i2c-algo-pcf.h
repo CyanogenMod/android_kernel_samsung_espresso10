@@ -64,7 +64,6 @@
 #define I2C_PCF_TRNS11 0x02	/*  11 kHz */
 #define I2C_PCF_TRNS15 0x03	/* 1.5 kHz */
 
-
 /* ----- Access to internal registers according to ES1,ES2 ------------	*/
 /* they are mapped to the data port ( a0 = 0 ) 				*/
 /* available when ESO == 0 :						*/

@@ -198,7 +198,6 @@ int tda18271_write_regs(struct dvb_frontend *fe, int idx, int len)
 
 	BUG_ON((len == 0) || (idx + len > sizeof(buf)));
 
-
 	switch (priv->small_i2c) {
 	case TDA18271_03_BYTE_CHUNK_INIT:
 		max = 3;

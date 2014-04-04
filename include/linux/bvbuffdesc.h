@@ -42,7 +42,6 @@ enum bvauxtype {
 #endif
 };
 
-
 struct bvphysdesc {
 	unsigned int structsize;	/* used to identify struct version */
 	unsigned long pagesize;		/* page size in bytes */

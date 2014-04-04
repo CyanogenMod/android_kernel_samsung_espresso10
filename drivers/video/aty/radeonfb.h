@@ -12,7 +12,6 @@
 #include <linux/pci.h>
 #include <linux/fb.h>
 
-
 #ifdef CONFIG_FB_RADEON_I2C
 #include <linux/i2c.h>
 #include <linux/i2c-algo-bit.h>
@@ -29,7 +28,6 @@
 /***************************************************************
  * Most of the definitions here are adapted right from XFree86 *
  ***************************************************************/
-
 
 /*
  * Chip families. Must fit in the low 16 bits of a long word
@@ -66,7 +64,6 @@ enum radeon_family {
 				 ((rinfo)->family == CHIP_FAMILY_RV280)  || \
 				 ((rinfo)->family == CHIP_FAMILY_RS300))
 
-
 #define IS_R300_VARIANT(rinfo) (((rinfo)->family == CHIP_FAMILY_R300)  || \
 				((rinfo)->family == CHIP_FAMILY_RV350) || \
 				((rinfo)->family == CHIP_FAMILY_R350)  || \
@@ -83,7 +80,7 @@ enum radeon_chip_flags {
 	CHIP_FLAGS_MASK		= 0xffff0000UL,
 	CHIP_IS_MOBILITY	= 0x00010000UL,
 	CHIP_IS_IGP		= 0x00020000UL,
-	CHIP_HAS_CRTC2		= 0x00040000UL,	
+	CHIP_HAS_CRTC2		= 0x00040000UL,
 };
 
 /*
@@ -94,7 +91,6 @@ enum radeon_errata {
 	CHIP_ERRATA_PLL_DUMMYREADS	= 0x00000002,
 	CHIP_ERRATA_PLL_DELAY		= 0x00000004,
 };
-
 
 /*
  * Monitor types
@@ -130,7 +126,6 @@ enum conn_type {
 	conn_DVI_D,
 };
 
-
 /*
  * PLL infos
  */
@@ -141,7 +136,6 @@ struct pll_info {
 	int ref_div;
 	int ref_clk;
 };
-
 
 /*
  * This structure contains the various registers manipulated by this
@@ -229,7 +223,7 @@ struct radeon_regs {
 	/* Computed values for PLL */
 	u32		dot_clock_freq;
 	int		feedback_div;
-	int		post_div;	
+	int		post_div;
 
 	/* PLL registers */
 	u32		ppll_div_3;
@@ -363,9 +357,7 @@ struct radeonfb_info {
 #endif
 };
 
-
 #define PRIMARY_MONITOR(rinfo)	(rinfo->mon1_type)
-
 
 /*
  * IO macros
@@ -384,7 +376,6 @@ static inline void _radeon_msleep(struct radeonfb_info *rinfo, unsigned long ms)
 	else
 		msleep(ms);
 }
-
 
 #define INREG8(addr)		readb((rinfo->mmio_base)+addr)
 #define OUTREG8(addr,val)	writeb(val, (rinfo->mmio_base)+addr)
@@ -472,7 +463,6 @@ static inline void __OUTPLL(struct radeonfb_info *rinfo, unsigned int index,
 	radeon_pll_errata_after_data(rinfo);
 }
 
-
 static inline void __OUTPLLP(struct radeonfb_info *rinfo, unsigned int index,
 			     u32 val, u32 mask)
 {
@@ -484,11 +474,9 @@ static inline void __OUTPLLP(struct radeonfb_info *rinfo, unsigned int index,
 	__OUTPLL(rinfo, index, tmp);
 }
 
-
 #define INPLL(addr)			__INPLL(rinfo, addr)
 #define OUTPLL(index, val)		__OUTPLL(rinfo, index, val)
 #define OUTPLLP(index, val, mask)	__OUTPLLP(rinfo, index, val, mask)
-
 
 #define BIOS_IN8(v)  	(readb(rinfo->bios_seg + (v)))
 #define BIOS_IN16(v) 	(readb(rinfo->bios_seg + (v)) | \
@@ -567,7 +555,6 @@ static inline void radeon_engine_flush (struct radeonfb_info *rinfo)
 	printk(KERN_ERR "radeonfb: Flush Timeout !\n");
 }
 
-
 static inline void _radeon_engine_idle(struct radeonfb_info *rinfo)
 {
 	int i;
@@ -585,11 +572,9 @@ static inline void _radeon_engine_idle(struct radeonfb_info *rinfo)
 	printk(KERN_ERR "radeonfb: Idle Timeout !\n");
 }
 
-
 #define radeon_engine_idle()		_radeon_engine_idle(rinfo)
 #define radeon_fifo_wait(entries)	_radeon_fifo_wait(rinfo,entries)
 #define radeon_msleep(ms)		_radeon_msleep(rinfo,ms)
-
 
 /* I2C Functions */
 extern void radeon_create_i2c_busses(struct radeonfb_info *rinfo);

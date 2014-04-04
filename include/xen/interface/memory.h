@@ -228,7 +228,6 @@ DEFINE_GUEST_HANDLE_STRUCT(xen_memory_map);
  */
 #define XENMEM_machine_memory_map   10
 
-
 /*
  * Prevent the balloon driver from changing the memory reservation
  * during a driver critical region.

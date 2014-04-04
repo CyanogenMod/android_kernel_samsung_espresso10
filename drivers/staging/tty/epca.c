@@ -45,7 +45,6 @@
 #include <linux/pci.h>
 #include "digiPCI.h"
 
-
 #include "digi1.h"
 #include "digiFep1.h"
 #include "epca.h"
@@ -55,7 +54,6 @@
 
 /* This major needs to be submitted to Linux to join the majors list */
 #define DIGIINFOMAJOR       35  /* For Digi specific ioctl */
-
 
 #define MAXCARDS 7
 #define epcaassert(x, msg)  if (!(x)) epca_error(__LINE__, msg)
@@ -1037,7 +1035,6 @@ static int __init pc_init(void)
 	pc_info->init_termios.c_ospeed = 9600;
 	pc_info->flags = TTY_DRIVER_REAL_RAW;
 	tty_set_operations(pc_info, &info_ops);
-
 
 	for (crd = 0; crd < num_cards; crd++) {
 		/*
@@ -2759,7 +2756,6 @@ err_out_free_pciio:
 err_out:
 	return -ENODEV;
 }
-
 
 static struct pci_device_id epca_pci_tbl[] = {
 	{ PCI_VENDOR_DIGI, PCI_DEVICE_XR, PCI_ANY_ID, PCI_ANY_ID, 0, 0, brd_xr },

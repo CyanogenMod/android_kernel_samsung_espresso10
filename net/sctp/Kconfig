@@ -52,17 +52,17 @@ config NET_SCTPPROBE
 config SCTP_DBG_MSG
 	bool "SCTP: Debug messages"
 	help
-	  If you say Y, this will enable verbose debugging messages. 
+	  If you say Y, this will enable verbose debugging messages.
 
-	  If unsure, say N.  However, if you are running into problems, use 
+	  If unsure, say N.  However, if you are running into problems, use
 	  this option to gather detailed trace information
 
 config SCTP_DBG_OBJCNT
 	bool "SCTP: Debug object counts"
 	depends on PROC_FS
 	help
-	  If you say Y, this will enable debugging support for counting the 
-	  type of objects that are currently allocated.  This is useful for 
+	  If you say Y, this will enable debugging support for counting the
+	  type of objects that are currently allocated.  This is useful for
 	  identifying memory leaks. This debug information can be viewed by
 	  'cat /proc/net/sctp/sctp_dbg_objcnt'
 
@@ -73,26 +73,26 @@ choice
 	default SCTP_HMAC_MD5
 	help
 	  HMAC algorithm to be used during association initialization.  It
-	  is strongly recommended to use HMAC-SHA1 or HMAC-MD5.  See 
+	  is strongly recommended to use HMAC-SHA1 or HMAC-MD5.  See
 	  configuration for Cryptographic API and enable those algorithms
-          to make usable by SCTP. 
+          to make usable by SCTP.
 
 config SCTP_HMAC_NONE
 	bool "None"
-	help 
-	  Choosing this disables the use of an HMAC during association 
+	help
+	  Choosing this disables the use of an HMAC during association
 	  establishment.  It is advised to use either HMAC-MD5 or HMAC-SHA1.
 
 config SCTP_HMAC_SHA1
 	bool "HMAC-SHA1"
-	help 
-	  Enable the use of HMAC-SHA1 during association establishment.  It 
+	help
+	  Enable the use of HMAC-SHA1 during association establishment.  It
 	  is advised to use either HMAC-MD5 or HMAC-SHA1.
 
 config SCTP_HMAC_MD5
 	bool "HMAC-MD5"
 	help
-	  Enable the use of HMAC-MD5 during association establishment.  It is 
+	  Enable the use of HMAC-MD5 during association establishment.  It is
 	  advised to use either HMAC-MD5 or HMAC-SHA1.
 
 endchoice

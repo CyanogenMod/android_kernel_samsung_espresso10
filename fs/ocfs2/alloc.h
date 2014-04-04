@@ -26,7 +26,6 @@
 #ifndef OCFS2_ALLOC_H
 #define OCFS2_ALLOC_H
 
-
 /*
  * For xattr tree leaf, we limit the leaf byte size to be 64K.
  */

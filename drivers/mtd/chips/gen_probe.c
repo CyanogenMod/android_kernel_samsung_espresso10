@@ -55,7 +55,6 @@ struct mtd_info *mtd_do_chip_probe(struct map_info *map, struct chip_probe *cp)
 }
 EXPORT_SYMBOL(mtd_do_chip_probe);
 
-
 static struct cfi_private *genprobe_ident_chips(struct map_info *map, struct chip_probe *cp)
 {
 	struct cfi_private cfi;
@@ -162,7 +161,6 @@ static struct cfi_private *genprobe_ident_chips(struct map_info *map, struct chi
 	kfree(chip_map);
 	return retcfi;
 }
-
 
 static int genprobe_new_chip(struct map_info *map, struct chip_probe *cp,
 			     struct cfi_private *cfi)

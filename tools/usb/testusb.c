@@ -75,7 +75,6 @@ struct usbtest_param {
 #define USB_CLASS_PER_INTERFACE		0	/* for DeviceClass */
 #define USB_CLASS_VENDOR_SPEC		0xff
 
-
 struct usb_device_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;

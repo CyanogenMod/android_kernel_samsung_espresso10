@@ -43,7 +43,6 @@
 #include "sn9c102_sensor.h"
 #include "sn9c102_devtable.h"
 
-
 enum sn9c102_frame_state {
 	F_UNUSED,
 	F_QUEUED,
@@ -142,7 +141,6 @@ sn9c102_match_id(struct sn9c102_device* cam, const struct usb_device_id *id)
 	return usb_match_id(usb_ifnum_to_if(cam->usbdev, 0), id) ? cam : NULL;
 }
 
-
 void
 sn9c102_attach_sensor(struct sn9c102_device* cam,
 		      const struct sn9c102_sensor* sensor)
@@ -150,13 +148,11 @@ sn9c102_attach_sensor(struct sn9c102_device* cam,
 	memcpy(&cam->sensor, sensor, sizeof(struct sn9c102_sensor));
 }
 
-
 enum sn9c102_bridge
 sn9c102_get_bridge(struct sn9c102_device* cam)
 {
 	return cam->bridge;
 }
-
 
 struct sn9c102_sensor* sn9c102_get_sensor(struct sn9c102_device* cam)
 {

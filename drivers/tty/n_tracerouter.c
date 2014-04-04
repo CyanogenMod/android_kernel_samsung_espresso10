@@ -209,7 +209,6 @@ static int __init n_tracerouter_init(void)
 	if (tr_data == NULL)
 		return -ENOMEM;
 
-
 	/* Note N_TRACEROUTER is defined in linux/tty.h */
 	retval = tty_register_ldisc(N_TRACEROUTER, &tty_ptirouter_ldisc);
 	if (retval < 0) {

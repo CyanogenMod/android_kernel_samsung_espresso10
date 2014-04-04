@@ -1385,7 +1385,6 @@ static void audit_log_exit(struct audit_context *context, struct task_struct *ts
 		  context->egid, context->sgid, context->fsgid, tty,
 		  tsk->sessionid);
 
-
 	audit_log_task_info(ab, tsk);
 	audit_log_key(ab, context->filterkey);
 	audit_log_end(ab);
@@ -1919,7 +1918,6 @@ static int audit_inc_name_count(struct audit_context *context,
 	return 0;
 }
 
-
 static inline int audit_copy_fcaps(struct audit_names *name, const struct dentry *dentry)
 {
 	struct cpu_vfs_cap_data caps;
@@ -1944,7 +1942,6 @@ static inline int audit_copy_fcaps(struct audit_names *name, const struct dentry
 
 	return 0;
 }
-
 
 /* Copy inode data into an audit_names. */
 static void audit_copy_inode(struct audit_names *name, const struct dentry *dentry,
@@ -2291,7 +2288,6 @@ int audit_bprm(struct linux_binprm *bprm)
 	context->aux = (void *)ax;
 	return 0;
 }
-
 
 /**
  * audit_socketcall - record audit data for sys_socketcall

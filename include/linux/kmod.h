@@ -44,7 +44,6 @@ static inline int request_module_nowait(const char *name, ...) { return -ENOSYS;
 #define try_then_request_module(x, mod...) (x)
 #endif
 
-
 struct cred;
 struct file;
 

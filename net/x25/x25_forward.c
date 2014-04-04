@@ -79,7 +79,6 @@ int x25_forward_call(struct x25_address *dest_addr, struct x25_neigh *from,
 	x25_transmit_link(skbn, neigh_new);
 	rc = 1;
 
-
 out_put_nb:
 	x25_neigh_put(neigh_new);
 
@@ -89,7 +88,6 @@ out_put_route:
 out_no_route:
 	return rc;
 }
-
 
 int x25_forward_data(int lci, struct x25_neigh *from, struct sk_buff *skb) {
 
@@ -147,7 +145,6 @@ void x25_clear_forward_by_lci(unsigned int lci)
 	}
 	write_unlock_bh(&x25_forward_list_lock);
 }
-
 
 void x25_clear_forward_by_dev(struct net_device *dev)
 {

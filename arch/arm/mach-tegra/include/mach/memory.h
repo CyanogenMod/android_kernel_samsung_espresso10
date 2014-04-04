@@ -25,4 +25,3 @@
 #define PLAT_PHYS_OFFSET		UL(0)
 
 #endif
-

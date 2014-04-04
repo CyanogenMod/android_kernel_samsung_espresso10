@@ -298,7 +298,6 @@ static const struct twl6032_ideal_code
 	},
 };
 
-
 struct twl6030_gpadc_data {
 	struct device		*dev;
 	struct mutex		lock;
@@ -1420,7 +1419,6 @@ static int twl6034enable_measure(void)
 
 	return ret;
 }
-
 
 static int __devinit twl6030_gpadc_probe(struct platform_device *pdev)
 {

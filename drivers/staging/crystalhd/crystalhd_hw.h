@@ -355,7 +355,6 @@ struct crystalhd_hw {
 			 MISC1_UV_RX_ERROR_STATUS_RX_L1_DESC_TX_ABORT_ERRORS_MASK |	\
 			 MISC1_UV_RX_ERROR_STATUS_RX_L1_FIFO_FULL_ERRORS_MASK)
 
-
 /**** API Exposed to the other layers ****/
 enum BC_STATUS crystalhd_download_fw(struct crystalhd_adp *adp,
 			      void *buffer, uint32_t sz);
@@ -365,7 +364,6 @@ enum BC_STATUS crystalhd_hw_open(struct crystalhd_hw *, struct crystalhd_adp *);
 enum BC_STATUS crystalhd_hw_close(struct crystalhd_hw *);
 enum BC_STATUS crystalhd_hw_setup_dma_rings(struct crystalhd_hw *);
 enum BC_STATUS crystalhd_hw_free_dma_rings(struct crystalhd_hw *);
-
 
 enum BC_STATUS crystalhd_hw_post_tx(struct crystalhd_hw *hw, struct crystalhd_dio_req *ioreq,
 			     hw_comp_callback call_back,

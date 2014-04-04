@@ -147,7 +147,6 @@ static int vpif_buffer_prepare(struct videobuf_queue *q,
 	struct common_obj *common;
 	unsigned long addr;
 
-
 	vpif_dbg(2, debug, "vpif_buffer_prepare\n");
 
 	common = &ch->common[VPIF_VIDEO_INDEX];
@@ -363,7 +362,6 @@ static irqreturn_t vpif_channel_isr(int irq, void *dev_id)
 			channel_first_int[i][channel_id] = 0;
 
 			vpif_schedule_next_buffer(common);
-
 
 			channel_first_int[i][channel_id] = 0;
 		} else {
@@ -1594,7 +1592,6 @@ static int vpif_try_fmt_vid_cap(struct file *file, void *priv,
 
 	return vpif_check_format(ch, pixfmt, 1);
 }
-
 
 /**
  * vpif_g_fmt_vid_cap() - Set INPUT handler

@@ -94,7 +94,6 @@ struct mldl_ext_cfg {
 	void *mpuacc_data;
 };
 
-
 /* Platform data for the MPU */
 struct mldl_cfg {
 	/* MPU related configuration */
@@ -142,7 +141,6 @@ struct mldl_cfg {
 	/*---------------------------------------------------*/
 	struct mldl_ext_cfg ext;
 };
-
 
 int mpu3050_open(struct mldl_cfg *mldl_cfg,
 		 void *mlsl_handle,
@@ -200,7 +198,6 @@ int mpu3050_get_config_compass(struct mldl_cfg *mldl_cfg,
 int mpu3050_get_config_pressure(struct mldl_cfg *mldl_cfg,
 				void *pressure_handle,
 				struct ext_slave_config *data);
-
 
 #endif				/* __MLDL_CFG_H__ */
 

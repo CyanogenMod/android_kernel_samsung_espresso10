@@ -130,11 +130,11 @@ struct s_smt_rx_queue {
 #define	TX_FIFO_SPACE		0x4000
 
 #define	TX_SMALL_FIFO		0x0900
-#define	TX_MEDIUM_FIFO		TX_FIFO_SPACE / 2	
-#define	TX_LARGE_FIFO		TX_FIFO_SPACE - TX_SMALL_FIFO	
+#define	TX_MEDIUM_FIFO		TX_FIFO_SPACE / 2
+#define	TX_LARGE_FIFO		TX_FIFO_SPACE - TX_SMALL_FIFO
 
 #define	RX_SMALL_FIFO		0x0900
-#define	RX_LARGE_FIFO		RX_FIFO_SPACE - RX_SMALL_FIFO	
+#define	RX_LARGE_FIFO		RX_FIFO_SPACE - RX_SMALL_FIFO
 
 struct s_smt_fifo_conf {
 	u_short	rbc_ram_start ;		/* FIFO start address */
@@ -172,7 +172,6 @@ struct s_smt_fp {
 		struct fddi_addr	mac_source ;
 		u_char			mac_info[0x20] ;
 	} mac_sfb ;
-
 
 	/*
 	 * queues
@@ -212,11 +211,10 @@ struct s_smt_fp {
 	HW_PTR	fm_st3u ;
 	HW_PTR	fm_st3l ;
 
-
 	/*
 	 * multicast table
 	 */
-#define FPMAX_MULTICAST 32 
+#define FPMAX_MULTICAST 32
 #define	SMT_MAX_MULTI	4
 	struct {
 		struct s_fpmc {
@@ -228,7 +226,7 @@ struct s_smt_fp {
 	struct fddi_addr	group_addr ;
 	u_long	func_addr ;		/* functional address */
 	int	smt_slots_used ;	/* count of table entries for the SMT */
-	int	os_slots_used ;		/* count of table entries */ 
+	int	os_slots_used ;		/* count of table entries */
 					/* used by the os-specific module */
 } ;
 
@@ -241,7 +239,6 @@ struct s_smt_fp {
 #define RX_DISABLE_PROMISC	4	/* disable promiscuous */
 #define RX_ENABLE_NSA		5	/* enable reception of NSA frames */
 #define RX_DISABLE_NSA		6	/* disable reception of NSA frames */
-
 
 /*
  * support for byte reversal in AIX
@@ -260,7 +257,7 @@ struct s_smt_fp {
 #endif
 #endif
 
-#ifdef	MDR_REV	
+#ifdef	MDR_REV
 #define	MDR_REVERSE(x)		((((x)<<24L)&0xff000000L)	+	\
 				 (((x)<< 8L)&0x00ff0000L)	+	\
 				 (((x)>> 8L)&0x0000ff00L)	+	\

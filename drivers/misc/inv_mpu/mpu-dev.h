@@ -17,7 +17,6 @@
   $
  */
 
-
 #ifndef __MPU_DEV_H__
 #define __MPU_DEV_H__
 

@@ -53,13 +53,13 @@
  * Revision 2.3 2001/03/05 daniela
  * Created struct pc300conf, to provide the hardware information to pc300util.
  * Inclusion of 'alloc_ramsize' field on structure 'pc300hw'.
- * 
+ *
  * Revision 2.2 2000/12/22 daniela
- * Structures and defines to support pc300util: statistics, status, 
+ * Structures and defines to support pc300util: statistics, status,
  * loopback tests, trace.
- * 
+ *
  * Revision 2.1 2000/09/28 ivan
- * Inclusion of 'iophys' and 'iosize' fields on structure 'pc300hw', to 
+ * Inclusion of 'iophys' and 'iosize' fields on structure 'pc300hw', to
  * allow release of I/O region at module unload.
  * Changed location of include files.
  *
@@ -71,7 +71,7 @@
  *
  * Revision 1.0 1999/12/16 ivan
  * First official release.
- * Inclusion of 'nchan' field on structure 'pc300hw', to allow variable 
+ * Inclusion of 'nchan' field on structure 'pc300hw', to allow variable
  * number of ports per card.
  * Inclusion of 'if_ptr' field on structure 'pc300dev'.
  *
@@ -193,8 +193,8 @@ struct RUNTIME_9050 {
 #define CPLD_V2_REG2	0x104	/* Clock enable , LED control */
 #define CPLD_ID_REG	0x108	/* CPLD version */
 
-/* CPLD Register bit description: for the FALC bits, they should always be 
-   set based on the channel (use (bit<<(2*ch)) to access the correct bit for 
+/* CPLD Register bit description: for the FALC bits, they should always be
+   set based on the channel (use (bit<<(2*ch)) to access the correct bit for
    that channel) */
 #define CPLD_REG1_FALC_RESET	0x01
 #define CPLD_REG1_SCA_RESET	0x02

@@ -32,7 +32,6 @@
 MODULE_DESCRIPTION("Driver for ENE UB6250 reader");
 MODULE_LICENSE("GPL");
 
-
 /*
  * The table of devices
  */
@@ -71,8 +70,6 @@ static struct us_unusual_dev ene_ub6250_unusual_dev_list[] = {
 
 #undef UNUSUAL_DEV
 
-
-
 /* ENE bin code len */
 #define ENE_BIN_CODE_LEN    0x800
 /* EnE HW Register */
@@ -99,7 +96,6 @@ static struct us_unusual_dev ene_ub6250_unusual_dev_list[] = {
 
 #define FDIR_WRITE         0
 #define FDIR_READ          1
-
 
 struct SD_STATUS {
 	u8    Insert:1;
@@ -131,7 +127,6 @@ struct SM_STATUS {
 	u8    WtP:1;
 	u8    IsMS:1;
 };
-
 
 /* SD Block Length */
 /* 2^9 = 512 Bytes, The HW maximum read/write data length */
@@ -306,7 +301,6 @@ static int sd_scsi_mode_sense(struct us_data *us, struct scsi_cmnd *srb)
 		usb_stor_set_xfer_buf(mediaWP, 12, srb);
 	else
 		usb_stor_set_xfer_buf(mediaNoWP, 12, srb);
-
 
 	return USB_STOR_TRANSPORT_GOOD;
 }
@@ -601,7 +595,6 @@ static int ene_sd_init(struct us_data *us)
 	return USB_STOR_TRANSPORT_GOOD;
 }
 
-
 static int ene_init(struct us_data *us)
 {
 	int result;
@@ -677,7 +670,6 @@ static int ene_transport(struct scsi_cmnd *srb, struct us_data *us)
 	return 0;
 }
 
-
 static int ene_ub6250_probe(struct usb_interface *intf,
 			 const struct usb_device_id *id)
 {
@@ -722,7 +714,6 @@ static int ene_ub6250_probe(struct usb_interface *intf,
 
 	return result;
 }
-
 
 #ifdef CONFIG_PM
 

@@ -40,7 +40,6 @@ BFA_MODULE(uf);
 #define BFA_LPS_MAX_VPORTS_SUPP_CB  255
 #define BFA_LPS_MAX_VPORTS_SUPP_CT  190
 
-
 /*
  * FC PORT related definitions
  */
@@ -225,7 +224,6 @@ static struct bfa_sm_table_s hal_port_sm_table[] = {
 	{BFA_SM(bfa_fcport_sm_iocdown), BFA_PORT_ST_IOCDOWN},
 	{BFA_SM(bfa_fcport_sm_iocfail), BFA_PORT_ST_IOCDOWN},
 };
-
 
 /*
  * forward declaration for RPORT related functions
@@ -423,7 +421,6 @@ bfa_plog_fchdr_and_pl(struct bfa_plog_s *plog, enum bfa_plog_mid mid,
 		bfa_plog_intarr(plog, mid, event, misc, ints, 4);
 	}
 }
-
 
 /*
  *  fcxp_pvt BFA FCXP private functions
@@ -1181,7 +1178,6 @@ bfa_fcxp_get_maxrsp(struct bfa_s *bfa)
 	return mod->rsp_pld_sz;
 }
 
-
 /*
  *  BFA LPS state machine functions
  */
@@ -1462,8 +1458,6 @@ bfa_lps_sm_logowait(struct bfa_lps_s *lps, enum bfa_lps_event event)
 		bfa_sm_fault(lps->bfa, event);
 	}
 }
-
-
 
 /*
  *  lps_pvt BFA LPS private functions
@@ -1809,8 +1803,6 @@ bfa_lps_cvl_event(struct bfa_lps_s *lps)
 		bfa_cb_lps_cvl_event(lps->bfa->bfad, lps->uarg);
 }
 
-
-
 /*
  *  lps_public BFA LPS public functions
  */
@@ -1888,7 +1880,6 @@ bfa_lps_fdisc(struct bfa_lps_s *lps, void *uarg, u16 pdusz, wwn_t pwwn,
 	bfa_sm_send_event(lps, BFA_LPS_SM_LOGIN);
 }
 
-
 /*
  * Initiate a lport FDSIC logout.
  */
@@ -1897,7 +1888,6 @@ bfa_lps_fdisclogo(struct bfa_lps_s *lps)
 {
 	bfa_sm_send_event(lps, BFA_LPS_SM_LOGOUT);
 }
-
 
 /*
  * Return lport services tag given the pid
@@ -1917,7 +1907,6 @@ bfa_lps_get_tag_from_pid(struct bfa_s *bfa, u32 pid)
 	/* Return base port tag anyway */
 	return 0;
 }
-
 
 /*
  * return port id assigned to the base lport
@@ -3742,7 +3731,6 @@ bfa_fcport_clear_stats(struct bfa_s *bfa, bfa_cb_port_t cbfn, void *cbarg)
 	return BFA_STATUS_OK;
 }
 
-
 /*
  * Fetch port attributes.
  */
@@ -4253,8 +4241,6 @@ bfa_rport_sm_iocdisable(struct bfa_rport_s *rp, enum bfa_rport_event event)
 	}
 }
 
-
-
 /*
  *  bfa_rport_private BFA rport private functions
  */
@@ -4468,8 +4454,6 @@ bfa_rport_send_fwspeed(struct bfa_rport_s *rp)
 	return BFA_TRUE;
 }
 
-
-
 /*
  *  bfa_rport_public
  */
@@ -4513,8 +4497,6 @@ bfa_rport_isr(struct bfa_s *bfa, struct bfi_msg_s *m)
 		WARN_ON(1);
 	}
 }
-
-
 
 /*
  *  bfa_rport_api
@@ -4568,7 +4550,6 @@ bfa_rport_speed(struct bfa_rport_s *rport, enum bfa_port_speed speed)
 	bfa_sm_send_event(rport, BFA_RPORT_SM_SET_SPEED);
 }
 
-
 /*
  * SGPG related functions
  */
@@ -4586,7 +4567,6 @@ bfa_sgpg_meminfo(struct bfa_iocfc_cfg_s *cfg, u32 *km_len,
 	*km_len += (cfg->drvcfg.num_sgpgs + 1) * sizeof(struct bfa_sgpg_s);
 	*dm_len += (cfg->drvcfg.num_sgpgs + 1) * sizeof(struct bfi_sgpg_s);
 }
-
 
 static void
 bfa_sgpg_attach(struct bfa_s *bfa, void *bfad, struct bfa_iocfc_cfg_s *cfg,
@@ -5051,8 +5031,6 @@ bfa_uf_free(struct bfa_uf_s *uf)
 	bfa_uf_post_all(BFA_UF_MOD(uf->bfa));
 }
 
-
-
 /*
  *  uf_pub BFA uf module public functions
  */
@@ -5071,5 +5049,3 @@ bfa_uf_isr(struct bfa_s *bfa, struct bfi_msg_s *msg)
 		WARN_ON(1);
 	}
 }
-
-

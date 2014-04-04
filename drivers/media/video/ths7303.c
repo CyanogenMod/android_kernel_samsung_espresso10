@@ -149,4 +149,3 @@ static void __exit ths7303_exit(void)
 
 module_init(ths7303_init);
 module_exit(ths7303_exit);
-

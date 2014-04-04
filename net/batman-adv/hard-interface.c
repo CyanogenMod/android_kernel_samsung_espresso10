@@ -31,7 +31,6 @@
 
 #include <linux/if_arp.h>
 
-
 static int batman_skb_recv(struct sk_buff *skb,
 			   struct net_device *dev,
 			   struct packet_type *ptype,

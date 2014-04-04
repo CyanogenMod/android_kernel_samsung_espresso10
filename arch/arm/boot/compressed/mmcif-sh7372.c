@@ -80,7 +80,6 @@ asmlinkage void mmcif_loader(unsigned char *buf, unsigned long len)
 	sh_mmcif_boot_do_read(MMCIF_BASE, 2, /* Kernel is at block 2 */
 			      (len + SH_MMCIF_BBS - 1) / SH_MMCIF_BBS, buf);
 
-
 	/* Disable clock to MMC hardware block */
 	__raw_writel(__raw_readl(SMSTPCR3) & (1 << 12), SMSTPCR3);
 

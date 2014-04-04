@@ -2256,7 +2256,6 @@ void rtl8192ce_bt_reg_init(struct ieee80211_hw *hw)
 	rtlpcipriv->bt_coexist.reg_bt_sco = 0;
 }
 
-
 void rtl8192ce_bt_hw_init(struct ieee80211_hw *hw)
 {
 	struct rtl_priv *rtlpriv = rtl_priv(hw);

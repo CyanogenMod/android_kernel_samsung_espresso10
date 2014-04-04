@@ -1345,7 +1345,6 @@ int txCommit(tid_t tid,		/* transaction identifier */
 	if ((tblk->flag & tblkGC_LAZY) == 0)
 		txUnlock(tblk);
 
-
 	/*
 	 *	reset in-memory object state
 	 */
@@ -2307,7 +2306,6 @@ static void txUpdateMap(struct tblock * tblk)
 	ipimap = JFS_SBI(tblk->sb)->ipimap;
 
 	maptype = (tblk->xflag & COMMIT_PMAP) ? COMMIT_PMAP : COMMIT_PWMAP;
-
 
 	/*
 	 *	update block allocation map

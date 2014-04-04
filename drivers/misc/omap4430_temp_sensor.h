@@ -1,7 +1,6 @@
 #ifndef __OMAP4430_TEMP_SENSOR_H__
 #define __OMAP4430_TEMP_SENSOR_H__
 
-
 #define OMAP4430_BGAP_TEMPSOFF                          (1 << 12)
 #define OMAP4430_BGAP_TEMP_SENSOR_CONTCONV              (1 << 10)
 #define OMAP4430_BGAP_TEMP_SENSOR_SOC                   (1 << 9)

@@ -1506,7 +1506,6 @@ static struct fb_ops pm2fb_ops = {
  * PCI stuff
  */
 
-
 /**
  * Device initialisation
  *
@@ -1770,7 +1769,6 @@ static struct pci_driver pm2fb_driver = {
 
 MODULE_DEVICE_TABLE(pci, pm2fb_id_table);
 
-
 #ifndef MODULE
 /**
  * Parse user speficied options.
@@ -1805,7 +1803,6 @@ static int __init pm2fb_setup(char *options)
 	return 0;
 }
 #endif
-
 
 static int __init pm2fb_init(void)
 {

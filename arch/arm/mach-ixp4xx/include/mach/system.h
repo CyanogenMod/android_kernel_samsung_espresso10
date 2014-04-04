@@ -21,7 +21,6 @@ static inline void arch_idle(void)
 #endif
 }
 
-
 static inline void arch_reset(char mode, const char *cmd)
 {
 	if ( 1 && mode == 's') {
@@ -41,4 +40,3 @@ static inline void arch_reset(char mode, const char *cmd)
 		*IXP4XX_OSWE = IXP4XX_WDT_RESET_ENABLE | IXP4XX_WDT_COUNT_ENABLE;
 	}
 }
-

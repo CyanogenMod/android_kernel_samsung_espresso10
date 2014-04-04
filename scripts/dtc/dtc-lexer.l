@@ -178,7 +178,6 @@ static void push_input_file(const char *filename)
 	yypush_buffer_state(yy_create_buffer(yyin, YY_BUF_SIZE));
 }
 
-
 static int pop_input_file(void)
 {
 	if (srcfile_pop() == 0)

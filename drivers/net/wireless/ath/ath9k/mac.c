@@ -831,7 +831,6 @@ void ath9k_hw_enable_interrupts(struct ath_hw *ah)
 			  AR_INTR_MAC_IRQ);
 		REG_WRITE(ah, AR_INTR_ASYNC_MASK, AR_INTR_MAC_IRQ);
 
-
 		REG_WRITE(ah, AR_INTR_SYNC_ENABLE, sync_default);
 		REG_WRITE(ah, AR_INTR_SYNC_MASK, sync_default);
 	}

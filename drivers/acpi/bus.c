@@ -53,7 +53,6 @@ EXPORT_SYMBOL(acpi_root_dir);
 
 #define STRUCT_TO_INT(s)	(*((int*)&s))
 
-
 #ifdef CONFIG_X86
 static int set_copy_dsdt(const struct dmi_system_id *id)
 {
@@ -91,7 +90,6 @@ static struct dmi_system_id dsdt_dmi_table[] __initdata = {
 int acpi_bus_get_device(acpi_handle handle, struct acpi_device **device)
 {
 	acpi_status status = AE_OK;
-
 
 	if (!device)
 		return -EINVAL;
@@ -220,7 +218,6 @@ static int __acpi_bus_get_power(struct acpi_device *device, int *state)
 	return 0;
 }
 
-
 static int __acpi_bus_set_power(struct acpi_device *device, int state)
 {
 	int result = 0;
@@ -301,7 +298,6 @@ static int __acpi_bus_set_power(struct acpi_device *device, int state)
 	return result;
 }
 
-
 int acpi_bus_set_power(acpi_handle handle, int state)
 {
 	struct acpi_device *device;
@@ -321,7 +317,6 @@ int acpi_bus_set_power(acpi_handle handle, int state)
 	return __acpi_bus_set_power(device, state);
 }
 EXPORT_SYMBOL(acpi_bus_set_power);
-
 
 int acpi_bus_init_power(struct acpi_device *device)
 {
@@ -346,7 +341,6 @@ int acpi_bus_init_power(struct acpi_device *device)
 	return result;
 }
 
-
 int acpi_bus_update_power(acpi_handle handle, int *state_p)
 {
 	struct acpi_device *device;
@@ -368,7 +362,6 @@ int acpi_bus_update_power(acpi_handle handle, int *state_p)
 	return result;
 }
 EXPORT_SYMBOL_GPL(acpi_bus_update_power);
-
 
 bool acpi_bus_power_manageable(acpi_handle handle)
 {
@@ -607,7 +600,6 @@ int acpi_bus_receive_event(struct acpi_bus_event *event)
 
 	DECLARE_WAITQUEUE(wait, current);
 
-
 	if (!event)
 		return -EINVAL;
 
@@ -800,7 +792,6 @@ static int __init acpi_bus_init_irq(void)
 	struct acpi_object_list arg_list = { 1, &arg };
 	char *message = NULL;
 
-
 	/*
 	 * Let the system know what interrupt model we are using by
 	 * evaluating the \_PIC object, if exists.
@@ -838,7 +829,6 @@ static int __init acpi_bus_init_irq(void)
 }
 
 u8 acpi_gbl_permanent_mmap;
-
 
 void __init acpi_early_init(void)
 {
@@ -944,13 +934,17 @@ static int __init acpi_bus_init(void)
 	status = acpi_ec_ecdt_probe();
 	/* Ignore result. Not having an ECDT is not fatal. */
 
-	acpi_bus_osc_support();
-
 	status = acpi_initialize_objects(ACPI_FULL_INITIALIZATION);
 	if (ACPI_FAILURE(status)) {
 		printk(KERN_ERR PREFIX "Unable to initialize ACPI objects\n");
 		goto error1;
 	}
+
+	/*
+	 * _OSC method may exist in module level code,
+	 * so it must be run after ACPI_FULL_INITIALIZATION
+	 */
+	acpi_bus_osc_support();
 
 	/*
 	 * _PDC control method may load dynamic SSDT tables,

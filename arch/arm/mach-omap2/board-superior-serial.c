@@ -61,7 +61,6 @@ static struct omap_i2c_bus_board_data __initdata superior_i2c_2_bus_pdata;
 static struct omap_i2c_bus_board_data __initdata superior_i2c_3_bus_pdata;
 static struct omap_i2c_bus_board_data __initdata superior_i2c_4_bus_pdata;
 
-
 static void __init superior_i2c_init(void)
 {
 

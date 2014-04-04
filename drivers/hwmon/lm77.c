@@ -71,7 +71,6 @@ static int lm77_write_value(struct i2c_client *client, u8 reg, u16 value);
 
 static struct lm77_data *lm77_update_device(struct device *dev);
 
-
 static const struct i2c_device_id lm77_id[] = {
 	{ "lm77", 0 },
 	{ }
@@ -181,7 +180,7 @@ static ssize_t set_temp_crit(struct device *dev, struct device_attribute *attr, 
 	struct lm77_data *data = i2c_get_clientdata(client);
 	long val = simple_strtoul(buf, NULL, 10);
 	int oldcrithyst;
-	
+
 	mutex_lock(&data->update_lock);
 	oldcrithyst = data->temp_crit - data->temp_hyst;
 	data->temp_crit = val;

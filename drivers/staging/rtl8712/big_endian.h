@@ -66,4 +66,3 @@
 #include "generic.h"
 
 #endif /* _LINUX_BYTEORDER_BIG_ENDIAN_H */
-

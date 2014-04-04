@@ -24,12 +24,10 @@
  *
  */
 
-
-
 #ifndef __AR3KPSCONFIG_H
 #define __AR3KPSCONFIG_H
 
-/* 
+/*
  * Define the flag HCI_TRANSPORT_SDIO and undefine HCI_TRANSPORT_UART if the transport being used is SDIO.
  */
 #undef HCI_TRANSPORT_UART
@@ -38,10 +36,8 @@
 #include <linux/errno.h>
 #include <linux/signal.h>
 
-
 #include <linux/ioctl.h>
 #include <linux/firmware.h>
-
 
 #include <net/bluetooth/bluetooth.h>
 #include <net/bluetooth/hci_core.h>
@@ -60,8 +56,7 @@
 #define BDADDR_FILE "ar3kbdaddr.pst"
 
 #define ROM_VER_AR3001_3_1_0	30000
-#define ROM_VER_AR3001_3_1_1	30101	
-
+#define ROM_VER_AR3001_3_1_1	30101
 
 #ifndef HCI_TRANSPORT_SDIO
 #define struct ar3k_config_info        struct hci_dev

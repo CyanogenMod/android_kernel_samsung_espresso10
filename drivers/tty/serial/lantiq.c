@@ -587,7 +587,6 @@ lqasc_console_putchar(struct uart_port *port, int ch)
 	ltq_w8(ch, port->membase + LTQ_ASC_TBUF);
 }
 
-
 static void
 lqasc_console_write(struct console *co, const char *s, u_int count)
 {

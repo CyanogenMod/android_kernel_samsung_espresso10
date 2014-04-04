@@ -40,7 +40,6 @@ GCDBG_FILTERDEF(mmu, GCZONE_NONE,
 		"flush",
 		"arena")
 
-
 /*******************************************************************************
  * Internal definitions.
  */
@@ -53,7 +52,6 @@ struct gcmmustlbblock {
 	/* Next block of preallocated slave memory. */
 	struct gcmmustlbblock *next;
 };
-
 
 /*******************************************************************************
  * Call back to enable MMU.
@@ -80,7 +78,6 @@ static void event_enable_mmu(struct gcevent *gcevent, unsigned int *flags)
 
 	GCEXIT(GCZONE_INIT);
 }
-
 
 /*******************************************************************************
  * Arena record management.

@@ -146,7 +146,6 @@
 	#define SFP_EEPROM_CON_TYPE_VAL_LC	0x7
 	#define SFP_EEPROM_CON_TYPE_VAL_COPPER	0x21
 
-
 #define SFP_EEPROM_COMP_CODE_ADDR		0x3
 	#define SFP_EEPROM_COMP_CODE_SR_MASK	(1<<4)
 	#define SFP_EEPROM_COMP_CODE_LR_MASK	(1<<5)
@@ -163,7 +162,6 @@
 #define EDC_MODE_LINEAR				0x0022
 #define EDC_MODE_LIMITING				0x0044
 #define EDC_MODE_PASSIVE_DAC			0x0055
-
 
 #define ETS_BW_LIMIT_CREDIT_UPPER_BOUND		(0x5000)
 #define ETS_BW_LIMIT_CREDIT_WEIGHT		(0x5000)
@@ -958,7 +956,6 @@ static void bnx2x_update_pfc_nig(struct link_params *params,
 	       pkt_priority_to_cos);
 }
 
-
 void bnx2x_update_pfc(struct link_params *params,
 		      struct link_vars *vars,
 		      struct bnx2x_nig_brb_pfc_port_params *pfc_params)
@@ -1172,7 +1169,6 @@ static u8 bnx2x_bmac_enable(struct link_params *params,
 	vars->mac_type = MAC_TYPE_BMAC;
 	return rc;
 }
-
 
 static void bnx2x_update_mng(struct link_params *params, u32 link_status)
 {
@@ -1611,7 +1607,6 @@ static void bnx2x_xgxs_deassert(struct link_params *params)
 	       params->phy[INT_PHY].def_md_devad);
 }
 
-
 void bnx2x_link_status_update(struct link_params *params,
 			      struct link_vars *vars)
 {
@@ -1736,7 +1731,6 @@ void bnx2x_link_status_update(struct link_params *params,
 	DP(NETIF_MSG_LINK, "line_speed %x  duplex %x  flow_ctrl 0x%x\n",
 		 vars->line_speed, vars->duplex, vars->flow_ctrl);
 }
-
 
 static void bnx2x_set_master_ln(struct link_params *params,
 				struct bnx2x_phy *phy)
@@ -1883,7 +1877,6 @@ static void bnx2x_set_parallel_detection(struct bnx2x_phy *phy,
 				  MDIO_REG_BANK_10G_PARALLEL_DETECT,
 				  MDIO_10G_PARALLEL_DETECT_PAR_DET_10G_CONTROL,
 				  &control2);
-
 
 		control2 |=
 		    MDIO_10G_PARALLEL_DETECT_PAR_DET_10G_CONTROL_PARDET10G_EN;
@@ -2246,7 +2239,6 @@ static void bnx2x_initialize_sgmii_process(struct bnx2x_phy *phy,
 		bnx2x_restart_autoneg(phy, params, 0);
 	}
 }
-
 
 /*
  * link management
@@ -3010,7 +3002,6 @@ static u8 bnx2x_format_ver(u32 num, u8 *str, u16 *len)
 	return 0;
 }
 
-
 static u8 bnx2x_null_format_ver(u32 spirom_ver, u8 *str, u16 *len)
 {
 	str[0] = '\0';
@@ -3692,7 +3683,6 @@ u8 bnx2x_link_update(struct link_params *params, struct link_vars *vars)
 	return rc;
 }
 
-
 /*****************************************************************************/
 /*			    External Phy section			     */
 /*****************************************************************************/
@@ -4108,7 +4098,6 @@ static u8 bnx2x_8073_config_init(struct bnx2x_phy *phy,
 				 MDIO_PMA_REG_8073_OPT_DIGITAL_CTRL,
 				 (val | (3<<9)));
 	}
-
 
 	/* Enable CL37 BAM */
 	if (REG_RD(bp, params->shmem_base +
@@ -5357,7 +5346,6 @@ static u8 bnx2x_8726_read_status(struct bnx2x_phy *phy,
 	return link_up;
 }
 
-
 static u8 bnx2x_8726_config_init(struct bnx2x_phy *phy,
 				 struct link_params *params,
 				 struct link_vars *vars)
@@ -5589,7 +5577,6 @@ static u8 bnx2x_8727_config_init(struct bnx2x_phy *phy,
 	bnx2x_cl45_write(bp, phy,
 			 MDIO_PMA_DEVAD, MDIO_PMA_REG_PHY_IDENTIFIER, mod_abs);
 
-
 	/* Make MOD_ABS give interrupt on change */
 	bnx2x_cl45_read(bp, phy, MDIO_PMA_DEVAD, MDIO_PMA_REG_8727_PCS_OPT_CTRL,
 			&val);
@@ -5782,7 +5769,6 @@ static void bnx2x_8727_handle_mod_abs(struct bnx2x_phy *phy,
 		bnx2x_cl45_read(bp, phy,
 				MDIO_PMA_DEVAD,
 				MDIO_PMA_REG_RX_ALARM, &rx_alarm_status);
-
 
 		if ((val & PORT_FEAT_CFG_OPT_MDL_ENFRCMNT_MASK) ==
 		    PORT_FEAT_CFG_OPT_MDL_ENFRCMNT_DISABLE_TX_LASER)
@@ -5985,7 +5971,6 @@ static void bnx2x_save_848xx_spirom_version(struct bnx2x_phy *phy,
 					  phy->ver_addr);
 		return;
 	}
-
 
 	/* 2) read register 0xc200_0000 (SPI_FW_STATUS) */
 	bnx2x_cl45_write(bp, phy, MDIO_PMA_DEVAD, 0xA819 + adj, 0x0000);
@@ -6308,7 +6293,6 @@ static u8 bnx2x_848x3_config_init(struct bnx2x_phy *phy,
 		val &= ~MDIO_CTL_REG_84823_USER_CTRL_CMS;
 	bnx2x_cl45_write(bp, phy, MDIO_CTL_DEVAD,
 		MDIO_CTL_REG_84823_USER_CTRL_REG, val);
-
 
 	return rc;
 }
@@ -6720,7 +6704,6 @@ static u8 bnx2x_7101_read_status(struct bnx2x_phy *phy,
 	}
 	return link_up;
 }
-
 
 static u8 bnx2x_7101_format_ver(u32 spirom_ver, u8 *str, u16 *len)
 {
@@ -7526,7 +7509,6 @@ u32 bnx2x_phy_selection(struct link_params *params)
 	return return_cfg;
 }
 
-
 u8 bnx2x_phy_probe(struct link_params *params)
 {
 	u8 phy_index, actual_phy_idx, link_cfg_idx;
@@ -7973,7 +7955,6 @@ static u8 bnx2x_8726_common_init_phy(struct bnx2x *bp,
 		bnx2x_cl45_write(bp, &phy,
 				 MDIO_PMA_DEVAD, MDIO_PMA_REG_GEN_CTRL, 0x0001);
 
-
 		/* Set fault module detected LED on */
 		bnx2x_set_gpio(bp, MISC_REGISTERS_GPIO_0,
 			       MISC_REGISTERS_GPIO_HIGH,
@@ -8091,7 +8072,6 @@ static u8 bnx2x_8727_common_init_phy(struct bnx2x *bp,
 				NIG_MASK_XGXS0_LINK10G |
 				NIG_MASK_SERDES0_LINK_STATUS |
 				NIG_MASK_MI_INT));
-
 
 		/* Reset the phy */
 		bnx2x_cl45_write(bp, &phy[port],

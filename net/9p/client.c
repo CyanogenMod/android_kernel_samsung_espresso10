@@ -430,7 +430,6 @@ p9_parse_header(struct p9_fcall *pdu, int32_t *size, int8_t *type, int16_t *tag,
 	if (size)
 		*size = r_size;
 
-
 rewind_and_exit:
 	if (rewind)
 		pdu->offset = offset;
@@ -508,7 +507,6 @@ static int p9_check_errors(struct p9_client *c, struct p9_req_t *req)
 		P9_DPRINTK(P9_DEBUG_9P, "<<< RLERROR (%d)\n", -ecode);
 	}
 
-
 	return err;
 
 out_err:
@@ -547,7 +545,6 @@ static int p9_client_flush(struct p9_client *c, struct p9_req_t *oldreq)
 	req = p9_client_rpc(c, P9_TFLUSH, "w", oldtag);
 	if (IS_ERR(req))
 		return PTR_ERR(req);
-
 
 	/* if we haven't received a response for oldreq,
 	   remove it from the list. */
@@ -958,7 +955,6 @@ struct p9_fid *p9_client_walk(struct p9_fid *oldfid, uint16_t nwname,
 		fid->uid = oldfid->uid;
 	} else
 		fid = oldfid;
-
 
 	P9_DPRINTK(P9_DEBUG_9P, ">>> TWALK fids %d,%d nwname %ud wname[0] %s\n",
 		oldfid->fid, fid->fid, nwname, wnames ? wnames[0] : NULL);

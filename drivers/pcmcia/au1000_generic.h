@@ -69,7 +69,6 @@ struct pcmcia_irqs {
 	const char *str;
 };
 
-
 struct au1000_pcmcia_socket {
 	struct pcmcia_socket socket;
 

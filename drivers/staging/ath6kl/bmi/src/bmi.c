@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="bmi.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -21,7 +21,6 @@
 //
 // Author(s): ="Atheros"
 //==============================================================================
-
 
 #ifdef THREAD_X
 #include <string.h>
@@ -43,7 +42,7 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(bmi,
                                  ATH_DEBUG_MASK_DEFAULTS,
                                  ATH_DEBUG_DESCRIPTION_COUNT(bmi_debug_desc),
                                  bmi_debug_desc);
-                                 
+
 #endif
 
 /*
@@ -61,7 +60,7 @@ static u8 *pBMICmdBuf;
                        sizeof(u32) /* addr */ + \
                        sizeof(u32))/* length */
 #define BMI_COMMAND_FITS(sz) ((sz) <= MAX_BMI_CMDBUF_SZ)
-    
+
 /* APIs visible to the driver */
 void
 BMIInit(void)
@@ -87,7 +86,7 @@ BMIInit(void)
         pBMICmdBuf = (u8 *)A_MALLOC_NOWAIT(MAX_BMI_CMDBUF_SZ);
         A_ASSERT(pBMICmdBuf);
     }
-    
+
     A_REGISTER_MODULE_DEBUG_INFO(bmi);
 }
 
@@ -294,7 +293,7 @@ BMIWriteMemory(struct hif_device *device,
                 remaining = remaining + (4 - (remaining & 3));
                 memcpy(alignedBuffer, src, remaining);
                 src = alignedBuffer;
-            } 
+            }
             txlen = remaining;
         } else {
             txlen = (BMI_DATASZ_MAX - header);
@@ -792,7 +791,7 @@ bmiBufferReceive(struct hif_device *device,
     u32 mboxAddress[HTC_MAILBOX_NUM_MAX];
     struct hif_pending_events_info     hifPendingEvents;
     static HIF_PENDING_EVENTS_FUNC getPendingEventsFunc = NULL;
-    
+
     if (!pendingEventsFuncCheck) {
             /* see if the HIF layer implements an alternative function to get pending events
              * do this only once! */
@@ -802,7 +801,7 @@ bmiBufferReceive(struct hif_device *device,
                            sizeof(getPendingEventsFunc));
         pendingEventsFuncCheck = true;
     }
-                       
+
     HIFConfigureDevice(device, HIF_DEVICE_GET_MBOX_ADDR,
                        &mboxAddress[0], sizeof(mboxAddress));
 
@@ -863,7 +862,7 @@ bmiBufferReceive(struct hif_device *device,
         word_available = 0;
         timeout = BMI_COMMUNICATION_TIMEOUT;
         while((!want_timeout || timeout--) && !word_available) {
-            
+
             if (getPendingEventsFunc != NULL) {
                 status = getPendingEventsFunc(device,
                                               &hifPendingEvents,
@@ -872,20 +871,20 @@ bmiBufferReceive(struct hif_device *device,
                     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BMI: Failed to get pending events \n"));
                     break;
                 }
-  
+
                 if (hifPendingEvents.AvailableRecvBytes >= sizeof(u32)) {
-                    word_available = 1;    
+                    word_available = 1;
                 }
-                continue;    
+                continue;
             }
-            
+
             status = HIFReadWrite(device, RX_LOOKAHEAD_VALID_ADDRESS, (u8 *)&word_available,
                 sizeof(word_available), HIF_RD_SYNC_BYTE_INC, NULL);
             if (status) {
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("Unable to read RX_LOOKAHEAD_VALID register\n"));
                 return A_ERROR;
             }
-            /* We did a 4-byte read to the same register; all we really want is one bit */ 
+            /* We did a 4-byte read to the same register; all we really want is one bit */
             word_available &= (1 << ENDPOINT1);
         }
 

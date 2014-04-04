@@ -231,7 +231,6 @@ u16 mtd_Write_Page_Main(u8 *write_data, u32 Block,
 		       (unsigned int)Block,
 		       (unsigned int)Page, (unsigned int)PageCount);
 
-
 	while (PageCount) {
 		ret = spectra_mtd->write(spectra_mtd,
 					 (Block * spectra_mtd->erasesize) + (Page * spectra_mtd->writesize),
@@ -280,7 +279,6 @@ u16 mtd_Read_Page_Main(u8 *read_data, u32 Block,
 		       "lba %u Page %u PageCount %u\n",
 		       (unsigned int)Block,
 		       (unsigned int)Page, (unsigned int)PageCount);
-
 
 	while (PageCount) {
 		ret = spectra_mtd->read(spectra_mtd,
@@ -334,7 +332,6 @@ u16 mtd_Read_Page_Main_Spare(u8 *read_data, u32 Block,
 		       "No. of pages %u block %u start page %u\n",
 		       (unsigned int)PageCount,
 		       (unsigned int)Block, (unsigned int)Page);
-
 
 	while (PageCount) {
 		struct mtd_oob_ops ops;

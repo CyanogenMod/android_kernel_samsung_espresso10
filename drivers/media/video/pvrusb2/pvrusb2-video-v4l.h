@@ -31,7 +31,6 @@
 
 */
 
-
 #include "pvrusb2-hdw-internal.h"
 void pvr2_saa7115_subdev_update(struct pvr2_hdw *, struct v4l2_subdev *);
 

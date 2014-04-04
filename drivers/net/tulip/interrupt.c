@@ -58,7 +58,6 @@ static unsigned int mit_table[MIT_SIZE+1] =
 };
 #endif
 
-
 int tulip_refill_rx(struct net_device *dev)
 {
 	struct tulip_private *tp = netdev_priv(dev);
@@ -135,7 +134,6 @@ int tulip_poll(struct napi_struct *napi, int budget)
 		}
                /* Acknowledge current RX interrupt sources. */
                iowrite32((RxIntr | RxNoBuf), tp->base_addr + CSR5);
-
 
                /* If we own the next entry, it is a new packet. Send it up. */
                while ( ! (tp->rx_ring[entry].status & cpu_to_le32(DescOwned))) {
@@ -289,7 +287,6 @@ int tulip_poll(struct napi_struct *napi, int budget)
              OFF: Only 1 pkt received
 
              Note. We only use min and max (0, 15) settings from mit_table */
-
 
           if( tp->flags &  HAS_INTR_MITIGATION) {
                  if( received > 1 ) {
@@ -564,7 +561,6 @@ irqreturn_t tulip_interrupt(int irq, void *dev_instance)
 		/* Acknowledge all of the current interrupt sources ASAP. */
 		iowrite32(csr5 & 0x0001ffff, ioaddr + CSR5);
 
-
 		if (csr5 & (RxIntr | RxNoBuf)) {
 				rx += tulip_rx(dev);
 			tulip_refill_rx(dev);
@@ -575,7 +571,6 @@ irqreturn_t tulip_interrupt(int irq, void *dev_instance)
 		if (tulip_debug > 4)
 			netdev_dbg(dev, "interrupt  csr5=%#8.8x new csr5=%#8.8x\n",
 				   csr5, ioread32(ioaddr + CSR5));
-
 
 		if (csr5 & (TxNoBuf | TxDied | TxIntr | TimerInt)) {
 			unsigned int dirty_tx;

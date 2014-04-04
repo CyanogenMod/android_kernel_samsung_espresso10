@@ -198,4 +198,3 @@ int ath5k_init_leds(struct ath5k_softc *sc)
 out:
 	return ret;
 }
-

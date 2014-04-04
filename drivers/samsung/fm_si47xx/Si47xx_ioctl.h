@@ -123,7 +123,6 @@ _IOW(Si47xx_IOC_MAGIC, 36, struct sys_config3)
 
 #define Si47xx_IOC_SEEK_FULL		_IOR(Si47xx_IOC_MAGIC, 40, u32)
 
-
 /*****************************************/
 
 #endif

@@ -145,7 +145,6 @@ void br_transmit_config(struct net_bridge_port *p)
 	struct br_config_bpdu bpdu;
 	struct net_bridge *br;
 
-
 	if (timer_pending(&p->hold_timer)) {
 		p->config_pending = 1;
 		return;
@@ -191,7 +190,7 @@ static inline void br_record_config_information(struct net_bridge_port *p,
 	p->designated_age = jiffies + bpdu->message_age;
 
 	mod_timer(&p->message_age_timer, jiffies
-		  + (p->br->max_age - bpdu->message_age));
+		  + (bpdu->max_age - bpdu->message_age));
 }
 
 /* called under bridge lock */
@@ -350,7 +349,6 @@ void br_become_designated_port(struct net_bridge_port *p)
 	p->designated_bridge = br->bridge_id;
 	p->designated_port = p->port_id;
 }
-
 
 /* called under bridge lock */
 static void br_make_blocking(struct net_bridge_port *p)
@@ -517,18 +515,27 @@ int br_set_max_age(struct net_bridge *br, unsigned long val)
 
 }
 
-int br_set_forward_delay(struct net_bridge *br, unsigned long val)
+void __br_set_forward_delay(struct net_bridge *br, unsigned long t)
 {
-	unsigned long t = clock_t_to_jiffies(val);
-
-	if (br->stp_enabled != BR_NO_STP &&
-	    (t < BR_MIN_FORWARD_DELAY || t > BR_MAX_FORWARD_DELAY))
-		return -ERANGE;
-
-	spin_lock_bh(&br->lock);
 	br->bridge_forward_delay = t;
 	if (br_is_root_bridge(br))
 		br->forward_delay = br->bridge_forward_delay;
+}
+
+int br_set_forward_delay(struct net_bridge *br, unsigned long val)
+{
+	unsigned long t = clock_t_to_jiffies(val);
+	int err = -ERANGE;
+
+	spin_lock_bh(&br->lock);
+	if (br->stp_enabled != BR_NO_STP &&
+	    (t < BR_MIN_FORWARD_DELAY || t > BR_MAX_FORWARD_DELAY))
+		goto unlock;
+
+	__br_set_forward_delay(br, t);
+	err = 0;
+
+unlock:
 	spin_unlock_bh(&br->lock);
-	return 0;
+	return err;
 }

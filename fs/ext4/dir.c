@@ -50,7 +50,6 @@ const struct file_operations ext4_dir_operations = {
 	.release	= ext4_release_dir,
 };
 
-
 static unsigned char get_dtype(struct super_block *sb, int filetype)
 {
 	if (!EXT4_HAS_INCOMPAT_FEATURE(sb, EXT4_FEATURE_INCOMPAT_FILETYPE) ||
@@ -89,10 +88,6 @@ int __ext4_check_dir_entry(const char *function, unsigned int line,
 		error_msg = "inode out of bounds";
 	else
 		return 0;
-
-	/* for debugging, sangwoo2.lee */
-	print_bh(dir->i_sb, bh, 0, EXT4_BLOCK_SIZE(dir->i_sb));
-	/* for debugging */
 
 	if (filp)
 		ext4_error_file(filp, function, line, bh ? bh->b_blocknr : 0,
@@ -333,7 +328,6 @@ static void free_rb_tree_fname(struct rb_root *root)
 	}
 }
 
-
 static struct dir_private_info *ext4_htree_create_dir_info(loff_t pos)
 {
 	struct dir_private_info *p;
@@ -409,8 +403,6 @@ int ext4_htree_store_dirent(struct file *dir_file, __u32 hash,
 	rb_insert_color(&new_fn->rb_hash, &info->root);
 	return 0;
 }
-
-
 
 /*
  * This is a helper function for ext4_dx_readdir.  It calls filldir

@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  * Or, point your browser to http://www.gnu.org/copyleft/gpl.html
  *
- * the project's page is at http://www.linuxtv.org/ 
+ * the project's page is at http://www.linuxtv.org/
  */
 
 #include <linux/kernel.h>
@@ -212,8 +212,6 @@ static int stv0297_set_tv_freq(struct saa7146_dev *dev, u32 freq)
 		av7110->fe->ops.i2c_gate_ctrl(av7110->fe, 1);
 	return tuner_write(dev, 0x63, data);
 }
-
-
 
 static struct saa7146_standard analog_standard[];
 static struct saa7146_standard dvb_standard[];
@@ -679,7 +677,6 @@ static u8 saa7113_init_regs[] = {
 	0xff
 };
 
-
 static struct saa7146_ext_vv av7110_vv_data_st;
 static struct saa7146_ext_vv av7110_vv_data_c;
 
@@ -835,8 +832,6 @@ int av7110_exit_v4l(struct av7110 *av7110)
 	return 0;
 }
 
-
-
 /* FIXME: these values are experimental values that look better than the
    values from the latest "official" driver -- at least for me... (MiHu) */
 static struct saa7146_standard standard[] = {
@@ -899,7 +894,6 @@ static int std_callback(struct saa7146_dev* dev, struct saa7146_standard *std)
 	return 0;
 }
 
-
 static struct saa7146_ext_vv av7110_vv_data_st = {
 	.inputs		= 1,
 	.audios		= 1,
@@ -929,4 +923,3 @@ static struct saa7146_ext_vv av7110_vv_data_c = {
 	.vbi_fops.release = av7110_vbi_reset,
 	.vbi_fops.write	= av7110_vbi_write,
 };
-

@@ -204,7 +204,6 @@ $config_help{"REBOOT_SCRIPT"} = << "EOF"
 EOF
     ;
 
-
 sub get_ktest_config {
     my ($config) = @_;
 

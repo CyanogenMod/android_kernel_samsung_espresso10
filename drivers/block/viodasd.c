@@ -188,7 +188,6 @@ static int viodasd_unlocked_open(struct block_device *bdev, fmode_t mode)
 	return ret;
 }
 
-
 /*
  * External release entry point.
  */
@@ -215,7 +214,6 @@ static int viodasd_release(struct gendisk *disk, fmode_t mode)
 
 	return 0;
 }
-
 
 /* External ioctl entry point.
  */

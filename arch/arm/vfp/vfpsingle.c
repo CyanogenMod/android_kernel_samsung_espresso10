@@ -252,7 +252,6 @@ vfp_propagate_nan(struct vfp_single *vsd, struct vfp_single *vsn,
 	return tn == VFP_SNAN || tm == VFP_SNAN ? FPSCR_IOC : VFP_NAN_FLAG;
 }
 
-
 /*
  * Extended operations
  */
@@ -720,10 +719,6 @@ static struct op fops_ext[32] = {
 	[FEXT_TO_IDX(FEXT_FTOSI)]	= { vfp_single_ftosi,  OP_SCALAR },
 	[FEXT_TO_IDX(FEXT_FTOSIZ)]	= { vfp_single_ftosiz, OP_SCALAR },
 };
-
-
-
-
 
 static u32
 vfp_single_fadd_nonnumber(struct vfp_single *vsd, struct vfp_single *vsn,

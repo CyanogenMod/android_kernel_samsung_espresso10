@@ -15,7 +15,6 @@
 
 /* look up and get a reference to a matching socket */
 
-
 /* This function is used by the 'TPROXY' target and the 'socket'
  * match. The following lookups are supported:
  *

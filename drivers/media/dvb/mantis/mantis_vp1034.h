@@ -24,7 +24,6 @@
 #include "dvb_frontend.h"
 #include "mantis_common.h"
 
-
 #define MANTIS_VP_1034_DVB_S	0x0014
 
 extern struct mantis_hwconfig vp1034_config;

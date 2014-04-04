@@ -46,7 +46,6 @@ struct iommu_table_entry {
  * hence during boot-time we will have to resort them based on
  * dependency. */
 
-
 #define __IOMMU_INIT(_detect, _depend, _early_init, _late_init, _finish)\
 	static const struct iommu_table_entry const			\
 		__iommu_entry_##_detect __used				\

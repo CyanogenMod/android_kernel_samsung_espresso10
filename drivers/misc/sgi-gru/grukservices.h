@@ -1,4 +1,3 @@
-
 /*
  *  Copyright (c) 2008 Silicon Graphics, Inc.  All Rights Reserved.
  *
@@ -18,7 +17,6 @@
  */
 #ifndef __GRU_KSERVICES_H_
 #define __GRU_KSERVICES_H_
-
 
 /*
  * Message queues using the GRU to send/receive messages.
@@ -129,7 +127,6 @@ extern void gru_free_message(struct gru_message_queue_desc *mqd,
  */
 extern void *gru_get_next_message(struct gru_message_queue_desc *mqd);
 
-
 /*
  * Read a GRU global GPA. Source can be located in a remote partition.
  *
@@ -142,7 +139,6 @@ extern void *gru_get_next_message(struct gru_message_queue_desc *mqd);
  *	>0		error
  */
 int gru_read_gpa(unsigned long *value, unsigned long gpa);
-
 
 /*
  * Copy data using the GRU. Source or destination can be located in a remote

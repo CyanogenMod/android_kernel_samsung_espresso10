@@ -1,4 +1,3 @@
-
 #define INITRD_MINOR 250 /* shouldn't collide with /dev/ram* too soon ... */
 
 /* 1 = load ramdisk, 0 = don't load */

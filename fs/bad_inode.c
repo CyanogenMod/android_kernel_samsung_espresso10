@@ -15,7 +15,6 @@
 #include <linux/namei.h>
 #include <linux/poll.h>
 
-
 static loff_t bad_file_llseek(struct file *file, loff_t offset, int origin)
 {
 	return -EIO;
@@ -294,16 +293,15 @@ static const struct inode_operations bad_inode_ops =
 	/* truncate_range returns void */
 };
 
-
 /*
  * When a filesystem is unable to read an inode due to an I/O error in
  * its read_inode() function, it can call make_bad_inode() to return a
- * set of stubs which will return EIO errors as required. 
+ * set of stubs which will return EIO errors as required.
  *
  * We only need to do limited initialisation: all other fields are
  * preinitialised to zero automatically.
  */
- 
+
 /**
  *	make_bad_inode - mark an inode bad due to an I/O error
  *	@inode: Inode to mark bad
@@ -312,7 +310,7 @@ static const struct inode_operations bad_inode_ops =
  *	failure this function makes the inode "bad" and causes I/O operations
  *	on it to fail from this point on.
  */
- 
+
 void make_bad_inode(struct inode *inode)
 {
 	remove_inode_hash(inode);
@@ -320,8 +318,8 @@ void make_bad_inode(struct inode *inode)
 	inode->i_mode = S_IFREG;
 	inode->i_atime = inode->i_mtime = inode->i_ctime =
 		current_fs_time(inode->i_sb);
-	inode->i_op = &bad_inode_ops;	
-	inode->i_fop = &bad_file_ops;	
+	inode->i_op = &bad_inode_ops;
+	inode->i_fop = &bad_file_ops;
 }
 EXPORT_SYMBOL(make_bad_inode);
 
@@ -330,17 +328,17 @@ EXPORT_SYMBOL(make_bad_inode);
  * &bad_inode_ops to cover the case of invalidated inodes as well as
  * those created by make_bad_inode() above.
  */
- 
+
 /**
  *	is_bad_inode - is an inode errored
  *	@inode: inode to test
  *
  *	Returns true if the inode in question has been marked as bad.
  */
- 
+
 int is_bad_inode(struct inode *inode)
 {
-	return (inode->i_op == &bad_inode_ops);	
+	return (inode->i_op == &bad_inode_ops);
 }
 
 EXPORT_SYMBOL(is_bad_inode);

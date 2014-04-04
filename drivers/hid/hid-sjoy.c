@@ -176,4 +176,3 @@ module_init(sjoy_init);
 module_exit(sjoy_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jussi Kivilinna");
-

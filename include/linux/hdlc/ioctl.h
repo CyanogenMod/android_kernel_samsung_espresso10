@@ -1,7 +1,6 @@
 #ifndef __HDLC_IOCTL_H__
 #define __HDLC_IOCTL_H__
 
-
 #define GENERIC_HDLC_VERSION 4	/* For synchronization with sethdlc utility */
 
 #define CLOCK_DEFAULT   0	/* Default setting */
@@ -10,14 +9,12 @@
 #define CLOCK_TXINT	3	/* Internal TX and external RX clock */
 #define CLOCK_TXFROMRX	4	/* TX clock derived from external RX clock */
 
-
 #define ENCODING_DEFAULT	0 /* Default setting */
 #define ENCODING_NRZ		1
 #define ENCODING_NRZI		2
 #define ENCODING_FM_MARK	3
 #define ENCODING_FM_SPACE	4
 #define ENCODING_MANCHESTER	5
-
 
 #define PARITY_DEFAULT		0 /* Default setting */
 #define PARITY_NONE		1 /* No parity */
@@ -34,13 +31,13 @@
 #define LMI_CCITT		3 /* ITU-T Annex A */
 #define LMI_CISCO		4 /* The "original" LMI, aka Gang of Four */
 
-typedef struct { 
+typedef struct {
 	unsigned int clock_rate; /* bits per second */
 	unsigned int clock_type; /* internal, external, TX-internal etc. */
 	unsigned short loopback;
 } sync_serial_settings;          /* V.35, V.24, X.21 */
 
-typedef struct { 
+typedef struct {
 	unsigned int clock_rate; /* bits per second */
 	unsigned int clock_type; /* internal, external, TX-internal etc. */
 	unsigned short loopback;

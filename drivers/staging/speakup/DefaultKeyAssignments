@@ -43,4 +43,3 @@ InsKeyPad-/		Paste screen region into any console.
 Hitting any key while speakup is outputting speech will quiet the
 synth until it has caught up with what is being printed on the
 console.
-

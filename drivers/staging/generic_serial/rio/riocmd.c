@@ -72,7 +72,6 @@
 #include "route.h"
 #include "cirrus.h"
 
-
 static struct IdentifyRta IdRta;
 static struct KillNeighbour KillUnit;
 
@@ -176,7 +175,6 @@ int RIOCommandRta(struct rio_info *p, unsigned long RtaUnique, int (*func) (stru
 	return -ENXIO;
 }
 
-
 int RIOIdentifyRta(struct rio_info *p, void __user * arg)
 {
 	unsigned int Host;
@@ -240,7 +238,6 @@ int RIOIdentifyRta(struct rio_info *p, void __user * arg)
 	}
 	return -ENOENT;
 }
-
 
 int RIOKillNeighbour(struct rio_info *p, void __user * arg)
 {
@@ -655,7 +652,6 @@ void RIOPollHostCommands(struct rio_info *p, struct Host *HostP)
 	unsigned short Rup;
 	unsigned long flags;
 
-
 	Rup = MAX_RUP + LINKS_PER_UNIT;
 
 	do {			/* do this loop for each RUP */
@@ -881,9 +877,9 @@ int RIOUnUse(unsigned long iPortP, struct CmdBlk *CmdBlkP)
 }
 
 /*
-** 
+**
 ** How to use this file:
-** 
+**
 ** To send a command down a rup, you need to allocate a command block, fill
 ** in the packet information, fill in the command number, fill in the pre-
 ** and post- functions and arguments, and then add the command block to the
@@ -896,13 +892,13 @@ int RIOUnUse(unsigned long iPortP, struct CmdBlk *CmdBlkP)
 ** command number, then the post-function will be called, with the argument
 ** specified earlier, a pointer to the command block, and the value of
 ** txcontrol.
-** 
+**
 ** To allocate a command block, call RIOGetCmdBlk(). This returns a pointer
 ** to the command block structure allocated, or NULL if there aren't any.
 ** The block will have been zeroed for you.
-** 
+**
 ** The structure has the following fields:
-** 
+**
 ** struct CmdBlk
 ** {
 **	 struct CmdBlk *NextP;		  ** Pointer to next command block   **
@@ -912,28 +908,28 @@ int RIOUnUse(unsigned long iPortP, struct CmdBlk *CmdBlkP)
 **			int	 (*PostFuncP)(); ** The func to call when completed **
 **			int	 PostArg;	   ** The arg for the func			**
 ** };
-** 
+**
 ** You need to fill in ALL fields EXCEPT NextP, which is used to link the
 ** blocks together either on the free list or on the Rup list.
-** 
+**
 ** Packet is an actual packet structure to be filled in with the packet
 ** information associated with the command. You need to fill in everything,
 ** as the command processor doesn't process the command packet in any way.
-** 
+**
 ** The PreFuncP is called before the packet is enqueued on the host rup.
 ** PreFuncP is called as (*PreFuncP)(PreArg, CmdBlkP);. PreFuncP must
 ** return !RIO_FAIL to have the packet queued on the rup, and RIO_FAIL
 ** if the packet is NOT to be queued.
-** 
+**
 ** The PostFuncP is called when the command has completed. It is called
 ** as (*PostFuncP)(PostArg, CmdBlkP, txcontrol);. PostFuncP is not expected
 ** to return a value. PostFuncP does NOT need to free the command block,
 ** as this happens automatically after PostFuncP returns.
-** 
+**
 ** Once the command block has been filled in, it is attached to the correct
 ** queue by calling RIOQueueCmdBlk( HostP, Rup, CmdBlkP ) where HostP is
 ** a pointer to the struct Host, Rup is the NUMBER of the rup (NOT a pointer
 ** to it!), and CmdBlkP is the pointer to the command block allocated using
 ** RIOGetCmdBlk().
-** 
+**
 */

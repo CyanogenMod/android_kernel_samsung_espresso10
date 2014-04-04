@@ -69,7 +69,7 @@
 
 2003-11-03 Karsten Wiese
 	Version 0.3:
-	24Bit support. 
+	24Bit support.
 	"arecord -D hw:1 -c 2 -r 48000 -M -f S24_3LE|aplay -D hw:1 -c 2 -r 48000 -M -f S24_3LE" works.
 
 2003-08-22 Karsten Wiese
@@ -93,7 +93,7 @@
 	This helped me much on my slowish PII 400 & PIII 500.
 	ACPI yet untested but might cause the same bad behaviour.
 	Use a kernel with lowlatency and preemptiv patches applied.
-	To autoload snd-usb-midi append a line 
+	To autoload snd-usb-midi append a line
 		post-install snd-usb-us428 modprobe snd-usb-midi
 	to /etc/modules.conf.
 
@@ -102,7 +102,6 @@
        	"pcm -c 2" doesn't work. "pcm -c 2 -m direct_interleaved" does.
 	KDE3: "Enable full duplex operation" deadlocks.
 
-	
 2002-08-31 Karsten Wiese
 	Version 0.0.3: audio also simplex;
 	simplifying: iso urbs only 1 packet, melted structs.
@@ -145,8 +144,6 @@
 #include "usbusx2y.h"
 #include "usX2Yhwdep.h"
 
-
-
 MODULE_AUTHOR("Karsten Wiese <annabellesgarden@yahoo.de>");
 MODULE_DESCRIPTION("TASCAM "NAME_ALLCAPS" Version 0.8.7.2");
 MODULE_LICENSE("GPL");
@@ -163,14 +160,13 @@ MODULE_PARM_DESC(id, "ID string for "NAME_ALLCAPS".");
 module_param_array(enable, bool, NULL, 0444);
 MODULE_PARM_DESC(enable, "Enable "NAME_ALLCAPS".");
 
-
 static int snd_usX2Y_card_used[SNDRV_CARDS];
 
 static void usX2Y_usb_disconnect(struct usb_device* usb_device, void* ptr);
 static void snd_usX2Y_card_private_free(struct snd_card *card);
 
-/* 
- * pipe 4 is used for switching the lamps, setting samplerate, volumes ....   
+/*
+ * pipe 4 is used for switching the lamps, setting samplerate, volumes ....
  */
 static void i_usX2Y_Out04Int(struct urb *urb)
 {
@@ -224,8 +220,7 @@ static void i_usX2Y_In04Int(struct urb *urb)
 			wake_up(&usX2Y->us428ctls_wait_queue_head);
 		}
 	}
-	
-	
+
 	if (usX2Y->US04) {
 		if (0 == usX2Y->US04->submitted)
 			do {
@@ -292,7 +287,7 @@ int usX2Y_In04_init(struct usX2Ydev *usX2Y)
 		usb_free_urb(usX2Y->In04urb);
 		return -ENOMEM;
 	}
-	 
+
 	init_waitqueue_head(&usX2Y->In04WaitQueue);
 	usb_fill_int_urb(usX2Y->In04urb, usX2Y->dev, usb_rcvintpipe(usX2Y->dev, 0x4),
 			 usX2Y->In04Buf, 21,
@@ -314,17 +309,16 @@ static void usX2Y_unlinkSeq(struct snd_usX2Y_AsyncSeq *S)
 	kfree(S->buffer);
 }
 
-
 static struct usb_device_id snd_usX2Y_usb_id_table[] = {
 	{
 		.match_flags =	USB_DEVICE_ID_MATCH_DEVICE,
 		.idVendor =	0x1604,
-		.idProduct =	USB_ID_US428 
+		.idProduct =	USB_ID_US428
 	},
 	{
 		.match_flags =	USB_DEVICE_ID_MATCH_DEVICE,
 		.idVendor =	0x1604,
-		.idProduct =	USB_ID_US122 
+		.idProduct =	USB_ID_US122
 	},
  	{
 		.match_flags =	USB_DEVICE_ID_MATCH_DEVICE,
@@ -358,7 +352,7 @@ static int usX2Y_create_card(struct usb_device *device, struct snd_card **cardp)
 	strcpy(card->driver, "USB "NAME_ALLCAPS"");
 	sprintf(card->shortname, "TASCAM "NAME_ALLCAPS"");
 	sprintf(card->longname, "%s (%x:%x if %d at %03d/%03d)",
-		card->shortname, 
+		card->shortname,
 		le16_to_cpu(device->descriptor.idVendor),
 		le16_to_cpu(device->descriptor.idProduct),
 		0,//us428(card)->usbmidi.ifnum,
@@ -367,7 +361,6 @@ static int usX2Y_create_card(struct usb_device *device, struct snd_card **cardp)
 	*cardp = card;
 	return 0;
 }
-
 
 static int usX2Y_usb_probe(struct usb_device *device,
 			   struct usb_interface *intf,
@@ -453,7 +446,7 @@ static void usX2Y_usb_disconnect(struct usb_device *device, void* ptr)
 		list_for_each(p, &usX2Y->midi_list) {
 			snd_usbmidi_disconnect(p);
 		}
-		if (usX2Y->us428ctls_sharedmem) 
+		if (usX2Y->us428ctls_sharedmem)
 			wake_up(&usX2Y->us428ctls_wait_queue_head);
 		snd_card_free(card);
 	}

@@ -381,7 +381,6 @@ enum nes_cqe_opcode_bits {
 	NES_CQE_VALID = (1<<31),
 };
 
-
 enum nes_cqe_word_idx {
 	NES_CQE_PAYLOAD_LENGTH_IDX = 0,
 	NES_CQE_COMP_COMP_CTX_LOW_IDX = 2,

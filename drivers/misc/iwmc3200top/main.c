@@ -38,7 +38,6 @@
 #include "fw-msg.h"
 #include "debugfs.h"
 
-
 #define DRIVER_DESCRIPTION "Intel(R) IWMC 3200 Top Driver"
 #define DRIVER_COPYRIGHT "Copyright (c) 2008 Intel Corporation."
 
@@ -49,7 +48,6 @@ MODULE_VERSION(DRIVER_VERSION);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR(DRIVER_COPYRIGHT);
 MODULE_FIRMWARE(FW_NAME(FW_API_VER));
-
 
 static inline int __iwmct_tx(struct iwmct_priv *priv, void *src, int count)
 {
@@ -97,7 +95,6 @@ static void op_top_message(struct iwmct_priv *priv, struct top_msg *msg)
 		break;
 	}
 }
-
 
 static void handle_top_message(struct iwmct_priv *priv, u8 *buf, int len)
 {
@@ -178,7 +175,6 @@ int iwmct_send_hcmd(struct iwmct_priv *priv, u8 *cmd, u16 len)
 	kfree(buf);
 	return ret;
 }
-
 
 static void iwmct_irq_read_worker(struct work_struct *ws)
 {
@@ -327,7 +323,6 @@ static void iwmct_irq(struct sdio_func *func)
 		goto exit_clear_intr;
 	}
 
-
 	/*
 	 * read 2 bytes of the transaction size
 	 * IMPORTANT: sdio transaction size has to be read before clearing
@@ -370,7 +365,6 @@ exit_clear_intr:
 	/* clear the function's interrupt request bit (write 1 to clear) */
 	sdio_writeb(func, 1, IWMC_SDIO_INTR_CLEAR_ADDR, &ret);
 }
-
 
 static int blocks;
 module_param(blocks, int, 0604);
@@ -484,7 +478,6 @@ static struct attribute_group iwmct_attribute_group = {
 	.attrs = iwmct_sysfs_entries,
 };
 
-
 static int iwmct_probe(struct sdio_func *func,
 			   const struct sdio_device_id *id)
 {
@@ -562,7 +555,6 @@ static int iwmct_probe(struct sdio_func *func,
 		goto error_claim_irq;
 	}
 
-
 	/* Enable function's interrupt */
 	sdio_writeb(priv->func, val, addr, &ret);
 	if (ret) {
@@ -622,7 +614,6 @@ static void iwmct_remove(struct sdio_func *func)
 	kfree(priv);
 }
 
-
 static const struct sdio_device_id iwmct_ids[] = {
 	/* Intel Wireless MultiCom 3200 Top Driver */
 	{ SDIO_DEVICE(SDIO_VENDOR_ID_INTEL, 0x1404)},
@@ -659,4 +650,3 @@ static void __exit iwmct_exit(void)
 
 module_init(iwmct_init);
 module_exit(iwmct_exit);
-

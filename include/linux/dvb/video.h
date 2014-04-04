@@ -38,7 +38,6 @@ typedef enum {
 	VIDEO_FORMAT_221_1    /* 2.21:1 */
 } video_format_t;
 
-
 typedef enum {
 	 VIDEO_SYSTEM_PAL,
 	 VIDEO_SYSTEM_NTSC,
@@ -49,7 +48,6 @@ typedef enum {
 	 VIDEO_SYSTEM_PAL60,
 	 VIDEO_SYSTEM_PALM60
 } video_system_t;
-
 
 typedef enum {
 	VIDEO_PAN_SCAN,       /* use pan and scan format */
@@ -70,13 +68,11 @@ typedef enum {
 			       system call */
 } video_stream_source_t;
 
-
 typedef enum {
 	VIDEO_STOPPED, /* Video is stopped */
 	VIDEO_PLAYING, /* Video is currently playing */
 	VIDEO_FREEZED  /* Video is freezed */
 } video_play_state_t;
-
 
 /* Decoder commands */
 #define VIDEO_CMD_PLAY        (0)
@@ -145,7 +141,6 @@ struct video_event {
 	} u;
 };
 
-
 struct video_status {
 	int                   video_blank;   /* blank video on freeze? */
 	video_play_state_t    play_state;    /* current state of playback */
@@ -154,12 +149,10 @@ struct video_status {
 	video_displayformat_t display_format;/* selected cropping mode */
 };
 
-
 struct video_still_picture {
 	char __user *iFrame;        /* pointer to a single iframe in memory */
 	__s32 size;
 };
-
 
 typedef
 struct video_highlight {
@@ -180,24 +173,20 @@ struct video_highlight {
 			     /*    9- 0  end x */
 } video_highlight_t;
 
-
 typedef struct video_spu {
 	int active;
 	int stream_id;
 } video_spu_t;
-
 
 typedef struct video_spu_palette {      /* SPU Palette information */
 	int length;
 	__u8 __user *palette;
 } video_spu_palette_t;
 
-
 typedef struct video_navi_pack {
 	int length;          /* 0 ... 1024 */
 	__u8 data[1024];
 } video_navi_pack_t;
-
 
 typedef __u16 video_attributes_t;
 /*   bits: descr. */
@@ -210,7 +199,6 @@ typedef __u16 video_attributes_t;
 /*    5- 3 source resolution (0=720x480/576, 1=704x480/576, 2=352x480/57 */
 /*    2    source letterboxed (1=yes, 0=no) */
 /*    0    film/camera mode (0=camera, 1=film (625/50 only)) */
-
 
 /* bit definitions for capabilities: */
 /* can the hardware decode MPEG1 and/or MPEG2? */
@@ -226,7 +214,6 @@ typedef __u16 video_attributes_t;
 #define VIDEO_CAP_SPU    16
 #define VIDEO_CAP_NAVI   32
 #define VIDEO_CAP_CSS    64
-
 
 #define VIDEO_STOP                 _IO('o', 21)
 #define VIDEO_PLAY                 _IO('o', 22)

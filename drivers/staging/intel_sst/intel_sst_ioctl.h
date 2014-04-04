@@ -263,7 +263,6 @@ union  snd_sst_codec_params {
 	struct snd_wma_params wma_params;
 };
 
-
 struct snd_sst_stream_params {
 	union snd_sst_codec_params uc;
 } __attribute__ ((packed));

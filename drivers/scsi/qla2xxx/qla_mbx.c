@@ -9,7 +9,6 @@
 #include <linux/delay.h>
 #include <linux/gfp.h>
 
-
 /*
  * qla2x00_mailbox_command
  *	Issue mailbox command and waits for completion.
@@ -589,7 +588,6 @@ qla2x00_get_fw_options(scsi_qla_host_t *vha, uint16_t *fwopts)
 
 	return rval;
 }
-
 
 /*
  * qla2x00_set_fw_options
@@ -4089,7 +4087,6 @@ qla81xx_set_port_config(scsi_qla_host_t *vha, uint16_t *mb)
 
 	return rval;
 }
-
 
 int
 qla24xx_set_fcp_prio(scsi_qla_host_t *vha, uint16_t loop_id, uint16_t priority,

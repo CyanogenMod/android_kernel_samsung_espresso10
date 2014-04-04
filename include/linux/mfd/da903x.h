@@ -128,7 +128,6 @@ struct da9030_battery_info {
 	int tbat_high;
 	int tbat_restart;
 
-
 	/* battery monitor interval (seconds) */
 	unsigned int batmon_interval;
 
@@ -232,7 +231,6 @@ extern int da903x_unregister_notifier(struct device *dev,
 #define DA9034_STATUS_SRP_READY		(1 << 15)
 
 extern int da903x_query_status(struct device *dev, unsigned int status);
-
 
 /* NOTE: the functions below are not intended for use outside
  * of the DA903x sub-device drivers

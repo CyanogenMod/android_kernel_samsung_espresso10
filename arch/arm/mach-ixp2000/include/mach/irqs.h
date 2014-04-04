@@ -6,7 +6,7 @@
  *
  * Copyright (C) 2002 Intel Corp.
  * Copyright (C) 2003-2004 MontaVista Software, Inc.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
@@ -36,13 +36,13 @@
 #define	IRQ_IXP2000_TIMER2     		5
 #define	IRQ_IXP2000_TIMER3     		6
 #define	IRQ_IXP2000_TIMER4     		7
-#define	IRQ_IXP2000_PMU        		8               
+#define	IRQ_IXP2000_PMU        		8
 #define	IRQ_IXP2000_SPF        		9  /* Slow port framer IRQ */
 #define	IRQ_IXP2000_DMA1      		10
 #define	IRQ_IXP2000_DMA2      		11
 #define	IRQ_IXP2000_DMA3      		12
 #define	IRQ_IXP2000_PCI_DOORBELL	13
-#define	IRQ_IXP2000_ME_ATTN       	14 
+#define	IRQ_IXP2000_ME_ATTN       	14
 #define	IRQ_IXP2000_PCI   		15 /* PCI INTA or INTB */
 #define	IRQ_IXP2000_THDA0   		16 /* thread 0-31A */
 #define	IRQ_IXP2000_THDA1  		17 /* thread 32-63A, IXP2800 only */
@@ -88,7 +88,7 @@
 
 #define	IXP2000_BOARD_IRQ(x)		(NR_IXP2000_IRQS + (x))
 
-#define	IXP2000_BOARD_IRQ_MASK(irq)	(1 << (irq - NR_IXP2000_IRQS))	
+#define	IXP2000_BOARD_IRQ_MASK(irq)	(1 << (irq - NR_IXP2000_IRQS))
 
 #define IXP2000_ERR_IRQ_MASK(irq) ( 1 << (irq - IRQ_IXP2000_DRAM0_MIN_ERR))
 #define IXP2000_VALID_ERR_IRQ_MASK (\
@@ -113,20 +113,19 @@
 #define	IXP2000_BOARD_IRQS		32
 #define NR_IRQS				(NR_IXP2000_IRQS + IXP2000_BOARD_IRQS)
 
-
-/* 
+/*
  * IXDP2400 specific IRQs
  */
-#define	IRQ_IXDP2400_INGRESS_NPU	IXP2000_BOARD_IRQ(0) 
-#define	IRQ_IXDP2400_ENET		IXP2000_BOARD_IRQ(1) 
-#define	IRQ_IXDP2400_MEDIA_PCI		IXP2000_BOARD_IRQ(2) 
-#define	IRQ_IXDP2400_MEDIA_SP		IXP2000_BOARD_IRQ(3) 
-#define	IRQ_IXDP2400_SF_PCI		IXP2000_BOARD_IRQ(4) 
-#define	IRQ_IXDP2400_SF_SP		IXP2000_BOARD_IRQ(5) 
-#define	IRQ_IXDP2400_PMC		IXP2000_BOARD_IRQ(6) 
-#define	IRQ_IXDP2400_TVM		IXP2000_BOARD_IRQ(7) 
+#define	IRQ_IXDP2400_INGRESS_NPU	IXP2000_BOARD_IRQ(0)
+#define	IRQ_IXDP2400_ENET		IXP2000_BOARD_IRQ(1)
+#define	IRQ_IXDP2400_MEDIA_PCI		IXP2000_BOARD_IRQ(2)
+#define	IRQ_IXDP2400_MEDIA_SP		IXP2000_BOARD_IRQ(3)
+#define	IRQ_IXDP2400_SF_PCI		IXP2000_BOARD_IRQ(4)
+#define	IRQ_IXDP2400_SF_SP		IXP2000_BOARD_IRQ(5)
+#define	IRQ_IXDP2400_PMC		IXP2000_BOARD_IRQ(6)
+#define	IRQ_IXDP2400_TVM		IXP2000_BOARD_IRQ(7)
 
-#define	NR_IXDP2400_IRQS		((IRQ_IXDP2400_TVM)+1)  
+#define	NR_IXDP2400_IRQS		((IRQ_IXDP2400_TVM)+1)
 #define	IXDP2400_NR_IRQS		NR_IXDP2400_IRQS - NR_IXP2000_IRQS
 
 /* IXDP2800 specific IRQs */
@@ -140,7 +139,7 @@
 #define	NR_IXDP2800_IRQS		((IRQ_IXDP2800_MEDIA)+1)
 #define	IXDP2800_NR_IRQS		NR_IXDP2800_IRQS - NR_IXP2000_IRQS
 
-/* 
+/*
  * IRQs on both IXDP2x01 boards
  */
 #define IRQ_IXDP2X01_SPCI_DB_0		IXP2000_BOARD_IRQ(2)
@@ -178,7 +177,7 @@
 		IXP2000_BOARD_IRQ_MASK(IRQ_IXDP2X01_CS8900) | \
 		IXP2000_BOARD_IRQ_MASK(IRQ_IXDP2X01_BBSRAM) )
 
-/* 
+/*
  * IXDP2401 specific IRQs
  */
 #define IRQ_IXDP2401_INTA_82546		IXP2000_BOARD_IRQ(0)

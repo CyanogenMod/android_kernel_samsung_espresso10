@@ -26,4 +26,3 @@ config CEPH_LIB_PRETTYDEBUG
 	  via CONFIG_DYNAMIC_DEBUG).
 
 	  If unsure, say N.
-

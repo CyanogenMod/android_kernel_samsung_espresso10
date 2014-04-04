@@ -33,8 +33,6 @@ config CPU_S3C244X
 	help
 	  Support for S3C2440 and S3C2442 Samsung Mobile CPU based systems.
 
-
-
 config S3C2440_CPUFREQ
 	bool "S3C2440/S3C2442 CPU Frequency scaling support"
 	depends on CPU_FREQ_S3C24XX && (CPU_S3C2440 || CPU_S3C2442)

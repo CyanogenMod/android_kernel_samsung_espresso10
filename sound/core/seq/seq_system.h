@@ -23,7 +23,6 @@
 
 #include <sound/seq_kernel.h>
 
-
 /* entry points for broadcasting system events */
 void snd_seq_system_broadcast(int client, int port, int type);
 
@@ -41,6 +40,5 @@ int snd_seq_system_client_init(void);
 
 /* unregister our internal client */
 void snd_seq_system_client_done(void);
-
 
 #endif

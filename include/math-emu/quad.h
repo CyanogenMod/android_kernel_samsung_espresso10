@@ -55,7 +55,7 @@
 union _FP_UNION_Q
 {
    long double flt;
-   struct 
+   struct
    {
 #if __BYTE_ORDER == __BIG_ENDIAN
       unsigned sign : 1;
@@ -74,7 +74,6 @@ union _FP_UNION_Q
 #endif /* not bigendian */
    } bits __attribute__((packed));
 };
-
 
 #define FP_DECL_Q(X)		_FP_DECL(4,X)
 #define FP_UNPACK_RAW_Q(X,val)	_FP_UNPACK_RAW_4(Q,X,val)

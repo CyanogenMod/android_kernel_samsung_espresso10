@@ -76,7 +76,6 @@
  * Change history:
  *---------------------------------------------------------------------------*/
 
-
 /* Define DHF_WCI if you want to use the WCI to access the ORiNOCO card.
    Define DHF_UIL if you want to use the UIL to access the ORiNOCO card.
    You must define either DHF_WCI or DHF_UIL. If neither of the two is defined

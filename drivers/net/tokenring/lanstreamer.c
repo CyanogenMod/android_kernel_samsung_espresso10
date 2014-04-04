@@ -6,7 +6,7 @@
  *  Copyright (C) 1999 IBM Corporation
  *
  *  Linux driver for IBM PCI tokenring cards based on the LanStreamer MPC
- *  chipset. 
+ *  chipset.
  *
  *  This driver is based on the olympic driver for IBM PCI TokenRing cards (Pit/Pit-Phy/Olympic
  *  chipsets) written  by:
@@ -19,41 +19,41 @@
  *      Copyright 1993 United States Government as represented by the
  *      Director, National Security Agency.
  *
- * This program is free software; you can redistribute it and/or modify      
- * it under the terms of the GNU General Public License as published by      
- * the Free Software Foundation; either version 2 of the License, or         
- * (at your option) any later version.                                       
- *                                                                           
- * This program is distributed in the hope that it will be useful,           
- * but WITHOUT ANY WARRANTY; without even the implied warranty of            
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             
- * GNU General Public License for more details.                              
- *                                                                           
- * NO WARRANTY                                                               
- * THE PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR        
- * CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT      
- * LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT,      
- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is    
- * solely responsible for determining the appropriateness of using and       
- * distributing the Program and assumes all risks associated with its        
- * exercise of rights under this Agreement, including but not limited to     
- * the risks and costs of program errors, damage to or loss of data,         
- * programs or equipment, and unavailability or interruption of operations.  
- *                                                                           
- * DISCLAIMER OF LIABILITY                                                   
- * NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY   
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL        
- * DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND   
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR     
- * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE    
- * USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED  
- * HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES             
- *                                                                           
- * You should have received a copy of the GNU General Public License         
- * along with this program; if not, write to the Free Software               
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
- *                                                                           
- * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * NO WARRANTY
+ * THE PROGRAM IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT
+ * LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT,
+ * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is
+ * solely responsible for determining the appropriateness of using and
+ * distributing the Program and assumes all risks associated with its
+ * exercise of rights under this Agreement, including but not limited to
+ * the risks and costs of program errors, damage to or loss of data,
+ * programs or equipment, and unavailability or interruption of operations.
+ *
+ * DISCLAIMER OF LIABILITY
+ * NEITHER RECIPIENT NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+ * TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF ANY RIGHTS GRANTED
+ * HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ *
  *  12/10/99 - Alpha Release 0.1.0
  *            First release to the public
  *  03/03/00 - Merged to kernel, indented -kr -i8 -bri0, fixed some missing
@@ -62,13 +62,13 @@
  *  03/08/01 - Added support for module_init() and module_exit()
  *  08/15/01 - Added ioctl() functionality for debugging, changed netif_*_queue
  *             calls and other incorrectness - Kent Yoder <yoder1@us.ibm.com>
- *  11/05/01 - Restructured the interrupt function, added delays, reduced the 
- *             the number of TX descriptors to 1, which together can prevent 
+ *  11/05/01 - Restructured the interrupt function, added delays, reduced the
+ *             the number of TX descriptors to 1, which together can prevent
  *             the card from locking up the box - <yoder1@us.ibm.com>
  *  09/27/02 - New PCI interface + bug fix. - <yoder1@us.ibm.com>
  *  11/13/02 - Removed free_irq calls which could cause a hang, added
  *	       netif_carrier_{on|off} - <yoder1@us.ibm.com>
- *  
+ *
  *  To Do:
  *
  *
@@ -86,8 +86,8 @@
 /* Change STREAMER_NETWORK_MONITOR to receive mac frames through the arb channel.
  * Will also create a /proc/net/streamer_tr entry if proc_fs is compiled into the
  * kernel.
- * Intended to be used to create a ring-error reporting network module 
- * i.e. it will give you the source address of beaconers on the ring 
+ * Intended to be used to create a ring-error reporting network module
+ * i.e. it will give you the source address of beaconers on the ring
  */
 
 #define STREAMER_NETWORK_MONITOR 0
@@ -135,12 +135,11 @@
 #error broken on 64-bit: stores pointer to rx_ring->buffer in 32-bit int
 #endif
 
-
 /* I've got to put some intelligence into the version number so that Peter and I know
- * which version of the code somebody has got. 
+ * which version of the code somebody has got.
  * Version Number = a.b.c.d  where a.b.c is the level of code and d is the latest author.
  * So 0.0.1.pds = Peter, 0.0.1.mlp = Mike
- * 
+ *
  * Official releases will only have an a.b.c version number format.
  */
 
@@ -152,7 +151,6 @@ static DEFINE_PCI_DEVICE_TABLE(streamer_pci_tbl) = {
 	{}	/* terminating entry */
 };
 MODULE_DEVICE_TABLE(pci,streamer_pci_tbl);
-
 
 static char *open_maj_error[] = {
 	"No error", "Lobe Media Test", "Physical Insertion",
@@ -173,7 +171,7 @@ static char *open_min_error[] = {
 /* Module parameters */
 
 /* Ring Speed 0,4,16
- * 0 = Autosense         
+ * 0 = Autosense
  * 4,16 = Selected speed only, no autosense
  * This allows the card to be the first on the ring
  * and become the active monitor.
@@ -263,7 +261,7 @@ static int __devinit streamer_init_one(struct pci_dev *pdev,
 #ifdef CONFIG_PROC_FS
 	if (!dev_streamer)
 		create_proc_read_entry("streamer_tr", 0, init_net.proc_net,
-					streamer_proc_info, NULL); 
+					streamer_proc_info, NULL);
 	streamer_priv->next = dev_streamer;
 	dev_streamer = streamer_priv;
 #endif
@@ -362,7 +360,7 @@ static int __devinit streamer_init_one(struct pci_dev *pdev,
 	printk("%s: %s. I/O at %hx, MMIO at %p, using irq %d\n",dev->name,
 		streamer_priv->streamer_card_name,
 		(unsigned int) dev->base_addr,
-		streamer_priv->streamer_mmio, 
+		streamer_priv->streamer_mmio,
 		dev->irq);
 
 	if (streamer_reset(dev))
@@ -439,7 +437,6 @@ static void __devexit streamer_remove_one(struct pci_dev *pdev)
 	pci_set_drvdata(pdev, NULL);
 }
 
-
 static int streamer_reset(struct net_device *dev)
 {
 	struct streamer_private *streamer_priv;
@@ -456,7 +453,7 @@ static int streamer_reset(struct net_device *dev)
 	t = jiffies;
 	/* Hold soft reset bit for a while */
 	ssleep(1);
-	
+
 	writew(readw(streamer_mmio + BCTL) & ~BCTL_SOFTRESET,
 	       streamer_mmio + BCTL);
 
@@ -497,9 +494,9 @@ static int streamer_reset(struct net_device *dev)
 		data=((u8 *)skb->data)+sizeof(struct streamer_rx_desc);
 		rx_ring->forward=0;
 		rx_ring->status=0;
-		rx_ring->buffer=cpu_to_le32(pci_map_single(streamer_priv->pci_dev, data, 
+		rx_ring->buffer=cpu_to_le32(pci_map_single(streamer_priv->pci_dev, data,
 							512, PCI_DMA_FROMDEVICE));
-		rx_ring->framelen_buflen=512; 
+		rx_ring->framelen_buflen=512;
 		writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev, rx_ring, 512, PCI_DMA_FROMDEVICE)),
 			streamer_mmio+RXBDA);
 	}
@@ -637,11 +634,11 @@ static int streamer_open(struct net_device *dev)
 
 		if (streamer_priv->streamer_laa[0]) {
 			writew(readw(streamer_mmio + LAPWWO) + 12, streamer_mmio + LAPA);
-			writew(htons((streamer_priv->streamer_laa[0] << 8) | 
+			writew(htons((streamer_priv->streamer_laa[0] << 8) |
 				     streamer_priv->streamer_laa[1]),streamer_mmio+LAPDINC);
-			writew(htons((streamer_priv->streamer_laa[2] << 8) | 
+			writew(htons((streamer_priv->streamer_laa[2] << 8) |
 				     streamer_priv->streamer_laa[3]),streamer_mmio+LAPDINC);
-			writew(htons((streamer_priv->streamer_laa[4] << 8) | 
+			writew(htons((streamer_priv->streamer_laa[4] << 8) |
 				     streamer_priv->streamer_laa[5]),streamer_mmio+LAPDINC);
 			memcpy(dev->dev_addr, streamer_priv->streamer_laa, dev->addr_len);
 		}
@@ -750,7 +747,7 @@ static int streamer_open(struct net_device *dev)
 		streamer_priv->streamer_ring_speed = 4;
 
 	if (streamer_priv->streamer_message_level)
-		printk(KERN_INFO "%s: Opened in %d Mbps mode\n", 
+		printk(KERN_INFO "%s: Opened in %d Mbps mode\n",
 			dev->name,
 			streamer_priv->streamer_ring_speed);
 
@@ -786,11 +783,11 @@ static int streamer_open(struct net_device *dev)
 
 		skb->dev = dev;
 
-		streamer_priv->streamer_rx_ring[i].forward = 
+		streamer_priv->streamer_rx_ring[i].forward =
 			cpu_to_le32(pci_map_single(streamer_priv->pci_dev, &streamer_priv->streamer_rx_ring[i + 1],
 					sizeof(struct streamer_rx_desc), PCI_DMA_FROMDEVICE));
 		streamer_priv->streamer_rx_ring[i].status = 0;
-		streamer_priv->streamer_rx_ring[i].buffer = 
+		streamer_priv->streamer_rx_ring[i].buffer =
 			cpu_to_le32(pci_map_single(streamer_priv->pci_dev, skb->data,
 					      streamer_priv->pkt_buf_sz, PCI_DMA_FROMDEVICE));
 		streamer_priv->streamer_rx_ring[i].framelen_buflen = streamer_priv->pkt_buf_sz;
@@ -809,15 +806,14 @@ static int streamer_open(struct net_device *dev)
 	streamer_priv->rx_ring_last_received = STREAMER_RX_RING_SIZE - 1;	/* last processed rx status */
 
 	writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev, &streamer_priv->streamer_rx_ring[0],
-				sizeof(struct streamer_rx_desc), PCI_DMA_TODEVICE)), 
+				sizeof(struct streamer_rx_desc), PCI_DMA_TODEVICE)),
 		streamer_mmio + RXBDA);
 	writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev, &streamer_priv->streamer_rx_ring[STREAMER_RX_RING_SIZE - 1],
-				sizeof(struct streamer_rx_desc), PCI_DMA_TODEVICE)), 
+				sizeof(struct streamer_rx_desc), PCI_DMA_TODEVICE)),
 		streamer_mmio + RXLBDA);
 
 	/* set bus master interrupt event mask */
 	writew(MISR_RX_NOBUF | MISR_RX_EOF, streamer_mmio + MISR_MASK);
-
 
 	/* setup tx ring */
 	streamer_priv->streamer_tx_ring=kmalloc(sizeof(struct streamer_tx_desc)*
@@ -829,7 +825,7 @@ static int streamer_open(struct net_device *dev)
 
 	writew(~BMCTL_TX2_DIS, streamer_mmio + BMCTL_RUM);	/* Enables TX channel 2 */
 	for (i = 0; i < STREAMER_TX_RING_SIZE; i++) {
-		streamer_priv->streamer_tx_ring[i].forward = cpu_to_le32(pci_map_single(streamer_priv->pci_dev, 
+		streamer_priv->streamer_tx_ring[i].forward = cpu_to_le32(pci_map_single(streamer_priv->pci_dev,
 										&streamer_priv->streamer_tx_ring[i + 1],
 										sizeof(struct streamer_tx_desc),
 										PCI_DMA_TODEVICE));
@@ -886,7 +882,7 @@ static int streamer_open(struct net_device *dev)
 }
 
 /*
- *	When we enter the rx routine we do not know how many frames have been 
+ *	When we enter the rx routine we do not know how many frames have been
  *	queued on the rx channel.  Therefore we start at the next rx status
  *	position and travel around the receive ring until we have completed
  *	all the frames.
@@ -894,7 +890,7 @@ static int streamer_open(struct net_device *dev)
  *	This means that we may process the frame before we receive the end
  *	of frame interrupt. This is why we always test the status instead
  *	of blindly processing the next frame.
- *	
+ *
  */
 static void streamer_rx(struct net_device *dev)
 {
@@ -910,7 +906,7 @@ static void streamer_rx(struct net_device *dev)
 	rx_ring_last_received = streamer_priv->rx_ring_last_received;
 
 	while (rx_desc->status & 0x01000000) {	/* While processed descriptors are available */
-		if (rx_ring_last_received != streamer_priv->rx_ring_last_received) 
+		if (rx_ring_last_received != streamer_priv->rx_ring_last_received)
 		{
 			printk(KERN_WARNING "RX Error 1 rx_ring_last_received not the same %x %x\n",
 				rx_ring_last_received, streamer_priv->rx_ring_last_received);
@@ -934,23 +930,23 @@ static void streamer_rx(struct net_device *dev)
 				skb = dev_alloc_skb(frame_length);
 			}
 
-			if (skb == NULL) 
+			if (skb == NULL)
 			{
 				printk(KERN_WARNING "%s: Not enough memory to copy packet to upper layers.\n",	dev->name);
 				dev->stats.rx_dropped++;
 			} else {	/* we allocated an skb OK */
 				if (buffer_cnt == 1) {
 					/* release the DMA mapping */
-					pci_unmap_single(streamer_priv->pci_dev, 
+					pci_unmap_single(streamer_priv->pci_dev,
 						le32_to_cpu(streamer_priv->streamer_rx_ring[rx_ring_last_received].buffer),
-						streamer_priv->pkt_buf_sz, 
+						streamer_priv->pkt_buf_sz,
 						PCI_DMA_FROMDEVICE);
 					skb2 = streamer_priv->rx_ring_skb[rx_ring_last_received];
 #if STREAMER_DEBUG_PACKETS
 					{
 						int i;
 						printk("streamer_rx packet print: skb->data2 %p  skb->head %p\n", skb2->data, skb2->head);
-						for (i = 0; i < frame_length; i++) 
+						for (i = 0; i < frame_length; i++)
 						{
 							printk("%x:", skb2->data[i]);
 							if (((i + 1) % 16) == 0)
@@ -964,12 +960,12 @@ static void streamer_rx(struct net_device *dev)
 					/* recycle this descriptor */
 					streamer_priv->streamer_rx_ring[rx_ring_last_received].status = 0;
 					streamer_priv->streamer_rx_ring[rx_ring_last_received].framelen_buflen = streamer_priv->pkt_buf_sz;
-					streamer_priv->streamer_rx_ring[rx_ring_last_received].buffer = 
+					streamer_priv->streamer_rx_ring[rx_ring_last_received].buffer =
 						cpu_to_le32(pci_map_single(streamer_priv->pci_dev, skb->data, streamer_priv->pkt_buf_sz,
 								PCI_DMA_FROMDEVICE));
 					streamer_priv->rx_ring_skb[rx_ring_last_received] = skb;
 					/* place recycled descriptor back on the adapter */
-					writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev, 
+					writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev,
 									&streamer_priv->streamer_rx_ring[rx_ring_last_received],
 									sizeof(struct streamer_rx_desc), PCI_DMA_FROMDEVICE)),
 						streamer_mmio + RXLBDA);
@@ -977,15 +973,15 @@ static void streamer_rx(struct net_device *dev)
 					netif_rx(skb2);
 				} else {
 					do {	/* Walk the buffers */
-						pci_unmap_single(streamer_priv->pci_dev, le32_to_cpu(rx_desc->buffer), length, PCI_DMA_FROMDEVICE), 
+						pci_unmap_single(streamer_priv->pci_dev, le32_to_cpu(rx_desc->buffer), length, PCI_DMA_FROMDEVICE),
 						memcpy(skb_put(skb, length), (void *)rx_desc->buffer, length);	/* copy this fragment */
 						streamer_priv->streamer_rx_ring[rx_ring_last_received].status = 0;
 						streamer_priv->streamer_rx_ring[rx_ring_last_received].framelen_buflen = streamer_priv->pkt_buf_sz;
-						
+
 						/* give descriptor back to the adapter */
-						writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev, 
+						writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev,
 									&streamer_priv->streamer_rx_ring[rx_ring_last_received],
-									length, PCI_DMA_FROMDEVICE)), 
+									length, PCI_DMA_FROMDEVICE)),
 							streamer_mmio + RXLBDA);
 
 						if (rx_desc->status & 0x80000000)
@@ -1032,7 +1028,7 @@ static irqreturn_t streamer_interrupt(int irq, void *dev_id)
 	spin_lock(&streamer_priv->streamer_lock);
 	sisr = readw(streamer_mmio + SISR);
 
-	while((sisr & (SISR_MI | SISR_SRB_REPLY | SISR_ADAPTER_CHECK | SISR_ASB_FREE | 
+	while((sisr & (SISR_MI | SISR_SRB_REPLY | SISR_ADAPTER_CHECK | SISR_ASB_FREE |
 		       SISR_ARB_CMD | SISR_TRB_REPLY | SISR_PAR_ERR | SISR_SERR_ERR)) &&
 	      (max_intr > 0)) {
 
@@ -1073,8 +1069,8 @@ static irqreturn_t streamer_interrupt(int irq, void *dev_id)
 		/* MISR_RX_EOF */
 
 			if (misr & MISR_RX_NOBUF) {
-				/* According to the documentation, we don't have to do anything,  
-                                 * but trapping it keeps it out of /var/log/messages.  
+				/* According to the documentation, we don't have to do anything,
+                                 * but trapping it keeps it out of /var/log/messages.
                                  */
 			}		/* SISR_RX_NOBUF */
 
@@ -1137,9 +1133,9 @@ static irqreturn_t streamer_interrupt(int irq, void *dev_id)
 
 		sisr = readw(streamer_mmio + SISR);
 		max_intr--;
-	} /* while() */		
+	} /* while() */
 
-	spin_unlock(&streamer_priv->streamer_lock) ; 
+	spin_unlock(&streamer_priv->streamer_lock) ;
 	return IRQ_HANDLED;
 }
 
@@ -1156,7 +1152,7 @@ static netdev_tx_t streamer_xmit(struct sk_buff *skb,
 	if (streamer_priv->free_tx_ring_entries) {
 		streamer_priv->streamer_tx_ring[streamer_priv->tx_ring_free].status = 0;
 		streamer_priv->streamer_tx_ring[streamer_priv->tx_ring_free].bufcnt_framelen = 0x00020000 | skb->len;
-		streamer_priv->streamer_tx_ring[streamer_priv->tx_ring_free].buffer = 
+		streamer_priv->streamer_tx_ring[streamer_priv->tx_ring_free].buffer =
 			cpu_to_le32(pci_map_single(streamer_priv->pci_dev, skb->data, skb->len, PCI_DMA_TODEVICE));
 		streamer_priv->streamer_tx_ring[streamer_priv->tx_ring_free].rsvd1 = skb->len;
 		streamer_priv->streamer_tx_ring[streamer_priv->tx_ring_free].rsvd2 = 0;
@@ -1178,7 +1174,7 @@ static netdev_tx_t streamer_xmit(struct sk_buff *skb,
 		}
 #endif
 
-		writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev, 
+		writel(cpu_to_le32(pci_map_single(streamer_priv->pci_dev,
 					&streamer_priv->streamer_tx_ring[streamer_priv->tx_ring_free],
 					sizeof(struct streamer_tx_desc), PCI_DMA_TODEVICE)),
 			streamer_mmio + TX2LFDA);
@@ -1193,7 +1189,6 @@ static netdev_tx_t streamer_xmit(struct sk_buff *skb,
 		return NETDEV_TX_BUSY;
 	}
 }
-
 
 static int streamer_close(struct net_device *dev)
 {
@@ -1216,11 +1211,11 @@ static int streamer_close(struct net_device *dev)
 
 	spin_unlock_irqrestore(&streamer_priv->streamer_lock, flags);
 
-	while (streamer_priv->srb_queued) 
+	while (streamer_priv->srb_queued)
 	{
 		interruptible_sleep_on_timeout(&streamer_priv->srb_wait,
 					       jiffies + 60 * HZ);
-		if (signal_pending(current)) 
+		if (signal_pending(current))
 		{
 			printk(KERN_WARNING "%s: SRB timed out.\n", dev->name);
 			printk(KERN_WARNING "SISR=%x MISR=%x LISR=%x\n",
@@ -1237,13 +1232,13 @@ static int streamer_close(struct net_device *dev)
 	for (i = 0; i < STREAMER_RX_RING_SIZE; i++) {
 	        if (streamer_priv->rx_ring_skb[streamer_priv->rx_ring_last_received]) {
 		        dev_kfree_skb(streamer_priv->rx_ring_skb[streamer_priv->rx_ring_last_received]);
-		} 
+		}
 		streamer_priv->rx_ring_last_received = (streamer_priv->rx_ring_last_received + 1) & (STREAMER_RX_RING_SIZE - 1);
 	}
 
 	/* reset tx/rx fifo's and busmaster logic */
 
-	/* TBD. Add graceful way to reset the LLC channel without doing a soft reset. 
+	/* TBD. Add graceful way to reset the LLC channel without doing a soft reset.
 	   writel(readl(streamer_mmio+BCTL)|(3<<13),streamer_mmio+BCTL);
 	   udelay(1);
 	   writel(readl(streamer_mmio+BCTL)&~(3<<13),streamer_mmio+BCTL);
@@ -1280,7 +1275,7 @@ static void streamer_set_rx_mode(struct net_device *dev)
 
 	/* Only issue the srb if there is a change in options */
 
-	if ((options ^ streamer_priv->streamer_copy_all_options)) 
+	if ((options ^ streamer_priv->streamer_copy_all_options))
 	{
 		/* Now to issue the srb command to alter the copy.all.options */
 		writew(htons(SRB_MODIFY_RECEIVE_OPTIONS << 8), streamer_mmio+LAPDINC);
@@ -1301,21 +1296,21 @@ static void streamer_set_rx_mode(struct net_device *dev)
 
 	/* Set the functional addresses we need for multicast */
 	writel(streamer_priv->srb,streamer_mmio+LAPA);
-	dev_mc_address[0] = dev_mc_address[1] = dev_mc_address[2] = dev_mc_address[3] = 0 ; 
-  
+	dev_mc_address[0] = dev_mc_address[1] = dev_mc_address[2] = dev_mc_address[3] = 0 ;
+
 	netdev_for_each_mc_addr(ha, dev) {
 		dev_mc_address[0] |= ha->addr[2];
 		dev_mc_address[1] |= ha->addr[3];
 		dev_mc_address[2] |= ha->addr[4];
 		dev_mc_address[3] |= ha->addr[5];
 	}
-  
+
 	writew(htons(SRB_SET_FUNC_ADDRESS << 8),streamer_mmio+LAPDINC);
 	writew(htons(STREAMER_CLEAR_RET_CODE << 8), streamer_mmio+LAPDINC);
 	writew(0,streamer_mmio+LAPDINC);
 	writew(htons( (dev_mc_address[0] << 8) | dev_mc_address[1]),streamer_mmio+LAPDINC);
 	writew(htons( (dev_mc_address[2] << 8) | dev_mc_address[3]),streamer_mmio+LAPDINC);
-	streamer_priv->srb_queued = 2 ; 
+	streamer_priv->srb_queued = 2 ;
 	writel(LISR_SRB_CMD,streamer_mmio+LISR_SUM);
 }
 
@@ -1330,7 +1325,7 @@ static void streamer_srb_bh(struct net_device *dev)
 
 	switch (srb_word) {
 
-		/* SRB_MODIFY_RECEIVE_OPTIONS i.e. set_multicast_list options (promiscuous) 
+		/* SRB_MODIFY_RECEIVE_OPTIONS i.e. set_multicast_list options (promiscuous)
 		 * At some point we should do something if we get an error, such as
 		 * resetting the IFF_PROMISC flag in dev
 		 */
@@ -1355,8 +1350,7 @@ static void streamer_srb_bh(struct net_device *dev)
 		}		/* switch srb[2] */
 		break;
 
-
-		/* SRB_SET_GROUP_ADDRESS - Multicast group setting 
+		/* SRB_SET_GROUP_ADDRESS - Multicast group setting
 		 */
 	case SRB_SET_GROUP_ADDRESS:
 	        srb_word=ntohs(readw(streamer_mmio+LAPDINC)) >> 8;
@@ -1383,7 +1377,6 @@ static void streamer_srb_bh(struct net_device *dev)
 		}		/* switch srb[2] */
 		break;
 
-
 		/* SRB_RESET_GROUP_ADDRESS - Remove a multicast address from group list
 		 */
 	case SRB_RESET_GROUP_ADDRESS:
@@ -1405,8 +1398,7 @@ static void streamer_srb_bh(struct net_device *dev)
 		}		/* switch srb[2] */
 		break;
 
-
-		/* SRB_SET_FUNC_ADDRESS - Called by the set_rx_mode 
+		/* SRB_SET_FUNC_ADDRESS - Called by the set_rx_mode
 		 */
 
 	case SRB_SET_FUNC_ADDRESS:
@@ -1488,7 +1480,7 @@ static int streamer_set_mac_address(struct net_device *dev, void *addr)
 	struct sockaddr *saddr = addr;
 	struct streamer_private *streamer_priv = netdev_priv(dev);
 
-	if (netif_running(dev)) 
+	if (netif_running(dev))
 	{
 		printk(KERN_WARNING "%s: Cannot set mac/laa address while card is open\n", dev->name);
 		return -EIO;
@@ -1529,7 +1521,7 @@ static void streamer_arb_cmd(struct net_device *dev)
 
 	writew(streamer_priv->arb, streamer_mmio + LAPA);
 	arb_word=ntohs(readw(streamer_mmio+LAPD)) >> 8;
-	
+
 	if (arb_word == ARB_RECEIVE_DATA) {	/* Receive.data, MAC frames */
 		writew(streamer_priv->arb + 6, streamer_mmio + LAPA);
 		streamer_priv->mac_rx_buffer = buff_off = ntohs(readw(streamer_mmio + LAPDINC));
@@ -1612,14 +1604,13 @@ drop_frame:
 
 		/* Is the ASB free ? */
 
-		if (!(readl(streamer_priv->streamer_mmio + SISR) & SISR_ASB_FREE)) 
+		if (!(readl(streamer_priv->streamer_mmio + SISR) & SISR_ASB_FREE))
 		{
 			streamer_priv->asb_queued = 1;
 			writel(LISR_ASB_FREE_REQ, streamer_priv->streamer_mmio + LISR_SUM);
 			return;
 			/* Drop out and wait for the bottom half to be run */
 		}
-
 
 		writew(streamer_priv->asb, streamer_mmio + LAPA);
 		writew(htons(ASB_RECEIVE_DATA << 8), streamer_mmio+LAPDINC);
@@ -1636,14 +1627,14 @@ drop_frame:
 		writew(streamer_priv->arb + 6, streamer_mmio + LAPA);
 		lan_status = ntohs(readw(streamer_mmio + LAPDINC));
 		fdx_prot_error = ntohs(readw(streamer_mmio+LAPD)) >> 8;
-		
+
 		/* Issue ARB Free */
 		writew(LISR_ARB_FREE, streamer_priv->streamer_mmio + LISR_SUM);
 
-		lan_status_diff = (streamer_priv->streamer_lan_status ^ lan_status) & 
-		    lan_status; 
+		lan_status_diff = (streamer_priv->streamer_lan_status ^ lan_status) &
+		    lan_status;
 
-		if (lan_status_diff & (LSC_LWF | LSC_ARW | LSC_FPE | LSC_RR)) 
+		if (lan_status_diff & (LSC_LWF | LSC_ARW | LSC_FPE | LSC_RR))
 		{
 			if (lan_status_diff & LSC_LWF)
 				printk(KERN_WARNING "%s: Short circuit detected on the lobe\n", dev->name);
@@ -1670,7 +1661,7 @@ drop_frame:
 		if (streamer_priv->streamer_message_level) {
 			if (lan_status_diff & LSC_SIG_LOSS)
 				printk(KERN_WARNING "%s: No receive signal detected\n", dev->name);
-			if (lan_status_diff & LSC_HARD_ERR) 
+			if (lan_status_diff & LSC_HARD_ERR)
 				printk(KERN_INFO "%s: Beaconing\n", dev->name);
 			if (lan_status_diff & LSC_SOFT_ERR)
 				printk(KERN_WARNING "%s: Adapter transmitted Soft Error Report Mac Frame\n", dev->name);
@@ -1725,7 +1716,7 @@ static void streamer_asb_bh(struct net_device *dev)
 	    netdev_priv(dev);
 	__u8 __iomem *streamer_mmio = streamer_priv->streamer_mmio;
 
-	if (streamer_priv->asb_queued == 1) 
+	if (streamer_priv->asb_queued == 1)
 	{
 		/* Dropped through the first time */
 

@@ -88,7 +88,6 @@ struct rmi_fn_09_data {
 	signed char status;
 };
 
-
 static ssize_t rmi_f09_status_show(struct device *dev,
 				     struct device_attribute *attr, char *buf);
 
@@ -160,7 +159,6 @@ static int rmi_f09_config(struct rmi_function_container *fc);
 static int rmi_f09_reset(struct rmi_function_container *fc);
 
 static int rmi_f09_create_sysfs(struct rmi_function_container *fc);
-
 
 static struct device_attribute attrs[] = {
 	__ATTR(status, RMI_RW_ATTR,
@@ -243,7 +241,6 @@ static int rmi_f09_initialize(struct rmi_function_container *fc)
 	struct rmi_fn_09_data *f09 = fc->data;
 	u8 query_base_addr;
 	int rc;
-
 
 	pdata = to_rmi_platform_data(rmi_dev);
 	query_base_addr = fc->fd.query_base_addr;
@@ -710,7 +707,6 @@ static ssize_t rmi_f09_control_test2_store(struct device *dev,
 	return count;
 
 }
-
 
 static ssize_t rmi_f09_test_number_control_show(struct device *dev,
 					struct device_attribute *attr,

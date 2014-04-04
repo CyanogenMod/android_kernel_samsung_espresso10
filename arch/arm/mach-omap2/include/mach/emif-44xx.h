@@ -20,7 +20,6 @@
 #ifndef __ARCH_ARM_MACH_OMAP2_EMIF_44XX_H
 #define __ARCH_ARM_MACH_OMAP2_EMIF_44XX_H
 
-
 /* Base address */
 #define OMAP44XX_EMIF1				0x4c000000
 #define OMAP44XX_EMIF2				0x4d000000

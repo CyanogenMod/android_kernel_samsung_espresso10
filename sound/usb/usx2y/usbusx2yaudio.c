@@ -10,7 +10,7 @@
  *
  *   Copyright (c) 2002 by Takashi Iwai <tiwai@suse.de>
  *
- *   Many codes borrowed from audio.c by 
+ *   Many codes borrowed from audio.c by
  *	    Alan Cox (alan@lxorguk.ukuu.org.uk)
  *	    Thomas Sailer (sailer@ife.ee.ethz.ch)
  *
@@ -29,7 +29,6 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  */
-
 
 #include <linux/interrupt.h>
 #include <linux/slab.h>
@@ -52,7 +51,7 @@
 					  smaller gives lower latencies.
 					*/
 #define USX2Y_NRPACKS_VARIABLE y	/* If your system works ok with this module's parameter
-					   nrpacks set to 1, you might as well comment 
+					   nrpacks set to 1, you might as well comment
 					   this #define out, and thereby produce smaller, faster code.
 					   You'd also set USX2Y_NRPACKS to 1 then.
 					*/
@@ -65,7 +64,6 @@
 #else
  #define nr_of_packs() USX2Y_NRPACKS
 #endif
-
 
 static int usX2Y_urb_capt_retire(struct snd_usX2Y_substream *subs)
 {
@@ -165,7 +163,7 @@ static int usX2Y_urb_play_prepare(struct snd_usX2Y_substream *subs,
 			/* set the buffer pointer */
 			urb->transfer_buffer = runtime->dma_area + subs->hwptr * usX2Y->stride;
 			if ((subs->hwptr += count) >= runtime->buffer_size)
-			subs->hwptr -= runtime->buffer_size;			
+			subs->hwptr -= runtime->buffer_size;
 		}
 	else
 		urb->transfer_buffer = subs->tmpbuf;
@@ -255,7 +253,6 @@ static inline int usX2Y_usbframe_complete(struct snd_usX2Y_substream *capsubs,
 	capsubs->completed_urb = NULL;
 	return 0;
 }
-
 
 static void usX2Y_clients_stop(struct usX2Ydev *usX2Y)
 {
@@ -392,7 +389,6 @@ static void usX2Y_subs_prepare(struct snd_usX2Y_substream *subs)
 	subs->transfer_done = 0;
 }
 
-
 static void usX2Y_urb_release(struct urb **urb, int free_tb)
 {
 	if (*urb) {
@@ -507,7 +503,7 @@ static int usX2Y_urbs_start(struct snd_usX2Y_substream *subs)
 				urb->iso_frame_desc[pack].offset = subs->maxpacksize * pack;
 				urb->iso_frame_desc[pack].length = subs->maxpacksize;
 			}
-			urb->transfer_buffer_length = subs->maxpacksize * nr_of_packs(); 
+			urb->transfer_buffer_length = subs->maxpacksize * nr_of_packs();
 			if ((err = usb_submit_urb(urb, GFP_ATOMIC)) < 0) {
 				snd_printk (KERN_ERR "cannot submit datapipe for urb %d, err = %d\n", i, err);
 				err = -EPIPE;
@@ -570,7 +566,6 @@ static int snd_usX2Y_pcm_trigger(struct snd_pcm_substream *substream, int cmd)
 	}
 	return 0;
 }
-
 
 /*
  * allocate a buffer, setup samplerate
@@ -661,7 +656,7 @@ static struct s_c2 SetRate48000[] =
 static void i_usX2Y_04Int(struct urb *urb)
 {
 	struct usX2Ydev *usX2Y = urb->context;
-	
+
 	if (urb->status)
 		snd_printk(KERN_ERR "snd_usX2Y_04Int() urb->status=%i\n", urb->status);
 	if (0 == --usX2Y->US04->len)
@@ -729,7 +724,6 @@ static int usX2Y_rate_set(struct usX2Ydev *usX2Y, int rate)
 	return err;
 }
 
-
 static int usX2Y_format_set(struct usX2Ydev *usX2Y, snd_pcm_format_t format)
 {
 	int alternate, err;
@@ -758,7 +752,6 @@ static int usX2Y_format_set(struct usX2Ydev *usX2Y, snd_pcm_format_t format)
 	usX2Y->rate = 0;
 	return err;
 }
-
 
 static int snd_usX2Y_pcm_hw_params(struct snd_pcm_substream *substream,
 				   struct snd_pcm_hw_params *hw_params)
@@ -888,8 +881,6 @@ static struct snd_pcm_hardware snd_usX2Y_2c =
 	.fifo_size =              0
 };
 
-
-
 static int snd_usX2Y_pcm_open(struct snd_pcm_substream *substream)
 {
 	struct snd_usX2Y_substream	*subs = ((struct snd_usX2Y_substream **)
@@ -906,8 +897,6 @@ static int snd_usX2Y_pcm_open(struct snd_pcm_substream *substream)
 	return 0;
 }
 
-
-
 static int snd_usX2Y_pcm_close(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
@@ -918,8 +907,7 @@ static int snd_usX2Y_pcm_close(struct snd_pcm_substream *substream)
 	return 0;
 }
 
-
-static struct snd_pcm_ops snd_usX2Y_pcm_ops = 
+static struct snd_pcm_ops snd_usX2Y_pcm_ops =
 {
 	.open =		snd_usX2Y_pcm_open,
 	.close =	snd_usX2Y_pcm_close,
@@ -930,7 +918,6 @@ static struct snd_pcm_ops snd_usX2Y_pcm_ops =
 	.trigger =	snd_usX2Y_pcm_trigger,
 	.pointer =	snd_usX2Y_pcm_pointer,
 };
-
 
 /*
  * free a usb stream instance
@@ -1013,7 +1000,7 @@ static int usX2Y_audio_stream_new(struct snd_card *card, int playback_endpoint, 
 int usX2Y_audio_create(struct snd_card *card)
 {
 	int err = 0;
-	
+
 	INIT_LIST_HEAD(&usX2Y(card)->pcm_list);
 
 	if (0 > (err = usX2Y_audio_stream_new(card, 0xA, 0x8)))

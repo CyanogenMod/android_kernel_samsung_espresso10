@@ -36,7 +36,6 @@ typedef struct xfs_qoff_logitem {
 	xfs_qoff_logformat_t	 qql_format;	/* logged structure */
 } xfs_qoff_logitem_t;
 
-
 extern void		   xfs_qm_dquot_logitem_init(struct xfs_dquot *);
 extern xfs_qoff_logitem_t *xfs_qm_qoff_logitem_init(struct xfs_mount *,
 					struct xfs_qoff_logitem *, uint);

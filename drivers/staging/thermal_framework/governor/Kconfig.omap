@@ -10,4 +10,3 @@ config OMAP_DIE_GOVERNOR
 	  This is the governor for the OMAP4 On-Die temperature sensor.
 	  This governer will institute the policy to call specific
 	  cooling agents.
-

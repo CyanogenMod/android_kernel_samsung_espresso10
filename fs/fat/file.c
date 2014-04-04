@@ -160,7 +160,6 @@ int fat_file_fsync(struct file *filp, int datasync)
 	return res ? res : err;
 }
 
-
 const struct file_operations fat_file_operations = {
 	.llseek		= generic_file_llseek,
 	.read		= do_sync_read,

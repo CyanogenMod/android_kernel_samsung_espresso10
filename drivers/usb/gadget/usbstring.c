@@ -19,7 +19,6 @@
 
 #include <asm/unaligned.h>
 
-
 static int utf8_to_utf16le(const char *s, __le16 *cp, unsigned len)
 {
 	int	count = 0;
@@ -83,9 +82,8 @@ fail:
 	return -1;
 }
 
-
 /**
- * usb_gadget_get_string - fill out a string descriptor 
+ * usb_gadget_get_string - fill out a string descriptor
  * @table: of c strings encoded using UTF-8
  * @id: string id, from low byte of wValue in get string descriptor
  * @buf: at least 256 bytes
@@ -133,4 +131,3 @@ usb_gadget_get_string (struct usb_gadget_strings *table, int id, u8 *buf)
 	buf [1] = USB_DT_STRING;
 	return buf [0];
 }
-

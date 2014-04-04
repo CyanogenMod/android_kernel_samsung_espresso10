@@ -417,7 +417,7 @@ static void nfs_readpage_retry(struct rpc_task *task, struct nfs_read_data *data
 static void nfs_readpage_result_partial(struct rpc_task *task, void *calldata)
 {
 	struct nfs_read_data *data = calldata;
- 
+
 	if (nfs_readpage_result(task, data) != 0)
 		return;
 	if (task->tk_status < 0)

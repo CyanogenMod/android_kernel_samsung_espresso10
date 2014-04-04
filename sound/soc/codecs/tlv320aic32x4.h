@@ -6,7 +6,6 @@
  * published by the Free Software Foundation.
  */
 
-
 #ifndef _TLV320AIC32X4_H
 #define _TLV320AIC32X4_H
 

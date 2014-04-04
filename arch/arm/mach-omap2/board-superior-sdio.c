@@ -38,12 +38,12 @@ static struct omap2_hsmmc_info superior_mmc_info[] = {
 		.external_ldo	= false,
 		.caps		= MMC_CAP_8_BIT_DATA | MMC_CAP_1_8V_DDR |
 						MMC_CAP_UHS_DDR50,
-		.caps2		= MMC_CAP2_PACKED_CMD,
+		.caps2		= MMC_CAP2_PACKED_CMD | MMC_CAP2_ADAPT_PACKED,
 		.ocr_mask	= MMC_VDD_165_195,
 		.gpio_wp	= -EINVAL,
 		.gpio_cd	= -EINVAL,
 #ifdef CONFIG_PM_RUNTIME
-		.power_saving = true,
+		.power_saving = false,
 #endif
 	},
 	{
@@ -52,7 +52,7 @@ static struct omap2_hsmmc_info superior_mmc_info[] = {
 		.gpio_wp	= -EINVAL,
 		.gpio_cd	= -EINVAL,
 #ifdef CONFIG_PM_RUNTIME
-		.power_saving = true,
+		.power_saving = false,
 #endif
 	},
 	{
@@ -67,7 +67,6 @@ static struct omap2_hsmmc_info superior_mmc_info[] = {
 	},
 	{}	/* Terminator */
 };
-
 
 static ssize_t sd_detection_cmd_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
@@ -91,7 +90,6 @@ static ssize_t sd_detection_cmd_show(struct device *dev,
 
 }
 static DEVICE_ATTR(status, S_IRUGO, sd_detection_cmd_show, NULL);
-
 
 static int superior_hsmmc_late_init(struct device *dev)
 {

@@ -544,7 +544,6 @@ static void s3c2410fb_lcd_enable(struct s3c2410fb_info *fbi, int enable)
 	local_irq_restore(flags);
 }
 
-
 /*
  *      s3c2410fb_blank
  *	@blank_mode: the blank mode we want.
@@ -812,7 +811,6 @@ static inline void s3c2410fb_cpufreq_deregister(struct s3c2410fb_info *info)
 }
 #endif
 
-
 static char driver_name[] = "s3c2410fb";
 
 static int __devinit s3c24xxfb_probe(struct platform_device *pdev,
@@ -1013,7 +1011,6 @@ static int __devinit s3c2412fb_probe(struct platform_device *pdev)
 {
 	return s3c24xxfb_probe(pdev, DRV_S3C2412);
 }
-
 
 /*
  *  Cleanup

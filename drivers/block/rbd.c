@@ -1,7 +1,6 @@
 /*
    rbd.c -- Export ceph rados objects as a Linux block device
 
-
    based on drivers/block/osdblk.c:
 
    Copyright 2009 Red Hat, Inc.
@@ -18,8 +17,6 @@
    You should have received a copy of the GNU General Public License
    along with this program; see the file COPYING.  If not, write to
    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
-
-
 
    For usage instructions, please refer to:
 
@@ -193,7 +190,6 @@ static ssize_t rbd_snap_add(struct device *dev,
 			    size_t count);
 static void __rbd_remove_snap_dev(struct rbd_device *rbd_dev,
 				  struct rbd_snap *snap);;
-
 
 static struct rbd_device *dev_to_rbd(struct device *dev)
 {
@@ -1471,7 +1467,6 @@ static void rbd_rq_fn(struct request_queue *q)
 				goto next_seg;
 			}
 
-
 			/* init OSD command: write or read */
 			if (do_write)
 				rbd_req_write(rq, rbd_dev,
@@ -1543,7 +1538,7 @@ static void rbd_free_disk(struct rbd_device *rbd_dev)
 }
 
 /*
- * reload the ondisk the header 
+ * reload the ondisk the header
  */
 static int rbd_read_header(struct rbd_device *rbd_dev,
 			   struct rbd_image_header *header)
@@ -1872,7 +1867,6 @@ static struct device_type rbd_device_type = {
 	.release	= rbd_sysfs_dev_release,
 };
 
-
 /*
   sysfs - snapshots
 */
@@ -2063,7 +2057,6 @@ static int __rbd_init_snaps_header(struct rbd_device *rbd_dev)
 
 	return 0;
 }
-
 
 static void rbd_root_dev_release(struct device *dev)
 {

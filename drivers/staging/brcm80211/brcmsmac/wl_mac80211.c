@@ -54,7 +54,6 @@
 static void wl_timer(unsigned long data);
 static void _wl_timer(struct wl_timer *t);
 
-
 static int ieee_hw_init(struct ieee80211_hw *hw);
 static int ieee_hw_rate_init(struct ieee80211_hw *hw);
 
@@ -759,8 +758,6 @@ static struct wl_info *wl_attach(u16 vendor, u16 device, unsigned long regs,
 	/* setup the bottom half handler */
 	tasklet_init(&wl->tasklet, wl_dpc, (unsigned long) wl);
 
-
-
 	base_addr = regs;
 
 	if (bustype == PCI_BUS) {
@@ -852,8 +849,6 @@ fail:
 	wl_free(wl);
 	return NULL;
 }
-
-
 
 #define CHAN2GHZ(channel, freqency, chflags)  { \
 	.band = IEEE80211_BAND_2GHZ, \
@@ -1302,8 +1297,6 @@ static int __init wl_module_init(void)
 	error = pci_register_driver(&wl_pci_driver);
 	if (!error)
 		return 0;
-
-
 
 	return error;
 }
@@ -1859,7 +1852,6 @@ static void wl_release_fw(struct wl_info *wl)
 		release_firmware(wl->fw.fw_hdr[i]);
 	}
 }
-
 
 /*
  * checks validity of all firmware images loaded from user space

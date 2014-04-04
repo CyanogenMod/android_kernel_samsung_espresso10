@@ -432,6 +432,7 @@ static int skcipher_recvmsg(struct kiocb *unused, struct socket *sock,
 	long copied = 0;
 
 	lock_sock(sk);
+	msg->msg_namelen = 0;
 	for (iov = msg->msg_iov, iovlen = msg->msg_iovlen; iovlen > 0;
 	     iovlen--, iov++) {
 		unsigned long seglen = iov->iov_len;
@@ -497,7 +498,6 @@ unlock:
 
 	return copied ?: err;
 }
-
 
 static unsigned int skcipher_poll(struct file *file, struct socket *sock,
 				  poll_table *wait)

@@ -19,7 +19,6 @@
 
 #include <plat/cpu-freq.h>
 
-
 static int s3c2443_gate(void __iomem *reg, struct clk *clk, int enable)
 {
 	u32 ctrlbit = clk->ctrlbit;
@@ -214,7 +213,6 @@ static struct clksrc_clk clksrc_clks[] = {
 		.reg_div = { .reg = S3C2443_CLKDIV1, .size = 8, .shift = 16 },
 	},
 };
-
 
 static struct clk init_clocks_off[] = {
 	{

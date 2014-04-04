@@ -803,20 +803,20 @@ static int do_sync(unsigned int num_qd, struct gfs2_quota_data **qda)
 		error = -ENOMEM;
 		goto out_gunlock;
 	}
-	/* 
+	/*
 	 * 1 blk for unstuffing inode if stuffed. We add this extra
 	 * block to the reservation unconditionally. If the inode
-	 * doesn't need unstuffing, the block will be released to the 
+	 * doesn't need unstuffing, the block will be released to the
 	 * rgrp since it won't be allocated during the transaction
 	 */
 	al->al_requested = 1;
 	/* +3 in the end for unstuffing block, inode size update block
-	 * and another block in case quota straddles page boundary and 
+	 * and another block in case quota straddles page boundary and
 	 * two blocks need to be updated instead of 1 */
 	blocks = num_qd * data_blocks + RES_DINODE + num_qd + 3;
 
 	if (nalloc)
-		al->al_requested += nalloc * (data_blocks + ind_blocks);		
+		al->al_requested += nalloc * (data_blocks + ind_blocks);
 	error = gfs2_inplace_reserve(ip);
 	if (error)
 		goto out_alloc;
@@ -1393,7 +1393,6 @@ void gfs2_wake_up_statfs(struct gfs2_sbd *sdp) {
 		wake_up(&sdp->sd_quota_wait);
 	}
 }
-
 
 /**
  * gfs2_quotad - Write cached quota changes into the quota file

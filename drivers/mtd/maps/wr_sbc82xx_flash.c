@@ -175,7 +175,6 @@ static void __exit cleanup_sbc82xx_flash(void)
 module_init(init_sbc82xx_flash);
 module_exit(cleanup_sbc82xx_flash);
 
-
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
 MODULE_DESCRIPTION("Flash map driver for WindRiver PowerQUICC II");

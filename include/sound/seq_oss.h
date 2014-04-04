@@ -43,7 +43,6 @@ struct snd_seq_oss_arg {
 	int event_passing;
 };
 
-
 /*
  * synthesizer operation callbacks
  */
@@ -77,7 +76,6 @@ struct snd_seq_oss_callback {
 
 /* default max queue length: configurable by module option */
 #define SNDRV_SEQ_OSS_MAX_QLEN		1024
-
 
 /*
  * data pointer to snd_seq_register_device

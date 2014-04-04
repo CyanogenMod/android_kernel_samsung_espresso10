@@ -98,7 +98,6 @@ static const unsigned char speed_val[16] =
 static const unsigned int speed_unit[8] =
 	{ 10000, 100000, 1000000, 10000000, 0, 0, 0, 0 };
 
-
 typedef int (tpl_parse_t)(struct mmc_card *, struct sdio_func *,
 			   const unsigned char *, unsigned);
 
@@ -409,4 +408,3 @@ void sdio_free_func_cis(struct sdio_func *func)
 	 */
 	put_device(&func->card->dev);
 }
-

@@ -8,7 +8,6 @@
     All the other people listed below are not related to this driver. Their names
     are only here, because this driver is derived from the bt848 driver.
 
-
     Derived from the bt848 driver:
 
     Copyright (C) 1996,97,98 Ralph  Metzler
@@ -52,9 +51,7 @@
 /* Steal the hardware definitions from the bttv driver. */
 #include "../media/video/bt8xx/bt848.h"
 
-
 #define BT8XXGPIO_NR_GPIOS		24 /* We have 24 GPIO pins */
-
 
 struct bt8xxgpio {
 	spinlock_t lock;
@@ -72,11 +69,9 @@ struct bt8xxgpio {
 #define bgwrite(dat, adr)	writel((dat), bg->mmio+(adr))
 #define bgread(adr)		readl(bg->mmio+(adr))
 
-
 static int modparam_gpiobase = -1/* dynamic */;
 module_param_named(gpiobase, modparam_gpiobase, int, 0444);
 MODULE_PARM_DESC(gpiobase, "The GPIO number base. -1 means dynamic, which is the default.");
-
 
 static int bt8xxgpio_gpio_direction_input(struct gpio_chip *gpio, unsigned nr)
 {

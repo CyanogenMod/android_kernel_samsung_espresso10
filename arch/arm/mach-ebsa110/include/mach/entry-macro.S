@@ -8,8 +8,6 @@
  * warranty of any kind, whether express or implied.
  */
 
-
-
 #define IRQ_STAT		0xff000000	/* read */
 
 	.macro	disable_fiq
@@ -36,4 +34,3 @@
 	moveq	\stat, \stat, lsr #1
 	tst	\stat, #1			@ bit 0 should be set
 	.endm
-

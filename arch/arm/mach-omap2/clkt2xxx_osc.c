@@ -73,4 +73,3 @@ unsigned long omap2_osc_clk_recalc(struct clk *clk)
 {
 	return omap2xxx_get_apll_clkin() * omap2xxx_get_sysclkdiv();
 }
-

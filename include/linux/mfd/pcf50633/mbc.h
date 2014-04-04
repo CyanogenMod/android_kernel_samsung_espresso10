@@ -131,4 +131,3 @@ int pcf50633_mbc_get_status(struct pcf50633 *);
 int pcf50633_mbc_get_usb_online_status(struct pcf50633 *);
 
 #endif
-

@@ -67,7 +67,6 @@ struct msm_iommu_ctx_dev {
 	int mids[MAX_NUM_MIDS];
 };
 
-
 /**
  * struct msm_iommu_drvdata - A single IOMMU hardware instance
  * @base:	IOMMU config port base address (VA)

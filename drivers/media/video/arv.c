@@ -201,7 +201,6 @@ static void iic(int n, unsigned long addr, unsigned long data1, unsigned long da
 		cpu_relax();
 }
 
-
 static void init_iic(void)
 {
 	DEBUG(1, "init_iic:\n");
@@ -702,7 +701,6 @@ static int ar_initialize(struct ar *ar)
 	return 0;
 }
 
-
 /****************************************************************************
  *
  * Video4Linux Module functions
@@ -844,7 +842,6 @@ out_end:
 	v4l2_device_unregister(&ar->v4l2_dev);
 	return ret;
 }
-
 
 static int __init ar_init_module(void)
 {

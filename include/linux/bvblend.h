@@ -399,7 +399,6 @@ union bvalpha {
 	float fp;		/* btwn 0.0 and 1.0 */
 };
 
-
 enum bvblend {
   /* Porter-Duff blending equations */
 	BVBLEND_CLEAR = BVBLENDDEF_FORMAT_CLASSIC |

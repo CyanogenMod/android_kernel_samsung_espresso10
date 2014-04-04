@@ -105,7 +105,6 @@ typedef struct cy_as_device_config {
 	cy_bool	crystal;
 } cy_as_device_config;
 
-
 /* Summary
    Specifies a resource that can be owned by either the West Bridge
    device or by the processor.
@@ -159,8 +158,6 @@ typedef enum cy_as_reset_type {
 	cy_as_reset_hard
 } cy_as_reset_type;
 
-
-
 /* Summary
    This type specifies the polarity of the SD power pin.
 
@@ -175,8 +172,6 @@ typedef enum cy_as_misc_signal_polarity {
 	cy_as_misc_active_low
 
 } cy_as_misc_signal_polarity;
-
-
 
 /* Summary
 	This type specifies the type of the data returned by a Function
@@ -492,7 +487,6 @@ typedef struct cy_as_get_firmware_version_data {
 	cy_bool	is_debug_mode;
 } cy_as_get_firmware_version_data;
 
-
 /*****************************
  * West Bridge Functions
  *****************************/
@@ -649,7 +643,6 @@ cy_as_misc_download_firmware(
 	uint32_t			  client
 	);
 
-
 /* Summary
    This function returns the version number of the firmware running in
    the West Bridge device.
@@ -798,7 +791,6 @@ cy_as_misc_write_m_c_u_register(
    * CY_AS_ERROR_NOT_YET_SUPPORTED - current soft reset is not supported
    * CY_AS_ERROR_ASYNC_PENDING - Reset is unable to flush pending async
    *	reads/writes in polling mode.
-
 
 	  See Also
    * CyAsMiscReset
@@ -1108,7 +1100,6 @@ cy_as_misc_set_log_level(
 	/* Level to set, 0 is fewer messages, 255 is all */
 	uint8_t	level
 	);
-
 
 /* Summary
    This function tells West Bridge that SD or MMC media has been

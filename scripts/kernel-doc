@@ -35,7 +35,6 @@ use strict;
 #              Small fixes (like spaces vs. \s in regex)
 # -- Tim Jansen <tim@tjansen.de>
 
-
 #
 # This will read a 'c' file and scan for embedded comments in the
 # style of gnome comments (+minor extensions - see below).
@@ -2044,6 +2043,9 @@ sub process_file($) {
 
     $section_counter = 0;
     while (<IN>) {
+	while (s/\\\s*$//) {
+	    $_ .= <IN>;
+	}
 	if ($state == 0) {
 	    if (/$doc_start/o) {
 		$state = 1;		# next line is always the function name
@@ -2255,7 +2257,6 @@ sub process_file($) {
 	}
     }
 }
-
 
 $kernelversion = get_kernel_version();
 

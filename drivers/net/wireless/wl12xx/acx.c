@@ -517,7 +517,6 @@ out:
 	return ret;
 }
 
-
 int wl1271_acx_sg_enable(struct wl1271 *wl, bool enable)
 {
 	struct acx_bt_wlan_coex *pta;

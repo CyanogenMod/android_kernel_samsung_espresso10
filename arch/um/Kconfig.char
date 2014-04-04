@@ -1,4 +1,3 @@
-
 menu "Character Devices"
 
 config STDERR_CONSOLE

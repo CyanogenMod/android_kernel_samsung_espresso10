@@ -76,7 +76,6 @@ static int hdcp_suspend_resume_auto_ri(enum ri_suspend_resume state)
 	return HDCP_OK;
 }
 
-
 /*-----------------------------------------------------------------------------
  * Function: hdcp_start_ddc_transfer
  *-----------------------------------------------------------------------------

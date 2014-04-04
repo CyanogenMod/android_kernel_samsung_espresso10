@@ -98,5 +98,4 @@ enum s5h1420_register {
 	Err04     = 0x49,
 };
 
-
 #endif

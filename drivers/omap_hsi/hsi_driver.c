@@ -43,7 +43,6 @@
 #define HSI_RESETDONE_NORMAL_RETRIES	1 /* Reset should complete in 1 R/W */
 					  /* cycle */
 
-
 void hsi_hsr_suspend(struct hsi_dev *hsi_ctrl)
 {
 	struct hsi_platform_data *pdata = hsi_ctrl->dev->platform_data;
@@ -159,7 +158,6 @@ void hsi_restore_ctx(struct hsi_dev *hsi_ctrl)
 		hsi_fifo_mapping(hsi_ctrl, hsi_ctrl->fifo_mapping_strategy);
 	}
 }
-
 
 /* NOTE: Function called in soft interrupt context (tasklet) */
 int hsi_port_event_handler(struct hsi_port *p, unsigned int event, void *arg)
@@ -902,7 +900,7 @@ static int __init hsi_platform_device_probe(struct platform_device *pd)
 	} else if (err) {
 		dev_err(&pd->dev, "%s: Error %d setting HSI FClk to %ld.\n",
 				__func__, err, pdata->default_hsi_fclk);
-		goto rollback3;
+		goto rollback4;
 	} else {
 		hsi_ctrl->hsi_fclk_current = pdata->default_hsi_fclk;
 	}
@@ -911,6 +909,8 @@ static int __init hsi_platform_device_probe(struct platform_device *pd)
 
 	return 0;
 
+rollback4:
+	unregister_hsi_devices(hsi_ctrl);
 rollback3:
 	hsi_debug_remove_ctrl(hsi_ctrl);
 rollback2:

@@ -2,13 +2,13 @@
  * Driver O/S-independent utility routines
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -47,9 +47,7 @@
 #include <proto/802.1d.h>
 #include <proto/802.11.h>
 
-
 #ifdef BCMDRIVER
-
 
 /* copy a pkt buffer chain into a buffer */
 uint
@@ -112,8 +110,6 @@ pktfrombuf(osl_t *osh, void *p, uint offset, int len, uchar *buf)
 	return ret;
 }
 
-
-
 /* return total length of buffer chain */
 uint
 pkttotlen(osl_t *osh, void *p)
@@ -147,7 +143,6 @@ pktsegcnt(osl_t *osh, void *p)
 
 	return cnt;
 }
-
 
 /*
  * osl multiple-precedence packet queue
@@ -506,8 +501,6 @@ pktq_mdeq(struct pktq *pq, uint prec_bmp, int *prec_out)
 }
 #endif /* BCMDRIVER */
 
-
-
 const unsigned char bcm_ctype[] = {
 	_BCM_C,_BCM_C,_BCM_C,_BCM_C,_BCM_C,_BCM_C,_BCM_C,_BCM_C,			/* 0-7 */
 	_BCM_C, _BCM_C|_BCM_S, _BCM_C|_BCM_S, _BCM_C|_BCM_S, _BCM_C|_BCM_S, _BCM_C|_BCM_S, _BCM_C,
@@ -651,7 +644,6 @@ bcmstrncat(char *dest, const char *src, uint size)
 	return (dest);
 }
 
-
 /****************************************************************************
 * Function:   bcmstrtok
 *
@@ -732,10 +724,8 @@ bcmstrtok(char **string, const char *delimiters, char *tokdelim)
 	}
 }
 
-
 #define xToLower(C) \
 	((C >= 'A' && C <= 'Z') ? (char)((int)C - (int)'A' + (int)'a') : C)
-
 
 /****************************************************************************
 * Function:   bcmstricmp
@@ -767,7 +757,6 @@ bcmstricmp(const char *s1, const char *s2)
 	if (!*s1 && *s2) return -1;
 	return 0;
 }
-
 
 /****************************************************************************
 * Function:   bcmstrnicmp
@@ -818,7 +807,6 @@ bcm_ether_atoe(char *p, struct ether_addr *ea)
 
 	return (i == 6);
 }
-
 
 #if defined(CONFIG_USBRNDIS_RETAIL) || defined(NDIS_MINIPORT_DRIVER)
 /* registry routine buffer preparation utility functions:
@@ -879,11 +867,6 @@ bcm_mdelay(uint ms)
 	}
 }
 
-
-
-
-
-
 #if defined(DHD_DEBUG)
 /* pretty hex print a pkt buffer chain */
 void
@@ -897,7 +880,7 @@ prpkt(const char *msg, osl_t *osh, void *p0)
 	for (p = p0; p; p = PKTNEXT(osh, p))
 		prhex(NULL, PKTDATA(osh, p), PKTLEN(osh, p));
 }
-#endif	
+#endif
 
 /* Takes an Ethernet frame and sets out-of-bound PKTPRIO.
  * Also updates the inplace vlan tag if requested.
@@ -985,8 +968,6 @@ bcmerrorstr(int bcmerror)
 
 	return bcmerrorstrtable[-bcmerror];
 }
-
-
 
 /* iovar table lookup */
 const bcm_iovar_t*
@@ -1532,8 +1513,7 @@ prhex(const char *msg, uchar *buf, uint nbytes)
 	if (p != line)
 		printf("%s\n", line);
 }
-#endif 
-
+#endif
 
 /* Produce a human-readable string for boardrev */
 char *
@@ -1706,7 +1686,6 @@ bcm_mw_to_qdbm(uint16 mw)
 	return (qdbm);
 }
 
-
 uint
 bcm_bitcount(uint8 *bitmap, uint length)
 {
@@ -1833,6 +1812,6 @@ bcm_format_ssid(char* buf, const uchar ssid[], uint ssid_len)
 
 	return (int)(p - buf);
 }
-#endif 
+#endif
 
 #endif /* BCMDRIVER */

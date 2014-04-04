@@ -1,7 +1,7 @@
 /*
  *
  *		SNMP MIB entries for the IP subsystem.
- *		
+ *
  *		Alan Cox <gw4pts@gw4pts.ampr.org>
  *
  *		We don't chose to implement SNMP in the kernel (this would
@@ -15,7 +15,7 @@
  *		2 of the License, or (at your option) any later version.
  *
  */
- 
+
 #ifndef _SNMP_H
 #define _SNMP_H
 
@@ -91,7 +91,6 @@ struct icmpv6msg_mib_device {
 	atomic_long_t	mibs[ICMP6MSG_MIB_MAX];
 };
 
-
 /* TCP */
 #define TCP_MIB_MAX	__TCP_MIB_MAX
 struct tcp_mib {
@@ -116,12 +115,12 @@ struct linux_xfrm_mib {
 	unsigned long	mibs[LINUX_MIB_XFRMMAX];
 };
 
-/* 
+/*
  * FIXME: On x86 and some other CPUs the split into user and softirq parts
- * is not needed because addl $1,memory is atomic against interrupts (but 
- * atomic_inc would be overkill because of the lock cycles). Wants new 
+ * is not needed because addl $1,memory is atomic against interrupts (but
+ * atomic_inc would be overkill because of the lock cycles). Wants new
  * nonlocked_atomic_inc() primitives -AK
- */ 
+ */
 #define DEFINE_SNMP_STAT(type, name)	\
 	__typeof__(type) __percpu *name[2]
 #define DEFINE_SNMP_STAT_ATOMIC(type, name)	\
@@ -168,7 +167,6 @@ struct linux_xfrm_mib {
 		ptr->mibs[basefield##PKTS]++; \
 		ptr->mibs[basefield##OCTETS] += addend;\
 	} while (0)
-
 
 #if BITS_PER_LONG==32
 

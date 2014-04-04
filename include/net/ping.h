@@ -40,7 +40,6 @@ struct ping_iter_state {
 
 extern struct proto ping_prot;
 
-
 extern void ping_rcv(struct sk_buff *);
 extern void ping_err(struct sk_buff *, u32 info);
 
@@ -50,6 +49,5 @@ extern void ping_proc_exit(void);
 #endif
 
 void __init ping_init(void);
-
 
 #endif /* _PING_H */

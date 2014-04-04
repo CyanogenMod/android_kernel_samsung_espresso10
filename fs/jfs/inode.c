@@ -31,7 +31,6 @@
 #include "jfs_unicode.h"
 #include "jfs_debug.h"
 
-
 struct inode *jfs_iget(struct super_block *sb, unsigned long ino)
 {
 	struct inode *inode;
@@ -125,7 +124,7 @@ int jfs_write_inode(struct inode *inode, struct writeback_control *wbc)
 {
 	int wait = wbc->sync_mode == WB_SYNC_ALL;
 
-	if (test_cflag(COMMIT_Nolink, inode))
+	if (inode->i_nlink == 0)
 		return 0;
 	/*
 	 * If COMMIT_DIRTY is not set, the inode isn't really dirty.

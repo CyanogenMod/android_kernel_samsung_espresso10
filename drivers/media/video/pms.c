@@ -40,7 +40,6 @@
 
 MODULE_LICENSE("GPL");
 
-
 #define MOTOROLA	1
 #define PHILIPS2	2               /* SAA7191 */
 #define PHILIPS1	3
@@ -87,7 +86,6 @@ module_param(mem_base, int, 0);
 
 static int video_nr = -1;
 module_param(video_nr, int, 0);
-
 
 static inline void mvv_write(struct pms *dev, u8 index, u8 value)
 {
@@ -196,7 +194,6 @@ static int pms_i2c_read(struct pms *dev, int slave, int sub)
 	return 0;
 }
 
-
 static void pms_i2c_andor(struct pms *dev, int slave, int sub, int and, int or)
 {
 	u8 tmp;
@@ -209,7 +206,6 @@ static void pms_i2c_andor(struct pms *dev, int slave, int sub, int and, int or)
 /*
  *	Control functions
  */
-
 
 static void pms_videosource(struct pms *dev, short source)
 {
@@ -255,7 +251,6 @@ static void pms_saturation(struct pms *dev, short sat)
 	}
 }
 
-
 static void pms_contrast(struct pms *dev, short contrast)
 {
 	switch (dev->decoder) {
@@ -281,7 +276,6 @@ static void pms_brightness(struct pms *dev, short brightness)
 		break;
 	}
 }
-
 
 static void pms_format(struct pms *dev, short format)
 {
@@ -441,7 +435,6 @@ static void pms_chromagain(struct pms *dev, short chroma)
 		pms_i2c_write(dev, 0x42, 0x11, chroma);
 }
 
-
 static void pms_spacialcompl(struct pms *dev, short data)
 {
 	mvv_write(dev, 0x3b, data);
@@ -468,7 +461,6 @@ static void pms_secamcross(struct pms *dev, short cross)
 		pms_i2c_andor(dev, 0x42, 0x0f, 0xdf, (cross & 1) << 5);
 }
 
-
 static void pms_swsense(struct pms *dev, short sense)
 {
 	if (dev->decoder == PHILIPS2) {
@@ -479,7 +471,6 @@ static void pms_swsense(struct pms *dev, short sense)
 		pms_i2c_write(dev, 0x42, 0x0b, sense);
 	}
 }
-
 
 static void pms_framerate(struct pms *dev, short frr)
 {
@@ -609,7 +600,6 @@ static void pms_resolution(struct pms *dev, short width, short height)
 	mvv_write(dev, 0x33, MVVMEMORYWIDTH);
 }
 
-
 /*
  *	Set Input
  */
@@ -621,7 +611,6 @@ static void pms_vcrinput(struct pms *dev, short input)
 	else if (dev->decoder == PHILIPS1)
 		pms_i2c_andor(dev, 0x42, 0x0d, 0x7f, (input & 1) << 7);
 }
-
 
 static int pms_capture(struct pms *dev, char __user *buf, int rgb555, int count)
 {
@@ -664,7 +653,6 @@ static int pms_capture(struct pms *dev, char __user *buf, int rgb555, int count)
 	}
 	return len;
 }
-
 
 /*
  *	Video4linux interfacing
@@ -988,7 +976,6 @@ static int init_mediavision(struct pms *dev)
 	}
 	outb(0xb8, 0x9a01);		/* Unlock */
 	outb(dev->io >> 4, 0x9a01);	/* Set IO port */
-
 
 	id = mvv_read(dev, 3);
 	decst = pms_i2c_stat(dev, 0x43);

@@ -224,7 +224,6 @@ static struct platform_driver physmap_flash_driver = {
 	},
 };
 
-
 #ifdef CONFIG_MTD_PHYSMAP_COMPAT
 static struct physmap_flash_data physmap_flash_data = {
 	.width		= CONFIG_MTD_PHYSMAP_BANKWIDTH,

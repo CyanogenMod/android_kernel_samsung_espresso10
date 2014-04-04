@@ -9,20 +9,20 @@
  *
  * Copyright (c) 2003-2004 MontaVista Software Inc.
  *
- * This file is licensed under  the terms of the GNU General Public 
- * License version 2. This program is licensed "as is" without any 
+ * This file is licensed under  the terms of the GNU General Public
+ * License version 2. This program is licensed "as is" without any
  * warranty of any kind, whether express or implied.
  *
  * From Jeff Daly:
  *
  * I2C adapter driver for Intel IXDP2xxx platforms. This should work for any
- * IXP2000 platform if it uses the HW GPIO in the same manner.  Basically, 
- * SDA and SCL GPIOs have external pullups.  Setting the respective GPIO to 
- * an input will make the signal a '1' via the pullup.  Setting them to 
- * outputs will pull them down. 
+ * IXP2000 platform if it uses the HW GPIO in the same manner.  Basically,
+ * SDA and SCL GPIOs have external pullups.  Setting the respective GPIO to
+ * an input will make the signal a '1' via the pullup.  Setting them to
+ * outputs will pull them down.
  *
  * The GPIOs are open drain signals and are used as configuration strap inputs
- * during power-up so there's generally a buffer on the board that needs to be 
+ * during power-up so there's generally a buffer on the board that needs to be
  * 'enabled' to drive the GPIOs.
  */
 
@@ -46,7 +46,6 @@ static inline int ixp2000_sda_pin(void *data)
 {
 	return ((struct ixp2000_i2c_pins*)data)->sda_pin;
 }
-
 
 static void ixp2000_bit_setscl(void *data, int val)
 {
@@ -102,7 +101,7 @@ static int ixp2000_i2c_probe(struct platform_device *plat_dev)
 {
 	int err;
 	struct ixp2000_i2c_pins *gpio = plat_dev->dev.platform_data;
-	struct ixp2000_i2c_data *drv_data = 
+	struct ixp2000_i2c_data *drv_data =
 		kzalloc(sizeof(struct ixp2000_i2c_data), GFP_KERNEL);
 
 	if (!drv_data)
@@ -132,7 +131,7 @@ static int ixp2000_i2c_probe(struct platform_device *plat_dev)
 		dev_err(&plat_dev->dev, "Could not install, error %d\n", err);
 		kfree(drv_data);
 		return err;
-	} 
+	}
 
 	platform_set_drvdata(plat_dev, drv_data);
 
@@ -165,4 +164,3 @@ MODULE_AUTHOR ("Deepak Saxena <dsaxena@plexity.net>");
 MODULE_DESCRIPTION("IXP2000 GPIO-based I2C bus driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:IXP2000-I2C");
-

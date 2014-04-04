@@ -401,7 +401,6 @@ static struct omap_hwmod_ocp_if omap3_l4_core__i2c3 = {
 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
 };
 
-
 static struct omap_hwmod_irq_info omap3_smartreflex_mpu_irqs[] = {
 	{.name = "sr1_irq", .irq = 18},
 };
@@ -2924,7 +2923,6 @@ static struct omap_hwmod omap3xxx_mcbsp3_sidetone_hwmod = {
 	.omap_chip	= OMAP_CHIP_INIT(CHIP_IS_OMAP3430),
 };
 
-
 /* SR common */
 static struct omap_hwmod_sysc_fields omap34xx_sr_sysc_fields = {
 	.clkact_shift	= 20,
@@ -3958,7 +3956,6 @@ static __initdata struct omap_hwmod *omap3xxx_hwmods[] = {
 	&omap34xx_sr2_hwmod,
 	&omap36xx_sr1_hwmod,
 	&omap36xx_sr2_hwmod,
-
 
 	/* gpio class */
 	&omap3xxx_gpio1_hwmod,

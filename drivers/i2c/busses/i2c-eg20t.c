@@ -173,7 +173,6 @@ struct adapter_info {
 	int ch_num;
 };
 
-
 static int pch_i2c_speed = 100; /* I2C bus speed in Kbps */
 static int pch_clk = 50000;	/* specifies I2C clock speed in KHz */
 static wait_queue_head_t pch_event;

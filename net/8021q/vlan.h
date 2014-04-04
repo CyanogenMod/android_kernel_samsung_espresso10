@@ -4,7 +4,6 @@
 #include <linux/if_vlan.h>
 #include <linux/u64_stats_sync.h>
 
-
 /**
  *	struct vlan_priority_tci_mapping - vlan egress priority mappings
  *	@priority: skb priority
@@ -16,7 +15,6 @@ struct vlan_priority_tci_mapping {
 	u16					vlan_qos;
 	struct vlan_priority_tci_mapping	*next;
 };
-
 
 /**
  *	struct vlan_pcpu_stats - VLAN percpu rx/tx stats

@@ -88,4 +88,3 @@ static inline map_word lpddr_build_cmd(u_long cmd, struct map_info *map)
 struct mtd_info *lpddr_cmdset(struct map_info *);
 
 #endif
-

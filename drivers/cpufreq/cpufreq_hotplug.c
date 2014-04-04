@@ -472,7 +472,6 @@ static void dbs_check_cpu(struct cpu_dbs_info_s *this_dbs_info)
 	/* calculate the average load across all related CPUs */
 	avg_load = total_load / num_online_cpus();
 
-
 	/*
 	 * hotplug load accounting
 	 * average load over multiple sampling periods

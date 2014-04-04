@@ -76,7 +76,6 @@ struct usb_yurex {
 static struct usb_driver yurex_driver;
 static const struct file_operations yurex_fops;
 
-
 static void yurex_control_callback(struct urb *urb)
 {
 	struct usb_yurex *dev = urb->context;
@@ -223,7 +222,6 @@ static int yurex_probe(struct usb_interface *interface, const struct usb_device_
 		goto error;
 	}
 
-
 	/* allocate control URB */
 	dev->cntl_urb = usb_alloc_urb(0, GFP_KERNEL);
 	if (!dev->cntl_urb) {
@@ -260,7 +258,6 @@ static int yurex_probe(struct usb_interface *interface, const struct usb_device_
 			     (void *)dev->cntl_req, dev->cntl_buffer,
 			     YUREX_BUF_SIZE, yurex_control_callback, dev);
 	dev->cntl_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
-
 
 	/* allocate interrupt URB */
 	dev->urb = usb_alloc_urb(0, GFP_KERNEL);
@@ -347,7 +344,6 @@ static struct usb_driver yurex_driver = {
 	.disconnect =	yurex_disconnect,
 	.id_table =	yurex_table,
 };
-
 
 static int yurex_fasync(int fd, struct file *file, int on)
 {
@@ -534,7 +530,6 @@ static const struct file_operations yurex_fops = {
 	.fasync	=	yurex_fasync,
 	.llseek =	default_llseek,
 };
-
 
 static int __init usb_yurex_init(void)
 {

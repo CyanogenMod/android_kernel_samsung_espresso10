@@ -626,7 +626,6 @@ sa1111_init_one_child(struct sa1111 *sachip, struct resource *parent,
 		goto out;
 	}
 
-
 	ret = device_register(&dev->dev);
 	if (ret) {
 		release_resource(&dev->res);

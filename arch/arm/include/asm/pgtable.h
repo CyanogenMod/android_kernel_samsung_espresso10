@@ -283,7 +283,6 @@ extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
 extern struct page *empty_zero_page;
 #define ZERO_PAGE(vaddr)	(empty_zero_page)
 
-
 extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
 
 /* to find an entry in a page-table-directory */
@@ -305,7 +304,6 @@ extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
 #define pgd_clear(pgdp)		do { } while (0)
 #define set_pgd(pgd,pgdp)	do { } while (0)
 #define set_pud(pud,pudp)	do { } while (0)
-
 
 /* Find an entry in the second-level page table.. */
 #define pmd_offset(dir, addr)	((pmd_t *)(dir))
@@ -337,7 +335,6 @@ static inline pte_t *pmd_page_vaddr(pmd_t pmd)
 
 /* we don't need complex calculations here as the pmd is folded into the pgd */
 #define pmd_addr_end(addr,end)	(end)
-
 
 #ifndef CONFIG_HIGHPTE
 #define __pte_map(pmd)		pmd_page_vaddr(*(pmd))

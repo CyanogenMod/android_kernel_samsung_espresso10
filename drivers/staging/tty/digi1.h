@@ -42,7 +42,7 @@
 #define	DIGI_POLLER	(('e'<<8) | 104)	/* Turn on/off poller */
 #define	DIGI_INIT	(('e'<<8) | 105)	/* Allow things to run. */
 
-struct	digiflow_struct 
+struct	digiflow_struct
 {
 	unsigned char	startc;				/* flow cntl start char	*/
 	unsigned char	stopc;				/* flow cntl stop char	*/
@@ -50,9 +50,8 @@ struct	digiflow_struct
 
 typedef struct digiflow_struct digiflow_t;
 
-
 /************************************************************************
- * Values for digi_flags 
+ * Values for digi_flags
  ************************************************************************/
 #define DIGI_IXON	0x0001		/* Handle IXON in the FEP	*/
 #define DIGI_FAST	0x0002		/* Fast baud rates		*/
@@ -64,7 +63,6 @@ typedef struct digiflow_struct digiflow_t;
 #define DIGI_FORCEDCD	0x0100		/* Force carrier		*/
 #define	DIGI_ALTPIN	0x0200		/* Alternate RJ-45 pin config	*/
 #define	DIGI_AIXON	0x0400		/* Aux flow control in fep	*/
-
 
 /************************************************************************
  * Values for digiDload
@@ -79,14 +77,14 @@ typedef struct digiflow_struct digiflow_t;
 /************************************************************************
  * Structure used with ioctl commands for DIGI parameters.
  ************************************************************************/
-struct digi_struct 
+struct digi_struct
 {
 	unsigned short	digi_flags;		/* Flags (see above)	*/
 };
 
 typedef struct digi_struct digi_t;
 
-struct digi_info 
+struct digi_info
 {
 	unsigned long board;        /* Which board is this ? */
 	unsigned char status;       /* Alive or dead */

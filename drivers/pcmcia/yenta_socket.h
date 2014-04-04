@@ -95,11 +95,9 @@
  */
 #define CB_MEM_PAGE(map)	(0x40 + (map))
 
-
 /* control how 16bit cards are powered */
 #define YENTA_16BIT_POWER_EXCA	0x00000001
 #define YENTA_16BIT_POWER_DF	0x00000002
-
 
 struct yenta_socket;
 
@@ -130,6 +128,5 @@ struct yenta_socket {
 	/* PCI saved state */
 	u32 saved_state[2];
 };
-
 
 #endif

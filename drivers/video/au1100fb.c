@@ -453,7 +453,6 @@ static struct fb_ops au1100fb_ops =
 	.fb_cursor		= au1100fb_fb_cursor,
 };
 
-
 /*-------------------------------------------------------------------------*/
 
 /* AU1100 LCD controller device driver */
@@ -499,8 +498,6 @@ static int __devinit au1100fb_drv_probe(struct platform_device *dev)
 
 	print_dbg("Register memory map at %p", fbdev->regs);
 	print_dbg("phys=0x%08x, size=%d", fbdev->regs_phys, fbdev->regs_len);
-
-
 
 	/* Allocate the framebuffer to the maximum screen size * nbr of video buffers */
 	fbdev->fb_len = fbdev->panel->xres * fbdev->panel->yres *

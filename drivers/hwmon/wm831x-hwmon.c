@@ -50,7 +50,6 @@ static const char *input_names[] = {
 	[WM831X_AUX_BATT_TEMP] = "Battery",
 };
 
-
 static ssize_t show_voltage(struct device *dev,
 			    struct device_attribute *attr, char *buf)
 {

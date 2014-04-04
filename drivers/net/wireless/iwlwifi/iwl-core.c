@@ -43,7 +43,6 @@
 #include "iwl-helpers.h"
 #include "iwl-agn.h"
 
-
 /*
  * set bt_coex_active to true, uCode will do kill/defer
  * every time the priority line is asserted (BT is sending signals on the
@@ -1009,7 +1008,6 @@ void iwl_apm_stop(struct iwl_priv *priv)
 	iwl_clear_bit(priv, CSR_GP_CNTRL, CSR_GP_CNTRL_REG_FLAG_INIT_DONE);
 }
 
-
 /*
  * Start up NIC's basic functionality after it has been reset
  * (e.g. after platform boot, or shutdown via iwl_apm_stop())
@@ -1113,7 +1111,6 @@ int iwl_apm_init(struct iwl_priv *priv)
 out:
 	return ret;
 }
-
 
 int iwl_set_tx_power(struct iwl_priv *priv, s8 tx_power, bool force)
 {
@@ -1704,7 +1701,6 @@ static void iwl_force_rf_reset(struct iwl_priv *priv)
 	IWL_DEBUG_INFO(priv, "perform radio reset.\n");
 	iwl_internal_short_hw_scan(priv);
 }
-
 
 int iwl_force_reset(struct iwl_priv *priv, int mode, bool external)
 {

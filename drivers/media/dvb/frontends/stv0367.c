@@ -917,7 +917,6 @@ static u32 stv0367_get_tuner_freq(struct dvb_frontend *fe)
 
 	dprintk("%s:\n", __func__);
 
-
 	if (&fe->ops)
 		frontend_ops = &fe->ops;
 	if (&frontend_ops->tuner_ops)
@@ -1292,7 +1291,6 @@ stv0367_ter_signal_type stv0367ter_lock_algo(struct stv0367_state *state)
 
 		stv0367_writebits(state, F367TER_CORE_ACTIVE, 1);
 
-
 		if (stv0367ter_check_syr(state) == FE_TER_NOSYMBOL)
 			return FE_TER_NOSYMBOL;
 		else { /*
@@ -1376,7 +1374,6 @@ stv0367_ter_signal_type stv0367ter_lock_algo(struct stv0367_state *state)
 
 	if (!u_var1)
 		return FE_TER_NOLOCK;
-
 
 	if (!u_var2)
 		return FE_TER_NOPRFOUND;
@@ -2099,7 +2096,6 @@ static int stv0367ter_read_ber(struct dvb_frontend *fe, u32 *ber)
 	u32 Errors = 0, tber = 0, temporary = 0;
 	int abc = 0, def = 0;
 
-
 	/*wait for counting completion*/
 	if (stv0367_readbits(state, F367TER_SFERRC_OLDVALUE) == 0)
 		Errors = ((u32)stv0367_readbits(state, F367TER_SFEC_ERR_CNT)
@@ -2348,7 +2344,6 @@ static u32 stv0367cab_get_mclk(struct dvb_frontend *fe, u32 ExtClk_Hz)
 	struct stv0367_state *state = fe->demodulator_priv;
 	u32 mclk_Hz = 0;/* master clock frequency (Hz) */
 	u32 M, N, P;
-
 
 	if (stv0367_readbits(state, F367CAB_BYPASS_PLLXN) == 0) {
 		N = (u32)stv0367_readbits(state, F367CAB_PLL_NDIV);

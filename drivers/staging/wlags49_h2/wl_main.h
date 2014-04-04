@@ -61,9 +61,6 @@
 #ifndef __WL_MAIN_H__
 #define __WL_MAIN_H__
 
-
-
-
 /*******************************************************************************
  *  function prototypes
  ******************************************************************************/
@@ -115,14 +112,12 @@ void wl_process_mailbox( struct wl_private *lp );
 
 #endif  /* USE_MBOX_SYNC */
 
-
 #ifdef USE_WDS
 
 void wl_wds_netdev_register( struct wl_private *lp );
 void wl_wds_netdev_deregister( struct wl_private *lp );
 
 #endif  /* USE_WDS */
-
 
 #ifdef USE_WDS
 

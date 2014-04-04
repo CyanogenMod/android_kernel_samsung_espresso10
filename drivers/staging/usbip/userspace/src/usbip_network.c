@@ -46,7 +46,6 @@ void pack_usb_interface(int pack __attribute__((unused)),
 	/* uint8_t members need nothing */
 }
 
-
 static ssize_t usbip_xmit(int sockfd, void *buff, size_t bufflen, int sending)
 {
 	ssize_t total = 0;
@@ -70,7 +69,6 @@ static ssize_t usbip_xmit(int sockfd, void *buff, size_t bufflen, int sending)
 		total	+= nbytes;
 
 	} while (bufflen > 0);
-
 
 	return total;
 }
@@ -149,7 +147,6 @@ err:
 	return -1;
 }
 
-
 int usbip_set_reuseaddr(int sockfd)
 {
 	const int val = 1;
@@ -196,7 +193,6 @@ int tcp_connect(char *hostname, char *service)
 	int sockfd;
 	int err;
 
-
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_socktype = SOCK_STREAM;
 
@@ -242,7 +238,6 @@ int tcp_connect(char *hostname, char *service)
 		freeaddrinfo(res0);
 		return sockfd;
 	}
-
 
 	dbg("%s:%s, %s", hostname, service, "no destination to connect to");
 	freeaddrinfo(res0);

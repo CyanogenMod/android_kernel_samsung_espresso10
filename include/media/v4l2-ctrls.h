@@ -227,7 +227,6 @@ struct v4l2_ctrl_config {
 void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
 		    s32 *min, s32 *max, s32 *step, s32 *def, u32 *flags);
 
-
 /** v4l2_ctrl_handler_init() - Initialize the control handler.
   * @hdl:	The control handler.
   * @nr_of_controls_hint: A hint of how many controls this handler is
@@ -355,13 +354,11 @@ struct v4l2_ctrl *v4l2_ctrl_add_ctrl(struct v4l2_ctrl_handler *hdl,
 int v4l2_ctrl_add_handler(struct v4l2_ctrl_handler *hdl,
 			  struct v4l2_ctrl_handler *add);
 
-
 /** v4l2_ctrl_cluster() - Mark all controls in the cluster as belonging to that cluster.
   * @ncontrols:	The number of controls in this cluster.
   * @controls: 	The cluster control array of size @ncontrols.
   */
 void v4l2_ctrl_cluster(unsigned ncontrols, struct v4l2_ctrl **controls);
-
 
 /** v4l2_ctrl_find() - Find a control with the given ID.
   * @hdl:	The control handler.
@@ -439,7 +436,6 @@ s32 v4l2_ctrl_g_ctrl(struct v4l2_ctrl *ctrl);
   * This function is for integer type controls only.
   */
 int v4l2_ctrl_s_ctrl(struct v4l2_ctrl *ctrl, s32 val);
-
 
 /* Helpers for ioctl_ops. If hdl == NULL then they will all return -EINVAL. */
 int v4l2_queryctrl(struct v4l2_ctrl_handler *hdl, struct v4l2_queryctrl *qc);

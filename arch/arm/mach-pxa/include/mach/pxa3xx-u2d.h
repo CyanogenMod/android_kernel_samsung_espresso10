@@ -24,7 +24,6 @@ struct pxa3xx_u2d_platform_data {
 	void (*exit)(struct device *);
 };
 
-
 /* Start PXA3xx U2D host */
 int pxa3xx_u2d_start_hc(struct usb_bus *host);
 /* Stop PXA3xx U2D host */

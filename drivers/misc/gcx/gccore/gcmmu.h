@@ -102,7 +102,6 @@
  * which is equal to 256 assuming 4KB page size. */
 #define GCMMU_STLB_PREALLOC_COUNT	(GCMMU_MTLB_ENTRY_NUM / 4)
 
-
 /*******************************************************************************
  * MMU structures.
  */
@@ -216,7 +215,6 @@ struct gcmmucontext {
 	/* Prev/next context. */
 	struct list_head link;
 };
-
 
 /*******************************************************************************
  * MMU management API.

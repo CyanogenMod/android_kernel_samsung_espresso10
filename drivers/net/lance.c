@@ -67,7 +67,6 @@ static unsigned int lance_portlist[] __initdata = { 0x300, 0x320, 0x340, 0x360, 
 static int lance_probe1(struct net_device *dev, int ioaddr, int irq, int options);
 static int __init do_lance_probe(struct net_device *dev);
 
-
 static struct card {
 	char id_offset14;
 	char id_offset15;
@@ -292,7 +291,6 @@ static struct lance_chip_type {
 
 enum {OLD_LANCE = 0, PCNET_ISA=1, PCNET_ISAP=2, PCNET_PCI=3, PCNET_VLB=4, PCNET_PCI_II=5, LANCE_UNKNOWN=6};
 
-
 /* Non-zero if lance_probe1() needs to allocate low-memory bounce buffers.
    Assume yes until we know the memory size. */
 static unsigned char lance_need_isa_bounce_buffers = 1;
@@ -307,8 +305,6 @@ static int lance_close(struct net_device *dev);
 static struct net_device_stats *lance_get_stats(struct net_device *dev);
 static void set_multicast_list(struct net_device *dev);
 static void lance_tx_timeout (struct net_device *dev);
-
-
 
 #ifdef MODULE
 #define MAX_CARDS		8	/* Max number of interfaces (cards) per module */
@@ -383,7 +379,6 @@ void __exit cleanup_module(void)
 }
 #endif /* MODULE */
 MODULE_LICENSE("GPL");
-
 
 /* Starting in v2.1.*, the LANCE/PCnet probe is now similar to the other
    board probes now that kmalloc() can allocate ISA DMA-able regions.
@@ -745,7 +740,6 @@ out_lp:
 	return err;
 }
 
-
 static int
 lance_open(struct net_device *dev)
 {
@@ -856,7 +850,6 @@ lance_purge_ring(struct net_device *dev)
 	}
 }
 
-
 /* Initialize the LANCE Rx and Tx rings. */
 static void
 lance_init_ring(struct net_device *dev, gfp_t gfp)
@@ -914,7 +907,6 @@ lance_restart(struct net_device *dev, unsigned int csr0_bits, int must_reinit)
 	outw(csr0_bits, dev->base_addr + LANCE_DATA);
 }
 
-
 static void lance_tx_timeout (struct net_device *dev)
 {
 	struct lance_private *lp = (struct lance_private *) dev->ml_priv;
@@ -947,7 +939,6 @@ static void lance_tx_timeout (struct net_device *dev)
 	dev->trans_start = jiffies; /* prevent tx timeout */
 	netif_wake_queue (dev);
 }
-
 
 static netdev_tx_t lance_start_xmit(struct sk_buff *skb,
 				    struct net_device *dev)
@@ -1310,4 +1301,3 @@ static void set_multicast_list(struct net_device *dev)
 	lance_restart(dev, 0x0142, 0); /*  Resume normal operation */
 
 }
-

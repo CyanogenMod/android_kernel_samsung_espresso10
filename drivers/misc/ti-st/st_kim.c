@@ -36,7 +36,6 @@
 #include <linux/skbuff.h>
 #include <linux/ti_wilink_st.h>
 
-
 #define MAX_ST_DEVICES	3	/* Imagine 1 on each UART for now */
 static struct platform_device *st_kim_devices[MAX_ST_DEVICES];
 
@@ -818,7 +817,6 @@ static void __exit st_kim_deinit(void)
 {
 	platform_driver_unregister(&kim_platform_driver);
 }
-
 
 module_init(st_kim_init);
 module_exit(st_kim_deinit);

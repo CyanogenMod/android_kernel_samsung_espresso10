@@ -319,7 +319,6 @@ static int ah_input(struct xfrm_state *x, struct sk_buff *skb)
 
 	skb->ip_summed = CHECKSUM_NONE;
 
-
 	if ((err = skb_cow_data(skb, 0, &trailer)) < 0)
 		goto out;
 	nfrags = err;
@@ -484,7 +483,6 @@ static void ah_destroy(struct xfrm_state *x)
 	crypto_free_ahash(ahp->ahash);
 	kfree(ahp);
 }
-
 
 static const struct xfrm_type ah_type =
 {

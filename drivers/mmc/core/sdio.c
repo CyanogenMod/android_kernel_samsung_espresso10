@@ -237,7 +237,6 @@ static int sdio_disable_wide(struct mmc_card *card)
 	return 0;
 }
 
-
 static int sdio_enable_4bit_bus(struct mmc_card *card)
 {
 	int err;
@@ -259,7 +258,6 @@ static int sdio_enable_4bit_bus(struct mmc_card *card)
 
 	return err;
 }
-
 
 /*
  * Test if the card supports high-speed mode and, if so, switch to it.
@@ -685,7 +683,7 @@ static int mmc_sdio_resume(struct mmc_host *host)
 	}
 
 	if (!err && host->sdio_irqs)
-		mmc_signal_sdio_irq(host);
+		wake_up_process(host->sdio_irq_thread);
 	mmc_release_host_sync(host);
 
 	/*
@@ -772,7 +770,6 @@ static const struct mmc_bus_ops mmc_sdio_ops = {
 	.resume = mmc_sdio_resume,
 	.power_restore = mmc_sdio_power_restore,
 };
-
 
 /*
  * Starting point for SDIO card init.
@@ -903,7 +900,6 @@ int mmc_attach_sdio(struct mmc_host *host)
 
 	mmc_claim_host(host);
 	return 0;
-
 
 remove_added:
 	/* Remove without lock if the device has been added. */

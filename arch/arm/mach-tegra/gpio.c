@@ -73,7 +73,6 @@ struct tegra_gpio_bank {
 #endif
 };
 
-
 static struct tegra_gpio_bank tegra_gpio_banks[] = {
 	{.bank = 0, .irq = INT_GPIO1},
 	{.bank = 1, .irq = INT_GPIO2},
@@ -132,8 +131,6 @@ static int tegra_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
 	tegra_gpio_mask_write(GPIO_MSK_OE(offset), offset, 1);
 	return 0;
 }
-
-
 
 static struct gpio_chip tegra_gpio_chip = {
 	.label			= "tegra-gpio",
@@ -320,7 +317,6 @@ static struct irq_chip tegra_gpio_irq_chip = {
 	.irq_set_wake	= tegra_gpio_wake_enable,
 #endif
 };
-
 
 /* This lock class tells lockdep that GPIO irqs are in a different
  * category than their parents, so it won't report false recursion.

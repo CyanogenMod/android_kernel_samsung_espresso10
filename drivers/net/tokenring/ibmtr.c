@@ -55,7 +55,7 @@
  *	  from being rudely overwritten before the transmit cycle is
  *	  complete. (August 15 1996)
  *	+ completed multiple adapter support. (November 20 1996)
- *	+ implemented csum_partial_copy in tr_rx and increased receive 
+ *	+ implemented csum_partial_copy in tr_rx and increased receive
  *        buffer size and count. Minor fixes. (March 15, 1997)
  *
  *	Changes by Christopher Turcksin <wabbit@rtfc.demon.co.uk>
@@ -71,8 +71,8 @@
  *
  *      Changes by Joel Sloan (jjs@c-me.com) :
  *      + disable verbose debug messages by default - to enable verbose
- *	  debugging, edit the IBMTR_DEBUG_MESSAGES define below 
- *	
+ *	  debugging, edit the IBMTR_DEBUG_MESSAGES define below
+ *
  *	Changes by Mike Phillips <phillim@amtrak.com> :
  *	+ Added extra #ifdef's to work with new PCMCIA Token Ring Code.
  *	  The PCMCIA code now just sets up the card so it can be recognized
@@ -83,7 +83,7 @@
  *	+ added spinlocks for SMP sanity (10 March 1999)
  *
  *      Changes by Jochen Friedrich to enable RFC1469 Option 2 multicasting
- *      i.e. using functional address C0 00 00 04 00 00 to transmit and 
+ *      i.e. using functional address C0 00 00 04 00 00 to transmit and
  *      receive multicast packets.
  *
  *      Changes by Mike Sullivan (based on original sram patch by Dave Grothe
@@ -102,7 +102,7 @@
  *	a cable is pulled or not in place, or a PCMCIA card is removed hot.
  */
 
-/* change the define of IBMTR_DEBUG_MESSAGES to a nonzero value 
+/* change the define of IBMTR_DEBUG_MESSAGES to a nonzero value
 in the event that chatty debug messages are desired - jjs 12/30/98 */
 
 #define IBMTR_DEBUG_MESSAGES 0
@@ -114,7 +114,7 @@ in the event that chatty debug messages are desired - jjs 12/30/98 */
 #undef MODULE		/* yes, really */
 #undef ENABLE_PAGING
 #else
-#define ENABLE_PAGING 1		
+#define ENABLE_PAGING 1
 #endif
 
 /* changes the output format of driver initialization */
@@ -142,8 +142,8 @@ static char version[] __devinitdata =
     "\nibmtr.c: v1.3.57   8/ 7/94 Peter De Schrijver and Mark Swanson\n"
     "         v2.1.125 10/20/98 Paul Norton    <pnorton@ieee.org>\n"
     "         v2.2.0   12/30/98 Joel Sloan     <jjs@c-me.com>\n"
-    "         v2.2.1   02/08/00 Mike Sullivan  <sullivam@us.ibm.com>\n" 
-    "         v2.2.2   07/27/00 Burt Silverman <burts@us.ibm.com>\n" 
+    "         v2.2.1   02/08/00 Mike Sullivan  <sullivam@us.ibm.com>\n"
+    "         v2.2.2   07/27/00 Burt Silverman <burts@us.ibm.com>\n"
     "         v2.4.0   03/01/01 Mike Sullivan <sullivan@us.ibm.com>\n";
 #endif
 
@@ -232,8 +232,8 @@ static void __devinit HWPrtChanID(void __iomem *pcid, short stride)
 	printk("\n");
 }
 
-/* We have to ioremap every checked address, because isa_readb is 
- * going away. 
+/* We have to ioremap every checked address, because isa_readb is
+ * going away.
  */
 
 static void __devinit find_turbo_adapters(int *iolist)
@@ -245,7 +245,7 @@ static void __devinit find_turbo_adapters(int *iolist)
 	unsigned char *tchanid, ctemp;
 	int i, j;
 	unsigned long jif;
-	void __iomem *ram_mapped ;   
+	void __iomem *ram_mapped ;
 
 	if (turbo_searched == 1) return;
 	turbo_searched=1;
@@ -254,9 +254,9 @@ static void __devinit find_turbo_adapters(int *iolist)
 		__u32 intf_tbl=0;
 
 		found_turbo=1;
-		ram_mapped = ioremap((u32)ram_addr,0x1fff) ; 
-		if (ram_mapped==NULL) 
- 			continue ; 
+		ram_mapped = ioremap((u32)ram_addr,0x1fff) ;
+		if (ram_mapped==NULL)
+ 			continue ;
 		chanid=(CHANNEL_ID + ram_mapped);
 		tchanid=pcchannelid;
 		ctemp=readb(chanid) & 0x0f;
@@ -294,11 +294,11 @@ static void __devinit find_turbo_adapters(int *iolist)
 			index++;
 			continue;
 		}
-#if IBMTR_DEBUG_MESSAGES 
+#if IBMTR_DEBUG_MESSAGES
 		printk("ibmtr::find_turbo_adapters, ibmtr card found at"
 			" %x but not a Turbo model\n",ram_addr);
 #endif
-	iounmap(ram_mapped) ; 	
+	iounmap(ram_mapped) ;
 	} /* for */
 	for(i=0; i<IBMTR_MAX_ADAPTERS; i++) {
 		if(!turbo_io[i]) break;
@@ -314,7 +314,7 @@ static void ibmtr_cleanup_card(struct net_device *dev)
 {
 	if (dev->base_addr) {
 		outb(0,dev->base_addr+ADAPTRESET);
-		
+
 		schedule_timeout_uninterruptible(TR_RST_TIME); /* wait 50ms */
 
 		outb(0,dev->base_addr+ADAPTRESETREL);
@@ -324,12 +324,12 @@ static void ibmtr_cleanup_card(struct net_device *dev)
 	free_irq(dev->irq, dev);
 	release_region(dev->base_addr, IBMTR_IO_EXTENT);
 
-	{ 
+	{
 		struct tok_info *ti = netdev_priv(dev);
 		iounmap(ti->mmio);
 		iounmap(ti->sram_virt);
 	}
-#endif		
+#endif
 }
 
 /****************************************************************************
@@ -411,10 +411,10 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 	 *    as LINUX doesn't care about segments
 	 */
 	t_mmio = ioremap(((__u32) (segment & 0xfc) << 11) + 0x80000,2048);
-	if (!t_mmio) { 
-		DPRINTK("Cannot remap mmiobase memory area") ; 
-		return -ENODEV ; 
-	} 
+	if (!t_mmio) {
+		DPRINTK("Cannot remap mmiobase memory area") ;
+		return -ENODEV ;
+	}
 	intr = segment & 0x03;	/* low bits is coded interrupt # */
 	if (ibmtr_debug_trace & TRC_INIT)
 		DPRINTK("PIOaddr: %4hx seg/intr: %2x mmio base: %p intr: %d\n"
@@ -450,9 +450,9 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 			break;
 		}
 	}
-	/* 
+	/*
 	 *    If we have an ISA board check for the ISA P&P version,
-	 *    as it has different IRQ settings 
+	 *    as it has different IRQ settings
 	 */
 	if (cardpresent == TR_ISA && (readb(AIPFID + t_mmio) == 0x0e))
 		cardpresent = TR_ISAPNP;
@@ -476,14 +476,14 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 		PrtChanID(mcchannelid, 1);
 	}
 	/* Now, setup some of the pl0 buffers for this driver.. */
-	/* If called from PCMCIA, it is already set up, so no need to 
+	/* If called from PCMCIA, it is already set up, so no need to
 	   waste the memory, just use the existing structure */
 #ifndef PCMCIA
 	ti->mmio = t_mmio;
         for (i = 0; i < IBMTR_MAX_ADAPTERS; i++) {
                 if (turbo_io[i] != PIOaddr)
 			continue;
-#if IBMTR_DEBUG_MESSAGES 
+#if IBMTR_DEBUG_MESSAGES
 		printk("ibmtr::tr_probe1, setting PIOaddr %x to Turbo\n",
 		       PIOaddr);
 #endif
@@ -496,7 +496,7 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 
 	/* if PCMCIA, the card can be recognized as either TR_ISA or TR_ISAPNP
 	 * depending which card is inserted.	*/
-	
+
 #ifndef PCMCIA
 	switch (cardpresent) {
 	case TR_ISA:
@@ -598,11 +598,11 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 	 *    in.  Given a choice, we will limit this adapter to 32K.  The
 	 *    maximum space will will use for two adapters is 64K so if the
 	 *    adapter we are working on demands 64K (it also doesn't support
-	 *    paging), then only one adapter can be supported.  
+	 *    paging), then only one adapter can be supported.
 	 */
 
 	/*
-	 *    determine how much of total RAM is mapped into PC space 
+	 *    determine how much of total RAM is mapped into PC space
 	 */
 	ti->mapped_ram_size= /*sixteen to onehundredtwentyeight 512byte blocks*/
 	    1<< ((readb(ti->mmio+ACA_OFFSET+ACA_RW+RRR_ODD) >> 2 & 0x03) + 4);
@@ -640,7 +640,7 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 		default:
 			DPRINTK("Unknown shared ram paging info %01X\n",
 							ti->shared_ram_paging);
-			iounmap(t_mmio); 
+			iounmap(t_mmio);
 			return -ENODEV;
 			break;
 		} /*end switch shared_ram_paging */
@@ -679,7 +679,7 @@ static int __devinit ibmtr_probe1(struct net_device *dev, int PIOaddr)
 	}
 	else  ti->sram_base = ti->sram_phys >> 12;
 
-	/* The PCMCIA has already got the interrupt line and the io port, 
+	/* The PCMCIA has already got the interrupt line and the io port,
 	   so no chance of anybody else getting it - MLP */
 	if (request_irq(dev->irq = irq, tok_interrupt, 0, "ibmtr", dev) != 0) {
 		DPRINTK("Could not grab irq %d.  Halting Token Ring driver.\n",
@@ -886,7 +886,7 @@ static int tok_open(struct net_device *dev)
 	/* init the spinlock */
 	spin_lock_init(&ti->lock);
 	init_timer(&ti->tr_timer);
-	
+
 	i = tok_init_card(dev);
 	if (i) return i;
 
@@ -928,7 +928,7 @@ static void tok_open_adapter(unsigned long dev_addr)
 	int i;
 
 	ti = netdev_priv(dev);
-	SET_PAGE(ti->init_srb_page); 
+	SET_PAGE(ti->init_srb_page);
 	writeb(~SRB_RESP_INT, ti->mmio + ACA_OFFSET + ACA_RESET + ISRP_ODD);
 	for (i = 0; i < sizeof(struct dir_open_adapter); i++)
 		writeb(0, ti->init_srb + i);
@@ -981,7 +981,6 @@ static void open_sap(unsigned char type, struct net_device *dev)
 	writeb(CMD_IN_SRB, ti->mmio + ACA_OFFSET + ACA_SET + ISRA_ODD);
 }
 
-
 /*****************************************************************************/
 
 static void tok_set_multicast_list(struct net_device *dev)
@@ -1009,7 +1008,7 @@ static void tok_set_multicast_list(struct net_device *dev)
 #define FUNCT_ADDRESS_OFST 6
 
 	writeb(DIR_SET_FUNC_ADDR, ti->srb + COMMAND_OFST);
-	for (i = 0; i < 4; i++) 
+	for (i = 0; i < 4; i++)
 		writeb(address[i], ti->srb + FUNCT_ADDRESS_OFST + i);
 	writeb(CMD_IN_SRB, ti->mmio + ACA_OFFSET + ACA_SET + ISRA_ODD);
 #if TR_VERBOSE
@@ -1551,7 +1550,7 @@ static void initial_tok_int(struct net_device *dev)
 
         if (ti->open_mode == MANUAL)	wake_up(&ti->wait_for_reset);
 	else				tok_open_adapter((unsigned long)dev);
-        
+
 } /*initial_tok_int() */
 
 /*****************************************************************************/
@@ -1665,7 +1664,6 @@ static void tr_tx(struct net_device *dev)
 }				/*tr_tx */
 
 /*****************************************************************************/
-
 
 #define RECEIVE_BUFFER_OFST     6
 #define LAN_HDR_LENGTH_OFST     8
@@ -1925,7 +1923,7 @@ static int __init ibmtr_init(void)
 		irq[i] = 0;
 		mem[i] = 0;
 		dev = alloc_trdev(sizeof(struct tok_info));
-		if (dev == NULL) { 
+		if (dev == NULL) {
 			if (i == 0)
 				return -ENOMEM;
 			break;

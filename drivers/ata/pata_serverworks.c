@@ -201,7 +201,6 @@ static unsigned long serverworks_osb4_filter(struct ata_device *adev, unsigned l
 	return mask;
 }
 
-
 /**
  *	serverworks_csb_filter	-	mode selection filter
  *	@adev: ATA device
@@ -392,7 +391,6 @@ static void serverworks_fixup_ht1000(struct pci_dev *pdev)
 	btr |= 0x3;
 	pci_write_config_byte(pdev, 0x5A, btr);
 }
-
 
 static int serverworks_init_one(struct pci_dev *pdev, const struct pci_device_id *id)
 {

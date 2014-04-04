@@ -34,7 +34,6 @@
 
 #define nilfs_bmap_keydiff_abs(diff)	((diff) < 0 ? -(diff) : (diff))
 
-
 struct nilfs_bmap;
 
 /**
@@ -83,7 +82,6 @@ struct nilfs_bmap_operations {
 	int (*bop_gather_data)(struct nilfs_bmap *, __u64 *, __u64 *, int);
 };
 
-
 #define NILFS_BMAP_SIZE		(NILFS_INODE_BMAP_SIZE * sizeof(__le64))
 #define NILFS_BMAP_KEY_BIT	(sizeof(unsigned long) * 8 /* CHAR_BIT */)
 #define NILFS_BMAP_NEW_PTR_INIT	\
@@ -93,7 +91,6 @@ static inline int nilfs_bmap_is_new_ptr(unsigned long ptr)
 {
 	return !!(ptr & NILFS_BMAP_NEW_PTR_INIT);
 }
-
 
 /**
  * struct nilfs_bmap - bmap structure
@@ -240,7 +237,6 @@ __u64 nilfs_bmap_data_get_key(const struct nilfs_bmap *,
 __u64 nilfs_bmap_find_target_seq(const struct nilfs_bmap *, __u64);
 __u64 nilfs_bmap_find_target_in_group(const struct nilfs_bmap *);
 
-
 /* Assume that bmap semaphore is locked. */
 static inline int nilfs_bmap_dirty(const struct nilfs_bmap *bmap)
 {
@@ -258,7 +254,6 @@ static inline void nilfs_bmap_clear_dirty(struct nilfs_bmap *bmap)
 {
 	bmap->b_state &= ~NILFS_BMAP_DIRTY;
 }
-
 
 #define NILFS_BMAP_LARGE	0x1
 

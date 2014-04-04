@@ -7,7 +7,7 @@
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
  *
- *  Interrupt safe locking assembler. 
+ *  Interrupt safe locking assembler.
  */
 #ifndef __ASM_PROC_LOCKS_H
 #define __ASM_PROC_LOCKS_H

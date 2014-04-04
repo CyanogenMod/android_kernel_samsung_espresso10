@@ -36,10 +36,8 @@
 #include "modem_variation.h"
 #include "modem_utils.h"
 
-
 /* If iod->id is 0, do not need to store to `iodevs_tree_fmt' in SIPC4 */
 #define sipc4_is_not_reserved_channel(ch) ((ch) != 0)
-
 
 static struct modem_shared *create_modem_shared_data(void)
 {

@@ -302,7 +302,6 @@ struct t10_wwn {
 	struct list_head t10_vpd_list;
 } ____cacheline_aligned;
 
-
 /*
  * Used by TCM Core internally to signal if >= SPC-3 persistent reservations
  * emulation is enabled or disabled, or running in with TCM/pSCSI passthrough

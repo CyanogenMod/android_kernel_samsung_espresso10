@@ -190,7 +190,6 @@ static void set_dma_cmds(struct mesh_state *ms, struct scsi_cmnd *cmd);
 static void halt_dma(struct mesh_state *ms);
 static void phase_mismatch(struct mesh_state *ms);
 
-
 /*
  * Some debugging & logging routines
  */
@@ -332,7 +331,6 @@ mesh_dump_regs(struct mesh_state *ms)
 	}
 }
 
-
 /*
  * Flush write buffers on the bus path to the mesh
  */
@@ -341,7 +339,6 @@ static inline void mesh_flush_io(volatile struct mesh_regs __iomem *mr)
 	(void)in_8(&mr->mesh_id);
 }
 
-
 /*
  * Complete a SCSI command
  */
@@ -349,7 +346,6 @@ static void mesh_completed(struct mesh_state *ms, struct scsi_cmnd *cmd)
 {
 	(*cmd->scsi_done)(cmd);
 }
-
 
 /* Called with  meshinterrupt disabled, initialize the chipset
  * and eventually do the initial bus reset. The lock must not be
@@ -377,7 +373,7 @@ static void mesh_init(struct mesh_state *ms)
 
 	if (init_reset_delay) {
 		printk(KERN_INFO "mesh: performing initial bus reset...\n");
-		
+
 		/* Reset bus */
 		out_8(&mr->bus_status1, BS1_RST);	/* assert RST */
 		mesh_flush_io(mr);
@@ -388,7 +384,7 @@ static void mesh_init(struct mesh_state *ms)
 		/* Wait for bus to come back */
 		msleep(init_reset_delay);
 	}
-	
+
 	/* Reconfigure controller */
 	out_8(&mr->interrupt, 0xff);	/* clear all interrupt bits */
 	out_8(&mr->sequence, SEQ_FLUSHFIFO);
@@ -400,7 +396,6 @@ static void mesh_init(struct mesh_state *ms)
 	ms->phase = idle;
 	ms->msgphase = msg_none;
 }
-
 
 static void mesh_start_cmd(struct mesh_state *ms, struct scsi_cmnd *cmd)
 {
@@ -943,7 +938,6 @@ static void reselected(struct mesh_state *ms)
 		goto bogus;
 	}
 
-
 	/*
 	 * Set up to continue with that target's transfer.
 	 */
@@ -1021,7 +1015,7 @@ static irqreturn_t do_mesh_interrupt(int irq, void *dev_id)
 	unsigned long flags;
 	struct mesh_state *ms = dev_id;
 	struct Scsi_Host *dev = ms->host;
-	
+
 	spin_lock_irqsave(dev->host_lock, flags);
 	mesh_interrupt(ms);
 	spin_unlock_irqrestore(dev->host_lock, flags);
@@ -1280,7 +1274,7 @@ static void set_dma_cmds(struct mesh_state *ms, struct scsi_cmnd *cmd)
 			scsi_for_each_sg(cmd, scl, nseg, i) {
 				u32 dma_addr = sg_dma_address(scl);
 				u32 dma_len = sg_dma_len(scl);
-				
+
 				total += scl->length;
 				if (off >= dma_len) {
 					off -= dma_len;
@@ -1621,7 +1615,6 @@ static void cmd_complete(struct mesh_state *ms)
 	}
 }
 
-
 /*
  * Called by midlayer with host locked to queue a new
  * request
@@ -1667,7 +1660,7 @@ static void mesh_interrupt(struct mesh_state *ms)
 		       ms->phase, ms->msgphase);
 #endif
 	while ((intr = in_8(&mr->interrupt)) != 0) {
-		dlog(ms, "interrupt intr/err/exc/seq=%.8x", 
+		dlog(ms, "interrupt intr/err/exc/seq=%.8x",
 		     MKWORD(intr, mr->error, mr->exception, mr->sequence));
 		if (intr & INT_ERROR) {
 			handle_error(ms);
@@ -1732,7 +1725,7 @@ static int mesh_host_reset(struct scsi_cmnd *cmd)
 
 	/* Complete pending commands */
 	handle_reset(ms);
-	
+
 	spin_unlock_irqrestore(ms->host->host_lock, flags);
 	return SUCCESS;
 }
@@ -1749,7 +1742,6 @@ static void set_mesh_power(struct mesh_state *ms, int state)
 		msleep(10);
 	}
 }
-
 
 #ifdef CONFIG_PM
 static int mesh_suspend(struct macio_dev *mdev, pm_message_t mesg)
@@ -1879,7 +1871,7 @@ static int mesh_probe(struct macio_dev *mdev, const struct of_device_id *match)
 		printk(KERN_ERR "mesh: couldn't register host");
 		goto out_release;
 	}
-	
+
 	/* Old junk for root discovery, that will die ultimately */
 #if !defined(MODULE)
        	note_scsi_host(mesh, mesh_host);
@@ -1892,12 +1884,12 @@ static int mesh_probe(struct macio_dev *mdev, const struct of_device_id *match)
 	ms->host = mesh_host;
 	ms->mdev = mdev;
 	ms->pdev = pdev;
-	
+
 	ms->mesh = ioremap(macio_resource_start(mdev, 0), 0x1000);
 	if (ms->mesh == NULL) {
 		printk(KERN_ERR "mesh: can't map registers\n");
 		goto out_free;
-	}		
+	}
 	ms->dma = ioremap(macio_resource_start(mdev, 1), 0x1000);
 	if (ms->dma == NULL) {
 		printk(KERN_ERR "mesh: can't map registers\n");
@@ -2021,8 +2013,7 @@ static int mesh_remove(struct macio_dev *mdev)
 	return 0;
 }
 
-
-static struct of_device_id mesh_match[] = 
+static struct of_device_id mesh_match[] =
 {
 	{
 	.name 		= "mesh",
@@ -2035,7 +2026,7 @@ static struct of_device_id mesh_match[] =
 };
 MODULE_DEVICE_TABLE (of, mesh_match);
 
-static struct macio_driver mesh_driver = 
+static struct macio_driver mesh_driver =
 {
 	.driver = {
 		.name 		= "mesh",
@@ -2050,7 +2041,6 @@ static struct macio_driver mesh_driver =
 	.resume		= mesh_resume,
 #endif
 };
-
 
 static int __init init_mesh(void)
 {

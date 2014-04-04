@@ -73,8 +73,6 @@ struct musb_ep;
 #include <linux/usb/hcd.h>
 #include "musb_host.h"
 
-
-
 #ifdef CONFIG_USB_MUSB_OTG
 
 #define	is_peripheral_enabled(musb)	((musb)->board_mode != MUSB_HOST)
@@ -166,7 +164,6 @@ static inline void musb_host_rx(struct musb *m, u8 e) {}
 
 #endif
 
-
 /****************************** CONSTANTS ********************************/
 
 #ifndef MUSB_C_NUM_EPS
@@ -205,7 +202,6 @@ enum musb_g_ep0_state {
 #define OTG_TIME_A_WAIT_BCON	1100		/* min 1 second */
 #define OTG_TIME_A_AIDL_BDIS	200		/* min 200 msec */
 #define OTG_TIME_B_ASE0_BRST	100		/* min 3.125 ms */
-
 
 /*************************** REGISTER ACCESS ********************************/
 
@@ -536,6 +532,7 @@ struct musb {
 	int reserve_async_suspend;
 #endif
 	int vbus_reset_count;
+	unsigned int otg_enum_delay;
 };
 
 struct musb_otg_work {
@@ -617,7 +614,6 @@ static inline void musb_configure_ep0(struct musb *musb)
 }
 #endif /* CONFIG_BLACKFIN */
 
-
 /***************************** Glue it together *****************************/
 
 extern const char musb_driver_name[];
@@ -691,12 +687,10 @@ static inline int musb_platform_exit(struct musb *musb)
 	return musb->ops->exit(musb);
 }
 
-static inline int musb_platform_vbus_reset(struct musb *musb)
+static inline void musb_platform_vbus_reset(struct musb *musb)
 {
-	if (!musb->ops->vbus_reset)
-		return -EINVAL;
-
-	return musb->ops->vbus_reset(musb);
+	if (musb->ops->vbus_reset)
+		musb->ops->vbus_reset(musb);
 }
 
 static inline int musb_platform_otg_notifications(struct musb *musb, u32 event)

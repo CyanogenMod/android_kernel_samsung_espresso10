@@ -10,10 +10,10 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
-   
+
    You should have received a copy of the GNU General Public License
    (for example /usr/src/linux/COPYING); if not, write to the Free
-   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  
+   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #include <linux/blkdev.h>
@@ -24,7 +24,7 @@
 #include "linear.h"
 
 /*
- * find which device holds a particular offset 
+ * find which device holds a particular offset
  */
 static inline dev_info_t *which_dev(mddev_t *mddev, sector_t sector)
 {
@@ -284,7 +284,6 @@ static int linear_make_request (mddev_t *mddev, struct bio *bio)
 	tmp_dev = which_dev(mddev, bio->bi_sector);
 	start_sector = tmp_dev->end_sector - tmp_dev->rdev->sectors;
 
-
 	if (unlikely(bio->bi_sector >= (tmp_dev->end_sector)
 		     || (bio->bi_sector < start_sector))) {
 		char b[BDEVNAME_SIZE];
@@ -320,7 +319,7 @@ static int linear_make_request (mddev_t *mddev, struct bio *bio)
 		bio_pair_release(bp);
 		return 0;
 	}
-		    
+
 	bio->bi_bdev = tmp_dev->rdev->bdev;
 	bio->bi_sector = bio->bi_sector - start_sector
 		+ tmp_dev->rdev->data_offset;
@@ -334,7 +333,6 @@ static void linear_status (struct seq_file *seq, mddev_t *mddev)
 
 	seq_printf(seq, " %dk rounding", mddev->chunk_sectors / 2);
 }
-
 
 static struct mdk_personality linear_personality =
 {
@@ -358,7 +356,6 @@ static void linear_exit (void)
 {
 	unregister_md_personality (&linear_personality);
 }
-
 
 module_init(linear_init);
 module_exit(linear_exit);

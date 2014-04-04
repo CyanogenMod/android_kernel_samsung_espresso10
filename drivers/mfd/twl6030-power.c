@@ -23,7 +23,7 @@
 
 #include <asm/mach-types.h>
 
-#define VREG_GRP		0
+#define VREG_GRP			0
 #define MSK_TRANSITION_APP_SHIFT	0x5
 
 static u8 dev_on_group;
@@ -113,7 +113,6 @@ static __initdata struct twl6030_resource_map twl6034_res_map[] = {
 	TWL6032_RES_DATA(RES_SYSEN, "SYSEN", 2, DEV_GRP_P1, BIT(2)),
 	TWL6032_RES_DATA(RES_REGEN2, "REGEN2", 2, DEV_GRP_P1, BIT(1)),
 	TWL6032_RES_DATA(RES_REGEN, "REGEN1", 2, DEV_GRP_P1, BIT(0)),
-
 
 	/* PREQx_RES_ASS_D register resources */
 	TWL6032_RES_DATA(RES_LDOn15, "LDOn15", 4, DEV_GRP_P1, BIT(7)),
@@ -247,7 +246,8 @@ static __init void twl6030_process_system_config(void)
 static __init void twl6030_program_map(unsigned long features)
 {
 	struct twl6030_resource_map *res;
-	int r, i;
+	int r = 0;
+	int i;
 
 	if (features & TWL6032_SUBCLASS) {
 		/*
@@ -283,7 +283,6 @@ static __init void twl6030_program_map(unsigned long features)
 
 			res++;
 		}
-
 
 		if (features & TWL6034_SUBCLASS)  {
 			r |= twl_i2c_write(TWL6030_MODULE_ID0, &mask[0],
@@ -377,7 +376,6 @@ static __init void twl6030_update_map(struct twl4030_resconfig *res_list, \
 		res_idx++;
 	}
 }
-
 
 static int twl6030_power_notifier_cb(struct notifier_block *notifier,
 					unsigned long pm_event,  void *unused)

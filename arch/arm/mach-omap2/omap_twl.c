@@ -687,7 +687,6 @@ int __init omap_twl_init(void)
 		omap446x_core_pmic.cmd_reg_addr =
 			TWL6032_SMPS2_SR_CMD_REG;
 
-
 		omap443x_446x_iva_pmic.volt_reg_addr
 			= TWL6032_SMPS5_SR_VOLT_REG;
 		omap443x_446x_iva_pmic.cmd_reg_addr

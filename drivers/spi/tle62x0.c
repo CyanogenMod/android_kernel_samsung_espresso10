@@ -16,7 +16,6 @@
 #include <linux/spi/spi.h>
 #include <linux/spi/tle62x0.h>
 
-
 #define CMD_READ	0x00
 #define CMD_SET		0xff
 

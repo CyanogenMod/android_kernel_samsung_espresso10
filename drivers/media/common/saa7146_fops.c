@@ -39,7 +39,6 @@ void saa7146_res_free(struct saa7146_fh *fh, unsigned int bits)
 	DEB_D(("res: put 0x%02x, cur:0x%02x\n",bits,vv->resources));
 }
 
-
 /********************************************************************************/
 /* common dma functions */
 
@@ -56,7 +55,6 @@ void saa7146_dma_free(struct saa7146_dev *dev,struct videobuf_queue *q,
 	videobuf_dma_free(dma);
 	buf->vb.state = VIDEOBUF_NEEDS_INIT;
 }
-
 
 /********************************************************************************/
 /* common buffer functions */
@@ -537,7 +535,6 @@ static int __init saa7146_vv_init_module(void)
 {
 	return 0;
 }
-
 
 static void __exit saa7146_vv_cleanup_module(void)
 {

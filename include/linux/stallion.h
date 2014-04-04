@@ -36,7 +36,6 @@
 #define	STL_MAXPORTS		64
 #define	STL_MAXDEVS		(STL_MAXBRDS * STL_MAXPORTS)
 
-
 /*
  *	Define a set of structures to hold all the board/panel/port info
  *	for our ports. These will be dynamically allocated as required.
@@ -134,7 +133,6 @@ struct stlbrd {
 	struct stlpanel	*bnk2panel[STL_MAXBANKS];
 	struct stlpanel	*panels[STL_MAXPANELS];
 };
-
 
 /*
  *	Define MAGIC numbers used for above structures.

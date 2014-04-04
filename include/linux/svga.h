@@ -64,7 +64,6 @@ struct svga_pll {
 	u32 f_base;
 };
 
-
 /* Write a value to the attribute register */
 
 static inline void svga_wattr(void __iomem *regbase, u8 index, u8 data)
@@ -95,7 +94,6 @@ static inline int svga_primary_device(struct pci_dev *dev)
 	return (flags & PCI_COMMAND_IO);
 }
 
-
 void svga_wcrt_multi(void __iomem *regbase, const struct vga_regset *regset, u32 value);
 void svga_wseq_multi(void __iomem *regbase, const struct vga_regset *regset, u32 value);
 
@@ -121,4 +119,3 @@ void svga_set_timings(void __iomem *regbase, const struct svga_timing_regs *tm, 
 int svga_match_format(const struct svga_fb_format *frm, struct fb_var_screeninfo *var, struct fb_fix_screeninfo *fix);
 
 #endif /* _LINUX_SVGA_H */
-

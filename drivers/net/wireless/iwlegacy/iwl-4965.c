@@ -201,7 +201,6 @@ static int iwl4965_load_bsm(struct iwl_priv *priv)
 	iwl_legacy_write_prph(priv,
 			BSM_WR_CTRL_REG, BSM_WR_CTRL_REG_BIT_START_EN);
 
-
 	return 0;
 }
 

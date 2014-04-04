@@ -13,7 +13,6 @@ struct ceph_x_ticket_blob {
 	char blob[];
 } __attribute__ ((packed));
 
-
 /* common request/reply headers */
 struct ceph_x_request_header {
 	__le16 op;
@@ -23,7 +22,6 @@ struct ceph_x_reply_header {
 	__le16 op;
 	__le32 result;
 } __attribute__ ((packed));
-
 
 /* authenticate handshake */
 
@@ -50,8 +48,6 @@ struct ceph_x_challenge_blob {
 	__le64 client_challenge;
 } __attribute__ ((packed));
 
-
-
 /* authorize handshake */
 
 /*
@@ -75,7 +71,6 @@ struct ceph_x_authorize_reply {
 	__u8 struct_v;
 	__le64 nonce_plus_one;
 } __attribute__ ((packed));
-
 
 /*
  * encyption bundle

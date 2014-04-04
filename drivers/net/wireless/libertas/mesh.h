@@ -4,7 +4,6 @@
 #ifndef _LBS_MESH_H_
 #define _LBS_MESH_H_
 
-
 #include <net/iw_handler.h>
 #include <net/lib80211.h>
 
@@ -24,7 +23,6 @@ struct lbs_mesh_stats {
 	u32	tx_failed_cnt;		/* Tx:  Failed transmissions */
 };
 
-
 struct net_device;
 struct lbs_private;
 
@@ -33,7 +31,6 @@ int lbs_deinit_mesh(struct lbs_private *priv);
 
 int lbs_add_mesh(struct lbs_private *priv);
 void lbs_remove_mesh(struct lbs_private *priv);
-
 
 /* Sending / Receiving */
 
@@ -44,7 +41,6 @@ struct net_device *lbs_mesh_set_dev(struct lbs_private *priv,
 	struct net_device *dev, struct rxpd *rxpd);
 void lbs_mesh_set_txpd(struct lbs_private *priv,
 	struct net_device *dev, struct txpd *txpd);
-
 
 /* Command handling */
 
@@ -68,13 +64,10 @@ int lbs_mesh_config_send(struct lbs_private *priv,
 			 uint16_t action, uint16_t type);
 int lbs_mesh_config(struct lbs_private *priv, uint16_t enable, uint16_t chan);
 
-
-
 /* Persistent configuration */
 
 void lbs_persist_config_init(struct net_device *net);
 void lbs_persist_config_remove(struct net_device *net);
-
 
 /* Ethtool statistics */
 
@@ -85,7 +78,6 @@ void lbs_mesh_ethtool_get_stats(struct net_device *dev,
 int lbs_mesh_ethtool_get_sset_count(struct net_device *dev, int sset);
 void lbs_mesh_ethtool_get_strings(struct net_device *dev,
 	uint32_t stringset, uint8_t *s);
-
 
 /* Accessors */
 
@@ -105,7 +97,5 @@ void lbs_mesh_ethtool_get_strings(struct net_device *dev,
 #define lbs_mesh_connected(priv) (0)
 
 #endif
-
-
 
 #endif

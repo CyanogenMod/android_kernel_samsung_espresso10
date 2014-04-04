@@ -50,4 +50,3 @@ static inline struct dvb_frontend* or51211_attach(const struct or51211_config* c
 #endif // CONFIG_DVB_OR51211
 
 #endif // OR51211_H
-

@@ -1357,7 +1357,6 @@ static const struct ath5k_ini rf5112_ini_bbgain[] = {
 	{ AR5K_BB_GAIN(63), 0x0000001a },
 };
 
-
 /*
  * Write initial register dump
  */

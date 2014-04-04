@@ -32,5 +32,4 @@
 /*FDLOCKFLAG1*/
 #define	_LOCKFLAG1_MSK		0x03
 
-
 #endif /* __RTL8712_DEBUGCTRL_BITDEF_H__ */

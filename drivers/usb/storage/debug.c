@@ -50,7 +50,6 @@
 #include "debug.h"
 #include "scsi.h"
 
-
 void usb_stor_show_command(struct scsi_cmnd *srb)
 {
 	char *what = NULL;

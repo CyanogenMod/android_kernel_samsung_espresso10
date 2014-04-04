@@ -877,7 +877,6 @@ static ssize_t apds990x_prox_reporting_avail_show(struct device *dev,
 static DEVICE_ATTR(prox0_reporting_mode_avail, S_IRUGO | S_IWUSR,
 		apds990x_prox_reporting_avail_show, NULL);
 
-
 static ssize_t apds990x_lux_thresh_above_show(struct device *dev,
 				   struct device_attribute *attr, char *buf)
 {

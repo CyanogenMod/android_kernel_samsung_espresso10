@@ -35,7 +35,6 @@
 #define PARTITION_SIZE		128
 #define PARTITION_THRESH	96
 
-
 	.sig volatile sig1
 	.sig volatile sig2
 	.sig volatile sig3
@@ -265,8 +264,5 @@ mpacket_tx_loop#:
 		.end
 	.end
 
-
 zero_byte_packet#:
 	halt
-
-

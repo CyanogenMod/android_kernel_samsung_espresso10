@@ -16,7 +16,7 @@
  * Richard Lucock 28/12/99
  *
  *  Copyright (C) 1991, 1992  Linus Torvalds
- *  Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 
+ *  Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997,
  * 		1998, 1999  Theodore Ts'o
  *
  */
@@ -107,7 +107,6 @@ static unsigned char current_ctl_bits;
 static void change_speed(struct async_struct *info, struct ktermios *old);
 static void rs_wait_until_sent(struct tty_struct *tty, int timeout);
 
-
 static struct serial_state rs_table[1];
 
 #define NR_PORTS ARRAY_SIZE(rs_table)
@@ -115,7 +114,6 @@ static struct serial_state rs_table[1];
 #include <asm/uaccess.h>
 
 #define serial_isroot()	(capable(CAP_SYS_ADMIN))
-
 
 static inline int serial_paranoia_check(struct async_struct *info,
 					char *name, const char *routine)
@@ -222,7 +220,7 @@ static void rs_start(struct tty_struct *tty)
  * rs_interrupt() should try to keep the interrupt handler as fast as
  * possible.  After you are done making modifications, it is not a bad
  * idea to do:
- * 
+ *
  * gcc -S -DKERNEL -Wall -Wstrict-prototypes -O6 -fomit-frame-pointer serial.c
  *
  * and look at the resulting assemble code in serial.s.
@@ -686,7 +684,6 @@ static void shutdown(struct async_struct * info)
 	local_irq_restore(flags);
 }
 
-
 /*
  * This routine is called to set the UART divisor registers to match
  * the specified baud rate for a serial port.
@@ -800,7 +797,7 @@ static void change_speed(struct async_struct *info,
 	if (I_IGNBRK(info->tty)) {
 		info->ignore_status_mask |= UART_LSR_BI;
 		/*
-		 * If we're ignore parity and break indicators, ignore 
+		 * If we're ignore parity and break indicators, ignore
 		 * overruns too.  (For real raw support).
 		 */
 		if (I_IGNPAR(info->tty))
@@ -997,7 +994,7 @@ static void rs_send_xchar(struct tty_struct *tty, char ch)
 /*
  * ------------------------------------------------------------
  * rs_throttle()
- * 
+ *
  * This routine is called by the upper-layer tty layer to signal that
  * incoming characters should be throttled.
  * ------------------------------------------------------------
@@ -1065,7 +1062,7 @@ static int get_serial_info(struct async_struct * info,
 {
 	struct serial_struct tmp;
 	struct serial_state *state = info->state;
-   
+
 	if (!retinfo)
 		return -EFAULT;
 	memset(&tmp, 0, sizeof(tmp));
@@ -1100,14 +1097,14 @@ static int set_serial_info(struct async_struct * info,
 	tty_lock();
 	state = info->state;
 	old_state = *state;
-  
+
 	change_irq = new_serial.irq != state->irq;
 	change_port = (new_serial.port != state->port);
 	if(change_irq || change_port || (new_serial.xmit_fifo_size != state->xmit_fifo_size)) {
 	  tty_unlock();
 	  return -EINVAL;
 	}
-  
+
 	if (!serial_isroot()) {
 		if ((new_serial.baud_base != state->baud_base) ||
 		    (new_serial.close_delay != state->close_delay) ||
@@ -1166,7 +1163,6 @@ check_and_exit:
 	return retval;
 }
 
-
 /*
  * get_lsr_info - get line status register info
  *
@@ -1175,7 +1171,7 @@ check_and_exit:
  * 	    release the bus after transmitting. This must be done when
  * 	    the transmit shift register is empty, not be done when the
  * 	    transmit holding register is empty.  This functionality
- * 	    allows an RS485 driver to be written in user space. 
+ * 	    allows an RS485 driver to be written in user space.
  */
 static int get_lsr_info(struct async_struct * info, unsigned int __user *value)
 {
@@ -1192,7 +1188,6 @@ static int get_lsr_info(struct async_struct * info, unsigned int __user *value)
 		return -EFAULT;
 	return 0;
 }
-
 
 static int rs_tiocmget(struct tty_struct *tty)
 {
@@ -1347,7 +1342,7 @@ static int rs_ioctl(struct tty_struct *tty,
 				local_irq_save(flags);
 				cnow = info->state->icount; /* atomic copy */
 				local_irq_restore(flags);
-				if (cnow.rng == cprev.rng && cnow.dsr == cprev.dsr && 
+				if (cnow.rng == cprev.rng && cnow.dsr == cprev.dsr &&
 				    cnow.dcd == cprev.dcd && cnow.cts == cprev.cts)
 					return -EIO; /* no change => error */
 				if ( ((arg & TIOCM_RNG) && (cnow.rng != cprev.rng)) ||
@@ -1393,7 +1388,7 @@ static void rs_set_termios(struct tty_struct *tty, struct ktermios *old_termios)
 	if (!(old_termios->c_cflag & CBAUD) &&
 	    (cflag & CBAUD)) {
 		info->MCR |= SER_DTR;
-		if (!(tty->termios->c_cflag & CRTSCTS) || 
+		if (!(tty->termios->c_cflag & CRTSCTS) ||
 		    !test_bit(TTY_THROTTLED, &tty->flags)) {
 			info->MCR |= SER_RTS;
 		}
@@ -1425,7 +1420,7 @@ static void rs_set_termios(struct tty_struct *tty, struct ktermios *old_termios)
 /*
  * ------------------------------------------------------------
  * rs_close()
- * 
+ *
  * This routine is called when the serial port gets closed.  First, we
  * wait for the last remaining data to be sent.  Then, we unlink its
  * async structure from the interrupt chain if necessary, and we free
@@ -1478,7 +1473,7 @@ static void rs_close(struct tty_struct *tty, struct file * filp)
 	}
 	info->flags |= ASYNC_CLOSING;
 	/*
-	 * Now we wait for the transmit buffer to clear; and we notify 
+	 * Now we wait for the transmit buffer to clear; and we notify
 	 * the line discipline to only process XON/XOFF characters.
 	 */
 	tty->closing = 1;
@@ -1508,7 +1503,7 @@ static void rs_close(struct tty_struct *tty, struct file * filp)
 	}
 	shutdown(info);
 	rs_flush_buffer(tty);
-		
+
 	tty_ldisc_flush(tty);
 	tty->closing = 0;
 	info->event = 0;
@@ -1552,7 +1547,7 @@ static void rs_wait_until_sent(struct tty_struct *tty, int timeout)
 	 * Set the check interval to be 1/5 of the estimated time to
 	 * send a single character, and make it at least 1.  The check
 	 * interval should also be less than the timeout.
-	 * 
+	 *
 	 * Note: we have to use pretty tight timings here to satisfy
 	 * the NIST-PCTS.
 	 */
@@ -1939,7 +1934,6 @@ static void show_serial_version(void)
  	printk(KERN_INFO "%s version %s\n", serial_name, serial_version);
 }
 
-
 static const struct tty_operations serial_ops = {
 	.open = rs_open,
 	.close = rs_close,
@@ -2008,7 +2002,7 @@ static int __init amiga_serial_probe(struct platform_device *pdev)
 	state->custom_divisor = 0;
 	state->close_delay = 5*HZ/10;
 	state->closing_wait = 30*HZ;
-	state->icount.cts = state->icount.dsr = 
+	state->icount.cts = state->icount.dsr =
 	  state->icount.rng = state->icount.dcd = 0;
 	state->icount.rx = state->icount.tx = 0;
 	state->icount.frame = state->icount.parity = 0;
@@ -2109,7 +2103,6 @@ static void __exit amiga_serial_exit(void)
 }
 
 module_exit(amiga_serial_exit);
-
 
 #if defined(CONFIG_SERIAL_CONSOLE) && !defined(MODULE)
 

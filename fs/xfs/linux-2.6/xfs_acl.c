@@ -26,7 +26,6 @@
 #include <linux/xattr.h>
 #include <linux/posix_acl_xattr.h>
 
-
 /*
  * Locking scheme:
  *  - all ACL updates are protected by inode->i_mutex, which is taken before

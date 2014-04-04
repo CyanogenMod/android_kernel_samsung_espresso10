@@ -107,7 +107,6 @@ extern "C" {
 /* note: there is implicitly 1 3D Dst Sync */
 #endif
 
-
 #if defined(SGX_FEATURE_EXTENDED_PERF_COUNTERS)
 #define	PVRSRV_SGX_HWPERF_NUM_COUNTERS	8
 #define	PVRSRV_SGX_HWPERF_NUM_MISC_COUNTERS 11
@@ -183,7 +182,6 @@ extern "C" {
 #define PVRSRV_SGX_HWPERF_STATUS_PERIODIC_ON		(1UL << 2)
 #define PVRSRV_SGX_HWPERF_STATUS_MK_EXECUTION_ON	(1UL << 3)
 
-
 /*!
  *****************************************************************************
  * One entry in the HWPerf Circular Buffer.
@@ -202,7 +200,6 @@ typedef struct _PVRSRV_SGX_HWPERF_CB_ENTRY_
 	IMG_UINT32	ui32MiscCounters[SGX_FEATURE_MP_CORE_COUNT_3D][PVRSRV_SGX_HWPERF_NUM_MISC_COUNTERS];
 } PVRSRV_SGX_HWPERF_CB_ENTRY;
 
-
 /*
 	Status values control structure
 */
@@ -211,7 +208,6 @@ typedef struct _CTL_STATUS_
 	IMG_DEV_VIRTADDR	sStatusDevAddr;
 	IMG_UINT32			ui32StatusValue;
 } CTL_STATUS;
-
 
 /*!
 	List of possible requests/commands to SGXGetMiscInfo()
@@ -239,7 +235,6 @@ typedef enum _SGX_MISC_INFO_REQUEST_
 	SGX_MISC_INFO_REQUEST_FORCE_I16					=  0x7fff
 } SGX_MISC_INFO_REQUEST;
 
-
 /******************************************************************************
  * Struct for passing SGX core rev/features from ukernel to driver.
  * This is accessed from the kernel part of the driver and microkernel; it is
@@ -263,7 +258,6 @@ typedef struct _PVRSRV_SGX_MISCINFO_FEATURES
 #endif
 } PVRSRV_SGX_MISCINFO_FEATURES;
 
-
 /******************************************************************************
  * Struct for getting lock-up stats from the kernel driver
  ******************************************************************************/
@@ -273,7 +267,6 @@ typedef struct _PVRSRV_SGX_MISCINFO_LOCKUPS
 	IMG_UINT32			ui32uKernelDetectedLockups; /*!< Microkernel detected lockups */
 } PVRSRV_SGX_MISCINFO_LOCKUPS;
 
-
 /******************************************************************************
  * Struct for getting lock-up stats from the kernel driver
  ******************************************************************************/
@@ -281,7 +274,6 @@ typedef struct _PVRSRV_SGX_MISCINFO_ACTIVEPOWER
 {
 	IMG_UINT32			ui32NumActivePowerEvents; /*!< active power events */
 } PVRSRV_SGX_MISCINFO_ACTIVEPOWER;
-
 
 /******************************************************************************
  * Struct for getting SPM stats fro the kernel driver
@@ -292,7 +284,6 @@ typedef struct _PVRSRV_SGX_MISCINFO_SPM
 	IMG_UINT32			ui32NumOutOfMemSignals; /*!< Number of Out of Mem Signals */
 	IMG_UINT32			ui32NumSPMRenders;	/*!< Number of SPM renders */
 } PVRSRV_SGX_MISCINFO_SPM;
-
 
 #if defined(SGX_FEATURE_DATA_BREAKPOINTS)
 /*!
@@ -327,7 +318,6 @@ typedef struct _SGX_BREAKPOINT_INFO
 } SGX_BREAKPOINT_INFO;
 #endif /* SGX_FEATURE_DATA_BREAKPOINTS */
 
-
 /*!
  ******************************************************************************
  * Structure for setting the hardware performance status
@@ -347,7 +337,6 @@ typedef struct _PVRSRV_SGX_MISCINFO_SET_HWPERF_STATUS
 	IMG_UINT32	ui32PerfGroup;
 	#endif /* SGX_FEATURE_EXTENDED_PERF_COUNTERS */
 } PVRSRV_SGX_MISCINFO_SET_HWPERF_STATUS;
-
 
 /*!
  ******************************************************************************
@@ -385,7 +374,6 @@ typedef struct _SGX_MISC_INFO_
 #define PVRSRV_MAX_BLT_SRC_SYNCS		3
 #endif
 
-
 #define SGX_KICKTA_DUMPBITMAP_MAX_NAME_LENGTH		256
 
 /*
@@ -415,7 +403,6 @@ typedef struct _PVRSRV_SGX_PDUMP_CONTEXT_
 	IMG_UINT32						ui32CacheControl;
 
 } PVRSRV_SGX_PDUMP_CONTEXT;
-
 
 #if !defined (SUPPORT_SID_INTERFACE)
 typedef struct _SGX_KICKTA_DUMP_ROFF_

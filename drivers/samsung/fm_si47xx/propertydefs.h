@@ -91,7 +91,6 @@
 #define FM_BLEND_MONO_THRESHOLD_MASK 0x007F
 #define FM_BLEND_MONO_THRESHOLD_SHFT 0
 
-
 /* FM_MAX_TUNE_ERROR */
 #define FM_MAX_TUNE_ERROR      0x1108
 #define FM_MAX_TUNE_ERROR_MASK 0x007F
@@ -357,7 +356,6 @@
 #define TX_RDS_FIFO_SIZE_MASK 0x00FF
 #define TX_RDS_FIFO_SIZE_SHFT 0
 
-
 /*==================================================================
  AM Receive Properties
 ==================================================================*/
@@ -563,11 +561,9 @@
 #define AM_CHANNEL_FILTER_BW_3KHZ 2
 #define AM_CHANNEL_FILTER_BW_2KHZ 3
 
-
 /*==================================================================
  WB Receive Properties
 ==================================================================*/
-
 
 /* WB_MAX_TUNE_ERROR */
 #define WB_MAX_TUNE_ERROR      0x5108

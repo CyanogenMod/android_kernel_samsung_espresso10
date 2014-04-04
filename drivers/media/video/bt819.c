@@ -48,7 +48,6 @@ static int debug;
 module_param(debug, int, 0);
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
 
-
 /* ----------------------------------------------------------------------- */
 
 struct bt819 {

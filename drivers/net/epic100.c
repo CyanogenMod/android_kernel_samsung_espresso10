@@ -140,7 +140,6 @@ IVc. Errata
 
 */
 
-
 enum chip_capability_flags { MII_PWRDWN=1, TYPE2_INTR=2, NO_MII=4 };
 
 #define EPIC_TOTAL_SIZE 0x100
@@ -152,12 +151,10 @@ typedef enum {
 	SMSC_83C175,
 } chip_t;
 
-
 struct epic_chip_info {
 	const char *name;
         int drv_flags;                          /* Driver use, intended as capability flags. */
 };
-
 
 /* indexed by chip_t */
 static const struct epic_chip_info pci_id_tbl[] = {
@@ -165,7 +162,6 @@ static const struct epic_chip_info pci_id_tbl[] = {
 	{ "SMSC EPIC/100 83c170",	TYPE2_INTR },
 	{ "SMSC EPIC/C 83c175",		TYPE2_INTR | MII_PWRDWN },
 };
-
 
 static DEFINE_PCI_DEVICE_TABLE(epic_pci_tbl) = {
 	{ 0x10B8, 0x0005, 0x1092, 0x0AB4, 0, 0, SMSC_83C170_0 },
@@ -175,7 +171,6 @@ static DEFINE_PCI_DEVICE_TABLE(epic_pci_tbl) = {
 	{ 0,}
 };
 MODULE_DEVICE_TABLE (pci, epic_pci_tbl);
-
 
 #ifndef USE_IO_OPS
 #undef inb
@@ -653,7 +648,6 @@ static void mdio_write(struct net_device *dev, int phy_id, int loc, int value)
 			break;
 	}
 }
-
 
 static int epic_open(struct net_device *dev)
 {
@@ -1524,7 +1518,6 @@ static int netdev_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 	return rc;
 }
 
-
 static void __devexit epic_remove_one (struct pci_dev *pdev)
 {
 	struct net_device *dev = pci_get_drvdata(pdev);
@@ -1543,7 +1536,6 @@ static void __devexit epic_remove_one (struct pci_dev *pdev)
 	/* pci_power_off(pdev, -1); */
 }
 
-
 #ifdef CONFIG_PM
 
 static int epic_suspend (struct pci_dev *pdev, pm_message_t state)
@@ -1560,7 +1552,6 @@ static int epic_suspend (struct pci_dev *pdev, pm_message_t state)
 	return 0;
 }
 
-
 static int epic_resume (struct pci_dev *pdev)
 {
 	struct net_device *dev = pci_get_drvdata(pdev);
@@ -1574,7 +1565,6 @@ static int epic_resume (struct pci_dev *pdev)
 
 #endif /* CONFIG_PM */
 
-
 static struct pci_driver epic_driver = {
 	.name		= DRV_NAME,
 	.id_table	= epic_pci_tbl,
@@ -1585,7 +1575,6 @@ static struct pci_driver epic_driver = {
 	.resume		= epic_resume,
 #endif /* CONFIG_PM */
 };
-
 
 static int __init epic_init (void)
 {
@@ -1598,12 +1587,10 @@ static int __init epic_init (void)
 	return pci_register_driver(&epic_driver);
 }
 
-
 static void __exit epic_cleanup (void)
 {
 	pci_unregister_driver (&epic_driver);
 }
-
 
 module_init(epic_init);
 module_exit(epic_cleanup);

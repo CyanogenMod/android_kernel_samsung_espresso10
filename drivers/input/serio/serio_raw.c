@@ -245,7 +245,6 @@ static const struct file_operations serio_raw_fops = {
 	.llseek = noop_llseek,
 };
 
-
 /*********************************************************************
  *                   Interface with serio port   	             *
  *********************************************************************/

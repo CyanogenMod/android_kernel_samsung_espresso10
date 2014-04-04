@@ -40,7 +40,6 @@ static inline struct bfs_inode_info *BFS_I(struct inode *inode)
 	return container_of(inode, struct bfs_inode_info, vfs_inode);
 }
 
-
 #define printf(format, args...) \
 	printk(KERN_ERR "BFS-fs: %s(): " format, __func__, ## args)
 

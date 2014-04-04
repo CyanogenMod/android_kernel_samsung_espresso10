@@ -372,4 +372,3 @@ MODULE_AUTHOR("Wim Van Sebroeck <wim@iguana.be>, "
 MODULE_DESCRIPTION("Intel TCO Vendor Specific WatchDog Timer Driver Support");
 MODULE_VERSION(DRV_VERSION);
 MODULE_LICENSE("GPL");
-

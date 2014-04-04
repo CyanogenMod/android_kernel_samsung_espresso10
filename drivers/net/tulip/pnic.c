@@ -17,7 +17,6 @@
 #include <linux/jiffies.h>
 #include "tulip.h"
 
-
 void pnic_do_nway(struct net_device *dev)
 {
 	struct tulip_private *tp = netdev_priv(dev);

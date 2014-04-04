@@ -115,7 +115,6 @@ static struct gfs2_sbd *init_sbd(struct super_block *sb)
 	return sdp;
 }
 
-
 /**
  * gfs2_check_sb - Check superblock
  * @sdp: the filesystem
@@ -760,7 +759,6 @@ fail:
 	return error;
 }
 
-
 static int init_inodes(struct gfs2_sbd *sdp, int undo)
 {
 	int error = 0;
@@ -912,7 +910,6 @@ static int init_threads(struct gfs2_sbd *sdp, int undo)
 
 	return 0;
 
-
 fail_quotad:
 	kthread_stop(sdp->sd_quotad_process);
 fail:
@@ -979,7 +976,7 @@ static int gfs2_lm_mount(struct gfs2_sbd *sdp, int silent)
 		switch (token) {
 		case Opt_jid:
 			ret = match_int(&tmp[0], &option);
-			if (ret || option < 0) 
+			if (ret || option < 0)
 				goto hostdata_error;
 			if (test_and_clear_bit(SDF_NOJOURNALID, &sdp->sd_flags))
 				ls->ls_jid = option;
@@ -1404,4 +1401,3 @@ struct file_system_type gfs2meta_fs_type = {
 	.mount = gfs2_mount_meta,
 	.owner = THIS_MODULE,
 };
-

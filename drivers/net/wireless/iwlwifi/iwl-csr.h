@@ -134,7 +134,6 @@
 #define CSR_DRAM_INT_TBL_REG	(CSR_BASE+0x0A0)
 #define CSR_MAC_SHADOW_REG_CTRL	(CSR_BASE+0x0A8) /* 6000 and up */
 
-
 /* GIO Chicken Bits (PCI Express bus link power management) */
 #define CSR_GIO_CHICKEN_BITS    (CSR_BASE+0x100)
 
@@ -268,7 +267,6 @@
 #define CSR_GP_CNTRL_REG_FLAG_MAC_POWER_SAVE         (0x04000000)
 #define CSR_GP_CNTRL_REG_FLAG_HW_RF_KILL_SW          (0x08000000)
 
-
 /* HW REV */
 #define CSR_HW_REV_TYPE_MSK            (0x00001F0)
 #define CSR_HW_REV_TYPE_5300           (0x0000020)
@@ -314,7 +312,6 @@
 #define CSR_GP_REG_MAC_POWER_SAVE           (0x01000000)
 #define CSR_GP_REG_PHY_POWER_SAVE           (0x02000000)
 #define CSR_GP_REG_POWER_SAVE_ERROR         (0x03000000)
-
 
 /* CSR GIO */
 #define CSR_GIO_REG_VAL_L0S_ENABLED	(0x00000002)

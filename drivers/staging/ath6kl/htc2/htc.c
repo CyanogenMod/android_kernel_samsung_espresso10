@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc.c" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -37,7 +37,7 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(htc,
                                  ATH_DEBUG_MASK_DEFAULTS,
                                  ATH_DEBUG_DESCRIPTION_COUNT(g_HTCDebugDescription),
                                  g_HTCDebugDescription);
-                                 
+
 #endif
 
 static void HTCReportFailure(void *Context);
@@ -67,13 +67,13 @@ static void HTCCleanup(struct htc_target *target)
     s32 i;
 
     DevCleanup(&target->Device);
-    
+
     for (i = 0;i < NUM_CONTROL_BUFFERS;i++) {
         if (target->HTCControlBuffers[i].Buffer) {
             kfree(target->HTCControlBuffers[i].Buffer);
         }
     }
-    
+
     if (A_IS_MUTEX_VALID(&target->HTCLock)) {
         A_MUTEX_DELETE(&target->HTCLock);
     }
@@ -101,7 +101,7 @@ HTC_HANDLE HTCCreate(void *hif_handle, struct htc_init_info *pInfo)
     AR_DEBUG_PRINTF(ATH_DEBUG_TRC, ("HTCCreate - Enter\n"));
 
     A_REGISTER_MODULE_DEBUG_INFO(htc);
-    
+
     do {
 
             /* allocate target memory */
@@ -117,7 +117,7 @@ HTC_HANDLE HTCCreate(void *hif_handle, struct htc_init_info *pInfo)
         A_MUTEX_INIT(&target->HTCTxLock);
         INIT_HTC_PACKET_QUEUE(&target->ControlBufferTXFreeList);
         INIT_HTC_PACKET_QUEUE(&target->ControlBufferRXFreeList);
-        
+
             /* give device layer the hif device handle */
         target->Device.HIFDevice = hif_handle;
             /* give the device layer our context (for event processing)
@@ -131,16 +131,15 @@ HTC_HANDLE HTCCreate(void *hif_handle, struct htc_init_info *pInfo)
         target->EpWaitingForBuffers = ENDPOINT_MAX;
 
         memcpy(&target->HTCInitInfo,pInfo,sizeof(struct htc_init_info));
-        
+
         ResetEndpointStates(target);
-          
+
             /* setup device layer */
         status = DevSetup(&target->Device);
 
         if (status) {
             break;
         }
-
 
         /* get the block sizes */
         status = HIFConfigureDevice(hif_handle, HIF_DEVICE_GET_MBOX_BLOCK_SIZE,
@@ -265,7 +264,6 @@ int HTCWaitTarget(HTC_HANDLE HTCHandle)
             break;
         }
 
-        
         if (pRdyMsg->Version2_0_Info.CreditCount == 0 || pRdyMsg->Version2_0_Info.CreditSize == 0) {
               /* this message is not valid */
             AR_DEBUG_ASSERT(false);
@@ -275,66 +273,66 @@ int HTCWaitTarget(HTC_HANDLE HTCHandle)
 
         target->TargetCredits = pRdyMsg->Version2_0_Info.CreditCount;
         target->TargetCreditSize = pRdyMsg->Version2_0_Info.CreditSize;
-        
+
         AR_DEBUG_PRINTF(ATH_DEBUG_WARN, (" Target Ready: credits: %d credit size: %d\n",
                 target->TargetCredits, target->TargetCreditSize));
-        
-            /* check if this is an extended ready message */        
+
+            /* check if this is an extended ready message */
         if (pPacket->ActualLength >= sizeof(HTC_READY_EX_MSG)) {
-                /* this is an extended message */    
-            target->HTCTargetVersion = pRdyMsg->HTCVersion;   
-            target->MaxMsgPerBundle = pRdyMsg->MaxMsgsPerHTCBundle;     
+                /* this is an extended message */
+            target->HTCTargetVersion = pRdyMsg->HTCVersion;
+            target->MaxMsgPerBundle = pRdyMsg->MaxMsgsPerHTCBundle;
         } else {
                 /* legacy */
             target->HTCTargetVersion = HTC_VERSION_2P0;
-            target->MaxMsgPerBundle = 0;    
+            target->MaxMsgPerBundle = 0;
         }
-        
-#ifdef HTC_FORCE_LEGACY_2P0   
-            /* for testing and comparison...*/     
+
+#ifdef HTC_FORCE_LEGACY_2P0
+            /* for testing and comparison...*/
         target->HTCTargetVersion = HTC_VERSION_2P0;
         target->MaxMsgPerBundle = 0;
 #endif
-           
-        AR_DEBUG_PRINTF(ATH_DEBUG_TRC, 
-                    ("Using HTC Protocol Version : %s (%d)\n ", 
+
+        AR_DEBUG_PRINTF(ATH_DEBUG_TRC,
+                    ("Using HTC Protocol Version : %s (%d)\n ",
                     (target->HTCTargetVersion == HTC_VERSION_2P0) ? "2.0" : ">= 2.1",
                     target->HTCTargetVersion));
-                    
+
         if (target->MaxMsgPerBundle > 0) {
                 /* limit what HTC can handle */
-            target->MaxMsgPerBundle = min(HTC_HOST_MAX_MSG_PER_BUNDLE, target->MaxMsgPerBundle);          
+            target->MaxMsgPerBundle = min(HTC_HOST_MAX_MSG_PER_BUNDLE, target->MaxMsgPerBundle);
                 /* target supports message bundling, setup device layer */
             if (DevSetupMsgBundling(&target->Device,target->MaxMsgPerBundle)) {
                     /* device layer can't handle bundling */
-                target->MaxMsgPerBundle = 0;        
+                target->MaxMsgPerBundle = 0;
             } else {
                     /* limit bundle what the device layer can handle */
                 target->MaxMsgPerBundle = min(DEV_GET_MAX_MSG_PER_BUNDLE(&target->Device),
-                                              target->MaxMsgPerBundle);     
+                                              target->MaxMsgPerBundle);
             }
         }
-        
+
         if (target->MaxMsgPerBundle > 0) {
-            AR_DEBUG_PRINTF(ATH_DEBUG_TRC, 
-                    (" HTC bundling allowed. Max Msg Per HTC Bundle: %d\n", target->MaxMsgPerBundle));    
-           
-            if (DEV_GET_MAX_BUNDLE_SEND_LENGTH(&target->Device) != 0) {           
+            AR_DEBUG_PRINTF(ATH_DEBUG_TRC,
+                    (" HTC bundling allowed. Max Msg Per HTC Bundle: %d\n", target->MaxMsgPerBundle));
+
+            if (DEV_GET_MAX_BUNDLE_SEND_LENGTH(&target->Device) != 0) {
                 target->SendBundlingEnabled = true;
-            }            
-            if (DEV_GET_MAX_BUNDLE_RECV_LENGTH(&target->Device) != 0) {    
+            }
+            if (DEV_GET_MAX_BUNDLE_RECV_LENGTH(&target->Device) != 0) {
                 target->RecvBundlingEnabled = true;
             }
-                            
+
             if (!DEV_IS_LEN_BLOCK_ALIGNED(&target->Device,target->TargetCreditSize)) {
                 AR_DEBUG_PRINTF(ATH_DEBUG_WARN, ("*** Credit size: %d is not block aligned! Disabling send bundling \n",
-                        target->TargetCreditSize));    
+                        target->TargetCreditSize));
                     /* disallow send bundling since the credit size is not aligned to a block size
                      * the I/O block padding will spill into the next credit buffer which is fatal */
                 target->SendBundlingEnabled = false;
             }
         }
-           
+
             /* setup our pseudo HTC control endpoint connection */
         A_MEMZERO(&connect,sizeof(connect));
         A_MEMZERO(&resp,sizeof(resp));
@@ -366,8 +364,6 @@ int HTCWaitTarget(HTC_HANDLE HTCHandle)
     return status;
 }
 
-
-
 /* Start HTC, enable interrupts and let the target know host has finished setup */
 int HTCStart(HTC_HANDLE HTCHandle)
 {
@@ -383,7 +379,7 @@ int HTCStart(HTC_HANDLE HTCHandle)
         /* make sure state is cleared again */
     target->OpStateFlags = 0;
     target->RecvStateFlags = 0;
-      
+
         /* now that we are starting, push control receive buffers into the
          * HTC control endpoint */
 
@@ -443,7 +439,7 @@ static void ResetEndpointStates(struct htc_target *target)
 
     for (i = ENDPOINT_0; i < ENDPOINT_MAX; i++) {
         pEndpoint = &target->EndPoint[i];
-        
+
         A_MEMZERO(&pEndpoint->CreditDist, sizeof(pEndpoint->CreditDist));
         pEndpoint->ServiceID = 0;
         pEndpoint->MaxMsgLength = 0;
@@ -468,7 +464,7 @@ void HTCStop(HTC_HANDLE HTCHandle)
         /* mark that we are shutting down .. */
     target->OpStateFlags |= HTC_OP_STATE_STOPPING;
     UNLOCK_HTC(target);
-    
+
         /* Masking interrupts is a synchronous operation, when this function returns
          * all pending HIF I/O has completed, we can safely flush the queues */
     DevMaskInterrupts(&target->Device);
@@ -487,7 +483,7 @@ void HTCStop(HTC_HANDLE HTCHandle)
     DevCleanupMsgBundling(&target->Device);
 
     ResetEndpointStates(target);
-   
+
     AR_DEBUG_PRINTF(ATH_DEBUG_TRC, ("-HTCStop \n"));
 }
 
@@ -501,7 +497,7 @@ void HTCDumpCreditStates(HTC_HANDLE HTCHandle)
     DumpCreditDistStates(target);
 
     UNLOCK_HTC_TX(target);
-    
+
     DumpAR6KDevState(&target->Device);
 }
 #endif
@@ -572,4 +568,3 @@ struct ar6k_device  *HTCGetAR6KDevice(void *HTCHandle)
     struct htc_target *target = GET_HTC_TARGET_FROM_HANDLE(HTCHandle);
     return &target->Device;
 }
-

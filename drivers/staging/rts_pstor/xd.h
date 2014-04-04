@@ -185,4 +185,3 @@ int xd_power_off_card3v3(struct rtsx_chip *chip);
 int release_xd_card(struct rtsx_chip *chip);
 
 #endif  /* __REALTEK_RTSX_XD_H */
-

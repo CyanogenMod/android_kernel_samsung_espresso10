@@ -77,7 +77,6 @@ struct nig_stats {
 	u32 egress_mac_pkt1_hi;
 };
 
-
 enum bnx2x_stats_event {
 	STATS_EVENT_PMF = 0,
 	STATS_EVENT_LINK_UP,

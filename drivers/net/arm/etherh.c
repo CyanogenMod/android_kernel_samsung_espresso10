@@ -143,9 +143,6 @@ static inline unsigned int etherh_get_stat(struct etherh_priv *eh)
 	return readb(eh->ctrl_port);
 }
 
-
-
-
 static void etherh_irq_enable(ecard_t *ec, int irqnr)
 {
 	struct etherh_priv *eh = ec->irq_data;
@@ -164,9 +161,6 @@ static expansioncard_ops_t etherh_ops = {
 	.irqenable	= etherh_irq_enable,
 	.irqdisable	= etherh_irq_disable,
 };
-
-
-
 
 static void
 etherh_setif(struct net_device *dev)
@@ -531,7 +525,7 @@ static int __devinit etherh_addr(char *addr, struct expansion_card *ec)
 {
 	struct in_chunk_dir cd;
 	char *s;
-	
+
 	if (!ecard_readchunk(&cd, ec, 0xf5, 0)) {
 		printk(KERN_ERR "%s: unable to read podule description string\n",
 		       dev_name(&ec->dev));

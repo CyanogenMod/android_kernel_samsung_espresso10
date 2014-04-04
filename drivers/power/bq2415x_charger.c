@@ -26,7 +26,6 @@
 #include <linux/i2c/twl.h>
 #include <linux/i2c/bq2415x.h>
 
-
 struct charge_params {
 	unsigned long		currentmA;
 	unsigned long		voltagemV;
@@ -140,7 +139,6 @@ static int bq2415x_read_byte(struct bq2415x_device_info *di, u8 *value, u8 reg)
 	return bq2415x_read_block(di, value, reg, 1);
 }
 
-
 static void bq2415x_config_status_reg(struct bq2415x_device_info *di)
 {
 	di->status_reg = (TIMER_RST | ENABLE_STAT_PIN);
@@ -191,7 +189,6 @@ static int bq2415x_charger_event(struct notifier_block *nb, unsigned long event,
 
 	return ret;
 }
-
 
 static void bq2415x_config_control_reg(struct bq2415x_device_info *di)
 {
@@ -289,7 +286,6 @@ static void bq2415x_config_safety_reg(struct bq2415x_device_info *di,
 	else if (max_currentmA > 1550)
 		max_currentmA = 1550;
 
-
 	if (max_voltagemV < 4200)
 		max_voltagemV = 4200;
 	else if (max_voltagemV > 4440)
@@ -314,7 +310,6 @@ bq2415x_charger_update_status(struct bq2415x_device_info *di)
 
 	di->timer_fault = 0;
 	bq2415x_read_block(di, &read_reg[0], 0, 7);
-
 
 	if ((read_reg[0] & 0x30) == 0x20)
 		dev_dbg(di->dev, "CHARGE DONE\n");
@@ -350,7 +345,6 @@ static void bq2415x_charger_work(struct work_struct *work)
 	schedule_delayed_work(&di->bq2415x_charger_work,
 				msecs_to_jiffies(BQ2415x_WATCHDOG_TIMEOUT));
 }
-
 
 static ssize_t bq2415x_set_enable_itermination(struct device *dev,
 				  struct device_attribute *attr,
@@ -564,7 +558,6 @@ static int __devinit bq2415x_charger_probe(struct i2c_client *client,
 	bq2415x_config_control_reg(di);
 	bq2415x_config_voltage_reg(di);
 	bq2415x_config_current_reg(di);
-
 
 	INIT_DELAYED_WORK_DEFERRABLE(&di->bq2415x_charger_work,
 				bq2415x_charger_work);

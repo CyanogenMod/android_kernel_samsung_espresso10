@@ -71,7 +71,6 @@ struct bma222_private_data {
 	struct bma222_config resume;	/** < resume configuration */
 };
 
-
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -282,7 +281,6 @@ static int bma222_exit(void *mlsl_handle,
 	kfree(pdata->private_data);
 	return INV_SUCCESS;
 }
-
 
 /**
  *  @brief facility to retrieve the device configuration.

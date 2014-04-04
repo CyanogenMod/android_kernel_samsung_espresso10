@@ -34,10 +34,8 @@ enum {
 	/* CONTROL REGISTERS */
 	CR_START			= 0x9000,
 
-
 	/* FIRMWARE */
 	FW_START			= 0xee00,
-
 
 	/* EEPROM */
 	E2P_START			= 0xf800,
@@ -633,7 +631,6 @@ enum {
 #define CR_DBG_SELECT			CTL_REG(0x0804)
 #define CR_FIFO_Length			CTL_REG(0x0808)
 
-
 #define CR_RSSI_MGC			CTL_REG(0x0810)
 
 #define CR_PON				CTL_REG(0x0818)
@@ -668,7 +665,6 @@ enum {
 #define UW2453_INTR_REG			((zd_addr_t)0x85c1)
 
 #define CWIN_SIZE			0x007f043f
-
 
 #define HWINT_ENABLED			\
 	(INT_TX_COMPLETE_EN|		\

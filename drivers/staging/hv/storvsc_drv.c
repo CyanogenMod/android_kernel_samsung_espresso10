@@ -69,7 +69,6 @@ struct storvsc_cmd_request {
 	struct hv_storvsc_request request;
 };
 
-
 static int storvsc_device_alloc(struct scsi_device *sdevice)
 {
 	/*
@@ -176,7 +175,6 @@ cleanup:
 	return NULL;
 }
 
-
 /* Assume the original sgl has enough room */
 static unsigned int copy_from_bounce_buffer(struct scatterlist *orig_sgl,
 					    struct scatterlist *bounce_sgl,
@@ -240,7 +238,6 @@ static unsigned int copy_from_bounce_buffer(struct scatterlist *orig_sgl,
 
 	return total_copied;
 }
-
 
 /* Assume the bounce_sgl has enough room ie using the create_bounce_buffer() */
 static unsigned int copy_to_bounce_buffer(struct scatterlist *orig_sgl,
@@ -307,7 +304,6 @@ static unsigned int copy_to_bounce_buffer(struct scatterlist *orig_sgl,
 	return total_copied;
 }
 
-
 /*
  * storvsc_remove - Callback when our device is removed
  */
@@ -335,7 +331,6 @@ static int storvsc_remove(struct hv_device *dev)
 	scsi_host_put(host);
 	return 0;
 }
-
 
 static int storvsc_get_chs(struct scsi_device *sdev, struct block_device * bdev,
 			   sector_t capacity, int *info)
@@ -411,7 +406,6 @@ cleanup:
 	return ret;
 }
 
-
 /*
  * storvsc_host_reset_handler - Reset the scsi HBA
  */
@@ -435,7 +429,6 @@ static int storvsc_host_reset_handler(struct scsi_cmnd *scmnd)
 
 	return ret;
 }
-
 
 /*
  * storvsc_commmand_completion - Command completion processing
@@ -485,7 +478,6 @@ static void storvsc_commmand_completion(struct hv_storvsc_request *request)
 	kmem_cache_free(host_dev->request_pool, cmd_request);
 }
 
-
 /*
  * storvsc_queuecommand - Initiate command processing
  */
@@ -503,7 +495,6 @@ static int storvsc_queuecommand_lck(struct scsi_cmnd *scmnd,
 	struct scatterlist *sgl;
 	unsigned int sg_count = 0;
 	struct vmscsi_request *vm_srb;
-
 
 	/* If retrying, no need to prep the cmd */
 	if (scmnd->host_scribble) {
@@ -537,7 +528,6 @@ static int storvsc_queuecommand_lck(struct scsi_cmnd *scmnd,
 	request = &cmd_request->request;
 	vm_srb = &request->vstor_packet.vm_srb;
 
-
 	/* Build the SRB */
 	switch (scmnd->sc_data_direction) {
 	case DMA_TO_DEVICE:
@@ -564,7 +554,6 @@ static int storvsc_queuecommand_lck(struct scsi_cmnd *scmnd,
 	memcpy(vm_srb->cdb, scmnd->cmnd, vm_srb->cdb_length);
 
 	request->sense_buffer = scmnd->sense_buffer;
-
 
 	request->data_buffer.len = scsi_bufflen(scmnd);
 	if (scsi_sg_count(scmnd)) {
@@ -645,7 +634,6 @@ retry_request:
 
 static DEF_SCSI_QCMD(storvsc_queuecommand)
 
-
 /* Scsi driver */
 static struct scsi_host_template scsi_driver = {
 	.module	=		THIS_MODULE,
@@ -673,7 +661,6 @@ static struct scsi_host_template scsi_driver = {
 	/* Make sure we dont get a sg segment crosses a page boundary */
 	.dma_boundary =		PAGE_SIZE-1,
 };
-
 
 /*
  * storvsc_probe - Add a new device for this driver
@@ -754,7 +741,6 @@ static struct hv_driver storvsc_drv = {
 	.remove = storvsc_remove,
 };
 
-
 /*
  * storvsc_drv_init - StorVsc driver initialization.
  */
@@ -786,7 +772,6 @@ static int storvsc_drv_init(void)
 
 	drv->name = driver_name;
 	drv->driver.name = driver_name;
-
 
 	/* The driver belongs to vmbus */
 	ret = vmbus_child_driver_register(&drv->driver);

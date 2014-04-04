@@ -3084,7 +3084,6 @@ u8 ata_bmdma_status(struct ata_port *ap)
 }
 EXPORT_SYMBOL_GPL(ata_bmdma_status);
 
-
 /**
  *	ata_bmdma_port_start - Set port up for bmdma.
  *	@ap: Port to initialize

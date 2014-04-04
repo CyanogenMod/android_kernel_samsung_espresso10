@@ -42,7 +42,6 @@ static ssize_t name_show(struct device *dev,
 	return sprintf(buf, "%s\n", dev_name(&wiphy->dev));
 }
 
-
 static ssize_t addresses_show(struct device *dev,
 			      struct device_attribute *attr,
 			      char *buf)

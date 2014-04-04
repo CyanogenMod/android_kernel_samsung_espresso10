@@ -53,7 +53,6 @@
 extern LDM_DEV  *gpsPVRLDMDev;
 extern struct gpu_platform_data *gpsSgxPlatformData;
 
-
 #if !defined(NO_HARDWARE)
 
 static struct pm_qos_request_list *qos_request;
@@ -138,19 +137,17 @@ PVRSRV_ERROR EnableSGXClocks(SYS_DATA *psSysData)
 			&gpsPVRLDMDev->dev, SYS_SGX_CLOCK_SPEED);
 	atomic_set(&psSysSpecData->sSGXClocksEnabled, 1);
 
-#else	
+#else
 	PVR_UNREFERENCED_PARAMETER(psSysData);
-#endif	
+#endif
 	return PVRSRV_OK;
 }
-
 
 IMG_VOID DisableSGXClocks(SYS_DATA *psSysData)
 {
 #if !defined(NO_HARDWARE)
 	SYS_SPECIFIC_DATA *psSysSpecData = (SYS_SPECIFIC_DATA *) psSysData->pvSysSpecificData;
 
-	
 	if (atomic_read(&psSysSpecData->sSGXClocksEnabled) == 0)
 	{
 		return;

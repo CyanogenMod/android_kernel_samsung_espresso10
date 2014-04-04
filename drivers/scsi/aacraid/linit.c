@@ -28,7 +28,6 @@
  * Abstract: Linux Driver entry module for Adaptec RAID Array Controller
  */
 
-
 #include <linux/compat.h>
 #include <linux/blkdev.h>
 #include <linux/completion.h>

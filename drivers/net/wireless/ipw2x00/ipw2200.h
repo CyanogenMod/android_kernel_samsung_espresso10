@@ -1395,7 +1395,6 @@ BITC(x,23),BITC(x,22),BITC(x,21),BITC(x,20),\
 BITC(x,19),BITC(x,18),BITC(x,17),BITC(x,16),\
 BIT_ARG16(x)
 
-
 #define IPW_DEBUG(level, fmt, args...) \
 do { if (ipw_debug_level & (level)) \
   printk(KERN_DEBUG DRV_NAME": %c %s " fmt, \

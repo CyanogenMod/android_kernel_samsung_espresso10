@@ -47,7 +47,6 @@
 #define RX_EVM	rx_evm_percentage
 #define RX_SIGQ	rx_mimo_signalquality
 
-
 void rtl92c_read_chip_version(struct ieee80211_hw *hw)
 {
 	struct rtl_priv *rtlpriv = rtl_priv(hw);

@@ -5,7 +5,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -124,7 +124,7 @@ typedef struct timer_list               A_TIMER;
 } while (0)
 
 /*
- * Cancel the Timer. 
+ * Cancel the Timer.
  */
 #define A_UNTIMEOUT(pTimer) do {                                \
     del_timer((pTimer));                                        \
@@ -243,19 +243,19 @@ typedef struct sk_buff_head A_NETBUF_QUEUE_T;
 
 /* Add data to end of a buffer  */
 #define A_NETBUF_PUT_DATA(bufPtr, srcPtr,  len) \
-    a_netbuf_put_data(bufPtr, srcPtr, len) 
+    a_netbuf_put_data(bufPtr, srcPtr, len)
 
 /* Add data to start of the  buffer */
 #define A_NETBUF_PUSH_DATA(bufPtr, srcPtr,  len) \
-    a_netbuf_push_data(bufPtr, srcPtr, len) 
+    a_netbuf_push_data(bufPtr, srcPtr, len)
 
 /* Remove data at start of the buffer */
 #define A_NETBUF_PULL_DATA(bufPtr, dstPtr, len) \
-    a_netbuf_pull_data(bufPtr, dstPtr, len) 
+    a_netbuf_pull_data(bufPtr, dstPtr, len)
 
 /* Remove data from the end of the buffer */
 #define A_NETBUF_TRIM_DATA(bufPtr, dstPtr, len) \
-    a_netbuf_trim_data(bufPtr, dstPtr, len) 
+    a_netbuf_trim_data(bufPtr, dstPtr, len)
 
 /* View data as "size" contiguous bytes of type "t" */
 #define A_NETBUF_VIEW_DATA(bufPtr, t, size) \
@@ -264,7 +264,7 @@ typedef struct sk_buff_head A_NETBUF_QUEUE_T;
 /* return the beginning of the headroom for the buffer */
 #define A_NETBUF_HEAD(bufPtr) \
         ((((struct sk_buff *)(bufPtr))->head))
-    
+
 /*
  * OS specific network buffer access routines
  */
@@ -299,16 +299,16 @@ u32 a_copy_from_user(void *to, const void *from, u32 n);
 
 /* In linux, WLAN Rx and Tx run in different contexts, so no need to check
  * for any commands/data queued for WLAN */
-#define A_CHECK_DRV_TX()   
-             
+#define A_CHECK_DRV_TX()
+
 #define A_GET_CACHE_LINE_BYTES()    L1_CACHE_BYTES
 
 #define A_CACHE_LINE_PAD            128
 
-static inline void *A_ALIGN_TO_CACHE_LINE(void *ptr) {   
+static inline void *A_ALIGN_TO_CACHE_LINE(void *ptr) {
     return (void *)L1_CACHE_ALIGN((unsigned long)ptr);
 }
-   
+
 #else /* __KERNEL__ */
 
 #ifdef __GNUC__

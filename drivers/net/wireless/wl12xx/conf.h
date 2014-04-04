@@ -545,7 +545,6 @@ struct conf_rx_settings {
 	CONF_HW_BIT_RATE_36MBPS | CONF_HW_BIT_RATE_48MBPS |      \
 	CONF_HW_BIT_RATE_54MBPS)
 
-
 /*
  * Default rates for management traffic when operating in AP mode. This
  * should be configured according to the basic rate set of the AP
@@ -609,7 +608,6 @@ struct conf_tx_rate_class {
 /* Slot number setting to start transmission at DIFS interval normal
  * DCF access */
 #define CONF_TX_AIFS_DIFS 2
-
 
 enum conf_tx_ac {
 	CONF_TX_AC_BE = 0,         /* best effort / legacy */
@@ -679,7 +677,6 @@ enum {
 	CONF_ACK_POLICY_NO_ACK = 1,
 	CONF_ACK_POLICY_BLOCK = 2,
 };
-
 
 struct conf_tx_tid {
 	u8 queue_id;

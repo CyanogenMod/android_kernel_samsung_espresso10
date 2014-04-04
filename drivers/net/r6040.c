@@ -730,7 +730,6 @@ static int r6040_up(struct net_device *dev)
 	return 0;
 }
 
-
 /* Read/set MAC address routines */
 static void r6040_mac_address(struct net_device *dev)
 {
@@ -1243,7 +1242,6 @@ static void __devexit r6040_remove_one(struct pci_dev *pdev)
 	pci_set_drvdata(pdev, NULL);
 }
 
-
 static DEFINE_PCI_DEVICE_TABLE(r6040_pci_tbl) = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_RDC, 0x6040) },
 	{ 0 }
@@ -1257,12 +1255,10 @@ static struct pci_driver r6040_driver = {
 	.remove		= __devexit_p(r6040_remove_one),
 };
 
-
 static int __init r6040_init(void)
 {
 	return pci_register_driver(&r6040_driver);
 }
-
 
 static void __exit r6040_cleanup(void)
 {

@@ -53,5 +53,4 @@ struct ixpdev_tx_desc
 	u32	unused;
 };
 
-
 #endif

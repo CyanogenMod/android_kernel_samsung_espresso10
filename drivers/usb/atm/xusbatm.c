@@ -24,7 +24,6 @@
 
 #include "usbatm.h"
 
-
 #define XUSBATM_DRIVERS_MAX	8
 
 #define XUSBATM_PARM(name, type, parmtype, desc) \
@@ -167,7 +166,6 @@ static int xusbatm_atm_start(struct usbatm_data *usbatm,
 
 	return 0;
 }
-
 
 static int xusbatm_usb_probe(struct usb_interface *intf,
 			     const struct usb_device_id *id)

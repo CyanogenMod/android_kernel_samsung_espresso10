@@ -391,7 +391,6 @@ struct uart_state {
 
 #define UART_XMIT_SIZE	PAGE_SIZE
 
-
 /* number of characters left in xmit buffer before we ask for more */
 #define WAKEUP_CHARS		256
 

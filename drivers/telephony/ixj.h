@@ -15,7 +15,7 @@
  *    2 of the License, or (at your option) any later version.
  *
  * Author:          Ed Okerson, <eokerson@quicknet.net>
- *    
+ *
  * Contributors:    Greg Herlein, <gherlein@quicknet.net>
  *                  David W. Erhart, <derhart@quicknet.net>
  *                  John Sellers, <jsellers@quicknet.net>
@@ -34,7 +34,7 @@
  * QUICKNET TECHNOLOGIES, INC. SPECIFICALLY DISCLAIMS ANY WARRANTIES,
  * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
  * AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS
- * ON AN "AS IS" BASIS, AND QUICKNET TECHNOLOGIES, INC. HAS NO OBLIGATION 
+ * ON AN "AS IS" BASIS, AND QUICKNET TECHNOLOGIES, INC. HAS NO OBLIGATION
  * TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  *
  *****************************************************************************/
@@ -1319,4 +1319,3 @@ typedef struct {
 typedef int (*IXJ_REGFUNC) (IXJ * j, unsigned long arg);
 
 extern IXJ *ixj_pcmcia_probe(unsigned long, unsigned long);
-

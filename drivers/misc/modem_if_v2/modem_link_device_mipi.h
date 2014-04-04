@@ -47,6 +47,8 @@
 
 #define MIPI_BULK_TX_SIZE	(8 * 1024)
 
+#define MIPI_CMD_SAVE_BUF_SIZE	50
+
 enum {
 	HSI_LL_MSG_BREAK, /* 0x0 */
 	HSI_LL_MSG_ECHO,
@@ -90,7 +92,6 @@ enum {
 	STEP_SEND_TO_CONN_CLOSED,
 };
 
-
 struct if_hsi_channel {
 	struct hsi_device *dev;
 	unsigned int channel_id;
@@ -125,6 +126,12 @@ struct if_hsi_command {
 	struct list_head list;
 };
 
+struct if_hsi_cmd_save {
+	unsigned long long time;
+	u32 command;
+	bool direction;
+};
+
 struct mipi_link_device {
 	struct link_device ld;
 
@@ -150,11 +157,13 @@ struct mipi_link_device {
 	/* for mipi-link's first initialization
 	 * link has to be initialized right after modem power on */
 	bool modem_power_on;
+
+	unsigned int cmd_save_pt;
+	struct if_hsi_cmd_save cmd_save[MIPI_CMD_SAVE_BUF_SIZE];
 };
 /* converts from struct link_device* to struct xxx_link_device* */
 #define to_mipi_link_device(linkdev) \
 			container_of(linkdev, struct mipi_link_device, ld)
-
 
 enum {
 	HSI_INIT_MODE_NORMAL,
@@ -168,7 +177,6 @@ static int if_hsi_write(struct if_hsi_channel *channel, u32 *data,
 static int if_hsi_protocol_send(struct mipi_link_device *mipi_ld, int ch,
 			u32 *data, unsigned int len);
 static int if_hsi_close_channel(struct if_hsi_channel *channel);
-
 
 #define MIPI_LOG_TAG "mipi_link: "
 

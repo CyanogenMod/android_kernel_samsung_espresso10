@@ -44,7 +44,6 @@
 #define B43_PHY_ANALOGOVER		B43_PHY_EXTG(0x14)	/* Analog override */
 #define B43_PHY_ANALOGOVERVAL		B43_PHY_EXTG(0x15)	/* Analog override value */
 
-
 /*** G-PHY table numbers */
 #define B43_GTAB(number, offset)	(((number) << B43_PHY_GTABNR_SHIFT) | (offset))
 #define B43_GTAB_NRSSI			B43_GTAB(0x00, 0)
@@ -53,7 +52,6 @@
 
 u16 b43_gtab_read(struct b43_wldev *dev, u16 table, u16 offset);
 void b43_gtab_write(struct b43_wldev *dev, u16 table, u16 offset, u16 value);
-
 
 /* Returns the boolean whether "TX Magnification" is enabled. */
 #define has_tx_magnification(phy) \

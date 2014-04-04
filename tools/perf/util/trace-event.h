@@ -7,7 +7,6 @@
 
 #define __unused __attribute__((unused))
 
-
 #ifndef PAGE_MASK
 #define PAGE_MASK (page_size - 1)
 #endif

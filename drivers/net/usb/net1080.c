@@ -33,7 +33,6 @@
 
 #include <asm/unaligned.h>
 
-
 /*
  * Netchip 1080 driver ... http://www.netchip.com
  * (Sept 2004:  End-of-life announcement has been sent.)
@@ -83,7 +82,6 @@ struct nc_trailer {
 
 /* packets _could_ be up to 64KB... */
 #define NC_MAX_PACKET	32767
-
 
 /*
  * Zero means no timeout; else, how long a 64 byte bulk packet may be queued
@@ -148,7 +146,6 @@ nc_register_write(struct usbnet *dev, u8 regnum, u16 value)
 	nc_vendor_write(dev, REQUEST_REGISTER, regnum, value);
 }
 
-
 #if 0
 static void nc_dump_registers(struct usbnet *dev)
 {
@@ -181,7 +178,6 @@ static void nc_dump_registers(struct usbnet *dev)
 	kfree(vp);
 }
 #endif
-
 
 /*-------------------------------------------------------------------------*/
 
@@ -243,7 +239,6 @@ static inline void nc_dump_usbctl(struct usbnet *dev, u16 usbctl)
 
 #define	STATUS_UNSPEC_MASK	0x0c8c
 #define	STATUS_NOISE_MASK 	((u16)~(0x0303|STATUS_UNSPEC_MASK))
-
 
 static inline void nc_dump_status(struct usbnet *dev, u16 status)
 {

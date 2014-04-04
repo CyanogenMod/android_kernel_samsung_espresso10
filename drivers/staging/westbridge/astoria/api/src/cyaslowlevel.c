@@ -981,7 +981,6 @@ cy_as_ll_send_callback(
 	(void)resp;
 	(void)ret;
 
-
 	cy_as_hal_assert(dev_p->sig == CY_AS_DEVICE_HANDLE_SIGNATURE);
 
 	/*

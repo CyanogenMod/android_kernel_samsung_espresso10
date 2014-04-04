@@ -139,7 +139,6 @@ int set_pages_nx(struct page *page, int numpages);
 int set_pages_ro(struct page *page, int numpages);
 int set_pages_rw(struct page *page, int numpages);
 
-
 void clflush_cache_range(void *addr, unsigned int size);
 
 #ifdef CONFIG_DEBUG_RODATA

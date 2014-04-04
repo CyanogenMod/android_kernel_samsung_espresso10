@@ -1,4 +1,3 @@
-
 #ifndef __MACH_OMAP2_IO_H__
 #define __MACH_OMAP2_IO_H__
 

@@ -97,9 +97,7 @@ extern int usbip_use_debug ;
 	} \
 } while (0)
 
-
 #define BUG()	do { err("sorry, it's a bug"); abort(); } while (0)
-
 
 struct usb_interface {
 	uint8_t bInterfaceClass;
@@ -107,8 +105,6 @@ struct usb_interface {
 	uint8_t bInterfaceProtocol;
 	uint8_t padding;	/* alignment */
 } __attribute__((packed));
-
-
 
 struct usb_device {
 	char path[SYSFS_PATH_MAX];

@@ -27,7 +27,6 @@
 #include <plat/mux.h>
 #include <plat/tc.h>
 
-
 /* NOTE:  don't expect this to support many I/O cards.  The 16xx chips have
  * hard-wired timings to support Compact Flash memory cards; they won't work
  * with various other devices (like WLAN adapters) without some external

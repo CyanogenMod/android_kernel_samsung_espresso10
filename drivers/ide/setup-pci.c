@@ -174,7 +174,6 @@ void ide_setup_pci_noise(struct pci_dev *dev, const struct ide_port_info *d)
 }
 EXPORT_SYMBOL_GPL(ide_setup_pci_noise);
 
-
 /**
  *	ide_pci_enable	-	do PCI enables
  *	@dev: PCI device

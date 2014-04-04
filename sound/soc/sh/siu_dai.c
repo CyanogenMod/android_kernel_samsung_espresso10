@@ -302,7 +302,6 @@ static int siu_dai_spbstart(struct siu_port *port_info)
 	siu_write32(base + SIU_TRDAT, port_info->trdat);
 	port_info->trdat = 0x0;
 
-
 	/* SPB start condition: software */
 	siu_write32(base + SIU_SBACTIV, 0);
 	/* Start SPB */

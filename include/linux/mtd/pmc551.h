@@ -40,7 +40,6 @@ static int pmc551_point(struct mtd_info *mtd, loff_t from, size_t len,
 static int pmc551_read(struct mtd_info *, loff_t, size_t, size_t *, u_char *);
 static int pmc551_write(struct mtd_info *, loff_t, size_t, size_t *, const u_char *);
 
-
 /*
  * Define the PCI ID's if the kernel doesn't define them for us
  */
@@ -51,7 +50,6 @@ static int pmc551_write(struct mtd_info *, loff_t, size_t, size_t *, const u_cha
 #ifndef PCI_DEVICE_ID_V3_SEMI_V370PDC
 #define PCI_DEVICE_ID_V3_SEMI_V370PDC     0x0200
 #endif
-
 
 #define PMC551_PCI_MEM_MAP0	0x50
 #define PMC551_PCI_MEM_MAP1	0x54
@@ -73,6 +71,4 @@ static int pmc551_write(struct mtd_info *, loff_t, size_t, size_t *, const u_cha
 #define PMC551_DRAM_BLK_SET_COL_MUX(x,v) (((x) & ~0x00007000) | (((v) & 0x7) << 12))
 #define PMC551_DRAM_BLK_SET_ROW_MUX(x,v) (((x) & ~0x00000f00) | (((v) & 0xf) << 8))
 
-
 #endif /* __MTD_PMC551_H__ */
-

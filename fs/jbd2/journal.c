@@ -503,7 +503,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
 		WARN_ONCE(1, "jbd: bad log_start_commit: %u %u %u %u\n",
 			  journal->j_commit_request,
 			  journal->j_commit_sequence,
-			  target, journal->j_running_transaction ? 
+			  target, journal->j_running_transaction ?
 			  journal->j_running_transaction->t_tid : 0);
 	return 0;
 }
@@ -1299,7 +1299,6 @@ static int load_superblock(journal_t *journal)
 	return 0;
 }
 
-
 /**
  * int jbd2_journal_load() - Read journal from disk.
  * @journal: Journal to act on.
@@ -1426,7 +1425,6 @@ int jbd2_journal_destroy(journal_t *journal)
 
 	return err;
 }
-
 
 /**
  *int jbd2_journal_check_used_features () - Check if features specified are used.
@@ -1610,7 +1608,6 @@ static int journal_convert_superblock_v1(journal_t *journal,
 	sync_dirty_buffer(bh);
 	return 0;
 }
-
 
 /**
  * int jbd2_journal_flush () - Flush journal
@@ -1916,7 +1913,6 @@ static const char *jbd2_slab_names[JBD2_MAX_SLABS] = {
 	"jbd2_1k", "jbd2_2k", "jbd2_4k", "jbd2_8k",
 	"jbd2_16k", "jbd2_32k", "jbd2_64k", "jbd2_128k"
 };
-
 
 static void jbd2_journal_destroy_slabs(void)
 {
@@ -2406,8 +2402,8 @@ static void __exit journal_exit(void)
 	jbd2_journal_destroy_caches();
 }
 
-/* 
- * jbd2_dev_to_name is a utility function used by the jbd2 and ext4 
+/*
+ * jbd2_dev_to_name is a utility function used by the jbd2 and ext4
  * tracing infrastructure to map a dev_t to a device name.
  *
  * The caller should use rcu_read_lock() in order to make sure the
@@ -2476,4 +2472,3 @@ EXPORT_SYMBOL(jbd2_dev_to_name);
 MODULE_LICENSE("GPL");
 module_init(journal_init);
 module_exit(journal_exit);
-

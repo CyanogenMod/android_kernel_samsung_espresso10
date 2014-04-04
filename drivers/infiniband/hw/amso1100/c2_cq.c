@@ -127,7 +127,6 @@ static inline enum ib_wc_status c2_cqe_status_to_openib(u8 status)
 	}
 }
 
-
 static inline int c2_poll_one(struct c2_dev *c2dev,
 			      struct c2_cq *cq, struct ib_wc *entry)
 {

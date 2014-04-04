@@ -19,7 +19,6 @@ extern int wm8903_mic_detect(struct snd_soc_codec *codec,
 			     struct snd_soc_jack *jack,
 			     int det, int shrt);
 
-
 /*
  * Register values.
  */

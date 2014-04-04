@@ -2209,7 +2209,6 @@ static struct llc_conn_state_trans llc_reject_state_trans_2_1 = {
 	.ev_actions    = llc_reject_actions_2_1,
 };
 
-
 /* State transitions for LLC_CONN_EV_LOCAL_BUSY_DETECTED event */
 static llc_conn_ev_qfyr_t llc_reject_ev_qfyrs_3[] = {
 	[0] = llc_conn_ev_qlfy_p_flag_eq_0,

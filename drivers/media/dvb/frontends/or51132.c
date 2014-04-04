@@ -52,7 +52,6 @@ static int debug;
 		if (debug) printk(KERN_DEBUG "or51132: " args); \
 	} while (0)
 
-
 struct or51132_state
 {
 	struct i2c_adapter* i2c;
@@ -69,7 +68,6 @@ struct or51132_state
 	/* Tuner private data */
 	u32 current_frequency;
 };
-
 
 /* Write buffer to demod */
 static int or51132_writebuf(struct or51132_state *state, const u8 *buf, int len)

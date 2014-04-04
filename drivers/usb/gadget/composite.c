@@ -895,7 +895,6 @@ int usb_string_ids_n(struct usb_composite_dev *c, unsigned n)
 	return next + 1;
 }
 
-
 /*-------------------------------------------------------------------------*/
 
 static void composite_setup_complete(struct usb_ep *ep, struct usb_request *req)
@@ -1454,4 +1453,3 @@ void usb_composite_setup_continue(struct usb_composite_dev *cdev)
 
 	spin_unlock_irqrestore(&cdev->lock, flags);
 }
-

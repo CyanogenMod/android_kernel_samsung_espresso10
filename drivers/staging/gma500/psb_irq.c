@@ -28,7 +28,6 @@
 #include "psb_intel_reg.h"
 #include "psb_powermgmt.h"
 
-
 /*
  * inline functions
  */
@@ -147,7 +146,6 @@ static void mid_vblank_handler(struct drm_device *dev, uint32_t pipe)
 	drm_handle_vblank(dev, pipe);
 }
 
-
 /**
  * Display controller interrupt handler for pipe event.
  *
@@ -233,7 +231,6 @@ irqreturn_t psb_irq_handler(DRM_IRQ_ARGS)
 
 	if (vdc_stat & _LNC_IRQ_TOPAZ_FLAG)
 		PSB_DEBUG_IRQ("Got TOPAZ interrupt\n");
-
 
 	vdc_stat &= dev_priv->vdc_irq_mask;
 	spin_unlock(&dev_priv->irqmask_lock);
@@ -572,4 +569,3 @@ psb_get_vblank_counter_exit:
 
 	return count;
 }
-

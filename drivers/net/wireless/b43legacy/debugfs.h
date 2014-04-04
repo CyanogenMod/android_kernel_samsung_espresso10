@@ -13,7 +13,6 @@ enum b43legacy_dyndbg { /* Dynamic debugging features */
 	__B43legacy_NR_DYNDBG,
 };
 
-
 #ifdef CONFIG_B43LEGACY_DEBUG
 
 struct dentry;

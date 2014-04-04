@@ -14,7 +14,6 @@
 # ARE EXPRESSLY DISCLAIMED.  The License provides additional details about
 # this warranty disclaimer.
 
-
 mwifiex-y += main.o
 mwifiex-y += init.o
 mwifiex-y += cfp.o

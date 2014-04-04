@@ -183,7 +183,6 @@ void netxen_nic_set_link_parameters(struct netxen_adapter *adapter);
 #define netxen_gb_unset_gb3_mask(config_word)  \
 	((config_word) &= ~(1 << 6))
 
-
 /*
  * PHY-Specific MII control/status registers.
  */

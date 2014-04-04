@@ -80,12 +80,8 @@ static u32 hwc_virt_to_phys(u32 arg)
 
 static void sync_drop(struct dsscomp_sync_obj *sync)
 {
-	if (sync && atomic_dec_and_test(&sync->refs)) {
-		if (debug & DEBUG_WAITS)
-			pr_info("free sync [%p]\n", sync);
-
+	if (sync && atomic_dec_and_test(&sync->refs))
 		kfree(sync);
-	}
 }
 
 static int sync_setup(const char *name, const struct file_operations *fops,
@@ -117,22 +113,12 @@ int dsscomp_wait(struct dsscomp_sync_obj *sync, enum dsscomp_wait_phase phase,
 								int timeout)
 {
 	mutex_lock(&wait_mtx);
-	if (debug & DEBUG_WAITS)
-		pr_info("wait %s on [%p]\n",
-			phase == DSSCOMP_WAIT_DISPLAYED ? "display" :
-			phase == DSSCOMP_WAIT_PROGRAMMED ? "program" :
-			"release", sync);
 
 	if (sync->state < phase) {
 		mutex_unlock(&wait_mtx);
 
 		timeout = wait_event_interruptible_timeout(waitq,
 			sync->state >= phase, timeout);
-		if (debug & DEBUG_WAITS)
-			pr_info("wait over [%p]: %s %d\n", sync,
-				 timeout < 0 ? "signal" :
-				 timeout > 0 ? "ok" : "timeout",
-				 timeout);
 		if (timeout <= 0)
 			return timeout ? : -ETIME;
 
@@ -257,9 +243,6 @@ static long setup_mgr(struct dsscomp_dev *cdev,
 	if (d->get_sync_obj) {
 		sync = kzalloc(sizeof(*sync), GFP_KERNEL);
 		r = sync_setup("dsscomp_sync", &sync_fops, sync, O_RDONLY);
-		if (sync && (debug & DEBUG_WAITS))
-			dev_info(DEV(cdev), "new sync [%p] on #%d\n", sync,
-								sync->fd);
 		if (r)
 			sync_drop(sync);
 	}
@@ -411,15 +394,11 @@ static void fill_cache(struct dsscomp_dev *cdev)
 			cdev->num_displays = i + 1;
 
 		cdev->displays[i] = dssdev;
-		dev_dbg(DEV(cdev), "display%lu=%s\n", i, dssdev->driver_name);
 
 		cdev->state_notifiers[i].notifier_call = dsscomp_state_notifier;
 		blocking_notifier_chain_register(&dssdev->state_notifiers,
 						cdev->state_notifiers + i);
 	}
-	dev_info(DEV(cdev), "found %d displays and %d overlays, WB overlay %d\n",
-				cdev->num_displays, cdev->num_ovls,
-				cdev->wb_ovl ? 1 : 0);
 }
 
 static void fill_platform_info(struct dsscomp_dev *cdev)
@@ -663,7 +642,9 @@ void dsscomp_kdump(void)
 	};
 	int i;
 
+#ifdef CONFIG_DSSCOMP_DEBUG_LOG
 	dsscomp_dbg_events(&s);
+#endif
 	dsscomp_dbg_comps(&s);
 	dsscomp_dbg_gralloc(&s);
 

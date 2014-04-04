@@ -44,8 +44,6 @@ static struct wake_lock spi_wakelock;
 ***************************************************************/
 enum SPI_MAIN_STATE_T spi_main_state = SPI_MAIN_STATE_END;
 
-
-
 static int _start_data_send(void);
 
 static void _start_packet_tx(void);
@@ -53,9 +51,6 @@ static void _start_packet_tx(void);
 static void _start_packet_tx_send(void);
 
 static void _start_packet_receive(void);
-
-
-
 
 /**************************************************************
 	Definition of Variables and Functions by platform
@@ -67,10 +62,7 @@ static void _start_packet_receive(void);
 
 #define MRDY_GUARANTEE_MRDY_LOOP_COUNT 10000 /* 120us */
 
-
 static void spi_main_process(struct work_struct *pspi_wq);
-
-
 
 #ifdef SPI_GUARANTEE_MRDY_GAP
 unsigned long mrdy_low_time_save, mrdy_high_time_save;
@@ -88,7 +80,6 @@ int check_mrdy_time_gap(unsigned long x, unsigned long y)
 }
 #endif
 
-
 /*=====================================
 * Description set state of spi
 	(Common)
@@ -100,7 +91,6 @@ void spi_main_set_state(enum SPI_MAIN_STATE_T state)
 		(int)spi_main_state, (int)state);
 }
 
-
 /*=====================================
 * Description	an interrupt handler for mrdy rising
 =====================================*/
@@ -110,7 +100,6 @@ SPI_DEV_IRQ_HANDLER(spi_main_mrdy_rising_handler)
 
 	return result;
 }
-
 
 /*=====================================
 //Description	an interrupt handler for srdy rising
@@ -142,7 +131,6 @@ SPI_DEV_IRQ_HANDLER(spi_main_srdy_rising_handler)
 	return result;
 }
 
-
 /*=====================================
 * Description	an interrupt handler for submrdy rising
 =====================================*/
@@ -152,7 +140,6 @@ SPI_DEV_IRQ_HANDLER(spi_main_submrdy_rising_handler)
 
 	return result;
 }
-
 
 /*=====================================
 * Description	an interrupt handler for subsrdy rising
@@ -172,7 +159,6 @@ SPI_DEV_IRQ_HANDLER(spi_main_subsrdy_rising_handler)
 	return result;
 }
 
-
 /*=====================================
 * Description	Send the signal to SPI Task
 =====================================*/
@@ -185,7 +171,6 @@ void spi_main_send_signal(enum SPI_MAIN_MSG_T spi_sigs)
 	queue_work(suspend_work_queue, (struct work_struct *)spi_wq);
 }
 
-
 /*=====================================
 * Description	Send the signal to SPI Task
 =====================================*/
@@ -197,7 +182,6 @@ void spi_main_send_signalfront(enum SPI_MAIN_MSG_T spi_sigs)
 	INIT_WORK(&spi_wq->work, spi_main_process);
 	queue_work_front(suspend_work_queue, (struct work_struct *)spi_wq);
 }
-
 
 /*=====================================
 * Description	check each queue data and start send routine
@@ -212,7 +196,6 @@ static int _start_data_send(void)
 	return 0;
 }
 
-
 /*=====================================
 * Description	start to send packet data
 =====================================*/
@@ -222,7 +205,6 @@ static void _start_packet_tx(void)
 
 	if (spi_data_check_tx_queue() == 0)
 		return;
-
 
 	/* check SUB SRDY state */
 	if (spi_dev_get_gpio(SPI_DEV_GPIOPIN_SUBSRDY) ==
@@ -293,7 +275,6 @@ static void _start_packet_tx(void)
 	return;
 }
 
-
 /*=====================================
 * Description	send data
 =====================================*/
@@ -328,7 +309,6 @@ static void _start_packet_tx_send(void)
 	_start_data_send();
 }
 
-
 /*=====================================
 * Description	start to receive packet data
 =====================================*/
@@ -346,9 +326,7 @@ static void _start_packet_receive(void)
 
 	spi_main_state = SPI_MAIN_STATE_RX_WAIT;
 
-
 	spi_dev_set_gpio(SPI_DEV_GPIOPIN_SUBMRDY, SPI_DEV_GPIOLEVEL_HIGH);
-
 
 	/* check SUBSRDY state */
 	while (spi_dev_get_gpio(SPI_DEV_GPIOPIN_SUBSRDY) ==
@@ -413,7 +391,6 @@ static void _start_packet_receive(void)
 	return;
 }
 
-
 /*=====================================
 * Description	creating a task
 =====================================*/
@@ -442,7 +419,6 @@ void spi_main_init(void *data)
 		"spi_subsrdy_rising", 0);
 }
 
-
 /*=====================================
 * Description	main process
 =====================================*/
@@ -453,7 +429,6 @@ static void spi_main_process(struct work_struct *work)
 
 	struct spi_work *spi_wq = container_of(work, struct spi_work, work);
 	signal_code = spi_wq->signal_code;
-
 
 	if (spi_main_state == SPI_MAIN_STATE_END
 		|| spi_main_state == SPI_MAIN_STATE_START) {
@@ -503,7 +478,6 @@ static void spi_main_process(struct work_struct *work)
 	}
 }
 
-
 /*=====================================
 //Description	main task
 =====================================*/
@@ -527,7 +501,6 @@ void spi_main(unsigned long argc, void *argv)
 	spi_main_state = SPI_MAIN_STATE_IDLE;
 	spi_set_is_restart(0);
 }
-
 
 /*=====================================
 * Description	spi restart for CP slient reset

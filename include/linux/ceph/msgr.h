@@ -24,7 +24,6 @@
 #define CEPH_BANNER "ceph v027"
 #define CEPH_BANNER_MAX_LEN 30
 
-
 /*
  * Rollover-safe type and comparator for 32-bit sequence numbers.
  * Comparator returns -1, 0, or 1.
@@ -35,7 +34,6 @@ static inline __s32 ceph_seq_cmp(__u32 a, __u32 b)
 {
        return (__s32)a - (__s32)b;
 }
-
 
 /*
  * entity_name -- logical name for a process participating in the
@@ -70,7 +68,6 @@ struct ceph_entity_inst {
 	struct ceph_entity_addr addr;
 } __attribute__ ((packed));
 
-
 /* used by message exchange protocol */
 #define CEPH_MSGR_TAG_READY         1  /* server->client: ready for messages */
 #define CEPH_MSGR_TAG_RESETSESSION  2  /* server->client: reset, try again */
@@ -87,7 +84,6 @@ struct ceph_entity_inst {
 #define CEPH_MSGR_TAG_BADPROTOVER  10  /* bad protocol version */
 #define CEPH_MSGR_TAG_BADAUTHORIZER 11 /* bad authorizer */
 #define CEPH_MSGR_TAG_FEATURES      12 /* insufficient features */
-
 
 /*
  * connection negotiation
@@ -114,7 +110,6 @@ struct ceph_msg_connect_reply {
 } __attribute__ ((packed));
 
 #define CEPH_MSG_CONNECT_LOSSY  1  /* messages i send may be safely dropped */
-
 
 /*
  * message header
@@ -170,6 +165,5 @@ struct ceph_msg_footer {
 
 #define CEPH_MSG_FOOTER_COMPLETE  (1<<0)   /* msg wasn't aborted */
 #define CEPH_MSG_FOOTER_NOCRC     (1<<1)   /* no data crc */
-
 
 #endif

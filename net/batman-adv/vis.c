@@ -751,7 +751,6 @@ static void broadcast_vis_packet(struct bat_priv *bat_priv,
 	uint8_t dstaddr[ETH_ALEN];
 	int i;
 
-
 	packet = (struct vis_packet *)info->skb_packet->data;
 
 	/* send to all routers in range. */

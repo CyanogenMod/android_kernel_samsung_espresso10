@@ -99,7 +99,6 @@ struct dn_rt_hash_bucket
 
 extern struct neigh_table dn_neigh_table;
 
-
 static unsigned char dn_hiord_addr[6] = {0xAA,0x00,0x04,0x00,0x00,0x00};
 
 static const int dn_rt_min_delay = 2 * HZ;
@@ -527,7 +526,6 @@ static int dn_route_rx_long(struct sk_buff *skb)
 		goto drop_it;
 	ptr += 6;
 
-
 	/* Source info */
 	ptr += 2;
 	cb->src = dn_eth2dn(ptr);
@@ -545,8 +543,6 @@ drop_it:
 	kfree_skb(skb);
 	return NET_RX_DROP;
 }
-
-
 
 static int dn_route_rx_short(struct sk_buff *skb)
 {
@@ -1186,7 +1182,6 @@ e_neighbour:
 	dst_free(&rt->dst);
 	goto e_nobufs;
 }
-
 
 /*
  * N.B. The flags may be moved into the flowi at some future stage.
@@ -1843,10 +1838,10 @@ void __init dn_route_init(void)
 	proc_net_fops_create(&init_net, "decnet_cache", S_IRUGO, &dn_rt_cache_seq_fops);
 
 #ifdef CONFIG_DECNET_ROUTER
-	rtnl_register(PF_DECnet, RTM_GETROUTE, dn_cache_getroute, dn_fib_dump);
+	rtnl_register(PF_DECnet, RTM_GETROUTE, dn_cache_getroute, dn_fib_dump, NULL);
 #else
 	rtnl_register(PF_DECnet, RTM_GETROUTE, dn_cache_getroute,
-		      dn_cache_dump);
+		      dn_cache_dump, NULL);
 #endif
 }
 
@@ -1858,4 +1853,3 @@ void __exit dn_route_cleanup(void)
 	proc_net_remove(&init_net, "decnet_cache");
 	dst_entries_destroy(&dn_dst_ops);
 }
-

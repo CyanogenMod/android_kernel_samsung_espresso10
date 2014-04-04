@@ -107,4 +107,3 @@ u32 omap2_pwrdm_get_mem_bank_stst_mask(u8 bank)
 	}
 	return 0;
 }
-

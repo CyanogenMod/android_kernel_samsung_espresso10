@@ -137,7 +137,6 @@ static void hp_sdc_mlc_isr (int irq, void *dev_id,
 	write_unlock(&mlc->lock);
 }
 
-
 /******************** Tasklet or userspace context functions ****************/
 
 static int hp_sdc_mlc_in(hil_mlc *mlc, suseconds_t timeout)

@@ -146,7 +146,6 @@
 #define DEBUG18(x)	do {} while (0)
 #endif
 
-
 /*
  * Firmware Dump structure definition
  */

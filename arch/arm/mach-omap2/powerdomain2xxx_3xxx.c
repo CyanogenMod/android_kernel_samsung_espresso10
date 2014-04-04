@@ -23,7 +23,6 @@
 #include "prm-regbits-24xx.h"
 #include "prm-regbits-34xx.h"
 
-
 /* Common functions across OMAP2 and OMAP3 */
 static int omap2_pwrdm_set_next_pwrst(struct powerdomain *pwrdm, u8 pwrst)
 {

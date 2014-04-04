@@ -622,7 +622,6 @@ static int set_fb_var(struct fb_info *fbi,
 	return 0;
 }
 
-
 /* Set rotation (0, 90, 180, 270 degree), and switch to the new mode. */
 static void omapfb_rotate(struct fb_info *fbi, int rotate)
 {

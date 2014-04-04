@@ -63,7 +63,6 @@ struct mii_phy
  */
 extern int mii_phy_probe(struct mii_phy *phy, int mii_id);
 
-
 /* MII definitions missing from mii.h */
 
 #define BMCR_SPD2	0x0040		/* Gigabit enable (bcm54xx)	*/

@@ -41,10 +41,6 @@ omap_otg_init(struct omap_usb_config *config)
 	/* NOTE:  no bus or clock setup (yet?) */
 
 	syscon = omap_readl(OTG_SYSCON_1) & 0xffff;
-	if (!(syscon & OTG_RESET_DONE))
-		pr_debug("USB resets not complete?\n");
-
-	//omap_writew(0, OTG_IRQ_EN);
 
 	/* pin muxing and transceiver pinouts */
 	if (config->pins[0] > 2)	/* alt pingroup 2 */
@@ -52,7 +48,6 @@ omap_otg_init(struct omap_usb_config *config)
 	syscon |= config->usb0_init(config->pins[0], is_usb0_device(config));
 	syscon |= config->usb1_init(config->pins[1]);
 	syscon |= config->usb2_init(config->pins[2], alt_pingroup);
-	pr_debug("OTG_SYSCON_1 = %08x\n", omap_readl(OTG_SYSCON_1));
 	omap_writel(syscon, OTG_SYSCON_1);
 
 	syscon = config->hmc_mode;
@@ -61,10 +56,6 @@ omap_otg_init(struct omap_usb_config *config)
 	if (config->otg)
 		syscon |= OTG_EN;
 #endif
-	if (cpu_class_is_omap1())
-		pr_debug("USB_TRANSCEIVER_CTRL = %03x\n",
-			 omap_readl(USB_TRANSCEIVER_CTRL));
-	pr_debug("OTG_SYSCON_2 = %08x\n", omap_readl(OTG_SYSCON_2));
 	omap_writel(syscon, OTG_SYSCON_2);
 
 	printk("USB: hmc %d", config->hmc_mode);
@@ -73,6 +64,7 @@ omap_otg_init(struct omap_usb_config *config)
 	else if (config->pins[0])
 		printk(", usb0 %d wires%s", config->pins[0],
 			is_usb0_device(config) ? " (dev)" : "");
+
 	if (config->pins[1])
 		printk(", usb1 %d wires", config->pins[1]);
 	if (!alt_pingroup && config->pins[2])
@@ -104,8 +96,6 @@ omap_otg_init(struct omap_usb_config *config)
 		syscon &= ~DEV_IDLE_EN;
 		udc_device->dev.platform_data = config;
 		status = platform_device_register(udc_device);
-		if (status)
-			pr_debug("can't register UDC device, %d\n", status);
 	}
 #endif
 
@@ -116,8 +106,6 @@ omap_otg_init(struct omap_usb_config *config)
 		syscon &= ~HST_IDLE_EN;
 		ohci_device->dev.platform_data = config;
 		status = platform_device_register(ohci_device);
-		if (status)
-			pr_debug("can't register OHCI device, %d\n", status);
 	}
 #endif
 
@@ -128,13 +116,9 @@ omap_otg_init(struct omap_usb_config *config)
 		syscon &= ~OTG_IDLE_EN;
 		otg_device->dev.platform_data = config;
 		status = platform_device_register(otg_device);
-		if (status)
-			pr_debug("can't register OTG device, %d\n", status);
 	}
 #endif
-	pr_debug("OTG_SYSCON_1 = %08x\n", omap_readl(OTG_SYSCON_1));
 	omap_writel(syscon, OTG_SYSCON_1);
-
 	status = 0;
 }
 

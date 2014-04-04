@@ -14,7 +14,6 @@
 #include <linux/types.h>
 #include <linux/zorro.h>
 
-
 #ifdef CONFIG_ZORRO_NAMES
 
 struct zorro_prod_info {
@@ -40,7 +39,6 @@ struct zorro_manuf_info {
 #define ENDMANUF()
 #define PRODUCT( manuf, prod, name ) 	static char __prodstr_##manuf##prod[] __initdata = name;
 #include "devlist.h"
-
 
 #define MANUF( manuf, name )		static struct zorro_prod_info __prods_##manuf[] __initdata = {
 #define ENDMANUF()			};

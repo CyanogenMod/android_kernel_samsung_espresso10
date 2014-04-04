@@ -88,7 +88,6 @@ enum {
 	static int __trc_fileno = ((BFA_TRC_ ## __mod ## _ ## __submod) | \
 						 BFA_TRC_MOD(__mod))
 
-
 #define bfa_trc32(_trcp, _data)	\
 	__bfa_trc((_trcp)->trcmod, __trc_fileno, __LINE__, (u32)_data)
 #define bfa_trc(_trcp, _data)	\
@@ -125,7 +124,6 @@ __bfa_trc(struct bfa_trc_mod_s *trcm, int fileno, int line, u64 data)
 	if (trcm->tail == trcm->head)
 		trcm->head = (trcm->head + 1) & (BFA_TRC_MAX - 1);
 }
-
 
 static inline void
 __bfa_trc32(struct bfa_trc_mod_s *trcm, int fileno, int line, u32 data)

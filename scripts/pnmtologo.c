@@ -1,4 +1,3 @@
-
 /*
  *  Convert a logo in ASCII PNM format to C source suitable for inclusion in
  *  the Linux kernel
@@ -20,13 +19,11 @@
 #include <string.h>
 #include <unistd.h>
 
-
 static const char *programname;
 static const char *filename;
 static const char *logoname = "linux_logo";
 static const char *outputname;
 static FILE *out;
-
 
 #define LINUX_LOGO_MONO		1	/* monochrome black/white */
 #define LINUX_LOGO_VGA16	2	/* 16 colors VGA text palette */
@@ -67,7 +64,6 @@ static const struct color clut_vga16[16] = {
     { 0xff, 0xff, 0xff },
 };
 
-
 static int logo_type = LINUX_LOGO_CLUT224;
 static unsigned int logo_width;
 static unsigned int logo_height;
@@ -78,7 +74,6 @@ static unsigned int logo_clutsize;
 static void die(const char *fmt, ...)
     __attribute__ ((noreturn)) __attribute ((format (printf, 1, 2)));
 static void usage(void) __attribute ((noreturn));
-
 
 static unsigned int get_number(FILE *fp)
 {
@@ -505,4 +500,3 @@ int main(int argc, char *argv[])
     }
     exit(0);
 }
-

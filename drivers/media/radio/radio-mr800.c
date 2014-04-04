@@ -682,4 +682,3 @@ static void __exit amradio_exit(void)
 
 module_init(amradio_init);
 module_exit(amradio_exit);
-

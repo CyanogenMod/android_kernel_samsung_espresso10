@@ -53,4 +53,3 @@ obj-$(CONFIG_LEDS) += $(led-y)
 # Miscellaneous functions
 obj-$(CONFIG_PM)			+= pm.o sleep.o
 obj-$(CONFIG_SA1100_SSP)		+= ssp.o
-

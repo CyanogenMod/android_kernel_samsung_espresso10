@@ -96,7 +96,6 @@ static void smb136_read_regs(struct i2c_client *client, char *str)
 	}
 }
 
-
 static int smb136_get_charging_status(struct i2c_client *client)
 {
 	int status = POWER_SUPPLY_STATUS_UNKNOWN;

@@ -13,7 +13,6 @@
 	410 Severn Ave., Suite 210
 	Annapolis MD 21403
 
-
 	Thanks go to jennings@Montrouge.SMR.slb.com ( Patrick Jennings)
 	and jrs@world.std.com (Rick Sladkey) for testing and bugfixes.
 	Mark Salazar <leslie@access.digex.net> made the changes for cards with
@@ -72,7 +71,6 @@ static const char version[] =
 #endif
 static unsigned int net_debug = NET_DEBUG;
 #define debug net_debug
-
 
 /*
   			Details of the i82586.
@@ -300,7 +298,6 @@ static int io = 0x300;
 static int irq;
 static int mem_start;
 
-
 /* Check for a network adaptor of this type, and return '0' iff one exists.
 	If dev->base_addr == 0, probe all likely locations.
 	If dev->base_addr == 1, always return failure.
@@ -478,7 +475,6 @@ static int el16_open(struct net_device *dev)
 	return 0;
 }
 
-
 static void el16_tx_timeout (struct net_device *dev)
 {
 	struct net_local *lp = netdev_priv(dev);
@@ -507,7 +503,6 @@ static void el16_tx_timeout (struct net_device *dev)
 	dev->trans_start = jiffies; /* prevent tx timeout */
 	netif_wake_queue (dev);
 }
-
 
 static netdev_tx_t el16_send_packet (struct sk_buff *skb,
 				     struct net_device *dev)

@@ -51,4 +51,3 @@
 #define		HAL_8192S_HW_GPIO_WPS_BIT	BIT(4)
 
 #endif	/*__RTL8712_GP_BITDEF_H__*/
-

@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -88,7 +88,6 @@
 #define  __dev_put(dev) dev_put(dev)
 #endif
 
-
 #define USER_SAVEDKEYS_STAT_INIT     0
 #define USER_SAVEDKEYS_STAT_RUN      1
 
@@ -111,7 +110,6 @@ struct USER_SAVEDKEYS {
 #define DBG_DRIVER      0x00000100
 
 #define DBG_DEFAULTS    (DBG_ERROR|DBG_WARNING)
-
 
 int ar6000_ReadRegDiag(struct hif_device *hifDevice, u32 *address, u32 *data);
 int ar6000_WriteRegDiag(struct hif_device *hifDevice, u32 *address, u32 *data);
@@ -193,7 +191,6 @@ enum {
     WLAN_WOW_STATE_SUSPENDING
 };
 
-
 typedef enum _AR6K_BIN_FILE {
     AR6K_OTP_FILE,
     AR6K_FIRMWARE_FILE,
@@ -224,7 +221,6 @@ typedef enum _AR6K_BIN_FILE {
 #else /* ATH6KL_CONFIG_HIF_VIRTUAL_SCATTER */
 #define NOHIFSCATTERSUPPORT_DEFAULT    0
 #endif /* ATH6KL_CONFIG_HIF_VIRTUAL_SCATTER */
-
 
 #if defined(CONFIG_ATH6KL_ENABLE_COEXISTENCE)
 
@@ -332,7 +328,7 @@ typedef enum _AR6K_BIN_FILE {
 #endif /* Board Data File */
 
 /* AR6003 2.0 definitions */
-#define AR6003_REV2_VERSION                 0x30000384 
+#define AR6003_REV2_VERSION                 0x30000384
 #define AR6003_REV2_DATA_DOWNLOAD_ADDRESS   AR6003_REV2_OTP_DATA_ADDRESS
 #define AR6003_REV2_PATCH_DOWNLOAD_ADDRESS  0x57e910
 #define AR6003_REV2_OTP_FILE                "ath6k/AR6003/hw2.0/otp.bin.z77"
@@ -368,7 +364,6 @@ typedef enum _AR6K_BIN_FILE {
 #else
 #define AR6003_REV3_BOARD_DATA_FILE      "ath6k/AR6003/hw2.1.1/bdata.CUSTOM.bin"
 #endif /* Board Data File */
-
 
 /* Power states */
 enum {

@@ -53,7 +53,7 @@ static void proc_audio_usbid_read(struct snd_info_entry *entry, struct snd_info_
 {
 	struct snd_usb_audio *chip = entry->private_data;
 	if (!chip->shutdown)
-		snd_iprintf(buffer, "%04x:%04x\n", 
+		snd_iprintf(buffer, "%04x:%04x\n",
 			    USB_ID_VENDOR(chip->usb_id),
 			    USB_ID_PRODUCT(chip->usb_id));
 }
@@ -107,7 +107,7 @@ static void proc_dump_substream_formats(struct snd_usb_substream *subs, struct s
 			}
 			snd_iprintf(buffer, "\n");
 		}
-		if (snd_usb_get_speed(subs->dev) != USB_SPEED_FULL)
+		if (subs->speed != USB_SPEED_FULL)
 			snd_iprintf(buffer, "    Data packet interval: %d us\n",
 				    125 * (1 << fp->datainterval));
 		// snd_iprintf(buffer, "    Max Packet Size = %d\n", fp->maxpacksize);
@@ -128,7 +128,7 @@ static void proc_dump_substream_status(struct snd_usb_substream *subs, struct sn
 		snd_iprintf(buffer, "]\n");
 		snd_iprintf(buffer, "    Packet Size = %d\n", subs->curpacksize);
 		snd_iprintf(buffer, "    Momentary freq = %u Hz (%#x.%04x)\n",
-			    snd_usb_get_speed(subs->dev) == USB_SPEED_FULL
+			    subs->speed == USB_SPEED_FULL
 			    ? get_full_speed_hz(subs->freqm)
 			    : get_high_speed_hz(subs->freqm),
 			    subs->freqm >> 16, subs->freqm & 0xffff);
@@ -170,4 +170,3 @@ void snd_usb_proc_pcm_format_add(struct snd_usb_stream *stream)
 	if (!snd_card_proc_new(card, name, &entry))
 		snd_info_set_text_ops(entry, stream, proc_pcm_format_read);
 }
-

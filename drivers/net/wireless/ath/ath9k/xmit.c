@@ -31,7 +31,6 @@
 #define NUM_SYMBOLS_PER_USEC(_usec) (_usec >> 2)
 #define NUM_SYMBOLS_PER_USEC_HALFGI(_usec) (((_usec*5)-4)/18)
 
-
 static u16 bits_per_symbol[][2] = {
 	/* 20MHz 40MHz */
 	{    26,   54 },     /*  0: BPSK */
@@ -272,6 +271,7 @@ static struct ath_buf *ath_tx_get_buffer(struct ath_softc *sc)
 	}
 
 	bf = list_first_entry(&sc->tx.txbuf, struct ath_buf, list);
+	bf->bf_next = NULL;
 	list_del(&bf->list);
 
 	spin_unlock_bh(&sc->tx.txbuflock);
@@ -334,7 +334,6 @@ static void ath_tx_count_frames(struct ath_softc *sc, struct ath_buf *bf,
 		bf = bf->bf_next;
 	}
 }
-
 
 static void ath_tx_complete_aggr(struct ath_softc *sc, struct ath_txq *txq,
 				 struct ath_buf *bf, struct list_head *bf_q,
@@ -1488,6 +1487,7 @@ static void ath_tx_send_normal(struct ath_softc *sc, struct ath_txq *txq,
 	if (tid)
 		INCR(tid->seq_start, IEEE80211_SEQ_MAX);
 
+	bf->bf_next = NULL;
 	bf->bf_lastbf = bf;
 	fi = get_frame_info(bf->bf_mpdu);
 	ath_buf_set_rate(sc, bf, fi->framelen);
@@ -1784,7 +1784,6 @@ static struct ath_buf *ath_tx_setup_buffer(struct ieee80211_hw *hw,
 			    ds,		/* first descriptor */
 			    bf->bf_buf_addr,
 			    txq->axq_qnum);
-
 
 	return bf;
 }
@@ -2221,8 +2220,6 @@ static void ath_tx_complete_poll_work(struct work_struct *work)
 			msecs_to_jiffies(ATH_TX_COMPLETE_POLL_INT));
 }
 
-
-
 void ath_tx_tasklet(struct ath_softc *sc)
 {
 	int i;
@@ -2431,6 +2428,7 @@ void ath_tx_node_init(struct ath_softc *sc, struct ath_node *an)
 	for (acno = 0, ac = &an->ac[acno];
 	     acno < WME_NUM_AC; acno++, ac++) {
 		ac->sched    = false;
+		ac->clear_ps_filter = true;
 		ac->txq = sc->tx.txq_map[acno];
 		INIT_LIST_HEAD(&ac->tid_q);
 	}

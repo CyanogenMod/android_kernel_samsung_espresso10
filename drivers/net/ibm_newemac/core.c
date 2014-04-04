@@ -745,7 +745,6 @@ static void emac_tx_timeout(struct net_device *ndev)
 	schedule_work(&dev->reset_work);
 }
 
-
 static inline int emac_phy_done(struct emac_instance *dev, u32 stacr)
 {
 	int done = !!(stacr & EMAC_STACR_OC);
@@ -2877,7 +2876,6 @@ static int __devinit emac_probe(struct platform_device *ofdev)
 
 	/* There's a new kid in town ! Let's tell everybody */
 	wake_up_all(&emac_probe_wait);
-
 
 	printk(KERN_INFO "%s: EMAC-%d %s, MAC %pM\n",
 	       ndev->name, dev->cell_index, np->full_name, ndev->dev_addr);

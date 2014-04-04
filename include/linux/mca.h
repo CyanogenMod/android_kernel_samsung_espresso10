@@ -56,7 +56,7 @@ struct mca_device {
 	/* if a pseudo adapter of the motherboard, this is the motherboard
 	 * register value to use for setup cycles */
 	short			pos_register;
-	
+
 	enum MCA_AdapterStatus	status;
 #ifdef CONFIG_MCA_PROC_FS
 	/* name of the proc/mca file */

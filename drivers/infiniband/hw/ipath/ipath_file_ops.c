@@ -973,7 +973,6 @@ bail:
 	return ret;
 }
 
-
 /* common code for the mappings on dma_alloc_coherent mem */
 static int ipath_mmap_mem(struct vm_area_struct *vma,
 	struct ipath_portdata *pd, unsigned len, int write_ok,
@@ -1889,7 +1888,6 @@ done_chk_sdma:
 done:
 	return ret;
 }
-
 
 static int ipath_do_user_init(struct file *fp,
 			      const struct ipath_user_info *uinfo)

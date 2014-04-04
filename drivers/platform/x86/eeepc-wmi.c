@@ -155,7 +155,6 @@ static struct asus_wmi_driver asus_wmi_driver = {
 	.quirks = eeepc_wmi_quirks,
 };
 
-
 static int __init eeepc_wmi_init(void)
 {
 	return asus_wmi_register_driver(&asus_wmi_driver);

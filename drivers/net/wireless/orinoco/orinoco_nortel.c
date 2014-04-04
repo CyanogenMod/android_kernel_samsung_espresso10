@@ -53,7 +53,6 @@
 #define COR_OFFSET    (0xe0)	/* COR attribute offset of Prism2 PC card */
 #define COR_VALUE     (COR_LEVEL_REQ | COR_FUNC_ENA)	/* Enable PC card with interrupt in level trigger */
 
-
 /*
  * Do a soft reset of the card using the Configuration Option Register
  * We need this to get going...

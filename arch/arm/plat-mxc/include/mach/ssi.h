@@ -18,4 +18,3 @@ struct imx_ssi_platform_data {
 };
 
 #endif /* __MACH_SSI_H */
-

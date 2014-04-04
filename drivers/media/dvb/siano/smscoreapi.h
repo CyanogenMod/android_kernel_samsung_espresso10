@@ -579,7 +579,6 @@ struct RECEPTION_STATISTICS_S {
 	s32 MRC_InBandPwr;	/* In band power in dBM */
 };
 
-
 /* Statistics information returned as response for
  * SmsHostApiGetStatisticsEx_Req for DVB applications, SMS1100 and up */
 struct SMSHOSTLIB_STATISTICS_DVB_S {
@@ -622,7 +621,6 @@ struct SMSHOSTLIB_I2C_RES_ST {
 	u32	ReadCount; /* number of bytes read */
 	u8	Data[1];
 };
-
 
 struct smscore_config_gpio {
 #define SMS_GPIO_DIRECTION_INPUT  0
@@ -667,7 +665,6 @@ struct smscore_gpio_config {
 
 #define SMS_GPIO_OUTPUT_SLEW_RATE_SLOW		1 /* 10xx */
 #define SMS_GPIO_OUTPUT_SLEW_RATE_FAST		0 /* 10xx */
-
 
 #define SMS_GPIO_OUTPUT_SLEW_RATE_0_45_V_NS	0 /* 11xx */
 #define SMS_GPIO_OUTPUT_SLEW_RATE_0_9_V_NS	1 /* 11xx */
@@ -750,7 +747,6 @@ int smscore_get_board_id(struct smscore_device_t *core);
 
 int smscore_led_state(struct smscore_device_t *core, int led);
 
-
 /* ------------------------------------------------------------------------ */
 
 #define DBG_INFO 1
@@ -771,6 +767,5 @@ int smscore_led_state(struct smscore_device_t *core, int led);
 	dprintk(KERN_INFO, DBG_INFO, fmt, ##arg)
 #define sms_debug(fmt, arg...) \
 	dprintk(KERN_DEBUG, DBG_ADV, fmt, ##arg)
-
 
 #endif /* __SMS_CORE_API_H__ */

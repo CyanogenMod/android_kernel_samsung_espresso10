@@ -150,7 +150,6 @@ static inline void isci_print_tmf(struct isci_tmf *tmf)
 			tmf->resp.resp_iu.resp_data[3]);
 }
 
-
 int isci_task_execute_task(
 	struct sas_task *task,
 	int num,
@@ -197,7 +196,6 @@ u16 isci_task_ssp_request_get_io_tag_to_manage(
 
 u8 isci_task_ssp_request_get_function(
 	struct isci_request *request);
-
 
 void *isci_task_ssp_request_get_response_data_address(
 	struct isci_request *request);

@@ -68,7 +68,6 @@ quiet_cmd_clean    = CLEAN   $(obj)
 quiet_cmd_cleandir = CLEAN   $(__clean-dirs)
       cmd_cleandir = rm -rf $(__clean-dirs)
 
-
 __clean: $(subdir-ymn)
 ifneq ($(strip $(__clean-files)),)
 	+$(call cmd,clean)
@@ -80,7 +79,6 @@ ifneq ($(strip $(clean-rule)),)
 	+$(clean-rule)
 endif
 	@:
-
 
 # ===========================================================================
 # Generic stuff
@@ -96,7 +94,6 @@ $(subdir-ymn):
 # If quiet is set, only print short version of command
 
 cmd = @$(if $($(quiet)cmd_$(1)),echo '  $($(quiet)cmd_$(1))' &&) $(cmd_$(1))
-
 
 # Declare the contents of the .PHONY variable as phony.  We keep that
 # information in a variable se we can use it in if_changed and friends.

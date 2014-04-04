@@ -495,7 +495,6 @@ fail:
 	return err;
 }
 
-
 /**
  * p9_virtio_create - allocate a new virtio channel
  * @client: client instance invoking this transport

@@ -13,7 +13,6 @@
  *  01/02/2001 [0.3] - put in default hard/soft settings.
  */
 
-
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
@@ -39,9 +38,7 @@ static int write_sq_ignore_int;	/* ++TeSche: used for Falcon */
 static int expand_bal;	/* Balance factor for expanding (not volume!) */
 static int expand_data;	/* Data for expanding */
 
-
 /*** Translations ************************************************************/
-
 
 /* ++TeSche: radically changed for new expanding purposes...
  *
@@ -110,9 +107,7 @@ static ssize_t ata_ctx_u16le(const u_char __user *userPtr, size_t userCount,
 			     u_char frame[], ssize_t *frameUsed,
 			     ssize_t frameLeft);
 
-
 /*** Low level stuff *********************************************************/
-
 
 static void *AtaAlloc(unsigned int size, gfp_t flags);
 static void AtaFree(void *, unsigned int size);
@@ -147,9 +142,7 @@ static int AtaSqOpen(fmode_t mode);
 static int TTStateInfo(char *buffer, size_t space);
 static int FalconStateInfo(char *buffer, size_t space);
 
-
 /*** Translations ************************************************************/
-
 
 static ssize_t ata_ct_law(const u_char __user *userPtr, size_t userCount,
 			  u_char frame[], ssize_t *frameUsed,
@@ -175,7 +168,6 @@ static ssize_t ata_ct_law(const u_char __user *userPtr, size_t userCount,
 	return used;
 }
 
-
 static ssize_t ata_ct_s8(const u_char __user *userPtr, size_t userCount,
 			 u_char frame[], ssize_t *frameUsed,
 			 ssize_t frameLeft)
@@ -192,7 +184,6 @@ static ssize_t ata_ct_s8(const u_char __user *userPtr, size_t userCount,
 	*frameUsed += used;
 	return used;
 }
-
 
 static ssize_t ata_ct_u8(const u_char __user *userPtr, size_t userCount,
 			 u_char frame[], ssize_t *frameUsed,
@@ -228,7 +219,6 @@ static ssize_t ata_ct_u8(const u_char __user *userPtr, size_t userCount,
 	return used;
 }
 
-
 static ssize_t ata_ct_s16be(const u_char __user *userPtr, size_t userCount,
 			    u_char frame[], ssize_t *frameUsed,
 			    ssize_t frameLeft)
@@ -259,7 +249,6 @@ static ssize_t ata_ct_s16be(const u_char __user *userPtr, size_t userCount,
 	}
 	return used;
 }
-
 
 static ssize_t ata_ct_u16be(const u_char __user *userPtr, size_t userCount,
 			    u_char frame[], ssize_t *frameUsed,
@@ -298,7 +287,6 @@ static ssize_t ata_ct_u16be(const u_char __user *userPtr, size_t userCount,
 	}
 	return used;
 }
-
 
 static ssize_t ata_ct_s16le(const u_char __user *userPtr, size_t userCount,
 			    u_char frame[], ssize_t *frameUsed,
@@ -340,7 +328,6 @@ static ssize_t ata_ct_s16le(const u_char __user *userPtr, size_t userCount,
 	return used;
 }
 
-
 static ssize_t ata_ct_u16le(const u_char __user *userPtr, size_t userCount,
 			    u_char frame[], ssize_t *frameUsed,
 			    ssize_t frameLeft)
@@ -379,7 +366,6 @@ static ssize_t ata_ct_u16le(const u_char __user *userPtr, size_t userCount,
 	}
 	return used;
 }
-
 
 static ssize_t ata_ctx_law(const u_char __user *userPtr, size_t userCount,
 			   u_char frame[], ssize_t *frameUsed,
@@ -442,7 +428,6 @@ static ssize_t ata_ctx_law(const u_char __user *userPtr, size_t userCount,
 	return used;
 }
 
-
 static ssize_t ata_ctx_s8(const u_char __user *userPtr, size_t userCount,
 			  u_char frame[], ssize_t *frameUsed,
 			  ssize_t frameLeft)
@@ -495,7 +480,6 @@ static ssize_t ata_ctx_s8(const u_char __user *userPtr, size_t userCount,
 	*frameUsed += usedf-frameLeft;
 	return used;
 }
-
 
 static ssize_t ata_ctx_u8(const u_char __user *userPtr, size_t userCount,
 			  u_char frame[], ssize_t *frameUsed,
@@ -552,7 +536,6 @@ static ssize_t ata_ctx_u8(const u_char __user *userPtr, size_t userCount,
 	return used;
 }
 
-
 static ssize_t ata_ctx_s16be(const u_char __user *userPtr, size_t userCount,
 			     u_char frame[], ssize_t *frameUsed,
 			     ssize_t frameLeft)
@@ -607,7 +590,6 @@ static ssize_t ata_ctx_s16be(const u_char __user *userPtr, size_t userCount,
 	*frameUsed += usedf-frameLeft;
 	return used;
 }
-
 
 static ssize_t ata_ctx_u16be(const u_char __user *userPtr, size_t userCount,
 			     u_char frame[], ssize_t *frameUsed,
@@ -666,7 +648,6 @@ static ssize_t ata_ctx_u16be(const u_char __user *userPtr, size_t userCount,
 	return used;
 }
 
-
 static ssize_t ata_ctx_s16le(const u_char __user *userPtr, size_t userCount,
 			     u_char frame[], ssize_t *frameUsed,
 			     ssize_t frameLeft)
@@ -723,7 +704,6 @@ static ssize_t ata_ctx_s16le(const u_char __user *userPtr, size_t userCount,
 	*frameUsed += usedf-frameLeft;
 	return used;
 }
-
 
 static ssize_t ata_ctx_u16le(const u_char __user *userPtr, size_t userCount,
 			     u_char frame[], ssize_t *frameUsed,
@@ -782,7 +762,6 @@ static ssize_t ata_ctx_u16le(const u_char __user *userPtr, size_t userCount,
 	return used;
 }
 
-
 static TRANS transTTNormal = {
 	.ct_ulaw	= ata_ct_law,
 	.ct_alaw	= ata_ct_law,
@@ -819,10 +798,7 @@ static TRANS transFalconExpanding = {
 	.ct_u16le	= ata_ctx_u16le,
 };
 
-
 /*** Low level stuff *********************************************************/
-
-
 
 /*
  * Atari (TT/Falcon)
@@ -868,11 +844,9 @@ static void AtaIrqCleanUp(void)
 }
 #endif /* MODULE */
 
-
 #define TONE_VOXWARE_TO_DB(v) \
 	(((v) < 0) ? -12 : ((v) > 100) ? 12 : ((v) - 50) * 6 / 25)
 #define TONE_DB_TO_VOXWARE(v) (((v) * 25 + ((v) > 0 ? 5 : -5)) / 6 + 50)
-
 
 static int AtaSetBass(int bass)
 {
@@ -881,7 +855,6 @@ static int AtaSetBass(int bass)
 	return TONE_DB_TO_VOXWARE(dmasound.bass);
 }
 
-
 static int AtaSetTreble(int treble)
 {
 	dmasound.treble = TONE_VOXWARE_TO_DB(treble);
@@ -889,19 +862,15 @@ static int AtaSetTreble(int treble)
 	return TONE_DB_TO_VOXWARE(dmasound.treble);
 }
 
-
-
 /*
  * TT
  */
-
 
 static void TTSilence(void)
 {
 	tt_dmasnd.ctrl = DMASND_CTRL_OFF;
 	atari_microwire_cmd(MW_LM1992_PSG_HIGH); /* mix in PSG signal 1:1 */
 }
-
 
 static void TTInit(void)
 {
@@ -952,7 +921,6 @@ static void TTInit(void)
 	expand_bal = -dmasound.soft.speed;
 }
 
-
 static int TTSetFormat(int format)
 {
 	/* TT sound DMA supports only 8bit modes */
@@ -980,11 +948,9 @@ static int TTSetFormat(int format)
 	return format;
 }
 
-
 #define VOLUME_VOXWARE_TO_DB(v) \
 	(((v) < 0) ? -40 : ((v) > 100) ? 0 : ((v) * 2) / 5 - 40)
 #define VOLUME_DB_TO_VOXWARE(v) ((((v) + 40) * 5 + 1) / 2)
-
 
 static int TTSetVolume(int volume)
 {
@@ -995,7 +961,6 @@ static int TTSetVolume(int volume)
 	return VOLUME_DB_TO_VOXWARE(dmasound.volume_left) |
 	       (VOLUME_DB_TO_VOXWARE(dmasound.volume_right) << 8);
 }
-
 
 #define GAIN_VOXWARE_TO_DB(v) \
 	(((v) < 0) ? -80 : ((v) > 100) ? 0 : ((v) * 4) / 5 - 80)
@@ -1008,12 +973,9 @@ static int TTSetGain(int gain)
 	return GAIN_DB_TO_VOXWARE(dmasound.gain);
 }
 
-
-
 /*
  * Falcon
  */
-
 
 static void FalconSilence(void)
 {
@@ -1027,7 +989,6 @@ static void FalconSilence(void)
 	tt_dmasnd.dac_src = 1; /* connect ADC to DAC, disconnect matrix */
 	tt_dmasnd.adc_src = 3; /* ADC Input = PSG */
 }
-
 
 static void FalconInit(void)
 {
@@ -1108,7 +1069,6 @@ static void FalconInit(void)
 	expand_bal = -dmasound.soft.speed;
 }
 
-
 static int FalconSetFormat(int format)
 {
 	int size;
@@ -1146,14 +1106,12 @@ static int FalconSetFormat(int format)
 	return format;
 }
 
-
 /* This is for the Falcon output *attenuation* in 1.5dB steps,
  * i.e. output level from 0 to -22.5dB in -1.5dB steps.
  */
 #define VOLUME_VOXWARE_TO_ATT(v) \
 	((v) < 0 ? 15 : (v) > 100 ? 0 : 15 - (v) * 3 / 20)
 #define VOLUME_ATT_TO_VOXWARE(v) (100 - (v) * 20 / 3)
-
 
 static int FalconSetVolume(int volume)
 {
@@ -1163,7 +1121,6 @@ static int FalconSetVolume(int volume)
 	return VOLUME_ATT_TO_VOXWARE(dmasound.volume_left) |
 	       VOLUME_ATT_TO_VOXWARE(dmasound.volume_right) << 8;
 }
-
 
 static void AtaPlayNextFrame(int index)
 {
@@ -1184,7 +1141,6 @@ static void AtaPlayNextFrame(int index)
 	write_sq.active++;
 	tt_dmasnd.ctrl = DMASND_CTRL_ON | DMASND_CTRL_REPEAT;
 }
-
 
 static void AtaPlay(void)
 {
@@ -1257,7 +1213,6 @@ static void AtaPlay(void)
 	atari_enable_irq(IRQ_MFP_TIMA);
 }
 
-
 static irqreturn_t AtaInterrupt(int irq, void *dummy)
 {
 #if 0
@@ -1327,9 +1282,7 @@ out:
 	return IRQ_HANDLED;
 }
 
-
 /*** Mid level stuff *********************************************************/
-
 
 /*
  * /dev/mixer abstraction
@@ -1338,7 +1291,6 @@ out:
 #define RECLEVEL_VOXWARE_TO_GAIN(v)	\
 	((v) < 0 ? 0 : (v) > 100 ? 15 : (v) * 3 / 20)
 #define RECLEVEL_GAIN_TO_VOXWARE(v)	(((v) * 20 + 2) / 3)
-
 
 static void __init TTMixerInit(void)
 {
@@ -1390,7 +1342,6 @@ static int AtaMixerIoctl(u_int cmd, u_long arg)
 	}
 	return -EINVAL;
 }
-
 
 static int TTMixerIoctl(u_int cmd, u_long arg)
 {
@@ -1501,7 +1452,6 @@ static int FalconStateInfo(char *buffer, size_t space)
 	return len;
 }
 
-
 /*** Machine definitions *****************************************************/
 
 static SETTINGS def_hard_falcon = {
@@ -1581,9 +1531,7 @@ static __initdata MACHINE machFalcon = {
 	.capabilities	=  DSP_CAP_BATCH	/* As per SNDCTL_DSP_GETCAPS */
 };
 
-
 /*** Config & Setup **********************************************************/
-
 
 static int __init dmasound_atari_init(void)
 {

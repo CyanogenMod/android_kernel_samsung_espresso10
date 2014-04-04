@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="athbtfilter.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -76,7 +76,6 @@ struct athbt_filter_instance {
     ATHBT_INDICATE_STATE_FN     pIndicateState;     /* function ptr to indicate a state */
 }; /* XXX: unused ? */
 
-
 /* API MACROS */
 
 #define AthBtFilterHciCommand(instance,packet,length)          \
@@ -108,7 +107,7 @@ struct athbt_filter_instance {
                                  (unsigned char *)(packet),  \
                                  (length));                  \
     }
-        
+
 /* if filtering is not desired, the application can indicate the state directly using this
  * macro:
  */

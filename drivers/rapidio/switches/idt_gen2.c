@@ -179,7 +179,6 @@ idtg2_route_clr_table(struct rio_mport *mport, u16 destid, u8 hopcount,
 	return 0;
 }
 
-
 static int
 idtg2_set_domain(struct rio_mport *mport, u16 destid, u8 hopcount,
 		       u8 sw_domain)

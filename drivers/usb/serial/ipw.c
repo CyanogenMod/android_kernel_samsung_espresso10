@@ -60,7 +60,6 @@
 
 #define USB_IPW_MAGIC	0x6d02	/* magic number for ipw struct */
 
-
 /* Message sizes */
 #define EVENT_BUFFER_SIZE	0xFF
 #define CHAR2INT16(c1, c0)	(((u32)((c1) & 0xff) << 8) + (u32)((c0) & 0xff))
@@ -68,7 +67,6 @@
 /* vendor/product pairs that are known work with this driver*/
 #define IPW_VID		0x0bc3
 #define IPW_PID		0x0001
-
 
 /* Vendor commands: */
 
@@ -269,7 +267,6 @@ static void ipw_close(struct usb_serial_port *port)
 	if (result < 0)
 		dev_err(&port->dev, "purge failed (error = %d)\n", result);
 
-
 	/* send RXBULK_off (tell modem to stop transmitting bulk data on
 	   rx chan) */
 	result = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
@@ -301,8 +298,6 @@ static struct usb_serial_driver ipw_device = {
 	.close =		ipw_close,
 	.dtr_rts =		ipw_dtr_rts,
 };
-
-
 
 static int __init usb_ipw_init(void)
 {

@@ -9,15 +9,11 @@
   under the terms of version 2 of the GNU General Public License
   as published by the Free Software Foundation.
 
-
-
-
 	DPRAM BDs:
 	0x000 - 0x050 TX#0	0x050 - 0x140 RX#0
 	0x140 - 0x190 TX#1	0x190 - 0x280 RX#1
 	0x280 - 0x2D0 TX#2	0x2D0 - 0x3C0 RX#2
 	0x3C0 - 0x410 TX#3	0x410 - 0x500 RX#3
-
 
 	000 5FF 1536 Bytes Dual-Port RAM User Data / BDs
 	600 6FF 256 Bytes Dual-Port RAM User Data / BDs
@@ -175,14 +171,10 @@ SCC_SCCS	= 0x17	// 8 bits
 	.endm
 #endif
 
-
 	.macro wait_for_command
 99:	btstl #0, CR
 	bne 99b
 	.endm
-
-
-
 
 /****************************** card initialization *******************/
 	.text
@@ -243,7 +235,6 @@ init_2:	addl #4, %d0
 	clrw PADIR			// first function
 	clrw PCSO			// CD and CTS always active
 
-
 /****************************** main loop *****************************/
 
 main:	movel channel_stats, %d7	// D7 = doorbell + irq status
@@ -284,7 +275,6 @@ main_next:
 	bne main_l
 	movel %d6, PLX_DOORBELL_FROM_CARD // signal the host
 	bra main
-
 
 /****************************** open port *****************************/
 
@@ -427,7 +417,6 @@ open_port_3:
 open_port_ret:
 	rts
 
-
 /****************************** close port ****************************/
 
 close_port:				// D0 = 4 * port, D6 = doorbell to host
@@ -441,7 +430,6 @@ close_port:				// D0 = 4 * port, D6 = doorbell to host
 	movel ch_status_addr(%d0), %d1
 	clrl STATUS_OPEN(%d1)		// confirm the port is closed
 	rts
-
 
 /****************************** transmit packet ***********************/
 // queue packets for transmission
@@ -480,7 +468,6 @@ tx_1:	movel %d1, tx_out(%d0)
 	bra tx
 
 tx_ret: rts
-
 
 /****************************** packet received ***********************/
 
@@ -557,7 +544,6 @@ rx_bad_frame:
 
 rx_ret: rts
 
-
 /****************************** packet transmitted ********************/
 
 // Service transmit buffers		// D0 = 4 * port, D6 = doorbell to host
@@ -598,7 +584,6 @@ tx_end_underrun:
 
 tx_end_ret: rts
 
-
 /****************************** PLX PCI9060 DMA memcpy ****************/
 
 #if QUICC_MEMCPY_USES_PLX
@@ -630,11 +615,6 @@ memcpy_end:
 	movel (%sp)+, %d0
 	rts
 #endif
-
-
-
-
-
 
 /****************************** PLX PCI9060 interrupt *****************/
 
@@ -678,7 +658,6 @@ port_interrupt_4:
 
 error_interrupt:
 	rte
-
 
 /****************************** cable and PM routine ******************/
 // modified registers: none
@@ -767,13 +746,11 @@ check_csr_next:
 	movel (%sp)+, %d0
 	rts
 
-
 /****************************** timer interrupt ***********************/
 
 timer_interrupt:
 	bsr check_csr
 	rte
-
 
 /****************************** RAM sizing and test *******************/
 #if DETECT_RAM
@@ -826,7 +803,6 @@ ram_test_all_ok:
 	rts
 #endif
 
-
 /****************************** constants *****************************/
 
 scc_reg_addr:
@@ -874,7 +850,6 @@ dcd_mask:
 
 	.ascii "wanXL firmware\n"
 	.asciz "Copyright (C) 2003 Krzysztof Halasa <khc@pm.waw.pl>\n"
-
 
 /****************************** variables *****************************/
 

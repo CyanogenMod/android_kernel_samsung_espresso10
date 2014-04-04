@@ -780,5 +780,4 @@
 #define WM9081_EQ_B5_PG_SHIFT                        0  /* EQ_B5_PG - [15:0] */
 #define WM9081_EQ_B5_PG_WIDTH                       16  /* EQ_B5_PG - [15:0] */
 
-
 #endif

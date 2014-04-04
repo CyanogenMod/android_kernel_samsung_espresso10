@@ -470,7 +470,6 @@ sensor_debug_suspend_store(struct device *dev,
 	if (unlikely(error))
 		return error;
 
-
 	if (suspend) {
 		pm_message_t msg;
 		memset(&msg, 0, sizeof(msg));
@@ -492,7 +491,6 @@ sensor_data_show(struct device *dev, struct device_attribute *attr, char *buf)
 #else
 	int x;
 #endif
-
 
 	x = input_abs_get_val(input_data, ABS_X);
 #if SENSOR_TYPE <= 4 || (9 <= SENSOR_TYPE && SENSOR_TYPE <= 11)

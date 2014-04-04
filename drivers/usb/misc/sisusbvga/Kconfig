@@ -1,4 +1,3 @@
-
 config USB_SISUSBVGA
 	tristate "USB 2.0 SVGA dongle support (Net2280/SiS315)"
 	depends on USB && (USB_MUSB_HDRC || USB_EHCI_HCD)
@@ -41,6 +40,3 @@ config USB_SISUSBVGA_CON
 	  must be given in the kernel command like, such as
 
 	     sisusbvga.first=1 sisusbvga.last=5
-
-
-

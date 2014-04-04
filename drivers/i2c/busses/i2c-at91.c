@@ -31,13 +31,11 @@
 
 #define TWI_CLOCK		100000		/* Hz. max 400 Kbits/sec */
 
-
 static struct clk *twi_clk;
 static void __iomem *twi_base;
 
 #define at91_twi_read(reg)		__raw_readl(twi_base + (reg))
 #define at91_twi_write(reg, val)	__raw_writel((val), twi_base + (reg))
-
 
 /*
  * Initialize the TWI hardware registers.

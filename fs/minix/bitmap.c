@@ -24,9 +24,9 @@ static unsigned long count_free(struct buffer_head *map[], unsigned numblocks, _
 {
 	unsigned i, j, sum = 0;
 	struct buffer_head *bh;
-  
+
 	for (i=0; i<numblocks-1; i++) {
-		if (!(bh=map[i])) 
+		if (!(bh=map[i]))
 			return(0);
 		for (j=0; j<bh->b_size; j++)
 			sum += nibblemap[bh->b_data[j] & 0xf]

@@ -65,7 +65,6 @@ static struct nla_policy wl1271_tm_policy[WL1271_TM_ATTR_MAX + 1] = {
 	[WL1271_TM_ATTR_PLT_MODE] =	{ .type = NLA_U32 },
 };
 
-
 static int wl1271_tm_cmd_test(struct wl1271 *wl, struct nlattr *tb[])
 {
 	int buf_len, ret, len;

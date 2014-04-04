@@ -41,7 +41,6 @@
 #include "lgdt330x.h"
 #include "mt2131.h"
 
-
 /****************************************************************************/
 /* Demod/tuner attachment ***************************************************/
 /****************************************************************************/
@@ -81,7 +80,6 @@ static int tuner_attach_stv6110(struct ngene_channel *chan)
 
 	return 0;
 }
-
 
 static int demod_attach_stv0900(struct ngene_channel *chan)
 {
@@ -184,7 +182,6 @@ static int cineS2_probe(struct ngene_channel *chan)
 	return 0;
 }
 
-
 static struct lgdt330x_config aver_m780 = {
 	.demod_address = 0xb2 >> 1,
 	.demod_chip    = LGDT3303,
@@ -216,7 +213,6 @@ static int demod_attach_lg330x(struct ngene_channel *chan)
 /****************************************************************************/
 /* Switch control (I2C gates, etc.) *****************************************/
 /****************************************************************************/
-
 
 static struct stv090x_config fe_cineS2 = {
 	.device         = STV0900,
@@ -330,7 +326,6 @@ static struct ngene_info ngene_info_cineS2v5 = {
 	.msi_supported	= true,
 };
 
-
 static struct ngene_info ngene_info_duoFlexS2 = {
 	.type           = NGENE_SIDEWINDER,
 	.name           = "Digital Devices DuoFlex S2 miniPCIe",
@@ -365,8 +360,6 @@ static struct ngene_info ngene_info_m780 = {
 };
 
 /****************************************************************************/
-
-
 
 /****************************************************************************/
 /* PCI Subsystem ID *********************************************************/

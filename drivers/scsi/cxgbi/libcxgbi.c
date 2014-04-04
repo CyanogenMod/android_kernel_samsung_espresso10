@@ -44,7 +44,6 @@ MODULE_LICENSE("GPL");
 module_param(dbg_level, uint, 0644);
 MODULE_PARM_DESC(dbg_level, "libiscsi debug level (default=0)");
 
-
 /*
  * cxgbi device management
  * maintains a list of the cxgbi devices

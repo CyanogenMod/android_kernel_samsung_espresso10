@@ -49,7 +49,6 @@
  * BMI handles all required Target-side cache flushing.
  */
 
-
 /* Maximum data size used for BMI transfers */
 #define BMI_DATASZ_MAX                      256
 
@@ -113,7 +112,7 @@
          * Request format:
          *    u32 command (BMI_READ_REGISTER)
          *    u32 address
-         * Response format: 
+         * Response format:
          *    u32 value
          */
 
@@ -150,7 +149,6 @@ PREPACK struct bmi_target_info {
 #define TARGET_TYPE_AR6001 1
 #define TARGET_TYPE_AR6002 2
 #define TARGET_TYPE_AR6003 3
-
 
 #define BMI_ROMPATCH_INSTALL               9
         /*
@@ -198,7 +196,6 @@ PREPACK struct bmi_target_info {
          *
          * Response format: none
          */
-
 
 #define BMI_LZ_STREAM_START                13
         /*

@@ -33,7 +33,6 @@
 #define YAS_LIS3DH_ABSMIN_2G                     (-YAS_LIS3DH_GRAVITY_EARTH * 2)
 #define YAS_LIS3DH_ABSMAX_2G                      (YAS_LIS3DH_GRAVITY_EARTH * 2)
 
-
 /* Default parameters */
 #define YAS_LIS3DH_DEFAULT_DELAY                                             100
 #define YAS_LIS3DH_DEFAULT_POSITION                                            0

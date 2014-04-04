@@ -1,5 +1,3 @@
-
-
 function testit ()
 {
  printf "%-30s: " $1
@@ -19,4 +17,3 @@ testit t3-l2-pi.tst
 testit t4-l2-pi-deboost.tst
 testit t5-l4-pi-boost-deboost.tst
 testit t5-l4-pi-boost-deboost-setsched.tst
-

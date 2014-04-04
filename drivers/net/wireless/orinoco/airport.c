@@ -221,7 +221,6 @@ airport_attach(struct macio_dev *mdev, const struct of_device_id *match)
 	return -ENODEV;
 }				/* airport_attach */
 
-
 static char version[] __initdata = DRIVER_NAME " " DRIVER_VERSION
 	" (Benjamin Herrenschmidt <benh@kernel.crashing.org>)";
 MODULE_AUTHOR("Benjamin Herrenschmidt <benh@kernel.crashing.org>");

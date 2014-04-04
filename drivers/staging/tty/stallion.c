@@ -140,7 +140,6 @@ static const struct tty_port_operations stl_port_ops;
 #define	BRD_FOUND	0x1
 #define STL_PROBED	0x2
 
-
 /*
  *	Define the port structure istate flags. These set of flags are
  *	modified at interrupt time - so setting and reseting them needs
@@ -932,7 +931,7 @@ static int stl_putchar(struct tty_struct *tty, unsigned char ch)
 		*head++ = ch;
 		if (head >= (portp->tx.buf + STL_TXBUFSIZE))
 			head = portp->tx.buf;
-	}	
+	}
 	portp->tx.head = head;
 	return 0;
 }
@@ -1079,7 +1078,7 @@ static int stl_setserial(struct tty_struct *tty, struct serial_struct __user *sp
 			mutex_unlock(&portp->port.mutex);
 			return -EPERM;
 		}
-	} 
+	}
 
 	portp->port.flags = (portp->port.flags & ~ASYNC_USR_MASK) |
 		(sio.flags & ASYNC_USR_MASK);
@@ -1714,18 +1713,18 @@ static int __devinit stl_initeio(struct stlbrd *brdp)
 	retval = -EBUSY;
 	if (!request_region(brdp->ioaddr1, brdp->iosize1, name)) {
 		printk(KERN_WARNING "STALLION: Warning, board %d I/O address "
-			"%x conflicts with another device\n", brdp->brdnr, 
+			"%x conflicts with another device\n", brdp->brdnr,
 			brdp->ioaddr1);
 		goto err;
 	}
-	
+
 	if (brdp->iosize2 > 0)
 		if (!request_region(brdp->ioaddr2, brdp->iosize2, name)) {
 			printk(KERN_WARNING "STALLION: Warning, board %d I/O "
 				"address %x conflicts with another device\n",
 				brdp->brdnr, brdp->ioaddr2);
 			printk(KERN_WARNING "STALLION: Warning, also "
-				"releasing board %d I/O address %x \n", 
+				"releasing board %d I/O address %x \n",
 				brdp->brdnr, brdp->ioaddr1);
 			goto err_rel1;
 		}
@@ -1918,24 +1917,24 @@ static int __devinit stl_initech(struct stlbrd *brdp)
 	}
 
 /*
- *	Check boards for possible IO address conflicts and return fail status 
+ *	Check boards for possible IO address conflicts and return fail status
  * 	if an IO conflict found.
  */
 	retval = -EBUSY;
 	if (!request_region(brdp->ioaddr1, brdp->iosize1, name)) {
 		printk(KERN_WARNING "STALLION: Warning, board %d I/O address "
-			"%x conflicts with another device\n", brdp->brdnr, 
+			"%x conflicts with another device\n", brdp->brdnr,
 			brdp->ioaddr1);
 		goto err;
 	}
-	
+
 	if (brdp->iosize2 > 0)
 		if (!request_region(brdp->ioaddr2, brdp->iosize2, name)) {
 			printk(KERN_WARNING "STALLION: Warning, board %d I/O "
 				"address %x conflicts with another device\n",
 				brdp->brdnr, brdp->ioaddr2);
 			printk(KERN_WARNING "STALLION: Warning, also "
-				"releasing board %d I/O address %x \n", 
+				"releasing board %d I/O address %x \n",
 				brdp->brdnr, brdp->ioaddr1);
 			goto err_rel1;
 		}
@@ -3248,7 +3247,6 @@ static void stl_cd1400echintr(struct stlpanel *panelp, unsigned int iobase)
 		stl_cd1400mdmisr(panelp, iobase);
 }
 
-
 /*****************************************************************************/
 
 /*
@@ -3586,7 +3584,7 @@ static int stl_sc26198panelinit(struct stlbrd *brdp, struct stlpanel *panelp)
 		outb(panelp->pagenr, brdp->ioctrl);
 
 	for (i = 0; i < nrchips; i++) {
-		ioaddr = panelp->iobase + (i * 4); 
+		ioaddr = panelp->iobase + (i * 4);
 		outb(SCCR, (ioaddr + XP_ADDR));
 		outb(CR_RESETALL, (ioaddr + XP_DATA));
 		outb(TSTR, (ioaddr + XP_ADDR));
@@ -4209,7 +4207,7 @@ static void stl_sc26198intr(struct stlpanel *panelp, unsigned int iobase)
 
 	spin_lock(&brd_lock);
 
-/* 
+/*
  *	Work around bug in sc26198 chip... Cannot have A6 address
  *	line of UART high, else iack will be returned as 0.
  */

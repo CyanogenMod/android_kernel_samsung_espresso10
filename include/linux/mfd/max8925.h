@@ -250,4 +250,3 @@ extern int max8925_device_init(struct max8925_chip *,
 				struct max8925_platform_data *);
 extern void max8925_device_exit(struct max8925_chip *);
 #endif /* __LINUX_MFD_MAX8925_H */
-

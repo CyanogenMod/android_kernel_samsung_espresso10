@@ -19,7 +19,6 @@
 #ifndef __ASM_ARCH_MEMORY_H
 #define __ASM_ARCH_MEMORY_H
 
-
 #if defined(CONFIG_FOOTBRIDGE_ADDIN)
 /*
  * If we may be using add-in footbridge mode, then we must

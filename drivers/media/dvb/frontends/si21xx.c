@@ -460,7 +460,6 @@ static int si21xx_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t volt)
 		volt == SEC_VOLTAGE_13 ? "SEC_VOLTAGE_13" :
 		volt == SEC_VOLTAGE_18 ? "SEC_VOLTAGE_18" : "??");
 
-
 	val = (0x80 | si21_readreg(state, LNB_CTRL_REG_1));
 
 	switch (volt) {
@@ -771,7 +770,6 @@ static int si21xx_set_frontend(struct dvb_frontend *fe,
 
 	band_high = (rf_freq - lnb_lo) + ((lnb_uncertanity * 200)
 					+ (data_rate * 135)) / 200;
-
 
 	icoarse_tune_freq = 100000 *
 				(((rf_freq - lnb_lo) -

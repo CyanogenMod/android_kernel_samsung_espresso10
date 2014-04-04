@@ -1,4 +1,3 @@
-
 #ifndef __MACH_SPI_H_
 #define __MACH_SPI_H_
 

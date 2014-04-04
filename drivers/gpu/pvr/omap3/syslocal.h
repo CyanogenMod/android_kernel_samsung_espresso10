@@ -54,8 +54,6 @@
 extern "C" {
 #endif
 
-
-
 IMG_CHAR *SysCreateVersionString(IMG_CPU_PHYADDR sRegRegion);
 
 IMG_VOID DisableSystemClocks(SYS_DATA *psSysData);
@@ -132,5 +130,3 @@ IMG_VOID UnwrapSystemPowerChange(SYS_SPECIFIC_DATA *psSysSpecData);
 #endif
 
 #endif
-
-

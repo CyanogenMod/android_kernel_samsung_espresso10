@@ -90,7 +90,6 @@ static void ac_get_8390_hdr(struct net_device *dev, struct e8390_pkt_hdr *hdr,
 
 static int ac_close_card(struct net_device *dev);
 
-
 /*	Probe for the AC3200.
 
 	The AC3200 can be identified by either the EISA configuration registers,

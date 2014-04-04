@@ -165,7 +165,6 @@ struct sci_phy_proto {
 	};
 } __packed;
 
-
 /**
  * struct sci_phy_properties - This structure defines the properties common to
  *    all phys that can be retrieved.

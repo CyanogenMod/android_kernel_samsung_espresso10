@@ -42,7 +42,6 @@ typedef __be32 (*callback_process_op_t)(void *, void *,
 typedef __be32 (*callback_decode_arg_t)(struct svc_rqst *, struct xdr_stream *, void *);
 typedef __be32 (*callback_encode_res_t)(struct svc_rqst *, struct xdr_stream *, void *);
 
-
 struct callback_op {
 	callback_process_op_t process_op;
 	callback_decode_arg_t decode_args;
@@ -633,7 +632,7 @@ static __be32 encode_compound_hdr_res(struct xdr_stream *xdr, struct cb_compound
 static __be32 encode_op_hdr(struct xdr_stream *xdr, uint32_t op, __be32 res)
 {
 	__be32 *p;
-	
+
 	p = xdr_reserve_space(xdr, 8);
 	if (unlikely(p == NULL))
 		return htonl(NFS4ERR_RESOURCE_HDR);
@@ -646,7 +645,7 @@ static __be32 encode_getattr_res(struct svc_rqst *rqstp, struct xdr_stream *xdr,
 {
 	__be32 *savep = NULL;
 	__be32 status = res->status;
-	
+
 	if (unlikely(status != 0))
 		goto out;
 	status = encode_attr_bitmap(xdr, res->bitmap, &savep);

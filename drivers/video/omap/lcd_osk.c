@@ -139,4 +139,3 @@ static void __exit osk_panel_drv_cleanup(void)
 
 module_init(osk_panel_drv_init);
 module_exit(osk_panel_drv_cleanup);
-

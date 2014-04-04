@@ -579,7 +579,6 @@ static bool psb_sdvo_set_current_inoutmap(struct psb_intel_output *output,
 	byArgs[2] = (u8) (in1outputmask & 0xFF);
 	byArgs[3] = (u8) ((in1outputmask >> 8) & 0xFF);
 
-
 	/*save inoutmap arg here*/
 	for (i = 0; i < 4; i++)
 		sdvo_priv->in_out_map[i] = byArgs[0];
@@ -592,13 +591,11 @@ static bool psb_sdvo_set_current_inoutmap(struct psb_intel_output *output,
 	return true;
 }
 
-
 static void psb_intel_sdvo_set_iomap(struct psb_intel_output *output)
 {
 	u32 dwCurrentSDVOIn0 = 0;
 	u32 dwCurrentSDVOIn1 = 0;
 	u32 dwDevMask = 0;
-
 
 	struct psb_intel_sdvo_priv *sdvo_priv = output->dev_priv;
 
@@ -650,7 +647,6 @@ static void psb_intel_sdvo_set_iomap(struct psb_intel_output *output)
 	psb_sdvo_set_current_inoutmap(output, dwCurrentSDVOIn0,
 					  dwCurrentSDVOIn1);
 }
-
 
 static bool psb_intel_sdvo_mode_fixup(struct drm_encoder *encoder,
 				  struct drm_display_mode *mode,
@@ -817,7 +813,6 @@ static void psb_intel_sdvo_dpms(struct drm_encoder *encoder, int mode)
 		    psb_intel_sdvo_get_trained_inputs(psb_intel_output,
 							&input1,
 							&input2);
-
 
 		/* Warn if the device reported failure to sync.
 		 * A lot of SDVO devices fail to notify of sync, but it's
@@ -1138,7 +1133,6 @@ static const struct drm_encoder_funcs psb_intel_sdvo_enc_funcs = {
 	.destroy = psb_intel_sdvo_enc_destroy,
 };
 
-
 void psb_intel_sdvo_init(struct drm_device *dev, int output_device)
 {
 	struct drm_connector *connector;
@@ -1193,7 +1187,6 @@ void psb_intel_sdvo_init(struct drm_device *dev, int output_device)
 	sdvo_priv->output_device = output_device;
 	psb_intel_output->i2c_bus = i2cbus;
 	psb_intel_output->dev_priv = sdvo_priv;
-
 
 	/* Read the regs to test if we can talk to the device */
 	for (i = 0; i < 0x40; i++) {
@@ -1265,7 +1258,6 @@ void psb_intel_sdvo_init(struct drm_device *dev, int output_device)
 					       &sdvo_priv->pixel_clock_min,
 					       &sdvo_priv->
 					       pixel_clock_max);
-
 
 	DRM_DEBUG("%s device VID/DID: %02X:%02X.%02X, "
 		  "clock range %dMHz - %dMHz, "

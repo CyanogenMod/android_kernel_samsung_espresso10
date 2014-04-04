@@ -44,4 +44,3 @@
 		addeqs	\irqnr, \irqnr, #1
 1001:
 		.endm
-

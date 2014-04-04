@@ -16,7 +16,6 @@
 #define MVSD_CLOCKRATE_MAX			50000000
 #define MVSD_BASE_DIV_MAX			0x7ff
 
-
 /*
  * Register offsets
  */
@@ -66,7 +65,6 @@
 #define MVSD_WINDOW_CTRL(i)			(0x108 + ((i) << 3))
 #define MVSD_WINDOW_BASE(i)			(0x10c + ((i) << 3))
 
-
 /*
  * MVSD_CMD
  */
@@ -82,7 +80,6 @@
 #define MVSD_CMD_DATA_PRESENT			(1 << 5)
 #define MVSD_UNEXPECTED_RESP			(1 << 7)
 #define MVSD_CMD_INDEX(x)			((x) << 8)
-
 
 /*
  * MVSD_AUTOCMD12_CMD
@@ -103,7 +100,6 @@
 #define MVSD_XFER_MODE_TO_HOST			(1 << 4)
 #define MVSD_XFER_MODE_STOP_CLK			(1 << 5)
 #define MVSD_XFER_MODE_PIO			(1 << 6)
-
 
 /*
  * MVSD_HOST_CTRL
@@ -127,13 +123,11 @@
 #define MVSD_HOST_CTRL_TMOUT(x) 		((x) << 11)
 #define MVSD_HOST_CTRL_TMOUT_EN 		(1 << 15)
 
-
 /*
  * MVSD_SW_RESET
  */
 
 #define MVSD_SW_RESET_NOW			(1 << 8)
-
 
 /*
  * Normal interrupt status bits
@@ -154,7 +148,6 @@
 #define MVSD_NOR_UNEXP_RSP			(1 << 14)
 #define MVSD_NOR_ERROR				(1 << 15)
 
-
 /*
  * Error status bits
  */
@@ -173,7 +166,6 @@
 #define MVSD_ERR_CRC_ENDBIT			(1 << 12)
 #define MVSD_ERR_CRC_STARTBIT			(1 << 13)
 #define MVSD_ERR_CRC_STATUS			(1 << 14)
-
 
 /*
  * CMD12 error status bits

@@ -254,7 +254,6 @@ static void imx_keypad_check_for_events(unsigned long data)
 		}
 	}
 
-
 	if (is_zero_matrix) {
 		/*
 		 * All keys have been released. Enable only the KDI

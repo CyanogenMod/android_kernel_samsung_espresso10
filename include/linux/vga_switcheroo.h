@@ -28,7 +28,6 @@ struct vga_switcheroo_handler {
 	int (*get_client_id)(struct pci_dev *pdev);
 };
 
-
 #if defined(CONFIG_VGA_SWITCHEROO)
 void vga_switcheroo_unregister_client(struct pci_dev *dev);
 int vga_switcheroo_register_client(struct pci_dev *dev,

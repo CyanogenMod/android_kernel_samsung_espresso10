@@ -1,15 +1,15 @@
 /*
    md_p.h : physical layout of Linux RAID devices
           Copyright (C) 1996-98 Ingo Molnar, Gadi Oxman
-	  
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
-   
+
    You should have received a copy of the GNU General Public License
    (for example /usr/src/linux/COPYING); if not, write to the Free
-   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  
+   Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #ifndef _MD_P_H
@@ -111,7 +111,6 @@ typedef struct mdp_device_descriptor_s {
  *   "raid_disks-delta_disks" is the old.  If -ve, raid_disks is the
  *   old value and "raid_disks+delta_disks" is the new (smaller) value.
  */
-
 
 typedef struct mdp_superblock_s {
 	/*
@@ -273,5 +272,4 @@ struct mdp_superblock_1 {
 
 #define	MD_FEATURE_ALL			(1|2|4)
 
-#endif 
-
+#endif

@@ -194,7 +194,6 @@ void mlx4_en_deactivate_tx_ring(struct mlx4_en_priv *priv,
 		       MLX4_QP_STATE_RST, NULL, 0, 0, &ring->qp);
 }
 
-
 static u32 mlx4_en_free_tx_desc(struct mlx4_en_priv *priv,
 				struct mlx4_en_tx_ring *ring,
 				int index, u8 owner)
@@ -276,7 +275,6 @@ static u32 mlx4_en_free_tx_desc(struct mlx4_en_priv *priv,
 	return tx_info->nr_txbb;
 }
 
-
 int mlx4_en_free_tx_buf(struct net_device *dev, struct mlx4_en_tx_ring *ring)
 {
 	struct mlx4_en_priv *priv = netdev_priv(dev);
@@ -306,7 +304,6 @@ int mlx4_en_free_tx_buf(struct net_device *dev, struct mlx4_en_tx_ring *ring)
 
 	return cnt;
 }
-
 
 static void mlx4_en_process_tx_cq(struct net_device *dev, struct mlx4_en_cq *cq)
 {
@@ -387,7 +384,6 @@ void mlx4_en_tx_irq(struct mlx4_cq *mcq)
 	mod_timer(&cq->timer, jiffies + 1);
 	spin_unlock(&ring->comp_lock);
 }
-
 
 void mlx4_en_poll_tx_cq(unsigned long data)
 {
@@ -746,7 +742,6 @@ netdev_tx_t mlx4_en_xmit(struct sk_buff *skb, struct net_device *dev)
 	}
 	AVG_PERF_COUNTER(priv->pstats.tx_pktsz_avg, skb->len);
 
-
 	/* valid only for none inline segments */
 	tx_info->data_offset = (void *) data - (void *) tx_desc;
 
@@ -826,4 +821,3 @@ tx_drop:
 	priv->stats.tx_dropped++;
 	return NETDEV_TX_OK;
 }
-

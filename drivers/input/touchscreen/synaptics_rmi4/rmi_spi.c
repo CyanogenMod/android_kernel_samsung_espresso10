@@ -125,8 +125,6 @@ static enum hrtimer_restart spi_poll_timer(struct hrtimer *timer)
 	return HRTIMER_NORESTART;
 }
 
-
-
 static int rmi_spi_xfer(struct rmi_phys_device *phys,
 		    const u8 *txbuf, unsigned n_tx, u8 *rxbuf, unsigned n_rx)
 {
@@ -557,7 +555,6 @@ static int rmi_spi_v2_set_page(struct rmi_phys_device *phys, u8 page)
 	return RMI_SPI_PAGE_SELECT_WRITE_LENGTH;
 }
 
-
 static int acquire_attn_irq(struct rmi_spi_data *data)
 {
 	int retval;
@@ -702,7 +699,6 @@ static int rmi_spi_check_device(struct rmi_phys_device *rmi_phys)
 	dev_err(rmi_phys->dev, "probe read returned invalid block.\n");
 	return -ENODEV;
 }
-
 
 static int __devinit rmi_spi_probe(struct spi_device *spi)
 {

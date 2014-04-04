@@ -29,7 +29,6 @@
 #include <asm/lv1call.h>
 #include <asm/cell-pmu.h>
 
-
 /* BOOKMARK tag macros */
 #define PS3_PM_BOOKMARK_START                    0x8000000000000000ULL
 #define PS3_PM_BOOKMARK_STOP                     0x4000000000000000ULL

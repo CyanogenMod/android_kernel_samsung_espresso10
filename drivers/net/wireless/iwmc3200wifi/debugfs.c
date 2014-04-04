@@ -104,7 +104,6 @@ static int iwm_generic_open(struct inode *inode, struct file *filp)
 	return 0;
 }
 
-
 static ssize_t iwm_debugfs_txq_read(struct file *filp, char __user *buffer,
 				   size_t count, loff_t *ppos)
 {

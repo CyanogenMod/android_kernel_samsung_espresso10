@@ -38,7 +38,6 @@ struct kvm_io_device_ops {
 	void (*destructor)(struct kvm_io_device *this);
 };
 
-
 struct kvm_io_device {
 	const struct kvm_io_device_ops *ops;
 };

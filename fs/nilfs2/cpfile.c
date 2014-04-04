@@ -29,7 +29,6 @@
 #include "mdt.h"
 #include "cpfile.h"
 
-
 static inline unsigned long
 nilfs_cpfile_checkpoints_per_block(const struct inode *cpfile)
 {

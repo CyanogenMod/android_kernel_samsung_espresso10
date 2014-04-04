@@ -22,7 +22,6 @@
 #include "sn9c102_sensor.h"
 #include "sn9c102_devtable.h"
 
-
 static int mt9v111_init(struct sn9c102_device *cam)
 {
 	struct sn9c102_sensor *s = sn9c102_get_sensor(cam);
@@ -187,7 +186,6 @@ static int mt9v111_set_pix_format(struct sn9c102_device *cam,
 	return err;
 }
 
-
 static const struct sn9c102_sensor mt9v111 = {
 	.name = "MT9V111",
 	.maintainer = "Luca Risolia <luca.risolia@studio.unibo.it>",
@@ -233,7 +231,6 @@ static const struct sn9c102_sensor mt9v111 = {
 	},
 	.set_pix_format = &mt9v111_set_pix_format
 };
-
 
 int sn9c102_probe_mt9v111(struct sn9c102_device *cam)
 {

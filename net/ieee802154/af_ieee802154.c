@@ -235,7 +235,6 @@ static const struct proto_ops ieee802154_dgram_ops = {
 #endif
 };
 
-
 /*
  * Create a socket. Initialise the socket, blank the addresses
  * set the state.
@@ -323,7 +322,6 @@ drop:
 	kfree_skb(skb);
 	return NET_RX_DROP;
 }
-
 
 static struct packet_type ieee802154_packet_type = {
 	.type = __constant_htons(ETH_P_IEEE802154),

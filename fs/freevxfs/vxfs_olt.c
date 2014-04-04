@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  */
 
-/* 
+/*
  * Veritas filesystem driver - object location table support.
  */
 #include <linux/fs.h>
@@ -37,7 +37,6 @@
 #include "vxfs.h"
 #include "vxfs_olt.h"
 #include "vxfs_extern.h"
-
 
 static inline void
 vxfs_get_fshead(struct vxfs_oltfshead *fshp, struct vxfs_sb_info *infp)
@@ -50,7 +49,7 @@ static inline void
 vxfs_get_ilist(struct vxfs_oltilist *ilistp, struct vxfs_sb_info *infp)
 {
 	BUG_ON(infp->vsi_iext);
-	infp->vsi_iext = ilistp->olt_iext[0]; 
+	infp->vsi_iext = ilistp->olt_iext[0];
 }
 
 static inline u_long
@@ -59,7 +58,6 @@ vxfs_oblock(struct super_block *sbp, daddr_t block, u_long bsize)
 	BUG_ON(sbp->s_blocksize % bsize);
 	return (block * (sbp->s_blocksize / bsize));
 }
-
 
 /**
  * vxfs_read_olt - read olt
@@ -80,7 +78,6 @@ vxfs_read_olt(struct super_block *sbp, u_long bsize)
 	struct buffer_head	*bp;
 	struct vxfs_olt		*op;
 	char			*oaddr, *eaddr;
-
 
 	bp = sb_bread(sbp, vxfs_oblock(sbp, infp->vsi_oltext, bsize));
 	if (!bp || !bp->b_data)
@@ -108,7 +105,7 @@ vxfs_read_olt(struct super_block *sbp, u_long bsize)
 	while (oaddr < eaddr) {
 		struct vxfs_oltcommon	*ocp =
 			(struct vxfs_oltcommon *)oaddr;
-		
+
 		switch (ocp->olt_type) {
 		case VXFS_OLT_FSHEAD:
 			vxfs_get_fshead((struct vxfs_oltfshead *)oaddr, infp);

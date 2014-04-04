@@ -94,7 +94,6 @@ static const struct ata_port_info uli_port_info = {
 	.port_ops       = &uli_ops,
 };
 
-
 MODULE_AUTHOR("Peer Chen");
 MODULE_DESCRIPTION("low-level driver for ULi Electronics SATA controller");
 MODULE_LICENSE("GPL");
@@ -254,7 +253,6 @@ static void __exit uli_exit(void)
 {
 	pci_unregister_driver(&uli_pci_driver);
 }
-
 
 module_init(uli_init);
 module_exit(uli_exit);

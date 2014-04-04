@@ -425,7 +425,6 @@ int cifs_mknod(struct inode *inode, struct dentry *direntry, int mode,
 	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_UNX_EMUL))
 		goto mknod_out;
 
-
 	cFYI(1, "sfu compat create special file");
 
 	buf = kmalloc(sizeof(FILE_ALL_INFO), GFP_KERNEL);

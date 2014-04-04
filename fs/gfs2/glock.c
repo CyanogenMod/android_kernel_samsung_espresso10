@@ -152,7 +152,6 @@ static int demote_ok(const struct gfs2_glock *gl)
 	return 1;
 }
 
-
 void gfs2_glock_add_to_lru(struct gfs2_glock *gl)
 {
 	spin_lock(&lru_lock);
@@ -319,7 +318,7 @@ static inline void do_error(struct gfs2_glock *gl, const int ret)
 /**
  * do_promote - promote as many requests as possible on the current queue
  * @gl: The glock
- * 
+ *
  * Returns: 1 if there is a blocked holder at the head of the list, or 2
  *          if a type specific operation is underway.
  */
@@ -933,7 +932,7 @@ void gfs2_print_dbg(struct seq_file *seq, const char *fmt, ...)
  * Eventually we should move the recursive locking trap to a
  * debugging option or something like that. This is the fast
  * path and needs to have the minimum number of distractions.
- * 
+ *
  */
 
 static inline void add_to_queue(struct gfs2_holder *gh)
@@ -1350,7 +1349,6 @@ void gfs2_glock_complete(struct gfs2_glock *gl, int ret)
 		gfs2_glock_put(gl);
 }
 
-
 static int gfs2_shrink_glock_memory(struct shrinker *shrink,
 				    struct shrink_control *sc)
 {
@@ -1439,7 +1437,6 @@ static void glock_hash_walk(glock_examiner examiner, const struct gfs2_sbd *sdp)
 	for (x = 0; x < GFS2_GL_HASH_SIZE; x++)
 		examine_bucket(examiner, sdp, x);
 }
-
 
 /**
  * thaw_glock - thaw out a glock which has an unprocessed reply waiting
@@ -1688,9 +1685,6 @@ static int __dump_glock(struct seq_file *seq, const struct gfs2_glock *gl)
 out:
 	return error;
 }
-
-
-
 
 int __init gfs2_glock_init(void)
 {

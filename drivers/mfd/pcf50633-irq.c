@@ -235,7 +235,6 @@ int pcf50633_irq_suspend(struct pcf50633 *pcf)
 	int i;
 	u8 res[5];
 
-
 	/* Make sure our interrupt handlers are not called
 	 * henceforth */
 	disable_irq(pcf->irq);

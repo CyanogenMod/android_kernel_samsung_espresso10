@@ -239,7 +239,6 @@ int snd_timer_open(struct snd_timer_instance **ti,
 		/* open a slave instance */
 		if (tid->dev_sclass <= SNDRV_TIMER_SCLASS_NONE ||
 		    tid->dev_sclass > SNDRV_TIMER_SCLASS_OSS_SEQUENCER) {
-			snd_printd("invalid slave class %i\n", tid->dev_sclass);
 			return -EINVAL;
 		}
 		mutex_lock(&register_mutex);

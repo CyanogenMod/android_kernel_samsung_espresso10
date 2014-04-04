@@ -26,7 +26,6 @@
 #include "cyasmisc.h"
 #include "cyas_cplus_start.h"
 
-
 /*@@Storage APIs
   Summary
   This section documents the storage APIs supported by the
@@ -508,7 +507,6 @@ typedef struct cy_as_storage_query_device_data {
 	cy_as_device_desc	 desc_p;
 } cy_as_storage_query_device_data;
 
-
 /* Summary
    Struct encapsulating parameters and return values
    for a CyAsStorageQueryUnit call.
@@ -607,12 +605,10 @@ typedef struct cy_as_m_s_c_progress_data {
 Flag to set Direct Write operation to read back from the
 address written to.
 
-
  See Also
  *CyAsSdioDirectWrite()
 */
 #define CY_SDIO_RAW	(0x01)
-
 
 /* Summary
 Flag to set Extended Read and Write to perform IO
@@ -628,7 +624,6 @@ address only.
 /* Summary
 Flag to set Extended Read and Write to perform incremental
 IO using the address provided as the base address.
-
 
  See Also
  *CyAsSdioExtendedRead()
@@ -679,7 +674,6 @@ and cleared to reset the West Bridge Sdio Interrupt.
 */
 
 #define CY_SDIO_REARM_INT	   (0x80)
-
 
 /* Summary
    Flag to check if 4 bit support is enabled on a
@@ -764,7 +758,6 @@ and cleared to reset the West Bridge Sdio Interrupt.
    See Also
    <link CyAsSDIOFunc::wakeup_support>*/
 #define CY_SDIO_FN_WUS		  (0x01)
-
 
 /* Summary
    This data structure stores SDIO function 0
@@ -1258,7 +1251,6 @@ cy_as_storage_query_device(
    * CY_AS_ERROR_NO_SUCH_DEVICE
    * CY_AS_ERROR_NO_SUCH_UNIT
    * CY_AS_ERROR_INVALID_RESPONSE
-
 
    See Also
    * CyAsMediaType
@@ -2013,7 +2005,6 @@ cy_as_sdio_get_c_i_s_info(
 	uint8_t *data_p
 	);
 
-
 /* Summary
    This function is used to read properties of the SDIO card.
 
@@ -2748,8 +2739,6 @@ cy_as_sdio_resume(
 	 /* Buffer to continue the Suspended IO operation */
 	uint8_t		 *data_p
 	);
-
-
 
 /* For supporting deprecated functions */
 #include "cyasstorage_dep.h"

@@ -1546,7 +1546,6 @@ static struct platform_driver sunlance_sbus_driver = {
 	.remove		= __devexit_p(sunlance_sbus_remove),
 };
 
-
 /* Find all the lance cards on the system and initialize them */
 static int __init sparc_lance_init(void)
 {

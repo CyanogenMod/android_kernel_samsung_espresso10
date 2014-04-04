@@ -10,7 +10,7 @@
  *   Many thanks to Robert Baruch for the SanDisk SmartMedia reader driver
  *   which I used as a template for this driver.
  *
- *   Some bugfixes and scatter-gather code by Gregory P. Smith 
+ *   Some bugfixes and scatter-gather code by Gregory P. Smith
  *   (greg-usb@electricrain.com)
  *
  *   Fix for media change by Joerg Schneider (js@joergschneider.com)
@@ -35,8 +35,8 @@
 
 /*
  * This driver attempts to support USB CompactFlash reader/writer devices
- * based on Datafab USB-to-ATA chips.  It was specifically developed for the 
- * Datafab MDCFE-B USB CompactFlash reader but has since been found to work 
+ * based on Datafab USB-to-ATA chips.  It was specifically developed for the
+ * Datafab MDCFE-B USB CompactFlash reader but has since been found to work
  * with a variety of Datafab-based devices from a number of manufacturers.
  * I've received a report of this driver working with a Datafab-based
  * SmartMedia device though please be aware that I'm personally unable to
@@ -78,7 +78,6 @@ struct datafab_info {
 static int datafab_determine_lun(struct us_data *us,
 				 struct datafab_info *info);
 
-
 /*
  * The table of devices
  */
@@ -117,7 +116,6 @@ static struct us_unusual_dev datafab_unusual_dev_list[] = {
 
 #undef UNUSUAL_DEV
 
-
 static inline int
 datafab_bulk_read(struct us_data *us, unsigned char *data, unsigned int len) {
 	if (len == 0)
@@ -128,7 +126,6 @@ datafab_bulk_read(struct us_data *us, unsigned char *data, unsigned int len) {
 			data, len, NULL);
 }
 
-
 static inline int
 datafab_bulk_write(struct us_data *us, unsigned char *data, unsigned int len) {
 	if (len == 0)
@@ -138,7 +135,6 @@ datafab_bulk_write(struct us_data *us, unsigned char *data, unsigned int len) {
 	return usb_stor_bulk_transfer_buf(us, us->send_bulk_pipe,
 			data, len, NULL);
 }
-
 
 static int datafab_read_data(struct us_data *us,
 			     struct datafab_info *info,
@@ -153,9 +149,9 @@ static int datafab_read_data(struct us_data *us,
 	unsigned int sg_offset = 0;
 	struct scatterlist *sg = NULL;
 
-	// we're working in LBA mode.  according to the ATA spec, 
+	// we're working in LBA mode.  according to the ATA spec,
 	// we can support up to 28-bit addressing.  I don't know if Datafab
-	// supports beyond 24-bit addressing.  It's kind of hard to test 
+	// supports beyond 24-bit addressing.  It's kind of hard to test
 	// since it requires > 8GB CF card.
 	//
 	if (sectors > 0x0FFFFFFF)
@@ -222,7 +218,6 @@ static int datafab_read_data(struct us_data *us,
 	return USB_STOR_TRANSPORT_ERROR;
 }
 
-
 static int datafab_write_data(struct us_data *us,
 			      struct datafab_info *info,
 			      u32 sector,
@@ -237,9 +232,9 @@ static int datafab_write_data(struct us_data *us,
 	unsigned int sg_offset = 0;
 	struct scatterlist *sg = NULL;
 
-	// we're working in LBA mode.  according to the ATA spec, 
+	// we're working in LBA mode.  according to the ATA spec,
 	// we can support up to 28-bit addressing.  I don't know if Datafab
-	// supports beyond 24-bit addressing.  It's kind of hard to test 
+	// supports beyond 24-bit addressing.  It's kind of hard to test
 	// since it requires > 8GB CF card.
 	//
 	if (sectors > 0x0FFFFFFF)
@@ -318,7 +313,6 @@ static int datafab_write_data(struct us_data *us,
 	kfree(buffer);
 	return USB_STOR_TRANSPORT_ERROR;
 }
-
 
 static int datafab_determine_lun(struct us_data *us,
 				 struct datafab_info *info)
@@ -427,9 +421,9 @@ static int datafab_id_device(struct us_data *us,
 	if (rc == USB_STOR_XFER_GOOD) {
 		// capacity is at word offset 57-58
 		//
-		info->sectors = ((u32)(reply[117]) << 24) | 
+		info->sectors = ((u32)(reply[117]) << 24) |
 				((u32)(reply[116]) << 16) |
-				((u32)(reply[115]) <<  8) | 
+				((u32)(reply[115]) <<  8) |
 				((u32)(reply[114])      );
 		rc = USB_STOR_TRANSPORT_GOOD;
 		goto leave;
@@ -442,9 +436,8 @@ static int datafab_id_device(struct us_data *us,
 	return rc;
 }
 
-
 static int datafab_handle_mode_sense(struct us_data *us,
-				     struct scsi_cmnd * srb, 
+				     struct scsi_cmnd * srb,
 				     int sense_6)
 {
 	static unsigned char rw_err_page[12] = {
@@ -550,7 +543,6 @@ static void datafab_info_destructor(void *extra)
 	// this routine is a placeholder...
 	// currently, we don't allocate any extra memory so we're okay
 }
-
 
 // Transport for the Datafab MDCFE-B
 //

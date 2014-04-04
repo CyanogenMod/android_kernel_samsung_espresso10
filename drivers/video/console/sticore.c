@@ -5,12 +5,12 @@
  *	Copyright (C) 2000 Philipp Rumpf <prumpf@tux.org>
  *	Copyright (C) 2001-2003 Helge Deller <deller@gmx.de>
  *	Copyright (C) 2001-2002 Thomas Bogendoerfer <tsbogend@alpha.franken.de>
- * 
+ *
  * TODO:
  * - call STI in virtual mode rather than in real mode
- * - screen blanking with state_mgmt() in text mode STI ? 
+ * - screen blanking with state_mgmt() in text mode STI ?
  * - try to make it work on m68k hp workstations ;)
- * 
+ *
  */
 
 #include <linux/module.h>
@@ -36,7 +36,6 @@ static struct sti_struct *default_sti __read_mostly;
 static int num_sti_roms __read_mostly;
 static struct sti_struct *sti_roms[MAX_STI_ROMS] __read_mostly;
 
-
 /* The colour indices used by STI are
  *   0 - Black
  *   1 - White
@@ -60,12 +59,12 @@ static const u8 col_trans[8] = {
 #define c_index(sti, c) ((c) & 0xff)
 
 static const struct sti_init_flags default_init_flags = {
-	.wait	= STI_WAIT, 
+	.wait	= STI_WAIT,
 	.reset	= 1,
-	.text	= 1, 
+	.text	= 1,
 	.nontext = 1,
-	.no_chg_bet = 1, 
-	.no_chg_bei = 1, 
+	.no_chg_bet = 1,
+	.no_chg_bei = 1,
 	.init_cmap_tx = 1,
 };
 
@@ -91,7 +90,7 @@ static int sti_init_graph(struct sti_struct *sti)
 		printk(KERN_ERR "STI init_graph failed (ret %d, errno %d)\n",ret,outptr.errno);
 		return -1;
 	}
-	
+
 	sti->text_planes = outptr.text_planes;
 	return 0;
 }
@@ -107,7 +106,7 @@ static void sti_inq_conf(struct sti_struct *sti)
 	s32 ret;
 
 	sti->outptr.ext_ptr = STI_PTR(&sti->outptr_ext);
-	
+
 	do {
 		spin_lock_irqsave(&sti->lock, flags);
 		ret = STI_CALL(sti->inq_conf, &default_conf_flags,
@@ -145,9 +144,9 @@ sti_putc(struct sti_struct *sti, int c, int y, int x)
 }
 
 static const struct sti_blkmv_flags clear_blkmv_flags = {
-	.wait	= STI_WAIT, 
-	.color	= 1, 
-	.clear	= 1, 
+	.wait	= STI_WAIT,
+	.color	= 1,
+	.clear	= 1,
 };
 
 void
@@ -167,7 +166,7 @@ sti_set(struct sti_struct *sti, int src_y, int src_x,
 	struct sti_blkmv_outptr outptr = { 0, };
 	s32 ret;
 	unsigned long flags;
-	
+
 	do {
 		spin_lock_irqsave(&sti->lock, flags);
 		ret = STI_CALL(sti->block_move, &clear_blkmv_flags,
@@ -203,7 +202,7 @@ sti_clear(struct sti_struct *sti, int src_y, int src_x,
 }
 
 static const struct sti_blkmv_flags default_blkmv_flags = {
-	.wait = STI_WAIT, 
+	.wait = STI_WAIT,
 };
 
 void
@@ -229,7 +228,6 @@ sti_bmove(struct sti_struct *sti, int src_y, int src_x,
 		spin_unlock_irqrestore(&sti->lock, flags);
 	} while (ret == 1);
 }
-
 
 static void sti_flush(unsigned long start, unsigned long end)
 {
@@ -258,9 +256,6 @@ static void __devinit sti_rom_copy(unsigned long base, unsigned long count,
 	sti_flush(dest_start, (unsigned long)dest);
 }
 
-
-
-
 static char default_sti_path[21] __read_mostly;
 
 #ifndef MODULE
@@ -268,20 +263,18 @@ static int __devinit sti_setup(char *str)
 {
 	if (str)
 		strlcpy (default_sti_path, str, sizeof (default_sti_path));
-	
+
 	return 1;
 }
 
 /*	Assuming the machine has multiple STI consoles (=graphic cards) which
  *	all get detected by sticon, the user may define with the linux kernel
  *	parameter sti=<x> which of them will be the initial boot-console.
- *	<x> is a number between 0 and MAX_STI_ROMS, with 0 as the default 
+ *	<x> is a number between 0 and MAX_STI_ROMS, with 0 as the default
  *	STI screen.
  */
 __setup("sti=", sti_setup);
 #endif
-
-
 
 static char __devinitdata	*font_name[MAX_STI_ROMS] = { "VGA8x16", };
 static int __devinitdata	font_index[MAX_STI_ROMS],
@@ -293,7 +286,7 @@ static int __devinit sti_font_setup(char *str)
 	char *x;
 	int i = 0;
 
-	/* we accept sti_font=VGA8x16, sti_font=10x20, sti_font=10*20 
+	/* we accept sti_font=VGA8x16, sti_font=10x20, sti_font=10*20
 	 * or sti_font=7 style command lines. */
 
 	while (i<MAX_STI_ROMS && str && *str) {
@@ -322,13 +315,13 @@ static int __devinit sti_font_setup(char *str)
  *	should be used by the sticon driver to draw characters to the screen.
  *	Possible values are:
  *	- sti_font=<fb_fontname>:
- *		<fb_fontname> is the name of one of the linux-kernel built-in 
- *		framebuffer font names (e.g. VGA8x16, SUN22x18). 
- *		This is only available if the fonts have been statically compiled 
+ *		<fb_fontname> is the name of one of the linux-kernel built-in
+ *		framebuffer font names (e.g. VGA8x16, SUN22x18).
+ *		This is only available if the fonts have been statically compiled
  *		in with e.g. the CONFIG_FONT_8x16 or CONFIG_FONT_SUN12x22 options.
  *	- sti_font=<number>
  *		most STI ROMs have built-in HP specific fonts, which can be selected
- *		by giving the desired number to the sticon driver. 
+ *		by giving the desired number to the sticon driver.
  *		NOTE: This number is machine and STI ROM dependend.
  *	- sti_font=<height>x<width>  (e.g. sti_font=16x8)
  *		<height> and <width> gives hints to the height and width of the
@@ -339,13 +332,11 @@ static int __devinit sti_font_setup(char *str)
 __setup("sti_font=", sti_font_setup);
 #endif
 
-
-	
 static void __devinit
 sti_dump_globcfg(struct sti_glob_cfg *glob_cfg, unsigned int sti_mem_request)
 {
 	struct sti_glob_cfg_ext *cfg;
-	
+
 	DPRINTK((KERN_INFO
 		"%d text planes\n"
 		"%4d x %4d screen resolution\n"
@@ -366,7 +357,7 @@ sti_dump_globcfg(struct sti_glob_cfg *glob_cfg, unsigned int sti_mem_request)
 		glob_cfg->reent_lvl,
 		glob_cfg->save_addr));
 
-	/* dump extended cfg */ 
+	/* dump extended cfg */
 	cfg = PTR_STI((unsigned long)glob_cfg->ext_ptr);
 	DPRINTK(( KERN_INFO
 		"monitor %d\n"
@@ -426,10 +417,10 @@ sti_init_glob_cfg(struct sti_struct *sti,
 	glob_cfg->save_addr = STI_PTR(save_addr);
 	for (i=0; i<8; i++) {
 		unsigned long newhpa, len;
-	       
+
 		if (sti->pd) {
 			unsigned char offs = sti->rm_entry[i];
-				
+
 			if (offs == 0)
 				continue;
 			if (offs != PCI_ROM_ADDRESS &&
@@ -446,18 +437,18 @@ sti_init_glob_cfg(struct sti_struct *sti,
 
 		sti->regions_phys[i] =
 			REGION_OFFSET_TO_PHYS(sti->regions[i], newhpa);
-		
+
 		len = sti->regions[i].region_desc.length * 4096;
 		if (len)
 			glob_cfg->region_ptrs[i] = sti->regions_phys[i];
-		
+
 		DPRINTK(("region #%d: phys %08lx, region_ptr %08x, len=%lukB, "
 			 "btlb=%d, sysonly=%d, cache=%d, last=%d\n",
 			i, sti->regions_phys[i], glob_cfg->region_ptrs[i],
 			len/1024,
 			sti->regions[i].region_desc.btlb,
 			sti->regions[i].region_desc.sys_only,
-			sti->regions[i].region_desc.cache, 
+			sti->regions[i].region_desc.cache,
 			sti->regions[i].region_desc.last));
 
 		/* last entry reached ? */
@@ -472,7 +463,7 @@ sti_init_glob_cfg(struct sti_struct *sti,
 	glob_cfg_ext->sti_mem_addr = STI_PTR(sti_mem_addr);
 
 	sti->glob_cfg = glob_cfg;
-	
+
 	return 0;
 }
 
@@ -485,7 +476,7 @@ static struct sti_cooked_font __devinit
 	void *dest;
 	struct sti_rom_font *nf;
 	struct sti_cooked_font *cooked_font;
-	
+
 	if (!fbfont_name || !strlen(fbfont_name))
 		return NULL;
 	fbfont = find_font(fbfont_name);
@@ -496,8 +487,8 @@ static struct sti_cooked_font __devinit
 
 	DPRINTK((KERN_DEBUG "selected %dx%d fb-font %s\n",
 			fbfont->width, fbfont->height, fbfont->name));
-			
-	bpc = ((fbfont->width+7)/8) * fbfont->height; 
+
+	bpc = ((fbfont->width+7)/8) * fbfont->height;
 	size = bpc * 256;
 	size += sizeof(struct sti_rom_font);
 
@@ -524,7 +515,7 @@ static struct sti_cooked_font __devinit
 		kfree(nf);
 		return NULL;
 	}
-	
+
 	cooked_font->raw = nf;
 	cooked_font->next_font = NULL;
 
@@ -553,7 +544,7 @@ static struct sti_cooked_font __devinit
 		return font;
 
 	if (font_width[index] && font_height[index])
-		font_index[index] = search_font_fnc(rom, 
+		font_index[index] = search_font_fnc(rom,
 				font_height[index], font_width[index]);
 
 	for (font = rom->font_start, i = font_index[index];
@@ -566,14 +557,13 @@ static struct sti_cooked_font __devinit
 		return rom->font_start;
 }
 
-
 static void __devinit
 sti_dump_rom(struct sti_rom *rom)
 {
 	printk(KERN_INFO "    id %04x-%04x, conforms to spec rev. %d.%02x\n",
-		rom->graphics_id[0], 
+		rom->graphics_id[0],
 		rom->graphics_id[1],
-		rom->revno[0] >> 4, 
+		rom->revno[0] >> 4,
 		rom->revno[0] & 0x0f);
 	DPRINTK(("      supports %d monitors\n", rom->num_mons));
 	DPRINTK(("      font start %08x\n", rom->font_start));
@@ -584,14 +574,13 @@ sti_dump_rom(struct sti_rom *rom)
 	DPRINTK(("      alternate code type %d\n", rom->alt_code_type));
 }
 
-
 static int __devinit
 sti_cook_fonts(struct sti_cooked_rom *cooked_rom,
 			struct sti_rom *raw_rom)
 {
 	struct sti_rom_font *raw_font, *font_start;
 	struct sti_cooked_font *cooked_font;
-	
+
 	cooked_font = kzalloc(sizeof(*cooked_font), GFP_KERNEL);
 	if (!cooked_font)
 		return 0;
@@ -619,13 +608,12 @@ sti_cook_fonts(struct sti_cooked_rom *cooked_rom,
 	return 1;
 }
 
-
 static int __devinit
 sti_search_font(struct sti_cooked_rom *rom, int height, int width)
 {
 	struct sti_cooked_font *font;
 	int i = 0;
-	
+
 	for (font = rom->font_start; font; font = font->next_font, i++) {
 		if ((font->raw->width == width) &&
 		    (font->raw->height == height))
@@ -642,7 +630,7 @@ sti_bmode_font_raw(struct sti_cooked_font *f)
 {
 	unsigned char *n, *p, *q;
 	int size = f->raw->bytes_per_char*256+sizeof(struct sti_rom_font);
-	
+
 	n = kzalloc (4*size, GFP_KERNEL);
 	if (!n)
 		return NULL;
@@ -697,7 +685,7 @@ sti_get_bmode_rom (unsigned long address)
 
 		raw_font = ((void *)raw) + raw->font_start;
 		font_start = raw_font;
-		
+
 		while (raw_font->next_font) {
 			BMODE_RELOCATE (raw_font->next_font);
 			raw_font = ((void *)font_start) + raw_font->next_font;
@@ -711,7 +699,7 @@ static struct sti_rom __devinit *sti_get_wmode_rom(unsigned long address)
 	struct sti_rom *raw;
 	unsigned long size;
 
-	/* read the ROM size directly from the struct in ROM */ 
+	/* read the ROM size directly from the struct in ROM */
 	size = gsc_readl(address + offsetof(struct sti_rom,last_addr));
 
 	raw = kmalloc(size, GFP_KERNEL);
@@ -757,7 +745,7 @@ static int __devinit sti_read_rom(int wordmode, struct sti_struct *sti,
 
 	sti->rom = cooked;
 	sti->rom->raw = raw;
-	
+
 	sti->font = sti_select_font(sti->rom, sti_search_font);
 	sti->font_width = sti->font->raw->width;
 	sti->font_height = sti->font->raw->height;
@@ -767,7 +755,7 @@ static int __devinit sti_read_rom(int wordmode, struct sti_struct *sti,
 	sti->sti_mem_request = raw->sti_mem_req;
 	sti->graphics_id[0] = raw->graphics_id[0];
 	sti->graphics_id[1] = raw->graphics_id[1];
-	
+
 	sti_dump_rom(raw);
 
 	/* check if the ROM routines in this card are compatible */
@@ -815,7 +803,7 @@ sti_try_rom_generic(unsigned long address, unsigned long hpa, struct pci_dev *pd
 		printk(KERN_WARNING "maximum number of STI ROMS reached !\n");
 		return NULL;
 	}
-	
+
 	sti = kzalloc(sizeof(*sti), GFP_KERNEL);
 	if (!sti) {
 		printk(KERN_ERR "Not enough memory !\n");
@@ -838,20 +826,20 @@ test_rom:
 		u32 *rm;
 		i = gsc_readl(address+0x04);
 		if (i != 1) {
-			/* The ROM could have multiple architecture 
+			/* The ROM could have multiple architecture
 			 * dependent images (e.g. i386, parisc,...) */
-			printk(KERN_WARNING 
+			printk(KERN_WARNING
 				"PCI ROM is not a STI ROM type image (0x%8x)\n", i);
 			goto out_err;
 		}
-		
+
 		sti->pd = pd;
 
 		i = gsc_readl(address+0x0c);
 		DPRINTK(("PCI ROM size (from header) = %d kB\n",
 			le16_to_cpu(i>>16)*512/1024));
 		rm_offset = le16_to_cpu(i & 0xffff);
-		if (rm_offset) { 
+		if (rm_offset) {
 			/* read 16 bytes from the pci region mapper array */
 			rm = (u32*) &sti->rm_entry;
 			*rm++ = gsc_readl(address+rm_offset+0x00);
@@ -869,9 +857,9 @@ test_rom:
 		DPRINTK(("sig %04x, PCI STI ROM at %08lx\n", sig, address));
 		goto test_rom;
 	}
-	
+
 	ok = 0;
-	
+
 	if ((sig & 0xff) == 0x01) {
 		DPRINTK(("    byte mode ROM at %08lx, hpa at %08lx\n",
 		       address, hpa));
@@ -895,7 +883,7 @@ test_rom:
 	 */
 	if (sti->pd) {
 		unsigned long rom_base;
-		rom_base = pci_resource_start(sti->pd, PCI_ROM_RESOURCE);	
+		rom_base = pci_resource_start(sti->pd, PCI_ROM_RESOURCE);
 		pci_write_config_dword(sti->pd, PCI_ROM_ADDRESS, rom_base & ~PCI_ROM_ADDRESS_ENABLE);
 		DPRINTK((KERN_DEBUG "STI PCI ROM disabled\n"));
 	}
@@ -906,12 +894,12 @@ test_rom:
 	sti_inq_conf(sti);
 	sti_dump_globcfg(sti->glob_cfg, sti->sti_mem_request);
 	sti_dump_outptr(sti);
-	
+
 	printk(KERN_INFO "    graphics card name: %s\n", sti->outptr.dev_name );
 
 	sti_roms[num_sti_roms] = sti;
 	num_sti_roms++;
-	
+
 	return sti;
 
 out_err:
@@ -926,9 +914,9 @@ static void __devinit sticore_check_for_default_sti(struct sti_struct *sti, char
 }
 
 /*
- * on newer systems PDC gives the address of the ROM 
+ * on newer systems PDC gives the address of the ROM
  * in the additional address field addr[1] while on
- * older Systems the PDC stores it in page0->proc_sti 
+ * older Systems the PDC stores it in page0->proc_sti
  */
 static int __devinit sticore_pa_init(struct parisc_device *dev)
 {
@@ -950,7 +938,6 @@ static int __devinit sticore_pa_init(struct parisc_device *dev)
 	return 0;
 }
 
-
 static int __devinit sticore_pci_init(struct pci_dev *pd,
 		const struct pci_device_id *ent)
 {
@@ -959,7 +946,7 @@ static int __devinit sticore_pci_init(struct pci_dev *pd,
 	unsigned int fb_len, rom_len;
 	int err;
 	struct sti_struct *sti;
-	
+
 	err = pci_enable_device(pd);
 	if (err < 0) {
 		dev_err(&pd->dev, "Cannot enable PCI device\n");
@@ -987,7 +974,7 @@ static int __devinit sticore_pci_init(struct pci_dev *pd,
 		print_pci_hwpath(pd, pa_path);
 		sticore_check_for_default_sti(sti, pa_path);
 	}
-	
+
 	if (!sti) {
 		printk(KERN_WARNING "Unable to handle STI device '%s'\n",
 			pci_name(pd));
@@ -998,12 +985,10 @@ static int __devinit sticore_pci_init(struct pci_dev *pd,
 	return 0;
 }
 
-
 static void __devexit sticore_pci_remove(struct pci_dev *pd)
 {
 	BUG();
 }
-
 
 static struct pci_device_id sti_pci_tbl[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_HP, PCI_DEVICE_ID_HP_VISUALIZE_EG) },
@@ -1033,7 +1018,6 @@ static struct parisc_driver pa_sti_driver = {
 	.id_table	= sti_pa_tbl,
 	.probe		= sticore_pa_init,
 };
-
 
 /*
  * sti_init_roms() - detects all STI ROMs and stores them in sti_roms[]
@@ -1083,4 +1067,3 @@ EXPORT_SYMBOL(sti_get_rom);
 MODULE_AUTHOR("Philipp Rumpf, Helge Deller, Thomas Bogendoerfer");
 MODULE_DESCRIPTION("Core STI driver for HP's NGLE series graphics cards in HP PARISC machines");
 MODULE_LICENSE("GPL v2");
-

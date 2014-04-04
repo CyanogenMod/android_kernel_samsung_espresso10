@@ -366,7 +366,6 @@ static const struct dev_pm_ops ath9k_pm_ops = {
 
 #endif /* !CONFIG_PM */
 
-
 MODULE_DEVICE_TABLE(pci, ath_pci_id_table);
 
 static struct pci_driver ath_pci_driver = {

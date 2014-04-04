@@ -185,7 +185,6 @@ cy_as_ll_stop(
    cy_as_device *dev_p
    );
 
-
 cy_as_ll_request_response *
 cy_as_ll_create_request(
 		cy_as_device *dev_p,

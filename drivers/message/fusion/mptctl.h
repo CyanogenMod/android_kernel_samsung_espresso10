@@ -49,8 +49,6 @@
 #define MPTCTL_H_INCLUDED
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-
-
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 /*
  *
@@ -136,7 +134,6 @@ typedef struct _mpt_ioctl_header {
 struct mpt_ioctl_diag_reset {
 	mpt_ioctl_header hdr;
 };
-
 
 /*
  *  PCI bus/device/function information structure.
@@ -248,7 +245,6 @@ struct mpt_ioctl_targetinfo {
 	int		 targetInfo[1];
 };
 
-
 /*
  * Event reporting IOCTL's.  These IOCTL's will
  * use the following defines:
@@ -351,7 +347,6 @@ struct mpt_ioctl_command32 {
 	char	MF[1];
 };
 #endif	/*}*/
-
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
@@ -460,8 +455,6 @@ typedef struct _hp_target_info {
 
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
-
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 
 #endif
-

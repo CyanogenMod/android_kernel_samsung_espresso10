@@ -32,7 +32,6 @@
  *
  */
 
-
 #define MSM8960_QGIC_DIST_PHYS	0x02000000
 #define MSM8960_QGIC_DIST_SIZE	SZ_4K
 

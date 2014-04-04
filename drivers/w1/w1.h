@@ -79,7 +79,6 @@ struct w1_slave
 
 typedef void (*w1_slave_found_callback)(struct w1_master *, u64);
 
-
 /**
  * Note: read_bit and write_bit are very low level functions and should only
  * be used with hardware that doesn't really support 1-wire operations,

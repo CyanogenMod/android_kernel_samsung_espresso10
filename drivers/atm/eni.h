@@ -1,8 +1,7 @@
 /* drivers/atm/eni.h - Efficient Networks ENI155P device driver declarations */
- 
+
 /* Written 1995-2000 by Werner Almesberger, EPFL LRC/ICA */
- 
- 
+
 #ifndef DRIVER_ATM_ENI_H
 #define DRIVER_ATM_ENI_H
 
@@ -17,7 +16,6 @@
 
 #include "midway.h"
 
-
 #define DEV_LABEL	"eni"
 
 #define UBR_BUFFER	(128*1024)	/* UBR buffer size */
@@ -29,7 +27,6 @@
 #define DEFAULT_TX_MULT	300		/* max_sdu*3 */
 
 #define ENI_ZEROES_SIZE	  4		/* need that many DMA-able zero bytes */
-
 
 struct eni_free {
 	void __iomem *start;		/* counting in bytes */
@@ -110,10 +107,8 @@ struct eni_dev {
 	struct pci_dev *pci_dev;	/* PCI stuff */
 };
 
-
 #define ENI_DEV(d) ((struct eni_dev *) (d)->dev_data)
 #define ENI_VCC(d) ((struct eni_vcc *) (d)->dev_data)
-
 
 struct eni_skb_prv {
 	struct atm_skb_data _;		/* reserved */

@@ -10,7 +10,6 @@ enum {
 	XT_ADDRTYPE_LIMIT_IFACE_OUT	= 0x0008,
 };
 
-
 /* rtn_type enum values from rtnetlink.h, but shifted */
 enum {
 	XT_ADDRTYPE_UNSPEC = 1 << 0,

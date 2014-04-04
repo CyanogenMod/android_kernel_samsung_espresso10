@@ -137,7 +137,6 @@ void uwb_rc_neh_put(struct uwb_rc_neh *neh)
 	kref_put(&neh->kref, uwb_rc_neh_release);
 }
 
-
 /**
  * Assigns @neh a context id from @rc's pool
  *
@@ -175,7 +174,6 @@ found:
 	neh->context = result;
 	return 0;
 }
-
 
 /** Releases @neh's context ID back to @rc (@rc->neh_lock is locked). */
 static
@@ -347,7 +345,6 @@ struct uwb_rc_neh *uwb_rc_neh_lookup(struct uwb_rc *rc,
 
 	return neh;
 }
-
 
 /*
  * Process notifications coming from the radio control interface
@@ -535,7 +532,6 @@ void uwb_rc_neh_grok(struct uwb_rc *rc, void *buf, size_t buf_size)
 }
 EXPORT_SYMBOL_GPL(uwb_rc_neh_grok);
 
-
 /**
  * The entity that reads from the device notification/event channel has
  * detected an error.
@@ -564,7 +560,6 @@ void uwb_rc_neh_error(struct uwb_rc *rc, int error)
 	}
 }
 EXPORT_SYMBOL_GPL(uwb_rc_neh_error);
-
 
 static void uwb_rc_neh_timer(unsigned long arg)
 {
@@ -597,7 +592,6 @@ void uwb_rc_neh_create(struct uwb_rc *rc)
 	set_bit(0xff, rc->ctx_bm);	/* and 0xff is invalid */
 	rc->ctx_roll = 1;
 }
-
 
 /** Release's the @rc's neh subsystem */
 void uwb_rc_neh_destroy(struct uwb_rc *rc)

@@ -39,7 +39,6 @@
 
 #include <net/ip_vs.h>
 
-
 static inline unsigned int
 ip_vs_nq_dest_overhead(struct ip_vs_dest *dest)
 {
@@ -49,7 +48,6 @@ ip_vs_nq_dest_overhead(struct ip_vs_dest *dest)
 	 */
 	return atomic_read(&dest->activeconns) + 1;
 }
-
 
 /*
  *	Weighted Least Connection scheduling
@@ -114,7 +112,6 @@ ip_vs_nq_schedule(struct ip_vs_service *svc, const struct sk_buff *skb)
 	return least;
 }
 
-
 static struct ip_vs_scheduler ip_vs_nq_scheduler =
 {
 	.name =			"nq",
@@ -123,7 +120,6 @@ static struct ip_vs_scheduler ip_vs_nq_scheduler =
 	.n_list =		LIST_HEAD_INIT(ip_vs_nq_scheduler.n_list),
 	.schedule =		ip_vs_nq_schedule,
 };
-
 
 static int __init ip_vs_nq_init(void)
 {

@@ -230,4 +230,3 @@ out:
 		r8712_write8(padapter, 0x102502f1, tmp8_ori);
 	return data;
 }
-

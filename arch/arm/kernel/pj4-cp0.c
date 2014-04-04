@@ -49,7 +49,6 @@ static struct notifier_block iwmmxt_notifier_block = {
 	.notifier_call	= iwmmxt_do,
 };
 
-
 static u32 __init pj4_cp_access_read(void)
 {
 	u32 value;
@@ -71,7 +70,6 @@ static void __init pj4_cp_access_write(u32 value)
 		"sub	pc, pc, #4\n\t"
 		: "=r" (temp) : "r" (value));
 }
-
 
 /*
  * Disable CP0/CP1 on boot, and let call_fpe() and the iWMMXt lazy

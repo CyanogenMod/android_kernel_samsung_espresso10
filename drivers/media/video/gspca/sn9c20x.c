@@ -1571,7 +1571,6 @@ static int set_gamma(struct gspca_dev *gspca_dev)
 	u8 gamma[17];
 	u8 gval = sd->gamma * 0xb8 / 0x100;
 
-
 	gamma[0] = 0x0a;
 	gamma[1] = 0x13 + (gval * (0xcb - 0x13) / 0xb8);
 	gamma[2] = 0x25 + (gval * (0xee - 0x25) / 0xb8);
@@ -1770,7 +1769,6 @@ static int sd_getbrightness(struct gspca_dev *gspca_dev, s32 *val)
 	*val = sd->brightness;
 	return 0;
 }
-
 
 static int sd_setcontrast(struct gspca_dev *gspca_dev, s32 val)
 {

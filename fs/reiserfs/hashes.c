@@ -1,4 +1,3 @@
-
 /*
  * Keyed 32-bit hash function using TEA in a Davis-Meyer function
  *   H0 = Key

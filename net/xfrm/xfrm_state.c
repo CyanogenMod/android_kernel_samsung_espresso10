@@ -923,7 +923,6 @@ xfrm_stateonly_find(struct net *net, u32 mark,
 		xfrm_state_hold(rx);
 	spin_unlock(&xfrm_state_lock);
 
-
 	return rx;
 }
 EXPORT_SYMBOL(xfrm_stateonly_find);

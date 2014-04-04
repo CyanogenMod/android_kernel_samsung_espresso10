@@ -177,7 +177,6 @@ static const struct seq_operations rxrpc_connection_seq_ops = {
 	.show   = rxrpc_connection_seq_show,
 };
 
-
 static int rxrpc_connection_seq_open(struct inode *inode, struct file *file)
 {
 	return seq_open(file, &rxrpc_connection_seq_ops);

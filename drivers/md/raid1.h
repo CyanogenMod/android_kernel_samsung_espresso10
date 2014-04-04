@@ -21,7 +21,6 @@ struct pool_info {
 	int	raid_disks;
 };
 
-
 typedef struct r1bio_s r1bio_t;
 
 struct r1_private_data_s {

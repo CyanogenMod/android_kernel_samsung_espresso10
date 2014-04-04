@@ -292,12 +292,10 @@ static int __init hsi_protocol_init(void)
 	return ret;
 }
 
-
 static void __exit hsi_protocol_exit(void)
 {
 	if_hsi_exit();
 }
-
 
 MODULE_AUTHOR("Rupesh Gujare <rupesh.g@samsung.com> / Samsung Electronics");
 MODULE_DESCRIPTION("HSI Protocol for Infineon Modem");

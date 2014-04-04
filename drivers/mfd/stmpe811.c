@@ -259,7 +259,6 @@ static void __init stmpe811_adc_exit(void)
 	misc_deregister(&stmpe811_adc_device);
 }
 
-
 static int stmpe811_adc_i2c_remove(struct i2c_client *client)
 {
 	struct stmpe811_adc_state *adc = i2c_get_clientdata(client);

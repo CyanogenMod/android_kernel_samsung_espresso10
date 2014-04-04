@@ -157,7 +157,6 @@ struct lance_private
 #define LE_C0_STRT	0x0002		/* Start */
 #define LE_C0_INIT	0x0001		/* Initialize */
 
-
 /*
  *		Bit definitions for CSR3
  */
@@ -166,7 +165,6 @@ struct lance_private
 #define LE_C3_ACON	0x0002		/* ALE Control
 					   (on for active low ALE) */
 #define LE_C3_BCON	0x0001		/* Byte Control */
-
 
 /*
  *		Mode Flags
@@ -194,7 +192,6 @@ struct lance_private
 #define LE_MO_DTX	0x0002		/* Disable Transmitter */
 #define LE_MO_DRX	0x0001		/* Disable Receiver */
 
-
 /*
  *		Receive Flags
  */
@@ -207,7 +204,6 @@ struct lance_private
 #define LE_R1_SOP	0x02		/* Start of Packet */
 #define LE_R1_EOP	0x01		/* End of Packet */
 #define LE_R1_POK       0x03		/* Packet is complete: SOP + EOP */
-
 
 /*
  *		Transmit Flags

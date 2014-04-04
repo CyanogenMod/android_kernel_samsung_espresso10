@@ -11,7 +11,6 @@
 
 #include <linux/types.h>
 
-
 /*
  * Partition definition structure:
  *
@@ -45,7 +44,6 @@ struct mtd_partition {
 #define MTDPART_OFS_NXTBLK	(-2)
 #define MTDPART_OFS_APPEND	(-1)
 #define MTDPART_SIZ_FULL	(0)
-
 
 struct mtd_info;
 

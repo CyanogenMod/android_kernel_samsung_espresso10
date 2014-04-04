@@ -64,7 +64,6 @@
 #define D_SUBMODULE tx
 #include "sdio-debug-levels.h"
 
-
 /*
  * Pull TX transations from the TX FIFO and send them to the device
  * until there are no more.
@@ -107,7 +106,6 @@ void i2400ms_tx_submit(struct work_struct *ws)
 
 	d_fnend(4, dev, "(i2400ms %p) = void\n", i2400ms);
 }
-
 
 /*
  * The generic driver notifies us that there is data ready for TX

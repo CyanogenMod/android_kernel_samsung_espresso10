@@ -82,7 +82,6 @@ typedef struct {
 #define MIB_SMT_STASTA_SEPA	1
 #define MIB_SMT_STASTA_THRU	2
 
-
 struct fddi_mib {
 	/*
 	 * private

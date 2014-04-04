@@ -361,7 +361,6 @@ static const struct nilfs_bmap_operations nilfs_direct_ops = {
 	.bop_gather_data	=	nilfs_direct_gather_data,
 };
 
-
 int nilfs_direct_init(struct nilfs_bmap *bmap)
 {
 	bmap->b_ops = &nilfs_direct_ops;

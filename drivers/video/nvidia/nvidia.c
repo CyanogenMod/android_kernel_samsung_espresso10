@@ -1283,7 +1283,6 @@ static int __devinit nvidiafb_probe(struct pci_dev *pd,
 	struct fb_info *info;
 	unsigned short cmd;
 
-
 	NVTRACE_ENTER();
 	assert(pd != NULL);
 
@@ -1411,7 +1410,6 @@ static int __devinit nvidiafb_probe(struct pci_dev *pd,
 		printk(KERN_ERR PFX "error registering nVidia framebuffer\n");
 		goto err_out_iounmap_fb;
 	}
-
 
 	printk(KERN_INFO PFX
 	       "PCI nVidia %s framebuffer (%dMB @ 0x%lX)\n",

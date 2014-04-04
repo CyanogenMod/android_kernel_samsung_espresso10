@@ -18,7 +18,6 @@ struct dnotify_struct {
 
 #ifdef __KERNEL__
 
-
 #ifdef CONFIG_DNOTIFY
 
 #define DNOTIFY_ALL_EVENTS (FS_DELETE | FS_DELETE_CHILD |\

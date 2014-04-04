@@ -31,8 +31,6 @@
 extern "C" {
 #endif
 
-
-
 typedef struct _PVRSRV_POWER_DEV_TAG_
 {
 	PFN_PRE_POWER					pfnPrePower;
@@ -64,8 +62,6 @@ IMG_BOOL PVRSRVGetInitServerState(PVRSRV_INIT_SERVER_STATE	eInitServerState);
 
 IMG_IMPORT
 PVRSRV_ERROR PVRSRVSetInitServerState(PVRSRV_INIT_SERVER_STATE	eInitServerState, IMG_BOOL bState);
-
-
 
 IMG_IMPORT
 PVRSRV_ERROR PVRSRVPowerLock(IMG_UINT32	ui32CallerID,

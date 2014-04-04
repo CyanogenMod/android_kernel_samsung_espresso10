@@ -105,7 +105,6 @@ static int i2c_sendbytes(struct i2c_adapter *i2c_adap,
 		return 0;
 	}
 
-
 	/* dev, reg + first byte */
 	addr = (msg->addr << 25) | msg->buf[0];
 	wdata = msg->buf[0];
@@ -167,7 +166,6 @@ static int i2c_readbytes(struct i2c_adapter *i2c_adap,
 	u32 ctrl, cnt;
 	int retval;
 
-
 	if (i2c_debug && !joined)
 		dprintk(1, "%s(msg->len=%d)\n", __func__, msg->len);
 
@@ -179,7 +177,6 @@ static int i2c_readbytes(struct i2c_adapter *i2c_adap,
 			return -EIO;
 		if (!i2c_slave_did_ack(i2c_adap))
 			return -ENXIO;
-
 
 		dprintk(1, "%s() returns 0\n", __func__);
 		return 0;

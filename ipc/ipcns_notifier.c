@@ -17,10 +17,7 @@
 
 #include "util.h"
 
-
-
 static BLOCKING_NOTIFIER_HEAD(ipcns_chain);
-
 
 static int ipcns_callback(struct notifier_block *self,
 				unsigned long action, void *arg)

@@ -474,7 +474,6 @@ static ssize_t bh1721fvc_light_name_show(struct device *dev,
 static struct device_attribute dev_attr_light_sensor_name =
 	__ATTR(name, S_IRUSR | S_IRGRP, bh1721fvc_light_name_show, NULL);
 
-
 static struct device_attribute *additional_light_attrs[] = {
 	&dev_attr_light_sensor_lux,
 	&dev_attr_light_sensor_raw_data,

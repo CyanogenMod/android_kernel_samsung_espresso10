@@ -36,7 +36,6 @@
 #define GPIO_USB_POWER		35
 #define GPIO_USB_NRESET		38
 
-
 /* Board initialization */
 static struct omap_board_config_kernel am3517_crane_config[] __initdata = {
 };

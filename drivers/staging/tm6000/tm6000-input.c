@@ -75,7 +75,6 @@ struct tm6000_IR {
 	u64			rc_type;
 };
 
-
 void tm6000_ir_wait(struct tm6000_core *dev, u8 state)
 {
 	struct tm6000_IR *ir = dev->ir;
@@ -88,7 +87,6 @@ void tm6000_ir_wait(struct tm6000_core *dev, u8 state)
 	else
 		ir->wait = 0;
 }
-
 
 static int tm6000_ir_config(struct tm6000_IR *ir)
 {
@@ -308,7 +306,6 @@ int tm6000_ir_int_start(struct tm6000_core *dev)
 	int pipe, size;
 	int err = -ENOMEM;
 
-
 	if (!ir)
 		return -ENODEV;
 
@@ -395,7 +392,6 @@ int tm6000_ir_init(struct tm6000_core *dev)
 	ir->polling = 50;
 	ir->pwled = 0;
 	ir->pwledcnt = 0;
-
 
 	snprintf(ir->name, sizeof(ir->name), "tm5600/60x0 IR (%s)",
 						dev->name);

@@ -39,7 +39,6 @@ struct u300_gpio_port {
 	int number;
 };
 
-
 static struct u300_gpio_port gpio_ports[] = {
 	{
 		.name = "gpio0",
@@ -75,7 +74,6 @@ static struct u300_gpio_port gpio_ports[] = {
 #endif
 
 };
-
 
 #ifdef U300_COH901571_3
 
@@ -240,7 +238,6 @@ u300_gpio_config[U300_GPIO_NUM_PORTS][U300_GPIO_PINS_PER_PORT] = {
 #endif
 };
 #endif
-
 
 /* No users == we can power down GPIO */
 static int gpio_users;
@@ -672,7 +669,6 @@ static struct platform_driver gpio_driver = {
 	},
 	.remove		= __exit_p(gpio_remove),
 };
-
 
 static int __init u300_gpio_init(void)
 {

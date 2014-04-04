@@ -52,7 +52,6 @@ struct stv6110x_devctl {
 	int (*tuner_get_status) (struct dvb_frontend *fe, u32 *status);
 };
 
-
 #if defined(CONFIG_DVB_STV6110x) || (defined(CONFIG_DVB_STV6110x_MODULE) && defined(MODULE))
 
 extern struct stv6110x_devctl *stv6110x_attach(struct dvb_frontend *fe,

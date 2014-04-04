@@ -22,7 +22,6 @@
 
 #include <linux/if_ether.h>
 
-
 #define INTF_HEADER_LEN     4
 
 struct rfc_1042_hdr {
@@ -210,7 +209,6 @@ enum MWIFIEX_802_11_WEP_STATUS {
 #define HostCmd_CMD_802_11_HS_CFG_ENH                 0x00e5
 #define HostCmd_CMD_CAU_REG_ACCESS                    0x00ed
 #define HostCmd_CMD_SET_BSS_MODE                      0x00f7
-
 
 enum ENH_PS_MODES {
 	EN_PS = 1,

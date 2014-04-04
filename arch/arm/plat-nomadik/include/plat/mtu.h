@@ -51,4 +51,3 @@ extern void __iomem *mtu_base;
 #define MTU_PCELL3	0xffC
 
 #endif /* __PLAT_MTU_H */
-

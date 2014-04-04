@@ -1,4 +1,3 @@
-
 /*
  *  acard-ahci.c - ACard AHCI SATA support
  *

@@ -750,7 +750,6 @@ void gru_check_context_placement(struct gru_thread_state *gts)
 	}
 }
 
-
 /*
  * Insufficient GRU resources available on the local blade. Steal a context from
  * a process. This is a hack until a _real_ resource scheduler is written....
@@ -970,4 +969,3 @@ again:
 
 	return VM_FAULT_NOPAGE;
 }
-

@@ -28,7 +28,6 @@
 #include "quota/xfs_qm.h"
 #include <linux/quota.h>
 
-
 STATIC int
 xfs_quota_type(int type)
 {

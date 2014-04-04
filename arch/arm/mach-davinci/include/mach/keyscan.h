@@ -39,4 +39,3 @@ struct davinci_ks_platform_data {
 };
 
 #endif
-

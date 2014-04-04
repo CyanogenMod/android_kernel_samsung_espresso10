@@ -7,7 +7,7 @@
 
 cyclomx-y                       := cycx_main.o
 cyclomx-$(CONFIG_CYCLOMX_X25)	+= cycx_x25.o
-cyclomx-objs			:= $(cyclomx-y)  
+cyclomx-objs			:= $(cyclomx-y)
 
 obj-$(CONFIG_HDLC)		+= hdlc.o
 obj-$(CONFIG_HDLC_RAW)		+= hdlc_raw.o
@@ -30,7 +30,7 @@ obj-$(CONFIG_X25_ASY)		+= x25_asy.o
 
 obj-$(CONFIG_LANMEDIA)		+= lmc/
 
-obj-$(CONFIG_DLCI)		+= dlci.o 
+obj-$(CONFIG_DLCI)		+= dlci.o
 obj-$(CONFIG_SDLA)		+= sdla.o
 obj-$(CONFIG_CYCLADES_SYNC)	+= cycx_drv.o cyclomx.o
 obj-$(CONFIG_LAPBETHER)		+= lapbether.o

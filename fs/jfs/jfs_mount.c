@@ -58,7 +58,6 @@
 #include "jfs_metapage.h"
 #include "jfs_debug.h"
 
-
 /*
  * forward references
  */
@@ -400,7 +399,6 @@ static int chkSuper(struct super_block *sb)
 	return rc;
 }
 
-
 /*
  *	updateSuper()
  *
@@ -455,7 +453,6 @@ int updateSuper(struct super_block *sb, uint state)
 	return 0;
 }
 
-
 /*
  *	readSuper()
  *
@@ -475,7 +472,6 @@ int readSuper(struct super_block *sb, struct buffer_head **bpp)
 
 	return -EIO;
 }
-
 
 /*
  *	logMOUNT()

@@ -164,5 +164,4 @@ typedef struct svc_fh {
 
 #endif /* __KERNEL__ */
 
-
 #endif /* _LINUX_NFSD_FH_H */

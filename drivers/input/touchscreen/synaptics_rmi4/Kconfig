@@ -2,7 +2,7 @@
 # RMI4 configuration
 #
 config TOUCHSCREEN_SYNAPTICS_RMI4
-	bool "Syanptics RMI4 drvier"
+	bool "Syanptics RMI4 driver"
 	  select RMI4_DEBUG
 	  select RMI4_BUS
 	  select RMI4_GENERIC
@@ -24,8 +24,7 @@ config RMI4_BUS
 
 	  If unsure, say Y.
 
-	  This feature is not currently available as
-	  a loadable module.
+	  This feature is not currently available as a loadable module.
 
 config RMI4_DEBUG
 	bool "Synaptics RMI4 debugging"
@@ -87,7 +86,6 @@ config RMI4_GENERIC
 	  your RMI device.
 
 	  This feature is not currently available as a loadable module.
-
 
 config RMI4_F1A
 	tristate "RMI4 Function 1A (capacitive button sensor)"

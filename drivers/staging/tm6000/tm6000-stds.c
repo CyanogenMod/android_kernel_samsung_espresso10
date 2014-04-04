@@ -32,7 +32,6 @@ struct tm6000_reg_settings {
 	unsigned char value;
 };
 
-
 struct tm6000_std_settings {
 	v4l2_std_id id;
 	struct tm6000_reg_settings common[27];
@@ -344,7 +343,6 @@ static struct tm6000_std_settings svideo_stds[] = {
 		},
 	},
 };
-
 
 static int tm6000_set_audio_std(struct tm6000_core *dev)
 {
@@ -673,7 +671,6 @@ ret:
 		tm6000_set_audio_std(dev);
 
 	msleep(40);
-
 
 	return 0;
 }

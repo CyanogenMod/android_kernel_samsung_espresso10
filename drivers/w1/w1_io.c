@@ -150,7 +150,6 @@ void w1_write_8(struct w1_master *dev, u8 byte)
 }
 EXPORT_SYMBOL_GPL(w1_write_8);
 
-
 /**
  * Generates a write-1 cycle and samples the level.
  * Only call if dev->bus_master->touch_bit is NULL

@@ -14,7 +14,6 @@
 #include <linux/vt_kern.h>
 #include <linux/console.h>
 
-
 void __attribute__((weak)) bust_spinlocks(int yes)
 {
 	if (yes) {
@@ -28,5 +27,3 @@ void __attribute__((weak)) bust_spinlocks(int yes)
 			wake_up_klogd();
 	}
 }
-
-

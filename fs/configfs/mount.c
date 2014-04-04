@@ -129,7 +129,6 @@ void configfs_release_fs(void)
 	simple_release_fs(&configfs_mount, &configfs_mnt_count);
 }
 
-
 static struct kobject *config_kobj;
 
 static int __init configfs_init(void)

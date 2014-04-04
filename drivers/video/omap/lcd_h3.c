@@ -136,4 +136,3 @@ static void __exit h3_panel_drv_cleanup(void)
 
 module_init(h3_panel_drv_init);
 module_exit(h3_panel_drv_cleanup);
-

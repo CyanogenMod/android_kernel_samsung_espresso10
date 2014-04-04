@@ -1154,7 +1154,6 @@ static enum stb0899_status stb0899_dvbs2_get_fec_status(struct stb0899_state *st
 	}
 }
 
-
 /*
  * stb0899_dvbs2_init_csm
  * set parameters for manual mode

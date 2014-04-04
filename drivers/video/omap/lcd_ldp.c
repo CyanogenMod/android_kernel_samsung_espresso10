@@ -61,7 +61,6 @@
 
 #define t2_out(c, r, v) twl_i2c_write_u8(c, r, v)
 
-
 static int ldp_panel_init(struct lcd_panel *panel,
 				struct omapfb_device *fbdev)
 {

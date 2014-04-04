@@ -813,7 +813,7 @@ bool ethtool_invalid_flags(struct net_device *dev, u32 data, u32 supported);
  * @set_tx_csum: Deprecated in favour of generic netdev features.  Turn
  *	transmit checksums on or off.  Returns a negative error code or zero.
  * @get_sg: Deprecated as redundant.  Report whether scatter-gather is
- *	enabled.  
+ *	enabled.
  * @set_sg: Deprecated in favour of generic netdev features.  Turn
  *	scatter-gather on or off. Returns a negative error code or zero.
  * @get_tso: Deprecated as redundant.  Report whether TCP segmentation
@@ -846,7 +846,7 @@ bool ethtool_invalid_flags(struct net_device *dev, u32 data, u32 supported);
  * @set_ufo: Deprecated in favour of generic netdev features.  Turn UDP
  *	fragmentation offload on or off.  Returns a negative error code or zero.
  * @get_flags: Deprecated as redundant.  Report features included in
- *	&enum ethtool_flags that are enabled.  
+ *	&enum ethtool_flags that are enabled.
  * @set_flags: Deprecated in favour of generic netdev features.  Turn
  *	features included in &enum ethtool_flags on or off.  Returns a
  *	negative error code or zero.

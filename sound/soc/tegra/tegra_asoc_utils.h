@@ -42,4 +42,3 @@ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
 void tegra_asoc_utils_fini(struct tegra_asoc_utils_data *data);
 
 #endif
-

@@ -26,7 +26,6 @@
 #include "dma.h"
 #include "hw.h"
 
-
 extern int ioat_pending_level;
 extern int ioat_ring_alloc_order;
 

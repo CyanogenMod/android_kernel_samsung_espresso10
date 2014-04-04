@@ -113,4 +113,3 @@ config SND_USB_6FIRE
           http://sixfireusb.sourceforge.net
 
 endif	# SND_USB
-

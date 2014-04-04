@@ -64,7 +64,6 @@
 #define PSZ_VGA		0x05
 #define PSZ_MAX		6
 
-
 /* The frame rate is encoded in the video_window.flags parameter using
    the upper 16 bits, since some flags are defined nowadays. The following
    defines provide a mask and shift to filter out this value.
@@ -81,14 +80,12 @@
 #define PWC_QLT_MASK		0x03000000
 #define PWC_QLT_SHIFT		24
 
-
 /* structure for transferring x & y coordinates */
 struct pwc_coord
 {
 	int x, y;		/* guess what */
 	int size;		/* size, or offset */
 };
-
 
 /* Used with VIDIOCPWCPROBE */
 struct pwc_probe
@@ -182,7 +179,6 @@ struct pwc_mpt_status
 	int time_tilt;
 };
 
-
 /* This is used for out-of-kernel decompression. With it, you can get
    all the necessary information to initialize and use the decompressor
    routines in standalone applications.
@@ -204,7 +200,6 @@ struct pwc_video_command
 #define PWCX_FLAG_PLANAR	0x0001
 #define PWCX_FLAG_BAYER		0x0008
 
-
 /* IOCTL definitions */
 
  /* Restore user settings */
@@ -225,7 +220,6 @@ struct pwc_video_command
 #define VIDIOCPWCSCQUAL		_IOW('v', 195, int)
  /* Get preferred compression quality */
 #define VIDIOCPWCGCQUAL		_IOR('v', 195, int)
-
 
 /* Retrieve serial number of camera */
 #define VIDIOCPWCGSERIAL	_IOR('v', 198, struct pwc_serial)
@@ -319,6 +313,5 @@ struct pwc_raw_frame {
 			   only the first 3 bytes is filled) */
    __u8   rawframe[0];	/* frame_size = H/4*vbandlength */
 } __attribute__ ((packed));
-
 
 #endif

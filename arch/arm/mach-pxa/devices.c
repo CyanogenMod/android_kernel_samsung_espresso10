@@ -87,7 +87,6 @@ void __init pxa_set_mci_info(struct pxamci_platform_data *info)
 	pxa_register_device(&pxa_device_mci, info);
 }
 
-
 static struct pxa2xx_udc_mach_info pxa_udc_info = {
 	.gpio_pullup = -1,
 };

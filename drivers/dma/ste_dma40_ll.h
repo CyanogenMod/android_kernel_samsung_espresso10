@@ -32,7 +32,6 @@
 #define D40_SREG_CFG_PHY_TM_POS		 4
 #define D40_SREG_CFG_PHY_EVTL_POS	 0
 
-
 /* Standard channel parameters - basic mode (element register) */
 #define D40_SREG_ELEM_PHY_ECNT_POS	16
 #define D40_SREG_ELEM_PHY_EIDX_POS	 0
@@ -109,7 +108,6 @@
 
 #define D40_MEM_LCSP3_DLOS_MASK		(0x7F << D40_MEM_LCSP3_DLOS_POS)
 #define D40_MEM_LCSP3_DTCP_MASK		(0x1 << D40_MEM_LCSP3_DTCP_POS)
-
 
 /* Standard channel parameter register offsets */
 #define D40_CHAN_REG_SSCFG	0x00
@@ -231,7 +229,6 @@ struct d40_phy_lli_bidir {
 	struct d40_phy_lli	*src;
 	struct d40_phy_lli	*dst;
 };
-
 
 /**
  * struct d40_log_lli - logical lli configuration

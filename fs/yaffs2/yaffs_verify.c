@@ -532,4 +532,3 @@ int yaffs_verify_file_sane(struct yaffs_obj *in)
 	in = in;
 	return YAFFS_OK;
 }
-

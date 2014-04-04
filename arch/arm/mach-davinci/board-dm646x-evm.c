@@ -811,4 +811,3 @@ MACHINE_START(DAVINCI_DM6467TEVM, "DaVinci DM6467T EVM")
 	.timer        = &davinci_timer,
 	.init_machine = evm_init,
 MACHINE_END
-

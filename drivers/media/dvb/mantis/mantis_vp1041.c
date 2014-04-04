@@ -337,7 +337,6 @@ static int vp1041_frontend_init(struct mantis_pci *mantis, struct dvb_frontend *
 		return -EIO;
 	}
 
-
 	dprintk(MANTIS_ERROR, 1, "Done!");
 
 	return 0;

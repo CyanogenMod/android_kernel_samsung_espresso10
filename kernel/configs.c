@@ -47,7 +47,6 @@
 #define MAGIC_END	"IKCFG_ED"
 #include "config_data.h"
 
-
 #define MAGIC_SIZE (sizeof(MAGIC_START) - 1)
 #define kernel_config_data_size \
 	(sizeof(kernel_config_data) - 1 - MAGIC_SIZE * 2)

@@ -131,4 +131,3 @@ int ocfs2_node_map_test_bit(struct ocfs2_super *osb,
 	spin_unlock(&osb->node_map_lock);
 	return ret;
 }
-

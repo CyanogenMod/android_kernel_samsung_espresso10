@@ -1464,7 +1464,6 @@ static int __init msm_otg_probe(struct platform_device *pdev)
 	} else
 		motg->pclk_src = ERR_PTR(-ENOENT);
 
-
 	motg->pclk = clk_get(&pdev->dev, "usb_hs_pclk");
 	if (IS_ERR(motg->pclk)) {
 		dev_err(&pdev->dev, "failed to get usb_hs_pclk\n");

@@ -53,7 +53,6 @@ struct pci_dev* bttv_get_pcidev(unsigned int card)
 	return bttvs[card]->c.pci;
 }
 
-
 int bttv_gpio_enable(unsigned int card, unsigned long mask, unsigned long data)
 {
 	struct bttv *btv;

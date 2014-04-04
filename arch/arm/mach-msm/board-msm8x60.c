@@ -28,7 +28,6 @@
 #include <mach/board.h>
 #include <mach/msm_iomap.h>
 
-
 static void __init msm8x60_map_io(void)
 {
 	msm_map_msm8x60_io();

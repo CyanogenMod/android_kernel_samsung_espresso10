@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ar6k.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +38,6 @@
 #define OTHER_INTS_ENABLED (INT_STATUS_ENABLE_ERROR_MASK |   \
                             INT_STATUS_ENABLE_CPU_MASK   |   \
                             INT_STATUS_ENABLE_COUNTER_MASK)
-
 
 //#define MBOXHW_UNIT_TEST 1
 
@@ -93,14 +92,14 @@ struct ar6k_async_reg_io_buffer {
     u8 _Pad2[A_CACHE_LINE_PAD];
 };
 
-struct ar6k_gmbox_info { 
+struct ar6k_gmbox_info {
     void        *pProtocolContext;
     int    (*pMessagePendingCallBack)(void *pContext, u8 LookAheadBytes[], int ValidBytes);
     int    (*pCreditsPendingCallback)(void *pContext, int NumCredits,  bool CreditIRQEnabled);
     void        (*pTargetFailureCallback)(void *pContext, int Status);
     void        (*pStateDumpCallback)(void *pContext);
     bool      CreditCountIRQEnabled;
-}; 
+};
 
 struct ar6k_device {
     A_MUTEX_T                   Lock;
@@ -120,7 +119,7 @@ struct ar6k_device {
     void                        (*TargetFailureCallback)(void *Context);
     int                    (*MessagePendingCallback)(void *Context,
                                                           u32 LookAheads[],
-                                                          int NumLookAheads, 
+                                                          int NumLookAheads,
                                                           bool *pAsyncProc,
                                                           int *pNumPktsFetched);
     HIF_DEVICE_IRQ_PROCESSING_MODE  HifIRQProcessingMode;
@@ -130,7 +129,7 @@ struct ar6k_device {
     bool                          DSRCanYield;
     int                             CurrentDSRRecvCount;
     struct hif_device_scatter_support_info HifScatterInfo;
-    struct dl_list                         ScatterReqHead; 
+    struct dl_list                         ScatterReqHead;
     bool                          ScatterIsVirtual;
     int                             MaxRecvBundleSize;
     int                             MaxSendBundleSize;
@@ -181,7 +180,7 @@ static INLINE int DevSendPacket(struct ar6k_device *pDev, struct htc_packet *pPa
        /* adjust the length to be a multiple of block size if appropriate */
     paddedLength = DEV_CALC_SEND_PADDED_LEN(pDev, SendLength);
 
-#if 0                    
+#if 0
     if (paddedLength > pPacket->BufferLength) {
         A_ASSERT(false);
         if (pPacket->Completion != NULL) {
@@ -191,7 +190,7 @@ static INLINE int DevSendPacket(struct ar6k_device *pDev, struct htc_packet *pPa
         return A_EINVAL;
     }
 #endif
-    
+
     AR_DEBUG_PRINTF(ATH_DEBUG_SEND,
                 ("DevSendPacket, Padded Length: %d Mbox:0x%X (mode:%s)\n",
                 paddedLength,
@@ -210,12 +209,12 @@ static INLINE int DevSendPacket(struct ar6k_device *pDev, struct htc_packet *pPa
     } else {
         if (status == A_PENDING) {
             status = 0;
-        }    
+        }
     }
 
     return status;
 }
-                    
+
 static INLINE int DevRecvPacket(struct ar6k_device *pDev, struct htc_packet *pPacket, u32 RecvLength) {
     u32 paddedLength;
     int status;
@@ -223,7 +222,7 @@ static INLINE int DevRecvPacket(struct ar6k_device *pDev, struct htc_packet *pPa
 
         /* adjust the length to be a multiple of block size if appropriate */
     paddedLength = DEV_CALC_RECV_PADDED_LEN(pDev, RecvLength);
-                    
+
     if (paddedLength > pPacket->BufferLength) {
         A_ASSERT(false);
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,
@@ -259,19 +258,19 @@ static INLINE int DevRecvPacket(struct ar6k_device *pDev, struct htc_packet *pPa
 
 #define DEV_CHECK_RECV_YIELD(pDev) \
             ((pDev)->CurrentDSRRecvCount >= (pDev)->HifIRQYieldParams.RecvPacketYieldCount)
-            
+
 #define IS_DEV_IRQ_PROC_SYNC_MODE(pDev) (HIF_DEVICE_IRQ_SYNC_ONLY == (pDev)->HifIRQProcessingMode)
 #define IS_DEV_IRQ_PROCESSING_ASYNC_ALLOWED(pDev) ((pDev)->HifIRQProcessingMode != HIF_DEVICE_IRQ_SYNC_ONLY)
 
 /**************************************************/
 /****** Scatter Function and Definitions
- * 
- *  
+ *
+ *
  */
-  
+
 int DevCopyScatterListToFromDMABuffer(struct hif_scatter_req *pReq, bool FromDMA);
-    
-    /* copy any READ data back into scatter list */        
+
+    /* copy any READ data back into scatter list */
 #define DEV_FINISH_SCATTER_OPERATION(pR)				\
 do {									\
 	if (!((pR)->CompletionStatus) &&				\
@@ -282,26 +281,25 @@ do {									\
 							  FROM_DMA_BUFFER); \
 	}								\
 } while (0)
-    
+
     /* copy any WRITE data to bounce buffer */
 static INLINE int DEV_PREPARE_SCATTER_OPERATION(struct hif_scatter_req *pReq)  {
     if ((pReq->Request & HIF_WRITE) && (pReq->ScatterMethod == HIF_SCATTER_DMA_BOUNCE)) {
-        return DevCopyScatterListToFromDMABuffer(pReq,TO_DMA_BUFFER);    
+        return DevCopyScatterListToFromDMABuffer(pReq,TO_DMA_BUFFER);
     } else {
         return 0;
     }
 }
-        
-    
+
 int DevSetupMsgBundling(struct ar6k_device *pDev, int MaxMsgsPerTransfer);
 
 int DevCleanupMsgBundling(struct ar6k_device *pDev);
-                                  
+
 #define DEV_GET_MAX_MSG_PER_BUNDLE(pDev)        (pDev)->HifScatterInfo.MaxScatterEntries
 #define DEV_GET_MAX_BUNDLE_LENGTH(pDev)         (pDev)->HifScatterInfo.MaxTransferSizePerScatterReq
 #define DEV_ALLOC_SCATTER_REQ(pDev)             \
     (pDev)->HifScatterInfo.pAllocateReqFunc((pDev)->ScatterIsVirtual ? (pDev) : (pDev)->HIFDevice)
-    
+
 #define DEV_FREE_SCATTER_REQ(pDev,pR)           \
     (pDev)->HifScatterInfo.pFreeReqFunc((pDev)->ScatterIsVirtual ? (pDev) : (pDev)->HIFDevice,(pR))
 
@@ -324,14 +322,12 @@ struct dev_scatter_dma_virtual_info {
     u8 DataArea[1];      /* start of data area */
 };
 
-
-
 void     DumpAR6KDevState(struct ar6k_device *pDev);
 
 /**************************************************/
 /****** GMBOX functions and definitions
- * 
- *  
+ *
+ *
  */
 
 #ifdef ATH_AR6K_ENABLE_GMBOX

@@ -23,4 +23,3 @@
 #define CSB726_IRQ_SM501	gpio_to_irq(CSB726_GPIO_IRQ_SM501)
 
 #endif
-

@@ -28,7 +28,6 @@ struct debugifc_mask_item {
 	unsigned long msk;
 };
 
-
 static unsigned int debugifc_count_whitespace(const char *buf,
 					      unsigned int count)
 {
@@ -45,7 +44,6 @@ static unsigned int debugifc_count_whitespace(const char *buf,
 	return scnt;
 }
 
-
 static unsigned int debugifc_count_nonwhitespace(const char *buf,
 						 unsigned int count)
 {
@@ -60,7 +58,6 @@ static unsigned int debugifc_count_nonwhitespace(const char *buf,
 	}
 	return scnt;
 }
-
 
 static unsigned int debugifc_isolate_word(const char *buf,unsigned int count,
 					  const char **wstrPtr,
@@ -89,7 +86,6 @@ static unsigned int debugifc_isolate_word(const char *buf,unsigned int count,
 	return consume_cnt;
 }
 
-
 static int debugifc_parse_unsigned_number(const char *buf,unsigned int count,
 					  u32 *num_ptr)
 {
@@ -115,7 +111,6 @@ static int debugifc_parse_unsigned_number(const char *buf,unsigned int count,
 	return 0;
 }
 
-
 static int debugifc_match_keyword(const char *buf,unsigned int count,
 				  const char *keyword)
 {
@@ -125,7 +120,6 @@ static int debugifc_match_keyword(const char *buf,unsigned int count,
 	if (kl != count) return 0;
 	return !memcmp(buf,keyword,kl);
 }
-
 
 int pvr2_debugifc_print_info(struct pvr2_hdw *hdw,char *buf,unsigned int acnt)
 {
@@ -141,7 +135,6 @@ int pvr2_debugifc_print_info(struct pvr2_hdw *hdw,char *buf,unsigned int acnt)
 
 	return bcnt;
 }
-
 
 int pvr2_debugifc_print_status(struct pvr2_hdw *hdw,
 			       char *buf,unsigned int acnt)
@@ -170,7 +163,6 @@ int pvr2_debugifc_print_status(struct pvr2_hdw *hdw,
 			 pvr2_hdw_get_streaming(hdw) ? "on" : "off");
 	bcnt += ccnt; acnt -= ccnt; buf += ccnt;
 
-
 	sp = pvr2_hdw_get_video_stream(hdw);
 	if (sp) {
 		pvr2_stream_get_stats(sp, &stats, 0);
@@ -190,7 +182,6 @@ int pvr2_debugifc_print_status(struct pvr2_hdw *hdw,
 
 	return bcnt;
 }
-
 
 static int pvr2_debugifc_do1cmd(struct pvr2_hdw *hdw,const char *buf,
 				unsigned int count)
@@ -301,7 +292,6 @@ static int pvr2_debugifc_do1cmd(struct pvr2_hdw *hdw,const char *buf,
 	return -EINVAL;
 }
 
-
 int pvr2_debugifc_docmd(struct pvr2_hdw *hdw,const char *buf,
 			unsigned int count)
 {
@@ -322,7 +312,6 @@ int pvr2_debugifc_docmd(struct pvr2_hdw *hdw,const char *buf,
 
 	return 0;
 }
-
 
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:

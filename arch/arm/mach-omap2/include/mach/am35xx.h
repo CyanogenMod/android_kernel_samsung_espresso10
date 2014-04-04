@@ -23,7 +23,6 @@
 #define AM35XX_IPSS_HECC_BASE		0x5C050000
 #define AM35XX_IPSS_VPFE_BASE		0x5C060000
 
-
 /* HECC module specifc offset definitions */
 #define AM35XX_HECC_SCC_HECC_OFFSET	(0x0)
 #define AM35XX_HECC_SCC_RAM_OFFSET	(0x3000)

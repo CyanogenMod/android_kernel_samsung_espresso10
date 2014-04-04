@@ -186,7 +186,6 @@ enum {
 
 #define PSB_NUM_VBLANKS 2
 
-
 #define PSB_2D_SIZE (256*1024*1024)
 #define PSB_MAX_RELOC_PAGES 1024
 
@@ -226,7 +225,6 @@ struct psb_intel_opregion {
 	struct opregion_asle *asle;
 	int enabled;
 };
-
 
 struct drm_psb_private {
 	struct drm_device *dev;
@@ -485,7 +483,6 @@ struct drm_psb_private {
 	void * fbdev;
 };
 
-
 struct psb_mmu_driver;
 
 extern int drm_crtc_probe_output_modes(struct drm_device *dev, int, int);
@@ -527,7 +524,6 @@ extern int psb_mmu_virtual_to_pfn(struct psb_mmu_pd *pd, uint32_t virtual,
 /*
  *Enable / disable MMU for different requestors.
  */
-
 
 extern void psb_mmu_set_pd_context(struct psb_mmu_pd *pd, int hw_context);
 extern int psb_mmu_insert_pages(struct psb_mmu_pd *pd, struct page **pages,
@@ -643,7 +639,6 @@ extern int psb_gem_dumb_destroy(struct drm_file *file, struct drm_device *dev,
 extern int psb_gem_dumb_map_gtt(struct drm_file *file, struct drm_device *dev,
 			 uint32_t handle, uint64_t *offset);
 extern int psb_gem_fault(struct vm_area_struct *vma, struct vm_fault *vmf);
-
 
 /*
  * Debug print bits setting

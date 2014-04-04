@@ -179,7 +179,6 @@ static void cx18_dualwatch(struct cx18 *cx)
 		CX18_DEBUG_INFO("dualwatch: changing stereo flag failed\n");
 }
 
-
 static struct cx18_mdl *cx18_get_mdl(struct cx18_stream *s, int non_block,
 				     int *err)
 {

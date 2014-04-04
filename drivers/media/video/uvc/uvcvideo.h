@@ -122,7 +122,6 @@ struct uvc_xu_control {
 	(UVC_ENTITY_IS_TERM(entity) && \
 	((entity)->type & 0x8000) == UVC_TERM_OUTPUT)
 
-
 /* ------------------------------------------------------------------------
  * GUIDs
  */

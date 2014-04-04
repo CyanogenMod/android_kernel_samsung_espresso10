@@ -452,4 +452,3 @@ struct _mmc_csd {
 #define MMC_SWITCH_MODE_WRITE_BYTE	0x03	/* Set target to value */
 
 #endif  /* MMC_MMC_PROTOCOL_H */
-

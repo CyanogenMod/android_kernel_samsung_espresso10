@@ -24,7 +24,6 @@
 #include "seq_memory.h"
 #include "seq_lock.h"
 
-
 /* === FIFO === */
 
 struct snd_seq_fifo {
@@ -44,7 +43,6 @@ struct snd_seq_fifo *snd_seq_fifo_new(int poolsize);
 
 /* delete fifo (destructor) */
 void snd_seq_fifo_delete(struct snd_seq_fifo **f);
-
 
 /* enqueue event to fifo */
 int snd_seq_fifo_event_in(struct snd_seq_fifo *f, struct snd_seq_event *event);
@@ -67,6 +65,5 @@ int snd_seq_fifo_poll_wait(struct snd_seq_fifo *f, struct file *file, poll_table
 
 /* resize pool in fifo */
 int snd_seq_fifo_resize(struct snd_seq_fifo *f, int poolsize);
-
 
 #endif

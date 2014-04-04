@@ -7,8 +7,6 @@
    Source: HD64570 SCA User's Manual
 */
 
-
-
 /* SCA Control Registers */
 #define LPR    0x00		/* Low Power */
 
@@ -21,7 +19,6 @@
 
 #define PCR    0x08		/* DMA Priority Control */
 #define DMER   0x09		/* DMA Master Enable */
-
 
 /* Interrupt registers */
 #define ISR0   0x10		/* Interrupt Status 0  */
@@ -36,16 +33,14 @@
 #define IVR    0x1A		/* Interrupt Vector */
 #define IMVR   0x1C		/* Interrupt Modified Vector */
 
-
-
 /* MSCI channel (port) 0 registers - offset 0x20
    MSCI channel (port) 1 registers - offset 0x40 */
 
 #define MSCI0_OFFSET 0x20
 #define MSCI1_OFFSET 0x40
 
-#define TRBL   0x00		/* TX/RX buffer L */ 
-#define TRBH   0x01		/* TX/RX buffer H */ 
+#define TRBL   0x00		/* TX/RX buffer L */
+#define TRBH   0x01		/* TX/RX buffer H */
 #define ST0    0x02		/* Status 0 */
 #define ST1    0x03		/* Status 1 */
 #define ST2    0x04		/* Status 2 */
@@ -66,12 +61,11 @@
 #define TMC    0x15		/* Time Constant */
 #define RXS    0x16		/* RX Clock Source */
 #define TXS    0x17		/* TX Clock Source */
-#define TRC0   0x18		/* TX Ready Control 0 */ 
-#define TRC1   0x19		/* TX Ready Control 1 */ 
-#define RRC    0x1A		/* RX Ready Control */ 
+#define TRC0   0x18		/* TX Ready Control 0 */
+#define TRC1   0x19		/* TX Ready Control 1 */
+#define RRC    0x1A		/* RX Ready Control */
 #define CST0   0x1C		/* Current Status 0 */
 #define CST1   0x1D		/* Current Status 1 */
-
 
 /* Timer channel 0 (port 0 RX) registers - offset 0x60
    Timer channel 1 (port 0 TX) registers - offset 0x68
@@ -90,8 +84,6 @@
 #define TCONRH 0x03		/* Constant H */
 #define TCSR   0x04		/* Control/Status */
 #define TEPR   0x05		/* Expand Prescale */
-
-
 
 /* DMA channel 0 (port 0 RX) registers - offset 0x80
    DMA channel 1 (port 0 TX) registers - offset 0xA0
@@ -142,9 +134,6 @@
 #define DCR_RX(node) (DCR + (node ? DMAC1RX_OFFSET : DMAC0RX_OFFSET))
 #define DCR_TX(node) (DCR + (node ? DMAC1TX_OFFSET : DMAC0TX_OFFSET))
 
-
-
-
 /* Descriptor Structure */
 
 typedef struct {
@@ -154,7 +143,6 @@ typedef struct {
 	u8 stat;		/* Status */
 	u8 unused;		/* pads to 2-byte boundary */
 }__packed pkt_desc;
-
 
 /* Packet Descriptor Status bits */
 
@@ -175,7 +163,6 @@ typedef struct {
 #define DIR_BOFE      0x20      /* Buffer Overflow/Underflow (chained-block)*/
 #define DIR_COFE      0x10      /* Counter Overflow (chained-block) */
 
-
 #define DSR_EOT       0x80      /* Transfer completed */
 #define DSR_EOM       0x40      /* Frame Transfer Completed (chained-block) */
 #define DSR_BOF       0x20      /* Buffer Overflow/Underflow (chained-block)*/
@@ -185,7 +172,6 @@ typedef struct {
 
 /* DMA Master Enable Register (DMER) bits */
 #define DMER_DME      0x80	/* DMA Master Enable */
-
 
 #define CMD_RESET     0x21	/* Reset Channel */
 #define CMD_TX_ENABLE 0x02	/* Start transmitter */

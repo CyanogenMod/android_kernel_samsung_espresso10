@@ -73,7 +73,6 @@ static struct net_device_stats* t3e3_get_stats(struct net_device *dev)
 	nstats->tx_errors = stats->out_errors;
 	nstats->rx_crc_errors = stats->in_error_crc;
 
-
 	nstats->rx_dropped = stats->in_dropped;
 	nstats->tx_dropped = stats->out_dropped;
 	nstats->tx_carrier_errors = stats->out_error_lost_carr +

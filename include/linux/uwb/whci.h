@@ -47,7 +47,6 @@
    a device with n capabilities. */
 #define UWBCAPDATA_SIZE(n) (8 + 8*(n))
 
-
 /*
  * URC registers (offsets from URCBASE)
  *
@@ -74,14 +73,12 @@
 #define URCEVTADDR	0x18
 #  define URCEVTADDR_OFFSET_MASK 0xfff    /* Event pointer offset mask */
 
-
 /** Write 32 bit @value to little endian register at @addr */
 static inline
 void le_writel(u32 value, void __iomem *addr)
 {
 	iowrite32(value, addr);
 }
-
 
 /** Read from 32 bit little endian register at @addr */
 static inline
@@ -90,7 +87,6 @@ u32 le_readl(void __iomem *addr)
 	return ioread32(addr);
 }
 
-
 /** Write 64 bit @value to little endian register at @addr */
 static inline
 void le_writeq(u64 value, void __iomem *addr)
@@ -98,7 +94,6 @@ void le_writeq(u64 value, void __iomem *addr)
 	iowrite32(value, addr);
 	iowrite32(value >> 32, addr + 4);
 }
-
 
 /** Read from 64 bit little endian register at @addr */
 static inline

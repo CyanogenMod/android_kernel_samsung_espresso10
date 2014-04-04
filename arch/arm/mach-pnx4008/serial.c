@@ -65,4 +65,3 @@ void pnx4008_uart_init(void)
 	start_int_ack(SE_U5_RX_INT);
 	start_int_umask(SE_U5_RX_INT);
 }
-

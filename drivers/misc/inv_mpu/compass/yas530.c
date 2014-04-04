@@ -409,7 +409,6 @@ static int yas530_suspend(void *mlsl_handle,
 	return result;
 }
 
-
 static int yas530_resume(void *mlsl_handle,
 			 struct ext_slave_descr *slave,
 			 struct ext_slave_platform_data *pdata)
@@ -466,7 +465,6 @@ static int yas530_read(void *mlsl_handle,
 		for (i = 0; i < 3; i++)
 			xyz[i] = tmp[i];
 	}
-
 
 	rawfixed[0] = (short)(xyz[0] / 100);
 	rawfixed[1] = (short)(xyz[1] / 100);

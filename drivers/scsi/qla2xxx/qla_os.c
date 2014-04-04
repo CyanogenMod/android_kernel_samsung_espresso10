@@ -2101,7 +2101,6 @@ qla2x00_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
 	if (ql2xmaxqdepth != 0 && ql2xmaxqdepth <= 0xffffU)
 		req->max_q_depth = ql2xmaxqdepth;
 
-
 	base_vha = qla2x00_create_host(sht, ha);
 	if (!base_vha) {
 		qla_printk(KERN_WARNING, ha,
@@ -3406,9 +3405,9 @@ qla2x00_do_dpc(void *data)
 			    base_vha->host_no));
 		}
 
-		if (test_bit(FCPORT_UPDATE_NEEDED, &base_vha->dpc_flags)) {
+		if (test_and_clear_bit(FCPORT_UPDATE_NEEDED,
+		    &base_vha->dpc_flags)) {
 			qla2x00_update_fcports(base_vha);
-			clear_bit(FCPORT_UPDATE_NEEDED, &base_vha->dpc_flags);
 		}
 
 		if (test_bit(ISP_QUIESCE_NEEDED, &base_vha->dpc_flags)) {
@@ -3929,7 +3928,6 @@ uint32_t qla82xx_error_recovery(scsi_qla_host_t *base_vha)
 		qla2x00_abort_isp_cleanup(base_vha);
 	}
 
-
 	fn = PCI_FUNC(ha->pdev->devfn);
 	while (fn > 0) {
 		fn--;
@@ -4070,7 +4068,6 @@ qla2xxx_pci_slot_reset(struct pci_dev *pdev)
 	if (ha->isp_ops->abort_isp(base_vha) == QLA_SUCCESS)
 		ret =  PCI_ERS_RESULT_RECOVERED;
 	clear_bit(ABORT_ISP_ACTIVE, &base_vha->dpc_flags);
-
 
 exit_slot_reset:
 	DEBUG17(qla_printk(KERN_WARNING, ha,

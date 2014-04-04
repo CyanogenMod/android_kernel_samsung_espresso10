@@ -29,7 +29,6 @@
 #include "ilt.h"
 #include "phy.h"
 
-
 /**** Initial Internal Lookup Tables ****/
 
 const u32 b43legacy_ilt_rotor[B43legacy_ILT_ROTOR_SIZE] = {

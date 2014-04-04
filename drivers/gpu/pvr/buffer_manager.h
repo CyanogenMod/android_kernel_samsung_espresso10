@@ -94,29 +94,21 @@ struct _BM_CONTEXT_
 {
 	MMU_CONTEXT	*psMMUContext;
 
-
 	 BM_HEAP *psBMHeap;
-
 
 	 BM_HEAP *psBMSharedHeap;
 
 	PVRSRV_DEVICE_NODE *psDeviceNode;
 
-
 	HASH_TABLE *pBufferHash;
-
 
 	IMG_HANDLE hResItem;
 
 	IMG_UINT32 ui32RefCount;
 
-
-
 	struct _BM_CONTEXT_ *psNext;
 	struct _BM_CONTEXT_ **ppsThis;
 };
-
-
 
 typedef IMG_VOID *BM_HANDLE;
 
@@ -133,11 +125,9 @@ BM_CreateContext(PVRSRV_DEVICE_NODE			*psDeviceNode,
 				 PVRSRV_PER_PROCESS_DATA	*psPerProc,
 				 IMG_BOOL					*pbCreated);
 
-
 PVRSRV_ERROR
 BM_DestroyContext (IMG_HANDLE hBMContext,
 					IMG_BOOL *pbCreated);
-
 
 IMG_HANDLE
 BM_CreateHeap (IMG_HANDLE hBMContext,
@@ -145,7 +135,6 @@ BM_CreateHeap (IMG_HANDLE hBMContext,
 
 IMG_VOID
 BM_DestroyHeap (IMG_HANDLE hDevMemHeap);
-
 
 IMG_BOOL
 BM_Reinitialise (PVRSRV_DEVICE_NODE *psDeviceNode);
@@ -174,7 +163,6 @@ IMG_VOID
 BM_Free (BM_HANDLE hBuf,
 		IMG_UINT32 ui32Flags);
 
-
 IMG_CPU_VIRTADDR
 BM_HandleToCpuVaddr (BM_HANDLE hBuf);
 
@@ -199,7 +187,6 @@ IMG_HANDLE BM_GetMMUHeap(IMG_HANDLE hDevMemHeap);
 
 PVRSRV_DEVICE_NODE* BM_GetDeviceNode(IMG_HANDLE hDevMemContext);
 
-
 IMG_HANDLE BM_GetMappingHandle(PVRSRV_KERNEL_MEM_INFO *psMemInfo);
 
 IMG_VOID BM_Export(BM_HANDLE hBuf);
@@ -209,7 +196,6 @@ IMG_VOID BM_FreeExport(BM_HANDLE hBuf, IMG_UINT32 ui32Flags);
 PVRSRV_ERROR BM_XProcWorkaroundSetShareIndex(IMG_UINT32 ui32Index);
 PVRSRV_ERROR BM_XProcWorkaroundUnsetShareIndex(IMG_UINT32 ui32Index);
 PVRSRV_ERROR BM_XProcWorkaroundFindNewBufferAndSetShareIndex(IMG_UINT32 *pui32Index);
-
 
 #if defined(__cplusplus)
 }

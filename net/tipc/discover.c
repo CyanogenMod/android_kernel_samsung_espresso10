@@ -43,7 +43,6 @@
 #define TIPC_LINK_REQ_SLOW	60000	/* max delay if bearer has links */
 #define TIPC_LINK_REQ_INACTIVE	0xffffffff /* indicates no timer in use */
 
-
 /**
  * struct link_req - information about an ongoing link setup request
  * @bearer: bearer issuing requests
@@ -355,4 +354,3 @@ void tipc_disc_delete(struct link_req *req)
 	buf_discard(req->buf);
 	kfree(req);
 }
-

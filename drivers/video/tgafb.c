@@ -68,7 +68,6 @@ static const char *mode_option;
 static const char *mode_option_pci = "640x480@60";
 static const char *mode_option_tc = "1280x1024@72";
 
-
 static struct pci_driver tgafb_pci_driver;
 static struct tc_driver tgafb_tc_driver;
 
@@ -87,7 +86,6 @@ static struct fb_ops tgafb_ops = {
 	.fb_copyarea		= tgafb_copyarea,
 	.fb_imageblit		= tgafb_imageblit,
 };
-
 
 #ifdef CONFIG_PCI
 /*
@@ -164,7 +162,6 @@ tgafb_tc_unregister(struct device *dev)
 	return 0;
 }
 #endif /* CONFIG_TC */
-
 
 /**
  *      tgafb_check_var - Optional function.  Validates a var passed in.
@@ -508,7 +505,6 @@ tgafb_set_pll(struct tga_par *par, int f)
 	TGA_WRITE_REG(par, ((vr >> 7) & 1)|2, TGA_CLOCK_REG);
 }
 
-
 /**
  *      tgafb_setcolreg - Optional function. Sets a color register.
  *      @regno: boolean, 0 copy local, 1 get_user() function
@@ -558,7 +554,6 @@ tgafb_setcolreg(unsigned regno, unsigned red, unsigned green, unsigned blue,
 
 	return 0;
 }
-
 
 /**
  *      tgafb_blank - Optional function.  Blanks the display.
@@ -617,7 +612,6 @@ tgafb_blank(int blank, struct fb_info *info)
 	local_irq_restore(flags);
 	return 0;
 }
-
 
 /*
  *  Acceleration.
@@ -736,7 +730,7 @@ tgafb_mono_imageblit(struct fb_info *info, const struct fb_image *image)
 
 		/* Handle another common case in which accel_putcs
 		   generates a large bitmap, which happens to be aligned.
-		   Allow the tail to be misaligned.  This case is 
+		   Allow the tail to be misaligned.  This case is
 		   interesting because we've not got to hold partial
 		   bytes across the words being written.  */
 
@@ -916,9 +910,9 @@ tgafb_imageblit(struct fb_info *info, const struct fb_image *image)
 }
 
 /**
- *      tgafb_fillrect - REQUIRED function. Can use generic routines if 
+ *      tgafb_fillrect - REQUIRED function. Can use generic routines if
  *                       non acclerated hardware and packed pixel based.
- *                       Draws a rectangle on the screen.               
+ *                       Draws a rectangle on the screen.
  *
  *      @info: frame buffer structure that represents a single frame buffer
  *      @rect: structure defining the rectagle and operation.
@@ -1050,7 +1044,7 @@ tgafb_fillrect(struct fb_info *info, const struct fb_fillrect *rect)
 
 /* Handle the special case of copying entire lines, e.g. during scrolling.
    We can avoid a lot of needless computation in this case.  In the 8bpp
-   case we need to use the COPY64 registers instead of mask writes into 
+   case we need to use the COPY64 registers instead of mask writes into
    the frame buffer to achieve maximum performance.  */
 
 static inline void
@@ -1412,7 +1406,7 @@ copyarea_backward_8bpp(struct fb_info *info, u32 dx, u32 dy, u32 sx, u32 sy,
 }
 
 static void
-tgafb_copyarea(struct fb_info *info, const struct fb_copyarea *area) 
+tgafb_copyarea(struct fb_info *info, const struct fb_copyarea *area)
 {
 	unsigned long dx, dy, width, height, sx, sy, vxres, vyres;
 	unsigned long line_length, bpp;
@@ -1466,7 +1460,6 @@ tgafb_copyarea(struct fb_info *info, const struct fb_copyarea *area)
 		copyarea_foreward_8bpp(info, dx, dy, sx, sy, height,
 				       width, line_length);
 }
-
 
 /*
  *  Initialisation

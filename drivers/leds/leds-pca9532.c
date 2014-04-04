@@ -505,4 +505,3 @@ MODULE_DESCRIPTION("PCA 9532 LED dimmer");
 
 module_init(pca9532_init);
 module_exit(pca9532_exit);
-

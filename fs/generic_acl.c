@@ -13,7 +13,6 @@
 #include <linux/posix_acl.h>
 #include <linux/posix_acl_xattr.h>
 
-
 static size_t
 generic_acl_list(struct dentry *dentry, char *list, size_t list_size,
 		const char *name, size_t name_len, int type)

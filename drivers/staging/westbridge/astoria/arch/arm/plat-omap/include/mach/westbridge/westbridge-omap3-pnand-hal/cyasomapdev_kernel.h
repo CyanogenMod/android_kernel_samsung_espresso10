@@ -22,7 +22,6 @@
 #ifndef __CY_AS_OMAP_DEV_KERNEL_H__
 #define __CY_AS_OMAP_DEV_KERNEL_H__
 
-
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/completion.h>
@@ -37,7 +36,6 @@
  * Constants
  */
 #define CY_AS_OMAP_KERNEL_HAL_SIG		(0x1441)
-
 
 /*
  * Data structures

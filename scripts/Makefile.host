@@ -74,7 +74,6 @@ host-objdirs += $(foreach f,$(host-cxxmulti),                  \
 
 host-objdirs := $(strip $(sort $(filter-out ./,$(host-objdirs))))
 
-
 __hostprogs     := $(addprefix $(obj)/,$(__hostprogs))
 host-csingle	:= $(addprefix $(obj)/,$(host-csingle))
 host-cmulti	:= $(addprefix $(obj)/,$(host-cmulti))
@@ -166,5 +165,4 @@ $(host-cshlib): $(obj)/%: $(host-cshobjs) FORCE
 	$(call if_changed,host-cshlib)
 
 targets += $(host-csingle)  $(host-cmulti) $(host-cobjs)\
-	   $(host-cxxmulti) $(host-cxxobjs) $(host-cshlib) $(host-cshobjs) 
-
+	   $(host-cxxmulti) $(host-cxxobjs) $(host-cshlib) $(host-cshobjs)

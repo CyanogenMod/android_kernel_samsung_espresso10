@@ -392,7 +392,6 @@ static void dispc_restore_context(void)
 	if (dss_has_feature(FEAT_PRELOAD))
 		RR(OVL_PRELOAD(OMAP_DSS_GFX));
 
-
 	/* VID1-3 */
 	for (o = OMAP_DSS_VIDEO1; o <= OMAP_DSS_VIDEO3; o++) {
 		if (o == OMAP_DSS_VIDEO3 && !dss_has_feature(FEAT_OVL_VID3))
@@ -647,7 +646,6 @@ void dispc_runtime_put(void)
 
 	mutex_unlock(&dispc.runtime_lock);
 }
-
 
 bool dispc_go_busy(enum omap_channel channel)
 {
@@ -2571,7 +2569,6 @@ int dispc_setup_plane(enum omap_plane plane,
 		_dispc_set_plane_ba1_uv(plane, puv_addr + offset1);
 	}
 
-
 	_dispc_set_row_inc(plane, row_inc);
 	_dispc_set_pix_inc(plane, pix_inc);
 
@@ -3051,7 +3048,6 @@ void dispc_enable_fifohandcheck(enum omap_channel channel, bool enable)
 		REG_FLD_MOD(DISPC_CONFIG, enable ? 1 : 0, 16, 16);
 }
 
-
 void dispc_set_lcd_display_type(enum omap_channel channel,
 		enum omap_lcd_display_type type)
 {
@@ -3081,7 +3077,6 @@ void dispc_set_loadmode(enum omap_dss_load_mode mode)
 {
 	REG_FLD_MOD(DISPC_CONFIG, mode, 2, 1);
 }
-
 
 void dispc_set_default_color(enum omap_channel channel, u32 color)
 {
@@ -3173,7 +3168,6 @@ bool dispc_alpha_blending_enabled(enum omap_channel ch)
 	return enabled;
 }
 
-
 bool dispc_trans_key_enabled(enum omap_channel ch)
 {
 	bool enabled;
@@ -3189,7 +3183,6 @@ bool dispc_trans_key_enabled(enum omap_channel ch)
 
 	return enabled;
 }
-
 
 void dispc_set_tft_data_lines(enum omap_channel channel, u8 data_lines)
 {
@@ -4470,7 +4463,6 @@ static void _omap_dispc_initial_config(void)
 		u16 sizey = ((size_reg >> 16) & 0x7ff) + 1;
 		u32 tot_size = sizex * sizey;
 
-
 		if (tot_size <= RESOLUTION_1280_720)
 			/* Disable the Display sub system global MFLAG */
 			dispc_write_reg(DISPC_GLOBAL_MFLAG, 0);
@@ -4496,7 +4488,6 @@ static int omap_dispchw_probe(struct platform_device *pdev)
 		r = PTR_ERR(clk);
 		goto err_get_clk;
 	}
-
 
 	dispc.dss_clk = clk;
 
@@ -4548,8 +4539,6 @@ static int omap_dispchw_probe(struct platform_device *pdev)
 	_omap_dispc_initialize_irq();
 
 	rev = dispc_read_reg(DISPC_REVISION);
-	dev_dbg(&pdev->dev, "OMAP DISPC rev %d.%d\n",
-	       FLD_GET(rev, 7, 4), FLD_GET(rev, 3, 0));
 #ifndef CONFIG_FB_OMAP_BOOTLOADER_INIT
 	dispc_runtime_put();
 #endif

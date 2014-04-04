@@ -95,7 +95,6 @@ do {								\
 #define	WL_CONN(fmt, args...)
 #endif /* (defined BCMDBG) */
 
-
 #define WL_SCAN_RETRY_MAX	3	/* used for ibss scan */
 #define WL_NUM_SCAN_MAX		1
 #define WL_NUM_PMKIDS_MAX	MAXPMKID	/* will be used

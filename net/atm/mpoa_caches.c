@@ -533,7 +533,6 @@ static void eg_destroy_cache(struct mpoa_client *mpc)
 	write_unlock_irq(&mpc->egress_lock);
 }
 
-
 static struct in_cache_ops ingress_ops = {
 	in_cache_add_entry,               /* add_entry       */
 	in_cache_get,                     /* get             */
@@ -560,7 +559,6 @@ static struct eg_cache_ops egress_ops = {
 	clear_expired,                    /* clear_expired    */
 	eg_destroy_cache                  /* destroy_cache    */
 };
-
 
 void atm_mpoa_init_cache(struct mpoa_client *mpc)
 {

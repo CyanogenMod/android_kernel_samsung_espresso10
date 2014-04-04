@@ -325,7 +325,6 @@ static s32 igb_obtain_mbx_lock_pf(struct e1000_hw *hw, u16 vf_number)
 	s32 ret_val = -E1000_ERR_MBX;
 	u32 p2v_mailbox;
 
-
 	/* Take ownership of the buffer */
 	wr32(E1000_P2VMAILBOX(vf_number), E1000_P2VMAILBOX_PFU);
 
@@ -443,4 +442,3 @@ s32 igb_init_mbx_params_pf(struct e1000_hw *hw)
 
 	return 0;
 }
-

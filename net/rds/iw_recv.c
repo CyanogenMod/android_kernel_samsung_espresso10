@@ -443,7 +443,6 @@ static u64 rds_iw_get_ack(struct rds_iw_connection *ic)
 }
 #endif
 
-
 static void rds_iw_send_ack(struct rds_iw_connection *ic, unsigned int adv_credits)
 {
 	struct rds_header *hdr = ic->i_ack;

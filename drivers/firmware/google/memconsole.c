@@ -57,7 +57,6 @@ static struct bin_attribute memconsole_bin_attr = {
 	.read = memconsole_read,
 };
 
-
 static void found_v1_header(struct biosmemcon_ebda *hdr)
 {
 	printk(KERN_INFO "BIOS console v1 EBDA structure found at %p\n", hdr);

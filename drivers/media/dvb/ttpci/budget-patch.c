@@ -27,7 +27,7 @@
  * Or, point your browser to http://www.gnu.org/copyleft/gpl.html
  *
  *
- * the project's page is at http://www.linuxtv.org/ 
+ * the project's page is at http://www.linuxtv.org/
  */
 
 #include "av7110.h"
@@ -466,11 +466,9 @@ static int budget_patch_attach (struct saa7146_dev* dev, struct saa7146_pci_exte
 	// Enable RPS1,                                                 (rFC p33)
 	saa7146_write(dev, MC1, (MASK_13 | MASK_29 ));
 
-
 	mdelay(50);
 	saa7146_setgpio(dev, 3, SAA7146_GPIO_OUTHI);
 	mdelay(150);
-
 
 	if( (saa7146_read(dev, GPIO_CTRL) & 0x10000000) == 0)
 		detected = 1;
@@ -487,7 +485,6 @@ static int budget_patch_attach (struct saa7146_dev* dev, struct saa7146_pci_exte
 
 	else
 		printk("BUDGET-PATCH DETECTED.\n");
-
 
 /*      OLD (Original design by Roberto Deza):
 **      This code will setup the SAA7146_RPS1 to generate a square
@@ -559,7 +556,6 @@ static int budget_patch_attach (struct saa7146_dev* dev, struct saa7146_pci_exte
 	// Setup RPS1 "program" (p35)
 	count = 0;
 
-
 	// Wait Source Line Counter Threshold                           (p36)
 	WRITE_RPS1(CMD_PAUSE | EVT_HS);
 	// Set GPIO3=1                                                  (p42)
@@ -613,7 +609,6 @@ static int budget_patch_attach (struct saa7146_dev* dev, struct saa7146_pci_exte
 	// saa7146_write(dev, RPS_THRESH0, ((TS_HEIGHT/2)<<16) |MASK_28| (TS_HEIGHT/2) |MASK_12 );
 	// Enable RPS1                                                  (rFC p33)
 	saa7146_write(dev, MC1, (MASK_13 | MASK_29));
-
 
 	dev->ext_priv = budget;
 

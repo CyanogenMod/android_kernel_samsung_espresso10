@@ -1343,7 +1343,6 @@ void isci_remote_device_gone(struct domain_device *dev)
 	isci_remote_device_stop(ihost, idev);
 }
 
-
 /**
  * isci_remote_device_found() - This function is called by libsas when a remote
  *    device is discovered. A remote device object is created and started. the

@@ -50,7 +50,6 @@ const BYTE abyOUICCMP[4]    = { 0x00, 0x0F, 0xAC, 0x04 };
 const BYTE abyOUI8021X[4]   = { 0x00, 0x0F, 0xAC, 0x01 };
 const BYTE abyOUIPSK[4]     = { 0x00, 0x0F, 0xAC, 0x02 };
 
-
 /*---------------------  Static Functions  --------------------------*/
 
 /*---------------------  Export Variables  --------------------------*/
@@ -244,7 +243,6 @@ WPA2vParseRSN (
         pBSSNode->bWPA2Valid = TRUE;
     }
 }
-
 
 /*+
  *

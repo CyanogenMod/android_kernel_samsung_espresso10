@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
  * Copyright (C) 2001 RidgeRun, Inc (glonnon@ridgerun.com)
  * Licensed under the GPL
@@ -13,4 +13,3 @@ extern int io_thread(void *arg);
 extern int kernel_fd;
 
 #endif
-

@@ -55,7 +55,6 @@
 
 #include <net/ip_vs.h>
 
-
 /*
  *    It is for garbage collection of stale IPVS lblcr entries,
  *    when the table is full.
@@ -83,7 +82,6 @@
 #define IP_VS_LBLCR_TAB_SIZE     (1 << IP_VS_LBLCR_TAB_BITS)
 #define IP_VS_LBLCR_TAB_MASK     (IP_VS_LBLCR_TAB_SIZE - 1)
 
-
 /*
  *      IPVS destination set structure and operations
  */
@@ -98,7 +96,6 @@ struct ip_vs_dest_set {
 	struct list_head	list;           /* destination list */
 	rwlock_t	        lock;           /* lock for this list */
 };
-
 
 static struct ip_vs_dest_set_elem *
 ip_vs_dest_set_insert(struct ip_vs_dest_set *set, struct ip_vs_dest *dest)
@@ -213,7 +210,6 @@ static inline struct ip_vs_dest *ip_vs_dest_set_min(struct ip_vs_dest_set *set)
 	return least;
 }
 
-
 /* get weighted most-connection node in the destination set */
 static inline struct ip_vs_dest *ip_vs_dest_set_max(struct ip_vs_dest_set *set)
 {
@@ -258,7 +254,6 @@ static inline struct ip_vs_dest *ip_vs_dest_set_max(struct ip_vs_dest_set *set)
 	return most;
 }
 
-
 /*
  *      IPVS lblcr entry represents an association between destination
  *      IP address and its destination server set
@@ -271,7 +266,6 @@ struct ip_vs_lblcr_entry {
 	unsigned long           lastuse;        /* last used time */
 };
 
-
 /*
  *      IPVS lblcr hash table
  */
@@ -283,7 +277,6 @@ struct ip_vs_lblcr_table {
 	int                     rover;          /* rover for expire check */
 	int                     counter;        /* counter for no expire */
 };
-
 
 #ifdef CONFIG_SYSCTL
 /*
@@ -309,7 +302,6 @@ static inline void ip_vs_lblcr_free(struct ip_vs_lblcr_entry *en)
 	kfree(en);
 }
 
-
 /*
  *	Returns hash value for IPVS LBLCR entry
  */
@@ -326,7 +318,6 @@ ip_vs_lblcr_hashkey(int af, const union nf_inet_addr *addr)
 	return (ntohl(addr_fold)*2654435761UL) & IP_VS_LBLCR_TAB_MASK;
 }
 
-
 /*
  *	Hash an entry in the ip_vs_lblcr_table.
  *	returns bool success.
@@ -339,7 +330,6 @@ ip_vs_lblcr_hash(struct ip_vs_lblcr_table *tbl, struct ip_vs_lblcr_entry *en)
 	list_add(&en->list, &tbl->bucket[hash]);
 	atomic_inc(&tbl->entries);
 }
-
 
 /*
  *  Get ip_vs_lblcr_entry associated with supplied parameters. Called under
@@ -358,7 +348,6 @@ ip_vs_lblcr_get(int af, struct ip_vs_lblcr_table *tbl,
 
 	return NULL;
 }
-
 
 /*
  * Create or update an ip_vs_lblcr_entry, which is a mapping of a destination
@@ -396,7 +385,6 @@ ip_vs_lblcr_new(struct ip_vs_lblcr_table *tbl, const union nf_inet_addr *daddr,
 
 	return en;
 }
-
 
 /*
  *      Flush all the entries of the specified table.
@@ -447,7 +435,6 @@ static inline void ip_vs_lblcr_full_check(struct ip_vs_service *svc)
 	}
 	tbl->rover = j;
 }
-
 
 /*
  *      Periodical timer handler for IPVS lblcr table
@@ -544,7 +531,6 @@ static int ip_vs_lblcr_init_svc(struct ip_vs_service *svc)
 	return 0;
 }
 
-
 static int ip_vs_lblcr_done_svc(struct ip_vs_service *svc)
 {
 	struct ip_vs_lblcr_table *tbl = svc->sched_data;
@@ -562,7 +548,6 @@ static int ip_vs_lblcr_done_svc(struct ip_vs_service *svc)
 
 	return 0;
 }
-
 
 static inline struct ip_vs_dest *
 __ip_vs_lblcr_schedule(struct ip_vs_service *svc)
@@ -621,7 +606,6 @@ __ip_vs_lblcr_schedule(struct ip_vs_service *svc)
 	return least;
 }
 
-
 /*
  *   If this destination server is overloaded and there is a less loaded
  *   server, then return true.
@@ -641,7 +625,6 @@ is_overloaded(struct ip_vs_dest *dest, struct ip_vs_service *svc)
 	}
 	return 0;
 }
-
 
 /*
  *    Locality-Based (weighted) Least-Connection scheduling
@@ -726,7 +709,6 @@ out:
 
 	return dest;
 }
-
 
 /*
  *      IPVS LBLCR Scheduler structure
@@ -814,7 +796,6 @@ static void __exit ip_vs_lblcr_cleanup(void)
 	unregister_ip_vs_scheduler(&ip_vs_lblcr_scheduler);
 	unregister_pernet_subsys(&ip_vs_lblcr_ops);
 }
-
 
 module_init(ip_vs_lblcr_init);
 module_exit(ip_vs_lblcr_cleanup);

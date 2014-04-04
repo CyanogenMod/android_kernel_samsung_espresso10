@@ -94,7 +94,6 @@ void t3e3_set_loopback(struct channel *sc, u32 mode)
 		dc_receiver_onoff(sc, SBE_2T3E3_ON);
 }
 
-
 void t3e3_reg_read(struct channel *sc, u32 *reg, u32 *val)
 {
 	u32 i;

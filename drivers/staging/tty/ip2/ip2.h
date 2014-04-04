@@ -37,30 +37,30 @@
  *	         1        == PCI
  *	         2        == EISA
  *	         0        == (skip this board)
- * This array defines the hardware addresses for them. Special 
- * addresses are EISA and PCI which go sniffing for boards. 
+ * This array defines the hardware addresses for them. Special
+ * addresses are EISA and PCI which go sniffing for boards.
 
  * In a multiboard system the position in the array determines which port
- * devices are assigned to each board: 
- *		board 0 is assigned ttyF0.. to ttyF63, 
+ * devices are assigned to each board:
+ *		board 0 is assigned ttyF0.. to ttyF63,
  *		board 1 is assigned ttyF64  to ttyF127,
  *		board 2 is assigned ttyF128 to ttyF191,
- *		board 3 is assigned ttyF192 to ttyF255. 
+ *		board 3 is assigned ttyF192 to ttyF255.
  *
- * In PCI and EISA bus systems each range is mapped to card in 
+ * In PCI and EISA bus systems each range is mapped to card in
  * monotonically increasing slot number order, ISA position is as specified
  * here.
 
- * If the irqs are ALL set to 0,0,0,0 all boards operate in 
- * polled mode. For interrupt operation ISA boards require that the IRQ be 
- * specified, while PCI and EISA boards any nonzero entry 
- * will enable interrupts using the BIOS configured irq for the board. 
+ * If the irqs are ALL set to 0,0,0,0 all boards operate in
+ * polled mode. For interrupt operation ISA boards require that the IRQ be
+ * specified, while PCI and EISA boards any nonzero entry
+ * will enable interrupts using the BIOS configured irq for the board.
  * An invalid irq entry will default to polled mode for that card and print
  * console warning.
- 
- * When the driver is loaded as a module these setting can be overridden on the 
+
+ * When the driver is loaded as a module these setting can be overridden on the
  * modprobe command line or on an option line in /etc/modprobe.conf.
- * If the driver is built-in the configuration must be 
+ * If the driver is built-in the configuration must be
  * set here for ISA cards and address set to 1 and 2 for PCI and EISA.
  *
  * Here is an example that shows most if not all possibe combinations:

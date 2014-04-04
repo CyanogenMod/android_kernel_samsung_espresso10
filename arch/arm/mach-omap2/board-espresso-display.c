@@ -45,7 +45,6 @@ static struct ltn070nl01_panel_data espresso_panel_data;
 static struct clk *dss_ick, *dss_sys_fclk, *dss_dss_fclk;
 #endif
 
-
 static void espresso_lcd_set_power(bool enable)
 {
 	pr_debug("(%s): espresso_lcd_set_power, enable=%d\n",
@@ -63,8 +62,6 @@ static void espresso_lcd_set_gptimer_idle(void)
 	if (likely(timer10_hwmod))
 		omap_hwmod_idle(timer10_hwmod);
 }
-
-
 
 #ifdef CONFIG_FB_OMAP_BOOTLOADER_INIT
 static void dss_clks_disable(void)

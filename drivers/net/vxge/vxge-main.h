@@ -94,7 +94,6 @@
 /* 100 - 9k Mtu, 300 - 1.5k mtu */
 #define TTI_T1A_TX_UFC_D(mtu)	(100 + ((VXGE_HW_MAX_MTU - mtu) / 37))
 
-
 #define RTI_RX_URANGE_A		5
 #define RTI_RX_URANGE_B		15
 #define RTI_RX_URANGE_C		40

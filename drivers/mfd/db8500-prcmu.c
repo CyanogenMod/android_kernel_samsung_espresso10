@@ -492,7 +492,6 @@ static struct {
 	u8 errata;
 } prcmu_version;
 
-
 int prcmu_enable_dsipll(void)
 {
 	int i;

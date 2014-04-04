@@ -17,7 +17,6 @@ extern __be32 ic_servaddr;		/* Boot server IP address */
 extern __be32 root_server_addr;	/* Address of NFS server */
 extern u8 root_server_path[];	/* Path to mount as root */
 
-
 /* bits in ic_proto_{enabled,used} */
 #define IC_PROTO	0xFF	/* Protocols mask: */
 #define IC_BOOTP	0x01	/*   BOOTP (or DHCP, see below) */

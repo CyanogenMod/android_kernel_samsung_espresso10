@@ -72,7 +72,6 @@ struct perf_probe_event {
 	struct perf_probe_arg	*args;	/* Arguments */
 };
 
-
 /* Line number container */
 struct line_node {
 	struct list_head	list;
@@ -129,7 +128,6 @@ extern int show_available_vars(struct perf_probe_event *pevs, int npevs,
 			       int max_probe_points, const char *module,
 			       struct strfilter *filter, bool externs);
 extern int show_available_funcs(const char *module, struct strfilter *filter);
-
 
 /* Maximum index number of event-name postfix */
 #define MAX_EVENT_INDEX	1024

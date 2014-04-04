@@ -18,7 +18,6 @@
 
 #include <linux/i2c/dm355evm_msp.h>
 
-
 /*
  * The MSP430 firmware on the DM355 EVM monitors on-board pushbuttons
  * and an IR receptor used for the remote control.  When any key is

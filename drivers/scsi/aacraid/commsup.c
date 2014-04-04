@@ -417,7 +417,6 @@ int aac_fib_send(u16 command, struct fib *fibptr, unsigned long size,
 	unsigned long qflags;
 	unsigned long mflags = 0;
 
-
 	if (!(hw_fib->header.XferState & cpu_to_le32(HostOwned)))
 		return -EBUSY;
 	/*
@@ -522,7 +521,6 @@ int aac_fib_send(u16 command, struct fib *fibptr, unsigned long size,
 		}
 		return -EBUSY;
 	}
-
 
 	/*
 	 *	If the caller wanted us to wait for response wait now.
@@ -824,7 +822,6 @@ void aac_printf(struct aac_dev *dev, u32 val)
 	}
 	memset(cp, 0, 256);
 }
-
 
 /**
  *	aac_handle_aif		-	Handle a message from the firmware
@@ -1580,7 +1577,6 @@ out:
 	aac->in_reset = 0;
 	return BlinkLED;
 }
-
 
 /**
  *	aac_command_thread	-	command processing thread

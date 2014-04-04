@@ -798,6 +798,7 @@ pref_skip_coa:
 		if (val < 0 || val > 255)
 			goto e_inval;
 		np->min_hopcount = val;
+		retv = 0;
 		break;
 	case IPV6_DONTFRAG:
 		np->dontfrag = valbool;
@@ -1287,4 +1288,3 @@ int compat_ipv6_getsockopt(struct sock *sk, int level, int optname,
 
 EXPORT_SYMBOL(compat_ipv6_getsockopt);
 #endif
-

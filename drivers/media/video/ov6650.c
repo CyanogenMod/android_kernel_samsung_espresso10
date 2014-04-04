@@ -32,7 +32,6 @@
 #include <media/soc_camera.h>
 #include <media/v4l2-chip-ident.h>
 
-
 /* Register definitions */
 #define REG_GAIN		0x00	/* range 00 - 3F */
 #define REG_BLUE		0x01
@@ -103,7 +102,6 @@
 #define REG_GMCO		0x6d
 #define REG_BMCO		0x6e
 
-
 /* Register bits, values, etc. */
 #define OV6650_PIDH		0x66	/* high byte of product ID number */
 #define OV6650_PIDL		0x50	/* low byte of product ID number */
@@ -169,7 +167,6 @@
 
 #define FRAME_RATE_MAX		30
 
-
 struct ov6650_reg {
 	u8	reg;
 	u8	val;
@@ -199,7 +196,6 @@ struct ov6650 {
 	enum v4l2_mbus_pixelcode code;
 	enum v4l2_colorspace	colorspace;
 };
-
 
 static enum v4l2_mbus_pixelcode ov6650_codes[] = {
 	V4L2_MBUS_FMT_YUYV8_2X8,
@@ -380,7 +376,6 @@ static int ov6650_reg_write(struct i2c_client *client, u8 reg, u8 val)
 	}
 	return 0;
 }
-
 
 /* Read a register, alter its bits, write it back */
 static int ov6650_reg_rmw(struct i2c_client *client, u8 reg, u8 set, u8 mask)

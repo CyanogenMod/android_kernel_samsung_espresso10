@@ -158,7 +158,6 @@
 #define xfs_sort(a,n,s,fn)	sort(a,n,s,fn,NULL)
 #define xfs_stack_trace()	dump_stack()
 
-
 /* Move the kernel do_div definition off to one side */
 
 #if defined __i386__

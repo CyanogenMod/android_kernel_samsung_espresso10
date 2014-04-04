@@ -18,7 +18,6 @@ from it, into perf.data - without displaying anything.
 
 This file can then be inspected later on, using 'perf report'.
 
-
 OPTIONS
 -------
 <command>...::

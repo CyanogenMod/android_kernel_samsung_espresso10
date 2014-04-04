@@ -44,7 +44,6 @@ struct sk_buff *atm_alloc_charge(struct atm_vcc *vcc, int pdu_size,
 }
 EXPORT_SYMBOL(atm_alloc_charge);
 
-
 /*
  * atm_pcr_goal returns the positive PCR if it should be rounded up, the
  * negative PCR if it should be rounded down, and zero if the maximum available

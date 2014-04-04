@@ -89,7 +89,6 @@ static DEFINE_SPINLOCK(fib_multipath_lock);
 
 #define endfor_nexthops(fi) }
 
-
 const struct fib_prop fib_props[RTN_MAX + 1] = {
 	[RTN_UNSPEC] = {
 		.error	= 0,
@@ -142,6 +141,18 @@ const struct fib_prop fib_props[RTN_MAX + 1] = {
 };
 
 /* Release a nexthop info record */
+static void free_fib_info_rcu(struct rcu_head *head)
+{
+	struct fib_info *fi = container_of(head, struct fib_info, rcu);
+
+	change_nexthops(fi) {
+		if (nexthop_nh->nh_dev)
+			dev_put(nexthop_nh->nh_dev);
+	} endfor_nexthops(fi);
+
+	release_net(fi->fib_net);
+	kfree(fi);
+}
 
 void free_fib_info(struct fib_info *fi)
 {
@@ -149,14 +160,8 @@ void free_fib_info(struct fib_info *fi)
 		pr_warning("Freeing alive fib_info %p\n", fi);
 		return;
 	}
-	change_nexthops(fi) {
-		if (nexthop_nh->nh_dev)
-			dev_put(nexthop_nh->nh_dev);
-		nexthop_nh->nh_dev = NULL;
-	} endfor_nexthops(fi);
 	fib_info_cnt--;
-	release_net(fi->fib_net);
-	kfree_rcu(fi, rcu);
+	call_rcu(&fi->rcu, free_fib_info_rcu);
 }
 
 void fib_release_info(struct fib_info *fi)
@@ -477,7 +482,6 @@ int fib_nh_match(struct fib_config *cfg, struct fib_info *fi)
 #endif
 	return 0;
 }
-
 
 /*
  * Picture
@@ -1213,7 +1217,6 @@ void fib_select_multipath(struct fib_result *res)
 			return;
 		}
 	}
-
 
 	/* w should be random number [0..fi->fib_power-1],
 	 * it is pretty bad approximation.

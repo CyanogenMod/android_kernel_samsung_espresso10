@@ -35,4 +35,3 @@
 #define EINT_GPIO_3(x)		S5PC100_GPH3(x)
 
 #endif /* __ASM_MACH_S5PC100_REGS_GPIO_H */
-

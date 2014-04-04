@@ -1,7 +1,6 @@
 /*
    net-3-driver for the 3c523 Etherlink/MC card (i82586 Ethernet chip)
 
-
    This is an extension to the Linux operating system, and is covered by the
    same GNU General Public License that covers that work.
 
@@ -138,7 +137,6 @@ static int shm_table[] __initdata = {
 };
 
 /******************* how to calculate the buffers *****************************
-
 
   * IMPORTANT NOTE: if you configure only one NUM_XMIT_BUFFS, the driver works
   * --------------- in a different (more stable?) mode. Only in this mode it's
@@ -888,7 +886,6 @@ static void *alloc_rfa(struct net_device *dev, void *ptr)
 
 	return ptr;
 }
-
 
 /**************************************************
  * Interrupt Handler ...

@@ -52,4 +52,3 @@ out:
 }
 
 EXPORT_SYMBOL(debug_smp_processor_id);
-

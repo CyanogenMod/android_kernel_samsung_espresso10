@@ -111,5 +111,4 @@ void ixp2400_msf_init(struct ixp2400_msf_parameters *mp);
 #define IXP2400_PORT_TX_MODE_2_CYCLE_DECODE	0x00000001
 #define IXP2400_PORT_TX_MODE_1_CYCLE_DECODE	0x00000000
 
-
 #endif

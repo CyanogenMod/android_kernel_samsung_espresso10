@@ -67,7 +67,6 @@
 #define V2M_TIMER2		(V2M_TIMER23 + 0x000)
 #define V2M_TIMER3		(V2M_TIMER23 + 0x020)
 
-
 /*
  * Interrupts.  Those in {} are for AMBA devices
  */
@@ -89,7 +88,6 @@
 #define IRQ_V2M_LAN9118		(32 + 15)
 #define IRQ_V2M_ISP1761		(32 + 16)
 #define IRQ_V2M_PCIE		(32 + 17)
-
 
 /*
  * Configuration

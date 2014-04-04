@@ -38,4 +38,3 @@ static inline unsigned int mmc_host_clk_rate(struct mmc_host *host)
 void mmc_host_deeper_disable(struct work_struct *work);
 
 #endif
-

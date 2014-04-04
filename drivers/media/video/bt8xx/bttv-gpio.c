@@ -5,7 +5,6 @@
     sysfs-based sub driver interface for bttv
     mainly intended for gpio access
 
-
     Copyright (C) 1996,97,98 Ralph  Metzler (rjkm@thp.uni-koeln.de)
 			   & Marcus Metzler (mocm@thp.uni-koeln.de)
     (c) 1999-2003 Gerd Knorr <kraxel@bytesex.org>

@@ -82,7 +82,6 @@ struct pwm_device *pwm_request(int pwm_id, const char *label)
 
 EXPORT_SYMBOL(pwm_request);
 
-
 void pwm_free(struct pwm_device *pwm)
 {
 	mutex_lock(&pwm_lock);
@@ -306,7 +305,6 @@ static int s3c_pwm_probe(struct platform_device *pdev)
 	__raw_writel(tcon, S3C2410_TCON);
 
 	local_irq_restore(flags);
-
 
 	ret = pwm_register(pwm);
 	if (ret) {

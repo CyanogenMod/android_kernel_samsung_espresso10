@@ -35,7 +35,6 @@
 #define W1_F2D_READ_SCRATCH	0xAA
 #define W1_F2D_COPY_SCRATCH	0x55
 
-
 #define W1_F2D_TPROG_MS		11
 
 #define W1_F2D_READ_RETRIES		10

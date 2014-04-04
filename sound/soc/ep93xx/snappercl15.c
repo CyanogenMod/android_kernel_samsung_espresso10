@@ -36,18 +36,18 @@ static int snappercl15_hw_params(struct snd_pcm_substream *substream,
 				  SND_SOC_DAIFMT_NB_IF |
 				  SND_SOC_DAIFMT_CBS_CFS);
 
-	err = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S | 
-				  SND_SOC_DAIFMT_NB_IF |		  
+	err = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S |
+				  SND_SOC_DAIFMT_NB_IF |
 				  SND_SOC_DAIFMT_CBS_CFS);
 	if (err)
 		return err;
 
-	err = snd_soc_dai_set_sysclk(codec_dai, 0, CODEC_CLOCK, 
+	err = snd_soc_dai_set_sysclk(codec_dai, 0, CODEC_CLOCK,
 				     SND_SOC_CLOCK_IN);
 	if (err)
 		return err;
 
-	err = snd_soc_dai_set_sysclk(cpu_dai, 0, CODEC_CLOCK, 
+	err = snd_soc_dai_set_sysclk(cpu_dai, 0, CODEC_CLOCK,
 				     SND_SOC_CLOCK_OUT);
 	if (err)
 		return err;
@@ -122,7 +122,7 @@ static int __init snappercl15_init(void)
 	snappercl15_snd_device = platform_device_alloc("soc-audio", -1);
 	if (!snappercl15_snd_device)
 		return -ENOMEM;
-	
+
 	platform_set_drvdata(snappercl15_snd_device, &snd_soc_snappercl15);
 	ret = platform_device_add(snappercl15_snd_device);
 	if (ret)
@@ -143,4 +143,3 @@ module_exit(snappercl15_exit);
 MODULE_AUTHOR("Ryan Mallon <ryan@bluewatersys.com>");
 MODULE_DESCRIPTION("ALSA SoC Snapper CL15");
 MODULE_LICENSE("GPL");
-

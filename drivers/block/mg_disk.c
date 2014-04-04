@@ -399,7 +399,6 @@ static int mg_get_disk_id(struct mg_host *host)
 	return err;
 }
 
-
 static int mg_disk_init(struct mg_host *host)
 {
 	struct mg_drv_data *prv_data = host->dev->platform_data;

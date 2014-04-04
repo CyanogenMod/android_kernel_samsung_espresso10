@@ -65,5 +65,4 @@ extern void bus_handler(int sig, struct uml_pt_regs *regs);
 extern void winch(int sig, struct uml_pt_regs *regs);
 extern void fatal_sigsegv(void) __attribute__ ((noreturn));
 
-
 #endif

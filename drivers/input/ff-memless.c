@@ -317,7 +317,6 @@ static void ml_combine_effects(struct ff_effect *effect,
 
 }
 
-
 /*
  * Because memoryless devices have only one effect per effect type active
  * at one time we have to combine multiple effects into one

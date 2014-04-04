@@ -145,7 +145,6 @@ function_stack_trace_call(unsigned long ip, unsigned long parent_ip)
 	local_irq_restore(flags);
 }
 
-
 static struct ftrace_ops trace_ops __read_mostly =
 {
 	.func = function_trace_call,
@@ -403,4 +402,3 @@ static __init int init_function_trace(void)
 	return register_tracer(&function_trace);
 }
 device_initcall(init_function_trace);
-

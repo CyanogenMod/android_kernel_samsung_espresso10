@@ -57,7 +57,6 @@
  */
 #define CACHE_DLIMIT	65536
 
-
 	.text
 /*
  * cpu_arm920_proc_init()
@@ -105,7 +104,6 @@ ENTRY(cpu_arm920_reset)
 ENTRY(cpu_arm920_do_idle)
 	mcr	p15, 0, r0, c7, c0, 4		@ Wait for interrupt
 	mov	pc, lr
-
 
 #ifndef CONFIG_CPU_DCACHE_WRITETHROUGH
 
@@ -329,7 +327,6 @@ ENTRY(arm920_cache_fns)
 
 #endif
 
-
 ENTRY(cpu_arm920_dcache_clean_area)
 1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
 	add	r0, r0, #CACHE_DLINESIZE
@@ -443,7 +440,7 @@ __arm920_setup:
 	 *  R
 	 * .RVI ZFRS BLDP WCAM
 	 * ..11 0001 ..11 0101
-	 * 
+	 *
 	 */
 	.type	arm920_crval, #object
 arm920_crval:

@@ -185,7 +185,6 @@ void *btree_last(struct btree_head *head, struct btree_geo *geo,
 void *btree_get_prev(struct btree_head *head, struct btree_geo *geo,
 		     unsigned long *key);
 
-
 /* internal use, use btree_visitor{l,32,64,128} */
 size_t btree_visitor(struct btree_head *head, struct btree_geo *geo,
 		     unsigned long opaque,
@@ -201,7 +200,6 @@ size_t btree_grim_visitor(struct btree_head *head, struct btree_geo *geo,
 				       unsigned long *key,
 				       size_t index, void *func2),
 			  void *func2);
-
 
 #include <linux/btree-128.h>
 

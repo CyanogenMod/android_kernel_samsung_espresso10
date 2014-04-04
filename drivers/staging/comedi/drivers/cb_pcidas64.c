@@ -1866,7 +1866,6 @@ static int attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	if (retval < 0)
 		return retval;
 
-
 	return 0;
 }
 

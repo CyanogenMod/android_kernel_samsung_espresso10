@@ -171,13 +171,12 @@ struct inode *ocfs2_iget(struct ocfs2_super *osb, u64 blkno, unsigned flags,
 
 bail:
 	if (!IS_ERR(inode)) {
-		trace_ocfs2_iget_end(inode, 
+		trace_ocfs2_iget_end(inode,
 			(unsigned long long)OCFS2_I(inode)->ip_blkno);
 	}
 
 	return inode;
 }
-
 
 /*
  * here's how inodes get read from disk:
@@ -260,7 +259,6 @@ void ocfs2_populate_inode(struct inode *inode, struct ocfs2_dinode *fe,
 	BUG_ON(!(fe->i_flags & cpu_to_le32(OCFS2_VALID_FL)));
 	BUG_ON(le32_to_cpu(fe->i_fs_generation) != osb->fs_generation);
 
-
 	OCFS2_I(inode)->ip_clusters = le32_to_cpu(fe->i_clusters);
 	OCFS2_I(inode)->ip_attr = le32_to_cpu(fe->i_attr);
 	OCFS2_I(inode)->ip_dyn_features = le16_to_cpu(fe->i_dyn_features);
@@ -299,7 +297,7 @@ void ocfs2_populate_inode(struct inode *inode, struct ocfs2_dinode *fe,
 		OCFS2_I(inode)->ip_flags |= OCFS2_INODE_SYSTEM_FILE;
 		inode->i_flags |= S_NOQUOTA;
 	}
-  
+
 	if (fe->i_flags & cpu_to_le32(OCFS2_LOCAL_ALLOC_FL)) {
 		OCFS2_I(inode)->ip_flags |= OCFS2_INODE_BITMAP;
 	} else if (fe->i_flags & cpu_to_le32(OCFS2_BITMAP_FL)) {
@@ -1393,7 +1391,6 @@ int ocfs2_read_inode_block(struct inode *inode, struct buffer_head **bh)
 	return ocfs2_read_inode_block_full(inode, bh, 0);
 }
 
-
 static u64 ocfs2_inode_cache_owner(struct ocfs2_caching_info *ci)
 {
 	struct ocfs2_inode_info *oi = cache_info_to_inode(ci);
@@ -1444,4 +1441,3 @@ const struct ocfs2_caching_operations ocfs2_inode_caching_ops = {
 	.co_io_lock		= ocfs2_inode_cache_io_lock,
 	.co_io_unlock		= ocfs2_inode_cache_io_unlock,
 };
-

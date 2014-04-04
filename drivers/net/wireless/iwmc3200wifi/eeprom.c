@@ -78,7 +78,6 @@ static struct iwm_eeprom_entry eeprom_map[] = {
 	{"Calib RX IQ", 0, IWM_EEPROM_CALIB_RXIQ_LEN},
 };
 
-
 static int iwm_eeprom_read(struct iwm_priv *iwm, u8 eeprom_id)
 {
 	int ret;
@@ -195,7 +194,6 @@ u32 iwm_eeprom_wireless_mode(struct iwm_priv *iwm)
 
 	return wireless_mode;
 }
-
 
 int iwm_eeprom_init(struct iwm_priv *iwm)
 {

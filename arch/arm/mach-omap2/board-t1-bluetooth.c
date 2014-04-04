@@ -341,7 +341,6 @@ static void __exit bcm4330_bluetooth_exit(void)
 	platform_driver_unregister(&bcm4330_bluetooth_platform_driver);
 }
 
-
 module_init(bcm4330_bluetooth_init);
 module_exit(bcm4330_bluetooth_exit);
 

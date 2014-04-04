@@ -18,7 +18,6 @@
 #include <linux/regulator/bq24022.h>
 #include <linux/regulator/driver.h>
 
-
 static int bq24022_set_current_limit(struct regulator_dev *rdev,
 					int min_uA, int max_uA)
 {

@@ -197,7 +197,6 @@
 #define MAC_REG_PWRCCK      0x73
 #define MAC_REG_PWROFDM     0x7C
 
-
 //
 // Bits in the BCFG0 register
 //
@@ -414,7 +413,6 @@
 #define IMR_AC0DMA          0x00000002      //
 #define IMR_TXDMA0          0x00000001      //
 
-
 //
 // Bits in the ISR register
 //
@@ -445,7 +443,6 @@
 #define ISR_BNTX            0x00000004      //
 #define ISR_AC0DMA          0x00000002      //
 #define ISR_TXDMA0          0x00000001      //
-
 
 //
 // Bits in the PSCFG register
@@ -537,7 +534,6 @@
 //
 #define MISCFFCTL_WRITE     0x0001      //
 
-
 //
 // Bits in WAKEUPEN0
 //
@@ -581,7 +577,6 @@
 #define GPIO1_MD            0x10        //
 #define GPIO1_DATA          0x20        //
 
-
 //
 // Bits in the MSRCTL register
 //
@@ -600,7 +595,6 @@
 #define MSRCTL1_CSAPAREN    0x04
 #define MSRCTL1_TXPAUSE     0x01
 
-
 // Loopback mode
 #define MAC_LB_EXT          0x02        //
 #define MAC_LB_INTERNAL     0x01        //
@@ -618,7 +612,6 @@
 #define PKT_TYPE_BSSID          0x01
 
 #define Default_BI              0x200
-
 
 // MiscFIFO Offset
 #define MISCFIFO_KEYETRY0       32
@@ -815,7 +808,6 @@
     VNSvOutPortB(dwIoBase + MAC_REG_PAGE1SEL, 0);           \
 }
 
-
 #define MACvWriteEtherAddress(dwIoBase, pbyEtherAddr)       \
 {                                                           \
     VNSvOutPortB(dwIoBase + MAC_REG_PAGE1SEL, 1);           \
@@ -833,7 +825,6 @@
                 *(pbyEtherAddr + 5));                       \
     VNSvOutPortB(dwIoBase + MAC_REG_PAGE1SEL, 0);           \
 }
-
 
 #define MACvClearISR(dwIoBase)                              \
 {                                                           \
@@ -1151,4 +1142,3 @@ void MACvSetDefaultTKIPKeyEntry(unsigned long dwIoBase, unsigned int uKeyLen,
 void MACvSetDefaultKeyCtl(unsigned long dwIoBase, unsigned short wKeyCtl, unsigned int uEntryIdx, unsigned char byLocalID);
 
 #endif // __MAC_H__
-

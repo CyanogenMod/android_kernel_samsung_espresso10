@@ -464,7 +464,6 @@ open(IN, "$objdump -hdr $inputfile|") || die "error running $objdump";
 
 my $text;
 
-
 # read headers first
 my $read_headers = 1;
 

@@ -1,4 +1,3 @@
-
 hostprogs-y	:= genksyms
 always		:= $(hostprogs-y)
 

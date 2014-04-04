@@ -1,4 +1,3 @@
-
 /*
  * netup-eeprom.c
  *

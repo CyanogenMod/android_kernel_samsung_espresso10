@@ -90,7 +90,6 @@ static int hippi_header(struct sk_buff *skb, struct net_device *dev,
 	return -((int)HIPPI_HLEN);
 }
 
-
 /*
  * Rebuild the HIPPI MAC header. This is called after an ARP has
  * completed on this sk_buff. We now let ARP fill in the other fields.
@@ -116,7 +115,6 @@ static int hippi_rebuild_header(struct sk_buff *skb)
 	 */
 	return arp_find(hip->le.daddr, skb);
 }
-
 
 /*
  *	Determine the packet's protocol ID.
@@ -190,7 +188,6 @@ static const struct header_ops hippi_header_ops = {
 	.rebuild	= hippi_rebuild_header,
 };
 
-
 static void hippi_setup(struct net_device *dev)
 {
 	dev->header_ops			= &hippi_header_ops;
@@ -206,7 +203,6 @@ static void hippi_setup(struct net_device *dev)
 	dev->addr_len		= HIPPI_ALEN;
 	dev->tx_queue_len	= 25 /* 5 */;
 	memset(dev->broadcast, 0xFF, HIPPI_ALEN);
-
 
 	/*
 	 * HIPPI doesn't support broadcast+multicast and we only use

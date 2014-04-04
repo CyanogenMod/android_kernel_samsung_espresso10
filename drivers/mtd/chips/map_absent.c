@@ -33,7 +33,6 @@ static void map_absent_sync (struct mtd_info *);
 static struct mtd_info *map_absent_probe(struct map_info *map);
 static void map_absent_destroy (struct mtd_info *);
 
-
 static struct mtd_chip_driver map_absent_chipdrv = {
 	.probe		= map_absent_probe,
 	.destroy	= map_absent_destroy,
@@ -66,7 +65,6 @@ static struct mtd_info *map_absent_probe(struct map_info *map)
 	__module_get(THIS_MODULE);
 	return mtd;
 }
-
 
 static int map_absent_read(struct mtd_info *mtd, loff_t from, size_t len, size_t *retlen, u_char *buf)
 {

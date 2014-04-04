@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_packet.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -22,7 +22,6 @@
 //==============================================================================
 #ifndef HTC_PACKET_H_
 #define HTC_PACKET_H_
-
 
 #include "dl_list.h"
 
@@ -100,8 +99,6 @@ struct htc_packet {
     void                  *pContext;    /* HTC private completion context */
 };
 
-
-
 #define COMPLETE_HTC_PACKET(p,status)        \
 {                                            \
     (p)->Status = (status);                  \
@@ -126,7 +123,7 @@ struct htc_packet {
 
 /* fast macro to recycle an RX packet that will be re-queued to HTC */
 #define HTC_PACKET_RESET_RX(p)              \
-    { (p)->pBuffer = (p)->pBufferStart; (p)->ActualLength = 0; }  
+    { (p)->pBuffer = (p)->pBufferStart; (p)->ActualLength = 0; }
 
 /* macro to set packet parameters for TX */
 #define SET_HTC_PACKET_INFO_TX(p,c,b,len,ep,tag)  \
@@ -141,9 +138,9 @@ struct htc_packet {
 /* HTC Packet Queueing Macros */
 struct htc_packet_queue {
     struct dl_list     QueueHead;
-    int         Depth;    
+    int         Depth;
 };
- 
+
 /* initialize queue */
 #define INIT_HTC_PACKET_QUEUE(pQ)   \
 {                                   \
@@ -167,8 +164,8 @@ struct htc_packet_queue {
 /* get packet at head without removing it */
 static INLINE struct htc_packet *HTC_GET_PKT_AT_HEAD(struct htc_packet_queue *queue)   {
     if (queue->Depth == 0) {
-        return NULL; 
-    }  
+        return NULL;
+    }
     return A_CONTAINING_STRUCT((DL_LIST_GET_ITEM_AT_HEAD(&queue->QueueHead)),struct htc_packet,ListLink);
 }
 /* remove a packet from a queue, where-ever it is in the queue */
@@ -200,7 +197,6 @@ static INLINE struct htc_packet *HTC_PACKET_DEQUEUE_TAIL(struct htc_packet_queue
 
 #define HTC_PACKET_QUEUE_DEPTH(pQ) (pQ)->Depth
 
-
 #define HTC_GET_ENDPOINT_FROM_PKT(p) (p)->Endpoint
 #define HTC_GET_TAG_FROM_PKT(p)      (p)->PktInfo.AsTx.Tag
 
@@ -218,10 +214,10 @@ static INLINE struct htc_packet *HTC_PACKET_DEQUEUE_TAIL(struct htc_packet_queue
     DL_LIST_INIT_AND_ADD(&(pQ)->QueueHead,&(pP)->ListLink)  \
     (pQ)->Depth = 1;                                        \
 }
-    
+
 #define HTC_PACKET_QUEUE_ITERATE_ALLOW_REMOVE(pQ, pPTemp) \
-    ITERATE_OVER_LIST_ALLOW_REMOVE(&(pQ)->QueueHead,(pPTemp), struct htc_packet, ListLink) 
+    ITERATE_OVER_LIST_ALLOW_REMOVE(&(pQ)->QueueHead,(pPTemp), struct htc_packet, ListLink)
 
 #define HTC_PACKET_QUEUE_ITERATE_END ITERATE_END
-        
+
 #endif /*HTC_PACKET_H_*/

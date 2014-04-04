@@ -26,7 +26,6 @@
 #define L2INODESLOTSIZE		7
 #define log2INODESIZE		9	/* log2(bytes per dinode) */
 
-
 /*
  *	on-disk inode : 512 bytes
  *

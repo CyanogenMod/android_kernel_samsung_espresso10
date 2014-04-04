@@ -255,7 +255,6 @@ struct ipath_sdma_desc {
 #define IPATH_IB_CFG_LREV_ENB 7 /* Get/set Auto-Lane-reversal enable */
 #define IPATH_IB_CFG_LINKLATENCY 8 /* Get Auto-Lane-reversal enable */
 
-
 struct ipath_devdata {
 	struct list_head ipath_list;
 

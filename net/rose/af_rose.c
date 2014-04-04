@@ -1215,7 +1215,6 @@ static int rose_sendmsg(struct kiocb *iocb, struct socket *sock,
 	return len;
 }
 
-
 static int rose_recvmsg(struct kiocb *iocb, struct socket *sock,
 			struct msghdr *msg, size_t size, int flags)
 {
@@ -1258,6 +1257,7 @@ static int rose_recvmsg(struct kiocb *iocb, struct socket *sock,
 	skb_copy_datagram_iovec(skb, 0, msg->msg_iov, copied);
 
 	if (srose != NULL) {
+		memset(srose, 0, msg->msg_namelen);
 		srose->srose_family = AF_ROSE;
 		srose->srose_addr   = rose->dest_addr;
 		srose->srose_call   = rose->dest_call;
@@ -1280,7 +1280,6 @@ static int rose_recvmsg(struct kiocb *iocb, struct socket *sock,
 
 	return copied;
 }
-
 
 static int rose_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
 {

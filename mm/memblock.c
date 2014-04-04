@@ -514,7 +514,6 @@ phys_addr_t __init memblock_alloc(phys_addr_t size, phys_addr_t align)
 	return memblock_alloc_base(size, align, MEMBLOCK_ALLOC_ACCESSIBLE);
 }
 
-
 /*
  * Additional node-local allocators. Search for node memory is bottom up
  * and walks memblock regions within that node bottom-up as well, but allocation
@@ -614,7 +613,6 @@ phys_addr_t __init memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align, i
 		return res;
 	return memblock_alloc_base(size, align, MEMBLOCK_ALLOC_ANYWHERE);
 }
-
 
 /*
  * Remaining API functions
@@ -717,7 +715,6 @@ int __init_memblock memblock_is_region_reserved(phys_addr_t base, phys_addr_t si
 {
 	return memblock_overlaps_region(&memblock.reserved, base, size) >= 0;
 }
-
 
 void __init_memblock memblock_set_current_limit(phys_addr_t limit)
 {

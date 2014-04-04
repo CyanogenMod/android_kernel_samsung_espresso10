@@ -66,7 +66,6 @@ int squashfs_frag_lookup(struct super_block *sb, unsigned int fragment,
 	return size;
 }
 
-
 /*
  * Read the uncompressed fragment lookup table indexes off disk into memory
  */

@@ -67,7 +67,6 @@ typedef struct tagSDot11Counters {
 //    unsigned long long   DecryptFailureCount;
 } SDot11Counters, *PSDot11Counters;
 
-
 //
 // MIB2 counter
 //
@@ -105,7 +104,6 @@ typedef struct tagSMib2Counter {
 #define UP                  1           //
 #define DOWN                2           //
 #define TESTING             3           //
-
 
 //
 // RMON counter
@@ -172,7 +170,6 @@ typedef struct tagSCustomCounters {
 
 } SCustomCounters, *PSCustomCounters;
 
-
 //
 // Custom counter
 //
@@ -203,7 +200,6 @@ typedef struct tagSISRCounters {
     /////////////////////////////////////
 } SISRCounters, *PSISRCounters;
 
-
 // Value in the etherStatsStatus entry
 #define VALID               1           //
 #define CREATE_REQUEST      2           //
@@ -218,7 +214,6 @@ typedef struct tagSStatCounter {
     //
     // ISR status count
     //
-
 
     // RSR status count
     //
@@ -295,8 +290,6 @@ typedef struct tagSStatCounter {
     unsigned char abyCntRxPattern[16];
     unsigned char abyCntTxPattern[16];
 
-
-
     // Software check....
     unsigned long dwCntRxDataErr;             // rx buffer data software compare CRC err count
     unsigned long dwCntDecryptErr;            // rx buffer data software compare CRC err count
@@ -372,6 +365,3 @@ void STAvUpdate802_11Counter(
 void STAvClear802_11Counter(PSDot11Counters p802_11Counter);
 
 #endif // __MIB_H__
-
-
-

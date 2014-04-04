@@ -19,7 +19,6 @@
 #include "bltsville.h"
 struct gcmmucontext;
 
-
 /*******************************************************************************
  * Debug logging switches.
  */
@@ -37,7 +36,6 @@ struct gcmmucontext;
 #if GCDEBUG_ENABLE && GCDEBUG_LINUXLOGS
 #error GCDEBUG_ENABLE and GCDEBUG_LINUXLOGS cannot be enabled simultaneously.
 #endif
-
 
 /*******************************************************************************
  * Dumping interface macro for release mode.
@@ -85,7 +83,6 @@ struct gcmmucontext;
 
 #endif
 
-
 /*******************************************************************************
  * Dumping macros not specific to a particular logging backend.
  */
@@ -131,7 +128,6 @@ do { \
 
 #define GC_FUNC_ENTER "++"
 #define GC_FUNC_EXIT "--"
-
 
 /*******************************************************************************
  * Dumping macros for internal gccore logging backend.
@@ -217,7 +213,6 @@ do { \
 
 #endif
 
-
 /*******************************************************************************
  * Dumping macros for linux builtin logging backend.
  */
@@ -255,7 +250,6 @@ do { \
 #define GCDUMPBUFFER(...)
 
 #endif
-
 
 /*******************************************************************************
  * Command buffer parser.
@@ -300,7 +294,6 @@ struct gccommandinfo {
 int gc_parse_command_buffer(unsigned int *buffer, unsigned int size,
 			    struct gccommandinfo *info);
 
-
 /*******************************************************************************
  * Filter structure.
  */
@@ -312,14 +305,12 @@ struct gcdbgfilter {
 	const char *zonename[];
 };
 
-
 /*******************************************************************************
  * Debug init/exit functions.
  */
 
 void gcdbg_init(void);
 void gcdbg_exit(void);
-
 
 /*******************************************************************************
  * Dumping functions.
@@ -367,7 +358,6 @@ void gc_dump_mmu_arenas(struct gcdbgfilter *filter, unsigned int zone,
 void gc_dump_mmu(struct gcdbgfilter *filter, unsigned int zone,
 		 struct gcmmucontext *gcmmucontext);
 
-
 /*******************************************************************************
  * CPU blitters.
  */
@@ -383,13 +373,11 @@ void gc_fill_phys_surface(struct gcdbgfilter *filter, unsigned int zone,
 			  unsigned int gpuaddr,
 			  unsigned int fillcolor);
 
-
 /*******************************************************************************
  * Bltsville debugging.
  */
 
 char *gc_bvblend_name(enum bvblend blend);
-
 
 /*******************************************************************************
  * Dumping control.

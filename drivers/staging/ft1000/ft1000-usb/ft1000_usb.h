@@ -19,13 +19,11 @@
 #define GET_DRV_ERR_RPT_MSG  0x0073
 #define RSP_DRV_ERR_RPT_MSG  0x0074
 
-
 // Size of DPRAM Command
 #define MAX_CMD_SQSIZE          1780
 #define SLOWQ_TYPE              0
 #define PSEUDOSZ                16
 #define DSP_QID_OFFSET          4
-
 
 // MEMORY MAP FOR ELECTRABUZZ ASIC
 #define	FT1000_REG_DFIFO_STAT	0x0008	// Downlink FIFO status register
@@ -38,7 +36,6 @@
 
 #define  SUCCESS             0x00
 
-
 #define DRIVERID                0x00
 
 // Driver Error Messages for DSP
@@ -48,8 +45,6 @@
 // Magnemite specific defines
 #define hi_mag                  0x6968  // Byte swap hi to avoid additional system call
 #define ho_mag                  0x6f68  // Byte swap ho to avoid additional system call
-
-
 
 struct media_msg {
 	struct pseudo_hdr pseudo;
@@ -75,7 +70,6 @@ struct dsp_init_msg {
 	u8 RfCalVer[CALVERSZ];      // Rf Calibration version
 	u8 RfCalDate[CALDATESZ];    // Rf Calibration date
 } __attribute__ ((packed));
-
 
 struct app_info_block {
 	u32 nTxMsg;                    // DPRAM msg sent to DSP with app_id
@@ -137,7 +131,6 @@ struct prov_record {
 #define ENET_MAX_SIZE           1514
 #define ENET_HEADER_SIZE        14
 
-
 #define CIS_NET_ADDR_OFFSET 0xff0
 
 // MAGNEMITE specific
@@ -170,8 +163,6 @@ struct prov_record {
 
 #define FT1000_REG_MAG_VERSION		0x0030	// LLC Version					LLC register
 
-
-
 // Common
 
 #define	FT1000_REG_DPRAM_ADDR	0x000E	// DPRAM ADDRESS when card in IO mode
@@ -192,8 +183,6 @@ struct prov_record {
 
 										// (Electrabuzz=0 Magnemite=TBD)
 
-
-
 // DSP doorbells
 
 #define FT1000_DB_DPRAM_RX		0x0001	// this value indicates that DSP has
@@ -206,11 +195,7 @@ struct prov_record {
 
 #define FT1000_DSP_ASIC_RESET   0x0008
 
-
-
 #define FT1000_DB_COND_RESET    0x0010
-
-
 
 // Host doorbells
 
@@ -224,8 +209,6 @@ struct prov_record {
 
 #define FT1000_DB_HB            0x1000  // this value indicates that supervisor
 
-
-
 // Electrabuzz specific DPRAM mapping                                        //      has a heartbeat message for DSP.
 
 #define FT1000_DPRAM_BASE		0x1000	//  0x0000 to 0x07FF	DPRAM	2Kx16 - R/W from PCMCIA or DSP
@@ -236,8 +219,6 @@ struct prov_record {
 
 #define FT1000_DPRAM_SIZE       0x1000  //  4K bytes
 
-
-
 #define FT1000_DRV_DEBUG        0x17E0  // Debug area for driver
 
 #define FT1000_FIFO_LEN         0x17FC  // total length for DSP FIFO tracking
@@ -245,8 +226,6 @@ struct prov_record {
 #define FT1000_HI_HO            0x17FE  // heartbeat with HI/HO
 
 #define FT1000_DSP_STATUS       0x1FFE  // dsp status - non-zero is a request to reset dsp
-
-
 
 #define FT1000_DSP_CON_STATE    0x1FF8  // DSP Connection Status Info
 
@@ -256,11 +235,7 @@ struct prov_record {
 
 #define DSP_TIMESTAMP_DIFF      0x1FFA  // difference of dsp timestamp in DPRAM and Pseudo header.
 
-
-
 #define FT1000_DPRAM_FEFE    	0x1002	// Dsp Downloader handshake location
-
-
 
 #define FT1000_DSP_TIMER0       0x1FF0
 
@@ -270,15 +245,11 @@ struct prov_record {
 
 #define FT1000_DSP_TIMER3       0x1FF6
 
-
-
 // MEMORY MAP FOR MAGNEMITE
 
 #define FT1000_DPRAM_MAG_TX_BASE	 	 0x0000	 //  TX AREA (SlowQ)
 
 #define FT1000_DPRAM_MAG_RX_BASE		 0x0200	 //  RX AREA (SlowQ)
-
-
 
 #define FT1000_MAG_FIFO_LEN              0x1FF   // total length for DSP FIFO tracking
 
@@ -292,61 +263,41 @@ struct prov_record {
 
 #define FT1000_MAG_DSP_LEDS_INDX         0x1     // dsp led status for PAD device
 
-
-
 #define FT1000_MAG_DSP_CON_STATE         0x3FE   // DSP Connection Status Info
 
 #define FT1000_MAG_DSP_CON_STATE_INDX    0x0     // DSP Connection Status Info
-
-
 
 #define FT1000_MAG_DPRAM_FEFE            0x000   // location for dsp ready indicator
 
 #define FT1000_MAG_DPRAM_FEFE_INDX       0x0     // location for dsp ready indicator
 
-
-
 #define FT1000_MAG_DSP_TIMER0            0x3FC
 
 #define FT1000_MAG_DSP_TIMER0_INDX       0x1
-
-
 
 #define FT1000_MAG_DSP_TIMER1            0x3FC
 
 #define FT1000_MAG_DSP_TIMER1_INDX       0x0
 
-
-
 #define FT1000_MAG_DSP_TIMER2            0x3FD
 
 #define FT1000_MAG_DSP_TIMER2_INDX       0x1
-
-
 
 #define FT1000_MAG_DSP_TIMER3            0x3FD
 
 #define FT1000_MAG_DSP_TIMER3_INDX       0x0
 
-
-
 #define FT1000_MAG_TOTAL_LEN             0x200
 
 #define FT1000_MAG_TOTAL_LEN_INDX        0x1
-
-
 
 #define FT1000_MAG_PH_LEN                0x200
 
 #define FT1000_MAG_PH_LEN_INDX           0x0
 
-
-
 #define FT1000_MAG_PORT_ID               0x201
 
 #define FT1000_MAG_PORT_ID_INDX          0x0
-
-
 
 //
 
@@ -360,8 +311,6 @@ struct prov_record {
 
 // SUPERVISOR ISR BIT MAPS
 
-
-
 #define ISR_EMPTY			(u8)0x00 	 // no bits set in ISR
 
 #define ISR_DOORBELL_ACK	(u8)0x01		 //  the doorbell i sent has been received.
@@ -371,8 +320,6 @@ struct prov_record {
 #define ISR_RCV				(u8)0x04 	 // packet received with no errors
 
 #define ISR_WATERMARK		(u8)0x08 	 //
-
-
 
 // Interrupt mask register defines
 
@@ -390,23 +337,15 @@ struct prov_record {
 
 #define ISR_MASK_ALL			0xffff
 
-
-
 #define HOST_INTF_LE            0x0000    // Host interface little endian
 
 #define HOST_INTF_BE            0x0001    // Host interface big endian
 
-
-
 #define ISR_DEFAULT_MASK		0x7ff9
-
-
 
 #define hi                      0x6869
 
 #define ho                      0x686f
-
-
 
 #define FT1000_ASIC_RESET       0x80     // COR value for soft reset to PCMCIA core
 
@@ -414,23 +353,15 @@ struct prov_record {
 
 #define FT1000_ASIC_MAG_BITS    0x55     // Bits set in COR register under normal operation
 
-
-
 #define FT1000_COR_OFFSET       0x100
-
-
 
 #define ELECTRABUZZ_ID			0        // ASIC ID for ELECTRABUZZ
 
 #define MAGNEMITE_ID			0x1a01   // ASIC ID for MAGNEMITE
 
-
-
 // Maximum times trying to get ASIC out of reset
 
 #define MAX_ASIC_RESET_CNT      20
-
-
 
 #define DSP_RESET_BIT           0x1
 
@@ -441,7 +372,6 @@ struct prov_record {
 #define DSP_ENCRYPTED           0x8
 
 #define EFUSE_MEM_DISABLE       0x0040
-
 
 #define MAX_BUF_SIZE            4096
 
@@ -537,7 +467,6 @@ struct ft1000_info {
 	struct proc_dir_entry *ft1000_proc_dir; //mbelian
 };
 
-
 struct dpram_blk {
     struct list_head list;
     u16 *pbuffer;
@@ -577,7 +506,5 @@ int ft1000_poll(void* dev_id);
 
 int ft1000_init_proc(struct net_device *dev);
 void ft1000_cleanup_proc(struct ft1000_info *info);
-
-
 
 #endif

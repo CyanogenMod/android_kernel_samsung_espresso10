@@ -13,7 +13,6 @@
 #include <linux/netfilter/xt_rateest.h>
 #include <net/netfilter/xt_rateest.h>
 
-
 static bool
 xt_rateest_mt(const struct sk_buff *skb, struct xt_action_param *par)
 {
@@ -107,7 +106,6 @@ static int xt_rateest_mt_checkentry(const struct xt_mtchk_param *par)
 			goto err2;
 	} else
 		est2 = NULL;
-
 
 	info->est1 = est1;
 	info->est2 = est2;

@@ -211,7 +211,6 @@ fail:
 	return err;
 }
 
-
 /*
  * conditionally insert an inline extent into the file.  This
  * does the checks required to make sure the data is small enough
@@ -573,7 +572,6 @@ static noinline int submit_compressed_extents(struct inode *inode,
 
 	if (list_empty(&async_cow->extents))
 		return 0;
-
 
 	while (!list_empty(&async_cow->extents)) {
 		async_extent = list_entry(async_cow->extents.next,
@@ -2808,7 +2806,6 @@ int btrfs_unlink_inode(struct btrfs_trans_handle *trans,
 	}
 	return ret;
 }
-		
 
 /* helper to check if there is any shared block in the path */
 static int check_path_shared(struct btrfs_root *root,
@@ -6258,7 +6255,6 @@ static int btrfs_writepage(struct page *page, struct writeback_control *wbc)
 {
 	struct extent_io_tree *tree;
 
-
 	if (current->flags & PF_MEMALLOC) {
 		redirty_page_for_writepage(wbc, page);
 		unlock_page(page);
@@ -6317,7 +6313,6 @@ static void btrfs_invalidatepage(struct page *page, unsigned long offset)
 	struct extent_state *cached_state = NULL;
 	u64 page_start = page_offset(page);
 	u64 page_end = page_start + PAGE_CACHE_SIZE - 1;
-
 
 	/*
 	 * we have the page locked, so new writeback can't start,

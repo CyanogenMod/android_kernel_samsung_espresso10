@@ -1461,7 +1461,6 @@ static void packet_write(struct r8a66597 *r8a66597, u16 pipenum)
 		pipe_irq_enable(r8a66597, urb, pipenum);
 }
 
-
 static void check_next_phase(struct r8a66597 *r8a66597, int status)
 {
 	struct r8a66597_td *td = r8a66597_get_td(r8a66597, 0);
@@ -2568,4 +2567,3 @@ static void __exit r8a66597_cleanup(void)
 	platform_driver_unregister(&r8a66597_driver);
 }
 module_exit(r8a66597_cleanup);
-

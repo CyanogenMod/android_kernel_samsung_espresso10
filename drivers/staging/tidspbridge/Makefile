@@ -29,4 +29,3 @@ ccflags-y += -Idrivers/staging/tidspbridge/rmgr
 ccflags-y += -Idrivers/staging/tidspbridge/dynload
 ccflags-y += -Idrivers/staging/tidspbridge/hw
 ccflags-y += -Iarch/arm
-

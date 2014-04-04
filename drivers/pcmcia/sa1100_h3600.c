@@ -114,7 +114,7 @@ err10:	return err;
 static void h3600_pcmcia_hw_shutdown(struct soc_pcmcia_socket *skt)
 {
 	soc_pcmcia_free_irqs(skt, irqs, ARRAY_SIZE(irqs));
-  
+
 	switch (skt->nr) {
 	case 0:
 		/* Disable CF bus: */
@@ -208,7 +208,7 @@ static void h3600_pcmcia_socket_suspend(struct soc_pcmcia_socket *skt)
 	}
 }
 
-struct pcmcia_low_level h3600_pcmcia_ops = { 
+struct pcmcia_low_level h3600_pcmcia_ops = {
 	.owner			= THIS_MODULE,
 	.hw_init		= h3600_pcmcia_hw_init,
 	.hw_shutdown		= h3600_pcmcia_hw_shutdown,

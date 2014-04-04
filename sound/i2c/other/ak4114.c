@@ -446,7 +446,6 @@ static struct snd_kcontrol_new snd_ak4114_iec958_controls[] = {
 }
 };
 
-
 static void snd_ak4114_proc_regs_read(struct snd_info_entry *entry,
 		struct snd_info_buffer *buffer)
 {

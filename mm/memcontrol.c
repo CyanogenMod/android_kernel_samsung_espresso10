@@ -74,7 +74,6 @@ static int really_do_swap_account __initdata = 0;
 #define do_swap_account		(0)
 #endif
 
-
 /*
  * Statistics for memory cgroup.
  */
@@ -454,7 +453,6 @@ mem_cgroup_remove_exceeded(struct mem_cgroup *mem,
 	__mem_cgroup_remove_exceeded(mem, mz, mctz);
 	spin_unlock(&mctz->lock);
 }
-
 
 static void mem_cgroup_update_tree(struct mem_cgroup *mem, struct page *page)
 {
@@ -839,7 +837,6 @@ static struct mem_cgroup *mem_cgroup_get_next(struct mem_cgroup *iter,
 #define for_each_mem_cgroup_all(iter) \
 	for_each_mem_cgroup_tree_cond(iter, NULL, true)
 
-
 static inline bool mem_cgroup_is_root(struct mem_cgroup *mem)
 {
 	return (mem == root_mem_cgroup);
@@ -1032,7 +1029,6 @@ static void mem_cgroup_lru_add_after_commit(struct page *page)
 		mem_cgroup_add_lru_list(page, page_lru(page));
 	spin_unlock_irqrestore(&zone->lru_lock, flags);
 }
-
 
 void mem_cgroup_move_lists(struct page *page,
 			   enum lru_list from, enum lru_list to)
@@ -1251,7 +1247,8 @@ mem_cgroup_get_reclaim_stat_from_page(struct page *page)
 unsigned long mem_cgroup_isolate_pages(unsigned long nr_to_scan,
 					struct list_head *dst,
 					unsigned long *scanned, int order,
-					int mode, struct zone *z,
+					isolate_mode_t mode,
+					struct zone *z,
 					struct mem_cgroup *mem_cont,
 					int active, int file)
 {
@@ -1448,7 +1445,6 @@ void mem_cgroup_print_oom_info(struct mem_cgroup *memcg, struct task_struct *p)
 
 	if (!memcg || !p)
 		return;
-
 
 	rcu_read_lock();
 
@@ -1833,7 +1829,6 @@ static int mem_cgroup_oom_unlock(struct mem_cgroup *mem)
 	return 0;
 }
 
-
 static DEFINE_MUTEX(memcg_oom_mutex);
 static DECLARE_WAIT_QUEUE_HEAD(memcg_oom_waitq);
 
@@ -2194,7 +2189,6 @@ static int __cpuinit memcg_cpu_hotplug_callback(struct notifier_block *nb,
 	drain_stock(stock);
 	return NOTIFY_OK;
 }
-
 
 /* See __mem_cgroup_try_charge() for details */
 enum {
@@ -3888,7 +3882,6 @@ int mem_cgroup_force_empty_write(struct cgroup *cont, unsigned int event)
 	return mem_cgroup_force_empty(mem_cgroup_from_cont(cont), true);
 }
 
-
 static u64 mem_cgroup_hierarchy_read(struct cgroup *cont, struct cftype *cft)
 {
 	return mem_cgroup_from_cont(cont)->use_hierarchy;
@@ -3926,7 +3919,6 @@ static int mem_cgroup_hierarchy_write(struct cgroup *cont, struct cftype *cft,
 
 	return retval;
 }
-
 
 static unsigned long mem_cgroup_recursive_stat(struct mem_cgroup *mem,
 					       enum mem_cgroup_stat_index idx)
@@ -4127,7 +4119,6 @@ static int mem_cgroup_move_charge_write(struct cgroup *cgrp,
 }
 #endif
 
-
 /* For read statistics */
 enum {
 	MCS_CACHE,
@@ -4168,7 +4159,6 @@ struct {
 	{"active_file", "total_active_file"},
 	{"unevictable", "total_unevictable"}
 };
-
 
 static void
 mem_cgroup_get_local_stat(struct mem_cgroup *mem, struct mcs_total_stat *s)
@@ -4271,7 +4261,6 @@ static int mem_control_stat_show(struct cgroup *cont, struct cftype *cft,
 
 	memset(&mystat, 0, sizeof(mystat));
 	mem_cgroup_get_local_stat(mem_cont, &mystat);
-
 
 	for (i = 0; i < NR_MCS_STAT; i++) {
 		if (i == MCS_SWAP && !do_swap_account)
@@ -4432,7 +4421,13 @@ static int compare_thresholds(const void *a, const void *b)
 	const struct mem_cgroup_threshold *_a = a;
 	const struct mem_cgroup_threshold *_b = b;
 
-	return _a->threshold - _b->threshold;
+	if (_a->threshold > _b->threshold)
+		return 1;
+
+	if (_a->threshold < _b->threshold)
+		return -1;
+
+	return 0;
 }
 
 static int mem_cgroup_oom_notify_cb(struct mem_cgroup *mem)
@@ -4605,6 +4600,12 @@ static void mem_cgroup_usage_unregister_event(struct cgroup *cgrp,
 swap_buffers:
 	/* Swap primary and spare array */
 	thresholds->spare = thresholds->primary;
+	/* If all events are unregistered, free the spare array */
+	if (!new) {
+		kfree(thresholds->spare);
+		thresholds->spare = NULL;
+	}
+
 	rcu_assign_pointer(thresholds->primary, new);
 
 	/* To be sure that nobody uses thresholds */

@@ -599,7 +599,6 @@
 #define U300_SYSCON_BCR_EXTRA_BOOT_OPTION_MASK			(0x01FC)
 #define U300_SYSCON_BCR_APP_BOOT_SERV_MASK			(0x0003)
 
-
 /* CPU clock defines */
 /**
  * CPU high frequency in MHz

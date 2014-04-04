@@ -1,4 +1,3 @@
-
 /* (C) 1999-2001 Paul `Rusty' Russell
  * (C) 2002-2004 Netfilter Core Team <coreteam@netfilter.org>
  *
@@ -83,6 +82,11 @@ static int ipv4_get_l4proto(const struct sk_buff *skb, unsigned int nhoff,
 
 	*dataoff = nhoff + (iph->ihl << 2);
 	*protonum = iph->protocol;
+
+	/* Check bogus IP headers */
+	if (*dataoff > skb->len) {
+		return -NF_ACCEPT;
+	}
 
 	return NF_ACCEPT;
 }

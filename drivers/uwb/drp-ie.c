@@ -23,7 +23,6 @@
 
 #include "uwb-internal.h"
 
-
 /*
  * Return the reason code for a reservations's DRP IE.
  */
@@ -134,7 +133,6 @@ static struct uwb_ie_drp *uwb_drp_ie_alloc(void)
 	return drp_ie;
 }
 
-
 /*
  * Fill a DRP IE's allocation fields from a MAS bitmap.
  */
@@ -199,7 +197,7 @@ int uwb_drp_ie_update(struct uwb_rsv *rsv)
 		rsv->drp_ie = NULL;
 		return 0;
 	}
-	
+
 	unsafe = rsv->mas.unsafe ? 1 : 0;
 
 	if (rsv->drp_ie == NULL) {
@@ -232,23 +230,22 @@ int uwb_drp_ie_update(struct uwb_rsv *rsv)
 	uwb_drp_ie_from_bm(drp_ie, &rsv->mas);
 
 	if (uwb_rsv_has_two_drp_ies(rsv)) {
-		mv = &rsv->mv; 
+		mv = &rsv->mv;
 		if (mv->companion_drp_ie == NULL) {
 			mv->companion_drp_ie = uwb_drp_ie_alloc();
 			if (mv->companion_drp_ie == NULL)
 				return -ENOMEM;
 		}
 		drp_ie = mv->companion_drp_ie;
-		
+
 		/* keep all the same configuration of the main drp_ie */
 		memcpy(drp_ie, rsv->drp_ie, sizeof(struct uwb_ie_drp));
-		
 
 		/* FIXME: handle properly the unsafe bit */
 		uwb_ie_drp_set_unsafe(drp_ie,       1);
 		uwb_ie_drp_set_status(drp_ie,       uwb_rsv_companion_status(rsv));
 		uwb_ie_drp_set_reason_code(drp_ie,  uwb_rsv_companion_reason_code(rsv));
-	
+
 		uwb_drp_ie_from_bm(drp_ie, &mv->companion_mas);
 	}
 
@@ -315,4 +312,3 @@ void uwb_drp_ie_to_bm(struct uwb_mas_bm *bm, const struct uwb_ie_drp *drp_ie)
 		}
 	}
 }
-

@@ -17,4 +17,3 @@
 #define CPWM				(RTL8712_POWERSAVE_ + 0x7D)
 
 #endif /* __RTL8712_POWERSAVE_REGDEF_H__ */
-

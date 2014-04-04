@@ -295,7 +295,6 @@ static int tdo24m_power(struct tdo24m *lcd, int power)
 	return ret;
 }
 
-
 static int tdo24m_set_power(struct lcd_device *ld, int power)
 {
 	struct tdo24m *lcd = lcd_get_data(ld);

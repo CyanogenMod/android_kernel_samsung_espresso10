@@ -522,7 +522,6 @@ static void seq_chn_voice_event(unsigned char *event_rec)
 #undef parm
 }
 
-
 static void seq_chn_common_event(unsigned char *event_rec)
 {
 	unsigned char dev = event_rec[1];
@@ -1070,7 +1069,7 @@ int sequencer_open(int dev, struct file *file)
 			{
 				if (!try_module_get(midi_devs[i]->owner))
 					continue;
-	
+
 				if ((retval = midi_devs[i]->open(i, mode,
 					sequencer_midi_input, sequencer_midi_output)) >= 0)
 				{
@@ -1548,7 +1547,6 @@ unsigned int sequencer_poll(int dev, struct file *file, poll_table * wait)
 	spin_unlock_irqrestore(&lock,flags);
 	return mask;
 }
-
 
 void sequencer_timer(unsigned long dummy)
 {

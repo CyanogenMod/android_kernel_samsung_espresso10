@@ -468,4 +468,3 @@ struct ixgbe_mbx_operations mbx_ops_generic = {
 	.check_for_ack          = ixgbe_check_for_ack_pf,
 	.check_for_rst          = ixgbe_check_for_rst_pf,
 };
-

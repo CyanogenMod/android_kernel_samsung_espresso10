@@ -9,7 +9,6 @@
 #include <linux/module.h>
 #include <net/tcp.h>
 
-
 /* From AIMD tables from RFC 3649 appendix B,
  * with fixed-point MD scaled <<8.
  */
@@ -156,7 +155,6 @@ static u32 hstcp_ssthresh(struct sock *sk)
 	/* Do multiplicative decrease */
 	return max(tp->snd_cwnd - ((tp->snd_cwnd * hstcp_aimd_vals[ca->ai].md) >> 8), 2U);
 }
-
 
 static struct tcp_congestion_ops tcp_highspeed __read_mostly = {
 	.init		= hstcp_init,

@@ -20,7 +20,6 @@
 #include <net/netlink.h>
 #include <net/pkt_sched.h>
 
-
 /*	Class-Based Queueing (CBQ) algorithm.
 	=======================================
 
@@ -56,7 +55,6 @@
 	In the worst case we have IntServ estimate with D = W*r+k*MTU
 	and C = MTU*r. The proof (if correct at all) is trivial.
 
-
 	--- It seems that cbq-2.0 is not very accurate. At least, I cannot
 	interpret some places, which look like wrong translations
 	from NS. Anyone is advised to find these differences
@@ -70,7 +68,6 @@
 	very close to an ideal solution.  */
 
 struct cbq_sched_data;
-
 
 struct cbq_class {
 	struct Qdisc_class_common common;
@@ -113,7 +110,6 @@ struct cbq_class {
 	struct cbq_class	*children;	/* Pointer to children chain */
 
 	struct Qdisc		*q;		/* Elementary queueing discipline */
-
 
 /* Variables */
 	unsigned char		cpriority;	/* Effective priority */
@@ -171,7 +167,6 @@ struct cbq_sched_data {
 	int			toplevel;
 	u32			hgenerator;
 };
-
 
 #define L2T(cl, len)	qdisc_l2t((cl)->R_tab, len)
 
@@ -250,10 +245,11 @@ cbq_classify(struct sk_buff *skb, struct Qdisc *sch, int *qerr)
 			else if ((cl = defmap[res.classid & TC_PRIO_MAX]) == NULL)
 				cl = defmap[TC_PRIO_BESTEFFORT];
 
-			if (cl == NULL || cl->level >= head->level)
+			if (cl == NULL)
 				goto fallback;
 		}
-
+		if (cl->level >= head->level)
+			goto fallback;
 #ifdef CONFIG_NET_CLS_ACT
 		switch (result) {
 		case TC_ACT_QUEUED:
@@ -962,8 +958,11 @@ cbq_dequeue(struct Qdisc *sch)
 		cbq_update(q);
 		if ((incr -= incr2) < 0)
 			incr = 0;
+		q->now += incr;
+	} else {
+		if (now > q->now)
+			q->now = now;
 	}
-	q->now += incr;
 	q->now_rt = now;
 
 	for (;;) {
@@ -1241,7 +1240,6 @@ cbq_reset(struct Qdisc *sch)
 	sch->q.qlen = 0;
 }
 
-
 static int cbq_set_lss(struct cbq_class *cl, struct tc_cbq_lssopt *lss)
 {
 	if (lss->change & TCF_CBQ_LSS_FLAGS) {
@@ -1463,6 +1461,7 @@ static int cbq_dump_wrr(struct sk_buff *skb, struct cbq_class *cl)
 	unsigned char *b = skb_tail_pointer(skb);
 	struct tc_cbq_wrropt opt;
 
+	memset(&opt, 0, sizeof(opt));
 	opt.flags = 0;
 	opt.allot = cl->allot;
 	opt.priority = cl->priority + 1;

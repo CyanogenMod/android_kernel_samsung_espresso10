@@ -8,5 +8,3 @@ config OMAP_THERMAL
 
 source "drivers/staging/thermal_framework/sensor/Kconfig.omap"
 source "drivers/staging/thermal_framework/governor/Kconfig.omap"
-
-

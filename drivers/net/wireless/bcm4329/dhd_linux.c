@@ -3,13 +3,13 @@
  * Basically selected code segments from usb-cdc.c and usb-rndis.c
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -464,8 +464,6 @@ module_param(dhd_rxbound, uint, 0);
 extern uint dhd_deferred_tx;
 module_param(dhd_deferred_tx, uint, 0);
 
-
-
 #ifdef SDTEST
 /* Echo packet generator (pkts/s) */
 uint dhd_pktgen = 0;
@@ -491,7 +489,6 @@ static char dhd_version[] = "Dongle Host Driver, version " EPI_VERSION_STR
 "\nCompiled in " SRCBASE " on " __DATE__ " at " __TIME__
 #endif
 ;
-
 
 #if defined(CONFIG_WIRELESS_EXT)
 struct iw_statistics *dhd_get_wireless_stats(struct net_device *dev);
@@ -558,8 +555,6 @@ static void dhd_set_packet_filter(int value, dhd_pub_t *dhd)
 	}
 #endif
 }
-
-
 
 #if defined(CONFIG_HAS_EARLYSUSPEND)
 static int dhd_set_suspend(int value, dhd_pub_t *dhd)
@@ -875,7 +870,6 @@ _dhd_set_multicast_list(dhd_info_t *dhd, int ifidx)
 		MFREE(dhd->pub.osh, buf, buflen);
 		return;
 	}
-
 
 	memset(&ioc, 0, sizeof(ioc));
 	ioc.cmd = WLC_SET_VAR;
@@ -1276,7 +1270,6 @@ dhd_rx_frame(dhd_pub_t *dhdp, int ifidx, void *pktbuf, int numpkt)
 		pnext = PKTNEXT(dhdp->osh, pktbuf);
 		PKTSETNEXT(wl->sh.osh, pktbuf, NULL);
 
-
 		skb = PKTTONATIVE(dhdp->osh, pktbuf);
 
 		/* Get the protocol, maintain skb around eth_type_trans()
@@ -1650,7 +1643,6 @@ struct ethtool_ops dhd_ethtool_ops = {
 	.get_drvinfo = dhd_ethtool_get_drvinfo
 };
 #endif /* LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 24) */
-
 
 #if LINUX_VERSION_CODE > KERNEL_VERSION(2, 4, 2)
 static int
@@ -2052,7 +2044,6 @@ dhd_del_if(dhd_info_t *dhd, int ifidx)
 	up(&dhd->sysioc_sem);
 }
 
-
 dhd_pub_t *
 dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 {
@@ -2218,7 +2209,6 @@ fail:
 
 	return NULL;
 }
-
 
 int
 dhd_bus_start(dhd_pub_t *dhdp)
@@ -2486,7 +2476,6 @@ dhd_net_attach(dhd_pub_t *dhdp, int ifidx)
 	       dhd->pub.mac.octet[0], dhd->pub.mac.octet[1], dhd->pub.mac.octet[2],
 	       dhd->pub.mac.octet[3], dhd->pub.mac.octet[4], dhd->pub.mac.octet[5]);
 
-
 #if defined(CONFIG_WIRELESS_EXT)
 #if defined(CONFIG_FIRST_SCAN)
 #ifdef SOFTAP
@@ -2674,7 +2663,7 @@ dhd_module_init(void)
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27))
 	sema_init(&dhd_registration_sem, 0);
-#endif 
+#endif
 
 	error = dhd_bus_register();
 
@@ -2867,7 +2856,6 @@ dhd_os_close_image(void *image)
 	if (image)
 		filp_close((struct file *)image, NULL);
 }
-
 
 void
 dhd_os_sdlock(dhd_pub_t *pub)
@@ -3138,7 +3126,6 @@ int net_os_set_packet_filter(struct net_device *dev, int val)
 	return ret;
 }
 
-
 void
 dhd_dev_init_ioctl(struct net_device *dev)
 {
@@ -3157,7 +3144,6 @@ dhd_dev_pno_reset(struct net_device *dev)
 	return (dhd_pno_clean(&dhd->pub));
 }
 
-
 /* Linux wrapper to call common dhd_pno_enable */
 int
 dhd_dev_pno_enable(struct net_device *dev,  int pfn_enabled)
@@ -3166,7 +3152,6 @@ dhd_dev_pno_enable(struct net_device *dev,  int pfn_enabled)
 
 	return (dhd_pno_enable(&dhd->pub, pfn_enabled));
 }
-
 
 /* Linux wrapper to call common dhd_pno_set */
 int

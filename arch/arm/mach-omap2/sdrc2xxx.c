@@ -39,7 +39,6 @@
 #define M_UNLOCK	0
 #define M_LOCK		1
 
-
 static struct memory_timings mem_timings;
 static u32 curr_perf_level = CORE_CLK_SRC_DPLL_X2;
 

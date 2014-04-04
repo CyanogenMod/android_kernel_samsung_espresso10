@@ -44,8 +44,6 @@
 
 /*---------------------  Export Definitions -------------------------*/
 
-
-
 // Scan time
 #define PROBE_DELAY                  100  // (us)
 #define SWITCH_CHANNEL_DELAY         200 // (us)
@@ -57,7 +55,6 @@
 #define WCMD_ACTIVE_SCAN_TIME   20 //(ms)
 #define WCMD_PASSIVE_SCAN_TIME  100 //(ms)
 
-
 #define DEFAULT_MSDU_LIFETIME           512  // ms
 #define DEFAULT_MSDU_LIFETIME_RES_64us  8000 // 64us
 
@@ -66,7 +63,6 @@
 
 #define MAKE_BEACON_RESERVED            10  //(us)
 
-
 #define TIM_MULTICAST_MASK           0x01
 #define TIM_BITMAPOFFSET_MASK        0xFE
 #define DEFAULT_DTIM_PERIOD             1
@@ -74,7 +70,6 @@
 #define AP_LONG_RETRY_LIMIT             4
 
 #define DEFAULT_IBSS_CHANNEL            6  //2.4G
-
 
 /*---------------------  Export Classes  ----------------------------*/
 
@@ -85,7 +80,6 @@
 #define timer_expire(timer, next_tick) mod_timer(&timer, RUN_AT(next_tick))
 
 typedef void (*TimerFunction)(unsigned long);
-
 
 //+++ NDIS related
 
@@ -117,8 +111,6 @@ typedef struct _NDIS_802_11_ASSOCIATION_INFORMATION
     unsigned long                   OffsetResponseIEs;
 } NDIS_802_11_ASSOCIATION_INFORMATION, *PNDIS_802_11_ASSOCIATION_INFORMATION;
 
-
-
 typedef struct tagSAssocInfo {
     NDIS_802_11_ASSOCIATION_INFORMATION     AssocInfo;
     BYTE                                    abyIEs[WLAN_BEACON_FR_MAXLEN+WLAN_BEACON_FR_MAXLEN];
@@ -127,8 +119,6 @@ typedef struct tagSAssocInfo {
     BYTE                                    abyReqIEs[WLAN_BEACON_FR_MAXLEN];
 } SAssocInfo, *PSAssocInfo;
 //---
-
-
 
 typedef enum tagWMAC_AUTHENTICATION_MODE {
 
@@ -143,8 +133,6 @@ typedef enum tagWMAC_AUTHENTICATION_MODE {
     WMAC_AUTH_MAX       // Not a real mode, defined as upper bound
 } WMAC_AUTHENTICATION_MODE, *PWMAC_AUTHENTICATION_MODE;
 
-
-
 // Pre-configured Mode (from XP)
 
 typedef enum tagWMAC_CONFIG_MODE {
@@ -155,7 +143,6 @@ typedef enum tagWMAC_CONFIG_MODE {
 
 } WMAC_CONFIG_MODE, *PWMAC_CONFIG_MODE;
 
-
 typedef enum tagWMAC_SCAN_TYPE {
 
     WMAC_SCAN_ACTIVE,
@@ -164,7 +151,6 @@ typedef enum tagWMAC_SCAN_TYPE {
 
 } WMAC_SCAN_TYPE, *PWMAC_SCAN_TYPE;
 
-
 typedef enum tagWMAC_SCAN_STATE {
 
     WMAC_NO_SCANNING,
@@ -172,8 +158,6 @@ typedef enum tagWMAC_SCAN_STATE {
     WMAC_IS_PROBEPENDING
 
 } WMAC_SCAN_STATE, *PWMAC_SCAN_STATE;
-
-
 
 // Notes:
 // Basic Service Set state explained as following:
@@ -207,7 +191,6 @@ typedef enum tagWMAC_CURRENT_MODE {
 
 } WMAC_CURRENT_MODE, *PWMAC_CURRENT_MODE;
 
-
 typedef enum tagWMAC_POWER_MODE {
 
     WMAC_POWER_CAM,
@@ -215,8 +198,6 @@ typedef enum tagWMAC_POWER_MODE {
     WMAC_POWER_MAX
 
 } WMAC_POWER_MODE, *PWMAC_POWER_MODE;
-
-
 
 // Tx Management Packet descriptor
 typedef struct tagSTxMgmtPacket {
@@ -226,7 +207,6 @@ typedef struct tagSTxMgmtPacket {
     unsigned int                cbPayloadLen;
 
 } STxMgmtPacket, *PSTxMgmtPacket;
-
 
 // Rx Management Packet descriptor
 typedef struct tagSRxMgmtPacket {
@@ -242,8 +222,6 @@ typedef struct tagSRxMgmtPacket {
 
 } SRxMgmtPacket, *PSRxMgmtPacket;
 
-
-
 typedef struct tagSMgmtObject
 {
 	void *pAdapter;
@@ -254,7 +232,6 @@ typedef struct tagSMgmtObject
     WMAC_CONFIG_MODE        eConfigMode; // MAC pre-configed mode
 
     CARD_PHY_TYPE           eCurrentPHYMode;
-
 
     // Operation state variables
     WMAC_CURRENT_MODE       eCurrMode;   // MAC current connection mode
@@ -346,7 +323,6 @@ typedef struct tagSMgmtObject
     PBYTE                   pbyMgmtPacketPool;
     BYTE                    byMgmtPacketPool[sizeof(STxMgmtPacket) + WLAN_A3FR_MAXLEN];
 
-
     // One second callback timer
 	struct timer_list	    sTimerSecondCallback;
 
@@ -365,19 +341,14 @@ typedef struct tagSMgmtObject
     // sNodeDBList[0] is reserved for Multicast under adhoc/AP mode
     KnownNodeDB             sNodeDBTable[MAX_NODE_NUM + 1];
 
-
-
     // WPA2 PMKID Cache
     SPMKIDCache             gsPMKIDCache;
     BOOL                    bRoaming;
 
     // rate fall back vars
 
-
-
     // associate info
     SAssocInfo              sAssocInfo;
-
 
     // for 802.11h
     BOOL                    b11hEnable;

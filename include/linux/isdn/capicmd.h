@@ -1,9 +1,9 @@
 /* $Id: capicmd.h,v 1.2.6.2 2001/09/23 22:24:33 kai Exp $
- * 
+ *
  * CAPI 2.0 Interface for Linux
- * 
+ *
  * Copyright 1997 by Carsten Paeth <calle@calle.de>
- * 
+ *
  * This software may be used and distributed according to the terms
  * of the GNU General Public License, incorporated herein by reference.
  *
@@ -74,7 +74,6 @@
 #define CAPI_CONNECT_B3_CONF		CAPICMD(CAPI_CONNECT_B3,CAPI_CONF)
 #define CAPI_CONNECT_B3_IND		CAPICMD(CAPI_CONNECT_B3,CAPI_IND)
 #define CAPI_CONNECT_B3_RESP		CAPICMD(CAPI_CONNECT_B3,CAPI_RESP)
-
 
 #define CAPI_CONNECT_B3_T90_ACTIVE_IND	CAPICMD(CAPI_CONNECT_B3_T90_ACTIVE,CAPI_IND)
 #define CAPI_CONNECT_B3_T90_ACTIVE_RESP	CAPICMD(CAPI_CONNECT_B3_T90_ACTIVE,CAPI_RESP)

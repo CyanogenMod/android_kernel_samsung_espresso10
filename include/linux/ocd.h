@@ -253,7 +253,6 @@
 #define OCDFMTDEF_COMPONENTSIZEMINUS1_MASK \
 	(0x3F << OCDFMTDEF_COMPONENTSIZEMINUS1_SHIFT)
 
-
 /*
  * The formats below are constructed from the definitions above.  However, not
  * all formats possible are specified (and named) below.  The other formats

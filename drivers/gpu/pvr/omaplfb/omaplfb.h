@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -70,11 +70,8 @@ typedef struct OMAPLFB_BUFFER_TAG
 
 	struct work_struct sWork;
 
-	
 	unsigned long		     	ulYOffset;
 
-	
-	
 	IMG_SYS_PHYADDR              	sSysAddr;
 	IMG_CPU_VIRTADDR             	sCPUVAddr;
 	PVRSRV_SYNC_DATA            	*psSyncData;
@@ -85,25 +82,19 @@ typedef struct OMAPLFB_BUFFER_TAG
 
 typedef struct OMAPLFB_SWAPCHAIN_TAG
 {
-	
+
 	unsigned int			uiSwapChainID;
 
-	
 	unsigned long       		ulBufferCount;
 
-	
 	OMAPLFB_BUFFER     		*psBuffer;
 
-	
 	struct workqueue_struct   	*psWorkQueue;
 
-	
 	OMAPLFB_BOOL			bNotVSynced;
 
-	
 	int				iBlankEvents;
 
-	
 	unsigned int            	uiFBDevID;
 } OMAPLFB_SWAPCHAIN;
 
@@ -118,12 +109,9 @@ typedef struct OMAPLFB_FBINFO_TAG
 	unsigned long       ulPhysicalWidthmm;
 	unsigned long       ulPhysicalHeightmm;
 
-	
-	
 	IMG_SYS_PHYADDR     sSysAddr;
 	IMG_CPU_VIRTADDR    sCPUVAddr;
 
-	
 	PVRSRV_PIXEL_FORMAT ePixelFormat;
 
 	OMAPLFB_BOOL        bIs2D;
@@ -136,64 +124,45 @@ typedef struct OMAPLFB_FBINFO_TAG
 
 typedef struct OMAPLFB_DEVINFO_TAG
 {
-	
+
 	unsigned int            uiFBDevID;
 
-	
 	unsigned int            uiPVRDevID;
 
-	
 	struct mutex		sCreateSwapChainMutex;
 
-	
 	OMAPLFB_BUFFER          sSystemBuffer;
 
-	
 	PVRSRV_DC_DISP2SRV_KMJTABLE	sPVRJTable;
-	
-	
+
 	PVRSRV_DC_SRV2DISP_KMJTABLE	sDCJTable;
 
-	
 	OMAPLFB_FBINFO          sFBInfo;
 
-	
 	OMAPLFB_SWAPCHAIN      *psSwapChain;
 
-	
 	unsigned int		uiSwapChainID;
 
-	
 	OMAPLFB_ATOMIC_BOOL     sFlushCommands;
 
-	
 	struct fb_info         *psLINFBInfo;
 
-	
 	struct notifier_block   sLINNotifBlock;
 
-	
-	
-
-	
 	IMG_DEV_VIRTADDR	sDisplayDevVAddr;
 
 	DISPLAY_INFO            sDisplayInfo;
 
-	
 	DISPLAY_FORMAT          sDisplayFormat;
-	
-	
+
 	DISPLAY_DIMS            sDisplayDim;
 
-	
 	OMAPLFB_ATOMIC_BOOL	sBlanked;
 
-	
 	OMAPLFB_ATOMIC_INT	sBlankEvents;
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-	
+
 	OMAPLFB_ATOMIC_BOOL	sEarlySuspendFlag;
 
 	struct early_suspend    sEarlySuspend;
@@ -286,5 +255,4 @@ void OMAPLFBPrintInfo(OMAPLFB_DEVINFO *psDevInfo);
 #define	OMAPLFBPrintInfo(psDevInfo)
 #endif
 
-#endif 
-
+#endif

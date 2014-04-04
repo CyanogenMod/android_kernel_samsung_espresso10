@@ -57,7 +57,6 @@ static char * nsp32_model[] = {
 	"Melco CardBus/PCI card with external ROM",
 };
 
-
 /*
  * SCSI Generic Definitions
  */
@@ -78,7 +77,6 @@ typedef u16 u16_le;
 #endif
 #define ASSERT 1
 #define NEGATE 0
-
 
 /*******************/
 /* normal register */
@@ -299,7 +297,6 @@ typedef u16 u16_le;
 #define ACKSUMCHECKRD		0x58	/* BASE+58, W, R */
 #define REQSUMCHECKRD		0x5c	/* BASE+5c, W, R */
 
-
 /********************/
 /* indexed register */
 /********************/
@@ -380,7 +377,6 @@ typedef u16 u16_le;
 # define SGT_AUTO_PARA_MEMED_CMD BIT(6)
 # define MEMRD_CMD1              BIT(7)
 
-
 #define SREQ_EDGH		0x0e	/* BASE+08, IDX+0e, B, W */
 # define SREQ_EDGH_SELECT BIT(0)
 
@@ -417,7 +413,6 @@ typedef u16 u16_le;
 #define SD6_NOISE_CANCEL	0x26	/* BASE+08, IDX+26, B, R/W */
 #define SD7_NOISE_CANCEL	0x27	/* BASE+08, IDX+27, B, R/W */
 
-
 /*
  * Useful Bus Monitor status combinations.
  */
@@ -438,7 +433,6 @@ typedef u16 u16_le;
 #define BUSPHASE_DATA_OUT    ( BUSMON_DATA_OUT    & BUSMON_PHASE_MASK )
 #define BUSPHASE_STATUS      ( BUSMON_STATUS      & BUSMON_PHASE_MASK )
 #define BUSPHASE_SELECT      ( BUSMON_SEL | BUSMON_IO )
-
 
 /************************************************************************
  * structure for DMA/Scatter Gather list
@@ -483,7 +477,6 @@ typedef struct _nsp32_autoparam {
 #define NSP32_TRANSFER_MMIO		BIT(1)	/* Not supported yet */
 #define NSP32_TRANSFER_PIO		BIT(2)	/* Not supported yet */
 
-
 /*
  * structure for connected LUN dynamic data
  *
@@ -503,14 +496,12 @@ typedef struct _nsp32_lunt {
 	dma_addr_t       sglun_paddr;   /* sglun physical address  */
 } nsp32_lunt;
 
-
 /*
  * SCSI TARGET/LUN definition
  */
 #define NSP32_HOST_SCSIID    7  /* SCSI initiator is every time defined as 7 */
 #define MAX_TARGET	     8
 #define MAX_LUN		     8	/* XXX: In SPI3, max number of LUN is 64. */
-
 
 typedef struct _nsp32_sync_table {
 	unsigned char	period_num;	/* period number                  */
@@ -519,7 +510,6 @@ typedef struct _nsp32_sync_table {
 	unsigned char	end_period;	/* search range - end period      */
 	unsigned char   sample_rate;    /* hazard killer parameter        */
 } nsp32_sync_table;
-
 
 /*
  * structure for target device static data

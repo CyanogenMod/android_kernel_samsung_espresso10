@@ -1109,7 +1109,6 @@ static inline void print_testname(const char *testname)
 	DO_TESTCASE_6IRW(desc, name, 312);			\
 	DO_TESTCASE_6IRW(desc, name, 321);
 
-
 void locking_selftest(void)
 {
 	/*

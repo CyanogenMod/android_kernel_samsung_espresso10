@@ -37,4 +37,3 @@ objs-y$(CONFIG_MACH_OVERO) += lcd_overo.o
 objs-y$(CONFIG_MACH_HERALD) += lcd_htcherald.o
 
 omapfb-objs := $(objs-yy)
-

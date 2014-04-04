@@ -84,10 +84,8 @@
 #include <linux/mmc/sdio_func.h>
 #include "i2400m-sdio.h"
 
-
 #define D_SUBMODULE fw
 #include "sdio-debug-levels.h"
-
 
 /*
  * Send a boot-mode command to the SDIO function
@@ -148,7 +146,6 @@ error_too_big:
 		i2400m, _cmd, cmd_size, (int) result);
 	return result;
 }
-
 
 /*
  * Read an ack from the device's boot-mode

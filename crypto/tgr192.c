@@ -12,7 +12,7 @@
  * This version is derived from the GnuPG implementation and the
  * Tiger-Perl interface written by Rafael Sevilla
  *
- * Adapted for Linux Kernel Crypto  by Aaron Grothe 
+ * Adapted for Linux Kernel Crypto  by Aaron Grothe
  * ajgrothe@yahoo.com, February 22, 2005
  *
  * This program is free software; you can redistribute it and/or modify
@@ -397,7 +397,6 @@ static const u64 sbox4[256] = {
 	0xc3a0396f7363a51fULL
 };
 
-
 static void tgr192_round(u64 * ra, u64 * rb, u64 * rc, u64 x, int mul)
 {
 	u64 a = *ra;
@@ -415,7 +414,6 @@ static void tgr192_round(u64 * ra, u64 * rb, u64 * rc, u64 x, int mul)
 	*rb = b;
 	*rc = c;
 }
-
 
 static void tgr192_pass(u64 * ra, u64 * rb, u64 * rc, u64 * x, int mul)
 {
@@ -437,7 +435,6 @@ static void tgr192_pass(u64 * ra, u64 * rb, u64 * rc, u64 * x, int mul)
 	*rc = c;
 }
 
-
 static void tgr192_key_schedule(u64 * x)
 {
 	x[0] -= x[7] ^ 0xa5a5a5a5a5a5a5a5ULL;
@@ -457,7 +454,6 @@ static void tgr192_key_schedule(u64 * x)
 	x[6] += x[5];
 	x[7] -= x[6] ^ 0x0123456789abcdefULL;
 }
-
 
 /****************
  * Transform the message DATA which consists of 512 bytes (8 words)
@@ -484,7 +480,6 @@ static void tgr192_transform(struct tgr192_ctx *tctx, const u8 * data)
 	tgr192_key_schedule(x);
 	tgr192_pass(&b, &c, &a, x, 9);
 
-
 	/* feedforward */
 	a ^= aa;
 	b -= bb;
@@ -507,7 +502,6 @@ static int tgr192_init(struct shash_desc *desc)
 
 	return 0;
 }
-
 
 /* Update the message digest with the contents
  * of INBUF with length INLEN. */
@@ -548,8 +542,6 @@ static int tgr192_update(struct shash_desc *desc, const u8 *inbuf,
 
 	return 0;
 }
-
-
 
 /* The routine terminates the computation */
 static int tgr192_final(struct shash_desc *desc, u8 * out)

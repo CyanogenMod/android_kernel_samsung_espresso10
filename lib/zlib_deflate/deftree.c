@@ -1,7 +1,7 @@
 /* +++ trees.c */
 /* trees.c -- output deflated data using Huffman coding
  * Copyright (C) 1995-1996 Jean-loup Gailly
- * For conditions of distribution and use, see copyright notice in zlib.h 
+ * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
 /*
@@ -341,7 +341,6 @@ static void init_block(
 
 #define SMALLEST 1
 /* Index within the heap array of least frequent node in the Huffman tree */
-
 
 /* ===========================================================================
  * Remove the smallest element from the heap and recreate the heap with
@@ -814,7 +813,6 @@ void zlib_tr_stored_type_only(
     s->compressed_len = (s->compressed_len + 3) & ~7L;
 }
 
-
 /* ===========================================================================
  * Send one empty static block to give enough lookahead for inflate.
  * This takes 10 bits, of which 7 may remain in the bit buffer.
@@ -1097,7 +1095,7 @@ static void copy_block(
     s->last_eob_len = 8; /* enough lookahead for inflate */
 
     if (header) {
-        put_short(s, (ush)len);   
+        put_short(s, (ush)len);
         put_short(s, (ush)~len);
 #ifdef DEBUG_ZLIB
         s->bits_sent += 2*16;
@@ -1110,4 +1108,3 @@ static void copy_block(
     memcpy(&s->pending_buf[s->pending], buf, len);
     s->pending += len;
 }
-

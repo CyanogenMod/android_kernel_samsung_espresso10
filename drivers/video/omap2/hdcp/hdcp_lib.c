@@ -502,7 +502,6 @@ void hdcp_lib_set_av_mute(enum av_mute av_mute_state)
 
 	DBG("hdcp_lib_set_av_mute() av_mute=%d", av_mute_state);
 
-
 	spin_lock_irqsave(&hdcp.spinlock, flags);
 
 	{

@@ -1519,7 +1519,6 @@ static int nilfs_btree_delete(struct nilfs_bmap *btree, __u64 key)
 	if (ret < 0)
 		goto out;
 
-
 	dat = NILFS_BMAP_USE_VBN(btree) ? nilfs_bmap_get_dat(btree) : NULL;
 
 	ret = nilfs_btree_prepare_delete(btree, path, &level, &stats, dat);

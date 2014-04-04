@@ -350,6 +350,9 @@ static int snd_soc_put_volsw_2r_st(struct snd_kcontrol *kcontrol,
 	val = ucontrol->value.integer.value[0];
 	val2 = ucontrol->value.integer.value[1];
 
+	if (val >= ARRAY_SIZE(st_table) || val2 >= ARRAY_SIZE(st_table))
+		return -EINVAL;
+
 	err = snd_soc_update_bits(codec, reg, 0x3f, st_table[val].m);
 	if (err < 0)
 		return err;
@@ -770,7 +773,6 @@ static const struct snd_soc_dapm_widget pm860x_dapm_widgets[] = {
 	SND_SOC_DAPM_AIF_OUT("PCM SDO", "PCM Capture", 0,
 			     PM860X_PCM_IFACE_3, 1, 1),
 
-
 	SND_SOC_DAPM_AIF_IN("I2S DIN", "I2S Playback", 0,
 			    PM860X_DAC_EN_2, 0, 0),
 	SND_SOC_DAPM_AIF_IN("I2S DIN1", "I2S Playback", 0,
@@ -837,7 +839,6 @@ static const struct snd_soc_dapm_widget pm860x_dapm_widgets[] = {
 	SND_SOC_DAPM_MUX("Lineout2 Mux", SND_SOC_NOPM, 0, 0, &lo2_mux),
 	SND_SOC_DAPM_MUX("Speaker Earpiece Demux", SND_SOC_NOPM, 0, 0,
 			 &spk_demux),
-
 
 	SND_SOC_DAPM_PGA("Headset1 PGA", PM860X_DAC_EN_1, 0, 0, NULL, 0),
 	SND_SOC_DAPM_PGA("Headset2 PGA", PM860X_DAC_EN_1, 1, 0, NULL, 0),
@@ -1487,4 +1488,3 @@ MODULE_DESCRIPTION("ASoC 88PM860x driver");
 MODULE_AUTHOR("Haojian Zhuang <haojian.zhuang@marvell.com>");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:88pm860x-codec");
-

@@ -211,7 +211,6 @@ static void stu300_irq_disable(struct stu300_dev *dev)
 	stu300_wr8(val, dev->virtbase + I2C_CR);
 }
 
-
 /*
  * Tells whether a certain event or events occurred in
  * response to a command. The events represent states in
@@ -490,7 +489,6 @@ static const struct stu300_clkset stu300_clktable[] = {
 	{ 100000000, 0xFFU },
 };
 
-
 static int stu300_set_clk(struct stu300_dev *dev, unsigned long clkrate)
 {
 
@@ -556,7 +554,6 @@ static int stu300_set_clk(struct stu300_dev *dev, unsigned long clkrate)
 	return 0;
 }
 
-
 static int stu300_init_hw(struct stu300_dev *dev)
 {
 	u32 dummy;
@@ -596,8 +593,6 @@ static int stu300_init_hw(struct stu300_dev *dev)
 
 	return 0;
 }
-
-
 
 /* Send slave address. */
 static int stu300_send_address(struct stu300_dev *dev,
@@ -744,7 +739,6 @@ static int stu300_xfer_msg(struct i2c_adapter *adap,
 			NUM_ADDR_RESEND_ATTEMPTS);
 		goto exit_disable;
 	}
-
 
 	if (msg->flags & I2C_M_RD) {
 		/* READ: we read the actual bytes one at a time */

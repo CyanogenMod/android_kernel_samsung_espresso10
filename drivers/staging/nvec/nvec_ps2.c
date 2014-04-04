@@ -76,7 +76,6 @@ static int nvec_ps2_notifier(struct notifier_block *nb,
 	return NOTIFY_DONE;
 }
 
-
 int __init nvec_ps2(struct nvec_chip *nvec)
 {
 	struct serio *ser_dev = kzalloc(sizeof(struct serio), GFP_KERNEL);

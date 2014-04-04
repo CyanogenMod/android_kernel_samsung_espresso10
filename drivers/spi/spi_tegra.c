@@ -167,7 +167,6 @@ struct spi_tegra_data {
 	dma_addr_t		rx_bb_phys;
 };
 
-
 static inline unsigned long spi_tegra_readl(struct spi_tegra_data *tspi,
 					    unsigned long reg)
 {
@@ -392,7 +391,6 @@ static int spi_tegra_setup(struct spi_device *spi)
 		spi->mode & SPI_CPOL ? "" : "~",
 		spi->mode & SPI_CPHA ? "" : "~",
 		spi->max_speed_hz);
-
 
 	switch (spi->chip_select) {
 	case 0:

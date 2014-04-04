@@ -225,7 +225,6 @@ static void __init dmar_register_rmrr_unit(struct dmar_rmrr_unit *rmrr)
 	list_add(&rmrr->list, &dmar_rmrr_units);
 }
 
-
 static int __init
 dmar_parse_one_rmrr(struct acpi_dmar_header *header)
 {
@@ -588,7 +587,6 @@ int __init dmar_dev_scope_init(void)
 	return ret;
 }
 
-
 int __init dmar_table_init(void)
 {
 	static int dmar_table_initialized;
@@ -722,7 +720,6 @@ int __init detect_intel_iommu(void)
 
 	return ret ? 1 : -ENODEV;
 }
-
 
 int alloc_iommu(struct dmar_drhd_unit *drhd)
 {
@@ -1137,7 +1134,6 @@ int dmar_enable_qi(struct intel_iommu *iommu)
 		return -ENOMEM;
 
 	qi = iommu->qi;
-
 
 	desc_page = alloc_pages_node(iommu->node, GFP_ATOMIC | __GFP_ZERO, 0);
 	if (!desc_page) {

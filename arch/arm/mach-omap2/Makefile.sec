@@ -47,7 +47,6 @@ obj-$(CONFIG_MACH_SAMSUNG_T1)		+= board-t1.o \
 					   board-t1-fmradio.o \
 					   board-t1-camera.o
 
-
 obj-$(CONFIG_MACH_SAMSUNG_T1)		+= board-t1-muxset-r02.o \
 					   board-t1-muxset-r03.o \
 					   board-t1-muxset-r04.o \

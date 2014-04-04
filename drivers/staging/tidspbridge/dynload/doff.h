@@ -24,7 +24,6 @@
 #ifndef _DOFF_H
 #define _DOFF_H
 
-
 #define BYTE_RESHUFFLE_VALUE 0x00010203
 
 /* DOFF file header containing fields categorizing the remainder of the file */
@@ -349,6 +348,5 @@ static inline int ds_alignment(u16 ds_flags)
 {
 	return 1 << ((ds_flags >> DS_ALIGNMENT_SHIFT) & DS_SECTION_TYPE_MASK);
 }
-
 
 #endif /* _DOFF_H */

@@ -6,7 +6,6 @@
 #include "ctree.h"
 #include "extent_map.h"
 
-
 static struct kmem_cache *extent_map_cache;
 
 int __init extent_map_init(void)

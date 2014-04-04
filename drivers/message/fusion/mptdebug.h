@@ -74,7 +74,6 @@
 #define MPT_CHECK_LOGGING(IOC, CMD, BITS)
 #endif
 
-
 /*
  * debug macros
  */
@@ -138,7 +137,6 @@
 
 #define d36memprintk(IOC, CMD)		\
 	MPT_CHECK_LOGGING(IOC, CMD, MPT_DEBUG_36GB_MEM)
-
 
 /*
  * Verbose logging

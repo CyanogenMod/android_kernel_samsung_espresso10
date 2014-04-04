@@ -1,4 +1,3 @@
-
 #ifndef PERF_LINUX_LINKAGE_H_
 #define PERF_LINUX_LINKAGE_H_
 

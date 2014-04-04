@@ -489,7 +489,6 @@ enum {
 #define QLCNIC_NIU_GB_MAC_CONFIG_1(I)		\
 		(QLCNIC_CRB_NIU + 0x30004 + (I)*0x10000)
 
-
 #define TEST_AGT_CTRL	(0x00)
 
 #define TA_CTL_START	BIT_0

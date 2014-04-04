@@ -213,7 +213,6 @@ static const u8 qib_6120_physportstate[0x20] = {
 	[0x17] = IB_PHYSPORTSTATE_CFG_TRAIN
 };
 
-
 struct qib_chip_specific {
 	u64 __iomem *cregbase;
 	u64 *cntrs;
@@ -441,7 +440,6 @@ static inline u32 read_6120_creg32(const struct qib_devdata *dd, u16 regno)
 #define QLOGIC_IB_HWE_PCIE0PLLFAILED       0x0800000000000000ULL
 #define QLOGIC_IB_HWE_SERDESPLLFAILED      0x1000000000000000ULL
 
-
 /* kr_extstatus bits */
 #define QLOGIC_IB_EXTS_FREQSEL 0x2
 #define QLOGIC_IB_EXTS_SERDESSEL 0x4
@@ -459,7 +457,6 @@ static inline u32 read_6120_creg32(const struct qib_devdata *dd, u16 regno)
 #define GPIO_OVRUN_BIT 4
 #define GPIO_LLI_BIT 5
 #define GPIO_ERRINTR_MASK 0x38
-
 
 #define QLOGIC_IB_RT_BUFSIZE_MASK 0xe0000000ULL
 #define QLOGIC_IB_RT_BUFSIZE_SHIFTVAL(tid) \
@@ -1677,7 +1674,6 @@ static irqreturn_t qib_6120intr(int irq, void *data)
 			}
 		}
 
-
 		if (ctxtrbits) {
 			ctxtrbits =
 				(ctxtrbits >> QLOGIC_IB_I_RCVAVAIL_SHIFT) |
@@ -1956,7 +1952,6 @@ static void qib_6120_put_tid_2(struct qib_devdata *dd, u64 __iomem *tidptr,
 	mmiowb();
 }
 
-
 /**
  * qib_6120_clear_tids - clear all TID entries for a context, expected and eager
  * @dd: the qlogic_ib device
@@ -2051,7 +2046,6 @@ static int qib_6120_get_base_info(struct qib_ctxtdata *rcd,
 		QIB_RUNTIME_FORCE_PIOAVAIL | QIB_RUNTIME_PIO_REGSWAPPED;
 	return 0;
 }
-
 
 static struct qib_message_header *
 qib_6120_get_msgheader(struct qib_devdata *dd, __le32 *rhf_addr)

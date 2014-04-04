@@ -42,7 +42,6 @@
 #include "lpfc_vport.h"
 #include "lpfc_debugfs.h"
 
-
 /* Called to verify a rcv'ed ADISC was intended for us. */
 static int
 lpfc_check_adisc(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
@@ -188,8 +187,6 @@ lpfc_check_elscmpl_iocb(struct lpfc_hba *phba, struct lpfc_iocbq *cmdiocb,
 	}
 	return ptr;
 }
-
-
 
 /*
  * Free resources / clean up outstanding I/Os
@@ -1015,7 +1012,6 @@ lpfc_cmpl_plogi_plogi_issue(struct lpfc_vport *vport,
 				 ndlp->nlp_flag, ndlp->nlp_rpi);
 	}
 
-
 out:
 	if (ndlp->nlp_DID == NameServer_DID) {
 		lpfc_vport_set_state(vport, FC_VPORT_FAILED);
@@ -1641,7 +1637,6 @@ lpfc_device_rm_prli_issue(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
 	}
 }
 
-
 /*! lpfc_device_recov_prli_issue
  *
  * \pre
@@ -2074,7 +2069,6 @@ lpfc_device_recov_npr_node(struct lpfc_vport *vport, struct lpfc_nodelist *ndlp,
 	spin_unlock_irq(shost->host_lock);
 	return ndlp->nlp_state;
 }
-
 
 /* This next section defines the NPort Discovery State Machine */
 

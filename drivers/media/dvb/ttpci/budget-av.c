@@ -30,7 +30,7 @@
  * Or, point your browser to http://www.gnu.org/copyleft/gpl.html
  *
  *
- * the project's page is at http://www.linuxtv.org/ 
+ * the project's page is at http://www.linuxtv.org/
  */
 
 #include "budget.h"
@@ -76,7 +76,6 @@ struct budget_av {
 };
 
 static int ciintf_slot_shutdown(struct dvb_ca_en50221 *ca, int slot);
-
 
 /* GPIO Connections:
  * 0 - Vcc/Reset (Reset is controlled by capacitor). Resets the frontend *AS WELL*!
@@ -393,7 +392,6 @@ static void ciintf_deinit(struct budget_av *budget_av)
 	saa7146_write(saa, MC1, MASK_27);
 }
 
-
 static const u8 saa7113_tab[] = {
 	0x01, 0x08,
 	0x02, 0xc0,
@@ -468,7 +466,6 @@ static int saa7113_setinput(struct budget_av *budget_av, int input)
 	budget_av->cur_input = input;
 	return 0;
 }
-
 
 static int philips_su1278_ty_ci_set_symbol_rate(struct dvb_frontend *fe, u32 srate, u32 ratio)
 {
@@ -589,7 +586,6 @@ static struct stv0299_config typhoon_config = {
 	.min_delay_ms = 100,
 	.set_symbol_rate = philips_su1278_ty_ci_set_symbol_rate,
 };
-
 
 static struct stv0299_config cinergy_1200s_config = {
 	.demod_address = 0x68,
@@ -1361,7 +1357,6 @@ static void frontend_init(struct budget_av *budget_av)
 		budget_av->budget.dvb_frontend = NULL;
 	}
 }
-
 
 static void budget_av_irq(struct saa7146_dev *dev, u32 * isr)
 {

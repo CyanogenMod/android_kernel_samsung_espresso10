@@ -68,7 +68,6 @@ typedef struct { unsigned long pmd; } pmd_t;
 
 #define pte_val(x)	((x).pte)
 
-
 #define pte_get_bits(p, bits) ((p).pte & (bits))
 #define pte_set_bits(p, bits) ((p).pte |= (bits))
 #define pte_clear_bits(p, bits) ((p).pte &= ~(bits))

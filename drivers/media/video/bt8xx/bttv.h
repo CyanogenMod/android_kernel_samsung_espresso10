@@ -184,7 +184,6 @@
 #define BTTV_BOARD_GEOVISION_GV800S_SL	   0x9e
 #define BTTV_BOARD_PV183                   0x9f
 
-
 /* more card-specific defines */
 #define PT2254_L_CHANNEL 0x10
 #define PT2254_R_CHANNEL 0x08
@@ -317,9 +316,6 @@ extern int bttv_read_gpio(unsigned int card, unsigned long *data);
 extern int bttv_write_gpio(unsigned int card,
 			   unsigned long mask, unsigned long data);
 
-
-
-
 /* ---------------------------------------------------------- */
 /* sysfs/driver-moded based gpio access interface             */
 
@@ -351,7 +347,6 @@ void bttv_gpio_bits(struct bttv_core *core, u32 mask, u32 bits);
 #define gpio_read()            bttv_gpio_read(&btv->c)
 #define gpio_write(value)      bttv_gpio_write(&btv->c, value)
 #define gpio_bits(mask,bits)   bttv_gpio_bits(&btv->c, mask, bits)
-
 
 /* ---------------------------------------------------------- */
 /* i2c                                                        */

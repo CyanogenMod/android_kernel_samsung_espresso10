@@ -23,7 +23,6 @@
 #include "lock.h"
 #include "dir.h"
 
-
 static void put_free_de(struct dlm_ls *ls, struct dlm_direntry *de)
 {
 	spin_lock(&ls->ls_recover_list_lock);
@@ -438,4 +437,3 @@ void dlm_copy_master_names(struct dlm_ls *ls, char *inbuf, int inlen,
  out:
 	up_read(&ls->ls_root_sem);
 }
-

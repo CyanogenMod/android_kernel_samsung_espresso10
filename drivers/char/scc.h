@@ -9,7 +9,6 @@
  *
  */
 
-
 #ifndef _SCC_H
 #define _SCC_H
 
@@ -34,7 +33,7 @@
 /* baud_bases for the common clocks in the Atari. These are the real
  * frequencies divided by 16.
  */
-   
+
 #define SCC_BAUD_BASE_TIMC	19200	/* 0.3072 MHz from TT-MFP, Timer C */
 #define SCC_BAUD_BASE_BCLK	153600	/* 2.4576 MHz */
 #define SCC_BAUD_BASE_PCLK4	229500	/* 3.6720 MHz */
@@ -135,13 +134,11 @@ struct scc_port {
 /* RR14 not present */
 /* RR15 is WR15 */
 
-
 /***********************************************************************/
 /*                                                                     */
 /*                             Register Values                         */
 /*                                                                     */
 /***********************************************************************/
-
 
 /* WR0: COMMAND_REG "CR" */
 
@@ -155,7 +152,6 @@ struct scc_port {
 #define	CR_TX_PENDING_RESET	0x28
 #define	CR_ERROR_RESET		0x30
 #define	CR_HIGHEST_IUS_RESET	0x38
-
 
 /* WR1: INT_AND_DMA_REG "IDR" */
 
@@ -173,7 +169,6 @@ struct scc_port {
 #define	IDR_WAITREQ_IS_REQ	0x40
 #define	IDR_WAITREQ_ENAB	0x80
 
-
 /* WR3: RX_CTRL_REG "RCR" */
 
 #define	RCR_RX_ENAB		0x01
@@ -188,7 +183,6 @@ struct scc_port {
 #define	RCR_CHSIZE_6		0x40
 #define	RCR_CHSIZE_7		0x80
 #define	RCR_CHSIZE_8		0xc0
-
 
 /* WR4: AUX1_CTRL_REG "A1CR" */
 
@@ -215,7 +209,6 @@ struct scc_port {
 #define	A1CR_CLKMODE_x32	0x80
 #define	A1CR_CLKMODE_x64	0xc0
 
-
 /* WR5: TX_CTRL_REG "TCR" */
 
 #define	TCR_TX_CRC_ENAB		0x01
@@ -233,7 +226,6 @@ struct scc_port {
 
 #define	TCR_DTR			0x80
 
-
 /* WR7': SLDC_OPTION_REG "SOR" */
 
 #define	SOR_AUTO_TX_ENAB	0x01
@@ -243,7 +235,6 @@ struct scc_port {
 #define	SOR_ALT_DTRREQ_TIMING	0x10
 #define	SOR_READ_CRC_CHARS	0x20
 #define	SOR_EXTENDED_REG_ACCESS	0x40
-
 
 /* WR9: MASTER_INT_CTRL "MIC" */
 
@@ -258,7 +249,6 @@ struct scc_port {
 #define	MIC_CH_A_RESET		0x40
 #define	MIC_CH_B_RESET		0x80
 #define	MIC_HARD_RESET		0xc0
-
 
 /* WR10: AUX2_CTRL_REG "A2CR" */
 
@@ -275,7 +265,6 @@ struct scc_port {
 #define	A2CR_CODING_FM0		0x60
 
 #define	A2CR_PRESET_CRC_1	0x80
-
 
 /* WR11: CLK_CTRL_REG "CCR" */
 
@@ -301,7 +290,6 @@ struct scc_port {
 
 #define	CCR_RTxC_XTAL		0x80
 
-
 /* WR14: DPLL_CTRL_REG "DCR" */
 
 #define	DCR_BRG_ENAB		0x01
@@ -318,7 +306,6 @@ struct scc_port {
 #define	DCR_DPLL_FM		0xc0
 #define	DCR_DPLL_NRZI		0xe0
 
-
 /* WR15: INT_CTRL_REG "ICR" */
 
 #define	ICR_OPTIONREG_SELECT	0x01
@@ -329,7 +316,6 @@ struct scc_port {
 #define	ICR_ENAB_CTS_INT	0x20
 #define	ICR_ENAB_UNDERRUN_INT	0x40
 #define	ICR_ENAB_BREAK_INT	0x80
-
 
 /* RR0: STATUS_REG "SR" */
 
@@ -342,7 +328,6 @@ struct scc_port {
 #define	SR_TX_UNDERRUN		0x40
 #define	SR_BREAK		0x80
 
-
 /* RR1: SPCOND_STATUS_REG "SCSR" */
 
 #define	SCSR_ALL_SENT		0x01
@@ -351,7 +336,6 @@ struct scc_port {
 #define	SCSR_RX_OVERRUN		0x20
 #define	SCSR_CRC_FRAME_ERR	0x40
 #define	SCSR_END_OF_FRAME	0x80
-
 
 /* RR3: INT_PENDING_REG "IPR" */
 
@@ -362,13 +346,11 @@ struct scc_port {
 #define	IPR_A_TX		0x10
 #define	IPR_A_RX		0x20
 
-
 /* RR7: FS_FIFO_HIGH_REG "FFHR" */
 
 #define	FFHR_CNT_MASK		0x3f
 #define	FFHR_IS_FROM_FIFO	0x40
 #define	FFHR_FIFO_OVERRUN	0x80
-
 
 /* RR10: DPLL_STATUS_REG "DSR" */
 
@@ -382,7 +364,6 @@ struct scc_port {
 /*                             Register Access                         */
 /*                                                                     */
 /***********************************************************************/
-
 
 /* The SCC needs 3.5 PCLK cycles recovery time between to register
  * accesses. PCLK runs with 8 MHz on an Atari, so this delay is 3.5 *
@@ -411,18 +392,18 @@ static unsigned char scc_shadow[2][16];
  * directly with less overhead. Another special case are WR7 and WR7'.
  * _SCCwrite automatically checks what of this registers is selected
  * and changes b0 of WR15 if needed.
- * 
+ *
  * _SCCread() for standard read registers is straightforward, except
  * for RR2 (split into two "virtual" registers: one for the value
  * written to WR2 (from the shadow) and one for the vector including
  * status from RR2, Ch. B) and RR3. The latter must be read from
  * Channel A, because it reads as all zeros on Ch. B. RR0 and RR8 can
  * be accessed directly as before.
- * 
+ *
  * The two inline function contain complicated switch statements. But
  * I rely on regno and final_delay being constants, so gcc can reduce
  * the whole stuff to just some assembler statements.
- * 
+ *
  * _SCCwrite and _SCCread aren't intended to be used directly under
  * normal circumstances. The macros SCCread[_ND] and SCCwrite[_ND] are
  * for that purpose. They assume that a local variable 'port' is
@@ -430,14 +411,13 @@ static unsigned char scc_shadow[2][16];
  * variants with "_NB" appended should be used if no other SCC
  * accesses follow immediately (within 0.5 usecs). They just skip the
  * final delay nops.
- * 
+ *
  * Please note that accesses to SCC registers should only take place
  * when interrupts are turned off (at least if SCC interrupts are
  * enabled). Otherwise, an interrupt could interfere with the
  * two-stage accessing process.
  *
  */
-
 
 static __inline__ void _SCCwrite(
 	struct scc_port *port,
@@ -463,7 +443,7 @@ static __inline__ void _SCCwrite(
 			scc_reg_delay();
 		}
 		goto normal_case;
-		
+
 	  case SDLC_OPTION_REG:
 		/* For WR7', first set b0 of WR15 to 1, if needed */
 		if (!(shadow[INT_CTRL_REG] & ICR_OPTIONREG_SELECT)) {
@@ -507,7 +487,7 @@ static __inline__ void _SCCwrite(
 		*port->ctrlp = val;
 		break;
 
-	  case 1 ... 6:	
+	  case 1 ... 6:
 	  case 10 ... 13:
 	  case 15:
 	  normal_case:
@@ -516,17 +496,16 @@ static __inline__ void _SCCwrite(
 		scc_reg_delay();
 		*port->ctrlp = val;
 		break;
-		
+
 	  default:
 		printk( "Bad SCC write access to WR%d\n", regno );
 		break;
-		
+
 	}
 
 	if (final_delay)
 		scc_reg_delay();
 }
-
 
 static __inline__ unsigned char _SCCread(
 	struct scc_port *port,
@@ -564,7 +543,7 @@ static __inline__ unsigned char _SCCread(
 		/* RR2 (vector including status) from Ch. B */
 		port = port->port_b;
 		goto normal_case;
-		
+
 		/* --- reading write registers: access the shadow --- */
 	  case 1 ... 7:
 	  case 10 ... 15:
@@ -582,7 +561,7 @@ static __inline__ unsigned char _SCCread(
 		printk( "Bad SCC read access to %cR%d\n", (regno & 16) ? 'R' : 'W',
 				regno & ~16 );
 		break;
-		
+
 	  case SPCOND_STATUS_REG:
 	  case FS_FIFO_LOW_REG:
 	  case FS_FIFO_HIGH_REG:
@@ -592,7 +571,7 @@ static __inline__ unsigned char _SCCread(
 		scc_reg_delay();
 		rv = *port->ctrlp;
 		break;
-		
+
 	}
 
 	if (final_delay)

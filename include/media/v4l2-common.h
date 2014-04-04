@@ -120,7 +120,6 @@ struct v4l2_device;
 struct v4l2_subdev;
 struct v4l2_subdev_ops;
 
-
 /* Load an i2c module and return an initialized v4l2_subdev struct.
    The client_type argument is the name of the chip that's on the adapter. */
 struct v4l2_subdev *v4l2_i2c_new_subdev(struct v4l2_device *v4l2_dev,

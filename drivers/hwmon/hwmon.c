@@ -141,4 +141,3 @@ EXPORT_SYMBOL_GPL(hwmon_device_unregister);
 MODULE_AUTHOR("Mark M. Hoffman <mhoffman@lightlink.com>");
 MODULE_DESCRIPTION("hardware monitoring sysfs/class support");
 MODULE_LICENSE("GPL");
-

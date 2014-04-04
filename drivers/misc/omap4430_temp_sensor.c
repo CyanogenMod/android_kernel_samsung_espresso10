@@ -76,7 +76,6 @@ static int omap4430_adc_to_temp[] = {
 	111, 113, 115, 117, 118, 120, 122, 123
 };
 
-
 static unsigned long omap_temp_sensor_readl(struct omap_temp_sensor
 					    *temp_sensor, u32 reg)
 {
@@ -253,7 +252,6 @@ static ssize_t omap_section_store_##node##num(struct device *dev,	\
 static DEVICE_ATTR(node##num, 0666, omap_section_show_##node##num,	\
 		omap_section_store_##node##num);	\
 
-
 #define omap_temp_section_sysfs(num)	\
 static ssize_t omap_section_show_temp##num(struct device *dev,	\
 				struct device_attribute *devattr,	\
@@ -337,7 +335,6 @@ out:
 	spin_unlock_irqrestore(&temp_sensor->lock, flags);
 	return ret;
 }
-
 
 static int omap_temp_sensor_disable(struct omap_temp_sensor *temp_sensor)
 {

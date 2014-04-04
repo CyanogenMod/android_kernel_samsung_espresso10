@@ -82,7 +82,6 @@ hv_timesource_pci_table[] __maybe_unused = {
 };
 MODULE_DEVICE_TABLE(pci, hv_timesource_pci_table);
 
-
 static int __init init_hv_clocksource(void)
 {
 	if ((x86_hyper != &x86_hyper_ms_hyperv) ||

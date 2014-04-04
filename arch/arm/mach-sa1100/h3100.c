@@ -36,7 +36,6 @@ static void h3100_lcd_power(int enable)
 	}
 }
 
-
 static void __init h3100_map_io(void)
 {
 	h3xxx_map_io();
@@ -90,4 +89,3 @@ MACHINE_START(H3100, "Compaq iPAQ H3100")
 	.timer		= &sa1100_timer,
 	.init_machine	= h3100_mach_init,
 MACHINE_END
-

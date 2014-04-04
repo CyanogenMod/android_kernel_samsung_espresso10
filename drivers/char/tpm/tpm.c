@@ -10,13 +10,13 @@
  * Maintained by: <tpmdd-devel@lists.sourceforge.net>
  *
  * Device driver for TCG/TCPA TPM (trusted platform module).
- * Specifications at www.trustedcomputinggroup.org	 
+ * Specifications at www.trustedcomputinggroup.org
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation, version 2 of the
  * License.
- * 
+ *
  * Note, the TPM chip is not interrupt driven (only polling)
  * and can have very long timeouts (minutes!). Hence the unusual
  * calls to msleep.
@@ -853,12 +853,12 @@ ssize_t tpm_show_pubek(struct device *dev, struct device_attribute *attr,
 	if (err)
 		goto out;
 
-	/* 
+	/*
 	   ignore header 10 bytes
 	   algorithm 32 bits (1 == RSA )
 	   encscheme 16 bits
 	   sigscheme 16 bits
-	   parameters (RSA 12->bytes: keybit, #primes, expbit)  
+	   parameters (RSA 12->bytes: keybit, #primes, expbit)
 	   keylenbytes 32 bits
 	   256 byte modulus
 	   ignore checksum 20 bytes
@@ -886,7 +886,6 @@ out:
 	return rc;
 }
 EXPORT_SYMBOL_GPL(tpm_show_pubek);
-
 
 ssize_t tpm_show_caps(struct device *dev, struct device_attribute *attr,
 		      char *buf)
@@ -1019,17 +1018,20 @@ ssize_t tpm_write(struct file *file, const char __user *buf,
 		  size_t size, loff_t *off)
 {
 	struct tpm_chip *chip = file->private_data;
-	size_t in_size = size, out_size;
+	size_t in_size = size;
+	ssize_t out_size;
 
 	/* cannot perform a write until the read has cleared
-	   either via tpm_read or a user_read_timer timeout */
-	while (atomic_read(&chip->data_pending) != 0)
-		msleep(TPM_TIMEOUT);
-
-	mutex_lock(&chip->buffer_mutex);
+	   either via tpm_read or a user_read_timer timeout.
+	   This also prevents splitted buffered writes from blocking here.
+	*/
+	if (atomic_read(&chip->data_pending) != 0)
+		return -EBUSY;
 
 	if (in_size > TPM_BUFSIZE)
-		in_size = TPM_BUFSIZE;
+		return -E2BIG;
+
+	mutex_lock(&chip->buffer_mutex);
 
 	if (copy_from_user
 	    (chip->data_buffer, (void __user *) buf, in_size)) {
@@ -1039,6 +1041,10 @@ ssize_t tpm_write(struct file *file, const char __user *buf,
 
 	/* atomic tpm command send and result receive */
 	out_size = tpm_transmit(chip, chip->data_buffer, TPM_BUFSIZE);
+	if (out_size < 0) {
+		mutex_unlock(&chip->buffer_mutex);
+		return out_size;
+	}
 
 	atomic_set(&chip->data_pending, out_size);
 	mutex_unlock(&chip->buffer_mutex);
@@ -1170,7 +1176,6 @@ void tpm_dev_vendor_release(struct tpm_chip *chip)
 }
 EXPORT_SYMBOL_GPL(tpm_dev_vendor_release);
 
-
 /*
  * Once all references to platform device are down to 0,
  * release all allocated structures.
@@ -1187,7 +1192,7 @@ void tpm_dev_release(struct device *dev)
 EXPORT_SYMBOL_GPL(tpm_dev_release);
 
 /*
- * Called from tpm_<specific>.c probe function only for devices 
+ * Called from tpm_<specific>.c probe function only for devices
  * the driver has determined it should claim.  Prior to calling
  * this function the specific probe function has called pci_enable_device
  * upon errant exit from this function specific probe function should call

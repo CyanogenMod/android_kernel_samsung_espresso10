@@ -45,7 +45,6 @@
 #define COMM_HUB_HEADER_LENGTH 16
 #define LOGGER_HEADER_LENGTH   10
 
-
 #define BARKER_DNLOAD_BT_POS		0
 #define BARKER_DNLOAD_BT_MSK		BIT(BARKER_DNLOAD_BT_POS)
 #define BARKER_DNLOAD_GPS_POS		1
@@ -151,7 +150,6 @@ struct iwmct_parser {
 	u32 entry_point;
 	struct iwmct_fw_hdr versions;
 };
-
 
 struct iwmct_work_struct {
 	struct list_head list;

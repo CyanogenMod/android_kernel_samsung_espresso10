@@ -64,5 +64,4 @@ typedef struct {
 	((entry0Type) | ((entry1Type) << 4) | \
 	 ((entry2Type) << 8) | ((entry3Type) << 12))
 
-
 #endif /* __TEE_CLIENT_API_IMP_H__ */

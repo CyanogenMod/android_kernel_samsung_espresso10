@@ -64,7 +64,6 @@ void add_event_entry(unsigned long value)
 	}
 }
 
-
 /* Wake up the waiting process if any. This happens
  * on "echo 0 >/dev/oprofile/enable" so the daemon
  * processes the data remaining in the event buffer.
@@ -76,7 +75,6 @@ void wake_up_buffer_waiter(void)
 	wake_up(&buffer_wait);
 	mutex_unlock(&buffer_mutex);
 }
-
 
 int alloc_event_buffer(void)
 {
@@ -98,7 +96,6 @@ int alloc_event_buffer(void)
 	return 0;
 }
 
-
 void free_event_buffer(void)
 {
 	mutex_lock(&buffer_mutex);
@@ -107,7 +104,6 @@ void free_event_buffer(void)
 	event_buffer = NULL;
 	mutex_unlock(&buffer_mutex);
 }
-
 
 static int event_buffer_open(struct inode *inode, struct file *file)
 {
@@ -144,7 +140,6 @@ out:
 	return err;
 }
 
-
 static int event_buffer_release(struct inode *inode, struct file *file)
 {
 	oprofile_stop();
@@ -155,7 +150,6 @@ static int event_buffer_release(struct inode *inode, struct file *file)
 	__clear_bit_unlock(0, &buffer_opened);
 	return 0;
 }
-
 
 static ssize_t event_buffer_read(struct file *file, char __user *buf,
 				 size_t count, loff_t *offset)

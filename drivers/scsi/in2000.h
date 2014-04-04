@@ -258,10 +258,7 @@ int __dummy_1,__dummy_2; \
 #define SRCID_ES     0x40
 #define SRCID_ER     0x80
 
-
-
 #define ILLEGAL_STATUS_BYTE   0xff
-
 
 #define DEFAULT_SX_PER     500   /* (ns) fairly safe */
 #define DEFAULT_SX_OFF     0     /* aka async */
@@ -273,7 +270,6 @@ struct sx_period {
    unsigned int   period_ns;
    uchar          reg_value;
    };
-
 
 struct IN2000_hostdata {
     struct Scsi_Host *next;
@@ -310,7 +306,6 @@ struct IN2000_hostdata {
 #endif
 #endif
     };
-
 
 /* defines for hostdata->chip */
 
@@ -366,7 +361,6 @@ struct IN2000_hostdata {
 
 #define A_NO_SCSI_RESET       1<<15
 
-
 /* defines for hostdata->sync_xfer[] */
 
 #define SS_UNSET     0
@@ -385,7 +379,6 @@ struct IN2000_hostdata {
 #define PR_TEST      1<<6
 #define PR_STOP      1<<7
 
-
 # include <linux/init.h>
 # include <linux/spinlock.h>
 # define in2000__INITFUNC(function) __initfunc(function)
@@ -402,7 +395,6 @@ static void in2000_setup(char *, int *) in2000__INIT;
 static int in2000_biosparam(struct scsi_device *, struct block_device *,
 		sector_t, int *);
 static int in2000_bus_reset(Scsi_Cmnd *);
-
 
 #define IN2000_CAN_Q    16
 #define IN2000_SG       SG_ALL

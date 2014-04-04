@@ -65,7 +65,6 @@ static struct omap2_hsmmc_info espresso_mmc_info[] = {
 	{}	/* Terminator */
 };
 
-
 static ssize_t sd_detection_cmd_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
@@ -88,7 +87,6 @@ static ssize_t sd_detection_cmd_show(struct device *dev,
 
 }
 static DEVICE_ATTR(status, 0444, sd_detection_cmd_show, NULL);
-
 
 static int espresso_hsmmc_late_init(struct device *dev)
 {

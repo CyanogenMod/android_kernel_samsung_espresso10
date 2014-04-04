@@ -45,8 +45,6 @@
 #include <net/addrconf.h>
 #include <net/xfrm.h>
 
-
-
 inline int ip6_rcv_finish( struct sk_buff *skb)
 {
 	if (skb_dst(skb) == NULL)
@@ -157,7 +155,6 @@ drop:
  *	Deliver the packet to the host
  */
 
-
 static int ip6_input_finish(struct sk_buff *skb)
 {
 	const struct inet6_protocol *ipprot;
@@ -233,7 +230,6 @@ discard:
 	return 0;
 }
 
-
 int ip6_input(struct sk_buff *skb)
 {
 	return NF_HOOK(NFPROTO_IPV6, NF_INET_LOCAL_IN, skb, skb->dev, NULL,
@@ -257,7 +253,8 @@ int ip6_mc_input(struct sk_buff *skb)
 	 *      IPv6 multicast router mode is now supported ;)
 	 */
 	if (dev_net(skb->dev)->ipv6.devconf_all->mc_forwarding &&
-	    !(ipv6_addr_type(&hdr->daddr) & IPV6_ADDR_LINKLOCAL) &&
+	    !(ipv6_addr_type(&hdr->daddr) &
+	      (IPV6_ADDR_LOOPBACK|IPV6_ADDR_LINKLOCAL)) &&
 	    likely(!(IP6CB(skb)->flags & IP6SKB_FORWARDED))) {
 		/*
 		 * Okay, we try to forward - split and duplicate

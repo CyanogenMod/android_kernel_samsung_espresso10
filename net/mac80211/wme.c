@@ -52,7 +52,6 @@ static int wme_downgrade_ac(struct sk_buff *skb)
 	}
 }
 
-
 /* Indicate which queue to use. */
 u16 ieee80211_select_queue(struct ieee80211_sub_if_data *sdata,
 			   struct sk_buff *skb)

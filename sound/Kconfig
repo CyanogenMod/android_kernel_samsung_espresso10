@@ -75,12 +75,6 @@ source "sound/core/Kconfig"
 
 source "sound/drivers/Kconfig"
 
-source "sound/isa/Kconfig"
-
-source "sound/pci/Kconfig"
-
-source "sound/ppc/Kconfig"
-
 source "sound/aoa/Kconfig"
 
 source "sound/arm/Kconfig"
@@ -89,8 +83,6 @@ source "sound/atmel/Kconfig"
 
 source "sound/spi/Kconfig"
 
-source "sound/mips/Kconfig"
-
 source "sound/sh/Kconfig"
 
 # the following will depend on the order of config.
@@ -98,14 +90,6 @@ source "sound/sh/Kconfig"
 source "sound/usb/Kconfig"
 
 source "sound/firewire/Kconfig"
-
-# the following will depend on the order of config.
-# here assuming PCMCIA is defined before ALSA
-source "sound/pcmcia/Kconfig"
-
-source "sound/sparc/Kconfig"
-
-source "sound/parisc/Kconfig"
 
 source "sound/soc/Kconfig"
 

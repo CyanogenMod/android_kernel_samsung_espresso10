@@ -131,7 +131,7 @@ static int __devinit create_gpio_led(const struct gpio_led *template,
 	ret = gpio_direction_output(led_dat->gpio, led_dat->active_low ^ state);
 	if (ret < 0)
 		goto err;
-		
+
 	INIT_WORK(&led_dat->work, gpio_led_work);
 
 	ret = led_classdev_register(parent, &led_dat->cdev);
@@ -230,7 +230,6 @@ static struct gpio_leds_priv * __devinit gpio_leds_create_of(struct platform_dev
 }
 #define of_gpio_leds_match NULL
 #endif
-
 
 static int __devinit gpio_led_probe(struct platform_device *pdev)
 {

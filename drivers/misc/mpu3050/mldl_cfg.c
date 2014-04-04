@@ -363,7 +363,6 @@ static int MLDLSetLevelShifterBit(struct mldl_cfg *pdata,
 #endif
 }
 
-
 #ifdef M_HW
 /**
  *  @internal
@@ -624,7 +623,6 @@ static int MLDLPowerMgmtMPU(struct mldl_cfg *pdata,
 	return ML_SUCCESS;
 }
 #endif				/* M_HW */
-
 
 void mpu_print_cfg(struct mldl_cfg *mldl_cfg)
 {
@@ -1532,7 +1530,6 @@ int mpu3050_suspend(struct mldl_cfg *mldl_cfg,
 	return result;
 }
 
-
 /**
  *  @brief  read raw sensor data from the accelerometer device
  *          in use.
@@ -1697,7 +1694,6 @@ int mpu3050_get_config_pressure(struct mldl_cfg *mldl_cfg,
 	else
 		return ML_ERROR_FEATURE_NOT_IMPLEMENTED;
 }
-
 
 /**
  *@}

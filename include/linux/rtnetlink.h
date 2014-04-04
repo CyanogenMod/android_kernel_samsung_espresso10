@@ -128,7 +128,7 @@ enum {
 #define RTM_NR_FAMILIES	(RTM_NR_MSGTYPES >> 2)
 #define RTM_FAM(cmd)	(((cmd) - RTM_BASE) >> 2)
 
-/* 
+/*
    Generic structure for encapsulation of optional route information.
    It is reminiscent of sockaddr, but with sa_family replaced
    with attribute type.
@@ -153,9 +153,6 @@ struct rtattr {
 #define RTA_DATA(rta)   ((void*)(((char*)(rta)) + RTA_LENGTH(0)))
 #define RTA_PAYLOAD(rta) ((int)((rta)->rta_len) - RTA_LENGTH(0))
 
-
-
-
 /******************************************************************************
  *		Definitions used in routing table administration.
  ****/
@@ -168,7 +165,7 @@ struct rtmsg {
 
 	unsigned char		rtm_table;	/* Routing table id */
 	unsigned char		rtm_protocol;	/* Routing protocol; see below	*/
-	unsigned char		rtm_scope;	/* See below */	
+	unsigned char		rtm_scope;	/* See below */
 	unsigned char		rtm_type;	/* See below	*/
 
 	unsigned		rtm_flags;
@@ -195,7 +192,6 @@ enum {
 };
 
 #define RTN_MAX (__RTN_MAX - 1)
-
 
 /* rtm_protocol */
 
@@ -261,7 +257,6 @@ enum rt_class_t {
 	RT_TABLE_LOCAL=255,
 	RT_TABLE_MAX=0xFFFFFFFF
 };
-
 
 /* Routing message attributes */
 
@@ -430,7 +425,7 @@ struct ifinfomsg {
 };
 
 /********************************************************************
- *		prefix information 
+ *		prefix information
  ****/
 
 struct prefixmsg {
@@ -444,7 +439,7 @@ struct prefixmsg {
 	unsigned char	prefix_pad3;
 };
 
-enum 
+enum
 {
 	PREFIX_UNSPEC,
 	PREFIX_ADDRESS,
@@ -458,7 +453,6 @@ struct prefix_cacheinfo {
 	__u32	preferred_time;
 	__u32	valid_time;
 };
-
 
 /*****************************************************************
  *		Traffic control messages.
@@ -597,8 +591,11 @@ struct tcamsg {
 };
 #define TA_RTA(r)  ((struct rtattr*)(((char*)(r)) + NLMSG_ALIGN(sizeof(struct tcamsg))))
 #define TA_PAYLOAD(n) NLMSG_PAYLOAD(n,sizeof(struct tcamsg))
-#define TCA_ACT_TAB 1 /* attr type must be >=1 */	
+#define TCA_ACT_TAB 1 /* attr type must be >=1 */
 #define TCAA_MAX 1
+
+/* New extended info filters for IFLA_EXT_MASK */
+#define RTEXT_FILTER_VF		(1 << 0)
 
 /* End of information exported to user level */
 
@@ -628,7 +625,7 @@ extern void __rta_fill(struct sk_buff *skb, int attrtype, int attrlen, const voi
 #define RTA_PUT(skb, attrtype, attrlen, data) \
 ({	if (unlikely(skb_tailroom(skb) < (int)RTA_SPACE(attrlen))) \
 		 goto rtattr_failure; \
-   	__rta_fill(skb, attrtype, attrlen, data); }) 
+   	__rta_fill(skb, attrtype, attrlen, data); })
 
 #define RTA_APPEND(skb, attrlen, data) \
 ({	if (unlikely(skb_tailroom(skb) < (int)(attrlen))) \
@@ -720,7 +717,7 @@ extern void __rta_fill(struct sk_buff *skb, int attrtype, int attrlen, const voi
 
 #define RTA_GET_SECS(rta) ((unsigned long) RTA_GET_U64(rta) * HZ)
 #define RTA_GET_MSECS(rta) (msecs_to_jiffies((unsigned long) RTA_GET_U64(rta)))
-		
+
 static inline struct rtattr *
 __rta_reserve(struct sk_buff *skb, int attrtype, int attrlen)
 {
@@ -798,6 +795,5 @@ rtattr_failure:
 }
 
 #endif /* __KERNEL__ */
-
 
 #endif	/* __LINUX_RTNETLINK_H */

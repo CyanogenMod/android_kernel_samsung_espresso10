@@ -24,5 +24,4 @@ struct s3c2410_spigpio_info {
 	void (*chip_select)(struct s3c2410_spigpio_info *spi, int cs);
 };
 
-
 #endif /* __ASM_ARCH_SPIGPIO_H */

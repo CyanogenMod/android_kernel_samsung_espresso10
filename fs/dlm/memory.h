@@ -24,4 +24,3 @@ char *dlm_allocate_lvb(struct dlm_ls *ls);
 void dlm_free_lvb(char *l);
 
 #endif		/* __MEMORY_DOT_H__ */
-

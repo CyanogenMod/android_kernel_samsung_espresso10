@@ -36,7 +36,6 @@
 #include "igbvf.h"
 #include <linux/if_vlan.h>
 
-
 struct igbvf_stats {
 	char stat_string[ETH_GSTRING_LEN];
 	int sizeof_stat;
@@ -438,7 +437,6 @@ static int igbvf_nway_reset(struct net_device *netdev)
 		igbvf_reinit_locked(adapter);
 	return 0;
 }
-
 
 static void igbvf_get_ethtool_stats(struct net_device *netdev,
                                     struct ethtool_stats *stats,

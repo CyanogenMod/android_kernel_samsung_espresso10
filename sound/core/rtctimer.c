@@ -42,7 +42,6 @@ static int rtctimer_close(struct snd_timer *t);
 static int rtctimer_start(struct snd_timer *t);
 static int rtctimer_stop(struct snd_timer *t);
 
-
 /*
  * The hardware dependent description for this timer.
  */
@@ -61,7 +60,6 @@ static int rtctimer_freq = RTC_FREQ;		/* frequency */
 static struct snd_timer *rtctimer;
 static struct tasklet_struct rtc_tasklet;
 static rtc_task_t rtc_task;
-
 
 static int
 rtctimer_open(struct snd_timer *t)
@@ -121,7 +119,6 @@ static void rtctimer_interrupt(void *private_data)
 	tasklet_schedule(private_data);
 }
 
-
 /*
  *  ENTRY functions
  */
@@ -170,7 +167,6 @@ static void __exit rtctimer_exit(void)
 		rtctimer = NULL;
 	}
 }
-
 
 /*
  * exported stuff

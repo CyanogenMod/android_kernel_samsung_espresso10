@@ -14,7 +14,6 @@
 
 #include "rtc-core.h"
 
-
 /* device attributes */
 
 /*
@@ -208,7 +207,6 @@ rtc_sysfs_set_wakealarm(struct device *dev, struct device_attribute *attr,
 static DEVICE_ATTR(wakealarm, S_IRUGO | S_IWUSR,
 		rtc_sysfs_show_wakealarm, rtc_sysfs_set_wakealarm);
 
-
 /* The reason to trigger an alarm with no process watching it (via sysfs)
  * is its side effect:  waking from a system state like suspend-to-RAM or
  * suspend-to-disk.  So: no attribute unless that side effect is possible.
@@ -220,7 +218,6 @@ static inline int rtc_does_wakealarm(struct rtc_device *rtc)
 		return 0;
 	return rtc->ops->set_alarm != NULL;
 }
-
 
 void rtc_sysfs_add_device(struct rtc_device *rtc)
 {

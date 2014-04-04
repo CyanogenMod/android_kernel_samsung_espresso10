@@ -63,7 +63,6 @@ struct mwifiex_drv_mode {
 	struct mwifiex_bss_attr *bss_attr;
 };
 
-
 #define MWIFIEX_DEFAULT_WATCHDOG_TIMEOUT	(5 * HZ)
 
 #define MWIFIEX_TIMER_10S			10000

@@ -449,7 +449,6 @@ int ixp2000_uengine_load(int uengine, struct ixp2000_uengine_code *c)
 }
 EXPORT_SYMBOL(ixp2000_uengine_load);
 
-
 static int __init ixp2000_uengine_init(void)
 {
 	int uengine;

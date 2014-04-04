@@ -53,7 +53,6 @@ void print_cdma_descriptors(void);
 extern u8 g_SBDCmdIndex;
 extern struct mrst_nand_info info;
 
-
 /*///////////   prototypes: APIs for LLD_CDMA */
 int is_cdma_interrupt(void);
 u16 CDMA_Event_Status(void);

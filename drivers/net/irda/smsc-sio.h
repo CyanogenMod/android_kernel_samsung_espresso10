@@ -11,7 +11,7 @@
 /*****************************
  * Generic SIO Flat (!?)     *
  *****************************/
- 
+
 /* Register 0x0d */
 #define SMSCSIOFLAT_DEVICEID_REG				0x0d
 
@@ -37,7 +37,6 @@
 #define 	SMSCSIOFLAT_UART2IRQSELECT_MASK		0x0f
 #define 	SMSCSIOFLAT_UART1IRQSELECT_MASK		0xf0
 #define 	SMSCSIOFLAT_UARTIRQSELECT_VAL_NONE	0x00
-
 
 /*********************
  * LPC47N227         *
@@ -95,6 +94,5 @@
 #define 	LPC47N227_FIRDMASELECT_VAL_DMA2	0x02
 #define 	LPC47N227_FIRDMASELECT_VAL_DMA3	0x03
 #define 	LPC47N227_FIRDMASELECT_VAL_NONE	0x0f
-
 
 #endif

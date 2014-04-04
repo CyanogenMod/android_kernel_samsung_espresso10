@@ -1,7 +1,7 @@
 /*
  * misc.c
- * 
- * This is a collection of several routines from gzip-1.0.3 
+ *
+ * This is a collection of several routines from gzip-1.0.3
  * adapted for Linux.
  *
  * malloc by Hannu Savolainen 1993 and Matthias Urlichs 1994
@@ -10,7 +10,7 @@
  *
  * Nicolas Pitre <nico@visuaide.com>  1999/04/14 :
  *  For this code to run directly from Flash, all constant variables must
- *  be marked with 'const' and all other variables initialized at run-time 
+ *  be marked with 'const' and all other variables initialized at run-time
  *  only.  This way all non constant variables will end up in the bss segment,
  *  which should point to addresses in RAM and cleared to 0 on start.
  *  This allows for a much quicker boot time.
@@ -25,7 +25,6 @@ unsigned int __machine_arch_type;
 #include <linux/stddef.h>	/* for NULL */
 #include <linux/linkage.h>
 #include <asm/string.h>
-
 
 static void putstr(const char *ptr);
 extern void error(char *x);
@@ -49,7 +48,6 @@ static void icedcc_putc(int ch)
 
 	asm("mcr p14, 0, %0, c0, c5, 0" : : "r" (ch));
 }
-
 
 #elif defined(CONFIG_CPU_XSCALE)
 
@@ -100,7 +98,6 @@ static void putstr(const char *ptr)
 
 	flush();
 }
-
 
 void *memcpy(void *__dest, __const void *__src, size_t __n)
 {
@@ -168,7 +165,6 @@ asmlinkage void __div0(void)
 }
 
 extern int do_decompress(u8 *input, int len, u8 *output, void (*error)(char *x));
-
 
 void
 decompress_kernel(unsigned long output_start, unsigned long free_mem_ptr_p,

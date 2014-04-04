@@ -427,4 +427,3 @@ MACHINE_START(NET2BIG, "LaCie 2Big Network")
 	.timer		= &orion5x_timer,
 	.fixup		= tag_fixup_mem32,
 MACHINE_END
-

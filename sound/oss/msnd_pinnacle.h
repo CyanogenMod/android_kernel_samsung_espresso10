@@ -28,7 +28,6 @@
 #ifndef __MSND_PINNACLE_H
 #define __MSND_PINNACLE_H
 
-
 #define DSP_NUMIO				0x08
 
 #define IREG_LOGDEVICE				0x07

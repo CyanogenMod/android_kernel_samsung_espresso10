@@ -2,7 +2,7 @@
  * linux/fs/binfmt_som.c
  *
  * These are the functions used to load SOM format executables as used
- * by HP-UX.  
+ * by HP-UX.
  *
  * Copyright 1999 Matthew Wilcox <willy@bofh.ai>
  * based on binfmt_elf which is
@@ -31,7 +31,6 @@
 
 #include <asm/uaccess.h>
 #include <asm/pgtable.h>
-
 
 #include <linux/elf.h>
 
@@ -178,7 +177,6 @@ out:
 	set_fs(old_fs);
 	return retval;
 }
-
 
 /*
  * These are the functions used to load SOM executables and shared

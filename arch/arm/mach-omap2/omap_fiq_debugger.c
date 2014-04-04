@@ -278,7 +278,6 @@ static int debug_port_init(struct platform_device *pdev)
 
 	dbg->have_state = true;
 
-
 	debug_omap_port_disable(pdev);
 	return 0;
 }

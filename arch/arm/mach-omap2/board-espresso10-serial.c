@@ -75,7 +75,6 @@ static void __init espresso10_i2c_init(void)
 	omap_register_i2c_bus_board_data(3, &espresso_i2c_3_bus_pdata);
 	omap_register_i2c_bus_board_data(4, &espresso_i2c_4_bus_pdata);
 
-
 	/*
 	 * Phoenix Audio IC needs I2C1 to
 	 * start with 400 KHz or less

@@ -51,13 +51,11 @@
 
 #endif
 
-
 extern const char *drbd_buildtag(void);
 #define REL_VERSION "8.3.11"
 #define API_VERSION 88
 #define PRO_VERSION_MIN 86
 #define PRO_VERSION_MAX 96
-
 
 enum drbd_io_error_p {
 	EP_PASS_ON, /* FIXME should the better be named "Ignore"? */
@@ -347,7 +345,6 @@ enum drbd_timeout_flag {
 
 #define DRBD_NL_CREATE_DEVICE 0x01
 #define DRBD_NL_SET_DEFAULTS  0x02
-
 
 /* For searching a vacant cn_idx value */
 #define CN_IDX_STEP			6977

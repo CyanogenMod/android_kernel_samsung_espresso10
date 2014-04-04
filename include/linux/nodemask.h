@@ -44,7 +44,7 @@
  *
  * int first_node(mask)			Number lowest set bit, or MAX_NUMNODES
  * int next_node(node, mask)		Next node past 'node', or MAX_NUMNODES
- * int first_unset_node(mask)		First node not set in mask, or 
+ * int first_unset_node(mask)		First node not set in mask, or
  *					MAX_NUMNODES.
  *
  * nodemask_t nodemask_of_node(node)	Return nodemask with bit 'node' set
@@ -497,6 +497,5 @@ struct nodemask_scratch {
 			NODEMASK_ALLOC(struct nodemask_scratch, x,	\
 					GFP_KERNEL | __GFP_NORETRY)
 #define NODEMASK_SCRATCH_FREE(x)	NODEMASK_FREE(x)
-
 
 #endif /* __LINUX_NODEMASK_H */

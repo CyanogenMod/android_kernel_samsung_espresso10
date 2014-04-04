@@ -21,7 +21,6 @@ Usage:
 	Then you have your drawn trace in draw_functrace
 """
 
-
 import sys, re
 
 class CallTree:
@@ -98,7 +97,6 @@ class CommentLineException(Exception):
 	"""
 	pass
 
-
 def parseLine(line):
 	line = line.strip()
 	if line.startswith("#"):
@@ -107,7 +105,6 @@ def parseLine(line):
 	if m is None:
 		raise BrokenLineException
 	return (m.group(1), m.group(2), m.group(3))
-
 
 def main():
 	CallTree.ROOT = CallTree("Root (Nowhere)", None, None)

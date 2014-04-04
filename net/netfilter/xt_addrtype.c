@@ -70,7 +70,6 @@ static u32 match_lookup_rt6(struct net *net, const struct net_device *dev,
 	if (rt->rt6i_flags & RTF_ANYCAST)
 		ret |= XT_ADDRTYPE_ANYCAST;
 
-
 	dst_release(&rt->dst);
 	return ret;
 }

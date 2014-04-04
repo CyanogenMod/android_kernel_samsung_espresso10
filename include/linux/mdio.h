@@ -291,7 +291,7 @@ static inline __u16 mdio_phy_id_devad(int phy_id)
 #define MDIO_SUPPORTS_C22		1
 #define MDIO_SUPPORTS_C45		2
 
-#ifdef __KERNEL__ 
+#ifdef __KERNEL__
 
 /**
  * struct mdio_if_info - Ethernet controller MDIO interface

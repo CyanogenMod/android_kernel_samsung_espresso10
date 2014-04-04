@@ -21,14 +21,12 @@
 #include <mach/hardware.h>
 #include <mach/dma.h>
 
-
 #undef DEBUG
 #ifdef DEBUG
 #define DPRINTK( s, arg... )  printk( "dma<%p>: " s, regs , ##arg )
 #else
 #define DPRINTK( x... )
 #endif
-
 
 typedef struct {
 	const char *device_id;		/* device name */
@@ -40,7 +38,6 @@ typedef struct {
 static sa1100_dma_t dma_chan[SA1100_DMA_CHANNELS];
 
 static DEFINE_SPINLOCK(dma_list_lock);
-
 
 static irqreturn_t dma_irq_handler(int irq, void *dev_id)
 {
@@ -62,7 +59,6 @@ static irqreturn_t dma_irq_handler(int irq, void *dev_id)
 	}
 	return IRQ_HANDLED;
 }
-
 
 /**
  *	sa1100_request_dma - allocate one of the SA11x0's DMA channels
@@ -147,7 +143,6 @@ int sa1100_request_dma (dma_device_t device, const char *device_id,
 	return 0;
 }
 
-
 /**
  * 	sa1100_free_dma - free a SA11x0 DMA channel
  * 	@regs: identifier for the channel to free
@@ -180,7 +175,6 @@ void sa1100_free_dma(dma_regs_t *regs)
 	free_irq(IRQ_DMA0 + i, regs);
 	dma_chan[i].device = 0;
 }
-
 
 /**
  * 	sa1100_start_dma - submit a data buffer for DMA
@@ -266,7 +260,6 @@ out:
 	return ret;
 }
 
-
 /**
  * 	sa1100_get_dma_pos - return current DMA position
  * 	@regs: identifier for the channel to use
@@ -309,7 +302,6 @@ dma_addr_t sa1100_get_dma_pos(dma_regs_t *regs)
 		return regs->DBSB;
 }
 
-
 /**
  * 	sa1100_reset_dma - reset a DMA channel
  * 	@regs: identifier for the channel to use
@@ -339,10 +331,8 @@ void sa1100_reset_dma(dma_regs_t *regs)
 	regs->DDAR = dma_chan[i].device;
 }
 
-
 EXPORT_SYMBOL(sa1100_request_dma);
 EXPORT_SYMBOL(sa1100_free_dma);
 EXPORT_SYMBOL(sa1100_start_dma);
 EXPORT_SYMBOL(sa1100_get_dma_pos);
 EXPORT_SYMBOL(sa1100_reset_dma);
-

@@ -5,13 +5,13 @@
  * SDIO core support 1bit, 4 bit SDIO mode as well as SPI mode.
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -19,12 +19,12 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: sbsdio.h 308945 2012-01-18 02:15:27Z $
+ * $Id: sbsdio.h 361940 2012-10-10 08:32:12Z $
  */
 
 #ifndef	_SBSDIO_H
@@ -120,7 +120,7 @@
 #define SBSDIO_DEVCTL_RST_CORECTL	0x00		/*   Determined by CoreControl bit */
 #define SBSDIO_DEVCTL_RST_BPRESET	0x10		/*   Force backplane reset */
 #define SBSDIO_DEVCTL_RST_NOBPRESET	0x20		/*   Force no backplane reset */
-
+#define SBSDIO_DEVCTL_EN_F2_BLK_WATERMARK 0x10  /* Enable function 2 tx for each block */
 
 /* SBSDIO_FUNC1_CHIPCLKCSR */
 #define SBSDIO_FORCE_ALP		0x01		/* Force ALP request to backplane */

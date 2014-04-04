@@ -6,7 +6,7 @@
  * Datasheets available at:
  *
  * f75375:
- * http://www.fintek.com.tw/files/productfiles/F75375_V026P.pdf 
+ * http://www.fintek.com.tw/files/productfiles/F75375_V026P.pdf
  *
  * f75373:
  * http://www.fintek.com.tw/files/productfiles/F75373_V025P.pdf

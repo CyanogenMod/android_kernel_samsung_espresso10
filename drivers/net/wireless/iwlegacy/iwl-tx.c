@@ -252,7 +252,6 @@ int iwl_legacy_queue_space(const struct iwl_queue *q)
 }
 EXPORT_SYMBOL(iwl_legacy_queue_space);
 
-
 /**
  * iwl_legacy_queue_init - Initialize queue's high/low-water and read/write indexes
  */

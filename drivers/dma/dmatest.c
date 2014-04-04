@@ -349,7 +349,6 @@ static int dmatest_func(void *data)
 						     DMA_BIDIRECTIONAL);
 		}
 
-
 		if (thread->type == DMA_MEMCPY)
 			tx = dev->device_prep_dma_memcpy(chan,
 							 dma_dsts[0] + dst_off,

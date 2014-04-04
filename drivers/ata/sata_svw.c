@@ -99,7 +99,6 @@ enum {
 
 static u8 k2_stat_check_status(struct ata_port *ap);
 
-
 static int k2_sata_check_atapi_dma(struct ata_queued_cmd *qc)
 {
 	u8 cmnd = qc->scsicmd->cmnd[0];
@@ -132,7 +131,6 @@ static int k2_sata_scr_read(struct ata_link *link,
 	return 0;
 }
 
-
 static int k2_sata_scr_write(struct ata_link *link,
 			     unsigned int sc_reg, u32 val)
 {
@@ -142,6 +140,39 @@ static int k2_sata_scr_write(struct ata_link *link,
 	return 0;
 }
 
+static int k2_sata_softreset(struct ata_link *link,
+			     unsigned int *class, unsigned long deadline)
+{
+	u8 dmactl;
+	void __iomem *mmio = link->ap->ioaddr.bmdma_addr;
+
+	dmactl = readb(mmio + ATA_DMA_CMD);
+
+	/* Clear the start bit */
+	if (dmactl & ATA_DMA_START) {
+		dmactl &= ~ATA_DMA_START;
+		writeb(dmactl, mmio + ATA_DMA_CMD);
+	}
+
+	return ata_sff_softreset(link, class, deadline);
+}
+
+static int k2_sata_hardreset(struct ata_link *link,
+			     unsigned int *class, unsigned long deadline)
+{
+	u8 dmactl;
+	void __iomem *mmio = link->ap->ioaddr.bmdma_addr;
+
+	dmactl = readb(mmio + ATA_DMA_CMD);
+
+	/* Clear the start bit */
+	if (dmactl & ATA_DMA_START) {
+		dmactl &= ~ATA_DMA_START;
+		writeb(dmactl, mmio + ATA_DMA_CMD);
+	}
+
+	return sata_sff_hardreset(link, class, deadline);
+}
 
 static void k2_sata_tf_load(struct ata_port *ap, const struct ata_taskfile *tf)
 {
@@ -177,7 +208,6 @@ static void k2_sata_tf_load(struct ata_port *ap, const struct ata_taskfile *tf)
 
 	ata_wait_idle(ap);
 }
-
 
 static void k2_sata_tf_read(struct ata_port *ap, struct ata_taskfile *tf)
 {
@@ -282,7 +312,6 @@ static void k2_bmdma_start_mmio(struct ata_queued_cmd *qc)
 		ap->ops->sff_exec_command(ap, &qc->tf);
 }
 
-
 static u8 k2_stat_check_status(struct ata_port *ap)
 {
 	return readl(ap->ioaddr.status_addr);
@@ -335,7 +364,6 @@ static int k2_sata_proc_info(struct Scsi_Host *shost, char *page, char **start,
 }
 #endif /* CONFIG_PPC_OF */
 
-
 static struct scsi_host_template k2_sata_sht = {
 	ATA_BMDMA_SHT(DRV_NAME),
 #ifdef CONFIG_PPC_OF
@@ -343,9 +371,10 @@ static struct scsi_host_template k2_sata_sht = {
 #endif
 };
 
-
 static struct ata_port_operations k2_sata_ops = {
 	.inherits		= &ata_bmdma_port_ops,
+	.softreset              = k2_sata_softreset,
+	.hardreset              = k2_sata_hardreset,
 	.sff_tf_load		= k2_sata_tf_load,
 	.sff_tf_read		= k2_sata_tf_read,
 	.sff_check_status	= k2_stat_check_status,
@@ -410,7 +439,6 @@ static void k2_sata_setup_port(struct ata_ioports *port, void __iomem *base)
 	port->bmdma_addr	= base + K2_SATA_DMA_CMD_OFFSET;
 	port->scr_addr		= base + K2_SATA_SCR_STATUS_OFFSET;
 }
-
 
 static int k2_sata_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 {

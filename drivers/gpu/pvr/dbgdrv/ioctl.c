@@ -1,42 +1,39 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
-
-
 
 #ifdef LINUX
 #include <asm/uaccess.h>
 #include "pvr_uaccess.h"
-#endif 
+#endif
 
 #include "img_types.h"
 #include "dbgdrvif.h"
 #include "dbgdriv.h"
 #include "hotkey.h"
 #include "dbgdriv_ioctl.h"
-
 
 static IMG_UINT32 DBGDIOCDrivCreateStream(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuffer)
 {
@@ -61,7 +58,6 @@ static IMG_UINT32 DBGDIOCDrivCreateStream(IMG_VOID * pvInBuffer, IMG_VOID * pvOu
 	#else
 	*ppvOut = ExtDBGDrivCreateStream(psIn->u.pszName, psIn->ui32CapMode, psIn->ui32OutMode, DEBUG_FLAGS_NO_BUF_EXPANDSION, psIn->ui32Pages);
 	#endif
-
 
 	return(IMG_TRUE);
 }
@@ -111,7 +107,7 @@ static IMG_UINT32 DBGDIOCDrivWriteString(IMG_VOID * pvInBuffer, IMG_VOID * pvOut
 	}
 	else
 	{
-		
+
 		*pui32OutLen = 0;
 		return(IMG_FALSE);
 	}
@@ -134,7 +130,7 @@ static IMG_UINT32 DBGDIOCDrivWriteStringCM(IMG_VOID * pvInBuffer, IMG_VOID * pvO
 	}
 	else
 	{
-		
+
 		*pui32OutLen = 0;
 		return(IMG_FALSE);
 	}
@@ -158,7 +154,7 @@ static IMG_UINT32 DBGDIOCDrivReadString(IMG_VOID * pvInBuffer, IMG_VOID * pvOutB
 	}
 	else
 	{
-		
+
 		*pui32OutLen = 0;
 		return(IMG_FALSE);
 	}
@@ -184,7 +180,7 @@ static IMG_UINT32 DBGDIOCDrivWrite(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuffer
 	}
 	else
 	{
-		
+
 		*pui32BytesCopied = 0;
 		return(IMG_FALSE);
 	}
@@ -210,7 +206,7 @@ static IMG_UINT32 DBGDIOCDrivWrite2(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuffe
 	}
 	else
 	{
-		
+
 		*pui32BytesCopied = 0;
 		return(IMG_FALSE);
 	}
@@ -236,7 +232,7 @@ static IMG_UINT32 DBGDIOCDrivWriteCM(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuff
 	}
 	else
 	{
-		
+
 		*pui32BytesCopied = 0;
 		return(IMG_FALSE);
 	}
@@ -262,7 +258,7 @@ static IMG_UINT32 DBGDIOCDrivRead(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuffer)
 	}
 	else
 	{
-		
+
 		*pui32BytesCopied = 0;
 		return(IMG_FALSE);
 	}
@@ -288,7 +284,7 @@ static IMG_UINT32 DBGDIOCDrivSetCaptureMode(IMG_VOID * pvInBuffer, IMG_VOID * pv
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -309,7 +305,7 @@ static IMG_UINT32 DBGDIOCDrivSetOutMode(IMG_VOID * pvInBuffer, IMG_VOID * pvOutB
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -330,7 +326,7 @@ static IMG_UINT32 DBGDIOCDrivSetDebugLevel(IMG_VOID * pvInBuffer, IMG_VOID * pvO
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -351,7 +347,7 @@ static IMG_UINT32 DBGDIOCDrivSetFrame(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuf
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -363,7 +359,7 @@ static IMG_UINT32 DBGDIOCDrivGetFrame(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuf
 
 	pui32Current = (IMG_UINT32 *) pvOutBuffer;
 	psStream = SID2PStream(*(IMG_SID *)pvInBuffer);
-	
+
 	if (psStream != (PDBG_STREAM)IMG_NULL)
 	{
 		*pui32Current = ExtDBGDrivGetFrame(psStream);
@@ -371,7 +367,7 @@ static IMG_UINT32 DBGDIOCDrivGetFrame(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuf
 	}
 	else
 	{
-		
+
 		*pui32Current = 0;
 		return(IMG_FALSE);
 	}
@@ -395,7 +391,7 @@ static IMG_UINT32 DBGDIOCDrivIsCaptureFrame(IMG_VOID * pvInBuffer, IMG_VOID * pv
 	}
 	else
 	{
-		
+
 		*pui32Current = 0;
 		return(IMG_FALSE);
 	}
@@ -417,7 +413,7 @@ static IMG_UINT32 DBGDIOCDrivOverrideMode(IMG_VOID * pvInBuffer, IMG_VOID * pvOu
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -436,7 +432,7 @@ static IMG_UINT32 DBGDIOCDrivDefaultMode(IMG_VOID * pvInBuffer, IMG_VOID * pvOut
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -457,7 +453,7 @@ static IMG_UINT32 DBGDIOCDrivSetMarker(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBu
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -477,7 +473,7 @@ static IMG_UINT32 DBGDIOCDrivGetMarker(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBu
 	}
 	else
 	{
-		
+
 		*pui32Current = 0;
 		return(IMG_FALSE);
 	}
@@ -516,7 +512,7 @@ static IMG_UINT32 DBGDIOCDrivWriteLF(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuff
 	}
 	else
 	{
-		
+
 		return(IMG_FALSE);
 	}
 }
@@ -540,7 +536,7 @@ static IMG_UINT32 DBGDIOCDrivReadLF(IMG_VOID * pvInBuffer, IMG_VOID * pvOutBuffe
 	}
 	else
 	{
-		
+
 		*pui32BytesCopied = 0;
 		return(IMG_FALSE);
 	}
@@ -584,4 +580,3 @@ IMG_UINT32 (*g_DBGDrivProc[25])(IMG_VOID *, IMG_VOID *) =
 	DBGDIOCDrivReadLF,
 	DBGDIOCDrivWaitForEvent
 };
-

@@ -12,7 +12,6 @@
 #ifndef _CRYPTO_INTERNAL_H
 #define _CRYPTO_INTERNAL_H
 
-
 //#include <linux/crypto.h>
 #include "rtl_crypto.h"
 #include <linux/mm.h>
@@ -21,7 +20,6 @@
 #include <asm/hardirq.h>
 #include <asm/softirq.h>
 #include <asm/kmap_types.h>
-
 
 extern enum km_type crypto_km_types[];
 
@@ -96,4 +94,3 @@ void crypto_exit_cipher_ops(struct crypto_tfm *tfm);
 void crypto_exit_compress_ops(struct crypto_tfm *tfm);
 
 #endif	/* _CRYPTO_INTERNAL_H */
-

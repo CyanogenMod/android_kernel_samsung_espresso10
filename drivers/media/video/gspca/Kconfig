@@ -14,7 +14,6 @@ menuconfig USB_GSPCA
 	  To compile this driver as modules, choose M here: the
 	  module will be called gspca_main.
 
-
 if USB_GSPCA && VIDEO_V4L2
 
 source "drivers/media/video/gspca/m5602/Kconfig"

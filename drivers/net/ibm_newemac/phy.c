@@ -432,10 +432,6 @@ static struct mii_phy_def et1011c_phy_def = {
 	.ops		= &et1011c_phy_ops
 };
 
-
-
-
-
 static struct mii_phy_ops m88e1111_phy_ops = {
 	.init		= m88e1111_init,
 	.setup_aneg	= genmii_setup_aneg,

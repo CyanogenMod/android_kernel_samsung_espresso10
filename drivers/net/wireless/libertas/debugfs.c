@@ -224,7 +224,6 @@ static void *lbs_tlv_find(uint16_t tlv_type, const uint8_t *tlv, uint16_t size)
 	return NULL;
 }
 
-
 static ssize_t lbs_threshold_read(uint16_t tlv_type, uint16_t event_mask,
 				  struct file *file, char __user *userbuf,
 				  size_t count, loff_t *ppos)
@@ -275,7 +274,6 @@ static ssize_t lbs_threshold_read(uint16_t tlv_type, uint16_t event_mask,
 	free_page((unsigned long)buf);
 	return ret;
 }
-
 
 static ssize_t lbs_threshold_write(uint16_t tlv_type, uint16_t event_mask,
 				   struct file *file,
@@ -351,14 +349,12 @@ static ssize_t lbs_threshold_write(uint16_t tlv_type, uint16_t event_mask,
 	return ret;
 }
 
-
 static ssize_t lbs_lowrssi_read(struct file *file, char __user *userbuf,
 				size_t count, loff_t *ppos)
 {
 	return lbs_threshold_read(TLV_TYPE_RSSI_LOW, CMD_SUBSCRIBE_RSSI_LOW,
 				  file, userbuf, count, ppos);
 }
-
 
 static ssize_t lbs_lowrssi_write(struct file *file, const char __user *userbuf,
 				 size_t count, loff_t *ppos)
@@ -367,14 +363,12 @@ static ssize_t lbs_lowrssi_write(struct file *file, const char __user *userbuf,
 				   file, userbuf, count, ppos);
 }
 
-
 static ssize_t lbs_lowsnr_read(struct file *file, char __user *userbuf,
 			       size_t count, loff_t *ppos)
 {
 	return lbs_threshold_read(TLV_TYPE_SNR_LOW, CMD_SUBSCRIBE_SNR_LOW,
 				  file, userbuf, count, ppos);
 }
-
 
 static ssize_t lbs_lowsnr_write(struct file *file, const char __user *userbuf,
 				size_t count, loff_t *ppos)
@@ -383,14 +377,12 @@ static ssize_t lbs_lowsnr_write(struct file *file, const char __user *userbuf,
 				   file, userbuf, count, ppos);
 }
 
-
 static ssize_t lbs_failcount_read(struct file *file, char __user *userbuf,
 				  size_t count, loff_t *ppos)
 {
 	return lbs_threshold_read(TLV_TYPE_FAILCOUNT, CMD_SUBSCRIBE_FAILCOUNT,
 				  file, userbuf, count, ppos);
 }
-
 
 static ssize_t lbs_failcount_write(struct file *file, const char __user *userbuf,
 				   size_t count, loff_t *ppos)
@@ -399,14 +391,12 @@ static ssize_t lbs_failcount_write(struct file *file, const char __user *userbuf
 				   file, userbuf, count, ppos);
 }
 
-
 static ssize_t lbs_highrssi_read(struct file *file, char __user *userbuf,
 				 size_t count, loff_t *ppos)
 {
 	return lbs_threshold_read(TLV_TYPE_RSSI_HIGH, CMD_SUBSCRIBE_RSSI_HIGH,
 				  file, userbuf, count, ppos);
 }
-
 
 static ssize_t lbs_highrssi_write(struct file *file, const char __user *userbuf,
 				  size_t count, loff_t *ppos)
@@ -415,14 +405,12 @@ static ssize_t lbs_highrssi_write(struct file *file, const char __user *userbuf,
 				   file, userbuf, count, ppos);
 }
 
-
 static ssize_t lbs_highsnr_read(struct file *file, char __user *userbuf,
 				size_t count, loff_t *ppos)
 {
 	return lbs_threshold_read(TLV_TYPE_SNR_HIGH, CMD_SUBSCRIBE_SNR_HIGH,
 				  file, userbuf, count, ppos);
 }
-
 
 static ssize_t lbs_highsnr_write(struct file *file, const char __user *userbuf,
 				 size_t count, loff_t *ppos)
@@ -438,14 +426,12 @@ static ssize_t lbs_bcnmiss_read(struct file *file, char __user *userbuf,
 				  file, userbuf, count, ppos);
 }
 
-
 static ssize_t lbs_bcnmiss_write(struct file *file, const char __user *userbuf,
 				 size_t count, loff_t *ppos)
 {
 	return lbs_threshold_write(TLV_TYPE_BCNMISS, CMD_SUBSCRIBE_BCNMISS,
 				   file, userbuf, count, ppos);
 }
-
 
 static ssize_t lbs_rdmac_read(struct file *file, char __user *userbuf,
 				  size_t count, loff_t *ppos)
@@ -824,15 +810,12 @@ void lbs_debugfs_remove_one(struct lbs_private *priv)
 	debugfs_remove(priv->debugfs_dir);
 }
 
-
-
 /* debug entry */
 
 #ifdef PROC_DEBUG
 
 #define item_size(n)	(FIELD_SIZEOF(struct lbs_private, n))
 #define item_addr(n)	(offsetof(struct lbs_private, n))
-
 
 struct debug_data {
 	char name[32];

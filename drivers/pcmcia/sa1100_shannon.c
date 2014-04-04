@@ -23,9 +23,9 @@ static struct pcmcia_irqs irqs[] = {
 static int shannon_pcmcia_hw_init(struct soc_pcmcia_socket *skt)
 {
 	/* All those are inputs */
-	GPDR &= ~(SHANNON_GPIO_EJECT_0 | SHANNON_GPIO_EJECT_1 | 
+	GPDR &= ~(SHANNON_GPIO_EJECT_0 | SHANNON_GPIO_EJECT_1 |
 		  SHANNON_GPIO_RDY_0 | SHANNON_GPIO_RDY_1);
-	GAFR &= ~(SHANNON_GPIO_EJECT_0 | SHANNON_GPIO_EJECT_1 | 
+	GAFR &= ~(SHANNON_GPIO_EJECT_0 | SHANNON_GPIO_EJECT_1 |
 		  SHANNON_GPIO_RDY_0 | SHANNON_GPIO_RDY_1);
 
 	skt->socket.pci_irq = skt->nr ? SHANNON_IRQ_GPIO_RDY_1 : SHANNON_IRQ_GPIO_RDY_0;
@@ -49,8 +49,8 @@ shannon_pcmcia_socket_state(struct soc_pcmcia_socket *skt,
 		state->detect = (levels & SHANNON_GPIO_EJECT_0) ? 0 : 1;
 		state->ready  = (levels & SHANNON_GPIO_RDY_0) ? 1 : 0;
 		state->wrprot = 0; /* Not available on Shannon. */
-		state->bvd1   = 1; 
-		state->bvd2   = 1; 
+		state->bvd1   = 1;
+		state->bvd2   = 1;
 		state->vs_3v  = 1; /* FIXME Can only apply 3.3V on Shannon. */
 		state->vs_Xv  = 0;
 		break;
@@ -59,8 +59,8 @@ shannon_pcmcia_socket_state(struct soc_pcmcia_socket *skt,
 		state->detect = (levels & SHANNON_GPIO_EJECT_1) ? 0 : 1;
 		state->ready  = (levels & SHANNON_GPIO_RDY_1) ? 1 : 0;
 		state->wrprot = 0; /* Not available on Shannon. */
-		state->bvd1   = 1; 
-		state->bvd2   = 1; 
+		state->bvd1   = 1;
+		state->bvd2   = 1;
 		state->vs_3v  = 1; /* FIXME Can only apply 3.3V on Shannon. */
 		state->vs_Xv  = 0;
 		break;
@@ -86,7 +86,7 @@ shannon_pcmcia_configure_socket(struct soc_pcmcia_socket *skt,
 	}
 
 	printk(KERN_WARNING "%s(): Warning, Can't perform reset\n", __func__);
-	
+
 	/* Silently ignore Vpp, output enable, speaker enable. */
 
 	return 0;

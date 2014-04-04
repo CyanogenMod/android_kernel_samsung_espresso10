@@ -189,7 +189,6 @@ static int jfs_create(struct inode *dip, struct dentry *dentry, int mode,
 	return rc;
 }
 
-
 /*
  * NAME:	jfs_mkdir(dip, dentry, mode)
  *
@@ -321,7 +320,6 @@ static int jfs_mkdir(struct inode *dip, struct dentry *dentry, int mode)
 
       out2:
 	free_UCSname(&dname);
-
 
       out1:
 
@@ -683,7 +681,6 @@ static s64 commitZeroLink(tid_t tid, struct inode *ip)
 
 	return 0;
 }
-
 
 /*
  * NAME:	jfs_free_zero_link()
@@ -1065,7 +1062,6 @@ static int jfs_symlink(struct inode *dip, struct dentry *dentry,
 	return rc;
 }
 
-
 /*
  * NAME:	jfs_rename
  *
@@ -1090,7 +1086,6 @@ static int jfs_rename(struct inode *old_dir, struct dentry *old_dentry,
 	struct tblock *tblk;
 	s64 new_size = 0;
 	int commit_flag;
-
 
 	jfs_info("jfs_rename: %s %s", old_dentry->d_name.name,
 		 new_dentry->d_name.name);
@@ -1346,7 +1341,6 @@ static int jfs_rename(struct inode *old_dir, struct dentry *old_dentry,
 	jfs_info("jfs_rename: returning %d", rc);
 	return rc;
 }
-
 
 /*
  * NAME:	jfs_mknod

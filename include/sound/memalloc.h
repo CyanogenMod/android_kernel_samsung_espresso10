@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
  *                   Takashi Iwai <tiwai@suse.de>
- * 
+ *
  *  Generic memory allocators
  *
  *
@@ -39,7 +39,6 @@ struct snd_dma_device {
 #define snd_dma_isa_data()	NULL
 #define snd_dma_continuous_data(x)	((struct device *)(unsigned long)(x))
 #endif
-
 
 /*
  * buffer types
@@ -133,4 +132,3 @@ void *snd_malloc_pages(size_t size, gfp_t gfp_flags);
 void snd_free_pages(void *ptr, size_t size);
 
 #endif /* __SOUND_MEMALLOC_H */
-

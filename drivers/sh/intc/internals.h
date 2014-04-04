@@ -69,7 +69,6 @@ struct intc_desc_int {
 	struct irq_chip chip;
 };
 
-
 enum {
 	REG_FN_ERR = 0,
 	REG_FN_TEST_BASE = 1,

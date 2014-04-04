@@ -405,7 +405,6 @@ static ssize_t proc_dev_atm_read(struct file *file, char __user *buf,
 struct proc_dir_entry *atm_proc_root;
 EXPORT_SYMBOL(atm_proc_root);
 
-
 int atm_proc_dev_register(struct atm_dev *dev)
 {
 	int error;

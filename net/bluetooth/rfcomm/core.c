@@ -62,7 +62,6 @@ static DEFINE_MUTEX(rfcomm_mutex);
 #define rfcomm_lock()	mutex_lock(&rfcomm_mutex)
 #define rfcomm_unlock()	mutex_unlock(&rfcomm_mutex)
 
-
 static LIST_HEAD(session_list);
 
 static int rfcomm_send_frame(struct rfcomm_session *s, u8 *data, int len);

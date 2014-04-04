@@ -238,7 +238,6 @@ struct bfa_lport_attr_s {
 	u16	authfail;	/*  auth failed state */
 };
 
-
 /*
  * VPORT states
  */
@@ -406,7 +405,6 @@ struct bfa_rport_remote_link_stats_s {
 	u32 itwc; /*  Invalid Transmission Word Count */
 	u32 icc; /*  Invalid CRC Count */
 };
-
 
 #define BFA_MAX_IO_INDEX 7
 #define BFA_NO_IO_INDEX 9

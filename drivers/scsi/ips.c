@@ -376,7 +376,6 @@ static struct scsi_host_template ips_driver_template = {
 	.use_clustering		= ENABLE_CLUSTERING,
 };
 
-
 /* This table describes all ServeRAID Adapters */
 static struct  pci_device_id  ips_pci_table[] = {
 	{ 0x1014, 0x002E, PCI_ANY_ID, PCI_ANY_ID, 0, 0 },
@@ -398,7 +397,6 @@ static struct pci_driver ips_pci_driver = {
 	.probe		= ips_insert_device,
 	.remove		= __devexit_p(ips_remove_device),
 };
-
 
 /*
  * Necessary forward function protoypes
@@ -488,7 +486,6 @@ static char ips_command_direction[] = {
 	IPS_DATA_UNK, IPS_DATA_UNK, IPS_DATA_UNK, IPS_DATA_UNK, IPS_DATA_UNK,
 	IPS_DATA_UNK, IPS_DATA_UNK, IPS_DATA_UNK, IPS_DATA_UNK, IPS_DATA_UNK
 };
-
 
 /****************************************************************************/
 /*                                                                          */
@@ -7081,8 +7078,6 @@ ips_init_phase1(struct pci_dev *pci_dev, int *indexPtr)
 	ha->adapt->hw_status_start = dma_address;
 	ha->dummy = (void *) (ha->adapt + 1);
 
-
-
 	ha->logical_drive_info = pci_alloc_consistent(pci_dev, sizeof (IPS_LD_INFO), &dma_address);
 	if (!ha->logical_drive_info) {
 		IPS_PRINTK(KERN_WARNING, pci_dev,
@@ -7090,7 +7085,6 @@ ips_init_phase1(struct pci_dev *pci_dev, int *indexPtr)
 		return ips_abort_init(ha, index);
 	}
 	ha->logical_drive_info_dma_addr = dma_address;
-
 
 	ha->conf = kmalloc(sizeof (IPS_CONF), GFP_KERNEL);
 
@@ -7225,7 +7219,6 @@ ips_init_phase2(int index)
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("IBM ServeRAID Adapter Driver " IPS_VER_STRING);
 MODULE_VERSION(IPS_VER_STRING);
-
 
 /*
  * Overrides for Emacs so that we almost follow Linus's tabbing style.

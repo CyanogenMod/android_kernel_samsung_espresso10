@@ -62,7 +62,6 @@ module_param(debug, bool, 0644);
 
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
 
-
 struct saa711x_state {
 	struct v4l2_subdev sd;
 	struct v4l2_ctrl_handler hdl;
@@ -274,7 +273,6 @@ static const unsigned char saa7115_init_auto_input[] = {
 	R_1C_ENHAN_COMB_CTRL1, 0xa9,		/* recommended value */
 	R_1D_ENHAN_COMB_CTRL2, 0x01,		/* recommended value */
 
-
 	R_80_GLOBAL_CNTL_1, 0x0,		/* No tasks enabled at init */
 
 		/* Power Device Control */
@@ -466,7 +464,6 @@ static const unsigned char saa7115_cfg_vbi_off[] = {
 
 	0x00, 0x00
 };
-
 
 static const unsigned char saa7115_init_misc[] = {
 	R_81_V_SYNC_FLD_ID_SRC_SEL_AND_RETIMED_V_F, 0x01,

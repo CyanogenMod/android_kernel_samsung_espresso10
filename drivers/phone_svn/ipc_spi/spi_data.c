@@ -16,17 +16,11 @@
 
 	spi_data.c
 
-
-
 	handling spi data
-
-
 
 	This is MASTER side.
 
 ***************************************************************/
-
-
 
 /**************************************************************
 
@@ -37,8 +31,6 @@
 #include "spi_data.h"
 #include "spi_os.h"
 #include "spi_dev.h"
-
-
 
 /**************************************************************
 
@@ -59,7 +51,6 @@ static int _prepare_tx_type_packet(void *buf,
 		enum SPI_DATA_TYPE_T spi_type);
 static int _spi_data_verify(void *buf,  unsigned int mux);
 
-
 /**********************************************************
 
 Prototype		void spi_get_queue_info(spi_data_queue_info *pQueueinfo)
@@ -74,7 +65,6 @@ struct spi_data_queue_info *spi_get_queue_info(void)
 	return spi_queue_info;
 }
 
-
 /**********************************************************
 
 Prototype		spi_get_data_packet_buf(char *spi_data_packet_buf)
@@ -88,7 +78,6 @@ char *spi_get_data_packet_buf(void)
 {
 	return gspi_data_packet_buf;
 }
-
 
 /**********************************************************
 
@@ -109,7 +98,6 @@ void spi_data_queue_init(void)
 
 	p_virtual_buff = ipc_spi_get_queue_buff();
 	spi_queue = p_virtual_buff+sizeof(struct spi_data_queue)*2;
-
 
 	spi_queue_info = (struct spi_data_queue_info *) spi_os_vmalloc(
 		sizeof(struct spi_data_queue_info)*SPI_DATA_QUEUE_TYPE_NB);
@@ -157,7 +145,6 @@ void spi_data_queue_init(void)
 	}
 }
 
-
 /**********************************************************
 
 Prototype		void spi_data_queue_destroy ( void )
@@ -201,8 +188,6 @@ void spi_data_queue_destroy(void)
 		spi_queue_info = NULL;
 	}
 }
-
-
 
 /**********************************************************
 
@@ -283,7 +268,6 @@ int spi_data_inqueue(struct spi_data_queue_info *queue_info,
 
 	return 1;
 }
-
 
 /**********************************************************
 
@@ -477,7 +461,6 @@ unsigned int spi_data_dequeue(struct spi_data_queue_info *queue_info,
 	return buf_length;
 }
 
-
 /**********************************************************
 
 Prototype		int spi_data_queue_is_empty
@@ -502,7 +485,6 @@ int spi_data_queue_is_empty(enum SPI_DATA_QUEUE_TYPE_T type)
 		return 0; /* not empty */
 }
 
-
 /**********************************************************
 
 Prototype		int spi_data_div_buf_is_empty
@@ -526,7 +508,6 @@ int spi_data_div_buf_is_empty(enum SPI_DATA_QUEUE_TYPE_T type)
 	else
 		return 1; /* Empty */
 }
-
 
 /**********************************************************
 
@@ -557,7 +538,6 @@ int spi_data_check_tx_queue(void)
 	else
 		return 0; /* empty */
 }
-
 
 /**********************************************************
 
@@ -633,7 +613,6 @@ int spi_data_prepare_tx_packet(void *buf)
 			((struct spi_data_packet_header *)
 			buf)->current_data_size;
 }
-
 
 /**********************************************************
 
@@ -767,7 +746,6 @@ static int _prepare_tx_type_packet(void *buf,
 		SPI_DATA_PACKET_HEADER_SIZE;
 }
 
-
 /**********************************************************
 
 Prototype		int spi_data_parsing_rx_packet
@@ -803,7 +781,6 @@ int spi_data_parsing_rx_packet(void *buf, unsigned int length)
 	struct spi_data_queue_info *queue_info;
 	struct spi_data_div_buf *tx_div_buf;
 
-
 	/* check spi packet header */
 	if (*(unsigned int *)buf == 0x00000000
 		|| *(unsigned int *)buf == 0xFFFFFFFF) {
@@ -818,7 +795,6 @@ int spi_data_parsing_rx_packet(void *buf, unsigned int length)
 	spi_packet_header = (struct spi_data_packet_header *) buf;
 	spi_packet_length = SPI_DATA_PACKET_HEADER_SIZE +
 		spi_packet_header->current_data_size;
-
 
 	do {
 		/* read spi data mux and set current queue */
@@ -922,7 +898,6 @@ int spi_data_parsing_rx_packet(void *buf, unsigned int length)
 
 	return 1;
 }
-
 
 /**********************************************************
 

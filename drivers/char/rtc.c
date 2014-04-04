@@ -1226,7 +1226,6 @@ static int rtc_proc_show(struct seq_file *seq, void *v)
 	freq = rtc_freq;
 	spin_unlock_irq(&rtc_lock);
 
-
 	rtc_get_rtc_time(&tm);
 
 	/*

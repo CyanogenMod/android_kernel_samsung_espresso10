@@ -206,7 +206,6 @@ static int sdricoh_reset(struct sdricoh_host *host)
 	sdricoh_writel(host, R224_MODE, 0x2000000);
 	sdricoh_writel(host, R228_POWER, 0xe0);
 
-
 	/* status register ? */
 	sdricoh_writel(host, R21C_STATUS, 0x18);
 

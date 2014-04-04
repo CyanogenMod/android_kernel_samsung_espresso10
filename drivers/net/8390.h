@@ -33,7 +33,6 @@ extern void ei_poll(struct net_device *dev);
 extern void eip_poll(struct net_device *dev);
 #endif
 
-
 /* Without I/O delay - non ISA or later chips */
 extern void NS8390_init(struct net_device *dev, int startp);
 extern int ei_open(struct net_device *dev);
@@ -127,7 +126,6 @@ struct ei_device {
 
 #define E8390_TXCONFIG		0x00	/* EN0_TXCR: Normal transmit mode */
 #define E8390_TXOFF		0x02	/* EN0_TXCR: Transmitter off */
-
 
 /*  Register accessed at EN_CMD, the 8390 base addr.  */
 #define E8390_STOP	0x01	/* Stop and reset the chip */

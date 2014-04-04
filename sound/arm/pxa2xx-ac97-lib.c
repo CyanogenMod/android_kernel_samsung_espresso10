@@ -146,6 +146,8 @@ static inline void pxa_ac97_warm_pxa27x(void)
 
 static inline void pxa_ac97_cold_pxa27x(void)
 {
+	unsigned int timeout;
+
 	GCR &=  GCR_COLD_RST;  /* clear everything but nCRST */
 	GCR &= ~GCR_COLD_RST;  /* then assert nCRST */
 
@@ -155,8 +157,10 @@ static inline void pxa_ac97_cold_pxa27x(void)
 	clk_enable(ac97conf_clk);
 	udelay(5);
 	clk_disable(ac97conf_clk);
-	GCR = GCR_COLD_RST;
-	udelay(50);
+	GCR = GCR_COLD_RST | GCR_WARM_RST;
+	timeout = 100;     /* wait for the codec-ready bit to be set */
+	while (!((GSR | gsr_bits) & (GSR_PCR | GSR_SCR)) && timeout--)
+		mdelay(1);
 }
 #endif
 
@@ -261,7 +265,6 @@ bool pxa2xx_ac97_try_cold_reset(struct snd_ac97 *ac97)
 	return true;
 }
 EXPORT_SYMBOL_GPL(pxa2xx_ac97_try_cold_reset);
-
 
 void pxa2xx_ac97_finish_reset(struct snd_ac97 *ac97)
 {
@@ -397,4 +400,3 @@ EXPORT_SYMBOL_GPL(pxa2xx_ac97_hw_remove);
 MODULE_AUTHOR("Nicolas Pitre");
 MODULE_DESCRIPTION("Intel/Marvell PXA sound library");
 MODULE_LICENSE("GPL");
-

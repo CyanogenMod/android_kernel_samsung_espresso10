@@ -49,7 +49,6 @@
 #define	ION_OEM_ID_MULTITECH	5		// 05h Multitech Rapidports
 #define	ION_OEM_ID_AGILENT	6		// 06h AGILENT board
 
-
 // ION-device Device IDs
 // Product IDs - assigned to match middle digit of serial number (No longer true)
 
@@ -105,13 +104,11 @@
 #define ION_DEVICE_ID_EDGEPORT_21C		0x01E	// Edgeport/21c is a TI based Edgeport/2 with lucent chip
 							// Small I2C
 
-
 /*
  *  DANGER DANGER The 0x20 bit was used to indicate a 8251/netchip GEN 2 device.
  *  Since the MAC, Linux, and Optimal drivers still used the old code
  *  I suggest that you skip the 0x20 bit when creating new PIDs
  */
-
 
 // Generation 3 devices -- 3410 based edgport/1 (256 byte I2C)
 #define ION_DEVICE_ID_TI3410_EDGEPORT_1		0x040	// Edgeport/1 RS232
@@ -152,7 +149,6 @@
 #define ION_DEVICE_ID_TI_EDGEPORT_8		0x0244	// Edgeport/8 (single-CPU)
 #define ION_DEVICE_ID_TI_EDGEPORT_416B		0x0247	// Edgeport/416
 
-
 /************************************************************************
  *
  *                        Generation 4 devices
@@ -179,7 +175,6 @@
 #define ION_DEVICE_ID_PLUS_PWR_HP4C		0x30D	// 5052 Plus Power HubPort/4C+
 #define ION_DEVICE_ID_PLUS_PWR_PCI		0x30E	// 3410 Plus Power PCI Host Controller 4 port
 
-
 //
 // Definitions for AXIOHM USB product IDs
 //
@@ -189,7 +184,6 @@
 #define AXIOHM_DEVICE_ID_EPIC_A758		0xA758
 #define AXIOHM_DEVICE_ID_EPIC_A794		0xA794
 #define AXIOHM_DEVICE_ID_EPIC_A225		0xA225
-
 
 //
 // Definitions for NCR USB product IDs
@@ -203,7 +197,6 @@
 #define NCR_DEVICE_ID_EPIC_0311			0x0311
 #define NCR_DEVICE_ID_EPIC_0312			0x0312
 
-
 //
 // Definitions for SYMBOL USB product IDs
 //
@@ -211,11 +204,9 @@
 #define SYMBOL_DEVICE_ID_MASK			0xffff
 #define SYMBOL_DEVICE_ID_KEYFOB			0x0700
 
-
 //
 // Definitions for other product IDs
 #define ION_DEVICE_ID_MT4X56USB			0x1403	// OEM device
-
 
 #define	GENERATION_ID_FROM_USB_PRODUCT_ID(ProductId)				\
 			((__u16) ((ProductId >> 8) & (ION_GENERATION_MASK)))
@@ -246,7 +237,6 @@
 							// Note that many units were shipped with MPS=16, we
 							// force an upgrade to this value).
 #define EDGE_FW_INT_INTERVAL			2	// 2ms polling on IntPipe
-
 
 //
 // Definitions of I/O Networks vendor-specific requests
@@ -280,7 +270,6 @@
 
 #define USB_REQUEST_ION_SEND_IOSP	10	// Send an IOSP command to the edgeport over the control pipe
 #define USB_REQUEST_ION_RECV_IOSP	11	// Receive an IOSP command from the edgeport over the control pipe
-
 
 #define USB_REQUEST_ION_DIS_INT_TIMER	0x80	// Sent to Axiohm to enable/ disable
 						// interrupt token timer
@@ -365,8 +354,6 @@ struct edge_compatibility_descriptor {
 #define	EDGE_DOWNLOAD_FILE_I930		0xFF	// Download the file compiled into driver (930 version)
 #define	EDGE_DOWNLOAD_FILE_80251	0xFE	// Download the file compiled into driver (80251 version)
 
-
-
 /*
  *	Special addresses for READ/WRITE_RAM/ROM
  */
@@ -388,7 +375,6 @@ struct edge_compatibility_descriptor {
 // in a read/write RAM/ROM command.
 #define	MAX_SIZE_REQ_ION_READ_MEM	((__u16)64)
 #define	MAX_SIZE_REQ_ION_WRITE_MEM	((__u16)64)
-
 
 //
 // Notes for the following two ION vendor-specific param descriptors:
@@ -470,10 +456,8 @@ struct edge_manuf_descriptor {
 
 };
 
-
 #define MANUF_DESC_VER_1	1	// Original definition of MANUF_DESC
 #define MANUF_DESC_VER_2	2	// Ver 2, starts at xC00h len 3C0h
-
 
 // Uart Types
 // Note: Since this field was added only recently, all Edgeport/4 units
@@ -496,12 +480,10 @@ struct edge_manuf_descriptor {
 #define	MANUF_CPU_REV_AD5		2	// 930 AD5, with above bug (supposedly) fixed
 #define	MANUF_CPU_80251			0x20	// Intel 80251
 
-
 #define MANUF_BOARD_REV_A		1	// Original version, == Manuf Rev A
 #define MANUF_BOARD_REV_B		2	// Manuf Rev B, wakeup interrupt works
 #define MANUF_BOARD_REV_C		3	// Manuf Rev C, 2/4 ports, rs232/rs422
 #define MANUF_BOARD_REV_GENERATION_2	0x20	// Second generaiton edgeport
-
 
 // Values of bottom 5 bits of CpuRev & BoardRev for
 // Implementation 1 (ie, 251+Netchip-based)
@@ -554,15 +536,12 @@ struct edge_boot_descriptor {
 						// FF end of structure, total len = 80
 };
 
-
 #define BOOT_DESC_VER_1		1	// Original definition of BOOT_PARAMS
 #define BOOT_DESC_VER_2		2	// 2nd definition, descriptors not included in boot
-
 
 	// Capabilities flags
 
 #define	BOOT_CAP_RESET_CMD	0x0001	// If set, boot correctly supports ION_RESET_DEVICE
-
 
 /************************************************************************
                  T I   U M P   D E F I N I T I O N S
@@ -571,7 +550,6 @@ struct edge_boot_descriptor {
 // Chip definitions in I2C
 #define UMP5152			0x52
 #define UMP3410			0x10
-
 
 //************************************************************************
 //	TI I2C Format Definitions
@@ -591,7 +569,6 @@ struct edge_boot_descriptor {
 // Special section defined by ION
 #define I2C_DESC_TYPE_ION		0	// Not defined by TI
 
-
 struct ti_i2c_desc {
 	__u8	Type;			// Type of descriptor
 	__u16	Size;			// Size of data only not including header
@@ -607,13 +584,11 @@ struct ti_i2c_firmware_rec {
 	__u8	Data[0];		// Download starts here
 } __attribute__((packed));
 
-
 struct watchport_firmware_version {
 // Added 2 bytes for version number
 	__u8	Version_Major;		//  Download Version (for Watchport)
 	__u8	Version_Minor;
 } __attribute__((packed));
-
 
 // Structure of header of download image in fw_down.h
 struct ti_i2c_image_header {
@@ -637,7 +612,6 @@ struct ti_basic_descriptor {
 	__u8	HubCurrent;	// HUB Current = 100ma
 } __attribute__((packed));
 
-
 // CPU / Board Rev Definitions
 #define TI_CPU_REV_5052			2	// 5052 based edgeports
 #define TI_CPU_REV_3410			3	// 3410 based edgeports
@@ -645,7 +619,6 @@ struct ti_basic_descriptor {
 #define TI_BOARD_REV_TI_EP		0	// Basic ti based edgeport
 #define TI_BOARD_REV_COMPACT		1	// Compact board
 #define TI_BOARD_REV_WATCHPORT		2	// Watchport
-
 
 #define TI_GET_CPU_REVISION(x)		(__u8)((((x)>>4)&0x0f))
 #define TI_GET_BOARD_REVISION(x)	(__u8)(((x)&0x0f))
@@ -665,7 +638,6 @@ struct ti_basic_descriptor {
 
 #define TI_CONFIG2_WATCHPORT		0x10
 
-
 struct edge_ti_manuf_descriptor {
 	__u8 IonConfig;		//  Config byte for ION manufacturing use
 	__u8 IonConfig2;	//  Expansion
@@ -678,6 +650,5 @@ struct edge_ti_manuf_descriptor {
 	__u8 TotalPorts;	//  Total Number of Com Ports for the entire device (All UMPs)
 	__u8 Reserved;		//  Reserved
 } __attribute__((packed));
-
 
 #endif		// if !defined(_USBVEND_H)

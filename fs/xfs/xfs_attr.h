@@ -37,7 +37,6 @@ struct xfs_attr_list_context;
  * External interfaces
  *========================================================================*/
 
-
 #define ATTR_DONTFOLLOW	0x0001	/* -- unused, from IRIX -- */
 #define ATTR_ROOT	0x0002	/* use attrs in root (trusted) namespace */
 #define ATTR_TRUST	0x0004	/* -- unused, from IRIX -- */
@@ -106,11 +105,9 @@ typedef struct attrlist_cursor_kern {
 	__u8	initted;	/* T/F: cursor has been initialized */
 } attrlist_cursor_kern_t;
 
-
 /*========================================================================
  * Structure used to pass context around among the routines.
  *========================================================================*/
-
 
 typedef int (*put_listent_func_t)(struct xfs_attr_list_context *, int,
 			      unsigned char *, int, int, unsigned char *);
@@ -130,7 +127,6 @@ typedef struct xfs_attr_list_context {
 	put_listent_func_t		put_listent;	/* list output fmt function */
 	int				index;		/* index into output buffer */
 } xfs_attr_list_context_t;
-
 
 /*========================================================================
  * Function prototypes for the kernel.

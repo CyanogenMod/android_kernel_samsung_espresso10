@@ -72,4 +72,3 @@ sctp_cmd_t *sctp_next_cmd(sctp_cmd_seq_t *seq)
 
 	return retval;
 }
-

@@ -264,7 +264,6 @@ static int tps6586x_gpio_get(struct gpio_chip *gc, unsigned offset)
 	return !!(val & (1 << offset));
 }
 
-
 static void tps6586x_gpio_set(struct gpio_chip *chip, unsigned offset,
 			      int value)
 {

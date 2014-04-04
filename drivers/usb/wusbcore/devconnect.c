@@ -139,7 +139,6 @@ err:
 	return NULL;
 }
 
-
 /*
  * Using the Connect-Ack list, fill out the @wusbhc Connect-Ack WUSB IE
  * properly so that it can be added to the MMC.

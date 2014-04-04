@@ -22,7 +22,6 @@
 #include "requestqueue.h"
 #include "recoverd.h"
 
-
 /* If the start for which we're re-enabling locking (seq) has been superseded
    by a newer stop (ls_recover_seq), we need to leave locking disabled.
 
@@ -320,4 +319,3 @@ void dlm_recoverd_resume(struct dlm_ls *ls)
 {
 	mutex_unlock(&ls->ls_recoverd_active);
 }
-

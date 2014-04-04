@@ -1299,7 +1299,6 @@ static int orinoco_ioctl_getrid(struct net_device *dev,
 	return err;
 }
 
-
 /* Commit handler, called after set operations */
 static int orinoco_ioctl_commit(struct net_device *dev,
 				struct iw_request_info *info,
@@ -1340,7 +1339,6 @@ static const struct iw_priv_args orinoco_privtab[] = {
 	{ SIOCIWFIRSTPRIV + 0x9, 0, IW_PRIV_TYPE_BYTE | MAX_RID_LEN,
 	  "get_rid" },
 };
-
 
 /*
  * Structures to export the Wireless Handlers
@@ -1385,7 +1383,6 @@ static const iw_handler	orinoco_handler[] = {
 	IW_HANDLER(SIOCSIWENCODEEXT,	orinoco_ioctl_set_encodeext),
 	IW_HANDLER(SIOCGIWENCODEEXT,	orinoco_ioctl_get_encodeext),
 };
-
 
 /*
   Added typecasting since we no longer use iwreq_data -- Moustafa

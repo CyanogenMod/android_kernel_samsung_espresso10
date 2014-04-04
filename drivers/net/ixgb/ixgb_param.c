@@ -157,7 +157,6 @@ IXGB_PARAM(FCReqTimeout, "Flow Control Request Timeout");
 
 IXGB_PARAM(IntDelayEnable, "Transmit Interrupt Delay Enable");
 
-
 #define DEFAULT_TIDV	   		     32
 #define MAX_TIDV			 0xFFFF
 #define MIN_TIDV			      0

@@ -1,13 +1,8 @@
-
-
-
-#define Assert(err, str) 
-#define Trace(dummy) 
-#define Tracev(dummy) 
-#define Tracecv(err, dummy) 
-#define Tracevv(dummy) 
-
-
+#define Assert(err, str)
+#define Trace(dummy)
+#define Tracev(dummy)
+#define Tracecv(err, dummy)
+#define Tracevv(dummy)
 
 #define LENGTH_CODES 29
 /* number of length codes, not counting the special END_BLOCK code */
@@ -34,7 +29,6 @@
 #define BUSY_STATE   113
 #define FINISH_STATE 666
 /* Stream status */
-
 
 /* Data structure describing a single value and its code string. */
 typedef struct ct_data_s {
@@ -261,7 +255,6 @@ typedef struct deflate_workspace {
  */
 #define put_byte(s, c) {s->pending_buf[s->pending++] = (c);}
 
-
 #define MIN_LOOKAHEAD (MAX_MATCH+MIN_MATCH+1)
 /* Minimum amount of lookahead, except at the end of the input file.
  * See deflate.c for comments about the MIN_MATCH+1.
@@ -281,7 +274,6 @@ void zlib_tr_align        (deflate_state *s);
 void zlib_tr_stored_block (deflate_state *s, char *buf, ulg stored_len,
 			   int eof);
 void zlib_tr_stored_type_only (deflate_state *);
-
 
 /* ===========================================================================
  * Output a short LSB first on the stream.
@@ -340,4 +332,3 @@ static inline void bi_windup(deflate_state *s)
     s->bits_sent = (s->bits_sent+7) & ~7;
 #endif
 }
-

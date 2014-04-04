@@ -9,8 +9,8 @@
 
 */
 
-/* 
- * DNPROTO_NSP can't be the same as SOL_SOCKET, 
+/*
+ * DNPROTO_NSP can't be the same as SOL_SOCKET,
  * so increment each by one (compared to ULTRIX)
  */
 #define DNPROTO_NSP     2                       /* NSP protocol number       */
@@ -19,7 +19,6 @@
 #define DNPROTO_EVL     5                       /* Evl protocol number (usr) */
 #define DNPROTO_EVR     6                       /* Evl protocol number (evl) */
 #define DNPROTO_NSPT    7                       /* NSP trace protocol number */
-
 
 #define DN_ADDL		2
 #define DN_MAXADDL	2 /* ULTRIX headers have 20 here, but pathworks has 2 */
@@ -30,7 +29,7 @@
 #define DN_MAXNODEL	256
 #define DNBUFSIZE	65023
 
-/* 
+/*
  * SET/GET Socket options  - must match the DSO_ numbers below
  */
 #define SO_CONDATA      1
@@ -54,7 +53,6 @@
 #define DSO_INFO	15       /* NSP Info field                      */
 #define DSO_MAX         15       /* Maximum option number               */
 
-
 /* LINK States */
 #define LL_INACTIVE	0
 #define LL_CONNECTING	1
@@ -69,7 +67,6 @@
 #define SDF_UICPROXY    4                  /* Use uic-based proxy       */
 
 /* Structures */
-
 
 struct dn_naddr {
 	__le16		a_len;
@@ -86,8 +83,6 @@ struct sockaddr_dn {
 };
 #define sdn_nodeaddrl   sdn_add.a_len   /* Node address length  */
 #define sdn_nodeaddr    sdn_add.a_addr  /* Node address         */
-
-
 
 /*
  * DECnet set/get DSO_CONDATA, DSO_DISDATA (optional data) structure
@@ -126,7 +121,6 @@ union etheraddress {
                 __u8 dne_nodeaddr[2]; /* DECnet node address   */
   } dne_remote;
 };
-
 
 /*
  * DECnet physical socket address format

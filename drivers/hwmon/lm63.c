@@ -231,7 +231,7 @@ static ssize_t set_pwm1(struct device *dev, struct device_attribute *dummy,
 	struct i2c_client *client = to_i2c_client(dev);
 	struct lm63_data *data = i2c_get_clientdata(client);
 	unsigned long val;
-	
+
 	if (!(data->config_fan & 0x20)) /* register is read-only */
 		return -EPERM;
 

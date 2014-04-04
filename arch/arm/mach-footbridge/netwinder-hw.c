@@ -26,7 +26,6 @@
 #define GP1_IO_BASE		0x338
 #define GP2_IO_BASE		0x33a
 
-
 #ifdef CONFIG_LEDS
 #define DEFAULT_LEDS	0
 #else

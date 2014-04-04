@@ -8,7 +8,6 @@ menuconfig SND_IMX_SOC
 	  Say Y or M if you want to add support for codecs attached to
 	  the i.MX SSI interface.
 
-
 if SND_IMX_SOC
 
 config SND_MXC_SOC_FIQ

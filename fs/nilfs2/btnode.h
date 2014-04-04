@@ -29,7 +29,6 @@
 #include <linux/fs.h>
 #include <linux/backing-dev.h>
 
-
 struct nilfs_btnode_chkey_ctxt {
 	__u64 oldkey;
 	__u64 newkey;

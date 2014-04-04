@@ -18,7 +18,6 @@
 #define KS8695_IRQ_VA		(KS8695_IO_VA + KS8695_IRQ_OFFSET)
 #define KS8695_IRQ_PA		(KS8695_IO_PA + KS8695_IRQ_OFFSET)
 
-
 /*
  * Interrupt Controller registers
  */
@@ -36,6 +35,5 @@
 #define KS8695_INTMS		(0x2c)		/* Interrupt Mask Status Register */
 #define KS8695_INTHPF		(0x30)		/* Interrupt Pending Highest Priority (FIQ) */
 #define KS8695_INTHPI		(0x34)		/* Interrupt Pending Highest Priority (IRQ) */
-
 
 #endif

@@ -764,7 +764,6 @@ static const struct i2c_device_id noon010_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, noon010_id);
 
-
 static struct i2c_driver noon010_i2c_driver = {
 	.driver = {
 		.name = MODULE_NAME

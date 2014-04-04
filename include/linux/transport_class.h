@@ -34,7 +34,6 @@ struct transport_class cls = {						\
 	.configure = cfg,						\
 }
 
-
 struct anon_transport_class {
 	struct transport_class tclass;
 	struct attribute_container container;
@@ -96,6 +95,5 @@ int transport_class_register(struct transport_class *);
 int anon_transport_class_register(struct anon_transport_class *);
 void transport_class_unregister(struct transport_class *);
 void anon_transport_class_unregister(struct anon_transport_class *);
-
 
 #endif

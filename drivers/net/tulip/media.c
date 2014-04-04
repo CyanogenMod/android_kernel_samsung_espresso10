@@ -20,7 +20,6 @@
 #include <linux/pci.h>
 #include "tulip.h"
 
-
 /* The maximum data clock rate is 2.5 Mhz.  The minimum timing is usually
    met by back-to-back PCI I/O cycles, but we insert a delay to avoid
    "overclocking" issues or future 66Mhz PCI. */
@@ -39,7 +38,6 @@
 static const unsigned char comet_miireg2offset[32] = {
 	0xB4, 0xB8, 0xBC, 0xC0,  0xC4, 0xC8, 0xCC, 0,  0,0,0,0,  0,0,0,0,
 	0,0xD0,0,0,  0,0,0,0,  0,0,0,0, 0, 0xD4, 0xD8, 0xDC, };
-
 
 /* MII transceiver control section.
    Read and write the MII registers using software-generated serial
@@ -165,7 +163,6 @@ void tulip_mdio_write(struct net_device *dev, int phy_id, int location, int val)
 
 	spin_unlock_irqrestore(&tp->mii_lock, flags);
 }
-
 
 /* Set up the transceiver control registers for the selected media type. */
 void tulip_select_media(struct net_device *dev, int startup)

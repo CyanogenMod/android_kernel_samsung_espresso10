@@ -30,7 +30,6 @@ MODULE_AUTHOR("Botond Botyanszki");
 MODULE_DESCRIPTION("REX-CFU1U PCMCIA driver for 2.6");
 MODULE_LICENSE("GPL");
 
-
 /*====================================================================*/
 /* MACROS                                                             */
 /*====================================================================*/
@@ -138,7 +137,6 @@ static int sl811_cs_config_check(struct pcmcia_device *p_dev, void *priv_data)
 
 	return pcmcia_request_io(p_dev);
 }
-
 
 static int sl811_cs_config(struct pcmcia_device *link)
 {

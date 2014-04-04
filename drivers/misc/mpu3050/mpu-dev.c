@@ -1152,7 +1152,6 @@ static int mpu3050_factory_on(struct i2c_client *client)
 
 	prev_gyro_suspended = mldl_cfg->gyro_is_suspended;
 
-
 	unsigned long sensors = mldl_cfg->requested_sensors;
 	(void)mpu3050_resume(mldl_cfg, mpu_private_data->this_client->adapter,
 			     accel_adapter,
@@ -1785,7 +1784,6 @@ int mpu3050_probe(struct i2c_client *client, const struct i2c_device_id *devid)
 	mpu->this_client = client;
 	mpu_private_data = mpu;
 	i2c_set_clientdata(client, mpu);
-
 
 #ifdef FACTORY_TEST
 	res =

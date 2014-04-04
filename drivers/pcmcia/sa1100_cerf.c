@@ -86,7 +86,7 @@ static void cerf_pcmcia_socket_suspend(struct soc_pcmcia_socket *skt)
 	soc_pcmcia_disable_irqs(skt, irqs, ARRAY_SIZE(irqs));
 }
 
-static struct pcmcia_low_level cerf_pcmcia_ops = { 
+static struct pcmcia_low_level cerf_pcmcia_ops = {
 	.owner			= THIS_MODULE,
 	.hw_init		= cerf_pcmcia_hw_init,
 	.hw_shutdown		= cerf_pcmcia_hw_shutdown,

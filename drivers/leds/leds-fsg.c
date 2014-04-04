@@ -32,7 +32,6 @@
 static short __iomem *latch_address;
 static unsigned short latch_value;
 
-
 static void fsg_led_wlan_set(struct led_classdev *led_cdev,
 			     enum led_brightness value)
 {
@@ -105,7 +104,6 @@ static void fsg_led_ring_set(struct led_classdev *led_cdev,
 	}
 }
 
-
 static struct led_classdev fsg_wlan_led = {
 	.name			= "fsg:blue:wlan",
 	.brightness_set		= fsg_led_wlan_set,
@@ -141,7 +139,6 @@ static struct led_classdev fsg_ring_led = {
 	.brightness_set		= fsg_led_ring_set,
 	.flags			= LED_CORE_SUSPENDRESUME,
 };
-
 
 static int fsg_led_probe(struct platform_device *pdev)
 {
@@ -214,7 +211,6 @@ static int fsg_led_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 static struct platform_driver fsg_led_driver = {
 	.probe		= fsg_led_probe,
 	.remove		= fsg_led_remove,
@@ -222,7 +218,6 @@ static struct platform_driver fsg_led_driver = {
 		.name		= "fsg-led",
 	},
 };
-
 
 static int __init fsg_led_init(void)
 {
@@ -233,7 +228,6 @@ static void __exit fsg_led_exit(void)
 {
 	platform_driver_unregister(&fsg_led_driver);
 }
-
 
 module_init(fsg_led_init);
 module_exit(fsg_led_exit);

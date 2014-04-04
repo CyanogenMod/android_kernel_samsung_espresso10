@@ -1147,7 +1147,6 @@ struct hci_ev_user_passkey_req {
 	bdaddr_t	bdaddr;
 } __packed;
 
-
 #define HCI_EV_REMOTE_OOB_DATA_REQUEST	0x35
 struct hci_ev_remote_oob_data_request {
 	bdaddr_t bdaddr;
@@ -1164,7 +1163,6 @@ struct hci_ev_user_passkey_notification {
 	bdaddr_t	bdaddr;
 	__le32		passkey;
 } __packed;
-
 
 #define HCI_EV_REMOTE_HOST_FEATURES	0x3d
 struct hci_ev_remote_host_features {

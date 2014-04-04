@@ -54,7 +54,6 @@
 #define H3600_GPIO_OPT_LOCK		22
 #define H3600_GPIO_OPT_DET		27
 
-
 /* H3100 / 3600 EGPIO pins */
 #define H3XXX_EGPIO_BASE		(GPIO_MAX + 1)
 

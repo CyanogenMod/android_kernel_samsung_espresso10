@@ -180,7 +180,6 @@ struct stir_cb {
 	struct urb	 *rx_urb;
 };
 
-
 /* These are the currently known USB ids */
 static struct usb_device_id dongles[] = {
     /* SigmaTel, Inc,  STIr4200 IrDA/USB Bridge */
@@ -488,7 +487,6 @@ static const struct {
         { 4000000, PDCLK_4000000 },
 };
 
-
 /*
  * Setup chip for speed.
  *  Called at startup to initialize the chip
@@ -572,7 +570,7 @@ static netdev_tx_t stir_hard_xmit(struct sk_buff *skb,
 
 	skb = xchg(&stir->tx_pending, skb);
         wake_up_process(stir->thread);
-	
+
 	/* this should never happen unless stop/wakeup problem */
 	if (unlikely(skb)) {
 		WARN_ON(1);
@@ -596,7 +594,7 @@ static int fifo_txwait(struct stir_cb *stir, int space)
 
 	/* Read FIFO status and count */
 	for (;; prev_count = count) {
-		err = read_reg(stir, REG_FIFOCTL, stir->fifo_status, 
+		err = read_reg(stir, REG_FIFOCTL, stir->fifo_status,
 				   FIFO_REGS_SIZE);
 		if (unlikely(err != FIFO_REGS_SIZE)) {
 			dev_warn(&stir->netdev->dev,
@@ -606,7 +604,7 @@ static int fifo_txwait(struct stir_cb *stir, int space)
 		}
 
 		status = stir->fifo_status[0];
-		count = (unsigned)(stir->fifo_status[2] & 0x1f) << 8 
+		count = (unsigned)(stir->fifo_status[2] & 0x1f) << 8
 			| stir->fifo_status[1];
 
 		pr_debug("fifo status 0x%lx count %lu\n", status, count);
@@ -635,9 +633,9 @@ static int fifo_txwait(struct stir_cb *stir, int space)
 		/* estimate transfer time for remaining chars */
 		msleep((count * 8000) / stir->speed);
 	}
-			
+
 	err = write_reg(stir, REG_FIFOCTL, FIFOCTL_CLR);
-	if (err) 
+	if (err)
 		return err;
 	err = write_reg(stir, REG_FIFOCTL, 0);
 	if (err)
@@ -645,7 +643,6 @@ static int fifo_txwait(struct stir_cb *stir, int space)
 
 	return 0;
 }
-
 
 /* Wait for turnaround delay before starting transmit.  */
 static void turnaround_delay(const struct stir_cb *stir, long us)
@@ -692,7 +689,7 @@ static void receive_stop(struct stir_cb *stir)
 	stir->receiving = 0;
 	usb_kill_urb(stir->rx_urb);
 
-	if (stir->rx_buff.in_frame) 
+	if (stir->rx_buff.in_frame)
 		stir->netdev->stats.collisions++;
 }
 /*
@@ -714,7 +711,7 @@ static void stir_send(struct stir_cb *stir, struct sk_buff *skb)
 		wraplen = wrap_fir_skb(skb, stir->io_buf);
 	else
 		wraplen = wrap_sir_skb(skb, stir->io_buf);
-		
+
 	/* check for space available in fifo */
 	if (!first_frame)
 		fifo_txwait(stir, wraplen);
@@ -801,10 +798,9 @@ static int stir_transmit_thread(void *arg)
         return 0;
 }
 
-
 /*
  * USB bulk receive completion callback.
- * Wakes up every ms (usb round trip) with wrapped 
+ * Wakes up every ms (usb round trip) with wrapped
  * data.
  */
 static void stir_rcv_irq(struct urb *urb)
@@ -817,14 +813,14 @@ static void stir_rcv_irq(struct urb *urb)
 		return;
 
 	/* unlink, shutdown, unplug, other nasties */
-	if (urb->status != 0) 
+	if (urb->status != 0)
 		return;
 
 	if (urb->actual_length > 0) {
 		pr_debug("receive %d\n", urb->actual_length);
 		unwrap_chars(stir, urb->transfer_buffer,
 			     urb->actual_length);
-		
+
 		do_gettimeofday(&stir->rx_time);
 	}
 
@@ -872,7 +868,7 @@ static int stir_net_open(struct net_device *netdev)
 	stir->receiving = 0;
 	stir->rx_buff.truesize = IRDA_SKB_MAX_MTU;
 	stir->rx_buff.skb = dev_alloc_skb(IRDA_SKB_MAX_MTU);
-	if (!stir->rx_buff.skb) 
+	if (!stir->rx_buff.skb)
 		goto err_out1;
 
 	skb_reserve(stir->rx_buff.skb, 1);
@@ -880,7 +876,7 @@ static int stir_net_open(struct net_device *netdev)
 	do_gettimeofday(&stir->rx_time);
 
 	stir->rx_urb = usb_alloc_urb(0, GFP_KERNEL);
-	if (!stir->rx_urb) 
+	if (!stir->rx_urb)
 		goto err_out2;
 
 	stir->io_buf = kmalloc(STIR_FIFO_SIZE, GFP_KERNEL);
@@ -893,9 +889,9 @@ static int stir_net_open(struct net_device *netdev)
 			  stir_rcv_irq, stir);
 
 	stir->fifo_status = kmalloc(FIFO_REGS_SIZE, GFP_KERNEL);
-	if (!stir->fifo_status) 
+	if (!stir->fifo_status)
 		goto err_out4;
-		
+
 	/*
 	 * Now that everything should be initialized properly,
 	 * Open new IrLAP layer instance to take care of us...
@@ -954,7 +950,7 @@ static int stir_net_close(struct net_device *netdev)
 
 	/* Mop up receive urb's */
 	usb_kill_urb(stir->rx_urb);
-	
+
 	kfree(stir->io_buf);
 	usb_free_urb(stir->rx_urb);
 	kfree_skb(stir->rx_buff.skb);

@@ -1,7 +1,6 @@
 /* drivers/atm/uPD98402.c - NEC uPD98402 (PHY) declarations */
- 
+
 /* Written 1995-2000 by Werner Almesberger, EPFL LRC/ICA */
- 
 
 #include <linux/module.h>
 #include <linux/mm.h>
@@ -15,13 +14,11 @@
 
 #include "uPD98402.h"
 
-
 #if 0
 #define DPRINTK(format,args...) printk(KERN_DEBUG format,##args)
 #else
 #define DPRINTK(format,args...)
 #endif
-
 
 struct uPD98402_priv {
 	struct k_sonet_stats sonet_stats;/* link diagnostics */
@@ -30,12 +27,10 @@ struct uPD98402_priv {
 	spinlock_t lock;
 };
 
-
 #define PRIV(dev) ((struct uPD98402_priv *) dev->phy_data)
 
 #define PUT(val,reg) dev->ops->phy_put(dev,val,uPD98402_##reg)
 #define GET(reg) dev->ops->phy_get(dev,uPD98402_##reg)
-
 
 static int fetch_stats(struct atm_dev *dev,struct sonet_stats __user *arg,int zero)
 {
@@ -54,14 +49,13 @@ static int fetch_stats(struct atm_dev *dev,struct sonet_stats __user *arg,int ze
 	return error ? -EFAULT : 0;
 }
 
-
 static int set_framing(struct atm_dev *dev,unsigned char framing)
 {
 	static const unsigned char sonet[] = { 1,2,3,0 };
 	static const unsigned char sdh[] = { 1,0,0,2 };
 	const char *set;
 	unsigned long flags;
- 
+
 	switch (framing) {
 		case SONET_FRAME_SONET:
 			set = sonet;
@@ -82,7 +76,6 @@ static int set_framing(struct atm_dev *dev,unsigned char framing)
 	return 0;
 }
 
-
 static int get_sense(struct atm_dev *dev,u8 __user *arg)
 {
 	unsigned long flags;
@@ -97,7 +90,6 @@ static int get_sense(struct atm_dev *dev,u8 __user *arg)
 	    put_user(s[2], arg+2) || put_user(0xff, arg+3) ||
 	    put_user(0xff, arg+4) || put_user(0xff, arg+5)) ? -EFAULT : 0;
 }
-
 
 static int set_loopback(struct atm_dev *dev,int mode)
 {
@@ -131,7 +123,6 @@ static int set_loopback(struct atm_dev *dev,int mode)
 	return 0;
 }
 
-
 static int uPD98402_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 {
 	switch (cmd) {
@@ -159,12 +150,10 @@ static int uPD98402_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 	}
 }
 
-
 #define ADD_LIMITED(s,v) \
     { atomic_add(GET(v),&PRIV(dev)->sonet_stats.s); \
     if (atomic_read(&PRIV(dev)->sonet_stats.s) < 0) \
 	atomic_set(&PRIV(dev)->sonet_stats.s,INT_MAX); }
-
 
 static void stat_event(struct atm_dev *dev)
 {
@@ -178,9 +167,7 @@ static void stat_event(struct atm_dev *dev)
 	if (events & uPD98402_PFM_B1E) ADD_LIMITED(section_bip,B1ECT);
 }
 
-
 #undef ADD_LIMITED
-
 
 static void uPD98402_int(struct atm_dev *dev)
 {
@@ -197,7 +184,7 @@ static void uPD98402_int(struct atm_dev *dev)
 			atomic_add(GET(HECCT),
 			    &PRIV(dev)->sonet_stats.uncorr_hcs);
 		}
-		if ((reason & uPD98402_INT_RFO) && 
+		if ((reason & uPD98402_INT_RFO) &&
 		    (time_after(jiffies, silence) || silence == 0)) {
 			printk(KERN_WARNING "%s(itf %d): uPD98402 receive "
 			    "FIFO overflow\n",dev->type,dev->number);
@@ -205,7 +192,6 @@ static void uPD98402_int(struct atm_dev *dev)
 		}
 	}
 }
-
 
 static int uPD98402_start(struct atm_dev *dev)
 {
@@ -228,14 +214,12 @@ static int uPD98402_start(struct atm_dev *dev)
 	return 0;
 }
 
-
 static int uPD98402_stop(struct atm_dev *dev)
 {
 	/* let SAR driver worry about stopping interrupts */
 	kfree(PRIV(dev));
 	return 0;
 }
-
 
 static const struct atmphy_ops uPD98402_ops = {
 	.start		= uPD98402_start,
@@ -244,14 +228,12 @@ static const struct atmphy_ops uPD98402_ops = {
 	.stop		= uPD98402_stop,
 };
 
-
 int uPD98402_init(struct atm_dev *dev)
 {
 DPRINTK("phy_init\n");
 	dev->phy = &uPD98402_ops;
 	return 0;
 }
-
 
 MODULE_LICENSE("GPL");
 

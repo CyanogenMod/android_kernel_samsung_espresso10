@@ -1,8 +1,8 @@
 /*
  * IBM Hot Plug Controller Driver
- * 
+ *
  * Written By: Irene Zubarev, IBM Corporation
- * 
+ *
  * Copyright (C) 2001 Greg Kroah-Hartman (greg@kroah.com)
  * Copyright (C) 2001,2002 IBM Corp.
  *
@@ -33,7 +33,6 @@
 #include <linux/list.h>
 #include "ibmphp.h"
 
-
 static int configure_device(struct pci_func *);
 static int configure_bridge(struct pci_func **, u8);
 static struct res_needed *scan_behind_bridge(struct pci_func *, u8);
@@ -42,7 +41,7 @@ static u8 find_sec_number (u8 primary_busno, u8 slotno);
 
 /*
  * NOTE..... If BIOS doesn't provide default routing, we assign:
- * 9 for SCSI, 10 for LAN adapters, and 11 for everything else. 
+ * 9 for SCSI, 10 for LAN adapters, and 11 for everything else.
  * If adapter is bridged, then we assign 11 to it and devices behind it.
  * We also assign the same irq numbers for multi function devices.
  * These are PIC mode, so shouldn't matter n.e.ways (hopefully)
@@ -71,11 +70,11 @@ static void assign_alt_irq (struct pci_func * cur_func, u8 class_code)
  * Configures the device to be added (will allocate needed resources if it
  * can), the device can be a bridge or a regular pci device, can also be
  * multi-functional
- * 
+ *
  * Input: function to be added
- * 
+ *
  * TO DO:  The error case with Multifunction device or multi function bridge,
- * if there is an error, will need to go through all previous functions and 
+ * if there is an error, will need to go through all previous functions and
  * unconfigure....or can add some code into unconfigure_card....
  */
 int ibmphp_configure_card (struct pci_func *func, u8 slotno)
@@ -98,7 +97,7 @@ int ibmphp_configure_card (struct pci_func *func, u8 slotno)
 	cur_func = func;
 
 	/* We only get bus and device from IRQ routing table.  So at this point,
-	 * func->busno is correct, and func->device contains only device (at the 5 
+	 * func->busno is correct, and func->device contains only device (at the 5
 	 * highest bits)
 	 */
 
@@ -151,7 +150,7 @@ int ibmphp_configure_card (struct pci_func *func, u8 slotno)
 						     cur_func->device, cur_func->busno);
 						cleanup_count = 6;
 						goto error;
-					}	
+					}
 					cur_func->next = NULL;
 					function = 0x8;
 					break;
@@ -339,7 +338,7 @@ error:
 }
 
 /*
- * This function configures the pci BARs of a single device.  
+ * This function configures the pci BARs of a single device.
  * Input: pointer to the pci_func
  * Output: configured PCI, 0, or error
  */
@@ -375,13 +374,13 @@ static int configure_device (struct pci_func *func)
 		   if devices don't adhere 100% to the spec, so don't want to write
 		   to the reserved bits
 
-		pcibios_read_config_byte(cur_func->busno, cur_func->device, 
+		pcibios_read_config_byte(cur_func->busno, cur_func->device,
 		PCI_BASE_ADDRESS_0 + 4 * count, &tmp);
 		if (tmp & 0x01) // IO
-			pcibios_write_config_dword(cur_func->busno, cur_func->device, 
+			pcibios_write_config_dword(cur_func->busno, cur_func->device,
 			PCI_BASE_ADDRESS_0 + 4 * count, 0xFFFFFFFD);
 		else  // Memory
-			pcibios_write_config_dword(cur_func->busno, cur_func->device, 
+			pcibios_write_config_dword(cur_func->busno, cur_func->device,
 			PCI_BASE_ADDRESS_0 + 4 * count, 0xFFFFFFFF);
 		 */
 		pci_bus_write_config_dword (ibmphp_pci_bus, devfn, address[count], 0xFFFFFFFF);
@@ -421,8 +420,8 @@ static int configure_device (struct pci_func *func)
 				return -EIO;
 			}
 			pci_bus_write_config_dword (ibmphp_pci_bus, devfn, address[count], func->io[count]->start);
-	
-			/* _______________This is for debugging purposes only_____________________ */ 
+
+			/* _______________This is for debugging purposes only_____________________ */
 			debug ("b4 writing, the IO address is %x\n", func->io[count]->start);
 			pci_bus_read_config_dword (ibmphp_pci_bus, devfn, address[count], &bar[count]);
 			debug ("after writing.... the start address is %x\n", bar[count]);
@@ -484,7 +483,7 @@ static int configure_device (struct pci_func *func)
 
 				pci_bus_write_config_dword (ibmphp_pci_bus, devfn, address[count], func->pfmem[count]->start);
 
-				/*_______________This is for debugging purposes only______________________________*/				
+				/*_______________This is for debugging purposes only______________________________*/
 				debug ("b4 writing, start address is %x\n", func->pfmem[count]->start);
 				pci_bus_read_config_dword (ibmphp_pci_bus, devfn, address[count], &bar[count]);
 				debug ("after writing, start address is %x\n", bar[count]);
@@ -559,7 +558,7 @@ static int configure_device (struct pci_func *func)
 /******************************************************************************
  * This routine configures a PCI-2-PCI bridge and the functions behind it
  * Parameters: pci_func
- * Returns: 
+ * Returns:
  ******************************************************************************/
 static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 {
@@ -622,7 +621,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 	debug ("AFTER FIND_SEC_NUMBER, func->busno IS %x\n", func->busno);
 
 	pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_SECONDARY_BUS, sec_number);
-	
+
 	/* __________________For debugging purposes only __________________________________
 	pci_bus_read_config_byte (ibmphp_pci_bus, devfn, PCI_SECONDARY_BUS, &sec_number);
 	debug ("sec_number after write/read is %x\n", sec_number);
@@ -642,11 +641,9 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 	debug ("func->busno is %x\n", func->busno);
 	debug ("sec_number after writing is %x\n", sec_number);
 
-
 	/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	   !!!!!!!!!!!!!!!NEED TO ADD!!!  FAST BACK-TO-BACK ENABLE!!!!!!!!!!!!!!!!!!!! 
+	   !!!!!!!!!!!!!!!NEED TO ADD!!!  FAST BACK-TO-BACK ENABLE!!!!!!!!!!!!!!!!!!!!
 	   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
 
 	/* First we need to allocate mem/io for the bridge itself in case it needs it */
 	for (count = 0; address[count]; count++) {	/* for 2 BARs */
@@ -670,7 +667,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 			debug ("len[count] in IO = %x\n", len[count]);
 
 			bus_io[count] = kzalloc(sizeof(struct resource_node), GFP_KERNEL);
-		
+
 			if (!bus_io[count]) {
 				err ("out of system memory\n");
 				retval = -ENOMEM;
@@ -735,7 +732,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 						ibmphp_add_pfmem_from_mem (bus_pfmem[count]);
 						func->pfmem[count] = bus_pfmem[count];
 					} else {
-						err ("cannot allocate requested pfmem for bus %x, device %x, len %x\n", 
+						err ("cannot allocate requested pfmem for bus %x, device %x, len %x\n",
 						     func->busno, func->device, len[count]);
 						kfree (mem_tmp);
 						kfree (bus_pfmem[count]);
@@ -805,7 +802,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 	debug ("amount_needed->mem = %x\n", amount_needed->mem);
 	debug ("amount_needed->pfmem =  %x\n", amount_needed->pfmem);
 
-	if (amount_needed->not_correct) {		
+	if (amount_needed->not_correct) {
 		debug ("amount_needed is not correct\n");
 		for (count = 0; address[count]; count++) {
 			/* for 2 BARs */
@@ -830,7 +827,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 	} else {
 		debug ("it wants %x IO behind the bridge\n", amount_needed->io);
 		io = kzalloc(sizeof(*io), GFP_KERNEL);
-		
+
 		if (!io) {
 			err ("out of system memory\n");
 			retval = -ENOMEM;
@@ -959,7 +956,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 
 		if (bus->noIORanges) {
 			pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_IO_BASE, 0x00 | bus->rangeIO->start >> 8);
-			pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_IO_LIMIT, 0x00 | bus->rangeIO->end >> 8);	
+			pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_IO_LIMIT, 0x00 | bus->rangeIO->end >> 8);
 
 			/* _______________This is for debugging purposes only ____________________
 			pci_bus_read_config_byte (ibmphp_pci_bus, devfn, PCI_IO_BASE, &temp);
@@ -980,7 +977,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 		if (bus->noMemRanges) {
 			pci_bus_write_config_word (ibmphp_pci_bus, devfn, PCI_MEMORY_BASE, 0x0000 | bus->rangeMem->start >> 16);
 			pci_bus_write_config_word (ibmphp_pci_bus, devfn, PCI_MEMORY_LIMIT, 0x0000 | bus->rangeMem->end >> 16);
-			
+
 			/* ____________________This is for debugging purposes only ________________________
 			pci_bus_read_config_word (ibmphp_pci_bus, devfn, PCI_MEMORY_BASE, &temp);
 			debug ("mem_base = %x\n", (temp & PCI_MEMORY_RANGE_TYPE_MASK) << 16);
@@ -1017,7 +1014,7 @@ static int configure_bridge (struct pci_func **func_passed, u8 slotno)
 		pci_bus_read_config_byte (ibmphp_pci_bus, devfn, PCI_INTERRUPT_PIN, &irq);
 		if ((irq > 0x00) && (irq < 0x05))
 			pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_INTERRUPT_LINE, func->irq[irq - 1]);
-		/*    
+		/*
 		pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_BRIDGE_CONTROL, ctrl);
 		pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_BRIDGE_CONTROL, PCI_BRIDGE_CTL_PARITY);
 		pci_bus_write_config_byte (ibmphp_pci_bus, devfn, PCI_BRIDGE_CONTROL, PCI_BRIDGE_CTL_SERR);
@@ -1204,9 +1201,9 @@ static struct res_needed *scan_behind_bridge (struct pci_func * func, u8 busno)
 	return amount;
 }
 
-/* The following 3 unconfigure_boot_ routines deal with the case when we had the card 
- * upon bootup in the system, since we don't allocate func to such case, we need to read 
- * the start addresses from pci config space and then find the corresponding entries in 
+/* The following 3 unconfigure_boot_ routines deal with the case when we had the card
+ * upon bootup in the system, since we don't allocate func to such case, we need to read
+ * the start addresses from pci config space and then find the corresponding entries in
  * our resource lists.  The functions return either 0, -ENODEV, or -1 (general failure)
  * Change: we also call these functions even if we configured the card ourselves (i.e., not
  * the bootup case), since it should work same way
@@ -1562,7 +1559,7 @@ static int unconfigure_boot_card (struct slot *slot_cur)
  * TO DO:  will probably need to add some code in case there was some resource,
  * to remove it... this is from when we have errors in the configure_card...
  * 			!!!!!!!!!!!!!!!!!!!!!!!!!FOR BUSES!!!!!!!!!!!!
- * Returns: 0, -1, -ENODEV 
+ * Returns: 0, -1, -ENODEV
  */
 int ibmphp_unconfigure_card (struct slot **slot_cur, int the_end)
 {
@@ -1634,7 +1631,7 @@ int ibmphp_unconfigure_card (struct slot **slot_cur, int the_end)
  * Input: bus and the amount of resources needed (we know we can assign those,
  *        since they've been checked already
  * Output: bus added to the correct spot
- *         0, -1, error 
+ *         0, -1, error
  */
 static int add_new_bus (struct bus_node *bus, struct resource_node *io, struct resource_node *mem, struct resource_node *pfmem, u8 parent_busno)
 {
@@ -1650,7 +1647,7 @@ static int add_new_bus (struct bus_node *bus, struct resource_node *io, struct r
 			err ("strange, cannot find bus which is supposed to be at the system... something is terribly wrong...\n");
 			return -ENODEV;
 		}
-	
+
 		list_add (&bus->bus_list, &cur_bus->bus_list);
 	}
 	if (io) {
@@ -1679,7 +1676,7 @@ static int add_new_bus (struct bus_node *bus, struct resource_node *io, struct r
 	}
 	if (pfmem) {
 		pfmem_range = kzalloc(sizeof(*pfmem_range), GFP_KERNEL);
-		if (!pfmem_range) {	
+		if (!pfmem_range) {
 			err ("out of system memory\n");
 			return -ENOMEM;
 		}
@@ -1726,4 +1723,3 @@ static u8 find_sec_number (u8 primary_busno, u8 slotno)
 		return busno;
 	return 0xff;
 }
-

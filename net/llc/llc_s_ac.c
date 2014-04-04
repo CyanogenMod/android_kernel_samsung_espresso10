@@ -25,7 +25,6 @@
 #include <net/llc_s_ev.h>
 #include <net/llc_sap.h>
 
-
 /**
  *	llc_sap_action_unit_data_ind - forward UI PDU to network layer
  *	@sap: SAP

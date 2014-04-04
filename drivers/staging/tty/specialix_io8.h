@@ -1,5 +1,5 @@
 /*
- *      linux/drivers/char/specialix_io8.h  -- 
+ *      linux/drivers/char/specialix_io8.h  --
  *                                   Specialix IO8+ multiport serial driver.
  *
  *      Copyright (C) 1997 Roger Wolff (R.E.Wolff@BitWizard.nl)
@@ -43,7 +43,7 @@
 
 #ifdef __KERNEL__
 
-/* You can have max 4 ISA cards in one PC, and I recommend not much 
+/* You can have max 4 ISA cards in one PC, and I recommend not much
 more than a few  PCI versions of the card. */
 
 #define SX_NBOARD		8
@@ -58,7 +58,6 @@ more than a few  PCI versions of the card. */
 #define SX_BOARD(line)		((line) / SX_NPORT)
 #define SX_PORT(line)		((line) & (SX_NPORT - 1))
 
-
 #define SX_DATA_REG 0     /* Base+0 : Data register */
 #define SX_ADDR_REG 1     /* base+1 : Address register. */
 
@@ -67,7 +66,6 @@ more than a few  PCI versions of the card. */
 /* On-board oscillator frequency */
 #define SX_OSCFREQ      (25 MHz/2)
 /* There is a 25MHz crystal on the board, but the chip is in /2 mode */
-
 
 /* Ticks per sec. Used for setting receiver timeout and break length */
 #define SPECIALIX_TPS		4000
@@ -104,7 +102,6 @@ struct specialix_board {
 #define SX_BOARD_ACTIVE		0x00000002
 #define SX_BOARD_IS_PCI		0x00000004
 
-
 struct specialix_port {
 	int			magic;
 	struct tty_port		port;
@@ -129,12 +126,3 @@ struct specialix_port {
 
 #endif /* __KERNEL__ */
 #endif /* __LINUX_SPECIALIX_H */
-
-
-
-
-
-
-
-
-

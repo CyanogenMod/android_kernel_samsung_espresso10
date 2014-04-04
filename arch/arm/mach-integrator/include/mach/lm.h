@@ -1,4 +1,3 @@
-
 struct lm_device {
 	struct device		dev;
 	struct resource		resource;

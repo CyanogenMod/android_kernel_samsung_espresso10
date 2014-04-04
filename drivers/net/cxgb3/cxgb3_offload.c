@@ -562,7 +562,6 @@ static void t3_process_tid_release_list(struct work_struct *work)
 	struct sk_buff *skb;
 	struct t3cdev *tdev = td->dev;
 
-
 	spin_lock_bh(&td->tid_release_lock);
 	while (td->tid_release_list) {
 		struct t3c_tid_entry *p = td->tid_release_list;
@@ -1314,7 +1313,6 @@ static void clean_l2_data(struct rcu_head *head)
 	struct l2t_data *d = container_of(head, struct l2t_data, rcu_head);
 	t3_free_l2t(d);
 }
-
 
 void cxgb3_offload_deactivate(struct adapter *adapter)
 {

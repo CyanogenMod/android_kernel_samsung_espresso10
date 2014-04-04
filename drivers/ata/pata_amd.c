@@ -183,7 +183,6 @@ static void amd_fifo_setup(struct ata_port *ap)
 	u8 fifo = fifobit[ap->port_no];
 	u8 r;
 
-
 	ata_for_each_dev(adev, &ap->link, ENABLED) {
 		if (adev->class == ATA_DEV_ATAPI)
 			fifo = 0;

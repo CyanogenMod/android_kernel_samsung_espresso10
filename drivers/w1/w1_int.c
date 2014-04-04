@@ -54,7 +54,6 @@ static struct w1_master * w1_alloc_dev(u32 id, int slave_count, int slave_ttl,
 		return NULL;
 	}
 
-
 	dev->bus_master = (struct w1_bus_master *)(dev + 1);
 
 	dev->owner		= THIS_MODULE;

@@ -478,7 +478,6 @@ static int present_buffer(struct omap_display_buffer *buffer)
 
 	omapfb_unlock(fbdev);
 
-
 	return 0;
 }
 
@@ -1112,4 +1111,3 @@ int omap_display_deinitialize(void)
 	return err;
 }
 EXPORT_SYMBOL(omap_display_deinitialize);
-

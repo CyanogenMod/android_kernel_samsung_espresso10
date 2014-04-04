@@ -298,7 +298,6 @@ plip_init_netdev(struct net_device *dev)
 	dev->netdev_ops		 = &plip_netdev_ops;
 	dev->header_ops          = &plip_header_ops;
 
-
 	nl->port_owner = 0;
 
 	/* Initialize constants */

@@ -115,4 +115,3 @@ enum s3c_gpio_number {
 #define S3C2410_GPH10	S3C2410_GPH(10)
 
 #endif /* __MACH_GPIONRS_H */
-

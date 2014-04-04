@@ -103,7 +103,6 @@ unsigned int GetUnitType(unsigned int);
 int RIOSetChange(struct rio_info *);
 int RIOFindFreeID(struct rio_info *, struct Host *, unsigned int *, unsigned int *);
 
-
 /* riotty.c */
 
 int riotopen(struct tty_struct *tty, struct file *filp);

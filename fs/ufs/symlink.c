@@ -31,7 +31,6 @@
 #include "ufs_fs.h"
 #include "ufs.h"
 
-
 static void *ufs_follow_link(struct dentry *dentry, struct nameidata *nd)
 {
 	struct ufs_inode_info *p = UFS_I(dentry->d_inode);

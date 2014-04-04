@@ -145,7 +145,6 @@ static ssize_t pressed_button_show(struct device *dev,
 			 quickstart_data.pressed->name : "none"));
 }
 
-
 static ssize_t pressed_button_store(struct device *dev,
 					 struct device_attribute *attr,
 					 const char *buf, size_t count)
@@ -345,7 +344,6 @@ static int quickstart_acpi_remove(struct acpi_device *device, int type)
 	if (ACPI_FAILURE(status))
 		printk(KERN_ERR "quickstart: Error removing notify handler\n");
 
-
 	kfree(quickstart);
 
 	return 0;
@@ -443,7 +441,6 @@ static int __init quickstart_init(void)
 	ret = device_create_file(&pf_device->dev, &dev_attr_buttons);
 	if (ret)
 		goto fail_dev_file2;
-
 
 	/* Input device */
 	ret = quickstart_init_input();

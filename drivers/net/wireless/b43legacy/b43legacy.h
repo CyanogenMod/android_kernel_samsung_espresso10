@@ -22,7 +22,6 @@
 #include "rfkill.h"
 #include "phy.h"
 
-
 /* The unique identifier of the firmware that's officially supported by this
  * driver version. */
 #define B43legacy_SUPPORTED_FIRMWARE_ID	"FW10"
@@ -287,7 +286,6 @@
 /* Convert a b43legacy rate value to a rate in 100kbps */
 #define B43legacy_RATE_TO_100KBPS(rate)	(((rate) * 10) / 2)
 
-
 #define B43legacy_DEFAULT_SHORT_RETRY_LIMIT	7
 #define B43legacy_DEFAULT_LONG_RETRY_LIMIT	4
 
@@ -352,7 +350,6 @@ static inline bool __b43legacy_warn_on_dummy(bool x) { return x; }
 # define B43legacy_BUG_ON(x)	do { /* nothing */ } while (0)
 # define B43legacy_DEBUG	0
 #endif
-
 
 struct net_device;
 struct pci_dev;
@@ -723,7 +720,6 @@ struct b43legacy_wldev {
 #endif
 };
 
-
 static inline
 struct b43legacy_wl *hw_to_b43legacy_wl(struct ieee80211_hw *hw)
 {
@@ -754,7 +750,6 @@ int b43legacy_using_pio(struct b43legacy_wldev *dev)
 #else
 # error "Using neither DMA nor PIO? Confused..."
 #endif
-
 
 static inline
 struct b43legacy_wldev *dev_to_b43legacy_wldev(struct device *dev)
@@ -809,8 +804,6 @@ struct b43legacy_lopair *b43legacy_get_lopair(struct b43legacy_phy *phy,
 	return phy->_lo_pairs + (radio_attenuation
 			+ 14 * (baseband_attenuation / 2));
 }
-
-
 
 /* Message printing */
 void b43legacyinfo(struct b43legacy_wl *wl, const char *fmt, ...)

@@ -146,7 +146,6 @@ typedef struct shared_phy_params {
 	u32 boardflags2;
 } shared_phy_params_t;
 
-
 extern shared_phy_t *wlc_phy_shared_attach(shared_phy_params_t *shp);
 extern void wlc_phy_shared_detach(shared_phy_t *phy_sh);
 extern wlc_phy_t *wlc_phy_attach(shared_phy_t *sh, void *regs, int bandtype,
@@ -183,7 +182,6 @@ extern void wlc_phy_set_deaf(wlc_phy_t *ppi, bool user_flag);
 
 extern void wlc_phy_switch_radio(wlc_phy_t *ppi, bool on);
 extern void wlc_phy_anacore(wlc_phy_t *ppi, bool on);
-
 
 extern void wlc_phy_BSSinit(wlc_phy_t *ppi, bool bonlyap, int rssi);
 

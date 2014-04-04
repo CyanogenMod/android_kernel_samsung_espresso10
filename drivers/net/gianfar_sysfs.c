@@ -57,7 +57,6 @@ static ssize_t gfar_set_bd_stash(struct device *dev,
 	if (!(priv->device_flags & FSL_GIANFAR_DEV_HAS_BD_STASHING))
 		return count;
 
-
 	/* Find out the new setting */
 	if (!strncmp("on", buf, count - 1) || !strncmp("1", buf, count - 1))
 		new_setting = 1;
@@ -66,7 +65,6 @@ static ssize_t gfar_set_bd_stash(struct device *dev,
 		new_setting = 0;
 	else
 		return count;
-
 
 	local_irq_save(flags);
 	lock_rx_qs(priv);

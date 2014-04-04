@@ -22,7 +22,6 @@
 #ifndef _HDCP_H_
 #define _HDCP_H_
 
-
 /********************************/
 /* Structures related to ioctl  */
 /********************************/
@@ -327,14 +326,12 @@ struct hdcp {
 extern struct hdcp hdcp;
 extern struct hdcp_sha_in sha_input;
 
-
 /***************************/
 /* Macros for accessing HW */
 /***************************/
 
 #define WR_REG_32(base, offset, val)	__raw_writel(val, base + offset)
 #define RD_REG_32(base, offset)		__raw_readl(base + offset)
-
 
 #undef FLD_MASK
 #define FLD_MASK(start, end)	(((1 << (start - end + 1)) - 1) << (end))
@@ -350,7 +347,6 @@ extern struct hdcp_sha_in sha_input;
 
 #define RD_FIELD_32(base, offset, start, end) \
 	((RD_REG_32(base, offset) & FLD_MASK(start, end)) >> (end))
-
 
 #undef HDCP_DEBUG
 #undef DBG

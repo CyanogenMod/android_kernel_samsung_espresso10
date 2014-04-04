@@ -1,4 +1,3 @@
-
 #include <linux/ceph/ceph_debug.h>
 
 #include <linux/backing-dev.h>
@@ -70,8 +69,14 @@ static int ceph_statfs(struct dentry *dentry, struct kstatfs *buf)
 	/*
 	 * express utilization in terms of large blocks to avoid
 	 * overflow on 32-bit machines.
+	 *
+	 * NOTE: for the time being, we make bsize == frsize to humor
+	 * not-yet-ancient versions of glibc that are broken.
+	 * Someday, we will probably want to report a real block
+	 * size...  whatever that may mean for a network file system!
 	 */
 	buf->f_bsize = 1 << CEPH_BLOCK_SHIFT;
+	buf->f_frsize = 1 << CEPH_BLOCK_SHIFT;
 	buf->f_blocks = le64_to_cpu(st.kb) >> (CEPH_BLOCK_SHIFT-10);
 	buf->f_bfree = (le64_to_cpu(st.kb) - le64_to_cpu(st.kb_used)) >>
 		(CEPH_BLOCK_SHIFT-10);
@@ -80,7 +85,6 @@ static int ceph_statfs(struct dentry *dentry, struct kstatfs *buf)
 	buf->f_files = le64_to_cpu(st.num_objects);
 	buf->f_ffree = -1;
 	buf->f_namelen = NAME_MAX;
-	buf->f_frsize = PAGE_CACHE_SIZE;
 
 	/* leave fsid little-endian, regardless of host endianness */
 	fsid = *(u64 *)(&monmap->fsid) ^ *((u64 *)&monmap->fsid + 1);
@@ -89,7 +93,6 @@ static int ceph_statfs(struct dentry *dentry, struct kstatfs *buf)
 
 	return 0;
 }
-
 
 static int ceph_sync_fs(struct super_block *sb, int wait)
 {
@@ -301,7 +304,7 @@ static int parse_mount_options(struct ceph_mount_options **pfsopt,
         fsopt->max_readdir = CEPH_MAX_READDIR_DEFAULT;
         fsopt->max_readdir_bytes = CEPH_MAX_READDIR_BYTES_DEFAULT;
         fsopt->congestion_kb = default_congestion_kb();
-	
+
         /* ip1[:port1][,ip2[:port2]...]:/subdir/in/fs */
         err = -EINVAL;
         if (!dev_name)
@@ -572,7 +575,6 @@ static void destroy_caches(void)
 	kmem_cache_destroy(ceph_file_cachep);
 }
 
-
 /*
  * ceph_umount_begin - initiate forced umount.  Tear down down the
  * mount, skipping steps that may hang while waiting for server(s).
@@ -640,9 +642,6 @@ static struct dentry *open_root_dentry(struct ceph_fs_client *fsc,
 	ceph_mdsc_put_request(req);
 	return root;
 }
-
-
-
 
 /*
  * mount: join the ceph cluster, and open root directory.

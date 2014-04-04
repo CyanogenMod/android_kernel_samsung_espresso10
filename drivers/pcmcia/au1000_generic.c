@@ -27,7 +27,7 @@
  *
  * ########################################################################
  *
- * 
+ *
  */
 
 #include <linux/module.h>
@@ -200,7 +200,7 @@ static void au1x00_check_status(struct au1000_pcmcia_socket *skt)
 	} while (events);
 }
 
-/* 
+/*
  * au1x00_pcmcia_poll_event()
  * Let's poll for events in addition to IRQs since IRQ only is unreliable...
  */
@@ -277,7 +277,7 @@ au1x00_pcmcia_set_socket(struct pcmcia_socket *sock, socket_state_t *state)
   return au1x00_pcmcia_config_skt(skt, state);
 }
 
-int 
+int
 au1x00_pcmcia_set_io_map(struct pcmcia_socket *sock, struct pccard_io_map *map)
 {
 	struct au1000_pcmcia_socket *skt = to_au1000_socket(sock);
@@ -299,8 +299,7 @@ au1x00_pcmcia_set_io_map(struct pcmcia_socket *sock, struct pccard_io_map *map)
 
 }  /* au1x00_pcmcia_set_io_map() */
 
-
-static int 
+static int
 au1x00_pcmcia_set_mem_map(struct pcmcia_socket *sock, struct pccard_mem_map *map)
 {
 	struct au1000_pcmcia_socket *skt = to_au1000_socket(sock);
@@ -439,7 +438,6 @@ int au1x00_pcmcia_socket_probe(struct device *dev, struct pcmcia_low_level *ops,
 	dev_set_drvdata(dev, sinfo);
 	return 0;
 
-
 out_err:
 	ops->hw_shutdown(skt);
 	while (i-- > 0) {
@@ -489,7 +487,6 @@ int au1x00_drv_pcmcia_remove(struct platform_device *dev)
 	return 0;
 }
 
-
 /*
  * PCMCIA "Driver" API
  */
@@ -516,7 +513,6 @@ static struct platform_driver au1x00_pcmcia_driver = {
 	.probe		= au1x00_drv_pcmcia_probe,
 	.remove		= au1x00_drv_pcmcia_remove,
 };
-
 
 /* au1x00_pcmcia_init()
  *

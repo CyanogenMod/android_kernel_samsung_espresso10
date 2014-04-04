@@ -703,7 +703,6 @@ static int if_sdio_prog_firmware(struct if_sdio_card *card)
 	if (ret)
 		goto out;
 
-
 	/*
 	 * The manual clearly describes that FEDC is the right code to use
 	 * to detect firmware presence, but for SD8686 it is not that simple.
@@ -923,7 +922,6 @@ static void if_sdio_interrupt(struct sdio_func *func)
 	card->priv->is_activity_detected = 1;
 	if (cause & IF_SDIO_H_INT_DNLD)
 		lbs_host_to_card_done(card->priv);
-
 
 	if (cause & IF_SDIO_H_INT_UPLD) {
 		ret = if_sdio_card_to_host(card);
@@ -1178,7 +1176,6 @@ static void if_sdio_remove(struct sdio_func *func)
 				(unsigned long) &cmd))
 			pr_alert("CMD_FUNC_SHUTDOWN cmd failed\n");
 	}
-
 
 	lbs_deb_sdio("call remove card\n");
 	lbs_stop_card(card->priv);

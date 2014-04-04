@@ -105,7 +105,6 @@
 #define MSM_AD5_PHYS          0xAC000000
 #define MSM_AD5_SIZE          (SZ_1M*13)
 
-
 #define MSM_I2C_SIZE          SZ_4K
 #define MSM_I2C_PHYS          0xA9900000
 
@@ -114,7 +113,6 @@
 
 #define MSM_NAND_PHYS           0xA0A00000
 
-
 #define MSM_TSIF_PHYS        (0xa0100000)
 #define MSM_TSIF_SIZE        (0x200)
 
@@ -122,7 +120,6 @@
 
 #define MSM_UART1DM_PHYS      0xA0200000
 #define MSM_UART2DM_PHYS      0xA0900000
-
 
 #define MSM_SDC1_PHYS          0xA0300000
 #define MSM_SDC1_SIZE          SZ_4K

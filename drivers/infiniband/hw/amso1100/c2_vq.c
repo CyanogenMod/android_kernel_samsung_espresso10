@@ -117,7 +117,6 @@ struct c2_vq_req *vq_req_alloc(struct c2_dev *c2dev)
 	return r;
 }
 
-
 /* vq_req_free - free the VQ Request Object.  It is assumed the verbs handler
  * has already free the VQ Reply Buffer if it existed.
  */
@@ -136,7 +135,6 @@ void vq_req_get(struct c2_dev *c2dev, struct c2_vq_req *r)
 {
 	atomic_inc(&r->refcnt);
 }
-
 
 /* vq_req_put - dereference and potentially free a VQ Request Object.
  *
@@ -157,7 +155,6 @@ void vq_req_put(struct c2_dev *c2dev, struct c2_vq_req *r)
 		kfree(r);
 	}
 }
-
 
 /*
  * vq_repbuf_alloc - allocate a VQ Reply Buffer.
@@ -236,7 +233,6 @@ int vq_send_wr(struct c2_dev *c2dev, union c2wr *wr)
 	spin_unlock(&c2dev->vqlock);
 	return 0;
 }
-
 
 /*
  * vq_wait_for_reply - block until the adapter posts a Verb Reply Message.

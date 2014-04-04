@@ -198,7 +198,6 @@ static void gx_disable_graphics(struct gxfb_par *par)
 	/* turn off the flat panel */
 	write_fp(par, FP_PM, par->fp[FP_PM] & ~FP_PM_P);
 
-
 	/* turn off display */
 	write_dc(par, DC_UNLOCK, DC_UNLOCK_UNLOCK);
 	write_dc(par, DC_GENERAL_CFG, par->dc[DC_GENERAL_CFG] &

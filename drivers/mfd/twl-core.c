@@ -202,7 +202,6 @@
 
 /* Triton Core internal information (END) */
 
-
 /* subchip/slave 0 0x48 - POWER */
 #define TWL6030_BASEADD_RTC		0x0000
 #define TWL6030_BASEADD_MEM		0x0017
@@ -240,7 +239,6 @@
 #define HFCLK_FREQ_38p4_MHZ		(3 << 0)
 #define HIGH_PERF_SQ			(1 << 3)
 #define CK32K_LOWPWR_EN			(1 << 7)
-
 
 /* chip-specific feature flags, for i2c_device_id.driver_data */
 #define TWL4030_VAUX2		BIT(0)	/* pre-5030 voltage ranges */
@@ -289,7 +287,6 @@ struct twl_client {
 };
 
 static struct twl_client twl_modules[TWL_NUM_SLAVES];
-
 
 /* mapping the module id to slave id and base address */
 struct twl_mapping {
@@ -719,7 +716,6 @@ add_children(struct twl4030_platform_data *pdata, unsigned long features,
 				pdata->irq_base + CHARGERFAULT_INTR_OFFSET);
 	}
 
-
 	if (twl_has_madc() && pdata->madc) {
 		child = add_child(2, "twl4030_madc",
 				pdata->madc, sizeof(*pdata->madc),
@@ -1064,7 +1060,6 @@ add_children(struct twl4030_platform_data *pdata, unsigned long features,
 					features);
 		if (IS_ERR(child))
 			return PTR_ERR(child);
-
 
 		child = add_regulator(TWL6030_REG_VMEM, pdata->vmem,
 					features);
@@ -1487,7 +1482,6 @@ twl_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		twl_6030_lite = true;
 		dev_info(&client->dev, "Board PMIC is TWL6032\n");
 	}
-
 
 	/* setup clock framework */
 	clocks_init(&client->dev, pdata->clock);

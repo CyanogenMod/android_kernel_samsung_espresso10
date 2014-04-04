@@ -340,7 +340,6 @@ struct mem_size_stats {
 	u64 pss;
 };
 
-
 static void smaps_pte_entry(pte_t ptent, unsigned long addr,
 		unsigned long ptent_size, struct mm_walk *walk)
 {

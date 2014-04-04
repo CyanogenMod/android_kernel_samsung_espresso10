@@ -125,4 +125,3 @@ struct ad_info {
  *  tab-width: 8
  * End:
  */
-

@@ -160,7 +160,6 @@ static __init int s3c2442_clk_init(void)
 
 arch_initcall(s3c2442_clk_init);
 
-
 static struct sys_device s3c2442_sysdev = {
 	.cls		= &s3c2442_sysclass,
 };

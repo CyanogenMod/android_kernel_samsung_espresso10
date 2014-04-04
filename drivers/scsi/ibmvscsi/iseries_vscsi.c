@@ -50,7 +50,7 @@ struct srp_lp_event {
 	struct viosrp_crq crq;	/* 0x20-0x3F          */
 };
 
-/** 
+/**
  * standard interface for handling logical partition events.
  */
 static void iseriesvscsi_handle_event(struct HvLpEvent *lpevt)

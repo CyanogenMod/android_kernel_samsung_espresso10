@@ -11,5 +11,3 @@ config OMAP4_DUTY_CYCLE
 	could pontentially sustain a thermal runaway, say Y here.
 
 source "drivers/staging/thermal_framework/governor/Kconfig.dc_governor"
-
-

@@ -28,7 +28,6 @@
 #include "base.h"
 #include "power/power.h"
 
-
 static void driver_bound(struct device *dev)
 {
 	if (klist_node_attached(&dev->p->knode_driver)) {

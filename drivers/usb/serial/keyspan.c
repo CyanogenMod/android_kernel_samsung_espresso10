@@ -94,7 +94,6 @@
       Tested on PPC and x86 architectures, seems to behave...
 */
 
-
 #include <linux/kernel.h>
 #include <linux/jiffies.h>
 #include <linux/errno.h>
@@ -196,7 +195,6 @@ struct keyspan_port_private {
 #include "keyspan_usa90msg.h"
 #include "keyspan_usa67msg.h"
 
-
 /* Functions used by new usb-serial code. */
 static int __init keyspan_init(void)
 {
@@ -261,7 +259,6 @@ static void keyspan_break_ctl(struct tty_struct *tty, int break_state)
 
 	keyspan_send_setup(port, 0);
 }
-
 
 static void keyspan_set_termios(struct tty_struct *tty,
 		struct usb_serial_port *port, struct ktermios *old_termios)
@@ -535,7 +532,6 @@ static void	usa26_instat_callback(struct urb *urb)
 
 	/* Now do something useful with the data */
 
-
 	/* Check port number from message and retrieve private data */
 	if (msg->port >= serial->num_ports) {
 		dbg("%s - Unexpected port number %d", __func__, msg->port);
@@ -570,7 +566,6 @@ static void	usa26_glocont_callback(struct urb *urb)
 {
 	dbg("%s", __func__);
 }
-
 
 static void usa28_indat_callback(struct urb *urb)
 {
@@ -688,7 +683,7 @@ static void	usa28_instat_callback(struct urb *urb)
 
 	if( old_dcd_state != p_priv->dcd_state && old_dcd_state) {
 		tty = tty_port_tty_get(&port->port);
-		if (tty && !C_CLOCAL(tty)) 
+		if (tty && !C_CLOCAL(tty))
 			tty_hangup(tty);
 		tty_kref_put(tty);
 	}
@@ -705,7 +700,6 @@ static void	usa28_glocont_callback(struct urb *urb)
 {
 	dbg("%s", __func__);
 }
-
 
 static void	usa49_glocont_callback(struct urb *urb)
 {
@@ -1002,7 +996,6 @@ static void usa90_indat_callback(struct urb *urb)
 		dbg("%s - resubmit read urb failed. (%d)", __func__, err);
 }
 
-
 static void	usa90_instat_callback(struct urb *urb)
 {
 	unsigned char 				*data = urb->transfer_buffer;
@@ -1097,7 +1090,6 @@ static void	usa67_instat_callback(struct urb *urb)
 		return;
 	}
 
-
 	/* Now do something useful with the data */
 	msg = (struct keyspan_usa67_portStatusMessage *)data;
 
@@ -1187,7 +1179,6 @@ static int keyspan_write_room(struct tty_struct *tty)
 	}
 	return 0;
 }
-
 
 static int keyspan_open(struct tty_struct *tty, struct usb_serial_port *port)
 {
@@ -1833,7 +1824,7 @@ static int keyspan_usa26_send_setup(struct usb_serial *serial,
 	d_details = s_priv->device_details;
 	device_port = port->number - port->serial->minor;
 
-	outcont_urb = d_details->outcont_endpoints[port->number];
+	outcont_urb = d_details->outcont_endpoints[device_port];
 	this_urb = p_priv->outcont_urb;
 
 	dbg("%s - endpoint %d", __func__, usb_pipeendpoint(this_urb->pipe));
@@ -2600,7 +2591,6 @@ static void keyspan_send_setup(struct usb_serial_port *port, int reset_port)
 	}
 }
 
-
 /* Gets called by the "real" driver (ie once firmware is loaded
    and renumeration has taken place. */
 static int keyspan_startup(struct usb_serial *serial)
@@ -2749,4 +2739,3 @@ MODULE_FIRMWARE("keyspan/usa49wlc.fw");
 
 module_param(debug, bool, S_IRUGO | S_IWUSR);
 MODULE_PARM_DESC(debug, "Debug enabled or not");
-

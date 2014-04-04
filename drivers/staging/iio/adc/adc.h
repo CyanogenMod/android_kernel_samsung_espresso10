@@ -27,7 +27,6 @@
 			      NULL,					\
 			      _addr)
 
-
 #define IIO_CONST_ATTR_IN_NAMED_OFFSET(_num, _name, _string)	\
 	IIO_CONST_ATTR(in##_num##_##_name##_offset, _string)
 

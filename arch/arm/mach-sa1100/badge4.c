@@ -87,7 +87,6 @@ static int __init badge4_sa1111_init(void)
 	return platform_add_devices(devices, ARRAY_SIZE(devices));
 }
 
-
 /*
  * 1 x Intel 28F320C3 Advanced+ Boot Block Flash (32 Mi bit)
  *   Eight 4 KiW Parameter Bottom Blocks (64 KiB)
@@ -135,7 +134,6 @@ static int __init five_v_on_setup(char *ignore)
 	return 1;
 }
 __setup("five_v_on", five_v_on_setup);
-
 
 static int __init badge4_init(void)
 {
@@ -190,7 +188,6 @@ static int __init badge4_init(void)
 	//GPSR  = BADGE4_GPIO_SA1111_NRST;
 	//GPDR |= BADGE4_GPIO_SA1111_NRST;
 
-
 	/* power management cruft */
 	PGSR = 0;
 	PWER = 0;
@@ -205,14 +202,12 @@ static int __init badge4_init(void)
 	/* drive CPLD as is during sleep */
 	PGSR |= (GPLR & (BADGE4_GPIO_SDTYP0|BADGE4_GPIO_SDTYP1));
 
-
 	/* Now bring up the SA-1111. */
 	ret = badge4_sa1111_init();
 	if (ret < 0)
 		printk(KERN_ERR
 			"%s: SA-1111 initialization failed (%d)\n",
 			__func__, ret);
-
 
 	/* maybe turn on 5v0 from the start */
 	badge4_set_5V(BADGE4_5V_INITIALLY, five_v_on);
@@ -223,7 +218,6 @@ static int __init badge4_init(void)
 }
 
 arch_initcall(badge4_init);
-
 
 static unsigned badge4_5V_bitmap = 0;
 
@@ -256,7 +250,6 @@ void badge4_set_5V(unsigned subsystem, int on)
 	local_irq_restore(flags);
 }
 EXPORT_SYMBOL(badge4_set_5V);
-
 
 static struct map_desc badge4_io_desc[] __initdata = {
 	{	/* SRAM  bank 1 */

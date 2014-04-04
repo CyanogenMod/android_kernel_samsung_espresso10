@@ -477,7 +477,6 @@ static int __init omap4_i2c_init(void)
 	return 0;
 }
 
-
 static bool enable_suspend_off = true;
 module_param(enable_suspend_off, bool, S_IRUSR | S_IRGRP | S_IROTH);
 
@@ -758,7 +757,6 @@ static void __init omap_tablet_reserve(void)
 					OMAP4_ION_HEAP_SECURE_OUTPUT_WFDHDCP_SIZE);
 	omap_reserve();
 }
-
 
 MACHINE_START(OMAP_BLAZE, "OMAP4 blaze board")
 	/* Maintainer: Dan Murphy - Texas Instruments Inc */

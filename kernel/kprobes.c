@@ -57,7 +57,6 @@
 #define KPROBE_HASH_BITS 6
 #define KPROBE_TABLE_SIZE (1 << KPROBE_HASH_BITS)
 
-
 /*
  * Some oddball architectures like 64bit powerpc have function descriptors
  * so this must be overridable.
@@ -198,7 +197,6 @@ static kprobe_opcode_t __kprobes *__get_insn_slot(struct kprobe_insn_cache *c)
 	list_add(&kip->list, &c->pages);
 	return kip->insns;
 }
-
 
 kprobe_opcode_t __kprobes *get_insn_slot(void)
 {

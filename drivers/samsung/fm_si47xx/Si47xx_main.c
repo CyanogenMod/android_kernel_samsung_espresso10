@@ -79,7 +79,6 @@ static long Si47xx_ioctl(struct file *filp, unsigned int ioctl_cmd,
 		return -ENOTTY;
 	}
 
-
 	switch (ioctl_cmd) {
 	case Si47xx_IOC_POWERUP:
 		debug("Si47xx_IOC_POWERUP called\n\n");

@@ -42,7 +42,6 @@ MODULE_DESCRIPTION("Analog Devices ADV7170 video encoder driver");
 MODULE_AUTHOR("Maxim Yevtyushkin");
 MODULE_LICENSE("GPL");
 
-
 static int debug;
 module_param(debug, int, 0);
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
@@ -188,7 +187,6 @@ static const unsigned char init_PAL[] = {
 	0x18, 0x00,		/* CGMS_WSS_2 */
 	0x19, 0x00,		/* Teletext Ctl */
 };
-
 
 static int adv7170_s_std_output(struct v4l2_subdev *sd, v4l2_std_id std)
 {

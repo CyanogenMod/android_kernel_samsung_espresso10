@@ -5,7 +5,6 @@
 
 struct pci_dev;
 
-
 #ifdef CONFIG_SSB_DRIVER_PCICORE
 
 /* PCI core registers. */
@@ -75,10 +74,8 @@ struct pci_dev;
 #define  SSB_PCICORE_SBTOPCI_RC_READL	0x00000010 /* Memory read line */
 #define  SSB_PCICORE_SBTOPCI_RC_READM	0x00000020 /* Memory read multiple */
 
-
 /* PCIcore specific boardflags */
 #define SSB_PCICORE_BFL_NOPCI		0x00000400 /* Board leaves PCI floating */
-
 
 struct ssb_pcicore {
 	struct ssb_device *dev;
@@ -96,9 +93,7 @@ extern int ssb_pcicore_dev_irqvecs_enable(struct ssb_pcicore *pc,
 int ssb_pcicore_plat_dev_init(struct pci_dev *d);
 int ssb_pcicore_pcibios_map_irq(const struct pci_dev *dev, u8 slot, u8 pin);
 
-
 #else /* CONFIG_SSB_DRIVER_PCICORE */
-
 
 struct ssb_pcicore {
 };

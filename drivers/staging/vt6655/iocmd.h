@@ -37,14 +37,12 @@
 //typedef uint16_t u16;
 //typedef uint8_t u8;
 
-
 // ioctl Command code
 #define MAGIC_CODE	                 0x3142
 #define IOCTL_CMD_TEST	            (SIOCDEVPRIVATE + 0)
 #define IOCTL_CMD_SET			    (SIOCDEVPRIVATE + 1)
 #define IOCTL_CMD_HOSTAPD           (SIOCDEVPRIVATE + 2)
 #define IOCTL_CMD_WPA               (SIOCDEVPRIVATE + 3)
-
 
 typedef enum tagWMAC_CMD {
 
@@ -85,7 +83,6 @@ typedef enum tagWZONETYPE {
 #define ADHOC_STARTED	   1
 #define ADHOC_JOINTED	   2
 
-
 #define PHY80211a 	    0
 #define PHY80211b       1
 #define PHY80211g       2
@@ -119,7 +116,6 @@ typedef struct tagSCmdScan {
 	u8 ssid[SSID_MAXLEN + 2];
 
 } SCmdScan, *PSCmdScan;
-
 
 //
 // BSS Join
@@ -169,7 +165,6 @@ typedef struct tagSCmdStartAP {
 
 } SCmdStartAP, *PSCmdStartAP;
 
-
 typedef struct tagSCmdSetWEP {
 
     bool bEnableWep;
@@ -179,8 +174,6 @@ typedef struct tagSCmdSetWEP {
     u32     auWepKeyLength[WEP_NKEYS];
 
 } SCmdSetWEP, *PSCmdSetWEP;
-
-
 
 typedef struct tagSBSSIDItem {
 
@@ -200,13 +193,11 @@ typedef struct tagSBSSIDItem {
 
 } SBSSIDItem;
 
-
 typedef struct tagSBSSIDList {
 
 	u32		    uItem;
 	SBSSIDItem	sBSSIDList[0];
 } SBSSIDList, *PSBSSIDList;
-
 
 typedef struct tagSCmdLinkStatus {
 
@@ -237,8 +228,6 @@ typedef struct tagSDot11MIBCount {
 	u32 MulticastReceivedFrameCount;
 	u32 FCSErrorCount;
 } SDot11MIBCount, *PSDot11MIBCount;
-
-
 
 //
 // statistic counter
@@ -345,7 +334,6 @@ typedef struct tagSStatMIBCount {
 	u32   ullTxDirectedBytes[2];
 } SStatMIBCount, *PSStatMIBCount;
 
-
 typedef struct tagSNodeItem {
     // STA info
     u16            wAID;
@@ -366,7 +354,6 @@ typedef struct tagSNodeItem {
 
 } SNodeItem;
 
-
 typedef struct tagSNodeList {
 
 	u32		    uItem;
@@ -374,19 +361,15 @@ typedef struct tagSNodeList {
 
 } SNodeList, *PSNodeList;
 
-
-
 typedef struct tagSCmdValue {
 
 	u32 dwValue;
 
 } SCmdValue,  *PSCmdValue;
 
-
 //
 // hostapd & viawget ioctl related
 //
-
 
 // VIAGWET_IOCTL_HOSTAPD ioctl() cmd:
 enum {
@@ -404,13 +387,10 @@ enum {
 	VIAWGET_HOSTAPD_STA_CLEAR_STATS = 12,
 };
 
-
 #define VIAWGET_HOSTAPD_GENERIC_ELEMENT_HDR_LEN \
 ((int) (&((struct viawget_hostapd_param *) 0)->u.generic_elem.data))
 
 // Maximum length for algorithm names (-1 for nul termination) used in ioctl()
-
-
 
 struct viawget_hostapd_param {
 	u32 cmd;
@@ -464,12 +444,8 @@ struct viawget_hostapd_param {
 
 /*---------------------  Export Variables  --------------------------*/
 
-
 /*---------------------  Export Types  ------------------------------*/
 
-
 /*---------------------  Export Functions  --------------------------*/
-
-
 
 #endif //__IOCMD_H__

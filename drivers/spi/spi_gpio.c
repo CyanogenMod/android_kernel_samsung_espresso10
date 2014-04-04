@@ -26,7 +26,6 @@
 #include <linux/spi/spi_bitbang.h>
 #include <linux/spi/spi_gpio.h>
 
-
 /*
  * This bitbanging SPI master driver should help make systems usable
  * when a native hardware SPI engine is not available, perhaps because
@@ -422,7 +421,6 @@ static void __exit spi_gpio_exit(void)
 	platform_driver_unregister(&spi_gpio_driver);
 }
 module_exit(spi_gpio_exit);
-
 
 MODULE_DESCRIPTION("SPI master driver using generic bitbanged GPIO ");
 MODULE_AUTHOR("David Brownell");

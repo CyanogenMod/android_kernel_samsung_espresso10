@@ -37,11 +37,9 @@
 #include <linux/sunrpc/sched.h>
 #include <linux/sunrpc/gss_asn1.h>
 
-
 #ifdef RPC_DEBUG
 # define RPCDBG_FACILITY        RPCDBG_AUTH
 #endif
-
 
 /* TWRITE_STR from gssapiP_generic.h */
 #define TWRITE_STR(ptr, str, len) \
@@ -231,4 +229,3 @@ g_verify_token_header(struct xdr_netobj *mech, int *body_size,
 }
 
 EXPORT_SYMBOL_GPL(g_verify_token_header);
-

@@ -119,7 +119,6 @@ static struct nlmsg_perm nlmsg_audit_perms[] =
 	{ AUDIT_TTY_SET,	NETLINK_AUDIT_SOCKET__NLMSG_TTY_AUDIT	},
 };
 
-
 static int nlmsg_perm(u16 nlmsg_type, u32 *perm, struct nlmsg_perm *tab, size_t tabsize)
 {
 	int i, err = -EINVAL;

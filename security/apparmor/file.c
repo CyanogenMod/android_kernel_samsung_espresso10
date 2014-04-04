@@ -21,7 +21,6 @@
 
 struct file_perms nullperms;
 
-
 /**
  * audit_file_mask - convert mask to permission string
  * @buffer: buffer to write string to (NOT NULL)

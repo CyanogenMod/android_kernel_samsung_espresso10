@@ -40,7 +40,7 @@
  *    Sridhar Samudrala     <sri@us.ibm.com>
  *    Ardelle Fan           <ardelle.fan@intel.com>
  *    Ryan Layer            <rmlayer@us.ibm.com>
- *    Kevin Gao             <kevin.gao@intel.com> 
+ *    Kevin Gao             <kevin.gao@intel.com>
  *
  * Any bugs reported given to us we will try to fix... any fixes shared will
  * be incorporated into the next SCTP release.
@@ -83,7 +83,6 @@
 #include <net/sctp/structs.h>
 #include <net/sctp/constants.h>
 
-
 /* Set SCTP_DEBUG flag via config if not already set. */
 #ifndef SCTP_DEBUG
 #ifdef CONFIG_SCTP_DBG_MSG
@@ -98,7 +97,6 @@
 #else /* static! */
 #define SCTP_PROTOSW_FLAG INET_PROTOSW_PERMANENT
 #endif
-
 
 /* Certain internal static functions need to be exported when
  * compiled into the test frame.
@@ -178,7 +176,6 @@ void sctp_assocs_proc_exit(void);
 int sctp_remaddr_proc_init(void);
 void sctp_remaddr_proc_exit(void);
 
-
 /*
  * Module global variables
  */
@@ -192,7 +189,6 @@ extern struct kmem_cache *sctp_bucket_cachep __read_mostly;
 /*
  *  Section:  Macros, externs, and inlines
  */
-
 
 #ifdef TEST_FRAME
 #include <test_frame.h>
@@ -270,7 +266,6 @@ struct sctp_mib {
         unsigned long   mibs[SCTP_MIB_MAX];
 };
 
-
 /* Print debugging messages.  */
 #if SCTP_DEBUG
 extern int sctp_debug_flag;
@@ -323,7 +318,6 @@ do {									\
 #define SCTP_ASSERT(expr, str, func)
 
 #endif /* SCTP_DEBUG */
-
 
 /*
  * Macros for keeping a global reference of object allocations.
@@ -400,7 +394,6 @@ static inline void sctp_v6_del_protocol(void) { return; }
 
 #endif /* #if defined(CONFIG_IPV6) */
 
-
 /* Map an association to an assoc_id. */
 static inline sctp_assoc_t sctp_assoc2id(const struct sctp_association *asoc)
 {
@@ -409,7 +402,6 @@ static inline sctp_assoc_t sctp_assoc2id(const struct sctp_association *asoc)
 
 /* Look up the association by its id.  */
 struct sctp_association *sctp_id2assoc(struct sock *sk, sctp_assoc_t id);
-
 
 /* A macro to walk a list of skbs.  */
 #define sctp_skb_for_each(pos, head, tmp) \
@@ -698,6 +690,19 @@ static inline void sctp_v4_map_v6(union sctp_addr *addr)
 	addr->v6.sin6_addr.s6_addr32[0] = 0;
 	addr->v6.sin6_addr.s6_addr32[1] = 0;
 	addr->v6.sin6_addr.s6_addr32[2] = htonl(0x0000ffff);
+}
+
+/* The cookie is always 0 since this is how it's used in the
+ * pmtu code.
+ */
+static inline struct dst_entry *sctp_transport_dst_check(struct sctp_transport *t)
+{
+	if (t->dst && !dst_check(t->dst, 0)) {
+		dst_release(t->dst);
+		t->dst = NULL;
+	}
+
+	return t->dst;
 }
 
 #endif /* __net_sctp_h__ */

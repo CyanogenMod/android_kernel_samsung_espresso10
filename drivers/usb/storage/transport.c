@@ -62,7 +62,6 @@
 #include <linux/blkdev.h>
 #include "../../scsi/sd.h"
 
-
 /***********************************************************************
  * Data transfer routines
  ***********************************************************************/
@@ -169,11 +168,11 @@ static int usb_stor_msg_common(struct us_data *us, int timeout)
 			usb_unlink_urb(us->current_urb);
 		}
 	}
- 
+
 	/* wait for the completion of the URB */
 	timeleft = wait_for_completion_interruptible_timeout(
 			&urb_done, timeout ? : MAX_SCHEDULE_TIMEOUT);
- 
+
 	clear_bit(US_FLIDX_URB_ACTIVE, &us->dflags);
 
 	if (timeleft <= 0) {
@@ -191,7 +190,7 @@ static int usb_stor_msg_common(struct us_data *us, int timeout)
  * termination.  Return codes are usual -Exxx, *not* USB_STOR_XFER_xxx.
  */
 int usb_stor_control_msg(struct us_data *us, unsigned int pipe,
-		 u8 request, u8 requesttype, u16 value, u16 index, 
+		 u8 request, u8 requesttype, u16 value, u16 index,
 		 void *data, u16 size, int timeout)
 {
 	int status;
@@ -208,8 +207,8 @@ int usb_stor_control_msg(struct us_data *us, unsigned int pipe,
 	us->cr->wLength = cpu_to_le16(size);
 
 	/* fill and submit the URB */
-	usb_fill_control_urb(us->current_urb, us->pusb_dev, pipe, 
-			 (unsigned char*) us->cr, data, size, 
+	usb_fill_control_urb(us->current_urb, us->pusb_dev, pipe,
+			 (unsigned char*) us->cr, data, size,
 			 usb_stor_blocking_completion, NULL);
 	status = usb_stor_msg_common(us, timeout);
 
@@ -252,7 +251,6 @@ int usb_stor_clear_halt(struct us_data *us, unsigned int pipe)
 	return result;
 }
 EXPORT_SYMBOL_GPL(usb_stor_clear_halt);
-
 
 /*
  * Interpret the results of a URB transfer
@@ -360,8 +358,8 @@ int usb_stor_ctrl_transfer(struct us_data *us, unsigned int pipe,
 	us->cr->wLength = cpu_to_le16(size);
 
 	/* fill and submit the URB */
-	usb_fill_control_urb(us->current_urb, us->pusb_dev, pipe, 
-			 (unsigned char*) us->cr, data, size, 
+	usb_fill_control_urb(us->current_urb, us->pusb_dev, pipe,
+			 (unsigned char*) us->cr, data, size,
 			 usb_stor_blocking_completion, NULL);
 	result = usb_stor_msg_common(us, 0);
 
@@ -421,7 +419,7 @@ int usb_stor_bulk_transfer_buf(struct us_data *us, unsigned int pipe,
 	/* store the actual length of the data transferred */
 	if (act_len)
 		*act_len = us->current_urb->actual_length;
-	return interpret_urb_result(us, pipe, length, result, 
+	return interpret_urb_result(us, pipe, length, result,
 			us->current_urb->actual_length);
 }
 EXPORT_SYMBOL_GPL(usb_stor_bulk_transfer_buf);
@@ -518,7 +516,7 @@ int usb_stor_bulk_transfer_sg(struct us_data* us, unsigned int pipe,
 		length_left -= partial;
 	} else {
 		/* no scatter-gather, just make the request */
-		result = usb_stor_bulk_transfer_buf(us, pipe, buf, 
+		result = usb_stor_bulk_transfer_buf(us, pipe, buf,
 				length_left, &partial);
 		length_left -= partial;
 	}
@@ -673,7 +671,7 @@ void usb_stor_invoke_transport(struct scsi_cmnd *srb, struct us_data *us)
 	}
 
 	/*
-	 * If we have a failure, we're going to do a REQUEST_SENSE 
+	 * If we have a failure, we're going to do a REQUEST_SENSE
 	 * automatically.  Note that we differentiate between a command
 	 * "failure" and an "error" in the transport mechanism.
 	 */
@@ -952,8 +950,8 @@ int usb_stor_CB_transport(struct scsi_cmnd *srb, struct us_data *us)
 	/* COMMAND STAGE */
 	/* let's send the command via the control pipe */
 	result = usb_stor_ctrl_transfer(us, us->send_ctrl_pipe,
-				      US_CBI_ADSC, 
-				      USB_TYPE_CLASS | USB_RECIP_INTERFACE, 0, 
+				      US_CBI_ADSC,
+				      USB_TYPE_CLASS | USB_RECIP_INTERFACE, 0,
 				      us->ifnum, srb->cmnd, srb->cmd_len);
 
 	/* check the return code for the command */
@@ -972,7 +970,7 @@ int usb_stor_CB_transport(struct scsi_cmnd *srb, struct us_data *us)
 	/* DATA STAGE */
 	/* transfer the data payload for this command, if one exists*/
 	if (transfer_length) {
-		pipe = srb->sc_data_direction == DMA_FROM_DEVICE ? 
+		pipe = srb->sc_data_direction == DMA_FROM_DEVICE ?
 				us->recv_bulk_pipe : us->send_bulk_pipe;
 		result = usb_stor_bulk_srb(us, pipe, srb);
 		US_DEBUGP("CBI data stage result is 0x%x\n", result);
@@ -993,7 +991,7 @@ int usb_stor_CB_transport(struct scsi_cmnd *srb, struct us_data *us)
 		return USB_STOR_TRANSPORT_GOOD;
 
 	result = usb_stor_intr_transfer(us, us->iobuf, 2);
-	US_DEBUGP("Got interrupt data (0x%x, 0x%x)\n", 
+	US_DEBUGP("Got interrupt data (0x%x, 0x%x)\n",
 			us->iobuf[0], us->iobuf[1]);
 	if (result != USB_STOR_XFER_GOOD)
 		return USB_STOR_TRANSPORT_ERROR;
@@ -1014,7 +1012,7 @@ int usb_stor_CB_transport(struct scsi_cmnd *srb, struct us_data *us)
 		return USB_STOR_TRANSPORT_GOOD;
 	}
 
-	/* If not UFI, we interpret the data as a result code 
+	/* If not UFI, we interpret the data as a result code
 	 * The first byte should always be a 0x0.
 	 *
 	 * Some bogus devices don't follow that rule.  They stuff the ASC
@@ -1029,9 +1027,9 @@ int usb_stor_CB_transport(struct scsi_cmnd *srb, struct us_data *us)
 
 	/* The second byte & 0x0F should be 0x0 for good, otherwise error */
 	switch (us->iobuf[1] & 0x0F) {
-		case 0x00: 
+		case 0x00:
 			return USB_STOR_TRANSPORT_GOOD;
-		case 0x01: 
+		case 0x01:
 			goto Failed;
 	}
 	return USB_STOR_TRANSPORT_ERROR;
@@ -1058,12 +1056,12 @@ int usb_stor_Bulk_max_lun(struct us_data *us)
 	/* issue the command */
 	us->iobuf[0] = 0;
 	result = usb_stor_control_msg(us, us->recv_ctrl_pipe,
-				 US_BULK_GET_MAX_LUN, 
-				 USB_DIR_IN | USB_TYPE_CLASS | 
+				 US_BULK_GET_MAX_LUN,
+				 USB_DIR_IN | USB_TYPE_CLASS |
 				 USB_RECIP_INTERFACE,
 				 0, us->ifnum, us->iobuf, 1, 10*HZ);
 
-	US_DEBUGP("GetMaxLUN command result is %d, data is %d\n", 
+	US_DEBUGP("GetMaxLUN command result is %d, data is %d\n",
 		  result, us->iobuf[0]);
 
 	/* if we have a successful request, return the result */
@@ -1115,7 +1113,7 @@ int usb_stor_Bulk_transport(struct scsi_cmnd *srb, struct us_data *us)
 	US_DEBUGP("Bulk Command S 0x%x T 0x%x L %d F %d Trg %d LUN %d CL %d\n",
 			le32_to_cpu(bcb->Signature), bcb->Tag,
 			le32_to_cpu(bcb->DataTransferLength), bcb->Flags,
-			(bcb->Lun >> 4), (bcb->Lun & 0x0F), 
+			(bcb->Lun >> 4), (bcb->Lun & 0x0F),
 			bcb->Length);
 	result = usb_stor_bulk_transfer_buf(us, us->send_bulk_pipe,
 				bcb, cbwlen, NULL);
@@ -1133,7 +1131,7 @@ int usb_stor_Bulk_transport(struct scsi_cmnd *srb, struct us_data *us)
 		udelay(125);
 
 	if (transfer_length) {
-		unsigned int pipe = srb->sc_data_direction == DMA_FROM_DEVICE ? 
+		unsigned int pipe = srb->sc_data_direction == DMA_FROM_DEVICE ?
 				us->recv_bulk_pipe : us->send_bulk_pipe;
 		result = usb_stor_bulk_srb(us, pipe, srb);
 		US_DEBUGP("Bulk data transfer result 0x%x\n", result);
@@ -1186,7 +1184,7 @@ int usb_stor_Bulk_transport(struct scsi_cmnd *srb, struct us_data *us)
 	/* check bulk status */
 	residue = le32_to_cpu(bcs->Residue);
 	US_DEBUGP("Bulk Status S 0x%x T 0x%x R %u Stat 0x%x\n",
-			le32_to_cpu(bcs->Signature), bcs->Tag, 
+			le32_to_cpu(bcs->Signature), bcs->Tag,
 			residue, bcs->Status);
 	if (!(bcs->Tag == us->tag || (us->fflags & US_FL_BULK_IGNORE_TAG)) ||
 		bcs->Status > US_BULK_STAT_PHASE) {
@@ -1238,8 +1236,8 @@ int usb_stor_Bulk_transport(struct scsi_cmnd *srb, struct us_data *us)
 		case US_BULK_STAT_OK:
 			/* device babbled -- return fake sense data */
 			if (fake_sense) {
-				memcpy(srb->sense_buffer, 
-				       usb_stor_sense_invalidCDB, 
+				memcpy(srb->sense_buffer,
+				       usb_stor_sense_invalidCDB,
 				       sizeof(usb_stor_sense_invalidCDB));
 				return USB_STOR_TRANSPORT_NO_SENSE;
 			}
@@ -1332,7 +1330,7 @@ int usb_stor_CB_reset(struct us_data *us)
 	memset(us->iobuf, 0xFF, CB_RESET_CMD_SIZE);
 	us->iobuf[0] = SEND_DIAGNOSTIC;
 	us->iobuf[1] = 4;
-	return usb_stor_reset_common(us, US_CBI_ADSC, 
+	return usb_stor_reset_common(us, US_CBI_ADSC,
 				 USB_TYPE_CLASS | USB_RECIP_INTERFACE,
 				 0, us->ifnum, us->iobuf, CB_RESET_CMD_SIZE);
 }
@@ -1345,7 +1343,7 @@ int usb_stor_Bulk_reset(struct us_data *us)
 {
 	US_DEBUGP("%s called\n", __func__);
 
-	return usb_stor_reset_common(us, US_BULK_RESET_REQUEST, 
+	return usb_stor_reset_common(us, US_BULK_RESET_REQUEST,
 				 USB_TYPE_CLASS | USB_RECIP_INTERFACE,
 				 0, us->ifnum, NULL, 0);
 }

@@ -1,6 +1,5 @@
 #!/bin/sh -x
 
-
 if [ -r Makefile ]; then
 	make distclean
 fi

@@ -22,8 +22,6 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
-
 /* This tables contains entries for the 675/680/690 (Timon) camera, with
    4 different qualities (no compression, low, medium, high).
    It lists the bandwidth requirements for said mode by its alternate interface
@@ -59,5 +57,3 @@ extern const unsigned int TimonRomTable [16][2][16][8];
 extern const unsigned int Timon_fps_vector[PWC_FPS_MAX_TIMON];
 
 #endif
-
-

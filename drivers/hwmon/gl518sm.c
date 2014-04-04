@@ -73,7 +73,6 @@ enum chips { gl518sm_r00, gl518sm_r80 };
 #define GL518_REG_VIN1		0x14
 #define GL518_REG_VDD		0x15
 
-
 /*
  * Conversions. Rounding and limit checking is only done on the TO_REG
  * variants. Note that you should be a bit careful with which arguments
@@ -552,7 +551,6 @@ exit_free:
 exit:
 	return err;
 }
-
 
 /* Called when we have found a new GL518SM.
    Note that we preserve D4:NoFan2 and D2:beep_enable. */

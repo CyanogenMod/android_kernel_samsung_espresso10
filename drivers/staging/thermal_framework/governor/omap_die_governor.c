@@ -38,7 +38,6 @@
 #define OMAP_MONITOR_TEMP 85000
 #define OMAP_SAFE_TEMP  25000
 
-
 /* TODO: Define this via a configurable file */
 #define HYSTERESIS_VALUE 2000
 #define NORMAL_TEMP_MONITORING_RATE 2000

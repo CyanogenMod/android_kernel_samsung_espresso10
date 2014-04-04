@@ -7,7 +7,7 @@
  *
  *  Based on the work of
  *		Donald Becker
- * 
+ *
  *  Old chipset support added by Simon Evans <spse@secret.org.uk> 2002
  *    - adds support for Belkin F5U011
  */
@@ -15,18 +15,18 @@
 /*
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or 
+ * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
- * 
+ *
  * Should you need to contact me, the author, you can do so either by
  * e-mail - mail your message to <vojtech@suse.cz>, or by paper mail:
  * Vojtech Pavlik, Simunkova 1594, Prague 8, 182 00 Czech Republic
@@ -67,7 +67,7 @@ static const char driver_name[] = "catc";
 
 /*
  * Some defines.
- */ 
+ */
 
 #define STATS_UPDATE		(HZ)	/* Time between stats updates */
 #define TX_TIMEOUT		(5*HZ)	/* Max time the queue can be stopped */
@@ -340,7 +340,7 @@ static void catc_irq_done(struct urb *urb)
 			if ((res = usb_submit_urb(catc->rx_urb, GFP_ATOMIC)) < 0) {
 				err("submit(rx_urb) status %d", res);
 			}
-		} 
+		}
 	}
 resubmit:
 	res = usb_submit_urb (urb, GFP_ATOMIC);
@@ -541,7 +541,7 @@ static int catc_ctrl_async(struct catc *catc, u8 dir, u8 request, u16 value,
 	unsigned long flags;
 
 	spin_lock_irqsave(&catc->ctrl_lock, flags);
-	
+
 	q = catc->ctrl_queue + catc->ctrl_head;
 
 	q->dir = dir;
@@ -642,7 +642,7 @@ static void catc_set_multicast_list(struct net_device *netdev)
 	if (netdev->flags & IFF_PROMISC) {
 		memset(catc->multicast, 0xff, 64);
 		rx |= (!catc->is_f5u011) ? RxPromisc : AltRxPromisc;
-	} 
+	}
 
 	if (netdev->flags & IFF_ALLMULTI) {
 		memset(catc->multicast, 0xff, 64);
@@ -688,7 +688,7 @@ static int catc_get_settings(struct net_device *dev, struct ethtool_cmd *cmd)
 	cmd->advertising = ADVERTISED_10baseT_Half | ADVERTISED_TP;
 	ethtool_cmd_speed_set(cmd, SPEED_10);
 	cmd->duplex = DUPLEX_HALF;
-	cmd->port = PORT_TP; 
+	cmd->port = PORT_TP;
 	cmd->phy_address = 0;
 	cmd->transceiver = XCVR_INTERNAL;
 	cmd->autoneg = AUTONEG_DISABLE;
@@ -797,7 +797,7 @@ static int catc_probe(struct usb_interface *intf, const struct usb_device_id *id
 	catc->tx_urb = usb_alloc_urb(0, GFP_KERNEL);
 	catc->rx_urb = usb_alloc_urb(0, GFP_KERNEL);
 	catc->irq_urb = usb_alloc_urb(0, GFP_KERNEL);
-	if ((!catc->ctrl_urb) || (!catc->tx_urb) || 
+	if ((!catc->ctrl_urb) || (!catc->tx_urb) ||
 	    (!catc->rx_urb) || (!catc->irq_urb)) {
 		err("No free urbs available.");
 		usb_free_urb(catc->ctrl_urb);
@@ -809,17 +809,17 @@ static int catc_probe(struct usb_interface *intf, const struct usb_device_id *id
 	}
 
 	/* The F5U011 has the same vendor/product as the netmate but a device version of 0x130 */
-	if (le16_to_cpu(usbdev->descriptor.idVendor) == 0x0423 && 
+	if (le16_to_cpu(usbdev->descriptor.idVendor) == 0x0423 &&
 	    le16_to_cpu(usbdev->descriptor.idProduct) == 0xa &&
 	    le16_to_cpu(catc->usbdev->descriptor.bcdDevice) == 0x0130) {
 		dbg("Testing for f5u011");
-		catc->is_f5u011 = 1;		
+		catc->is_f5u011 = 1;
 		atomic_set(&catc->recq_sz, 0);
 		pktsz = RX_PKT_SZ;
 	} else {
 		pktsz = RX_MAX_BURST * (PKT_SZ + 2);
 	}
-	
+
 	usb_fill_control_urb(catc->ctrl_urb, usbdev, usb_sndctrlpipe(usbdev, 0),
 		NULL, NULL, 0, catc_ctrl_done, catc);
 
@@ -837,10 +837,10 @@ static int catc_probe(struct usb_interface *intf, const struct usb_device_id *id
 
 		i = 0x12345678;
 		catc_write_mem(catc, 0x7a80, &i, 4);
-		i = 0x87654321;	
+		i = 0x87654321;
 		catc_write_mem(catc, 0xfa80, &i, 4);
 		catc_read_mem(catc, 0x7a80, &i, 4);
-	  
+
 		switch (i) {
 		case 0x12345678:
 			catc_set_reg(catc, TxBufCount, 8);
@@ -856,31 +856,31 @@ static int catc_probe(struct usb_interface *intf, const struct usb_device_id *id
 			dbg("32k Memory\n");
 			break;
 		}
-	  
+
 		dbg("Getting MAC from SEEROM.");
-	  
+
 		catc_get_mac(catc, netdev->dev_addr);
-		
+
 		dbg("Setting MAC into registers.");
-	  
+
 		for (i = 0; i < 6; i++)
 			catc_set_reg(catc, StationAddr0 - i, netdev->dev_addr[i]);
-		
+
 		dbg("Filling the multicast list.");
-	  
+
 		memset(broadcast, 0xff, 6);
 		catc_multicast(broadcast, catc->multicast);
 		catc_multicast(netdev->dev_addr, catc->multicast);
 		catc_write_mem(catc, 0xfa80, catc->multicast, 64);
-		
+
 		dbg("Clearing error counters.");
-		
+
 		for (i = 0; i < 8; i++)
 			catc_set_reg(catc, EthStats + i, 0);
 		catc->last_stats = jiffies;
-		
+
 		dbg("Enabling.");
-		
+
 		catc_set_reg(catc, MaxBurst, RX_MAX_BURST);
 		catc_set_reg(catc, OpModes, OpTxMerge | OpRxMerge | OpLenInclude | Op3MemWaits);
 		catc_set_reg(catc, LEDCtrl, LEDLink);
@@ -889,7 +889,7 @@ static int catc_probe(struct usb_interface *intf, const struct usb_device_id *id
 		dbg("Performing reset\n");
 		catc_reset(catc);
 		catc_get_mac(catc, netdev->dev_addr);
-		
+
 		dbg("Setting RX Mode");
 		catc->rxmode[0] = RxEnable | RxPolarity | RxMultiCast;
 		catc->rxmode[1] = 0;

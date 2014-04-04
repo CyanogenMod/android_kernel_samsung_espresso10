@@ -467,7 +467,6 @@ static void request_complete(void *data)
 	process_pending_requests();
 }
 
-
 static int do_full_screen_update(struct blizzard_request *req)
 {
 	int i;
@@ -1020,7 +1019,6 @@ static void blizzard_sync(void)
 
 	wait_for_completion(&comp);
 }
-
 
 static void blizzard_bind_client(struct omapfb_notifier_block *nb)
 {
@@ -1645,4 +1643,3 @@ struct lcd_ctrl blizzard_ctrl = {
 	.suspend		= blizzard_suspend,
 	.resume			= blizzard_resume,
 };
-

@@ -1427,8 +1427,6 @@ static irqreturn_t rt2400pci_interrupt(int irq, void *dev_instance)
 
 	spin_unlock(&rt2x00dev->irqmask_lock);
 
-
-
 	return IRQ_HANDLED;
 }
 
@@ -1618,6 +1616,7 @@ static int rt2400pci_probe_hw_mode(struct rt2x00_dev *rt2x00dev)
 static int rt2400pci_probe_hw(struct rt2x00_dev *rt2x00dev)
 {
 	int retval;
+	u32 reg;
 
 	/*
 	 * Allocate eeprom data.
@@ -1629,6 +1628,14 @@ static int rt2400pci_probe_hw(struct rt2x00_dev *rt2x00dev)
 	retval = rt2400pci_init_eeprom(rt2x00dev);
 	if (retval)
 		return retval;
+
+	/*
+	 * Enable rfkill polling by setting GPIO direction of the
+	 * rfkill switch GPIO pin correctly.
+	 */
+	rt2x00pci_register_read(rt2x00dev, GPIOCSR, &reg);
+	rt2x00_set_field32(&reg, GPIOCSR_BIT8, 1);
+	rt2x00pci_register_write(rt2x00dev, GPIOCSR, reg);
 
 	/*
 	 * Initialize hw specifications.
@@ -1808,7 +1815,6 @@ static DEFINE_PCI_DEVICE_TABLE(rt2400pci_device_table) = {
 	{ PCI_DEVICE(0x1814, 0x0101) },
 	{ 0, }
 };
-
 
 MODULE_AUTHOR(DRV_PROJECT);
 MODULE_VERSION(DRV_VERSION);

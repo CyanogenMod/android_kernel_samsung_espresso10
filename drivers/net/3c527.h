@@ -14,11 +14,9 @@
 #define         HOST_CMD_SUSPND_TX  3
 #define         HOST_CMD_RESTRT_TX  5
 
-
 #define HOST_STATUS		2
 #define		HOST_STATUS_CRR	(1<<6)
 #define		HOST_STATUS_CWR	(1<<5)
-
 
 #define HOST_CTRL		6
 #define		HOST_CTRL_ATTN	(1<<7)

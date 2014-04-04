@@ -46,7 +46,6 @@ struct rtentry {
 	unsigned short	rt_irtt;	/* Initial RTT			*/
 };
 
-
 #define	RTF_UP		0x0001		/* route usable		  	*/
 #define	RTF_GATEWAY	0x0002		/* destination is a gateway	*/
 #define	RTF_HOST	0x0004		/* host entry (net otherwise)	*/
@@ -63,7 +62,4 @@ struct rtentry {
  *	<linux/ipv6_route.h> uses RTF values >= 64k
  */
 
-
-
 #endif	/* _LINUX_ROUTE_H */
-

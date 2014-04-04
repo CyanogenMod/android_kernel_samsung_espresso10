@@ -48,18 +48,13 @@
 
 /*---------------------  Static Definitions -------------------------*/
 
-
-
-
 /*---------------------  Static Classes  ----------------------------*/
 
 /*---------------------  Static Variables  --------------------------*/
 static int          msglevel                =MSG_LEVEL_INFO;
 /*---------------------  Static Functions  --------------------------*/
 
-
 /*---------------------  Export Variables  --------------------------*/
-
 
 /*---------------------  Export Functions  --------------------------*/
 
@@ -72,7 +67,6 @@ static int          msglevel                =MSG_LEVEL_INFO;
  *    None.
  *
 -*/
-
 
 void
 PSvEnablePowerSaving(
@@ -129,11 +123,6 @@ PSvEnablePowerSaving(
     return;
 }
 
-
-
-
-
-
 /*+
  *
  * Routine Description:
@@ -170,7 +159,6 @@ PSvDisablePowerSaving(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -180,7 +168,6 @@ PSvDisablePowerSaving(
  *    true, if power down success
  *    false, if fail
 -*/
-
 
 bool
 PSbConsiderPowerDown(
@@ -236,8 +223,6 @@ PSbConsiderPowerDown(
     return true;
 }
 
-
-
 /*+
  *
  * Routine Description:
@@ -248,8 +233,6 @@ PSbConsiderPowerDown(
  *
 -*/
 
-
-
 void
 PSvSendPSPOLL(
     void *hDeviceContext
@@ -258,7 +241,6 @@ PSvSendPSPOLL(
     PSDevice            pDevice = (PSDevice)hDeviceContext;
     PSMgmtObject        pMgmt = pDevice->pMgmt;
     PSTxMgmtPacket      pTxPacket = NULL;
-
 
     memset(pMgmt->pbyPSPacketPool, 0, sizeof(STxMgmtPacket) + WLAN_HDR_ADDR2_LEN);
     pTxPacket = (PSTxMgmtPacket)pMgmt->pbyPSPacketPool;
@@ -285,8 +267,6 @@ PSvSendPSPOLL(
     return;
 }
 
-
-
 /*+
  *
  * Routine Description:
@@ -305,7 +285,6 @@ PSbSendNullPacket(
     PSTxMgmtPacket      pTxPacket = NULL;
     PSMgmtObject        pMgmt = pDevice->pMgmt;
     unsigned int uIdx;
-
 
     if (pDevice->bLinkPass == false) {
         return false;
@@ -368,7 +347,6 @@ PSbSendNullPacket(
 //            DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "Send Null Packet success....\n");
     }
 
-
     return true ;
 }
 
@@ -409,4 +387,3 @@ PSbIsNextTBTTWakeUp(
 
     return bWakeUp;
 }
-

@@ -206,7 +206,6 @@ static void slc_bump(struct slcan *sl)
 		cf.data[i] |= tmp;
 	}
 
-
 	skb = dev_alloc_skb(sizeof(struct can_frame));
 	if (!skb)
 		return;
@@ -344,7 +343,6 @@ out:
 	kfree_skb(skb);
 	return NETDEV_TX_OK;
 }
-
 
 /******************************************
  *   Routines looking at netdevice side.

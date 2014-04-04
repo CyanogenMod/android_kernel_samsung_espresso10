@@ -56,7 +56,6 @@ struct read_event {
 	u64 id;
 };
 
-
 #define PERF_SAMPLE_MASK				\
 	(PERF_SAMPLE_IP | PERF_SAMPLE_TID |		\
 	 PERF_SAMPLE_TIME | PERF_SAMPLE_ADDR |		\
@@ -144,7 +143,7 @@ void perf_event__print_totals(void);
 struct perf_session;
 struct thread_map;
 
-typedef int (*perf_event__handler_synth_t)(union perf_event *event, 
+typedef int (*perf_event__handler_synth_t)(union perf_event *event,
 					   struct perf_session *session);
 typedef int (*perf_event__handler_t)(union perf_event *event,
 				     struct perf_sample *sample,

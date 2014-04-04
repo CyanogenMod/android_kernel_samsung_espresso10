@@ -464,7 +464,6 @@ static int philips_europa_tuner_init(struct dvb_frontend *fe)
 	static u8 msg[] = { 0x00, 0x40};
 	struct i2c_msg init_msg = {.addr = 0x43,.flags = 0,.buf = msg,.len = sizeof(msg) };
 
-
 	if (philips_td1316_tuner_init(fe))
 		return -EIO;
 	msleep(1);

@@ -473,7 +473,6 @@ static ssize_t read_kmem(struct file *file, char __user *buf,
 	return read ? read : err;
 }
 
-
 static ssize_t do_write_kmem(unsigned long p, const char __user *buf,
 				size_t count, loff_t *ppos)
 {

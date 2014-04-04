@@ -22,4 +22,3 @@ int dlm_is_removed(struct dlm_ls *ls, int nodeid);
 int dlm_is_member(struct dlm_ls *ls, int nodeid);
 
 #endif                          /* __MEMBER_DOT_H__ */
-

@@ -130,7 +130,6 @@ that protects the following:
 All external entry functions are locked with the priv->action_lock to ensure
 that only one external action is invoked at a time.
 
-
 */
 
 #include <linux/compiler.h>
@@ -7310,7 +7309,7 @@ static int ipw2100_wx_set_txpow(struct net_device *dev,
 {
 	struct ipw2100_priv *priv = libipw_priv(dev);
 	int err = 0, value;
-	
+
 	if (ipw_radio_kill_sw(priv, wrqu->txpower.disabled))
 		return -EINPROGRESS;
 

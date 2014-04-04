@@ -484,7 +484,6 @@ int sport_config_tx_dma(struct sport_device *sport, void *buf, \
 	pr_debug("%s x_count:0x%x, y_count:0x%x\n", __func__,
 			x_count, y_count);
 
-
 	if (sport->dma_tx_desc) {
 		dma_free_coherent(NULL, sport->tx_desc_bytes, \
 				sport->dma_tx_desc, 0);

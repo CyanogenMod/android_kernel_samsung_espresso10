@@ -296,7 +296,6 @@ static void da9034_touch_close(struct input_dev *dev)
 			DA9034_MANUAL_CTRL, DA9034_LDO_ADC_EN);
 }
 
-
 static int __devinit da9034_touch_probe(struct platform_device *pdev)
 {
 	struct da9034_touch_pdata *pdata = pdev->dev.platform_data;

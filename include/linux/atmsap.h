@@ -2,7 +2,6 @@
 
 /* Written 1995-1999 by Werner Almesberger, EPFL LRC/ICA */
 
-
 #ifndef _LINUX_ATMSAP_H
 #define _LINUX_ATMSAP_H
 
@@ -12,7 +11,6 @@
  * BEGIN_xx and END_xx markers are used for automatic generation of
  * documentation. Do not change them.
  */
-
 
 /*
  * Layer 2 protocol identifiers
@@ -35,7 +33,6 @@
 #define ATM_L2_ISO7776	0x11	/* ISO 7776 DTE-DTE */
 /* END_L2 */
 
-
 /*
  * Layer 3 protocol identifiers
  */
@@ -53,7 +50,6 @@
 #define ATM_L3_USER	0x10	/* user-specified */
 /* END_L3 */
 
-
 /*
  * High layer identifiers
  */
@@ -65,7 +61,6 @@
 #define ATM_HL_HLP	0x03	/* high layer profile - UNI 3.0 only */
 #define ATM_HL_VENDOR	0x04	/* vendor-specific application identifier */
 /* END_HL */
-
 
 /*
  * ITU-T coded mode of operation
@@ -98,7 +93,6 @@
  */
 
 #define ATM_MAX_HLI	8	/* maximum high-layer information length */
-
 
 struct atm_blli {
     unsigned char l2_proto;	/* layer 2 protocol */
@@ -135,7 +129,6 @@ struct atm_blli {
     } l3;
 } __ATM_API_ALIGN;
 
-
 struct atm_bhli {
     unsigned char hl_type;	/* high layer information type */
     unsigned char hl_length;	/* length (only if hl_type == ATM_HL_USER || */
@@ -143,16 +136,13 @@ struct atm_bhli {
     unsigned char hl_info[ATM_MAX_HLI];/* high layer information */
 };
 
-
 #define ATM_MAX_BLLI	3		/* maximum number of BLLI elements */
-
 
 struct atm_sap {
 	struct atm_bhli bhli;		/* local SAP, high-layer information */
 	struct atm_blli blli[ATM_MAX_BLLI] __ATM_API_ALIGN;
 					/* local SAP, low-layer info */
 };
-
 
 static __inline__ int blli_in_use(struct atm_blli blli)
 {

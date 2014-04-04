@@ -202,7 +202,6 @@ typedef struct _MPI2_SCSI_IO_REQUEST
 #define MPI2_SCSIIO_CONTROL_TLR_ON              (0x00000040)
 #define MPI2_SCSIIO_CONTROL_TLR_OFF             (0x00000080)
 
-
 /* SCSI IO Error Reply Message */
 typedef struct _MPI2_SCSI_IO_REPLY
 {
@@ -259,7 +258,6 @@ typedef struct _MPI2_SCSI_IO_REPLY
 
 #define MPI2_SCSI_TASKTAG_UNKNOWN               (0xFFFF)
 
-
 /****************************************************************************
 *  SCSI Task Management messages
 ****************************************************************************/
@@ -311,8 +309,6 @@ typedef struct _MPI2_SCSI_TASK_MANAGE_REQUEST
 
 #define MPI2_SCSITASKMGMT_MSGFLAGS_DO_NOT_SEND_TASK_IU  (0x01)
 
-
-
 /* SCSI Task Management Reply Message */
 typedef struct _MPI2_SCSI_TASK_MANAGE_REPLY
 {
@@ -356,7 +352,6 @@ typedef struct _MPI2_SCSI_TASK_MANAGE_REPLY
 #define MPI2_SCSITASKMGMT_RI_SHIFT_ARI1                 (16)
 #define MPI2_SCSITASKMGMT_RI_MASK_ARI0                  (0xFF000000)
 #define MPI2_SCSITASKMGMT_RI_SHIFT_ARI0                 (24)
-
 
 /****************************************************************************
 *  SCSI Enclosure Processor messages
@@ -405,7 +400,6 @@ typedef struct _MPI2_SEP_REQUEST
 #define MPI2_SEP_REQ_SLOTSTATUS_DEV_FAULTY              (0x00000002)
 #define MPI2_SEP_REQ_SLOTSTATUS_NO_ERROR                (0x00000001)
 
-
 /* SCSI Enclosure Processor Reply Message */
 typedef struct _MPI2_SEP_REPLY
 {
@@ -442,7 +436,4 @@ typedef struct _MPI2_SEP_REPLY
 #define MPI2_SEP_REPLY_SLOTSTATUS_DEV_FAULTY            (0x00000002)
 #define MPI2_SEP_REPLY_SLOTSTATUS_NO_ERROR              (0x00000001)
 
-
 #endif
-
-

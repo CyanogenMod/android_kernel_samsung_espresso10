@@ -56,4 +56,3 @@ struct w90x900_uartcfg {
 #endif /* __ASSEMBLY__ */
 
 #endif /* __ASM_ARM_REGS_SERIAL_H */
-

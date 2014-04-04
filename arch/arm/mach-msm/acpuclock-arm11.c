@@ -33,7 +33,6 @@
 #include "proc_comm.h"
 #include "acpuclock.h"
 
-
 #define A11S_CLK_CNTL_ADDR (MSM_CSR_BASE + 0x100)
 #define A11S_CLK_SEL_ADDR (MSM_CSR_BASE + 0x104)
 #define A11S_VDD_SVS_PLEVEL_ADDR (MSM_CSR_BASE + 0x124)
@@ -134,7 +133,6 @@ static struct clkctl_acpu_speed  acpu_freq_tbl[] = {
 };
 #endif
 
-
 #ifdef CONFIG_CPU_FREQ_TABLE
 static struct cpufreq_frequency_table freq_table[] = {
 	{ 0, 122880 },
@@ -170,7 +168,6 @@ static int pc_pll_request(unsigned id, unsigned on)
 #endif
 	return res;
 }
-
 
 /*----------------------------------------------------------------------------
  * ARM11 'owned' clock control

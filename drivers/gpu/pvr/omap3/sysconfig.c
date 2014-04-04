@@ -208,11 +208,9 @@ static PVRSRV_ERROR SysLocateDevices(SYS_DATA *psSysData)
 
 	PVR_UNREFERENCED_PARAMETER(psSysData);
 
-
 	gsSGXDeviceMap.ui32Flags = 0x0;
 
 #if defined(NO_HARDWARE)
-
 
 	eError = OSBaseAllocContigMemory(SYS_OMAP3430_SGX_REGS_SIZE,
 									 &gsSGXRegsCPUVAddr,
@@ -234,9 +232,6 @@ static PVRSRV_ERROR SysLocateDevices(SYS_DATA *psSysData)
 
 	OSMemSet(gsSGXRegsCPUVAddr, 0, SYS_OMAP3430_SGX_REGS_SIZE);
 
-
-
-
 	gsSGXDeviceMap.ui32IRQ = 0;
 
 #else
@@ -256,10 +251,8 @@ static PVRSRV_ERROR SysLocateDevices(SYS_DATA *psSysData)
 	}
 #endif
 
-
 	return PVRSRV_OK;
 }
-
 
 IMG_CHAR *SysCreateVersionString(IMG_CPU_PHYADDR sRegRegion)
 {
@@ -312,7 +305,6 @@ IMG_CHAR *SysCreateVersionString(IMG_CPU_PHYADDR sRegRegion)
 	return aszVersionString;
 }
 
-
 PVRSRV_ERROR SysInitialise(IMG_VOID)
 {
 	IMG_UINT32			i;
@@ -341,7 +333,6 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 	SYS_SPECIFIC_DATA_SET(&gsSysSpecificData, SYS_SPECIFIC_DATA_ENABLE_ENVDATA);
 
 	gpsSysData->ui32NumDevices = SYS_DEVICE_COUNT;
-
 
 	for(i=0; i<SYS_DEVICE_COUNT; i++)
 	{
@@ -384,13 +375,7 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 	psTimingInfo->ui32uKernelFreq = SYS_SGX_PDS_TIMER_FREQ;
 #endif
 
-
-
 	gpsSysSpecificData->ui32SrcClockDiv = 3;
-
-
-
-
 
 	eError = SysLocateDevices(gpsSysData);
 	if (eError != PVRSRV_OK)
@@ -424,7 +409,6 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 	}
 #endif
 
-
 	eError = PVRSRVRegisterDevice(gpsSysData, SGXRegisterDevice,
 								  DEVICE_SGX_INTERRUPT, &gui32SGXDeviceID);
 	if (eError != PVRSRV_OK)
@@ -435,10 +419,6 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 		return eError;
 	}
 	SYS_SPECIFIC_DATA_SET(&gsSysSpecificData, SYS_SPECIFIC_DATA_ENABLE_REGDEV);
-
-
-
-
 
 	psDeviceNode = gpsSysData->psDeviceNodeList;
 	while(psDeviceNode)
@@ -451,15 +431,10 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 				DEVICE_MEMORY_INFO *psDevMemoryInfo;
 				DEVICE_MEMORY_HEAP_INFO *psDeviceMemoryHeap;
 
-
-
-
 				psDeviceNode->psLocalDevMemArena = IMG_NULL;
-
 
 				psDevMemoryInfo = &psDeviceNode->sDevMemoryInfo;
 				psDeviceMemoryHeap = psDevMemoryInfo->psDeviceMemoryHeap;
-
 
 				for(i=0; i<psDevMemoryInfo->ui32HeapCount; i++)
 				{
@@ -475,7 +450,6 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 				PVR_DPF((PVR_DBG_ERROR,"SysInitialise: Failed to find SGX device node!"));
 				return PVRSRV_ERROR_INIT_FAILURE;
 		}
-
 
 		psDeviceNode = psDeviceNode->psNext;
 	}
@@ -520,7 +494,6 @@ PVRSRV_ERROR SysInitialise(IMG_VOID)
 	return PVRSRV_OK;
 }
 
-
 PVRSRV_ERROR SysFinalise(IMG_VOID)
 {
 	PVRSRV_ERROR eError = PVRSRV_OK;
@@ -553,7 +526,6 @@ PVRSRV_ERROR SysFinalise(IMG_VOID)
 	SYS_SPECIFIC_DATA_SET(&gsSysSpecificData, SYS_SPECIFIC_DATA_ENABLE_LISR);
 #endif
 
-
 	gpsSysData->pszVersionString = SysCreateVersionString(gsSGXDeviceMap.sRegsCpuPBase);
 	if (!gpsSysData->pszVersionString)
 	{
@@ -574,7 +546,6 @@ PVRSRV_ERROR SysFinalise(IMG_VOID)
 	return eError;
 }
 
-
 PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 {
 	PVRSRV_ERROR eError;
@@ -589,7 +560,7 @@ PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 			return eError;
 		}
 	}
-#endif 
+#endif
 
 	if (SYS_SPECIFIC_DATA_TEST(gpsSysSpecificData, SYS_SPECIFIC_DATA_ENABLE_MISR))
 	{
@@ -614,7 +585,6 @@ PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 		}
 #endif
 
-
 		eError = PVRSRVDeinitialiseDevice (gui32SGXDeviceID);
 		if (eError != PVRSRV_OK)
 		{
@@ -632,8 +602,6 @@ PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 						 IMG_NULL);
 	}
 #endif
-
-
 
 	if (SYS_SPECIFIC_DATA_TEST(gpsSysSpecificData, SYS_SPECIFIC_DATA_ENABLE_SYSCLOCKS))
 	{
@@ -668,7 +636,6 @@ PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 	}
 #endif
 
-
 	gpsSysSpecificData->ui32SysSpecificData = 0;
 	gpsSysSpecificData->bSGXInitComplete = IMG_FALSE;
 
@@ -676,7 +643,6 @@ PVRSRV_ERROR SysDeinitialise (SYS_DATA *psSysData)
 
 	return PVRSRV_OK;
 }
-
 
 PVRSRV_ERROR SysGetDeviceMemoryMap(PVRSRV_DEVICE_TYPE	eDeviceType,
 								   IMG_VOID				**ppvDeviceMap)
@@ -699,14 +665,12 @@ PVRSRV_ERROR SysGetDeviceMemoryMap(PVRSRV_DEVICE_TYPE	eDeviceType,
 	return PVRSRV_OK;
 }
 
-
 IMG_DEV_PHYADDR SysCpuPAddrToDevPAddr(PVRSRV_DEVICE_TYPE	eDeviceType,
 									  IMG_CPU_PHYADDR		CpuPAddr)
 {
 	IMG_DEV_PHYADDR DevPAddr;
 
 	PVR_UNREFERENCED_PARAMETER(eDeviceType);
-
 
 	DevPAddr.uiAddr = CpuPAddr.uiAddr;
 
@@ -717,7 +681,6 @@ IMG_CPU_PHYADDR SysSysPAddrToCpuPAddr (IMG_SYS_PHYADDR sys_paddr)
 {
 	IMG_CPU_PHYADDR cpu_paddr;
 
-
 	cpu_paddr.uiAddr = sys_paddr.uiAddr;
 	return cpu_paddr;
 }
@@ -726,11 +689,9 @@ IMG_SYS_PHYADDR SysCpuPAddrToSysPAddr (IMG_CPU_PHYADDR cpu_paddr)
 {
 	IMG_SYS_PHYADDR sys_paddr;
 
-
 	sys_paddr.uiAddr = cpu_paddr.uiAddr;
 	return sys_paddr;
 }
-
 
 IMG_DEV_PHYADDR SysSysPAddrToDevPAddr(PVRSRV_DEVICE_TYPE eDeviceType, IMG_SYS_PHYADDR SysPAddr)
 {
@@ -738,12 +699,10 @@ IMG_DEV_PHYADDR SysSysPAddrToDevPAddr(PVRSRV_DEVICE_TYPE eDeviceType, IMG_SYS_PH
 
 	PVR_UNREFERENCED_PARAMETER(eDeviceType);
 
-
 	DevPAddr.uiAddr = SysPAddr.uiAddr;
 
 	return DevPAddr;
 }
-
 
 IMG_SYS_PHYADDR SysDevPAddrToSysPAddr(PVRSRV_DEVICE_TYPE eDeviceType, IMG_DEV_PHYADDR DevPAddr)
 {
@@ -751,24 +710,20 @@ IMG_SYS_PHYADDR SysDevPAddrToSysPAddr(PVRSRV_DEVICE_TYPE eDeviceType, IMG_DEV_PH
 
 	PVR_UNREFERENCED_PARAMETER(eDeviceType);
 
-
 	SysPAddr.uiAddr = DevPAddr.uiAddr;
 
 	return SysPAddr;
 }
-
 
 IMG_VOID SysRegisterExternalDevice(PVRSRV_DEVICE_NODE *psDeviceNode)
 {
 	PVR_UNREFERENCED_PARAMETER(psDeviceNode);
 }
 
-
 IMG_VOID SysRemoveExternalDevice(PVRSRV_DEVICE_NODE *psDeviceNode)
 {
 	PVR_UNREFERENCED_PARAMETER(psDeviceNode);
 }
-
 
 IMG_UINT32 SysGetInterruptSource(SYS_DATA			*psSysData,
 								 PVRSRV_DEVICE_NODE	*psDeviceNode)
@@ -783,17 +738,14 @@ IMG_UINT32 SysGetInterruptSource(SYS_DATA			*psSysData,
 #endif
 }
 
-
 IMG_VOID SysClearInterrupts(SYS_DATA* psSysData, IMG_UINT32 ui32ClearBits)
 {
 	PVR_UNREFERENCED_PARAMETER(psSysData);
 	PVR_UNREFERENCED_PARAMETER(ui32ClearBits);
 
-
 	OSReadHWReg(((PVRSRV_SGXDEV_INFO *)gpsSGXDevNode->pvDevice)->pvRegsBaseKM,
 										EUR_CR_EVENT_HOST_CLEAR);
 }
-
 
 PVRSRV_ERROR SysSystemPrePowerState(PVRSRV_SYS_POWER_STATE eNewPowerState)
 {
@@ -837,7 +789,6 @@ PVRSRV_ERROR SysSystemPrePowerState(PVRSRV_SYS_POWER_STATE eNewPowerState)
 
 	return eError;
 }
-
 
 PVRSRV_ERROR SysSystemPostPowerState(PVRSRV_SYS_POWER_STATE eNewPowerState)
 {
@@ -886,7 +837,6 @@ PVRSRV_ERROR SysSystemPostPowerState(PVRSRV_SYS_POWER_STATE eNewPowerState)
 	return eError;
 }
 
-
 PVRSRV_ERROR SysDevicePrePowerState(IMG_UINT32				ui32DeviceIndex,
 									PVRSRV_DEV_POWER_STATE	eNewPowerState,
 									PVRSRV_DEV_POWER_STATE	eCurrentPowerState)
@@ -909,7 +859,6 @@ PVRSRV_ERROR SysDevicePrePowerState(IMG_UINT32				ui32DeviceIndex,
 #endif
 	return PVRSRV_OK;
 }
-
 
 PVRSRV_ERROR SysDevicePostPowerState(IMG_UINT32				ui32DeviceIndex,
 									 PVRSRV_DEV_POWER_STATE	eNewPowerState,
@@ -936,7 +885,6 @@ PVRSRV_ERROR SysDevicePostPowerState(IMG_UINT32				ui32DeviceIndex,
 
 	return eError;
 }
-
 
 PVRSRV_ERROR SysOEMFunction (	IMG_UINT32	ui32ID,
 								IMG_VOID	*pvIn,

@@ -1006,7 +1006,6 @@ int rds_ib_xmit_rdma(struct rds_connection *conn, struct rm_rdma_op *op)
 		BUG_ON(failed_wr != &first->s_wr);
 	}
 
-
 out:
 	return ret;
 }

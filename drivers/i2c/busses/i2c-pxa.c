@@ -477,7 +477,6 @@ static void i2c_pxa_reset(struct pxa_i2c *i2c)
 	udelay(100);
 }
 
-
 #ifdef CONFIG_I2C_PXA_SLAVE
 /*
  * PXA I2C Slave mode
@@ -1006,7 +1005,6 @@ static irqreturn_t i2c_pxa_handler(int this_irq, void *dev_id)
 
 	return IRQ_HANDLED;
 }
-
 
 static int i2c_pxa_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
 {

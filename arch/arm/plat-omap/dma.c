@@ -22,7 +22,6 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.
- *
  */
 
 #include <linux/module.h>
@@ -129,8 +128,7 @@ static inline void disable_lnk(int lch);
 static void omap_disable_channel_irq(int lch);
 static inline void omap_enable_channel_irq(int lch);
 
-#define REVISIT_24XX()		printk(KERN_ERR "FIXME: no %s on 24xx\n", \
-						__func__);
+#define REVISIT_24XX()	printk(KERN_ERR "FIXME: no %s on 24xx\n", __func__);
 
 #ifdef CONFIG_ARCH_OMAP15XX
 /* Returns 1 if the DMA module is in OMAP1510-compatible mode, 0 otherwise */
@@ -139,7 +137,7 @@ static int omap_dma_in_1510_mode(void)
 	return enable_1510_mode;
 }
 #else
-#define omap_dma_in_1510_mode()		0
+#define omap_dma_in_1510_mode()	0
 #endif
 
 #ifdef CONFIG_ARCH_OMAP1
@@ -753,8 +751,7 @@ void omap_free_dma(int lch)
 	unsigned long flags;
 
 	if (dma_chan[lch].dev_id == -1) {
-		pr_err("omap_dma: trying to free unallocated DMA channel %d\n",
-		       lch);
+		pr_err("omap_dma: trying to free unallocated DMA channel %d\n", lch);
 		return;
 	}
 
@@ -955,8 +952,7 @@ void omap_stop_dma(int lch)
 			l = p->dma_read(CCR, lch);
 		}
 		if (i >= 100)
-			printk(KERN_ERR "DMA drain did not complete on "
-					"lch %d\n", lch);
+			printk(KERN_ERR "DMA drain did not complete on lch %d\n", lch);
 		/* Restore OCP_SYSCONFIG */
 		p->dma_write(sys_cf, OCP_SYSCONFIG, lch);
 	} else {
@@ -1002,7 +998,6 @@ int omap_set_dma_callback(int lch,
 
 	spin_lock_irqsave(&dma_chan_lock, flags);
 	if (dma_chan[lch].dev_id == -1) {
-		printk(KERN_ERR "DMA callback for not set for free channel\n");
 		spin_unlock_irqrestore(&dma_chan_lock, flags);
 		return -EINVAL;
 	}
@@ -1116,8 +1111,7 @@ void omap_dma_link_lch(int lch_head, int lch_queue)
 {
 	if (omap_dma_in_1510_mode()) {
 		if (lch_head == lch_queue) {
-			p->dma_write(p->dma_read(CCR, lch_head) | (3 << 8),
-								CCR, lch_head);
+			p->dma_write(p->dma_read(CCR, lch_head) | (3 << 8), CCR, lch_head);
 			return;
 		}
 		printk(KERN_ERR "DMA linking is not supported in 1510 mode\n");
@@ -1127,8 +1121,7 @@ void omap_dma_link_lch(int lch_head, int lch_queue)
 
 	if ((dma_chan[lch_head].dev_id == -1) ||
 	    (dma_chan[lch_queue].dev_id == -1)) {
-		printk(KERN_ERR "omap_dma: trying to link "
-		       "non requested channels\n");
+		printk(KERN_ERR "omap_dma: trying to link non requested channels\n");
 		dump_stack();
 	}
 
@@ -1154,15 +1147,13 @@ void omap_dma_unlink_lch(int lch_head, int lch_queue)
 
 	if (dma_chan[lch_head].next_lch != lch_queue ||
 	    dma_chan[lch_head].next_lch == -1) {
-		printk(KERN_ERR "omap_dma: trying to unlink "
-		       "non linked channels\n");
+		printk(KERN_ERR "omap_dma: trying to unlink non linked channels\n");
 		dump_stack();
 	}
 
 	if ((dma_chan[lch_head].flags & OMAP_DMA_ACTIVE) ||
 	    (dma_chan[lch_queue].flags & OMAP_DMA_ACTIVE)) {
-		printk(KERN_ERR "omap_dma: You need to stop the DMA channels "
-		       "before unlinking\n");
+		printk(KERN_ERR "omap_dma: You need to stop the DMA channels before unlinking\n");
 		dump_stack();
 	}
 
@@ -1182,10 +1173,8 @@ static void create_dma_lch_chain(int lch_head, int lch_queue)
 		dma_chan[lch_head].prev_linked_ch = lch_queue;
 		dma_chan[lch_queue].next_linked_ch = lch_head;
 		dma_chan[lch_queue].prev_linked_ch = lch_head;
-	}
-
-	/* a link exists, link the new channel in circular chain */
-	else {
+	} else {
+		/* a link exists, link the new channel in circular chain */
 		dma_chan[lch_queue].next_linked_ch =
 					dma_chan[lch_head].next_linked_ch;
 		dma_chan[lch_queue].prev_linked_ch = lch_head;
@@ -1221,8 +1210,7 @@ static void create_dma_lch_chain(int lch_head, int lch_queue)
  * 	     Failure: -EINVAL/-ENOMEM
  */
 int omap_request_dma_chain(int dev_id, const char *dev_name,
-			   void (*callback) (int lch, u16 ch_status,
-					     void *data),
+			   void (*callback) (int lch, u16 ch_status, void *data),
 			   int *chain_id, int no_of_chans, int chain_mode,
 			   struct omap_dma_channel_params params)
 {
@@ -1407,8 +1395,6 @@ int omap_dma_chain_status(int chain_id)
 		printk(KERN_ERR "Chain doesn't exists\n");
 		return -EINVAL;
 	}
-	pr_debug("CHAINID=%d, qcnt=%d\n", chain_id,
-			dma_linked_lch[chain_id].q_count);
 
 	if (OMAP_DMA_CHAIN_QEMPTY(chain_id))
 		return OMAP_DMA_CHAIN_INACTIVE;
@@ -1521,7 +1507,6 @@ int omap_dma_chain_a_transfer(int chain_id, int src_start, int dest_start,
 					CCR, dma_chan[lch].prev_linked_ch))) {
 					disable_lnk(dma_chan[lch].
 						    prev_linked_ch);
-					pr_debug("\n prev ch is stopped\n");
 					start_dma = 1;
 				}
 			}
@@ -1544,7 +1529,6 @@ int omap_dma_chain_a_transfer(int chain_id, int src_start, int dest_start,
 				if (0 == (l & (1 << 7))) {
 					l |= (1 << 7);
 					dma_chan[lch].state = DMA_CH_STARTED;
-					pr_debug("starting %d\n", lch);
 					p->dma_write(l, CCR, lch);
 				} else
 					start_dma = 0;
@@ -1853,8 +1837,7 @@ static int omap2_dma_handle_ch(int ch)
 
 	if (!status) {
 		if (printk_ratelimit())
-			printk(KERN_WARNING "Spurious DMA IRQ for lch %d\n",
-				ch);
+			printk(KERN_WARNING "Spurious DMA IRQ for lch %d\n", ch);
 		p->dma_write(1 << ch, IRQSTATUS_L0, ch);
 		return 0;
 	}

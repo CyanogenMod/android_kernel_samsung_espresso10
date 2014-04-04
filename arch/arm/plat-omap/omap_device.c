@@ -227,7 +227,6 @@ static int _omap_device_deactivate(struct omap_device *od, u8 ignore_lat)
 					   odpl->deactivate_lat);
 		}
 
-
 		od->dev_wakeup_lat += odpl->activate_lat;
 
 		od->pm_lat_level++;
@@ -292,7 +291,6 @@ static void _add_optional_clock_clkdev(struct omap_device *od,
 		clkdev_add(l);
 	}
 }
-
 
 /* Public functions for use by core code */
 
@@ -589,7 +587,6 @@ int omap_device_register(struct omap_device *od)
 	od->pdev.dev.pwr_domain = &omap_device_power_domain;
 	return platform_device_register(&od->pdev);
 }
-
 
 /* Public functions for use by device drivers through struct platform_data */
 

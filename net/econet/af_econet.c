@@ -63,7 +63,6 @@ static DEFINE_SPINLOCK(aun_queue_lock);
 static struct socket *udpsock;
 #define AUN_PORT	0x8000
 
-
 struct aunhdr
 {
 	unsigned char code;		/* AUN magic protocol byte */
@@ -840,7 +839,6 @@ static void aun_send_response(__u32 addr, unsigned long seq, int code, int cb)
 
 	kernel_sendmsg(udpsock, &udpmsg, &iov, 1, sizeof(ah));
 }
-
 
 /*
  *	Handle incoming AUN packets.  Work out if anybody wants them,

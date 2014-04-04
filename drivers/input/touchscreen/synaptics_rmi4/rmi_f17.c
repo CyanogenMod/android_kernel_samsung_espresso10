@@ -104,7 +104,6 @@ struct f17_stick_controls {
 	u8 maximum_radial_force;
 };
 
-
 union f17_device_commands {
 	struct {
 		u8 rezero:1;
@@ -141,7 +140,6 @@ struct f17_stick_data {
 		u8 regs[1];
 	} gestures;
 };
-
 
 /* data specific to f17 that needs to be kept around */
 
@@ -183,8 +181,6 @@ static ssize_t f17_rezero_store(struct device *dev,
 					 struct device_attribute *attr,
 					 const char *buf, size_t count);
 
-
-
 static int f17_alloc_memory(struct rmi_function_container *fc);
 
 static void f17_free_memory(struct rmi_function_container *fc);
@@ -204,7 +200,6 @@ static struct device_attribute attrs[] = {
 		f17_rezero_show, f17_rezero_store),
 };
 
-
 int f17_read_control_parameters(struct rmi_device *rmi_dev,
 	struct rmi_f17_device_data *f17)
 {
@@ -214,7 +209,6 @@ int f17_read_control_parameters(struct rmi_device *rmi_dev,
 
 	return retval;
 }
-
 
 static int f17_init(struct rmi_function_container *fc)
 {
@@ -687,7 +681,6 @@ static void f17_module_exit(void)
 	rmi_unregister_function_driver(&function_handler);
 }
 
-
 static ssize_t f17_rezero_show(struct device *dev,
 				struct device_attribute *attr,
 				char *buf)
@@ -733,7 +726,6 @@ static ssize_t f17_rezero_store(struct device *dev,
 	}
 	return count;
 }
-
 
 module_init(f17_module_init);
 module_exit(f17_module_exit);

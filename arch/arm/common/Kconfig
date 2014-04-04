@@ -54,7 +54,6 @@ config FIQ_DEBUGGER
 	  kernel is unresponsive due to being stuck with interrupts
 	  disabled.
 
-
 config FIQ_DEBUGGER_NO_SLEEP
 	bool "Keep serial debugger active"
 	depends on FIQ_DEBUGGER

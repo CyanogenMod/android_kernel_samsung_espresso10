@@ -302,7 +302,6 @@ static void send_packet(struct usb_device *udev,
 		dev_dbg(&udev->dev, "retval = %d\n", retval);
 }
 
-
 static void send_packets_g50(struct usb_device *udev,
 			     struct asus_oled_packet *packet, char *buf)
 {
@@ -318,7 +317,6 @@ static void send_packets_g50(struct usb_device *udev,
 	send_packet(udev, packet, 0x380, 0x080, buf,
 		    0x11, 0x00, 0x03, 0x03, 0x80, 0x00);
 }
-
 
 static void send_data(struct asus_oled_dev *odev)
 {
@@ -467,7 +465,6 @@ static ssize_t odev_set_picture(struct asus_oled_dev *odev,
 
 		if (count < 10 || buf[2] != ':')
 			goto error_header;
-
 
 		switch (tolower(buf[1])) {
 		case ASUS_OLED_STATIC:
@@ -818,4 +815,3 @@ static void __exit asus_oled_exit(void)
 
 module_init(asus_oled_init);
 module_exit(asus_oled_exit);
-

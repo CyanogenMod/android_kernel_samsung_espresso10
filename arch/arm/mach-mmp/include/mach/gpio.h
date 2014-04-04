@@ -16,7 +16,6 @@
 #define gpio_to_irq(gpio)	(IRQ_GPIO_START + (gpio))
 #define irq_to_gpio(irq)	((irq) - IRQ_GPIO_START)
 
-
 #define __gpio_is_inverted(gpio)	(0)
 #define __gpio_is_occupied(gpio)	(0)
 

@@ -32,7 +32,6 @@
 #define MODE_10    0x08000000
 #define MODE_11    0x0C000000
 
-
 #define DATA_TRANSFER_MODE              0
 #define PROTECTION_PER_BLOCK            1
 #define LOAD_WAIT_COUNT                 2
@@ -126,6 +125,3 @@ extern int totalUsedBanks;
 extern u32 GLOB_valid_banks[LLD_MAX_FLASH_BANKS];
 
 #endif /*_LLD_NAND_*/
-
-
-

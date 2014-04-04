@@ -33,7 +33,6 @@
 
 #include "pdump_km.h"
 
-
 IMG_VOID SGXInitClocks(PVRSRV_SGXDEV_INFO	*psDevInfo,
 					   IMG_UINT32			ui32PDUMPFlags)
 {
@@ -53,7 +52,6 @@ IMG_VOID SGXInitClocks(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	PDUMPREGWITHFLAGS(SGX_PDUMPREG_NAME, EUR_CR_CLKGATECTL2, ui32RegVal, ui32PDUMPFlags);
 #endif
 }
-
 
 static IMG_VOID SGXResetInitBIFContexts(PVRSRV_SGXDEV_INFO	*psDevInfo,
 										IMG_UINT32			ui32PDUMPFlags)
@@ -96,7 +94,6 @@ static IMG_VOID SGXResetInitBIFContexts(PVRSRV_SGXDEV_INFO	*psDevInfo,
 #endif
 }
 
-
 static IMG_VOID SGXResetSetupBIFContexts(PVRSRV_SGXDEV_INFO	*psDevInfo,
 										 IMG_UINT32			ui32PDUMPFlags)
 {
@@ -128,7 +125,6 @@ static IMG_VOID SGXResetSetupBIFContexts(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	{
 		IMG_UINT32	ui32EDMDirListReg;
 
-
 		#if (SGX_BIF_DIR_LIST_INDEX_EDM == 0)
 		ui32EDMDirListReg = EUR_CR_BIF_DIR_LIST_BASE0;
 		#else
@@ -149,7 +145,6 @@ static IMG_VOID SGXResetSetupBIFContexts(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	}
 }
 
-
 static IMG_VOID SGXResetSleep(PVRSRV_SGXDEV_INFO	*psDevInfo,
 							  IMG_UINT32			ui32PDUMPFlags,
 							  IMG_BOOL				bPDump)
@@ -168,7 +163,6 @@ static IMG_VOID SGXResetSleep(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	PVR_UNREFERENCED_PARAMETER(ui32PDUMPFlags);
 #endif
 
-
 	SGXWaitClocks(psDevInfo, 100);
 	if (bPDump)
 	{
@@ -181,11 +175,9 @@ static IMG_VOID SGXResetSleep(PVRSRV_SGXDEV_INFO	*psDevInfo,
 
 #if defined(EMULATOR)
 
-
 	OSReadHWReg(psDevInfo->pvRegsBaseKM, ui32ReadRegister);
 #endif
 }
-
 
 #if !defined(SGX_FEATURE_MP)
 static IMG_VOID SGXResetSoftReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
@@ -268,13 +260,11 @@ static IMG_VOID SGXResetSoftReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	}
 }
 
-
 static IMG_VOID SGXResetInvalDC(PVRSRV_SGXDEV_INFO	*psDevInfo,
 							    IMG_UINT32			ui32PDUMPFlags,
 								IMG_BOOL			bPDump)
 {
 	IMG_UINT32 ui32RegVal;
-
 
 #if defined(EUR_CR_BIF_CTRL_INVAL)
 	ui32RegVal = EUR_CR_BIF_CTRL_INVAL_ALL_MASK;
@@ -303,8 +293,6 @@ static IMG_VOID SGXResetInvalDC(PVRSRV_SGXDEV_INFO	*psDevInfo,
 #if !defined(SGX_FEATURE_MULTIPLE_MEM_CONTEXTS)
 	{
 
-
-
 		if (PollForValueKM((IMG_UINT32 *)((IMG_UINT8*)psDevInfo->pvRegsBaseKM + EUR_CR_BIF_MEM_REQ_STAT),
 							0,
 							EUR_CR_BIF_MEM_REQ_STAT_READS_MASK,
@@ -324,7 +312,6 @@ static IMG_VOID SGXResetInvalDC(PVRSRV_SGXDEV_INFO	*psDevInfo,
 #endif
 }
 #endif
-
 
 IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 				  IMG_BOOL				bHardwareRecovery,
@@ -370,12 +357,9 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	}
 #endif
 
-
 	SGXResetSoftReset(psDevInfo, IMG_TRUE, ui32PDUMPFlags, IMG_TRUE);
 
 	SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_TRUE);
-
-
 
 #if defined(SGX_FEATURE_36BIT_MMU)
 
@@ -386,7 +370,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	SGXResetInitBIFContexts(psDevInfo, ui32PDUMPFlags);
 
 #if defined(EUR_CR_BIF_MEM_ARB_CONFIG)
-
 
 	ui32RegVal	= (12UL << EUR_CR_BIF_MEM_ARB_CONFIG_PAGE_SIZE_SHIFT) |
 				  (7UL << EUR_CR_BIF_MEM_ARB_CONFIG_BEST_CNT_SHIFT) |
@@ -418,24 +401,15 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	if (bHardwareRecovery)
 	{
 
-
-
-
-
-
-
 		ui32RegVal = (IMG_UINT32)psDevInfo->sBIFResetPDDevPAddr.uiAddr;
 		OSWriteHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_BIF_DIR_LIST_BASE0, ui32RegVal);
 
 		SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_FALSE);
 
-
 		SGXResetSoftReset(psDevInfo, IMG_FALSE, ui32PDUMPFlags, IMG_TRUE);
 		SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_FALSE);
 
 		SGXResetInvalDC(psDevInfo, ui32PDUMPFlags, IMG_FALSE);
-
-
 
 		for (;;)
 		{
@@ -448,17 +422,12 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 				break;
 			}
 
-
-
-
 			sBifFault.uiAddr = OSReadHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_BIF_FAULT);
 			PVR_DPF((PVR_DBG_WARNING, "SGXReset: Page fault 0x%x/0x%x", ui32BifIntStat, sBifFault.uiAddr));
 			ui32PDIndex = sBifFault.uiAddr >> (SGX_MMU_PAGE_SHIFT + SGX_MMU_PT_SHIFT);
 			ui32PTIndex = (sBifFault.uiAddr & SGX_MMU_PT_MASK) >> SGX_MMU_PAGE_SHIFT;
 
-
 			SGXResetSoftReset(psDevInfo, IMG_TRUE, ui32PDUMPFlags, IMG_FALSE);
-
 
 			psDevInfo->pui32BIFResetPD[ui32PDIndex] = (psDevInfo->sBIFResetPTDevPAddr.uiAddr
 													>>SGX_MMU_PDE_ADDR_ALIGNSHIFT)
@@ -468,7 +437,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 													>>SGX_MMU_PTE_ADDR_ALIGNSHIFT)
 													| SGX_MMU_PTE_VALID;
 
-
 			ui32RegVal = OSReadHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_EVENT_STATUS);
 			OSWriteHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_EVENT_HOST_CLEAR, ui32RegVal);
 			ui32RegVal = OSReadHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_EVENT_STATUS2);
@@ -476,13 +444,10 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 
 			SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_FALSE);
 
-
 			SGXResetSoftReset(psDevInfo, IMG_FALSE, ui32PDUMPFlags, IMG_FALSE);
 			SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_FALSE);
 
-
 			SGXResetInvalDC(psDevInfo, ui32PDUMPFlags, IMG_FALSE);
-
 
 			psDevInfo->pui32BIFResetPD[ui32PDIndex] = 0;
 			psDevInfo->pui32BIFResetPT[ui32PTIndex] = 0;
@@ -494,8 +459,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 		SGXResetSoftReset(psDevInfo, IMG_FALSE, ui32PDUMPFlags, IMG_TRUE);
 		SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_FALSE);
 	}
-
-
 
 	SGXResetSetupBIFContexts(psDevInfo, ui32PDUMPFlags);
 
@@ -509,16 +472,13 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	PDUMPREGWITHFLAGS(SGX_PDUMPREG_NAME, EUR_CR_BIF_TWOD_REQ_BASE, SGX_2D_HEAP_BASE, ui32PDUMPFlags);
 #endif
 
-
 	SGXResetInvalDC(psDevInfo, ui32PDUMPFlags, IMG_TRUE);
 
 	PVR_DPF((PVR_DBG_MESSAGE,"Soft Reset of SGX"));
 
-
 	ui32RegVal = 0;
 	OSWriteHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_SOFT_RESET, ui32RegVal);
 	PDUMPREGWITHFLAGS(SGX_PDUMPREG_NAME, EUR_CR_SOFT_RESET, ui32RegVal, ui32PDUMPFlags);
-
 
 	SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_TRUE);
 
@@ -538,7 +498,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 
 	PDUMPCOMMENTWITHFLAGS(ui32PDUMPFlags, "Start of SGX MP reset sequence\r\n");
 
-
 	ui32RegVal = EUR_CR_MASTER_SOFT_RESET_BIF_RESET_MASK  |
 				 EUR_CR_MASTER_SOFT_RESET_IPF_RESET_MASK  |
 				 EUR_CR_MASTER_SOFT_RESET_DPM_RESET_MASK  |
@@ -551,7 +510,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 #if defined(SGX_FEATURE_SYSTEM_CACHE)
 	ui32RegVal |= EUR_CR_MASTER_SOFT_RESET_SLC_RESET_MASK;
 #endif
-
 
 	ui32RegVal |= EUR_CR_MASTER_SOFT_RESET_CORE_RESET_MASK(0)  |
 				  EUR_CR_MASTER_SOFT_RESET_CORE_RESET_MASK(1)  |
@@ -607,7 +565,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 
 	SGXResetSleep(psDevInfo, ui32PDUMPFlags, IMG_TRUE);
 
-
 	ui32RegVal = 0;
 	OSWriteHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_MASTER_SOFT_RESET, ui32RegVal);
 	PDUMPCOMMENTWITHFLAGS(ui32PDUMPFlags, "Remove the resets from all of SGX\r\n");
@@ -634,7 +591,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 	ui32RegVal |= EUR_CR_MASTER_BIF_MMU_CTRL_ENABLE_DC_TLB_MASK;
 	#endif
 
-
 	OSWriteHWReg(psDevInfo->pvRegsBaseKM, EUR_CR_MASTER_BIF_MMU_CTRL, ui32RegVal);
 	PDUMPREGWITHFLAGS(SGX_PDUMPREG_NAME, EUR_CR_MASTER_BIF_MMU_CTRL, ui32RegVal, ui32PDUMPFlags);
 
@@ -648,7 +604,6 @@ IMG_VOID SGXReset(PVRSRV_SGXDEV_INFO	*psDevInfo,
 
 	ui32RegVal |= EUR_CR_BIF_MMU_CTRL_ENABLE_DC_TLB_MASK;
 	#endif
-
 
 	{
 		IMG_UINT32 ui32Core;

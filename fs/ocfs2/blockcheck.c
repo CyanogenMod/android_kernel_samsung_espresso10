@@ -33,7 +33,6 @@
 
 #include "blockcheck.h"
 
-
 /*
  * We use the following conventions:
  *
@@ -41,7 +40,6 @@
  * p = # parity bits
  * c = # total code bits (d + p)
  */
-
 
 /*
  * Calculate the bit offset in the hamming code buffer based on the bit's
@@ -225,7 +223,6 @@ void ocfs2_hamming_fix_block(void *data, unsigned int blocksize,
 	ocfs2_hamming_fix(data, blocksize * 8, 0, fix);
 }
 
-
 /*
  * Debugfs handling.
  */
@@ -367,8 +364,6 @@ static void ocfs2_blockcheck_inc_recover(struct ocfs2_blockcheck_stats *stats)
 	if (!new_count)
 		mlog(ML_NOTICE, "ECC recovery count has wrapped\n");
 }
-
-
 
 /*
  * These are the low-level APIs for using the ocfs2_block_check structure.
@@ -642,4 +637,3 @@ int ocfs2_validate_meta_ecc_bhs(struct super_block *sb,
 
 	return rc;
 }
-

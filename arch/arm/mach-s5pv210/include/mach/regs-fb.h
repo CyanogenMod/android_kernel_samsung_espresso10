@@ -1,8 +1,8 @@
-/* 
+/*
  * Copyright 2010 Ben Dooks <ben-linux@fluff.org>
  *
  * Dummy framebuffer to allow build for the moment.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation.

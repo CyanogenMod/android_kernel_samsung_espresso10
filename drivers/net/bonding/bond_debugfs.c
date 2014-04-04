@@ -120,7 +120,6 @@ void bond_destroy_debugfs(void)
 	bonding_debug_root = NULL;
 }
 
-
 #else /* !CONFIG_DEBUG_FS */
 
 void bond_debug_register(struct bonding *bond)

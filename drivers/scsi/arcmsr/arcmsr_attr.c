@@ -253,7 +253,6 @@ void arcmsr_free_sysfs_attr(struct AdapterControlBlock *acb)
 	sysfs_remove_bin_file(&host->shost_dev.kobj, &arcmsr_sysfs_message_read_attr);
 }
 
-
 static ssize_t
 arcmsr_attr_host_driver_version(struct device *dev,
 				struct device_attribute *attr, char *buf)

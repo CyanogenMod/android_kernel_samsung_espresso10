@@ -148,7 +148,6 @@ struct f01_data {
 #endif
 };
 
-
 static ssize_t rmi_fn_01_productinfo_show(struct device *dev,
 					  struct device_attribute *attr,
 					  char *buf);
@@ -261,7 +260,6 @@ static int rmi_f01_create_sysfs(struct rmi_function_container *fc);
 static int rmi_f01_config(struct rmi_function_container *fc);
 
 static int rmi_f01_reset(struct rmi_function_container *fc);
-
 
 static struct device_attribute fn_01_attrs[] = {
 	__ATTR(productinfo, RMI_RO_ATTR,
@@ -812,7 +810,6 @@ static ssize_t rmi_fn_01_doze_holdoff_show(struct device *dev,
 
 }
 
-
 static ssize_t rmi_fn_01_doze_holdoff_store(struct device *dev,
 					  struct device_attribute *attr,
 					  const char *buf, size_t count)
@@ -1236,7 +1233,6 @@ static int rmi_f01_reset(struct rmi_function_container *fc)
 	/*do nothing here */
 	return 0;
 }
-
 
 #ifdef CONFIG_PM
 static int rmi_f01_suspend(struct rmi_function_container *fc)

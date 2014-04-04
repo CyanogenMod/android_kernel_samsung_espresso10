@@ -2457,7 +2457,6 @@ static struct omap_hwmod omap44xx_emif2_hwmod = {
 	.omap_chip	= OMAP_CHIP_INIT(CHIP_IS_OMAP44XX),
 };
 
-
 /*
  * 'fdif' class
  * face detection hw accelerator module
@@ -6129,7 +6128,6 @@ static struct omap_hwmod_ocp_if *omap44xx_usbhs_ehci_masters[] = {
 	&omap44xx_usb_host_hs__l3_main_2,
 };
 
-
 static struct omap_hwmod omap44xx_usbhs_ehci_hwmod = {
 	.name		= "usbhs_ehci",
 	.class		= &omap44xx_usbhs_ehci_hwmod_class,
@@ -6392,4 +6390,3 @@ int __init omap44xx_hwmod_init(void)
 {
 	return omap_hwmod_register(omap44xx_hwmods);
 }
-

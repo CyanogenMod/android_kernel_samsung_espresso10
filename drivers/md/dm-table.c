@@ -553,7 +553,6 @@ int dm_get_device(struct dm_target *ti, const char *path, fmode_t mode,
 	return __table_get_device(ti->table, ti, path, mode, result);
 }
 
-
 /*
  * Decrement a devices use count and remove it if necessary.
  */

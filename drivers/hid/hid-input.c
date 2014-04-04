@@ -190,7 +190,6 @@ static int hidinput_setkeycode(struct input_dev *dev,
 	return -EINVAL;
 }
 
-
 /**
  * hidinput_calc_abs_res - calculate an absolute axis resolution
  * @field: the HID report field to calculate resolution for
@@ -693,7 +692,6 @@ mapped:
 	if (usage->code > max)
 		goto ignore;
 
-
 	if (usage->type == EV_ABS) {
 
 		int a = field->logical_minimum;
@@ -1014,4 +1012,3 @@ void hidinput_disconnect(struct hid_device *hid)
 	}
 }
 EXPORT_SYMBOL_GPL(hidinput_disconnect);
-

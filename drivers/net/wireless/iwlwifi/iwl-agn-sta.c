@@ -382,7 +382,6 @@ static int iwl_set_tkip_dynamic_key_info(struct iwl_priv *priv,
 
 	priv->stations[sta_id].sta.key.key_flags = key_flags;
 
-
 	/* This copy is acutally not needed: we get the key with each TX */
 	memcpy(priv->stations[sta_id].keyinfo.key, keyconf->key, 16);
 
@@ -477,7 +476,7 @@ int iwl_remove_dynamic_key(struct iwl_priv *priv,
 					sizeof(struct iwl_keyinfo));
 	priv->stations[sta_id].sta.key.key_flags =
 			STA_KEY_FLG_NO_ENC | STA_KEY_FLG_INVALID;
-	priv->stations[sta_id].sta.key.key_offset = WEP_INVALID_OFFSET;
+	priv->stations[sta_id].sta.key.key_offset = keyconf->hw_key_idx;
 	priv->stations[sta_id].sta.sta.modify_mask = STA_MODIFY_KEY_MASK;
 	priv->stations[sta_id].sta.mode = STA_CONTROL_MODIFY_MSK;
 

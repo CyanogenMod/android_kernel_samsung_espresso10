@@ -18,7 +18,7 @@
 
  Its usb's unableness to atomically handle power of 2 period sized data chuncs
  at standard samplerates,
- what led to this part of the usx2y module: 
+ what led to this part of the usx2y module:
  It provides the alsa kernel half of the usx2y-alsa-jack driver pair.
  The pair uses a hardware dependent alsa-device for mmaped pcm transport.
  Advantage achieved:
@@ -47,7 +47,7 @@
  Kernel:
  - rawusb dma pcm buffer transport should go to snd-usb-lib, so also snd-usb-audio
    devices can use it.
-   Currently rawusb dma pcm buffer transport (this file) is only available to snd-usb-usx2y. 
+   Currently rawusb dma pcm buffer transport (this file) is only available to snd-usb-usx2y.
 */
 
 #include <linux/delay.h>
@@ -57,7 +57,6 @@
 #if defined(USX2Y_NRPACKS_VARIABLE) || USX2Y_NRPACKS == 1
 
 #include <sound/hwdep.h>
-
 
 static int usX2Y_usbpcm_urb_capt_retire(struct snd_usX2Y_substream *subs)
 {
@@ -145,7 +144,6 @@ static int usX2Y_hwdep_urb_play_prepare(struct snd_usX2Y_substream *subs,
 	return 0;
 }
 
-
 static inline void usX2Y_usbpcm_urb_capt_iso_advance(struct snd_usX2Y_substream *subs,
 						     struct urb *urb)
 {
@@ -201,7 +199,7 @@ static inline int usX2Y_usbpcm_usbframe_complete(struct snd_usX2Y_substream *cap
 			return err;
 		}
 	}
-	
+
 	playbacksubs->completed_urb = NULL;
 
 	state = atomic_read(&capsubs->state);
@@ -225,7 +223,6 @@ static inline int usX2Y_usbpcm_usbframe_complete(struct snd_usX2Y_substream *cap
 		capsubs2->completed_urb = NULL;
 	return 0;
 }
-
 
 static void i_usX2Y_usbpcm_urb_complete(struct urb *urb)
 {
@@ -265,7 +262,6 @@ static void i_usX2Y_usbpcm_urb_complete(struct urb *urb)
 		}
 	}
 }
-
 
 static void usX2Y_hwdep_urb_release(struct urb **urb)
 {
@@ -448,7 +444,7 @@ static int usX2Y_usbpcm_urbs_start(struct snd_usX2Y_substream *subs)
 						urb->iso_frame_desc[pack].offset = subs->maxpacksize * (pack + u * nr_of_packs());
 						urb->iso_frame_desc[pack].length = subs->maxpacksize;
 					}
-					urb->transfer_buffer_length = subs->maxpacksize * nr_of_packs(); 
+					urb->transfer_buffer_length = subs->maxpacksize * nr_of_packs();
 					if ((err = usb_submit_urb(urb, GFP_KERNEL)) < 0) {
 						snd_printk (KERN_ERR "cannot usb_submit_urb() for urb %d, err = %d\n", u, err);
 						err = -EPIPE;
@@ -462,7 +458,7 @@ static int usX2Y_usbpcm_urbs_start(struct snd_usX2Y_substream *subs)
 				} else {
 					atomic_set(&subs->state, state_STARTING1);
 					break;
-				}			
+				}
 			}
 		}
 	}
@@ -470,11 +466,11 @@ static int usX2Y_usbpcm_urbs_start(struct snd_usX2Y_substream *subs)
 	wait_event(usX2Y->prepare_wait_queue, NULL == usX2Y->prepare_subs);
 	if (atomic_read(&subs->state) != state_PREPARED)
 		err = -EPIPE;
-		
+
  cleanup:
 	if (err) {
 		usX2Y_subs_startup_finish(usX2Y);	// Call it now
-		usX2Y_clients_stop(usX2Y);		// something is completely wroong > stop evrything			
+		usX2Y_clients_stop(usX2Y);		// something is completely wroong > stop evrything
 	}
 	return err;
 }
@@ -529,7 +525,7 @@ static int snd_usX2Y_usbpcm_prepare(struct snd_pcm_substream *substream)
 					err = -ERESTARTSYS;
 					goto up_prepare_mutex;
 				}
-			} 
+			}
 			if (0 > (err = usX2Y_usbpcm_urbs_start(subs)))
 				goto up_prepare_mutex;
 		}
@@ -563,8 +559,6 @@ static struct snd_pcm_hardware snd_usX2Y_4c =
 	.fifo_size =              0
 };
 
-
-
 static int snd_usX2Y_usbpcm_open(struct snd_pcm_substream *substream)
 {
 	struct snd_usX2Y_substream	*subs = ((struct snd_usX2Y_substream **)
@@ -582,7 +576,6 @@ static int snd_usX2Y_usbpcm_open(struct snd_pcm_substream *substream)
 	return 0;
 }
 
-
 static int snd_usX2Y_usbpcm_close(struct snd_pcm_substream *substream)
 {
 	struct snd_pcm_runtime *runtime = substream->runtime;
@@ -592,8 +585,7 @@ static int snd_usX2Y_usbpcm_close(struct snd_pcm_substream *substream)
 	return 0;
 }
 
-
-static struct snd_pcm_ops snd_usX2Y_usbpcm_ops = 
+static struct snd_pcm_ops snd_usX2Y_usbpcm_ops =
 {
 	.open =		snd_usX2Y_usbpcm_open,
 	.close =	snd_usX2Y_usbpcm_close,
@@ -604,7 +596,6 @@ static struct snd_pcm_ops snd_usX2Y_usbpcm_ops =
 	.trigger =	snd_usX2Y_pcm_trigger,
 	.pointer =	snd_usX2Y_pcm_pointer,
 };
-
 
 static int usX2Y_pcms_lock_check(struct snd_card *card)
 {
@@ -635,7 +626,6 @@ static int usX2Y_pcms_lock_check(struct snd_card *card)
 	return err;
 }
 
-
 static void usX2Y_pcms_unlock(struct snd_card *card)
 {
 	struct list_head *list;
@@ -650,10 +640,9 @@ static void usX2Y_pcms_unlock(struct snd_card *card)
 	}
 }
 
-
 static int snd_usX2Y_hwdep_pcm_open(struct snd_hwdep *hw, struct file *file)
 {
-	// we need to be the first 
+	// we need to be the first
 	struct snd_card *card = hw->card;
 	int err = usX2Y_pcms_lock_check(card);
 	if (0 == err)
@@ -661,7 +650,6 @@ static int snd_usX2Y_hwdep_pcm_open(struct snd_hwdep *hw, struct file *file)
 	usX2Y_pcms_unlock(card);
 	return err;
 }
-
 
 static int snd_usX2Y_hwdep_pcm_release(struct snd_hwdep *hw, struct file *file)
 {
@@ -673,16 +661,13 @@ static int snd_usX2Y_hwdep_pcm_release(struct snd_hwdep *hw, struct file *file)
 	return err;
 }
 
-
 static void snd_usX2Y_hwdep_pcm_vm_open(struct vm_area_struct *area)
 {
 }
 
-
 static void snd_usX2Y_hwdep_pcm_vm_close(struct vm_area_struct *area)
 {
 }
-
 
 static int snd_usX2Y_hwdep_pcm_vm_fault(struct vm_area_struct *area,
 					struct vm_fault *vmf)
@@ -697,13 +682,11 @@ static int snd_usX2Y_hwdep_pcm_vm_fault(struct vm_area_struct *area,
 	return 0;
 }
 
-
 static const struct vm_operations_struct snd_usX2Y_hwdep_pcm_vm_ops = {
 	.open = snd_usX2Y_hwdep_pcm_vm_open,
 	.close = snd_usX2Y_hwdep_pcm_vm_close,
 	.fault = snd_usX2Y_hwdep_pcm_vm_fault,
 };
-
 
 static int snd_usX2Y_hwdep_pcm_mmap(struct snd_hwdep * hw, struct file *filp, struct vm_area_struct *area)
 {
@@ -713,9 +696,9 @@ static int snd_usX2Y_hwdep_pcm_mmap(struct snd_hwdep * hw, struct file *filp, st
 	if (!(usX2Y->chip_status & USX2Y_STAT_CHIP_INIT))
 		return -EBUSY;
 
-	/* if userspace tries to mmap beyond end of our buffer, fail */ 
+	/* if userspace tries to mmap beyond end of our buffer, fail */
 	if (size > PAGE_ALIGN(sizeof(struct snd_usX2Y_hwdep_pcm_shm))) {
-		snd_printd("%lu > %lu\n", size, (unsigned long)sizeof(struct snd_usX2Y_hwdep_pcm_shm)); 
+		snd_printd("%lu > %lu\n", size, (unsigned long)sizeof(struct snd_usX2Y_hwdep_pcm_shm));
 		return -EINVAL;
 	}
 
@@ -728,14 +711,12 @@ static int snd_usX2Y_hwdep_pcm_mmap(struct snd_hwdep * hw, struct file *filp, st
 	return 0;
 }
 
-
 static void snd_usX2Y_hwdep_pcm_private_free(struct snd_hwdep *hwdep)
 {
 	struct usX2Ydev *usX2Y = hwdep->private_data;
 	if (NULL != usX2Y->hwdep_pcm_shm)
 		snd_free_pages(usX2Y->hwdep_pcm_shm, sizeof(struct snd_usX2Y_hwdep_pcm_shm));
 }
-
 
 int usX2Y_hwdep_pcm_new(struct snd_card *card)
 {
@@ -779,7 +760,6 @@ int usX2Y_hwdep_pcm_new(struct snd_card *card)
 						     64*1024, 128*1024))) {
 		return err;
 	}
-
 
 	return 0;
 }

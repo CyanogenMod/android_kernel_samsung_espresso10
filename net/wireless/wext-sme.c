@@ -103,7 +103,6 @@ int cfg80211_mgd_wext_siwfreq(struct net_device *dev,
 			goto out;
 	}
 
-
 	wdev->wext.connect.channel = chan;
 
 	/* SSID is not set, we just want to switch channel */
@@ -128,7 +127,8 @@ int cfg80211_mgd_wext_giwfreq(struct net_device *dev,
 	struct ieee80211_channel *chan = NULL;
 
 	/* call only for station! */
-	if (WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
+	if ((wdev->iftype != NL80211_IFTYPE_P2P_CLIENT) &&
+		WARN_ON(wdev->iftype != NL80211_IFTYPE_STATION))
 		return -EINVAL;
 
 	wdev_lock(wdev);

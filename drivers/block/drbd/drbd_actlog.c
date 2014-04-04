@@ -62,7 +62,6 @@ struct drbd_atodb_wait {
 	int                error;
 };
 
-
 int w_al_write_transaction(struct drbd_conf *, struct drbd_work *, int);
 
 static int _drbd_md_sync_page_io(struct drbd_conf *mdev,
@@ -640,7 +639,6 @@ static int w_update_odbm(struct drbd_conf *mdev, struct drbd_work *w, int unused
 
 	return 1;
 }
-
 
 /* ATTENTION. The AL's extents are 4MB each, while the extents in the
  * resync LRU-cache are 16MB each.

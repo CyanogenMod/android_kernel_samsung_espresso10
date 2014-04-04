@@ -47,7 +47,6 @@ static u8 alps_bsbe1_inittab[] = {
 	0xff, 0xff
 };
 
-
 static int alps_bsbe1_set_symbol_rate(struct dvb_frontend* fe, u32 srate, u32 ratio)
 {
 	u8 aclk = 0;

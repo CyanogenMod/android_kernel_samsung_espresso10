@@ -3,13 +3,13 @@
  * of the SiliconBackplane-based Broadcom chips.
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -52,7 +52,6 @@ static si_info_t *si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs
 static bool si_buscore_prep(si_info_t *sii, uint bustype, uint devid, void *sdh);
 static bool si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 	uint *origidx, void *regs);
-
 
 /* global variable to indicate reservation/release of gpio's */
 static uint32 si_gpioreservation = 0;
@@ -135,14 +134,12 @@ si_kattach(osl_t *osh)
 	return &ksii.pub;
 }
 
-
 static bool
 si_buscore_prep(si_info_t *sii, uint bustype, uint devid, void *sdh)
 {
 	/* need to set memseg flag for CF card first before any sb registers access */
 	if (BUSTYPE(bustype) == PCMCIA_BUS)
 		sii->memseg = TRUE;
-
 
 	if (BUSTYPE(bustype) == SDIO_BUS) {
 		int err;
@@ -175,7 +172,6 @@ si_buscore_prep(si_info_t *sii, uint bustype, uint devid, void *sdh)
 		/* Also, disable the extra SDIO pull-ups */
 		bcmsdh_cfg_write(sdh, SDIO_FUNC_1, SBSDIO_FUNC1_SDIOPULLUP, 0, NULL);
 	}
-
 
 	return TRUE;
 }
@@ -262,14 +258,12 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 			*origidx = i;
 	}
 
-
 	SI_MSG(("Buscore id/type/rev %d/0x%x/%d\n", sii->pub.buscoreidx, sii->pub.buscoretype,
 		sii->pub.buscorerev));
 
 	if (BUSTYPE(sii->pub.bustype) == SI_BUS && (CHIPID(sii->pub.chip) == BCM4712_CHIP_ID) &&
 	    (sii->pub.chippkg != BCM4712LARGE_PKG_ID) && (sii->pub.chiprev <= 3))
 		OR_REG(sii->osh, &cc->slow_clk_ctl, SCC_SS_XTAL);
-
 
 	/* Make sure any on-chip ARM is off (in case strapping is wrong), or downloaded code was
 	 * already running.
@@ -286,8 +280,6 @@ si_buscore_setup(si_info_t *sii, chipcregs_t *cc, uint bustype, uint32 savewin,
 	return TRUE;
 }
 
-
-
 static si_info_t *
 si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
                        uint bustype, void *sdh, char **vars, uint *varsz)
@@ -301,7 +293,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 	ASSERT(GOODREGS(regs));
 
 	bzero((uchar*)sii, sizeof(si_info_t));
-
 
 	{
 		if (NULL == (common_info_alloced = (void *)MALLOC(osh, sizeof(si_common_info_t)))) {
@@ -320,7 +311,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 	sii->curmap = regs;
 	sii->sdh = sdh;
 	sii->osh = osh;
-
 
 	/* find Chipcommon address */
 	if (bustype == PCI_BUS) {
@@ -390,8 +380,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 
 	pvars = NULL;
 
-
-
 		if (sii->pub.ccrev >= 20) {
 			cc = (chipcregs_t *)si_setcore(sih, CC_CORE_ID, 0);
 			W_REG(osh, &cc->gpiopullup, 0);
@@ -402,8 +390,6 @@ si_doattach(si_info_t *sii, uint devid, osl_t *osh, void *regs,
 		/* Skip PMU initialization from the Dongle Host.
 		 * Firmware will take care of it when it comes up.
 		 */
-
-
 
 	return (sii);
 }
@@ -426,7 +412,6 @@ si_detach(si_t *sih)
 				REG_UNMAP(sii->common_info->regs[idx]);
 				sii->common_info->regs[idx] = NULL;
 			}
-
 
 	if (1 == sii->common_info->attach_count--) {
 		MFREE(sii->osh, sii->common_info, sizeof(si_common_info_t));
@@ -978,7 +963,6 @@ si_clock_rate(uint32 pll_type, uint32 n, uint32 m)
 	}
 }
 
-
 /* set chip watchdog reset timer to fire in 'ticks' */
 void
 si_watchdog(si_t *sih, uint ticks)
@@ -1013,8 +997,6 @@ si_watchdog_ms(si_t *sih, uint32 ms)
 	si_watchdog(sih, wd_msticks * ms);
 }
 #endif
-
-
 
 /* initialize the sdio core */
 void
@@ -1052,7 +1034,6 @@ si_sdio_init(si_t *sih)
 	bcmsdh_intr_enable(sii->sdh);
 
 }
-
 
 /* change logical "focus" to the gpio core for optimized access */
 void *
@@ -1411,7 +1392,6 @@ si_gpio_int_enable(si_t *sih, bool enable)
 	return (si_corereg(sih, SI_CC_IDX, offs, CI_GPIO, (enable ? CI_GPIO : 0)));
 }
 
-
 /* Return the RAM size of the SOCRAM core */
 uint32
 si_socram_size(si_t *sih)
@@ -1469,7 +1449,6 @@ done:
 
 	return memsize;
 }
-
 
 void
 si_btcgpiowar(si_t *sih)

@@ -10,7 +10,6 @@
 # Public License ("GPL") version 2 as published by the Free Software
 # Foundation.
 
-
 import os
 import sys
 
@@ -24,7 +23,6 @@ sys.path.append('scripts/python/Perf-Trace-Util/lib/Perf/Trace')
 from perf_trace_context import *
 from Core import *
 from SchedGui import *
-
 
 threads = { 0 : "idle"}
 
@@ -322,7 +320,6 @@ class TimeSliceList(UserList):
 				max_cpu = cpu
 		return max_cpu
 
-
 class SchedEventProxy:
 	def __init__(self):
 		self.current_tsk = defaultdict(lambda : -1)
@@ -355,7 +352,6 @@ class SchedEventProxy:
 			return
 		ts = self.timeslices.get_time_slice(headers.ts())
 		ts.wake_up(self.timeslices, pid, target_cpu, fork)
-
 
 def trace_begin():
 	global parser

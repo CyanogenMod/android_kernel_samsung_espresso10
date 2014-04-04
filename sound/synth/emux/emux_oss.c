@@ -22,7 +22,6 @@
  * 				midi emulation.
  */
 
-
 #ifdef CONFIG_SND_SEQUENCER_OSS
 
 #include <asm/uaccess.h>
@@ -57,7 +56,6 @@ static struct snd_seq_oss_callback oss_callback = {
 	.reset = snd_emux_reset_seq_oss,
 };
 
-
 /*
  * register OSS synth
  */
@@ -85,7 +83,6 @@ snd_emux_init_seq_oss(struct snd_emux *emu)
 	snd_device_register(emu->card, dev);
 }
 
-
 /*
  * unregister
  */
@@ -97,7 +94,6 @@ snd_emux_detach_seq_oss(struct snd_emux *emu)
 		emu->oss_synth = NULL;
 	}
 }
-
 
 /* use port number as a unique soundfont client number */
 #define SF_CLIENT_NO(p)	((p) + 0x1000)
@@ -152,7 +148,6 @@ snd_emux_open_seq_oss(struct snd_seq_oss_arg *arg, void *closure)
 	return 0;
 }
 
-
 #define DEFAULT_DRUM_FLAGS	((1<<9) | (1<<25))
 
 /*
@@ -173,7 +168,6 @@ reset_port_mode(struct snd_emux_port *port, int midi_mode)
 		port->oss_arg->event_passing = SNDRV_SEQ_OSS_PROCESS_EVENTS;
 	}
 }
-
 
 /*
  * close port
@@ -203,7 +197,6 @@ snd_emux_close_seq_oss(struct snd_seq_oss_arg *arg)
 	mutex_unlock(&emu->register_mutex);
 	return 0;
 }
-
 
 /*
  * load patch
@@ -249,7 +242,6 @@ snd_emux_load_patch_seq_oss(struct snd_seq_oss_arg *arg, int format,
 	return rc;
 }
 
-
 /*
  * ioctl
  */
@@ -273,7 +265,7 @@ snd_emux_ioctl_seq_oss(struct snd_seq_oss_arg *arg, unsigned int cmd, unsigned l
 	case SNDCTL_SEQ_RESETSAMPLES:
 		snd_soundfont_remove_samples(emu->sflist);
 		return 0;
-			
+
 	case SNDCTL_SYNTH_MEMAVL:
 		if (emu->memhdr)
 			return snd_util_mem_avail(emu->memhdr);
@@ -282,7 +274,6 @@ snd_emux_ioctl_seq_oss(struct snd_seq_oss_arg *arg, unsigned int cmd, unsigned l
 
 	return 0;
 }
-
 
 /*
  * reset device
@@ -300,7 +291,6 @@ snd_emux_reset_seq_oss(struct snd_seq_oss_arg *arg)
 	snd_emux_reset_port(p);
 	return 0;
 }
-
 
 /*
  * receive raw events: only SEQ_PRIVATE is accepted.
@@ -334,7 +324,6 @@ snd_emux_event_oss_input(struct snd_seq_event *ev, int direct, void *private_dat
 	return 0;
 }
 
-
 /*
  * OSS/AWE driver specific h/w controls
  */
@@ -367,7 +356,7 @@ emuspec_control(struct snd_emux *emu, struct snd_emux_port *port, int cmd,
 		if (chan)
 			snd_emux_send_effect_oss(port, chan, p1, p2);
 		break;
-		
+
 	case _EMUX_OSS_TERMINATE_ALL:
 		snd_emux_terminate_all(emu);
 		break;
@@ -496,7 +485,6 @@ gusspec_control(struct snd_emux *emu, struct snd_emux_port *port, int cmd,
 		return;
 	}
 }
-
 
 /*
  * send an event to midi emulation

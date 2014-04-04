@@ -21,7 +21,6 @@
 /* WDT defines */
 #define OMAP3_WDT3_ISR_OFFSET	0x0018
 
-
 /**
  * struct dsp_wdt_setting - the basic dsp_wdt_setting structure
  * @reg_base:	pointer to the base of the wdt registers
@@ -76,4 +75,3 @@ void dsp_wdt_enable(bool enable);
 void dsp_wdt_sm_set(void *data);
 
 #endif
-

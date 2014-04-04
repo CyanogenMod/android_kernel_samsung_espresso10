@@ -36,7 +36,6 @@
 
 #include "gadget_chips.h"
 
-
 /*
  * Kbuild is not very cooperative with respect to linking separately
  * compiled library objects into one module.  So for now we won't use
@@ -49,7 +48,6 @@
 #include "epautoconf.c"
 
 /*-------------------------------------------------------------------------*/
-
 
 MODULE_AUTHOR("Ben Williamson");
 MODULE_LICENSE("GPL v2");
@@ -103,10 +101,8 @@ MODULE_PARM_DESC(iSerialNumber, "SerialNumber");
 static const char *EP_IN_NAME;
 static const char *EP_OUT_NAME;
 
-
 /* big enough to hold our biggest descriptor */
 #define USB_BUFSIZ 256
-
 
 /* This is a gadget, and the IN/OUT naming is from the host's perspective.
    USB -> OUT endpoint -> rawmidi
@@ -147,7 +143,6 @@ struct gmidi_device {
 
 static void gmidi_transmit(struct gmidi_device* dev, struct usb_request* req);
 
-
 #define DBG(d, fmt, args...) \
 	dev_dbg(&(d)->gadget->dev , fmt , ## args)
 #define VDBG(d, fmt, args...) \
@@ -157,13 +152,11 @@ static void gmidi_transmit(struct gmidi_device* dev, struct usb_request* req);
 #define INFO(d, fmt, args...) \
 	dev_info(&(d)->gadget->dev , fmt , ## args)
 
-
 static unsigned buflen = 256;
 static unsigned qlen = 32;
 
 module_param(buflen, uint, S_IRUGO);
 module_param(qlen, uint, S_IRUGO);
-
 
 /* Thanks to Grey Innovation for donating this product ID.
  *
@@ -172,7 +165,6 @@ module_param(qlen, uint, S_IRUGO);
  */
 #define DRIVER_VENDOR_NUM	0x17b3		/* Grey Innovation */
 #define DRIVER_PRODUCT_NUM	0x0004		/* Linux-USB "MIDI Gadget" */
-
 
 /*
  * DESCRIPTORS ... most are static, but strings and (full)
@@ -570,7 +562,6 @@ fail:
 	return err;
 }
 
-
 static void gmidi_reset_config(struct gmidi_device *dev)
 {
 	if (dev->config == 0) {
@@ -652,7 +643,6 @@ gmidi_set_config(struct gmidi_device *dev, unsigned number, gfp_t gfp_flags)
 	}
 	return result;
 }
-
 
 static void gmidi_setup_complete(struct usb_ep *ep, struct usb_request *req)
 {
@@ -1225,7 +1215,6 @@ autoconf_fail:
 		device_desc.bcdDevice = cpu_to_le16(0x9999);
 	}
 
-
 	/* ok, we made sense of the hardware ... */
 	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
 	if (!dev) {
@@ -1269,7 +1258,6 @@ fail:
 	return err;
 }
 
-
 static void gmidi_suspend(struct usb_gadget *gadget)
 {
 	struct gmidi_device *dev = get_gadget_data(gadget);
@@ -1287,7 +1275,6 @@ static void gmidi_resume(struct usb_gadget *gadget)
 
 	DBG(dev, "resume\n");
 }
-
 
 static struct usb_gadget_driver gmidi_driver = {
 	.speed		= USB_SPEED_FULL,
@@ -1317,4 +1304,3 @@ static void __exit gmidi_cleanup(void)
 	usb_gadget_unregister_driver(&gmidi_driver);
 }
 module_exit(gmidi_cleanup);
-

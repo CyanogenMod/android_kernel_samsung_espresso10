@@ -1045,12 +1045,12 @@ config SMC911X
 	help
 	  This is a driver for SMSC's LAN911x series of Ethernet chipsets
 	  including the new LAN9115, LAN9116, LAN9117, and LAN9118.
-	  Say Y if you want it compiled into the kernel, 
+	  Say Y if you want it compiled into the kernel,
 	  and read the Ethernet-HOWTO, available from
 	  <http://www.tldp.org/docs.html#howto>.
 
-	  This driver is also available as a module. The module will be 
-	  called smc911x.  If you want to compile it as a module, say M 
+	  This driver is also available as a module. The module will be
+	  called smc911x.  If you want to compile it as a module, say M
 	  here and read <file:Documentation/kbuild/modules.txt>
 
 config SMSC911X
@@ -1525,9 +1525,9 @@ config E100
 	select MII
 	---help---
 	  This driver supports Intel(R) PRO/100 family of adapters.
-	  To verify that your adapter is supported, find the board ID number 
-	  on the adapter. Look for a label that has a barcode and a number 
-	  in the format 123456-001 (six digits hyphen three digits). 
+	  To verify that your adapter is supported, find the board ID number
+	  on the adapter. Look for a label that has a barcode and a number
+	  in the format 123456-001 (six digits hyphen three digits).
 
 	  Use the above information and the Adapter & Driver ID Guide at:
 
@@ -1539,7 +1539,7 @@ config E100
 
 	  <http://www.intel.com/p/en_US/support/highlights/network/pro100plus>
 
-	  More specific information on configuring the driver is in 
+	  More specific information on configuring the driver is in
 	  <file:Documentation/networking/e100.txt>.
 
 	  To compile this driver as a module, choose M here. The module
@@ -1563,7 +1563,7 @@ config FEALNX
 	select CRC32
 	select MII
 	help
-	  Say Y here to support the Myson MTD-800 family of PCI-based Ethernet 
+	  Say Y here to support the Myson MTD-800 family of PCI-based Ethernet
 	  cards. <http://www.myson.com.tw/>
 
 config NATSEMI
@@ -2023,7 +2023,6 @@ config LANTIQ_ETOP
 	help
 	  Support for the MII0 inside the Lantiq SoC
 
-
 source "drivers/net/fs_enet/Kconfig"
 
 source "drivers/net/octeon/Kconfig"
@@ -2097,7 +2096,7 @@ config E1000
 	depends on PCI
 	---help---
 	  This driver supports Intel(R) PRO/1000 gigabit ethernet family of
-	  adapters.  For more information on how to identify your adapter, go 
+	  adapters.  For more information on how to identify your adapter, go
 	  to the Adapter & Driver ID Guide at:
 
 	  <http://support.intel.com/support/network/adapter/pro100/21397.htm>
@@ -2107,7 +2106,7 @@ config E1000
 
 	  <http://support.intel.com>
 
-	  More specific information on configuring the driver is in 
+	  More specific information on configuring the driver is in
 	  <file:Documentation/networking/e1000.txt>.
 
 	  To compile this driver as a module, choose M here. The module
@@ -2290,7 +2289,7 @@ config SKGE
 	  and related Gigabit Ethernet adapters. It is a new smaller driver
 	  with better performance and more complete ethtool support.
 
-	  It does not support the link failover and network management 
+	  It does not support the link failover and network management
 	  features that "portable" vendor supplied sk98lin driver does.
 
 	  This driver supports adapters based on the original Yukon chipset:
@@ -2543,7 +2542,7 @@ config S6GMAC
 source "drivers/net/stmmac/Kconfig"
 
 config PCH_GBE
-	tristate "Intel EG20T PCH / OKI SEMICONDUCTOR ML7223 IOH GbE"
+	tristate "Intel EG20T PCH/OKI SEMICONDUCTOR IOH(ML7223/ML7831) GbE"
 	depends on PCI
 	select MII
 	---help---
@@ -2556,10 +2555,11 @@ config PCH_GBE
 	  This driver enables Gigabit Ethernet function.
 
 	  This driver also can be used for OKI SEMICONDUCTOR IOH(Input/
-	  Output Hub), ML7223.
-	  ML7223 IOH is for MP(Media Phone) use.
-	  ML7223 is companion chip for Intel Atom E6xx series.
-	  ML7223 is completely compatible for Intel EG20T PCH.
+	  Output Hub), ML7223/ML7831.
+	  ML7223 IOH is for MP(Media Phone) use. ML7831 IOH is for general
+	  purpose use.
+	  ML7223/ML7831 is companion chip for Intel Atom E6xx series.
+	  ML7223/ML7831 is completely compatible for Intel EG20T PCH.
 
 endif # NETDEV_1000
 
@@ -2760,7 +2760,7 @@ config IXGB
 
 	  <http://support.intel.com>
 
-	  More specific information on configuring the driver is in 
+	  More specific information on configuring the driver is in
 	  <file:Documentation/networking/ixgb.txt>.
 
 	  To compile this driver as a module, choose M here. The module
@@ -2772,7 +2772,7 @@ config S2IO
 	---help---
 	  This driver supports Exar Corp's Xframe Series 10Gb Ethernet Adapters.
 
-	  More specific information on configuring the driver is in 
+	  More specific information on configuring the driver is in
 	  <file:Documentation/networking/s2io.txt>.
 
 	  To compile this driver as a module, choose M here. The module
@@ -2944,8 +2944,6 @@ source "drivers/net/wan/Kconfig"
 source "drivers/atm/Kconfig"
 
 source "drivers/ieee802154/Kconfig"
-
-source "drivers/s390/net/Kconfig"
 
 source "drivers/net/caif/Kconfig"
 
@@ -3290,9 +3288,9 @@ config PPPOE
 	  Support for PPP over Ethernet.
 
 	  This driver requires the latest version of pppd from the CVS
-	  repository at cvs.samba.org.  Alternatively, see the 
+	  repository at cvs.samba.org.  Alternatively, see the
 	  RoaringPenguin package (<http://www.roaringpenguin.com/pppoe>)
-	  which contains instruction on how to use this driver (under 
+	  which contains instruction on how to use this driver (under
 	  the heading "Kernel mode PPPoE").
 
 config PPTP

@@ -1465,7 +1465,6 @@ static int vidioc_dqbuf(struct file *file, void *priv, struct v4l2_buffer *b)
 	return videobuf_dqbuf(&fh->mpegq, b, file->f_flags & O_NONBLOCK);
 }
 
-
 static int vidioc_streamon(struct file *file, void *priv,
 				enum v4l2_buf_type i)
 {

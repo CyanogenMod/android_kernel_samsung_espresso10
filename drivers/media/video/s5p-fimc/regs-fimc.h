@@ -211,7 +211,6 @@
 #define S5P_CIREAL_ISIZE_HEIGHT(x)	((x) << 16)
 #define S5P_CIREAL_ISIZE_WIDTH(x)	((x) << 0)
 
-
 /* Input DMA control */
 #define S5P_MSCTRL			0xfc
 #define S5P_MSCTRL_IN_BURST_COUNT_MASK	(0xF << 24)

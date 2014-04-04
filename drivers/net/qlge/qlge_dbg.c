@@ -316,7 +316,6 @@ static int ql_get_serdes_regs(struct ql_adapter *qdev,
 		ql_get_both_serdes(qdev, i, direct_ptr, indirect_ptr,
 					xfi_direct_valid, xfi_indirect_valid);
 
-
 	/* Get XAUI_XFI_HSS_PLL register block. */
 	if (qdev->func & 1) {
 		direct_ptr =
@@ -1247,7 +1246,6 @@ void ql_gen_reg_dump(struct ql_adapter *qdev,
 {
 	int i, status;
 
-
 	memset(&(mpi_coredump->mpi_global_header), 0,
 		sizeof(struct mpi_coredump_global_header));
 	mpi_coredump->mpi_global_header.cookie = MPI_COREDUMP_COOKIE;
@@ -1257,7 +1255,6 @@ void ql_gen_reg_dump(struct ql_adapter *qdev,
 		sizeof(struct ql_reg_dump);
 	memcpy(mpi_coredump->mpi_global_header.idString, "MPI Coredump",
 		sizeof(mpi_coredump->mpi_global_header.idString));
-
 
 	/* segment 16 */
 	ql_build_coredump_seg_header(&mpi_coredump->misc_nic_seg_hdr,

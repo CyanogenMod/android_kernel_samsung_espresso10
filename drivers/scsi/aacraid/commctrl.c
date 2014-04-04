@@ -455,7 +455,6 @@ static int check_revision(struct aac_dev *dev, void __user *arg)
 	return 0;
 }
 
-
 /**
  *
  * aac_send_raw_scb
@@ -481,7 +480,6 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
 	u32 byte_count = 0;
 	u32 actual_fibsize64, actual_fibsize = 0;
 	int i;
-
 
 	if (dev->in_reset) {
 		dprintk((KERN_DEBUG"aacraid: send raw srb -EBUSY\n"));
@@ -824,7 +822,6 @@ struct aac_pci_info {
 	u32 slot;
 };
 
-
 static int aac_get_pci_info(struct aac_dev* dev, void __user *arg)
 {
 	struct aac_pci_info pci_info;
@@ -838,7 +835,6 @@ static int aac_get_pci_info(struct aac_dev* dev, void __user *arg)
 	}
 	return 0;
 }
-
 
 int aac_do_ioctl(struct aac_dev * dev, int cmd, void __user *arg)
 {
@@ -881,4 +877,3 @@ int aac_do_ioctl(struct aac_dev * dev, int cmd, void __user *arg)
 	}
 	return status;
 }
-

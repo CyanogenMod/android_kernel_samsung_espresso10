@@ -1,4 +1,3 @@
-
 /*
  *  ATI Mach64 GX Support
  */
@@ -24,7 +23,6 @@
 
 #define STOP_BITS_2595     0x1800
 
-
 #define MIN_N_408		2
 
 #define MIN_N_1703		6
@@ -33,7 +31,6 @@
 #define MAX_M		30
 #define MIN_N		35
 #define MAX_N		255-8
-
 
     /*
      *  Support Functions
@@ -59,7 +56,6 @@ static void aty_StrobeClock(const struct atyfb_par *par)
 	aty_st_8(CLOCK_CNTL + par->clk_wr_offset, tmp | CLOCK_STROBE, par);
 	return;
 }
-
 
     /*
      *  IBM RGB514 DAC and Clock Chip
@@ -196,7 +192,6 @@ const struct aty_pll_ops aty_pll_ibm514 = {
 	.set_pll	= aty_set_pll_514,
 };
 
-
     /*
      *  ATI 68860-B DAC
      */
@@ -279,7 +274,6 @@ const struct aty_dac_ops aty_dac_ati68860b = {
 	.set_dac	= aty_set_dac_ATI68860_B,
 };
 
-
     /*
      *  AT&T 21C498 DAC
      */
@@ -332,7 +326,6 @@ const struct aty_dac_ops aty_dac_att21c498 = {
 	.set_dac	= aty_set_dac_ATT21C498,
 };
 
-
     /*
      *  ATI 18818 / ICS 2595 Clock Chip
      */
@@ -364,7 +357,7 @@ static int aty_var_to_pll_18818(const struct fb_info *info, u32 vclk_per,
 	}
 	MHz100 *= 1000;
 	MHz100 = (REF_DIV_2595 * MHz100) / REF_FREQ_2595;
- 
+
 	MHz100 += 500;		/* + 0.5 round */
 	MHz100 /= 1000;
 
@@ -488,7 +481,6 @@ const struct aty_pll_ops aty_pll_ati18818_1 = {
 	.set_pll	= aty_set_pll18818,
 };
 
-
     /*
      *  STG 1703 Clock Chip
      */
@@ -603,7 +595,6 @@ const struct aty_pll_ops aty_pll_stg1703 = {
 	.pll_to_var	= aty_pll_1703_to_var,
 	.set_pll	= aty_set_pll_1703,
 };
-
 
     /*
      *  Chrontel 8398 Clock Chip
@@ -727,7 +718,6 @@ const struct aty_pll_ops aty_pll_ch8398 = {
 	.pll_to_var	= aty_pll_8398_to_var,
 	.set_pll	= aty_set_pll_8398,
 };
-
 
     /*
      *  AT&T 20C408 Clock Chip
@@ -874,7 +864,6 @@ const struct aty_pll_ops aty_pll_att20c408 = {
 	.pll_to_var	= aty_pll_408_to_var,
 	.set_pll	= aty_set_pll_408,
 };
-
 
     /*
      *  Unsupported DAC and Clock Chip

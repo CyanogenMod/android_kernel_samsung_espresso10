@@ -355,6 +355,14 @@ static struct config_group *target_fabric_make_mappedlun(
 		ret = -EINVAL;
 		goto out;
 	}
+	if (mapped_lun > (TRANSPORT_MAX_LUNS_PER_TPG-1)) {
+		pr_err("Mapped LUN: %lu exceeds TRANSPORT_MAX_LUNS_PER_TPG"
+			"-1: %u for Target Portal Group: %u\n", mapped_lun,
+			TRANSPORT_MAX_LUNS_PER_TPG-1,
+			se_tpg->se_tpg_tfo->tpg_get_tag(se_tpg));
+		ret = -EINVAL;
+		goto out;
+	}
 
 	lacl = core_dev_init_initiator_node_lun_acl(se_tpg, mapped_lun,
 			config_item_name(acl_ci), &ret);
@@ -747,7 +755,6 @@ static ssize_t target_fabric_port_store_attr_alua_tg_pt_write_md(
 }
 
 TCM_PORT_ATTR(alua_tg_pt_write_md, S_IRUGO | S_IWUSR);
-
 
 static struct configfs_attribute *target_fabric_port_attrs[] = {
 	&target_fabric_port_alua_tg_pt_gp.attr,

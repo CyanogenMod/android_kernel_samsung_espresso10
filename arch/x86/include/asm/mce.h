@@ -112,7 +112,6 @@ struct mce_log {
 #define K8_MCE_THRESHOLD_BANK_5    (MCE_THRESHOLD_BASE + 5 * 9)
 #define K8_MCE_THRESHOLD_DRAM_ECC  (MCE_THRESHOLD_BANK_4 + 0)
 
-
 #ifdef __KERNEL__
 
 extern struct atomic_notifier_head x86_mce_decoder_chain;

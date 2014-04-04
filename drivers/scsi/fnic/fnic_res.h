@@ -234,7 +234,6 @@ static inline void fnic_queue_rq_desc(struct vnic_rq *rq,
 	vnic_rq_post(rq, os_buf, 0, dma_addr, len);
 }
 
-
 struct fnic;
 
 int fnic_get_vnic_config(struct fnic *);

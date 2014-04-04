@@ -12,7 +12,6 @@
 #define CHET_V3   6	/* vendor specific #3 */
 #define CHET_V4   7	/* vendor specific #4 */
 
-
 /*
  * CHIOGPARAMS
  *    query changer properties
@@ -44,20 +43,18 @@ struct changer_vendor_params {
 	int  reserved[8];
 };
 
-
 /*
  * CHIOMOVE
  *    move a medium from one element to another
  */
 struct changer_move {
 	int cm_fromtype;	/* type/unit of source element */
-	int cm_fromunit;	
+	int cm_fromunit;
 	int cm_totype;	/* type/unit of destination element */
 	int cm_tounit;
 	int cm_flags;
 };
 #define CM_INVERT   1   /* flag: rotate media (for double-sided like MOD) */
-
 
 /*
  * CHIOEXCHANGE
@@ -77,7 +74,6 @@ struct changer_exchange {
 #define CE_INVERT1   1
 #define CE_INVERT2   2
 
-
 /*
  * CHIOPOSITION
  *    move the transport element (robot arm) to a specific element.
@@ -88,7 +84,6 @@ struct changer_position {
 	int cp_flags;
 };
 #define CP_INVERT   1
-
 
 /*
  * CHIOGSTATUS
@@ -104,7 +99,6 @@ struct changer_element_status {
 #define CESTATUS_ACCESS   0x08	/* access allowed */
 #define CESTATUS_EXENAB   0x10	/* element can export media */
 #define CESTATUS_INENAB   0x20	/* element can import media */
-
 
 /*
  * CHIOGELEM
@@ -130,7 +124,6 @@ struct changer_get_element {
 #define CGE_IDLUN     0x08       /* ID+LUN available      */
 #define CGE_PVOLTAG   0x10       /* primary volume tag available */
 #define CGE_AVOLTAG   0x20       /* alternate volume tag available */
-
 
 /*
  * CHIOSVOLTAG

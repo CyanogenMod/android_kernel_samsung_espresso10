@@ -28,7 +28,6 @@
 #include <linux/usb.h>
 #include <linux/usb/usbnet.h>
 
-
 /*
  * This supports simple USB network links that don't require any special
  * framing or hardware control operations.  The protocol used here is a
@@ -138,7 +137,6 @@ static const struct driver_info	belkin_info = {
 };
 
 #endif	/* CONFIG_USB_BELKIN */
-
 
 
 #ifdef	CONFIG_USB_EPSON2888

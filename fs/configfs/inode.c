@@ -240,7 +240,6 @@ const unsigned char * configfs_get_name(struct configfs_dirent *sd)
 	return NULL;
 }
 
-
 /*
  * Unhashes the dentry corresponding to given configfs_dirent
  * Called with parent inode's i_mutex held.

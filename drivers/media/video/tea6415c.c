@@ -27,7 +27,6 @@
     Foundation, Inc., 675 Mvss Ave, Cambridge, MA 02139, USA.
   */
 
-
 #include <linux/module.h>
 #include <linux/ioctl.h>
 #include <linux/slab.h>
@@ -44,7 +43,6 @@ static int debug;
 module_param(debug, int, 0644);
 
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
-
 
 /* makes a connection between the input-pin 'i' and the output-pin 'o' */
 static int tea6415c_s_routing(struct v4l2_subdev *sd,

@@ -172,7 +172,6 @@ static const struct mcp23s08_ops mcp23s17_ops = {
 	.read_regs	= mcp23s17_read_regs,
 };
 
-
 /*----------------------------------------------------------------------*/
 
 static int mcp23s08_direction_input(struct gpio_chip *chip, unsigned offset)

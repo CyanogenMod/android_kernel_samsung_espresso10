@@ -14,11 +14,9 @@ enum {
 	IP6T_HL_GT,		/* greater than */
 };
 
-
 struct ip6t_hl_info {
 	__u8	mode;
 	__u8	hop_limit;
 };
-
 
 #endif

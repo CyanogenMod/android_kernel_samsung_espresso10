@@ -35,4 +35,3 @@ ccflags-$(CONFIG_PPC32) := $(call cc-ifversion, -lt, 0400, -O1)
 
 TAGS:
 	etags *.c
-

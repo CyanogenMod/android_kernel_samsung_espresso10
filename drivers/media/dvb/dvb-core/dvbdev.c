@@ -100,7 +100,6 @@ fail:
 	return -ENODEV;
 }
 
-
 static const struct file_operations dvb_device_fops =
 {
 	.owner =	THIS_MODULE,
@@ -135,7 +134,6 @@ int dvb_generic_open(struct inode *inode, struct file *file)
 }
 EXPORT_SYMBOL(dvb_generic_open);
 
-
 int dvb_generic_release(struct inode *inode, struct file *file)
 {
 	struct dvb_device *dvbdev = file->private_data;
@@ -154,7 +152,6 @@ int dvb_generic_release(struct inode *inode, struct file *file)
 }
 EXPORT_SYMBOL(dvb_generic_release);
 
-
 long dvb_generic_ioctl(struct file *file,
 		       unsigned int cmd, unsigned long arg)
 {
@@ -169,7 +166,6 @@ long dvb_generic_ioctl(struct file *file,
 	return dvb_usercopy(file, cmd, arg, dvbdev->kernel_ioctl);
 }
 EXPORT_SYMBOL(dvb_generic_ioctl);
-
 
 static int dvbdev_get_free_id (struct dvb_adapter *adap, int type)
 {
@@ -186,7 +182,6 @@ skip:
 	}
 	return -ENFILE;
 }
-
 
 int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
 			const struct dvb_device *template, void *priv, int type)
@@ -243,6 +238,7 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
 	if (minor == MAX_DVB_MINORS) {
 		kfree(dvbdevfops);
 		kfree(dvbdev);
+		up_write(&minor_rwsem);
 		mutex_unlock(&dvbdev_register_lock);
 		return -EINVAL;
 	}
@@ -271,7 +267,6 @@ int dvb_register_device(struct dvb_adapter *adap, struct dvb_device **pdvbdev,
 	return 0;
 }
 EXPORT_SYMBOL(dvb_register_device);
-
 
 void dvb_unregister_device(struct dvb_device *dvbdev)
 {
@@ -314,7 +309,6 @@ static int dvbdev_get_free_adapter_num (void)
 
 	return -ENFILE;
 }
-
 
 int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
 			 struct module *module, struct device *device,
@@ -362,7 +356,6 @@ int dvb_register_adapter(struct dvb_adapter *adap, const char *name,
 	return num;
 }
 EXPORT_SYMBOL(dvb_register_adapter);
-
 
 int dvb_unregister_adapter(struct dvb_adapter *adap)
 {
@@ -458,7 +451,6 @@ static char *dvb_devnode(struct device *dev, mode_t *mode)
 		dvbdev->adapter->num, dnames[dvbdev->type], dvbdev->id);
 }
 
-
 static int __init init_dvbdev(void)
 {
 	int retval;
@@ -489,7 +481,6 @@ error:
 	unregister_chrdev_region(dev, MAX_DVB_MINORS);
 	return retval;
 }
-
 
 static void __exit exit_dvbdev(void)
 {

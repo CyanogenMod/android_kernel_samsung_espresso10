@@ -33,7 +33,6 @@
 
 #include <media/saa7146_vv.h>
 
-
 #define ANALOG_TUNER_VES1820 1
 #define ANALOG_TUNER_STV0297 2
 
@@ -71,7 +70,6 @@ struct dvb_video_events {
 	spinlock_t		  lock;
 };
 
-
 struct av7110;
 
 /* infrared remote control */
@@ -91,7 +89,6 @@ struct infrared {
 	u16			last_toggle;
 	u8			delay_timer_finished;
 };
-
 
 /* place to store all the necessary device information */
 struct av7110 {
@@ -125,7 +122,6 @@ struct av7110 {
 #define DVB_ADAC_MSP34x5  3
 #define DVB_ADAC_NONE	 -1
 
-
 	/* buffers */
 
 	void		       *iobuf;	 /* memory for all buffers */
@@ -146,14 +142,12 @@ struct av7110 {
 #define BMP_LOADED   2
 	wait_queue_head_t	bmpq;
 
-
 	/* DEBI and polled command interface */
 
 	spinlock_t		debilock;
 	struct mutex		dcomlock;
 	volatile int		debitype;
 	volatile int		debilen;
-
 
 	/* Recording and playback flags */
 
@@ -163,7 +157,6 @@ struct av7110 {
 #define RP_VIDEO 1
 #define RP_AUDIO 2
 #define RP_AV	 3
-
 
 	/* OSD */
 
@@ -219,7 +212,6 @@ struct av7110 {
 
 	int arm_errors;
 	int registered;
-
 
 	/* AV711X */
 
@@ -289,7 +281,6 @@ struct av7110 {
 	int (*fe_set_frontend)(struct dvb_frontend* fe, struct dvb_frontend_parameters* params);
 };
 
-
 extern int ChangePIDs(struct av7110 *av7110, u16 vpid, u16 apid, u16 ttpid,
 		       u16 subpid, u16 pcrpid);
 
@@ -306,7 +297,6 @@ extern void av7110_ir_exit(struct av7110 *av7110);
 extern int i2c_writereg(struct av7110 *av7110, u8 id, u8 reg, u8 val);
 extern u8 i2c_readreg(struct av7110 *av7110, u8 id, u8 reg);
 extern int msp_writereg(struct av7110 *av7110, u8 dev, u16 reg, u16 val);
-
 
 extern int av7110_init_analog_module(struct av7110 *av7110);
 extern int av7110_init_v4l(struct av7110 *av7110);

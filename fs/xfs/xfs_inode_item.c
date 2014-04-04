@@ -33,14 +33,12 @@
 #include "xfs_error.h"
 #include "xfs_trace.h"
 
-
 kmem_zone_t	*xfs_ili_zone;		/* inode log item zone */
 
 static inline struct xfs_inode_log_item *INODE_ITEM(struct xfs_log_item *lip)
 {
 	return container_of(lip, struct xfs_inode_log_item, ili_item);
 }
-
 
 /*
  * This returns the number of iovecs needed to log the given inode item.
@@ -525,7 +523,6 @@ xfs_inode_item_format(
 	iip->ili_format.ilf_size = nvecs;
 }
 
-
 /*
  * This is called to pin the inode associated with the inode log
  * item in memory so it cannot be written out.
@@ -541,7 +538,6 @@ xfs_inode_item_pin(
 	trace_xfs_inode_pin(ip, _RET_IP_);
 	atomic_inc(&ip->i_pincount);
 }
-
 
 /*
  * This is called to unpin the inode associated with the inode log
@@ -815,7 +811,6 @@ static struct xfs_item_ops xfs_inode_item_ops = {
 	.iop_committing = xfs_inode_item_committing
 };
 
-
 /*
  * Initialize the inode log item for a newly allocated (in-core) inode.
  */
@@ -853,7 +848,6 @@ xfs_inode_item_destroy(
 #endif
 	kmem_zone_free(xfs_ili_zone, ip->i_itemp);
 }
-
 
 /*
  * This is the inode flushing I/O completion routine.  It is called
@@ -944,7 +938,6 @@ xfs_iflush_done(
 		/* xfs_trans_ail_delete_bulk() drops the AIL lock. */
 		xfs_trans_ail_delete_bulk(ailp, log_items, i);
 	}
-
 
 	/*
 	 * clean up and unlock the flush lock now we are done. We can clear the

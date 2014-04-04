@@ -16,7 +16,6 @@
  * 02110-1301 USA
  */
 
-
 #ifndef __LINUX_CM3663_H
 #define __LINUX_CM3663_H
 

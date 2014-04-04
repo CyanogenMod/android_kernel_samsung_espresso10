@@ -362,7 +362,6 @@ int MS_LibProcessBootBlock(struct us_data *us, WORD PhyBlock, BYTE *PageData)
 	BYTE                     *PageBuffer;
 	MS_LibTypeExtdat         ExtraData;
 
-
 	PageBuffer = kmalloc(MS_BYTES_PER_PAGE, GFP_KERNEL);
 	if (PageBuffer == NULL)
 		return (DWORD)-1;
@@ -512,7 +511,6 @@ exit:
 int MS_LibAllocLogicalMap(struct us_data *us)
 {
 	DWORD  i;
-
 
 	us->MS_Lib.Phy2LogMap = kmalloc(us->MS_Lib.NumberOfPhyBlock *
 						sizeof(WORD), GFP_KERNEL);
@@ -859,7 +857,6 @@ int MS_LibErrorPhyBlock(struct us_data *us, WORD phyblk)
 	if (MS_LibIsWritable(us))
 		return MS_LibOverwriteExtra(us, phyblk, 0,
 				(BYTE)(~MS_REG_OVR_BKST & BYTE_MASK));
-
 
 	return MS_STATUS_SUCCESS;
 }

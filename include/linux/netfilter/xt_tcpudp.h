@@ -32,5 +32,4 @@ struct xt_udp {
 #define XT_UDP_INV_DSTPT	0x02	/* Invert the sense of dest ports. */
 #define XT_UDP_INV_MASK	0x03	/* All possible flags. */
 
-
 #endif

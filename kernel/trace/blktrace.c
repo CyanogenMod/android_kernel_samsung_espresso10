@@ -826,7 +826,6 @@ static void blk_add_trace_getrq(void *ignore,
 	}
 }
 
-
 static void blk_add_trace_sleeprq(void *ignore,
 				  struct request_queue *q,
 				  struct bio *bio, int rw)
@@ -1810,4 +1809,3 @@ void blk_fill_rwbs(char *rwbs, u32 rw, int bytes)
 }
 
 #endif /* CONFIG_EVENT_TRACING */
-

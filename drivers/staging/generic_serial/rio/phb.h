@@ -5,7 +5,7 @@
  ****************************************************************************
 
  Author  : Ian Nandhra, Jeremy Rolls
- Date    : 
+ Date    :
 
  *
  *  (C) 1990 - 2000 Specialix International Ltd., Byfleet, Surrey, UK.
@@ -26,7 +26,6 @@
 
  Version : 0.01
 
-
                             Mods
  ----------------------------------------------------------------------------
   Date     By                Description
@@ -46,7 +45,6 @@
 
 #define PHB_HANDSHAKE_FLAGS     (PHB_HANDSHAKE_RESET | PHB_HANDSHAKE_SET)
 						/* Reset by ltt */
-
 
 /*************************************************
  * Maximum number of PHB's
@@ -106,8 +104,6 @@
 #define	PORT_WASPCLOSED		0x2000	/* Port closed with PCLOSE */
 #define	DUMPMODE		0x4000	/* Dump RTA mem */
 #define	READ_REG		0x8000	/* Read CD1400 register */
-
-
 
 /**************************************************************************
  * PHB Structure

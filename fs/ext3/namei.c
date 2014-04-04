@@ -130,7 +130,6 @@ struct dx_node
 	struct dx_entry	entries[0];
 };
 
-
 struct dx_frame
 {
 	struct buffer_head *bh;
@@ -557,7 +556,6 @@ static int ext3_htree_next_block(struct inode *dir, __u32 hash,
 	return 1;
 }
 
-
 /*
  * This function fills a red-black tree with information from a
  * directory block.  It returns the number directory entries loaded
@@ -584,11 +582,8 @@ static int htree_dirblock_to_tree(struct file *dir_file,
 		if (!ext3_check_dir_entry("htree_dirblock_to_tree", dir, de, bh,
 					(block<<EXT3_BLOCK_SIZE_BITS(dir->i_sb))
 						+((char *)de - bh->b_data))) {
-			/* On error, skip the f_pos to the next block. */
-			dir_file->f_pos = (dir_file->f_pos |
-					(dir->i_sb->s_blocksize - 1)) + 1;
-			brelse (bh);
-			return count;
+			/* silently ignore the rest of the block */
+			break;
 		}
 		ext3fs_dirhash(de->name, de->name_len, hinfo);
 		if ((hinfo->hash < start_hash) ||
@@ -607,7 +602,6 @@ static int htree_dirblock_to_tree(struct file *dir_file,
 	brelse(bh);
 	return count;
 }
-
 
 /*
  * This function fills a red-black tree with information from a
@@ -698,7 +692,6 @@ errout:
 	dx_release(frames);
 	return (err);
 }
-
 
 /*
  * Directory block splitting, compacting
@@ -837,7 +830,6 @@ static inline int search_dirblock(struct buffer_head * bh,
 	}
 	return 0;
 }
-
 
 /*
  *	ext3_find_entry()
@@ -1052,7 +1044,6 @@ static struct dentry *ext3_lookup(struct inode * dir, struct dentry *dentry, str
 	return d_splice_alias(inode, dentry);
 }
 
-
 struct dentry *ext3_get_parent(struct dentry *child)
 {
 	unsigned long ino;
@@ -1237,7 +1228,6 @@ errout:
 	*error = err;
 	return NULL;
 }
-
 
 /*
  * Add a new entry into a directory (leaf) block.  If de is non-NULL,
@@ -2248,7 +2238,7 @@ retry:
 		 * lock which ranks below transaction start (and it can also
 		 * wait for journal commit if we are running out of space). So
 		 * we have to stop transaction now and restart it when symlink
-		 * contents is written. 
+		 * contents is written.
 		 *
 		 * To keep fs consistent in case of crash, we have to put inode
 		 * to orphan list in the mean time.

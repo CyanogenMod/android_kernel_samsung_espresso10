@@ -73,7 +73,6 @@ struct ieee80211_fragment_entry {
 	u8 last_pn[6]; /* PN of the last fragment if CCMP was used */
 };
 
-
 struct ieee80211_bss {
 	/* don't want to look up all the time */
 	size_t ssid_len;
@@ -130,7 +129,6 @@ static inline u8 bss_mesh_id_len(struct ieee80211_bss *bss)
 	return 0;
 }
 
-
 typedef unsigned __bitwise__ ieee80211_tx_result;
 #define TX_CONTINUE	((__force ieee80211_tx_result) 0u)
 #define TX_DROP		((__force ieee80211_tx_result) 1u)
@@ -152,7 +150,6 @@ struct ieee80211_tx_data {
 	u16 ethertype;
 	unsigned int flags;
 };
-
 
 typedef unsigned __bitwise__ ieee80211_rx_result;
 #define RX_CONTINUE		((__force ieee80211_rx_result) 0u)
@@ -909,7 +906,6 @@ struct ieee80211_local {
 #define I802_DEBUG_INC(c) do { } while (0)
 #endif /* CONFIG_MAC80211_DEBUG_COUNTERS */
 
-
 	int total_ps_buffered; /* total number of all buffered unicast and
 				* multicast packets for power saving stations
 				*/
@@ -1068,13 +1064,11 @@ static inline struct ieee80211_hw *local_to_hw(
 	return &local->hw;
 }
 
-
 static inline int ieee80211_bssid_match(const u8 *raddr, const u8 *addr)
 {
 	return compare_ether_addr(raddr, addr) == 0 ||
 	       is_broadcast_ether_addr(raddr);
 }
-
 
 int ieee80211_hw_config(struct ieee80211_local *local, u32 changed);
 void ieee80211_tx_set_protected(struct ieee80211_tx_data *tx);
@@ -1169,11 +1163,9 @@ void ieee80211_sched_scan_stopped_work(struct work_struct *work);
 bool ieee80211_cfg_on_oper_channel(struct ieee80211_local *local);
 void ieee80211_offchannel_enable_all_ps(struct ieee80211_local *local,
 					bool tell_ap);
-void ieee80211_offchannel_stop_vifs(struct ieee80211_local *local,
-				    bool offchannel_ps_enable);
+void ieee80211_offchannel_stop_vifs(struct ieee80211_local *local);
 void ieee80211_offchannel_return(struct ieee80211_local *local,
-				 bool enable_beaconing,
-				 bool offchannel_ps_disable);
+				 bool enable_beaconing);
 void ieee80211_hw_roc_setup(struct ieee80211_local *local);
 
 /* interface handling */
@@ -1214,7 +1206,6 @@ struct ieee80211_tx_status_rtap_hdr {
 	__le16 tx_flags;
 	u8 data_retries;
 } __packed;
-
 
 /* HT */
 void ieee80211_ht_cap_ie_to_sta_ht_cap(struct ieee80211_supported_band *sband,

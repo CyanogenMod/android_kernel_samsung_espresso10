@@ -1,7 +1,6 @@
 #ifndef _SCSI_LOGGING_H
 #define _SCSI_LOGGING_H
 
-
 /*
  * This defines the scsi logging feature.  It is a means by which the user
  * can select how much information they get about various goings on, and it

@@ -159,7 +159,6 @@ struct mspro_block_data {
 	int                   (*mrq_handler)(struct memstick_dev *card,
 					     struct memstick_request **mrq);
 
-
 	/* Default request setup function for data access method preferred by
 	 * this host instance.
 	 */
@@ -201,7 +200,6 @@ static int mspro_block_bd_open(struct block_device *bdev, fmode_t mode)
 
 	return rc;
 }
-
 
 static int mspro_block_disk_release(struct gendisk *disk)
 {
@@ -1450,7 +1448,6 @@ static struct memstick_device_id mspro_block_id_tbl[] = {
 	 MEMSTICK_CLASS_DUO},
 	{}
 };
-
 
 static struct memstick_driver mspro_block_driver = {
 	.driver = {

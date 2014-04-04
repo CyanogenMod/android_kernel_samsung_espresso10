@@ -2327,13 +2327,13 @@ static int hp_event(struct snd_soc_dapm_widget *w,
 				    WM8962_HP1L_ENA_DLY | WM8962_HP1R_ENA_DLY |
 				    WM8962_HP1L_ENA_OUTP |
 				    WM8962_HP1R_ENA_OUTP, 0);
-				    
+
 		break;
 
 	default:
 		BUG();
 		return -EINVAL;
-	
+
 	}
 
 	return 0;
@@ -2713,7 +2713,6 @@ static int wm8962_add_widgets(struct snd_soc_codec *codec)
 		snd_soc_add_controls(codec, wm8962_spk_stereo_controls,
 				     ARRAY_SIZE(wm8962_spk_stereo_controls));
 
-
 	snd_soc_dapm_new_controls(dapm, wm8962_dapm_widgets,
 				  ARRAY_SIZE(wm8962_dapm_widgets));
 	if (pdata && pdata->spk_mono)
@@ -2731,7 +2730,6 @@ static int wm8962_add_widgets(struct snd_soc_codec *codec)
 	else
 		snd_soc_dapm_add_routes(dapm, wm8962_spk_stereo_intercon,
 					ARRAY_SIZE(wm8962_spk_stereo_intercon));
-
 
 	snd_soc_dapm_disable_pin(dapm, "Beep");
 
@@ -2890,6 +2888,9 @@ static int wm8962_set_bias_level(struct snd_soc_codec *codec,
 		/* VMID 2*250k */
 		snd_soc_update_bits(codec, WM8962_PWR_MGMT_1,
 				    WM8962_VMID_SEL_MASK, 0x100);
+
+		if (codec->dapm.bias_level == SND_SOC_BIAS_OFF)
+			msleep(100);
 		break;
 
 	case SND_SOC_BIAS_OFF:
@@ -3812,7 +3813,7 @@ static int wm8962_probe(struct snd_soc_codec *codec)
 			ret);
 		goto err_enable;
 	}
-	
+
 	dev_info(codec->dev, "customer id %x revision %c\n",
 		 (ret & WM8962_CUST_ID_MASK) >> WM8962_CUST_ID_SHIFT,
 		 ((ret & WM8962_CHIP_REV_MASK) >> WM8962_CHIP_REV_SHIFT)

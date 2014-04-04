@@ -145,7 +145,6 @@
 
 #if !defined(__doxygen__)
 
-
 #endif
 
 /* Summary
@@ -162,7 +161,6 @@
 /***************************************
  * West Bridge Types
  ***************************************/
-
 
 /* Summary
    This data structure is the data passed via the evdata paramater
@@ -229,7 +227,6 @@ typedef struct cy_as_usb_inquiry_data {
 	void *data;
 } cy_as_usb_inquiry_data;
 
-
 /* Summary
    This data structure is the data passed via the evdata
    parameter on a usb event
@@ -277,7 +274,6 @@ typedef struct cy_as_usb_unknown_command_data {
 	/* If status if failed, the additional sense code qualifier */
 	uint8_t ascq;
 } cy_as_usb_unknown_command_data;
-
 
 /* Summary
    This data structure is the data passed via the evdata
@@ -433,7 +429,6 @@ typedef struct cy_as_usb_enum_control {
 	cy_bool mass_storage_callbacks;
 } cy_as_usb_enum_control;
 
-
 /* Summary
    This structure is used to configure a single endpoint
 
@@ -576,7 +571,6 @@ typedef void (*cy_as_usb_event_callback)(
 	void *evdata
 );
 
-
 /* Summary
    This type is the callback function called after an
    asynchronous USB read/write operation
@@ -622,7 +616,6 @@ typedef void (*cy_as_usb_function_callback)(
 	/* A client supplied 32 bit tag */
 	uint32_t				client
 );
-
 
 /********************************************
  * West Bridge Functions
@@ -733,7 +726,6 @@ cy_as_usb_register_callback(
 	/* The function to call */
 	cy_as_usb_event_callback callback
 	);
-
 
 /* Summary
    This function connects the West Bridge device D+ and D- signals
@@ -1539,7 +1531,6 @@ cy_as_usb_clear_stall(
 	/* Client supplied data */
 	uint32_t				client
 	);
-
 
 /* Summary
    This function returns the stall status for a given endpoint

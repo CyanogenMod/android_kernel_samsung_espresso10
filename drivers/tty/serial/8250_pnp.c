@@ -26,7 +26,6 @@
 
 #define UNKNOWN_DEV 0x3000
 
-
 static const struct pnp_device_id pnp_dev_table[] = {
 	/* Archtek America Corp. */
 	/* Archtek SmartLink Modem 3334BT Plug & Play */

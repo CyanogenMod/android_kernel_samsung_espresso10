@@ -175,7 +175,6 @@ static int __init lne390_probe1(struct net_device *dev, int ioaddr)
 		inb(ioaddr + LNE390_CFG1), inb(ioaddr + LNE390_CFG2));
 #endif
 
-
 /*	Check the EISA ID of the card. */
 	eisa_id = inl(ioaddr + LNE390_ID_PORT);
 	if ((eisa_id != LNE390_ID0) && (eisa_id != LNE390_ID1)) {
@@ -365,7 +364,6 @@ static void lne390_block_output(struct net_device *dev, int count,
 	memcpy_toio(shmem, buf, count);
 }
 
-
 #ifdef MODULE
 #define MAX_LNE_CARDS	4	/* Max number of LNE390 cards per module */
 static struct net_device *dev_lne[MAX_LNE_CARDS];
@@ -430,4 +428,3 @@ void __exit cleanup_module(void)
 	}
 }
 #endif /* MODULE */
-

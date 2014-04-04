@@ -43,7 +43,6 @@ MODULE_LICENSE("GPL");
 #define   TEA6330T_GMU			0x80	/* mute control, general mute */
 #define   TEA6330T_EQN			0x40	/* equalizer switchover (0=equalizer-on) */
 
-
 struct tea6330t {
 	struct snd_i2c_device *device;
 	struct snd_i2c_bus *bus;
@@ -54,7 +53,6 @@ struct tea6330t {
 	unsigned char bass, treble;
 	unsigned char max_bass, max_treble;
 };
-
 
 int snd_tea6330t_detect(struct snd_i2c_bus *bus, int equalizer)
 {
@@ -96,7 +94,7 @@ static int snd_tea6330t_get_master_volume(struct snd_kcontrol *kcontrol,
 					  struct snd_ctl_elem_value *ucontrol)
 {
 	struct tea6330t *tea = snd_kcontrol_chip(kcontrol);
-	
+
 	snd_i2c_lock(tea->bus);
 	ucontrol->value.integer.value[0] = tea->mleft - 0x14;
 	ucontrol->value.integer.value[1] = tea->mright - 0x14;
@@ -111,7 +109,7 @@ static int snd_tea6330t_put_master_volume(struct snd_kcontrol *kcontrol,
 	int change, count, err;
 	unsigned char bytes[3];
 	unsigned char val1, val2;
-	
+
 	val1 = (ucontrol->value.integer.value[0] % 44) + 0x14;
 	val2 = (ucontrol->value.integer.value[1] % 44) + 0x14;
 	snd_i2c_lock(tea->bus);
@@ -147,7 +145,7 @@ static int snd_tea6330t_get_master_switch(struct snd_kcontrol *kcontrol,
 					  struct snd_ctl_elem_value *ucontrol)
 {
 	struct tea6330t *tea = snd_kcontrol_chip(kcontrol);
-	
+
 	snd_i2c_lock(tea->bus);
 	ucontrol->value.integer.value[0] = tea->regs[TEA6330T_SADDR_VOLUME_LEFT] == 0 ? 0 : 1;
 	ucontrol->value.integer.value[1] = tea->regs[TEA6330T_SADDR_VOLUME_RIGHT] == 0 ? 0 : 1;
@@ -162,7 +160,7 @@ static int snd_tea6330t_put_master_switch(struct snd_kcontrol *kcontrol,
 	int change, err;
 	unsigned char bytes[3];
 	unsigned char oval1, oval2, val1, val2;
-	
+
 	val1 = ucontrol->value.integer.value[0] & 1;
 	val2 = ucontrol->value.integer.value[1] & 1;
 	snd_i2c_lock(tea->bus);
@@ -201,7 +199,7 @@ static int snd_tea6330t_get_bass(struct snd_kcontrol *kcontrol,
 				 struct snd_ctl_elem_value *ucontrol)
 {
 	struct tea6330t *tea = snd_kcontrol_chip(kcontrol);
-	
+
 	ucontrol->value.integer.value[0] = tea->bass;
 	return 0;
 }
@@ -213,7 +211,7 @@ static int snd_tea6330t_put_bass(struct snd_kcontrol *kcontrol,
 	int change, err;
 	unsigned char bytes[2];
 	unsigned char val1;
-	
+
 	val1 = ucontrol->value.integer.value[0] % (tea->max_bass + 1);
 	snd_i2c_lock(tea->bus);
 	tea->bass = val1;
@@ -248,7 +246,7 @@ static int snd_tea6330t_get_treble(struct snd_kcontrol *kcontrol,
 				   struct snd_ctl_elem_value *ucontrol)
 {
 	struct tea6330t *tea = snd_kcontrol_chip(kcontrol);
-	
+
 	ucontrol->value.integer.value[0] = tea->treble;
 	return 0;
 }
@@ -260,7 +258,7 @@ static int snd_tea6330t_put_treble(struct snd_kcontrol *kcontrol,
 	int change, err;
 	unsigned char bytes[2];
 	unsigned char val1;
-	
+
 	val1 = ucontrol->value.integer.value[0] % (tea->max_treble + 1);
 	snd_i2c_lock(tea->bus);
 	tea->treble = val1;
@@ -285,7 +283,7 @@ static void snd_tea6330_free(struct snd_i2c_device *device)
 {
 	kfree(device->private_data);
 }
-                                        
+
 int snd_tea6330t_update_mixer(struct snd_card *card,
 			      struct snd_i2c_bus *bus,
 			      int equalizer, int fader)
@@ -358,7 +356,7 @@ int snd_tea6330t_update_mixer(struct snd_card *card,
 
 	snd_i2c_unlock(bus);
 	return 0;
-	
+
       __error:
       	snd_i2c_unlock(bus);
       	snd_i2c_device_free(device);

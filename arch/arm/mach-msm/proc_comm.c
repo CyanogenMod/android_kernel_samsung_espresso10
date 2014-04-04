@@ -124,7 +124,7 @@ int msm_proc_comm(unsigned cmd, unsigned *data1, unsigned *data2)
 void __init proc_comm_boot_wait(void)
 {
 	void __iomem *base = MSM_SHARED_RAM_BASE;
- 
+
 	proc_comm_wait_for(base + MDM_STATUS, PCOM_READY);
- 
+
 }

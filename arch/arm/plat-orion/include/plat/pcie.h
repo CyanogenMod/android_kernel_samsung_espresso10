@@ -31,5 +31,4 @@ int orion_pcie_rd_conf_wa(void __iomem *wa_base, struct pci_bus *bus,
 int orion_pcie_wr_conf(void __iomem *base, struct pci_bus *bus,
 		       u32 devfn, int where, int size, u32 val);
 
-
 #endif

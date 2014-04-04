@@ -1,4 +1,3 @@
-
 #EXTRA_CFLAGS += -DCONFIG_IEEE80211_NOWEP=y
 #EXTRA_CFLAGS += -std=gnu89
 #EXTRA_CFLAGS += -O2
@@ -12,7 +11,6 @@ ccflags-y += -DRATE_ADAPT
 
 #enable it for legacy power save, disable it for leisure  power save
 ccflags-y += -DENABLE_LPS
-
 
 #ccflags-y := -mhard-float -DCONFIG_FORCE_HARD_FLOAT=y
 
@@ -35,4 +33,3 @@ r8187se-y :=			\
 		ieee80211/ieee80211_crypt_wep.o
 
 obj-$(CONFIG_R8187SE)	+= r8187se.o
-

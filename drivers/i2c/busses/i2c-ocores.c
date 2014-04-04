@@ -18,7 +18,7 @@
  * - interrupts      : interrupt number
  * - regstep         : size of device registers in bytes
  * - clock-frequency : frequency of bus clock in Hz
- * 
+ *
  * Example:
  *
  *  i2c0: ocores@a0000000 {
@@ -226,7 +226,6 @@ static void ocores_init(struct ocores_i2c *i2c)
 	oc_setreg(i2c, OCI2C_CMD, OCI2C_CMD_IACK);
 	oc_setreg(i2c, OCI2C_CONTROL, ctrl | OCI2C_CTRL_IEN | OCI2C_CTRL_EN);
 }
-
 
 static u32 ocores_func(struct i2c_adapter *adap)
 {

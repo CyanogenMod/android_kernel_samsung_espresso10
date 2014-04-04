@@ -1,6 +1,6 @@
 /*
  * Generic Generic NCR5380 driver
- *	
+ *
  * Copyright 1993, Drew Eckhardt
  *	Visionary Computing
  *	(Unix and Linux consulting and custom programming)
@@ -19,9 +19,9 @@
  * Added ISAPNP support for DTC436 adapters,
  * Thomas Sailer, sailer@ife.ee.ethz.ch
  *
- * ALPHA RELEASE 1. 
+ * ALPHA RELEASE 1.
  *
- * For more information, please consult 
+ * For more information, please consult
  *
  * NCR 5380 Family
  * SCSI Protocol Controller
@@ -34,7 +34,7 @@
  * 1+ (800) 334-5454
  */
 
-/* 
+/*
  * TODO : flesh out DMA support, find some one actually using this (I have
  * 	a memory mapped Trantor board that works fine)
  */
@@ -48,16 +48,16 @@
  *
  * USLEEP - enable support for devices that don't disconnect.  Untested.
  *
- * The card is detected and initialized in one of several ways : 
- * 1.  With command line overrides - NCR5380=port,irq may be 
+ * The card is detected and initialized in one of several ways :
+ * 1.  With command line overrides - NCR5380=port,irq may be
  *     used on the LILO command line to override the defaults.
  *
- * 2.  With the GENERIC_NCR5380_OVERRIDE compile time define.  This is 
+ * 2.  With the GENERIC_NCR5380_OVERRIDE compile time define.  This is
  *     specified as an array of address, irq, dma, board tuples.  Ie, for
- *     one board at 0x350, IRQ5, no dma, I could say  
+ *     one board at 0x350, IRQ5, no dma, I could say
  *     -DGENERIC_NCR5380_OVERRIDE={{0xcc000, 5, DMA_NONE, BOARD_NCR5380}}
- * 
- * -1 should be specified for no or DMA interrupt, -2 to autoprobe for an 
+ *
+ * -1 should be specified for no or DMA interrupt, -2 to autoprobe for an
  * 	IRQ line if overridden on the command line.
  *
  * 3.  When included as a module, with arguments passed on the command line:
@@ -72,10 +72,10 @@
  *       for a port mapped NCR5380 board or
  *     modprobe g_NCR5380 ncr_irq=255 ncr_addr=0xc8000 ncr_53c400=1
  *       for a memory mapped NCR53C400 board with interrupts disabled.
- * 
- * 255 should be specified for no or DMA interrupt, 254 to autoprobe for an 
+ *
+ * 255 should be specified for no or DMA interrupt, 254 to autoprobe for an
  * 	IRQ line if overridden on the command line.
- *     
+ *
  */
 
 /*
@@ -90,7 +90,6 @@
 
 #define AUTOPROBE_IRQ
 #define AUTOSENSE
-
 
 #ifdef CONFIG_SCSI_GENERIC_NCR53C400
 #define NCR53C400_PSEUDO_DMA 1
@@ -193,7 +192,6 @@ static void __init internal_setup(int board, char *str, int *ints)
 		++commandline_current;
 	}
 }
-
 
 /**
  * 	do_NCR53C80_setup		-	set up entry point
@@ -493,7 +491,7 @@ int __init generic_NCR5380_detect(struct scsi_host_template * tpnt)
  *
  *	Report driver information for the NCR5380
  */
- 	
+
 const char *generic_NCR5380_info(struct Scsi_Host *host)
 {
 	static const char string[] = "Generic NCR5380/53C400 Driver";
@@ -502,18 +500,18 @@ const char *generic_NCR5380_info(struct Scsi_Host *host)
 
 /**
  *	generic_NCR5380_release_resources	-	free resources
- *	@instance: host adapter to clean up 
+ *	@instance: host adapter to clean up
  *
  *	Free the generic interface resources from this adapter.
  *
  *	Locks: none
  */
- 
+
 int generic_NCR5380_release_resources(struct Scsi_Host *instance)
 {
 	NCR5380_local_declare();
 	NCR5380_setup(instance);
-	
+
 	if (instance->irq != SCSI_IRQ_NONE)
 		free_irq(instance->irq, instance);
 	NCR5380_exit(instance);
@@ -525,7 +523,6 @@ int generic_NCR5380_release_resources(struct Scsi_Host *instance)
 	release_mem_region(instance->NCR5380_instance_name, NCR5380_region_size);
 #endif
 
-
 	return 0;
 }
 
@@ -536,9 +533,9 @@ int generic_NCR5380_release_resources(struct Scsi_Host *instance)
  *	@dev: device identifier for this disk
  *	@ip: sizes to fill in
  *
- *	Generates a BIOS / DOS compatible H-C-S mapping for the specified 
+ *	Generates a BIOS / DOS compatible H-C-S mapping for the specified
  *	device / size.
- * 
+ *
  * 	XXX Most SCSI boards use this mapping, I could be incorrect.  Someone
  *	using hard disks on a trantor should verify that this mapping
  *	corresponds to that used by the BIOS / ASPI driver by running the linux
@@ -569,7 +566,7 @@ generic_NCR5380_biosparam(struct scsi_device *sdev, struct block_device *bdev,
  *	Perform a pseudo DMA mode read from an NCR53C400 or equivalent
  *	controller
  */
- 
+
 static inline int NCR5380_pread(struct Scsi_Host *instance, unsigned char *dst, int len)
 {
 	int blocks = len / 128;
@@ -613,7 +610,7 @@ static inline int NCR5380_pread(struct Scsi_Host *instance, unsigned char *dst, 
 
 #ifndef SCSI_G_NCR5380_MEM
 		{
-			int i;	
+			int i;
 			for (i = 0; i < 128; i++)
 				dst[start + i] = NCR5380_read(C400_HOST_BUFFER);
 		}
@@ -638,7 +635,7 @@ static inline int NCR5380_pread(struct Scsi_Host *instance, unsigned char *dst, 
 #endif
 	if (!(NCR5380_read(BUS_AND_STATUS_REG) & BASR_END_DMA_TRANSFER))
 		printk(KERN_ERR "53C400r: no end dma signal\n");
-		
+
 	NCR5380_write(MODE_REG, MR_BASE);
 	NCR5380_read(RESET_PARITY_INTERRUPT_REG);
 	return 0;
@@ -741,9 +738,9 @@ static inline int NCR5380_pwrite(struct Scsi_Host *instance, unsigned char *src,
 #endif				/* PSEUDO_DMA */
 
 /*
- *	Include the NCR5380 core code that we build our driver around	
+ *	Include the NCR5380 core code that we build our driver around
  */
- 
+
 #include "NCR5380.c"
 
 #define PRINTP(x) len += sprintf(buffer+len, x)
@@ -771,7 +768,7 @@ static int sprint_command(char *buffer, int len, unsigned char *command)
  *	@buffer: buffr to print into
  *	@len: buffer length
  *	@cmd: SCSI command block
- *	
+ *
  *	Print out the target and command data in hex
  */
 
@@ -800,7 +797,7 @@ static int sprint_Scsi_Cmnd(char *buffer, int len, Scsi_Cmnd * cmd)
  *
  *	Locks: global cli/lock for queue walk
  */
- 
+
 static int generic_NCR5380_proc_info(struct Scsi_Host *scsi_ptr, char *buffer, char **start, off_t offset, int length, int inout)
 {
 	int len = 0;

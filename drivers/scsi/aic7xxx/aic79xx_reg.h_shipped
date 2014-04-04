@@ -1237,7 +1237,6 @@ ahd_reg_print_t ahd_scb_disconnected_lists_print;
     ahd_print_register(NULL, 0, "SCB_DISCONNECTED_LISTS", 0x1b8, regvalue, cur_col, wrap)
 #endif
 
-
 #define	MODE_PTR        		0x00
 #define		DST_MODE        	0x70
 #define		SRC_MODE        	0x07
@@ -2608,7 +2607,6 @@ ahd_reg_print_t ahd_scb_disconnected_lists_print;
 
 #define	SCB_DISCONNECTED_LISTS		0x1b8
 
-
 #define	AHD_TIMER_MAX_US	0x18ffe7
 #define	AHD_TIMER_MAX_TICKS	0xffff
 #define	AHD_SENSE_BUFSIZE	0x100
@@ -2667,7 +2665,6 @@ ahd_reg_print_t ahd_scb_disconnected_lists_print;
 #define	AHD_ANNEXCOL_PER_DEV0	0x04
 #define	DST_MODE_SHIFT	0x04
 
-
 /* Downloaded Constant Definitions */
 #define	CACHELINE_MASK	0x07
 #define	SCB_TRANSFER_SIZE	0x06
@@ -2678,7 +2675,6 @@ ahd_reg_print_t ahd_scb_disconnected_lists_print;
 #define	SG_PREFETCH_CNT_LIMIT	0x01
 #define	SG_PREFETCH_CNT	0x00
 #define	DOWNLOAD_CONST_COUNT	0x08
-
 
 /* Exported Labels */
 #define	LABEL_seq_isr 	0x28f

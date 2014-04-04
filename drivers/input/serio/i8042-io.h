@@ -37,7 +37,6 @@ extern int of_i8042_aux_irq;
 # define I8042_AUX_IRQ	12
 #endif
 
-
 /*
  * Register numbers.
  */

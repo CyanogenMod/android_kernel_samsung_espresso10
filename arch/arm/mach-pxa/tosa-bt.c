@@ -133,7 +133,6 @@ static struct platform_driver tosa_bt_driver = {
 	},
 };
 
-
 static int __init tosa_bt_init(void)
 {
 	return platform_driver_register(&tosa_bt_driver);

@@ -50,7 +50,6 @@ void vq_callback(struct virtqueue *vq)
 {
 }
 
-
 void vhost_vq_setup(struct vdev_info *dev, struct vq_info *info)
 {
 	struct vhost_vring_state state = { .index = info->idx };

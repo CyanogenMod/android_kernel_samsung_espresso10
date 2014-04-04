@@ -37,7 +37,6 @@
 #include <linux/slab.h>
 #include <net/net_namespace.h>
 
-
 static const char* version = "HDLC support module revision 1.22";
 
 #undef DEBUG_LINK
@@ -83,16 +82,12 @@ static inline void hdlc_proto_start(struct net_device *dev)
 		hdlc->proto->start(dev);
 }
 
-
-
 static inline void hdlc_proto_stop(struct net_device *dev)
 {
 	hdlc_device *hdlc = dev_to_hdlc(dev);
 	if (hdlc->proto->stop)
 		hdlc->proto->stop(dev);
 }
-
-
 
 static int hdlc_device_event(struct notifier_block *this, unsigned long event,
 			     void *ptr)
@@ -142,8 +137,6 @@ carrier_exit:
 	return NOTIFY_DONE;
 }
 
-
-
 /* Must be called by hardware driver when HDLC device is being opened */
 int hdlc_open(struct net_device *dev)
 {
@@ -176,8 +169,6 @@ int hdlc_open(struct net_device *dev)
 	return 0;
 }
 
-
-
 /* Must be called by hardware driver when HDLC device is being closed */
 void hdlc_close(struct net_device *dev)
 {
@@ -198,8 +189,6 @@ void hdlc_close(struct net_device *dev)
 	if (hdlc->proto->close)
 		hdlc->proto->close(dev);
 }
-
-
 
 int hdlc_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 {
@@ -268,8 +257,6 @@ void unregister_hdlc_device(struct net_device *dev)
 	rtnl_unlock();
 }
 
-
-
 int attach_hdlc_protocol(struct net_device *dev, struct hdlc_proto *proto,
 			 size_t size)
 {
@@ -290,7 +277,6 @@ int attach_hdlc_protocol(struct net_device *dev, struct hdlc_proto *proto,
 	return 0;
 }
 
-
 void detach_hdlc_protocol(struct net_device *dev)
 {
 	hdlc_device *hdlc = dev_to_hdlc(dev);
@@ -306,7 +292,6 @@ void detach_hdlc_protocol(struct net_device *dev)
 	hdlc_setup_dev(dev);
 }
 
-
 void register_hdlc_protocol(struct hdlc_proto *proto)
 {
 	rtnl_lock();
@@ -314,7 +299,6 @@ void register_hdlc_protocol(struct hdlc_proto *proto)
 	first_proto = proto;
 	rtnl_unlock();
 }
-
 
 void unregister_hdlc_protocol(struct hdlc_proto *proto)
 {
@@ -329,8 +313,6 @@ void unregister_hdlc_protocol(struct hdlc_proto *proto)
 	*p = proto->next;
 	rtnl_unlock();
 }
-
-
 
 MODULE_AUTHOR("Krzysztof Halasa <khc@pm.waw.pl>");
 MODULE_DESCRIPTION("HDLC support module");
@@ -353,11 +335,9 @@ static struct packet_type hdlc_packet_type __read_mostly = {
 	.func = hdlc_rcv,
 };
 
-
 static struct notifier_block hdlc_notifier = {
 	.notifier_call = hdlc_device_event,
 };
-
 
 static int __init hdlc_module_init(void)
 {
@@ -370,14 +350,11 @@ static int __init hdlc_module_init(void)
 	return 0;
 }
 
-
-
 static void __exit hdlc_module_exit(void)
 {
 	dev_remove_pack(&hdlc_packet_type);
 	unregister_netdevice_notifier(&hdlc_notifier);
 }
-
 
 module_init(hdlc_module_init);
 module_exit(hdlc_module_exit);

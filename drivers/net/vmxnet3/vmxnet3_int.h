@@ -65,7 +65,6 @@
 # define VMXNET3_DRIVER_VERSION_REPORT VMXNET3_DRIVER_VERSION_STRING"-NAPI"
 #endif
 
-
 /*
  * Version numbers
  */
@@ -292,7 +291,6 @@ struct vmxnet3_rx_queue {
 					 VMXNET3_DEVICE_MAX_RX_QUEUES + 1)
 #define VMXNET3_LINUX_MIN_MSIX_VECT     2 /* 1 for tx-rx pair and 1 for event */
 
-
 struct vmxnet3_intr {
 	enum vmxnet3_intr_mask_mode  mask_mode;
 	enum vmxnet3_intr_type       type;	/* MSI-X, MSI, or INTx? */
@@ -309,7 +307,6 @@ struct vmxnet3_intr {
 #define VMXNET3_INTR_BUDDYSHARE 0    /* Corresponding tx,rx queues share irq */
 #define VMXNET3_INTR_TXSHARE 1	     /* All tx queues share one irq */
 #define VMXNET3_INTR_DONTSHARE 2     /* each queue has its own irq */
-
 
 #define VMXNET3_STATE_BIT_RESETTING   0
 #define VMXNET3_STATE_BIT_QUIESCED    1

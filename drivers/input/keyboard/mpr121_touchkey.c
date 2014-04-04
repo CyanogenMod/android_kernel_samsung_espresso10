@@ -150,7 +150,6 @@ static int __devinit mpr121_phys_init(const struct mpr121_platform_data *pdata,
 			goto err_i2c_write;
 	}
 
-
 	/*
 	 * Capacitance on sensing input varies and needs to be compensated.
 	 * The internal MPR121-auto-configuration can do this if it's

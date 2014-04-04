@@ -40,5 +40,4 @@ config CAN_BCM
 	  CAN messages are used on the bus (e.g. in automotive environments).
 	  To use the Broadcast Manager, use AF_CAN with protocol CAN_BCM.
 
-
 source "drivers/net/can/Kconfig"

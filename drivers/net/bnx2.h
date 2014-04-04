@@ -9,7 +9,6 @@
  * Written by: Michael Chan  (mchan@broadcom.com)
  */
 
-
 #ifndef BNX2_H
 #define BNX2_H
 
@@ -43,7 +42,6 @@ struct tx_bd {
 		#define TX_BD_FLAGS_SW_LSO		(1<<15)
 
 };
-
 
 /*
  *  rx_bd definition
@@ -181,7 +179,6 @@ struct status_block_msix {
 
 #define BNX2_SBLK_MSIX_ALIGN_SIZE	128
 
-
 /*
  *  statistics_block definition
  */
@@ -268,7 +265,6 @@ struct statistics_block {
 	u32 stat_GenStat15;
 	u32 stat_FwRxDrop;
 };
-
 
 /*
  *  l2_fhdr definition
@@ -1780,7 +1776,6 @@ struct l2_fhdr {
 #define BNX2_MISC_OSCFUNDS_CTRL_IAMP_ADJ_2		 (2L<<10)
 #define BNX2_MISC_OSCFUNDS_CTRL_IAMP_ADJ_3		 (3L<<10)
 
-
 /*
  *  nvm_reg definition
  *  offset: 0x6400
@@ -1956,8 +1951,6 @@ struct l2_fhdr {
 #define BNX2_NVM_RECONFIG_RECONFIG_STRAP_VALUE		 (0xfL<<4)
 #define BNX2_NVM_RECONFIG_RESERVED			 (0x7fffffL<<8)
 #define BNX2_NVM_RECONFIG_RECONFIG_DONE			 (1L<<31)
-
-
 
 /*
  *  dma_reg definition
@@ -2399,7 +2392,6 @@ struct l2_fhdr {
 
 #define BNX2_DMA_FUSE_CTRL2_DATA			0x00000f14
 
-
 /*
  *  context_reg definition
  *  offset: 0x1000
@@ -2583,7 +2575,6 @@ struct l2_fhdr {
 #define BNX2_CTX_CAM_CTRL_SEARCH			 (1L<<29)
 #define BNX2_CTX_CAM_CTRL_WRITE_REQ			 (1L<<30)
 #define BNX2_CTX_CAM_CTRL_READ_REQ			 (1L<<31)
-
 
 /*
  *  emac_reg definition
@@ -3115,7 +3106,6 @@ struct l2_fhdr {
 #define BNX2_EMAC_TX_RATE_LIMIT_CTRL_TX_THROTTLE_INC	 (0x7fL<<0)
 #define BNX2_EMAC_TX_RATE_LIMIT_CTRL_TX_THROTTLE_NUM	 (0x7fL<<16)
 #define BNX2_EMAC_TX_RATE_LIMIT_CTRL_RATE_LIMITER_EN	 (1L<<31)
-
 
 /*
  *  rpm_reg definition
@@ -4165,7 +4155,6 @@ struct l2_fhdr {
 #define BNX2_RPM_ACPI_PATTERN_CRC7			0x00001a34
 #define BNX2_RPM_ACPI_PATTERN_CRC7_PATTERN_CRC7		 (0xffffffffL<<0)
 
-
 /*
  *  rlup_reg definition
  *  offset: 0x2000
@@ -4190,7 +4179,6 @@ struct l2_fhdr {
 #define BNX2_RLUP_RSS_COMMAND_HASH_MASK			 (0x7UL<<14)
 
 #define BNX2_RLUP_RSS_DATA				0x0000204c
-
 
 /*
  *  rbuf_reg definition
@@ -4269,7 +4257,6 @@ struct l2_fhdr {
 #define BNX2_RBUF_PKT_DATA				0x00208000
 #define BNX2_RBUF_CLIST_DATA				0x00210000
 #define BNX2_RBUF_BUF_DATA				0x00220000
-
 
 /*
  *  rv2p_reg definition
@@ -4450,8 +4437,6 @@ struct l2_fhdr {
 #define BNX2_RV2P_MFTQ_CTL_MAX_DEPTH			 (0x3ffL<<12)
 #define BNX2_RV2P_MFTQ_CTL_CUR_DEPTH			 (0x3ffL<<22)
 
-
-
 /*
  *  mq_reg definition
  *  offset: 0x3c00
@@ -4568,8 +4553,6 @@ struct l2_fhdr {
 #define BNX2_TSCH_TSS_CFG_TSS_START_CID			 (0x7ffL<<8)
 #define BNX2_TSCH_TSS_CFG_NUM_OF_TSS_CON		 (0xfL<<24)
 
-
-
 /*
  *  tbdr_reg definition
  *  offset: 0x5000
@@ -4640,8 +4623,6 @@ struct l2_fhdr {
 #define BNX2_TBDR_FTQ_CTL_FORCE_INTERVENE		 (1L<<2)
 #define BNX2_TBDR_FTQ_CTL_MAX_DEPTH			 (0x3ffL<<12)
 #define BNX2_TBDR_FTQ_CTL_CUR_DEPTH			 (0x3ffL<<22)
-
-
 
 /*
  *  tdma_reg definition
@@ -4790,8 +4771,6 @@ struct l2_fhdr {
 #define BNX2_TDMA_FTQ_CTL_FORCE_INTERVENE		 (1L<<2)
 #define BNX2_TDMA_FTQ_CTL_MAX_DEPTH			 (0x3ffL<<12)
 #define BNX2_TDMA_FTQ_CTL_CUR_DEPTH			 (0x3ffL<<22)
-
-
 
 /*
  *  hc_reg definition
@@ -5588,7 +5567,6 @@ struct l2_fhdr {
 					 BNX2_HC_SB_CONFIG_1)
 #define BNX2_HC_RX_TICKS_OFF	(BNX2_HC_RX_TICKS_1 - BNX2_HC_SB_CONFIG_1)
 
-
 /*
  *  txp_reg definition
  *  offset: 0x40000
@@ -5683,7 +5661,6 @@ struct l2_fhdr {
 
 #define BNX2_TXP_SCRATCH				0x00060000
 
-
 /*
  *  tpat_reg definition
  *  offset: 0x80000
@@ -5777,7 +5754,6 @@ struct l2_fhdr {
 #define BNX2_TPAT_FTQ_CTL_CUR_DEPTH			 (0x3ffL<<22)
 
 #define BNX2_TPAT_SCRATCH				0x000a0000
-
 
 /*
  *  rxp_reg definition
@@ -5919,7 +5895,6 @@ struct l2_fhdr {
 #define BNX2_RXP_SCRATCH_RSS_TBL_SZ			 0x000e0038
 #define BNX2_RXP_SCRATCH_RSS_TBL			 0x000e003c
 #define BNX2_RXP_SCRATCH_RSS_TBL_MAX_ENTRIES		 128
-
 
 /*
  *  com_reg definition
@@ -6086,7 +6061,6 @@ struct l2_fhdr {
 #define BNX2_FW_RX_LOW_LATENCY				 0x00120058
 #define BNX2_FW_RX_DROP_COUNT				 0x00120084
 
-
 /*
  *  cp_reg definition
  *  offset: 0x180000
@@ -6208,7 +6182,6 @@ struct l2_fhdr {
 #define BNX2_CP_SCRATCH					0x001a0000
 
 #define BNX2_FW_MAX_ISCSI_CONN				 0x001a0080
-
 
 /*
  *  mcp_reg definition
@@ -6371,9 +6344,7 @@ struct l2_fhdr {
 #define BNX2_SHM_HDR_ADDR_0				BNX2_MCP_SCRATCH + 4
 #define BNX2_SHM_HDR_ADDR_1				BNX2_MCP_SCRATCH + 8
 
-
 #define NUM_MC_HASH_REGISTERS   8
-
 
 /* PHY_ID1: bits 31-16; PHY_ID2: bits 15-0.  */
 #define PHY_BCM5706_PHY_ID                          0x00206160
@@ -6619,7 +6590,6 @@ struct sw_tx_bd {
 
 #define NVRAM_TIMEOUT_COUNT			30000
 
-
 #define FLASH_STRAP_MASK			(BNX2_NVM_CFG1_FLASH_MODE   | \
 						 BNX2_NVM_CFG1_BUFFER_MODE  | \
 						 BNX2_NVM_CFG1_PROTECT_MODE | \
@@ -6651,7 +6621,6 @@ struct flash_spec {
 #else
 #define BNX2_MIN_MSIX_VEC	1
 #endif
-
 
 struct bnx2_irq {
 	irq_handler_t	handler;
@@ -6998,7 +6967,6 @@ struct bnx2_rv2p_fw_file {
 #define RV2P_PROC1                              0
 #define RV2P_PROC2                              1
 
-
 /* This value (in milliseconds) determines the frequency of the driver
  * issuing the PULSE message code.  The firmware monitors this periodic
  * pulse to determine when to switch to an OS-absent mode. */
@@ -7010,7 +6978,6 @@ struct bnx2_rv2p_fw_file {
  * running and there won't be any firmware-driver synchronization during a
  * driver reset. */
 #define BNX2_FW_ACK_TIME_OUT_MS                  1000
-
 
 #define BNX2_DRV_RESET_SIGNATURE		0x00000000
 #define BNX2_DRV_RESET_SIGNATURE_MAGIC		 0x4841564b /* HAVK */

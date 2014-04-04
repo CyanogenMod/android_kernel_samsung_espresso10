@@ -165,7 +165,6 @@ static bool tomoyo_del_domain(struct list_head *element)
 	return true;
 }
 
-
 static void tomoyo_del_name(struct list_head *element)
 {
 	const struct tomoyo_name *ptr =

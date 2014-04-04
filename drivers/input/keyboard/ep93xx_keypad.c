@@ -180,7 +180,6 @@ static void ep93xx_keypad_close(struct input_dev *pdev)
 	}
 }
 
-
 #ifdef CONFIG_PM
 /*
  * NOTE: I don't know if this is correct, or will work on the ep93xx.

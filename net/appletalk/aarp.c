@@ -461,7 +461,6 @@ static void aarp_send_probe_phase1(struct atalk_iface *iface)
 	}
 }
 
-
 void aarp_probe_network(struct atalk_iface *atif)
 {
 	if (atif->dev->type == ARPHRD_LOCALTLK ||

@@ -163,7 +163,6 @@ int tf_send_receive(
 	struct tf_connection *connection,
 	bool bKillable);
 
-
 /**
  * get a pointer to the secure world description.
  * This points directly into the L1 shared buffer
@@ -189,7 +188,6 @@ int tf_pm_shutdown(struct tf_comm *comm);
 int tf_power_management(struct tf_comm *comm,
 	enum TF_POWER_OPERATION operation);
 
-
 /*----------------------------------------------------------------------------
  * Communication initialization and termination
  *----------------------------------------------------------------------------*/
@@ -197,6 +195,5 @@ int tf_power_management(struct tf_comm *comm,
 int tf_init(struct tf_comm *comm);
 
 void tf_terminate(struct tf_comm *comm);
-
 
 #endif  /* __TF_COMM_H__ */

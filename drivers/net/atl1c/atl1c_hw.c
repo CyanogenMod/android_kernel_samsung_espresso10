@@ -118,7 +118,6 @@ static int atl1c_get_permanent_address(struct atl1c_hw *hw)
 		AT_WRITE_REG(hw, REG_WOL_CTRL, 0);
 		AT_READ_REG(hw, REG_WOL_CTRL, &wol_data);
 
-
 		AT_READ_REG(hw, REG_TWSI_CTRL, &twsi_ctrl_data);
 		twsi_ctrl_data |= TWSI_CTRL_SW_LDSTART;
 		AT_WRITE_REG(hw, REG_TWSI_CTRL, twsi_ctrl_data);

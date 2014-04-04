@@ -103,7 +103,6 @@ void v9fs_cache_session_put_cookie(struct v9fs_session_info *v9ses)
 	v9ses->fscache = NULL;
 }
 
-
 static uint16_t v9fs_cache_inode_get_key(const void *cookie_netfs_data,
 					 void *buffer, uint16_t bufmax)
 {

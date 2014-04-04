@@ -238,7 +238,6 @@ static void ipath_chk_errormask(struct ipath_devdata *dd)
 			(unsigned long)dd->ipath_errormask);
 }
 
-
 /**
  * ipath_get_faststats - get word counters from chip before they overflow
  * @opaque - contains a pointer to the infinipath device ipath_devdata

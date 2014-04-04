@@ -1,7 +1,7 @@
 /*
  * linux/fs/lockd/svcproc.c
  *
- * Lockd server procedures. We don't implement the NLM_*_RES 
+ * Lockd server procedures. We don't implement the NLM_*_RES
  * procedures because we don't use the async procedures.
  *
  * Copyright (C) 1996, Olaf Kirch <okir@monad.swb.de>
@@ -67,7 +67,8 @@ nlmsvc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
 
 	/* Obtain file pointer. Not used by FREE_ALL call. */
 	if (filp != NULL) {
-		if ((error = nlm_lookup_file(rqstp, &file, &lock->fh)) != 0)
+		error = cast_status(nlm_lookup_file(rqstp, &file, &lock->fh));
+		if (error != 0)
 			goto no_locks;
 		*filp = file;
 

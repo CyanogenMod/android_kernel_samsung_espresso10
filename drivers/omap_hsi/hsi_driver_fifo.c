@@ -404,4 +404,3 @@ u8 hsi_hst_fifo_flush_channel(struct hsi_dev *hsi_ctrl, unsigned int port,
 
 	return 0;
 }
-

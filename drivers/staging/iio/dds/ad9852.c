@@ -208,8 +208,6 @@ static void ad9852_init(struct ad9852_state *st)
 error_ret:
 	mutex_unlock(&st->lock);
 
-
-
 }
 
 static struct attribute *ad9852_attributes[] = {

@@ -132,7 +132,6 @@ int jfs_umount(struct super_block *sb)
 	return rc;
 }
 
-
 int jfs_umount_rw(struct super_block *sb)
 {
 	struct jfs_sb_info *sbi = JFS_SBI(sb);

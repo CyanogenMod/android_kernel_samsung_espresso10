@@ -112,7 +112,6 @@ struct sense_info {
 	u8 ascq;
 };
 
-
 #define MPT2SAS_TURN_ON_FAULT_LED (0xFFFC)
 #define MPT2SAS_RESCAN_AFTER_HOST_RESET (0xFFFF)
 
@@ -1110,7 +1109,6 @@ _scsih_build_scatter_gather(struct MPT2SAS_ADAPTER *ioc,
 		chain_dma = chain_req->chain_buffer_dma;
 	} while (1);
 
-
  fill_in_last_segment:
 
 	/* fill the last segment */
@@ -1678,7 +1676,6 @@ _scsih_disable_ddio(struct MPT2SAS_ADAPTER *ioc)
 	return;
 }
 
-
 /**
  * _scsih_get_num_volumes - Get number of volumes in the ioc
  * @ioc: per adapter object
@@ -1704,7 +1701,6 @@ _scsih_get_num_volumes(struct MPT2SAS_ADAPTER *ioc)
 	}
 	return vol_cnt;
 }
-
 
 /**
  * _scsih_init_warpdrive_properties - Set properties for warpdrive direct I/O.
@@ -1844,7 +1840,6 @@ _scsih_init_warpdrive_properties(struct MPT2SAS_ADAPTER *ioc,
 	raid_device->max_lba = le64_to_cpu(vol_pg0->MaxLBA);
 	raid_device->stripe_sz = le32_to_cpu(vol_pg0->StripeSize);
 	raid_device->block_sz = le16_to_cpu(vol_pg0->BlockSize);
-
 
 	kfree(vol_pg0);
 	return;
@@ -2224,7 +2219,6 @@ mpt2sas_scsih_clear_tm_flag(struct MPT2SAS_ADAPTER *ioc, u16 handle)
 		}
 	}
 }
-
 
 /**
  * mpt2sas_scsih_issue_tm - main routine for sending tm requests
@@ -2700,7 +2694,6 @@ _scsih_fw_event_free(struct MPT2SAS_ADAPTER *ioc, struct fw_event_work
 	spin_unlock_irqrestore(&ioc->fw_event_lock, flags);
 }
 
-
 /**
  * _scsih_queue_rescan - queue a topology rescan from user context
  * @ioc: per adapter object
@@ -2964,8 +2957,6 @@ _scsih_tm_tr_send(struct MPT2SAS_ADAPTER *ioc, u16 handle)
 	mpi_request->TaskType = MPI2_SCSITASKMGMT_TASKTYPE_TARGET_RESET;
 	mpt2sas_base_put_smid_hi_priority(ioc, smid);
 }
-
-
 
 /**
  * _scsih_sas_control_complete - completion routine
@@ -3413,7 +3404,6 @@ _scsih_check_ir_config_unhide_events(struct MPT2SAS_ADAPTER *ioc,
 	}
 }
 
-
 /**
  * _scsih_check_volume_delete_events - set delete flag for volumes
  * @ioc: per adapter object
@@ -3596,7 +3586,6 @@ _scsih_scsi_direct_io_set(struct MPT2SAS_ADAPTER *ioc, u16 smid, u8 direct_io)
 	ioc->scsi_lookup[smid - 1].direct_io = direct_io;
 }
 
-
 /**
  * _scsih_setup_direct_io - setup MPI request for WARPDRIVE Direct I/O
  * @ioc: per adapter object
@@ -3740,11 +3729,7 @@ _scsih_qcmd_lck(struct scsi_cmnd *scmd, void (*done)(struct scsi_cmnd *))
 			else
 				mpi_control |= MPI2_SCSIIO_CONTROL_SIMPLEQ;
 		} else
-/* MPI Revision I (UNIT = 0xA) - removed MPI2_SCSIIO_CONTROL_UNTAGGED */
-/*			mpi_control |= MPI2_SCSIIO_CONTROL_UNTAGGED;
- */
-			mpi_control |= (0x500);
-
+			mpi_control |= MPI2_SCSIIO_CONTROL_SIMPLEQ;
 	} else
 		mpi_control |= MPI2_SCSIIO_CONTROL_SIMPLEQ;
 	/* Make sure Device is not raid volume.
@@ -4225,7 +4210,6 @@ _scsih_io_done(struct MPT2SAS_ADAPTER *ioc, u16 smid, u8 msix_index, u32 reply)
 		    sas_device_priv_data->sas_target->handle);
 		return 0;
 	}
-
 
 	/* turning off TLR */
 	scsi_state = mpi_reply->SCSIState;
@@ -4988,7 +4972,6 @@ _scsih_add_device(struct MPT2SAS_ADAPTER *ioc, u16 handle, u8 phy_num, u8 is_pd)
 		    ioc->name, __FILE__, __LINE__, __func__);
 		return -1;
 	}
-
 
 	spin_lock_irqsave(&ioc->sas_device_lock, flags);
 	sas_device = mpt2sas_scsih_sas_device_find_by_sas_address(ioc,
@@ -6607,7 +6590,6 @@ _scsih_remove_unresponding_sas_devices(struct MPT2SAS_ADAPTER *ioc)
 	struct _sas_node *sas_expander;
 	struct _raid_device *raid_device, *raid_device_next;
 
-
 	list_for_each_entry_safe(sas_device, sas_device_next,
 	    &ioc->sas_device_list, list) {
 		if (sas_device->responding) {
@@ -7623,7 +7605,6 @@ _scsih_pci_slot_reset(struct pci_dev *pdev)
 	rc = mpt2sas_base_map_resources(ioc);
 	if (rc)
 		return PCI_ERS_RESULT_DISCONNECT;
-
 
 	rc = mpt2sas_base_hard_reset_handler(ioc, CAN_SLEEP,
 	    FORCE_BIG_HAMMER);

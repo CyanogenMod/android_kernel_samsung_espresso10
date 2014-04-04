@@ -36,7 +36,6 @@ enum {
 	GPIO_PS_ON,
 };
 
-
 struct gpio sensors_gpios[] = {
 	[GPIO_SENSOR_EN] = {
 		.flags = GPIOF_OUT_INIT_HIGH,
@@ -194,5 +193,3 @@ void __init omap4_t1_sensors_init(void)
 			i2c_register_board_info(4, t1_i2c4_boardinfo_7,
 					ARRAY_SIZE(t1_i2c4_boardinfo_7));
 }
-
-

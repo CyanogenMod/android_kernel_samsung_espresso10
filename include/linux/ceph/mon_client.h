@@ -24,7 +24,6 @@ struct ceph_monmap {
 struct ceph_mon_client;
 struct ceph_mon_generic_request;
 
-
 /*
  * Generic mechanism for resending monitor requests.
  */

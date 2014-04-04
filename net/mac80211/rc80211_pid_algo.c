@@ -19,7 +19,6 @@
 #include "mesh.h"
 #include "rc80211_pid.h"
 
-
 /* This is an implementation of a TX rate control algorithm that uses a PID
  * controller. Given a target failed frames rate, the controller decides about
  * TX rate changes to meet the target failed frames rate.
@@ -63,7 +62,6 @@
  * floating point arithmetic. Hence, all values are shifted left by
  * RC_PID_ARITH_SHIFT.
  */
-
 
 /* Adjust the rate while ensuring that we won't switch to a lower rate if it
  * exhibited a worse failed frames behaviour and we'll choose the highest rate

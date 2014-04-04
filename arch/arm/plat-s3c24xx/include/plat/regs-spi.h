@@ -46,7 +46,6 @@
 
 #define S3C2410_SPCON_TAGD	  (1<<0)	/* Tx auto garbage data mode */
 
-
 #define S3C2410_SPSTA	 (0x04)
 
 #define S3C2412_SPSTA_RXFIFO_AE		(1<<11)
@@ -77,6 +76,5 @@
 #define S3C2412_TXFIFO	 (0x18)
 #define S3C2412_RXFIFO	 (0x18)
 #define S3C2412_SPFIC	 (0x24)
-
 
 #endif /* __ASM_ARCH_REGS_SPI_H */

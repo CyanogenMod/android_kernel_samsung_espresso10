@@ -31,7 +31,6 @@
 #include "hyperv.h"
 #include "hyperv_storage.h"
 
-
 static inline struct storvsc_device *alloc_stor_device(struct hv_device *device)
 {
 	struct storvsc_device *stor_device;
@@ -252,7 +251,6 @@ static void storvsc_on_io_completion(struct hv_device *device,
 
 	stor_pkt = &request->vstor_packet;
 
-
 	/* Copy over the status...etc */
 	stor_pkt->vm_srb.scsi_status = vstor_packet->vm_srb.scsi_status;
 	stor_pkt->vm_srb.srb_status = vstor_packet->vm_srb.srb_status;
@@ -292,7 +290,6 @@ static void storvsc_on_io_completion(struct hv_device *device,
 		stor_device->drain_notify)
 		wake_up(&stor_device->waiting_to_drain);
 
-
 	put_stor_device(device);
 }
 
@@ -325,7 +322,6 @@ static void storvsc_on_channel_callback(void *context)
 	unsigned char packet[ALIGN(sizeof(struct vstor_packet), 8)];
 	struct hv_storvsc_request *request;
 	int ret;
-
 
 	stor_device = must_get_stor_device(device);
 	if (!stor_device)
@@ -456,17 +452,13 @@ int storvsc_do_io(struct hv_device *device,
 	if (!stor_device)
 		return -2;
 
-
 	request->device  = device;
-
 
 	vstor_packet->flags |= REQUEST_COMPLETION_FLAG;
 
 	vstor_packet->vm_srb.length = sizeof(struct vmscsi_request);
 
-
 	vstor_packet->vm_srb.sense_info_length = SENSE_BUFFER_SIZE;
-
 
 	vstor_packet->vm_srb.data_transfer_length =
 	request->data_buffer.len;
@@ -561,4 +553,3 @@ int storvsc_get_major_info(struct storvsc_device_info *device_info,
 
 	return -ENODEV;
 }
-

@@ -334,7 +334,6 @@ static int wm8350_isink_enable_time(struct regulator_dev *rdev)
 	return -EINVAL;
 }
 
-
 int wm8350_isink_set_flash(struct wm8350 *wm8350, int isink, u16 mode,
 			   u16 trigger, u16 duration, u16 on_ramp, u16 off_ramp,
 			   u16 drive)

@@ -27,7 +27,6 @@ struct ath_softc;
 #define RATE_TABLE_SIZE  72
 #define MAX_TX_RATE_PHY  48
 
-
 #define RC_INVALID	0x0000
 #define RC_LEGACY	0x0001
 #define RC_SS		0x0002

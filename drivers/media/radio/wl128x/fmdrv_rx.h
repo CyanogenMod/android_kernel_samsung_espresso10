@@ -56,4 +56,3 @@ void fm_rx_get_region(struct fmdev *, u8 *);
 u32 fm_rx_set_chanl_spacing(struct fmdev *, u8);
 u32 fm_rx_get_chanl_spacing(struct fmdev *, u8 *);
 #endif
-

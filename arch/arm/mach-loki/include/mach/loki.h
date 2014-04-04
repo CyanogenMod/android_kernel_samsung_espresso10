@@ -76,8 +76,6 @@
 #define DDR_VIRT_BASE		(LOKI_REGS_VIRT_BASE | 0xf0000)
 #define DDR_REG(x)		(DDR_VIRT_BASE | (x))
 
-
 #define GPIO_MAX		8
-
 
 #endif

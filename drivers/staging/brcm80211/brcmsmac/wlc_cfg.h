@@ -53,7 +53,6 @@
 					 *      3       5356a0
 					 */
 
-
 /* For undefined values, use defaults */
 #ifndef D11CONF
 #define D11CONF	D11_DEFAULT

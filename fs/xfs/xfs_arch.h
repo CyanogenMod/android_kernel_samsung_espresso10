@@ -99,7 +99,7 @@ static inline void be64_add_cpu(__be64 *a, __s64 b)
  * into 32bits a four-member array is used:
  *
  *  |24-31|16-23| 8-15| 0- 7|
- */ 
+ */
 
 #define XFS_GET_DIR_INO4(di) \
 	(((__u32)(di).i[0] << 24) | ((di).i[1] << 16) | ((di).i[2] << 8) | ((di).i[3]))
@@ -132,5 +132,5 @@ do { \
 	(di).i[6] = (((from) & 0x000000000000ff00ULL) >> 8); \
 	(di).i[7] = ((from) & 0x00000000000000ffULL); \
 } while (0)
-	
+
 #endif	/* __XFS_ARCH_H__ */

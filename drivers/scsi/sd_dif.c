@@ -183,7 +183,6 @@ static struct blk_integrity dif_type1_integrity_ip = {
 	.tag_size		= 0,
 };
 
-
 /*
  * Type 3 protection has a 16-bit guard tag and 16 + 32 bits of opaque
  * tag space.
@@ -478,4 +477,3 @@ void sd_dif_complete(struct scsi_cmnd *scmd, unsigned int good_bytes)
 		}
 	}
 }
-

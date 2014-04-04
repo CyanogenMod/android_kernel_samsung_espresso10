@@ -61,7 +61,6 @@ static int open_cgroup(char *name)
 	char mnt[MAX_PATH+1];
 	int fd;
 
-
 	if (cgroupfs_find_mountpoint(mnt, MAX_PATH+1))
 		return -1;
 

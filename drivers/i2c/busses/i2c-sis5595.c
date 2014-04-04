@@ -21,14 +21,14 @@
 
 /*
    Note: all have mfr. ID 0x1039.
-   SUPPORTED		PCI ID		
+   SUPPORTED		PCI ID
 	5595		0008
 
    Note: these chips contain a 0008 device which is incompatible with the
          5595. We recognize these by the presence of the listed
          "blacklist" PCI ID and refuse to load.
 
-   NOT SUPPORTED	PCI ID		BLACKLIST PCI ID	
+   NOT SUPPORTED	PCI ID		BLACKLIST PCI ID
 	 540		0008		0540
 	 550		0008		0550
 	5513		0008		5511
@@ -48,7 +48,7 @@
 	 746		0008		0746
 */
 
-/* TO DO: 
+/* TO DO:
  * Add Block Transfers (ugly, but supported by the adapter)
  * Add adapter resets
  */
@@ -337,7 +337,6 @@ static s32 sis5595_access(struct i2c_adapter *adap, u16 addr,
 	    ((read_write == I2C_SMBUS_WRITE) || (size == SIS5595_QUICK)))
 		return 0;
 
-
 	switch (size) {
 	case SIS5595_BYTE:
 	case SIS5595_BYTE_DATA:
@@ -370,7 +369,7 @@ static struct i2c_adapter sis5595_adapter = {
 };
 
 static const struct pci_device_id sis5595_ids[] __devinitconst = {
-	{ PCI_DEVICE(PCI_VENDOR_ID_SI, PCI_DEVICE_ID_SI_503) }, 
+	{ PCI_DEVICE(PCI_VENDOR_ID_SI, PCI_DEVICE_ID_SI_503) },
 	{ 0, }
 };
 

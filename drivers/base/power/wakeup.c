@@ -16,7 +16,7 @@
 
 #include "power.h"
 
-#define TIMEOUT		100
+#define TIMEOUT    100
 
 /*
  * If set, the suspend/hibernate code will abort transitions to a sleep state
@@ -540,7 +540,6 @@ void __pm_wakeup_event(struct wakeup_source *ws, unsigned int msec)
 	spin_unlock_irqrestore(&ws->lock, flags);
 }
 EXPORT_SYMBOL_GPL(__pm_wakeup_event);
-
 
 /**
  * pm_wakeup_event - Notify the PM core of a wakeup event.

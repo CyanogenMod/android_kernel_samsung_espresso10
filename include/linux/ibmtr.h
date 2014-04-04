@@ -71,7 +71,6 @@
 /* Bit 0 - Primary or alternate adapter.  Set to zero if this adapter is the
 		primary adapter, 1 if this adapter is the alternate adapter. */
 
-
 #define ISRP_ODD        0x09
 
 #define ADAP_CHK_INT 0x40 /* Bit 6 - Adapter check.  the adapter has
@@ -92,8 +91,6 @@
                              response to your SRB (the response is located in
                              the SSB area of shared memory). */
 /* Bit 1 - Bridge frame forward complete. */
-
-
 
 #define ISRA_EVEN 0x0A /*Interrupt status registers - adapter  - even and odd */
 /* Bit 7 - Internal parity error (on adapter's internal bus) */

@@ -85,7 +85,6 @@ struct ehci_caps {
 	u8		portroute[8];	 /* nibbles for routing - offset 0xC */
 } __attribute__ ((packed));
 
-
 /* Section 2.3 Host Controller Operational Registers */
 struct ehci_regs {
 	/* USBCMD: offset 0x00 */
@@ -188,7 +187,6 @@ struct ehci_dbg_port {
 	u32	address;
 #define DBGP_EPADDR(dev, ep)	(((dev)<<8)|(ep))
 } __attribute__ ((packed));
-
 
 #define	QTD_NEXT(dma)	cpu_to_le32((u32)dma)
 

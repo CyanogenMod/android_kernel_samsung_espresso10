@@ -209,7 +209,6 @@ static struct v4l2_queryctrl pwc_controls[] = {
 	},
 };
 
-
 static void pwc_vidioc_fill_fmt(const struct pwc_device *pdev, struct v4l2_format *f)
 {
 	memset(&f->fmt.pix, 0, sizeof(struct v4l2_pix_format));
@@ -909,6 +908,5 @@ const struct v4l2_ioctl_ops pwc_ioctl_ops = {
 	.vidioc_enum_frameintervals	    = pwc_enum_frameintervals,
 	.vidioc_default		    = pwc_default,
 };
-
 
 /* vim: set cino= formatoptions=croql cindent shiftwidth=8 tabstop=8: */

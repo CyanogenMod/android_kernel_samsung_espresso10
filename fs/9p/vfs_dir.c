@@ -279,7 +279,6 @@ exit:
 	return err;
 }
 
-
 /**
  * v9fs_dir_release - close a directory
  * @inode: inode of the directory

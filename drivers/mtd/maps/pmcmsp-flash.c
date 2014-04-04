@@ -41,7 +41,6 @@
 #include <msp_prom.h>
 #include <msp_regs.h>
 
-
 static struct mtd_info **msp_flash;
 static struct mtd_partition **msp_parts;
 static struct map_info *msp_maps;

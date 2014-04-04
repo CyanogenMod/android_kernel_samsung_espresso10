@@ -74,7 +74,6 @@ static struct ata_device *ata_scsi_find_dev(struct ata_port *ap,
 #define ALL_MPAGES 0x3f
 #define ALL_SUB_MPAGES 0xff
 
-
 static const u8 def_rw_recovery_mpage[RW_RECOVERY_MPAGE_LEN] = {
 	RW_RECOVERY_MPAGE,
 	RW_RECOVERY_MPAGE_LEN - 2,
@@ -308,7 +307,8 @@ ata_scsi_activity_show(struct device *dev, struct device_attribute *attr,
 	struct ata_port *ap = ata_shost_to_port(sdev->host);
 	struct ata_device *atadev = ata_scsi_find_dev(ap, sdev);
 
-	if (ap->ops->sw_activity_show && (ap->flags & ATA_FLAG_SW_ACTIVITY))
+	if (atadev && ap->ops->sw_activity_show &&
+	    (ap->flags & ATA_FLAG_SW_ACTIVITY))
 		return ap->ops->sw_activity_show(atadev, buf);
 	return -EINVAL;
 }
@@ -323,7 +323,8 @@ ata_scsi_activity_store(struct device *dev, struct device_attribute *attr,
 	enum sw_activity val;
 	int rc;
 
-	if (ap->ops->sw_activity_store && (ap->flags & ATA_FLAG_SW_ACTIVITY)) {
+	if (atadev && ap->ops->sw_activity_store &&
+	    (ap->flags & ATA_FLAG_SW_ACTIVITY)) {
 		val = simple_strtoul(buf, NULL, 0);
 		switch (val) {
 		case OFF: case BLINK_ON: case BLINK_OFF:
@@ -544,7 +545,6 @@ int ata_cmd_ioctl(struct scsi_device *scsidev, void __user *arg)
 				rc = -EFAULT;
 		}
 	}
-
 
 	if (cmd_result) {
 		rc = -EIO;
@@ -1354,7 +1354,6 @@ static unsigned int ata_scsi_start_stop_xlat(struct ata_queued_cmd *qc)
 	scmd->result = SAM_STAT_GOOD;
 	return 1;
 }
-
 
 /**
  *	ata_scsi_flush_xlat - Translate SCSI SYNCHRONIZE CACHE command
@@ -2714,7 +2713,6 @@ static unsigned int atapi_xlat(struct ata_queued_cmd *qc)
 			/* some SATA bridges need us to indicate data xfer direction */
 			qc->tf.feature |= ATAPI_DMADIR;
 	}
-
 
 	/* FIXME: We need to translate 0x05 READ_BLOCK_LIMITS to a MODE_SENSE
 	   as ATAPI tape drives don't get this right otherwise */

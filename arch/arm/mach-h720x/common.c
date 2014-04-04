@@ -65,7 +65,6 @@ static void unmask_global_irq(struct irq_data *d)
 	CPU_REG (IRQC_VIRT, IRQC_IER) |= (1 << d->irq);
 }
 
-
 /*
  * ack GPIO irq's
  * Ack only for edge triggered int's valid

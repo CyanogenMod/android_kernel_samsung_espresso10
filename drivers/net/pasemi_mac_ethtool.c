@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  */
 
-
 #include <linux/netdevice.h>
 #include <linux/ethtool.h>
 #include <linux/pci.h>
@@ -105,7 +104,6 @@ pasemi_mac_ethtool_set_msglevel(struct net_device *netdev,
 	mac->msg_enable = level;
 }
 
-
 static void
 pasemi_mac_ethtool_get_ringparam(struct net_device *netdev,
 				 struct ethtool_ringparam *ering)
@@ -157,4 +155,3 @@ const struct ethtool_ops pasemi_mac_ethtool_ops = {
 	.get_sset_count		= pasemi_mac_get_sset_count,
 	.get_ethtool_stats	= pasemi_mac_get_ethtool_stats,
 };
-

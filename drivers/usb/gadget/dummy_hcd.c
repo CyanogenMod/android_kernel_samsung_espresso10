@@ -21,7 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 /*
  * This exposes a device side "USB gadget" API, driven by requests to a
  * Linux-USB host controller driver.  USB traffic is simulated; there's
@@ -54,7 +53,6 @@
 #include <asm/irq.h>
 #include <asm/system.h>
 #include <asm/unaligned.h>
-
 
 #define DRIVER_DESC	"USB Host+Gadget Emulator"
 #define DRIVER_VERSION	"02 May 2005"
@@ -122,10 +120,7 @@ static const char ep0name [] = "ep0";
 static const char *const ep_name [] = {
 	ep0name,				/* everyone has ep0 */
 
-	/* act like a net2280: high speed, six configurable endpoints */
-	"ep-a", "ep-b", "ep-c", "ep-d", "ep-e", "ep-f",
-
-	/* or like pxa250: fifteen fixed function endpoints */
+	/* act like a pxa250: fifteen fixed function endpoints */
 	"ep1in-bulk", "ep2out-bulk", "ep3in-iso", "ep4out-iso", "ep5in-int",
 	"ep6in-bulk", "ep7out-bulk", "ep8in-iso", "ep9out-iso", "ep10in-int",
 	"ep11in-bulk", "ep12out-bulk", "ep13in-iso", "ep14out-iso",
@@ -133,6 +128,10 @@ static const char *const ep_name [] = {
 
 	/* or like sa1100: two fixed function endpoints */
 	"ep1out-bulk", "ep2in-bulk",
+
+	/* and now some generic EPs so we have enough in multi config */
+	"ep3out", "ep4in", "ep5out", "ep6out", "ep7in", "ep8out", "ep9in",
+	"ep10out", "ep11out", "ep12in", "ep13out", "ep14in", "ep15out",
 };
 #define DUMMY_ENDPOINTS	ARRAY_SIZE(ep_name)
 
@@ -144,7 +143,6 @@ struct urbp {
 	struct urb		*urb;
 	struct list_head	urbp_list;
 };
-
 
 enum dummy_rh_state {
 	DUMMY_RH_RESET,
@@ -858,7 +856,6 @@ int net2280_set_fifo_mode (struct usb_gadget *gadget, int mode)
 }
 EXPORT_SYMBOL (net2280_set_fifo_mode);
 
-
 /* The gadget structure is stored inside the hcd structure and will be
  * released along with it. */
 static void
@@ -1197,7 +1194,6 @@ static struct dummy_ep *find_endpoint (struct dummy *dum, u8 address)
 #define Intf_InRequest	(Intf_Request | USB_DIR_IN)
 #define Ep_Request	(USB_TYPE_STANDARD | USB_RECIP_ENDPOINT)
 #define Ep_InRequest	(Ep_Request | USB_DIR_IN)
-
 
 /**
  * handle_control_request() - handles all control transfers

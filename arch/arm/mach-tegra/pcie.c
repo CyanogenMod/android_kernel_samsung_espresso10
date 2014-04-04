@@ -476,7 +476,6 @@ static struct hw_pci tegra_pcie_hw __initdata = {
 	.map_irq	= tegra_pcie_map_irq,
 };
 
-
 static irqreturn_t tegra_pcie_isr(int irq, void *arg)
 {
 	const char *err_msg[] = {

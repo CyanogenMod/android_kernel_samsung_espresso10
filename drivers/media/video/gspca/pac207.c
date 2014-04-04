@@ -184,7 +184,6 @@ static int pac207_write_regs(struct gspca_dev *gspca_dev, u16 index,
 	return err;
 }
 
-
 static int pac207_write_reg(struct gspca_dev *gspca_dev, u16 index, u16 value)
 {
 	struct usb_device *udev = gspca_dev->dev;

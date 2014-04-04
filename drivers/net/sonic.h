@@ -22,7 +22,6 @@
 #ifndef SONIC_H
 #define SONIC_H
 
-
 /*
  * SONIC register offsets
  */
@@ -59,7 +58,6 @@
 #define SONIC_WT1              0x2a
 
 #define SONIC_SR               0x28
-
 
 /* test-only registers */
 
@@ -160,7 +158,6 @@
 
 #define SONIC_RCR_DEFAULT       (SONIC_RCR_BRD)
 
-
 /*
  * SONIC Transmit Control register bits
  */
@@ -202,7 +199,6 @@
 #define SONIC_INT_MP		0x0002
 #define SONIC_INT_RFO		0x0001
 
-
 /*
  * The interrupts we allow.
  */
@@ -218,7 +214,6 @@
                                 SONIC_INT_CRC | \
                                 SONIC_INT_FAE | \
                                 SONIC_INT_MP)
-
 
 #define SONIC_EOL       0x0001
 #define CAM_DESCRIPTORS 16

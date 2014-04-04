@@ -44,7 +44,6 @@
 
 #include <linux/generic_serial.h>
 
-
 #include "linux_compat.h"
 #include "rio_linux.h"
 #include "pkt.h"
@@ -71,7 +70,6 @@
 #include "route.h"
 #include "cirrus.h"
 #include "rioioctl.h"
-
 
 static struct LpbReq LpbReq;
 static struct RupReq RupReq;

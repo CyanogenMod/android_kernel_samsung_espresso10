@@ -38,7 +38,6 @@
 #define RX8581_REG_FLAG		0x0E /* Flag Register */
 #define RX8581_REG_CTRL		0x0F /* Control Register */
 
-
 /* Flag Register bit definitions */
 #define RX8581_FLAG_UF		0x20 /* Update */
 #define RX8581_FLAG_TF		0x10 /* Timer */
@@ -121,7 +120,6 @@ static int rx8581_get_datetime(struct i2c_client *client, struct rtc_time *tm)
 	tm->tm_year = bcd2bin(date[RX8581_REG_YR]);
 	if (tm->tm_year < 70)
 		tm->tm_year += 100;	/* assume we are in 1970...2069 */
-
 
 	dev_dbg(&client->dev, "%s: tm is secs=%d, mins=%d, hours=%d, "
 		"mday=%d, mon=%d, year=%d, wday=%d\n",

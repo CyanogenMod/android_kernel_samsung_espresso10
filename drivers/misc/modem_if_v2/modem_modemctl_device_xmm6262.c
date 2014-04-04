@@ -71,7 +71,6 @@ static int xmm6262_off(struct modem_ctl *mc)
 	return 0;
 }
 
-
 static int xmm6262_reset(struct modem_ctl *mc)
 {
 	mif_info("\n");

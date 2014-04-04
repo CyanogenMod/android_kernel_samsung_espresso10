@@ -65,11 +65,11 @@ static const struct regulator_init_data vbatt_initdata = {
 		.always_on = 1,
 	},
 	.num_consumer_supplies = ARRAY_SIZE(vbatt_supplies),
-	.consumer_supplies = vbatt_supplies,
+	.consumer_supplies = (struct regulator_consumer_supply *) vbatt_supplies,
 };
 
 static const struct fixed_voltage_config vbatt_config = {
-	.init_data = &vbatt_initdata,
+	.init_data = (struct regulator_init_data *) &vbatt_initdata,
 	.microvolts = 1800000,
 	.supply_name = "VBATT",
 	.gpio = -EINVAL,
@@ -79,7 +79,7 @@ static struct platform_device vbatt_device = {
 	.name	= "reg-fixed-voltage",
 	.id	= -1,
 	.dev = {
-		.platform_data = &vbatt_config,
+		.platform_data = (struct fixed_voltage_config *) &vbatt_config,
 	},
 };
 
@@ -93,7 +93,7 @@ static const struct regulator_init_data wm1811_ldo1_initdata = {
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
 	},
 	.num_consumer_supplies = ARRAY_SIZE(wm1811_ldo1_supplies),
-	.consumer_supplies = wm1811_ldo1_supplies,
+	.consumer_supplies = (struct regulator_consumer_supply *) wm1811_ldo1_supplies,
 };
 
 static const struct regulator_consumer_supply wm1811_ldo2_supplies[] = {
@@ -106,7 +106,7 @@ static const struct regulator_init_data wm1811_ldo2_initdata = {
 		.always_on = true,  /* Actually status changed by LDO1 */
 	},
 	.num_consumer_supplies = ARRAY_SIZE(wm1811_ldo2_supplies),
-	.consumer_supplies = wm1811_ldo2_supplies,
+	.consumer_supplies = (struct regulator_consumer_supply *) wm1811_ldo2_supplies,
 };
 
 static struct wm8994_pdata wm1811_pdata = {
@@ -124,10 +124,10 @@ static struct wm8994_pdata wm1811_pdata = {
 
 	.ldo = {
 		{
-			.init_data = &wm1811_ldo1_initdata,
+			.init_data = (struct regulator_init_data *) &wm1811_ldo1_initdata,
 		},
 		{
-			.init_data = &wm1811_ldo2_initdata,
+			.init_data = (struct regulator_init_data *) &wm1811_ldo2_initdata,
 		}
 	},
 
@@ -474,7 +474,6 @@ static void espresso_twl6030_init(void)
 	if (ret)
 		pr_err("%s:PHOENIX_MSK_TRANSITION write fail!\n", __func__);
 
-
 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID0,
 			&val, TWL6030_BBSPOR_CFG);
 
@@ -488,7 +487,6 @@ static void espresso_twl6030_init(void)
 			val, TWL6030_BBSPOR_CFG);
 	if (ret)
 		pr_err("%s:TWL6030 BBSPOR_CFG write fail!\n", __func__);
-
 
 	if (system_rev >= 9) {
 		ret = twl_i2c_read_u8(TWL6030_MODULE_ID0,
@@ -601,7 +599,6 @@ static struct regulator_consumer_supply espresso_vdd_io_1V8_supplies[] = {
 	REGULATOR_SUPPLY("SENSOR_1.8V", "4-0044"),
 };
 
-
 static struct regulator_init_data espresso_vdd_io_1V8 = {
 	.constraints = {
 		.min_uV = 1800000,
@@ -667,7 +664,6 @@ static struct i2c_board_info espresso_twl6030_i2c1_board_info[] __initdata = {
 #endif
 };
 
-
 static struct i2c_board_info espresso_twl6032_i2c1_board_info[] __initdata = {
 	{
 		I2C_BOARD_INFO("twl6032", 0x48),
@@ -719,9 +715,6 @@ static struct platform_device espresso_vmmc_device = {
 	},
 };
 
-
-
-
 static void __init espresso_audio_init(void)
 {
 #ifdef CONFIG_TWL6040_CODEC
@@ -756,7 +749,6 @@ void __init omap4_espresso_pmic_init(void)
 	platform_add_devices(espresso_pmic_devices,
 			     ARRAY_SIZE(espresso_pmic_devices));
 
-
 	if (system_rev < 7)
 		espresso_vaux2.constraints.always_on = true;
 
@@ -784,7 +776,6 @@ void __init omap4_espresso_pmic_init(void)
 		omap_muxtbl_get_gpio_by_name("TF_EN");
 		platform_device_register(&espresso_vmmc_device);
 	}
-
 
 	/*
 	 * Drive MSECURE high for TWL6030 write access.

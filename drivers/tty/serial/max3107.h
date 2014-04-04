@@ -25,10 +25,8 @@
 #define MAX3107_GPIO_BASE	88
 #define MAX3107_GPIO_COUNT	4
 
-
 /* GPIO connected to chip's reset pin */
 #define MAX3107_RESET_GPIO	87
-
 
 /* Chip reset delay */
 #define MAX3107_RESET_DELAY	10
@@ -36,13 +34,11 @@
 /* Chip wakeup delay */
 #define MAX3107_WAKEUP_DELAY	50
 
-
 /* Sleep mode definitions */
 #define MAX3107_DISABLE_FORCED_SLEEP	0
 #define MAX3107_ENABLE_FORCED_SLEEP	1
 #define MAX3107_DISABLE_AUTOSLEEP	2
 #define MAX3107_ENABLE_AUTOSLEEP	3
-
 
 /* Definitions for register access with SPI transfers
  *
@@ -194,7 +190,6 @@
 #define MAX3107_LCR_WORD_LEN_7		(0x0002)
 #define MAX3107_LCR_WORD_LEN_8		(0x0003)
 
-
 /* IRDA register bits */
 #define MAX3107_IRDA_IRDAEN_BIT		(1 << 0) /* IRDA mode enable */
 #define MAX3107_IRDA_SIR_BIT		(1 << 1) /* SIR mode enable */
@@ -302,13 +297,11 @@
 #define MAX3107_CLKSRC_UNDEF6_BIT	(1 << 6) /* Undefined/not used */
 #define MAX3107_CLKSRC_CLK2RTS_BIT	(1 << 7) /* Baud clk to RTS pin */
 
-
 /* HW definitions */
 #define MAX3107_RX_FIFO_SIZE	128
 #define MAX3107_TX_FIFO_SIZE	128
 #define MAX3107_REVID1		0x00a0
 #define MAX3107_REVID2		0x00a1
-
 
 /* Baud rate generator configuration values for external clock 13MHz */
 #define MAX3107_BRG13_B300	(0x0A9400 | 0x05)
@@ -354,7 +347,6 @@
 #define MAX3107_BRG13_IB230400	(0x000000 | 0x03)
 #define MAX3107_BRG13_IB460800	(0x000000 | 0x00)
 #define MAX3107_BRG13_IB921600	(0x000000 | 0x00)
-
 
 struct baud_table {
 	int baud;

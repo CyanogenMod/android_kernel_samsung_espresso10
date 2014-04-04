@@ -30,4 +30,3 @@
 		teq	\rd, #0x10000
 		bne	1001b
 		.endm
-

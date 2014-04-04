@@ -1,5 +1,5 @@
 /* -*- linux-c -*- ------------------------------------------------------- *
- *   
+ *
  * linux/include/linux/auto_fs.h
  *
  *   Copyright 1997 Transmeta Corporation - All Rights Reserved
@@ -9,7 +9,6 @@
  * option, any later version, incorporated herein by reference.
  *
  * ----------------------------------------------------------------------- */
-
 
 #ifndef _LINUX_AUTO_FS_H
 #define _LINUX_AUTO_FS_H
@@ -31,25 +30,16 @@
 #define AUTOFS_MIN_PROTO_VERSION	AUTOFS_PROTO_VERSION
 
 /*
- * Architectures where both 32- and 64-bit binaries can be executed
- * on 64-bit kernels need this.  This keeps the structure format
- * uniform, and makes sure the wait_queue_token isn't too big to be
- * passed back down to the kernel.
- *
- * This assumes that on these architectures:
- * mode     32 bit    64 bit
- * -------------------------
- * int      32 bit    32 bit
- * long     32 bit    64 bit
- *
- * If so, 32-bit user-space code should be backwards compatible.
+ * The wait_queue_token (autofs_wqt_t) is part of a structure which is passed
+ * back to the kernel via ioctl from userspace. On architectures where 32- and
+ * 64-bit userspace binaries can be executed it's important that the size of
+ * autofs_wqt_t stays constant between 32- and 64-bit Linux kernels so that we
+ * do not break the binary ABI interface by changing the structure size.
  */
-
-#if defined(__sparc__) || defined(__mips__) || defined(__x86_64__) \
- || defined(__powerpc__) || defined(__s390__)
-typedef unsigned int autofs_wqt_t;
-#else
+#if defined(__ia64__) || defined(__alpha__) /* pure 64bit architectures */
 typedef unsigned long autofs_wqt_t;
+#else
+typedef unsigned int autofs_wqt_t;
 #endif
 
 /* Packet types */
@@ -66,7 +56,7 @@ struct autofs_packet_missing {
         autofs_wqt_t wait_queue_token;
 	int len;
 	char name[NAME_MAX+1];
-};	
+};
 
 /* v3 expire (via ioctl) */
 struct autofs_packet_expire {

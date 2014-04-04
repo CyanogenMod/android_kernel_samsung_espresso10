@@ -342,7 +342,6 @@ int fix_ft1000_read_dpram32(struct ft1000_device *ft1000dev, u16 indx,
 	return ret;
 }
 
-
 //---------------------------------------------------------------------------
 // Function:    fix_ft1000_write_dpram32
 //
@@ -414,7 +413,6 @@ int fix_ft1000_write_dpram32(struct ft1000_device *ft1000dev, u16 indx, u8 *buff
 
 	return ret;
 }
-
 
 //------------------------------------------------------------------------
 //
@@ -612,7 +610,6 @@ static void ft1000_reset_asic(struct net_device *dev)
 	DEBUG("ft1000_hw: interrupt status register = 0x%x\n", tempword);
 }
 
-
 //---------------------------------------------------------------------------
 //
 // Function:   ft1000_reset_card
@@ -680,7 +677,6 @@ static const struct net_device_ops ftnet_ops =
 	.ndo_get_stats = &ft1000_netdev_stats,
 };
 #endif
-
 
 //---------------------------------------------------------------------------
 // Function:    init_ft1000_netdev
@@ -972,7 +968,6 @@ static int ft1000_copy_down_pkt(struct net_device *netdev, u8 * packet, u16 len)
 	return 0;
 }
 
-
 //---------------------------------------------------------------------------
 // Function:    ft1000_start_xmit
 //
@@ -1030,7 +1025,6 @@ err:
 
 	return NETDEV_TX_OK;
 }
-
 
 //---------------------------------------------------------------------------
 //
@@ -1126,7 +1120,6 @@ static int ft1000_copy_up_pkt(struct urb *urb)
 	return SUCCESS;
 }
 
-
 //---------------------------------------------------------------------------
 //
 // Function:   ft1000_submit_rx_urb
@@ -1167,7 +1160,6 @@ static int ft1000_submit_rx_urb(struct ft1000_info *info)
 
 	return 0;
 }
-
 
 //---------------------------------------------------------------------------
 // Function:    ft1000_open
@@ -1245,7 +1237,6 @@ static struct net_device_stats *ft1000_netdev_stats(struct net_device *dev)
 
 	return &(info->stats);
 }
-
 
 //---------------------------------------------------------------------------
 //

@@ -18,7 +18,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/i2c.h>
@@ -34,7 +33,6 @@
 #include <media/saa6588.h>
 #include <media/v4l2-device.h>
 #include <media/v4l2-chip-ident.h>
-
 
 /* insmod options */
 static unsigned int debug;

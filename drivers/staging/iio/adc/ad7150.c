@@ -540,7 +540,6 @@ static ssize_t ad7150_store_ch1_setup(struct device *dev,
 		return len;
 	}
 
-
 	return -EINVAL;
 }
 

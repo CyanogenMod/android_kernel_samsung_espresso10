@@ -35,17 +35,14 @@
 #endif
 #include "sgx_mkif_km.h"
 
-
 #define SGX_MAX_DEV_DATA			24
 #define	SGX_MAX_INIT_MEM_HANDLES	18
-
 
 typedef struct _SGX_BRIDGE_INFO_FOR_SRVINIT
 {
 	IMG_DEV_PHYADDR sPDDevPAddr;
 	PVRSRV_HEAP_INFO asHeapInfo[PVRSRV_MAX_CLIENT_HEAPS];
 } SGX_BRIDGE_INFO_FOR_SRVINIT;
-
 
 typedef enum _SGXMKIF_CMD_TYPE_
 {
@@ -65,7 +62,6 @@ typedef enum _SGXMKIF_CMD_TYPE_
 	SGXMKIF_CMD_FORCE_I32		= -1,
 
 } SGXMKIF_CMD_TYPE;
-
 
 typedef struct _SGX_BRIDGE_INIT_INFO_
 {
@@ -205,7 +201,6 @@ typedef struct _SGX_BRIDGE_INIT_INFO_
 
 } SGX_BRIDGE_INIT_INFO;
 
-
 typedef struct _SGX_DEVICE_SYNC_LIST_
 {
 	PSGXMKIF_HWDEVICE_SYNC_LIST	psHWDeviceSyncList;
@@ -222,7 +217,6 @@ typedef struct _SGX_DEVICE_SYNC_LIST_
 
 	struct _SGX_DEVICE_SYNC_LIST_	*psNext;
 
-
 	IMG_UINT32			ui32NumSyncObjects;
 #if defined (SUPPORT_SID_INTERFACE)
 	IMG_SID				ahSyncHandles[1];
@@ -230,7 +224,6 @@ typedef struct _SGX_DEVICE_SYNC_LIST_
 	IMG_HANDLE			ahSyncHandles[1];
 #endif
 } SGX_DEVICE_SYNC_LIST, *PSGX_DEVICE_SYNC_LIST;
-
 
 typedef struct _SGX_INTERNEL_STATUS_UPDATE_
 {
@@ -241,7 +234,6 @@ typedef struct _SGX_INTERNEL_STATUS_UPDATE_
 	IMG_HANDLE				hKernelMemInfo;
 #endif
 } SGX_INTERNEL_STATUS_UPDATE;
-
 
 typedef struct _SGX_CCB_KICK_
 {
@@ -258,7 +250,6 @@ typedef struct _SGX_CCB_KICK_
 #else
 	IMG_HANDLE	hKernelHWSyncListMemInfo;
 #endif
-
 
 #if defined (SUPPORT_SID_INTERFACE)
 	IMG_SID		*pahDstSyncHandles;
@@ -287,7 +278,6 @@ typedef struct _SGX_CCB_KICK_
 	IMG_BOOL	bTerminateOrAbort;
 #endif
 	IMG_BOOL	bLastInScene;
-
 
 	IMG_UINT32	ui32CCBOffset;
 
@@ -321,7 +311,6 @@ typedef struct _SGX_CCB_KICK_
 #endif
 #endif
 
-
 	IMG_BOOL	bTADependency;
 #if defined (SUPPORT_SID_INTERFACE)
 	IMG_SID		hTA3DSyncInfo;
@@ -343,9 +332,7 @@ typedef struct _SGX_CCB_KICK_
 	IMG_HANDLE	hDevMemContext;
 } SGX_CCB_KICK;
 
-
 #define SGX_KERNEL_USE_CODE_BASE_INDEX		15
-
 
 typedef struct _SGX_CLIENT_INFO_
 {
@@ -368,14 +355,12 @@ typedef struct _SGX_INTERNAL_DEVINFO_
 	IMG_BOOL			bForcePTOff;
 } SGX_INTERNAL_DEVINFO;
 
-
 typedef struct _SGX_INTERNAL_DEVINFO_KM_
 {
 	IMG_UINT32			ui32Flags;
 	IMG_HANDLE			hHostCtlKernelMemInfoHandle;
 	IMG_BOOL			bForcePTOff;
 } SGX_INTERNAL_DEVINFO_KM;
-
 
 #if defined(TRANSFER_QUEUE)
 typedef struct _PVRSRV_TRANSFER_SGX_KICK_
@@ -436,23 +421,17 @@ typedef struct _PVRSRV_2D_SGX_KICK_
 #if defined (SUPPORT_SID_INTERFACE)
 	IMG_SID			ahSrcSyncInfo[SGX_MAX_2D_SRC_SYNC_OPS];
 
-
 	IMG_SID			hDstSyncInfo;
 
-
 	IMG_SID			hTASyncInfo;
-
 
 	IMG_SID			h3DSyncInfo;
 #else
 	IMG_HANDLE		ahSrcSyncInfo[SGX_MAX_2D_SRC_SYNC_OPS];
 
-
 	IMG_HANDLE		hDstSyncInfo;
 
-
 	IMG_HANDLE		hTASyncInfo;
-
 
 	IMG_HANDLE		h3DSyncInfo;
 #endif
@@ -465,6 +444,5 @@ typedef struct _PVRSRV_2D_SGX_KICK_
 } PVRSRV_2D_SGX_KICK, *PPVRSRV_2D_SGX_KICK;
 #endif
 #endif
-
 
 #endif

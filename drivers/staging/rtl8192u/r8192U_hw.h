@@ -34,7 +34,6 @@ typedef enum _RT_RF_TYPE_DEF
 	RF_819X_MAX_TYPE
 }RT_RF_TYPE_DEF;
 
-
 typedef enum _BaseBand_Config_Type{
 	BaseBand_Config_PHY_REG = 0,			//Radio Path A
 	BaseBand_Config_AGC_TAB = 1,			//Radio Path B

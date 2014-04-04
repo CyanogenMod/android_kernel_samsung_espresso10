@@ -9,4 +9,3 @@ config DRM_PSB
 	help
 	  Say yes for an experimental KMS framebuffer driver for the
 	  Intel GMA500 ('Poulsbo') graphics support.
-

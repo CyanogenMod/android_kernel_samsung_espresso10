@@ -74,7 +74,6 @@
 #define AES_SYSCONFIG_DMA_REQ_IN_EN_BIT		(1 << 5)
 #define AES_SYSCONFIG_DMA_REQ_OUT_EN_BIT	(1 << 6)
 
-
 /*----------------------------------------------------------------------*/
 /*			 AES Context					*/
 /*----------------------------------------------------------------------*/
@@ -1187,7 +1186,6 @@ static int aes_decrypt(struct ablkcipher_request *req)
 	return aes_operate(req);
 }
 
-
 static void aes_sync_op_complete(
 	struct crypto_async_request *async_req, int err)
 {
@@ -1493,7 +1491,6 @@ static struct crypto_alg smc_aes_ctr_alg = {
 		}
 	},
 };
-
 
 int register_smc_public_crypto_aes(void)
 {

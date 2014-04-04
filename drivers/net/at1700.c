@@ -119,7 +119,6 @@ struct net_local {
 	ushort tx_queue_len;			/* Current length of the Tx queue. */
 };
 
-
 /* Offsets from the base address. */
 #define STATUS			0
 #define TX_STATUS		0
@@ -149,9 +148,7 @@ struct net_local {
 #define AT1700_IO_EXTENT	32
 #define PORT_OFFSET(o) (o)
 
-
 #define TX_TIMEOUT		(HZ/10)
-
 
 /* Index to functions, as function prototypes. */
 
@@ -165,7 +162,6 @@ static void net_rx(struct net_device *dev);
 static int net_close(struct net_device *dev);
 static void set_rx_mode(struct net_device *dev);
 static void net_tx_timeout (struct net_device *dev);
-
 
 #ifdef CONFIG_MCA_LEGACY
 struct at1720_mca_adapters_struct {
@@ -449,7 +445,6 @@ found:
 	for (i = 0; i < 8; i++)
 		outb(0x00, ioaddr + PORT_OFFSET(8 + i));
 
-
 	/* Switch to bank 2 */
 	/* Lock our I/O address, and set manual processing mode for 16 collisions. */
 	outb(0x08, ioaddr + CONFIG_1);
@@ -486,7 +481,6 @@ err_out:
 	release_region(ioaddr, AT1700_IO_EXTENT);
 	return ret;
 }
-
 
 /*  EEPROM_Ctrl bits. */
 #define EE_SHIFT_CLK	0x40	/* EEPROM shift clock, in reg. 16. */
@@ -527,8 +521,6 @@ static int __init read_eeprom(long ioaddr, int location)
 	outb(0, ee_addr);
 	return retval;
 }
-
-
 
 static int net_open(struct net_device *dev)
 {
@@ -593,7 +585,6 @@ static void net_tx_timeout (struct net_device *dev)
 
 	netif_wake_queue(dev);
 }
-
 
 static netdev_tx_t net_send_packet (struct sk_buff *skb,
 				    struct net_device *dev)

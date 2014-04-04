@@ -244,7 +244,6 @@ struct rmi_function_container {
 #define to_rmi_function_container(d) \
 		container_of(d, struct rmi_function_container, dev);
 
-
 /**
  * struct rmi_driver - represents an RMI driver
  * @driver: Device driver model driver
@@ -499,7 +498,6 @@ void rmi_unregister_function_driver(struct rmi_function_handler *fh);
  */
 struct rmi_function_handler *rmi_get_function_handler(int id);
 
-
 struct rmi_char_device;
 
 /**
@@ -547,7 +545,6 @@ struct rmi_char_device {
 
 int rmi_register_character_driver(struct rmi_char_driver *char_driver);
 int rmi_unregister_character_driver(struct rmi_char_driver *char_driver);
-
 
 /* Helper fn to convert a byte array representing a short in the RMI
  * endian-ness to a short in the native processor's specific endianness.

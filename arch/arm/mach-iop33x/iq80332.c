@@ -49,7 +49,6 @@ static struct sys_timer iq80332_timer = {
 	.init		= iq80332_timer_init,
 };
 
-
 /*
  * IQ80332 PCI.
  */
@@ -102,7 +101,6 @@ static int __init iq80332_pci_init(void)
 }
 
 subsys_initcall(iq80332_pci_init);
-
 
 /*
  * IQ80332 machine initialisation.

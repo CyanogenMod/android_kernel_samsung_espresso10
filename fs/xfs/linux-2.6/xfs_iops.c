@@ -214,7 +214,6 @@ xfs_vn_mknod(
 		posix_acl_release(default_acl);
 	}
 
-
 	d_instantiate(dentry, inode);
 	return -error;
 
@@ -478,7 +477,6 @@ xfs_vn_getattr(
 	stat->ctime = inode->i_ctime;
 	stat->blocks =
 		XFS_FSB_TO_BB(mp, ip->i_d.di_nblocks + ip->i_delayed_blks);
-
 
 	switch (inode->i_mode & S_IFMT) {
 	case S_IFBLK:

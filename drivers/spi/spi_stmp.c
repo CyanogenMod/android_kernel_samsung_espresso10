@@ -32,7 +32,6 @@
 #include <mach/regs-ssp.h>
 #include <mach/regs-apbh.h>
 
-
 /* 0 means DMA mode(recommended, default), !0 - PIO mode */
 static int pio;
 static int clock;

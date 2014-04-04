@@ -563,7 +563,6 @@ struct signed_div_result {
 	unsigned long long int remainder;
 } signed_div(long long int, long long int);
 
-
 /*---------------------------------------------------------------------------*/
 /*
  *  MACROS SAM(...) AND JOM(...) ALLOW DIAGNOSTIC OUTPUT TO BE TAGGED WITH

@@ -655,7 +655,7 @@ static int das08jr_ao_winsn(struct comedi_device *dev,
 	int chan;
 
 	lsb = data[0] & 0xff;
-	msb = (data[0] >> 8) & 0xf;
+	msb = (data[0] >> 8) & 0xff;
 
 	chan = CR_CHAN(insn->chanspec);
 
@@ -1050,7 +1050,6 @@ static int das08_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 
 	return das08_common_attach(dev, iobase);
 }
-
 
 int das08_common_detach(struct comedi_device *dev)
 {

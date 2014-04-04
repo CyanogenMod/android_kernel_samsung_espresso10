@@ -353,7 +353,6 @@ int build_phys_page_list(struct ib_phys_buf *buffer_list,
 					int *shift,
 					__be64 **page_list);
 
-
 #define IWCH_NODE_DESC "cxgb3 Chelsio Communications"
 
 #endif

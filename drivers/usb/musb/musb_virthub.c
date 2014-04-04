@@ -44,7 +44,6 @@
 
 #include "musb_core.h"
 
-
 static void musb_port_suspend(struct musb *musb, bool do_suspend)
 {
 	u8		power;
@@ -212,7 +211,6 @@ void musb_root_disconnect(struct musb *musb)
 			otg_state_string(musb->xceiv->state));
 	}
 }
-
 
 /*---------------------------------------------------------------------*/
 

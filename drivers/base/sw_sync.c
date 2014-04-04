@@ -109,7 +109,6 @@ struct sync_timeline_ops sw_sync_timeline_ops = {
 	.fill_driver_data = sw_sync_fill_driver_data,
 };
 
-
 struct sw_sync_timeline *sw_sync_timeline_create(const char *name)
 {
 	struct sw_sync_timeline *obj = (struct sw_sync_timeline *)
@@ -126,7 +125,6 @@ void sw_sync_timeline_inc(struct sw_sync_timeline *obj, u32 inc)
 
 	sync_timeline_signal(&obj->obj);
 }
-
 
 #ifdef CONFIG_SW_SYNC_USER
 /* *WARNING*

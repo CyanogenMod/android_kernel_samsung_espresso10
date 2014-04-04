@@ -94,5 +94,4 @@ struct hsi_rx_config {
 			  /* SSI: FT[8..0] */
 };
 
-
 #endif /* HSI_CHAR_H */

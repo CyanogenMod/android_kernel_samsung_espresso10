@@ -952,7 +952,6 @@ void cx231xx_disable656(struct cx231xx *dev)
 	u8 temp = 0;
 	int status;
 
-
 	status = vid_blk_write_byte(dev, TS1_PIN_CTL0, 0x00);
 
 	status = vid_blk_read_byte(dev, TS1_PIN_CTL1, &temp);
@@ -1433,7 +1432,6 @@ void cx231xx_dump_SC_reg(struct cx231xx *dev)
 	cx231xx_info("reg0x%x=0x%x 0x%x 0x%x 0x%x\n", PWR_CTL_EN, value[0],
 				 value[1], value[2], value[3]);
 
-
 }
 
 void cx231xx_Setup_AFE_for_LowIF(struct cx231xx *dev)
@@ -1442,8 +1440,6 @@ void cx231xx_Setup_AFE_for_LowIF(struct cx231xx *dev)
 	u8 status = 0;
 	u8 value = 0;
 
-
-
 	status = afe_read_byte(dev, ADC_STATUS2_CH3, &value);
 	value = (value & 0xFE)|0x01;
 	status = afe_write_byte(dev, ADC_STATUS2_CH3, value);
@@ -1451,7 +1447,6 @@ void cx231xx_Setup_AFE_for_LowIF(struct cx231xx *dev)
 	status = afe_read_byte(dev, ADC_STATUS2_CH3, &value);
 	value = (value & 0xFE)|0x00;
 	status = afe_write_byte(dev, ADC_STATUS2_CH3, value);
-
 
 /*
 	config colibri to lo-if mode
@@ -1562,7 +1557,6 @@ void cx231xx_set_DIF_bandpass(struct cx231xx *dev, u32 if_freq,
 	cx231xx_info("if_freq=%d;spectral_invert=0x%x;mode=0x%x\n",
 			 if_freq, spectral_invert, mode);
 
-
 	if (mode == TUNER_MODE_FM_RADIO) {
 		pll_freq_word = 0x905A1CAC;
 		status = vid_blk_write_word(dev, DIF_PLL_FREQ_WORD,  pll_freq_word);
@@ -1620,7 +1614,6 @@ int cx231xx_dif_configure_C2HH_for_low_IF(struct cx231xx *dev, u32 mode,
 					  u32 function_mode, u32 standard)
 {
 	int status = 0;
-
 
 	if (mode == V4L2_TUNER_RADIO) {
 		/* C2HH */

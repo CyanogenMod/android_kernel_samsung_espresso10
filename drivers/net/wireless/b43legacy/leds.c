@@ -30,7 +30,6 @@
 #include "leds.h"
 #include "rfkill.h"
 
-
 static void b43legacy_led_turn_on(struct b43legacy_wldev *dev, u8 led_index,
 			    bool activelow)
 {

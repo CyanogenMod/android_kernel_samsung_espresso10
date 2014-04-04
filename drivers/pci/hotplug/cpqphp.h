@@ -41,8 +41,6 @@
 #define info(format, arg...) printk(KERN_INFO "%s: " format , MY_NAME , ## arg)
 #define warn(format, arg...) printk(KERN_WARNING "%s: " format , MY_NAME , ## arg)
 
-
-
 struct smbios_system_slot {
 	u8 type;
 	u8 length;
@@ -388,7 +386,6 @@ struct resource_lists {
 
 #define REMOVE_NOT_SUPPORTED		0x00000003
 
-
 /*
  * error Messages
  */
@@ -401,7 +398,6 @@ struct resource_lists {
 #define msg_button_off		"PCI slot #%d - powering off due to button press.\n"
 #define msg_button_cancel	"PCI slot #%d - action canceled due to button press.\n"
 #define msg_button_ignore	"PCI slot #%d - button press ignored.  (action in progress...)\n"
-
 
 /* debugfs functions for the hotplug controller info */
 extern void cpqhp_initialize_debugfs(void);
@@ -460,7 +456,6 @@ extern struct irq_routing_table *cpqhp_routing_table;
 extern u8 cpqhp_nic_irq;
 extern u8 cpqhp_disk_irq;
 
-
 /* inline functions */
 
 static inline const char *slot_name(struct slot *slot)
@@ -491,7 +486,6 @@ static inline void set_SOGO(struct controller *ctrl)
 	writew(misc, ctrl->hpc_reg + MISC);
 }
 
-
 static inline void amber_LED_on(struct controller *ctrl, u8 slot)
 {
 	u32 led_control;
@@ -500,7 +494,6 @@ static inline void amber_LED_on(struct controller *ctrl, u8 slot)
 	led_control |= (0x01010000L << slot);
 	writel(led_control, ctrl->hpc_reg + LED_CONTROL);
 }
-
 
 static inline void amber_LED_off(struct controller *ctrl, u8 slot)
 {
@@ -511,7 +504,6 @@ static inline void amber_LED_off(struct controller *ctrl, u8 slot)
 	writel(led_control, ctrl->hpc_reg + LED_CONTROL);
 }
 
-
 static inline int read_amber_LED(struct controller *ctrl, u8 slot)
 {
 	u32 led_control;
@@ -521,7 +513,6 @@ static inline int read_amber_LED(struct controller *ctrl, u8 slot)
 
 	return led_control ? 1 : 0;
 }
-
 
 static inline void green_LED_on(struct controller *ctrl, u8 slot)
 {
@@ -541,7 +532,6 @@ static inline void green_LED_off(struct controller *ctrl, u8 slot)
 	writel(led_control, ctrl->hpc_reg + LED_CONTROL);
 }
 
-
 static inline void green_LED_blink(struct controller *ctrl, u8 slot)
 {
 	u32 led_control;
@@ -552,7 +542,6 @@ static inline void green_LED_blink(struct controller *ctrl, u8 slot)
 	writel(led_control, ctrl->hpc_reg + LED_CONTROL);
 }
 
-
 static inline void slot_disable(struct controller *ctrl, u8 slot)
 {
 	u8 slot_enable;
@@ -561,7 +550,6 @@ static inline void slot_disable(struct controller *ctrl, u8 slot)
 	slot_enable &= ~(0x01 << slot);
 	writeb(slot_enable, ctrl->hpc_reg + SLOT_ENABLE);
 }
-
 
 static inline void slot_enable(struct controller *ctrl, u8 slot)
 {
@@ -572,7 +560,6 @@ static inline void slot_enable(struct controller *ctrl, u8 slot)
 	writeb(slot_enable, ctrl->hpc_reg + SLOT_ENABLE);
 }
 
-
 static inline u8 is_slot_enabled(struct controller *ctrl, u8 slot)
 {
 	u8 slot_enable;
@@ -582,12 +569,10 @@ static inline u8 is_slot_enabled(struct controller *ctrl, u8 slot)
 	return slot_enable ? 1 : 0;
 }
 
-
 static inline u8 read_slot_enable(struct controller *ctrl)
 {
 	return readb(ctrl->hpc_reg + SLOT_ENABLE);
 }
-
 
 /**
  * get_controller_speed - find the current frequency/mode of controller.
@@ -618,7 +603,6 @@ static inline u8 get_controller_speed(struct controller *ctrl)
 	misc = readw(ctrl->hpc_reg + MISC);
 	return (misc & 0x0800) ? PCI_SPEED_66MHz : PCI_SPEED_33MHz;
 }
-
 
 /**
  * get_adapter_speed - find the max supported frequency/mode of adapter.
@@ -663,7 +647,6 @@ static inline void disable_slot_power(struct controller *ctrl, u8 slot)
 	writeb(slot_power, ctrl->hpc_reg + SLOT_POWER);
 }
 
-
 static inline int cpq_get_attention_status(struct controller *ctrl, struct slot *slot)
 {
 	u8 hp_slot;
@@ -673,7 +656,6 @@ static inline int cpq_get_attention_status(struct controller *ctrl, struct slot 
 	return read_amber_LED(ctrl, hp_slot);
 }
 
-
 static inline int get_slot_enabled(struct controller *ctrl, struct slot *slot)
 {
 	u8 hp_slot;
@@ -682,7 +664,6 @@ static inline int get_slot_enabled(struct controller *ctrl, struct slot *slot)
 
 	return is_slot_enabled(ctrl, hp_slot);
 }
-
 
 static inline int cpq_get_latch_status(struct controller *ctrl,
 				       struct slot *slot)
@@ -698,7 +679,6 @@ static inline int cpq_get_latch_status(struct controller *ctrl,
 
 	return(status == 0) ? 1 : 0;
 }
-
 
 static inline int get_presence_status(struct controller *ctrl,
 				      struct slot *slot)

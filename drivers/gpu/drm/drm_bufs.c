@@ -1285,7 +1285,6 @@ static int drm_addbufs_fb(struct drm_device * dev, struct drm_buf_desc * request
 	return 0;
 }
 
-
 /**
  * Add buffers for DMA transfers (ioctl).
  *

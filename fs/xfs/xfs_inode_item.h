@@ -125,7 +125,6 @@ struct xfs_bmbt_rec;
 struct xfs_inode;
 struct xfs_mount;
 
-
 typedef struct xfs_inode_log_item {
 	xfs_log_item_t		ili_item;	   /* common portion */
 	struct xfs_inode	*ili_inode;	   /* inode ptr */
@@ -144,7 +143,6 @@ typedef struct xfs_inode_log_item {
 #endif
 	xfs_inode_log_format_t	ili_format;	   /* logged structure */
 } xfs_inode_log_item_t;
-
 
 static inline int xfs_inode_clean(xfs_inode_t *ip)
 {

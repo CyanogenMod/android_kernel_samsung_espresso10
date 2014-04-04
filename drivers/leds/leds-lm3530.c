@@ -265,7 +265,6 @@ static void lm3530_brightness_set(struct led_classdev *led_cdev,
 	}
 }
 
-
 static ssize_t lm3530_mode_set(struct device *dev, struct device_attribute
 				   *attr, const char *buf, size_t size)
 {

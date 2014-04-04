@@ -364,7 +364,6 @@ extern struct user_namespace init_user_ns;
 #define current_user_ns() (&init_user_ns)
 #endif
 
-
 #define current_uid_gid(_uid, _gid)		\
 do {						\
 	const struct cred *__cred;		\

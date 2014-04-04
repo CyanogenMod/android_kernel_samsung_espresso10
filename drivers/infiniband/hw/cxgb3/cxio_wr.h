@@ -114,7 +114,6 @@ static inline enum t3_rdma_opcode wr2opcode(enum t3_wr_opcode wrop)
 	return -1;
 }
 
-
 /* Work request id */
 union t3_wrid {
 	struct {
@@ -299,7 +298,6 @@ enum t3_modify_qp_flags {
 	MODQP_WRITE_EC = 0x08,
 	MODQP_READ_EC  = 0x10,
 };
-
 
 enum t3_mpa_attrs {
 	uP_RI_MPA_RX_MARKER_ENABLE = 0x1,

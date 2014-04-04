@@ -1619,7 +1619,6 @@ static int s3c_fb_runtime_resume(struct device *dev)
 #define s3c_fb_runtime_resume NULL
 #endif
 
-
 #define VALID_BPP124 (VALID_BPP(1) | VALID_BPP(2) | VALID_BPP(4))
 #define VALID_BPP1248 (VALID_BPP124 | VALID_BPP(8))
 

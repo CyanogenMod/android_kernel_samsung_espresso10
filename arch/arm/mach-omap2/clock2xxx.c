@@ -69,5 +69,3 @@ static int __init omap2xxx_clk_arch_init(void)
 }
 
 arch_initcall(omap2xxx_clk_arch_init);
-
-

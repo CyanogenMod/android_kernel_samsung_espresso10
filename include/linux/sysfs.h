@@ -60,8 +60,6 @@ struct attribute_group {
 	struct attribute	**attrs;
 };
 
-
-
 /**
  * Use these macros to make defining attributes easier. See include/linux/device.h
  * for examples..

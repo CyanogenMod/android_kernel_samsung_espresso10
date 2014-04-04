@@ -366,7 +366,6 @@ static void save_gic_wakeupgen_secure(void)
 		pr_debug("GIC and Wakeupgen context save failed\n");
 }
 
-
 /*
  * API to save Secure RAM, GIC, WakeupGen Registers using secure API
  * for HS/EMU device
@@ -858,4 +857,3 @@ int __init omap4_mpuss_init(void)
 }
 
 #endif
-

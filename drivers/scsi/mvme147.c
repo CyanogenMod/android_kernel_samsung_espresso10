@@ -15,7 +15,6 @@
 
 #include <linux/stat.h>
 
-
 static irqreturn_t mvme147_intr(int irq, void *data)
 {
 	struct Scsi_Host *instance = data;
@@ -134,7 +133,6 @@ static int mvme147_bus_reset(struct scsi_cmnd *cmd)
 	return SUCCESS;
 }
 
-
 static struct scsi_host_template driver_template = {
 	.proc_name		= "MVME147",
 	.name			= "MVME147 built-in SCSI",
@@ -150,7 +148,6 @@ static struct scsi_host_template driver_template = {
 	.cmd_per_lun		= CMD_PER_LUN,
 	.use_clustering		= ENABLE_CLUSTERING
 };
-
 
 #include "scsi_module.c"
 

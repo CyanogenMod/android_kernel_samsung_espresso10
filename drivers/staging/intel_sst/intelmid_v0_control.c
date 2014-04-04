@@ -391,7 +391,6 @@ static int fs_set_pcm_audio_params(int sfreq, int word_size, int num_channel)
 		sc_access[0].mask = MASK0|MASK1|MASK2|MASK3;
 		sc_access[0].value = 0xFB;
 
-
 		sc_access[1].reg_addr  = AUDIOPORT2;
 		sc_access[1].value = config1 | 0x10;
 		sc_access[1].mask = MASK0 | MASK1 | MASK2 | MASK3
@@ -507,7 +506,6 @@ static int fs_set_mute(int dev_id, u8 value)
 		retval = fs_init_card();
 	if (retval)
 		return retval;
-
 
 	pr_debug("dev_id:0x%x value:0x%x\n", dev_id, value);
 	switch (dev_id) {
@@ -826,7 +824,6 @@ static void fs_pmic_irq_cb(void *cb_data, u8 value)
 		jack_event_flag = 1;
 		mjack->jack.type = SND_JACK_HEADSET;
 	}
-
 
 	if (jack_event_flag)
 		sst_mad_send_jack_report(&mjack->jack,

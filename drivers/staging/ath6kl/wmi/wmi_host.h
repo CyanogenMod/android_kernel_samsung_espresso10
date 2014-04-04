@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wmi_host.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -54,7 +54,7 @@ typedef struct sq_threshold_params_s {
 
 /*
  * These constants are used with A_WLAN_BAND_SET.
- */ 
+ */
 #define A_BAND_24GHZ           0
 #define A_BAND_5GHZ            1
 #define A_NUM_BANDS            2
@@ -73,7 +73,7 @@ struct wmi_t {
     u8 wmi_keepaliveInterval;
 #ifdef THREAD_X
     A_CSECT_T                       wmi_lock;
-#else 
+#else
     A_MUTEX_T                       wmi_lock;
 #endif
     HTC_ENDPOINT_ID                 wmi_endpoint_id;

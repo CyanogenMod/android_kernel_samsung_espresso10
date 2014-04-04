@@ -1001,7 +1001,6 @@ struct ad714x_chip *ad714x_probe(struct device *dev, u16 bus_type, int irq,
 	struct ad714x_wheel_drv *wl_drv;
 	struct ad714x_touchpad_drv *tp_drv;
 
-
 	if (irq <= 0) {
 		dev_err(dev, "IRQ not configured!\n");
 		error = -EINVAL;

@@ -584,7 +584,6 @@ int vlynq_enable_device(struct vlynq_device *dev)
 }
 EXPORT_SYMBOL(vlynq_enable_device);
 
-
 void vlynq_disable_device(struct vlynq_device *dev)
 {
 	struct plat_vlynq_ops *ops = dev->dev.platform_data;

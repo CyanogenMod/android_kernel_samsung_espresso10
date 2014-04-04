@@ -80,7 +80,6 @@
 #define SDRC_RFR_CTRL_110MHz	(0x0002da01 | 1) /* Need to calc */
 #define SDRC_RFR_CTRL_BYPASS	(0x00005000 | 1) /* Need to calc */
 
-
 /*
  * SMS register access
  */
@@ -99,7 +98,6 @@
 #define SMS_ROT_SIZE(context)		(0x184 + 0x10 * context)
 #define SMS_ROT_PHYSICAL_BA(context)	(0x188 + 0x10 * context)
 /* REVISIT: fill in other SMS registers here */
-
 
 #ifndef __ASSEMBLER__
 

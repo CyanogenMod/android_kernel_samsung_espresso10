@@ -138,7 +138,6 @@ MODULE_PARM_DESC(snd_buf_bytes,
 		 __MODULE_STRING(UDSL_MAX_BUF_SIZE) ", default: "
 		 __MODULE_STRING(UDSL_DEFAULT_SND_BUF_SIZE) ")");
 
-
 /* receive */
 
 struct usbatm_vcc_data {
@@ -152,7 +151,6 @@ struct usbatm_vcc_data {
 	struct sk_buff *sarb;
 };
 
-
 /* send */
 
 struct usbatm_control {
@@ -162,7 +160,6 @@ struct usbatm_control {
 };
 
 #define UDSL_SKB(x)		((struct usbatm_control *)(x)->cb)
-
 
 /* ATM */
 
@@ -183,7 +180,6 @@ static struct atmdev_ops usbatm_atm_devops = {
 	.owner		= THIS_MODULE,
 };
 
-
 /***********
 **  misc  **
 ***********/
@@ -201,7 +197,6 @@ static inline void usbatm_pop(struct atm_vcc *vcc, struct sk_buff *skb)
 	else
 		dev_kfree_skb_any(skb);
 }
-
 
 /***********
 **  urbs  **
@@ -285,7 +280,6 @@ static void usbatm_complete(struct urb *urb)
 	} else
 		tasklet_schedule(&channel->tasklet);
 }
-
 
 /*************
 **  decode  **
@@ -459,7 +453,6 @@ static void usbatm_extract_cells(struct usbatm_data *instance,
 	}
 }
 
-
 /*************
 **  encode  **
 *************/
@@ -522,7 +515,6 @@ static unsigned int usbatm_write_cells(struct usbatm_data *instance,
 	return bytes_written;
 }
 
-
 /**************
 **  receive  **
 **************/
@@ -575,7 +567,6 @@ static void usbatm_rx_process(unsigned long data)
 			return;
 	}
 }
-
 
 /***********
 **  send  **
@@ -705,7 +696,6 @@ static int usbatm_atm_send(struct atm_vcc *vcc, struct sk_buff *skb)
 	return err;
 }
 
-
 /********************
 **  bean counting  **
 ********************/
@@ -735,7 +725,6 @@ static void usbatm_put_instance(struct usbatm_data *instance)
 
 	kref_put(&instance->refcount, usbatm_destroy_instance);
 }
-
 
 /**********
 **  ATM  **
@@ -990,7 +979,6 @@ static int usbatm_atm_init(struct usbatm_data *instance)
 	atm_dev_deregister(atm_dev); /* usbatm_atm_dev_close will eventually be called */
 	return ret;
 }
-
 
 /**********
 **  USB  **
@@ -1328,7 +1316,6 @@ void usbatm_usb_disconnect(struct usb_interface *intf)
 	usbatm_put_instance(instance);	/* taken in usbatm_usb_probe */
 }
 EXPORT_SYMBOL_GPL(usbatm_usb_disconnect);
-
 
 /***********
 **  init  **

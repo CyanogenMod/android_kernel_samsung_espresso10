@@ -38,7 +38,6 @@ struct prism2_wep_data {
 	struct crypto_blkcipher *rx_tfm;
 };
 
-
 static void * prism2_wep_init(int keyidx)
 {
 	struct prism2_wep_data *priv;
@@ -79,7 +78,6 @@ fail:
 
 	return NULL;
 }
-
 
 static void prism2_wep_deinit(void *priv)
 {
@@ -162,7 +160,6 @@ static int prism2_wep_encrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	return 0;
 }
 
-
 /* Perform WEP decryption on given buffer. Buffer includes whole WEP part of
  * the frame: IV (4 bytes), encrypted payload (including SNAP header),
  * ICV (4 bytes). len includes both IV and ICV.
@@ -226,7 +223,6 @@ static int prism2_wep_decrypt(struct sk_buff *skb, int hdr_len, void *priv)
 	return 0;
 }
 
-
 static int prism2_wep_set_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct prism2_wep_data *wep = priv;
@@ -240,7 +236,6 @@ static int prism2_wep_set_key(void *key, int len, u8 *seq, void *priv)
 	return 0;
 }
 
-
 static int prism2_wep_get_key(void *key, int len, u8 *seq, void *priv)
 {
 	struct prism2_wep_data *wep = priv;
@@ -253,7 +248,6 @@ static int prism2_wep_get_key(void *key, int len, u8 *seq, void *priv)
 	return wep->key_len;
 }
 
-
 static char * prism2_wep_print_stats(char *p, void *priv)
 {
 	struct prism2_wep_data *wep = priv;
@@ -261,7 +255,6 @@ static char * prism2_wep_print_stats(char *p, void *priv)
 		     wep->key_idx, wep->key_len);
 	return p;
 }
-
 
 static struct ieee80211_crypto_ops ieee80211_crypt_wep = {
 	.name			= "WEP",

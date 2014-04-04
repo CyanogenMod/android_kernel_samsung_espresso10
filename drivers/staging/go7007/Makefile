@@ -2,7 +2,6 @@
 		wis-uda1342.o wis-sony-tuner.o wis-saa7113.o wis-ov7640.o \
 		wis-tw2804.o
 
-
 obj-$(CONFIG_VIDEO_GO7007) += go7007.o
 obj-$(CONFIG_VIDEO_GO7007_USB) += go7007-usb.o
 obj-$(CONFIG_VIDEO_GO7007_USB_S2250_BOARD) += s2250.o s2250-loader.o

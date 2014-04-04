@@ -31,7 +31,6 @@ static inline int cpu_has_vmx(void)
 	return test_bit(5, &ecx); /* CPUID.1:ECX.VMX[bit 5] -> VT */
 }
 
-
 /** Disable VMX on the current CPU
  *
  * vmxoff causes a undefined-opcode exception if vmxon was not run
@@ -66,9 +65,6 @@ static inline void cpu_emergency_vmxoff(void)
 	if (cpu_has_vmx())
 		__cpu_emergency_vmxoff();
 }
-
-
-
 
 /*
  * SVM functions:
@@ -106,7 +102,6 @@ static inline int cpu_has_svm(const char **msg)
 	}
 	return 1;
 }
-
 
 /** Disable SVM on the current CPU
  *

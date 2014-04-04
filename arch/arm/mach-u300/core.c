@@ -158,7 +158,6 @@ static struct amba_device pl172_device = {
 	},
 };
 
-
 /*
  * Everything within this next ifdef deals with external devices connected to
  * the APP SPI bus.
@@ -1526,7 +1525,6 @@ const struct coh_dma_channel chan_config[U300_DMA_CHANNELS] = {
 #endif
 };
 
-
 static struct coh901318_platform coh901318_platform = {
 	.chans_slave = dma_slave_channels,
 	.chans_memcpy = dma_memcpy_channels,
@@ -1646,7 +1644,6 @@ static struct platform_device *platform_devs[] __initdata = {
 	&ave_device
 };
 
-
 /*
  * Interrupts: the U300 platforms have two pl190 ARM PrimeCells connected
  * together so some interrupts are connected to the first one and some
@@ -1671,7 +1668,6 @@ void __init u300_init_irq(void)
 	vic_init((void __iomem *) U300_INTCON0_VBASE, 0, mask[0], mask[0]);
 	vic_init((void __iomem *) U300_INTCON1_VBASE, 32, mask[1], mask[1]);
 }
-
 
 /*
  * U300 platforms peripheral handling
@@ -1768,7 +1764,6 @@ static void __init u300_init_check_chip(void)
 		       chipname);
 	}
 #endif
-
 
 }
 

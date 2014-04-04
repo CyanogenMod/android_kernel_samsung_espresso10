@@ -15,9 +15,9 @@
 
 /**
  * struct omap_vc_channel_cfg - describe the cfg_channel bitfield
- * @sa: bit for slave address 
+ * @sa: bit for slave address
  * @rav: bit for voltage configuration register
- * @rac: bit for command configuration register	
+ * @rac: bit for command configuration register
  * @racen: enable bit for RAC
  * @cmd: bit for command value set selection
  *
@@ -374,7 +374,6 @@ static void __init omap3_vc_init_channel(struct voltagedomain *voltdm)
 
 	is_initialized = true;
 }
-
 
 /* OMAP4 specific voltage init functions */
 static void __init omap4_vc_init_channel(struct voltagedomain *voltdm)

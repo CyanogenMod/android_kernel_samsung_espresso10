@@ -679,7 +679,6 @@ void __exit lguest_arch_host_fini(void)
 	put_online_cpus();
 }
 
-
 /*H:122 The i386-specific hypercalls simply farm out to the right functions. */
 int lguest_arch_do_hcall(struct lg_cpu *cpu, struct hcall_args *args)
 {

@@ -7,8 +7,6 @@
 
 #include "usbip.h"
 
-
-
 #define MAXNPORT 128
 
 struct class_device {
@@ -25,7 +23,6 @@ struct usbip_imported_device {
 	uint8_t busnum;
 	uint8_t devnum;
 
-
 	struct dlist *cdev_list;	/* list of class device */
 	struct usb_device udev;
 };
@@ -40,14 +37,12 @@ struct usbip_vhci_driver {
 	struct usbip_imported_device idev[MAXNPORT];
 };
 
-
 extern struct usbip_vhci_driver *vhci_driver;
 
 int usbip_vhci_driver_open(void);
 void usbip_vhci_driver_close(void);
 
 int  usbip_vhci_refresh_device_list(void);
-
 
 int usbip_vhci_get_free_port(void);
 int usbip_vhci_attach_device2(uint8_t port, int sockfd, uint32_t devid,

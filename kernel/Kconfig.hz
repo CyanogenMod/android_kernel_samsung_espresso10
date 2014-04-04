@@ -15,7 +15,6 @@ choice
 	 environment leading to NR_CPUS * HZ number of timer interrupts
 	 per second.
 
-
 	config HZ_100
 		bool "100 HZ"
 	help

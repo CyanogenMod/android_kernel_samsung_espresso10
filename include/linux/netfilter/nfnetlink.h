@@ -57,7 +57,7 @@ struct nfgenmsg {
 #include <net/netlink.h>
 
 struct nfnl_callback {
-	int (*call)(struct sock *nl, struct sk_buff *skb, 
+	int (*call)(struct sock *nl, struct sk_buff *skb,
 		    const struct nlmsghdr *nlh,
 		    const struct nlattr * const cda[]);
 	const struct nla_policy *policy;	/* netlink attribute policy */

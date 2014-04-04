@@ -41,7 +41,6 @@
 #define FST_NDEV_NAME           "sync"          /* For net interface */
 #define FST_DEV_NAME            "farsync"       /* For misc interfaces */
 
-
 /*      User version number
  *
  *      This version number is incremented with each official release of the
@@ -52,7 +51,6 @@
  */
 #define FST_USER_VERSION        "1.04"
 
-
 /*      Ioctl call command values
  */
 #define FSTWRITE        (SIOCDEVPRIVATE+10)
@@ -60,7 +58,6 @@
 #define FSTCPURELEASE   (SIOCDEVPRIVATE+12)
 #define FSTGETCONF      (SIOCDEVPRIVATE+13)
 #define FSTSETCONF      (SIOCDEVPRIVATE+14)
-
 
 /*      FSTWRITE
  *
@@ -71,7 +68,6 @@ struct fstioc_write {
         unsigned int  offset;
         unsigned char data[0];
 };
-
 
 /*      FSTCPURESET and FSTCPURELEASE
  *
@@ -226,7 +222,7 @@ struct fstioc_info {
 /* "cardMode" bitmask */
 #define CARD_MODE_IDENTIFY      0x0001
 
-/* 
+/*
  * Constants for T1/E1 configuration
  */
 
@@ -348,4 +344,3 @@ extern int fst_debug_mask;              /* Bit mask of actions to debug, bits
                                          * one of these then I've been an ass
                                          */
 #endif  /* FST_DEBUG */
-

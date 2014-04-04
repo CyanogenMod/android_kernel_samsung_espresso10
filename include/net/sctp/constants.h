@@ -149,7 +149,6 @@ SCTP_SUBTYPE_CONSTRUCTOR(TIMEOUT,	sctp_event_timeout_t,	timeout)
 SCTP_SUBTYPE_CONSTRUCTOR(OTHER,		sctp_event_other_t,	other)
 SCTP_SUBTYPE_CONSTRUCTOR(PRIMITIVE,	sctp_event_primitive_t,	primitive)
 
-
 #define sctp_chunk_is_data(a) (a->chunk_hdr->type == SCTP_CID_DATA)
 
 /* Calculate the actual data size in a data chunk */
@@ -182,8 +181,6 @@ typedef enum {
 	SCTP_IERROR_ABORT,
 } sctp_ierror_t;
 
-
-
 /* SCTP state defines for internal state machine */
 typedef enum {
 
@@ -214,7 +211,7 @@ typedef enum {
  *   accept new associations, but it can initiate the creation of new ones.
  * - A socket in SCTP_SS_LISTENING state indicates that it is willing to
  *   accept new associations, but cannot initiate the creation of new ones.
- * - A socket in SCTP_SS_ESTABLISHED state indicates that it has a single 
+ * - A socket in SCTP_SS_ESTABLISHED state indicates that it has a single
  *   association.
  */
 typedef enum {
@@ -394,7 +391,6 @@ typedef enum {
 	SCTP_LOWER_CWND_ECNE,
 	SCTP_LOWER_CWND_INACTIVE,
 } sctp_lower_cwnd_t;
-
 
 /* SCTP-AUTH Necessary constants */
 

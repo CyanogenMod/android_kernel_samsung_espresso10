@@ -121,4 +121,3 @@ static void __exit innovator1510_panel_drv_cleanup(void)
 
 module_init(innovator1510_panel_drv_init);
 module_exit(innovator1510_panel_drv_cleanup);
-

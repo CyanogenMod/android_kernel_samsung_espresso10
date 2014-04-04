@@ -70,8 +70,6 @@ INT vendorextnIoctl(PMINI_ADAPTER Adapter, UINT cmd, ULONG arg)
 	return CONTINUE_COMMON_PATH;
 }
 
-
-
 //------------------------------------------------------------------
 // Procedure:	vendorextnReadSection
 //
@@ -94,8 +92,6 @@ INT vendorextnReadSection(PVOID  pContext, PUCHAR pBuffer, FLASH2X_SECTION_VAL S
 {
 	return STATUS_FAILURE;
 }
-
-
 
 //------------------------------------------------------------------
 // Procedure:	vendorextnWriteSection
@@ -120,8 +116,6 @@ INT vendorextnWriteSection(PVOID  pContext, PUCHAR pBuffer, FLASH2X_SECTION_VAL 
 	return STATUS_FAILURE;
 }
 
-
-
 //------------------------------------------------------------------
 // Procedure:	vendorextnWriteSectionWithoutErase
 //
@@ -143,4 +137,3 @@ INT vendorextnWriteSectionWithoutErase(PVOID  pContext, PUCHAR pBuffer, FLASH2X_
 {
 	return STATUS_FAILURE;
 }
-

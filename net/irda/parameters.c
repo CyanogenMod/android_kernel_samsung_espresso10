@@ -247,7 +247,6 @@ static int irda_extract_integer(void *self, __u8 *buf, int len, __u8 pi,
 		}
 	}
 
-
 	switch (extract_len) {
 	case 1:
 		n += irda_param_unpack(buf+2, "b", &p.pv.i);

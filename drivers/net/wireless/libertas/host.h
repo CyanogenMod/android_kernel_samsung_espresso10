@@ -285,7 +285,6 @@ enum cmd_mesh_config_types {
 #define MACREG_INT_CODE_MESH_AUTO_STARTED	35
 #define MACREG_INT_CODE_FIRMWARE_READY		48
 
-
 /* 802.11-related definitions */
 
 /* TxPD descriptor */
@@ -851,8 +850,6 @@ struct cmd_ds_host_sleep {
 	struct wol_config wol_conf;
 } __packed;
 
-
-
 struct cmd_ds_802_11_key_material {
 	struct cmd_header hdr;
 
@@ -881,7 +878,6 @@ struct cmd_ds_802_11_tpc_cfg {
 	uint8_t usesnr;
 } __packed;
 
-
 struct cmd_ds_802_11_pa_cfg {
 	struct cmd_header hdr;
 
@@ -891,7 +887,6 @@ struct cmd_ds_802_11_pa_cfg {
 	int8_t P1;
 	int8_t P2;
 } __packed;
-
 
 struct cmd_ds_802_11_led_ctrl {
 	struct cmd_header hdr;

@@ -27,7 +27,6 @@ static inline u32 sdram_selfrefresh_enable(void)
 #elif defined(CONFIG_ARCH_AT91CAP9)
 #include <mach/at91cap9_ddrsdr.h>
 
-
 static inline u32 sdram_selfrefresh_enable(void)
 {
 	u32 saved_lpr, lpr;

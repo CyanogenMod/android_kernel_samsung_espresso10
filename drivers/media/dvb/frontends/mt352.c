@@ -279,7 +279,6 @@ static int mt352_set_parameters(struct dvb_frontend* fe,
 			return -EINVAL;
 	}
 
-
 	buf[0] = TPS_GIVEN_1; /* TPS_GIVEN_1 and following registers */
 
 	buf[1] = msb(tps);      /* TPS_GIVEN_(1|0) */
@@ -409,7 +408,6 @@ static int mt352_get_parameters(struct dvb_frontend* fe,
 		op->bandwidth = BANDWIDTH_7_MHZ;
 	else
 		op->bandwidth = BANDWIDTH_6_MHZ;
-
 
 	if (mt352_read_register(state, STATUS_2) & 0x02)
 		param->inversion = INVERSION_OFF;

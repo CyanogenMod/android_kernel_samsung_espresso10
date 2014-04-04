@@ -156,7 +156,6 @@
 
 #define SDIO_FBR_CIS		0x09	/* CIS pointer (3 bytes) */
 
-
 #define SDIO_FBR_CSA		0x0C	/* CSA pointer (3 bytes) */
 
 #define SDIO_FBR_CSA_DATA	0x0F
@@ -164,4 +163,3 @@
 #define SDIO_FBR_BLKSIZE	0x10	/* block size (2 bytes) */
 
 #endif
-

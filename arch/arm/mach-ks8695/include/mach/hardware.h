@@ -26,7 +26,6 @@
  */
 #define KS8695_SDRAM_PA		0x00000000
 
-
 /*
  * We map an entire MiB with the System Configuration Registers in even
  * though only 64KiB is needed. This makes it easier for use with the
@@ -41,7 +40,6 @@
 
 #define KS8695_PCIIO_PA		0x80000000
 #define KS8695_PCIIO_SIZE	SZ_64K
-
 
 /*
  * PCI support

@@ -51,7 +51,6 @@
 #define VIT_COR_MASK           (0x82)
 #define VIT_COR_RESYNC         (0x80)
 
-
 /* 0x32 VIT_SYNC_STATUS */
 #define VIT_SYNC_STATUS        (0x32)
 #define VITINSYNC              (0x80)

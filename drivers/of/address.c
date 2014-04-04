@@ -1,4 +1,3 @@
-
 #include <linux/io.h>
 #include <linux/ioport.h>
 #include <linux/module.h>
@@ -576,7 +575,6 @@ int of_address_to_resource(struct device_node *dev, int index,
 	return __of_address_to_resource(dev, addrp, size, flags, r);
 }
 EXPORT_SYMBOL_GPL(of_address_to_resource);
-
 
 /**
  * of_iomap - Maps the memory mapped IO for a given device_node

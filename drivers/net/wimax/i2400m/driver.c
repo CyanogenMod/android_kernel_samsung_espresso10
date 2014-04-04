@@ -74,7 +74,6 @@
 #define D_SUBMODULE driver
 #include "debug-levels.h"
 
-
 static char i2400m_debug_params[128];
 module_param_string(debug, i2400m_debug_params, sizeof(i2400m_debug_params),
 		    0644);
@@ -148,7 +147,6 @@ error_msg_to_dev:
 	return result;
 }
 
-
 /*
  * Context to wait for a reset to finalize
  */
@@ -156,7 +154,6 @@ struct i2400m_reset_ctx {
 	struct completion completion;
 	int result;
 };
-
 
 /*
  * WiMAX stack operation: reset a device
@@ -205,7 +202,6 @@ out:
 	d_fnend(4, dev, "(wimax_dev %p) = %d\n", wimax_dev, result);
 	return result;
 }
-
 
 /*
  * Check the MAC address we got from boot mode is ok
@@ -260,7 +256,6 @@ error:
 	d_fnend(3, dev, "(i2400m %p) = %d\n", i2400m, result);
 	return result;
 }
-
 
 /**
  * __i2400m_dev_start - Bring up driver communication with the device
@@ -369,7 +364,6 @@ error_bootstrap:
 	return result;
 }
 
-
 static
 int i2400m_dev_start(struct i2400m *i2400m, enum i2400m_bri bm_flags)
 {
@@ -386,7 +380,6 @@ int i2400m_dev_start(struct i2400m *i2400m, enum i2400m_bri bm_flags)
 	mutex_unlock(&i2400m->init_mutex);
 	return result;
 }
-
 
 /**
  * i2400m_dev_stop - Tear down driver communication with the device
@@ -428,7 +421,6 @@ void __i2400m_dev_stop(struct i2400m *i2400m)
 	d_fnend(3, dev, "(i2400m %p) = 0\n", i2400m);
 }
 
-
 /*
  * Watch out -- we only need to stop if there is a need for it. The
  * device could have reset itself and failed to come up again (see
@@ -446,7 +438,6 @@ void i2400m_dev_stop(struct i2400m *i2400m)
 	}
 	mutex_unlock(&i2400m->init_mutex);
 }
-
 
 /*
  * Listen to PM events to cache the firmware before suspend/hibernation
@@ -492,7 +483,6 @@ int i2400m_pm_notifier(struct notifier_block *notifier,
 	return NOTIFY_DONE;
 }
 
-
 /*
  * pre-reset is called before a device is going on reset
  *
@@ -523,7 +513,6 @@ int i2400m_pre_reset(struct i2400m *i2400m)
 	return result;
 }
 EXPORT_SYMBOL_GPL(i2400m_pre_reset);
-
 
 /*
  * Restore device state after a reset
@@ -572,7 +561,6 @@ error_bus_setup:
 	return result;
 }
 EXPORT_SYMBOL_GPL(i2400m_post_reset);
-
 
 /*
  * The device has rebooted; fix up the device and the driver
@@ -683,7 +671,6 @@ out:
 		ws, i2400m, reason);
 }
 
-
 /**
  * i2400m_dev_reset_handle - Handle a device's reset in a thread context
  *
@@ -702,7 +689,6 @@ int i2400m_dev_reset_handle(struct i2400m *i2400m, const char *reason)
 	return schedule_work(&i2400m->reset_ws);
 }
 EXPORT_SYMBOL_GPL(i2400m_dev_reset_handle);
-
 
  /*
  * The actual work of error recovery.
@@ -777,7 +763,6 @@ error_bm_cmd_kzalloc:
 	return result;
 }
 
-
 /*
  * Free boot mode command and ack buffers.
  */
@@ -787,7 +772,6 @@ void i2400m_bm_buf_free(struct i2400m *i2400m)
 	kfree(i2400m->bm_ack_buf);
 	kfree(i2400m->bm_cmd_buf);
 }
-
 
 /**
  * i2400m_init - Initialize a 'struct i2400m' from all zeroes
@@ -831,7 +815,6 @@ void i2400m_init(struct i2400m *i2400m)
 }
 EXPORT_SYMBOL_GPL(i2400m_init);
 
-
 int i2400m_reset(struct i2400m *i2400m, enum i2400m_reset_type rt)
 {
 	struct net_device *net_dev = i2400m->wimax_dev.net_dev;
@@ -848,7 +831,6 @@ int i2400m_reset(struct i2400m *i2400m, enum i2400m_reset_type rt)
 	return i2400m->bus_reset(i2400m, rt);
 }
 EXPORT_SYMBOL_GPL(i2400m_reset);
-
 
 /**
  * i2400m_setup - bus-generic setup function for the i2400m device
@@ -960,7 +942,6 @@ error_bm_buf_alloc:
 }
 EXPORT_SYMBOL_GPL(i2400m_setup);
 
-
 /**
  * i2400m_release - release the bus-generic driver resources
  *
@@ -991,7 +972,6 @@ void i2400m_release(struct i2400m *i2400m)
 }
 EXPORT_SYMBOL_GPL(i2400m_release);
 
-
 /*
  * Debug levels control; see debug.h
  */
@@ -1007,7 +987,6 @@ struct d_level D_LEVEL[] = {
 	D_SUBMODULE_DEFINE(tx),
 };
 size_t D_LEVEL_SIZE = ARRAY_SIZE(D_LEVEL);
-
 
 static
 int __init i2400m_driver_init(void)

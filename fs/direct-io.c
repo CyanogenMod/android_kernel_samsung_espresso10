@@ -183,7 +183,7 @@ static int dio_refill_pages(struct dio *dio)
 		ret = 0;
 	}
 out:
-	return ret;	
+	return ret;
 }
 
 /*
@@ -262,7 +262,7 @@ static ssize_t dio_complete(struct dio *dio, loff_t offset, ssize_t ret, bool is
 
 static int dio_bio_complete(struct dio *dio, struct bio *bio);
 /*
- * Asynchronous IO callback. 
+ * Asynchronous IO callback.
  */
 static void dio_bio_end_aio(struct bio *bio, int error)
 {
@@ -543,7 +543,7 @@ static int get_more_blocks(struct dio *dio)
 		dio_count = dio->final_block_in_request - dio->block_in_file;
 		fs_count = dio_count >> dio->blkfactor;
 		blkmask = (1 << dio->blkfactor) - 1;
-		if (dio_count & blkmask)	
+		if (dio_count & blkmask)
 			fs_count++;
 
 		map_bh->b_state = 0;
@@ -622,7 +622,7 @@ static int dio_bio_add_page(struct dio *dio)
 	}
 	return ret;
 }
-		
+
 /*
  * Put cur_page under IO.  The section of cur_page which is described by
  * cur_page_offset,cur_page_len is put into a BIO.  The section of cur_page
@@ -689,7 +689,7 @@ out:
  * An autonomous function to put a chunk of a page under deferred IO.
  *
  * The caller doesn't actually know (or care) whether this piece of page is in
- * a BIO, or is under IO or whatever.  We just take care of all possible 
+ * a BIO, or is under IO or whatever.  We just take care of all possible
  * situations here.  The separation between the logic of do_direct_IO() and
  * that of submit_page_section() is important for clarity.  Please don't break.
  *
@@ -805,13 +805,13 @@ static void dio_zero_block(struct dio *dio, int end)
 	 * We need to zero out part of an fs block.  It is either at the
 	 * beginning or the end of the fs block.
 	 */
-	if (end) 
+	if (end)
 		this_chunk_blocks = dio_blocks_per_fs_block - this_chunk_blocks;
 
 	this_chunk_bytes = this_chunk_blocks << dio->blkbits;
 
 	page = ZERO_PAGE(0);
-	if (submit_page_section(dio, page, 0, this_chunk_bytes, 
+	if (submit_page_section(dio, page, 0, this_chunk_bytes,
 				dio->next_block_for_io))
 		return;
 
@@ -984,12 +984,12 @@ out:
  * Releases both i_mutex and i_alloc_sem
  */
 static ssize_t
-direct_io_worker(int rw, struct kiocb *iocb, struct inode *inode, 
-	const struct iovec *iov, loff_t offset, unsigned long nr_segs, 
+direct_io_worker(int rw, struct kiocb *iocb, struct inode *inode,
+	const struct iovec *iov, loff_t offset, unsigned long nr_segs,
 	unsigned blkbits, get_block_t get_block, dio_iodone_t end_io,
 	dio_submit_t submit_io, struct dio *dio)
 {
-	unsigned long user_addr; 
+	unsigned long user_addr;
 	unsigned long flags;
 	int seg;
 	ssize_t ret = 0;
@@ -1048,7 +1048,7 @@ direct_io_worker(int rw, struct kiocb *iocb, struct inode *inode,
 		}
 		dio->total_pages += (bytes + PAGE_SIZE - 1) / PAGE_SIZE;
 		dio->curr_user_address = user_addr;
-	
+
 		ret = do_direct_IO(dio);
 
 		dio->result += iov[seg].iov_len -
@@ -1158,7 +1158,7 @@ direct_io_worker(int rw, struct kiocb *iocb, struct inode *inode,
  */
 ssize_t
 __blockdev_direct_IO(int rw, struct kiocb *iocb, struct inode *inode,
-	struct block_device *bdev, const struct iovec *iov, loff_t offset, 
+	struct block_device *bdev, const struct iovec *iov, loff_t offset,
 	unsigned long nr_segs, get_block_t get_block, dio_iodone_t end_io,
 	dio_submit_t submit_io,	int flags)
 {
@@ -1195,7 +1195,7 @@ __blockdev_direct_IO(int rw, struct kiocb *iocb, struct inode *inode,
 			if (bdev)
 				 blkbits = bdev_blkbits;
 			blocksize_mask = (1 << blkbits) - 1;
-			if ((addr & blocksize_mask) || (size & blocksize_mask))  
+			if ((addr & blocksize_mask) || (size & blocksize_mask))
 				goto out;
 		}
 	}

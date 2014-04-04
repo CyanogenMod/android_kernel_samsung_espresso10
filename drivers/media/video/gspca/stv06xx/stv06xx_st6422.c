@@ -167,7 +167,6 @@ static int st6422_init(struct sd *sd)
 		{ 0x050c, 0x2a },
 		{ 0x050d, 0x01 },
 
-
 		{ 0x1431, 0x00 },	/* 0x00-0x07 ??? */
 		{ 0x1433, 0x34 },	/* 160x120, 0x00-0x01 night filter */
 		{ 0x1438, 0x18 },	/* 640x480 */
@@ -179,7 +178,6 @@ static int st6422_init(struct sd *sd)
 
 		{ 0x143b, 0x05 },
 		{ 0x143c, 0x00 },	/* 0x00-0x01 - ??? */
-
 
 /* shutter time 0x0000-0x03FF */
 /* low value  give good picures on moving objects (but requires much light) */
@@ -223,7 +221,6 @@ static int st6422_init(struct sd *sd)
 		{ 0x150f, 0x37 },
 		{ 0x15c0, 0x00 },
 		{ 0x15c3, 0x08 },	/* 0x04/0x14 ... test pictures ??? */
-
 
 		{ 0x143f, 0x01 },	/* commit settings */
 

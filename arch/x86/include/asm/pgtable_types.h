@@ -276,7 +276,6 @@ static inline pteval_t pte_flags(pte_t pte)
 #define pgprot_val(x)	((x).pgprot)
 #define __pgprot(x)	((pgprot_t) { (x) } )
 
-
 typedef struct page *pgtable_t;
 
 extern pteval_t __supported_pte_mask;

@@ -52,7 +52,6 @@
 
 #define C_EIFS      80      // micro sec.
 
-
 #define C_SLOT_SHORT   9      // micro sec.
 #define C_SLOT_LONG   20
 
@@ -84,7 +83,6 @@
 #define TOP_RATE_55M        0x00400000
 #define TOP_RATE_2M         0x00200000
 #define TOP_RATE_1M         0x00100000
-
 
 /*---------------------  Export Types  ------------------------------*/
 

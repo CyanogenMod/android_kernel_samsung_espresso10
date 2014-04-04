@@ -6,15 +6,7 @@
 # To add a new book the only step required is to add the book to the
 # list of DOCBOOKS.
 
-DOCBOOKS := z8530book.xml mcabook.xml device-drivers.xml \
-	    kernel-hacking.xml kernel-locking.xml deviceiobook.xml \
-	    writing_usb_driver.xml networking.xml \
-	    kernel-api.xml filesystems.xml lsm.xml usb.xml kgdb.xml \
-	    gadget.xml libata.xml mtdnand.xml librs.xml rapidio.xml \
-	    genericirq.xml s390-drivers.xml uio-howto.xml scsi.xml \
-	    80211.xml debugobjects.xml sh.xml regulator.xml \
-	    alsa-driver-api.xml writing-an-alsa-driver.xml \
-	    tracepoint.xml media.xml drm.xml
+DOCBOOKS := 
 
 ###
 # The build process is as follows (targets):
@@ -101,7 +93,7 @@ endef
 	$(call if_changed_rule,docproc)
 
 ###
-#Read in all saved dependency files 
+#Read in all saved dependency files
 cmd_files := $(wildcard $(foreach f,$(BOOKS),$(dir $(f)).$(notdir $(f)).cmd))
 
 ifneq ($(cmd_files),)

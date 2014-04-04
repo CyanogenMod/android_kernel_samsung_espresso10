@@ -16,7 +16,6 @@ struct inode;
 struct gfs2_inode;
 struct page;
 
-
 /**
  * gfs2_write_calc_reserv - calculate number of blocks needed to write to a file
  * @ip: the file

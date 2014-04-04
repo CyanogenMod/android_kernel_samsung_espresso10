@@ -53,7 +53,6 @@ static int boost_audio;
 module_param(boost_audio, bool, S_IRUGO|S_IWUSR);
 MODULE_PARM_DESC(boost_audio, "boost the audio signal");
 
-
 /* table of devices that work with this driver */
 static struct usb_device_id hdpvr_table[] = {
 	{ USB_DEVICE(HD_PVR_VENDOR_ID, HD_PVR_PRODUCT_ID) },
@@ -64,7 +63,6 @@ static struct usb_device_id hdpvr_table[] = {
 	{ }					/* Terminating entry */
 };
 MODULE_DEVICE_TABLE(usb, hdpvr_table);
-
 
 void hdpvr_delete(struct hdpvr_device *dev)
 {
@@ -443,7 +441,6 @@ static void hdpvr_disconnect(struct usb_interface *interface)
 	video_unregister_device(dev->video_dev);
 	atomic_dec(&dev_nr);
 }
-
 
 static struct usb_driver hdpvr_usb_driver = {
 	.name =		"hdpvr",

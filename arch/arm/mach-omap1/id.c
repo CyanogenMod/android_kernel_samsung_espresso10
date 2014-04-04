@@ -201,4 +201,3 @@ void __init omap_check_revision(void)
 	       die_rev, omap_revision & 0xff, system_serial_low,
 	       system_serial_high);
 }
-

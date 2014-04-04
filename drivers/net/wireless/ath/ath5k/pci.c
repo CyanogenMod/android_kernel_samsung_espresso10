@@ -138,7 +138,6 @@ static int ath5k_pci_eeprom_read_mac(struct ath5k_hw *ah, u8 *mac)
 	return 0;
 }
 
-
 /* Common ath_bus_opts structure */
 static const struct ath_bus_ops ath_pci_bus_ops = {
 	.ath_bus_type = ATH_PCI,

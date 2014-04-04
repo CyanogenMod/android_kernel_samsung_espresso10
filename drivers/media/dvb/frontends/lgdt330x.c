@@ -463,7 +463,6 @@ static int lgdt3302_read_status(struct dvb_frontend* fe, fe_status_t* status)
 	i2c_read_demod_bytes(state, TOP_CONTROL, buf, sizeof(buf));
 	dprintk("%s: TOP_CONTROL = 0x%02x, IRO_MASK = 0x%02x, IRQ_STATUS = 0x%02x\n", __func__, buf[0], buf[1], buf[2]);
 
-
 	/* sync status */
 	if ((buf[2] & 0x03) == 0x01) {
 		*status |= FE_HAS_SYNC;

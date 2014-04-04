@@ -268,4 +268,3 @@ void __init omap4_espresso10_display_init(void)
 
 	omap_display_init(&espresso10_dss_data);
 }
-

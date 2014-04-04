@@ -441,7 +441,6 @@ static int pci_dio_insn_bits_di_b(struct comedi_device *dev,
 	for (i = 0; i < d->regs; i++)
 		data[1] |= inb(dev->iobase + d->addr + i) << (8 * i);
 
-
 	return 2;
 }
 
@@ -1246,7 +1245,6 @@ static int pci_dio_detach(struct comedi_device *dev)
 	if (dev->private) {
 		if (devpriv->valid)
 			pci_dio_reset(dev);
-
 
 		/* This shows the silliness of using this kind of
 		 * scheme for numbering subdevices.  Don't do it.  --ds */

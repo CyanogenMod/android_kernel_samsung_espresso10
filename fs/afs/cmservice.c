@@ -418,7 +418,6 @@ static void SRXAFSCB_ProbeUuid(struct work_struct *work)
 
 	_enter("");
 
-
 	if (memcmp(r, &afs_uuid, sizeof(afs_uuid)) == 0)
 		reply.match = htonl(0);
 	else

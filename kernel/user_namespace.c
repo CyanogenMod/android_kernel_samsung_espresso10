@@ -93,7 +93,6 @@ uid_t user_ns_map_uid(struct user_namespace *to, const struct cred *cred, uid_t 
 	if (likely(to == cred->user->user_ns))
 		return uid;
 
-
 	/* Is cred->user the creator of the target user_ns
 	 * or the creator of one of it's parents?
 	 */

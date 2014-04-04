@@ -5,7 +5,6 @@
 #include <linux/string.h>
 #include <net/ip_vs.h>
 
-
 static int sysctl_depth(struct ctl_table *table)
 {
 	struct ctl_table *tmp;
@@ -27,7 +26,6 @@ static struct ctl_table *sysctl_parent(struct ctl_table *table, int n)
 
 	return table;
 }
-
 
 static void sysctl_print_path(struct ctl_table *table)
 {

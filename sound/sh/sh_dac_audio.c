@@ -64,7 +64,6 @@ struct snd_sh_dac {
 	struct dac_audio_pdata *pdata;
 };
 
-
 static void dac_audio_start_timer(struct snd_sh_dac *chip)
 {
 	hrtimer_start(&chip->hrtimer, chip->wakeups_per_second,
@@ -88,7 +87,6 @@ static void dac_audio_set_rate(struct snd_sh_dac *chip)
 {
 	chip->wakeups_per_second = ktime_set(0, 1000000000 / chip->rate);
 }
-
 
 /* PCM INTERFACE */
 
@@ -283,7 +281,6 @@ static int __devinit snd_sh_dac_pcm(struct snd_sh_dac *chip, int device)
 	return 0;
 }
 /* END OF PCM INTERFACE */
-
 
 /* driver .remove  --  destructor */
 static int snd_sh_dac_remove(struct platform_device *devptr)

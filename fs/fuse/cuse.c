@@ -76,7 +76,6 @@ static struct list_head *cuse_conntbl_head(dev_t devt)
 	return &cuse_conntbl[(MAJOR(devt) + MINOR(devt)) % CUSE_CONNTBL_LEN];
 }
 
-
 /**************************************************************************
  * CUSE frontend operations
  *
@@ -184,7 +183,6 @@ static const struct file_operations cuse_frontend_fops = {
 	.poll			= fuse_file_poll,
 	.llseek		= noop_llseek,
 };
-
 
 /**************************************************************************
  * CUSE channel initialization and destruction
@@ -539,7 +537,6 @@ static int cuse_channel_release(struct inode *inode, struct file *file)
 }
 
 static struct file_operations cuse_channel_fops; /* initialized during init */
-
 
 /**************************************************************************
  * Misc stuff and module initializatiion

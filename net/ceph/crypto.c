@@ -1,4 +1,3 @@
-
 #include <linux/ceph/ceph_debug.h>
 
 #include <linux/err.h>
@@ -78,8 +77,6 @@ int ceph_crypto_key_unarmor(struct ceph_crypto_key *key, const char *inkey)
 	     key->type, key->len);
 	return 0;
 }
-
-
 
 #define AES_KEY_SIZE 16
 
@@ -327,7 +324,6 @@ static int ceph_aes_decrypt2(const void *key, int key_len,
 
 	return 0;
 }
-
 
 int ceph_decrypt(struct ceph_crypto_key *secret, void *dst, size_t *dst_len,
 		 const void *src, size_t src_len)

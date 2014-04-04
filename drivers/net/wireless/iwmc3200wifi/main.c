@@ -237,8 +237,6 @@ static void iwm_auth_retry_worker(struct work_struct *work)
 	iwm_set_tx_key(iwm, iwm->default_key);
 }
 
-
-
 static void iwm_watchdog(unsigned long data)
 {
 	struct iwm_priv *iwm = (struct iwm_priv *)data;

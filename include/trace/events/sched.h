@@ -205,7 +205,6 @@ DECLARE_EVENT_CLASS(sched_process_template,
 DEFINE_EVENT(sched_process_template, sched_process_free,
 	     TP_PROTO(struct task_struct *p),
 	     TP_ARGS(p));
-	     
 
 /*
  * Tracepoint for a task exiting:
@@ -303,7 +302,6 @@ DECLARE_EVENT_CLASS(sched_stat_template,
 			__entry->comm, __entry->pid,
 			(unsigned long long)__entry->delay)
 );
-
 
 /*
  * Tracepoint for accounting wait time (time the task is runnable

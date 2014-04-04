@@ -18,4 +18,3 @@ config UNIX
 	  correctly if you say M here and then neglect to load the module.
 
 	  Say Y unless you know what you are doing.
-

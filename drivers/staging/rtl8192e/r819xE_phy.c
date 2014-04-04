@@ -696,12 +696,10 @@ static u32 rtl8192_phy_RFSerialRead(struct r8192_priv *priv,
 	rtl8192_setBBreg(priv, pPhyReg->rfHSSIPara2,  bLSSIReadEdge, 0x0);
 	rtl8192_setBBreg(priv, pPhyReg->rfHSSIPara2,  bLSSIReadEdge, 0x1);
 
-
 	// TODO: we should not delay such a  long time. Ask help from SD3
 	msleep(1);
 
 	ret = rtl8192_QueryBBReg(priv, pPhyReg->rfLSSIReadBack, bLSSIReadBackData);
-
 
 	// Switch back to Reg_Mode0;
 	priv->RfReg0Value[eRFPath] &= 0xebf;
@@ -771,7 +769,6 @@ static void rtl8192_phy_RFSerialWrite(struct r8192_priv *priv,
 
 	// Write Operation
 	rtl8192_setBBreg(priv, pPhyReg->rf3wireOffset, bMaskDWord, DataAndAddr);
-
 
 	if(Offset==0x0)
 		priv->RfReg0Value[eRFPath] = Data;
@@ -982,7 +979,6 @@ static void phy_FwRFSerialWrite(struct r8192_priv *priv,
 	//delay_us(20);
 
 }
-
 
 /******************************************************************************
  *function:  This function read BB parameters from Header file we gen,
@@ -1269,7 +1265,6 @@ RT_STATUS rtl8192_phy_checkBBAndRF(struct r8192_priv *priv,
 			break;
 		}
 
-
 		//
 		// Check whether readback data is correct
 		//
@@ -1283,7 +1278,6 @@ RT_STATUS rtl8192_phy_checkBBAndRF(struct r8192_priv *priv,
 
 	return ret;
 }
-
 
 /******************************************************************************
  *function:  This function initialize BB&RF
@@ -1349,7 +1343,6 @@ static RT_STATUS rtl8192_BB_Config_ParaFile(struct r8192_priv *priv)
 			dwRegValue = 0x0;	//Antenna gain offset doesn't make sense in RF 1T2R.
 		rtl8192_setBBreg(priv, rFPGA0_TxGainStage,
 			(bXBTxAGC|bXCTxAGC|bXDTxAGC), dwRegValue);
-
 
 		//XSTALLCap
 		dwRegValue = priv->CrystalCap;
@@ -2000,7 +1993,6 @@ static void CCK_Tx_Power_Track_BW_Switch(struct r8192_priv *priv)
 		CCK_Tx_Power_Track_BW_Switch_ThermalMeter(priv);
 }
 
-
 //
 /******************************************************************************
  *function:  Callback routine of the work item for set bandwidth mode.
@@ -2018,7 +2010,6 @@ void rtl8192_SetBWModeWorkItem(struct r8192_priv *priv)
 
 	RT_TRACE(COMP_SWBW, "==>rtl8192_SetBWModeWorkItem()  Switch to %s bandwidth\n",
 					priv->CurrentChannelBW == HT_CHANNEL_WIDTH_20?"20MHz":"40MHz")
-
 
 	if(!priv->up)
 	{
@@ -2096,7 +2087,6 @@ void rtl8192_SetBWModeWorkItem(struct r8192_priv *priv)
 			rtl8192_setBBreg(priv, rCCK0_System, bCCKSideBand, (priv->nCur40MhzPrimeSC>>1));
 			rtl8192_setBBreg(priv, rOFDM1_LSTF, 0xC00, priv->nCur40MhzPrimeSC);
 
-
 			rtl8192_setBBreg(priv, rFPGA0_AnalogParameter1, 0x00100000, 0);
 			break;
 		default:
@@ -2129,7 +2119,6 @@ void rtl8192_SetBWMode(struct ieee80211_device *ieee, HT_CHANNEL_WIDTH Bandwidth
 {
 	struct r8192_priv *priv = ieee80211_priv(ieee->dev);
 
-
 	if(priv->SetBWModeInProgress)
 		return;
 
@@ -2150,7 +2139,6 @@ void rtl8192_SetBWMode(struct ieee80211_device *ieee, HT_CHANNEL_WIDTH Bandwidth
 	rtl8192_SetBWModeWorkItem(priv);
 
 }
-
 
 void InitialGain819xPci(struct ieee80211_device *ieee, u8 Operation)
 {
@@ -2212,7 +2200,6 @@ void InitialGain819xPci(struct ieee80211_device *ieee, u8 Operation)
 
 				rtl8192_phy_setTxPower(priv, priv->ieee80211->current_network.channel);
 
-
 				if(dm_digtable.dig_algorithm == DIG_ALGO_BY_FALSE_ALARM)
 					rtl8192_setBBreg(priv, UFWP, bMaskByte1, 0x1);	// FW DIG ON
 				break;
@@ -2222,4 +2209,3 @@ void InitialGain819xPci(struct ieee80211_device *ieee, u8 Operation)
 		}
 	}
 }
-

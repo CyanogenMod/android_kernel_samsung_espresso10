@@ -226,7 +226,6 @@ enum {
 	SLEEP_SAVE_COUNT
 };
 
-
 static void pxa25x_cpu_pm_save(unsigned long *sleep_save)
 {
 	SAVE(PSTR);

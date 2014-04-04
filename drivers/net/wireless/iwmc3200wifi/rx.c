@@ -239,7 +239,6 @@ static int iwm_ntf_tx(struct iwm_priv *iwm, u8 *buf,
 	return 0;
 }
 
-
 static int iwm_ntf_calib_res(struct iwm_priv *iwm, u8 *buf,
 			     unsigned long buf_size, struct iwm_wifi_cmd *cmd)
 {
@@ -1698,4 +1697,3 @@ void iwm_rx_worker(struct work_struct *work)
 	}
 	spin_unlock(&iwm->ticket_lock);
 }
-

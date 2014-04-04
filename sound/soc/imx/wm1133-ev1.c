@@ -239,7 +239,6 @@ static int wm1133_ev1_init(struct snd_soc_pcm_runtime *rtd)
 	return 0;
 }
 
-
 static struct snd_soc_dai_link wm1133_ev1_dai = {
 	.name = "WM1133-EV1",
 	.stream_name = "Audio",

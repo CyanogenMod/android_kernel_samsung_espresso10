@@ -350,7 +350,6 @@ void pcibios_set_master(struct pci_dev *dev)
 	pci_write_config_byte(dev, PCI_LATENCY_TIMER, lat);
 }
 
-
 struct pci_bus * __init it8152_pci_scan_bus(int nr, struct pci_sys_data *sys)
 {
 	return pci_scan_bus(nr, &it8152_ops, sys);

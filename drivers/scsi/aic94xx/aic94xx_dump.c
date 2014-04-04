@@ -807,7 +807,6 @@ void asd_dump_ddb_0(struct asd_ha_struct *asd_ha)
 	asd_ddbsite_read_byte(asd_ha, 0,                     \
 			      offsetof(struct asd_ddb_seq_shared, __name)+_o)
 
-
 	asd_printk("DDB: 0\n");
 	asd_printk("q_free_ddb_head:%04x\n", DDB0_FIELDW(q_free_ddb_head));
 	asd_printk("q_free_ddb_tail:%04x\n", DDB0_FIELDW(q_free_ddb_tail));

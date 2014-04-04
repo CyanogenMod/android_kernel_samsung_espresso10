@@ -162,7 +162,6 @@ static int ami30x_read(void *mlsl_handle,
 	return INV_ERROR_COMPASS_DATA_NOT_READY;
 }
 
-
 /* For AMI305,the range field needs to be modified to {9830.4f} */
 static struct ext_slave_descr ami30x_descr = {
 	.init             = NULL,

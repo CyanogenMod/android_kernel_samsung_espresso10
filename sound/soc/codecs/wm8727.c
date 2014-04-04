@@ -31,7 +31,6 @@
 			SNDRV_PCM_RATE_48000 | SNDRV_PCM_RATE_96000 |\
 			SNDRV_PCM_RATE_192000)
 
-
 static struct snd_soc_dai_driver wm8727_dai = {
 	.name = "wm8727-hifi",
 	.playback = {

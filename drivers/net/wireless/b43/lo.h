@@ -69,7 +69,6 @@ struct b43_txpower_lo_control {
 #define B43_LO_PWRVEC_EXPIRE	(HZ * (30 - 2))
 #define B43_LO_TXCTL_EXPIRE	(HZ * (180 - 4))
 
-
 /* Adjust the Local Oscillator to the saved attenuation
  * and txctl values.
  */

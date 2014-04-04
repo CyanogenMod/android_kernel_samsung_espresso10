@@ -28,7 +28,6 @@
 
 #include "board-espresso10.h"
 
-
 #define YAS_TA_OFFSET {200, -4600, -1100}
 #define YAS_USB_OFFSET {0, -1100, -300}
 #define YAS_FULL_OFFSET {0, 0, 0}
@@ -175,4 +174,3 @@ void __init omap4_espresso10_sensors_init(void)
 				ARRAY_SIZE(espresso10_sensors_i2c4_boardinfo));
 
 }
-

@@ -34,7 +34,6 @@
 #define ICMP_ADDRESSREPLY	18	/* Address Mask Reply		*/
 #define NR_ICMP_TYPES		18
 
-
 /* Codes for UNREACH. */
 #define ICMP_NET_UNREACH	0	/* Network Unreachable		*/
 #define ICMP_HOST_UNREACH	1	/* Host Unreachable		*/
@@ -63,7 +62,6 @@
 /* Codes for TIME_EXCEEDED. */
 #define ICMP_EXC_TTL		0	/* TTL count exceeded		*/
 #define ICMP_EXC_FRAGTIME	1	/* Fragment Reass time exceeded	*/
-
 
 struct icmphdr {
   __u8		type;
@@ -100,6 +98,5 @@ static inline struct icmphdr *icmp_hdr(const struct sk_buff *skb)
 struct icmp_filter {
 	__u32		data;
 };
-
 
 #endif	/* _LINUX_ICMP_H */

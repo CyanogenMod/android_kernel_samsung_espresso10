@@ -334,7 +334,6 @@ static struct aa_dfa *unpack_dfa(struct aa_ext *e)
 		int flags = TO_ACCEPT1_FLAG(YYTD_DATA32) |
 			TO_ACCEPT2_FLAG(YYTD_DATA32);
 
-
 		if (aa_g_paranoid_load)
 			flags |= DFA_FLAG_VERIFY_STATES;
 

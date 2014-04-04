@@ -22,7 +22,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #include <linux/list.h>
 #include <media/v4l2-dev.h>
 #include <media/tuner.h>

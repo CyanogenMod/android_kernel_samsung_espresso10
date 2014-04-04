@@ -396,7 +396,6 @@ static inline int compute_score2(struct sock *sk, struct net *net,
 	return score;
 }
 
-
 /* called with read_rcu_lock() */
 static struct sock *udp4_lib_lookup2(struct net *net,
 		__be32 saddr, __be16 sport,
@@ -765,7 +764,7 @@ send:
 /*
  * Push out all pending data as one UDP datagram. Socket is locked.
  */
-static int udp_push_pending_frames(struct sock *sk)
+int udp_push_pending_frames(struct sock *sk)
 {
 	struct udp_sock  *up = udp_sk(sk);
 	struct inet_sock *inet = inet_sk(sk);
@@ -784,6 +783,7 @@ out:
 	up->pending = 0;
 	return err;
 }
+EXPORT_SYMBOL(udp_push_pending_frames);
 
 int udp_sendmsg(struct kiocb *iocb, struct sock *sk, struct msghdr *msg,
 		size_t len)
@@ -1077,7 +1077,6 @@ out:
 	return ret;
 }
 
-
 /**
  *	first_packet_length	- return length of first packet in receive queue
  *	@sk: socket
@@ -1254,7 +1253,6 @@ csum_copy_err:
 	msg->msg_flags &= ~MSG_TRUNC;
 	goto try_again;
 }
-
 
 int udp_disconnect(struct sock *sk, int flags)
 {
@@ -1464,7 +1462,6 @@ int udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 			goto drop;
 	}
 
-
 	if (sk_rcvqueues_full(sk, skb))
 		goto drop;
 
@@ -1487,7 +1484,6 @@ drop:
 	kfree_skb(skb);
 	return -1;
 }
-
 
 static void flush_stack(struct sock **stack, unsigned int count,
 			struct sk_buff *skb, unsigned int final)
@@ -2282,4 +2278,3 @@ struct sk_buff *udp4_ufo_fragment(struct sk_buff *skb, u32 features)
 out:
 	return segs;
 }
-

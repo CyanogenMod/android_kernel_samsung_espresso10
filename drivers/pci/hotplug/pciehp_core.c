@@ -163,7 +163,6 @@ static int set_attention_status(struct hotplug_slot *hotplug_slot, u8 status)
 	return pciehp_set_attention_status(slot, status);
 }
 
-
 static int enable_slot(struct hotplug_slot *hotplug_slot)
 {
 	struct slot *slot = hotplug_slot->private;
@@ -173,7 +172,6 @@ static int enable_slot(struct hotplug_slot *hotplug_slot)
 
 	return pciehp_sysfs_enable_slot(slot);
 }
-
 
 static int disable_slot(struct hotplug_slot *hotplug_slot)
 {

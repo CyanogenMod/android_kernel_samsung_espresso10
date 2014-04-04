@@ -71,7 +71,7 @@ typedef int __bitwise snd_device_state_t;
 
 typedef int __bitwise snd_device_cmd_t;
 #define	SNDRV_DEV_CMD_PRE	((__force snd_device_cmd_t) 0)
-#define	SNDRV_DEV_CMD_NORMAL	((__force snd_device_cmd_t) 1)	
+#define	SNDRV_DEV_CMD_NORMAL	((__force snd_device_cmd_t) 1)
 #define	SNDRV_DEV_CMD_POST	((__force snd_device_cmd_t) 2)
 
 struct snd_device;
@@ -132,6 +132,7 @@ struct snd_card {
 	int shutdown;			/* this card is going down */
 	int free_on_last_close;		/* free in context of file_release */
 	wait_queue_head_t shutdown_sleep;
+	atomic_t refcount;		/* refcount for disconnection */
 	struct device *dev;		/* device assigned to this card */
 	struct device *card_dev;	/* cardX object for sysfs */
 
@@ -189,6 +190,7 @@ struct snd_minor {
 	const struct file_operations *f_ops;	/* file operations */
 	void *private_data;		/* private data for f_ops->open */
 	struct device *dev;		/* device for sysfs */
+	struct snd_card *card_ptr;	/* assigned card instance */
 };
 
 /* return a device pointer linked to each sound device as a parent */
@@ -295,6 +297,7 @@ int snd_card_info_done(void);
 int snd_component_add(struct snd_card *card, const char *component);
 int snd_card_file_add(struct snd_card *card, struct file *file);
 int snd_card_file_remove(struct snd_card *card, struct file *file);
+void snd_card_unref(struct snd_card *card);
 
 #define snd_card_set_dev(card, devptr) ((card)->dev = (devptr))
 
@@ -369,7 +372,7 @@ void __snd_printk(unsigned int level, const char *file, int line,
  *
  * When CONFIG_SND_DEBUG is set, this macro evaluates the given condition,
  * and call WARN() and returns the value if it's non-zero.
- * 
+ *
  * When CONFIG_SND_DEBUG is not set, this just returns zero, and the given
  * condition is ignored.
  *
@@ -405,7 +408,6 @@ static inline int __snd_bug_on(int cond)
 #else
 #define snd_printdd(format, args...)	do { } while (0)
 #endif
-
 
 #define SNDRV_OSS_VERSION         ((3<<16)|(8<<8)|(1<<4)|(0))	/* 3.8.1a */
 

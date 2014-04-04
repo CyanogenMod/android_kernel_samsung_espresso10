@@ -92,8 +92,6 @@
 #define XEL_ARP_PACKET_SIZE		28 	/* Max ARP packet size */
 #define XEL_HEADER_IP_LENGTH_OFFSET	16 	/* IP Length Offset */
 
-
-
 #define TX_TIMEOUT		(60*HZ)		/* Tx timeout is 60 seconds. */
 #define ALIGNMENT		4
 
@@ -140,7 +138,6 @@ struct net_local {
 	int last_link;
 	bool has_mdio;
 };
-
 
 /*************************/
 /* EmacLite driver calls */

@@ -65,7 +65,6 @@ static DEFINE_SPINLOCK(cfgspace_lock);
 /* Core to access the external PCI config space. Can only have one. */
 static struct ssb_pcicore *extpci_core;
 
-
 static u32 get_cfgspace_addr(struct ssb_pcicore *pc,
 			     unsigned int bus, unsigned int dev,
 			     unsigned int func, unsigned int off)

@@ -8,4 +8,3 @@ config DVB_NGENE
 	select MEDIA_TUNER_MT2131 if !MEDIA_TUNER_CUSTOMISE
 	---help---
 	  Support for Micronas PCI express cards with nGene bridge.
-

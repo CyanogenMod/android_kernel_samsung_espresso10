@@ -24,7 +24,6 @@
  *
  */
 
-
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/types.h>
@@ -54,7 +53,6 @@
 #define DLM_UNLOCK_REGRANT_LOCK        0x00000008
 #define DLM_UNLOCK_CLEAR_CONVERT_TYPE  0x00000010
 
-
 static enum dlm_status dlm_get_cancel_actions(struct dlm_ctxt *dlm,
 					      struct dlm_lock_resource *res,
 					      struct dlm_lock *lock,
@@ -73,7 +71,6 @@ static enum dlm_status dlm_send_remote_unlock_request(struct dlm_ctxt *dlm,
 						 int flags,
 						 u8 owner);
 
-
 /*
  * according to the spec:
  * http://opendlm.sourceforge.net/cvsmirror/opendlm/docs/dlmbook_final.pdf
@@ -85,7 +82,6 @@ static enum dlm_status dlm_send_remote_unlock_request(struct dlm_ctxt *dlm,
  * convert (passing LKM_CANCEL in flags), then call the unlock
  * again (with no LKM_CANCEL in flags).
  */
-
 
 /*
  * locking:
@@ -275,7 +271,6 @@ void dlm_commit_pending_cancel(struct dlm_lock_resource *res,
 	list_move_tail(&lock->list, &res->granted);
 	lock->ml.convert_type = LKM_IVMODE;
 }
-
 
 static inline enum dlm_status dlmunlock_master(struct dlm_ctxt *dlm,
 					  struct dlm_lock_resource *res,
@@ -520,7 +515,6 @@ leave:
 	return status;
 }
 
-
 static enum dlm_status dlm_get_cancel_actions(struct dlm_ctxt *dlm,
 					      struct dlm_lock_resource *res,
 					      struct dlm_lock *lock,
@@ -689,4 +683,3 @@ retry:
 	return status;
 }
 EXPORT_SYMBOL_GPL(dlmunlock);
-

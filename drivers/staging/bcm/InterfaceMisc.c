@@ -153,8 +153,6 @@ BcmWRM(PVOID arg,
 	return InterfaceWRM((PS_INTERFACE_ADAPTER)arg, addr, buff, len);
 }
 
-
-
 INT Bcm_clear_halt_of_endpoints(PMINI_ADAPTER Adapter)
 {
 	PS_INTERFACE_ADAPTER psIntfAdapter = (PS_INTERFACE_ADAPTER)(Adapter->pvInterfaceAdapter);
@@ -178,7 +176,6 @@ INT Bcm_clear_halt_of_endpoints(PMINI_ADAPTER Adapter)
 	//Killing all the submitted urbs to different end points.
 	Bcm_kill_all_URBs(psIntfAdapter);
 
-
 	//clear the halted/stalled state for every end point
 	status = usb_clear_halt(psIntfAdapter->udev,psIntfAdapter->sIntrIn.int_in_pipe);
 	if(status != STATUS_SUCCESS)
@@ -194,7 +191,6 @@ INT Bcm_clear_halt_of_endpoints(PMINI_ADAPTER Adapter)
 
 	return status ;
 }
-
 
 VOID Bcm_kill_all_URBs(PS_INTERFACE_ADAPTER psIntfAdapter)
 {
@@ -262,4 +258,3 @@ VOID putUsbSuspend(struct work_struct *work)
 		usb_autopm_put_interface(intf);
 
 }
-

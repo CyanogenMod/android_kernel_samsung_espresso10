@@ -127,7 +127,6 @@ struct pt_regs {
 #endif /* __KERNEL__ */
 #endif /* !__i386__ */
 
-
 #ifdef __KERNEL__
 
 #include <linux/init.h>

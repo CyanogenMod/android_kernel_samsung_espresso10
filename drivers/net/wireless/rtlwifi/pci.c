@@ -524,7 +524,6 @@ static void _rtl_pci_tx_chk_waitq(struct ieee80211_hw *hw)
 	}
 }
 
-
 static void _rtl_pci_tx_isr(struct ieee80211_hw *hw, int prio)
 {
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
@@ -1454,7 +1453,6 @@ static int rtl_pci_tx(struct ieee80211_hw *hw, struct sk_buff *skb,
 
 	rtlpriv->cfg->ops->set_desc((u8 *)pdesc, true,
 				    HW_DESC_OWN, (u8 *)&temp_one);
-
 
 	if ((ring->entries - skb_queue_len(&ring->queue)) < 2 &&
 	    hw_queue != BEACON_QUEUE) {

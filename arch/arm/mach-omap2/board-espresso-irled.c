@@ -180,13 +180,16 @@ static ssize_t check_ir_show(struct device *dev, struct device_attribute *attr,
 }
 
 static ssize_t clock_store(struct device *dev, struct device_attribute *attr,
-			   const char *buf, size_t size)
+						   const char *buf, size_t size)
 {
 	unsigned int _data;
 	if (sscanf(buf, "%u", &_data) == 1)
-		if (_data == 300000 || _data == 600000 || _data == 800000
-		    || _data == 1008000)
-			ir_data.cpu_frequency = _data;
+		if (   _data == 300000
+			|| _data == 600000
+			|| _data == 800000
+			|| _data == 1008000
+		)
+		ir_data.cpu_frequency = _data;
 
 	return size;
 }

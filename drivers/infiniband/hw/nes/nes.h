@@ -273,7 +273,6 @@ struct nes_device {
 	u8                     link_recheck;
 };
 
-
 static inline __le32 get_crc_value(struct nes_v4_quad *nes_quad)
 {
 	u32 crc_value;
@@ -386,8 +385,6 @@ static inline void nes_write8(void __iomem *addr, u8 val)
 	writeb(val, addr);
 }
 
-
-
 static inline int nes_alloc_resource(struct nes_adapter *nesadapter,
 		unsigned long *resource_array, u32 max_resources,
 		u32 *req_resource_num, u32 *next)
@@ -488,13 +485,10 @@ static inline struct nes_qp *to_nesqp(struct ib_qp *ibqp)
 	return container_of(ibqp, struct nes_qp, ibqp);
 }
 
-
-
 /* nes.c */
 void nes_add_ref(struct ib_qp *);
 void nes_rem_ref(struct ib_qp *);
 struct ib_qp *nes_get_qp(struct ib_device *, int);
-
 
 /* nes_hw.c */
 struct nes_adapter *nes_init_adapter(struct nes_device *, u8);
@@ -511,6 +505,7 @@ void nes_iwarp_ce_handler(struct nes_device *, struct nes_hw_cq *);
 int nes_destroy_cqp(struct nes_device *);
 int nes_nic_cm_xmit(struct sk_buff *, struct net_device *);
 void nes_recheck_link_status(struct work_struct *work);
+void nes_terminate_timeout(unsigned long context);
 
 /* nes_nic.c */
 struct net_device *nes_netdev_init(struct nes_device *, void __iomem *);

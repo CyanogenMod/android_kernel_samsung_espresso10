@@ -165,4 +165,3 @@ static void __init lpc32xx_timer_init(void)
 struct sys_timer lpc32xx_timer = {
 	.init		= &lpc32xx_timer_init,
 };
-

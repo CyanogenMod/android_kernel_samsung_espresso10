@@ -121,7 +121,6 @@ static const struct attribute_group *iio_bfin_tmr_trigger_attr_groups[] = {
 	NULL
 };
 
-
 static irqreturn_t iio_bfin_tmr_trigger_isr(int irq, void *devid)
 {
 	struct bfin_tmr_state *st = devid;

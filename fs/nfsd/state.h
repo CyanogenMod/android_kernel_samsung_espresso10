@@ -4,11 +4,11 @@
  *
  *  Kendrick Smith <kmsmith@umich.edu>
  *  Andy Adamson <andros@umich.edu>
- *  
+ *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
  *  are met:
- *  
+ *
  *  1. Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
  *  2. Redistributions in binary form must reproduce the above copyright
@@ -210,9 +210,9 @@ struct nfsd4_sessionid {
  * struct nfs4_client - one per client.  Clientids live here.
  * 	o Each nfs4_client is hashed by clientid.
  *
- * 	o Each nfs4_clients is also hashed by name 
+ * 	o Each nfs4_clients is also hashed by name
  * 	  (the opaque quantity initially sent by the client to identify itself).
- * 	  
+ *
  *	o cl_perclient list is used to ensure no dangling stateowner references
  *	  when we expire the nfs4_client
  */
@@ -295,18 +295,18 @@ update_stateid(stateid_t *stateid)
 	stateid->si_generation++;
 }
 
-/* A reasonable value for REPLAY_ISIZE was estimated as follows:  
- * The OPEN response, typically the largest, requires 
- *   4(status) + 8(stateid) + 20(changeinfo) + 4(rflags) +  8(verifier) + 
- *   4(deleg. type) + 8(deleg. stateid) + 4(deleg. recall flag) + 
- *   20(deleg. space limit) + ~32(deleg. ace) = 112 bytes 
+/* A reasonable value for REPLAY_ISIZE was estimated as follows:
+ * The OPEN response, typically the largest, requires
+ *   4(status) + 8(stateid) + 20(changeinfo) + 4(rflags) +  8(verifier) +
+ *   4(deleg. type) + 8(deleg. stateid) + 4(deleg. recall flag) +
+ *   20(deleg. space limit) + ~32(deleg. ace) = 112 bytes
  */
 
-#define NFSD4_REPLAY_ISIZE       112 
+#define NFSD4_REPLAY_ISIZE       112
 
 /*
- * Replay buffer, where the result of the last seqid-mutating operation 
- * is cached. 
+ * Replay buffer, where the result of the last seqid-mutating operation
+ * is cached.
  */
 struct nfs4_replay {
 	__be32			rp_status;
@@ -326,8 +326,8 @@ struct nfs4_replay {
 *         for lock_owner
 *    so_perclient: nfs4_client->cl_perclient entry - used when nfs4_client
 *         struct is reaped.
-*    so_perfilestate: heads the list of nfs4_stateid (either open or lock) 
-*         and is used to ensure no dangling nfs4_stateid references when we 
+*    so_perfilestate: heads the list of nfs4_stateid (either open or lock)
+*         and is used to ensure no dangling nfs4_stateid references when we
 *         release a stateowner.
 *    so_perlockowner: (open) nfs4_stateid->st_perlockowner entry - used when
 *         close is called to reap associated byte-range locks
@@ -357,7 +357,7 @@ struct nfs4_stateowner {
 
 /*
 *  nfs4_file: a file opened by some number of (open) nfs4_stateowners.
-*    o fi_perfile list is used to search for conflicting 
+*    o fi_perfile list is used to search for conflicting
 *      share_acces, share_deny on the file.
 */
 struct nfs4_file {
@@ -377,7 +377,7 @@ struct nfs4_file {
 	struct file_lock	*fi_lease;
 	atomic_t		fi_delegees;
 	struct inode		*fi_inode;
-	u32                     fi_id;      /* used with stateowner->so_id 
+	u32                     fi_id;      /* used with stateowner->so_id
 					     * for stateid_hashtbl hash */
 	bool			fi_had_conflict;
 };
@@ -426,7 +426,7 @@ static inline struct file *find_any_file(struct nfs4_file *f)
 */
 
 struct nfs4_stateid {
-	struct list_head              st_hash; 
+	struct list_head              st_hash;
 	struct list_head              st_perfile;
 	struct list_head              st_perstateowner;
 	struct list_head              st_lockowners;

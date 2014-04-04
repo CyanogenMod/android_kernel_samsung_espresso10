@@ -9,4 +9,3 @@ config DVB_PT1
 	  an external software decoder to watch TV on your computer.
 
 	  Say Y or M if you own such a device and want to use it.
-

@@ -2664,8 +2664,6 @@ qla2x00_configure_loop(scsi_qla_host_t *vha)
 	return (rval);
 }
 
-
-
 /*
  * qla2x00_configure_local_loop
  *	Updates Fibre Channel Device Database with local loop devices.

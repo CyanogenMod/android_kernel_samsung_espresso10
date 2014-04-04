@@ -22,7 +22,6 @@
 #include <drm/drmP.h>
 #include "psb_drv.h"
 
-
 /*
  *	GTT resource allocator - manage page mappings in GTT space
  */
@@ -52,7 +51,7 @@ static inline uint32_t psb_gtt_mask_pte(uint32_t pfn, int type)
  *	psb_gtt_entry		-	find the GART entries for a gtt_range
  *	@dev: our DRM device
  *	@r: our GTT range
- * 
+ *
  *	Given a gtt_range object return the GART offset of the page table
  *	entries for this gtt_range
  */
@@ -104,7 +103,7 @@ static int psb_gtt_insert(struct drm_device *dev, struct gtt_range *r)
 	}
 	/* Make sure all the entries are set before we return */
 	ioread32(gtt_slot - 1);
-	
+
 	return 0;
 }
 
@@ -264,7 +263,7 @@ void psb_gtt_unpin(struct gtt_range *gt)
 	}
 	mutex_unlock(&dev_priv->gtt_mutex);
 }
-	
+
 /*
  *	GTT resource allocator - allocate and manage GTT address space
  */
@@ -291,7 +290,7 @@ struct gtt_range *psb_gtt_alloc_range(struct drm_device *dev, int len,
 	struct resource *r = dev_priv->gtt_mem;
 	int ret;
 	unsigned long start, end;
-	
+
 	if (backed) {
 	        /* The start of the GTT is the stolen pages */
 	        start = r->start;
@@ -367,7 +366,6 @@ void psb_gtt_free_range(struct drm_device *dev, struct gtt_range *gt)
 {
 	psb_gtt_kref_put(gt);
 }
-
 
 struct psb_gtt *psb_gtt_alloc(struct drm_device *dev)
 {

@@ -145,7 +145,6 @@ static int __devinit st1232_ts_probe(struct i2c_client *client,
 		return -EINVAL;
 	}
 
-
 	ts = kzalloc(sizeof(struct st1232_ts_data), GFP_KERNEL);
 	input_dev = input_allocate_device();
 	if (!ts || !input_dev) {

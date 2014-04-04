@@ -1,7 +1,6 @@
 /* drivers/atm/eni.c - Efficient Networks ENI155P device driver */
- 
+
 /* Written 1995-2000 by Werner Almesberger, EPFL LRC/ICA */
- 
 
 #include <linux/module.h>
 #include <linux/kernel.h>
@@ -34,7 +33,7 @@
 #if !defined(__i386__) && !defined(__x86_64__)
 #ifndef ioremap_nocache
 #define ioremap_nocache(X,Y) ioremap(X,Y)
-#endif 
+#endif
 #endif
 
 /*
@@ -61,37 +60,30 @@
  *   2^n block (never happens in real life, though)
  */
 
-
 #if 0
 #define DPRINTK(format,args...) printk(KERN_DEBUG format,##args)
 #else
 #define DPRINTK(format,args...)
 #endif
 
-
 #ifndef CONFIG_ATM_ENI_TUNE_BURST
 #define CONFIG_ATM_ENI_BURST_TX_8W
 #define CONFIG_ATM_ENI_BURST_RX_4W
 #endif
 
-
 #ifndef CONFIG_ATM_ENI_DEBUG
-
 
 #define NULLCHECK(x)
 
 #define EVENT(s,a,b)
 
-
 static void event_dump(void)
 {
 }
 
-
 #else
 
-
-/* 
+/*
  * NULL pointer checking
  */
 
@@ -110,15 +102,13 @@ static const char *ev[EV];
 static unsigned long ev_a[EV],ev_b[EV];
 static int ec = 0;
 
-
 static void EVENT(const char *s,unsigned long a,unsigned long b)
 {
-	ev[ec] = s; 
+	ev[ec] = s;
 	ev_a[ec] = a;
 	ev_b[ec] = b;
 	ec = (ec+1) % EV;
 }
-
 
 static void event_dump(void)
 {
@@ -131,9 +121,7 @@ static void event_dump(void)
 	}
 }
 
-
 #endif /* CONFIG_ATM_ENI_DEBUG */
-
 
 /*
  * NExx   must not be equal at end
@@ -149,7 +137,6 @@ static void event_dump(void)
 #define NEPMOK(a0,d,b,c) NEPJOK(a0,(a0+d) & (c-1),b)
 #define EEPMOK(a0,d,b,c) EEPJOK(a0,(a0+d) & (c-1),b)
 
-
 static int tx_complete = 0,dma_complete = 0,queued = 0,requeued = 0,
   backlogged = 0,rx_enqueued = 0,rx_dequeued = 0,pushed = 0,submitted = 0,
   putting = 0;
@@ -163,9 +150,7 @@ static dma_addr_t zeroes;
 #define eni_in(r)	readl(eni_dev->reg+(r)*4)
 #define eni_out(v,r)	writel((v),eni_dev->reg+(r)*4)
 
-
 /*-------------------------------- utilities --------------------------------*/
-
 
 static void dump_mem(struct eni_dev *eni_dev)
 {
@@ -176,7 +161,6 @@ static void dump_mem(struct eni_dev *eni_dev)
 		    eni_dev->free_list[i].start,
 		    1 << eni_dev->free_list[i].order);
 }
-
 
 static void dump(struct atm_dev *dev)
 {
@@ -200,7 +184,6 @@ static void dump(struct atm_dev *dev)
 			    ENI_VCC(eni_dev->rx_map[i])->words*4);
 	printk(KERN_NOTICE "----\n");
 }
-
 
 static void eni_put_free(struct eni_dev *eni_dev, void __iomem *start,
     unsigned long size)
@@ -233,7 +216,6 @@ static void eni_put_free(struct eni_dev *eni_dev, void __iomem *start,
 	eni_dev->free_len = len;
 	/*dump_mem(eni_dev);*/
 }
-
 
 static void __iomem *eni_alloc_mem(struct eni_dev *eni_dev, unsigned long *size)
 {
@@ -271,7 +253,6 @@ static void __iomem *eni_alloc_mem(struct eni_dev *eni_dev, unsigned long *size)
 	return start;
 }
 
-
 static void eni_free_mem(struct eni_dev *eni_dev, void __iomem *start,
     unsigned long size)
 {
@@ -305,12 +286,9 @@ static void eni_free_mem(struct eni_dev *eni_dev, void __iomem *start,
 	/*dump_mem(eni_dev);*/
 }
 
-
 /*----------------------------------- RX ------------------------------------*/
 
-
 #define ENI_VCC_NOS ((struct atm_vcc *) 1)
-
 
 static void rx_ident_err(struct atm_vcc *vcc)
 {
@@ -341,7 +319,6 @@ static void rx_ident_err(struct atm_vcc *vcc)
 	ENI_DEV(dev)->slow = NULL;
 	skb_queue_head_init(&ENI_DEV(dev)->rx_queue);
 }
-
 
 static int do_rx_dma(struct atm_vcc *vcc,struct sk_buff *skb,
     unsigned long skip,unsigned long size,unsigned long eff)
@@ -489,7 +466,6 @@ trouble:
 	return -1;
 }
 
-
 static void discard(struct atm_vcc *vcc,unsigned long size)
 {
 	struct eni_vcc *eni_vcc;
@@ -501,7 +477,6 @@ static void discard(struct atm_vcc *vcc,unsigned long size)
 	if (eni_vcc->rxing) ENI_PRV_POS(eni_vcc->last) += size+1;
 	else eni_vcc->rx_pos = (eni_vcc->rx_pos+size+1) & (eni_vcc->words-1);
 }
-
 
 /*
  * TODO: should check whether direct copies (without DMA setup, dequeuing on
@@ -543,7 +518,6 @@ static int rx_aal0(struct atm_vcc *vcc)
 	eni_vcc->rxing++;
 	return 0;
 }
-
 
 static int rx_aal5(struct atm_vcc *vcc)
 {
@@ -613,7 +587,6 @@ static int rx_aal5(struct atm_vcc *vcc)
 	return 0;
 }
 
-
 static inline int rx_vcc(struct atm_vcc *vcc)
 {
 	void __iomem *vci_dsc;
@@ -652,7 +625,6 @@ static inline int rx_vcc(struct atm_vcc *vcc)
 	return 0;
 }
 
-
 static void poll_rx(struct atm_dev *dev)
 {
 	struct eni_dev *eni_dev;
@@ -676,7 +648,6 @@ static void poll_rx(struct atm_dev *dev)
 		ENI_VCC(curr)->servicing--;
 	}
 }
-
 
 static void get_service(struct atm_dev *dev)
 {
@@ -720,7 +691,6 @@ putting++;
 		ENI_VCC(vcc)->servicing++;
 	}
 }
-
 
 static void dequeue_rx(struct atm_dev *dev)
 {
@@ -776,7 +746,6 @@ rx_dequeued++;
 	wake_up(&eni_dev->rx_wait);
 }
 
-
 static int open_rx_first(struct atm_vcc *vcc)
 {
 	struct eni_dev *eni_dev;
@@ -804,7 +773,6 @@ static int open_rx_first(struct atm_vcc *vcc)
 	eni_vcc->next = ENI_VCC_NOS;
 	return 0;
 }
-
 
 static int open_rx_second(struct atm_vcc *vcc)
 {
@@ -835,7 +803,6 @@ static int open_rx_second(struct atm_vcc *vcc)
 	    MID_VCI_LOCATION_SHIFT) | (order << MID_VCI_SIZE_SHIFT),here);
 	return 0;
 }
-
 
 static void close_rx(struct atm_vcc *vcc)
 {
@@ -900,7 +867,6 @@ static void close_rx(struct atm_vcc *vcc)
 	eni_vcc->rx = NULL;
 }
 
-
 static int start_rx(struct atm_dev *dev)
 {
 	struct eni_dev *eni_dev;
@@ -923,12 +889,9 @@ static int start_rx(struct atm_dev *dev)
 	return 0;
 }
 
-
 /*----------------------------------- TX ------------------------------------*/
 
-
 enum enq_res { enq_ok,enq_next,enq_jam };
-
 
 static inline void put_dma(int chan,u32 *dma,int *j,dma_addr_t paddr,
     u32 size)
@@ -1027,7 +990,6 @@ static inline void put_dma(int chan,u32 *dma,int *j,dma_addr_t paddr,
 		dma[(*j)++] = paddr;
 	}
 }
-
 
 static enum enq_res do_tx(struct sk_buff *skb)
 {
@@ -1176,7 +1138,6 @@ queued++;
 	return enq_ok;
 }
 
-
 static void poll_tx(struct atm_dev *dev)
 {
 	struct eni_tx *tx;
@@ -1199,7 +1160,6 @@ requeued++;
 			}
 	}
 }
-
 
 static void dequeue_tx(struct atm_dev *dev)
 {
@@ -1234,7 +1194,6 @@ dma_complete++;
 	}
 }
 
-
 static struct eni_tx *alloc_tx(struct eni_dev *eni_dev,int ubr)
 {
 	int i;
@@ -1243,7 +1202,6 @@ static struct eni_tx *alloc_tx(struct eni_dev *eni_dev,int ubr)
 		if (!eni_dev->tx[i].send) return eni_dev->tx+i;
 	return NULL;
 }
-
 
 static int comp_tx(struct eni_dev *eni_dev,int *pcr,int reserved,int *pre,
     int *res,int unlimited)
@@ -1280,7 +1238,6 @@ static int comp_tx(struct eni_dev *eni_dev,int *pcr,int reserved,int *pre,
 	DPRINTK("out pcr: %d (%d:%d)\n",*pcr,*pre,*res);
 	return 0;
 }
-
 
 static int reserve_or_set_tx(struct atm_vcc *vcc,struct atm_trafprm *txtp,
     int set_rsv,int set_shp)
@@ -1369,7 +1326,6 @@ static int reserve_or_set_tx(struct atm_vcc *vcc,struct atm_trafprm *txtp,
 	return 0;
 }
 
-
 static int open_tx_first(struct atm_vcc *vcc)
 {
 	ENI_VCC(vcc)->tx = NULL;
@@ -1378,12 +1334,10 @@ static int open_tx_first(struct atm_vcc *vcc)
 	return reserve_or_set_tx(vcc,&vcc->qos.txtp,1,1);
 }
 
-
 static int open_tx_second(struct atm_vcc *vcc)
 {
 	return 0; /* nothing to do */
 }
-
 
 static void close_tx(struct atm_vcc *vcc)
 {
@@ -1427,7 +1381,6 @@ static void close_tx(struct atm_vcc *vcc)
 	eni_vcc->tx = NULL;
 }
 
-
 static int start_tx(struct atm_dev *dev)
 {
 	struct eni_dev *eni_dev;
@@ -1448,9 +1401,7 @@ static int start_tx(struct atm_dev *dev)
 	return 0;
 }
 
-
 /*--------------------------------- common ----------------------------------*/
-
 
 #if 0 /* may become useful again when tuning things */
 
@@ -1465,7 +1416,6 @@ if (eni_boards) printk(KERN_INFO "loss: %ld\n",ENI_DEV(eni_boards)->lost);
 }
 
 #endif
-
 
 static void bug_int(struct atm_dev *dev,unsigned long reason)
 {
@@ -1483,7 +1433,6 @@ static void bug_int(struct atm_dev *dev,unsigned long reason)
 	printk(KERN_NOTICE "---recent events---\n");
 	event_dump();
 }
-
 
 static irqreturn_t eni_int(int irq,void *dev_id)
 {
@@ -1519,7 +1468,6 @@ static irqreturn_t eni_int(int irq,void *dev_id)
 	tasklet_schedule(&eni_dev->task);
 	return IRQ_HANDLED;
 }
-
 
 static void eni_tasklet(unsigned long data)
 {
@@ -1564,9 +1512,7 @@ tx_complete++;
 	poll_tx(dev);
 }
 
-
 /*--------------------------------- entries ---------------------------------*/
-
 
 static const char *media_name[] __devinitdata = {
     "MMF", "SMF", "MMF", "03?", /*  0- 3 */
@@ -1579,7 +1525,6 @@ static const char *media_name[] __devinitdata = {
     "28?", "29?", "30?", "31?"  /* 28-31 */
 };
 
-
 #define SET_SEPROM \
   ({ if (!error && !pci_error) { \
     pci_error = pci_write_config_byte(eni_dev->pci_dev,PCI_TONGA_CTRL,tonga); \
@@ -1590,7 +1535,6 @@ static const char *media_name[] __devinitdata = {
     pci_error = pci_read_config_byte(eni_dev->pci_dev,PCI_TONGA_CTRL,&tonga); \
     udelay(10); /* 10 usecs */ \
   } })
-
 
 static int __devinit get_esi_asic(struct atm_dev *dev)
 {
@@ -1679,10 +1623,8 @@ static int __devinit get_esi_asic(struct atm_dev *dev)
 	return error;
 }
 
-
 #undef SET_SEPROM
 #undef GET_SEPROM
-
 
 static int __devinit get_esi_fpga(struct atm_dev *dev, void __iomem *base)
 {
@@ -1693,7 +1635,6 @@ static int __devinit get_esi_fpga(struct atm_dev *dev, void __iomem *base)
 	for (i = 0; i < ESI_LEN; i++) dev->esi[i] = readb(mac_base+(i^3));
 	return 0;
 }
-
 
 static int __devinit eni_do_init(struct atm_dev *dev)
 {
@@ -1788,11 +1729,10 @@ unmap:
 	goto out;
 }
 
-
 static int __devinit eni_start(struct atm_dev *dev)
 {
 	struct eni_dev *eni_dev;
-	
+
 	void __iomem *buf;
 	unsigned long buffer_mem;
 	int error;
@@ -1878,7 +1818,6 @@ out:
 	return error;
 }
 
-
 static void eni_close(struct atm_vcc *vcc)
 {
 	DPRINTK(">eni_close\n");
@@ -1893,7 +1832,6 @@ static void eni_close(struct atm_vcc *vcc)
 	clear_bit(ATM_VF_ADDR,&vcc->flags);
 	/*foo();*/
 }
-
 
 static int eni_open(struct atm_vcc *vcc)
 {
@@ -1940,7 +1878,6 @@ static int eni_open(struct atm_vcc *vcc)
 	return 0;
 }
 
-
 static int eni_change_qos(struct atm_vcc *vcc,struct atm_qos *qos,int flgs)
 {
 	struct eni_dev *eni_dev = ENI_DEV(vcc->dev);
@@ -1978,7 +1915,6 @@ static int eni_change_qos(struct atm_vcc *vcc,struct atm_qos *qos,int flgs)
 	tasklet_enable(&eni_dev->task);
 	return 0;
 }
-
 
 static int eni_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 {
@@ -2019,20 +1955,17 @@ static int eni_ioctl(struct atm_dev *dev,unsigned int cmd,void __user *arg)
 	return dev->phy->ioctl(dev,cmd,arg);
 }
 
-
 static int eni_getsockopt(struct atm_vcc *vcc,int level,int optname,
     void __user *optval,int optlen)
 {
 	return -EINVAL;
 }
 
-
 static int eni_setsockopt(struct atm_vcc *vcc,int level,int optname,
     void __user *optval,unsigned int optlen)
 {
 	return -EINVAL;
 }
-
 
 static int eni_send(struct atm_vcc *vcc,struct sk_buff *skb)
 {
@@ -2075,13 +2008,10 @@ static void eni_phy_put(struct atm_dev *dev,unsigned char value,
 	writel(value,ENI_DEV(dev)->phy+addr*4);
 }
 
-
-
 static unsigned char eni_phy_get(struct atm_dev *dev,unsigned long addr)
 {
 	return readl(ENI_DEV(dev)->phy+addr*4);
 }
-
 
 static int eni_proc_read(struct atm_dev *dev,loff_t *pos,char *page)
 {
@@ -2140,7 +2070,7 @@ static int eni_proc_read(struct atm_dev *dev,loff_t *pos,char *page)
 		    " (default)"
 #endif
 		    "\n","");
-	if (!--left) 
+	if (!--left)
 		return sprintf(page,"%4sBuffer multipliers: tx %d%%, rx %d%%\n",
 		    "",eni_dev->tx_mult,eni_dev->rx_mult);
 	for (i = 0; i < NR_CHAN; i++) {
@@ -2203,7 +2133,6 @@ static int eni_proc_read(struct atm_dev *dev,loff_t *pos,char *page)
 	return 0;
 }
 
-
 static const struct atmdev_ops ops = {
 	.open		= eni_open,
 	.close		= eni_close,
@@ -2216,7 +2145,6 @@ static const struct atmdev_ops ops = {
 	.change_qos	= eni_change_qos,
 	.proc_read	= eni_proc_read
 };
-
 
 static int __devinit eni_init_one(struct pci_dev *pci_dev,
     const struct pci_device_id *ent)
@@ -2263,7 +2191,6 @@ out0:
 	return error;
 }
 
-
 static struct pci_device_id eni_pci_tbl[] = {
 	{ PCI_VDEVICE(EF, PCI_DEVICE_ID_EF_ATM_FPGA), 0 /* FPGA */ },
 	{ PCI_VDEVICE(EF, PCI_DEVICE_ID_EF_ATM_ASIC), 1 /* ASIC */ },
@@ -2271,12 +2198,10 @@ static struct pci_device_id eni_pci_tbl[] = {
 };
 MODULE_DEVICE_TABLE(pci,eni_pci_tbl);
 
-
 static void __devexit eni_remove_one(struct pci_dev *pci_dev)
 {
 	/* grrr */
 }
-
 
 static struct pci_driver eni_driver = {
 	.name		= DEV_LABEL,
@@ -2284,7 +2209,6 @@ static struct pci_driver eni_driver = {
 	.probe		= eni_init_one,
 	.remove		= __devexit_p(eni_remove_one),
 };
-
 
 static int __init eni_init(void)
 {
@@ -2297,7 +2221,6 @@ static int __init eni_init(void)
 	}
 	return pci_register_driver(&eni_driver);
 }
-
 
 module_init(eni_init);
 /* @@@ since exit routine not defined, this module can not be unloaded */

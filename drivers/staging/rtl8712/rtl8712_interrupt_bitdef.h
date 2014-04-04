@@ -34,6 +34,4 @@
 #define	_VODOK					BIT(1)
 #define	_RXOK					BIT(0)
 
-
 #endif	/*__RTL8712_INTERRUPT_BITDEF_H__*/
-

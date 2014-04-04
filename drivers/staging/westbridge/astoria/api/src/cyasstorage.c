@@ -54,7 +54,6 @@ cy_an_map_bus_from_media_type(cy_as_device *dev_p,
 	if (!cy_as_device_is_firmware_loaded(dev_p))
 		return CY_AS_ERROR_NO_FIRMWARE;
 
-
 	if (dev_p->media_supported[0] & code) {
 		if (dev_p->media_supported[1] & code) {
 			/*
@@ -272,7 +271,6 @@ my_storage_request_callback(cy_as_device *dev_p,
 					cy_as_storage_processor, 0);
 		}
 		break;
-
 
 	case CY_RQT_SDIO_INTR:
 		cy_as_ll_send_status_response(dev_p,
@@ -658,7 +656,6 @@ cy_as_storage_register_callback(cy_as_device_handle handle,
 }
 EXPORT_SYMBOL(cy_as_storage_register_callback);
 
-
 static cy_as_return_status_t
 my_handle_response_storage_claim(cy_as_device *dev_p,
 			cy_as_ll_request_response *req_p,
@@ -819,7 +816,6 @@ my_handle_response_storage_release(cy_as_device *dev_p,
 		ret = CY_AS_ERROR_INVALID_RESPONSE;
 		goto destroy;
 	}
-
 
 	if (cy_as_ll_request_response__get_word(reply_p, 1) != 0)
 		ret = CY_AS_ERROR_NOT_RELEASED;
@@ -1494,7 +1490,6 @@ cy_as_get_block_size(cy_as_device *dev_p,
 			goto destroy;
 		}
 
-
 		dev_p->storage_device_info[bus][device].block_size =
 			cy_as_ll_request_response__get_word(reply_p, 1);
 	} else
@@ -2160,7 +2155,6 @@ my_storage_cancel_callback(
 	cy_as_ll_destroy_response(dev_p, resp);
 	cy_as_ll_destroy_request(dev_p, rqt);
 }
-
 
 cy_as_return_status_t
 cy_as_storage_cancel_async(cy_as_device_handle handle)
@@ -2851,7 +2845,6 @@ cy_as_storage_func_callback(cy_as_device *dev_p,
 	cy_as_remove_c_b_node(dev_p->func_cbs_stor);
 }
 
-
 static void
 cy_as_sdio_sync_reply_callback(
 		cy_as_device *dev_p,
@@ -2940,7 +2933,6 @@ cy_as_sdio_direct_io(
 	if (ret != CY_AS_ERROR_SUCCESS)
 		return ret;
 
-
 	if (!(cy_as_sdio_check_function_initialized(handle,
 		bus, n_function_no)))
 		return CY_AS_ERROR_INVALID_FUNCTION;
@@ -3005,7 +2997,6 @@ destroy:
 		cy_as_ll_destroy_response(dev_p, reply_p);
 	return ret;
 }
-
 
 cy_as_return_status_t
 cy_as_sdio_direct_read(
@@ -3072,7 +3063,6 @@ cy_as_sdio_extended_i_o(
 	if (cy_as_sdio_check_function_suspended(handle, bus, n_function_no))
 		return CY_AS_ERROR_FUNCTION_SUSPENDED;
 
-
 	if ((cy_as_device_is_storage_async_pending(dev_p)) ||
 	(dev_p->storage_wait))
 		return CY_AS_ERROR_ASYNC_PENDING;
@@ -3133,7 +3123,6 @@ cy_as_sdio_extended_i_o(
 		((is_write == cy_true) ? 0x8000 : 0x0000));
 	cy_as_ll_request_response__set_word(req_p, 2,
 		((uint16_t)(address&0x0000ffff) << 9) |  argument);
-
 
 	/* Send the request and wait for completion of storage request */
 	dev_p->storage_wait = cy_true;
@@ -3249,7 +3238,6 @@ cy_as_sdio_async_reply_callback(
 		dev_p->storage_error = ret;
 }
 
-
 cy_as_return_status_t
 cy_as_sdio_extended_i_o_async(
 		cy_as_device_handle			handle,
@@ -3295,7 +3283,6 @@ cy_as_sdio_extended_i_o_async(
 		return CY_AS_ERROR_SUCCESS;
 	}
 
-
 	/*
 	 * since async operations can be triggered by interrupt
 	 * code, we must insure that we do not get multiple async
@@ -3310,7 +3297,6 @@ cy_as_sdio_extended_i_o_async(
 	}
 	cy_as_device_set_storage_async_pending(dev_p);
 	cy_as_hal_enable_interrupts(mask);
-
 
 	/*
 	 * storage information about the currently
@@ -3382,7 +3368,6 @@ cy_as_sdio_extended_i_o_async(
 		((is_write == cy_true) ? 0x8000 : 0x0000));
 	cy_as_ll_request_response__set_word(req_p, 2,
 		((uint16_t)(address&0x0000ffff) << 9) |  argument);
-
 
 	/* Send the request and wait for completion of storage request */
 	dev_p->storage_wait = cy_true;
@@ -3475,7 +3460,6 @@ cy_as_sdio_get_c_i_s_info(
 	if ((cy_as_device_is_storage_async_pending(dev_p)) ||
 	(dev_p->storage_wait))
 		return CY_AS_ERROR_ASYNC_PENDING;
-
 
 	/* Initialise the request to send to the Antioch. */
 	req_p = dev_p->storage_rw_req_p;
@@ -3882,7 +3866,6 @@ cy_as_sdio_abort_function(
 	else
 		ret = CY_AS_ERROR_INVALID_RESPONSE;
 
-
 destroy:
 	if (req_p != 0)
 		cy_as_ll_destroy_request(dev_p, req_p);
@@ -4120,6 +4103,5 @@ cy_as_sdio_de_init_function(
 
 	return CY_AS_ERROR_SUCCESS;
 }
-
 
 /*[]*/

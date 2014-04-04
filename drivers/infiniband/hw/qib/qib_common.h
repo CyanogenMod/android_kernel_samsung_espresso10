@@ -397,7 +397,6 @@ struct qib_user_info {
 #define QIB_EVENT_LMC_CHANGE_BIT	(1UL << _QIB_EVENT_LMC_CHANGE_BIT)
 #define QIB_EVENT_SL2VL_CHANGE_BIT	(1UL << _QIB_EVENT_SL2VL_CHANGE_BIT)
 
-
 /*
  * Poll types
  */

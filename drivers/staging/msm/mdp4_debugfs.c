@@ -36,9 +36,7 @@
 #include "msm_fb.h"
 #include "mdp4.h"
 
-
 #define MDP4_DEBUG_BUF	128
-
 
 static char mdp4_debug_buf[MDP4_DEBUG_BUF];
 static ulong mdp4_debug_offset;
@@ -62,7 +60,6 @@ DEFINE_SIMPLE_ATTRIBUTE(
 			mdp4_offset_set,
 			"%llx\n");
 
-
 static int mdp4_debugfs_release(struct inode *inode, struct file *file)
 {
 	return 0;
@@ -85,7 +82,6 @@ static ssize_t mdp4_debugfs_write(
 
 	if (copy_from_user(mdp4_debug_buf, buff, count))
 		return -EFAULT;
-
 
 	mdp4_debug_buf[count] = 0;	/* end of string */
 

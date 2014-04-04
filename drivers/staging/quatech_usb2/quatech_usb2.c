@@ -1930,7 +1930,6 @@ static int qt2_boxstoprx(struct usb_serial *serial, unsigned short uart_number,
 		QT2_STOP_RECEIVE, 0x40, stop, uart_number, NULL, 0, 300);
 }
 
-
 /*
  * last things in file: stuff to register this driver into the generic
  * USB serial framework.

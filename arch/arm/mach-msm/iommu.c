@@ -444,7 +444,6 @@ static int msm_iommu_map(struct iommu_domain *domain, unsigned long va,
 	sl_offset = SL_OFFSET(va);
 	sl_pte = sl_table + sl_offset;
 
-
 	if (len == SZ_4K)
 		*sl_pte = (pa & SL_BASE_MASK_SMALL) | SL_AP0 | SL_AP1 | SL_NG |
 					  SL_SHARED | SL_TYPE_SMALL | pgprot;

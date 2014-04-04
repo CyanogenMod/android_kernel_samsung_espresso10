@@ -18,7 +18,6 @@ struct rpc_rtt {
 	int ntimeouts[5];	/* Number of timeouts for the last request */
 };
 
-
 extern void rpc_init_rtt(struct rpc_rtt *rt, unsigned long timeo);
 extern void rpc_update_rtt(struct rpc_rtt *rt, unsigned timer, long m);
 extern unsigned long rpc_calc_rto(struct rpc_rtt *rt, unsigned timer);

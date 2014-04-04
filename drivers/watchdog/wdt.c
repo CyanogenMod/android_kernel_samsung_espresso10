@@ -305,7 +305,6 @@ static irqreturn_t wdt_interrupt(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 /**
  *	wdt_write:
  *	@file: file handle to the watchdog
@@ -520,7 +519,6 @@ static int wdt_notify_sys(struct notifier_block *this, unsigned long code,
 /*
  *	Kernel Interfaces
  */
-
 
 static const struct file_operations wdt_fops = {
 	.owner		= THIS_MODULE,

@@ -1263,5 +1263,4 @@
 
 #define MX35_PAD_TEST_MODE__TCU_TEST_MODE			IOMUX_PAD(0x790, 0x0,   0, 0x0,   0, NO_PAD_CTRL)
 
-
 #endif /* __MACH_IOMUX_MX35_H__ */

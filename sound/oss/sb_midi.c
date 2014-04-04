@@ -27,7 +27,6 @@
  * future version of this driver.
  */
 
-
 static int sb_midi_open(int dev, int mode,
 	     void            (*input) (int dev, unsigned char data),
 	     void            (*output) (int dev)
@@ -186,9 +185,8 @@ void sb_dsp_midi_init(sb_devc * devc, struct module *owner)
 
 	if (owner)
 			midi_devs[dev]->owner = owner;
-	
-	midi_devs[dev]->devc = devc;
 
+	midi_devs[dev]->devc = devc;
 
 	midi_devs[dev]->converter = kmalloc(sizeof(struct synth_operations), GFP_KERNEL);
 	if (midi_devs[dev]->converter == NULL)

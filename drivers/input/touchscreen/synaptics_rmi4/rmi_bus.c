@@ -403,7 +403,6 @@ int rmi_register_character_driver(struct rmi_char_driver *char_driver)
 }
 EXPORT_SYMBOL(rmi_register_character_driver);
 
-
 int rmi_unregister_character_driver(struct rmi_char_driver *char_driver)
 {
 	struct rmi_character_driver_list *entry, *n;

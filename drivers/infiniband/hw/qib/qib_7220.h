@@ -145,5 +145,4 @@ void set_7220_relock_poll(struct qib_devdata *, int);
 void shutdown_7220_relock_poll(struct qib_devdata *);
 void toggle_7220_rclkrls(struct qib_devdata *);
 
-
 #endif /* _QIB_7220_H */

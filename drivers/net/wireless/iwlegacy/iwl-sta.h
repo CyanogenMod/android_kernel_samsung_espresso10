@@ -42,7 +42,6 @@
 				(this is for the IBSS BSSID stations) */
 #define IWL_STA_BCAST BIT(4) /* this station is the special bcast station */
 
-
 void iwl_legacy_restore_stations(struct iwl_priv *priv,
 				struct iwl_rxon_context *ctx);
 void iwl_legacy_clear_ucode_stations(struct iwl_priv *priv,

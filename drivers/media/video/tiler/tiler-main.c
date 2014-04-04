@@ -1361,7 +1361,6 @@ cleanup:
 	return res;
 }
 
-
 /* get physical pages of a user block */
 struct tiler_pa_info *user_block_to_pa(u32 usr_addr, u32 num_pg)
 {

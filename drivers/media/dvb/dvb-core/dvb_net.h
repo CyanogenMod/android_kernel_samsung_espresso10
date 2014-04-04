@@ -40,7 +40,6 @@ struct dvb_net {
 	struct dmx_demux *demux;
 };
 
-
 void dvb_net_release(struct dvb_net *);
 int  dvb_net_init(struct dvb_adapter *, struct dvb_net *, struct dmx_demux *);
 

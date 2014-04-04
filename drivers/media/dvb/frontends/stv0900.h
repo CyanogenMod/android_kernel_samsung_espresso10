@@ -71,4 +71,3 @@ static inline struct dvb_frontend *stv0900_attach(const struct stv0900_config *c
 #endif
 
 #endif
-

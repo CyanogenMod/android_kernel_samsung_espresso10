@@ -102,7 +102,6 @@ static const struct snd_kcontrol_new stac9766_snd_ac97_controls[] = {
 	SOC_DOUBLE_TLV("Record Volume", AC97_REC_GAIN, 8, 0, 15, 0, record_tlv),
 	SOC_SINGLE("Record Switch", AC97_REC_GAIN, 15, 1, 1),
 
-
 	SOC_SINGLE_TLV("Beep Volume", AC97_PC_BEEP, 1, 15, 1, beep_tlv),
 	SOC_SINGLE("Beep Switch", AC97_PC_BEEP, 15, 1, 1),
 	SOC_SINGLE("Beep Frequency", AC97_PC_BEEP, 5, 127, 1),

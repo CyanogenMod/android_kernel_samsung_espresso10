@@ -42,7 +42,6 @@ int tm6000_read_write_usb(struct tm6000_core *dev, u8 req_type, u8 req,
 	if (len)
 		data = kzalloc(len, GFP_KERNEL);
 
-
 	if (req_type & USB_DIR_IN)
 		pipe = usb_rcvctrlpipe(dev->udev, 0);
 	else {
@@ -308,7 +307,7 @@ int tm6000_init_analog_mode(struct tm6000_core *dev)
 	 * FIXME: This is a hack! xc3028 "sleeps" when no channel is detected
 	 * for more than a few seconds. Not sure why, as this behavior does
 	 * not happen on other devices with xc3028. So, I suspect that it
-	 * is yet another bug at tm6000. After start sleeping, decoding 
+	 * is yet another bug at tm6000. After start sleeping, decoding
 	 * doesn't start automatically. Instead, it requires some
 	 * I2C commands to wake it up. As we want to have image at the
 	 * beginning, we needed to add this hack. The better would be to
@@ -613,7 +612,6 @@ int tm6000_set_audio_bitrate(struct tm6000_core *dev, int bitrate)
 	default:
 		return -EINVAL;
 	}
-
 
 	/* enable I2S, if we use sif or external I2S device */
 	if (dev->dev_type == TM6010) {

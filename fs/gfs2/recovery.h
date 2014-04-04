@@ -33,4 +33,3 @@ extern int gfs2_recover_journal(struct gfs2_jdesc *gfs2_jd, bool wait);
 extern void gfs2_recover_func(struct work_struct *work);
 
 #endif /* __RECOVERY_DOT_H__ */
-

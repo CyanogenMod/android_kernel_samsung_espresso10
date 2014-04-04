@@ -803,7 +803,6 @@ static int sr030pc30_detect(struct i2c_client *client)
 	return ret == SR030PC30_ID ? 0 : -ENODEV;
 }
 
-
 static int sr030pc30_probe(struct i2c_client *client,
 			   const struct i2c_device_id *id)
 {
@@ -855,7 +854,6 @@ static const struct i2c_device_id sr030pc30_id[] = {
 	{ },
 };
 MODULE_DEVICE_TABLE(i2c, sr030pc30_id);
-
 
 static struct i2c_driver sr030pc30_i2c_driver = {
 	.driver = {

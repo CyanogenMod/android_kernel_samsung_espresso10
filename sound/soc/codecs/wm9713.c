@@ -234,7 +234,6 @@ static int wm9713_voice_shutdown(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
-
 /* We have to create a fake left and right HP mixers because
  * the codec only has a single control that is shared by both channels.
  * This makes it impossible to determine the audio path using the current

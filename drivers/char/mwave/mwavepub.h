@@ -52,7 +52,6 @@
 
 #include <linux/miscdevice.h>
 
-
 typedef struct _MW_ABILITIES {
 	unsigned long instr_per_sec;
 	unsigned long data_size;
@@ -64,7 +63,6 @@ typedef struct _MW_ABILITIES {
 	char mwave_os_name[16];
 	char bios_task_name[16];
 } MW_ABILITIES, *pMW_ABILITIES;
-
 
 typedef struct _MW_READWRITE {
 	unsigned short usDspAddress;	/* The dsp address */
@@ -84,6 +82,5 @@ typedef struct _MW_READWRITE {
 #define IOCTL_MW_UNREGISTER_IPC  _IOW(MWAVE_MINOR,10,int)
 #define IOCTL_MW_GET_IPC         _IOW(MWAVE_MINOR,11,int)
 #define IOCTL_MW_TRACE           _IOR(MWAVE_MINOR,12,MW_READWRITE)
-
 
 #endif

@@ -576,7 +576,7 @@ static int pppoe_release(struct socket *sock)
 
 	po = pppox_sk(sk);
 
-	if (sk->sk_state & (PPPOX_CONNECTED | PPPOX_BOUND)) {
+	if (sk->sk_state & (PPPOX_CONNECTED | PPPOX_BOUND | PPPOX_ZOMBIE)) {
 		dev_put(po->pppoe_dev);
 		po->pppoe_dev = NULL;
 	}
@@ -854,7 +854,6 @@ static int pppoe_sendmsg(struct kiocb *iocb, struct socket *sock,
 	error = -EMSGSIZE;
 	if (total_len > (dev->mtu + dev->hard_header_len))
 		goto end;
-
 
 	skb = sock_wmalloc(sk, total_len + dev->hard_header_len + 32,
 			   0, GFP_KERNEL);

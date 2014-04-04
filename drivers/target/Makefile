@@ -1,4 +1,3 @@
-
 target_core_mod-y		:= target_core_configfs.o \
 				   target_core_device.o \
 				   target_core_fabric_configfs.o \

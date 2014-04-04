@@ -471,7 +471,6 @@ struct mlx4_init_port_param {
 		if (((dev)->caps.port_mask & 1 << ((port) - 1)) ||	\
 		    ((dev)->caps.flags & MLX4_DEV_CAP_FLAG_IBOE))
 
-
 int mlx4_buf_alloc(struct mlx4_dev *dev, int size, int max_direct,
 		   struct mlx4_buf *buf);
 void mlx4_buf_free(struct mlx4_dev *dev, int size, struct mlx4_buf *buf);

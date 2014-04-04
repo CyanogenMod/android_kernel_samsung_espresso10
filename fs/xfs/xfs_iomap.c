@@ -44,7 +44,6 @@
 #include "xfs_iomap.h"
 #include "xfs_trace.h"
 
-
 #define XFS_WRITEIO_ALIGN(mp,off)	(((off) >> mp->m_writeio_log) \
 						<< mp->m_writeio_log)
 #define XFS_WRITE_IMAPS		XFS_BMAP_MAX_NMAP
@@ -400,7 +399,6 @@ xfs_iomap_write_delay(
 
 	extsz = xfs_get_extsz_hint(ip);
 	offset_fsb = XFS_B_TO_FSBT(mp, offset);
-
 
 	error = xfs_iomap_eof_want_preallocate(mp, ip, offset, count,
 				imap, XFS_WRITE_IMAPS, &prealloc);

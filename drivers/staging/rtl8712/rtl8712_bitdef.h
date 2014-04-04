@@ -16,4 +16,3 @@
 #include "rtl8712_debugctrl_bitdef.h"
 
 #endif /* __RTL8712_BITDEF_H__ */
-

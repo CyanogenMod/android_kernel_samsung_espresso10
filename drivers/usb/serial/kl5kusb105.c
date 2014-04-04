@@ -58,7 +58,6 @@ static int debug;
 #define DRIVER_AUTHOR "Utz-Uwe Haus <haus@uuhaus.de>, Johan Hovold <jhovold@gmail.com>"
 #define DRIVER_DESC "KLSI KL5KUSB105 chipset USB->Serial Converter driver"
 
-
 /*
  * Function prototypes
  */
@@ -133,11 +132,9 @@ struct klsi_105_private {
 	spinlock_t			lock;
 };
 
-
 /*
  * Handle vendor specific USB requests
  */
-
 
 #define KLSI_TIMEOUT	 5000 /* default urb timeout */
 
@@ -224,7 +221,6 @@ static int klsi_105_get_line_state(struct usb_serial_port *port,
 	kfree(status_buf);
 	return rc;
 }
-
 
 /*
  * Driver's tty interface functions
@@ -690,7 +686,6 @@ static int klsi_105_tiocmset(struct tty_struct *tty,
 	return retval;
 }
 
-
 static int __init klsi_105_init(void)
 {
 	int retval;
@@ -716,14 +711,12 @@ static void __exit klsi_105_exit(void)
 	usb_serial_deregister(&kl5kusb105d_device);
 }
 
-
 module_init(klsi_105_init);
 module_exit(klsi_105_exit);
 
 MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_LICENSE("GPL");
-
 
 module_param(debug, bool, S_IRUGO | S_IWUSR);
 MODULE_PARM_DESC(debug, "enable extensive debugging messages");

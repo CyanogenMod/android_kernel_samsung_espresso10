@@ -535,4 +535,3 @@ void __init nuc900_board_init(struct platform_device **device, int size)
 	spi_register_board_info(nuc900_spi_board_info,
 					ARRAY_SIZE(nuc900_spi_board_info));
 }
-

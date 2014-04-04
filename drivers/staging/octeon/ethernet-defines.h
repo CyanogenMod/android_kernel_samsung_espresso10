@@ -61,7 +61,6 @@
 
 #include "cvmx-config.h"
 
-
 #define OCTEON_ETHERNET_VERSION "1.9"
 
 #ifndef CONFIG_CAVIUM_RESERVE32
@@ -101,6 +100,5 @@
 #define FAU_NUM_PACKET_BUFFERS_TO_FREE (FAU_TOTAL_TX_TO_CLEAN - sizeof(uint32_t))
 
 #define TOTAL_NUMBER_OF_PORTS       (CVMX_PIP_NUM_INPUT_PORTS+1)
-
 
 #endif /* __ETHERNET_DEFINES_H__ */

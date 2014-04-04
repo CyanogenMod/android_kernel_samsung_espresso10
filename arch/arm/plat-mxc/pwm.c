@@ -18,13 +18,11 @@
 #include <linux/pwm.h>
 #include <mach/hardware.h>
 
-
 /* i.MX1 and i.MX21 share the same PWM function block: */
 
 #define MX1_PWMC    0x00   /* PWM Control Register */
 #define MX1_PWMS    0x04   /* PWM Sample Register */
 #define MX1_PWMP    0x08   /* PWM Period Register */
-
 
 /* i.MX27, i.MX31, i.MX35 share the same PWM function block: */
 
@@ -38,8 +36,6 @@
 #define MX3_PWMCR_CLKSRC_IPG_HIGH (2 << 16)
 #define MX3_PWMCR_CLKSRC_IPG      (1 << 16)
 #define MX3_PWMCR_EN              (1 << 0)
-
-
 
 struct pwm_device {
 	struct list_head	node;

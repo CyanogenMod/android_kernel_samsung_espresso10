@@ -290,7 +290,6 @@ static struct clk timer2_clk = {
 	.flags = ALWAYS_ENABLED, /* no LPSC, always enabled; c.f. spruep9a */
 };
 
-
 static struct clk ide_clk = {
 	.name = "ide",
 	.parent = &pll1_sysclk4,

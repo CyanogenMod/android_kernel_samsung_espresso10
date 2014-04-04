@@ -52,7 +52,6 @@ void iwl_free_isr_ict(struct iwl_priv *priv)
 	}
 }
 
-
 /* allocate dram shared table it is a PAGE_SIZE aligned
  * also reset all data related to ICT table interrupt.
  */
@@ -236,7 +235,6 @@ irqreturn_t iwl_isr_ict(int irq, void *data)
 	 */
 	inta_mask = iwl_read32(priv, CSR_INT_MASK);  /* just for debug */
 	iwl_write32(priv, CSR_INT_MASK, 0x00000000);
-
 
 	/* Ignore interrupt if there's nothing in NIC to service.
 	 * This may be due to IRQ shared with another device,

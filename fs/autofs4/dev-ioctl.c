@@ -234,7 +234,6 @@ static void autofs_dev_ioctl_fd_install(unsigned int fd, struct file *file)
 	spin_unlock(&files->file_lock);
 }
 
-
 /*
  * Open a file descriptor on the autofs mount point corresponding
  * to the given path and device number (aka. new_encode_dev(sb->s_dev)).
@@ -759,4 +758,3 @@ void autofs_dev_ioctl_exit(void)
 	misc_deregister(&_autofs_dev_ioctl_misc);
 	return;
 }
-

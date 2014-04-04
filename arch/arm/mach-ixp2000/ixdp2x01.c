@@ -127,12 +127,11 @@ void __init ixdp2x01_init_irq(void)
 	irq_set_chained_handler(IRQ_IXP2000_PCIB, ixdp2x01_irq_handler);
 }
 
-
 /*************************************************************************
  * IXDP2x01 memory map
  *************************************************************************/
 static struct map_desc ixdp2x01_io_desc __initdata = {
-	.virtual	= IXDP2X01_VIRT_CPLD_BASE, 
+	.virtual	= IXDP2X01_VIRT_CPLD_BASE,
 	.pfn		= __phys_to_pfn(IXDP2X01_PHYS_CPLD_BASE),
 	.length		= IXDP2X01_CPLD_REGION_SIZE,
 	.type		= MT_DEVICE
@@ -143,7 +142,6 @@ static void __init ixdp2x01_map_io(void)
 	ixp2000_map_io();
 	iotable_init(&ixdp2x01_io_desc, 1);
 }
-
 
 /*************************************************************************
  * IXDP2x01 serial ports
@@ -186,7 +184,7 @@ static struct plat_serial8250_port ixdp2x01_serial_port2[] = {
 		.iotype		= UPIO_MEM32,
 		.regshift	= 2,
 		.uartclk	= IXDP2X01_UART_CLK,
-	}, 
+	},
 	{ }
 };
 
@@ -211,7 +209,6 @@ static void ixdp2x01_uart_init(void)
 	platform_device_register(&ixdp2x01_serial_device1);
 	platform_device_register(&ixdp2x01_serial_device2);
 }
-
 
 /*************************************************************************
  * IXDP2x01 timer tick configuration
@@ -314,7 +311,6 @@ static int __init ixdp2x01_pci_map_irq(struct pci_dev *dev, u8 slot, u8 pin)
 	return -1;
 }
 
-
 static int ixdp2x01_pci_setup(int nr, struct pci_sys_data *sys)
 {
 	sys->mem_offset = 0xe0000000;
@@ -403,7 +399,7 @@ static void __init ixdp2x01_init_machine(void)
 {
 	ixp2000_reg_wrb(IXDP2X01_CPLD_FLASH_REG,
 		(IXDP2X01_CPLD_FLASH_BANK_MASK | IXDP2X01_CPLD_FLASH_INTERN));
-	
+
 	ixdp2x01_flash_data.nr_banks =
 		((*IXDP2X01_CPLD_FLASH_REG & IXDP2X01_CPLD_FLASH_BANK_MASK) + 1);
 
@@ -411,7 +407,6 @@ static void __init ixdp2x01_init_machine(void)
 	ixp2000_uart_init();
 	ixdp2x01_uart_init();
 }
-
 
 #ifdef CONFIG_ARCH_IXDP2401
 MACHINE_START(IXDP2401, "Intel IXDP2401 Development Platform")
@@ -447,5 +442,3 @@ MACHINE_START(IXDP28X5, "Intel IXDP2805/2855 Development Platform")
 	.init_machine	= ixdp2x01_init_machine,
 MACHINE_END
 #endif
-
-

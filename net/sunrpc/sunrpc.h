@@ -48,4 +48,3 @@ int svc_send_common(struct socket *sock, struct xdr_buf *xdr,
 		    struct page *tailpage, unsigned long tailoffset);
 
 #endif /* _NET_SUNRPC_SUNRPC_H */
-

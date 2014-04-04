@@ -634,7 +634,6 @@ static int veth_process_caps(struct veth_lpar_connection *cnx)
 		}
 	}
 
-
 	return HvLpEvent_Rc_Good;
 }
 

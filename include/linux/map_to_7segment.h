@@ -61,7 +61,6 @@
  */
 #include <linux/errno.h>
 
-
 #define BIT_SEG7_A		0
 #define BIT_SEG7_B		1
 #define BIT_SEG7_C		2
@@ -184,4 +183,3 @@ static __inline__ int map_to_seg7(struct seg7_conversion_map *map, int c)
 	SEG7_CONVERSION_MAP(_name,MAP_ASCII7SEG_ALPHANUM)
 
 #endif	/* MAP_TO_7SEGMENT_H */
-

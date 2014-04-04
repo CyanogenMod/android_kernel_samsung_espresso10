@@ -56,5 +56,4 @@
 
 #define NR_IRQS			(IRQ_ORION5X_GPIO_START + NR_GPIO_IRQS)
 
-
 #endif

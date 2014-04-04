@@ -118,7 +118,6 @@ static ssize_t f11_rezeroWait_store(struct device *dev,
 					 const char *buf, size_t count);
 #endif
 
-
 static void rmi_f11_free_memory(struct rmi_function_container *fc);
 
 static int rmi_f11_initialize(struct rmi_function_container *fc);
@@ -132,7 +131,6 @@ static int rmi_f11_reset(struct rmi_function_container *fc);
 static int rmi_f11_register_devices(struct rmi_function_container *fc);
 
 static void rmi_f11_free_devices(struct rmi_function_container *fc);
-
 
 static struct device_attribute attrs[] = {
 	__ATTR(flip, RMI_RW_ATTR, f11_flip_show, f11_flip_store),
@@ -149,7 +147,6 @@ static struct device_attribute attrs[] = {
 #endif
 	__ATTR(rezero, RMI_WO_ATTR, rmi_show_error, f11_rezero_store)
 };
-
 
 union f11_2d_commands {
 	struct {
@@ -608,7 +605,6 @@ static void rmi_f11_abs_pos_report(struct f11_2d_sensor *sensor,
 		w_min = max(1, w_min);
 	}
 #endif
-
 
 #ifdef ABS_MT_PRESSURE
 	input_report_abs(sensor->input, ABS_MT_PRESSURE, z);
@@ -1214,7 +1210,6 @@ static void rmi_f11_free_memory(struct rmi_function_container *fc)
 	}
 }
 
-
 static int rmi_f11_initialize(struct rmi_function_container *fc)
 {
 	struct rmi_device *rmi_dev = fc->rmi_dev;
@@ -1667,7 +1662,6 @@ static ssize_t f11_flip_store(struct device *dev,
 	fc = to_rmi_function_container(dev);
 	instance_data = fc->data;
 
-
 	if (sscanf(buf, "%u %u", &new_X, &new_Y) != 2)
 		return -EINVAL;
 	if (new_X < 0 || new_X > 1 || new_Y < 0 || new_Y > 1)
@@ -1701,7 +1695,6 @@ static ssize_t f11_swap_store(struct device *dev,
 
 	fc = to_rmi_function_container(dev);
 	instance_data = fc->data;
-
 
 	if (sscanf(buf, "%u", &newSwap) != 1)
 		return -EINVAL;
@@ -1741,7 +1734,6 @@ static ssize_t f11_relreport_store(struct device *dev,
 	fc = to_rmi_function_container(dev);
 	instance_data = fc->data;
 
-
 	if (sscanf(buf, "%u", &new_value) != 1)
 		return -EINVAL;
 	if (new_value < 0 || new_value > 1)
@@ -1777,7 +1769,6 @@ static ssize_t f11_offset_store(struct device *dev,
 
 	fc = to_rmi_function_container(dev);
 	instance_data = fc->data;
-
 
 	if (sscanf(buf, "%d %d", &new_X, &new_Y) != 2)
 		return -EINVAL;

@@ -189,7 +189,6 @@ extern uint16_t qla24xx_calc_iocbs(uint16_t);
 extern void qla24xx_build_scsi_iocbs(srb_t *, struct cmd_type_7 *, uint16_t);
 extern int qla24xx_dif_start_scsi(srb_t *);
 
-
 /*
  * Global Function Prototypes in qla_mbx.c source file.
  */

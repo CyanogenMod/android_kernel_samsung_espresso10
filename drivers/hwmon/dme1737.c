@@ -1694,7 +1694,6 @@ static const struct attribute_group dme1737_zone3_group = {
 	.attrs = dme1737_zone3_attr,
 };
 
-
 /* The following struct holds temp zone hysteresis related attributes, which
  * are not available in all chips. The following chips support them:
  * DME1737, SCH311x */
@@ -1858,7 +1857,6 @@ static struct attribute *dme1737_zone_chmod_attr[] = {
 static const struct attribute_group dme1737_zone_chmod_group = {
 	.attrs = dme1737_zone_chmod_attr,
 };
-
 
 /* The permissions of the following zone 3 attributes are changed to read-
  * writeable if the chip is *not* locked. Otherwise they stay read-only. */

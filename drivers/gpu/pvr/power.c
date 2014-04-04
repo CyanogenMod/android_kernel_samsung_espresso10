@@ -87,7 +87,6 @@ static IMG_BOOL _IsSystemStatePowered(PVRSRV_SYS_POWER_STATE eSystemPowerState)
 	return (IMG_BOOL)(eSystemPowerState < PVRSRV_SYS_POWER_STATE_D2);
 }
 
-
 IMG_EXPORT
 PVRSRV_ERROR PVRSRVPowerLock(IMG_UINT32	ui32CallerID,
 							 IMG_BOOL	bSystemPowerEvent)
@@ -116,7 +115,6 @@ PVRSRV_ERROR PVRSRVPowerLock(IMG_UINT32	ui32CallerID,
 		else if (bTryLock)
 		{
 
-
 			eError = PVRSRV_ERROR_RETRY;
 			break;
 		}
@@ -130,7 +128,6 @@ PVRSRV_ERROR PVRSRVPowerLock(IMG_UINT32	ui32CallerID,
 		OSPowerLockUnwrap();
 	}
 
-
 	if ((eError == PVRSRV_OK) &&
 		!bSystemPowerEvent &&
 		!_IsSystemStatePowered(psSysData->eCurrentPowerState))
@@ -143,7 +140,6 @@ PVRSRV_ERROR PVRSRVPowerLock(IMG_UINT32	ui32CallerID,
 	return eError;
 }
 
-
 IMG_EXPORT
 IMG_VOID PVRSRVPowerUnlock(IMG_UINT32	ui32CallerID)
 {
@@ -151,17 +147,14 @@ IMG_VOID PVRSRVPowerUnlock(IMG_UINT32	ui32CallerID)
 	OSPowerLockUnwrap();
 }
 
-
 static PVRSRV_ERROR PVRSRVDevicePrePowerStateKM_AnyVaCb(PVRSRV_POWER_DEV *psPowerDevice, va_list va)
 {
 	PVRSRV_DEV_POWER_STATE	eNewDevicePowerState;
 	PVRSRV_ERROR			eError;
 
-
 	IMG_BOOL				bAllDevices;
 	IMG_UINT32				ui32DeviceIndex;
 	PVRSRV_DEV_POWER_STATE	eNewPowerState;
-
 
 	bAllDevices = va_arg(va, IMG_BOOL);
 	ui32DeviceIndex = va_arg(va, IMG_UINT32);
@@ -186,7 +179,6 @@ static PVRSRV_ERROR PVRSRVDevicePrePowerStateKM_AnyVaCb(PVRSRV_POWER_DEV *psPowe
 				}
 			}
 
-
 			eError = SysDevicePrePowerState(psPowerDevice->ui32DeviceIndex,
 											eNewDevicePowerState,
 											psPowerDevice->eCurrentPowerState);
@@ -210,7 +202,6 @@ PVRSRV_ERROR PVRSRVDevicePrePowerStateKM(IMG_BOOL				bAllDevices,
 
 	SysAcquireData(&psSysData);
 
-
 	eError = List_PVRSRV_POWER_DEV_PVRSRV_ERROR_Any_va(psSysData->psPowerDeviceList,
 														&PVRSRVDevicePrePowerStateKM_AnyVaCb,
 														bAllDevices,
@@ -225,11 +216,9 @@ static PVRSRV_ERROR PVRSRVDevicePostPowerStateKM_AnyVaCb(PVRSRV_POWER_DEV *psPow
 	PVRSRV_DEV_POWER_STATE	eNewDevicePowerState;
 	PVRSRV_ERROR			eError;
 
-
 	IMG_BOOL				bAllDevices;
 	IMG_UINT32				ui32DeviceIndex;
 	PVRSRV_DEV_POWER_STATE	eNewPowerState;
-
 
 	bAllDevices = va_arg(va, IMG_BOOL);
 	ui32DeviceIndex = va_arg(va, IMG_UINT32);
@@ -279,7 +268,6 @@ PVRSRV_ERROR PVRSRVDevicePostPowerStateKM(IMG_BOOL					bAllDevices,
 
 	SysAcquireData(&psSysData);
 
-
 	eError = List_PVRSRV_POWER_DEV_PVRSRV_ERROR_Any_va(psSysData->psPowerDeviceList,
 														&PVRSRVDevicePostPowerStateKM_AnyVaCb,
 														bAllDevices,
@@ -288,7 +276,6 @@ PVRSRV_ERROR PVRSRVDevicePostPowerStateKM(IMG_BOOL					bAllDevices,
 
 	return eError;
 }
-
 
 IMG_EXPORT
 PVRSRV_ERROR PVRSRVSetDevicePowerStateKM(IMG_UINT32				ui32DeviceIndex,
@@ -310,9 +297,6 @@ PVRSRV_ERROR PVRSRVSetDevicePowerStateKM(IMG_UINT32				ui32DeviceIndex,
 	#if defined(PDUMP)
 	if (eNewPowerState == PVRSRV_DEV_POWER_STATE_DEFAULT)
 	{
-
-
-
 
 		eError = PVRSRVDevicePrePowerStateKM(IMG_FALSE, ui32DeviceIndex, PVRSRV_DEV_POWER_STATE_ON);
 		if(eError != PVRSRV_OK)
@@ -364,7 +348,6 @@ Exit:
 	return eError;
 }
 
-
 IMG_EXPORT
 PVRSRV_ERROR PVRSRVSystemPrePowerStateKM(PVRSRV_SYS_POWER_STATE eNewSysPowerState)
 {
@@ -373,7 +356,6 @@ PVRSRV_ERROR PVRSRVSystemPrePowerStateKM(PVRSRV_SYS_POWER_STATE eNewSysPowerStat
 	PVRSRV_DEV_POWER_STATE	eNewDevicePowerState;
 
 	SysAcquireData(&psSysData);
-
 
 	eError = PVRSRVPowerLock(KERNEL_ID, IMG_TRUE);
 	if(eError != PVRSRV_OK)
@@ -393,7 +375,6 @@ PVRSRV_ERROR PVRSRVSystemPrePowerStateKM(PVRSRV_SYS_POWER_STATE eNewSysPowerStat
 		{
 			eNewDevicePowerState = PVRSRV_DEV_POWER_STATE_OFF;
 		}
-
 
 		eError = PVRSRVDevicePrePowerStateKM(IMG_TRUE, 0, eNewDevicePowerState);
 		if (eError != PVRSRV_OK)
@@ -420,14 +401,12 @@ ErrorExit:
 			"PVRSRVSystemPrePowerStateKM: Transition from %d to %d FAILED 0x%x",
 			psSysData->eCurrentPowerState, eNewSysPowerState, eError));
 
-
 	psSysData->eFailedPowerState = eNewSysPowerState;
 
 	PVRSRVPowerUnlock(KERNEL_ID);
 
 	return eError;
 }
-
 
 IMG_EXPORT
 PVRSRV_ERROR PVRSRVSystemPostPowerStateKM(PVRSRV_SYS_POWER_STATE eNewSysPowerState)
@@ -461,7 +440,6 @@ PVRSRV_ERROR PVRSRVSystemPostPowerStateKM(PVRSRV_SYS_POWER_STATE eNewSysPowerSta
 			eNewDevicePowerState = PVRSRV_DEV_POWER_STATE_OFF;
 		}
 
-
 		eError = PVRSRVDevicePostPowerStateKM(IMG_TRUE, 0, eNewDevicePowerState);
 		if (eError != PVRSRV_OK)
 		{
@@ -479,19 +457,15 @@ Exit:
 
 	PVRSRVPowerUnlock(KERNEL_ID);
 
-
 	if (_IsSystemStatePowered(eNewSysPowerState) &&
 			PVRSRVGetInitServerState(PVRSRV_INIT_SERVER_SUCCESSFUL))
 	{
-
-
 
 		PVRSRVScheduleDeviceCallbacks();
 	}
 
 	return eError;
 }
-
 
 IMG_EXPORT
 PVRSRV_ERROR PVRSRVSetPowerStateKM(PVRSRV_SYS_POWER_STATE eNewSysPowerState)
@@ -513,7 +487,6 @@ PVRSRV_ERROR PVRSRVSetPowerStateKM(PVRSRV_SYS_POWER_STATE eNewSysPowerState)
 		goto ErrorExit;
 	}
 
-
 	psSysData->eFailedPowerState = PVRSRV_SYS_POWER_STATE_Unspecified;
 
 	return PVRSRV_OK;
@@ -524,12 +497,10 @@ ErrorExit:
 			"PVRSRVSetPowerStateKM: Transition from %d to %d FAILED 0x%x",
 			psSysData->eCurrentPowerState, eNewSysPowerState, eError));
 
-
 	psSysData->eFailedPowerState = eNewSysPowerState;
 
 	return eError;
 }
-
 
 PVRSRV_ERROR PVRSRVRegisterPowerDevice(IMG_UINT32					ui32DeviceIndex,
 									   PFN_PRE_POWER				pfnPrePower,
@@ -562,7 +533,6 @@ PVRSRV_ERROR PVRSRVRegisterPowerDevice(IMG_UINT32					ui32DeviceIndex,
 		return eError;
 	}
 
-
 	psPowerDevice->pfnPrePower = pfnPrePower;
 	psPowerDevice->pfnPostPower = pfnPostPower;
 	psPowerDevice->pfnPreClockSpeedChange = pfnPreClockSpeedChange;
@@ -572,12 +542,10 @@ PVRSRV_ERROR PVRSRVRegisterPowerDevice(IMG_UINT32					ui32DeviceIndex,
 	psPowerDevice->eCurrentPowerState = eCurrentPowerState;
 	psPowerDevice->eDefaultPowerState = eDefaultPowerState;
 
-
 	List_PVRSRV_POWER_DEV_Insert(&(psSysData->psPowerDeviceList), psPowerDevice);
 
 	return (PVRSRV_OK);
 }
-
 
 PVRSRV_ERROR PVRSRVRemovePowerDevice (IMG_UINT32 ui32DeviceIndex)
 {
@@ -585,7 +553,6 @@ PVRSRV_ERROR PVRSRVRemovePowerDevice (IMG_UINT32 ui32DeviceIndex)
 	PVRSRV_POWER_DEV	*psPowerDev;
 
 	SysAcquireData(&psSysData);
-
 
 	psPowerDev = (PVRSRV_POWER_DEV*)
 					List_PVRSRV_POWER_DEV_Any_va(psSysData->psPowerDeviceList,
@@ -602,7 +569,6 @@ PVRSRV_ERROR PVRSRVRemovePowerDevice (IMG_UINT32 ui32DeviceIndex)
 	return (PVRSRV_OK);
 }
 
-
 IMG_EXPORT
 IMG_BOOL PVRSRVIsDevicePowered(IMG_UINT32 ui32DeviceIndex)
 {
@@ -610,7 +576,6 @@ IMG_BOOL PVRSRVIsDevicePowered(IMG_UINT32 ui32DeviceIndex)
 	PVRSRV_POWER_DEV	*psPowerDevice;
 
 	SysAcquireData(&psSysData);
-
 
 	if (OSIsResourceLocked(&psSysData->sPowerStateChangeResource, KERNEL_ID) ||
 		OSIsResourceLocked(&psSysData->sPowerStateChangeResource, ISR_ID))
@@ -625,7 +590,6 @@ IMG_BOOL PVRSRVIsDevicePowered(IMG_UINT32 ui32DeviceIndex)
 	return (psPowerDevice && (psPowerDevice->eCurrentPowerState == PVRSRV_DEV_POWER_STATE_ON))
 			? IMG_TRUE : IMG_FALSE;
 }
-
 
 PVRSRV_ERROR PVRSRVDevicePreClockSpeedChange(IMG_UINT32	ui32DeviceIndex,
 											 IMG_BOOL	bIdleDevice,
@@ -649,7 +613,6 @@ PVRSRV_ERROR PVRSRVDevicePreClockSpeedChange(IMG_UINT32	ui32DeviceIndex,
 			return eError;
 		}
 	}
-
 
 	psPowerDevice = (PVRSRV_POWER_DEV*)
 					List_PVRSRV_POWER_DEV_Any_va(psSysData->psPowerDeviceList,
@@ -677,7 +640,6 @@ PVRSRV_ERROR PVRSRVDevicePreClockSpeedChange(IMG_UINT32	ui32DeviceIndex,
 	return eError;
 }
 
-
 IMG_VOID PVRSRVDevicePostClockSpeedChange(IMG_UINT32	ui32DeviceIndex,
 										  IMG_BOOL		bIdleDevice,
 										  IMG_VOID		*pvInfo)
@@ -689,7 +651,6 @@ IMG_VOID PVRSRVDevicePostClockSpeedChange(IMG_UINT32	ui32DeviceIndex,
 	PVR_UNREFERENCED_PARAMETER(pvInfo);
 
 	SysAcquireData(&psSysData);
-
 
 	psPowerDevice = (PVRSRV_POWER_DEV*)
 					List_PVRSRV_POWER_DEV_Any_va(psSysData->psPowerDeviceList,
@@ -708,7 +669,6 @@ IMG_VOID PVRSRVDevicePostClockSpeedChange(IMG_UINT32	ui32DeviceIndex,
 					ui32DeviceIndex, eError));
 		}
 	}
-
 
 	if (bIdleDevice)
 	{

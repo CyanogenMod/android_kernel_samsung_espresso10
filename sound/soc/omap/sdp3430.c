@@ -257,7 +257,6 @@ static int sdp3430_twl4030_voice_init(struct snd_soc_pcm_runtime *rtd)
 	return 0;
 }
 
-
 /* Digital audio interface glue - connects codec <--> CPU */
 static struct snd_soc_dai_link sdp3430_dai[] = {
 	{
@@ -342,4 +341,3 @@ module_exit(sdp3430_soc_exit);
 MODULE_AUTHOR("Misael Lopez Cruz <x0052729@ti.com>");
 MODULE_DESCRIPTION("ALSA SoC SDP3430");
 MODULE_LICENSE("GPL");
-

@@ -17,7 +17,6 @@
 
 #include "ssb_private.h"
 
-
 static inline u32 mips_read32(struct ssb_mipscore *mcore,
 			      u16 offset)
 {

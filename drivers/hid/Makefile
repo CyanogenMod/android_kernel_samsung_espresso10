@@ -78,4 +78,3 @@ obj-$(CONFIG_HID_WALTOP)	+= hid-waltop.o
 obj-$(CONFIG_USB_HID)		+= usbhid/
 obj-$(CONFIG_USB_MOUSE)		+= usbhid/
 obj-$(CONFIG_USB_KBD)		+= usbhid/
-

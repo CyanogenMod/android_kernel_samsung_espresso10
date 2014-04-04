@@ -190,7 +190,6 @@
 #define WOL_WAKECSR_FILT_BCAST	0x00000020
 #define WOL_WAKECSR_FILT_SEEN	0x00000040
 
-
 /* Receive DMA Registers */
 #define RXDMA_CFG	0x4000UL	/* RX Configuration Register	*/
 #define RXDMA_DBLOW	0x4004UL	/* RX Descriptor Base Low	*/

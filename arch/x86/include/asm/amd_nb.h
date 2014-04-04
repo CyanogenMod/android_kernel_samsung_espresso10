@@ -62,5 +62,4 @@ static inline struct amd_northbridge *node_to_amd_nb(int node)
 
 #endif
 
-
 #endif /* _ASM_X86_AMD_NB_H */

@@ -5,7 +5,6 @@
 
 #include "b43.h"
 
-
 /* DMA-Interrupt reasons. */
 #define B43_DMAIRQ_FATALMASK	((1 << 10) | (1 << 11) | (1 << 12) \
 					 | (1 << 14) | (1 << 15))
@@ -168,7 +167,6 @@ struct b43_dmadesc_generic {
 /* Pointer poison */
 #define B43_DMA_PTR_POISON		((void *)ERR_PTR(-ENOMEM))
 #define b43_dma_ptr_is_poisoned(ptr)	(unlikely((ptr) == B43_DMA_PTR_POISON))
-
 
 struct sk_buff;
 struct b43_private;

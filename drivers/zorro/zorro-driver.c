@@ -14,7 +14,6 @@
 #include <linux/module.h>
 #include <linux/zorro.h>
 
-
     /**
      *  zorro_match_device - Tell if a Zorro device structure has a matching
      *                       Zorro device id structure
@@ -38,7 +37,6 @@ zorro_match_device(const struct zorro_device_id *ids,
 	return NULL;
 }
 
-
 static int zorro_device_probe(struct device *dev)
 {
 	int error = 0;
@@ -59,7 +57,6 @@ static int zorro_device_probe(struct device *dev)
 	return error;
 }
 
-
 static int zorro_device_remove(struct device *dev)
 {
 	struct zorro_dev *z = to_zorro_dev(dev);
@@ -72,7 +69,6 @@ static int zorro_device_remove(struct device *dev)
 	}
 	return 0;
 }
-
 
     /**
      *  zorro_register_driver - register a new Zorro driver
@@ -92,7 +88,6 @@ int zorro_register_driver(struct zorro_driver *drv)
 	return driver_register(&drv->driver);
 }
 
-
     /**
      *  zorro_unregister_driver - unregister a zorro driver
      *  @drv: the driver structure to unregister
@@ -107,7 +102,6 @@ void zorro_unregister_driver(struct zorro_driver *drv)
 {
 	driver_unregister(&drv->driver);
 }
-
 
     /**
      *  zorro_bus_match - Tell if a Zorro device structure has a matching Zorro
@@ -168,7 +162,6 @@ struct bus_type zorro_bus_type = {
 	.probe	= zorro_device_probe,
 	.remove	= zorro_device_remove,
 };
-
 
 static int __init zorro_driver_init(void)
 {

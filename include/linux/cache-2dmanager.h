@@ -55,5 +55,4 @@ void c2dm_l1cache(int count, struct c2dmrgn rgns[], int dir);
  */
 void c2dm_l2cache(int count, struct c2dmrgn rgns[], int dir);
 
-
 #endif /* CACHE_2DMANAGER_H_ */

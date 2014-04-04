@@ -157,7 +157,6 @@ error:
 	return NULL;
 }
 
-
 static struct dvb_frontend_ops vp7045_fe_ops = {
 	.info = {
 		.name			= "Twinhan VP7045/46 USB DVB-T",

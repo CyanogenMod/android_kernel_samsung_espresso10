@@ -262,5 +262,4 @@ struct e1000_hw {
 void e1000_rlpml_set_vf(struct e1000_hw *, u16);
 void e1000_init_function_pointers_vf(struct e1000_hw *hw);
 
-
 #endif /* _E1000_VF_H_ */

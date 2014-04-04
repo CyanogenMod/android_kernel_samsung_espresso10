@@ -62,7 +62,6 @@ config FB_MSM_LCDC_PRISM_WVGA_PANEL
 	---help---
 	  Support for LCDC Prism WVGA (800x480) panel
 
-
 config FB_MSM_LCDC_ST15_PANEL
         depends on FB_MSM_LCDC_HW
         bool "LCDC ST1.5 Panel"

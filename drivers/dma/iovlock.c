@@ -139,7 +139,6 @@ void dma_unpin_iovec_pages(struct dma_pinned_list *pinned_list)
 	kfree(pinned_list);
 }
 
-
 /*
  * We have already pinned down the pages we will be using in the iovecs.
  * Each entry in iov array has corresponding entry in pinned_list->page_list.

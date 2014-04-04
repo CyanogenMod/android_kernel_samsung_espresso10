@@ -242,7 +242,6 @@ static inline bool atmci_is_mci2(void)
 	return false;
 }
 
-
 /*
  * The debugfs stuff below is mostly optimized away when
  * CONFIG_DEBUG_FS is not set.
@@ -1536,7 +1535,6 @@ static void atmci_sdio_interrupt(struct atmel_mci *host, u32 status)
 		}
 	}
 }
-
 
 static irqreturn_t atmci_interrupt(int irq, void *dev_id)
 {

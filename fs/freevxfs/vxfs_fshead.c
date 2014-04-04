@@ -41,7 +41,6 @@
 #include "vxfs_extern.h"
 #include "vxfs_fshead.h"
 
-
 #ifdef DIAGNOSTIC
 static void
 vxfs_dumpfsh(struct vxfs_fsh *fhp)
@@ -117,10 +116,9 @@ vxfs_read_fshead(struct super_block *sbp)
 	}
 	if (!VXFS_ISFSH(vip)) {
 		printk(KERN_ERR "vxfs: fsh list inode is of wrong type (%x)\n",
-				vip->vii_mode & VXFS_TYPE_MASK); 
+				vip->vii_mode & VXFS_TYPE_MASK);
 		goto out_free_fship;
 	}
-
 
 #ifdef DIAGNOSTIC
 	printk("vxfs: fsh inode dump:\n");
@@ -137,7 +135,7 @@ vxfs_read_fshead(struct super_block *sbp)
 	if (!sfp) {
 		printk(KERN_ERR "vxfs: unable to get structural fsh\n");
 		goto out_iput_fship;
-	} 
+	}
 
 #ifdef DIAGNOSTIC
 	vxfs_dumpfsh(sfp);
@@ -165,7 +163,7 @@ vxfs_read_fshead(struct super_block *sbp)
 	}
 	if (!VXFS_ISILT(VXFS_INO(infp->vsi_stilist))) {
 		printk(KERN_ERR "vxfs: structural list inode is of wrong type (%x)\n",
-				VXFS_INO(infp->vsi_stilist)->vii_mode & VXFS_TYPE_MASK); 
+				VXFS_INO(infp->vsi_stilist)->vii_mode & VXFS_TYPE_MASK);
 		goto out_iput_stilist;
 	}
 

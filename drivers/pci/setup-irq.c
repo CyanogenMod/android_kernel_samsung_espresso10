@@ -9,14 +9,12 @@
  * Support routines for initializing a PCI subsystem.
  */
 
-
 #include <linux/init.h>
 #include <linux/kernel.h>
 #include <linux/pci.h>
 #include <linux/errno.h>
 #include <linux/ioport.h>
 #include <linux/cache.h>
-
 
 static void __init
 pdev_fixup_irq(struct pci_dev *dev,

@@ -116,7 +116,6 @@
 /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
 static const char *fb_mode;
 
-
 /*
  * These are the bitfields for each
  * display depth that we support.

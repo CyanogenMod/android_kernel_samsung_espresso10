@@ -742,4 +742,3 @@ ahd_scb_scsiid_print(u_int regvalue, u_int *cur_col, u_int wrap)
 	return (ahd_print_register(SCB_SCSIID_parse_table, 2, "SCB_SCSIID",
 	    0x193, regvalue, cur_col, wrap));
 }
-

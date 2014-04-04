@@ -474,7 +474,6 @@ static const u64 fix_mac[] = {
 MODULE_LICENSE("GPL");
 MODULE_VERSION(DRV_VERSION);
 
-
 /* Module Loadable parameters. */
 S2IO_PARM_INT(tx_fifo_num, FIFO_DEFAULT_NUM);
 S2IO_PARM_INT(rx_ring_num, 1);
@@ -6618,7 +6617,6 @@ static int s2io_ethtool_get_regs_len(struct net_device *dev)
 	return XENA_REG_SPACE;
 }
 
-
 static int s2io_get_eeprom_len(struct net_device *dev)
 {
 	return XENA_EEPROM_SPACE;
@@ -7846,7 +7844,6 @@ s2io_init_nic(struct pci_dev *pdev, const struct pci_device_id *pre)
 	else
 		sp->device_type = XFRAME_I_DEVICE;
 
-
 	/* Initialize some PCI/PCI-X fields of the NIC. */
 	s2io_init_pci(sp);
 
@@ -7902,7 +7899,6 @@ s2io_init_nic(struct pci_dev *pdev, const struct pci_device_id *pre)
 	for (i = 0; i < config->tx_fifo_num; i++)
 		sp->fifo_selector[i] = fifo_selector[i];
 
-
 	config->tx_intr_type = TXD_INT_TYPE_UTILZ;
 	for (i = 0; i < config->tx_fifo_num; i++) {
 		struct tx_fifo_config *tx_cfg = &config->tx_cfg[i];
@@ -7942,7 +7938,6 @@ s2io_init_nic(struct pci_dev *pdev, const struct pci_device_id *pre)
 	mac_control->rmac_pause_time = rmac_pause_time;
 	mac_control->mc_pause_threshold_q0q3 = mc_pause_threshold_q0q3;
 	mac_control->mc_pause_threshold_q4q7 = mc_pause_threshold_q4q7;
-
 
 	/*  initialize the shared memory used by the NIC and the host */
 	if (init_shared_mem(sp)) {

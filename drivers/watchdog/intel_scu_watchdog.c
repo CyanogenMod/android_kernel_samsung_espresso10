@@ -283,7 +283,6 @@ static int intel_scu_set_heartbeat(u32 t)
 		hw_value = ioread32(watchdog_device.timer_load_count_addr);
 		hw_value = hw_value & 0xFFFF0000;
 
-
 	} while (soft_value != hw_value);
 
 	watchdog_device.timer_started = 1;
@@ -370,7 +369,6 @@ static long intel_scu_ioctl(struct file *file,
 	void __user *argp = (void __user *)arg;
 	u32 __user *p = argp;
 	u32 new_margin;
-
 
 	static const struct watchdog_info ident = {
 		.options =          WDIOF_SETTIMEOUT
@@ -505,7 +503,6 @@ static int __init intel_scu_watchdog_init(void)
 	watchdog_device.soft_threshold =
 		(watchdog_device.timer_set - timer_margin)
 		* watchdog_device.timer_tbl_ptr->freq_hz;
-
 
 	watchdog_device.intel_scu_notifier.notifier_call =
 		intel_scu_notify_sys;

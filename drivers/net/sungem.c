@@ -1258,7 +1258,6 @@ static void gem_stop_dma(struct gem *gp)
 	/* Need to wait a bit ... done by the caller */
 }
 
-
 /* Must be invoked under gp->lock and gp->tx_lock. */
 // XXX dbl check what that function should do when called on PCS PHY
 static void gem_begin_auto_negotiation(struct gem *gp, struct ethtool_cmd *ep)
@@ -1939,7 +1938,6 @@ static void gem_init_pause_thresholds(struct gem *gp)
 		gp->rx_pause_on = on;
 	}
 
-
 	/* Configure the chip "burst" DMA mode & enable some
 	 * HW bug fixes on Apple version
 	 */
@@ -2099,7 +2097,6 @@ static void gem_reinit_chip(struct gem *gp)
 	gem_init_mac(gp);
 }
 
-
 /* Must be invoked with no lock held. */
 static void gem_stop_phy(struct gem *gp, int wol)
 {
@@ -2174,7 +2171,6 @@ static void gem_stop_phy(struct gem *gp, int wol)
 		(void) readl(gp->regs + MAC_XIFCFG);
 	}
 }
-
 
 static int gem_do_start(struct net_device *dev)
 {
@@ -2301,7 +2297,6 @@ static void gem_reset_task(struct work_struct *work)
 	mutex_unlock(&gp->pm_mutex);
 }
 
-
 static int gem_open(struct net_device *dev)
 {
 	struct gem *gp = netdev_priv(dev);
@@ -2363,7 +2358,7 @@ static int gem_suspend(struct pci_dev *pdev, pm_message_t state)
 		netif_device_detach(dev);
 
 		/* Switch off MAC, remember WOL setting */
-		gp->asleep_wol = gp->wake_on_lan;
+		gp->asleep_wol = !!gp->wake_on_lan;
 		gem_do_stop(dev, gp->asleep_wol);
 	} else
 		gp->asleep_wol = 0;
@@ -2538,7 +2533,6 @@ static void gem_set_multicast(struct net_device *dev)
 	struct gem *gp = netdev_priv(dev);
 	u32 rxcfg, rxcfg_new;
 	int limit = 10000;
-
 
 	spin_lock_irq(&gp->lock);
 	spin_lock(&gp->tx_lock);
@@ -2743,7 +2737,6 @@ static void gem_set_msglevel(struct net_device *dev, u32 value)
 	struct gem *gp = netdev_priv(dev);
 	gp->msg_enable = value;
 }
-
 
 /* Add more when I understand how to program the chip */
 /* like WAKE_UCAST | WAKE_MCAST | WAKE_BCAST */
@@ -3170,7 +3163,6 @@ err_disable_device:
 	return err;
 
 }
-
 
 static struct pci_driver gem_driver = {
 	.name		= GEM_MODULE_NAME,

@@ -22,7 +22,6 @@
 #ifndef WD33C93_H
 #define WD33C93_H
 
-
 #define PROC_INTERFACE     /* add code for /proc/scsi/wd33c93/xxx interface */
 #ifdef  PROC_INTERFACE
 #define PROC_STATISTICS    /* add code for keeping various real time stats */
@@ -32,7 +31,6 @@
 #define DEBUGGING_ON       /* enable command-line debugging bitmask */
 #define DEBUG_DEFAULTS 0   /* default debugging bitmask */
 
-
 #ifdef DEBUGGING_ON
 #define DB(f,a) if (hostdata->args & (f)) a;
 #else
@@ -40,7 +38,6 @@
 #endif
 
 #define uchar unsigned char
-
 
 /* wd register names */
 #define WD_OWN_ID    0x00
@@ -199,11 +196,9 @@ typedef struct {
 #endif
 } wd33c93_regs;
 
-
 typedef int (*dma_setup_t) (struct scsi_cmnd *SCpnt, int dir_in);
 typedef void (*dma_stop_t) (struct Scsi_Host *instance,
 		struct scsi_cmnd *SCpnt, int status);
-
 
 #define ILLEGAL_STATUS_BYTE   0xff
 
@@ -272,7 +267,6 @@ struct WD33C93_hostdata {
 #endif
     };
 
-
 /* defines for hostdata->chip */
 
 #define C_WD33C93       0
@@ -338,7 +332,6 @@ struct WD33C93_hostdata {
 #define PR_DISCQ     1<<5
 #define PR_TEST      1<<6
 #define PR_STOP      1<<7
-
 
 void wd33c93_init (struct Scsi_Host *instance, const wd33c93_regs regs,
          dma_setup_t setup, dma_stop_t stop, int clock_freq);

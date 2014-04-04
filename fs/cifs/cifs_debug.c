@@ -66,7 +66,6 @@ void cifs_dump_detail(struct smb_hdr *smb)
 	cERROR(1, "smb buf %p len %d", smb, smbCalcSize(smb));
 }
 
-
 void cifs_dump_mids(struct TCP_Server_Info *server)
 {
 	struct list_head *tmp;

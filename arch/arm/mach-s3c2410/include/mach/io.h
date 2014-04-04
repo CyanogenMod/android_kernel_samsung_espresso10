@@ -46,7 +46,6 @@ static inline void __out##fnsuffix (unsigned int val, unsigned int port) \
 	: "cc");					      \
 }
 
-
 #define DECLARE_DYN_IN(sz,fnsuffix,instr)				\
 static inline unsigned sz __in##fnsuffix (unsigned int port)		\
 {									\

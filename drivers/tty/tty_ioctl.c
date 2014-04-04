@@ -36,7 +36,6 @@
 #define TERMIOS_TERMIO	4
 #define TERMIOS_OLD	8
 
-
 /**
  *	tty_chars_in_buffer	-	characters pending
  *	@tty: terminal
@@ -65,7 +64,7 @@ EXPORT_SYMBOL(tty_chars_in_buffer);
  *	the number of bytes written. If no method is provided 2K is always
  *	returned and data may be lost as there will be no flow control.
  */
- 
+
 int tty_write_room(struct tty_struct *tty)
 {
 	if (tty->ops->write_room)
@@ -160,7 +159,6 @@ void tty_wait_until_sent(struct tty_struct *tty, long timeout)
 	}
 }
 EXPORT_SYMBOL(tty_wait_until_sent);
-
 
 /*
  *		Termios Helper Methods
@@ -505,7 +503,6 @@ int tty_set_termios(struct tty_struct *tty, struct ktermios *new_termios)
 	 *	Perform the actual termios internal changes under lock.
 	 */
 
-
 	/* FIXME: we need to decide on some locking/ordering semantics
 	   for the set_termios notification eventually */
 	mutex_lock(&tty->termios_mutex);
@@ -617,7 +614,7 @@ static int set_termios(struct tty_struct *tty, void __user *arg, int opt)
 	if (opt & TERMIOS_WAIT) {
 		tty_wait_until_sent(tty, 0);
 		if (signal_pending(current))
-			return -EINTR;
+			return -ERESTARTSYS;
 	}
 
 	tty_set_termios(tty, &tmp_termios);
@@ -652,7 +649,6 @@ static int get_termio(struct tty_struct *tty, struct termio __user *termio)
 	return 0;
 }
 
-
 #ifdef TCGETX
 
 /**
@@ -684,7 +680,7 @@ static int set_termiox(struct tty_struct *tty, void __user *arg, int opt)
 	if (opt & TERMIOS_WAIT) {
 		tty_wait_until_sent(tty, 0);
 		if (signal_pending(current))
-			return -EINTR;
+			return -ERESTARTSYS;
 	}
 
 	mutex_lock(&tty->termios_mutex);
@@ -695,7 +691,6 @@ static int set_termiox(struct tty_struct *tty, void __user *arg, int opt)
 }
 
 #endif
-
 
 #ifdef TIOCGETP
 /*
@@ -1070,7 +1065,7 @@ int tty_mode_ioctl(struct tty_struct *tty, struct file *file,
 		return set_termiox(real_tty, p, TERMIOS_WAIT);
 	case TCSETXF:
 		return set_termiox(real_tty, p, TERMIOS_FLUSH);
-#endif		
+#endif
 	case TIOCGSOFTCAR:
 		copy_termios(real_tty, &kterm);
 		ret = put_user((kterm.c_cflag & CLOCAL) ? 1 : 0,

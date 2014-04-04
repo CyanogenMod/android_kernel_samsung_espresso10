@@ -73,7 +73,6 @@
 #undef RC_REPORT_FIFO
 #undef RC_REPORT_OVERRUN
 
-
 #define RISCOM_LEGAL_FLAGS \
 	(ASYNC_HUP_NOTIFY   | ASYNC_SAK          | ASYNC_SPLIT_TERMIOS   | \
 	 ASYNC_SPD_HI       | ASYNC_SPEED_VHI    | ASYNC_SESSION_LOCKOUT | \
@@ -111,7 +110,6 @@ static unsigned short rc_ioport[] =  {
 #endif
 };
 #define RC_NIOPORT	ARRAY_SIZE(rc_ioport)
-
 
 static int rc_paranoia_check(struct riscom_port const *port,
 				    char *name, const char *routine)
@@ -863,7 +861,7 @@ static int carrier_raised(struct tty_port *port)
 	struct riscom_board *bp = port_Board(p);
 	unsigned long flags;
 	int CD;
-	
+
 	spin_lock_irqsave(&riscom_lock, flags);
 	rc_out(bp, CD180_CAR, port_No(p));
 	CD = rc_in(bp, CD180_MSVR) & MSVR_CD;
@@ -933,7 +931,7 @@ static void rc_close_port(struct tty_port *port)
 	struct riscom_port *rp = container_of(port, struct riscom_port, port);
 	struct riscom_board *bp = port_Board(rp);
 	unsigned long timeout;
-	
+
 	/*
 	 * At this point we stop accepting input.  To do this, we
 	 * disable the receive line status interrupts, and tell the
@@ -1399,7 +1397,6 @@ static const struct tty_port_operations riscom_port_ops = {
 	.shutdown = rc_close_port,
 	.activate = rc_activate_port,
 };
-
 
 static int __init rc_init_drivers(void)
 {

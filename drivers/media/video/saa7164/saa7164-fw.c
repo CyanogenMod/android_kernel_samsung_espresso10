@@ -359,7 +359,6 @@ int saa7164_downloadfirmware(struct saa7164_dev *dev)
 			(saa7164_readl(SAA_SECONDSTAGEERROR_FLAGS) ==
 			SAA_DEVICE_IMAGE_BOOTING)) {
 
-
 			dprintk(DBGLVL_FW, "%s() Loader 2 has loaded.\n",
 				__func__);
 

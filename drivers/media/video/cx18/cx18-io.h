@@ -146,7 +146,6 @@ void cx18_memcpy_fromio(struct cx18 *cx, void *to,
 
 void cx18_memset_io(struct cx18 *cx, void __iomem *addr, int val, size_t count);
 
-
 /* Access "register" region of CX23418 memory mapped I/O */
 static inline void cx18_write_reg_noretry(struct cx18 *cx, u32 val, u32 reg)
 {
@@ -168,7 +167,6 @@ static inline u32 cx18_read_reg(struct cx18 *cx, u32 reg)
 {
 	return cx18_readl(cx, cx->reg_mem + reg);
 }
-
 
 /* Access "encoder memory" region of CX23418 memory mapped I/O */
 static inline void cx18_write_enc(struct cx18 *cx, u32 val, u32 addr)

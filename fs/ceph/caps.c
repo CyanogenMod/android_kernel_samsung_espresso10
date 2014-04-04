@@ -39,7 +39,6 @@
  * cluster to release server state.
  */
 
-
 /*
  * Generate readable cap strings for debugging output.
  */
@@ -1972,7 +1971,6 @@ static void kick_flushing_inode_caps(struct ceph_mds_client *mdsc,
 		spin_unlock(&inode->i_lock);
 	}
 }
-
 
 /*
  * Take references to capabilities we hold, so that we don't release

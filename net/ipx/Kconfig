@@ -57,4 +57,3 @@ config IPX_INTERN
 	  can be found on <ftp://ftp.gwdg.de/pub/linux/misc/ncpfs/>.
 
 	  If you don't know what you are doing, say N.
-

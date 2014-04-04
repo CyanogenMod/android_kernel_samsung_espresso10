@@ -845,7 +845,6 @@ mpt2sas_transport_add_host_phy(struct MPT2SAS_ADAPTER *ioc, struct _sas_phy
 	struct sas_phy *phy;
 	int phy_index = mpt2sas_phy->phy_id;
 
-
 	INIT_LIST_HEAD(&mpt2sas_phy->port_siblings);
 	phy = sas_phy_alloc(parent_dev, phy_index);
 	if (!phy) {
@@ -894,7 +893,6 @@ mpt2sas_transport_add_host_phy(struct MPT2SAS_ADAPTER *ioc, struct _sas_phy
 	mpt2sas_phy->phy = phy;
 	return 0;
 }
-
 
 /**
  * mpt2sas_transport_add_expander_phy - report expander phy to transport
@@ -1028,7 +1026,6 @@ rphy_to_ioc(struct sas_rphy *rphy)
 	struct Scsi_Host *shost = dev_to_shost(rphy->dev.parent->parent);
 	return shost_priv(shost);
 }
-
 
 /* report phy error log structure */
 struct phy_error_log_request{
@@ -1808,7 +1805,6 @@ _transport_phy_speed(struct sas_phy *phy, struct sas_phy_linkrates *rates)
 	kfree(sas_iounit_pg1);
 	return rc;
 }
-
 
 /**
  * _transport_smp_handler - transport portal for smp passthru

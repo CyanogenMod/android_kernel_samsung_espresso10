@@ -120,7 +120,6 @@
 #define EM2874_LEADERSHIP_ISDBT			  77
 #define EM28174_BOARD_PCTV_290E                   78
 
-
 /* Limits minimum and default number of buffers */
 #define EM28XX_MIN_BUF 4
 #define EM28XX_DEF_BUF 8
@@ -188,7 +187,6 @@ enum em28xx_mode {
 	EM28XX_ANALOG_MODE,
 	EM28XX_DIGITAL_MODE,
 };
-
 
 struct em28xx;
 

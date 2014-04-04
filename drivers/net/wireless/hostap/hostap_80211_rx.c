@@ -55,7 +55,6 @@ void hostap_dump_rx_80211(const char *name, struct sk_buff *skb,
 	printk("\n");
 }
 
-
 /* Send RX frame to netif with 802.11 (and possible prism) header.
  * Called from hardware or software IRQ context. */
 int prism2_rx_80211(struct net_device *dev, struct sk_buff *skb,
@@ -203,7 +202,6 @@ hdr->f.status = s; hdr->f.len = l; hdr->f.data = d
 	return ret;
 }
 
-
 /* Called only as a tasklet (software IRQ) */
 static void monitor_rx(struct net_device *dev, struct sk_buff *skb,
 		       struct hostap_80211_rx_status *rx_stats)
@@ -214,7 +212,6 @@ static void monitor_rx(struct net_device *dev, struct sk_buff *skb,
 	dev->stats.rx_packets++;
 	dev->stats.rx_bytes += len;
 }
-
 
 /* Called only as a tasklet (software IRQ) */
 static struct prism2_frag_entry *
@@ -244,7 +241,6 @@ prism2_frag_cache_find(local_info_t *local, unsigned int seq,
 
 	return NULL;
 }
-
 
 /* Called only as a tasklet (software IRQ) */
 static struct sk_buff *
@@ -297,7 +293,6 @@ prism2_frag_cache_get(local_info_t *local, struct ieee80211_hdr *hdr)
 	return skb;
 }
 
-
 /* Called only as a tasklet (software IRQ) */
 static int prism2_frag_cache_invalidate(local_info_t *local,
 					struct ieee80211_hdr *hdr)
@@ -322,7 +317,6 @@ static int prism2_frag_cache_invalidate(local_info_t *local,
 	return 0;
 }
 
-
 static struct hostap_bss_info *__hostap_get_bss(local_info_t *local, u8 *bssid,
 						u8 *ssid, size_t ssid_len)
 {
@@ -342,7 +336,6 @@ static struct hostap_bss_info *__hostap_get_bss(local_info_t *local, u8 *bssid,
 
 	return NULL;
 }
-
 
 static struct hostap_bss_info *__hostap_add_bss(local_info_t *local, u8 *bssid,
 						u8 *ssid, size_t ssid_len)
@@ -369,7 +362,6 @@ static struct hostap_bss_info *__hostap_add_bss(local_info_t *local, u8 *bssid,
 	return bss;
 }
 
-
 static void __hostap_expire_bss(local_info_t *local)
 {
 	struct hostap_bss_info *bss;
@@ -385,7 +377,6 @@ static void __hostap_expire_bss(local_info_t *local)
 		kfree(bss);
 	}
 }
-
 
 /* Both IEEE 802.11 Beacon and Probe Response frames have similar structure, so
  * the same routine can be used to parse both of them. */
@@ -466,7 +457,6 @@ static void hostap_rx_sta_beacon(local_info_t *local, struct sk_buff *skb,
 	spin_unlock(&local->lock);
 }
 
-
 static int
 hostap_rx_frame_mgmt(local_info_t *local, struct sk_buff *skb,
 		     struct hostap_80211_rx_status *rx_stats, u16 type,
@@ -527,7 +517,6 @@ hostap_rx_frame_mgmt(local_info_t *local, struct sk_buff *skb,
 	}
 }
 
-
 /* Called only as a tasklet (software IRQ) */
 static struct net_device *prism2_rx_get_wds(local_info_t *local,
 						   u8 *addr)
@@ -547,7 +536,6 @@ static struct net_device *prism2_rx_get_wds(local_info_t *local,
 
 	return iface ? iface->dev : NULL;
 }
-
 
 static int
 hostap_rx_frame_wds(local_info_t *local, struct ieee80211_hdr *hdr, u16 fc,
@@ -604,7 +592,6 @@ hostap_rx_frame_wds(local_info_t *local, struct ieee80211_hdr *hdr, u16 fc,
 	return 0;
 }
 
-
 static int hostap_is_eapol_frame(local_info_t *local, struct sk_buff *skb)
 {
 	struct net_device *dev = local->dev;
@@ -643,7 +630,6 @@ static int hostap_is_eapol_frame(local_info_t *local, struct sk_buff *skb)
 	return 0;
 }
 
-
 /* Called only as a tasklet (software IRQ) */
 static int
 hostap_rx_frame_decrypt(local_info_t *local, struct sk_buff *skb,
@@ -681,7 +667,6 @@ hostap_rx_frame_decrypt(local_info_t *local, struct sk_buff *skb,
 	return res;
 }
 
-
 /* Called only as a tasklet (software IRQ) */
 static int
 hostap_rx_frame_decrypt_msdu(local_info_t *local, struct sk_buff *skb,
@@ -708,7 +693,6 @@ hostap_rx_frame_decrypt_msdu(local_info_t *local, struct sk_buff *skb,
 
 	return 0;
 }
-
 
 /* All received frames are sent to this function. @skb contains the frame in
  * IEEE 802.11 format, i.e., in the format it was sent over air.
@@ -1111,6 +1095,5 @@ void hostap_80211_rx(struct net_device *dev, struct sk_buff *skb,
 	dev->stats.rx_dropped++;
 	goto rx_exit;
 }
-
 
 EXPORT_SYMBOL(hostap_80211_rx);

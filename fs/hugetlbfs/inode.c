@@ -440,7 +440,7 @@ static int hugetlbfs_setattr(struct dentry *dentry, struct iattr *attr)
 	return 0;
 }
 
-static struct inode *hugetlbfs_get_inode(struct super_block *sb, uid_t uid, 
+static struct inode *hugetlbfs_get_inode(struct super_block *sb, uid_t uid,
 					gid_t gid, int mode, dev_t dev)
 {
 	struct inode *inode;
@@ -637,7 +637,6 @@ static void hugetlbfs_inc_free_inodes(struct hugetlbfs_sb_info *sbinfo)
 	}
 }
 
-
 static struct kmem_cache *hugetlbfs_inode_cachep;
 
 static struct inode *hugetlbfs_alloc_inode(struct super_block *sb)
@@ -675,7 +674,6 @@ static const struct address_space_operations hugetlbfs_aops = {
 	.set_page_dirty	= hugetlbfs_set_page_dirty,
 	.migratepage    = hugetlbfs_migrate_page,
 };
-
 
 static void init_once(void *foo)
 {

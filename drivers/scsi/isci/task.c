@@ -134,7 +134,6 @@ static void isci_task_refuse(struct isci_host *ihost, struct sas_task *task,
 	for (; num > 0; num--,\
 	     task = list_entry(task->list.next, struct sas_task, list))
 
-
 static inline int isci_device_io_ready(struct isci_remote_device *idev,
 				       struct sas_task *task)
 {
@@ -923,14 +922,11 @@ int isci_task_lu_reset(struct domain_device *domain_device, u8 *lun)
 	return ret;
 }
 
-
 /*	 int (*lldd_clear_nexus_port)(struct asd_sas_port *); */
 int isci_task_clear_nexus_port(struct asd_sas_port *port)
 {
 	return TMF_RESP_FUNC_FAILED;
 }
-
-
 
 int isci_task_clear_nexus_ha(struct sas_ha_struct *ha)
 {
@@ -1098,7 +1094,6 @@ int isci_task_abort_task(struct sas_task *task)
 				"task %p on dev %p\n",
 				__func__, task, isci_device);
 
-
 		} else {
 			/* The request has already completed and there
 			 * is nothing to do here other than to set the task
@@ -1214,7 +1209,6 @@ int isci_task_abort_task_set(
 	return TMF_RESP_FUNC_FAILED;
 }
 
-
 /**
  * isci_task_clear_aca() - This function is one of the SAS Domain Template
  *    functions. This is one of the Task Management functoins called by libsas.
@@ -1231,8 +1225,6 @@ int isci_task_clear_aca(
 	return TMF_RESP_FUNC_FAILED;
 }
 
-
-
 /**
  * isci_task_clear_task_set() - This function is one of the SAS Domain Template
  *    functions. This is one of the Task Management functoins called by libsas.
@@ -1248,7 +1240,6 @@ int isci_task_clear_task_set(
 {
 	return TMF_RESP_FUNC_FAILED;
 }
-
 
 /**
  * isci_task_query_task() - This function is implemented to cause libsas to

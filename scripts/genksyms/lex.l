@@ -20,7 +20,6 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-
 %{
 
 #include <limits.h>
@@ -62,7 +61,6 @@ MC_TOKEN		([~%^&*+=|<>/-]=)|(&&)|("||")|(->)|(<<)|(>>)
 
 %%
 
-
  /* Keep track of our location in the original source files.  */
 ^#[ \t]+{INT}[ \t]+\"[^\"\n]+\".*\n	return FILENAME;
 ^#.*\n					cur_line++;
@@ -70,7 +68,6 @@ MC_TOKEN		([~%^&*+=|<>/-]=)|(&&)|("||")|(->)|(<<)|(>>)
 
  /* Ignore all other whitespace.  */
 [ \t\f\v\r]+				;
-
 
 {STRING}				return STRING;
 {CHAR}					return CHAR;
@@ -89,13 +86,11 @@ MC_TOKEN		([~%^&*+=|<>/-]=)|(&&)|("||")|(->)|(<<)|(>>)
  /* All other tokens are single characters.  */
 .					return yytext[0];
 
-
 %%
 
 /* Bring in the keyword recognizer.  */
 
 #include "keywords.c"
-
 
 /* Macros to append to our phrase collection list.  */
 
@@ -119,7 +114,6 @@ MC_TOKEN		([~%^&*+=|<>/-]=)|(&&)|("||")|(->)|(<<)|(>>)
 			} while (0)
 
 #define APP		_APP(yytext, yyleng)
-
 
 /* The second stage lexer.  Here we incorporate knowledge of the state
    of the parser to tailor the tokens that are returned.  */

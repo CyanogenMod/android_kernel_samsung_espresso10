@@ -26,7 +26,6 @@ enum nuc900_lcddrv_type {
 	LCDDRV_NUC960,
 };
 
-
 #define PALETTE_BUFFER_SIZE	256
 #define PALETTE_BUFF_CLEAR 	(0x80000000) /* entry is clear/invalid */
 

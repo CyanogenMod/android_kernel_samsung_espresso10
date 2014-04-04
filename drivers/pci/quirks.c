@@ -138,11 +138,11 @@ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_82441,	quirk_p
 
 /*  The VIA VP2/VP3/MVP3 seem to have some 'features'. There may be a workaround
     but VIA don't answer queries. If you happen to have good contacts at VIA
-    ask them for me please -- Alan 
-    
-    This appears to be BIOS not version dependent. So presumably there is a 
+    ask them for me please -- Alan
+
+    This appears to be BIOS not version dependent. So presumably there is a
     chipset level fix */
-    
+
 static void __devinit quirk_isa_dma_hangs(struct pci_dev *dev)
 {
 	if (!isa_dma_bridge_buggy) {
@@ -231,7 +231,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 	PCI_DEVICE_ID_INTEL_82439TX, 	quir
  *      the info on which Mr Breese based his work.
  *
  *	Updated based on further information from the site and also on
- *	information provided by VIA 
+ *	information provided by VIA
  */
 static void quirk_vialatency(struct pci_dev *dev)
 {
@@ -239,7 +239,7 @@ static void quirk_vialatency(struct pci_dev *dev)
 	u8 busarb;
 	/* Ok we have a potential problem chipset here. Now see if we have
 	   a buggy southbridge */
-	   
+
 	p = pci_get_device(PCI_VENDOR_ID_VIA, PCI_DEVICE_ID_VIA_82C686, NULL);
 	if (p!=NULL) {
 		/* 0x40 - 0x4f == 686B, 0x10 - 0x2f == 686A; thanks Dan Hollis */
@@ -254,9 +254,9 @@ static void quirk_vialatency(struct pci_dev *dev)
 		if (p->revision < 0x10 || p->revision > 0x12)
 			goto exit;
 	}
-	
+
 	/*
-	 *	Ok we have the problem. Now set the PCI master grant to 
+	 *	Ok we have the problem. Now set the PCI master grant to
 	 *	occur every master grant. The apparent bug is that under high
 	 *	PCI load (quite common in Linux of course) you can get data
 	 *	loss when the CPU is held off the bus for 3 bus master requests
@@ -269,7 +269,7 @@ static void quirk_vialatency(struct pci_dev *dev)
 	 */
 
 	pci_read_config_byte(dev, 0x76, &busarb);
-	/* Set bit 4 and bi 5 of byte 76 to 0x01 
+	/* Set bit 4 and bi 5 of byte 76 to 0x01
 	   "Master priority rotation on every PCI master grant */
 	busarb &= ~(1<<5);
 	busarb |= (1<<4);
@@ -312,7 +312,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_VIA,	PCI_DEVICE_ID_VIA_82C576,	quirk_vsfx)
  *	that DMA to AGP space. Latency must be set to 0xA and triton
  *	workaround applied too
  *	[Info kindly provided by ALi]
- */	
+ */
 static void __init quirk_alimagik(struct pci_dev *dev)
 {
 	if ((pci_pci_problems&PCIPCI_ALIMAGIK)==0) {
@@ -406,7 +406,7 @@ static void __devinit quirk_io_region(struct pci_dev *dev, unsigned region,
 			dev_info(&dev->dev, "quirk: %pR claimed by %s\n",
 				 res, name);
 	}
-}	
+}
 
 /*
  *	ATI Northbridge setups MCE the processor if you even
@@ -463,7 +463,7 @@ static void piix4_io_quirk(struct pci_dev *dev, const char *name, unsigned int p
 	/*
 	 * For now we only print it out. Eventually we'll want to
 	 * reserve it (at least if it's in the 0x1000+ range), but
-	 * let's get enough confirmation reports first. 
+	 * let's get enough confirmation reports first.
 	 */
 	base &= -size;
 	dev_info(&dev->dev, "%s PIO at %04x-%04x\n", name, base, base + size - 1);
@@ -488,7 +488,7 @@ static void piix4_mem_quirk(struct pci_dev *dev, const char *name, unsigned int 
 	}
 	/*
 	 * For now we only print it out. Eventually we'll want to
-	 * reserve it, but let's get enough confirmation reports first. 
+	 * reserve it, but let's get enough confirmation reports first.
 	 */
 	base &= -size;
 	dev_info(&dev->dev, "%s MMIO at %04x-%04x\n", name, base, base + size - 1);
@@ -782,7 +782,7 @@ static void __devinit quirk_xio2000a(struct pci_dev *dev)
 DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_XIO2000A,
 			quirk_xio2000a);
 
-#ifdef CONFIG_X86_IO_APIC 
+#ifdef CONFIG_X86_IO_APIC
 
 #include <asm/io_apic.h>
 
@@ -796,12 +796,12 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_XIO2000A,
 static void quirk_via_ioapic(struct pci_dev *dev)
 {
 	u8 tmp;
-	
+
 	if (nr_ioapics < 1)
 		tmp = 0;    /* nothing routed to external APIC */
 	else
 		tmp = 0x1f; /* all known bits (4-0) routed to external APIC */
-		
+
 	dev_info(&dev->dev, "%sbling VIA external APIC routing\n",
 	       tmp == 0 ? "Disa" : "Ena");
 
@@ -892,7 +892,6 @@ static void __devinit quirk_via_acpi(struct pci_dev *d)
 }
 DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA,	PCI_DEVICE_ID_VIA_82C586_3,	quirk_via_acpi);
 DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_VIA,	PCI_DEVICE_ID_VIA_82C686_4,	quirk_via_acpi);
-
 
 /*
  *	VIA bridges which have VLink
@@ -1086,7 +1085,7 @@ DECLARE_PCI_FIXUP_RESUME(PCI_VENDOR_ID_CYRIX,	PCI_DEVICE_ID_CYRIX_PCI_MASTER, qu
 static void quirk_disable_pxb(struct pci_dev *pdev)
 {
 	u16 config;
-	
+
 	if (pdev->revision != 0x04)		/* Only C0 requires this */
 		return;
 	pci_read_config_word(pdev, 0x40, &config);
@@ -1122,6 +1121,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_IXP700_SATA, quirk
 DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_ATI, PCI_DEVICE_ID_ATI_IXP700_SATA, quirk_amd_ide_mode);
 DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SATA_IDE, quirk_amd_ide_mode);
 DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_HUDSON2_SATA_IDE, quirk_amd_ide_mode);
+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_AMD, 0x7900, quirk_amd_ide_mode);
+DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_AMD, 0x7900, quirk_amd_ide_mode);
 
 /*
  *	Serverworks CSB5 IDE does not fully support native mode
@@ -1184,16 +1185,15 @@ static void __init quirk_eisa_bridge(struct pci_dev *dev)
 }
 DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_82375,	quirk_eisa_bridge);
 
-
 /*
  * On ASUS P4B boards, the SMBus PCI Device within the ICH2/4 southbridge
  * is not activated. The myth is that Asus said that they do not want the
  * users to be irritated by just another PCI Device in the Win98 device
- * manager. (see the file prog/hotplug/README.p4b in the lm_sensors 
+ * manager. (see the file prog/hotplug/README.p4b in the lm_sensors
  * package 2.7.0 for details)
  *
- * The SMBus PCI Device can be activated by setting a bit in the ICH LPC 
- * bridge. Unfortunately, this device has no subvendor/subdevice ID. So it 
+ * The SMBus PCI Device can be activated by setting a bit in the ICH LPC
+ * bridge. Unfortunately, this device has no subvendor/subdevice ID. So it
  * becomes necessary to do this tweak in two steps -- the chosen trigger
  * is either the Host bridge (preferred) or on-board VGA controller.
  *
@@ -1348,7 +1348,7 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_82815_CGC,	asu
 static void asus_hides_smbus_lpc(struct pci_dev *dev)
 {
 	u16 val;
-	
+
 	if (likely(!asus_hides_smbus))
 		return;
 
@@ -1479,7 +1479,6 @@ static void quirk_sis_503(struct pci_dev *dev)
 }
 DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_SI,	PCI_DEVICE_ID_SI_503,		quirk_sis_503);
 DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_SI,	PCI_DEVICE_ID_SI_503,		quirk_sis_503);
-
 
 /*
  * On ASUS A8V and A8V Deluxe boards, the onboard AC97 audio controller
@@ -1626,7 +1625,6 @@ static void __devinit quirk_pcie_mch(struct pci_dev *pdev)
 DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7520_MCH,	quirk_pcie_mch);
 DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7320_MCH,	quirk_pcie_mch);
 DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7525_MCH,	quirk_pcie_mch);
-
 
 /*
  * It's possible for the MSI to get corrupted if shpc and acpi
@@ -2669,7 +2667,7 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x4375,
 /* Allow manual resource allocation for PCI hotplug bridges
  * via pci=hpmemsize=nnM and pci=hpiosize=nnM parameters. For
  * some PCI-PCI hotplug bridges, like PLX 6254 (former HINT HB6),
- * kernel fails to allocate resources when hotplug device is 
+ * kernel fails to allocate resources when hotplug device is
  * inserted and PCI bus is rescanned.
  */
 static void __devinit quirk_hotplug_bridge(struct pci_dev *dev)
@@ -2746,7 +2744,7 @@ static void ricoh_mmc_fixup_r5c832(struct pci_dev *dev)
 	if (PCI_FUNC(dev->devfn))
 		return;
 	/*
-	 * RICOH 0xe823 SD/MMC card reader fails to recognize
+	 * RICOH 0xe822 and 0xe823 SD/MMC card readers fail to recognize
 	 * certain types of SD/MMC cards. Lowering the SD base
 	 * clock frequency from 200Mhz to 50Mhz fixes this issue.
 	 *
@@ -2757,7 +2755,8 @@ static void ricoh_mmc_fixup_r5c832(struct pci_dev *dev)
 	 * 0xf9  - Key register for 0x150
 	 * 0xfc  - key register for 0xe1
 	 */
-	if (dev->device == PCI_DEVICE_ID_RICOH_R5CE823) {
+	if (dev->device == PCI_DEVICE_ID_RICOH_R5CE822 ||
+	    dev->device == PCI_DEVICE_ID_RICOH_R5CE823) {
 		pci_write_config_byte(dev, 0xf9, 0xfc);
 		pci_write_config_byte(dev, 0x150, 0x10);
 		pci_write_config_byte(dev, 0xf9, 0x00);
@@ -2784,6 +2783,8 @@ static void ricoh_mmc_fixup_r5c832(struct pci_dev *dev)
 }
 DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_R5C832, ricoh_mmc_fixup_r5c832);
 DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_R5C832, ricoh_mmc_fixup_r5c832);
+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_R5CE822, ricoh_mmc_fixup_r5c832);
+DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_R5CE822, ricoh_mmc_fixup_r5c832);
 DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_R5CE823, ricoh_mmc_fixup_r5c832);
 DECLARE_PCI_FIXUP_RESUME_EARLY(PCI_VENDOR_ID_RICOH, PCI_DEVICE_ID_RICOH_R5CE823, ricoh_mmc_fixup_r5c832);
 #endif /*CONFIG_MMC_RICOH_MMC*/
@@ -2883,7 +2884,6 @@ extern struct pci_fixup __start_pci_fixups_resume_early[];
 extern struct pci_fixup __end_pci_fixups_resume_early[];
 extern struct pci_fixup __start_pci_fixups_suspend[];
 extern struct pci_fixup __end_pci_fixups_suspend[];
-
 
 void pci_fixup_device(enum pci_fixup_pass pass, struct pci_dev *dev)
 {

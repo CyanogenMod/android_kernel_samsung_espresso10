@@ -14,7 +14,6 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/pci.h>

@@ -638,7 +638,6 @@
 #define V_TPIPAR(x) ((x) << S_TPIPAR)
 #define G_TPIPAR(x) (((x) >> S_TPIPAR) & M_TPIPAR)
 
-
 /* TP registers */
 #define A_TP_IN_CONFIG 0x300
 
@@ -1684,7 +1683,6 @@
 #define M_TRANSACTION_TIMER    0xff
 #define V_TRANSACTION_TIMER(x) ((x) << S_TRANSACTION_TIMER)
 #define G_TRANSACTION_TIMER(x) (((x) >> S_TRANSACTION_TIMER) & M_TRANSACTION_TIMER)
-
 
 /* ULP registers */
 #define A_ULP_ULIMIT 0x980

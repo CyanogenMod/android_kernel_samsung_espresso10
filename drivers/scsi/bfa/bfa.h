@@ -128,7 +128,6 @@ bfa_reqq_winit(struct bfa_reqq_wait_s *wqe, void (*qresume) (void *cbarg),
 
 #define bfa_reqq_wcancel(__wqe)	list_del(&(__wqe)->qe)
 
-
 /*
  * Generic BFA callback element.
  */
@@ -160,7 +159,6 @@ struct bfa_cb_qe_s {
 #define bfa_cb_queue_done(__hcb_qe) do {	\
 		(__hcb_qe)->once = BFA_FALSE;	\
 	} while (0)
-
 
 /*
  * PCI devices supported by the current BFA
@@ -337,7 +335,6 @@ wwn_t bfa_iocfc_get_nwwn(struct bfa_s *bfa);
 int bfa_iocfc_get_pbc_vports(struct bfa_s *bfa,
 				struct bfi_pbc_vport_s *pbc_vport);
 
-
 /*
  *----------------------------------------------------------------------
  *		BFA public interfaces
@@ -395,7 +392,6 @@ void bfa_comp_free(struct bfa_s *bfa, struct list_head *comp_q);
 
 typedef void (*bfa_cb_ioc_t) (void *cbarg, enum bfa_status status);
 void bfa_iocfc_get_attr(struct bfa_s *bfa, struct bfa_iocfc_attr_s *attr);
-
 
 bfa_status_t bfa_iocfc_israttr_set(struct bfa_s *bfa,
 				   struct bfa_iocfc_intr_attr_s *attr);

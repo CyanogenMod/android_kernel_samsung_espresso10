@@ -245,7 +245,6 @@ fail_iput:
 	goto fail;
 }
 
-
 struct inode *gfs2_lookup_simple(struct inode *dip, const char *name)
 {
 	struct qstr qstr;
@@ -262,7 +261,6 @@ struct inode *gfs2_lookup_simple(struct inode *dip, const char *name)
 	else
 		return inode;
 }
-
 
 /**
  * gfs2_lookupi - Look up a filename in a directory and return its inode
@@ -427,7 +425,7 @@ static void gfs2_init_dir(struct buffer_head *dibh,
 	gfs2_qstr2dirent(&gfs2_qdotdot, dibh->b_size - GFS2_DIRENT_SIZE(1) - sizeof(struct gfs2_dinode), dent);
 	gfs2_inum_out(parent, dent);
 	dent->de_type = cpu_to_be16(DT_DIR);
-	
+
 }
 
 /**
@@ -491,7 +489,7 @@ static void init_dinode(struct gfs2_inode *dip, struct gfs2_glock *gl,
 	di->di_ctime_nsec = cpu_to_be32(tv.tv_nsec);
 	memset(&di->di_reserved, 0, sizeof(di->di_reserved));
 
-	switch(mode & S_IFMT) {	
+	switch(mode & S_IFMT) {
 	case S_IFREG:
 		if ((dip->i_diskflags & GFS2_DIF_INHERIT_JDATA) ||
 		    gfs2_tune_get(sdp, gt_new_files_jdata))
@@ -1040,7 +1038,6 @@ static int gfs2_unlink_inode(struct gfs2_inode *dip,
 	return 0;
 }
 
-
 /**
  * gfs2_unlink - Unlink an inode (this does rmdir as well)
  * @dir: The inode of the directory containing the inode to unlink
@@ -1073,7 +1070,6 @@ static int gfs2_unlink(struct inode *dir, struct dentry *dentry)
 
 	rgd = gfs2_blk2rgrpd(sdp, ip->i_no_addr);
 	gfs2_holder_init(rgd->rd_gl, LM_ST_EXCLUSIVE, 0, ghs + 2);
-
 
 	error = gfs2_glock_nq(ghs); /* parent */
 	if (error)
@@ -1287,7 +1283,7 @@ static int gfs2_rename(struct inode *odir, struct dentry *odentry,
 	if (nip) {
 		gfs2_holder_init(nip->i_gl, LM_ST_EXCLUSIVE, 0, ghs + num_gh);
 		num_gh++;
-		/* grab the resource lock for unlink flag twiddling 
+		/* grab the resource lock for unlink flag twiddling
 		 * this is the case of the target file already existing
 		 * so we unlink before doing the rename
 		 */
@@ -1549,7 +1545,6 @@ int gfs2_permission(struct inode *inode, int mask, unsigned int flags)
 	struct gfs2_holder i_gh;
 	int error;
 	int unlock = 0;
-
 
 	ip = GFS2_I(inode);
 	if (gfs2_glock_is_locked_by_me(ip->i_gl) == NULL) {
@@ -1889,4 +1884,3 @@ const struct inode_operations gfs2_symlink_iops = {
 	.removexattr = gfs2_removexattr,
 	.fiemap = gfs2_fiemap,
 };
-

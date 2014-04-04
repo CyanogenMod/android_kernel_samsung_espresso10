@@ -603,7 +603,6 @@
 #define		LAST_SEG        	0x02
 #define		LAST_SEG_DONE   	0x01
 
-
 #define	CMD_GROUP2_BYTE_DELTA	0xfa
 #define	MAX_OFFSET_8BIT	0x0f
 #define	BUS_16_BIT	0x01
@@ -623,7 +622,6 @@
 #define	HOST_MSG	0xff
 #define	BUS_32_BIT	0x02
 #define	CCSGADDR_MAX	0x80
-
 
 /* Downloaded Constant Definitions */
 #define	TMODE_NUMCMDS	0x00

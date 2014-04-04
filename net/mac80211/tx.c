@@ -2005,7 +2005,6 @@ netdev_tx_t ieee80211_subif_start_xmit(struct sk_buff *skb,
 	return ret;
 }
 
-
 /*
  * ieee80211_clear_tx_pending may not be called in a context where
  * it is possible that it packets could come in again.

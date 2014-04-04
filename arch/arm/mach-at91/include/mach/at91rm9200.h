@@ -50,7 +50,6 @@
 #define AT91RM9200_ID_IRQ5	30	/* Advanced Interrupt Controller (IRQ5) */
 #define AT91RM9200_ID_IRQ6	31	/* Advanced Interrupt Controller (IRQ6) */
 
-
 /*
  * Peripheral physical base addresses.
  */
@@ -75,7 +74,6 @@
 #define AT91RM9200_BASE_SSC2	0xfffd8000
 #define AT91RM9200_BASE_SPI	0xfffe0000
 #define AT91_BASE_SYS		0xfffff000
-
 
 /*
  * System Peripherals (offset from AT91_BASE_SYS)
@@ -108,6 +106,5 @@
 #define AT91RM9200_SRAM_SIZE	SZ_16K		/* Internal SRAM size (16Kb) */
 
 #define AT91RM9200_UHP_BASE	0x00300000	/* USB Host controller */
-
 
 #endif

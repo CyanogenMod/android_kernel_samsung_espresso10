@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -75,7 +75,7 @@ ar6000_get_hif_dev(struct hif_device *device, void *config)
 
     status = HIFConfigureDevice(device,
                                 HIF_DEVICE_GET_OS_DEVICE,
-                                (struct hif_device_os_device_info *)config, 
+                                (struct hif_device_os_device_info *)config,
                                 sizeof(struct hif_device_os_device_info));
     return status;
 }
@@ -91,7 +91,7 @@ int ar6000_set_uart_config(struct hif_device *hifDevice,
     regAddress = WLAN_UART_BASE_ADDRESS | UART_CLKDIV_ADDRESS;
     regVal = ((u32)scale << 16) | step;
     /* change the HCI UART scale/step values through the diagnostic window */
-    status = ar6000_WriteRegDiag(hifDevice, &regAddress, &regVal);                     
+    status = ar6000_WriteRegDiag(hifDevice, &regAddress, &regVal);
 
     return status;
 }

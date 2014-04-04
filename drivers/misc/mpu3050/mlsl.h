@@ -37,7 +37,6 @@ struct acc_data {
 	s16 z;
 };
 
-
 /*
  * NOTE : to properly support Yamaha compass reads,
  * the max transfer size should be at least 9 B.

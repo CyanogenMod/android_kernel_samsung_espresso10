@@ -218,7 +218,6 @@ static const int protohead[CFCTRL_SRV_MASK] = {
 	[CFCTRL_SRV_DBG] = 3,
 };
 
-
 static int caif_connect_req_to_link_param(struct cfcnfg *cnfg,
 				   struct caif_connect_request *s,
 				   struct cfctrl_link_param *l)

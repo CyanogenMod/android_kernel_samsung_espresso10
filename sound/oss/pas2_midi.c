@@ -41,7 +41,6 @@ static int pas_midi_open(int dev, int mode,
 	unsigned long   flags;
 	unsigned char   ctrl;
 
-
 	if (midi_busy)
 		return -EBUSY;
 

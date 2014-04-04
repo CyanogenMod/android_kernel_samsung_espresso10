@@ -688,7 +688,7 @@ static int max8997_set_voltage_buck(struct regulator_dev *rdev,
 		}
 
 		new_val++;
-	} while (desc->min + desc->step + new_val <= desc->max);
+	} while (desc->min + desc->step * new_val <= desc->max);
 
 	new_idx = tmp_idx;
 	new_val = tmp_val;
@@ -842,7 +842,6 @@ static int max8997_set_voltage_ldobuck_wrap(struct regulator_dev *rdev,
 
 	return max8997_set_voltage_ldobuck(rdev, min_uV, max_uV, &dummy);
 }
-
 
 static struct regulator_ops max8997_charger_ops = {
 	.is_enabled		= max8997_reg_is_enabled,

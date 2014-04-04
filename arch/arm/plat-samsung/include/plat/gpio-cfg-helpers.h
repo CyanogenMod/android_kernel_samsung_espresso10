@@ -89,7 +89,6 @@ unsigned int s3c_gpio_getcfg_s3c24xx(struct s3c_gpio_chip *chip,
 extern int s3c_gpio_setcfg_s3c24xx_a(struct s3c_gpio_chip *chip,
 				     unsigned int off, unsigned int cfg);
 
-
 /**
  * s3c_gpio_getcfg_s3c24xx_a - S3C24XX style GPIO configuration read (Bank A)
  * @chip: The gpio chip that is being configured.
@@ -122,7 +121,6 @@ extern unsigned s3c_gpio_getcfg_s3c24xx_a(struct s3c_gpio_chip *chip,
 */
 extern int s3c_gpio_setcfg_s3c64xx_4bit(struct s3c_gpio_chip *chip,
 					unsigned int off, unsigned int cfg);
-
 
 /**
  * s3c_gpio_getcfg_s3c64xx_4bit - S3C64XX 4bit single register GPIO config read.
@@ -186,7 +184,6 @@ extern int s3c_gpio_setpull_1down(struct s3c_gpio_chip *chip,
 extern int s3c_gpio_setpull_updown(struct s3c_gpio_chip *chip,
 				   unsigned int off, s3c_gpio_pull_t pull);
 
-
 /**
  * s3c_gpio_getpull_updown() - Get configuration for choice of up, down or none
  * @chip: The gpio chip that the GPIO pin belongs to
@@ -248,4 +245,3 @@ extern s3c_gpio_pull_t s3c_gpio_getpull_s3c2443(struct s3c_gpio_chip *chip,
 						unsigned int off);
 
 #endif /* __PLAT_GPIO_CFG_HELPERS_H */
-

@@ -263,4 +263,3 @@ static struct s6e63m0_gamma gamma_table = {
 };
 
 #endif
-

@@ -1,4 +1,3 @@
-
 obj-$(CONFIG_RPC_OMAP) += omaprpc.o
 omaprpc-y :=  omap_rpc.o \
               omap_rpc_tiler.o \
@@ -11,7 +10,3 @@ endif
 ifeq ($(CONFIG_DMA_SHARED_BUFFER),y)
 omaprpc-y += omap_rpc_dmabuf.o
 endif
-
-
-
-

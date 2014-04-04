@@ -84,7 +84,7 @@ struct shm_info {
 
 #ifdef __KERNEL__
 struct shmid_kernel /* private to the kernel */
-{	
+{
 	struct kern_ipc_perm	shm_perm;
 	struct file *		shm_file;
 	unsigned long		shm_nattch;

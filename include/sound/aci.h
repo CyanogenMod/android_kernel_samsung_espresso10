@@ -87,4 +87,3 @@ int snd_aci_cmd(struct snd_miro_aci *aci, int write1, int write2, int write3);
 struct snd_miro_aci *snd_aci_get_aci(void);
 
 #endif  /* _ACI_H_ */
-

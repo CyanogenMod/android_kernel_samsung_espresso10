@@ -29,8 +29,6 @@
 #include "nxt6000_priv.h"
 #include "nxt6000.h"
 
-
-
 struct nxt6000_state {
 	struct i2c_adapter* i2c;
 	/* configuration settings */

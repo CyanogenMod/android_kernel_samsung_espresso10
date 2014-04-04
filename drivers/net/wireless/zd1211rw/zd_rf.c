@@ -179,4 +179,3 @@ int zd_rf_generic_patch_6m(struct zd_rf *rf, u8 channel)
 {
 	return zd_chip_generic_patch_6m_band(zd_rf_to_chip(rf), channel);
 }
-

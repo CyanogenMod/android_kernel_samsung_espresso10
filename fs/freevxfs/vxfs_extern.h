@@ -37,12 +37,10 @@
  * outside their respective source files.
  */
 
-
 struct kmem_cache;
 struct super_block;
 struct vxfs_inode_info;
 struct inode;
-
 
 /* vxfs_bmap.c */
 extern daddr_t			vxfs_bmap1(struct inode *, long);

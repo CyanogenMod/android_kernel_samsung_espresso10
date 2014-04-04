@@ -1427,7 +1427,6 @@ static void eexp_hw_rxinit(struct net_device *dev)
 		rx_block += RX_BUF_SIZE;
 	} while (rx_block <= lp->rx_buf_end-RX_BUF_SIZE);
 
-
 	/* Make first Rx frame descriptor point to first Rx buffer
            descriptor */
 	outw(lp->rx_first + 6, ioaddr+WRITE_PTR);
@@ -1646,7 +1645,6 @@ eexp_set_multicast(struct net_device *dev)
         }
 }
 
-
 /*
  * MODULE stuff
  */
@@ -1664,7 +1662,6 @@ module_param_array(irq, int, NULL, 0);
 MODULE_PARM_DESC(io, "EtherExpress 16 I/O base address(es)");
 MODULE_PARM_DESC(irq, "EtherExpress 16 IRQ number(s)");
 MODULE_LICENSE("GPL");
-
 
 /* Ideally the user would give us io=, irq= for every card.  If any parameters
  * are specified, we verify and then use them.  If no parameters are given, we

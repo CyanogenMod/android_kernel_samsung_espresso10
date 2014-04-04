@@ -151,7 +151,6 @@ DOT11D_GetMaxTxPwrInDbm(
 	return MaxTxPwrInDbm;
 }
 
-
 void
 DOT11D_ScanComplete(
 	struct ieee80211_device * dev

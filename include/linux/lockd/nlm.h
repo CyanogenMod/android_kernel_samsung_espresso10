@@ -9,7 +9,6 @@
 #ifndef LINUX_LOCKD_NLM_H
 #define LINUX_LOCKD_NLM_H
 
-
 /* Maximum file offset in file_lock.fl_end */
 # define NLM_OFFSET_MAX		((s32) 0x7fffffff)
 # define NLM4_OFFSET_MAX	((s64) ((~(u64)0) >> 1))

@@ -11,7 +11,6 @@
 
 #include <linux/ssb/ssb_regs.h>
 
-
 struct pcmcia_device;
 struct ssb_bus;
 struct ssb_driver;
@@ -102,7 +101,6 @@ struct ssb_boardinfo {
 	u16 rev;
 };
 
-
 struct ssb_device;
 /* Lowlevel read/write operations on the device MMIO.
  * Internal, don't use that outside of ssb. */
@@ -120,7 +118,6 @@ struct ssb_bus_ops {
 			    size_t count, u16 offset, u8 reg_width);
 #endif
 };
-
 
 /* Core-ID values. */
 #define SSB_DEV_CHIPCOMMON	0x800
@@ -213,7 +210,6 @@ void * ssb_get_devtypedata(struct ssb_device *dev)
 	return dev->devtypedata;
 }
 
-
 struct ssb_driver {
 	const char *name;
 	const struct ssb_device_id *id_table;
@@ -234,9 +230,6 @@ static inline int ssb_driver_register(struct ssb_driver *drv)
 	return __ssb_driver_register(drv, THIS_MODULE);
 }
 extern void ssb_driver_unregister(struct ssb_driver *drv);
-
-
-
 
 enum ssb_bustype {
 	SSB_BUSTYPE_SSB,	/* This SSB bus is the system bus */
@@ -396,7 +389,6 @@ extern int ssb_bus_sdiobus_register(struct ssb_bus *bus,
 				    unsigned int quirks);
 #endif /* CONFIG_SSB_SDIOHOST */
 
-
 extern void ssb_bus_unregister(struct ssb_bus *bus);
 
 /* Does the device have an SPROM? */
@@ -424,7 +416,6 @@ int ssb_device_is_enabled(struct ssb_device *dev);
 void ssb_device_enable(struct ssb_device *dev, u32 core_specific_flags);
 /* Disable a device in hardware and pass SSB_TMSLOW flags (if any). */
 void ssb_device_disable(struct ssb_device *dev, u32 core_specific_flags);
-
 
 /* Device MMIO register read/write functions. */
 static inline u8 ssb_read8(struct ssb_device *dev, u16 offset)
@@ -464,7 +455,6 @@ static inline void ssb_block_write(struct ssb_device *dev, const void *buffer,
 	dev->ops->block_write(dev, buffer, count, offset, reg_width);
 }
 #endif /* CONFIG_SSB_BLOCKIO */
-
 
 /* The SSB DMA API. Use this API for any DMA operation on the device.
  * This API basically is a wrapper that calls the correct DMA API for
@@ -508,7 +498,6 @@ void ssb_pcihost_set_power_state(struct ssb_device *sdev, pci_power_t state)
 {
 }
 #endif /* CONFIG_SSB_PCIHOST */
-
 
 /* If a driver is shutdown or suspended, call this to signal
  * that the bus may be completely powered down. SSB will decide,

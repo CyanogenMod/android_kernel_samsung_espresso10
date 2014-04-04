@@ -17,5 +17,4 @@
 #define PCIBIOS_MIN_MEM			0x01000000
 #define PCIMEM_BASE			MV78XX0_PCIE_MEM_PHYS_BASE /* mem base for VGA */
 
-
 #endif

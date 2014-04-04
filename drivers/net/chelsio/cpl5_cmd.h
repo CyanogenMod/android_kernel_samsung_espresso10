@@ -72,7 +72,6 @@ enum CPL_opcode {
 	CPL_PCMD_READ         = 0x31,
 	CPL_PCMD_READ_RPL     = 0x32,
 
-
 	CPL_RX_DATA           = 0xA0,
 	CPL_RX_DATA_DDP       = 0xA1,
 	CPL_RX_DATA_ACK       = 0xA3,
@@ -636,4 +635,3 @@ struct cpl_mss_change {
 };
 
 #endif /* _CXGB_CPL5_CMD_H_ */
-

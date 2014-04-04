@@ -30,8 +30,6 @@
 #include "dvb_frontend.h"
 #include "ves1820.h"
 
-
-
 struct ves1820_state {
 	struct i2c_adapter* i2c;
 	/* configuration settings */
@@ -42,7 +40,6 @@ struct ves1820_state {
 	u8 reg0;
 	u8 pwm;
 };
-
 
 static int verbose;
 

@@ -15,7 +15,7 @@ struct cyclades_monitor {
 
 /*
  * This is our internal structure for each serial port's state.
- * 
+ *
  * Many fields are paralleled by the structure used by the serial_struct
  * structure.
  *
@@ -148,7 +148,6 @@ struct cyclades_port {
 #define CySCRL		(0x23)
 #define CySCRH		(0x22)
 #define CyTFTC		(0x80)
-
 
 /* max number of chars in the FIFO */
 

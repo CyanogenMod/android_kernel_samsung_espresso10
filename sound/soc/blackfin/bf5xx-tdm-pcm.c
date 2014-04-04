@@ -229,7 +229,6 @@ static int bf5xx_pcm_silence(struct snd_pcm_substream *substream,
 	return 0;
 }
 
-
 struct snd_pcm_ops bf5xx_pcm_tdm_ops = {
 	.open           = bf5xx_pcm_open,
 	.ioctl          = snd_pcm_lib_ioctl,

@@ -28,7 +28,6 @@
 #include <linux/nilfs2_fs.h>
 #include "mdt.h"
 
-
 static inline unsigned long nilfs_sufile_get_nsegments(struct inode *sufile)
 {
 	return ((struct the_nilfs *)sufile->i_sb->s_fs_info)->ns_nsegments;

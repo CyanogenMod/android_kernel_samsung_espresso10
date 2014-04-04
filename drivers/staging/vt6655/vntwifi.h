@@ -101,8 +101,6 @@ typedef enum tagWMAC_CONFIG_MODE {
 
 } WMAC_CONFIG_MODE, *PWMAC_CONFIG_MODE;
 
-
-
 typedef enum tagWMAC_POWER_MODE {
 
     WMAC_POWER_CAM,
@@ -129,14 +127,11 @@ typedef enum tagWMAC_POWER_MODE {
 #define VNTWIFIbIsESS(wCapInfo)                         \
         WLAN_GET_CAP_INFO_ESS(wCapInfo)                 \
 
-
 /*---------------------  Export Classes  ----------------------------*/
 
 /*---------------------  Export Variables  --------------------------*/
 
-
 /*---------------------  Export Types  ------------------------------*/
-
 
 /*---------------------  Export Functions  --------------------------*/
 
@@ -194,7 +189,6 @@ VNTWIFIvSetEncryptionMode (
     WMAC_ENCRYPTION_MODE eEncryptionMode
     );
 
-
 bool
 VNTWIFIbConfigPhyMode(
     void *pMgmtHandle,
@@ -218,8 +212,6 @@ VNTWIFIvGetNextBSS (
     void **pvNextBSS
     );
 
-
-
 void
 VNTWIFIvUpdateNodeTxCounter(
     void *pMgmtHandle,
@@ -228,7 +220,6 @@ VNTWIFIvUpdateNodeTxCounter(
     unsigned short wRate,
     unsigned char *pbyTxFailCount
     );
-
 
 void
 VNTWIFIvGetTxRate(
@@ -252,9 +243,6 @@ VNTWIFIbyGetKeyCypher(
     void *pMgmtHandle,
     bool bGroupKey
     );
-
-
-
 
 bool
 VNTWIFIbSetPMKIDCache (

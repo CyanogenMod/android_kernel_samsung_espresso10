@@ -44,8 +44,6 @@ static struct ncr_chip zalon720_chip __initdata = {
 	.features =	FE_WIDE | FE_DIFF | FE_EHP| FE_MUX | FE_EA,
 };
 
-
-
 #if 0
 /* FIXME:
  * Is this function dead code? or is someone planning on using it in the
@@ -59,7 +57,7 @@ static struct ncr_chip zalon720_chip __initdata = {
 static u8 iodc_data[32] __attribute__ ((aligned (64)));
 static unsigned long pdc_result[32] __attribute__ ((aligned (16))) ={0,0,0,0};
 
-static int 
+static int
 lasi_scsi_clock(void * hpa, int defaultclock)
 {
 	int clock, status;
@@ -69,7 +67,7 @@ lasi_scsi_clock(void * hpa, int defaultclock)
 		clock = (int) pdc_result[16];
 	} else {
 		printk(KERN_WARNING "%s: pdc_iodc_read returned %d\n", __func__, status);
-		clock = defaultclock; 
+		clock = defaultclock;
 	}
 
 	printk(KERN_DEBUG "%s: SCSI clock %d\n", __func__, clock);
@@ -161,7 +159,7 @@ zalon_probe(struct parisc_device *dev)
 }
 
 static struct parisc_device_id zalon_tbl[] = {
-	{ HPHW_A_DMA, HVERSION_REV_ANY_ID, HVERSION_ANY_ID, 0x00089 }, 
+	{ HPHW_A_DMA, HVERSION_REV_ANY_ID, HVERSION_ANY_ID, 0x00089 },
 	{ 0, }
 };
 

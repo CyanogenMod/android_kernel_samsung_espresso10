@@ -106,4 +106,3 @@ static inline size_t btree_grim_visitor128(struct btree_head128 *head,
 	for (val = btree_last128(head, &k1, &k2);	\
 	     val;					\
 	     val = btree_get_prev128(head, &k1, &k2))
-

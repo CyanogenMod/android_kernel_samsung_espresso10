@@ -129,7 +129,6 @@ extern void sst_mad_send_jack_report(struct snd_jack *jack,
 				     int buttonpressevent,
 				     int status);
 
-
 int intemad_set_headset_state(int state);
 int intelmad_get_mic_bias(void);
 

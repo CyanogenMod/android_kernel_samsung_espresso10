@@ -63,7 +63,6 @@ error_ret:
 	return ret;
 }
 
-
 /**
  * max1363_ring_preenable() - setup the parameters of the ring before enabling
  *

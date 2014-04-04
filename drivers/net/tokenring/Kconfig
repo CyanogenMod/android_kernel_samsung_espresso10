@@ -78,7 +78,7 @@ config 3C359
 	  To compile this driver as a module, choose M here: the module will be
 	  called 3c359.
 
-	  Also read the file <file:Documentation/networking/3c359.txt> or check the 
+	  Also read the file <file:Documentation/networking/3c359.txt> or check the
 	  Linux Token Ring Project site for the latest information at
 	  <http://www.linuxtr.net>
 

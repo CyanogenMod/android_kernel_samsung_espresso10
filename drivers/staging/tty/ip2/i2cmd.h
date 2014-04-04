@@ -300,7 +300,6 @@ static UCHAR cc02[];
 #define COX_NONE  0  // Don't send Xon/Xoff
 #define COX_XON   1  // Send xon/xoff to start/stop incoming data
 
-
 #define CMD_CTS_REP  (cmdSyntaxPtr)(ct18) // Enable  CTS reporting
 #define CMD_CTS_NREP (cmdSyntaxPtr)(ct19) // Disable CTS reporting
 
@@ -322,7 +321,7 @@ static UCHAR cc02[];
 #define CBK_NULL     0x01  // Report breaks as a good null
 #define CBK_STAT_SEQ 0x02  // Report breaks as a status AND as in-band character
                            //  sequence FFh, 01h, 10h
-#define CBK_SEQ      0x03  // Report breaks as the in-band 
+#define CBK_SEQ      0x03  // Report breaks as the in-band
 						   //sequence FFh, 01h, 10h ONLY.
 #define CBK_FLSH     0x04  // if this bit set also flush input data
 #define CBK_POSIX    0x08  // if this bit set report as FF,0,0 sequence
@@ -374,7 +373,6 @@ static UCHAR cc02[];
 								// replacement character defined here AND
 								// report the error as a status packet (as in
 								// CSE_ESTAT).
-
 
 // COMMAND 37, to send flow control packets, is handled only by low-level
 // library code in response to data movement and shouldn't ever be sent by the
@@ -463,7 +461,6 @@ static UCHAR cc02[];
 
 #define CMD_BMARK_REQ   (cmdSyntaxPtr)(ct60) // Bookmark request
 
-
 // Enable/Disable internal loopback mode
 //
 #define CMD_INLOOP(arg) \
@@ -478,7 +475,6 @@ static UCHAR cc02[];
 //
 #define CMD_HOT_TIME(arg) \
 	(((cmdSyntaxPtr)(ct62))->cmd[1] = (arg),(cmdSyntaxPtr)(ct62))
-
 
 // Define (outgoing) xon for receive flow control
 //
@@ -610,8 +606,8 @@ static UCHAR cc02[];
 // Makes the loadware report DSS signals for this channel immediately.
 //
 #define CMD_DSS_NOW (cmdSyntaxPtr)(ct89)
-	
-// Set the receive silo parameters 
+
+// Set the receive silo parameters
 // 	timeout is ms idle wait until delivery       (~VTIME)
 // 	threshold is max characters cause interrupt  (~VMIN)
 //
@@ -624,7 +620,5 @@ static UCHAR cc02[];
 //
 #define CMD_LBREAK(ds) \
 	(((cmdSyntaxPtr)(ct91))->cmd[1] = (ds),(cmdSyntaxPtr)(ct66))
-
-
 
 #endif // I2CMD_H

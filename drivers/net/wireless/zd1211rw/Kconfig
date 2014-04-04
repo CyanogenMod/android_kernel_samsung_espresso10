@@ -16,4 +16,3 @@ config ZD1211RW_DEBUG
 	  ZD1211 debugging messages. Choosing Y will result in additional debug
 	  messages being saved to your kernel logs, which may help debug any
 	  problems.
-

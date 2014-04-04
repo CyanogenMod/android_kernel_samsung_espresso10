@@ -39,7 +39,6 @@ static int pvr2_context_cleanup_flag;
 static int pvr2_context_cleaned_flag;
 static struct task_struct *pvr2_context_thread_ptr;
 
-
 static void pvr2_context_set_notify(struct pvr2_context *mp, int fl)
 {
 	int signal_flag = 0;
@@ -76,7 +75,6 @@ static void pvr2_context_set_notify(struct pvr2_context *mp, int fl)
 	if (signal_flag) wake_up(&pvr2_context_sync_data);
 }
 
-
 static void pvr2_context_destroy(struct pvr2_context *mp)
 {
 	pvr2_trace(PVR2_TRACE_CTXT,"pvr2_context %p (destroy)",mp);
@@ -102,12 +100,10 @@ static void pvr2_context_destroy(struct pvr2_context *mp)
 	kfree(mp);
 }
 
-
 static void pvr2_context_notify(struct pvr2_context *mp)
 {
 	pvr2_context_set_notify(mp,!0);
 }
-
 
 static void pvr2_context_check(struct pvr2_context *mp)
 {
@@ -152,12 +148,10 @@ static void pvr2_context_check(struct pvr2_context *mp)
 	}
 }
 
-
 static int pvr2_context_shutok(void)
 {
 	return pvr2_context_cleanup_flag && (pvr2_context_exist_first == NULL);
 }
-
 
 static int pvr2_context_thread_func(void *foo)
 {
@@ -190,7 +184,6 @@ static int pvr2_context_thread_func(void *foo)
 	return 0;
 }
 
-
 int pvr2_context_global_init(void)
 {
 	pvr2_context_thread_ptr = kthread_run(pvr2_context_thread_func,
@@ -198,7 +191,6 @@ int pvr2_context_global_init(void)
 					      "pvrusb2-context");
 	return (pvr2_context_thread_ptr ? 0 : -ENOMEM);
 }
-
 
 void pvr2_context_global_done(void)
 {
@@ -209,7 +201,6 @@ void pvr2_context_global_done(void)
 		pvr2_context_cleaned_flag);
 	kthread_stop(pvr2_context_thread_ptr);
 }
-
 
 struct pvr2_context *pvr2_context_create(
 	struct usb_interface *intf,
@@ -243,7 +234,6 @@ struct pvr2_context *pvr2_context_create(
 	return mp;
 }
 
-
 static void pvr2_context_reset_input_limits(struct pvr2_context *mp)
 {
 	unsigned int tmsk,mmsk;
@@ -259,12 +249,10 @@ static void pvr2_context_reset_input_limits(struct pvr2_context *mp)
 	pvr2_hdw_commit_ctl(hdw);
 }
 
-
 static void pvr2_context_enter(struct pvr2_context *mp)
 {
 	mutex_lock(&mp->mutex);
 }
-
 
 static void pvr2_context_exit(struct pvr2_context *mp)
 {
@@ -276,14 +264,12 @@ static void pvr2_context_exit(struct pvr2_context *mp)
 	if (destroy_flag) pvr2_context_notify(mp);
 }
 
-
 void pvr2_context_disconnect(struct pvr2_context *mp)
 {
 	pvr2_hdw_disconnect(mp->hdw);
 	mp->disconnect_flag = !0;
 	pvr2_context_notify(mp);
 }
-
 
 void pvr2_channel_init(struct pvr2_channel *cp,struct pvr2_context *mp)
 {
@@ -301,7 +287,6 @@ void pvr2_channel_init(struct pvr2_channel *cp,struct pvr2_context *mp)
 	pvr2_context_exit(mp);
 }
 
-
 static void pvr2_channel_disclaim_stream(struct pvr2_channel *cp)
 {
 	if (!cp->stream) return;
@@ -309,7 +294,6 @@ static void pvr2_channel_disclaim_stream(struct pvr2_channel *cp)
 	cp->stream->user = NULL;
 	cp->stream = NULL;
 }
-
 
 void pvr2_channel_done(struct pvr2_channel *cp)
 {
@@ -331,7 +315,6 @@ void pvr2_channel_done(struct pvr2_channel *cp)
 	cp->hdw = NULL;
 	pvr2_context_exit(mp);
 }
-
 
 int pvr2_channel_limit_inputs(struct pvr2_channel *cp,unsigned int cmsk)
 {
@@ -377,12 +360,10 @@ int pvr2_channel_limit_inputs(struct pvr2_channel *cp,unsigned int cmsk)
 	return ret;
 }
 
-
 unsigned int pvr2_channel_get_limited_inputs(struct pvr2_channel *cp)
 {
 	return cp->input_mask;
 }
-
 
 int pvr2_channel_claim_stream(struct pvr2_channel *cp,
 			      struct pvr2_context_stream *sp)
@@ -402,7 +383,6 @@ int pvr2_channel_claim_stream(struct pvr2_channel *cp,
 	return code;
 }
 
-
 // This is the marker for the real beginning of a legitimate mpeg2 stream.
 static char stream_sync_key[] = {
 	0x00, 0x00, 0x01, 0xba,
@@ -418,7 +398,6 @@ struct pvr2_ioread *pvr2_channel_create_mpeg_stream(
 	pvr2_ioread_set_sync_key(cp,stream_sync_key,sizeof(stream_sync_key));
 	return cp;
 }
-
 
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:

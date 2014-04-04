@@ -171,7 +171,6 @@ static int sierra_probe(struct usb_serial *serial,
 {
 	int result = 0;
 	struct usb_device *udev;
-	struct sierra_intf_private *data;
 	u8 ifnum;
 
 	udev = serial->dev;
@@ -198,11 +197,6 @@ static int sierra_probe(struct usb_serial *serial,
 			"Ignoring blacklisted interface #%d\n", ifnum);
 		return -ENODEV;
 	}
-
-	data = serial->private = kzalloc(sizeof(struct sierra_intf_private), GFP_KERNEL);
-	if (!data)
-		return -ENOMEM;
-	spin_lock_init(&data->susp_lock);
 
 	return result;
 }
@@ -304,6 +298,10 @@ static const struct usb_device_id id_table[] = {
 	{ USB_DEVICE(0x1199, 0x68A3), 	/* Sierra Wireless Direct IP modems */
 	  .driver_info = (kernel_ulong_t)&direct_ip_interface_blacklist
 	},
+	/* AT&T Direct IP LTE modems */
+	{ USB_DEVICE_AND_INTERFACE_INFO(0x0F3D, 0x68AA, 0xFF, 0xFF, 0xFF),
+	  .driver_info = (kernel_ulong_t)&direct_ip_interface_blacklist
+	},
 	{ USB_DEVICE(0x0f3d, 0x68A3), 	/* Airprime/Sierra Wireless Direct IP modems */
 	  .driver_info = (kernel_ulong_t)&direct_ip_interface_blacklist
 	},
@@ -312,7 +310,6 @@ static const struct usb_device_id id_table[] = {
 	{ }
 };
 MODULE_DEVICE_TABLE(usb, id_table);
-
 
 struct sierra_port_private {
 	spinlock_t lock;	/* lock the structure */
@@ -806,7 +803,6 @@ static void sierra_close(struct usb_serial_port *port)
 	struct sierra_port_private *portdata;
 	struct sierra_intf_private *intfdata = port->serial->private;
 
-
 	dev_dbg(&port->dev, "%s\n", __func__);
 	portdata = usb_get_serial_port_data(port);
 
@@ -822,13 +818,12 @@ static void sierra_close(struct usb_serial_port *port)
 				sierra_send_setup(port);
 			else
 				usb_autopm_get_interface_no_resume(serial->interface);
-				
+
 		}
 		mutex_unlock(&serial->disc_mutex);
 		spin_lock_irq(&intfdata->susp_lock);
 		portdata->opened = 0;
 		spin_unlock_irq(&intfdata->susp_lock);
-
 
 		/* Stop reading urbs */
 		sierra_stop_rx_urbs(port);
@@ -857,7 +852,6 @@ static int sierra_open(struct tty_struct *tty, struct usb_serial_port *port)
 	/* Set some sane defaults */
 	portdata->rts_state = 1;
 	portdata->dtr_state = 1;
-
 
 	endpoint = port->bulk_in_endpointAddress;
 	for (i = 0; i < portdata->num_in_urbs; i++) {
@@ -890,7 +884,6 @@ static int sierra_open(struct tty_struct *tty, struct usb_serial_port *port)
 	return 0;
 }
 
-
 static void sierra_dtr_rts(struct usb_serial_port *port, int on)
 {
 	struct usb_serial *serial = port->serial;
@@ -911,12 +904,21 @@ static void sierra_dtr_rts(struct usb_serial_port *port, int on)
 static int sierra_startup(struct usb_serial *serial)
 {
 	struct usb_serial_port *port;
+	struct sierra_intf_private *intfdata;
 	struct sierra_port_private *portdata;
 	struct sierra_iface_info *himemoryp = NULL;
 	int i;
 	u8 ifnum;
 
 	dev_dbg(&serial->dev->dev, "%s\n", __func__);
+
+	intfdata = kzalloc(sizeof(*intfdata), GFP_KERNEL);
+	if (!intfdata)
+		return -ENOMEM;
+
+	spin_lock_init(&intfdata->susp_lock);
+
+	usb_set_serial_data(serial, intfdata);
 
 	/* Set Device mode to D0 */
 	sierra_set_power_state(serial->dev, 0x0000);
@@ -933,7 +935,7 @@ static int sierra_startup(struct usb_serial *serial)
 			dev_dbg(&port->dev, "%s: kmalloc for "
 				"sierra_port_private (%d) failed!\n",
 				__func__, i);
-			return -ENOMEM;
+			goto err;
 		}
 		spin_lock_init(&portdata->lock);
 		init_usb_anchor(&portdata->active);
@@ -970,6 +972,14 @@ static int sierra_startup(struct usb_serial *serial)
 	}
 
 	return 0;
+err:
+	for (--i; i >= 0; --i) {
+		portdata = usb_get_serial_port_data(serial->port[i]);
+		kfree(portdata);
+	}
+	kfree(intfdata);
+
+	return -ENOMEM;
 }
 
 static void sierra_release(struct usb_serial *serial)
@@ -989,6 +999,7 @@ static void sierra_release(struct usb_serial *serial)
 			continue;
 		kfree(portdata);
 	}
+	kfree(serial->private);
 }
 
 #ifdef CONFIG_PM
@@ -1124,7 +1135,6 @@ static int __init sierra_init(void)
 	retval = usb_serial_register(&sierra_device);
 	if (retval)
 		goto failed_device_register;
-
 
 	retval = usb_register(&sierra_driver);
 	if (retval)

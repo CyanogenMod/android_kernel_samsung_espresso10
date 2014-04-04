@@ -48,7 +48,6 @@ struct ocfs2_recovery_map {
 	unsigned int *rm_entries;
 };
 
-
 struct ocfs2_journal {
 	enum ocfs2_journal_state   j_state;    /* Journals current state   */
 
@@ -274,7 +273,6 @@ int			     ocfs2_extend_trans(handle_t *handle, int nblocks);
 #define OCFS2_JOURNAL_ACCESS_CREATE 0
 #define OCFS2_JOURNAL_ACCESS_WRITE  1
 #define OCFS2_JOURNAL_ACCESS_UNDO   2
-
 
 /* ocfs2_inode */
 int ocfs2_journal_access_di(handle_t *handle, struct ocfs2_caching_info *ci,

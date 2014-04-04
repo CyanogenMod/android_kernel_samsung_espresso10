@@ -168,4 +168,3 @@
 #define ISR_UNDERRUN		(1<<4)
 
 #endif /* _DM9000X_H_ */
-

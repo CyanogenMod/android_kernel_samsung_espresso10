@@ -108,7 +108,6 @@ struct video_info {
 	char reserved[236];
 };
 
-
 extern struct video_info xgi_video_info;
 
 #endif

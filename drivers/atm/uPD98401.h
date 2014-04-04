@@ -1,17 +1,14 @@
 /* drivers/atm/uPD98401.h - NEC uPD98401 (SAR) declarations */
- 
+
 /* Written 1995 by Werner Almesberger, EPFL LRC */
- 
 
 #ifndef DRIVERS_ATM_uPD98401_H
 #define DRIVERS_ATM_uPD98401_H
-
 
 #define MAX_CRAM_SIZE	(1 << 18)	/* 2^18 words */
 #define RAM_INCREMENT	1024		/* check in 4 kB increments */
 
 #define uPD98401_PORTS	0x24		/* probably more ? */
-
 
 /*
  * Commands

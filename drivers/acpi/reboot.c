@@ -1,4 +1,3 @@
-
 #include <linux/pci.h>
 #include <linux/acpi.h>
 #include <acpi/reboot.h>

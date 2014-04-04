@@ -82,7 +82,6 @@ unsigned char MLSLSerialWriteSingle(void *sl_handle,
 					 slaveAddr, registerAddr, data);
 }
 
-
 /**
  *  @brief  used to write multiple bytes of data from registers.
  *          This should be sent by I2C.
@@ -127,7 +126,6 @@ unsigned char MLSLSerialWrite(void *sl_handle,
 	return ML_SUCCESS;
 }
 
-
 /**
  *  @brief  used to read multiple bytes of data from registers.
  *          This should be sent by I2C.
@@ -164,7 +162,6 @@ unsigned char MLSLSerialRead(void *sl_handle,
 	}
 	return ML_SUCCESS;
 }
-
 
 /**
  *  @brief  used to write multiple bytes of data to the memory.
@@ -207,7 +204,6 @@ unsigned char MLSLSerialWriteMem(void *sl_handle,
 	return ML_SUCCESS;
 }
 
-
 /**
  *  @brief  used to read multiple bytes of data from the memory.
  *          This should be sent by I2C.
@@ -248,7 +244,6 @@ unsigned char MLSLSerialReadMem(void *sl_handle,
 	return ML_SUCCESS;
 }
 
-
 /**
  *  @brief  used to write multiple bytes of data to the fifo.
  *          This should be sent by I2C.
@@ -287,7 +282,6 @@ unsigned char MLSLSerialWriteFifo(void *sl_handle,
 	}
 	return ML_SUCCESS;
 }
-
 
 /**
  *  @brief  used to read multiple bytes of data from the fifo.

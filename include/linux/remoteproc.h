@@ -292,6 +292,7 @@ struct rproc {
 	struct work_struct error_work;
 	struct blocking_notifier_head nbh;
 	struct completion error_comp;
+	void *cdump_buf0, *cdump_buf1;
 #ifdef CONFIG_REMOTE_PROC_AUTOSUSPEND
 	unsigned sus_timeout;
 	bool force_suspend;

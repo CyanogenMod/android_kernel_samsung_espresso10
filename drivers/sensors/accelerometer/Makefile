@@ -18,4 +18,3 @@
 #
 
 obj-$(CONFIG_INPUT_YAS_ACCELEROMETER) += yas_acc_kernel_driver.o
-

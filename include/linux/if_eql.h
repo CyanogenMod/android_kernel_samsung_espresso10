@@ -7,7 +7,7 @@
  *
  *	This software may be used and distributed according to the terms
  *	of the GNU General Public License, incorporated herein by reference.
- * 
+ *
  * The author may be reached as simon@ncm.com, or C/O
  *    NCM
  *    Attn: Simon Janes
@@ -59,7 +59,7 @@ typedef struct equalizer {
 	int			min_slaves;
 	int			max_slaves;
 	struct timer_list	timer;
-} equalizer_t;  
+} equalizer_t;
 
 #endif /* __KERNEL__ */
 
@@ -78,6 +78,5 @@ typedef struct slaving_request {
 	char	slave_name[16];
 	long	priority;
 } slaving_request_t;
-
 
 #endif /* _LINUX_EQL_H */

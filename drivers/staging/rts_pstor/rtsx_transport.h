@@ -38,7 +38,6 @@ void rtsx_stor_get_xfer_buf(unsigned char *buffer,
 	unsigned int buflen, struct scsi_cmnd *srb);
 void rtsx_invoke_transport(struct scsi_cmnd *srb, struct rtsx_chip *chip);
 
-
 #define rtsx_init_cmd(chip)			((chip)->ci = 0)
 
 void rtsx_add_cmd(struct rtsx_chip *chip,
@@ -63,4 +62,3 @@ int rtsx_transfer_data_partial(struct rtsx_chip *chip, u8 card, void *buf, size_
 		enum dma_data_direction dma_dir, int timeout);
 
 #endif   /* __REALTEK_RTSX_TRANSPORT_H */
-

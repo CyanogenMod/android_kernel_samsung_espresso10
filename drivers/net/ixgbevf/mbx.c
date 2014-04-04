@@ -246,7 +246,6 @@ static s32 ixgbevf_write_mbx_vf(struct ixgbe_hw *hw, u32 *msg, u16 size)
 	s32 ret_val;
 	u16 i;
 
-
 	/* lock the mailbox to prevent pf/vf race condition */
 	ret_val = ixgbevf_obtain_mbx_lock_vf(hw);
 	if (ret_val)
@@ -338,4 +337,3 @@ struct ixgbe_mbx_operations ixgbevf_mbx_ops = {
 	.check_for_ack = ixgbevf_check_for_ack_vf,
 	.check_for_rst = ixgbevf_check_for_rst_vf,
 };
-

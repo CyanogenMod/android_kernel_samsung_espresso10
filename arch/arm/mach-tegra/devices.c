@@ -16,7 +16,6 @@
  *
  */
 
-
 #include <linux/resource.h>
 #include <linux/platform_device.h>
 #include <linux/dma-mapping.h>
@@ -210,7 +209,6 @@ struct platform_device tegra_spi_device4 = {
 		.coherent_dma_mask	= 0xffffffff,
 	},
 };
-
 
 static struct resource sdhci_resource1[] = {
 	[0] = {

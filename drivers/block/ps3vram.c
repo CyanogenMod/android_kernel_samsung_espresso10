@@ -20,9 +20,7 @@
 #include <asm/ps3.h>
 #include <asm/ps3gpu.h>
 
-
 #define DEVICE_NAME		"ps3vram"
-
 
 #define XDR_BUF_SIZE (2 * 1024 * 1024) /* XDR buffer (must be 1MiB aligned) */
 #define XDR_IOIF 0x0c000000
@@ -85,14 +83,11 @@ struct ps3vram_priv {
 	struct bio_list list;
 };
 
-
 static int ps3vram_major;
-
 
 static const struct block_device_operations ps3vram_fops = {
 	.owner		= THIS_MODULE,
 };
-
 
 #define DMA_NOTIFIER_HANDLE_BASE 0x66604200 /* first DMA notifier handle */
 #define DMA_NOTIFIER_OFFSET_BASE 0x1000     /* first DMA notifier offset */
@@ -350,7 +345,6 @@ static void ps3vram_cache_load(struct ps3_system_bus_device *dev, int entry,
 	cache->tags[entry].address = address;
 	cache->tags[entry].flags |= CACHE_PAGE_PRESENT;
 }
-
 
 static void ps3vram_cache_flush(struct ps3_system_bus_device *dev)
 {
@@ -838,7 +832,6 @@ static struct ps3_system_bus_driver ps3vram = {
 	.remove		= ps3vram_remove,
 	.shutdown	= ps3vram_remove,
 };
-
 
 static int __init ps3vram_init(void)
 {

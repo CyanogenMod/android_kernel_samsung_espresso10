@@ -18,5 +18,4 @@ enum d_module {
 	D_SUBMODULE_DECLARE(fw)
 };
 
-
 #endif /* #ifndef __debug_levels__h__ */

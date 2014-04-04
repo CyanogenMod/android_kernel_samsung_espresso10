@@ -2623,7 +2623,6 @@ static const struct gcregsemaphore gcregsema_fe_pe = {
 	0
 };
 
-
 /*******************************************************************************
 ** State gcregFlush
 */

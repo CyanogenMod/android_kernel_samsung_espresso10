@@ -141,7 +141,6 @@ static int cmc221_get_active(struct modem_ctl *mc)
 	return 0;
 }
 
-
 static void mc_work(struct work_struct *work_arg)
 {
 
@@ -182,8 +181,6 @@ static void mc_work(struct work_struct *work_arg)
 		break;
 	}
 }
-
-
 
 static irqreturn_t phone_active_irq_handler(int irq, void *_mc)
 {

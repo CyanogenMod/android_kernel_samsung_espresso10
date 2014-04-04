@@ -221,7 +221,6 @@ static void gdrom_spicommand(void *spi_string, int buflen)
 	outsw(GDROM_DATA_REG, cmd, 6);
 }
 
-
 /* gdrom_command_executediagnostic:
  * Used to probe for presence of working GDROM
  * Restarts GDROM device and then applies standard ATA 3

@@ -320,7 +320,6 @@ void au8522_release_state(struct au8522_state *state);
 #define AU8522_AUDIOAGC2_REG605H 			0x605
 #define AU8522_AUDIOFREQ_REG606H 			0x606
 
-
 /**************************************************************/
 
 #define AU8522_INPUT_CONTROL_REG081H_ATSC               	0xC4

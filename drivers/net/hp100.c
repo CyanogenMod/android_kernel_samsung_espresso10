@@ -236,7 +236,6 @@ module_param(hp100_mode, int, 0);
 static int hp100_probe1(struct net_device *dev, int ioaddr, u_char bus,
 			struct pci_dev *pci_dev);
 
-
 static int hp100_open(struct net_device *dev);
 static int hp100_close(struct net_device *dev);
 static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
@@ -898,7 +897,6 @@ static void hp100_hwinit(struct net_device *dev)
 
 }
 
-
 /*
  * mmuinit - Reinitialise Cascade MMU and MAC settings.
  * Note: Must already be in reset and leaves card in reset.
@@ -1151,7 +1149,6 @@ static int hp100_close(struct net_device *dev)
 	return 0;
 }
 
-
 /*
  * Configure the PDL Rx rings and LAN
  */
@@ -1202,7 +1199,6 @@ static void hp100_init_pdls(struct net_device *dev)
 	}
 }
 
-
 /* These functions "format" the entries in the pdl structure   */
 /* They return how much memory the fragments need.            */
 static int hp100_init_rxpdl(struct net_device *dev,
@@ -1232,7 +1228,6 @@ static int hp100_init_rxpdl(struct net_device *dev,
 
 	return roundup(MAX_RX_FRAG * 2 + 2, 4);
 }
-
 
 static int hp100_init_txpdl(struct net_device *dev,
 			    register hp100_ring_t * ringptr,
@@ -1593,7 +1588,6 @@ drop:
 	return NETDEV_TX_OK;
 }
 
-
 /* clean_txring checks if packets have been sent by the card by reading
  * the TX_PDL register from the performance page and comparing it to the
  * number of committed packets. It then frees the skb's of the packets that
@@ -1759,7 +1753,6 @@ drop:
 	return NETDEV_TX_OK;
 
 }
-
 
 /*
  * Receive Function (Non-Busmaster mode)
@@ -2054,7 +2047,6 @@ static void hp100_clear_stats(struct hp100_private *lp, int ioaddr)
 	hp100_page(PERFORMANCE);
 	spin_unlock_irqrestore(&lp->lock, flags);
 }
-
 
 /*
  *  multicast setup
@@ -2824,7 +2816,6 @@ void hp100_RegisterDump(struct net_device *dev)
 }
 #endif
 
-
 static void cleanup_dev(struct net_device *d)
 {
 	struct hp100_private *p = netdev_priv(d);
@@ -2948,7 +2939,6 @@ static void __devexit hp100_pci_remove (struct pci_dev *pdev)
 	pci_disable_device(pdev);
 }
 
-
 static struct pci_driver hp100_pci_driver = {
 	.name		= "hp100",
 	.id_table	= hp100_pci_tbl,
@@ -3053,7 +3043,6 @@ static int __init hp100_module_init(void)
 	hp100_isa_cleanup();
 	goto out;
 }
-
 
 static void __exit hp100_module_exit(void)
 {

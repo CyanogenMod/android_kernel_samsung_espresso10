@@ -27,7 +27,6 @@
 #define MAX_INTERESTING 50000
 #define STDDEV_THRESH 400
 
-
 /*
  * Concepts and ideas behind the menu governor
  *
@@ -121,17 +120,18 @@ struct menu_device {
 	int		interval_ptr;
 };
 
-
 #define LOAD_INT(x) ((x) >> FSHIFT)
 #define LOAD_FRAC(x) LOAD_INT(((x) & (FIXED_1-1)) * 100)
 
+/* commenting this function because we r not using it currenlty*/
+#if 0
 static int get_loadavg(void)
 {
 	unsigned long this = this_cpu_load();
 
-
 	return LOAD_INT(this) * 10 + LOAD_FRAC(this) / 10;
 }
+#endif
 
 static inline int which_bucket(unsigned int duration)
 {
@@ -261,7 +261,6 @@ static int menu_select(struct cpuidle_device *dev)
 	data->expected_us =
 		t.tv_sec * USEC_PER_SEC + t.tv_nsec / NSEC_PER_USEC;
 
-
 	data->bucket = which_bucket(data->expected_us);
 
 	multiplier = performance_multiplier();
@@ -346,7 +345,6 @@ static void menu_update(struct cpuidle_device *dev)
 	if (unlikely(!(target->flags & CPUIDLE_FLAG_TIME_VALID)))
 		last_idle_us = data->expected_us;
 
-
 	measured_us = last_idle_us;
 
 	/*
@@ -355,7 +353,6 @@ static void menu_update(struct cpuidle_device *dev)
 	 */
 	if (measured_us > data->exit_us)
 		measured_us -= data->exit_us;
-
 
 	/* update our correction ratio */
 

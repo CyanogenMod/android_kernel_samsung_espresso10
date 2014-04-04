@@ -76,5 +76,4 @@ int smapi_query_DSP_cfg(SMAPI_DSP_SETTINGS * pSettings);
 int smapi_set_DSP_cfg(void);
 int smapi_set_DSP_power_state(BOOLEAN bOn);
 
-
 #endif

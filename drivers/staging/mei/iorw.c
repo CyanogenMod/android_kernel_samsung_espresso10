@@ -14,7 +14,6 @@
  *
  */
 
-
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/errno.h>
@@ -32,14 +31,11 @@
 #include <linux/jiffies.h>
 #include <linux/uaccess.h>
 
-
 #include "mei_dev.h"
 #include "hw.h"
 #include "mei.h"
 #include "interface.h"
 #include "mei_version.h"
-
-
 
 /**
  * mei_ioctl_connect_client - the connect to fw client IOCTL function
@@ -73,7 +69,6 @@ int mei_ioctl_connect_client(struct file *file,
 	dev = cl->dev;
 
 	dev_dbg(&dev->pdev->dev, "mei_ioctl_connect_client() Entry\n");
-
 
 	/* buffered ioctl cb */
 	cb = kzalloc(sizeof(struct mei_cl_cb), GFP_KERNEL);
@@ -152,7 +147,6 @@ int mei_ioctl_connect_client(struct file *file,
 		goto end;
 	}
 
-
 	/* prepare the output buffer */
 	client = &data->out_client_properties;
 	client->max_msg_length = dev->me_clients[i].props.max_msg_length;
@@ -174,7 +168,6 @@ int mei_ioctl_connect_client(struct file *file,
 				      &dev->ctrl_rd_list.mei_cb.
 				      cb_list);
 		}
-
 
 	} else {
 		dev_dbg(&dev->pdev->dev, "Queuing the connect request due to device busy\n");
@@ -297,7 +290,6 @@ int amthi_read(struct mei_device *dev, struct file *file,
 	if (cb == NULL && file->f_flags & O_NONBLOCK)
 		return -EAGAIN;
 
-
 	dev_dbg(&dev->pdev->dev, "waiting for amthi data\n");
 	while (cb == NULL) {
 		/* unlock the Mutex */
@@ -314,7 +306,6 @@ int amthi_read(struct mei_device *dev, struct file *file,
 		/* Locking again the Mutex */
 		mutex_lock(&dev->device_lock);
 	}
-
 
 	dev_dbg(&dev->pdev->dev, "Got amthi data\n");
 	dev->iamthif_timer = 0;

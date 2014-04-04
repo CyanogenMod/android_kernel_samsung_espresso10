@@ -79,4 +79,3 @@ extern unsigned char cfag12864b_isenabled(void);
 extern unsigned char cfag12864b_isinited(void);
 
 #endif /* _CFAG12864B_H_ */
-

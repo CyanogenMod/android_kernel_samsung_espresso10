@@ -15,7 +15,6 @@
  */
 #define RC_TO_ISA(r)    ((((r)&0x07)<<1) | (((r)&~0x07)<<7))
 
-
 /* RISCom/8 On-Board Registers (assuming address translation) */
 
 #define RC_RI           0x100   /* Ring Indicator Register (R/O)           */
@@ -23,14 +22,12 @@
 #define RC_BSR          0x101   /* Board Status Register (R/O)             */
 #define RC_CTOUT        0x101   /* Clear Timeout (W/O)                     */
 
-
 /* Board Status Register */
 
 #define RC_BSR_TOUT     0x08     /* Hardware Timeout                       */
 #define RC_BSR_RINT     0x04     /* Receiver Interrupt                     */
 #define RC_BSR_TINT     0x02     /* Transmitter Interrupt                  */
 #define RC_BSR_MINT     0x01     /* Modem Ctl Interrupt                    */
-
 
 /* On-board oscillator frequency (in Hz) */
 #define RC_OSCFREQ      9830400
@@ -44,11 +41,10 @@
 #define RC_ID           0x10
 
 /* Definitions for Cirrus Logic CL-CD180 8-port async mux chip */
- 
+
 #define CD180_NCH       8       /* Total number of channels                */
 #define CD180_TPC       16      /* Ticks per character                     */
 #define CD180_NFIFO	8	/* TX FIFO size                            */
-
 
 /* Global registers */
 
@@ -65,7 +61,6 @@
 #define CD180_RCSR      0x7a    /* Receiver Character Status Register      */
 #define CD180_TDR       0x7b    /* Transmit Data Register                  */
 #define CD180_EOIR      0x7f    /* End of Interrupt Register               */
-
 
 /* Channel Registers */
 
@@ -90,7 +85,6 @@
 #define CD180_TBPRH     0x39    /* Transmit Baud Rate Period Register High */
 #define CD180_TBPRL     0x3a    /* Transmit Baud Rate Period Register Low  */
 
-
 /* Global Interrupt Vector Register (R/W) */
 
 #define GIVR_ITMASK     0x07     /* Interrupt type mask                     */
@@ -99,18 +93,15 @@
 #define  GIVR_IT_RCV     0x03    /* Receive Good Data Interrupt             */
 #define  GIVR_IT_REXC    0x07    /* Receive Exception Interrupt             */
 
-
 /* Global Interrupt Channel Register (R/W) */
- 
+
 #define GICR_CHAN       0x1c    /* Channel Number Mask                     */
 #define GICR_CHAN_OFF   2       /* Channel Number Offset                   */
-
 
 /* Channel Address Register (R/W) */
 
 #define CAR_CHAN        0x07    /* Channel Number Mask                     */
 #define CAR_A7          0x08    /* A7 Address Extension (unused)           */
-
 
 /* Receive Character Status Register (R/O) */
 
@@ -125,7 +116,6 @@
 #define RCSR_PE         0x04    /* Parity Error                            */
 #define RCSR_FE         0x02    /* Frame Error                             */
 #define RCSR_OE         0x01    /* Overrun Error                           */
-
 
 /* Channel Command Register (R/W) (commands in groups can be OR-ed) */
 
@@ -151,7 +141,6 @@
 #define CCR_TXDIS       0x14    /* Disable Transmitter                     */
 #define CCR_RXDIS       0x11    /* Disable Receiver                        */
 
-
 /* Interrupt Enable Register (R/W) */
 
 #define IER_DSR         0x80    /* Enable interrupt on DSR change          */
@@ -162,7 +151,6 @@
 #define IER_TXRDY       0x04    /* Enable interrupt on TX FIFO empty       */
 #define IER_TXEMPTY     0x02    /* Enable interrupt on TX completely empty */
 #define IER_RET         0x01    /* Enable interrupt on RX Exc. Timeout     */
-
 
 /* Channel Option Register 1 (R/W) */
 
@@ -182,7 +170,6 @@
 #define  COR1_7BITS      0x02   /* 7 bits                                  */
 #define  COR1_8BITS      0x03   /* 8 bits                                  */
 
-
 /* Channel Option Register 2 (R/W) */
 
 #define COR2_IXM        0x80    /* Implied XON mode                        */
@@ -194,7 +181,6 @@
 #define COR2_CTSAE      0x02    /* CTS Automatic Enable                    */
 #define COR2_DSRAE      0x01    /* DSR Automatic Enable                    */
 
-
 /* Channel Option Register 3 (R/W) */
 
 #define COR3_XONCH      0x80    /* XON is a pair of characters (1 & 3)     */
@@ -202,7 +188,6 @@
 #define COR3_FCT        0x20    /* Flow-Control Transparency Mode          */
 #define COR3_SCDE       0x10    /* Special Character Detection Enable      */
 #define COR3_RXTH       0x0f    /* RX FIFO Threshold value (1-8)           */
-
 
 /* Channel Control Status Register (R/O) */
 
@@ -213,7 +198,6 @@
 #define CCSR_TXFLOFF    0x04    /* Transmit Flow Off (got XOFF)            */
 #define CCSR_TXFLON     0x02    /* Transmit Flow On (got XON)              */
 
-
 /* Modem Change Option Register 1 (R/W) */
 
 #define MCOR1_DSRZD     0x80    /* Detect 0->1 transition of DSR           */
@@ -222,20 +206,17 @@
 #define MCOR1_DTRTH     0x0f    /* Auto DTR flow control Threshold (1-8)   */
 #define  MCOR1_NODTRFC   0x0     /* Automatic DTR flow control disabled     */
 
-
 /* Modem Change Option Register 2 (R/W) */
 
 #define MCOR2_DSROD     0x80    /* Detect 1->0 transition of DSR           */
 #define MCOR2_CDOD      0x40    /* Detect 1->0 transition of CD            */
 #define MCOR2_CTSOD     0x20    /* Detect 1->0 transition of CTS           */
 
-
 /* Modem Change Register (R/W) */
 
 #define MCR_DSRCHG      0x80    /* DSR Changed                             */
 #define MCR_CDCHG       0x40    /* CD Changed                              */
 #define MCR_CTSCHG      0x20    /* CTS Changed                             */
-
 
 /* Modem Signal Value Register (R/W) */
 
@@ -244,7 +225,6 @@
 #define MSVR_CTS        0x20    /* Current state of CTS input              */
 #define MSVR_DTR        0x02    /* Current state of DTR output             */
 #define MSVR_RTS        0x01    /* Current state of RTS output             */
-
 
 /* Escape characters */
 

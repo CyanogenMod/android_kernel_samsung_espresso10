@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="dbglog.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -41,7 +41,7 @@ extern "C" {
 
 /*
  * Please ensure that the definition of any new module introduced is captured
- * between the DBGLOG_MODULEID_START and DBGLOG_MODULEID_END defines. The 
+ * between the DBGLOG_MODULEID_START and DBGLOG_MODULEID_END defines. The
  * structure is required for the parser to correctly pick up the values for
  * different modules.
  */

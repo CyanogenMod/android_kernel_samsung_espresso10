@@ -36,7 +36,6 @@
 #error "Unsupported AT91 processor"
 #endif
 
-
 /*
  * Peripheral identifiers/interrupts.
  */
@@ -88,6 +87,5 @@
 
 /* Clocks */
 #define AT91_SLOW_CLOCK		32768		/* slow clock */
-
 
 #endif

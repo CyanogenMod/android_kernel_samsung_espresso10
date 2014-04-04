@@ -16,4 +16,3 @@ b43legacy-$(CONFIG_B43LEGACY_DMA)	+= dma.o
 b43legacy-$(CONFIG_B43LEGACY_PIO)	+= pio.o
 
 obj-$(CONFIG_B43LEGACY)			+= b43legacy.o
-

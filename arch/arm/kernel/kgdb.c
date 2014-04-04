@@ -207,7 +207,6 @@ static struct notifier_block kgdb_notifier = {
 	.priority	= -INT_MAX,
 };
 
-
 /**
  *	kgdb_arch_init - Perform any architecture specific initalization.
  *

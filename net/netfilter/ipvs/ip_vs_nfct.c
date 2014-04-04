@@ -66,7 +66,6 @@
 #include <net/netfilter/nf_conntrack_helper.h>
 #include <net/netfilter/nf_conntrack_zones.h>
 
-
 #define FMT_TUPLE	"%pI4:%u->%pI4:%u/%u"
 #define ARG_TUPLE(T)	&(T)->src.u3.ip, ntohs((T)->src.u.all), \
 			&(T)->dst.u3.ip, ntohs((T)->dst.u.all), \
@@ -291,4 +290,3 @@ void ip_vs_conn_drop_conntrack(struct ip_vs_conn *cp)
 			__func__, ARG_TUPLE(&tuple));
 	}
 }
-

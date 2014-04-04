@@ -706,7 +706,6 @@ int fnic_wq_cmpl_handler(struct fnic *fnic, int work_to_do)
 	return wq_work_done;
 }
 
-
 void fnic_free_wq_buf(struct vnic_wq *wq, struct vnic_wq_buf *buf)
 {
 	struct fc_frame *fp = buf->os_buf;

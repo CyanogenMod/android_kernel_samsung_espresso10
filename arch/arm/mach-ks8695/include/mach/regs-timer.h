@@ -18,7 +18,6 @@
 #define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
 #define KS8695_TMR_PA		(KS8695_IO_PA + KS8695_TMR_OFFSET)
 
-
 /*
  * Timer registers
  */
@@ -28,13 +27,11 @@
 #define KS8695_T1PD		(0x0C)		/* Timer 1 Pulse Count Register */
 #define KS8695_T0PD		(0x10)		/* Timer 0 Pulse Count Register */
 
-
 /* Timer Control Register */
 #define TMCON_T1EN		(1 << 1)	/* Timer 1 Enable */
 #define TMCON_T0EN		(1 << 0)	/* Timer 0 Enable */
 
 /* Timer0 Timeout Counter Register */
 #define T0TC_WATCHDOG		(0xff)		/* Enable watchdog mode */
-
 
 #endif

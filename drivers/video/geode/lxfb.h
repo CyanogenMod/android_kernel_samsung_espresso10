@@ -73,7 +73,6 @@ int lx_powerdown(struct fb_info *info);
 int lx_powerup(struct fb_info *info);
 #endif
 
-
 /* Graphics Processor registers (table 6-29 from the data book) */
 enum gp_registers {
 	GP_DST_OFFSET = 0,
@@ -118,7 +117,6 @@ enum gp_registers {
 
 #define GP_BLT_STATUS_CE		(1 << 4)	/* cmd buf empty */
 #define GP_BLT_STATUS_PB		(1 << 0)	/* primitive busy */
-
 
 /* Display Controller registers (table 6-47 from the data book) */
 enum dc_registers {
@@ -244,7 +242,6 @@ enum dc_registers {
 #define DC_GENLK_CTL_FLICK_EN		(1 << 24)
 #define DC_GENLK_CTL_GENLK_EN		(1 << 18)
 
-
 /*
  * Video Processor registers (table 6-71).
  * There is space for 64 bit values, but we never use more than the
@@ -338,7 +335,6 @@ enum vp_registers {
 #define VP_MISC_DACPWRDN		(1 << 10)
 #define VP_MISC_BYP_BOTH		(1 << 0)
 
-
 /*
  * Flat Panel registers (table 6-71).
  * Also 64 bit registers; see above note about 32-bit handling.
@@ -378,7 +374,6 @@ enum fp_registers {
 #define FP_PM_PANEL_ON			(1 << 0)	/* r/o */
 
 #define FP_DFC_BC			((1 << 4) | (1 << 5) | (1 << 6))
-
 
 /* register access functions */
 
@@ -421,7 +416,6 @@ static inline void write_fp(struct lxfb_par *par, int reg, uint32_t val)
 {
 	writel(val, par->vp_regs + 8*reg + VP_FP_START);
 }
-
 
 /* MSRs are defined in linux/cs5535.h; their bitfields are here */
 

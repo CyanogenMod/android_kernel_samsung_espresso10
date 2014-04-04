@@ -530,7 +530,6 @@ bool set_channel (void *pDeviceHandler, unsigned int uConnectionChannel)
 	PSDevice pDevice = (PSDevice) pDeviceHandler;
 	bool bResult = true;
 
-
 	if (pDevice->byCurrentCh == uConnectionChannel) {
 		return bResult;
 	}
@@ -558,14 +557,12 @@ bool set_channel (void *pDeviceHandler, unsigned int uConnectionChannel)
 	}
 	//}} RobertYu
 
-
 	pDevice->byCurrentCh = (unsigned char)uConnectionChannel;
 	bResult &= RFbSelectChannel(pDevice->PortOffset, pDevice->byRFType, (unsigned char)uConnectionChannel);
 
 	// Init Synthesizer Table
 	if (pDevice->bEnablePSMode == true)
 		RFvWriteWakeProgSyn(pDevice->PortOffset, pDevice->byRFType, uConnectionChannel);
-
 
 	//DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"CARDbSetMediaChannel: %d\n", (unsigned char)uConnectionChannel);
 	BBvSoftwareReset(pDevice->PortOffset);
@@ -611,7 +608,6 @@ void set_country_info(void *pDeviceHandler, CARD_PHY_TYPE ePHYType, void *pIE)
 	unsigned int uNumOfCountryInfo = 0;
 	unsigned char byCh = 0;
 	PWLAN_IE_COUNTRY pIE_Country = (PWLAN_IE_COUNTRY) pIE;
-
 
 	uNumOfCountryInfo = (pIE_Country->len - 3);
 	uNumOfCountryInfo /= 3;
@@ -660,7 +656,6 @@ unsigned char set_support_channels(void *pDeviceHandler, unsigned char *pbyIEs)
 	PWLAN_IE_SUPP_CH pIE = (PWLAN_IE_SUPP_CH) pbyIEs;
 	unsigned char *pbyChTupple;
 	unsigned char byLen = 0;
-
 
 	pIE->byElementID = WLAN_EID_SUPP_CH;
 	pIE->len = 0;

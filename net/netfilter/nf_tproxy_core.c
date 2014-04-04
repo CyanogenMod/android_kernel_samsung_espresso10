@@ -18,7 +18,6 @@
 #include <net/udp.h>
 #include <net/netfilter/nf_tproxy_core.h>
 
-
 static void
 nf_tproxy_destructor(struct sk_buff *skb)
 {
@@ -51,7 +50,9 @@ EXPORT_SYMBOL_GPL(nf_tproxy_assign_sock);
 static int __init nf_tproxy_init(void)
 {
 	pr_info("NF_TPROXY: Transparent proxy support initialized, version 4.1.0\n");
+#if 0
 	pr_info("NF_TPROXY: Copyright (c) 2006-2007 BalaBit IT Ltd.\n");
+#endif
 	return 0;
 }
 

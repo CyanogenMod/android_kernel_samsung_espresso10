@@ -376,7 +376,6 @@ struct be_cmd_req_cq_create {
 	struct phys_addr pages[8];
 } __packed;
 
-
 struct be_cmd_resp_cq_create {
 	struct be_cmd_resp_hdr hdr;
 	u16 cq_id;
@@ -399,7 +398,6 @@ struct be_cmd_resp_get_fat {
 	u32 rsvd[2];
 	u32 data_buffer[1];
 } __packed;
-
 
 /******************** Create MCCQ ***************************/
 /* Pseudo amap definition in which each bit of the actual structure is defined
@@ -933,7 +931,6 @@ struct be_cmd_req_rx_filter {
 	struct macaddr mac[BE_MAX_MC];
 };
 
-
 /******************** Link Status Query *******************/
 struct be_cmd_req_link_status {
 	struct be_cmd_req_hdr hdr;
@@ -1341,7 +1338,6 @@ struct be_port_rxf_stats_v1 {
 	u32 rsvd5[3];
 };
 
-
 struct be_rxf_stats_v1 {
 	struct be_port_rxf_stats_v1 port[4];
 	u32 rsvd0[2];
@@ -1543,4 +1539,3 @@ extern int be_cmd_get_cntl_attributes(struct be_adapter *adapter);
 extern int be_cmd_check_native_mode(struct be_adapter *adapter);
 extern int be_cmd_get_reg_len(struct be_adapter *adapter, u32 *log_size);
 extern void be_cmd_get_regs(struct be_adapter *adapter, u32 buf_len, void *buf);
-

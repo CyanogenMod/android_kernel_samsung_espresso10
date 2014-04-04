@@ -19,7 +19,6 @@
  *	sync'd some routines with mace.c and fixed various bugs.
  */
 
-
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/netdevice.h>

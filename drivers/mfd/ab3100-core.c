@@ -374,7 +374,6 @@ int ab3100_event_unregister(struct ab3100 *ab3100,
 }
 EXPORT_SYMBOL(ab3100_event_unregister);
 
-
 static int ab3100_event_registers_startup_state_get(struct device *dev,
 					     u8 *event)
 {
@@ -407,8 +406,6 @@ static irqreturn_t ab3100_irq_handler(int irq, void *data)
 	u8 event_regs[3];
 	u32 fatevent;
 	int err;
-
-	add_interrupt_randomness(irq);
 
 	err = ab3100_get_register_page_interruptible(ab3100, AB3100_EVENTA1,
 				       event_regs, 3);
@@ -938,9 +935,6 @@ static int __devinit ab3100_probe(struct i2c_client *client,
 
 	err = request_threaded_irq(client->irq, NULL, ab3100_irq_handler,
 				IRQF_ONESHOT, "ab3100-core", ab3100);
-	/* This real unpredictable IRQ is of course sampled for entropy */
-	rand_initialize_irq(client->irq);
-
 	if (err)
 		goto exit_no_irq;
 

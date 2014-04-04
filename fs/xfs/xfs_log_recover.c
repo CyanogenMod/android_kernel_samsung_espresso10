@@ -146,7 +146,6 @@ xlog_align(
 	return XFS_BUF_PTR(bp) + BBTOB(offset);
 }
 
-
 /*
  * nbblks should be uint, but oh well.  Just want to catch that 32-bit length.
  */
@@ -2484,7 +2483,6 @@ xlog_recover_dquot_pass2(
 	xfs_dq_logformat_t	*dq_f;
 	uint			type;
 
-
 	/*
 	 * Filesystems are required to send in quota flags at mount time.
 	 */
@@ -2597,7 +2595,6 @@ xlog_recover_efi_pass2(
 	xfs_trans_ail_update(log->l_ailp, &efip->efi_item, lsn);
 	return 0;
 }
-
 
 /*
  * This routine is called when an efd format structure is found in
@@ -3184,7 +3181,6 @@ xlog_recover_process_iunlinks(
 	mp->m_dmevmask = mp_dmevmask;
 }
 
-
 #ifdef DEBUG
 STATIC void
 xlog_pack_data_checksum(
@@ -3512,7 +3508,7 @@ xlog_do_recovery_pass(
 				 *   - order is important.
 				 */
 				error = xlog_bread_offset(log, 0,
-						bblks - split_bblks, hbp,
+						bblks - split_bblks, dbp,
 						offset + BBTOB(split_bblks));
 				if (error)
 					goto bread_err2;
@@ -3789,7 +3785,6 @@ xlog_recover_finish(
 	}
 	return 0;
 }
-
 
 #if defined(DEBUG)
 /*

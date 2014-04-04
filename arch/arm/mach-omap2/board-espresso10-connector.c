@@ -1,8 +1,5 @@
-/* arch/arm/mach-omap2/board-espresso10-connector.c
- *
+/*
  * Copyright (C) 2011 Samsung Electronics Co, Ltd.
- *
- * Based on mach-omap2/board-espresso-connector.c
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -12,7 +9,6 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
  */
 
 #include <linux/device.h>
@@ -87,21 +83,22 @@ static char *device_names[] = {
 	[P30_TA]			= "TA",
 };
 
+#ifdef CONFIG_SAMSUNG_Y_CABLE
+extern s16 adc_val;
+#endif
+
 struct omap4_otg {
 	struct otg_transceiver otg;
 	struct device dev;
-
 	struct regulator *vusb;
 	struct work_struct set_vbus_work;
 	struct mutex lock;
-
 	bool reg_on;
 	bool need_vbus_drive;
 	int usb_manual_mode;
 	int uart_manual_mode;
 	int current_device;
 	int ta_nconnected;
-
 	struct switch_dev dock_switch;
 	struct switch_dev audio_switch;
 #ifdef CONFIG_USB_HOST_NOTIFY
@@ -525,7 +522,6 @@ int omap4_espresso10_get_adc(enum espresso10_adc_ch ch)
 		for (i = 0; i < 5; i++) {
 			usleep_range(5000, 5500);
 			adc_tmp = stmpe811_adc_get_value(stmpe811_ch);
-			pr_info("adc_check_1 adc=%d\n", adc_tmp);
 			adc_sum += adc_tmp;
 			if (adc_max < adc_tmp)
 				adc_max = adc_tmp;
@@ -555,8 +551,18 @@ static void espresso10_con_usb_charger_attached(struct omap4_otg *otg)
 	}
 
 	if (!val) { /* connected */
+#ifdef CONFIG_SAMSUNG_Y_CABLE
+	if (adc_val > 2606 && adc_val < 2855) {
+		otg->otg.default_a = true;
+		otg->otg.state = OTG_STATE_A_IDLE;
+	} else {
 		otg->otg.default_a = false;
 		otg->otg.state = OTG_STATE_B_IDLE;
+	}
+#else
+		otg->otg.default_a = false;
+		otg->otg.state = OTG_STATE_B_IDLE;
+#endif
 		otg->otg.last_event = USB_EVENT_VBUS;
 
 		atomic_notifier_call_chain(&otg->otg.notifier,
@@ -1219,7 +1225,6 @@ static int __init espresso10_save_init_switch_param(char *str)
 	return 0;
 }
 __setup("switch_sel=", espresso10_save_init_switch_param);
-
 
 #ifdef CONFIG_USB_HOST_NOTIFY
 static void espresso10_booster(int enable)

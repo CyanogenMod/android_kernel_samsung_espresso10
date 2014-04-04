@@ -428,7 +428,6 @@ ohci_s3c2410_start(struct usb_hcd *hcd)
 	return 0;
 }
 
-
 static const struct hc_driver ohci_s3c2410_hc_driver = {
 	.description =		hcd_name,
 	.product_desc =		"S3C24XX OHCI",

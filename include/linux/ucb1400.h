@@ -160,7 +160,6 @@ static inline void ucb1400_adc_disable(struct snd_ac97 *ac97)
 	ucb1400_reg_write(ac97, UCB_ADC_CR, 0);
 }
 
-
 unsigned int ucb1400_adc_read(struct snd_ac97 *ac97, u16 adc_channel,
 			      int adcsync);
 

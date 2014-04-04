@@ -52,7 +52,6 @@ struct XENA_dev_config {
 /* The SW_RESET register must read this value after a successful reset. */
 #define	SW_RESET_RAW_VAL			0xA5000000
 
-
 	u64 adapter_status;
 #define ADAPTER_STATUS_TDMA_READY          s2BIT(0)
 #define ADAPTER_STATUS_RDMA_READY          s2BIT(1)

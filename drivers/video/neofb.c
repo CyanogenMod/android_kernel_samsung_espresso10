@@ -23,9 +23,9 @@
  *
  * 0.3.3
  *  - Porting over to new fbdev api. (jsimmons)
- *  
+ *
  * 0.3.2
- *  - got rid of all floating point (dok) 
+ *  - got rid of all floating point (dok)
  *
  * 0.3.1
  *  - added module license (dok)
@@ -111,7 +111,6 @@ module_param(mode_option, charp, 0);
 MODULE_PARM_DESC(mode_option, "Preferred video mode ('640x480-8@60', etc)");
 
 #endif
-
 
 /* --------------------------------------------------------------------- */
 
@@ -343,7 +342,6 @@ static int vgaHWInit(const struct fb_var_screeninfo *var,
 	par->Graphics[7] = 0x0F;
 	par->Graphics[8] = 0xFF;
 
-
 	par->Attribute[0] = 0x00;	/* standard colormap translation */
 	par->Attribute[1] = 0x01;
 	par->Attribute[2] = 0x02;
@@ -472,7 +470,6 @@ static void vgaHWRestore(const struct fb_info *info,
 
 	VGAdisablePalette();
 }
-
 
 /* -------------------- Hardware specific routines ------------------------- */
 
@@ -888,7 +885,6 @@ static int neofb_set_par(struct fb_info *info)
 	par->PanelHorizCenterReg4 = 0x00;
 	par->PanelHorizCenterReg5 = 0x00;
 
-
 	if (par->PanelDispCntlReg1 & 0x02) {
 		if (info->var.xres == par->NeoPanelWidth) {
 			/*
@@ -1161,14 +1157,14 @@ static int neofb_set_par(struct fb_info *info)
 
 	switch (info->fix.accel) {
 		case FB_ACCEL_NEOMAGIC_NM2200:
-		case FB_ACCEL_NEOMAGIC_NM2230: 
-		case FB_ACCEL_NEOMAGIC_NM2360: 
-		case FB_ACCEL_NEOMAGIC_NM2380: 
+		case FB_ACCEL_NEOMAGIC_NM2230:
+		case FB_ACCEL_NEOMAGIC_NM2360:
+		case FB_ACCEL_NEOMAGIC_NM2380:
 			neo2200_accel_init(info, &info->var);
 			break;
 		default:
 			break;
-	}	
+	}
 	return 0;
 }
 
@@ -1500,15 +1496,15 @@ neofb_fillrect(struct fb_info *info, const struct fb_fillrect *rect)
 {
 	switch (info->fix.accel) {
 		case FB_ACCEL_NEOMAGIC_NM2200:
-		case FB_ACCEL_NEOMAGIC_NM2230: 
-		case FB_ACCEL_NEOMAGIC_NM2360: 
+		case FB_ACCEL_NEOMAGIC_NM2230:
+		case FB_ACCEL_NEOMAGIC_NM2360:
 		case FB_ACCEL_NEOMAGIC_NM2380:
 			neo2200_fillrect(info, rect);
 			break;
 		default:
 			cfb_fillrect(info, rect);
 			break;
-	}	
+	}
 }
 
 static void
@@ -1516,15 +1512,15 @@ neofb_copyarea(struct fb_info *info, const struct fb_copyarea *area)
 {
 	switch (info->fix.accel) {
 		case FB_ACCEL_NEOMAGIC_NM2200:
-		case FB_ACCEL_NEOMAGIC_NM2230: 
-		case FB_ACCEL_NEOMAGIC_NM2360: 
-		case FB_ACCEL_NEOMAGIC_NM2380: 
+		case FB_ACCEL_NEOMAGIC_NM2230:
+		case FB_ACCEL_NEOMAGIC_NM2360:
+		case FB_ACCEL_NEOMAGIC_NM2380:
 			neo2200_copyarea(info, area);
 			break;
 		default:
 			cfb_copyarea(info, area);
 			break;
-	}	
+	}
 }
 
 static void
@@ -1543,20 +1539,20 @@ neofb_imageblit(struct fb_info *info, const struct fb_image *image)
 	}
 }
 
-static int 
+static int
 neofb_sync(struct fb_info *info)
 {
 	switch (info->fix.accel) {
 		case FB_ACCEL_NEOMAGIC_NM2200:
-		case FB_ACCEL_NEOMAGIC_NM2230: 
-		case FB_ACCEL_NEOMAGIC_NM2360: 
-		case FB_ACCEL_NEOMAGIC_NM2380: 
+		case FB_ACCEL_NEOMAGIC_NM2230:
+		case FB_ACCEL_NEOMAGIC_NM2360:
+		case FB_ACCEL_NEOMAGIC_NM2380:
 			neo2200_sync(info);
 			break;
 		default:
 			break;
 	}
-	return 0;		
+	return 0;
 }
 
 /*
@@ -1938,7 +1934,6 @@ static int __devinit neo_init_hw(struct fb_info *info)
 	par->cursorOff = CursorOff;
 	return videoRam * 1024;
 }
-
 
 static struct fb_info *__devinit neo_alloc_fb_info(struct pci_dev *dev, const struct
 						   pci_device_id *id)

@@ -433,7 +433,6 @@ enum lock_type4 {
 	NFS4_WRITEW_LT = 4
 };
 
-
 /* Mandatory Attributes */
 #define FATTR4_WORD0_SUPPORTED_ATTRS    (1UL << 0)
 #define FATTR4_WORD0_TYPE               (1UL << 1)

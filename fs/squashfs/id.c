@@ -61,7 +61,6 @@ int squashfs_get_id(struct super_block *sb, unsigned int index,
 	return 0;
 }
 
-
 /*
  * Read uncompressed id lookup table indexes from disk into memory
  */

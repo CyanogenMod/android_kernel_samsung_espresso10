@@ -1,4 +1,4 @@
-/* 
+/*
  *  Transport specific attributes.
  *
  *  Copyright (c) 2003 Silicon Graphics, Inc.  All rights reserved.
@@ -82,7 +82,6 @@ struct scsi_transport_template {
 
 #define transport_class_to_shost(tc) \
 	dev_to_shost((tc)->parent)
-
 
 /* Private area maintenance. The driver requested allocations come
  * directly after the transport class allocations (if any).  The idea

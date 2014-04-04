@@ -3,7 +3,7 @@
  * Copyright (c) 2004-2010 Atheros Communications Inc.
  * All rights reserved.
  *
- * 
+ *
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -33,7 +33,6 @@
 #define IEEE80211_MAX_SEQ_NO        0xFFF
 #define IEEE80211_NEXT_SEQ_NO(x)    (((x) + 1) & IEEE80211_MAX_SEQ_NO)
 
-
 #define NUM_OF_TIDS         8
 #define AGGR_SZ_DEFAULT     8
 
@@ -49,7 +48,7 @@
 
 /* Hold q is a function of win_sz, which is negotiated per tid */
 #define HOLD_Q_SZ(_x)   (TID_WINDOW_SZ((_x))*sizeof(struct osbuf_hold_q))
-/* AGGR_RX_TIMEOUT value is important as a (too) small value can cause frames to be 
+/* AGGR_RX_TIMEOUT value is important as a (too) small value can cause frames to be
  * delivered out of order and a (too) large value can cause undesirable latency in
  * certain situations. */
 #define AGGR_RX_TIMEOUT     400  /* Timeout(in ms) for delivery of frames, if they are stuck */
@@ -64,7 +63,6 @@ struct osbuf_hold_q {
     bool      is_amsdu;
     u16 seq_no;
 };
-
 
 #if 0
 /* XXX: unused ? */
@@ -82,9 +80,9 @@ struct rxtid {
     u16 seq_next;   /* Next seq no, in current window */
     u32 hold_q_sz;  /* Num of frames that can be held in hold q */
     struct osbuf_hold_q        *hold_q;    /* Hold q for re-order */
-#if 0    
+#if 0
     struct window_snapshot     old_win;    /* Sliding window snapshot - for timeout */
-#endif    
+#endif
     A_NETBUF_QUEUE_T    q;          /* q head for enqueuing frames for dispatch */
     A_MUTEX_T           lock;
 };
@@ -104,7 +102,7 @@ struct rxtid_stats {
 struct aggr_info {
     u8 aggr_sz;            /* config value of aggregation size */
     u8 timerScheduled;
-    A_TIMER             timer;              /* timer for returning held up pkts in re-order que */    
+    A_TIMER             timer;              /* timer for returning held up pkts in re-order que */
     void                *dev;               /* dev handle */
     RX_CALLBACK         rx_fn;              /* callback function to return frames; to upper layer */
     struct rxtid               RxTid[NUM_OF_TIDS]; /* Per tid window */

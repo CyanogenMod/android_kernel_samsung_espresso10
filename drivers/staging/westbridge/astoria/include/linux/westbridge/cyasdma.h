@@ -27,7 +27,6 @@
 
 #include "cyas_cplus_start.h"
 
-
 /*@@DMA Overview
 	This module manages the DMA operations to/from the West Bridge
 	device.  The DMA module maintains a DMA queue for each endpoint

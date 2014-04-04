@@ -92,13 +92,13 @@ int coda_cnode_make(struct inode **inode, struct CodaFid *fid, struct super_bloc
 {
         struct coda_vattr attr;
         int error;
-        
+
 	/* We get inode numbers from Venus -- see venus source */
 	error = venus_getattr(sb, fid, &attr);
 	if ( error ) {
 	    *inode = NULL;
 	    return error;
-	} 
+	}
 
 	*inode = coda_iget(sb, fid, &attr);
 	if ( IS_ERR(*inode) ) {
@@ -108,7 +108,6 @@ int coda_cnode_make(struct inode **inode, struct CodaFid *fid, struct super_bloc
 	return 0;
 }
 
-
 /* Although we treat Coda file identifiers as immutable, there is one
  * special case for files created during a disconnection where they may
  * not be globally unique. When an identifier collision is detected we
@@ -117,12 +116,12 @@ int coda_cnode_make(struct inode **inode, struct CodaFid *fid, struct super_bloc
  * and new values of the identifier to handle any in-flight upcalls.
  * The real solution is to use globally unique UUIDs as identifiers, but
  * retrofitting the existing userspace code for this is non-trivial. */
-void coda_replace_fid(struct inode *inode, struct CodaFid *oldfid, 
+void coda_replace_fid(struct inode *inode, struct CodaFid *oldfid,
 		      struct CodaFid *newfid)
 {
 	struct coda_inode_info *cii = ITOC(inode);
 	unsigned long hash = coda_f2i(newfid);
-	
+
 	BUG_ON(!coda_fideq(&cii->c_fid, oldfid));
 
 	/* replace fid and rehash inode */
@@ -134,7 +133,7 @@ void coda_replace_fid(struct inode *inode, struct CodaFid *oldfid,
 }
 
 /* convert a fid to an inode. */
-struct inode *coda_fid_to_inode(struct CodaFid *fid, struct super_block *sb) 
+struct inode *coda_fid_to_inode(struct CodaFid *fid, struct super_block *sb)
 {
 	struct inode *inode;
 	unsigned long hash = coda_f2i(fid);
@@ -171,4 +170,3 @@ int coda_cnode_makectl(struct inode **inode, struct super_block *sb)
 
 	return error;
 }
-

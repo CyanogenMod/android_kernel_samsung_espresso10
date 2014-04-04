@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="credit_dist.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -75,7 +75,6 @@ static INLINE void ReduceCredits(struct common_credit_state_info *pCredInfo,
     (pCredInfo)->CurrentFreeCredits -= (credits);   \
 }
 
-
 /* default credit init callback.
  * This function is called in the context of HTCStart() to setup initial (application-specific)
  * credit distributions */
@@ -99,7 +98,7 @@ static void ar6000_credit_init(void                     *Context,
         pCurEpDist->TxCreditsMin = pCurEpDist->TxCreditsPerMaxMsg;
 
 #ifdef CONFIG_GIVE_LOW_PRIORITY_STREAMS_MIN_CREDITS
- 
+
       if (TotalCredits > 4)
       {
           if ((pCurEpDist->ServiceID == WMI_DATA_BK_SVC)  || (pCurEpDist->ServiceID == WMI_DATA_BE_SVC)){
@@ -109,7 +108,7 @@ static void ar6000_credit_init(void                     *Context,
                 SET_EP_ACTIVE(pCurEpDist);
           }
       }
- 
+
 #endif
 
         if (pCurEpDist->ServiceID == WMI_CONTROL_SVC) {
@@ -165,7 +164,6 @@ static void ar6000_credit_init(void                     *Context,
 
 }
 
-
 /* default credit distribution callback
  * This callback is invoked whenever endpoints require credit distributions.
  * A lock is held while this function is invoked, this function shall NOT block.
@@ -204,11 +202,11 @@ static void ar6000_credit_distribute(void                     *Context,
                             /* oversubscribed endpoints need to reduce back to normal */
                         ReduceCredits(pCredInfo, pCurEpDist, pCurEpDist->TxCreditsNorm);
                     }
-                
+
                     if (!IS_EP_ACTIVE(pCurEpDist)) {
                             /* endpoint is inactive, now check for messages waiting for credits */
                         if (pCurEpDist->TxQueueDepth == 0) {
-                                /* EP is inactive and there are no pending messages, 
+                                /* EP is inactive and there are no pending messages,
                                  * reduce credits back to zero to recover credits */
                             ReduceCredits(pCredInfo, pCurEpDist, 0);
                         }
@@ -305,7 +303,7 @@ static void SeekCredits(struct common_credit_state_info *pCredInfo,
                  break;
             }
         }
- 
+
         if (pEPDist->ServiceID == WMI_DATA_VO_SVC) {
             if ((pEPDist->TxCreditsAssigned >= pEPDist->TxCreditsNorm)) {
                  /* limit VO service from oversubscribing */
@@ -321,7 +319,7 @@ static void SeekCredits(struct common_credit_state_info *pCredInfo,
                  break;
             }
         }
- 
+
         if (pEPDist->ServiceID == WMI_DATA_VO_SVC) {
             if ((pEPDist->TxCreditsAssigned >= pEPDist->TxCreditsNorm) ||
                 (pCredInfo->CurrentFreeCredits <= pEPDist->TxCreditsPerMaxMsg)) {
@@ -414,4 +412,3 @@ int ar6000_setup_credit_dist(HTC_HANDLE HTCHandle, struct common_credit_state_in
 
     return 0;
 }
-

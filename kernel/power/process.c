@@ -1,10 +1,9 @@
 /*
- * drivers/power/process.c - Functions for starting/stopping processes on 
+ * drivers/power/process.c - Functions for starting/stopping processes on
  *                           suspend transitions.
  *
  * Originally from swsusp.
  */
-
 
 #undef DEBUG
 
@@ -19,7 +18,7 @@
 #include <linux/wakelock.h>
 #include "power.h"
 
-/* 
+/*
  * Timeout for stopping processes
  */
 #define TIMEOUT	(20 * HZ)
@@ -208,4 +207,3 @@ void thaw_processes(void)
 	schedule();
 	printk("done.\n");
 }
-

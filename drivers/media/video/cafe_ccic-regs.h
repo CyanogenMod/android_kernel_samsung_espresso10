@@ -88,7 +88,6 @@
 #define   C0_SIF_HVSYNC	  0x00000000	/* Use H/VSYNC */
 #define   CO_SOF_NOSYNC	  0x40000000	/* Use inband active signaling */
 
-
 #define REG_CTRL1	0x40	/* Control 1 */
 #define   C1_444ALPHA	  0x00f00000	/* Alpha field in RGB444 */
 #define   C1_ALPHA_SHFT	  20
@@ -134,7 +133,6 @@
 #define   TWSIC1_RVALID	  0x04000000	/* Read data valid */
 #define   TWSIC1_ERROR	  0x08000000	/* Something screwed up */
 
-
 #define REG_UBAR	0xc4	/* Upper base address register */
 
 /*
@@ -157,7 +155,6 @@
 #define   GGPIO_VAL  		0x00008	/* Output pin value */
 
 #define REG_LEN                REG_GL_IMASK + 4
-
 
 /*
  * Useful stuff that probably belongs somewhere global.

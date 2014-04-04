@@ -200,7 +200,6 @@
 #define   CMATRIX_LEN 6
 #define REG_CMATRIX_SIGN 0x58
 
-
 #define REG_BRIGHT	0x55	/* Brightness */
 #define REG_CONTRAS	0x56	/* Contrast control */
 
@@ -220,9 +219,6 @@
 #define REG_HAECC6	0xa9	/* Hist AEC/AGC control 6 */
 #define REG_HAECC7	0xaa	/* Hist AEC/AGC control 7 */
 #define REG_BD60MAX	0xab	/* 60hz banding step limit */
-
-
-
 
 /* Returns 0 if OK */
 static int stk_sensor_outb(struct stk_camera *dev, u8 reg, u8 val)
@@ -496,7 +492,6 @@ static int stk_sensor_set_hw(struct stk_camera *dev,
 	return ret;
 }
 
-
 int stk_sensor_configure(struct stk_camera *dev)
 {
 	int com7;
@@ -592,4 +587,3 @@ int stk_sensor_set_brightness(struct stk_camera *dev, int br)
 	stk_sensor_outb(dev, REG_AEW, min(0xff, br + 6));
 	return 0;
 }
-

@@ -261,7 +261,6 @@ int ibm_partition(struct parsed_partitions *state)
 	strlcat(state->pp_buf, "\n", PAGE_SIZE);
 	goto out_freeall;
 
-
 out_readerr:
 	res = -1;
 out_freeall:

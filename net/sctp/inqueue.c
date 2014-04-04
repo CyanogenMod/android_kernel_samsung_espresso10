@@ -125,7 +125,6 @@ struct sctp_chunkhdr *sctp_inq_peek(struct sctp_inq *queue)
 	return ch;
 }
 
-
 /* Extract a chunk from an SCTP inqueue.
  *
  * WARNING:  If you need to put the chunk on another queue, you need to
@@ -243,4 +242,3 @@ void sctp_inq_set_th_handler(struct sctp_inq *q, work_func_t callback)
 {
 	INIT_WORK(&q->immediate, callback);
 }
-

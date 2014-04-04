@@ -280,7 +280,6 @@ rpcauth_destroy_credcache(struct rpc_auth *auth)
 }
 EXPORT_SYMBOL_GPL(rpcauth_destroy_credcache);
 
-
 #define RPC_AUTH_EXPIRY_MORATORIUM (60 * HZ)
 
 /*

@@ -460,6 +460,5 @@
 	GPIO76_LCD_PCLK,	\
 	GPIO77_LCD_BIAS
 
-
 extern int keypad_set_wake(unsigned int on);
 #endif /* __ASM_ARCH_MFP_PXA27X_H */

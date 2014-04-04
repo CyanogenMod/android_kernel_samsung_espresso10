@@ -65,7 +65,6 @@
 
 #define UNCACHEABLE_ADDR	(ARMCSR_BASE + 0x108)
 
-
 /* PIC irq control */
 #define PIC_LO			0x20
 #define PIC_MASK_LO		0x21

@@ -185,7 +185,6 @@ struct wl1271_cmd_sched_scan_config {
 	struct conn_scan_ch_params channels[MAX_CHANNELS_ALL_BANDS];
 } __packed;
 
-
 #define SCHED_SCAN_MAX_SSIDS 8
 
 enum {
@@ -221,6 +220,5 @@ struct wl1271_cmd_sched_scan_stop {
 	u8 tag;
 	u8 padding[3];
 } __packed;
-
 
 #endif /* __WL1271_SCAN_H__ */

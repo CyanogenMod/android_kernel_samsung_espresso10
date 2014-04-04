@@ -2472,7 +2472,7 @@ static void do_unlock_effects(struct dlm_rsb *r, struct dlm_lkb *lkb,
 }
 
 /* returns: 0 did nothing, -DLM_ECANCEL canceled lock */
- 
+
 static int do_cancel(struct dlm_rsb *r, struct dlm_lkb *lkb)
 {
 	int error;
@@ -5112,4 +5112,3 @@ int dlm_user_purge(struct dlm_ls *ls, struct dlm_user_proc *proc,
 	}
 	return error;
 }
-

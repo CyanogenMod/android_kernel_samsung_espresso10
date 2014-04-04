@@ -637,7 +637,6 @@ static int wm8955_hw_params(struct snd_pcm_substream *substream,
 	return 0;
 }
 
-
 static int wm8955_set_sysclk(struct snd_soc_dai *dai, int clk_id,
 			     unsigned int freq, int dir)
 {
@@ -745,7 +744,6 @@ static int wm8955_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
 
 	return 0;
 }
-
 
 static int wm8955_digital_mute(struct snd_soc_dai *codec_dai, int mute)
 {

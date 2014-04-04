@@ -291,7 +291,6 @@ static inline int scsi_status_is_good(int status)
 #define VOLUME_OVERFLOW     0x0d
 #define MISCOMPARE          0x0e
 
-
 /*
  *  DEVICE TYPES
  *  Please keep them in 0x%02x format for $MODALIAS to work
@@ -304,7 +303,7 @@ static inline int scsi_status_is_good(int status)
 #define TYPE_WORM           0x04    /* Treated as ROM by our system */
 #define TYPE_ROM            0x05
 #define TYPE_SCANNER        0x06
-#define TYPE_MOD            0x07    /* Magneto-optical disk - 
+#define TYPE_MOD            0x07    /* Magneto-optical disk -
 				     * - treated as TYPE_DISK */
 #define TYPE_MEDIUM_CHANGER 0x08
 #define TYPE_COMM           0x09    /* Communications device */
@@ -369,7 +368,6 @@ static inline int scsi_is_wlun(unsigned int lun)
 {
 	return (lun & 0xff00) == SCSI_W_LUN_BASE;
 }
-
 
 /*
  *  MESSAGE CODES
@@ -506,7 +504,6 @@ static inline int scsi_is_wlun(unsigned int lun)
 #define READ_ELEMENT_STATUS_TIMEOUT	(5 * 60 * HZ)
 #define READ_DEFECT_DATA_TIMEOUT	(60 * HZ )
 
-
 #define IDENTIFY_BASE       0x80
 #define IDENTIFY(can_disconnect, lun)   (IDENTIFY_BASE |\
 		     ((can_disconnect) ?  0x40 : 0) |\
@@ -533,7 +530,6 @@ static inline int scsi_is_wlun(unsigned int lun)
 #define SCSI_INQ_PQ_CON         0x00
 #define SCSI_INQ_PQ_NOT_CON     0x01
 #define SCSI_INQ_PQ_NOT_CAP     0x03
-
 
 /*
  * Here are some scsi specific ioctl commands which are sometimes useful.

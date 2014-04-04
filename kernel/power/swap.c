@@ -419,7 +419,6 @@ static int save_image(struct swap_map_handle *handle,
 	return ret;
 }
 
-
 /**
  * save_image_lzo - Save the suspend image data compressed with LZO.
  * @handle: Swap mam handle to use for saving the image.

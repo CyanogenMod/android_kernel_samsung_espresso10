@@ -1094,7 +1094,6 @@ static void __exit ieee80211_exit(void)
 	rcu_barrier();
 }
 
-
 subsys_initcall(ieee80211_init);
 module_exit(ieee80211_exit);
 

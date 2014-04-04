@@ -383,4 +383,3 @@ static void __exit ems_pci_exit(void)
 
 module_init(ems_pci_init);
 module_exit(ems_pci_exit);
-

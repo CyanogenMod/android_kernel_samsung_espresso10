@@ -8,4 +8,3 @@ config BT_CMTP
 
 	  Say Y here to compile CMTP support into the kernel or say M to
 	  compile it as module (cmtp).
-

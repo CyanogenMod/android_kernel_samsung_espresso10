@@ -1,7 +1,6 @@
 #ifndef _R819XU_PHYREG_H
 #define _R819XU_PHYREG_H
 
-
 #define   RF_DATA				0x1d4					// FW will write RF data in the register.
 
 //Register   //duplicate register due to connection: RF_Mode, TRxRN, NumOf L-STF
@@ -176,7 +175,6 @@
 #define rOFDM0_TxCoeff5           	0xcb4
 #define rOFDM0_TxCoeff6           	0xcb8
 
-
 /* Page d */
 #define rOFDM1_LSTF               	0xd00
 #define rOFDM1_TRxPathEnable      	0xd04
@@ -218,7 +216,6 @@
 #define rTxAGC_Mcs07_Mcs04		0xe14
 #define rTxAGC_Mcs11_Mcs08		0xe18
 #define rTxAGC_Mcs15_Mcs12		0xe1c
-
 
 /* RF Zebra 1 */
 #define rZebra1_HSSIEnable            	0x0
@@ -810,7 +807,6 @@
 #define bTxAGCRateMCS11_MCS8	0x7f7f7f7f
 #define bTxAGCRateMCS15_MCS12	0x7f7f7f7f
 
-
 /* Rx Pseduo noise */
 #define bRxPesudoNoiseOn         0x20000000
 #define bRxPesudoNoise_A         0xff
@@ -910,6 +906,5 @@
 #define bRTL8256TxBBOPBias	0x400
 #define rRTL8256TxBBBW		19
 #define bRTL8256TxBBBW		0x18
-
 
 #endif	/* __INC_HAL8190PCIPHYREG_H */

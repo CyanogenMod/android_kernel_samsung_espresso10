@@ -23,4 +23,3 @@ void dlm_put_lockspace(struct dlm_ls *ls);
 void dlm_stop_lockspaces(void);
 
 #endif				/* __LOCKSPACE_DOT_H__ */
-

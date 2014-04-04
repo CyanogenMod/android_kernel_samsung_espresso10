@@ -74,13 +74,9 @@ static ssize_t manager_display_store(struct omap_overlay_manager *mgr,
 	if (len > 0 && dssdev == NULL)
 		return -EINVAL;
 
-	if (dssdev)
-		DSSDBG("display %s found\n", dssdev->name);
-
 	if (mgr->device) {
 		r = mgr->unset_device(mgr);
 		if (r) {
-			DSSERR("failed to unset display\n");
 			goto put_device;
 		}
 	}
@@ -88,13 +84,11 @@ static ssize_t manager_display_store(struct omap_overlay_manager *mgr,
 	if (dssdev) {
 		r = mgr->set_device(mgr, dssdev);
 		if (r) {
-			DSSERR("failed to set manager\n");
 			goto put_device;
 		}
 
 		r = mgr->apply(mgr);
 		if (r) {
-			DSSERR("failed to apply dispc config\n");
 			goto put_device;
 		}
 	}
@@ -416,7 +410,6 @@ static MANAGER_ATTR(cpr_coef, S_IRUGO|S_IWUSR,
 		manager_cpr_coef_show,
 		manager_cpr_coef_store);
 
-
 static struct attribute *manager_sysfs_attrs[] = {
 	&manager_attr_name.attr,
 	&manager_attr_display.attr,
@@ -698,6 +691,9 @@ static int dss_mgr_wait_for_vsync(struct omap_overlay_manager *mgr)
 	unsigned long timeout = msecs_to_jiffies(500);
 	u32 irq = 0; /* For non-supported panels will cause a timeout */
 	int r;
+	r = dispc_runtime_get();
+	if (r)
+		return r;
 
 	switch (mgr->device->type) {
 	case OMAP_DISPLAY_TYPE_VENC:
@@ -751,6 +747,7 @@ static int dss_mgr_wait_for_vsync(struct omap_overlay_manager *mgr)
 	if (!r)
 		mgr->device->first_vsync = true;
 
+	dispc_runtime_put();
 	return r;
 }
 
@@ -765,6 +762,9 @@ static int dss_mgr_wait_for_go(struct omap_overlay_manager *mgr)
 
 	if (!dssdev || dssdev->state != OMAP_DSS_DISPLAY_ACTIVE)
 		return 0;
+	r = dispc_runtime_get();
+	if (r)
+		return r;
 
 	if (dssdev->type == OMAP_DISPLAY_TYPE_VENC
 			|| dssdev->type == OMAP_DISPLAY_TYPE_HDMI) {
@@ -826,7 +826,7 @@ static int dss_mgr_wait_for_go(struct omap_overlay_manager *mgr)
 			break;
 		}
 	}
-
+	dispc_runtime_put();
 	return r;
 }
 
@@ -846,7 +846,9 @@ int dss_mgr_wait_for_go_ovl(struct omap_overlay *ovl)
 
 	if (!dssdev || dssdev->state != OMAP_DSS_DISPLAY_ACTIVE)
 		return 0;
-
+	r = dispc_runtime_get();
+	if (r)
+		return r;
 	if (dssdev->type == OMAP_DISPLAY_TYPE_VENC
 			|| dssdev->type == OMAP_DISPLAY_TYPE_HDMI) {
 		irq = DISPC_IRQ_EVSYNC_ODD | DISPC_IRQ_EVSYNC_EVEN
@@ -905,7 +907,7 @@ int dss_mgr_wait_for_go_ovl(struct omap_overlay *ovl)
 			break;
 		}
 	}
-
+	dispc_runtime_put();
 	return r;
 }
 
@@ -1768,8 +1770,6 @@ static int omap_dss_mgr_blank(struct omap_overlay_manager *mgr,
 	int r, r_get, i;
 	bool update = false;
 
-	DSSDBG("omap_dss_mgr_blank(%s,wait=%d)\n", mgr->name, wait_for_go);
-
 	r_get = r = dispc_runtime_get();
 	/* still clear cache even if failed to get clocks, just don't config */
 
@@ -1792,7 +1792,6 @@ static int omap_dss_mgr_blank(struct omap_overlay_manager *mgr,
 			continue;
 
 		oc = &dss_cache.overlay_cache[ovl->id];
-
 
 		/* complete unconfigured info in cache */
 		if (ovl->info_dirty)
@@ -1835,8 +1834,6 @@ static int omap_dss_mgr_blank(struct omap_overlay_manager *mgr,
 
 	if (!r_get) {
 		r = configure_dispc();
-		if (r)
-			pr_info("mgr_blank while GO is set");
 	}
 
 	if (r_get || !wait_for_go) {
@@ -1911,6 +1908,8 @@ static int omap_dss_mgr_apply(struct omap_overlay_manager *mgr)
 	if (r)
 		return r;
 
+	omap_dss_overlay_ensure_bw();
+
 	spin_lock_irqsave(&dss_cache.lock, flags);
 
 	if (!mgr->device || (mgr->device->state != OMAP_DSS_DISPLAY_ACTIVE &&
@@ -1935,8 +1934,6 @@ static int omap_dss_mgr_apply(struct omap_overlay_manager *mgr)
 			goto done;
 		}
 
-		pr_info_ratelimited("cannot apply mgr(%s) on inactive device\n",
-								mgr->name);
 		r = -ENODEV;
 		goto done;
 	}
@@ -2232,7 +2229,6 @@ int omap_dss_wb_apply(struct omap_overlay_manager *mgr,
 	else
 		r = configure_dispc();
 
-
 	spin_unlock_irqrestore(&dss_cache.lock, flags);
 	return r;
 }
@@ -2337,7 +2333,6 @@ int omap_dss_ovl_set_info(struct omap_overlay *ovl,
 
 	return 0;
 }
-
 
 static int omap_dss_mgr_set_info(struct omap_overlay_manager *mgr,
 		struct omap_overlay_manager_info *info)
@@ -2531,4 +2526,3 @@ struct omap_overlay_manager *omap_dss_get_overlay_manager(int num)
 	return NULL;
 }
 EXPORT_SYMBOL(omap_dss_get_overlay_manager);
-

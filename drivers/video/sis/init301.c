@@ -4308,7 +4308,6 @@ SiS_EnableBridge(struct SiS_Private *SiS_Pr)
 
 	 }
 
-
 #endif /* CONFIG_FB_SIS_300 */
 
       } else {
@@ -7870,7 +7869,6 @@ SiS_SetCHTVReg(struct SiS_Private *SiS_Pr, unsigned short ModeNo, unsigned short
       default: CHTVRegData = SiS_Pr->SiS_CHTVReg_OPAL;  break;
    }
 
-
    if(SiS_Pr->SiS_IF_DEF_CH70xx == 1) {
 
 #ifdef CONFIG_FB_SIS_300
@@ -8683,7 +8681,6 @@ SiS_SetCRT2Group(struct SiS_Private *SiS_Pr, unsigned short ModeNo)
    return true;
 }
 
-
 /*********************************************/
 /*     ENABLE/DISABLE LCD BACKLIGHT (SIS)    */
 /*********************************************/
@@ -9448,7 +9445,6 @@ SiS_CheckACK(struct SiS_Private *SiS_Pr)
 }
 
 /* End of I2C functions ----------------------- */
-
 
 /* =============== SiS 315/330 O.E.M. ================= */
 
@@ -11068,4 +11064,3 @@ SiS_OEM300Setting(struct SiS_Private *SiS_Pr, unsigned short ModeNo, unsigned sh
   }
 }
 #endif
-

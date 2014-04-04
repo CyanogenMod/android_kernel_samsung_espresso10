@@ -162,4 +162,3 @@ MODULE_ALIAS("platform:wm831x-on");
 MODULE_DESCRIPTION("WM831x ON pin");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
-

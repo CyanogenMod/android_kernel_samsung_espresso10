@@ -27,7 +27,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #ifndef __LINUX_USBVISION_H
 #define __LINUX_USBVISION_H
 
@@ -154,7 +153,6 @@
 #define USBVISION_NUMSBUF		2 /* Dimensioning the USB S buffering */
 
 #define USBVISION_POWEROFF_TIME		(3 * HZ)		/* 3 seconds */
-
 
 #define FRAMERATE_MIN	0
 #define FRAMERATE_MAX	31

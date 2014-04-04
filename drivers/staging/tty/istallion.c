@@ -347,7 +347,6 @@ MODULE_AUTHOR("Greg Ungerer");
 MODULE_DESCRIPTION("Stallion Intelligent Multiport Serial Driver");
 MODULE_LICENSE("GPL");
 
-
 module_param_array(board0, charp, NULL, 0);
 MODULE_PARM_DESC(board0, "Board 0 config -> name[,ioaddr[,memaddr]");
 module_param_array(board1, charp, NULL, 0);
@@ -831,7 +830,6 @@ static int stli_open(struct tty_struct *tty, struct file *filp)
 	return tty_port_open(&portp->port, tty, filp);
 }
 
-
 /*****************************************************************************/
 
 static void stli_shutdown(struct tty_port *port)
@@ -1135,7 +1133,6 @@ static void stli_dtr_rts(struct tty_port *port, int on)
 		sizeof(asysigs_t), 0) < 0)
 			printk(KERN_WARNING "istallion: dtr set failed.\n");
 }
-
 
 /*****************************************************************************/
 
@@ -1457,7 +1454,7 @@ static int stli_getserial(struct stliport *portp, struct serial_struct __user *s
 	brdp = stli_brds[portp->brdnr];
 	if (brdp != NULL)
 		sio.port = brdp->iobase;
-		
+
 	return copy_to_user(sp, &sio, sizeof(struct serial_struct)) ?
 			-EFAULT : 0;
 }
@@ -1484,7 +1481,7 @@ static int stli_setserial(struct tty_struct *tty, struct serial_struct __user *s
 		    ((sio.flags & ~ASYNC_USR_MASK) !=
 		    (portp->port.flags & ~ASYNC_USR_MASK)))
 			return -EPERM;
-	} 
+	}
 
 	portp->port.flags = (portp->port.flags & ~ASYNC_USR_MASK) |
 		(sio.flags & ASYNC_USR_MASK);
@@ -1707,7 +1704,6 @@ static void stli_start(struct tty_struct *tty)
 }
 
 /*****************************************************************************/
-
 
 /*
  *	Hangup this port. This is pretty much like closing the port, only
@@ -2584,21 +2580,21 @@ static void stli_ecpinit(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void stli_ecpenable(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_ATENABLE, (brdp->iobase + ECP_ATCONFR));
 }
 
 /*****************************************************************************/
 
 static void stli_ecpdisable(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_ATDISABLE, (brdp->iobase + ECP_ATCONFR));
 }
 
 /*****************************************************************************/
 
 static void __iomem *stli_ecpgetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	void __iomem *ptr;
 	unsigned char val;
 
@@ -2619,7 +2615,7 @@ static void __iomem *stli_ecpgetmemptr(struct stlibrd *brdp, unsigned long offse
 /*****************************************************************************/
 
 static void stli_ecpreset(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_ATSTOP, (brdp->iobase + ECP_ATCONFR));
 	udelay(10);
 	outb(ECP_ATDISABLE, (brdp->iobase + ECP_ATCONFR));
@@ -2629,7 +2625,7 @@ static void stli_ecpreset(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void stli_ecpintr(struct stlibrd *brdp)
-{	
+{
 	outb(0x1, brdp->iobase);
 }
 
@@ -2658,21 +2654,21 @@ static void stli_ecpeiinit(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void stli_ecpeienable(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_EIENABLE, (brdp->iobase + ECP_EICONFR));
 }
 
 /*****************************************************************************/
 
 static void stli_ecpeidisable(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_EIDISABLE, (brdp->iobase + ECP_EICONFR));
 }
 
 /*****************************************************************************/
 
 static void __iomem *stli_ecpeigetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	void __iomem *ptr;
 	unsigned char	val;
 
@@ -2696,7 +2692,7 @@ static void __iomem *stli_ecpeigetmemptr(struct stlibrd *brdp, unsigned long off
 /*****************************************************************************/
 
 static void stli_ecpeireset(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_EISTOP, (brdp->iobase + ECP_EICONFR));
 	udelay(10);
 	outb(ECP_EIDISABLE, (brdp->iobase + ECP_EICONFR));
@@ -2710,21 +2706,21 @@ static void stli_ecpeireset(struct stlibrd *brdp)
  */
 
 static void stli_ecpmcenable(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_MCENABLE, (brdp->iobase + ECP_MCCONFR));
 }
 
 /*****************************************************************************/
 
 static void stli_ecpmcdisable(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_MCDISABLE, (brdp->iobase + ECP_MCCONFR));
 }
 
 /*****************************************************************************/
 
 static void __iomem *stli_ecpmcgetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	void __iomem *ptr;
 	unsigned char val;
 
@@ -2745,7 +2741,7 @@ static void __iomem *stli_ecpmcgetmemptr(struct stlibrd *brdp, unsigned long off
 /*****************************************************************************/
 
 static void stli_ecpmcreset(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_MCSTOP, (brdp->iobase + ECP_MCCONFR));
 	udelay(10);
 	outb(ECP_MCDISABLE, (brdp->iobase + ECP_MCCONFR));
@@ -2769,7 +2765,7 @@ static void stli_ecppciinit(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void __iomem *stli_ecppcigetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	void __iomem *ptr;
 	unsigned char	val;
 
@@ -2790,7 +2786,7 @@ static void __iomem *stli_ecppcigetmemptr(struct stlibrd *brdp, unsigned long of
 /*****************************************************************************/
 
 static void stli_ecppcireset(struct stlibrd *brdp)
-{	
+{
 	outb(ECP_PCISTOP, (brdp->iobase + ECP_PCICONFR));
 	udelay(10);
 	outb(0, (brdp->iobase + ECP_PCICONFR));
@@ -2821,21 +2817,21 @@ static void stli_onbinit(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void stli_onbenable(struct stlibrd *brdp)
-{	
+{
 	outb((brdp->enabval | ONB_ATENABLE), (brdp->iobase + ONB_ATCONFR));
 }
 
 /*****************************************************************************/
 
 static void stli_onbdisable(struct stlibrd *brdp)
-{	
+{
 	outb((brdp->enabval | ONB_ATDISABLE), (brdp->iobase + ONB_ATCONFR));
 }
 
 /*****************************************************************************/
 
 static void __iomem *stli_onbgetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	void __iomem *ptr;
 
 	if (offset > brdp->memsize) {
@@ -2852,7 +2848,7 @@ static void __iomem *stli_onbgetmemptr(struct stlibrd *brdp, unsigned long offse
 /*****************************************************************************/
 
 static void stli_onbreset(struct stlibrd *brdp)
-{	
+{
 	outb(ONB_ATSTOP, (brdp->iobase + ONB_ATCONFR));
 	udelay(10);
 	outb(ONB_ATDISABLE, (brdp->iobase + ONB_ATCONFR));
@@ -2886,21 +2882,21 @@ static void stli_onbeinit(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void stli_onbeenable(struct stlibrd *brdp)
-{	
+{
 	outb(ONB_EIENABLE, (brdp->iobase + ONB_EICONFR));
 }
 
 /*****************************************************************************/
 
 static void stli_onbedisable(struct stlibrd *brdp)
-{	
+{
 	outb(ONB_EIDISABLE, (brdp->iobase + ONB_EICONFR));
 }
 
 /*****************************************************************************/
 
 static void __iomem *stli_onbegetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	void __iomem *ptr;
 	unsigned char val;
 
@@ -2924,7 +2920,7 @@ static void __iomem *stli_onbegetmemptr(struct stlibrd *brdp, unsigned long offs
 /*****************************************************************************/
 
 static void stli_onbereset(struct stlibrd *brdp)
-{	
+{
 	outb(ONB_EISTOP, (brdp->iobase + ONB_EICONFR));
 	udelay(10);
 	outb(ONB_EIDISABLE, (brdp->iobase + ONB_EICONFR));
@@ -2950,7 +2946,7 @@ static void stli_bbyinit(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void __iomem *stli_bbygetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	void __iomem *ptr;
 	unsigned char val;
 
@@ -2965,7 +2961,7 @@ static void __iomem *stli_bbygetmemptr(struct stlibrd *brdp, unsigned long offse
 /*****************************************************************************/
 
 static void stli_bbyreset(struct stlibrd *brdp)
-{	
+{
 	outb(BBY_ATSTOP, (brdp->iobase + BBY_ATCONFR));
 	udelay(10);
 	outb(0, (brdp->iobase + BBY_ATCONFR));
@@ -2987,7 +2983,7 @@ static void stli_stalinit(struct stlibrd *brdp)
 /*****************************************************************************/
 
 static void __iomem *stli_stalgetmemptr(struct stlibrd *brdp, unsigned long offset, int line)
-{	
+{
 	BUG_ON(offset > brdp->memsize);
 	return brdp->membase + (offset % STAL_PAGESIZE);
 }
@@ -2995,7 +2991,7 @@ static void __iomem *stli_stalgetmemptr(struct stlibrd *brdp, unsigned long offs
 /*****************************************************************************/
 
 static void stli_stalreset(struct stlibrd *brdp)
-{	
+{
 	u32 __iomem *vecp;
 
 	vecp = (u32 __iomem *) (brdp->membase + 0x30);
@@ -3142,7 +3138,6 @@ static int stli_initecp(struct stlibrd *brdp)
 		brdp->nrpanels++;
 	}
 
-
 	set_bit(BST_FOUND, &brdp->state);
 	return 0;
 err_unmap:
@@ -3177,7 +3172,7 @@ static int stli_initonb(struct stlibrd *brdp)
 	}
 
 	brdp->iosize = ONB_IOSIZE;
-	
+
 	if (!request_region(brdp->iobase, brdp->iosize, "istallion")) {
 		retval = -EIO;
 		goto err;
@@ -3298,7 +3293,6 @@ static int stli_initonb(struct stlibrd *brdp)
 		brdp->nrports = i;
 	}
 	brdp->panels[0] = brdp->nrports;
-
 
 	set_bit(BST_FOUND, &brdp->state);
 	return 0;
@@ -3867,7 +3861,7 @@ err:
 /*****************************************************************************/
 
 /*
- *	Code to handle an "staliomem" read operation. This device is the 
+ *	Code to handle an "staliomem" read operation. This device is the
  *	contents of the board shared memory. It is used for down loading
  *	the slave image (and debugging :-)
  */
@@ -3929,7 +3923,7 @@ out:
 /*****************************************************************************/
 
 /*
- *	Code to handle an "staliomem" write operation. This device is the 
+ *	Code to handle an "staliomem" write operation. This device is the
  *	contents of the board shared memory. It is used for down loading
  *	the slave image (and debugging :-)
  *

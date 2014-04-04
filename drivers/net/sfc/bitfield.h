@@ -512,8 +512,6 @@ typedef union efx_oword {
 	EFX_SET_DWORD32(dword, EFX_LOW_BIT(field),			\
 			 EFX_HIGH_BIT(field), value)
 
-
-
 #if BITS_PER_LONG == 64
 #define EFX_SET_OWORD_FIELD EFX_SET_OWORD_FIELD64
 #define EFX_SET_QWORD_FIELD EFX_SET_QWORD_FIELD64
@@ -528,7 +526,6 @@ typedef union efx_oword {
 #define DMA_ADDR_T_WIDTH	(8 * sizeof(dma_addr_t))
 #define EFX_DMA_TYPE_WIDTH(width) \
 	(((width) < DMA_ADDR_T_WIDTH) ? (width) : DMA_ADDR_T_WIDTH)
-
 
 /* Static initialiser */
 #define EFX_OWORD32(a, b, c, d)						\

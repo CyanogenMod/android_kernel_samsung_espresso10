@@ -108,9 +108,9 @@ static int __init ixdp2400_pci_map_irq(struct pci_dev *dev, u8 slot, u8 pin)
 		 */
 		if(dev->bus->self->devfn == IXDP2X00_P2P_DEVFN) {
 			switch(dev->devfn) {
-				case IXDP2400_MASTER_ENET_DEVFN:	
-					return IRQ_IXDP2400_ENET;	
-			
+				case IXDP2400_MASTER_ENET_DEVFN:
+					return IRQ_IXDP2400_ENET;
+
 				case IXDP2400_MEDIA_DEVFN:
 					return IRQ_IXDP2400_MEDIA_PCI;
 
@@ -125,7 +125,6 @@ static int __init ixdp2400_pci_map_irq(struct pci_dev *dev, u8 slot, u8 pin)
 		return -1;
 	} else return IRQ_IXP2000_PCIB; /* Slave NIC interrupt */
 }
-
 
 static void ixdp2400_pci_postinit(void)
 {
@@ -176,4 +175,3 @@ MACHINE_START(IXDP2400, "Intel IXDP2400 Development Platform")
 	.timer		= &ixdp2400_timer,
 	.init_machine	= ixdp2x00_init_machine,
 MACHINE_END
-

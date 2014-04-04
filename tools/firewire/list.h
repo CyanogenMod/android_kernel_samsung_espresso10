@@ -59,4 +59,3 @@ list_remove(struct list *link)
 	for (pos = list_head(list, typeof(*pos), member);	\
 	     &pos->member != (list);				\
 	     pos = list_next(pos, member))
-

@@ -30,7 +30,6 @@
 #include "routing.h"
 #include "hard-interface.h"
 
-
 static struct sk_buff *frag_merge_packet(struct list_head *head,
 					 struct frag_packet_list_entry *tfp,
 					 struct sk_buff *skb)

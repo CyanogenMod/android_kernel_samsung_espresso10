@@ -50,7 +50,7 @@ static struct dentry *ufs_lookup(struct inode * dir, struct dentry *dentry, stru
 {
 	struct inode * inode = NULL;
 	ino_t ino;
-	
+
 	if (dentry->d_name.len > UFS_MAXNAMLEN)
 		return ERR_PTR(-ENAMETOOLONG);
 
@@ -70,7 +70,7 @@ static struct dentry *ufs_lookup(struct inode * dir, struct dentry *dentry, stru
  * is so far negative - it has no inode.
  *
  * If the create succeeds, we fill in the inode information
- * with d_instantiate(). 
+ * with d_instantiate().
  */
 static int ufs_create (struct inode * dir, struct dentry * dentry, int mode,
 		struct nameidata *nd)
@@ -333,7 +333,6 @@ static int ufs_rename(struct inode *old_dir, struct dentry *old_dentry,
 		inode_dec_link_count(old_dir);
 	}
 	return 0;
-
 
 out_dir:
 	if (dir_de) {

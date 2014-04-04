@@ -2436,8 +2436,6 @@ static ssize_t target_core_alua_tg_pt_gp_store_attr_alua_write_metadata(
 
 SE_DEV_ALUA_TG_PT_ATTR(alua_write_metadata, S_IRUGO | S_IWUSR);
 
-
-
 /*
  * nonop_delay_msecs
  */
@@ -3234,7 +3232,8 @@ static int __init target_core_init_configfs(void)
 	if (ret < 0)
 		goto out;
 
-	if (core_dev_setup_virtual_lun0() < 0)
+	ret = core_dev_setup_virtual_lun0();
+	if (ret < 0)
 		goto out;
 
 	return 0;

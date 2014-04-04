@@ -30,7 +30,6 @@
 
 #include <linux/i2c/twl.h>
 
-
 /*
  * RTC block register offsets (use TWL_MODULE_RTC)
  */
@@ -127,7 +126,6 @@ static const u8 twl6030_rtc_reg_map[] = {
 #define BIT_RTC_INTERRUPTS_REG_EVERY_M           0x03
 #define BIT_RTC_INTERRUPTS_REG_IT_TIMER_M        0x04
 #define BIT_RTC_INTERRUPTS_REG_IT_ALARM_M        0x08
-
 
 /* REG_SECONDS_REG through REG_YEARS_REG is how many registers? */
 #define ALL_TIME_REGS		6
@@ -390,7 +388,6 @@ static int twl_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
 			alm->time.tm_min,
 			alm->time.tm_sec);
 
-
 	/* update all the alarm registers in one shot */
 	ret = twl_i2c_write(TWL_MODULE_RTC, alarm_data,
 		(rtc_reg_map[REG_ALARM_SECONDS_REG]), ALL_TIME_REGS);
@@ -569,6 +566,11 @@ static int __devinit twl_rtc_probe(struct platform_device *pdev)
 			goto out1;
 	}
 
+	/* ensure interrupts are disabled, bootloaders can be strange */
+	ret = twl_rtc_write_u8(0, REG_RTC_INTERRUPTS_REG);
+	if (ret < 0)
+		dev_warn(&pdev->dev, "unable to disable interrupt\n");
+
 	/* init cached IRQ enable bits */
 	ret = twl_rtc_read_u8(&rtc_irq_bits, REG_RTC_INTERRUPTS_REG);
 	if (ret < 0)
@@ -628,7 +630,6 @@ static int __devinit twl_rtc_probe(struct platform_device *pdev)
 		control |= BIT_RTC_CTRL_REG_AUTO_COMP_M;
 		ret |= twl_rtc_write_u8(control, REG_RTC_CTRL_REG);
 
-
 		ret |= twl_rtc_read_u8(&msb_value, REG_RTC_COMP_MSB_REG);
 		ret |= twl_rtc_read_u8(&lsb_value, REG_RTC_COMP_LSB_REG);
 		dev_info(&pdev->dev, "COMP_MSB=0x%x  COMP_LSB=0x%x\n",
@@ -680,7 +681,6 @@ static int __devexit twl_rtc_remove(struct platform_device *pdev)
 		twl6030_interrupt_mask(TWL6030_RTC_INT_MASK,
 			REG_INT_MSK_STS_A);
 	}
-
 
 	free_irq(irq, rtc);
 

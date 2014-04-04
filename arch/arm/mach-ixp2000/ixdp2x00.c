@@ -42,7 +42,6 @@
 
 #include <mach/gpio.h>
 
-
 /*************************************************************************
  * IXDP2x00 IRQ Initialization
  *************************************************************************/
@@ -101,7 +100,7 @@ static void ixdp2x00_irq_unmask(struct irq_data *d)
 	dummy &=  ~IXP2000_BOARD_IRQ_MASK(d->irq);
 	ixp2000_reg_wrb(board_irq_mask, dummy);
 
-	if (machine_is_ixdp2400()) 
+	if (machine_is_ixdp2400())
 		ixp2000_release_slowport(&old_cfg);
 }
 
@@ -147,7 +146,7 @@ void __init ixdp2x00_init_irq(volatile unsigned long *stat_reg, volatile unsigne
 	unsigned int irq;
 
 	ixp2000_init_irq();
-	
+
 	if (!ixdp2x00_master_npu())
 		return;
 
@@ -171,7 +170,7 @@ void __init ixdp2x00_init_irq(volatile unsigned long *stat_reg, volatile unsigne
  * IXDP2x00 memory map
  *************************************************************************/
 static struct map_desc ixdp2x00_io_desc __initdata = {
-	.virtual	= IXDP2X00_VIRT_CPLD_BASE, 
+	.virtual	= IXDP2X00_VIRT_CPLD_BASE,
 	.pfn		= __phys_to_pfn(IXDP2X00_PHYS_CPLD_BASE),
 	.length		= IXDP2X00_CPLD_SIZE,
 	.type		= MT_DEVICE
@@ -179,7 +178,7 @@ static struct map_desc ixdp2x00_io_desc __initdata = {
 
 void __init ixdp2x00_map_io(void)
 {
-	ixp2000_map_io();	
+	ixp2000_map_io();
 
 	iotable_init(&ixdp2x00_io_desc, 1);
 }
@@ -187,10 +186,10 @@ void __init ixdp2x00_map_io(void)
 /*************************************************************************
  * IXDP2x00-common PCI init
  *
- * The IXDP2[48]00 has a horrid PCI bus layout. Basically the board 
- * contains two NPUs (ingress and egress) connected over PCI,  both running 
- * instances  of the kernel. So far so good. Peers on the PCI bus running 
- * Linux is a common design in telecom systems. The problem is that instead 
+ * The IXDP2[48]00 has a horrid PCI bus layout. Basically the board
+ * contains two NPUs (ingress and egress) connected over PCI,  both running
+ * instances  of the kernel. So far so good. Peers on the PCI bus running
+ * Linux is a common design in telecom systems. The problem is that instead
  * of all the devices being controlled by a single host, different
  * devices are controlled by different NPUs on the same bus, leading to
  * multiple hosts on the bus. The exact bus layout looks like:
@@ -199,7 +198,7 @@ void __init ixdp2x00_map_io(void)
  *    Master NPU <-------------------+-------------------> Slave NPU
  *                                   |
  *                                   |
- *                                  P2P 
+ *                                  P2P
  *                                   |
  *
  *                  Bus 1            |
@@ -225,7 +224,7 @@ void __init ixdp2x00_map_io(void)
  *    from device list.
  * 4) Find HW designers and LART them.
  *
- * The boards also do not do normal PCI IRQ routing, or any sort of 
+ * The boards also do not do normal PCI IRQ routing, or any sort of
  * sensical  swizzling, so we just need to check where on the  bus a
  * device sits and figure out to which CPLD pin the interrupt is routed.
  * See ixdp2[48]00.c files.
@@ -304,4 +303,3 @@ void __init ixdp2x00_init_machine(void)
 	platform_add_devices(ixdp2x00_devices, ARRAY_SIZE(ixdp2x00_devices));
 	ixp2000_uart_init();
 }
-

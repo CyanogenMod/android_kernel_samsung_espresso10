@@ -56,7 +56,6 @@ static irqreturn_t aectc_irq(int irq, struct uio_info *dev_info)
 	void __iomem *int_flag = dev_info->priv + INTA_DRVR_ADDR;
 	unsigned char status = ioread8(int_flag);
 
-
 	if ((status & INTA_ENABLED_FLAG) && (status & INTA_FLAG)) {
 		/* application writes 0x00 to 0x2F to get next interrupt */
 		status = ioread8(dev_info->priv + MAILBOX);

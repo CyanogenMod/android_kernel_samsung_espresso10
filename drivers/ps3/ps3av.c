@@ -181,7 +181,6 @@ static int ps3av_parse_event_packet(const struct ps3av_reply_hdr *hdr)
 	return 0;
 }
 
-
 #define POLLING_INTERVAL  25	/* in msec */
 
 static int ps3av_vuart_write(struct ps3_system_bus_device *dev,

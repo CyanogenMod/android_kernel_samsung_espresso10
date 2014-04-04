@@ -25,7 +25,6 @@ static char version[] __devinitdata =
 		"Broadcom NetXtreme II iSCSI Driver " DRV_MODULE_NAME \
 		" v" DRV_MODULE_VERSION " (" DRV_MODULE_RELDATE ")\n";
 
-
 MODULE_AUTHOR("Anil Veerabhadrappa <anilgv@broadcom.com> and "
 	      "Eddie Wai <eddie.wai@broadcom.com>");
 
@@ -66,7 +65,6 @@ MODULE_PARM_DESC(rq_size, "Configure RQ size");
 
 u64 iscsi_error_mask = 0x00;
 
-
 /**
  * bnx2i_identify_device - identifies NetXtreme II device type
  * @hba: 		Adapter structure pointer
@@ -99,7 +97,6 @@ void bnx2i_identify_device(struct bnx2i_hba *hba)
 				  hba->pci_did);
 }
 
-
 /**
  * get_adapter_list_head - returns head of adapter list
  */
@@ -123,7 +120,6 @@ hba_not_found:
 	return hba;
 }
 
-
 /**
  * bnx2i_find_hba_for_cnic - maps cnic device instance to bnx2i adapter instance
  * @cnic:	pointer to cnic device instance
@@ -143,7 +139,6 @@ struct bnx2i_hba *bnx2i_find_hba_for_cnic(struct cnic_dev *cnic)
 	mutex_unlock(&bnx2i_dev_lock);
 	return NULL;
 }
-
 
 /**
  * bnx2i_start - cnic callback to initialize & start adapter instance
@@ -183,7 +178,6 @@ void bnx2i_start(void *handle)
 		msleep(BNX2I_INIT_POLL_TIME);
 }
 
-
 /**
  * bnx2i_chip_cleanup - local routine to handle chip cleanup
  * @hba:	Adapter instance to register
@@ -214,7 +208,6 @@ static void bnx2i_chip_cleanup(struct bnx2i_hba *hba)
 		mutex_unlock(&hba->net_dev_lock);
 	}
 }
-
 
 /**
  * bnx2i_stop - cnic callback to shutdown adapter instance
@@ -266,7 +259,6 @@ void bnx2i_stop(void *handle)
 	clear_bit(ADAPTER_STATE_UP, &hba->adapter_state);
 }
 
-
 /**
  * bnx2i_init_one - initialize an adapter instance and allocate memory resources
  * @hba:	bnx2i adapter instance
@@ -303,7 +295,6 @@ static int bnx2i_init_one(struct bnx2i_hba *hba, struct cnic_dev *cnic)
 	return rc;
 }
 
-
 /**
  * bnx2i_ulp_init - initialize an adapter instance
  * @dev:	cnic device handle
@@ -330,7 +321,6 @@ void bnx2i_ulp_init(struct cnic_dev *dev)
 		bnx2i_free_hba(hba);
 	}
 }
-
 
 /**
  * bnx2i_ulp_exit - shuts down adapter instance and frees all resources
@@ -359,7 +349,6 @@ void bnx2i_ulp_exit(struct cnic_dev *dev)
 
 	bnx2i_free_hba(hba);
 }
-
 
 /**
  * bnx2i_mod_init - module init entry point
@@ -400,7 +389,6 @@ unreg_xport:
 out:
 	return err;
 }
-
 
 /**
  * bnx2i_mod_exit - module cleanup/exit entry point

@@ -78,7 +78,6 @@ static const __le32 i2400m_ACK_BARKER[4] = {
 	__constant_cpu_to_le32(I2400M_ACK_BARKER)
 };
 
-
 /*
  * Read and return the amount of bytes available for RX
  *
@@ -113,7 +112,6 @@ error_read:
 	d_fnend(7, dev, "(i2400ms %p) = %ld\n", i2400ms, (long) rx_size);
 	return rx_size;
 }
-
 
 /*
  * Read data from the device (when in normal)
@@ -199,7 +197,6 @@ error_bad_size:
 	d_fnend(7, dev, "(i2400ms %p) = %d\n", i2400ms, ret);
 }
 
-
 /*
  * Process an interrupt from the SDIO card
  *
@@ -229,7 +226,6 @@ void i2400ms_irq(struct sdio_func *func)
 error_no_irq:
 	d_fnend(6, dev, "(i2400ms %p) = void\n", i2400ms);
 }
-
 
 /*
  * Setup SDIO RX
@@ -274,7 +270,6 @@ error_irq_claim:
 	d_fnend(5, dev, "(i2400ms %p) = %d\n", i2400ms, result);
 	return result;
 }
-
 
 /*
  * Tear down SDIO RX

@@ -319,7 +319,6 @@ do {								\
 /* FER (Function Event Register) */
 #define ADM8211_FER_INTR_EV_ENT	(1 << 15)
 
-
 /* Si4126 RF Synthesizer - Control Registers */
 #define SI4126_MAIN_CONF	0
 #define SI4126_PHASE_DET_GAIN	1
@@ -337,7 +336,6 @@ do {								\
 /* Powerdown */
 #define SI4126_POWERDOWN_PDIB	(1 << 1)
 #define SI4126_POWERDOWN_PDRB	(1 << 0)
-
 
 /* RF3000 BBP - Control Port Registers */
 /* 0x00 - reserved */
@@ -391,7 +389,6 @@ struct adm8211_desc {
 #define RDES1_CONTROL_RBS1	(0x00000fff)
 
 #define RDES1_STATUS_RSSI	(0x0000007f)
-
 
 #define TDES0_CONTROL_OWN	(1 << 31)
 #define TDES0_CONTROL_DONE	(1 << 30)
@@ -485,7 +482,6 @@ struct adm8211_tx_hdr {
 	u16 reserved_1;
 	u32 reserved_2;
 } __packed;
-
 
 #define RX_COPY_BREAK 128
 #define RX_PKT_SIZE 2500

@@ -184,7 +184,6 @@
 		 .rreg = xreg_right, .shift = xshift, \
 		 .min = xmin, .max = xmax} }
 
-
 /*
  * Simplified versions of above macros, declaring a struct and calculating
  * ARRAY_SIZE internally
@@ -218,7 +217,6 @@
 
 #define snd_soc_get_enum_text(soc_enum, idx) \
 	(soc_enum->texts ? soc_enum->texts[idx] : soc_enum->dtexts[idx])
-
 
 /*
  * Bias levels

@@ -123,7 +123,6 @@ error_ret:
 }
 EXPORT_SYMBOL(iio_push_event);
 
-
 /* This turns up an awful lot */
 ssize_t iio_read_const_attr(struct device *dev,
 			    struct device_attribute *attr,
@@ -132,7 +131,6 @@ ssize_t iio_read_const_attr(struct device *dev,
 	return sprintf(buf, "%s\n", to_iio_const_attr(attr)->string);
 }
 EXPORT_SYMBOL(iio_read_const_attr);
-
 
 static ssize_t iio_event_chrdev_read(struct file *filep,
 				     char __user *buf,
@@ -640,7 +638,6 @@ static int iio_device_add_channel_sysfs(struct iio_dev *dev_info,
 					struct iio_chan_spec const *chan)
 {
 	int ret, i;
-
 
 	if (chan->channel < 0)
 		return 0;

@@ -649,7 +649,6 @@ int check_stk(struct usb_device *p, bool ntsc)
 		if (0x000 == cfg[i].reg || 0x002 == cfg[i].reg)
 			continue;
 
-
 		ir = read_stk(p, cfg[i].reg);
 		if (0x100 == cfg[i].reg) {
 			if ((ir != (0xFF & cfg[i].set)) &&

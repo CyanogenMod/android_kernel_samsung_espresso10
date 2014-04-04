@@ -83,7 +83,6 @@ __iwl_legacy_write8(const char *f, u32 l, struct iwl_priv *priv,
 #define iwl_write8(priv, ofs, val) _iwl_legacy_write8(priv, ofs, val)
 #endif
 
-
 static inline void _iwl_legacy_write32(struct iwl_priv *priv, u32 ofs, u32 val)
 {
 	trace_iwlwifi_legacy_dev_iowrite32(priv, ofs, val);

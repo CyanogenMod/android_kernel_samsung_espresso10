@@ -11,7 +11,6 @@
 
 #include "leds.h"
 
-
 #define LED_STATE_ENABLED	1
 #define LED_STATE_CLAIMED	2
 

@@ -108,7 +108,6 @@ enum bverror {
 	BVERR_DSTGEOM_PALETTE =	/* dstgeom.paletteformat not supported */
 		BVERRDEF_VENDOR_ALL + 27400,
 
-
 	BVERR_DSTRECT =		/* bvbltparams.dstrect not supported */
 		BVERRDEF_VENDOR_ALL + 28000,
 

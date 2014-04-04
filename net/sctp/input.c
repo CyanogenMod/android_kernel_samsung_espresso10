@@ -78,7 +78,6 @@ static struct sctp_association *__sctp_lookup_association(
 
 static int sctp_add_backlog(struct sock *sk, struct sk_buff *skb);
 
-
 /* Calculate the SCTP checksum of an SCTP packet.  */
 static inline int sctp_rcv_checksum(struct sk_buff *skb)
 {
@@ -448,7 +447,7 @@ void sctp_icmp_proto_unreachable(struct sock *sk,
 						jiffies + (HZ/20)))
 				sctp_association_hold(asoc);
 		}
-			
+
 	} else {
 		if (timer_pending(&t->proto_unreach_timer) &&
 		    del_timer(&t->proto_unreach_timer))
@@ -737,15 +736,12 @@ static void __sctp_unhash_endpoint(struct sctp_endpoint *ep)
 
 	epb = &ep->base;
 
-	if (hlist_unhashed(&epb->node))
-		return;
-
 	epb->hashent = sctp_ep_hashfn(epb->bind_addr.port);
 
 	head = &sctp_ep_hashtable[epb->hashent];
 
 	sctp_write_lock(&head->lock);
-	__hlist_del(&epb->node);
+	hlist_del_init(&epb->node);
 	sctp_write_unlock(&head->lock);
 }
 
@@ -826,7 +822,7 @@ static void __sctp_unhash_established(struct sctp_association *asoc)
 	head = &sctp_assoc_hashtable[epb->hashent];
 
 	sctp_write_lock(&head->lock);
-	__hlist_del(&epb->node);
+	hlist_del_init(&epb->node);
 	sctp_write_unlock(&head->lock);
 }
 
@@ -1011,7 +1007,6 @@ static struct sctp_association *__sctp_rcv_asconf_lookup(
 	return __sctp_lookup_association(laddr, &paddr, transportp);
 }
 
-
 /* SCTP-AUTH, Section 6.3:
 *    If the receiver does not find a STCB for a packet containing an AUTH
 *    chunk as the first chunk and not a COOKIE-ECHO chunk as the second
@@ -1113,7 +1108,6 @@ static struct sctp_association *__sctp_rcv_lookup_harder(struct sk_buff *skb,
 		return __sctp_rcv_walk_lookup(skb, laddr, transportp);
 		break;
 	}
-
 
 	return NULL;
 }

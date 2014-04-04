@@ -34,7 +34,6 @@
 #include "rf.h"
 #include "dm.h"
 
-
 static void _rtl92s_get_powerbase(struct ieee80211_hw *hw, u8 *p_pwrlevel,
 				  u8 chnl, u32 *ofdmbase, u32 *mcsbase,
 				  u8 *p_final_pwridx)

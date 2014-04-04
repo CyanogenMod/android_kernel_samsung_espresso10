@@ -7,4 +7,3 @@ struct mc33880_platform_data {
 };
 
 #endif
-

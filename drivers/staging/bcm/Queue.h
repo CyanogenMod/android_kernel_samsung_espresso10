@@ -4,8 +4,6 @@
 #ifndef	__QUEUE_H__
 #define	__QUEUE_H__
 
-
-
 #define ENQUEUEPACKET(_Head, _Tail,_Packet)	\
 do						\
 {                                               \

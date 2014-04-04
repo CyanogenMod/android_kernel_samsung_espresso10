@@ -23,7 +23,6 @@
 #include <linux/wireless.h>
 #include <net/iw_handler.h>
 
-
 /* return value from  GELIC_LV1_GET_WLAN_EVENT netcontrol */
 enum gelic_lv1_wl_event {
 	GELIC_LV1_WL_EVENT_DEVICE_READY   = 0x01, /* Eurus ready */
@@ -75,7 +74,6 @@ struct gelic_eurus_common_cfg {
 	u16 auth_method; /* shared key or open */
 	u16 op_mode; /* B/G */
 } __packed;
-
 
 /* for GELIC_EURUS_CMD_WEP_CFG */
 enum gelic_eurus_wep_security {
@@ -194,7 +192,6 @@ struct gelic_eurus_rssi_info {
 	/* big endian */
 	__be16 rssi;
 } __packed;
-
 
 /* for 'stat' member of gelic_wl_info */
 enum gelic_wl_info_status_bit {

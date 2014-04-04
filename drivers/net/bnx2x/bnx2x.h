@@ -103,7 +103,6 @@ do {								\
 	pr_err("[%s:%d]" __fmt, __func__, __LINE__, ##__args); \
 	} while (0)
 
-
 /* before we have a dev->name use dev_info() */
 #define BNX2X_DEV_INFO(__fmt, __args...)			 \
 do {								 \
@@ -134,7 +133,6 @@ void bnx2x_panic_dump(struct bnx2x *bp);
 #define U64_LO(x)			(u32)(((u64)(x)) & 0xffffffff)
 #define U64_HI(x)			(u32)(((u64)(x)) >> 32)
 #define HILO_U64(hi, lo)		((((u64)(hi)) << 32) + (lo))
-
 
 #define REG_ADDR(bp, offset)		((bp->regview) + (offset))
 
@@ -280,7 +278,6 @@ union db_prod {
 	struct doorbell_set_prod data;
 	u32		raw;
 };
-
 
 /* MC hsi */
 #define BCM_PAGE_SHIFT			12
@@ -447,7 +444,6 @@ struct bnx2x_fastpath {
 #define IS_FCOE_IDX(idx)	false
 #endif
 
-
 /* MC hsi */
 #define MAX_FETCH_BD			13	/* HW max BDs per packet */
 #define RX_COPY_THRESH			92
@@ -494,7 +490,6 @@ struct bnx2x_fastpath {
 				  (MAX_RCQ_DESC_CNT - 1)) ? (x) + 2 : (x) + 1)
 #define RCQ_BD(x)			((x) & MAX_RCQ_BD)
 
-
 /* This is needed for determining of last_max */
 #define SUB_S16(a, b)			(s16)((s16)(a) - (s16)(b))
 
@@ -516,7 +511,6 @@ struct bnx2x_fastpath {
 	__SGE_MASK_CLEAR_BIT(fp->sge_mask[(idx) >> RX_SGE_MASK_ELEM_SHIFT], \
 			     ((idx) & RX_SGE_MASK_ELEM_MASK))
 
-
 /* used on a CID received from the HW */
 #define SW_CID(x)			(le32_to_cpu(x) & \
 					 (COMMON_RAMROD_ETH_RX_CQE_CID >> 7))
@@ -536,7 +530,6 @@ struct bnx2x_fastpath {
 		       DPM_TRIGER_TYPE); \
 	} while (0)
 
-
 /* TX CSUM helpers */
 #define SKB_CS_OFF(skb)		(offsetof(struct tcphdr, check) - \
 				 skb->csum_offset)
@@ -554,7 +547,6 @@ struct bnx2x_fastpath {
 
 #define XMIT_CSUM			(XMIT_CSUM_V4 | XMIT_CSUM_V6)
 #define XMIT_GSO			(XMIT_GSO_V4 | XMIT_GSO_V6)
-
 
 /* stuff added to make the code fit 80Col */
 
@@ -840,7 +832,6 @@ struct bnx2x_slowpath {
 #define bnx2x_sp(bp, var)		(&bp->slowpath->var)
 #define bnx2x_sp_mapping(bp, var) \
 		(bp->slowpath_mapping + offsetof(struct bnx2x_slowpath, var))
-
 
 /* attn group wiring */
 #define MAX_DYNAMIC_ATTN_GRPS		8
@@ -1268,8 +1259,6 @@ struct bnx2x {
 #define QUEUE_DROP_TTL0		TSTORM_ETH_CLIENT_CONFIG_DROP_TTL0
 #define QUEUE_DROP_UDP_CS_ERR	TSTORM_ETH_CLIENT_CONFIG_DROP_UDP_CS_ERR
 
-
-
 /* rss capabilities */
 #define RSS_IPV4_CAP		0x0001
 #define RSS_IPV4_TCP_CAP	0x0002
@@ -1554,7 +1543,6 @@ static inline u32 reg_poll(struct bnx2x *bp, u32 reg, u32 expected, int ms,
 #define UNLOAD_CLOSE			1
 #define UNLOAD_RECOVERY			2
 
-
 /* DMAE command defines */
 #define DMAE_TIMEOUT			-1
 #define DMAE_PCI_ERROR			-2	/* E2 and onward */
@@ -1632,7 +1620,6 @@ static inline u32 reg_poll(struct bnx2x *bp, u32 reg, u32 expected, int ms,
 #define PCICFG_LINK_SPEED		0xf0000
 #define PCICFG_LINK_SPEED_SHIFT		16
 
-
 #define BNX2X_NUM_TESTS			7
 
 #define BNX2X_PHY_LOOPBACK		0
@@ -1642,9 +1629,7 @@ static inline u32 reg_poll(struct bnx2x *bp, u32 reg, u32 expected, int ms,
 #define BNX2X_LOOPBACK_FAILED		(BNX2X_MAC_LOOPBACK_FAILED | \
 					 BNX2X_PHY_LOOPBACK_FAILED)
 
-
 #define STROM_ASSERT_ARRAY_SIZE		50
-
 
 /* must be used on a CID before placing it on a HW ring */
 #define HW_CID(bp, x)			((BP_PORT(bp) << 23) | \
@@ -1652,7 +1637,6 @@ static inline u32 reg_poll(struct bnx2x *bp, u32 reg, u32 expected, int ms,
 
 #define SP_DESC_CNT		(BCM_PAGE_SIZE / sizeof(struct eth_spe))
 #define MAX_SP_DESC_CNT			(SP_DESC_CNT - 1)
-
 
 #define BNX2X_BTR			4
 #define MAX_SPQ_PENDING			8
@@ -1675,7 +1659,6 @@ static inline u32 reg_poll(struct bnx2x *bp, u32 reg, u32 expected, int ms,
 /* Memory of fairness algorithm . 2 cycles */
 #define FAIR_MEM					2
 
-
 #define ATTN_NIG_FOR_FUNC		(1L << 8)
 #define ATTN_SW_TIMER_4_FUNC		(1L << 9)
 #define GPIO_2_FUNC			(1L << 10)
@@ -1690,7 +1673,6 @@ static inline u32 reg_poll(struct bnx2x *bp, u32 reg, u32 expected, int ms,
 
 #define ATTN_HARD_WIRED_MASK		0xff00
 #define ATTENTION_ID			4
-
 
 /* stuff added to make the code fit 80Col */
 
@@ -1800,7 +1782,6 @@ static inline u32 reg_poll(struct bnx2x *bp, u32 reg, u32 expected, int ms,
 #define MC_HASH_SIZE			8
 #define MC_HASH_OFFSET(bp, i)		(BAR_TSTRORM_INTMEM + \
 	TSTORM_APPROXIMATE_MATCH_MULTICAST_FILTERING_OFFSET(BP_FUNC(bp)) + i*4)
-
 
 #ifndef PXP2_REG_PXP2_INT_STS
 #define PXP2_REG_PXP2_INT_STS		PXP2_REG_PXP2_INT_STS_0

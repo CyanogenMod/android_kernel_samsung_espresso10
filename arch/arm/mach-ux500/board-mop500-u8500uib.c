@@ -99,7 +99,6 @@ static struct i2c_board_info __initdata mop500_i2c0_devices_u8500[] = {
 	},
 };
 
-
 void __init mop500_u8500uib_init(void)
 {
 	mop500_uib_i2c_add(3, mop500_i2c3_devices_u8500,

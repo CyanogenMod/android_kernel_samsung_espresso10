@@ -348,7 +348,6 @@ static const struct snd_kcontrol_new uda1380_output_mux_control =
 static const struct snd_kcontrol_new uda1380_capture_mux_control =
 	SOC_DAPM_ENUM("Route", uda1380_capture_sel_enum);
 
-
 static const struct snd_soc_dapm_widget uda1380_dapm_widgets[] = {
 	SND_SOC_DAPM_MUX("Input Mux", SND_SOC_NOPM, 0, 0,
 		&uda1380_input_mux_control),

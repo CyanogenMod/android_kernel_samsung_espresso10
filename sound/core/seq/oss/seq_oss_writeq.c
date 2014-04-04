@@ -29,7 +29,6 @@
 #include <linux/wait.h>
 #include <linux/slab.h>
 
-
 /*
  * create a write queue record
  */
@@ -69,7 +68,6 @@ snd_seq_oss_writeq_delete(struct seq_oss_writeq *q)
 		kfree(q);
 	}
 }
-
 
 /*
  * reset the write queue
@@ -144,7 +142,6 @@ snd_seq_oss_writeq_wakeup(struct seq_oss_writeq *q, abstime_t time)
 	spin_unlock_irqrestore(&q->sync_lock, flags);
 }
 
-
 /*
  * return the unused pool size
  */
@@ -156,7 +153,6 @@ snd_seq_oss_writeq_get_free_size(struct seq_oss_writeq *q)
 	snd_seq_oss_control(q->dp, SNDRV_SEQ_IOCTL_GET_CLIENT_POOL, &pool);
 	return pool.output_free;
 }
-
 
 /*
  * set output threshold size from ioctl
@@ -170,4 +166,3 @@ snd_seq_oss_writeq_set_output(struct seq_oss_writeq *q, int val)
 	pool.output_room = val;
 	snd_seq_oss_control(q->dp, SNDRV_SEQ_IOCTL_SET_CLIENT_POOL, &pool);
 }
-

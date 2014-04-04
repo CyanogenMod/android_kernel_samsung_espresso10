@@ -759,7 +759,6 @@ static void jsm_carrier(struct jsm_channel *ch)
 		ch->ch_flags &= ~CH_CD;
 }
 
-
 void jsm_check_queue_flow_control(struct jsm_channel *ch)
 {
 	struct board_ops *bd_ops = ch->ch_bd->bd_ops;

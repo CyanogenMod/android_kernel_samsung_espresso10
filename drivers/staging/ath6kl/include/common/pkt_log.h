@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2005-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -27,7 +27,6 @@
 extern "C" {
 #endif
 
-
 /* Pkt log info */
 typedef PREPACK struct pkt_log_t {
     struct info_t {
@@ -37,7 +36,6 @@ typedef PREPACK struct pkt_log_t {
     }info[4096];
     u16 last_idx;
 }POSTPACK PACKET_LOG;
-
 
 #ifdef __cplusplus
 }

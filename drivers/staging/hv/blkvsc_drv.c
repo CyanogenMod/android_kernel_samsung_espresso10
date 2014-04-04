@@ -35,7 +35,6 @@
 #include "hyperv.h"
 #include "hyperv_storage.h"
 
-
 #define BLKVSC_MINORS	64
 
 enum blkvsc_device_type {
@@ -174,7 +173,6 @@ static int blkvsc_submit_request(struct blkvsc_request *blkvsc_req,
 	struct vmscsi_request *vm_srb;
 	int ret;
 
-
 	storvsc_req = &blkvsc_req->request;
 	vm_srb = &storvsc_req->vstor_packet.vm_srb;
 
@@ -202,7 +200,6 @@ static int blkvsc_submit_request(struct blkvsc_request *blkvsc_req,
 	return ret;
 }
 
-
 static int blkvsc_open(struct block_device *bdev, fmode_t mode)
 {
 	struct block_device_context *blkdev = bdev->bd_disk->private_data;
@@ -216,7 +213,6 @@ static int blkvsc_open(struct block_device *bdev, fmode_t mode)
 
 	return 0;
 }
-
 
 static int blkvsc_getgeo(struct block_device *bd, struct hd_geometry *hg)
 {
@@ -235,7 +231,6 @@ static int blkvsc_getgeo(struct block_device *bd, struct hd_geometry *hg)
 	return 0;
 
 }
-
 
 static void blkvsc_init_rw(struct blkvsc_request *blkvsc_req)
 {
@@ -258,7 +253,6 @@ static void blkvsc_init_rw(struct blkvsc_request *blkvsc_req)
 	*(unsigned int *)&blkvsc_req->cmnd[10] =
 	cpu_to_be32(blkvsc_req->sector_count);
 }
-
 
 static int blkvsc_ioctl(struct block_device *bd, fmode_t mode,
 			unsigned cmd, unsigned long arg)
@@ -290,7 +284,6 @@ static void blkvsc_cmd_completion(struct hv_storvsc_request *request)
 	struct vmscsi_request *vm_srb;
 	unsigned long flags;
 
-
 	vm_srb = &blkvsc_req->request.vstor_packet.vm_srb;
 
 	spin_lock_irqsave(&blkdev->lock, flags);
@@ -304,7 +297,6 @@ static void blkvsc_cmd_completion(struct hv_storvsc_request *request)
 
 	complete(&blkvsc_req->request.wait_event);
 }
-
 
 static int blkvsc_do_operation(struct block_device_context *blkdev,
 				enum blkvsc_op_type op)
@@ -427,7 +419,6 @@ cleanup:
 	return ret;
 }
 
-
 static int blkvsc_cancel_pending_reqs(struct block_device_context *blkdev)
 {
 	struct blkvsc_request *pend_req, *tmp;
@@ -435,7 +426,6 @@ static int blkvsc_cancel_pending_reqs(struct block_device_context *blkdev)
 	struct vmscsi_request *vm_srb;
 
 	int ret = 0;
-
 
 	/* Flush the pending list first */
 	list_for_each_entry_safe(pend_req, tmp, &blkdev->pending_list,
@@ -495,7 +485,6 @@ out:
 	return ret;
 }
 
-
 /*
  * blkvsc_remove() - Callback when our device is removed
  */
@@ -503,7 +492,6 @@ static int blkvsc_remove(struct hv_device *dev)
 {
 	struct block_device_context *blkdev = dev_get_drvdata(&dev->device);
 	unsigned long flags;
-
 
 	/* Get to a known state */
 	spin_lock_irqsave(&blkdev->lock, flags);
@@ -578,7 +566,6 @@ static int blkvsc_release(struct gendisk *disk, fmode_t mode)
 
 	return 0;
 }
-
 
 /*
  * We break the request into 1 or more blkvsc_requests and submit
@@ -760,7 +747,6 @@ static int blkvsc_do_pending_reqs(struct block_device_context *blkdev)
 	return ret;
 }
 
-
 static void blkvsc_request(struct request_queue *queue)
 {
 	struct block_device_context *blkdev = NULL;
@@ -795,8 +781,6 @@ static void blkvsc_request(struct request_queue *queue)
 		}
 	}
 }
-
-
 
 /* The one and only one */
 static  struct hv_driver blkvsc_drv = {
@@ -833,7 +817,6 @@ static int blkvsc_drv_init(void)
 	return ret;
 }
 
-
 static void blkvsc_drv_exit(void)
 {
 
@@ -861,7 +844,6 @@ static int blkvsc_probe(struct hv_device *dev)
 	/* Initialize what we can here */
 	spin_lock_init(&blkdev->lock);
 
-
 	blkdev->request_pool = kmem_cache_create(dev_name(&dev->device),
 					sizeof(struct blkvsc_request), 0,
 					SLAB_HWCACHE_ALIGN, NULL);
@@ -869,7 +851,6 @@ static int blkvsc_probe(struct hv_device *dev)
 		ret = -ENOMEM;
 		goto cleanup;
 	}
-
 
 	ret = blkvsc_device_add(dev, &device_info);
 	if (ret != 0)
@@ -965,7 +946,6 @@ static void blkvsc_request_completion(struct hv_storvsc_request *request)
 	unsigned long flags;
 	struct blkvsc_request *comp_req, *tmp;
 	struct vmscsi_request *vm_srb;
-
 
 	spin_lock_irqsave(&blkdev->lock, flags);
 

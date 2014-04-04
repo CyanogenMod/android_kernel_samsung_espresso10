@@ -81,4 +81,3 @@ config SCSI_OAK1
 	help
 	  This enables support for the Oak SCSI card. If you have an Acorn
 	  system with one of these, say Y. If unsure, say N.
-

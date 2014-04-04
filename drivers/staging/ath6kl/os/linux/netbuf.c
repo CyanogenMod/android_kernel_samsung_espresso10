@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -63,7 +63,7 @@ a_netbuf_alloc(int size)
     struct sk_buff *skb;
     size += 2 * (A_GET_CACHE_LINE_BYTES()); /* add some cacheline space at front and back of buffer */
     skb = dev_alloc_skb(AR6000_DATA_OFFSET + sizeof(struct htc_packet) + size);
-    skb_reserve(skb, AR6000_DATA_OFFSET + sizeof(struct htc_packet) + A_GET_CACHE_LINE_BYTES());    
+    skb_reserve(skb, AR6000_DATA_OFFSET + sizeof(struct htc_packet) + A_GET_CACHE_LINE_BYTES());
     return ((void *)skb);
 }
 
@@ -151,9 +151,8 @@ a_netbuf_put_data(void *bufPtr, char *srcPtr, s32 len)
     return 0;
 }
 
-
 /*
- * Trim the network buffer pointed to by bufPtr to len # of bytes 
+ * Trim the network buffer pointed to by bufPtr to len # of bytes
  */
 int
 a_netbuf_setlen(void *bufPtr, s32 len)
@@ -182,13 +181,12 @@ a_netbuf_trim_data(void *bufPtr, char *dstPtr, s32 len)
 {
     char *start = (char*)(((struct sk_buff *)bufPtr)->data +
         (((struct sk_buff *)bufPtr)->len - len));
-    
+
     memcpy(dstPtr, start, len);
     skb_trim((struct sk_buff *)bufPtr, ((struct sk_buff *)bufPtr)->len - len);
 
     return 0;
 }
-
 
 /*
  * Returns the number of bytes available to a a_netbuf_push()

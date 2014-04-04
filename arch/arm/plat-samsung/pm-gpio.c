@@ -1,4 +1,3 @@
-
 /* linux/arch/arm/plat-s3c/pm-gpio.c
  *
  * Copyright 2008 Openmoko, Inc.
@@ -169,7 +168,6 @@ static void s3c_gpio_pm_2bit_resume(struct s3c_gpio_chip *chip)
 
 		change_mask |= mask;
 	}
-
 
 	/* Write the new CON settings */
 

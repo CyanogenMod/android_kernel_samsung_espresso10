@@ -1,4 +1,3 @@
-
 extern struct sys_timer footbridge_timer;
 extern struct sys_timer isa_timer;
 

@@ -910,7 +910,6 @@ struct v4l2_bt_timings {
 #define V4L2_DV_VSYNC_POS_POL	0x00000001
 #define V4L2_DV_HSYNC_POS_POL	0x00000002
 
-
 /* DV timings */
 struct v4l2_dv_timings {
 	__u32 type;
@@ -1572,7 +1571,6 @@ struct v4l2_enc_idx {
 	struct v4l2_enc_idx_entry entry[V4L2_ENC_IDX_ENTRIES];
 };
 
-
 #define V4L2_ENC_CMD_START      (0)
 #define V4L2_ENC_CMD_STOP       (1)
 #define V4L2_ENC_CMD_PAUSE      (2)
@@ -1592,7 +1590,6 @@ struct v4l2_encoder_cmd {
 };
 
 #endif
-
 
 /*
  *	D A T A   S E R V I C E S   ( V B I )

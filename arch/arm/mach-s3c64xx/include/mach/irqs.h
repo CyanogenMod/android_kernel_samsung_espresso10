@@ -217,4 +217,3 @@
 #define IRQ_ONENAND	IRQ_ONENAND0
 
 #endif /* __ASM_MACH_S3C64XX_IRQS_H */
-

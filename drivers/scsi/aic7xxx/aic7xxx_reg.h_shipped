@@ -187,7 +187,6 @@ ahc_reg_print_t ahc_scb_tag_print;
     ahc_print_register(NULL, 0, "SCB_TAG", 0xbb, regvalue, cur_col, wrap)
 #endif
 
-
 #define	SCSISEQ         		0x00
 #define		TEMODE          	0x80
 #define		SCSIRSTO        	0x01
@@ -871,7 +870,6 @@ ahc_reg_print_t ahc_scb_tag_print;
 
 #define	SG_CACHE_PRE    		0xfc
 
-
 #define	MAX_OFFSET_ULTRA2	0x7f
 #define	MAX_OFFSET_16BIT	0x08
 #define	BUS_8_BIT	0x00
@@ -897,7 +895,6 @@ ahc_reg_print_t ahc_scb_tag_print;
 #define	SCB_UPLOAD_SIZE	0x20
 #define	STACK_SIZE	0x04
 
-
 /* Downloaded Constant Definitions */
 #define	INVERTED_CACHESIZE_MASK	0x03
 #define	SG_PREFETCH_ADDR_MASK	0x06
@@ -907,6 +904,5 @@ ahc_reg_print_t ahc_scb_tag_print;
 #define	CACHESIZE_MASK	0x02
 #define	QINFIFO_OFFSET	0x01
 #define	DOWNLOAD_CONST_COUNT	0x07
-
 
 /* Exported Labels */

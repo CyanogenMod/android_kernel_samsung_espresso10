@@ -26,7 +26,6 @@
 #include <media/msp3400.h>
 #include <media/v4l2-common.h>
 
-
 struct routing_scheme {
 	const int *def;
 	unsigned int cnt;

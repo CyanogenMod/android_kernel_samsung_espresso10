@@ -102,7 +102,6 @@ struct atmel_ssc_state {
 	u32 ssc_imr;
 };
 
-
 struct atmel_ssc_info {
 	char *name;
 	struct ssc_device *ssc;

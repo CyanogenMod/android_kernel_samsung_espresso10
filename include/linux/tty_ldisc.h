@@ -12,25 +12,25 @@
  * 	This function is called when the line discipline is associated
  * 	with the tty.  The line discipline can use this as an
  * 	opportunity to initialize any state needed by the ldisc routines.
- * 
+ *
  * void	(*close)(struct tty_struct *);
  *
  *	This function is called when the line discipline is being
  * 	shutdown, either because the tty is being closed or because
  * 	the tty is being changed to use a new line discipline
- * 
+ *
  * void	(*flush_buffer)(struct tty_struct *tty);
  *
  * 	This function instructs the line discipline to clear its
  * 	buffers of any input characters it may have queued to be
  * 	delivered to the user mode process.
- * 
+ *
  * ssize_t (*chars_in_buffer)(struct tty_struct *tty);
  *
  * 	This function returns the number of input characters the line
  *	discipline may have queued up to be delivered to the user mode
  *	process.
- * 
+ *
  * ssize_t (*read)(struct tty_struct * tty, struct file * file,
  *		   unsigned char * buf, size_t nr);
  *
@@ -38,7 +38,7 @@
  * 	the tty.  The line discipline will return whatever characters
  * 	it has buffered up for the user.  If this function is not
  * 	defined, the user will receive an EIO error.
- * 
+ *
  * ssize_t (*write)(struct tty_struct * tty, struct file * file,
  * 		    const unsigned char * buf, size_t nr);
  *
@@ -47,7 +47,7 @@
  * 	low-level tty device for transmission, optionally performing
  * 	some processing on the characters first.  If this function is
  * 	not defined, the user will receive an EIO error.
- * 
+ *
  * int	(*ioctl)(struct tty_struct * tty, struct file * file,
  * 		 unsigned int cmd, unsigned long arg);
  *
@@ -58,7 +58,7 @@
  * 	layer, (2) tty low-level driver, (3) line discpline.  So a
  * 	low-level driver can "grab" an ioctl request before the line
  * 	discpline has a chance to see it.
- * 
+ *
  * long	(*compat_ioctl)(struct tty_struct * tty, struct file * file,
  * 		        unsigned int cmd, unsigned long arg);
  *
@@ -68,7 +68,7 @@
  *
  * 	This function notifies the line discpline that a change has
  * 	been made to the termios structure.
- * 
+ *
  * int	(*poll)(struct tty_struct * tty, struct file * file,
  * 		  poll_table *wait);
  *
@@ -85,7 +85,7 @@
  * 	character received by the device.  <fp> is a pointer to a
  * 	pointer of flag bytes which indicate whether a character was
  * 	received with a parity error, etc.
- * 
+ *
  * void	(*write_wakeup)(struct tty_struct *);
  *
  * 	This function is called by the low-level tty driver to signal
@@ -116,7 +116,7 @@ struct tty_ldisc_ops {
 	char	*name;
 	int	num;
 	int	flags;
-	
+
 	/*
 	 * The following routines are called from above.
 	 */
@@ -127,7 +127,7 @@ struct tty_ldisc_ops {
 	ssize_t	(*read)(struct tty_struct * tty, struct file * file,
 			unsigned char __user * buf, size_t nr);
 	ssize_t	(*write)(struct tty_struct * tty, struct file * file,
-			 const unsigned char * buf, size_t nr);	
+			 const unsigned char * buf, size_t nr);
 	int	(*ioctl)(struct tty_struct * tty, struct file * file,
 			 unsigned int cmd, unsigned long arg);
 	long	(*compat_ioctl)(struct tty_struct * tty, struct file * file,
@@ -136,7 +136,7 @@ struct tty_ldisc_ops {
 	unsigned int (*poll)(struct tty_struct *, struct file *,
 			     struct poll_table_struct *);
 	int	(*hangup)(struct tty_struct *tty);
-	
+
 	/*
 	 * The following routines are called from below.
 	 */
@@ -147,7 +147,7 @@ struct tty_ldisc_ops {
 				struct pps_event_time *);
 
 	struct  module *owner;
-	
+
 	int refcount;
 };
 

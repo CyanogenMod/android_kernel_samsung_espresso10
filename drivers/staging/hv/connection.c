@@ -32,7 +32,6 @@
 #include "hyperv.h"
 #include "hyperv_vmbus.h"
 
-
 struct vmbus_connection vmbus_connection = {
 	.conn_state		= DISCONNECTED,
 	.next_gpadl_handle	= ATOMIC_INIT(0xE1E10),

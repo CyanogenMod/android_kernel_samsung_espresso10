@@ -272,7 +272,6 @@ enum cx231xx_mute_video_shift {
 #define MC417_MIADDR	0x0F00
 #define MC417_MIDATA	0x00FF
 
-
 /* Bit definitions for MC417_CTL register ****
  *bits 31-6   bits 5-4   bit 3    bits 2-1       Bit 0
  *+--------+-------------+--------+--------------+------------+
@@ -293,7 +292,6 @@ enum cx231xx_mute_video_shift {
 #define MC417_GPIO_SEL_GPIO2	0x2
 #define MC417_GPIO_SEL_GPIO1	0x1
 #define MC417_GPIO_SEL_GPIO0	0x0
-
 
 #define CX23417_GPIO_MASK 0xFC0003FF
 static int setITVCReg(struct cx231xx *dev, u32 gpio_direction, u32 value)
@@ -470,7 +468,6 @@ static int mc417_register_read(struct cx231xx *dev, u16 address, u32 *value)
 
 	*value  = return_value;
 
-
 	return ret;
 }
 
@@ -570,7 +567,6 @@ static int mc417_memory_read(struct cx231xx *dev, u32 address, u32 *value)
 
 	/*Wait for MIRDY line*/
 	ret = waitForMciComplete(dev);
-
 
 	/*Read data byte 3;*/
 	temp = (0x82|MCI_MEMORY_DATA_BYTE3)<<10;
@@ -917,7 +913,6 @@ static void mciWriteMemoryToGPIO(struct cx231xx *dev, u32 address, u32 value,
 		p_fw_image++;
 	}
 }
-
 
 static int cx231xx_load_firmware(struct cx231xx *dev)
 {
@@ -1312,10 +1307,8 @@ static void buffer_filled(char *data, int len, struct urb *urb,
 		if (list_empty(&dma_q->active))
 			return;
 
-
 		buf = list_entry(dma_q->active.next,
 				 struct cx231xx_buffer, vb.queue);
-
 
 		/* Fill buffer */
 		vbuf = videobuf_to_vmalloc(&buf->vb);
@@ -1570,7 +1563,6 @@ static int vidioc_enumaudio(struct file *file, void *fh,
 		strncpy(vin->name, "VideoGrabber Audio", 14);
 		vin->capability = V4L2_AUDCAP_STEREO;
 
-
 return 0;
 }
 static const char *iname[] = {
@@ -1593,7 +1585,6 @@ static int vidioc_enum_input(struct file *file, void *priv,
 	if (i->index >= 4)
 		return -EINVAL;
 
-
 	input = &cx231xx_boards[dev->model].input[i->index];
 
 	if (input->type == 0)
@@ -1610,7 +1601,6 @@ static int vidioc_enum_input(struct file *file, void *priv,
 		i->type = V4L2_INPUT_TYPE_TUNER;
 	else
 		i->type  = V4L2_INPUT_TYPE_CAMERA;
-
 
 	return 0;
 }
@@ -1663,7 +1653,6 @@ static int vidioc_s_frequency(struct file *file, void *priv,
 				struct v4l2_frequency *f)
 {
 
-
 	return 0;
 }
 
@@ -1691,8 +1680,6 @@ static struct v4l2_capability pvr_capability = {
 static int vidioc_querycap(struct file *file, void  *priv,
 				struct v4l2_capability *cap)
 {
-
-
 
 		memcpy(cap, &pvr_capability, sizeof(struct v4l2_capability));
 	return 0;
@@ -1786,7 +1773,6 @@ static int vidioc_dqbuf(struct file *file, void *priv, struct v4l2_buffer *b)
 	return videobuf_dqbuf(&fh->vidq, b, file->f_flags & O_NONBLOCK);
 }
 
-
 static int vidioc_streamon(struct file *file, void *priv,
 				enum v4l2_buf_type i)
 {
@@ -1851,7 +1837,6 @@ static int vidioc_s_ext_ctrls(struct file *file, void *priv,
 	}
 
 	return err;
-
 
 return 0;
 }
@@ -1941,7 +1926,6 @@ static int mpeg_open(struct file *file)
 	file->private_data = fh;
 	fh->dev      = dev;
 
-
 	videobuf_queue_vmalloc_init(&fh->vidq, &cx231xx_qops,
 			    NULL, &dev->video_mode.slock,
 			    V4L2_BUF_TYPE_VIDEO_CAPTURE, V4L2_FIELD_INTERLACED,
@@ -1954,7 +1938,6 @@ static int mpeg_open(struct file *file)
 			    sizeof(struct cx231xx_buffer),
 			    fh, NULL);
 */
-
 
 	cx231xx_set_alt_setting(dev, INDEX_VANC, 1);
 	cx231xx_set_gpio_value(dev, 2, 0);
@@ -2023,7 +2006,6 @@ static ssize_t mpeg_read(struct file *file, char __user *data,
 {
 	struct cx231xx_fh *fh = file->private_data;
 	struct cx231xx *dev = fh->dev;
-
 
 	/* Deal w/ A/V decoder * and mpeg encoder sync issues. */
 	/* Start mpeg encoder on first read. */

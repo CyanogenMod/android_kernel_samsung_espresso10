@@ -22,10 +22,10 @@
  *
  */
 
-int snd_pcm_hw_param_first(struct snd_pcm_substream *pcm, 
+int snd_pcm_hw_param_first(struct snd_pcm_substream *pcm,
 			   struct snd_pcm_hw_params *params,
 			   snd_pcm_hw_param_t var, int *dir);
-int snd_pcm_hw_param_last(struct snd_pcm_substream *pcm, 
+int snd_pcm_hw_param_last(struct snd_pcm_substream *pcm,
 			  struct snd_pcm_hw_params *params,
 			  snd_pcm_hw_param_t var, int *dir);
 int snd_pcm_hw_param_value(const struct snd_pcm_hw_params *params,
@@ -269,7 +269,7 @@ static inline int snd_interval_empty(const struct snd_interval *i)
 
 static inline int snd_interval_single(const struct snd_interval *i)
 {
-	return (i->min == i->max || 
+	return (i->min == i->max ||
 		(i->min + 1 == i->max && i->openmax));
 }
 
@@ -338,4 +338,3 @@ static inline unsigned int sub(unsigned int a, unsigned int b)
 }
 
 #endif /* __SOUND_PCM_PARAMS_H */
-

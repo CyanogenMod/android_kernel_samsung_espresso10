@@ -31,7 +31,6 @@
 #include <time.h>
 #endif
 
-
 #define DMX_FILTER_SIZE 16
 
 typedef enum
@@ -45,13 +44,11 @@ typedef enum
 	DMX_OUT_TSDEMUX_TAP /* Like TS_TAP but retrieved from the DMX device */
 } dmx_output_t;
 
-
 typedef enum
 {
 	DMX_IN_FRONTEND, /* Input from a front-end device.  */
 	DMX_IN_DVR       /* Input from the logical DVR device.  */
 } dmx_input_t;
-
 
 typedef enum
 {
@@ -88,14 +85,12 @@ typedef enum
 #define DMX_PES_SUBTITLE DMX_PES_SUBTITLE0
 #define DMX_PES_PCR      DMX_PES_PCR0
 
-
 typedef struct dmx_filter
 {
 	__u8  filter[DMX_FILTER_SIZE];
 	__u8  mask[DMX_FILTER_SIZE];
 	__u8  mode[DMX_FILTER_SIZE];
 } dmx_filter_t;
-
 
 struct dmx_sct_filter_params
 {
@@ -108,7 +103,6 @@ struct dmx_sct_filter_params
 #define DMX_IMMEDIATE_START 4
 #define DMX_KERNEL_CLIENT   0x8000
 };
-
 
 struct dmx_pes_filter_params
 {
@@ -140,7 +134,6 @@ struct dmx_stc {
 	unsigned int base;	/* output: divisor for stc to get 90 kHz clock */
 	__u64 stc;		/* output: stc in 'base'*90 kHz units */
 };
-
 
 #define DMX_START                _IO('o', 41)
 #define DMX_STOP                 _IO('o', 42)

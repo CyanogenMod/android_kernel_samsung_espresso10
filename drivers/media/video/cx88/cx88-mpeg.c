@@ -76,7 +76,6 @@ static void flush_request_modules(struct cx8802_dev *dev)
 #define flush_request_modules(dev)
 #endif /* CONFIG_MODULES */
 
-
 static LIST_HEAD(cx8802_devlist);
 static DEFINE_MUTEX(cx8802_mutex);
 /* ------------------------------------------------------------------ */

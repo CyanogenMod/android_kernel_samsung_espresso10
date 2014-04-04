@@ -216,7 +216,6 @@ static u32 sfb_compute_qlen(u32 *prob_r, u32 *avgpm_r, const struct sfb_sched_da
 	return qlen;
 }
 
-
 static void sfb_init_perturbation(u32 slot, struct sfb_sched_data *q)
 {
 	q->bins[slot].perturbation = net_random();
@@ -556,6 +555,8 @@ static int sfb_dump(struct Qdisc *sch, struct sk_buff *skb)
 
 	sch->qstats.backlog = q->qdisc->qstats.backlog;
 	opts = nla_nest_start(skb, TCA_OPTIONS);
+	if (opts == NULL)
+		goto nla_put_failure;
 	NLA_PUT(skb, TCA_SFB_PARMS, sizeof(opt), &opt);
 	return nla_nest_end(skb, opts);
 
@@ -657,7 +658,6 @@ static unsigned long sfb_bind(struct Qdisc *sch, unsigned long parent,
 {
 	return 0;
 }
-
 
 static const struct Qdisc_class_ops sfb_class_ops = {
 	.graft		=	sfb_graft,

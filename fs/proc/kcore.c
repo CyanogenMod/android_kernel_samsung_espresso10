@@ -35,7 +35,6 @@
 
 static struct proc_dir_entry *proc_root_kcore;
 
-
 #ifndef kc_vaddr_to_offset
 #define	kc_vaddr_to_offset(v) ((v) - PAGE_OFFSET)
 #endif
@@ -82,8 +81,8 @@ static size_t get_kcore_size(int *nphdr, size_t *elf_buflen)
 			size = try;
 		*nphdr = *nphdr + 1;
 	}
-	*elf_buflen =	sizeof(struct elfhdr) + 
-			(*nphdr + 2)*sizeof(struct elf_phdr) + 
+	*elf_buflen =	sizeof(struct elfhdr) +
+			(*nphdr + 2)*sizeof(struct elf_phdr) +
 			3 * ((sizeof(struct elf_note)) +
 			     roundup(sizeof(CORE_STR), 4)) +
 			roundup(sizeof(struct elf_prstatus), 4) +
@@ -129,7 +128,6 @@ static void __kcore_update_ram(struct list_head *list)
 	free_kclist_ents(&garbage);
 }
 
-
 #ifdef CONFIG_HIGHMEM
 /*
  * If no highmem, we can assume [0...max_low_pfn) continuous range of memory
@@ -163,7 +161,6 @@ int get_sparsemem_vmemmap_info(struct kcore_list *ent, struct list_head *head)
 	unsigned long nr_pages = ent->size >> PAGE_SHIFT;
 	unsigned long start, end;
 	struct kcore_list *vmm, *tmp;
-
 
 	start = ((unsigned long)pfn_to_page(pfn)) & PAGE_MASK;
 	end = ((unsigned long)pfn_to_page(pfn + nr_pages)) - 1;
@@ -480,7 +477,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
 	start = kc_offset_to_vaddr(*fpos - elf_buflen);
 	if ((tsz = (PAGE_SIZE - (start & ~PAGE_MASK))) > buflen)
 		tsz = buflen;
-		
+
 	while (buflen) {
 		struct kcore_list *m;
 
@@ -518,7 +515,7 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
 				 * we clear too and hope it will trigger the
 				 * EFAULT again.
 				 */
-				if (n) { 
+				if (n) {
 					if (clear_user(buffer + tsz - n,
 								n))
 						return -EFAULT;
@@ -539,7 +536,6 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
 	return acc;
 }
 
-
 static int open_kcore(struct inode *inode, struct file *filp)
 {
 	if (!capable(CAP_SYS_RAWIO))
@@ -553,7 +549,6 @@ static int open_kcore(struct inode *inode, struct file *filp)
 	}
 	return 0;
 }
-
 
 static const struct file_operations proc_kcore_operations = {
 	.read		= read_kcore,
@@ -576,7 +571,6 @@ static int __meminit kcore_callback(struct notifier_block *self,
 	return NOTIFY_OK;
 }
 #endif
-
 
 static struct kcore_list kcore_vmalloc;
 

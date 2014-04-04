@@ -70,7 +70,6 @@ static struct x25_asy *x25_asy_alloc(void)
 			return sl;
 	}
 
-
 	/* Sorry, too many, all slots in use */
 	if (i >= x25_asy_maxdev)
 		return NULL;
@@ -102,7 +101,6 @@ static struct x25_asy *x25_asy_alloc(void)
 	}
 	return NULL;
 }
-
 
 /* Free an X.25 channel. */
 static void x25_asy_free(struct x25_asy *sl)
@@ -168,14 +166,12 @@ static int x25_asy_change_mtu(struct net_device *dev, int newmtu)
 	return 0;
 }
 
-
 /* Set the "sending" flag.  This must be atomic, hence the ASM. */
 
 static inline void x25_asy_lock(struct x25_asy *sl)
 {
 	netif_stop_queue(sl->dev);
 }
-
 
 /* Clear the "sending" flag.  This must be atomic, hence the ASM. */
 
@@ -350,7 +346,6 @@ static netdev_tx_t x25_asy_xmit(struct sk_buff *skb,
 	return NETDEV_TX_OK;
 }
 
-
 /*
  *	LAPB interface boilerplate
  */
@@ -444,7 +439,6 @@ static struct lapb_register_struct x25_asy_callbacks = {
 
 };
 
-
 /* Open the low-level part of the X.25 channel. Easy! */
 static int x25_asy_open(struct net_device *dev)
 {
@@ -493,7 +487,6 @@ norbuff:
 	return -ENOMEM;
 }
 
-
 /* Close the low-level part of the X.25 channel. Easy! */
 static int x25_asy_close(struct net_device *dev)
 {
@@ -524,7 +517,6 @@ static void x25_asy_receive_buf(struct tty_struct *tty,
 
 	if (!sl || sl->magic != X25_ASY_MAGIC || !netif_running(sl->dev))
 		return;
-
 
 	/* Read the characters out of the buffer */
 	while (count--) {
@@ -579,7 +571,6 @@ static int x25_asy_open_tty(struct tty_struct *tty)
 	/* Done.  We have linked the TTY line to a channel. */
 	return 0;
 }
-
 
 /*
  * Close down an X.25 channel.
@@ -681,7 +672,6 @@ static void x25_asy_unesc(struct x25_asy *sl, unsigned char s)
 		set_bit(SLF_ERROR, &sl->flags);
 	}
 }
-
 
 /* Perform I/O control on an active X.25 channel. */
 static int x25_asy_ioctl(struct tty_struct *tty, struct file *file,
@@ -795,7 +785,6 @@ static int __init init_x25_asy(void)
 
 	return tty_register_ldisc(N_X25, &x25_ldisc);
 }
-
 
 static void __exit exit_x25_asy(void)
 {

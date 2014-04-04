@@ -3,8 +3,8 @@
 #
 
 menuconfig BT
-	tristate "Bluetooth subsystem support"
-	depends on NET && !S390
+	tristate "Bluetooth MGMT subsystem support"
+	depends on NET
 	depends on RFKILL || !RFKILL
 	select CRYPTO
 	help
@@ -67,4 +67,3 @@ source "net/bluetooth_mgmt/cmtp/Kconfig"
 source "net/bluetooth_mgmt/hidp/Kconfig"
 
 source "drivers/bluetooth/Kconfig"
-

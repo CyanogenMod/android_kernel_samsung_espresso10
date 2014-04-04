@@ -156,4 +156,3 @@ int mantis_exit(struct mantis_pci *mantis)
 	rc_map_unregister(&ir_mantis_map);
 	return 0;
 }
-

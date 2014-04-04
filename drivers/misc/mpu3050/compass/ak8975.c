@@ -45,7 +45,6 @@
 #undef MPL_LOG_TAG
 #define MPL_LOG_TAG "MPL-compass"
 
-
 #define AK8975_REG_ST1  (0x02)
 #define AK8975_REG_HXL  (0x03)
 #define AK8975_REG_ST2  (0x09)

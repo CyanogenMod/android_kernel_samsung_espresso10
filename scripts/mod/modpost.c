@@ -26,7 +26,6 @@
 #define MODULE_SYMBOL_PREFIX ""
 #endif
 
-
 /* Are we using CONFIG_MODVERSIONS? */
 int modversions = 0;
 /* Warn about undefined symbols? (do so if we have vmlinux) */
@@ -236,7 +235,6 @@ static struct {
 	{ .str = "EXPORT_SYMBOL_GPL_FUTURE", .export = export_gpl_future },
 	{ .str = "(unknown)",                .export = export_unknown },
 };
-
 
 static const char *export_str(enum export ex)
 {
@@ -848,8 +846,6 @@ static void check_section(const char *modname, struct elf_info *elf,
 	}
 }
 
-
-
 #define ALL_INIT_DATA_SECTIONS \
 	".init.setup$", ".init.rodata$", \
 	".devinit.rodata$", ".cpuinit.rodata$", ".meminit.rodata$", \
@@ -895,7 +891,6 @@ static const char *init_exit_sections[] =
 
 /* data section */
 static const char *data_sections[] = { DATA_SECTIONS, NULL };
-
 
 /* symbols in .data that may refer to init/exit sections */
 #define DEFAULT_SYMBOL_WHITE_LIST					\

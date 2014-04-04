@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -34,9 +34,9 @@
 
 #define EPPING_RSVD_FILL                  0xCC
 
-#define HCI_RSVD_EXPECTED_PKT_TYPE_RECV_OFFSET  7 
-  
-typedef PREPACK struct {    
+#define HCI_RSVD_EXPECTED_PKT_TYPE_RECV_OFFSET  7
+
+typedef PREPACK struct {
     u8 _HCIRsvd[8];           /* reserved for HCI packet header (GMBOX) testing */
     u8 StreamEcho_h;          /* stream no. to echo this packet on (filled by host) */
     u8 StreamEchoSent_t;      /* stream no. packet was echoed to (filled by target)
@@ -45,9 +45,9 @@ typedef PREPACK struct {
     u8 StreamNo_h;            /* stream number to send on (filled by host) */
     u8 Magic_h[4];            /* magic number to filter for this packet on the host*/
     u8 _rsvd[6];              /* reserved fields that must be set to a "reserved" value
-                                          since this packet maps to a 14-byte ethernet frame we want 
+                                          since this packet maps to a 14-byte ethernet frame we want
                                           to make sure ethertype field is set to something unknown */
-                                          
+
     u8 _pad[2];               /* padding for alignment */
     u8 TimeStamp[8];          /* timestamp of packet (host or target) */
     u32 HostContext_h;         /* 4 byte host context, target echos this back */
@@ -66,8 +66,6 @@ typedef PREPACK struct {
 #define EPPING_PING_MAGIC_2               0xCE
 #define EPPING_PING_MAGIC_3               0xEC
 
-
-
 #define IS_EPPING_PACKET(pPkt)   (((pPkt)->Magic_h[0] == EPPING_PING_MAGIC_0) && \
                                   ((pPkt)->Magic_h[1] == EPPING_PING_MAGIC_1) && \
                                   ((pPkt)->Magic_h[2] == EPPING_PING_MAGIC_2) && \
@@ -77,7 +75,7 @@ typedef PREPACK struct {
                                         (pPkt)->Magic_h[1] = EPPING_PING_MAGIC_1; \
                                         (pPkt)->Magic_h[2] = EPPING_PING_MAGIC_2; \
                                         (pPkt)->Magic_h[3] = EPPING_PING_MAGIC_3;}
-                                                                            
+
 #define CMD_FLAGS_DATA_CRC            (1 << 0)  /* DataCRC field is valid */
 #define CMD_FLAGS_DELAY_ECHO          (1 << 1)  /* delay the echo of the packet */
 #define CMD_FLAGS_NO_DROP             (1 << 2)  /* do not drop at HTC layer no matter what the stream is */
@@ -92,14 +90,14 @@ typedef PREPACK struct {
 #define EPPING_CMD_CONT_RX_STOP         6   /* stop continuous RX packet transmission */
 
     /* test command parameters may be no more than 8 bytes */
-typedef PREPACK struct {    
+typedef PREPACK struct {
     u16 BurstCnt;       /* number of packets to burst together (for HTC 2.1 testing) */
     u16 PacketLength;   /* length of packet to generate including header */
     u16 Flags;          /* flags */
 
 #define EPPING_CONT_RX_DATA_CRC     (1 << 0)  /* Add CRC to all data */
 #define EPPING_CONT_RX_RANDOM_DATA  (1 << 1)  /* randomize the data pattern */
-#define EPPING_CONT_RX_RANDOM_LEN   (1 << 2)  /* randomize the packet lengths */          
+#define EPPING_CONT_RX_RANDOM_LEN   (1 << 2)  /* randomize the packet lengths */
 } POSTPACK EPPING_CONT_RX_PARAMS;
 
 #define EPPING_HDR_CRC_OFFSET    A_OFFSETOF(EPPING_HEADER,StreamNo_h)

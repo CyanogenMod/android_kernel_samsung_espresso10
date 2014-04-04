@@ -52,7 +52,6 @@ config ROMFS_BACKED_BY_BOTH
 	depends on BLOCK && (MTD=y || (ROMFS_FS=m && MTD))
 endchoice
 
-
 config ROMFS_ON_BLOCK
 	bool
 	default y if ROMFS_BACKED_BY_BLOCK || ROMFS_BACKED_BY_BOTH

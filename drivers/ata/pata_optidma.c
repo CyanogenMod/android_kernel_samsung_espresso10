@@ -138,7 +138,6 @@ static void optidma_mode_setup(struct ata_port *ap, struct ata_device *adev, u8 
 	/* Switch from IDE to control mode */
 	optidma_unlock(ap);
 
-
 	/*
  	 *	As with many controllers the address setup time is shared
  	 *	and must suit both devices if present. FIXME: Check if we

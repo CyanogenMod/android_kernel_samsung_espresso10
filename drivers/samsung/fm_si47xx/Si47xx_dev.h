@@ -242,5 +242,3 @@ extern int Si47xx_dev_reset_rds_data(void);
 extern void Si47xx_work_func(struct work_struct *);
 #endif
 #endif
-
-

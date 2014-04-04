@@ -2156,7 +2156,6 @@ sub process {
 						ERROR("space prohibited after that '$op' $at\n" . $hereptr);
 					}
 
-
 				# << and >> may either have or not have spaces both sides
 				} elsif ($op eq '<<' or $op eq '>>' or
 					 $op eq '&' or $op eq '^' or $op eq '|' or

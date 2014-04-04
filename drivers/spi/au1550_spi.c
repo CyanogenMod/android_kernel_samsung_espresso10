@@ -45,7 +45,6 @@ module_param(usedma, uint, 0644);
 #define AU1550_SPI_DEBUG_LOOPBACK
 */
 
-
 #define AU1550_SPI_DBDMA_DESCRIPTORS 1
 #define AU1550_SPI_DMA_RXTMP_MINSIZE 2048U
 
@@ -86,7 +85,6 @@ struct au1550_spi {
 	struct resource *ioarea;
 };
 
-
 /* we use an 8-bit memory device for dma transfers to/from spi fifo */
 static dbdev_tab_t au1550_spi_mem_dbdev =
 {
@@ -102,7 +100,6 @@ static dbdev_tab_t au1550_spi_mem_dbdev =
 static int ddma_memid;	/* id to above mem dma device */
 
 static void au1550_spi_bits_handlers_set(struct au1550_spi *hw, int bpw);
-
 
 /*
  *  compute BRG and DIV bits to setup spi clock based on main input clock rate
@@ -510,7 +507,6 @@ static irqreturn_t au1550_spi_dma_irq_callback(struct au1550_spi *hw)
 	return IRQ_HANDLED;
 }
 
-
 /* routines to handle different word sizes in pio mode */
 #define AU1550_SPI_RX_WORD(size, mask)					\
 static void au1550_spi_rx_word_##size(struct au1550_spi *hw)		\
@@ -737,7 +733,6 @@ static void __init au1550_spi_setup_psc_as_spi(struct au1550_spi *hw)
 		au_sync();
 	} while ((stat & PSC_SPISTAT_SR) == 0);
 
-
 	cfg = hw->usedma ? 0 : PSC_SPICFG_DD_DISABLE;
 	cfg |= PSC_SPICFG_SET_LEN(8);
 	cfg |= PSC_SPICFG_RT_FIFO8 | PSC_SPICFG_TT_FIFO8;
@@ -763,7 +758,6 @@ static void __init au1550_spi_setup_psc_as_spi(struct au1550_spi *hw)
 
 	au1550_spi_reset_fifos(hw);
 }
-
 
 static int __init au1550_spi_probe(struct platform_device *pdev)
 {
@@ -867,7 +861,6 @@ static int __init au1550_spi_probe(struct platform_device *pdev)
 			err = -ENXIO;
 			goto err_no_txdma_descr;
 		}
-
 
 		hw->dma_rx_ch = au1xxx_dbdma_chan_alloc(hw->dma_rx_id,
 			ddma_memid, NULL, (void *)hw);

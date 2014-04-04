@@ -56,13 +56,12 @@ void coda_cache_clear_all(struct super_block *sb)
 	atomic_inc(&permission_epoch);
 }
 
-
 /* check if the mask has been matched against the acl already */
 int coda_cache_check(struct inode *inode, int mask)
 {
 	struct coda_inode_info *cii = ITOC(inode);
 	int hit;
-	
+
 	spin_lock(&cii->c_lock);
 	hit = (mask & cii->c_cached_perm) == mask &&
 	    cii->c_uid == current_fsuid() &&
@@ -72,17 +71,16 @@ int coda_cache_check(struct inode *inode, int mask)
 	return hit;
 }
 
-
 /* Purging dentries and children */
 /* The following routines drop dentries which are not
-   in use and flag dentries which are in use to be 
+   in use and flag dentries which are in use to be
    zapped later.
 
    The flags are detected by:
    - coda_dentry_revalidate (for lookups) if the flag is C_PURGE
    - coda_dentry_delete: to remove dentry from the cache when d_count
      falls to zero
-   - an inode method coda_revalidate (for attributes) if the 
+   - an inode method coda_revalidate (for attributes) if the
      flag is C_VATTR
 */
 
@@ -97,20 +95,20 @@ static void coda_flag_children(struct dentry *parent, int flag)
 	{
 		de = list_entry(child, struct dentry, d_u.d_child);
 		/* don't know what to do with negative dentries */
-		if ( ! de->d_inode ) 
+		if ( ! de->d_inode )
 			continue;
 		coda_flag_inode(de->d_inode, flag);
 	}
 	spin_unlock(&parent->d_lock);
-	return; 
+	return;
 }
 
 void coda_flag_inode_children(struct inode *inode, int flag)
 {
 	struct dentry *alias_de;
 
-	if ( !inode || !S_ISDIR(inode->i_mode)) 
-		return; 
+	if ( !inode || !S_ISDIR(inode->i_mode))
+		return;
 
 	alias_de = d_find_alias(inode);
 	if (!alias_de)
@@ -119,4 +117,3 @@ void coda_flag_inode_children(struct inode *inode, int flag)
 	shrink_dcache_parent(alias_de);
 	dput(alias_de);
 }
-

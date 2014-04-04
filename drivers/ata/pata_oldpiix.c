@@ -203,7 +203,6 @@ static unsigned int oldpiix_qc_issue(struct ata_queued_cmd *qc)
 	return ata_bmdma_qc_issue(qc);
 }
 
-
 static struct scsi_host_template oldpiix_sht = {
 	ATA_BMDMA_SHT(DRV_NAME),
 };
@@ -216,7 +215,6 @@ static struct ata_port_operations oldpiix_pata_ops = {
 	.set_dmamode		= oldpiix_set_dmamode,
 	.prereset		= oldpiix_pre_reset,
 };
-
 
 /**
  *	oldpiix_init_one - Register PIIX ATA PCI device with kernel services
@@ -286,4 +284,3 @@ MODULE_DESCRIPTION("SCSI low-level driver for early PIIX series controllers");
 MODULE_LICENSE("GPL");
 MODULE_DEVICE_TABLE(pci, oldpiix_pci_tbl);
 MODULE_VERSION(DRV_VERSION);
-

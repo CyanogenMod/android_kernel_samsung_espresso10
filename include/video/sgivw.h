@@ -342,8 +342,6 @@ typedef enum {
   DBE_VT_UNKNOWN
 } dbe_timing_t;
 
-
-
 /*
  * Crime Video Timing Data Structure
  */

@@ -45,7 +45,6 @@ MODULE_PARM_DESC(seq_oss_debug, "debug option");
 int seq_oss_debug = 0;
 #endif
 
-
 /*
  * prototypes
  */
@@ -65,7 +64,6 @@ static ssize_t odev_read(struct file *file, char __user *buf, size_t count, loff
 static ssize_t odev_write(struct file *file, const char __user *buf, size_t count, loff_t *offset);
 static long odev_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
 static unsigned int odev_poll(struct file *file, poll_table * wait);
-
 
 /*
  * module interface
@@ -169,7 +167,6 @@ odev_read(struct file *file, char __user *buf, size_t count, loff_t *offset)
 	return snd_seq_oss_read(dp, buf, count);
 }
 
-
 static ssize_t
 odev_write(struct file *file, const char __user *buf, size_t count, loff_t *offset)
 {
@@ -256,7 +253,7 @@ unregister_device(void)
 {
 	mutex_lock(&register_mutex);
 	debug_printk(("device unregistered\n"));
-	if (snd_unregister_oss_device(SNDRV_OSS_DEVICE_TYPE_MUSIC, NULL, 0) < 0)		
+	if (snd_unregister_oss_device(SNDRV_OSS_DEVICE_TYPE_MUSIC, NULL, 0) < 0)
 		snd_printk(KERN_ERR "error unregister device music\n");
 	if (snd_unregister_oss_device(SNDRV_OSS_DEVICE_TYPE_SEQUENCER, NULL, 0) < 0)
 		snd_printk(KERN_ERR "error unregister device seq\n");
@@ -281,7 +278,6 @@ info_read(struct snd_info_entry *entry, struct snd_info_buffer *buf)
 	snd_seq_oss_midi_info_read(buf);
 	mutex_unlock(&register_mutex);
 }
-
 
 static int __init
 register_proc(void)

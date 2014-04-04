@@ -171,4 +171,3 @@ struct ixgbevf_info {
 };
 
 #endif /* __IXGBE_VF_H__ */
-

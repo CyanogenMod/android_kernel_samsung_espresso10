@@ -560,7 +560,6 @@ pci224_ao_insn_read(struct comedi_device *dev, struct comedi_subdevice *s,
 	for (i = 0; i < insn->n; i++)
 		data[i] = devpriv->ao_readback[chan];
 
-
 	return i;
 }
 
@@ -584,7 +583,6 @@ static void pci224_ao_stop(struct comedi_device *dev,
 
 	if (!test_and_clear_bit(AO_CMD_STARTED, &devpriv->state))
 		return;
-
 
 	spin_lock_irqsave(&devpriv->ao_spinlock, flags);
 	/* Kill the interrupts. */
@@ -1079,7 +1077,6 @@ static int pci224_ao_cmd(struct comedi_device *dev, struct comedi_subdevice *s)
 	if (cmd->chanlist == NULL || cmd->chanlist_len == 0)
 		return -EINVAL;
 
-
 	/* Determine which channels are enabled and their load order.  */
 	devpriv->ao_enab = 0;
 
@@ -1422,20 +1419,17 @@ static int pci224_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	if (!devpriv->ao_readback)
 		return -ENOMEM;
 
-
 	/* Allocate buffer to hold values for AO channel scan. */
 	devpriv->ao_scan_vals = kmalloc(sizeof(devpriv->ao_scan_vals[0]) *
 					thisboard->ao_chans, GFP_KERNEL);
 	if (!devpriv->ao_scan_vals)
 		return -ENOMEM;
 
-
 	/* Allocate buffer to hold AO channel scan order. */
 	devpriv->ao_scan_order = kmalloc(sizeof(devpriv->ao_scan_order[0]) *
 					 thisboard->ao_chans, GFP_KERNEL);
 	if (!devpriv->ao_scan_order)
 		return -ENOMEM;
-
 
 	/* Disable interrupt sources. */
 	devpriv->intsce = 0;
@@ -1548,7 +1542,6 @@ static int pci224_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 		printk("(irq %u%s) ", irq, (dev->irq ? "" : " UNAVAILABLE"));
 	else
 		printk("(no irq) ");
-
 
 	printk("attached\n");
 

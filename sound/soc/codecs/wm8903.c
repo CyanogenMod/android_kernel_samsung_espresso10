@@ -426,7 +426,6 @@ static int wm8903_class_w_put(struct snd_kcontrol *kcontrol,
 	.get = snd_soc_dapm_get_volsw, .put = wm8903_class_w_put, \
 	.private_value =  SOC_SINGLE_VALUE(reg, shift, max, invert) }
 
-
 static int wm8903_deemph[] = { 0, 32000, 44100, 48000 };
 
 static int wm8903_set_deemph(struct snd_soc_codec *codec)
@@ -623,7 +622,6 @@ static const struct soc_enum rinput_enum =
 
 static const struct soc_enum rinput_inv_enum =
 	SOC_ENUM_SINGLE(WM8903_ANALOGUE_RIGHT_INPUT_1, 4, 3, rinput_mux_text);
-
 
 static const char *sidetone_text[] = {
 	"None", "Left", "Right"
@@ -1100,6 +1098,8 @@ static const struct snd_soc_dapm_route wm8903_intercon[] = {
 
 	{ "ROP", NULL, "Right Speaker PGA" },
 	{ "RON", NULL, "Right Speaker PGA" },
+
+	{ "Charge Pump", NULL, "CLK_DSP" },
 
 	{ "Left Headphone Output PGA", NULL, "Charge Pump" },
 	{ "Right Headphone Output PGA", NULL, "Charge Pump" },
@@ -1974,7 +1974,7 @@ static int wm8903_probe(struct snd_soc_codec *codec)
 
 		wm8903->mic_delay = pdata->micdet_delay;
 	}
-	
+
 	if (wm8903->irq) {
 		if (pdata && pdata->irq_active_low) {
 			trigger = IRQF_TRIGGER_LOW;
@@ -1986,7 +1986,7 @@ static int wm8903_probe(struct snd_soc_codec *codec)
 
 		snd_soc_update_bits(codec, WM8903_INTERRUPT_CONTROL,
 				    WM8903_IRQ_POL, irq_pol);
-		
+
 		ret = request_threaded_irq(wm8903->irq, NULL, wm8903_irq,
 					   trigger | IRQF_ONESHOT,
 					   "wm8903", codec);

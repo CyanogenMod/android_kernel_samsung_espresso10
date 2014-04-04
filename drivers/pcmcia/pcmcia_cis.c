@@ -25,7 +25,6 @@
 #include <pcmcia/ds.h>
 #include "cs_internal.h"
 
-
 /**
  * pccard_read_tuple() - internal CIS tuple access
  * @s:		the struct pcmcia_socket where the card is inserted
@@ -65,7 +64,6 @@ done:
 	kfree(buf);
 	return ret;
 }
-
 
 /**
  * pccard_loop_tuple() - loop over tuples in the CIS
@@ -125,7 +123,6 @@ next_entry:
 	return ret;
 }
 
-
 /**
  * pcmcia_io_cfg_data_width() - convert cfgtable to data path width parameter
  */
@@ -137,7 +134,6 @@ static int pcmcia_io_cfg_data_width(unsigned int flags)
 		return IO_DATA_PATH_WIDTH_8;
 	return IO_DATA_PATH_WIDTH_AUTO;
 }
-
 
 struct pcmcia_cfg_mem {
 	struct pcmcia_device *p_dev;
@@ -194,7 +190,6 @@ static int pcmcia_do_loop_config(tuple_t *tuple, cisparse_t *parse, void *priv)
 	/* enable audio? */
 	if ((flags & CONF_AUTO_AUDIO) && (cfg->flags & CISTPL_CFTABLE_AUDIO))
 		p_dev->config_flags |= CONF_ENABLE_SPKR;
-
 
 	/* IO window settings? */
 	if (flags & CONF_AUTO_SET_IO) {
@@ -284,7 +279,6 @@ int pcmcia_loop_config(struct pcmcia_device *p_dev,
 }
 EXPORT_SYMBOL(pcmcia_loop_config);
 
-
 struct pcmcia_loop_mem {
 	struct pcmcia_device *p_dev;
 	void *priv_data;
@@ -334,7 +328,6 @@ int pcmcia_loop_tuple(struct pcmcia_device *p_dev, cisdata_t code,
 				 &loop, pcmcia_do_loop_tuple);
 }
 EXPORT_SYMBOL(pcmcia_loop_tuple);
-
 
 struct pcmcia_loop_get {
 	size_t len;
@@ -389,7 +382,6 @@ size_t pcmcia_get_tuple(struct pcmcia_device *p_dev, cisdata_t code,
 }
 EXPORT_SYMBOL(pcmcia_get_tuple);
 
-
 /**
  * pcmcia_do_get_mac() - internal helper for pcmcia_get_mac_from_cis()
  *
@@ -435,4 +427,3 @@ int pcmcia_get_mac_from_cis(struct pcmcia_device *p_dev, struct net_device *dev)
 	return pcmcia_loop_tuple(p_dev, CISTPL_FUNCE, pcmcia_do_get_mac, dev);
 }
 EXPORT_SYMBOL(pcmcia_get_mac_from_cis);
-

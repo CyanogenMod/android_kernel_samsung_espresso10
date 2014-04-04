@@ -61,27 +61,19 @@ typedef struct _PVRSRV_KERNEL_MEM_INFO_
 
 	IMG_PVOID				pvLinAddrKM;
 
-
 	IMG_DEV_VIRTADDR		sDevVAddr;
-
 
 	IMG_UINT32				ui32Flags;
 
-
 	IMG_SIZE_T				uAllocSize;
-
 
 	PVRSRV_MEMBLK			sMemBlk;
 
-
 	IMG_PVOID				pvSysBackupBuffer;
-
 
 	IMG_UINT32				ui32RefCount;
 
-
 	IMG_BOOL				bPendingFree;
-
 
 #if defined(SUPPORT_MEMINFO_IDS)
 	#if !defined(USE_CODE)
@@ -93,30 +85,17 @@ typedef struct _PVRSRV_KERNEL_MEM_INFO_
 	#endif
 #endif
 
-
 	struct _PVRSRV_KERNEL_SYNC_INFO_	*psKernelSyncInfo;
 
 	PVRSRV_MEMTYPE				memType;
 
-
-
-
-
-
-
-
 	struct {
-
 
 		IMG_BOOL bInUse;
 
-
 		IMG_HANDLE hDevCookieInt;
 
-
 		IMG_UINT32 ui32ShareIndex;
-
-
 
 		IMG_UINT32 ui32OrigReqAttribs;
 		IMG_UINT32 ui32OrigReqSize;
@@ -124,31 +103,22 @@ typedef struct _PVRSRV_KERNEL_MEM_INFO_
 	} sShareMemWorkaround;
 } PVRSRV_KERNEL_MEM_INFO;
 
-
 typedef struct _PVRSRV_KERNEL_SYNC_INFO_
 {
 
 	PVRSRV_SYNC_DATA		*psSyncData;
 
-
 	IMG_DEV_VIRTADDR		sWriteOpsCompleteDevVAddr;
-
 
 	IMG_DEV_VIRTADDR		sReadOpsCompleteDevVAddr;
 
-
 	IMG_DEV_VIRTADDR		sReadOps2CompleteDevVAddr;
-
 
 	PVRSRV_KERNEL_MEM_INFO	*psSyncDataMemInfoKM;
 
-
-
 	IMG_UINT32              ui32RefCount;
 
-
 	IMG_HANDLE hResItem;
-
 
 	IMG_UINT32		ui32UID;
 } PVRSRV_KERNEL_SYNC_INFO;
@@ -189,7 +159,6 @@ typedef struct _PVRSRV_COMMAND
 	IMG_HANDLE					hCallbackData;
 }PVRSRV_COMMAND, *PPVRSRV_COMMAND;
 
-
 typedef struct _PVRSRV_QUEUE_INFO_
 {
 	IMG_VOID			*pvLinQueueKM;
@@ -207,7 +176,6 @@ typedef struct _PVRSRV_QUEUE_INFO_
 	struct _PVRSRV_QUEUE_INFO_ *psNextKM;
 }PVRSRV_QUEUE_INFO;
 
-
 typedef struct _PVRSRV_HEAP_INFO_KM_
 {
 	IMG_UINT32			ui32HeapID;
@@ -219,7 +187,6 @@ typedef struct _PVRSRV_HEAP_INFO_KM_
 	IMG_UINT32			ui32XTileStride;
 }PVRSRV_HEAP_INFO_KM;
 
-
 typedef struct _PVRSRV_EVENTOBJECT_KM_
 {
 
@@ -229,63 +196,49 @@ typedef struct _PVRSRV_EVENTOBJECT_KM_
 
 } PVRSRV_EVENTOBJECT_KM;
 
-
 typedef struct _PVRSRV_MISC_INFO_KM_
 {
 	IMG_UINT32	ui32StateRequest;
 	IMG_UINT32	ui32StatePresent;
-
 
 	IMG_VOID	*pvSOCTimerRegisterKM;
 	IMG_VOID	*pvSOCTimerRegisterUM;
 	IMG_HANDLE	hSOCTimerRegisterOSMemHandle;
 	IMG_HANDLE	hSOCTimerRegisterMappingInfo;
 
-
 	IMG_VOID	*pvSOCClockGateRegs;
 	IMG_UINT32	ui32SOCClockGateRegsSize;
-
 
 	IMG_CHAR	*pszMemoryStr;
 	IMG_UINT32	ui32MemoryStrLen;
 
-
 	PVRSRV_EVENTOBJECT_KM	sGlobalEventObject;
 	IMG_HANDLE				hOSGlobalEvent;
 
-
 	IMG_UINT32	aui32DDKVersion[4];
-
 
 	struct
 	{
 
 		IMG_BOOL bDeferOp;
 
-
 		PVRSRV_MISC_INFO_CPUCACHEOP_TYPE eCacheOpType;
-
 
 		PVRSRV_KERNEL_MEM_INFO *psKernelMemInfo;
 
-
 		IMG_VOID *pvBaseVAddr;
-
 
 		IMG_UINT32	ui32Length;
 	} sCacheOpCtl;
-
 
 	struct
 	{
 
 		PVRSRV_KERNEL_MEM_INFO *psKernelMemInfo;
 
-
 		IMG_UINT32 ui32RefCount;
 	} sGetRefCountCtl;
 } PVRSRV_MISC_INFO_KM;
-
 
 typedef PVRSRV_ERROR (*PFN_INSERT_CMD) (PVRSRV_QUEUE_INFO*,
 										PVRSRV_COMMAND**,
@@ -298,7 +251,6 @@ typedef PVRSRV_ERROR (*PFN_INSERT_CMD) (PVRSRV_QUEUE_INFO*,
 										IMG_UINT32);
 typedef PVRSRV_ERROR (*PFN_SUBMIT_CMD) (PVRSRV_QUEUE_INFO*, PVRSRV_COMMAND*, IMG_BOOL);
 
-
 typedef struct PVRSRV_DEVICECLASS_BUFFER_TAG
 {
 	PFN_GET_BUFFER_ADDR		pfnGetBufferAddr;
@@ -308,7 +260,6 @@ typedef struct PVRSRV_DEVICECLASS_BUFFER_TAG
 	PVRSRV_KERNEL_SYNC_INFO	*psKernelSyncInfo;
 	IMG_UINT32				ui32MemMapRefCount;
 } PVRSRV_DEVICECLASS_BUFFER;
-
 
 typedef struct PVRSRV_CLIENT_DEVICECLASS_INFO_TAG
 {
@@ -320,7 +271,6 @@ typedef struct PVRSRV_CLIENT_DEVICECLASS_INFO_TAG
 	IMG_HANDLE	hServices;
 } PVRSRV_CLIENT_DEVICECLASS_INFO;
 
-
 typedef enum
 {
 	PVRSRV_FREE_CALLBACK_ORIGIN_ALLOCATOR,
@@ -329,17 +279,14 @@ typedef enum
 }
 PVRSRV_FREE_CALLBACK_ORIGIN;
 
-
 IMG_IMPORT
 PVRSRV_ERROR FreeMemCallBackCommon(PVRSRV_KERNEL_MEM_INFO *psMemInfo,
                                    IMG_UINT32 ui32Param,
                                    PVRSRV_FREE_CALLBACK_ORIGIN eCallbackOrigin);
 
-
 IMG_IMPORT
 PVRSRV_ERROR PVRSRVQueueCommand(IMG_HANDLE hQueueInfo,
 								PVRSRV_COMMAND *psCommand);
-
 
 IMG_IMPORT PVRSRV_ERROR IMG_CALLCONV
 PVRSRVAllocSharedSysMem(const PVRSRV_CONNECTION *psConnection,
@@ -363,7 +310,6 @@ PVRSRVMapMemInfoMem(const PVRSRV_CONNECTION *psConnection,
                     IMG_HANDLE hKernelMemInfo,
 #endif
                     PVRSRV_CLIENT_MEM_INFO **ppsClientMemInfo);
-
 
 #if defined (__cplusplus)
 }

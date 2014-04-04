@@ -200,7 +200,6 @@ struct sci_remote_node_context {
 void sci_remote_node_context_construct(struct sci_remote_node_context *rnc,
 					    u16 remote_node_index);
 
-
 bool sci_remote_node_context_is_ready(
 	struct sci_remote_node_context *sci_rnc);
 

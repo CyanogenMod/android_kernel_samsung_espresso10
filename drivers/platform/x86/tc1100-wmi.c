@@ -186,7 +186,6 @@ static int __init tc1100_probe(struct platform_device *device)
 	return sysfs_create_group(&device->dev.kobj, &tc1100_attribute_group);
 }
 
-
 static int __devexit tc1100_remove(struct platform_device *device)
 {
 	sysfs_remove_group(&device->dev.kobj, &tc1100_attribute_group);

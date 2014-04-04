@@ -34,7 +34,6 @@
 /* debugging module parameter */
 static int debug;
 
-
 #define nvt_pr(level, text, ...) \
 	printk(level KBUILD_MODNAME ": " text, ## __VA_ARGS__)
 
@@ -52,7 +51,6 @@ static int debug;
 	if (debug > 2) \
 		printk(KERN_DEBUG \
 			KBUILD_MODNAME ": " text "\n" , ## __VA_ARGS__)
-
 
 /*
  * Original lirc driver said min value of 76, and recommended value of 256
@@ -235,7 +233,6 @@ struct nvt_dev {
 #define CIR_IRFIFOSTS_TX_FTA		0x04
 #define CIR_IRFIFOSTS_TX_EMPTY		0x02
 #define CIR_IRFIFOSTS_TX_FULL		0x01
-
 
 /* CIR WAKE UP Regs */
 #define CIR_WAKE_IRCON			0x00

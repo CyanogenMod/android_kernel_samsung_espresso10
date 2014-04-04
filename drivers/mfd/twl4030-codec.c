@@ -274,4 +274,3 @@ module_exit(twl4030_codec_exit);
 
 MODULE_AUTHOR("Peter Ujfalusi <peter.ujfalusi@ti.com>");
 MODULE_LICENSE("GPL");
-

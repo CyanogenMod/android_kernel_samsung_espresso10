@@ -349,7 +349,6 @@ int beiscsi_get_macaddr(char *buf, struct beiscsi_hba *phba)
 	return rc;
 }
 
-
 /**
  * beiscsi_conn_get_stats - get the iscsi stats
  * @cls_conn: pointer to iscsi cls conn

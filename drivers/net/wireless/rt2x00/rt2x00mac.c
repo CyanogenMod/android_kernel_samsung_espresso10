@@ -649,7 +649,6 @@ void rt2x00mac_bss_info_changed(struct ieee80211_hw *hw,
 				mutex_unlock(&intf->beacon_skb_mutex);
 			}
 
-
 		} else if (bss_conf->enable_beacon && !intf->enable_beacon) {
 			rt2x00dev->intf_beaconing++;
 			intf->enable_beacon = true;

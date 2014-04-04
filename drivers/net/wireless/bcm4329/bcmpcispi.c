@@ -2,13 +2,13 @@
  * Broadcom SPI over PCI-SPI Host Controller, low-level hardware driver
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -36,7 +36,6 @@
 #include <bcmspi.h>
 #include <bcmpcispi.h>		/* BRCM PCI-SPI Host Controller Register definitions */
 
-
 /* ndis_osl.h needs to do a runtime check of the osh to map
  * R_REG/W_REG to bus specific access similar to linux_osl.h.
  * Until then...
@@ -46,10 +45,8 @@
 #define SPIPCI_RREG R_REG
 #define SPIPCI_WREG W_REG
 
-
 #define	SPIPCI_ANDREG(osh, r, v) SPIPCI_WREG(osh, (r), (SPIPCI_RREG(osh, r) & (v)))
 #define	SPIPCI_ORREG(osh, r, v)	SPIPCI_WREG(osh, (r), (SPIPCI_RREG(osh, r) | (v)))
-
 
 int bcmpcispi_dump = 0;		/* Set to dump complete trace of all SPI bus transactions */
 
@@ -61,7 +58,6 @@ typedef struct spih_info_ {
 	spih_regs_t	*regs;		/* SPI Controller Registers */
 	uint8		rev;		/* PCI Card Revision ID */
 } spih_info_t;
-
 
 /* Attach to PCI-SPI Host Controller Hardware */
 bool
@@ -309,7 +305,6 @@ spi_start_clock(sdioh_info_t *sd, uint16 div)
 
 		sd_info(("%s: Oscillator is %dHz\n", __FUNCTION__, xtal_freq));
 
-
 		disp_xtal_freq = xtal_freq / 10000;
 
 		/* Round it off to a nice number. */
@@ -549,7 +544,6 @@ spi_sendrecv(sdioh_info_t *sd, uint8 *msg_out, uint8 *msg_in, int msglen)
 #endif /* BCMSDYIELD */
 
 	ASSERT(msglen % 4 == 0);
-
 
 	SPIPCI_ANDREG(osh, &regs->spih_gpio_data, ~SPIH_CS);	/* Set GPIO CS# Low (asserted) */
 

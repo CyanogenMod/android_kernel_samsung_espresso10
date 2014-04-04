@@ -68,7 +68,6 @@ static int pcie_valid_config(struct pcie_port *pp, int bus, int dev)
 	return 1;
 }
 
-
 /*
  * PCIe config cycles are done by programming the PCIE_CONF_ADDR register
  * and then reading the PCIE_CONF_DATA register. Need to make sure these

@@ -47,7 +47,6 @@
 /* SSBT :: KJH * 15sec -> 5sec */
 #define L2CAP_CONN_LE_TIMEOUT          (5000) /* 5 seconds */
 
-
 /* L2CAP socket address */
 struct sockaddr_l2 {
 	sa_family_t	l2_family;

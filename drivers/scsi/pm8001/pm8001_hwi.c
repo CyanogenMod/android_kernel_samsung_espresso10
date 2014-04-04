@@ -3240,7 +3240,6 @@ mpi_task_abort_resp(struct pm8001_hba_info *pm8001_ha, void *piomb)
 	ccb = &pm8001_ha->ccb_info[pPayload->tag];
 	t = ccb->task;
 
-
 	status = le32_to_cpu(pPayload->status);
 	tag = le32_to_cpu(pPayload->tag);
 	scp = le32_to_cpu(pPayload->scp);
@@ -4500,4 +4499,3 @@ const struct pm8001_dispatch pm8001_8001_dispatch = {
 	.set_dev_state_req	= pm8001_chip_set_dev_state_req,
 	.sas_re_init_req	= pm8001_chip_sas_re_initialization,
 };
-

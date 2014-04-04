@@ -1,7 +1,6 @@
 #ifndef LINUX_SSB_REGS_H_
 #define LINUX_SSB_REGS_H_
 
-
 /* SiliconBackplane Address Map.
  * All regions may not exist on all chips.
  */
@@ -26,15 +25,12 @@
 #define	SSB_EUART		(SSB_EXTIF_BASE + 0x00800000)
 #define	SSB_LED			(SSB_EXTIF_BASE + 0x00900000)
 
-
 /* Enumeration space constants */
 #define SSB_CORE_SIZE		0x1000	/* Size of a core MMIO area */
 #define SSB_MAX_NR_CORES	((SSB_ENUM_LIMIT - SSB_ENUM_BASE) / SSB_CORE_SIZE)
 
-
 /* mips address */
 #define	SSB_EJTAG		0xff200000	/* MIPS EJTAG space (2M) */
-
 
 /* SSB PCI config space registers. */
 #define SSB_PMCSR		0x44
@@ -54,7 +50,6 @@
 #define  SSB_GPIO_HWRAD		0x20	/* PCI config space GPIO 13 for hw radio disable */
 #define  SSB_GPIO_XTAL		0x40	/* PCI config space GPIO 14 for Xtal powerup */
 #define  SSB_GPIO_PLL		0x80	/* PCI config space GPIO 15 for PLL powerdown */
-
 
 #define SSB_BAR0_MAX_RETRIES	50
 
@@ -498,6 +493,5 @@ enum {
 #define SSB_ADM_BASE1_SHIFT		12
 #define SSB_ADM_BASE2			0xFFFF0000	/* Type2 base address for the core */
 #define SSB_ADM_BASE2_SHIFT		16
-
 
 #endif /* LINUX_SSB_REGS_H_ */

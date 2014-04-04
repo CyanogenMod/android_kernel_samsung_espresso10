@@ -118,7 +118,6 @@ static struct ib_device *__ib_device_get_by_name(const char *name)
 	return NULL;
 }
 
-
 static int alloc_name(char *name)
 {
 	unsigned long *inuse;
@@ -155,7 +154,6 @@ static int start_port(struct ib_device *device)
 {
 	return (device->node_type == RDMA_NODE_IB_SWITCH) ? 0 : 1;
 }
-
 
 static int end_port(struct ib_device *device)
 {

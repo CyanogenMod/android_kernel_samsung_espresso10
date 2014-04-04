@@ -153,7 +153,6 @@ int pr_buffer(const char *tag, const char *data, size_t data_len,
 /* flow control CMD from CP, it use in serial devices */
 int link_rx_flowctl_cmd(struct link_device *ld, const char *data, size_t len);
 
-
 /* get iod from tree functions */
 
 struct io_device *get_iod_with_format(struct modem_shared *msd,
@@ -191,6 +190,8 @@ void iodev_netif_stop(struct io_device *iod, void *args);
 
 /* change tx_link of raw devices */
 void rawdevs_set_tx_link(struct modem_shared *msd, enum modem_link link_type);
+
+__be32 ipv4str_to_be32(const char *ipv4str, size_t count);
 
 void mif_add_timer(struct timer_list *timer, unsigned long expire,
 		void (*function)(unsigned long), unsigned long data);

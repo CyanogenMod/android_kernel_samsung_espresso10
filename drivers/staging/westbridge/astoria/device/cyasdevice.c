@@ -161,7 +161,6 @@ void  hal_reset(cy_as_hal_device_tag tag)
 }
 EXPORT_SYMBOL(hal_reset);
 
-
 /* below structures and functions primarily
  * implemented for firmware loading */
 static struct platform_device *westbridge_pd;
@@ -218,7 +217,6 @@ static int cyasdevice_initialize(void)
 		return -ENOMEM;
 	}
 	memset(cy_as_dev, 0, sizeof(cyasdevice));
-
 
 	/* Init the HAL & CyAsDeviceHandle */
 
@@ -381,7 +379,6 @@ cy_as_hal_device_tag cyasdevice_gethaltag(void)
 }
 EXPORT_SYMBOL(cyasdevice_gethaltag);
 
-
 /*init Westbridge device driver **/
 static int __init cyasdevice_init(void)
 {
@@ -391,13 +388,11 @@ static int __init cyasdevice_init(void)
 	return 0;
 }
 
-
 static void __exit cyasdevice_cleanup(void)
 {
 
 	cyasdevice_deinit(cy_as_device_controller);
 }
-
 
 MODULE_DESCRIPTION("west bridge device driver");
 MODULE_AUTHOR("cypress semiconductor");

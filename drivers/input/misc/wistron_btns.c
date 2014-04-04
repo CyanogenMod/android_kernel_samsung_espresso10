@@ -629,7 +629,6 @@ static struct key_entry keymap_prestigio[] __initdata = {
 	{ KE_END,  0 }
 };
 
-
 /*
  * If your machine is not here (which is currently rather likely), please send
  * a list of buttons and their key codes (reported when loading this module

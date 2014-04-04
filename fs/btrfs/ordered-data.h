@@ -115,7 +115,6 @@ struct btrfs_ordered_extent {
 	struct list_head root_extent_list;
 };
 
-
 /*
  * calculates the total size you need to allocate for an ordered sum
  * structure spanning 'bytes' in the file

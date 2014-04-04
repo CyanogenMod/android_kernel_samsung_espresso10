@@ -79,9 +79,6 @@
 #define SSB_EXTIF_UART_MSR		0x0360
 #define SSB_EXTIF_UART_SCRATCH		0x0370
 
-
-
-
 /* pcmcia/prog/flash_config */
 #define	SSB_EXTCFG_EN			(1 << 0)	/* enable */
 #define	SSB_EXTCFG_MODE			0xE		/* mode */
@@ -152,8 +149,6 @@
 /* watchdog */
 #define SSB_EXTIF_WATCHDOG_CLK		48000000	/* Hz */
 
-
-
 #ifdef CONFIG_SSB_DRIVER_EXTIF
 
 struct ssb_extif {
@@ -185,7 +180,6 @@ u32 ssb_extif_gpio_intmask(struct ssb_extif *extif, u32 mask, u32 value);
 extern int ssb_extif_serial_init(struct ssb_extif *extif,
 				 struct ssb_serial_port *ports);
 #endif /* CONFIG_SSB_SERIAL */
-
 
 #else /* CONFIG_SSB_DRIVER_EXTIF */
 /* extif disabled */

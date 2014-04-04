@@ -105,4 +105,3 @@ do {								\
 	gpio_set_value(_pdata->gpio_host_active, _value);	\
 	pr_debug("> H-ACT %s\n", _value ? "1" : "0");	\
 } while (0)
-

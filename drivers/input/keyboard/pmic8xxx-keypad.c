@@ -547,7 +547,6 @@ static int __devinit pmic8xxx_kp_probe(struct platform_device *pdev)
 		.inv_int_pol	= 1,
 	};
 
-
 	if (!pdata || !pdata->num_cols || !pdata->num_rows ||
 		pdata->num_cols > PM8XXX_MAX_COLS ||
 		pdata->num_rows > PM8XXX_MAX_ROWS ||

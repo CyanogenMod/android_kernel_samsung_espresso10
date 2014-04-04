@@ -378,7 +378,6 @@ static int ieee802154_associate_resp(struct sk_buff *skb,
 			IEEE802154_ADDR_LEN);
 	addr.pan_id = ieee802154_mlme_ops(dev)->get_pan_id(dev);
 
-
 	ret = ieee802154_mlme_ops(dev)->assoc_resp(dev, &addr,
 		nla_get_u16(info->attrs[IEEE802154_ATTR_DEST_SHORT_ADDR]),
 		nla_get_u8(info->attrs[IEEE802154_ATTR_STATUS]));
@@ -469,7 +468,6 @@ static int ieee802154_start_req(struct sk_buff *skb, struct genl_info *info)
 	else
 		page = 0;
 
-
 	if (addr.short_addr == IEEE802154_ADDR_BROADCAST) {
 		ieee802154_nl_start_confirm(dev, IEEE802154_NO_SHORT_ADDRESS);
 		dev_put(dev);
@@ -509,7 +507,6 @@ static int ieee802154_scan_req(struct sk_buff *skb, struct genl_info *info)
 		page = nla_get_u8(info->attrs[IEEE802154_ATTR_PAGE]);
 	else
 		page = 0;
-
 
 	ret = ieee802154_mlme_ops(dev)->scan_req(dev, type, channels, page,
 			duration);

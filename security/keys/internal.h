@@ -74,12 +74,10 @@ extern unsigned key_quota_maxbytes;
 
 #define KEYQUOTA_LINK_BYTES	4		/* a link in a keyring is worth 4 bytes */
 
-
 extern struct rb_root key_serial_tree;
 extern spinlock_t key_serial_lock;
 extern struct mutex key_construction_mutex;
 extern wait_queue_head_t request_key_conswq;
-
 
 extern struct key_type *key_type_lookup(const char *type);
 extern void key_type_put(struct key_type *ktype);

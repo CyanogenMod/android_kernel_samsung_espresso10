@@ -28,7 +28,7 @@
     and other provisions required by the GPL.  If you do not delete
     the provisions above, a recipient may use your version of this
     file under either the MPL or the GPL.
-    
+
 ======================================================================*/
 
 #include <linux/module.h>
@@ -51,7 +51,6 @@
 #include <pcmcia/cisreg.h>
 
 #include "8250.h"
-
 
 /*====================================================================*/
 
@@ -258,9 +257,7 @@ static const struct serial_quirk quirks[] = {
 	}
 };
 
-
 static int serial_config(struct pcmcia_device * link);
-
 
 static void serial_remove(struct pcmcia_device *link)
 {
@@ -600,7 +597,6 @@ static int serial_check_for_multi(struct pcmcia_device *p_dev,  void *priv_data)
 
 	return 0; /* break */
 }
-
 
 static int serial_config(struct pcmcia_device * link)
 {

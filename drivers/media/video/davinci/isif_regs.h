@@ -254,7 +254,6 @@
 #define ISIF_LIN_CORRSFT_SHIFT			4
 #define ISIF_LIN_SCALE_FACT_INTEG_SHIFT		10
 
-
 /* Pattern registers */
 #define ISIF_PG_EN				(1 << 3)
 #define ISIF_SEL_PG_SRC				(3 << 4)

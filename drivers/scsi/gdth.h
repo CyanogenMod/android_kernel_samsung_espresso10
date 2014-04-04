@@ -3,9 +3,9 @@
 
 /*
  * Header file for the GDT Disk Array/Storage RAID controllers driver for Linux
- * 
+ *
  * gdth.h Copyright (C) 1995-06 ICP vortex, Achim Leubner
- * See gdth.c for further informations and 
+ * See gdth.c for further informations and
  * below for supported controller types
  *
  * <achim_leubner@adaptec.com>
@@ -55,7 +55,7 @@
 #define PCI_VENDOR_ID_VORTEX            0x1119  /* PCI controller vendor ID */
 #endif
 #ifndef PCI_VENDOR_ID_INTEL
-#define PCI_VENDOR_ID_INTEL             0x8086  
+#define PCI_VENDOR_ID_INTEL             0x8086
 #endif
 
 #ifndef PCI_DEVICE_ID_VORTEX_GDT60x0
@@ -125,7 +125,7 @@
 
 #ifndef PCI_DEVICE_ID_VORTEX_GDTMAXRP
 /* GDT_MPR, last device ID */
-#define PCI_DEVICE_ID_VORTEX_GDTMAXRP   0x2ff   
+#define PCI_DEVICE_ID_VORTEX_GDTMAXRP   0x2ff
 #endif
 
 #ifndef PCI_DEVICE_ID_VORTEX_GDTNEWRX
@@ -136,7 +136,7 @@
 #ifndef PCI_DEVICE_ID_VORTEX_GDTNEWRX2
 /* new(2) GDT Rx Controller */
 #define PCI_DEVICE_ID_VORTEX_GDTNEWRX2  0x301
-#endif        
+#endif
 
 #ifndef PCI_DEVICE_ID_INTEL_SRC
 /* Intel Storage RAID Controller */
@@ -159,7 +159,7 @@
 #define MAXLUN          8
 #define MAXBUS          6
 #define MAX_EVENTS      100                     /* event buffer count */
-#define MAX_RES_ARGS    40                      /* device reservation, 
+#define MAX_RES_ARGS    40                      /* device reservation,
                                                    must be a multiple of 4 */
 #define MAXCYLS         1024
 #define HEADS           64
@@ -234,7 +234,7 @@
 #define GDT_RELEASE_ALL 17                      /* release all devices */
 #define GDT_RESET_BUS   18                      /* reset bus */
 #define GDT_SCAN_START  19                      /* start device scan */
-#define GDT_SCAN_END    20                      /* stop device scan */  
+#define GDT_SCAN_END    20                      /* stop device scan */
 #define GDT_X_INIT_RAW  21                      /* ext. init: 64 bit support */
 
 /* screen service commands */
@@ -242,8 +242,8 @@
 #define GDT_X_INIT_SCR  4                       /* ext. init: 64 bit support */
 
 /* IOCTL command defines */
-#define SCSI_DR_INFO    0x00                    /* SCSI drive info */                   
-#define SCSI_CHAN_CNT   0x05                    /* SCSI channel count */   
+#define SCSI_DR_INFO    0x00                    /* SCSI drive info */
+#define SCSI_CHAN_CNT   0x05                    /* SCSI channel count */
 #define SCSI_DR_LIST    0x06                    /* SCSI drive list */
 #define SCSI_DEF_CNT    0x15                    /* grown/primary defects */
 #define DSK_STATISTICS  0x4b                    /* SCSI disk statistics */
@@ -263,7 +263,7 @@
 #define BOARD_INFO      0x28                    /* controller info */
 #define SET_PERF_MODES  0x82                    /* set mode (coalescing,..) */
 #define GET_PERF_MODES  0x83                    /* get mode */
-#define CACHE_READ_OEM_STRING_RECORD 0x84       /* read OEM string record */ 
+#define CACHE_READ_OEM_STRING_RECORD 0x84       /* read OEM string record */
 #define HOST_GET        0x10001L                /* get host drive list */
 #define IO_CHANNEL      0x00020000L             /* default IO channel */
 #define INVALID_CHANNEL 0x0000ffffL             /* invalid channel */
@@ -276,7 +276,7 @@
 #define S_RAW_SCSI      12                      /* raw serv.: target error */
 #define S_RAW_ILL       0xff                    /* raw serv.: illegal */
 #define S_NOFUNC        -2                      /* unknown function */
-#define S_CACHE_RESERV  -24                     /* cache: reserv. conflict */   
+#define S_CACHE_RESERV  -24                     /* cache: reserv. conflict */
 
 /* timeout values */
 #define INIT_RETRIES    100000                  /* 100000 * 1ms = 100s */
@@ -320,7 +320,7 @@
 #include "gdth_ioctl.h"
 
 /* screenservice message */
-typedef struct {                               
+typedef struct {
     u32     msg_handle;                     /* message handle */
     u32     msg_len;                        /* size of message */
     u32     msg_alen;                       /* answer length */
@@ -329,7 +329,6 @@ typedef struct {
     u8      msg_reserved[2];
     char        msg_text[MSGLEN+2];             /* the message text */
 } __attribute__((packed)) gdth_msg_str;
-
 
 /* IOCTL data structures */
 
@@ -352,11 +351,11 @@ typedef struct {
     u32     st_buff_u_addr2;    /* reserved for 64 bit addressing */
     u32     st_buff_indx2;      /* reserved command idx. for this buffer */
     u32     st_buff_size;       /* size of each buffer in bytes */
-    u32     cmd_mode;           /* 0 = mode disabled, 1 = cmd_buff_addr1 */ 
-    u32     cmd_buff_addr1;     /* physical address of cmd buffer 1 */   
+    u32     cmd_mode;           /* 0 = mode disabled, 1 = cmd_buff_addr1 */
+    u32     cmd_buff_addr1;     /* physical address of cmd buffer 1 */
     u32     cmd_buff_u_addr1;   /* reserved for 64 bit addressing */
     u32     cmd_buff_indx1;     /* cmd buf addr1 unique identifier */
-    u32     cmd_buff_addr2;     /* physical address of cmd buffer 1 */   
+    u32     cmd_buff_addr2;     /* physical address of cmd buffer 1 */
     u32     cmd_buff_u_addr2;   /* reserved for 64 bit addressing */
     u32     cmd_buff_indx2;     /* cmd buf addr1 unique identifier */
     u32     cmd_buff_size;      /* size of each cmd bufer in bytes */
@@ -413,7 +412,7 @@ typedef struct {
     u32     channel_no;                     /* number of channel */
     u32     drive_cnt;                      /* drive count */
     u8      siop_id;                        /* SCSI processor ID */
-    u8      siop_state;                     /* SCSI processor state */ 
+    u8      siop_state;                     /* SCSI processor state */
 } __attribute__((packed)) gdth_getch_str;
 
 /* get SCSI drive numbers */
@@ -489,7 +488,7 @@ typedef struct {
     u32     al_controller;                  /* controller ID */
     u8      al_cache_drive;                 /* cache drive number */
     u8      al_status;                      /* cache drive state */
-    u8      al_res[2];     
+    u8      al_res[2];
 } __attribute__((packed)) gdth_arraycomp_str;
 
 /* array drive information */
@@ -658,7 +657,7 @@ typedef struct {
     u8      subtype_valid;                  /* board_subtype valid? */
     u8      board_subtype;                  /* subtype/hardware level */
     u8      ramparity_pres;                 /* RAM parity check hardware? */
-} __attribute__((packed)) gdth_binfo_str; 
+} __attribute__((packed)) gdth_binfo_str;
 
 /* get host drive info */
 typedef struct {
@@ -680,8 +679,7 @@ typedef struct {
     u8      clust_drvtype;                  /* cluster drive type */
     u32     location;                       /* controller number */
     gdth_hentry_str entry[MAX_HDRIVES];         /* entries */
-} __attribute__((packed)) gdth_hget_str;    
-
+} __attribute__((packed)) gdth_hget_str;
 
 /* DPRAM structures */
 
@@ -724,7 +722,6 @@ typedef struct {
     u8      switch_support;                 /* see need_deinit */
     u8      padding;
 } __attribute__((packed)) gdt_eisa_sram;
-
 
 /* DPRAM ISA controllers */
 typedef struct {
@@ -818,8 +815,8 @@ typedef struct {
     u8              unused5[7];
     u8              edoor_en_reg;           /* board interrupts enable */
     u8              unused6[27];
-    u32             unused7[939];         
-    u32             severity;       
+    u32             unused7[939];
+    u32             severity;
     char                evt_str[256];           /* event string */
 } __attribute__((packed)) gdt6m_i960_regs;
 
@@ -833,14 +830,12 @@ typedef struct {
     gdt_pci_sram        gdt6sr;                 /* SRAM structure */
 } __attribute__((packed)) gdt6m_dpram_str;
 
-
 /* PCI resources */
 typedef struct {
     struct pci_dev      *pdev;
     unsigned long               dpmem;                  /* DPRAM address */
     unsigned long               io;                     /* IO address */
 } gdth_pci_str;
-
 
 /* controller information structure */
 typedef struct {
@@ -1012,7 +1007,6 @@ typedef struct {
 typedef struct {
     unsigned long       b[10];                          /* 32/64 bit compiler ! */
 } __attribute__((packed)) gdth_stackframe;
-
 
 /* function prototyping */
 

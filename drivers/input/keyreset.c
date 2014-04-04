@@ -22,7 +22,6 @@
 #include <linux/slab.h>
 #include <linux/syscalls.h>
 
-
 struct keyreset_state {
 	struct input_handler input_handler;
 	unsigned long keybit[BITS_TO_LONGS(KEY_CNT)];
@@ -217,7 +216,6 @@ int keyreset_remove(struct platform_device *pdev)
 	kfree(state);
 	return 0;
 }
-
 
 struct platform_driver keyreset_driver = {
 	.driver.name = KEYRESET_NAME,

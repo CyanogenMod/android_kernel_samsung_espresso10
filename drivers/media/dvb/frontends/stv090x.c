@@ -114,7 +114,6 @@ static struct stv090x_dev *append_internal(struct stv090x_internal *internal)
 	return new_dev;
 }
 
-
 /* DVBS1 and DSS C/N Lookup table */
 static const struct stv090x_tab stv090x_s1cn_tab[] = {
 	{   0, 8917 }, /*  0.0dB */
@@ -247,7 +246,6 @@ static const struct stv090x_tab stv090x_rf_tab[] = {
 	{ -65, 0xa14f }, /* -65dBm */
 	{ -70, 0x07aa }	 /* -70dBm */
 };
-
 
 static struct stv090x_reg stv0900_initval[] = {
 
@@ -3167,7 +3165,6 @@ err:
 	return -1;
 }
 
-
 static enum stv090x_signal_state stv090x_algo(struct stv090x_state *state)
 {
 	struct dvb_frontend *fe = &state->frontend;
@@ -3719,7 +3716,6 @@ err:
 	dprintk(FE_ERROR, 1, "I/O error");
 	return -1;
 }
-
 
 static enum dvbfe_algo stv090x_frontend_algo(struct dvb_frontend *fe)
 {
@@ -4750,7 +4746,6 @@ static struct dvb_frontend_ops stv090x_ops = {
 	.read_signal_strength		= stv090x_read_signal_strength,
 	.read_snr			= stv090x_read_cnr
 };
-
 
 struct dvb_frontend *stv090x_attach(const struct stv090x_config *config,
 				    struct i2c_adapter *i2c,

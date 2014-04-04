@@ -670,7 +670,6 @@ static irqreturn_t dma_thread_fn(int irq, void *data)
 	else
 		handle_continuous_dma(ch);
 
-
 	return IRQ_HANDLED;
 }
 

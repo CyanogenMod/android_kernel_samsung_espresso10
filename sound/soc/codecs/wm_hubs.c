@@ -118,27 +118,15 @@ static bool wm_hubs_dac_hp_direct(struct snd_soc_codec *codec)
 	reg = snd_soc_read(codec, WM8993_OUTPUT_MIXER1);
 	if (!(reg & WM8993_DACL_TO_HPOUT1L)) {
 		if (reg & ~WM8993_DACL_TO_MIXOUTL) {
-			dev_vdbg(codec->dev, "Analogue paths connected: %x\n",
-				 reg & ~WM8993_DACL_TO_HPOUT1L);
 			return false;
-		} else {
-			dev_vdbg(codec->dev, "HPL connected to mixer\n");
 		}
-	} else {
-		dev_vdbg(codec->dev, "HPL connected to DAC\n");
 	}
 
 	reg = snd_soc_read(codec, WM8993_OUTPUT_MIXER2);
 	if (!(reg & WM8993_DACR_TO_HPOUT1R)) {
 		if (reg & ~WM8993_DACR_TO_MIXOUTR) {
-			dev_vdbg(codec->dev, "Analogue paths connected: %x\n",
-				 reg & ~WM8993_DACR_TO_HPOUT1R);
 			return false;
-		} else {
-			dev_vdbg(codec->dev, "HPR connected to mixer\n");
 		}
-	} else {
-		dev_vdbg(codec->dev, "HPR connected to DAC\n");
 	}
 
 	return true;
@@ -344,7 +332,6 @@ SOC_SINGLE_TLV("IN1R Volume", WM8993_RIGHT_LINE_INPUT_1_2_VOLUME, 0, 31, 0,
 	       inpga_tlv),
 SOC_SINGLE("IN1R Switch", WM8993_RIGHT_LINE_INPUT_1_2_VOLUME, 7, 1, 1),
 SOC_SINGLE("IN1R ZC Switch", WM8993_RIGHT_LINE_INPUT_1_2_VOLUME, 6, 1, 0),
-
 
 SOC_SINGLE_TLV("IN2L Volume", WM8993_LEFT_LINE_INPUT_3_4_VOLUME, 0, 31, 0,
 	       inpga_tlv),
@@ -639,8 +626,6 @@ void wm_hubs_update_class_w(struct snd_soc_codec *codec)
 	if (hubs->check_class_w_digital && !hubs->check_class_w_digital(codec))
 		enable = false;
 
-	dev_vdbg(codec->dev, "Class W %s\n", enable ? "enabled" : "disabled");
-
 	snd_soc_update_bits(codec, WM8993_CLASS_W_0,
 			    WM8993_CP_DYN_V | WM8993_CP_DYN_FREQ, enable);
 }
@@ -844,7 +829,7 @@ SND_SOC_DAPM_MIXER("Right Output Mixer", WM8993_POWER_MANAGEMENT_3, 4, 0,
 SND_SOC_DAPM_PGA("Left Output PGA", WM8993_POWER_MANAGEMENT_3, 7, 0, NULL, 0),
 SND_SOC_DAPM_PGA("Right Output PGA", WM8993_POWER_MANAGEMENT_3, 6, 0, NULL, 0),
 
-SND_SOC_DAPM_SUPPLY("Headphone Supply", SND_SOC_NOPM, 0, 0, hp_supply_event, 
+SND_SOC_DAPM_SUPPLY("Headphone Supply", SND_SOC_NOPM, 0, 0, hp_supply_event,
 		    SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_PRE_PMD),
 SND_SOC_DAPM_OUT_DRV_E("Headphone PGA", SND_SOC_NOPM, 0, 0, NULL, 0,
 		       hp_event, SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),

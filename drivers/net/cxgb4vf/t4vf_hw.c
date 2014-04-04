@@ -1059,7 +1059,6 @@ int t4vf_alloc_mac_filt(struct adapter *adapter, unsigned int viid, bool free,
 			memcpy(p->macaddr, addr[offset+i], sizeof(p->macaddr));
 		}
 
-
 		ret = t4vf_wr_mbox_core(adapter, &cmd, sizeof(cmd), &rpl,
 					sleep_ok);
 		if (ret && ret != -ENOMEM)

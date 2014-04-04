@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -204,25 +204,19 @@ static PVRSRV_ERROR OpenDCDevice(IMG_UINT32 uiPVRDevID,
 	}
 	if (i == uiMaxFBDevIDPlusOne)
 	{
-		DEBUG_PRINTK((KERN_WARNING DRIVER_PREFIX
-			": %s: PVR Device %u not found\n", __FUNCTION__, uiPVRDevID));
 		return PVRSRV_ERROR_INVALID_DEVICE;
 	}
 
-	
 	psDevInfo->sSystemBuffer.psSyncData = psSystemBufferSyncData;
-	
+
 	eError = OMAPLFBUnblankDisplay(psDevInfo);
 	if (eError != OMAPLFB_OK)
 	{
-		DEBUG_PRINTK((KERN_WARNING DRIVER_PREFIX
-			": %s: Device %u: OMAPLFBUnblankDisplay failed (%d)\n", __FUNCTION__, psDevInfo->uiFBDevID, eError));
 		return PVRSRV_ERROR_UNBLANK_DISPLAY_FAILED;
 	}
 
-	
 	*phDevice = (IMG_HANDLE)psDevInfo;
-	
+
 	return PVRSRV_OK;
 }
 
@@ -244,16 +238,16 @@ static PVRSRV_ERROR EnumDCFormats(IMG_HANDLE hDevice,
                                   DISPLAY_FORMAT *psFormat)
 {
 	OMAPLFB_DEVINFO	*psDevInfo;
-	
+
 	if(!hDevice || !pui32NumFormats)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
 	}
 
 	psDevInfo = (OMAPLFB_DEVINFO*)hDevice;
-	
+
 	*pui32NumFormats = 1;
-	
+
 	if(psFormat)
 	{
 		psFormat[0] = psDevInfo->sDisplayFormat;
@@ -262,7 +256,7 @@ static PVRSRV_ERROR EnumDCFormats(IMG_HANDLE hDevice,
 	return PVRSRV_OK;
 }
 
-static PVRSRV_ERROR EnumDCDims(IMG_HANDLE hDevice, 
+static PVRSRV_ERROR EnumDCDims(IMG_HANDLE hDevice,
                                DISPLAY_FORMAT *psFormat,
                                IMG_UINT32 *pui32NumDims,
                                DISPLAY_DIMS *psDim)
@@ -278,20 +272,18 @@ static PVRSRV_ERROR EnumDCDims(IMG_HANDLE hDevice,
 
 	*pui32NumDims = 1;
 
-	
 	if(psDim)
 	{
 		psDim[0] = psDevInfo->sDisplayDim;
 	}
-	
+
 	return PVRSRV_OK;
 }
-
 
 static PVRSRV_ERROR GetDCSystemBuffer(IMG_HANDLE hDevice, IMG_HANDLE *phBuffer)
 {
 	OMAPLFB_DEVINFO	*psDevInfo;
-	
+
 	if(!hDevice || !phBuffer)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
@@ -304,11 +296,10 @@ static PVRSRV_ERROR GetDCSystemBuffer(IMG_HANDLE hDevice, IMG_HANDLE *phBuffer)
 	return PVRSRV_OK;
 }
 
-
 static PVRSRV_ERROR GetDCInfo(IMG_HANDLE hDevice, DISPLAY_INFO *psDCInfo)
 {
 	OMAPLFB_DEVINFO	*psDevInfo;
-	
+
 	if(!hDevice || !psDCInfo)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
@@ -322,7 +313,7 @@ static PVRSRV_ERROR GetDCInfo(IMG_HANDLE hDevice, DISPLAY_INFO *psDCInfo)
 }
 
 static PVRSRV_ERROR GetDCBufferAddr(IMG_HANDLE        hDevice,
-                                    IMG_HANDLE        hBuffer, 
+                                    IMG_HANDLE        hBuffer,
                                     IMG_SYS_PHYADDR   **ppsSysAddr,
                                     IMG_UINT32        *pui32ByteSize,
                                     IMG_VOID          **ppvCpuVAddr,
@@ -405,8 +396,7 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	PVRSRV_ERROR eError;
 
 	UNREFERENCED_PARAMETER(ui32OEMFlags);
-	
-	
+
 	if(!hDevice
 	|| !psDstSurfAttrib
 	|| !psSrcSurfAttrib
@@ -417,8 +407,7 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	}
 
 	psDevInfo = (OMAPLFB_DEVINFO*)hDevice;
-	
-	
+
 	if (psDevInfo->sDisplayInfo.ui32MaxSwapChains == 0)
 	{
 		return PVRSRV_ERROR_NOT_SUPPORTED;
@@ -426,55 +415,46 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 
 	OMAPLFBCreateSwapChainLock(psDevInfo);
 
-	
 	if(psDevInfo->psSwapChain != NULL)
 	{
 		eError = PVRSRV_ERROR_FLIP_CHAIN_EXISTS;
 		goto ExitUnLock;
 	}
-	
-	
+
 	if(ui32BufferCount > psDevInfo->sDisplayInfo.ui32MaxSwapChainBuffers)
 	{
 		eError = PVRSRV_ERROR_TOOMANYBUFFERS;
 		goto ExitUnLock;
 	}
-	
+
 	if ((psDevInfo->sFBInfo.ulRoundedBufferSize * (unsigned long)ui32BufferCount) > psDevInfo->sFBInfo.ulFBSize)
 	{
 		eError = PVRSRV_ERROR_TOOMANYBUFFERS;
 		goto ExitUnLock;
 	}
-	
+
 	if(psDstSurfAttrib->pixelformat != psDevInfo->sDisplayFormat.pixelformat
 	|| psDstSurfAttrib->sDims.ui32ByteStride != psDevInfo->sDisplayDim.ui32ByteStride
 	|| psDstSurfAttrib->sDims.ui32Width != psDevInfo->sDisplayDim.ui32Width
 	|| psDstSurfAttrib->sDims.ui32Height != psDevInfo->sDisplayDim.ui32Height)
 	{
-		
+
 		eError = PVRSRV_ERROR_INVALID_PARAMS;
 		goto ExitUnLock;
-	}		
+	}
 
 	if(psDstSurfAttrib->pixelformat != psSrcSurfAttrib->pixelformat
 	|| psDstSurfAttrib->sDims.ui32ByteStride != psSrcSurfAttrib->sDims.ui32ByteStride
 	|| psDstSurfAttrib->sDims.ui32Width != psSrcSurfAttrib->sDims.ui32Width
 	|| psDstSurfAttrib->sDims.ui32Height != psSrcSurfAttrib->sDims.ui32Height)
 	{
-		
+
 		eError = PVRSRV_ERROR_INVALID_PARAMS;
 		goto ExitUnLock;
-	}		
+	}
 
 	UNREFERENCED_PARAMETER(ui32Flags);
-	
-#if defined(PVR_OMAPFB3_UPDATE_MODE)
-	if (!OMAPLFBSetUpdateMode(psDevInfo, PVR_OMAPFB3_UPDATE_MODE))
-	{
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Couldn't set frame buffer update mode %d\n", __FUNCTION__, psDevInfo->uiFBDevID, PVR_OMAPFB3_UPDATE_MODE);
-	}
-#endif
-	
+
 	psSwapChain = (OMAPLFB_SWAPCHAIN*)OMAPLFBAllocKernelMem(sizeof(OMAPLFB_SWAPCHAIN));
 	if(!psSwapChain)
 	{
@@ -494,12 +474,11 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	psSwapChain->bNotVSynced = OMAPLFB_TRUE;
 	psSwapChain->uiFBDevID = psDevInfo->uiFBDevID;
 
-	
 	for(i=0; i<ui32BufferCount-1; i++)
 	{
 		psBuffer[i].psNext = &psBuffer[i+1];
 	}
-	
+
 	psBuffer[i].psNext = &psBuffer[0];
 
 	for(i=0; i<ui32BufferCount; i++)
@@ -525,10 +504,8 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 		psBuffer[i].bvmap_handle = NULL;
 	}
 
-
 	if (OMAPLFBCreateSwapQueue(psSwapChain) != OMAPLFB_OK)
-	{ 
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Failed to create workqueue\n", __FUNCTION__, psDevInfo->uiFBDevID);
+	{
 		eError = PVRSRV_ERROR_UNABLE_TO_INSTALL_ISR;
 		goto ErrorFreeBuffers;
 	}
@@ -536,7 +513,6 @@ static PVRSRV_ERROR CreateDCSwapChain(IMG_HANDLE hDevice,
 	if (OMAPLFBEnableLFBEventNotification(psDevInfo)!= OMAPLFB_OK)
 	{
 		eError = PVRSRV_ERROR_UNABLE_TO_ENABLE_EVENT;
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Couldn't enable framebuffer event notification\n", __FUNCTION__, psDevInfo->uiFBDevID);
 		goto ErrorDestroySwapQueue;
 	}
 
@@ -574,12 +550,12 @@ static PVRSRV_ERROR DestroyDCSwapChain(IMG_HANDLE hDevice,
 	OMAPLFB_DEVINFO	*psDevInfo;
 	OMAPLFB_SWAPCHAIN *psSwapChain;
 	OMAPLFB_ERROR eError;
-	
+
 	if(!hDevice || !hSwapChain)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
 	}
-	
+
 	psDevInfo = (OMAPLFB_DEVINFO*)hDevice;
 	psSwapChain = (OMAPLFB_SWAPCHAIN*)hSwapChain;
 
@@ -587,21 +563,13 @@ static PVRSRV_ERROR DestroyDCSwapChain(IMG_HANDLE hDevice,
 
 	if (SwapChainHasChanged(psDevInfo, psSwapChain))
 	{
-		printk(KERN_WARNING DRIVER_PREFIX
-			": %s: Device %u: Swap chain mismatch\n", __FUNCTION__, psDevInfo->uiFBDevID);
-
 		eError = PVRSRV_ERROR_INVALID_PARAMS;
 		goto ExitUnLock;
 	}
 
-	
 	OMAPLFBDestroySwapQueue(psSwapChain);
 
 	eError = OMAPLFBDisableLFBEventNotification(psDevInfo);
-	if (eError != OMAPLFB_OK)
-	{
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Couldn't disable framebuffer event notification\n", __FUNCTION__, psDevInfo->uiFBDevID);
-	}
 
 	OMAPLFBDeInitBltFBs(psDevInfo);
 	gbBvReady = IMG_FALSE;
@@ -631,8 +599,6 @@ static PVRSRV_ERROR SetDCDstRect(IMG_HANDLE hDevice,
 	UNREFERENCED_PARAMETER(hSwapChain);
 	UNREFERENCED_PARAMETER(psRect);
 
-	
-	
 	return PVRSRV_ERROR_NOT_SUPPORTED;
 }
 
@@ -643,8 +609,6 @@ static PVRSRV_ERROR SetDCSrcRect(IMG_HANDLE hDevice,
 	UNREFERENCED_PARAMETER(hDevice);
 	UNREFERENCED_PARAMETER(hSwapChain);
 	UNREFERENCED_PARAMETER(psRect);
-
-	
 
 	return PVRSRV_ERROR_NOT_SUPPORTED;
 }
@@ -657,8 +621,6 @@ static PVRSRV_ERROR SetDCDstColourKey(IMG_HANDLE hDevice,
 	UNREFERENCED_PARAMETER(hSwapChain);
 	UNREFERENCED_PARAMETER(ui32CKColour);
 
-	
-
 	return PVRSRV_ERROR_NOT_SUPPORTED;
 }
 
@@ -669,8 +631,6 @@ static PVRSRV_ERROR SetDCSrcColourKey(IMG_HANDLE hDevice,
 	UNREFERENCED_PARAMETER(hDevice);
 	UNREFERENCED_PARAMETER(hSwapChain);
 	UNREFERENCED_PARAMETER(ui32CKColour);
-
-	
 
 	return PVRSRV_ERROR_NOT_SUPPORTED;
 }
@@ -684,16 +644,15 @@ static PVRSRV_ERROR GetDCBuffers(IMG_HANDLE hDevice,
 	OMAPLFB_SWAPCHAIN *psSwapChain;
 	PVRSRV_ERROR eError;
 	unsigned i;
-	
-	
-	if(!hDevice 
+
+	if(!hDevice
 	|| !hSwapChain
 	|| !pui32BufferCount
 	|| !phBuffer)
 	{
 		return PVRSRV_ERROR_INVALID_PARAMS;
 	}
-	
+
 	psDevInfo = (OMAPLFB_DEVINFO*)hDevice;
 	psSwapChain = (OMAPLFB_SWAPCHAIN*)hSwapChain;
 
@@ -701,22 +660,17 @@ static PVRSRV_ERROR GetDCBuffers(IMG_HANDLE hDevice,
 
 	if (SwapChainHasChanged(psDevInfo, psSwapChain))
 	{
-		printk(KERN_WARNING DRIVER_PREFIX
-			": %s: Device %u: Swap chain mismatch\n", __FUNCTION__, psDevInfo->uiFBDevID);
-
 		eError = PVRSRV_ERROR_INVALID_PARAMS;
 		goto Exit;
 	}
-	
-	
+
 	*pui32BufferCount = (IMG_UINT32)psSwapChain->ulBufferCount;
-	
-	
+
 	for(i=0; i<psSwapChain->ulBufferCount; i++)
 	{
 		phBuffer[i] = (IMG_HANDLE)&psSwapChain->psBuffer[i];
 	}
-	
+
 	eError = PVRSRV_OK;
 
 Exit:
@@ -738,8 +692,6 @@ static PVRSRV_ERROR SwapToDCBuffer(IMG_HANDLE hDevice,
 	UNREFERENCED_PARAMETER(hPrivateTag);
 	UNREFERENCED_PARAMETER(ui32ClipRectCount);
 	UNREFERENCED_PARAMETER(psClipRect);
-	
-	
 
 	return PVRSRV_OK;
 }
@@ -798,7 +750,6 @@ void OMAPLFBSwapHandler(OMAPLFB_BUFFER *psBuffer)
 	bPreviouslyNotVSynced = psSwapChain->bNotVSynced;
 	psSwapChain->bNotVSynced = OMAPLFB_TRUE;
 
-
 	if (!DontWaitForVSync(psDevInfo))
 	{
 		OMAPLFB_UPDATE_MODE eMode = OMAPLFBGetUpdateMode(psDevInfo);
@@ -836,7 +787,6 @@ void OMAPLFBSwapHandler(OMAPLFB_BUFFER *psBuffer)
 
 #if defined(CONFIG_DSSCOMP)
 
-
 static void dsscomp_proxy_cmdcomplete(void * cookie, int i)
 {
 	gapsDevInfo[0]->sPVRJTable.pfnPVRSRVCmdComplete(cookie, i);
@@ -850,12 +800,9 @@ static IMG_BOOL ProcessFlipV1(IMG_HANDLE hCmdCookie,
 							  unsigned long ulSwapInterval)
 {
 	OMAPLFBCreateSwapChainLock(psDevInfo);
-	
+
 	if (SwapChainHasChanged(psDevInfo, psSwapChain))
 	{
-		DEBUG_PRINTK((KERN_WARNING DRIVER_PREFIX
-			": %s: Device %u (PVR Device ID %u): The swap chain has been destroyed\n",
-			__FUNCTION__, psDevInfo->uiFBDevID, psDevInfo->uiPVRDevID));
 	}
 	else
 	{
@@ -904,8 +851,6 @@ static IMG_BOOL ProcessFlipV1(IMG_HANDLE hCmdCookie,
 int meminfo_idx_valid(unsigned int meminfo_ix, int num_meminfos)
 {
 	if (meminfo_ix < 0 || meminfo_ix >= num_meminfos) {
-		WARN(1, "%s: Invalid meminfo index %d, max %d\n",
-				__func__, meminfo_ix, num_meminfos);
 		return 0;
 	}
 	return 1;
@@ -943,21 +888,18 @@ static IMG_BOOL ProcessFlipV2(IMG_HANDLE hCmdCookie,
 	else
 		rgz_items = psHwcData->blit_data.rgz_items;
 
-
 	psDssData = &(psHwcData->dsscomp_data);
 	calcsz = sizeof(*psHwcData) +
 		(sizeof(struct rgz_blt_entry) * rgz_items);
 	iUseBltFB = psHwcData->blit_data.rgz_flags & HWC_BLT_FLAG_USE_FB;
 
 	if (!iUseBltFB && rgz_items > 0) {
-		WARN(1, "Trying to blit without a pipe configured for the blit FB");
 		return IMG_FALSE;
 	}
 
 	if (rgz_items > 0 && !gbBvInterfacePresent)
 	{
 		/* We cannot blit if BV GC2D is not present!, likely a bug */
-		WARN(1, "Trying to blit when BV GC2D is not present");
 		rgz_items = 0; /* Prevent blits */
 	}
 
@@ -966,7 +908,6 @@ static IMG_BOOL ProcessFlipV2(IMG_HANDLE hCmdCookie,
 		/* Defer allocation and mapping of blit buffers */
 		if (OMAPLFBInitBltFBs(psDevInfo) != OMAPLFB_OK)
 		{
-			WARN(1, "Could not initialize blit FBs");
 			return IMG_FALSE;
 		}
 
@@ -976,15 +917,9 @@ static IMG_BOOL ProcessFlipV2(IMG_HANDLE hCmdCookie,
 	memset(asMemInfo, 0, sizeof(asMemInfo));
 
 	/* Check the size of private data along with the blit operations */
-	if (uiHwcDataSz != calcsz)
-	{
-		WARN(1, "invalid size of private data (%d vs %d)",
-		     uiHwcDataSz, calcsz);
-	}
 
 	if (ui32NumMemInfos == 0)
 	{
-		WARN(1, "must have at least one layer");
 		return IMG_FALSE;
 	}
 
@@ -1087,7 +1022,6 @@ static IMG_BOOL ProcessFlipV2(IMG_HANDLE hCmdCookie,
 		ix = psDssData->ovls[i].ba;
 		if (ix >= k)
 		{
-			WARN(1, "Invalid Post2 layer (%u)", ix);
 			psDssData->ovls[i].cfg.enabled = false;
 			continue;
 		}
@@ -1201,7 +1135,7 @@ static OMAPLFB_ERROR OMAPLFBInitIonOmap(OMAPLFB_DEVINFO *psDevInfo,
         {
 		printk(KERN_ERR DRIVER_PREFIX
 			" %s: Could not create ion client\n", __FUNCTION__);
-                return OMAPLFB_ERROR_INIT_FAILURE;
+        return OMAPLFB_ERROR_INIT_FAILURE;
         }
 #endif /* defined(CONFIG_ION_OMAP) */
 
@@ -1209,9 +1143,6 @@ static OMAPLFB_ERROR OMAPLFBInitIonOmap(OMAPLFB_DEVINFO *psDevInfo,
 	{
 		/* Set a default swap chain length if it's not present in the platform data */
 		iMaxSwapChainBuffs = 2;
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Swap chain length missing in "
-			"platform data, defaulting to %d\n", __FUNCTION__, psDevInfo->uiFBDevID,
-			iMaxSwapChainBuffs);
 	}
 	else
 	{
@@ -1220,18 +1151,12 @@ static OMAPLFB_ERROR OMAPLFBInitIonOmap(OMAPLFB_DEVINFO *psDevInfo,
 
 	if (psFBPlatConfig->tiler2d_buffers < iMaxSwapChainBuffs)
 	{
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Trying to use %d tiler "
-			"buffers which is less than the swap chain length of %d, maximum "
-			"swap chain length will be set to %d\n", __FUNCTION__, psDevInfo->uiFBDevID,
-			psFBPlatConfig->tiler2d_buffers, iMaxSwapChainBuffs, psFBPlatConfig->tiler2d_buffers);
 		iMaxSwapChainBuffs = psFBPlatConfig->tiler2d_buffers;
 	}
 
 	psDevInfo->sDisplayInfo.ui32MaxSwapChainBuffers = iMaxSwapChainBuffs;
 	n = psFBPlatConfig->tiler2d_buffers;
 
-	printk(KERN_DEBUG DRIVER_PREFIX
-		": %s: Device %u: Requesting %d TILER 2D framebuffers\n", __FUNCTION__, uiFBDevID, n);
 	sAllocData.w *= n;
 
 	psPVRFBInfo->uiBytesPerPixel = psLINFBInfo->var.bits_per_pixel >> 3;
@@ -1260,7 +1185,6 @@ static OMAPLFB_ERROR OMAPLFBInitIonOmap(OMAPLFB_DEVINFO *psDevInfo,
 	psPVRFBInfo->psPageList = kzalloc(w * n * psPVRFBInfo->ulHeight * sizeof(*psPVRFBInfo->psPageList), GFP_KERNEL);
 	if (!psPVRFBInfo->psPageList)
 	{
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Could not allocate page list\n", __FUNCTION__, psDevInfo->uiFBDevID);
 		ion_free(gpsIONClient, sAllocData.handle);
 		return OMAPLFB_ERROR_INIT_FAILURE;
 	}
@@ -1308,9 +1232,6 @@ static OMAPLFB_ERROR OMAPLFBInitFBVRAM(OMAPLFB_DEVINFO *psDevInfo,
 	{
 		/* Set a default swap chain length if it's not present in the platform data */
 		iMaxSwapChainBuffs = 2;
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Swap chain length missing in "
-			"platform data, defaulting to %d\n", __FUNCTION__, psDevInfo->uiFBDevID,
-			iMaxSwapChainBuffs);
 	}
 	else
 	{
@@ -1319,10 +1240,6 @@ static OMAPLFB_ERROR OMAPLFBInitFBVRAM(OMAPLFB_DEVINFO *psDevInfo,
 
 	if (psFBPlatConfig->vram_buffers < iMaxSwapChainBuffs)
 	{
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Trying to use %d vram "
-			"buffers which is less than the swap chain length of %d, maximum "
-			"swap chain length will be set to %d\n", __FUNCTION__, psDevInfo->uiFBDevID,
-			psFBPlatConfig->vram_buffers, iMaxSwapChainBuffs, psFBPlatConfig->vram_buffers);
 		iMaxSwapChainBuffs = psFBPlatConfig->vram_buffers;
 	}
 
@@ -1347,10 +1264,6 @@ static OMAPLFB_ERROR OMAPLFBInitFBVRAM(OMAPLFB_DEVINFO *psDevInfo,
 	}
 	else if (ui32FBAvailableBuffs < psFBPlatConfig->vram_buffers)
 	{
-		printk(KERN_WARNING DRIVER_PREFIX ": %s: Device %u: Not enough vram to hold "
-			"%d buffers (available %d), swap chain length will be set to %d\n",
-			__FUNCTION__, psDevInfo->uiFBDevID, iMaxSwapChainBuffs, ui32FBAvailableBuffs,
-			ui32FBAvailableBuffs);
 		iMaxSwapChainBuffs = ui32FBAvailableBuffs;
 	}
 	else
@@ -1359,19 +1272,6 @@ static OMAPLFB_ERROR OMAPLFBInitFBVRAM(OMAPLFB_DEVINFO *psDevInfo,
 	}
 
 	psDevInfo->sDisplayInfo.ui32MaxSwapChainBuffers = iMaxSwapChainBuffs;
-
-	printk(KERN_DEBUG DRIVER_PREFIX ": %s: Device %u: Using %d VRAM framebuffers\n", __FUNCTION__,
-		psDevInfo->uiFBDevID, iMaxSwapChainBuffs);
-
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer virtual width: %u\n",
-			psDevInfo->uiFBDevID, psLINFBInfo->var.xres_virtual));
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer virtual height: %u\n",
-			psDevInfo->uiFBDevID, psLINFBInfo->var.yres_virtual));
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: LCM of stride and page size: %lu\n",
-			psDevInfo->uiFBDevID, ulLCM));
 
 	return OMAPLFB_OK;
 }
@@ -1397,9 +1297,6 @@ static OMAPLFB_ERROR OMAPLFBInitFBDev(OMAPLFB_DEVINFO *psDevInfo)
 	psLINFBOwner = psLINFBInfo->fbops->owner;
 	if (!try_module_get(psLINFBOwner))
 	{
-		printk(KERN_INFO DRIVER_PREFIX
-			": %s: Device %u: Couldn't get framebuffer module\n", __FUNCTION__, uiFBDevID);
-
 		goto ErrorRelSem;
 	}
 
@@ -1410,9 +1307,6 @@ static OMAPLFB_ERROR OMAPLFBInitFBDev(OMAPLFB_DEVINFO *psDevInfo)
 		res = psLINFBInfo->fbops->fb_open(psLINFBInfo, 0);
 		if (res != 0)
 		{
-			printk(KERN_INFO DRIVER_PREFIX
-				" %s: Device %u: Couldn't open framebuffer(%d)\n", __FUNCTION__, uiFBDevID, res);
-
 			goto ErrorModPut;
 		}
 	}
@@ -1452,62 +1346,32 @@ static OMAPLFB_ERROR OMAPLFBInitFBDev(OMAPLFB_DEVINFO *psDevInfo)
 	}
 
 	OMAPLFBPrintInfo(psDevInfo);
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer physical address: %p\n",
-			psDevInfo->uiFBDevID, (void *)psPVRFBInfo->sSysAddr.uiAddr));
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer virtual address: %p\n",
-			psDevInfo->uiFBDevID, (void *)psPVRFBInfo->sCPUVAddr));
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer size: %lu\n",
-			psDevInfo->uiFBDevID, psPVRFBInfo->ulFBSize));
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer width: %lu\n",
-			psDevInfo->uiFBDevID, psPVRFBInfo->ulWidth));
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer height: %lu\n",
-			psDevInfo->uiFBDevID, psPVRFBInfo->ulHeight));
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-			": Device %u: Framebuffer stride: %lu\n",
-			psDevInfo->uiFBDevID, psPVRFBInfo->ulByteStride));
 
 	if(psLINFBInfo->var.bits_per_pixel == 16)
 	{
 		if((psLINFBInfo->var.red.length == 5) &&
-			(psLINFBInfo->var.green.length == 6) && 
-			(psLINFBInfo->var.blue.length == 5) && 
+			(psLINFBInfo->var.green.length == 6) &&
+			(psLINFBInfo->var.blue.length == 5) &&
 			(psLINFBInfo->var.red.offset == 11) &&
-			(psLINFBInfo->var.green.offset == 5) && 
-			(psLINFBInfo->var.blue.offset == 0) && 
+			(psLINFBInfo->var.green.offset == 5) &&
+			(psLINFBInfo->var.blue.offset == 0) &&
 			(psLINFBInfo->var.red.msb_right == 0))
 		{
 			psPVRFBInfo->ePixelFormat = PVRSRV_PIXEL_FORMAT_RGB565;
-		}
-		else
-		{
-			printk(KERN_INFO DRIVER_PREFIX ": %s: Device %u: Unknown FB format\n", __FUNCTION__, uiFBDevID);
 		}
 	}
 	else if(psLINFBInfo->var.bits_per_pixel == 32)
 	{
 		if((psLINFBInfo->var.red.length == 8) &&
-			(psLINFBInfo->var.green.length == 8) && 
-			(psLINFBInfo->var.blue.length == 8) && 
+			(psLINFBInfo->var.green.length == 8) &&
+			(psLINFBInfo->var.blue.length == 8) &&
 			(psLINFBInfo->var.red.offset == 16) &&
-			(psLINFBInfo->var.green.offset == 8) && 
-			(psLINFBInfo->var.blue.offset == 0) && 
+			(psLINFBInfo->var.green.offset == 8) &&
+			(psLINFBInfo->var.blue.offset == 0) &&
 			(psLINFBInfo->var.red.msb_right == 0))
 		{
 			psPVRFBInfo->ePixelFormat = PVRSRV_PIXEL_FORMAT_ARGB8888;
 		}
-		else
-		{
-			printk(KERN_INFO DRIVER_PREFIX ": %s: Device %u: Unknown FB format\n", __FUNCTION__, uiFBDevID);
-		}
-	}	
-	else
-	{
-		printk(KERN_INFO DRIVER_PREFIX ": %s: Device %u: Unknown FB format\n", __FUNCTION__, uiFBDevID);
 	}
 
 	psDevInfo->sFBInfo.ulPhysicalWidthmm =
@@ -1516,7 +1380,6 @@ static OMAPLFB_ERROR OMAPLFBInitFBDev(OMAPLFB_DEVINFO *psDevInfo)
 	psDevInfo->sFBInfo.ulPhysicalHeightmm =
 		((int)psLINFBInfo->var.height > 0) ? psLINFBInfo->var.height : 54;
 
-	
 	psDevInfo->sFBInfo.sSysAddr.uiAddr = psPVRFBInfo->sSysAddr.uiAddr;
 	psDevInfo->sFBInfo.sCPUVAddr = psPVRFBInfo->sCPUVAddr;
 
@@ -1565,7 +1428,7 @@ static void OMAPLFBDeInitFBDev(OMAPLFB_DEVINFO *psDevInfo)
 		kfree(psPVRFBInfo->psBltFBsBvPhys);
 	}
 #endif
-	if (psLINFBInfo->fbops->fb_release != NULL) 
+	if (psLINFBInfo->fbops->fb_release != NULL)
 	{
 		(void) psLINFBInfo->fbops->fb_release(psLINFBInfo, 0);
 	}
@@ -1581,32 +1444,27 @@ static OMAPLFB_DEVINFO *OMAPLFBInitDev(unsigned uiFBDevID)
 	IMG_UINT32		aui32SyncCountList[OMAPLFB_COMMAND_COUNT][2];
 	OMAPLFB_DEVINFO		*psDevInfo = NULL;
 
-	
 	psDevInfo = (OMAPLFB_DEVINFO *)OMAPLFBAllocKernelMem(sizeof(OMAPLFB_DEVINFO));
 
 	if(psDevInfo == NULL)
 	{
 		printk(KERN_ERR DRIVER_PREFIX
 			": %s: Device %u: Couldn't allocate device information structure\n", __FUNCTION__, uiFBDevID);
-
 		goto ErrorExit;
 	}
 
-	
 	memset(psDevInfo, 0, sizeof(OMAPLFB_DEVINFO));
 
 	psDevInfo->uiFBDevID = uiFBDevID;
 
-	
 	if(!(*gpfnGetPVRJTable)(&psDevInfo->sPVRJTable))
 	{
 		goto ErrorFreeDevInfo;
 	}
 
-	
 	if(OMAPLFBInitFBDev(psDevInfo) != OMAPLFB_OK)
 	{
-		
+
 		goto ErrorFreeDevInfo;
 	}
 
@@ -1626,18 +1484,11 @@ static OMAPLFB_DEVINFO *OMAPLFBInitDev(unsigned uiFBDevID)
 	psDevInfo->sDisplayDim.ui32Height     = (IMG_UINT32)psDevInfo->sFBInfo.ulHeight;
 	psDevInfo->sDisplayDim.ui32ByteStride = (IMG_UINT32)psDevInfo->sFBInfo.ulByteStride;
 
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-		": Device %u: Maximum number of swap chain buffers: %u\n",
-		psDevInfo->uiFBDevID, psDevInfo->sDisplayInfo.ui32MaxSwapChainBuffers));
-
-	
 	psDevInfo->sSystemBuffer.sSysAddr = psDevInfo->sFBInfo.sSysAddr;
 	psDevInfo->sSystemBuffer.sCPUVAddr = psDevInfo->sFBInfo.sCPUVAddr;
 	psDevInfo->sSystemBuffer.psDevInfo = psDevInfo;
 
 	OMAPLFBInitBufferForSwap(&psDevInfo->sSystemBuffer);
-
-	
 
 	psDevInfo->sDCJTable.ui32TableSize = sizeof(PVRSRV_DC_SRV2DISP_KMJTABLE);
 	psDevInfo->sDCJTable.pfnOpenDCDevice = OpenDCDevice;
@@ -1657,7 +1508,6 @@ static OMAPLFB_DEVINFO *OMAPLFBInitDev(unsigned uiFBDevID)
 	psDevInfo->sDCJTable.pfnSwapToDCBuffer = SwapToDCBuffer;
 	psDevInfo->sDCJTable.pfnSetDCState = SetDCState;
 
-	
 	if(psDevInfo->sPVRJTable.pfnPVRSRVRegisterDCDevice(
 		&psDevInfo->sDCJTable,
 		&psDevInfo->uiPVRDevID) != PVRSRV_OK)
@@ -1667,15 +1517,10 @@ static OMAPLFB_DEVINFO *OMAPLFBInitDev(unsigned uiFBDevID)
 
 		goto ErrorDeInitFBDev;
 	}
-	DEBUG_PRINTK((KERN_INFO DRIVER_PREFIX
-		": Device %u: PVR Device ID: %u\n",
-		psDevInfo->uiFBDevID, psDevInfo->uiPVRDevID));
-	
-	
+
 	pfnCmdProcList[DC_FLIP_COMMAND] = ProcessFlip;
 
-	
-	aui32SyncCountList[DC_FLIP_COMMAND][0] = 0; 
+	aui32SyncCountList[DC_FLIP_COMMAND][0] = 0;
 	if (gbBvInterfacePresent)
 	{
 		aui32SyncCountList[DC_FLIP_COMMAND][1] = 32;
@@ -1684,10 +1529,6 @@ static OMAPLFB_DEVINFO *OMAPLFBInitDev(unsigned uiFBDevID)
 	{
 		aui32SyncCountList[DC_FLIP_COMMAND][1] = 10;
 	}
-
-	
-
-
 
 	if (psDevInfo->sPVRJTable.pfnPVRSRVRegisterCmdProcList(psDevInfo->uiPVRDevID,
 			&pfnCmdProcList[0],
@@ -1753,18 +1594,12 @@ OMAPLFB_ERROR OMAPLFBInit(void)
 
 	gbBvInterfacePresent = OMAPLFBInitBlt();
 
-	if (!gbBvInterfacePresent)
-	{
-		printk(KERN_INFO DRIVER_PREFIX "%s: Blitsville gc2d "
-			"not present, blits disabled\n", __func__);
-	}
 	for(i = uiMaxFBDevIDPlusOne; i-- != 0;)
 	{
 		OMAPLFB_DEVINFO *psDevInfo = OMAPLFBInitDev(i);
 
 		if (psDevInfo != NULL)
 		{
-			
 			OMAPLFBSetDevInfoPtr(psDevInfo->uiFBDevID, psDevInfo);
 			uiDevicesFound++;
 		}
@@ -1797,19 +1632,17 @@ static OMAPLFB_BOOL OMAPLFBDeInitDev(OMAPLFB_DEVINFO *psDevInfo)
 		return OMAPLFB_FALSE;
 	}
 
-	
 	if (psPVRJTable->pfnPVRSRVRemoveDCDevice(psDevInfo->uiPVRDevID) != PVRSRV_OK)
 	{
 		printk(KERN_ERR DRIVER_PREFIX
 			": %s: Device %u: PVR Device %u: Couldn't remove device from PVR Services\n", __FUNCTION__, psDevInfo->uiFBDevID, psDevInfo->uiPVRDevID);
 		return OMAPLFB_FALSE;
 	}
-	
+
 	OMAPLFBDeInitFBDev(psDevInfo);
 
 	OMAPLFBSetDevInfoPtr(psDevInfo->uiFBDevID, NULL);
 
-	
 	OMAPLFBFreeKernelMem(psDevInfo);
 
 	return OMAPLFB_TRUE;
@@ -1833,4 +1666,3 @@ OMAPLFB_ERROR OMAPLFBDeInit(void)
 
 	return (bError) ? OMAPLFB_ERROR_INIT_FAILURE : OMAPLFB_OK;
 }
-

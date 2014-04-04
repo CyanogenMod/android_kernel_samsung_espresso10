@@ -37,7 +37,6 @@
 			     PARAMS(print));		       \
 	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
 
-
 #undef __field
 #define __field(type, item)		type	item;
 
@@ -87,7 +86,6 @@
 	__TRACE_EVENT_FLAGS(name, value)
 
 #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
-
 
 /*
  * Stage 2 of the trace events.
@@ -763,7 +761,6 @@ static inline void perf_test_probe_##call(void)				\
 	check_trace_callback_type_##call(perf_trace_##template);	\
 }
 
-
 #undef DEFINE_EVENT_PRINT
 #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
 	DEFINE_EVENT(template, name, PARAMS(proto), PARAMS(args))
@@ -772,4 +769,3 @@ static inline void perf_test_probe_##call(void)				\
 #endif /* CONFIG_PERF_EVENTS */
 
 #undef _TRACE_PROFILE_INIT
-

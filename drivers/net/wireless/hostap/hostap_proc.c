@@ -9,7 +9,6 @@
 
 #define PROC_LIMIT (PAGE_SIZE - 80)
 
-
 #ifndef PRISM2_NO_PROCFS_DEBUG
 static int prism2_debug_proc_read(char *page, char **start, off_t off,
 				  int count, int *eof, void *data)
@@ -50,7 +49,6 @@ static int prism2_debug_proc_read(char *page, char **start, off_t off,
 	return (p - page);
 }
 #endif /* PRISM2_NO_PROCFS_DEBUG */
-
 
 static int prism2_stats_proc_read(char *page, char **start, off_t off,
 				  int count, int *eof, void *data)
@@ -99,7 +97,6 @@ static int prism2_stats_proc_read(char *page, char **start, off_t off,
 	return (p - page);
 }
 
-
 static int prism2_wds_proc_read(char *page, char **start, off_t off,
 				int count, int *eof, void *data)
 {
@@ -138,7 +135,6 @@ static int prism2_wds_proc_read(char *page, char **start, off_t off,
 
 	return (p - page - off);
 }
-
 
 static int prism2_bss_list_proc_read(char *page, char **start, off_t off,
 				     int count, int *eof, void *data)
@@ -194,7 +190,6 @@ static int prism2_bss_list_proc_read(char *page, char **start, off_t off,
 	return (p - page - off);
 }
 
-
 static int prism2_crypt_proc_read(char *page, char **start, off_t off,
 				  int count, int *eof, void *data)
 {
@@ -227,7 +222,6 @@ static int prism2_crypt_proc_read(char *page, char **start, off_t off,
 	return (p - page - off);
 }
 
-
 static int prism2_pda_proc_read(char *page, char **start, off_t off,
 				int count, int *eof, void *data)
 {
@@ -244,7 +238,6 @@ static int prism2_pda_proc_read(char *page, char **start, off_t off,
 	memcpy(page, local->pda + off, count);
 	return count;
 }
-
 
 static int prism2_aux_dump_proc_read(char *page, char **start, off_t off,
 				     int count, int *eof, void *data)
@@ -264,7 +257,6 @@ static int prism2_aux_dump_proc_read(char *page, char **start, off_t off,
 
 	return count;
 }
-
 
 #ifdef PRISM2_IO_DEBUG
 static int prism2_io_debug_proc_read(char *page, char **start, off_t off,
@@ -303,7 +295,6 @@ static int prism2_io_debug_proc_read(char *page, char **start, off_t off,
 	return count;
 }
 #endif /* PRISM2_IO_DEBUG */
-
 
 #ifndef PRISM2_NO_STATION_MODES
 static int prism2_scan_results_proc_read(char *page, char **start, off_t off,
@@ -384,7 +375,6 @@ static int prism2_scan_results_proc_read(char *page, char **start, off_t off,
 }
 #endif /* PRISM2_NO_STATION_MODES */
 
-
 void hostap_init_proc(local_info_t *local)
 {
 	local->proc = NULL;
@@ -428,7 +418,6 @@ void hostap_init_proc(local_info_t *local)
 #endif /* PRISM2_NO_STATION_MODES */
 }
 
-
 void hostap_remove_proc(local_info_t *local)
 {
 	if (local->proc != NULL) {
@@ -451,7 +440,6 @@ void hostap_remove_proc(local_info_t *local)
 			remove_proc_entry(local->proc->name, hostap_proc);
 	}
 }
-
 
 EXPORT_SYMBOL(hostap_init_proc);
 EXPORT_SYMBOL(hostap_remove_proc);

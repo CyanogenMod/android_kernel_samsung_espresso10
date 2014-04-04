@@ -18,7 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #include <linux/module.h>
 #include <linux/errno.h>
 #include <linux/kernel.h>
@@ -173,7 +172,6 @@ static void cx2341x_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *ty
 		break;
 	}
 }
-
 
 /********************** OLD CODE *********************/
 
@@ -1236,8 +1234,6 @@ void cx2341x_log_status(const struct cx2341x_mpeg_params *p, const char *prefix)
 		p->video_chroma_median_filter_top);
 }
 EXPORT_SYMBOL(cx2341x_log_status);
-
-
 
 /********************** NEW CODE *********************/
 

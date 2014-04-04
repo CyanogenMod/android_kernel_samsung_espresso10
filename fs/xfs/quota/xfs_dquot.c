@@ -39,7 +39,6 @@
 #include "xfs_qm.h"
 #include "xfs_trace.h"
 
-
 /*
    LOCK ORDER
 
@@ -337,8 +336,6 @@ xfs_qm_init_dquot_blk(
 	xfs_trans_log_buf(tp, bp, 0, BBTOB(q->qi_dqchunklen) - 1);
 }
 
-
-
 /*
  * Allocate a block and fill it with dquots.
  * This is called when the bmapi finds a hole.
@@ -561,7 +558,6 @@ xfs_qm_dqtobp(
 	return (0);
 }
 
-
 /*
  * Read in the ondisk dquot using dqtobp() then copy it to an incore version,
  * and release the buffer immediately.
@@ -627,7 +623,6 @@ xfs_qm_dqread(
 
 	return (error);
 }
-
 
 /*
  * allocate an incore dquot from the kernel heap,
@@ -1009,7 +1004,6 @@ xfs_qm_dqget(
 	return (0);
 }
 
-
 /*
  * Release a reference to the dquot (decrement ref-count)
  * and unlock it. If there is a group quota attached to this
@@ -1284,7 +1278,6 @@ xfs_dqunlock(
 	}
 }
 
-
 void
 xfs_dqunlock_nonotify(
 	xfs_dquot_t *dqp)
@@ -1319,7 +1312,6 @@ xfs_dqlock2(
 		mutex_lock(&d2->q_qlock);
 	}
 }
-
 
 /*
  * Take a dquot out of the mount's dqlist as well as the hashlist.
@@ -1421,7 +1413,6 @@ xfs_qm_dqpurge(
 	mutex_unlock(&qh->qh_lock);
 	return (0);
 }
-
 
 #ifdef QUOTADEBUG
 void

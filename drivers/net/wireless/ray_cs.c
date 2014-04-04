@@ -66,7 +66,6 @@ typedef u_char mac_addr[ETH_ALEN];	/* Hardware address */
 #include "rayctl.h"
 #include "ray_cs.h"
 
-
 /** Prototypes based on PCMCIA skeleton driver *******************************/
 static int ray_config(struct pcmcia_device *link);
 static void ray_release(struct pcmcia_device *link);
@@ -318,7 +317,6 @@ static int ray_probe(struct pcmcia_device *p_dev)
 	local->wireless_data.spy_data = &local->spy_data;
 	dev->wireless_data = &local->wireless_data;
 #endif /* WIRELESS_SPY */
-
 
 	dev_dbg(&p_dev->dev, "ray_cs ray_attach calling ether_setup.)\n");
 	netif_stop_queue(dev);
@@ -737,7 +735,6 @@ static void join_net(u_long data)
 	}
 	local->card_status = CARD_DOING_ACQ;
 }
-
 
 static void ray_release(struct pcmcia_device *link)
 {

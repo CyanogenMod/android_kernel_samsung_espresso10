@@ -25,7 +25,6 @@
 #ifndef __APDS990X_H__
 #define __APDS990X_H__
 
-
 #define APDS_IRLED_CURR_12mA	0x3
 #define APDS_IRLED_CURR_25mA	0x2
 #define APDS_IRLED_CURR_50mA	0x1

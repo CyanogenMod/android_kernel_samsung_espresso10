@@ -83,7 +83,6 @@ int __qmgr_request_queue(unsigned int queue, unsigned int len /* dwords */,
 
 void qmgr_release_queue(unsigned int queue);
 
-
 static inline void qmgr_put_entry(unsigned int queue, u32 val)
 {
 	extern struct qmgr_regs __iomem *qmgr_regs;

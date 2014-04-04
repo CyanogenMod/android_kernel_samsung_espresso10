@@ -47,7 +47,6 @@ int mesh_paths_generation;
  */
 static DEFINE_RWLOCK(pathtbl_resize_lock);
 
-
 static inline struct mesh_table *resize_dereference_mesh_paths(void)
 {
 	return rcu_dereference_protected(mesh_paths,
@@ -69,7 +68,6 @@ static inline struct mesh_table *resize_dereference_mpp_paths(void)
 #define for_each_mesh_entry(tbl, p, node, i) \
 	for (i = 0; i <= tbl->hash_mask; i++) \
 		hlist_for_each_entry_rcu(node, p, &tbl->hash_buckets[i], list)
-
 
 static struct mesh_table *mesh_table_alloc(int size_order)
 {
@@ -172,7 +170,6 @@ static u32 mesh_table_hash(u8 *addr, struct ieee80211_sub_if_data *sdata,
 		& tbl->hash_mask;
 }
 
-
 /**
  *
  * mesh_path_assign_nexthop - update mesh path next hop
@@ -204,7 +201,6 @@ void mesh_path_assign_nexthop(struct mesh_path *mpath, struct sta_info *sta)
 	skb_queue_splice(&tmpq, &mpath->frame_queue);
 	spin_unlock_irqrestore(&mpath->frame_queue.lock, flags);
 }
-
 
 /**
  * mesh_path_lookup - look up a path in the mesh path table
@@ -268,7 +264,6 @@ struct mesh_path *mpp_path_lookup(u8 *dst, struct ieee80211_sub_if_data *sdata)
 	}
 	return NULL;
 }
-
 
 /**
  * mesh_path_lookup_by_idx - look up a path in the mesh path table by its index
@@ -520,7 +515,6 @@ err_node_alloc:
 err_path_alloc:
 	return err;
 }
-
 
 /**
  * mesh_plink_broken - deactivates paths and sends perr when a link breaks

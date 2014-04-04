@@ -177,7 +177,6 @@ static inline void hp_sdc_spin_ibf(void)
 	write_unlock_irqrestore(lock, flags);
 }
 
-
 /************************ Interrupt context functions ************************/
 static void hp_sdc_take(int irq, void *dev_id, uint8_t status, uint8_t data)
 {
@@ -274,7 +273,6 @@ static irqreturn_t hp_sdc_isr(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 static irqreturn_t hp_sdc_nmisr(int irq, void *dev_id)
 {
 	int status;
@@ -296,7 +294,6 @@ static irqreturn_t hp_sdc_nmisr(int irq, void *dev_id)
 
 	return IRQ_HANDLED;
 }
-
 
 /***************** Kernel (tasklet) context functions ****************/
 
@@ -541,7 +538,6 @@ unsigned long hp_sdc_put(void)
 	}
 	read_unlock_irq(&hp_sdc.rtq_lock);
 
-
 	if (act & HP_SDC_ACT_POSTCMD) {
 		uint8_t postcmd;
 
@@ -659,8 +655,6 @@ int hp_sdc_dequeue_transaction(hp_sdc_transaction *this)
 	write_unlock_irqrestore(&hp_sdc.lock, flags);
 	return 0;
 }
-
-
 
 /********************** User context functions **************************/
 int hp_sdc_request_timer_irq(hp_sdc_irqhook *callback)

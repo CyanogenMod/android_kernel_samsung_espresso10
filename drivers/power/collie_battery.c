@@ -197,7 +197,6 @@ static void collie_bat_work(struct work_struct *work)
 	collie_bat_update(&collie_bat_main);
 }
 
-
 static enum power_supply_property collie_bat_main_props[] = {
 	POWER_SUPPLY_PROP_STATUS,
 	POWER_SUPPLY_PROP_TECHNOLOGY,

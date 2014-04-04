@@ -73,7 +73,6 @@
 #include "smsc-ircc2.h"
 #include "smsc-sio.h"
 
-
 MODULE_AUTHOR("Daniele Peri <peri@csai.unipa.it>");
 MODULE_DESCRIPTION("SMC IrCC SIR/FIR controller driver");
 MODULE_LICENSE("GPL");
@@ -1060,7 +1059,6 @@ static void smsc_ircc_fir_stop(struct smsc_ircc_cb *self)
 	outb(inb(fir_base + IRCC_LCR_B) & IRCC_LCR_B_SIP_ENABLE, fir_base + IRCC_LCR_B);
 }
 
-
 /*
  * Function smsc_ircc_change_speed(self, baud)
  *
@@ -1179,7 +1177,6 @@ static void smsc_ircc_set_sir_speed(struct smsc_ircc_cb *self, __u32 speed)
 
 	IRDA_DEBUG(2, "%s() speed changed to: %d\n", __func__, speed);
 }
-
 
 /*
  * Function smsc_ircc_hard_xmit_fir (skb, dev)
@@ -1508,7 +1505,6 @@ static void smsc_ircc_sir_receive(struct smsc_ircc_cb *self)
 	} while (inb(iobase + UART_LSR) & UART_LSR_DR);
 }
 
-
 /*
  * Function smsc_ircc_interrupt (irq, dev_id, regs)
  *
@@ -1626,7 +1622,6 @@ static irqreturn_t smsc_ircc_interrupt_sir(struct net_device *dev)
 	return IRQ_HANDLED;
 }
 
-
 #if 0 /* unused */
 /*
  * Function ircc_is_receiving (self)
@@ -1691,7 +1686,6 @@ static void smsc_ircc_stop_interrupts(struct smsc_ircc_cb *self)
 
 	spin_unlock_irqrestore(&self->lock, flags);
 }
-
 
 /*
  * Function smsc_ircc_net_open (dev)
@@ -2054,7 +2048,6 @@ static int smsc_ircc_is_receiving(struct smsc_ircc_cb *self)
 	return self->rx_buff.state != OUTSIDE_FRAME;
 }
 
-
 /*
  * Function smsc_ircc_probe_transceiver(self)
  *
@@ -2080,7 +2073,6 @@ static void smsc_ircc_probe_transceiver(struct smsc_ircc_cb *self)
 
 	self->transceiver = SMSC_IRCC2_C_DEFAULT_TRANSCEIVER;
 }
-
 
 /*
  * Function smsc_ircc_set_transceiver_for_speed(self, speed)
@@ -2132,7 +2124,6 @@ static void smsc_ircc_sir_wait_hw_transmitter_finish(struct smsc_ircc_cb *self)
 	if (count < 0)
 		IRDA_DEBUG(0, "%s(): stuck transmitter\n", __func__);
 }
-
 
 /* PROBING
  *
@@ -2271,7 +2262,6 @@ static int __init smsc_superio_paged(const struct smsc_chip *chips, unsigned sho
 
 	return ret;
 }
-
 
 static int __init smsc_access(unsigned short cfg_base, unsigned char reg)
 {
@@ -2525,7 +2515,6 @@ static struct smsc_ircc_subsystem_configuration subsystem_configurations[] __ini
 	},
 	{ } // Terminator
 };
-
 
 /*
  * This sets up the basic SMSC parameters
@@ -2909,7 +2898,6 @@ static int __init smsc_ircc_preconfigure_subsystems(unsigned short ircc_cfg,
  *
  ************************************************/
 
-
 /*
  * Function smsc_ircc_set_transceiver_smsc_ircc_atc(fir_base, speed)
  *
@@ -3026,7 +3014,6 @@ static int smsc_ircc_probe_transceiver_toshiba_sat1800(int fir_base)
 {
 	return 0;
 }
-
 
 module_init(smsc_ircc_init);
 module_exit(smsc_ircc_cleanup);

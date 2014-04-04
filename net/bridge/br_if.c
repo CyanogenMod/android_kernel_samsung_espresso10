@@ -60,7 +60,6 @@ static int port_cost(struct net_device *dev)
 	return 100;	/* assume old 10Mbps */
 }
 
-
 /* Check for port carrier transistions. */
 void br_port_carrier_check(struct net_bridge_port *p)
 {
@@ -241,6 +240,7 @@ int br_add_bridge(struct net *net, const char *name)
 		return -ENOMEM;
 
 	dev_net_set(dev, net);
+	dev->rtnl_link_ops = &br_link_ops;
 
 	res = register_netdev(dev);
 	if (res)

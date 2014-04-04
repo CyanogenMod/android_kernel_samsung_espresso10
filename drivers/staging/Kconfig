@@ -21,7 +21,6 @@ menuconfig STAGING
 
 	  If in doubt, say N here.
 
-
 if STAGING
 
 source "drivers/staging/tty/Kconfig"
@@ -79,8 +78,6 @@ source "drivers/staging/phison/Kconfig"
 source "drivers/staging/line6/Kconfig"
 
 source "drivers/gpu/drm/vmwgfx/Kconfig"
-
-source "drivers/gpu/drm/nouveau/Kconfig"
 
 source "drivers/staging/octeon/Kconfig"
 

@@ -210,7 +210,6 @@ out:
 	return ret;
 }
 
-
 /* ID -> Name */
 static ssize_t nfs_idmap_lookup_name(__u32 id, const char *type, char *buf, size_t buflen)
 {
@@ -704,7 +703,7 @@ static void
 idmap_pipe_destroy_msg(struct rpc_pipe_msg *msg)
 {
 	struct idmap_msg *im = msg->data;
-	struct idmap *idmap = container_of(im, struct idmap, idmap_im); 
+	struct idmap *idmap = container_of(im, struct idmap, idmap_im);
 
 	if (msg->errno >= 0)
 		return;
@@ -714,7 +713,7 @@ idmap_pipe_destroy_msg(struct rpc_pipe_msg *msg)
 	mutex_unlock(&idmap->idmap_im_lock);
 }
 
-/* 
+/*
  * Fowler/Noll/Vo hash
  *    http://www.isthe.com/chongo/tech/comp/fnv/
  */

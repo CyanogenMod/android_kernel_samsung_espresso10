@@ -566,7 +566,6 @@ static u32 hsi_process_dma_event(struct hsi_dev *hsi_ctrl)
 	/* Acknowledge interrupt for DMA channel */
 	hsi_outl(lch_served, base, HSI_SYS_GDD_MPU_IRQ_STATUS_REG);
 
-
 	return status_reg;
 }
 

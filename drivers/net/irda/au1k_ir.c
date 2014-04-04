@@ -37,7 +37,7 @@
 #elif defined(CONFIG_MIPS_DB1000) || defined(CONFIG_MIPS_DB1100)
 #include <asm/db1x00.h>
 #include <asm/mach-db1x00/bcsr.h>
-#else 
+#else
 #error au1k_ir: unsupported board
 #endif
 
@@ -73,16 +73,15 @@ static DEFINE_SPINLOCK(ir_lock);
  * IrDA peripheral bug. You have to read the register
  * twice to get the right value.
  */
-u32 read_ir_reg(u32 addr) 
-{ 
+u32 read_ir_reg(u32 addr)
+{
 	readl(addr);
 	return readl(addr);
 }
 
-
 /*
  * Buffer allocation/deallocation routines. The buffer descriptor returned
- * has the virtual and dma address of a buffer suitable for 
+ * has the virtual and dma address of a buffer suitable for
  * both, receive and transmit operations.
  */
 static db_dest_t *GetFreeDB(struct au1k_private *aup)
@@ -104,7 +103,6 @@ static void ReleaseDB(struct au1k_private *aup, db_dest_t *pDB)
 	aup->pDBfree = pDB;
 }
 
-
 /*
   DMA memory allocation, derived from pci_alloc_consistent.
   However, the Au1000 data cache is coherent (when programmed
@@ -125,24 +123,22 @@ static void *dma_alloc(size_t size, dma_addr_t * dma_handle)
 	return ret;
 }
 
-
 static void dma_free(void *vaddr, size_t size)
 {
 	vaddr = (void *)KSEG0ADDR(vaddr);
 	free_pages((unsigned long) vaddr, get_order(size));
 }
 
-
-static void 
+static void
 setup_hw_rings(struct au1k_private *aup, u32 rx_base, u32 tx_base)
 {
 	int i;
 	for (i=0; i<NUM_IR_DESC; i++) {
-		aup->rx_ring[i] = (volatile ring_dest_t *) 
+		aup->rx_ring[i] = (volatile ring_dest_t *)
 			(rx_base + sizeof(ring_dest_t)*i);
 	}
 	for (i=0; i<NUM_IR_DESC; i++) {
-		aup->tx_ring[i] = (volatile ring_dest_t *) 
+		aup->tx_ring[i] = (volatile ring_dest_t *)
 			(tx_base + sizeof(ring_dest_t)*i);
 	}
 }
@@ -221,7 +217,7 @@ static int au1k_irda_net_init(struct net_device *dev)
 	/* The only value we must override it the baudrate */
 	aup->qos.baud_rate.bits = IR_9600|IR_19200|IR_38400|IR_57600|
 		IR_115200|IR_576000 |(IR_4000000 << 8);
-	
+
 	aup->qos.min_turn_time.bits = qos_mtt_bits;
 	irda_qos_bits_to_value(&aup->qos);
 
@@ -235,7 +231,7 @@ static int au1k_irda_net_init(struct net_device *dev)
 		goto out2;
 
 	/* allocate the data buffers */
-	aup->db[0].vaddr = 
+	aup->db[0].vaddr =
 		(void *)dma_alloc(MAX_BUF_SIZE * 2*NUM_IR_DESC, &temp);
 	if (!aup->db[0].vaddr)
 		goto out3;
@@ -247,7 +243,7 @@ static int au1k_irda_net_init(struct net_device *dev)
 	for (i=0; i<(2*NUM_IR_DESC); i++) {
 		pDB->pnext = pDBfree;
 		pDBfree = pDB;
-		pDB->vaddr = 
+		pDB->vaddr =
 			(u32 *)((unsigned)aup->db[0].vaddr + MAX_BUF_SIZE*i);
 		pDB->dma_addr = (dma_addr_t)virt_to_bus(pDB->vaddr);
 		pDB++;
@@ -295,7 +291,6 @@ out1:
 	return retval;
 }
 
-
 static int au1k_init(struct net_device *dev)
 {
 	struct au1k_private *aup = netdev_priv(dev);
@@ -305,7 +300,7 @@ static int au1k_init(struct net_device *dev)
 
 	/* bring the device out of reset */
 	control = 0xe; /* coherent, clock enable, one half system clock */
-			  
+
 #ifndef CONFIG_CPU_LITTLE_ENDIAN
 	control |= 1;
 #endif
@@ -349,16 +344,16 @@ static int au1k_irda_start(struct net_device *dev)
 		return retval;
 	}
 
-	if ((retval = request_irq(AU1000_IRDA_TX_INT, au1k_irda_interrupt, 
+	if ((retval = request_irq(AU1000_IRDA_TX_INT, au1k_irda_interrupt,
 					0, dev->name, dev))) {
-		printk(KERN_ERR "%s: unable to get IRQ %d\n", 
+		printk(KERN_ERR "%s: unable to get IRQ %d\n",
 				dev->name, dev->irq);
 		return retval;
 	}
-	if ((retval = request_irq(AU1000_IRDA_RX_INT, au1k_irda_interrupt, 
+	if ((retval = request_irq(AU1000_IRDA_RX_INT, au1k_irda_interrupt,
 					0, dev->name, dev))) {
 		free_irq(AU1000_IRDA_TX_INT, dev);
-		printk(KERN_ERR "%s: unable to get IRQ %d\n", 
+		printk(KERN_ERR "%s: unable to get IRQ %d\n",
 				dev->name, dev->irq);
 		return retval;
 	}
@@ -370,7 +365,7 @@ static int au1k_irda_start(struct net_device *dev)
 
 	writel(read_ir_reg(IR_CONFIG_2) | 1<<8, IR_CONFIG_2); /* int enable */
 
-	aup->timer.expires = RUN_AT((3*HZ)); 
+	aup->timer.expires = RUN_AT((3*HZ));
 	aup->timer.data = (unsigned long)dev;
 	return 0;
 }
@@ -381,7 +376,7 @@ static int au1k_irda_stop(struct net_device *dev)
 
 	/* disable interrupts */
 	writel(read_ir_reg(IR_CONFIG_2) & ~(1<<8), IR_CONFIG_2);
-	writel(0, IR_CONFIG_1); 
+	writel(0, IR_CONFIG_1);
 	writel(0, IR_INTERFACE_CONFIG); /* disable clock */
 	au_sync();
 
@@ -414,8 +409,7 @@ static void __exit au1k_irda_exit(void)
 	free_netdev(dev);
 }
 
-
-static inline void 
+static inline void
 update_tx_stats(struct net_device *dev, u32 status, u32 pkt_len)
 {
 	struct au1k_private *aup = netdev_priv(dev);
@@ -430,7 +424,6 @@ update_tx_stats(struct net_device *dev, u32 status, u32 pkt_len)
 	}
 }
 
-
 static void au1k_tx_ack(struct net_device *dev)
 {
 	struct au1k_private *aup = netdev_priv(dev);
@@ -438,7 +431,7 @@ static void au1k_tx_ack(struct net_device *dev)
 
 	ptxd = aup->tx_ring[aup->tx_tail];
 	while (!(ptxd->flags & AU_OWN) && (aup->tx_tail != aup->tx_head)) {
-		update_tx_stats(dev, ptxd->flags, 
+		update_tx_stats(dev, ptxd->flags,
 				ptxd->count_1<<8 | ptxd->count_0);
 		ptxd->count_0 = 0;
 		ptxd->count_1 = 0;
@@ -459,17 +452,16 @@ static void au1k_tx_ack(struct net_device *dev)
 			aup->newspeed = 0;
 		}
 		else {
-			writel(read_ir_reg(IR_CONFIG_1) & ~IR_TX_ENABLE, 
-					IR_CONFIG_1); 
+			writel(read_ir_reg(IR_CONFIG_1) & ~IR_TX_ENABLE,
+					IR_CONFIG_1);
 			au_sync();
-			writel(read_ir_reg(IR_CONFIG_1) | IR_RX_ENABLE, 
-					IR_CONFIG_1); 
+			writel(read_ir_reg(IR_CONFIG_1) | IR_RX_ENABLE,
+					IR_CONFIG_1);
 			writel(0, IR_RING_PROMPT);
 			au_sync();
 		}
 	}
 }
-
 
 /*
  * Au1000 transmit routine.
@@ -517,11 +509,11 @@ static int au1k_irda_hard_xmit(struct sk_buff *skb, struct net_device *dev)
 
 #if 0
 	if (read_ir_reg(IR_RX_BYTE_CNT) != 0) {
-		printk("tx warning: rx byte cnt %x\n", 
+		printk("tx warning: rx byte cnt %x\n",
 				read_ir_reg(IR_RX_BYTE_CNT));
 	}
 #endif
-	
+
 	if (aup->speed == 4000000) {
 		/* FIR */
 		skb_copy_from_linear_data(skb, pDB->vaddr, skb->len);
@@ -540,7 +532,7 @@ static int au1k_irda_hard_xmit(struct sk_buff *skb, struct net_device *dev)
 	ptxd->flags |= AU_OWN;
 	au_sync();
 
-	writel(read_ir_reg(IR_CONFIG_1) | IR_TX_ENABLE, IR_CONFIG_1); 
+	writel(read_ir_reg(IR_CONFIG_1) | IR_TX_ENABLE, IR_CONFIG_1);
 	writel(0, IR_RING_PROMPT);
 	au_sync();
 
@@ -549,8 +541,7 @@ static int au1k_irda_hard_xmit(struct sk_buff *skb, struct net_device *dev)
 	return NETDEV_TX_OK;
 }
 
-
-static inline void 
+static inline void
 update_rx_stats(struct net_device *dev, u32 status, u32 count)
 {
 	struct au1k_private *aup = netdev_priv(dev);
@@ -567,7 +558,7 @@ update_rx_stats(struct net_device *dev, u32 status, u32 count)
 		if (status & IR_CRC_ERROR)
 			ps->rx_crc_errors++;
 	}
-	else 
+	else
 		ps->rx_bytes += count;
 }
 
@@ -622,7 +613,6 @@ static int au1k_irda_rx(struct net_device *dev)
 	return 0;
 }
 
-
 static irqreturn_t au1k_irda_interrupt(int dummy, void *dev_id)
 {
 	struct net_device *dev = dev_id;
@@ -634,7 +624,6 @@ static irqreturn_t au1k_irda_interrupt(int dummy, void *dev_id)
 
 	return IRQ_HANDLED;
 }
-
 
 /*
  * The Tx ring has been full longer than the watchdog timeout
@@ -653,11 +642,10 @@ static void au1k_tx_timeout(struct net_device *dev)
 	netif_wake_queue(dev);
 }
 
-
 /*
  * Set the IrDA communications speed.
  */
-static int 
+static int
 au1k_irda_set_speed(struct net_device *dev, int speed)
 {
 	unsigned long flags;
@@ -678,7 +666,7 @@ au1k_irda_set_speed(struct net_device *dev, int speed)
 	writel(read_ir_reg(IR_ENABLE) & ~0x8000, IR_ENABLE);
 
 	/* disable RX/TX */
-	writel(read_ir_reg(IR_CONFIG_1) & ~(IR_RX_ENABLE|IR_TX_ENABLE), 
+	writel(read_ir_reg(IR_CONFIG_1) & ~(IR_RX_ENABLE|IR_TX_ENABLE),
 			IR_CONFIG_1);
 	au_sync_delay(1);
 	while (read_ir_reg(IR_ENABLE) & (IR_RX_STATUS | IR_TX_STATUS)) {
@@ -694,7 +682,7 @@ au1k_irda_set_speed(struct net_device *dev, int speed)
 	writel(read_ir_reg(IR_CONFIG_1) & ~IR_DMA_ENABLE, IR_CONFIG_1);
 	au_sync_delay(1);
 
-	/* 
+	/*
 	 *  After we disable tx/rx. the index pointers
  	 * go back to zero.
 	 */
@@ -729,29 +717,29 @@ au1k_irda_set_speed(struct net_device *dev, int speed)
 	}
 
 	switch (speed) {
-	case 9600:	
-		writel(11<<10 | 12<<5, IR_WRITE_PHY_CONFIG); 
-		writel(IR_SIR_MODE, IR_CONFIG_1); 
+	case 9600:
+		writel(11<<10 | 12<<5, IR_WRITE_PHY_CONFIG);
+		writel(IR_SIR_MODE, IR_CONFIG_1);
 		break;
-	case 19200:	
-		writel(5<<10 | 12<<5, IR_WRITE_PHY_CONFIG); 
-		writel(IR_SIR_MODE, IR_CONFIG_1); 
+	case 19200:
+		writel(5<<10 | 12<<5, IR_WRITE_PHY_CONFIG);
+		writel(IR_SIR_MODE, IR_CONFIG_1);
 		break;
 	case 38400:
-		writel(2<<10 | 12<<5, IR_WRITE_PHY_CONFIG); 
-		writel(IR_SIR_MODE, IR_CONFIG_1); 
+		writel(2<<10 | 12<<5, IR_WRITE_PHY_CONFIG);
+		writel(IR_SIR_MODE, IR_CONFIG_1);
 		break;
-	case 57600:	
-		writel(1<<10 | 12<<5, IR_WRITE_PHY_CONFIG); 
-		writel(IR_SIR_MODE, IR_CONFIG_1); 
+	case 57600:
+		writel(1<<10 | 12<<5, IR_WRITE_PHY_CONFIG);
+		writel(IR_SIR_MODE, IR_CONFIG_1);
 		break;
-	case 115200: 
-		writel(12<<5, IR_WRITE_PHY_CONFIG); 
-		writel(IR_SIR_MODE, IR_CONFIG_1); 
+	case 115200:
+		writel(12<<5, IR_WRITE_PHY_CONFIG);
+		writel(IR_SIR_MODE, IR_CONFIG_1);
 		break;
 	case 4000000:
 		writel(0xF, IR_WRITE_PHY_CONFIG);
-		writel(IR_FIR|IR_DMA_ENABLE|IR_RX_ENABLE, IR_CONFIG_1); 
+		writel(IR_FIR|IR_DMA_ENABLE|IR_RX_ENABLE, IR_CONFIG_1);
 		break;
 	default:
 		printk(KERN_ERR "%s unsupported speed %x\n", dev->name, speed);
@@ -787,7 +775,7 @@ au1k_irda_set_speed(struct net_device *dev, int speed)
 	return ret;
 }
 
-static int 
+static int
 au1k_irda_ioctl(struct net_device *dev, struct ifreq *ifreq, int cmd)
 {
 	struct if_irda_req *rq = (struct if_irda_req *)ifreq;

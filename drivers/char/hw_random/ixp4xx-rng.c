@@ -25,7 +25,6 @@
 #include <asm/io.h>
 #include <mach/hardware.h>
 
-
 static int ixp4xx_rng_data_read(struct hwrng *rng, u32 *buffer)
 {
 	void __iomem * rng_base = (void __iomem *)rng->priv;

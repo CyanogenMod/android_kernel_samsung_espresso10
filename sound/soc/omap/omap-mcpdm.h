@@ -92,7 +92,6 @@
 #define PDM_CMD_MASK		0x200
 #define PDM_STATUS_MASK		0x400
 
-
 #define PDMOUTFORMAT_LJUST	(0 << 8)
 #define PDMOUTFORMAT_RJUST	(1 << 8)
 

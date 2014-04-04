@@ -15,7 +15,6 @@
 #ifndef __AA_PATH_H
 #define __AA_PATH_H
 
-
 enum path_flags {
 	PATH_IS_DIR = 0x1,		/* path is a directory */
 	PATH_CONNECT_PATH = 0x4,	/* connect disconnected paths to / */

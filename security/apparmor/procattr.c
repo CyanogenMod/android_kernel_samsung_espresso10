@@ -17,7 +17,6 @@
 #include "include/policy.h"
 #include "include/domain.h"
 
-
 /**
  * aa_getprocattr - Return the profile information for @profile
  * @profile: the profile to print profile info about  (NOT NULL)

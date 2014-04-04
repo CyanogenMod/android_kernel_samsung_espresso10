@@ -446,7 +446,6 @@ static const struct nla_policy choke_policy[TCA_CHOKE_MAX + 1] = {
 	[TCA_CHOKE_STAB]	= { .len = RED_STAB_SIZE },
 };
 
-
 static void choke_free(void *addr)
 {
 	if (addr) {

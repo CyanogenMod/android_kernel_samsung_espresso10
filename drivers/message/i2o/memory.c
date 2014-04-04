@@ -51,7 +51,6 @@ u16 i2o_sg_tablesize(struct i2o_controller *c, u16 body_size)
 }
 EXPORT_SYMBOL_GPL(i2o_sg_tablesize);
 
-
 /**
  *	i2o_dma_map_single - Map pointer to controller and fill in I2O message.
  *	@c: I2O controller
@@ -210,7 +209,6 @@ int i2o_dma_alloc(struct device *dev, struct i2o_dma *addr, size_t len)
 }
 EXPORT_SYMBOL_GPL(i2o_dma_alloc);
 
-
 /**
  *	i2o_dma_free - Free DMA memory
  *	@dev: struct device pointer to the PCI device of the I2O controller
@@ -230,7 +228,6 @@ void i2o_dma_free(struct device *dev, struct i2o_dma *addr)
 	}
 }
 EXPORT_SYMBOL_GPL(i2o_dma_free);
-
 
 /**
  *	i2o_dma_realloc - Realloc DMA memory

@@ -20,7 +20,6 @@
 #include <linux/audit.h>
 #include <asm/uaccess.h>
 
-
 /*
  * Check permissions for extended attribute access.  This is a bit complicated
  * because different namespaces have very different rules.
@@ -113,7 +112,6 @@ int __vfs_setxattr_noperm(struct dentry *dentry, const char *name,
 
 	return error;
 }
-
 
 int
 vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
@@ -248,7 +246,6 @@ vfs_removexattr(struct dentry *dentry, const char *name)
 	return error;
 }
 EXPORT_SYMBOL_GPL(vfs_removexattr);
-
 
 /*
  * Extended attribute SET operations
@@ -568,7 +565,6 @@ SYSCALL_DEFINE2(fremovexattr, int, fd, const char __user *, name)
 	fput(f);
 	return error;
 }
-
 
 static const char *
 strcmp_prefix(const char *a, const char *a_prefix)

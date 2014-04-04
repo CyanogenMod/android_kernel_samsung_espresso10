@@ -61,7 +61,6 @@ failed:
 	return ERR_PTR(-ENOMEM);
 }
 
-
 static void lzo_free(void *strm)
 {
 	struct squashfs_lzo *stream = strm;
@@ -72,7 +71,6 @@ static void lzo_free(void *strm)
 	}
 	kfree(stream);
 }
-
 
 static int lzo_uncompress(struct squashfs_sb_info *msblk, void **buffer,
 	struct buffer_head **bh, int b, int offset, int length, int srclength,

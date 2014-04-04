@@ -133,7 +133,6 @@ struct mei_message_data {
 	char *data;
 } __packed;
 
-
 struct mei_cl_cb {
 	struct list_head cb_list;
 	enum mei_cb_major_types major_file_operations;
@@ -246,7 +245,6 @@ struct mei_device {
 	u16 wd_timeout;	/* seconds ((wd_data[1] << 8) + wd_data[0]) */
 	unsigned char wd_data[MEI_START_WD_DATA_SIZE];
 
-
 	u16 wd_due_counter;
 	bool wd_bypass;	/* if false, don't refresh watchdog ME client */
 
@@ -268,7 +266,6 @@ struct mei_device {
 	long open_handle_count;
 
 };
-
 
 /*
  * mei init function prototypes
@@ -393,7 +390,6 @@ static inline u32 mei_mecbrw_read(struct mei_device *dev)
 {
 	return mei_reg_read(dev, ME_CB_RW);
 }
-
 
 /*
  * mei interface function prototypes

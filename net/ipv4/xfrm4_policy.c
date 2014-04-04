@@ -302,4 +302,3 @@ void __init xfrm4_init(int rt_max_size)
 						xfrm4_policy_table);
 #endif
 }
-

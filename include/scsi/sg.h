@@ -32,20 +32,20 @@ Major new features in SG 3.x driver (cf SG 2.x drivers)
 	- scatter/gather in user space, direct IO, and mmap supported
 
  The normal action of this driver is to use the adapter (HBA) driver to DMA
- data into kernel buffers and then use the CPU to copy the data into the 
- user space (vice versa for writes). That is called "indirect" IO due to 
+ data into kernel buffers and then use the CPU to copy the data into the
+ user space (vice versa for writes). That is called "indirect" IO due to
  the double handling of data. There are two methods offered to remove the
  redundant copy: 1) direct IO and 2) using the mmap() system call to map
  the reserve buffer (this driver has one reserve buffer per fd) into the
  user space. Both have their advantages.
- In terms of absolute speed mmap() is faster. If speed is not a concern, 
+ In terms of absolute speed mmap() is faster. If speed is not a concern,
  indirect IO should be fine. Read the documentation for more information.
 
  ** N.B. To use direct IO 'echo 1 > /proc/scsi/sg/allow_dio' or
          'echo 1 > /sys/module/sg/parameters/allow_dio' is needed.
          That attribute is 0 by default. **
- 
- Historical note: this SCSI pass-through driver has been known as "sg" for 
+
+ Historical note: this SCSI pass-through driver has been known as "sg" for
  a decade. In broader kernel discussions "sg" is used to refer to scatter
  gather techniques. The context should clarify which "sg" is referred to.
 
@@ -65,7 +65,7 @@ Major new features in SG 3.x driver (cf SG 2.x drivers)
 	http://www.torque.net/sg/p/scsi-generic_long.txt
  Also available: <kernel_source>/Documentation/scsi/scsi-generic.txt
 
- Utility and test programs are available at the sg web site. They are 
+ Utility and test programs are available at the sg web site. They are
  packaged as sg3_utils (for the lk 2.4 and 2.6 series) and sg_utils
  (for the lk 2.2 series).
 */
@@ -81,7 +81,6 @@ typedef struct sg_iovec /* same structure as used by readv() Linux system */
     void __user *iov_base;      /* Starting address  */
     size_t iov_len;             /* Length in bytes  */
 } sg_iovec_t;
-
 
 typedef struct sg_io_hdr
 {
@@ -140,7 +139,6 @@ typedef struct sg_io_hdr
 #define SG_INFO_DIRECT_IO 0x2   /* direct IO requested and performed */
 #define SG_INFO_MIXED_IO 0x4    /* part direct, part indirect IO */
 
-
 typedef struct sg_scsi_id { /* used by SG_GET_SCSI_ID ioctl() */
     int host_no;        /* as in "scsi<n>" where 'n' is one of 0, 1, 2 etc */
     int channel;
@@ -163,7 +161,6 @@ typedef struct sg_req_info { /* used by SG_GET_REQUEST_TABLE ioctl() */
 			      or request duration (req_state==2) */
     int unused;
 } sg_req_info_t; /* 20 bytes long on i386 */
-
 
 /* IOCTLs: Those ioctls that are relevant to the SG 3.x drivers follow.
  [Those that only apply to the SG 2.x drivers are at the end of the file.]
@@ -221,8 +218,7 @@ typedef struct sg_req_info { /* used by SG_GET_REQUEST_TABLE ioctl() */
 #define SG_GET_KEEP_ORPHAN 0x2288
 
 /* yields scsi midlevel's access_count for this SCSI device */
-#define SG_GET_ACCESS_COUNT 0x2289  
-
+#define SG_GET_ACCESS_COUNT 0x2289
 
 #define SG_SCATTER_SZ (8 * 4096)
 /* Largest size (in bytes) a single scatter-gather list element can have.
@@ -250,7 +246,6 @@ typedef struct sg_io_vec Sg_io_vec;
 typedef struct sg_scsi_id Sg_scsi_id;
 typedef struct sg_req_info Sg_req_info;
 
-
 /* vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv */
 /*   The older SG interface based on the 'sg_header' structure follows.   */
 /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
@@ -275,7 +270,6 @@ struct sg_header
 	   when (driver_status & DRIVER_SENSE) is true. */
 };      /* This structure is 36 bytes long on i386 */
 
-
 /* IOCTLs: The following are not required (or ignored) when the sg_io_hdr_t
 	   interface is used. They are kept for backward compatibility with
 	   the original and version 2 drivers. */
@@ -295,7 +289,6 @@ struct sg_header
 
 #define SG_NEXT_CMD_LEN 0x2283  /* override SCSI command length with given
 		   number on the next write() on this file descriptor */
-
 
 /* Defaults, commented if they differ from original sg driver */
 #ifdef __KERNEL__

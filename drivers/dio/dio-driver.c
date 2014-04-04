@@ -14,7 +14,6 @@
 #include <linux/module.h>
 #include <linux/dio.h>
 
-
 /**
  *  dio_match_device - Tell if a DIO device structure has a matching DIO device id structure
  *  @ids: array of DIO device id structures to search in
@@ -64,7 +63,6 @@ static int dio_device_probe(struct device *dev)
 	return error;
 }
 
-
 /**
  *  dio_register_driver - register a new DIO driver
  *  @drv: the driver structure to register
@@ -83,7 +81,6 @@ int dio_register_driver(struct dio_driver *drv)
 	return driver_register(&drv->driver);
 }
 
-
 /**
  *  dio_unregister_driver - unregister a DIO driver
  *  @drv: the driver structure to unregister
@@ -98,7 +95,6 @@ void dio_unregister_driver(struct dio_driver *drv)
 {
 	driver_unregister(&drv->driver);
 }
-
 
 /**
  *  dio_bus_match - Tell if a DIO device structure has a matching DIO device id structure
@@ -122,13 +118,11 @@ static int dio_bus_match(struct device *dev, struct device_driver *drv)
 	return dio_match_device(ids, d) ? 1 : 0;
 }
 
-
 struct bus_type dio_bus_type = {
 	.name	= "dio",
 	.match	= dio_bus_match,
 	.probe	= dio_device_probe,
 };
-
 
 static int __init dio_driver_init(void)
 {

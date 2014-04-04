@@ -84,7 +84,6 @@ static int cx23885_start_vbi_dma(struct cx23885_dev    *dev,
 	return 0;
 }
 
-
 static int cx23885_restart_vbi_queue(struct cx23885_dev    *dev,
 			     struct cx23885_dmaqueue *q)
 {

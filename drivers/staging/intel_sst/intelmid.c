@@ -57,7 +57,6 @@ MODULE_DESCRIPTION("Intel MAD Sound card driver");
 MODULE_LICENSE("GPL v2");
 MODULE_SUPPORTED_DEVICE("{Intel,Intel_MAD}");
 
-
 static int card_index = SNDRV_DEFAULT_IDX1;/* Index 0-MAX */
 static char *card_id = SNDRV_DEFAULT_STR1;	/* ID for this card */
 
@@ -104,7 +103,6 @@ static struct snd_pcm_hardware snd_intelmad_stream = {
 	.periods_max = MAX_PERIODS,
 	.fifo_size = FIFO_SIZE,
 };
-
 
 /**
  * snd_intelmad_pcm_trigger - stream activities are handled here
@@ -958,7 +956,6 @@ free_allocs:
 	return ret_val;
 }
 
-
 static int snd_intelmad_remove(struct platform_device *pdev)
 {
 	struct snd_intelmad *intelmaddata = platform_get_drvdata(pdev);
@@ -1018,4 +1015,3 @@ static void __exit alsa_card_intelmad_exit(void)
 
 module_init(alsa_card_intelmad_init)
 module_exit(alsa_card_intelmad_exit)
-

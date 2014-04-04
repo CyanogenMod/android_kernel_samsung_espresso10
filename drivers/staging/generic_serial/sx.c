@@ -1,4 +1,4 @@
-/* sx.c -- driver for the Specialix SX series cards. 
+/* sx.c -- driver for the Specialix SX series cards.
  *
  *  This driver will also support the older SI, and XIO cards.
  *
@@ -35,7 +35,7 @@
  * - Fixed module and port counting
  * - Fixed signal handling
  * - Fixed an Ooops
- * 
+ *
  * Revision 1.32  2000/03/07 09:00:00  wolff,pvdl
  * - Fixed some sx_dprintk typos
  * - added detection for an invalid board/module configuration
@@ -155,7 +155,7 @@
  * rcs cleanup
  *
  * Revision 1.1  1999/03/28 12:10:34  wolff
- * Readying for release on 2.0.x (sorry David, 1.01 becomes 1.1 for RCS). 
+ * Readying for release on 2.0.x (sorry David, 1.01 becomes 1.1 for RCS).
  *
  * Revision 0.12  1999/03/28 09:20:10  wolff
  * Fixed problem in 0.11, continuing cleanup.
@@ -245,7 +245,7 @@
 #define PCI_DEVICE_ID_SPECIALIX_SX_XIO_IO8 0x2000
 #endif
 
-/* Configurable options: 
+/* Configurable options:
    (Don't be too sure that it'll work if you toggle them) */
 
 /* Am I paranoid or not ? ;-) */
@@ -266,7 +266,7 @@
 
 #if 0
 /* Not implemented */
-/* 
+/*
  * The following defines are mostly for testing purposes. But if you need
  * some nice reporting in your syslog, you can define them also.
  */
@@ -299,19 +299,19 @@ static int sx_initialized;
 static int sx_nports;
 static int sx_debug;
 
-/* You can have the driver poll your card. 
-    - Set sx_poll to 1 to poll every timer tick (10ms on Intel). 
+/* You can have the driver poll your card.
+    - Set sx_poll to 1 to poll every timer tick (10ms on Intel).
       This is used when the card cannot use an interrupt for some reason.
 
-    - set sx_slowpoll to 100 to do an extra poll once a second (on Intel). If 
+    - set sx_slowpoll to 100 to do an extra poll once a second (on Intel). If
       the driver misses an interrupt (report this if it DOES happen to you!)
-      everything will continue to work.... 
+      everything will continue to work....
  */
 static int sx_poll = 1;
 static int sx_slowpoll;
 
-/* The card limits the number of interrupts per second. 
-   At 115k2 "100" should be sufficient. 
+/* The card limits the number of interrupts per second.
+   At 115k2 "100" should be sufficient.
    If you're using higher baudrates, you can increase this...
  */
 
@@ -320,7 +320,7 @@ static int sx_maxints = 100;
 #ifdef CONFIG_ISA
 
 /* These are the only open spaces in my computer. Yours may have more
-   or less.... -- REW 
+   or less.... -- REW
    duh: Card at 0xa0000 is possible on HP Netserver?? -- pvdl
 */
 static int sx_probe_addrs[] = {
@@ -343,7 +343,7 @@ module_param_array(sx_probe_addrs, int, NULL, 0);
 module_param_array(si_probe_addrs, int, NULL, 0);
 #endif
 
-/* Set the mask to all-ones. This alas, only supports 32 interrupts. 
+/* Set the mask to all-ones. This alas, only supports 32 interrupts.
    Some architectures may need more. */
 static int sx_irqmask = -1;
 
@@ -366,13 +366,13 @@ static struct real_driver sx_real_driver = {
 	sx_close,
 };
 
-/* 
+/*
    This driver can spew a whole lot of debugging output at you. If you
    need maximum performance, you should disable the DEBUG define. To
    aid in debugging in the field, I'm leaving the compile-time debug
    features enabled, and disable them "runtime". That allows me to
    instruct people with problems to enable debugging without requiring
-   them to recompile... 
+   them to recompile...
 */
 #define DEBUG
 
@@ -388,7 +388,7 @@ static struct real_driver sx_real_driver = {
 #define func_enter2()	sx_dprintk(SX_DEBUG_FLOW, "sx: enter %s (port %d)\n", \
 				__func__, port->line)
 
-/* 
+/*
  *  Firmware loader driver specific routines
  *
  */
@@ -583,7 +583,7 @@ static int sx_reset(struct sx_board *board)
 }
 
 /* This doesn't work on machines where "NULL" isn't 0 */
-/* If you have one of those, someone will need to write 
+/* If you have one of those, someone will need to write
    the equivalent of this, which will amount to about 3 lines. I don't
    want to complicate this right now. -- REW
    (See, I do write comments every now and then :-) */
@@ -640,7 +640,7 @@ static int sx_start_board(struct sx_board *board)
 		write_sx_byte(board, SI1_ISA_RESET_CLEAR, 0);
 		write_sx_byte(board, SI1_ISA_INTCL, 0);
 	} else {
-		/* Don't bug me about the clear_set. 
+		/* Don't bug me about the clear_set.
 		   I haven't the foggiest idea what it's about -- REW */
 		write_sx_byte(board, SI2_ISA_RESET, SI2_ISA_RESET_CLEAR);
 		write_sx_byte(board, SI2_ISA_INTCLEAR, SI2_ISA_INTCLEAR_SET);
@@ -1026,7 +1026,7 @@ static int sx_set_real_termios(void *ptr)
    Other drivers use the macro "MIN" to calculate how much to copy.
    This has the disadvantage that it will evaluate parts twice. That's
    expensive when it's IO (and the compiler cannot optimize those away!).
-   Moreover, I'm not sure that you're race-free. 
+   Moreover, I'm not sure that you're race-free.
 
    I assign a value, and then only allow the value to decrease. This
    is always safe. This makes the code a few lines longer, and you
@@ -1053,7 +1053,7 @@ static void sx_transmit_chars(struct sx_port *port)
 		sx_dprintk(SX_DEBUG_TRANSMIT, "Copying %d ", c);
 		tx_ip = sx_read_channel_byte(port, hi_txipos);
 
-		/* Took me 5 minutes to deduce this formula. 
+		/* Took me 5 minutes to deduce this formula.
 		   Luckily it is literally in the manual in section 6.5.4.3.5 */
 		txroom = (sx_read_channel_byte(port, hi_txopos) - tx_ip - 1) &
 				0xff;
@@ -1181,7 +1181,7 @@ static inline void sx_receive_chars(struct sx_port *port)
 	func_exit();
 }
 
-/* Inlined: it is called only once. Remove the inline if you add another 
+/* Inlined: it is called only once. Remove the inline if you add another
    call */
 static inline void sx_check_modem_signals(struct sx_port *port)
 {
@@ -1239,7 +1239,7 @@ static inline void sx_check_modem_signals(struct sx_port *port)
 	}
 }
 
-/* This is what an interrupt routine should look like. 
+/* This is what an interrupt routine should look like.
  * Small, elegant, clear.
  */
 
@@ -1254,7 +1254,7 @@ static irqreturn_t sx_interrupt(int irq, void *ptr)
 			board->irq);
 
 	/* AAargh! The order in which to do these things is essential and
-	   not trivial. 
+	   not trivial.
 
 	   - Rate limit goes before "recursive". Otherwise a series of
 	   recursive calls will hang the machine in the interrupt routine.
@@ -1270,7 +1270,7 @@ static irqreturn_t sx_interrupt(int irq, void *ptr)
 	   - The "initialized" test goes after the hardware twiddling. Otherwise
 	   the card will stick us in the interrupt routine again.
 
-	   - The initialized test goes before recursive. 
+	   - The initialized test goes before recursive.
 	 */
 
 #ifdef IRQ_RATE_LIMIT
@@ -1597,7 +1597,7 @@ static int do_memtest(struct sx_board *board, int min, int max)
 	/* This is a marchb. Theoretically, marchb catches much more than
 	   simpler tests. In practise, the longer test just catches more
 	   intermittent errors. -- REW
-	   (For the theory behind memory testing see: 
+	   (For the theory behind memory testing see:
 	   Testing Semiconductor Memories by A.J. van de Goor.) */
 	MARCHUP {
 		W0;
@@ -1928,14 +1928,14 @@ static int sx_ioctl(struct tty_struct *tty,
 }
 
 /* The throttle/unthrottle scheme for the Specialix card is different
- * from other drivers and deserves some explanation. 
+ * from other drivers and deserves some explanation.
  * The Specialix hardware takes care of XON/XOFF
  * and CTS/RTS flow control itself.  This means that all we have to
  * do when signalled by the upper tty layer to throttle/unthrottle is
  * to make a note of it here.  When we come to read characters from the
  * rx buffers on the card (sx_receive_chars()) we look to see if the
- * upper layer can accept more (as noted here in sx_rx_throt[]). 
- * If it can't we simply don't remove chars from the cards buffer. 
+ * upper layer can accept more (as noted here in sx_rx_throt[]).
+ * If it can't we simply don't remove chars from the cards buffer.
  * When the tty layer can accept chars, we again note that here and when
  * sx_receive_chars() is called it will remove them from the cards buffer.
  * The card will notice that a ports buffer has drained below some low
@@ -2244,7 +2244,7 @@ static int __devinit probe_sx(struct sx_board *board)
 /* Specialix probes for this card at 32k increments from 640k to 16M.
    I consider machines with less than 16M unlikely nowadays, so I'm
    not probing above 1Mb. Also, 0xa0000, 0xb0000, are taken by the VGA
-   card. 0xe0000 and 0xf0000 are taken by the BIOS. That only leaves 
+   card. 0xe0000 and 0xf0000 are taken by the BIOS. That only leaves
    0xc0000, 0xc8000, 0xd0000 and 0xd8000 . */
 
 static int __devinit probe_si(struct sx_board *board)
@@ -2273,7 +2273,7 @@ static int __devinit probe_si(struct sx_board *board)
 		}
 	}
 
-	/* Now we're pretty much convinced that there is an SI board here, 
+	/* Now we're pretty much convinced that there is an SI board here,
 	   but to prevent trouble, we'd better double check that we don't
 	   have an SI1 board when we're probing for an SI2 board.... */
 
@@ -2294,7 +2294,7 @@ static int __devinit probe_si(struct sx_board *board)
 		}
 	}
 
-	/* Now we're pretty much convinced that there is an SI board here, 
+	/* Now we're pretty much convinced that there is an SI board here,
 	   but to prevent trouble, we'd better double check that we don't
 	   have an SI1 board when we're probing for an SI2 board.... */
 
@@ -2614,8 +2614,8 @@ static struct eisa_driver sx_eisadriver = {
 #endif
 
 #ifdef CONFIG_PCI
- /******************************************************** 
- * Setting bit 17 in the CNTRL register of the PLX 9050  * 
+ /********************************************************
+ * Setting bit 17 in the CNTRL register of the PLX 9050  *
  * chip forces a retry on writes while a read is pending.*
  * This is to prevent the card locking up on Intel Xeon  *
  * multiprocessor systems with the NX chipset.    -- NV  *

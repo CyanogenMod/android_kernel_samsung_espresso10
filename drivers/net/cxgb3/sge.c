@@ -384,7 +384,6 @@ static void free_rx_bufs(struct pci_dev *pdev, struct sge_fl *q)
 	while (q->credits--) {
 		struct rx_sw_desc *d = &q->sdesc[cidx];
 
-
 		clear_rx_desc(pdev, q, d);
 		if (++cidx == q->size)
 			cidx = 0;
@@ -658,7 +657,6 @@ static void t3_reset_qset(struct sge_qset *q)
 	q->nomem = 0;
 	napi_free_frags(&q->napi);
 }
-
 
 /**
  *	free_qset - free the resources of an SGE queue set

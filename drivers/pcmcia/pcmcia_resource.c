@@ -32,11 +32,9 @@
 
 #include "cs_internal.h"
 
-
 /* Access speed for IO windows */
 static int io_speed;
 module_param(io_speed, int, 0444);
-
 
 int pcmcia_validate_mem(struct pcmcia_socket *s)
 {
@@ -53,7 +51,6 @@ struct resource *pcmcia_find_mem_region(u_long base, u_long num, u_long align,
 		return s->resource_ops->find_mem(base, num, align, low, s);
 	return NULL;
 }
-
 
 /**
  * release_io_space() - release IO ports allocated with alloc_io_space()
@@ -87,7 +84,6 @@ static void release_io_space(struct pcmcia_socket *s, struct resource *res)
 		}
 	}
 }
-
 
 /**
  * alloc_io_space() - allocate IO ports for use by a PCMCIA device
@@ -147,7 +143,6 @@ static int alloc_io_space(struct pcmcia_socket *s, struct resource *res,
 	return ret;
 }
 
-
 /**
  * pcmcia_access_config() - read or write card configuration registers
  *
@@ -187,7 +182,6 @@ static int pcmcia_access_config(struct pcmcia_device *p_dev,
 	return ret;
 }
 
-
 /**
  * pcmcia_read_config_byte() - read a byte from a card configuration register
  *
@@ -200,7 +194,6 @@ int pcmcia_read_config_byte(struct pcmcia_device *p_dev, off_t where, u8 *val)
 }
 EXPORT_SYMBOL(pcmcia_read_config_byte);
 
-
 /**
  * pcmcia_write_config_byte() - write a byte to a card configuration register
  *
@@ -212,7 +205,6 @@ int pcmcia_write_config_byte(struct pcmcia_device *p_dev, off_t where, u8 val)
 	return pcmcia_access_config(p_dev, where, &val, pcmcia_write_cis_mem);
 }
 EXPORT_SYMBOL(pcmcia_write_config_byte);
-
 
 /**
  * pcmcia_map_mem_page() - modify iomem window to point to a different offset
@@ -244,7 +236,6 @@ int pcmcia_map_mem_page(struct pcmcia_device *p_dev, struct resource *res,
 	return ret;
 }
 EXPORT_SYMBOL(pcmcia_map_mem_page);
-
 
 /**
  * pcmcia_fixup_iowidth() - reduce io width to 8bit
@@ -294,7 +285,6 @@ unlock:
 }
 EXPORT_SYMBOL(pcmcia_fixup_iowidth);
 
-
 /**
  * pcmcia_fixup_vpp() - set Vpp to a new voltage level
  * @p_dev: pcmcia device
@@ -334,7 +324,6 @@ unlock:
 	return ret;
 }
 EXPORT_SYMBOL(pcmcia_fixup_vpp);
-
 
 /**
  * pcmcia_release_configuration() - physically disable a PCMCIA device
@@ -383,7 +372,6 @@ int pcmcia_release_configuration(struct pcmcia_device *p_dev)
 	return 0;
 }
 
-
 /**
  * pcmcia_release_io() - release I/O allocated by a PCMCIA device
  * @p_dev: pcmcia device
@@ -419,7 +407,6 @@ out:
 
 	return ret;
 } /* pcmcia_release_io */
-
 
 /**
  * pcmcia_release_window() - release reserved iomem for PCMCIA devices
@@ -470,7 +457,6 @@ int pcmcia_release_window(struct pcmcia_device *p_dev, struct resource *res)
 	return 0;
 } /* pcmcia_release_window */
 EXPORT_SYMBOL(pcmcia_release_window);
-
 
 /**
  * pcmcia_enable_device() - set up and activate a PCMCIA device
@@ -617,7 +603,6 @@ int pcmcia_enable_device(struct pcmcia_device *p_dev)
 } /* pcmcia_enable_device */
 EXPORT_SYMBOL(pcmcia_enable_device);
 
-
 /**
  * pcmcia_request_io() - attempt to reserve port ranges for PCMCIA devices
  * @p_dev: the associated PCMCIA device
@@ -683,7 +668,6 @@ out:
 } /* pcmcia_request_io */
 EXPORT_SYMBOL(pcmcia_request_io);
 
-
 /**
  * pcmcia_request_irq() - attempt to request a IRQ for a PCMCIA device
  * @p_dev: the associated PCMCIA device
@@ -711,7 +695,6 @@ int __must_check pcmcia_request_irq(struct pcmcia_device *p_dev,
 	return ret;
 }
 EXPORT_SYMBOL(pcmcia_request_irq);
-
 
 /**
  * pcmcia_request_exclusive_irq() - attempt to request an exclusive IRQ first
@@ -749,7 +732,6 @@ __pcmcia_request_exclusive_irq(struct pcmcia_device *p_dev,
 	return ret;
 } /* pcmcia_request_exclusive_irq */
 EXPORT_SYMBOL(__pcmcia_request_exclusive_irq);
-
 
 #ifdef CONFIG_PCMCIA_PROBE
 
@@ -825,7 +807,6 @@ void pcmcia_cleanup_irq(struct pcmcia_socket *s)
 
 #endif  /* CONFIG_PCMCIA_PROBE */
 
-
 /**
  * pcmcia_setup_irq() - determine IRQ to be used for device
  * @p_dev - the associated PCMCIA device
@@ -861,7 +842,6 @@ int pcmcia_setup_irq(struct pcmcia_device *p_dev)
 
 	return -EINVAL;
 }
-
 
 /**
  * pcmcia_request_window() - attempt to reserve iomem for PCMCIA devices
@@ -964,7 +944,6 @@ int pcmcia_request_window(struct pcmcia_device *p_dev, struct resource *res,
 	return 0;
 } /* pcmcia_request_window */
 EXPORT_SYMBOL(pcmcia_request_window);
-
 
 /**
  * pcmcia_disable_device() - disable and clean up a PCMCIA device

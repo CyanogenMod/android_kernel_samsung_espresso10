@@ -60,7 +60,6 @@ struct bnx2i_async_msg {
 	u32 cq_req_sn;
 };
 
-
 /*
  * iSCSI Buffer Descriptor (BD)
  */
@@ -98,7 +97,6 @@ struct iscsi_bd {
 	u16 reserved3;
 #endif
 };
-
 
 /*
  * iSCSI Cleanup SQ WQE
@@ -140,7 +138,6 @@ struct bnx2i_cleanup_request {
 	u8 cq_index;
 #endif
 };
-
 
 /*
  * iSCSI Cleanup CQE
@@ -184,7 +181,6 @@ struct bnx2i_cleanup_response {
 #endif
 	u32 cq_req_sn;
 };
-
 
 /*
  * SCSI read/write SQ WQE
@@ -261,7 +257,6 @@ struct bnx2i_cmd_request {
 	u8 cq_index;
 #endif
 };
-
 
 /*
  * task statistics for write response
@@ -365,8 +360,6 @@ struct bnx2i_cmd_response {
 	u32 cq_req_sn;
 };
 
-
-
 /*
  * firmware middle-path request SQ WQE
  */
@@ -445,7 +438,6 @@ struct bnx2i_fw_mp_request {
 #endif
 };
 
-
 /*
  * firmware response - CQE: used only by firmware
  */
@@ -470,7 +462,6 @@ struct bnx2i_fw_response {
 	u32 hdr_itt;
 	u32 cq_req_sn;
 };
-
 
 /*
  * iSCSI KCQ CQE parameters
@@ -509,8 +500,6 @@ struct iscsi_kcqe {
 #define ISCSI_KCQE_RESERVED1_SHIFT 7
 #endif
 };
-
-
 
 /*
  * iSCSI KWQE header
@@ -666,7 +655,6 @@ struct iscsi_kwqe_conn_offload2 {
 	u32 num_additional_wqes;
 };
 
-
 /*
  * Initial iSCSI connection offload request 3
  */
@@ -681,7 +669,6 @@ struct iscsi_kwqe_conn_offload3 {
 	u32 reserved1;
 	struct iscsi_pte qp_first_pte[3];
 };
-
 
 /*
  * iSCSI connection update request
@@ -872,7 +859,6 @@ struct bnx2i_login_request {
 #endif
 };
 
-
 /*
  * iSCSI Login CQE
  */
@@ -958,7 +944,6 @@ struct bnx2i_login_response {
 	u32 cq_req_sn;
 };
 
-
 /*
  * iSCSI Logout SQ WQE
  */
@@ -1022,7 +1007,6 @@ struct bnx2i_logout_request {
 #endif
 };
 
-
 /*
  * iSCSI Logout CQE
  */
@@ -1078,7 +1062,6 @@ struct bnx2i_logout_response {
 	u32 cq_req_sn;
 };
 
-
 /*
  * iSCSI Nop-In CQE
  */
@@ -1126,7 +1109,6 @@ struct bnx2i_nop_in_msg {
 #endif
 	u32 cq_req_sn;
 };
-
 
 /*
  * iSCSI NOP-OUT SQ WQE
@@ -1383,7 +1365,6 @@ union iscsi_request {
 	struct bnx2i_logout_request logout_req;
 	struct bnx2i_cleanup_request cleanup;
 };
-
 
 /*
  * iSCSI TMF CQE

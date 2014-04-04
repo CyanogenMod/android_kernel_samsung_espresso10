@@ -17,7 +17,6 @@
 #define KS8695_SWITCH_VA	(KS8695_IO_VA + KS8695_SWITCH_OFFSET)
 #define KS8695_SWITCH_PA	(KS8695_IO_PA + KS8695_SWITCH_OFFSET)
 
-
 /*
  * Switch registers
  */
@@ -41,7 +40,6 @@
 #define KS8695_LPPM12		(0x74)		/* Port 1 & 2 PHY Power Management */
 #define KS8695_LPPM34		(0x78)		/* Port 3 & 4 PHY Power Management */
 
-
 /* Switch Engine Control 0 */
 #define SEC0_LLED1S		(7 << 25)	/* LED1 Select */
 #define		LLED1S_SPEED		(0 << 25)
@@ -60,7 +58,5 @@
 #define		LLED0S_FDX_COLLISION	(5 << 22)
 #define		LLED0S_LINK_ACTIVITY	(6 << 22)
 #define SEC0_ENABLE		(1 << 0)	/* Enable Switch */
-
-
 
 #endif

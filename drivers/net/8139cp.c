@@ -52,7 +52,6 @@
 #define DRV_VERSION		"1.3"
 #define DRV_RELDATE		"Mar 22, 2004"
 
-
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/kernel.h>
@@ -382,7 +381,6 @@ struct cp_private {
 	readl(cp->regs + (reg));		\
 	} while (0)
 
-
 static void __cp_set_rx_mode (struct net_device *dev);
 static void cp_tx (struct cp_private *cp);
 static void cp_clean_rings (struct cp_private *cp);
@@ -420,7 +418,6 @@ static struct {
 	{ "tx_underrun" },
 	{ "rx_frags" },
 };
-
 
 #if CP_VLAN_TAG_USED
 static void cp_vlan_rx_register(struct net_device *dev, struct vlan_group *grp)
@@ -1281,7 +1278,6 @@ static int mdio_read(struct net_device *dev, int phy_id, int location)
 	return location < 8 && mii_2_8139_map[location] ?
 	       readw(cp->regs + mii_2_8139_map[location]) : 0;
 }
-
 
 static void mdio_write(struct net_device *dev, int phy_id, int location,
 		       int value)

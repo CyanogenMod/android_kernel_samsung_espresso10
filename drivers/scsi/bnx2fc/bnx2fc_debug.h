@@ -55,7 +55,6 @@ extern unsigned int bnx2fc_debug_level;
 				   (tgt)->rport->port_id, ##arg));	\
 	} while (0)
 
-
 #define BNX2FC_HBA_DBG(lport, fmt, arg...)				\
 	do {								\
 		if (!lport || !lport->host)				\

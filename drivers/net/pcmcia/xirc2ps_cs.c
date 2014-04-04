@@ -1,6 +1,6 @@
 /* [xirc2ps_cs.c wk 03.11.99] (1.40 1999/11/18 00:06:03)
  * Xircom CreditCard Ethernet Adapter IIps driver
- * Xircom Realport 10/100 (RE-100) driver 
+ * Xircom Realport 10/100 (RE-100) driver
  *
  * This driver supports various Xircom CreditCard Ethernet adapters
  * including the CE2, CE IIps, RE-10, CEM28, CEM33, CE33, CEM56,
@@ -10,7 +10,7 @@
  * autodetect the media properly. In this case use the
  * if_port=1 (for 10BaseT) or if_port=4 (for 100BaseT) options
  * to force the media type.
- * 
+ *
  * Written originally by Werner Koch based on David Hinds' skeleton of the
  * PCMCIA driver.
  *
@@ -668,7 +668,6 @@ xirc2ps_config_check(struct pcmcia_device *p_dev, void *priv_data)
 	return pcmcia_request_io(p_dev);
 }
 
-
 static int pcmcia_get_mac_ce(struct pcmcia_device *p_dev,
 			     tuple_t *tuple,
 			     void *priv)
@@ -686,7 +685,6 @@ static int pcmcia_get_mac_ce(struct pcmcia_device *p_dev,
 		dev->dev_addr[i] = tuple->TupleData[i+2];
 	return 0;
 };
-
 
 static int
 xirc2ps_config(struct pcmcia_device * link)
@@ -942,7 +940,6 @@ xirc2ps_release(struct pcmcia_device *link)
 
 /*====================================================================*/
 
-
 static int xirc2ps_suspend(struct pcmcia_device *link)
 {
 	struct net_device *dev = link->priv;
@@ -966,7 +963,6 @@ static int xirc2ps_resume(struct pcmcia_device *link)
 
 	return 0;
 }
-
 
 /*====================================================================*/
 
@@ -1225,7 +1221,6 @@ do_start_xmit(struct sk_buff *skb, struct net_device *dev)
 
     pr_debug("do_start_xmit(skb=%p, dev=%p) len=%u\n",
 	  skb, dev, pktlen);
-
 
     /* adjust the packet length to min. required
      * and hope that the buffer is large enough
@@ -1648,7 +1643,7 @@ init_mii(struct net_device *dev)
 	return 0; /* No MII */
 
     local->new_mii = (mii_rd(ioaddr, 0, 2) != 0xffff);
-    
+
     if (local->probe_port)
 	control = 0x1000; /* auto neg */
     else if (dev->if_port == 4)
@@ -1763,7 +1758,6 @@ static const struct pcmcia_device_id xirc2ps_ids[] = {
 	PCMCIA_DEVICE_NULL,
 };
 MODULE_DEVICE_TABLE(pcmcia, xirc2ps_ids);
-
 
 static struct pcmcia_driver xirc2ps_cs_driver = {
 	.owner		= THIS_MODULE,

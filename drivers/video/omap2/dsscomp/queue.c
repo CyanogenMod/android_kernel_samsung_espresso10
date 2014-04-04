@@ -406,9 +406,6 @@ void dsscomp_drop(dsscomp_t comp)
 		maskref_decmask(&mgrq[comp->ix].ovl_qmask, comp->ovl_mask);
 	comp->state = 0;
 
-	if (debug & DEBUG_COMPOSITIONS)
-		dev_info(DEV(cdev), "[%p] released\n", comp);
-
 	DO_IF_DEBUG_FS(list_del(&comp->dbg_q));
 
 	kfree(comp);
@@ -442,20 +439,13 @@ static void dsscomp_mgr_delayed_cb(struct work_struct *work)
 		mgrq[ix].ovl_mask = comp->ovl_mask & ~comp->ovl_dmask;
 		maskref_decmask(&mgrq[ix].ovl_qmask, comp->ovl_mask);
 
-		if (debug & DEBUG_PHASES)
-			dev_info(DEV(cdev), "[%p] programmed\n", comp);
 	} else if ((status == DSS_COMPLETION_DISPLAYED) &&
 		   comp->state == DSSCOMP_STATE_PROGRAMMED) {
 		/* composition is 1st displayed */
 		comp->state = DSSCOMP_STATE_DISPLAYED;
 		log_state(comp, dsscomp_mgr_delayed_cb, status);
-		if (debug & DEBUG_PHASES)
-			dev_info(DEV(cdev), "[%p] displayed\n", comp);
 	} else if (status & DSS_COMPLETION_RELEASED) {
 		/* composition is no longer displayed */
-		log_event(20 * comp->ix + 20, 0, comp, "%pf on %s",
-				(u32) dsscomp_mgr_delayed_cb,
-				(u32) log_status_str(status));
 		dsscomp_drop(comp);
 	}
 	mutex_unlock(&mtx);
@@ -474,8 +464,7 @@ u32 dsscomp_mgr_callback(void *data, int id, int status)
 		/* allocate work object from cache */
 		wk = kmem_cache_zalloc(dsscomp_cb_wk_cachep, GFP_ATOMIC);
 		if (!wk) {
-			pr_err("DSSCOMP: %s: can't allocate cache object\n",
-								__func__);
+			pr_err("DSSCOMP: %s: can't allocate cache object\n", __func__);
 			BUG();
 		}
 
@@ -565,13 +554,6 @@ int dsscomp_apply(dsscomp_t comp)
 
 			wb = omap_dss_get_wb(0);
 			wb->get_wb_info(wb, &wb_info);
-			/* if prev comp was with M2M WB */
-			if (wb_info.mode == OMAP_WB_MEM2MEM_MODE &&
-							wb_info.enabled) {
-				if (wb->wait_framedone(wb))
-					dev_warn(DEV(cdev),
-						"WB Framedone expired\n");
-			}
 
 			/* if wb is disabled and wb was enabled in prev
 			 * comp - set m2m flag. */
@@ -622,23 +604,15 @@ int dsscomp_apply(dsscomp_t comp)
 				mutex_lock(&mtx);
 				if (!mgrq[comp->ix].blanking || m2m_mgr_mode) {
 					/*
-					 * Ideally, we should call
-					 * ovl->unset_manager(ovl),
-					 * but it may block on go
-					 * even though the disabling
-					 * of the overlay already
-					 * went through. So instead,
+					 * Ideally, we should call ovl->unset_manager(ovl),
+					 * but it may block on go even though the disabling
+					 * of the overlay already went through. So instead,
 					 * we are just clearing the manager.
 					 */
 					ovl->manager = NULL;
 					r = ovl->set_manager(ovl, mgr);
 				} else	{
-					/* Ignoring manager change
-					during blanking. */
-					pr_info_ratelimited("dsscomp_apply "
-						"skip set_manager(%s) for "
-						"ovl%d while blank."
-						, mgr->name, oi->cfg.ix);
+					/* Ignoring manager change during blanking. */
 					r = -ENODEV;
 				}
 				mutex_unlock(&mtx);
@@ -673,9 +647,6 @@ skip_ovl_set:
 		dev_err(DEV(cdev), "[%p] set failed %d\n", comp, r);
 		goto done;
 	} else {
-		if (r)
-			dev_warn(DEV(cdev), "[%p] ignoring set failure %d\n",
-								comp, r);
 		comp->blank = dmask == comp->ovl_mask;
 		comp->ovl_dmask = dmask;
 
@@ -738,8 +709,6 @@ skip_ovl_set:
 
 	mutex_lock(&mtx);
 	if (mgrq[comp->ix].blanking && !m2m_mgr_mode) {
-		pr_info_ratelimited("ignoring apply mgr(%s) while blanking\n",
-								mgr->name);
 		r = -ENODEV;
 	} else {
 		if (wb_apply) {
@@ -849,11 +818,8 @@ int dsscomp_delayed_apply(dsscomp_t comp)
 
 	/* allocate work object from cache */
 	wk = kmem_cache_zalloc(dsscomp_app_wk_cachep, GFP_NOWAIT);
-	if (!wk) {
-		pr_warn("DSSCOMP: %s: can't allocate object from cache\n",
-								__func__);
+	if (!wk)
 		return -ENOMEM;
-	}
 
 	mutex_lock(&mtx);
 
@@ -861,8 +827,6 @@ int dsscomp_delayed_apply(dsscomp_t comp)
 	comp->state = DSSCOMP_STATE_APPLYING;
 	log_state(comp, dsscomp_delayed_apply, 0);
 
-	if (debug & DEBUG_PHASES)
-		dev_info(DEV(cdev), "[%p] applying\n", comp);
 	mutex_unlock(&mtx);
 
 	wk->comp = comp;

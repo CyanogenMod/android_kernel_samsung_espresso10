@@ -257,7 +257,6 @@ static int dibx000_i2c_gate_ctrl(struct dibx000_i2c_master *mst, u8 tx[4],
 {
 	u16 val;
 
-
 	if (onoff)
 		val = addr << 8;	// bit 7 = use master or not, if 0, the gate is open
 	else
@@ -498,7 +497,6 @@ void dibx000_exit_i2c_master(struct dibx000_i2c_master *mst)
 	i2c_del_adapter(&mst->master_i2c_adap_gpio67);
 }
 EXPORT_SYMBOL(dibx000_exit_i2c_master);
-
 
 u32 systime(void)
 {

@@ -79,7 +79,6 @@ int i1480_rceb_check(const struct i1480 *i1480, const struct uwb_rceb *rceb,
 }
 EXPORT_SYMBOL_GPL(i1480_rceb_check);
 
-
 /*
  * Execute a Radio Control Command
  *
@@ -150,7 +149,6 @@ error:
 }
 EXPORT_SYMBOL_GPL(i1480_cmd);
 
-
 static
 int i1480_print_state(struct i1480 *i1480)
 {
@@ -166,7 +164,6 @@ int i1480_print_state(struct i1480 *i1480)
 error:
 	return result;
 }
-
 
 /*
  * PCI probe, firmware uploader

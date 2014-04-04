@@ -3167,7 +3167,6 @@ struct fcp_icmnd64_wqe {
 	uint32_t rsvd_12_15[4];        /* word 12-15 */
 };
 
-
 union lpfc_wqe {
 	uint32_t words[16];
 	struct lpfc_wqe_generic generic;

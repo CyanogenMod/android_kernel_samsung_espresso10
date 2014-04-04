@@ -188,7 +188,6 @@ static inline u8 irqstat_to_notifier_v2(u32 status)
 	return val;
 }
 
-
 static irqreturn_t sr_interrupt(int irq, void *data)
 {
 	struct omap_sr *sr_info = (struct omap_sr *)data;
@@ -847,7 +846,6 @@ int sr_notifier_control(struct voltagedomain *voltdm, bool enable)
 			__func__);
 		return -EINVAL;
 	}
-
 
 	switch (sr->ip_type) {
 	case SR_TYPE_V1:

@@ -26,7 +26,6 @@
 
 static int acm_notify(void *dev, u16 state);
 
-
 static wait_queue_head_t modem_wait_q;
 
 static unsigned int read_state;
@@ -86,7 +85,6 @@ void notify_control_line_state(u32 value)
 }
 EXPORT_SYMBOL(notify_control_line_state);
 
-
 #define GS_CDC_NOTIFY_SERIAL_STATE	_IOW('S', 1, int)
 #define GS_IOC_NOTIFY_DTR_TEST		_IOW('S', 3, int)
 
@@ -116,7 +114,6 @@ modem_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	}
 	return 0;
 }
-
 
 static const struct file_operations modem_fops = {
 	.owner		= THIS_MODULE,

@@ -177,7 +177,6 @@ static int snd_cx18_pcm_capture_open(struct snd_pcm_substream *substream)
 		return 0;
 	}
 
-
 	runtime->hw = snd_cx18_hw_capture;
 	snd_pcm_hw_constraint_integer(runtime, SNDRV_PCM_HW_PARAM_PERIODS);
 	cxsc->capture_pcm_substream = substream;
@@ -226,7 +225,6 @@ static int snd_cx18_pcm_ioctl(struct snd_pcm_substream *substream,
 	snd_cx18_unlock(cxsc);
 	return ret;
 }
-
 
 static int snd_pcm_alloc_vmalloc_buffer(struct snd_pcm_substream *subs,
 					size_t size)

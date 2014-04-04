@@ -273,7 +273,6 @@ err:
 	return retval;
 }
 
-
 static u32 cx25821_functionality(struct i2c_adapter *adap)
 {
 	return I2C_FUNC_SMBUS_EMUL |

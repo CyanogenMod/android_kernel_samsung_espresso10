@@ -41,7 +41,6 @@ MODULE_PARM_DESC(nowayout,
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 #endif
 
-
 static unsigned long at91wdt_busy;
 
 /* ......................................................................... */

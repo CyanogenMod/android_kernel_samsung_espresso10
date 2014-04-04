@@ -10,10 +10,9 @@
  *
  * File attributes for PCI devices
  *
- * Modeled after usb's driverfs.c 
+ * Modeled after usb's driverfs.c
  *
  */
-
 
 #include <linux/kernel.h>
 #include <linux/sched.h>
@@ -73,7 +72,7 @@ static ssize_t broken_parity_status_store(struct device *dev,
 
 static ssize_t local_cpus_show(struct device *dev,
 			struct device_attribute *attr, char *buf)
-{		
+{
 	const struct cpumask *mask;
 	int len;
 
@@ -88,7 +87,6 @@ static ssize_t local_cpus_show(struct device *dev,
 	buf[len] = '\0';
 	return len;
 }
-
 
 static ssize_t local_cpulist_show(struct device *dev,
 			struct device_attribute *attr, char *buf)
@@ -510,13 +508,13 @@ pci_write_config(struct file* filp, struct kobject *kobj,
 		size = dev->cfg_size - off;
 		count = size;
 	}
-	
+
 	if ((off & 1) && size) {
 		pci_user_write_config_byte(dev, off, data[off - init_off]);
 		off++;
 		size--;
 	}
-	
+
 	if ((off & 3) && size > 2) {
 		u16 val = data[off - init_off];
 		val |= (u16) data[off - init_off + 1] << 8;
@@ -534,7 +532,7 @@ pci_write_config(struct file* filp, struct kobject *kobj,
 		off += 4;
 		size -= 4;
 	}
-	
+
 	if (size >= 2) {
 		u16 val = data[off - init_off];
 		val |= (u16) data[off - init_off + 1] << 8;
@@ -1065,21 +1063,21 @@ pci_read_rom(struct file *filp, struct kobject *kobj,
 
 	if (!pdev->rom_attr_enabled)
 		return -EINVAL;
-	
+
 	rom = pci_map_rom(pdev, &size);	/* size starts out as PCI window size */
 	if (!rom || !size)
 		return -EIO;
-		
+
 	if (off >= size)
 		count = 0;
 	else {
 		if (off + count > size)
 			count = size - off;
-		
+
 		memcpy_fromio(buf, rom + off, count);
 	}
 	pci_unmap_rom(pdev, rom);
-		
+
 	return count;
 }
 

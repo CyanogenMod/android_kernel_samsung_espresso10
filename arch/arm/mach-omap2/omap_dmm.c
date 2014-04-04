@@ -42,7 +42,6 @@ static struct omap_device_pm_latency omap_dmm_latency[] = {
 	},
 };
 
-
 void __init omap_dmm_init(void)
 {
 	struct omap_hwmod *oh = NULL;

@@ -71,7 +71,6 @@ static int sha1_update(struct shash_desc *desc, const u8 *data,
 	return 0;
 }
 
-
 /* Add padding and return the message digest. */
 static int sha1_final(struct shash_desc *desc, u8 *out)
 {

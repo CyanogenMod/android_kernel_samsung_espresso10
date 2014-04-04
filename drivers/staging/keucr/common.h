@@ -12,4 +12,3 @@ typedef u32 *PDWORD;
 #define BYTE_MASK	0xff
 
 #endif
-

@@ -343,7 +343,6 @@ void __naked get_mode_regs(struct mode_regs *regs)
 	"bx	lr\n");
 }
 
-
 static void dump_allregs(struct fiq_debugger_state *state, unsigned *regs)
 {
 	struct mode_regs mode_regs;
@@ -705,7 +704,6 @@ static irqreturn_t wakeup_irq_handler(int irq, void *dev)
 
 	return IRQ_HANDLED;
 }
-
 
 static void debug_handle_irq_context(struct fiq_debugger_state *state)
 {

@@ -18,7 +18,6 @@
 #ifndef __XFS_MRU_CACHE_H__
 #define __XFS_MRU_CACHE_H__
 
-
 /* Function pointer type for callback to free a client's data pointer. */
 typedef void (*xfs_mru_cache_free_func_t)(unsigned long, void*);
 

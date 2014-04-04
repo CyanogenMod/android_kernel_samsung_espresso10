@@ -238,7 +238,6 @@ static int mt2032_optimize_vco(struct dvb_frontend *fe,int sel,int lock)
 	return lock;
 }
 
-
 static void mt2032_set_if_freq(struct dvb_frontend *fe, unsigned int rfin,
 			       unsigned int if1, unsigned int if2,
 			       unsigned int from, unsigned int to)
@@ -295,7 +294,6 @@ static void mt2032_set_if_freq(struct dvb_frontend *fe, unsigned int rfin,
 	if (ret!=2)
 		tuner_warn("i2c i/o error: rc == %d (should be 2)\n",ret);
 }
-
 
 static int mt2032_set_tv_freq(struct dvb_frontend *fe,
 			      struct analog_parameters *params)
@@ -633,7 +631,6 @@ struct dvb_frontend *microtune_attach(struct dvb_frontend *fe,
 	company_code = buf[0x11] << 8 | buf[0x12];
 	tuner_info("microtune: companycode=%04x part=%02x rev=%02x\n",
 		   company_code,buf[0x13],buf[0x14]);
-
 
 	if (buf[0x13] < ARRAY_SIZE(microtune_part) &&
 	    NULL != microtune_part[buf[0x13]])

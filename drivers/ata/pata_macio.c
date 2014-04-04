@@ -125,7 +125,6 @@ static const char* macio_ata_names[] = {
 #define TR_100_UDMAREG_UDMA_MASK	0x0000ffff
 #define TR_100_UDMAREG_UDMA_EN		0x00000001
 
-
 /* 66Mhz cell, found in KeyLargo. Can do ultra mode 0 to 2 on
  * 40 connector cable and to 4 on 80 connector one.
  * Clock unit is 15ns (66Mhz)
@@ -199,13 +198,11 @@ static const char* macio_ata_names[] = {
 #define KAUAI_FCR_UATA_RESET_N		0x00000002
 #define KAUAI_FCR_UATA_ENABLE		0x00000001
 
-
 /* Allow up to 256 DBDMA commands per xfer */
 #define MAX_DCMDS		256
 
 /* Don't let a DMA segment go all the way to 64K */
 #define MAX_DBDMA_SEG		0xff00
-
 
 /*
  * Wait 1s for disk to answer on IDE bus after a hard reset
@@ -363,7 +360,6 @@ static const struct pata_macio_timing *pata_macio_find_timing(
 	}
 	return NULL;
 }
-
 
 static void pata_macio_apply_timings(struct ata_port *ap, unsigned int device)
 {
@@ -567,7 +563,6 @@ static void pata_macio_qc_prep(struct ata_queued_cmd *qc)
 	dev_dbgdma(priv->dev, "%s: %d DMA list entries\n", __func__, pi);
 }
 
-
 static void pata_macio_freeze(struct ata_port *ap)
 {
 	struct dbdma_regs __iomem *dma_regs = ap->ioaddr.bmdma_addr;
@@ -583,7 +578,6 @@ static void pata_macio_freeze(struct ata_port *ap)
 
 	ata_sff_freeze(ap);
 }
-
 
 static void pata_macio_bmdma_setup(struct ata_queued_cmd *qc)
 {
@@ -1256,7 +1250,6 @@ static void pata_macio_mb_event(struct macio_dev* mdev, int mb_state)
 }
 #endif /* CONFIG_PMAC_MEDIABAY */
 
-
 static int __devinit pata_macio_pci_attach(struct pci_dev *pdev,
 					   const struct pci_device_id *id)
 {
@@ -1393,7 +1386,6 @@ static struct pci_driver pata_macio_pci_driver = {
 	},
 };
 MODULE_DEVICE_TABLE(pci, pata_macio_pci_match);
-
 
 static int __init pata_macio_init(void)
 {

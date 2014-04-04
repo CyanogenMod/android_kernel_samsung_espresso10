@@ -47,8 +47,6 @@ static inline wchar_t *UniStrcpy(wchar_t * ucs1, const wchar_t * ucs2)
 	return anchor;
 }
 
-
-
 /*
  * UniStrncpy:  Copy length limited string with pad
  */
@@ -136,7 +134,6 @@ static inline wchar_t UniToupper(wchar_t uc)
 	}
 	return uc;		/* Past last range */
 }
-
 
 /*
  * UniStrupr:  Upper case a unicode string

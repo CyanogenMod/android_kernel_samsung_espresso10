@@ -404,7 +404,6 @@ static inline void ax25_adjust_path(ax25_address *addr, ax25_digi *digipeat)
 	digipeat->ndigi = k;
 }
 
-
 /*
  *	Find which interface to use.
  */

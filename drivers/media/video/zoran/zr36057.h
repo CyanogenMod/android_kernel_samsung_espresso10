@@ -21,7 +21,6 @@
 #ifndef _ZR36057_H_
 #define _ZR36057_H_
 
-
 /* Zoran ZR36057 registers */
 
 #define ZR36057_VFEHCR          0x000	/* Video Front End, Horizontal Configuration Register */

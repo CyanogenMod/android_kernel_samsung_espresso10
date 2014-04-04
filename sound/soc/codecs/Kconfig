@@ -130,7 +130,7 @@ config SND_SOC_AD1980
 
 config SND_SOC_AD73311
 	tristate
-	
+
 config SND_SOC_ADS117X
 	tristate
 
@@ -358,6 +358,9 @@ config SND_SOC_WM8993
 	tristate
 
 config SND_SOC_WM8994
+	tristate
+
+config SND_SOC_MID_WM8994
 	tristate
 
 config SND_SOC_WM8995

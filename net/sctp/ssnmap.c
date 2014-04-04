@@ -54,7 +54,6 @@ static inline size_t sctp_ssnmap_size(__u16 in, __u16 out)
 	return sizeof(struct sctp_ssnmap) + (in + out) * sizeof(__u16);
 }
 
-
 /* Create a new sctp_ssnmap.
  * Allocate room to store at least 'len' contiguous TSNs.
  */
@@ -89,7 +88,6 @@ fail_map:
 fail:
 	return NULL;
 }
-
 
 /* Initialize a block of memory as a ssnmap.  */
 static struct sctp_ssnmap *sctp_ssnmap_init(struct sctp_ssnmap *map, __u16 in,

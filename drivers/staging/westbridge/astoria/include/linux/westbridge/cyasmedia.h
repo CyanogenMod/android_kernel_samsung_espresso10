@@ -24,7 +24,6 @@
 
 #include "cyas_cplus_start.h"
 
-
 /* Summary
    Specifies a specific type of media supported by West Bridge
 

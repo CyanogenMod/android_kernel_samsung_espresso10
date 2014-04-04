@@ -75,7 +75,7 @@ void usb_stor_pad12_command(struct scsi_cmnd *srb, struct us_data *us)
 void usb_stor_ufi_command(struct scsi_cmnd *srb, struct us_data *us)
 {
 	/* fix some commands -- this is a form of mode translation
-	 * UFI devices only accept 12 byte long commands 
+	 * UFI devices only accept 12 byte long commands
 	 *
 	 * NOTE: This only works because a scsi_cmnd struct field contains
 	 * a unsigned char cmnd[16], so we know we have storage available

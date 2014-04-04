@@ -49,10 +49,8 @@ module_param(init_nr_desc_per_channel, uint, 0644);
 MODULE_PARM_DESC(init_nr_desc_per_channel,
 		 "initial descriptors per channel (default: 64)");
 
-
 /* prototypes */
 static dma_cookie_t atc_tx_submit(struct dma_async_tx_descriptor *tx);
-
 
 /*----------------------------------------------------------------------*/
 
@@ -394,7 +392,6 @@ static void atc_advance_work(struct at_dma_chan *atchan)
 	}
 }
 
-
 /**
  * atc_handle_error - handle errors reported by DMA controller
  * @atchan: channel where error occurs
@@ -519,7 +516,6 @@ static irqreturn_t at_dma_interrupt(int irq, void *dev_id)
 	return ret;
 }
 
-
 /*--  DMA Engine API  --------------------------------------------------*/
 
 /**
@@ -641,7 +637,6 @@ err_desc_get:
 	return NULL;
 }
 
-
 /**
  * atc_prep_slave_sg - prepare descriptors for a DMA_SLAVE transaction
  * @chan: DMA channel
@@ -674,7 +669,7 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
 			flags);
 
 	if (unlikely(!atslave || !sg_len)) {
-		dev_dbg(chan2dev(chan), "prep_dma_memcpy: length is zero!\n");
+		dev_dbg(chan2dev(chan), "prep_slave_sg: sg length is zero!\n");
 		return NULL;
 	}
 
@@ -702,6 +697,11 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
 
 			mem = sg_dma_address(sg);
 			len = sg_dma_len(sg);
+			if (unlikely(!len)) {
+				dev_dbg(chan2dev(chan),
+					"prep_slave_sg: sg(%d) data length is zero\n", i);
+				goto err;
+			}
 			mem_width = 2;
 			if (unlikely(mem & 3 || len & 3))
 				mem_width = 0;
@@ -736,6 +736,11 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
 
 			mem = sg_dma_address(sg);
 			len = sg_dma_len(sg);
+			if (unlikely(!len)) {
+				dev_dbg(chan2dev(chan),
+					"prep_slave_sg: sg(%d) data length is zero\n", i);
+				goto err;
+			}
 			mem_width = 2;
 			if (unlikely(mem & 3 || len & 3))
 				mem_width = 0;
@@ -769,6 +774,7 @@ atc_prep_slave_sg(struct dma_chan *chan, struct scatterlist *sgl,
 
 err_desc_get:
 	dev_err(chan2dev(chan), "not enough descriptors available\n");
+err:
 	atc_desc_put(atchan, first);
 	return NULL;
 }
@@ -915,7 +921,6 @@ err_out:
 	clear_bit(ATC_IS_CYCLIC, &atchan->status);
 	return NULL;
 }
-
 
 static int atc_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
 		       unsigned long arg)
@@ -1159,7 +1164,6 @@ static void atc_free_chan_resources(struct dma_chan *chan)
 
 	dev_vdbg(chan2dev(chan), "free_chan_resources: done\n");
 }
-
 
 /*--  Module Management  -----------------------------------------------*/
 

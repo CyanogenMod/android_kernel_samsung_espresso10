@@ -2422,7 +2422,6 @@ static ssize_t ocfs2_file_splice_write(struct pipe_inode_info *pipe,
 		.u.file = out,
 	};
 
-
 	trace_ocfs2_file_splice_write(inode, out, out->f_path.dentry,
 			(unsigned long long)OCFS2_I(inode)->ip_blkno,
 			out->f_path.dentry->d_name.len,
@@ -2516,7 +2515,6 @@ static ssize_t ocfs2_file_aio_read(struct kiocb *iocb,
 			(unsigned long long)OCFS2_I(inode)->ip_blkno,
 			filp->f_path.dentry->d_name.len,
 			filp->f_path.dentry->d_name.name, nr_segs);
-
 
 	if (!inode) {
 		ret = -EINVAL;

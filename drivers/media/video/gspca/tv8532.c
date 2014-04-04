@@ -154,7 +154,6 @@ static const u8 eeprom_data[][3] = {
 	{0x05, 0x09, 0xf1},
 };
 
-
 /* write 1 byte */
 static void reg_w1(struct gspca_dev *gspca_dev,
 		  __u16 index, __u8 value)

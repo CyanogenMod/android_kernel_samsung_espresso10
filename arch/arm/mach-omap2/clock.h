@@ -103,7 +103,6 @@ void omap2_init_dpll_parent(struct clk *clk);
 
 int omap2_wait_clock_ready(void __iomem *reg, u32 cval, const char *name);
 
-
 #ifdef CONFIG_ARCH_OMAP2
 void omap2xxx_clk_prepare_for_reboot(void);
 #else

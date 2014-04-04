@@ -254,7 +254,6 @@ struct acx_packet_detection {
 	__le32 threshold;
 } __packed;
 
-
 enum acx_slot_type {
 	SLOT_TIME_LONG = 0,
 	SLOT_TIME_SHORT = 1,
@@ -271,7 +270,6 @@ struct acx_slot {
 	u8 slot_time;
 	u8 reserved[6];
 } __packed;
-
 
 #define ACX_MC_ADDRESS_GROUP_MAX	(8)
 #define ADDRESS_GROUP_MAX_LEN	        (ETH_ALEN * ACX_MC_ADDRESS_GROUP_MAX)
@@ -384,7 +382,6 @@ struct acx_ap_bt_wlan_coex_param {
 	u8 param_idx;
 	u8 padding[3];
 } __packed;
-
 
 struct acx_dco_itrim_params {
 	struct acx_header header;
@@ -761,7 +758,6 @@ struct acx_sta_rate_policy {
 	struct acx_rate_class rate_class[CONF_TX_MAX_RATE_CLASSES];
 } __packed;
 
-
 #define ACX_TX_AP_MODE_MGMT_RATE 4
 #define ACX_TX_AP_MODE_BCST_RATE 5
 struct acx_ap_rate_policy {
@@ -883,7 +879,6 @@ struct wl1271_acx_rx_config_opt {
 	u8 queue_type;
 	u8 reserved;
 } __packed;
-
 
 struct wl1271_acx_bet_enable {
 	struct acx_header header;
@@ -1056,7 +1051,6 @@ struct wl1271_acx_ht_capabilities {
 #define WL1271_ACX_FW_CAP_LSIG_TXOP_PROTECTION         BIT(3)
 #define WL1271_ACX_FW_CAP_HT_CONTROL_FIELDS            BIT(4)
 #define WL1271_ACX_FW_CAP_RD_INITIATION                BIT(5)
-
 
 /*
  * ACX_HT_BSS_OPERATION
@@ -1318,7 +1312,6 @@ enum {
 	ACX_CONFIG_PS               = 0x1017,
 	ACX_CONFIG_HANGOVER         = 0x1018,
 };
-
 
 int wl1271_acx_wake_up_conditions(struct wl1271 *wl);
 int wl1271_acx_sleep_auth(struct wl1271 *wl, u8 sleep_auth);

@@ -23,10 +23,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-
-
 #include "pwc-dec1.h"
-
 
 void pwc_dec1_init(int type, int release, void *buffer, void *table)
 {
@@ -35,8 +32,6 @@ void pwc_dec1_init(int type, int release, void *buffer, void *table)
 
 void pwc_dec1_exit(void)
 {
-
-
 
 }
 
@@ -47,4 +42,3 @@ int pwc_dec1_alloc(struct pwc_device *pwc)
 		return -ENOMEM;
 	return 0;
 }
-

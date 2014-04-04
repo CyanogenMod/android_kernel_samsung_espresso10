@@ -42,7 +42,6 @@
 
 #include "buffer_head_io.h"
 
-
 struct ocfs2_slot {
 	int sl_valid;
 	unsigned int sl_node_num;
@@ -57,7 +56,6 @@ struct ocfs2_slot_info {
 	unsigned int si_num_slots;
 	struct ocfs2_slot *si_slots;
 };
-
 
 static int __ocfs2_node_num_to_slot(struct ocfs2_slot_info *si,
 				    unsigned int node_num);
@@ -535,4 +533,3 @@ void ocfs2_put_slot(struct ocfs2_super *osb)
 bail:
 	ocfs2_free_slot_info(osb);
 }
-

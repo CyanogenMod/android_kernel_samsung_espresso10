@@ -31,7 +31,6 @@
 #include "hyperv.h"
 #include "hyperv_net.h"
 
-
 /* Globals */
 static const char *driver_name = "netvsc";
 
@@ -42,7 +41,6 @@ static const struct hv_guid netvsc_device_type = {
 		0x91, 0x3F, 0xF2, 0xD2, 0xF9, 0x65, 0xED, 0x0E
 	}
 };
-
 
 static struct netvsc_device *alloc_net_device(struct hv_device *device)
 {
@@ -67,7 +65,6 @@ static void free_net_device(struct netvsc_device *device)
 	device->dev->ext = NULL;
 	kfree(device);
 }
-
 
 /* Get the net device object iff exists and its refcount > 1 */
 static struct netvsc_device *get_outbound_net_device(struct hv_device *device)
@@ -246,7 +243,6 @@ static int netvsc_init_recv_buf(struct hv_device *device)
 		goto cleanup;
 	}
 
-
 	/* Notify the NetVsp of the gpadl handle */
 	init_packet = &net_device->channel_init_pkt;
 
@@ -272,7 +268,6 @@ static int netvsc_init_recv_buf(struct hv_device *device)
 
 	t = wait_for_completion_timeout(&net_device->channel_init_wait, 5*HZ);
 	BUG_ON(t == 0);
-
 
 	/* Check the response */
 	if (init_packet->msg.v1_msg.
@@ -478,7 +473,6 @@ exit:
 	put_net_device(device);
 	return ret;
 }
-
 
 static int netvsc_connect_vsp(struct hv_device *device)
 {

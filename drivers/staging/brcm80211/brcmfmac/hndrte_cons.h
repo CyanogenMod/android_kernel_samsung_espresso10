@@ -59,4 +59,3 @@ typedef struct {
 } hndrte_cons_t;
 
 #endif /* _hndrte_cons_h */
-

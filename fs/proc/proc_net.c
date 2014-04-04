@@ -26,7 +26,6 @@
 
 #include "internal.h"
 
-
 static struct net *get_proc_net(const struct inode *inode)
 {
 	return maybe_get_net(PDE_NET(PDE(inode)));
@@ -176,7 +175,6 @@ const struct file_operations proc_net_operations = {
 	.read		= generic_read_dir,
 	.readdir	= proc_tgid_net_readdir,
 };
-
 
 struct proc_dir_entry *proc_net_fops_create(struct net *net,
 	const char *name, mode_t mode, const struct file_operations *fops)

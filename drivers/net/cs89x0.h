@@ -14,7 +14,6 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
    */
 
-
 #define PP_ChipID 0x0000	/* offset   0h -> Corp -ID              */
 				/* offset   2h -> Model/Product Number  */
 				/* offset   3h -> Chip Revision Number  */
@@ -462,4 +461,3 @@
 
 #define BIT0 1
 #define BIT15 0x8000
-

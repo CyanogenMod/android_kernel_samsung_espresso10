@@ -1,6 +1,6 @@
 /*
  * Linux ARCnet driver - device-independent routines
- * 
+ *
  * Written 1997 by David Woodhouse.
  * Written 1994-1999 by Avery Pennarun.
  * Written 1999-2000 by Martin Mares <mj@ucw.cz>.
@@ -20,12 +20,12 @@
  * modified by SRC, incorporated herein by reference.
  *
  * **********************
- * 
+ *
  * The change log is now in a file called ChangeLog in this directory.
  *
  * Sources:
  *  - Crynwr arcnet.com/arcether.com packet drivers.
- *  - arcnet.c v0.00 dated 1/1/94 and apparently by 
+ *  - arcnet.c v0.00 dated 1/1/94 and apparently by
  *     Donald Becker - it didn't work :)
  *  - skeleton.c v0.05 dated 11/16/93 by Donald Becker
  *     (from Linux Kernel 1.1.45)
@@ -169,7 +169,6 @@ void arcnet_dump_skb(struct net_device *dev,
 EXPORT_SYMBOL(arcnet_dump_skb);
 #endif
 
-
 /*
  * Dump the contents of an ARCnet buffer
  */
@@ -207,7 +206,6 @@ static void arcnet_dump_packet(struct net_device *dev, int bufnum,
 
 #endif
 
-
 /*
  * Unregister a protocol driver from the arc_proto_map.  Protocol drivers
  * are responsible for registering themselves, but the unregister routine
@@ -230,11 +228,10 @@ void arcnet_unregister_proto(struct ArcProto *proto)
 	}
 }
 
-
 /*
  * Add a buffer to the queue.  Only the interrupt handler is allowed to do
  * this, unless interrupts are disabled.
- * 
+ *
  * Note: we don't check for a full queue, since there aren't enough buffers
  * to more than fill it.
  */
@@ -254,7 +251,6 @@ static void release_arcbuf(struct net_device *dev, int bufnum)
 		BUGMSG2(D_DURING, "\n");
 	}
 }
-
 
 /*
  * Get a buffer from the queue.  If this returns -1, there are no buffers
@@ -282,7 +278,6 @@ static int get_arcbuf(struct net_device *dev)
 		}
 	}
 
-
 	BUGLVL(D_DURING) {
 		BUGMSG(D_DURING, "get_arcbuf: got #%d; buffer queue is now: ", buf);
 		for (i = lp->next_buf; i != lp->first_free_buf; i = (i+1) % 5)
@@ -293,7 +288,6 @@ static int get_arcbuf(struct net_device *dev)
 	atomic_inc(&lp->buf_lock);
 	return buf;
 }
-
 
 static int choose_mtu(void)
 {
@@ -381,7 +375,6 @@ int arcnet_open(struct net_device *dev)
 		BUGMSG2(D_PROTO, "\n");
 	}
 
-
 	BUGMSG(D_INIT, "arcnet_open: resetting card.\n");
 
 	/* try to put the card in a defined state - if it fails the first
@@ -438,7 +431,6 @@ int arcnet_open(struct net_device *dev)
 		ACOMMAND(CFLAGScmd | RESETclear);
 	}
 
-
 	BUGMSG(D_DEBUG, "%s: %d: %s\n",__FILE__,__LINE__,__func__);
 	/* make sure we're ready to receive IRQ's. */
 	AINTMASK(0);
@@ -460,7 +452,6 @@ int arcnet_open(struct net_device *dev)
 	return error;
 }
 
-
 /* The inverse routine to arcnet_open - shuts down the card. */
 int arcnet_close(struct net_device *dev)
 {
@@ -480,7 +471,6 @@ int arcnet_close(struct net_device *dev)
 	return 0;
 }
 
-
 static int arcnet_header(struct sk_buff *skb, struct net_device *dev,
 			 unsigned short type, const void *daddr,
 			 const void *saddr, unsigned len)
@@ -498,7 +488,6 @@ static int arcnet_header(struct sk_buff *skb, struct net_device *dev,
 	if (skb->len!=0 && len != skb->len)
 		BUGMSG(D_NORMAL, "arcnet_header: Yikes!  skb->len(%d) != len(%d)!\n",
 		       skb->len, len);
-
 
   	/* Type is host order - ? */
   	if(type == ETH_P_ARCNET) {
@@ -537,8 +526,7 @@ static int arcnet_header(struct sk_buff *skb, struct net_device *dev,
 	return proto->build_header(skb, dev, type, _daddr);
 }
 
-
-/* 
+/*
  * Rebuild the ARCnet hard header. This is called after an ARP (or in the
  * future other address resolution) has completed on this sk_buff. We now
  * let ARP fill in the destination field.
@@ -587,8 +575,6 @@ static int arcnet_rebuild_header(struct sk_buff *skb)
 
 	return 1;		/* success */
 }
-
-
 
 /* Called by the kernel in order to transmit a packet. */
 netdev_tx_t arcnet_send_packet(struct sk_buff *skb,
@@ -676,7 +662,6 @@ netdev_tx_t arcnet_send_packet(struct sk_buff *skb,
 	return retval;		/* no need to try again */
 }
 
-
 /*
  * Actually start transmitting a packet that was loaded into a buffer
  * by prepare_tx.  This should _only_ be called by the interrupt handler.
@@ -708,7 +693,6 @@ static int go_tx(struct net_device *dev)
 	return 1;
 }
 
-
 /* Called by the kernel when transmit times out */
 void arcnet_timeout(struct net_device *dev)
 {
@@ -732,7 +716,7 @@ void arcnet_timeout(struct net_device *dev)
 	AINTMASK(0);
 	lp->intmask |= TXFREEflag|EXCNAKflag;
 	AINTMASK(lp->intmask);
-	
+
 	spin_unlock_irqrestore(&lp->lock, flags);
 
 	if (time_after(jiffies, lp->last_timeout + 10*HZ)) {
@@ -744,7 +728,6 @@ void arcnet_timeout(struct net_device *dev)
 	if (lp->cur_tx == -1)
 		netif_wake_queue(dev);
 }
-
 
 /*
  * The typical workload of the driver: Handle the network interface
@@ -764,7 +747,7 @@ irqreturn_t arcnet_interrupt(int irq, void *dev_id)
 
 	lp = netdev_priv(dev);
 	BUG_ON(!lp);
-		
+
 	spin_lock(&lp->lock);
 
 	/*
@@ -794,7 +777,7 @@ irqreturn_t arcnet_interrupt(int irq, void *dev_id)
 		/*
 		 * RESET flag was enabled - card is resetting and if RX is
 		 * disabled, it's NOT because we just got a packet.
-		 * 
+		 *
 		 * The card is in an undefined state.  Clear it out and start over.
 		 */
 		if (status & RESETflag) {
@@ -805,14 +788,14 @@ irqreturn_t arcnet_interrupt(int irq, void *dev_id)
 			/* get out of the interrupt handler! */
 			break;
 		}
-		/* 
+		/*
 		 * RX is inhibited - we must have received something. Prepare to
 		 * receive into the next buffer.
-		 * 
+		 *
 		 * We don't actually copy the received packet from the card until
 		 * after the transmit handler runs (and possibly launches the next
 		 * tx); this should improve latency slightly if we get both types
-		 * of interrupts at once. 
+		 * of interrupts at once.
 		 */
 		recbuf = -1;
 		if (status & lp->intmask & NORXflag) {
@@ -840,7 +823,6 @@ irqreturn_t arcnet_interrupt(int irq, void *dev_id)
 			lp->intmask &= ~(EXCNAKflag);
                         didsomething++;
                 }
-
 
 		/* a transmit finished, and we're interested in it. */
 		if ((status & lp->intmask & TXFREEflag) || lp->timed_out) {
@@ -984,15 +966,13 @@ irqreturn_t arcnet_interrupt(int irq, void *dev_id)
 	       ASTATUS(), boguscount);
 	BUGMSG(D_DURING, "\n");
 
-
 	AINTMASK(0);
 	udelay(1);
 	AINTMASK(lp->intmask);
-	
+
 	spin_unlock(&lp->lock);
 	return retval;
 }
-
 
 /*
  * This is a generic packet receiver that calls arcnet??_rx depending on the
@@ -1007,7 +987,7 @@ static void arcnet_rx(struct net_device *dev, int bufnum)
 
 	soft = &pkt.soft.rfc1201;
 
-	lp->hw.copy_from_card(dev, bufnum, 0, &pkt, sizeof(ARC_HDR_SIZE));
+	lp->hw.copy_from_card(dev, bufnum, 0, &pkt, ARC_HDR_SIZE);
 	if (pkt.hard.offset[0]) {
 		ofs = pkt.hard.offset[0];
 		length = 256 - ofs;
@@ -1056,7 +1036,6 @@ static void arcnet_rx(struct net_device *dev, int bufnum)
 	arc_proto_map[soft->proto]->rx(dev, bufnum, &pkt, length);
 }
 
-
 static void null_rx(struct net_device *dev, int bufnum,
 		    struct archdr *pkthdr, int length)
 {
@@ -1064,7 +1043,6 @@ static void null_rx(struct net_device *dev, int bufnum,
 	"rx: don't know how to deal with proto %02Xh from host %02Xh.\n",
 	       pkthdr->soft.rfc1201.proto, pkthdr->hard.source);
 }
-
 
 static int null_build_header(struct sk_buff *skb, struct net_device *dev,
 			     unsigned short type, uint8_t daddr)
@@ -1078,7 +1056,6 @@ static int null_build_header(struct sk_buff *skb, struct net_device *dev,
 	/* always fails */
 	return 0;
 }
-
 
 /* the "do nothing" prepare_tx function warns that there's nothing to do. */
 static int null_prepare_tx(struct net_device *dev, struct archdr *pkt,

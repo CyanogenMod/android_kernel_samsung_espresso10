@@ -30,7 +30,6 @@ static u16 lbtf_region_code_to_index[MRVDRV_MAX_REGION_CODE] =
 
 static struct cmd_ctrl_node *lbtf_get_cmd_ctrl_node(struct lbtf_private *priv);
 
-
 /**
  *  lbtf_cmd_copyback - Simple callback that copies response back into command
  *

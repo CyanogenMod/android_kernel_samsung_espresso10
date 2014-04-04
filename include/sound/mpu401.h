@@ -91,7 +91,7 @@ struct snd_mpu401 {
 	spinlock_t input_lock;
 	spinlock_t output_lock;
 	spinlock_t timer_lock;
-	
+
 	struct timer_list timer;
 
 	void (*write) (struct snd_mpu401 * mpu, unsigned char data, unsigned long addr);
@@ -116,7 +116,6 @@ struct snd_mpu401 {
 
 /* read MPU401D() */
 #define MPU401_ACK		0xfe
-
 
 /*
 

@@ -26,7 +26,6 @@
  * 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
 #ifndef __BF5XX_SPORT_H__
 #define __BF5XX_SPORT_H__
 

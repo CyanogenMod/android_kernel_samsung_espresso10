@@ -72,7 +72,6 @@ static struct s3c24xx_uart_clksrc at2440evb_serial_clocks[] = {
 	}
 };
 
-
 static struct s3c2410_uartcfg at2440evb_uartcfgs[] __initdata = {
 	[0] = {
 		.hwport	     = 0,
@@ -230,7 +229,6 @@ static void __init at2440evb_init(void)
 
 	platform_add_devices(at2440evb_devices, ARRAY_SIZE(at2440evb_devices));
 }
-
 
 MACHINE_START(AT2440EVB, "AT2440EVB")
 	.boot_params	= S3C2410_SDRAM_PA + 0x100,

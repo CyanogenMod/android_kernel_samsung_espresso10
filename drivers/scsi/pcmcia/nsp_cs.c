@@ -92,8 +92,6 @@ static struct scsi_host_template nsp_driver_template = {
 
 static nsp_hw_data nsp_data_base; /* attach <-> detect glue */
 
-
-
 /*
  * debug, error print
  */
@@ -255,7 +253,6 @@ static int nsp_queuecommand_lck(struct scsi_cmnd *SCpnt,
 		nsp_scsi_done(SCpnt);
 		return 0;
 	}
-
 
 	//nsp_dbg(NSP_DEBUG_QUEUECOMMAND, "out");
 #ifdef NSP_DEBUG
@@ -427,15 +424,15 @@ struct nsp_sync_table {
 
 static struct nsp_sync_table nsp_sync_table_40M[] = {
 	{0x0c, 0x0c, 0x1, 0},	/* 20MB	  50ns*/
-	{0x19, 0x19, 0x3, 1},	/* 10MB	 100ns*/ 
-	{0x1a, 0x25, 0x5, 2},	/* 7.5MB 150ns*/ 
+	{0x19, 0x19, 0x3, 1},	/* 10MB	 100ns*/
+	{0x1a, 0x25, 0x5, 2},	/* 7.5MB 150ns*/
 	{0x26, 0x32, 0x7, 3},	/* 5MB	 200ns*/
 	{   0,    0,   0, 0},
 };
 
 static struct nsp_sync_table nsp_sync_table_20M[] = {
-	{0x19, 0x19, 0x1, 0},	/* 10MB	 100ns*/ 
-	{0x1a, 0x25, 0x2, 0},	/* 7.5MB 150ns*/ 
+	{0x19, 0x19, 0x1, 0},	/* 10MB	 100ns*/
+	{0x1a, 0x25, 0x2, 0},	/* 7.5MB 150ns*/
 	{0x26, 0x32, 0x3, 1},	/* 5MB	 200ns*/
 	{   0,    0,   0, 0},
 };
@@ -452,7 +449,6 @@ static int nsp_analyze_sdtr(struct scsi_cmnd *SCpnt)
 	struct nsp_sync_table *sync_table;
 	unsigned int	       period, offset;
 	int		       i;
-
 
 	nsp_dbg(NSP_DEBUG_SYNC, "in");
 
@@ -496,7 +492,6 @@ static int nsp_analyze_sdtr(struct scsi_cmnd *SCpnt)
 
 	return TRUE;
 }
-
 
 /*
  * start ninja hardware timer
@@ -739,7 +734,6 @@ static void nsp_pio_read(struct scsi_cmnd *SCpnt)
 		stat = nsp_index_read(base, SCSIBUSMON);
 		stat &= BUSMON_PHASE_MASK;
 
-
 		res = nsp_fifo_count(SCpnt) - ocount;
 		//nsp_dbg(NSP_DEBUG_DATA_IO, "ptr=0x%p this=0x%x ocount=0x%x res=0x%x", SCpnt->SCp.ptr, SCpnt->SCp.this_residual, ocount, res);
 		if (res == 0) { /* if some data available ? */
@@ -963,7 +957,6 @@ static irqreturn_t nspintr(int irq, void *dev_id)
 	int            i, tmp;
 	nsp_hw_data   *data;
 
-
 	//nsp_dbg(NSP_DEBUG_INTR, "dev_id=0x%p", dev_id);
 	//nsp_dbg(NSP_DEBUG_INTR, "host=0x%p", ((scsi_info_t *)dev_id)->host);
 
@@ -1148,7 +1141,6 @@ static irqreturn_t nspintr(int irq, void *dev_id)
 		return IRQ_HANDLED;
 	}
 
-
 	/* check unexpected bus free state */
 	if (phase == 0) {
 		nsp_msg(KERN_DEBUG, "unexpected bus free. irq_status=0x%x, phase=0x%x, irq_phase=0x%x", irq_status, phase, irq_phase);
@@ -1297,7 +1289,7 @@ static irqreturn_t nspintr(int irq, void *dev_id)
 	}
 
 	//nsp_dbg(NSP_DEBUG_INTR, "out");
-	return IRQ_HANDLED; 	
+	return IRQ_HANDLED;
 
 timer_out:
 	nsp_start_timer(tmpSC, 1000/102);
@@ -1350,7 +1342,6 @@ static struct Scsi_Host *nsp_detect(struct scsi_host_template *sht)
 
 	nsp_dbg(NSP_DEBUG_INIT, "end");
 
-
 	return host; /* detect done. */
 }
 
@@ -1391,7 +1382,6 @@ static int nsp_proc_info(struct Scsi_Host *host, char *buffer, char **start,
 	hostno = host->host_no;
 	data = (nsp_hw_data *)host->hostdata;
 
-
 	SPRINTF("NinjaSCSI status\n\n");
 	SPRINTF("Driver version:        $Revision: 1.23 $\n");
 	SPRINTF("SCSI host No.:         %d\n",          hostno);
@@ -1416,7 +1406,6 @@ static int nsp_proc_info(struct Scsi_Host *host, char *buffer, char **start,
 		break;
 	}
 	SPRINTF("\n");
-
 
 	spin_lock_irqsave(&(data->Lock), flags);
 	SPRINTF("CurrentSC:             0x%p\n\n",      data->CurrentSC);
@@ -1465,7 +1454,6 @@ static int nsp_proc_info(struct Scsi_Host *host, char *buffer, char **start,
 		*start = NULL;
                 return 0;
         }
-
 
 	thislength = min(thislength, length);
 	*start = buffer + offset;
@@ -1527,7 +1515,6 @@ static int nsp_eh_host_reset(struct scsi_cmnd *SCpnt)
 	return SUCCESS;
 }
 
-
 /**********************************************************************
   PCMCIA functions
 **********************************************************************/
@@ -1555,7 +1542,6 @@ static int nsp_cs_probe(struct pcmcia_device *link)
 	return ret;
 } /* nsp_cs_attach */
 
-
 static void nsp_cs_detach(struct pcmcia_device *link)
 {
 	nsp_dbg(NSP_DEBUG_INIT, "in, link=0x%p", link);
@@ -1566,7 +1552,6 @@ static void nsp_cs_detach(struct pcmcia_device *link)
 	kfree(link->priv);
 	link->priv = NULL;
 } /* nsp_cs_detach */
-
 
 static int nsp_cs_config_check(struct pcmcia_device *p_dev, void *priv_data)
 {
@@ -1659,7 +1644,6 @@ static int nsp_cs_config(struct pcmcia_device *link)
 		goto cs_failed;
 	}
 
-
 	ret = scsi_add_host (host, NULL);
 	if (ret)
 		goto cs_failed;
@@ -1676,7 +1660,6 @@ static int nsp_cs_config(struct pcmcia_device *link)
 
 	return -ENODEV;
 } /* nsp_cs_config */
-
 
 static void nsp_cs_release(struct pcmcia_device *link)
 {
@@ -1783,7 +1766,6 @@ static void __exit nsp_cs_exit(void)
 {
 	pcmcia_unregister_driver(&nsp_driver);
 }
-
 
 module_init(nsp_cs_init)
 module_exit(nsp_cs_exit)

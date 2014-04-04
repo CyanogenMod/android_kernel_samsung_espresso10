@@ -20,13 +20,10 @@
 #ifndef	TARGETOS_H
 #define TARGETOS_H
 
-
 //-------- those should go into include/linux/pci.h
 #define PCI_VENDOR_ID_SK		0x1148
 #define PCI_DEVICE_ID_SK_FP		0x4000
 //--------
-
-
 
 //-------- those should go into include/linux/if_fddi.h
 #define FDDI_MAC_HDR_LEN 13
@@ -39,7 +36,6 @@
 #define FDDI_RCF_FRAME2K 0x20
 #define FDDI_RCF_FRAME4K 0x30
 //--------
-
 
 #undef ADDR
 
@@ -72,13 +68,11 @@
 #define SMT_PAGESIZE	PAGE_SIZE	// Size of a memory page (power of 2).
 // -----------------------
 
-
 // SMT Definitions
 // -----------------------
 #define	TICKS_PER_SECOND	HZ
 #define SMC_VERSION    		1
 // -----------------------
-
 
 // OS-Driver Definitions
 // -----------------------
@@ -113,8 +107,8 @@ struct s_skfp_ioctl {
 	unsigned char __user *data;        /* Pointer to the data buffer */
 };
 
-/* 
-** Recognised ioctl commands for the driver 
+/*
+** Recognised ioctl commands for the driver
 */
 #define SKFP_GET_STATS		0x05 /* Get the driver statistics */
 #define SKFP_CLR_STATS		0x06 /* Zero out the driver statistics */
@@ -125,7 +119,7 @@ struct s_smt_os {
 	struct net_device *next_module;
 	u32	bus_type;		/* bus type (0 == PCI, 1 == EISA) */
 	struct pci_dev 	pdev;		/* PCI device structure */
-	
+
 	unsigned long base_addr;
 	unsigned char factory_mac_addr[8];
 	ulong	SharedMemSize;
@@ -148,16 +142,16 @@ struct s_smt_os {
 	// MAX_FRAME_SIZE bytes in size
 	unsigned char *LocalRxBuffer;
 	dma_addr_t LocalRxBufferDMA;
-	
+
 	// Version (required by SMT module).
 	u_long smc_version ;
 
 	// Required by Hardware Module (HWM).
 	struct hw_modul hwm ;
-	
+
 	// For SMP-savety
 	spinlock_t DriverLock;
-	
+
 };
 
 typedef struct s_smt_os skfddi_priv;

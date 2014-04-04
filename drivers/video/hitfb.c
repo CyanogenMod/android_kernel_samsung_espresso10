@@ -488,7 +488,6 @@ static int __init hitfb_init(void)
 	return ret;
 }
 
-
 static void __exit hitfb_exit(void)
 {
 	platform_device_unregister(&hitfb_device);

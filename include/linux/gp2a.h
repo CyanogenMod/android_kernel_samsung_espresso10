@@ -16,7 +16,6 @@
  * 02110-1301 USA
  */
 
-
 #ifndef __LINUX_GP2A_H
 #define __LINUX_GP2A_H
 

@@ -114,7 +114,6 @@ struct sipc_mapped { /* map to the onedram start addr */
 	struct ringbuf_cont rbcont[IPCIDX_MAX];
 };
 
-
 #define PN_CMD 0x00
 #define PN_FMT 0x01
 #define PN_RFS 0x41
@@ -149,7 +148,6 @@ struct raw_hdr {
 	u8 channel;
 	u8 control;
 } __packed;
-
 
 /* RFS IPC Frame */
 struct rfs_hdr {
@@ -203,7 +201,6 @@ enum {
 
 #define PN_PDP(chid) (0x20 | ((chid) + CHID_PSD_DATA1 - 1))
 #define PDP_ID(res) ((res) - PN_PDP_START)
-
 
 /*
  * IPC 4.0 Mailbox message definition
@@ -262,6 +259,5 @@ enum {
 #define CP_QUALCOMM        0x0100
 #define CP_INFINEON        0x0200
 #define CP_BROADCOM        0x0300
-
 
 #endif /* __SAMSUNG_IPC_V4_H__ */

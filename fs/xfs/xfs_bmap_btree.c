@@ -217,7 +217,6 @@ xfs_bmbt_disk_get_startoff(
 		 xfs_mask64lo(64 - BMBT_EXNTFLAG_BITLEN)) >> 9;
 }
 
-
 /*
  * Set all the fields in a bmap extent record from the arguments.
  */
@@ -274,7 +273,6 @@ xfs_bmbt_set_all(
 	xfs_bmbt_set_allf(r, s->br_startoff, s->br_startblock,
 			     s->br_blockcount, s->br_state);
 }
-
 
 /*
  * Set all the fields in a disk format bmap extent record from the arguments.
@@ -465,7 +463,6 @@ xfs_check_nostate_extents(
 	}
 	return 0;
 }
-
 
 STATIC struct xfs_btree_cur *
 xfs_bmbt_dup_cursor(

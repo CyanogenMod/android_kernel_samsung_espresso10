@@ -89,4 +89,3 @@
 #define CONSISTENT_DMA_SIZE		(14 * SZ_1M)
 
 #endif
-

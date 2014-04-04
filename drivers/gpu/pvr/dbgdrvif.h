@@ -1,32 +1,31 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
 
 *****************************************************************************/
 #ifndef _DBGDRVIF_
 #define _DBGDRVIF_
-
 
 #if defined(__linux__)
 
@@ -34,7 +33,7 @@
 #define METHOD_BUFFERED                 0
 #define FILE_ANY_ACCESS                 0
 
-#define CTL_CODE( DeviceType, Function, Method, Access ) (Function) 
+#define CTL_CODE( DeviceType, Function, Method, Access ) (Function)
 #define MAKEIOCTLINDEX(i)	((i) & 0xFFF)
 
 #else
@@ -124,12 +123,10 @@
 #define DEBUG_SERVICE_WAITFOREVENT		CTL_CODE(FILE_DEVICE_UNKNOWN, DEBUG_SERVICE_IOCTL_BASE + 0x18, METHOD_BUFFERED, FILE_ANY_ACCESS)
 #define DEBUG_SERVICE_SETCONNNOTIFY		CTL_CODE(FILE_DEVICE_UNKNOWN, DEBUG_SERVICE_IOCTL_BASE + 0x19, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
-
 typedef enum _DBG_EVENT_
 {
 	DBG_EVENT_STREAM_DATA = 1
 } DBG_EVENT;
-
 
 /*****************************************************************************
  In/Out Structures
@@ -350,7 +347,6 @@ typedef struct _DBGKM_SERVICE_TABLE_
 	IMG_VOID 	(IMG_CALLCONV *pfnSetConnectNotifier)	(DBGKM_CONNECT_NOTIFIER fn_notifier);
 	IMG_UINT32 	(IMG_CALLCONV *pfnWritePersist)			(PDBG_STREAM psStream,IMG_UINT8 *pui8InBuf,IMG_UINT32 ui32InBuffSize,IMG_UINT32 ui32Level);
 } DBGKM_SERVICE_TABLE, *PDBGKM_SERVICE_TABLE;
-
 
 #endif
 /*****************************************************************************

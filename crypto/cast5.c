@@ -20,7 +20,6 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
 */
 
-
 #include <asm/byteorder.h>
 #include <linux/init.h>
 #include <linux/crypto.h>
@@ -38,7 +37,6 @@ struct cast5_ctx {
 	u8 Kr[16];
 	int rr;	/* rr?number of rounds = 16:number of rounds = 12; (rfc 2144) */
 };
-
 
 static const u32 s1[256] = {
 	0x30fb40d4, 0x9fa0ff0b, 0x6beccd2f, 0x3f258c7a, 0x1e213f2f,
@@ -576,7 +574,6 @@ static const u32 sb8[256] = {
 #define F3(D, m, r)  ((I = ((m) - (D))), (I = rol32(I, (r))),   \
     (((s1[I >> 24] + s2[(I>>16)&0xff]) ^ s3[(I>>8)&0xff]) - s4[I&0xff]))
 
-
 static void cast5_encrypt(struct crypto_tfm *tfm, u8 *outbuf, const u8 *inbuf)
 {
 	struct cast5_ctx *c = crypto_tfm_ctx(tfm);
@@ -742,7 +739,6 @@ static void key_schedule(u32 *x, u32 *z, u32 *k)
 #undef zi
 }
 
-
 static int cast5_setkey(struct crypto_tfm *tfm, const u8 *key, unsigned key_len)
 {
 	struct cast5_ctx *c = crypto_tfm_ctx(tfm);
@@ -756,7 +752,6 @@ static int cast5_setkey(struct crypto_tfm *tfm, const u8 *key, unsigned key_len)
 
 	memset(p_key, 0, 16);
 	memcpy(p_key, key, key_len);
-
 
 	x[0] = be32_to_cpu(p_key[0]);
 	x[1] = be32_to_cpu(p_key[1]);
@@ -806,4 +801,3 @@ module_exit(cast5_mod_fini);
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("Cast5 Cipher Algorithm");
-

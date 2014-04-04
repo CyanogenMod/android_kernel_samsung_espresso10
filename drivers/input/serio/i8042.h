@@ -1,7 +1,6 @@
 #ifndef _I8042_H
 #define _I8042_H
 
-
 /*
  *  Copyright (c) 1999-2002 Vojtech Pavlik
  *

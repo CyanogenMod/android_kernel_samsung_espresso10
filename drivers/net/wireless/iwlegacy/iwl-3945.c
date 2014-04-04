@@ -267,7 +267,6 @@ int iwl3945_rs_next_rate(struct iwl_priv *priv, int rate)
 	return next_rate;
 }
 
-
 /**
  * iwl3945_tx_queue_reclaim - Reclaim Tx queue entries already Tx'd
  *
@@ -354,8 +353,6 @@ static void iwl3945_rx_reply_tx(struct iwl_priv *priv,
 		IWL_ERR(priv, "TODO:  Implement Tx ABORT REQUIRED!!!\n");
 }
 
-
-
 /*****************************************************************************
  *
  * Intel PRO/Wireless 3945ABG/BG Network Connection
@@ -432,7 +429,6 @@ void iwl3945_reply_statistics(struct iwl_priv *priv,
 	}
 	iwl3945_hw_rx_statistics(priv, rxb);
 }
-
 
 /******************************************************************************
  *
@@ -551,8 +547,6 @@ static void iwl3945_rx_reply_rx(struct iwl_priv *priv,
 		IWL_DEBUG_RX(priv, "Bad CRC or FIFO: 0x%08X.\n", rx_end->status);
 		return;
 	}
-
-
 
 	/* Convert 3945's rssi indicator to dBm */
 	rx_status.signal = rx_stats->rssi - IWL39_RSSI_OFFSET;
@@ -824,7 +818,6 @@ static int iwl3945_tx_reset(struct iwl_priv *priv)
 		FH39_TSSR_TX_MSG_CONFIG_REG_VAL_ORDER_RSP_WAIT_TH |
 		FH39_TSSR_TX_MSG_CONFIG_REG_VAL_RSP_WAIT_TH);
 
-
 	return 0;
 }
 
@@ -868,7 +861,6 @@ static int iwl3945_txq_ctx_reset(struct iwl_priv *priv)
 	iwl3945_hw_txq_ctx_free(priv);
 	return rc;
 }
-
 
 /*
  * Start up 3945's basic functionality after it has been reset
@@ -982,7 +974,6 @@ int iwl3945_hw_nic_init(struct iwl_priv *priv)
 	iwl3945_rx_replenish(priv);
 
 	iwl3945_rx_init(priv, rxq);
-
 
 	/* Look at using this instead:
 	rxq->need_update = 1;
@@ -2234,7 +2225,6 @@ static u16 iwl3945_get_hcmd_size(u8 cmd_id, u16 len)
 	}
 }
 
-
 static u16 iwl3945_build_addsta_hcmd(const struct iwl_legacy_addsta_cmd *cmd,
 								u8 *data)
 {
@@ -2498,7 +2488,6 @@ static int iwl3945_verify_bsm(struct iwl_priv *priv)
 	return 0;
 }
 
-
 /******************************************************************************
  *
  * EEPROM related functions
@@ -2518,7 +2507,6 @@ static int iwl3945_eeprom_acquire_semaphore(struct iwl_priv *priv)
 	_iwl_legacy_clear_bit(priv, CSR_EEPROM_GP, CSR_EEPROM_GP_IF_OWNER_MSK);
 	return 0;
 }
-
 
 static void iwl3945_eeprom_release_semaphore(struct iwl_priv *priv)
 {

@@ -239,7 +239,6 @@ struct nv_adma_cpb {
 	__le64			reserved3;     /* 120-127 */
 };
 
-
 struct nv_adma_port_priv {
 	struct nv_adma_cpb	*cpb;
 	dma_addr_t		cpb_dma;
@@ -291,7 +290,6 @@ struct nv_swncq_port_priv {
 
 	unsigned int	ncq_flags;
 };
-
 
 #define NV_ADMA_CHECK_INTR(GCTL, PORT) ((GCTL) & (1 << (19 + (12 * (PORT)))))
 
@@ -2533,4 +2531,3 @@ module_param_named(swncq, swncq_enabled, bool, 0444);
 MODULE_PARM_DESC(swncq, "Enable use of SWNCQ (Default: true)");
 module_param_named(msi, msi_enabled, bool, 0444);
 MODULE_PARM_DESC(msi, "Enable use of MSI (Default: false)");
-

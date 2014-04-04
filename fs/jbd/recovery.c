@@ -51,7 +51,6 @@ static void journal_brelse_array(struct buffer_head *b[], int n)
 		brelse (b[n]);
 }
 
-
 /*
  * When reading from the journal, we are going through the block device
  * layer directly and so there is no readahead being done for us.  We
@@ -122,7 +121,6 @@ failed:
 
 #endif /* __KERNEL__ */
 
-
 /*
  * Read a block from the journal
  */
@@ -172,7 +170,6 @@ static int jread(struct buffer_head **bhp, journal_t *journal,
 	return 0;
 }
 
-
 /*
  * Count the number of in-use tags in a journal descriptor block.
  */
@@ -199,7 +196,6 @@ static int count_tags(struct buffer_head *bh, int size)
 
 	return nr;
 }
-
 
 /* Make sure we wrap around the log correctly! */
 #define wrap(journal, var)						\
@@ -558,7 +554,6 @@ static int do_one_pass(journal_t *journal,
  failed:
 	return err;
 }
-
 
 /* Scan a revoke record, marking all blocks mentioned as revoked. */
 

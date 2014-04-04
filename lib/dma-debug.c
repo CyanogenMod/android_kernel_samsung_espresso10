@@ -1305,7 +1305,6 @@ static int __init dma_debug_driver_setup(char *str)
 		pr_info("DMA-API: enable driver filter for driver [%s]\n",
 			current_driver_name);
 
-
 	return 1;
 }
 __setup("dma_debug_driver=", dma_debug_driver_setup);

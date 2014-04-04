@@ -120,7 +120,6 @@ static void bit_reset_window(unsigned long *seq_bits)
 		seq_bits[i] = 0;
 }
 
-
 /* receive and process one packet within the sequence number window.
  *
  * returns:

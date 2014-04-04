@@ -61,9 +61,6 @@
 #ifndef __WAVELAN2_H__
 #define __WAVELAN2_H__
 
-
-
-
 /*******************************************************************************
  *  include files
  ******************************************************************************/
@@ -89,9 +86,6 @@
 
 #include <linux/interrupt.h>
 
-
-
-
 /*******************************************************************************
  *  constant definitions
  ******************************************************************************/
@@ -116,7 +110,6 @@
 
 #define WVLAN_MAX_LOOKAHEAD (HCF_MAX_MSG+46) /* as per s0005MIC_4.doc */
 
-
 /* Min/Max/Default Parameter Values */
 #if 0 //;? (HCF_TYPE) & HCF_TYPE_AP
 //;? why this difference depending on compile option, seems to me it should depend on runtime if anything
@@ -127,7 +120,6 @@
 
 #define PARM_MIN_NAME_LEN                       1
 #define PARM_MAX_NAME_LEN                       32
-
 
 /* The following definitions pertain to module and profile parameters */
 // #define PARM_AP_MODE                            APMode
@@ -441,7 +433,6 @@
 #define PARM_MAX_LONG_RETRY_LIMIT               15
 #define PARM_DEFAULT_LONG_RETRY_LIMIT           3
 
-
 #define PARM_PROBE_DATA_RATES                   ProbeDataRates
 #define PARM_NAME_PROBE_DATA_RATES              TEXT("ProbeDataRates")
 #define PARM_MIN_PROBE_DATA_RATES               0x0000
@@ -454,7 +445,6 @@
 #define PARM_MIN_SHORT_RETRY_LIMIT              1
 #define PARM_MAX_SHORT_RETRY_LIMIT              15
 #define PARM_DEFAULT_SHORT_RETRY_LIMIT          7
-
 
 */
 
@@ -479,9 +469,6 @@
 #define WVLAN_VALID_MAC_ADDRESS( x ) \
 ((x[0]!=0xFF) && (x[1]!=0xFF) && (x[2]!=0xFF) && (x[3]!=0xFF) && (x[4]!=0xFF) && (x[5]!=0xFF))
 
-
-
-
 /*******************************************************************************
  * type definitions
  ******************************************************************************/
@@ -495,7 +482,6 @@ typedef enum
 }
 bool_t;
 
-
 typedef struct _ScanResult
 {
 	//hcf_16        len;
@@ -506,7 +492,6 @@ typedef struct _ScanResult
 }
 ScanResult;
 
-
 typedef struct _LINK_STATUS_STRCT
 {
 	hcf_16  len;
@@ -514,7 +499,6 @@ typedef struct _LINK_STATUS_STRCT
 	hcf_16  linkStatus;     /* 1..5 */
 }
 LINK_STATUS_STRCT;
-
 
 typedef struct _ASSOC_STATUS_STRCT
 {
@@ -525,7 +509,6 @@ typedef struct _ASSOC_STATUS_STRCT
 	hcf_8   oldApAddr[ETH_ALEN];
 }
 ASSOC_STATUS_STRCT;
-
 
 typedef struct _SECURITY_STATUS_STRCT
 {
@@ -560,7 +543,6 @@ typedef struct wvlan_llc_snap
 }
 WVLAN_LLC_SNAP, *PWVLAN_LLC_SNAP;
 
-
 typedef struct wvlan_lt_hdr
 {
 	unsigned char   version;                /* Version (0x00) */
@@ -569,7 +551,6 @@ typedef struct wvlan_lt_hdr
 }
 WVLAN_LT_HDR, *PWVLAN_LT_HDR;
 
-
 typedef struct wvlan_wmp_hdr
 {
 	unsigned char   version;                /* Version  */
@@ -577,17 +558,14 @@ typedef struct wvlan_wmp_hdr
 }
 WVLAN_WMP_HDR, *PWVLAN_WMP_HDR;
 
-
 #define FILLER_SIZE             1554
 #define TEST_PATTERN_SIZE       54
-
 
 typedef struct wvlan_lt_req
 {
 	unsigned char   Filler[TEST_PATTERN_SIZE];   /* minimal length of 54 bytes */
 }
 WVLAN_LT_REQ, *PWVLAN_LT_REQ;
-
 
 typedef struct wvlan_lt_rsp
 {
@@ -607,7 +585,6 @@ typedef struct wvlan_lt_rsp
 	unsigned char  reserved[5];
 }
 WVLAN_LT_RSP, *PWVLAN_LT_RSP;
-
 
 typedef struct wvlan_rx_wmp_hdr
 {
@@ -633,7 +610,6 @@ typedef struct wvlan_rx_wmp_hdr
 }
 WVLAN_RX_WMP_HDR, *PWVLAN_RX_WMP_HDR;
 
-
 typedef struct wvlan_linktest_req_pdu
 {
 	WVLAN_ETH_HDR     ethHdr;
@@ -642,7 +618,6 @@ typedef struct wvlan_linktest_req_pdu
 	WVLAN_LT_REQ      ltReq;
 }
 WVLAN_LINKTEST_REQ_PDU, *PWVLAN_LINKTEST_REQ_PDU;
-
 
 typedef struct wvlan_linktest_rsp_pdu
 {
@@ -654,7 +629,6 @@ typedef struct wvlan_linktest_rsp_pdu
 }
 WVLAN_LINKTEST_RSP_PDU, *PWVLAN_LINKTEST_RSP_PDU;
 
-
 typedef struct _LINKTEST_RSP_STRCT
 {
 	hcf_16                   len;
@@ -662,7 +636,6 @@ typedef struct _LINKTEST_RSP_STRCT
 	WVLAN_LINKTEST_RSP_PDU   ltRsp;
 }
 LINKTEST_RSP_STRCT;
-
 
 typedef struct wvlan_wmp_rsp_pdu
 {
@@ -673,7 +646,6 @@ typedef struct wvlan_wmp_rsp_pdu
 }
 WVLAN_WMP_RSP_PDU, *PWVLAN_WMP_RSP_PDU;
 
-
 typedef struct _WMP_RSP_STRCT
 {
 	hcf_16              len;
@@ -681,7 +653,6 @@ typedef struct _WMP_RSP_STRCT
 	WVLAN_WMP_RSP_PDU   wmpRsp;
 }
 WMP_RSP_STRCT;
-
 
 typedef struct _PROBE_RESP
 {
@@ -729,7 +700,6 @@ typedef struct _PROBE_RESP
 }
 PROBE_RESP, *PPROBE_RESP;
 
-
 typedef struct _ProbeResult
 {
 	int         scan_complete;
@@ -769,7 +739,6 @@ typedef enum wvlan_drv_mode
 }
 WVLAN_DRV_MODE, *PWVLAN_DRV_MODE;
 
-
 typedef enum wvlan_port_state
 {
 	WVLAN_PORT_STATE_ENABLED,
@@ -795,7 +764,6 @@ typedef enum wvlan_pm_state
 }
 WVLAN_PM_STATE, *PWVLAN_PM_STATE;
 
-
 typedef struct wvlan_frame
 {
 	struct sk_buff  *skb;       /* sk_buff for frame. */
@@ -804,7 +772,6 @@ typedef struct wvlan_frame
 }
 WVLAN_FRAME, *PWVLAN_FRAME;
 
-
 typedef struct wvlan_lframe
 {
 	struct list_head    node;   /* Node in the list */
@@ -812,13 +779,10 @@ typedef struct wvlan_lframe
 }
 WVLAN_LFRAME, *PWVLAN_LFRAME;
 
-
-
 #define DEFAULT_NUM_TX_FRAMES           48
 #define TX_Q_LOW_WATER_MARK             (DEFAULT_NUM_TX_FRAMES/3)
 
 #define WVLAN_MAX_TX_QUEUES             1
-
 
 #ifdef USE_WDS
 
@@ -835,8 +799,6 @@ typedef struct wvlan_wds_if
 
 #endif  // USE_WDS
 
-
-
 #define NUM_RX_DESC 5
 #define NUM_TX_DESC 5
 
@@ -850,12 +812,10 @@ typedef struct dma_strct
 	int         status;
 } DMA_STRCT;
 
-
 /* Macros used in DMA support */
 /* get bus address of {rx,tx}dma structure member, in little-endian byte order */
 #define WL_DMA_BUS_ADDR_LE(str, i, mem) \
 	cpu_to_le32(str##_dma_addr[(i)] + ((hcf_8 *)&str[(i)]->mem - (hcf_8 *)str[(i)]))
-
 
 struct wl_private
 {
@@ -864,13 +824,11 @@ struct wl_private
 	struct pcmcia_device	    *link;
 #endif // BUS_PCMCIA
 
-
 	struct net_device           *dev;
 //	struct net_device           *dev_next;
 	spinlock_t                  slock;
 	struct tasklet_struct       task;
 	struct net_device_stats     stats;
-
 
 #ifdef WIRELESS_EXT
 	struct iw_statistics        wstats;
@@ -880,7 +838,6 @@ struct wl_private
 	struct iw_spy_data          spy_data;
 	struct iw_public_data	wireless_data;
 #endif // WIRELESS_EXT
-
 
 	IFB_STRCT                   hcfCtx;
 //;? struct timer_list			timer_oor;

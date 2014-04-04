@@ -15,4 +15,3 @@ config CEPH_FS
 	  More information at http://ceph.newdream.net/.
 
 	  If unsure, say N.
-

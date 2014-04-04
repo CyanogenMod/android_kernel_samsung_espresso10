@@ -2,9 +2,11 @@
 # Bluetooth subsystem configuration
 #
 
+if CONFIG_BT_MGMT = n
+
 menuconfig BT
 	tristate "Bluetooth subsystem support"
-	depends on NET && !S390
+	depends on NET
 	depends on RFKILL || !RFKILL
 	select CRYPTO
 	help
@@ -19,7 +21,7 @@ menuconfig BT
 	     HCI Device drivers (Interface to the hardware)
 	     SCO Module (SCO audio links)
 	     L2CAP Module (Logical Link Control and Adaptation Protocol)
-	     RFCOMM Module (RFCOMM Protocol)  
+	     RFCOMM Module (RFCOMM Protocol)
 	     BNEP Module (Bluetooth Network Encapsulation Protocol)
 	     CMTP Module (CAPI Message Transport Protocol)
 	     HIDP Module (Human Interface Device Protocol)
@@ -68,3 +70,4 @@ source "net/bluetooth/hidp/Kconfig"
 
 source "drivers/bluetooth/Kconfig"
 
+endif

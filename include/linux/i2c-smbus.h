@@ -23,7 +23,6 @@
 
 #include <linux/i2c.h>
 
-
 /**
  * i2c_smbus_alert_setup - platform data for the smbus_alert i2c client
  * @alert_edge_triggered: whether the alert interrupt is edge (1) or level (0)

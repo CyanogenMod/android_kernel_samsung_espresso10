@@ -12,7 +12,6 @@
  *  for more details.
  */
 
-
     /*
      *  Basic transpose step
      */
@@ -25,7 +24,6 @@ static inline void _transp(u32 d[], unsigned int i1, unsigned int i2,
 	d[i1] ^= t;
 	d[i2] ^= t << shift;
 }
-
 
 extern void c2p_unsupported(void);
 
@@ -51,7 +49,6 @@ static inline u32 get_mask(unsigned int n)
 	c2p_unsupported();
 	return 0;
 }
-
 
     /*
      *  Transpose operations on 8 32-bit words
@@ -94,7 +91,6 @@ static inline void transp8(u32 d[], unsigned int n, unsigned int m)
 	c2p_unsupported();
 }
 
-
     /*
      *  Transpose operations on 4 32-bit words
      */
@@ -121,7 +117,6 @@ static inline void transp4(u32 d[], unsigned int n, unsigned int m)
 	c2p_unsupported();
 }
 
-
     /*
      *  Transpose operations on 4 32-bit words (reverse order)
      */
@@ -140,7 +135,6 @@ static inline void transp4x(u32 d[], unsigned int n, unsigned int m)
 
 	c2p_unsupported();
 }
-
 
     /*
      *  Compose two values, using a bitmask as decision value

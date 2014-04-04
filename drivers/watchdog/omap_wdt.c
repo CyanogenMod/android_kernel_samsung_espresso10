@@ -148,7 +148,6 @@ static void omap_wdt_set_timeout(struct omap_wdt_dev *wdev)
 	__raw_writel(delay_period, base + OMAP_WATCHDOG_WDLY);
 }
 
-
 static irqreturn_t omap_wdt_interrupt(int irq, void *dev_id)
 {
 	struct omap_wdt_dev *wdev = dev_id;

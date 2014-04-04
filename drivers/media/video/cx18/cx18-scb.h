@@ -79,7 +79,6 @@
    between SCB_OFFSET and SCB_OFFSET+SCB_RESERVED_SIZE-1 inclusive */
 #define SCB_RESERVED_SIZE 0x10000
 
-
 /* This structure is used by EPU to provide memory descriptors in its memory */
 struct cx18_mdl_ent {
     u32 paddr;  /* Physical address of a buffer segment */

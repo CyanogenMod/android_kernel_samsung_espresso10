@@ -280,7 +280,6 @@ static const struct hc_driver ohci_da8xx_hc_driver = {
 
 /*-------------------------------------------------------------------------*/
 
-
 /**
  * usb_hcd_da8xx_probe - initialize DA8xx-based HCDs
  * Context: !in_interrupt()

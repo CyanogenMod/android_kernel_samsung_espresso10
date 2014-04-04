@@ -11,12 +11,10 @@ typedef struct _TARGET_PARAMS
       B_UINT32 m_u32BandBScan;
       B_UINT32 m_u32BandCScan;
 
-
       // QoS Params
       B_UINT32 m_u32ErtpsOptions;
 
       B_UINT32 m_u32PHSEnable;
-
 
       // HO Params
       B_UINT32 m_u32HoEnable;

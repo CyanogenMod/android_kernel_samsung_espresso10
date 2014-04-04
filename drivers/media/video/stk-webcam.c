@@ -37,7 +37,6 @@
 
 #include "stk-webcam.h"
 
-
 static int hflip = 1;
 module_param(hflip, bool, 0444);
 MODULE_PARM_DESC(hflip, "Horizontal image flip (mirror). Defaults to 1");
@@ -53,8 +52,6 @@ MODULE_PARM_DESC(debug, "Debug v4l ioctls. Defaults to 0");
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Jaime Velasco Juan <jsagarribay@gmail.com> and Nicolas VIVIEN");
 MODULE_DESCRIPTION("Syntek DC1125 webcam driver");
-
-
 
 /* Some cameras have audio interfaces, we aren't interested in those */
 static struct usb_device_id stkwebcam_table[] = {
@@ -206,7 +203,6 @@ static struct regval stk1125_initvals[] = {
 
 	{0xffff, 0xff},
 };
-
 
 static int stk_initialise(struct stk_camera *dev)
 {
@@ -659,7 +655,6 @@ static unsigned int v4l_stk_poll(struct file *fp, poll_table *wait)
 	return 0;
 }
 
-
 static void stk_v4l_vm_open(struct vm_area_struct *vma)
 {
 	struct stk_sio_buffer *sbuf = vma->vm_private_data;
@@ -731,7 +726,6 @@ static int stk_vidioc_enum_input(struct file *filp,
 	input->type = V4L2_INPUT_TYPE_CAMERA;
 	return 0;
 }
-
 
 static int stk_vidioc_g_input(struct file *filp, void *priv, unsigned int *i)
 {
@@ -840,7 +834,6 @@ static int stk_vidioc_s_ctrl(struct file *filp,
 	}
 	return 0;
 }
-
 
 static int stk_vidioc_enum_fmt_vid_cap(struct file *filp,
 		void *priv, struct v4l2_fmtdesc *fmtd)
@@ -1143,7 +1136,6 @@ static int stk_vidioc_streamoff(struct file *filp,
 	return 0;
 }
 
-
 static int stk_vidioc_g_parm(struct file *filp,
 		void *priv, struct v4l2_streamparm *sp)
 {
@@ -1225,7 +1217,6 @@ static struct video_device stk_v4l_data = {
 	.release = stk_v4l_dev_release,
 };
 
-
 static int stk_register_video_device(struct stk_camera *dev)
 {
 	int err;
@@ -1241,7 +1232,6 @@ static int stk_register_video_device(struct stk_camera *dev)
 			 video_device_node_name(&dev->vdev));
 	return err;
 }
-
 
 /* USB Stuff */
 
@@ -1368,7 +1358,6 @@ static struct usb_driver stk_camera_driver = {
 #endif
 };
 
-
 static int __init stk_camera_init(void)
 {
 	int result;
@@ -1376,7 +1365,6 @@ static int __init stk_camera_init(void)
 	result = usb_register(&stk_camera_driver);
 	if (result)
 		STK_ERROR("usb_register failed ! Error number %d\n", result);
-
 
 	return result;
 }
@@ -1388,5 +1376,3 @@ static void __exit stk_camera_exit(void)
 
 module_init(stk_camera_init);
 module_exit(stk_camera_exit);
-
-

@@ -30,7 +30,6 @@
 #include "mdt.h"
 #include "sufile.h"
 
-
 struct nilfs_sufile_info {
 	struct nilfs_mdt_info mi;
 	unsigned long ncleansegs;/* number of clean segments */

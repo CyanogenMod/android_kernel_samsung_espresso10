@@ -55,7 +55,7 @@ struct writeback_control {
 
 /*
  * fs/fs-writeback.c
- */	
+ */
 struct bdi_writeback;
 int inode_wait(void *);
 void writeback_inodes_sb(struct super_block *);
@@ -80,7 +80,6 @@ static inline void inode_sync_wait(struct inode *inode)
 	wait_on_bit(&inode->i_state, __I_SYNC, inode_wait,
 							TASK_UNINTERRUPTIBLE);
 }
-
 
 /*
  * mm/page-writeback.c
@@ -158,6 +157,5 @@ void tag_pages_for_writeback(struct address_space *mapping,
 /* pdflush.c */
 extern int nr_pdflush_threads;	/* Global so it can be exported to sysctl
 				   read-only. */
-
 
 #endif		/* WRITEBACK_H */

@@ -89,7 +89,6 @@ struct ushc_int_data {
 #define USHC_INT_STATUS_SDIO_INT     (1 << 1)
 #define USHC_INT_STATUS_CARD_PRESENT (1 << 0)
 
-
 struct ushc_data {
 	struct usb_device *usb_dev;
 	struct mmc_host *mmc;

@@ -46,7 +46,6 @@ static void notrace pxa_update_sched_clock(void)
 	update_sched_clock(&cd, cyc, (u32)~0);
 }
 
-
 #define MIN_OSCR_DELTA 16
 
 static irqreturn_t

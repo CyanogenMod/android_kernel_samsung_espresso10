@@ -1,4 +1,3 @@
-
 /*
  *  ATI Mach64 CT/VT/GT/LT Support
  */

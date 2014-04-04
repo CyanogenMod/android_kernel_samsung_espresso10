@@ -23,7 +23,6 @@
 
 #define RETRIES			5
 
-
 #define	CA_APP_INFO_ENQUIRY	0x9f8020
 #define	CA_APP_INFO		0x9f8021
 #define	CA_ENTER_MENU		0x9f8022
@@ -48,11 +47,9 @@
 #define CA_LIST_LAST		0x9f880c
 #define CA_LIST_MORE		0x9f880d
 
-
 struct dst_ca_private {
 	struct dst_state *dst;
 	struct dvb_device *dvbdev;
 };
-
 
 #endif

@@ -149,7 +149,6 @@ struct snd_ad1816a {
 	struct snd_timer *timer;
 };
 
-
 #define AD1816A_HW_AUTO		0
 #define AD1816A_HW_AD1816A	1
 #define AD1816A_HW_AD1815	2
@@ -161,7 +160,6 @@ struct snd_ad1816a {
 #define AD1816A_MODE_OPEN	(AD1816A_MODE_PLAYBACK |	\
 				AD1816A_MODE_CAPTURE |		\
 				AD1816A_MODE_TIMER)
-
 
 extern int snd_ad1816a_create(struct snd_card *card, unsigned long port,
 			      int irq, int dma1, int dma2,

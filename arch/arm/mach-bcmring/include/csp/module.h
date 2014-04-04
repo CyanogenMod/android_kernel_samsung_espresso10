@@ -12,7 +12,6 @@
 * consent.
 *****************************************************************************/
 
-
 #ifndef CSP_MODULE_H
 #define CSP_MODULE_H
 
@@ -27,6 +26,5 @@
 /* ---- Public Constants and Types --------------------------------------- */
 /* ---- Public Variable Externs ------------------------------------------ */
 /* ---- Public Function Prototypes --------------------------------------- */
-
 
 #endif /* CSP_MODULE_H */

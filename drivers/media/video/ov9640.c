@@ -240,7 +240,6 @@ static int ov9640_reg_write(struct i2c_client *client, u8 reg, u8 val)
 	return 0;
 }
 
-
 /* Read a register, alter its bits, write it back */
 static int ov9640_reg_rmw(struct i2c_client *client, u8 reg, u8 set, u8 unset)
 {
@@ -645,8 +644,6 @@ static int ov9640_cropcap(struct v4l2_subdev *sd, struct v4l2_cropcap *a)
 
 	return 0;
 }
-
-
 
 static int ov9640_video_probe(struct soc_camera_device *icd,
 				struct i2c_client *client)

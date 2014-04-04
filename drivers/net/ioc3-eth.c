@@ -158,7 +158,6 @@ static inline unsigned long ioc3_map(void *ptr, unsigned long vdev)
 #define BARRIER()							\
 	__asm__("sync" ::: "memory")
 
-
 #define IOC3_SIZE 0x100000
 
 /*

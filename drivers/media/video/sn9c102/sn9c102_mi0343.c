@@ -22,7 +22,6 @@
 #include "sn9c102_sensor.h"
 #include "sn9c102_devtable.h"
 
-
 static int mi0343_init(struct sn9c102_device* cam)
 {
 	struct sn9c102_sensor* s = sn9c102_get_sensor(cam);
@@ -50,7 +49,6 @@ static int mi0343_init(struct sn9c102_device* cam)
 
 	return err;
 }
-
 
 static int mi0343_get_ctrl(struct sn9c102_device* cam,
 			   struct v4l2_control* ctrl)
@@ -117,7 +115,6 @@ static int mi0343_get_ctrl(struct sn9c102_device* cam,
 
 	return 0;
 }
-
 
 static int mi0343_set_ctrl(struct sn9c102_device* cam,
 			   const struct v4l2_control* ctrl)
@@ -188,7 +185,6 @@ static int mi0343_set_ctrl(struct sn9c102_device* cam,
 	return err ? -EIO : 0;
 }
 
-
 static int mi0343_set_crop(struct sn9c102_device* cam,
 			    const struct v4l2_rect* rect)
 {
@@ -202,7 +198,6 @@ static int mi0343_set_crop(struct sn9c102_device* cam,
 
 	return err;
 }
-
 
 static int mi0343_set_pix_format(struct sn9c102_device* cam,
 				 const struct v4l2_pix_format* pix)
@@ -222,7 +217,6 @@ static int mi0343_set_pix_format(struct sn9c102_device* cam,
 
 	return err;
 }
-
 
 static const struct sn9c102_sensor mi0343 = {
 	.name = "MI-0343",
@@ -329,7 +323,6 @@ static const struct sn9c102_sensor mi0343 = {
 	},
 	.set_pix_format = &mi0343_set_pix_format
 };
-
 
 int sn9c102_probe_mi0343(struct sn9c102_device* cam)
 {

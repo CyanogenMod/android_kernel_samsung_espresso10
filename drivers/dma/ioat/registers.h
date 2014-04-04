@@ -99,7 +99,6 @@
 #define IOAT_DMA_COMP_V1			0x0001	/* Compatibility with DMA version 1 */
 #define IOAT_DMA_COMP_V2			0x0002	/* Compatibility with DMA version 2 */
 
-
 #define IOAT1_CHANSTS_OFFSET		0x04	/* 64-bit Channel Status Register */
 #define IOAT2_CHANSTS_OFFSET		0x08	/* 64-bit Channel Status Register */
 #define IOAT_CHANSTS_OFFSET(ver)		((ver) < IOAT_VER_2_0 \
@@ -120,8 +119,6 @@
 #define IOAT_CHANSTS_DONE	0x1
 #define IOAT_CHANSTS_SUSPENDED	0x2
 #define IOAT_CHANSTS_HALTED	0x3
-
-
 
 #define IOAT_CHAN_DMACOUNT_OFFSET	0x06    /* 16-bit DMA Count register */
 

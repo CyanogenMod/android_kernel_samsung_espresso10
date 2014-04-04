@@ -69,7 +69,6 @@ static void ar9002_hw_init_mode_regs(struct ath_hw *ah)
 					2);
 	} else if (AR_SREV_9285_12_OR_LATER(ah)) {
 
-
 		INIT_INI_ARRAY(&ah->iniModes, ar9285Modes_9285_1_2,
 			       ARRAY_SIZE(ar9285Modes_9285_1_2), 6);
 		INIT_INI_ARRAY(&ah->iniCommon, ar9285Common_9285_1_2,

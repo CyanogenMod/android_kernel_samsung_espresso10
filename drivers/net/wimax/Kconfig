@@ -2,7 +2,6 @@
 # WiMAX LAN device drivers configuration
 #
 
-
 comment "Enable WiMAX (Networking options) to see the WiMAX drivers"
 	depends on WIMAX = n
 

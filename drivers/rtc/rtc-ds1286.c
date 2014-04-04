@@ -40,7 +40,6 @@ static inline void ds1286_rtc_write(struct ds1286_priv *priv, u8 data, int reg)
 	__raw_writel(data, &priv->rtcregs[reg]);
 }
 
-
 static int ds1286_alarm_irq_enable(struct device *dev, unsigned int enabled)
 {
 	struct ds1286_priv *priv = dev_get_drvdata(dev);

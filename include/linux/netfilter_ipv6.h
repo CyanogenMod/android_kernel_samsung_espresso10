@@ -1,10 +1,10 @@
 #ifndef __LINUX_IP6_NETFILTER_H
 #define __LINUX_IP6_NETFILTER_H
 
-/* IPv6-specific defines for netfilter. 
+/* IPv6-specific defines for netfilter.
  * (C)1998 Rusty Russell -- This code is GPL.
  * (C)1999 David Jeffery
- *   this header was blatantly ripped from netfilter_ipv4.h 
+ *   this header was blatantly ripped from netfilter_ipv4.h
  *   it's amazing what adding a bunch of 6s can do =8^)
  */
 
@@ -30,7 +30,6 @@
 /* Frag & flags. */
 #define NFC_IP6_FRAG             0x0080
 
-
 /* Per-protocol information: only matters if proto match. */
 /* TCP flags. */
 #define NFC_IP6_TCPFLAGS         0x0100
@@ -54,7 +53,6 @@
 #define NF_IP6_POST_ROUTING	4
 #define NF_IP6_NUMHOOKS		5
 #endif /* ! __KERNEL__ */
-
 
 enum nf_ip6_hook_priorities {
 	NF_IP6_PRI_FIRST = INT_MIN,

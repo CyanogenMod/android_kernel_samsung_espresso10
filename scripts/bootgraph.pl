@@ -22,7 +22,6 @@
 # Authors:
 # 	Arjan van de Ven <arjan@linux.intel.com>
 
-
 #
 # This script turns a dmesg output into a SVG graphic that shows which
 # functions take how much time. You can view SVG graphics with various
@@ -185,7 +184,6 @@ foreach my $key (@initcalls) {
 		}
 	}
 }
-
 
 # print the time line on top
 my $time = $firsttime;

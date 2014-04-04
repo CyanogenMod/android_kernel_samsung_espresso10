@@ -56,5 +56,4 @@
 
 #define NR_IRQS			64
 
-
 #endif

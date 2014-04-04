@@ -207,4 +207,3 @@ i2cmdBaudDef(int which, unsigned short rate)
 	pCM->cmd[2] = (unsigned char) (rate >> 8);
 	return pCM;
 }
-

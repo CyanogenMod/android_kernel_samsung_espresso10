@@ -19,7 +19,6 @@
 #include <linux/mfd/wm831x/pdata.h>
 #include <linux/mfd/wm831x/status.h>
 
-
 struct wm831x_status {
 	struct led_classdev cdev;
 	struct wm831x *wm831x;

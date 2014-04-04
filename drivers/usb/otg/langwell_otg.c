@@ -301,7 +301,6 @@ err:
 	return -EPIPE;
 }
 
-
 static void langwell_otg_phy_low_power(int on)
 {
 	struct langwell_otg		*lnw = the_transceiver;

@@ -10,7 +10,6 @@
 
 #include <linux/usb.h>
 
-
 /*-------------------------------------------------------------------------*/
 
 /* FIXME make these public somewhere; usbdevfs.h? */
@@ -393,7 +392,6 @@ static int simple_io(
 	return retval;
 }
 
-
 /*-------------------------------------------------------------------------*/
 
 /* We use scatterlist primitives to test queued I/O.
@@ -498,7 +496,6 @@ static int perform_sglist(
 				iterations, retval);
 	return retval;
 }
-
 
 /*-------------------------------------------------------------------------*/
 
@@ -1023,7 +1020,10 @@ test_ctrl_queue(struct usbtest_dev *dev, struct usbtest_param *param)
 		case 13:	/* short read, resembling case 10 */
 			req.wValue = cpu_to_le16((USB_DT_CONFIG << 8) | 0);
 			/* last data packet "should" be DATA1, not DATA0 */
-			len = 1024 - udev->descriptor.bMaxPacketSize0;
+			if (udev->speed == USB_SPEED_SUPER)
+				len = 1024 - 512;
+			else
+				len = 1024 - udev->descriptor.bMaxPacketSize0;
 			expected = -EREMOTEIO;
 			break;
 		case 14:	/* short read; try to fill the last packet */
@@ -1097,7 +1097,6 @@ cleanup:
 	return context.status;
 }
 #undef NUM_SUBCASES
-
 
 /*-------------------------------------------------------------------------*/
 
@@ -1382,11 +1381,15 @@ static int test_halt(struct usbtest_dev *tdev, int ep, struct urb *urb)
 
 static int halt_simple(struct usbtest_dev *dev)
 {
-	int		ep;
-	int		retval = 0;
-	struct urb	*urb;
+	int			ep;
+	int			retval = 0;
+	struct urb		*urb;
+	struct usb_device	*udev = testdev_to_usbdev(dev);
 
-	urb = simple_alloc_urb(testdev_to_usbdev(dev), 0, 512);
+	if (udev->speed == USB_SPEED_SUPER)
+		urb = simple_alloc_urb(udev, 0, 1024);
+	else
+		urb = simple_alloc_urb(udev, 0, 512);
 	if (urb == NULL)
 		return -ENOMEM;
 
@@ -2334,7 +2337,6 @@ static int usbtest_resume(struct usb_interface *intf)
 	return 0;
 }
 
-
 static void usbtest_disconnect(struct usb_interface *intf)
 {
 	struct usbtest_dev	*dev = usb_get_intfdata(intf);
@@ -2426,7 +2428,6 @@ static struct usbtest_info generic_info = {
 	.alt		= -1,
 };
 #endif
-
 
 static const struct usb_device_id id_table[] = {
 
@@ -2532,4 +2533,3 @@ module_exit(usbtest_exit);
 
 MODULE_DESCRIPTION("USB Core/HCD Testing Driver");
 MODULE_LICENSE("GPL");
-

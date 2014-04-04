@@ -53,7 +53,6 @@
 #define MPI2_SASSTATUS_SDSF_CONNECTION_FAILED           (0x13)
 #define MPI2_SASSTATUS_INITIATOR_RESPONSE_TIMEOUT       (0x14)
 
-
 /*
  * Values for the SAS DeviceInfo field used in SAS Device Status Change Event
  * data and SAS Configuration pages.
@@ -76,7 +75,6 @@
 #define MPI2_SAS_DEVICE_INFO_END_DEVICE         (0x00000001)
 #define MPI2_SAS_DEVICE_INFO_EDGE_EXPANDER      (0x00000002)
 #define MPI2_SAS_DEVICE_INFO_FANOUT_EXPANDER    (0x00000003)
-
 
 /*****************************************************************************
 *
@@ -114,7 +112,6 @@ typedef struct _MPI2_SMP_PASSTHROUGH_REQUEST
 
 /* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
 
-
 /* SMP Passthrough Reply Message */
 typedef struct _MPI2_SMP_PASSTHROUGH_REPLY
 {
@@ -141,7 +138,6 @@ typedef struct _MPI2_SMP_PASSTHROUGH_REPLY
 #define MPI2_SMP_PT_REPLY_PT_FLAGS_IMMEDIATE    (0x80)
 
 /* values for SASStatus field are at the top of this file */
-
 
 /****************************************************************************
 *  SATA Passthrough messages
@@ -178,7 +174,6 @@ typedef struct _MPI2_SATA_PASSTHROUGH_REQUEST
 
 /* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
 
-
 /* SATA Passthrough Reply Message */
 typedef struct _MPI2_SATA_PASSTHROUGH_REPLY
 {
@@ -202,7 +197,6 @@ typedef struct _MPI2_SATA_PASSTHROUGH_REPLY
   Mpi2SataPassthroughReply_t, MPI2_POINTER pMpi2SataPassthroughReply_t;
 
 /* values for SASStatus field are at the top of this file */
-
 
 /****************************************************************************
 *  SAS IO Unit Control messages
@@ -261,7 +255,6 @@ typedef struct _MPI2_SAS_IOUNIT_CONTROL_REQUEST
 #define MPI2_SAS_LOOKUP_METHOD_SAS_ENCLOSURE_SLOT   (0x02)
 #define MPI2_SAS_LOOKUP_METHOD_SAS_DEVICE_NAME      (0x03)
 
-
 /* SAS IO Unit Control Reply Message */
 typedef struct _MPI2_SAS_IOUNIT_CONTROL_REPLY
 {
@@ -282,7 +275,4 @@ typedef struct _MPI2_SAS_IOUNIT_CONTROL_REPLY
   MPI2_POINTER PTR_MPI2_SAS_IOUNIT_CONTROL_REPLY,
   Mpi2SasIoUnitControlReply_t, MPI2_POINTER pMpi2SasIoUnitControlReply_t;
 
-
 #endif
-
-

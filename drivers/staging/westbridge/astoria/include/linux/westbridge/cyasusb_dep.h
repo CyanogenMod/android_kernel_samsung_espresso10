@@ -51,7 +51,6 @@ typedef struct cy_as_usb_inquiry_data_dep {
 	void *data;
 } cy_as_usb_inquiry_data_dep;
 
-
 typedef struct cy_as_usb_unknown_command_data_dep {
 	/* The media for the event */
 	cy_as_media_type media;
@@ -69,7 +68,6 @@ typedef struct cy_as_usb_unknown_command_data_dep {
 	uint8_t ascq;
 } cy_as_usb_unknown_command_data_dep;
 
-
 typedef struct cy_as_usb_start_stop_data_dep {
 	/* The media type for the event */
 	cy_as_media_type media;
@@ -78,7 +76,6 @@ typedef struct cy_as_usb_start_stop_data_dep {
 	/* CyTrue means LoEj bit set, otherwise false */
 	cy_bool loej;
 } cy_as_usb_start_stop_data_dep;
-
 
 typedef struct cy_as_usb_enum_control_dep {
 	/* The bits in this member determine which mass storage devices
@@ -98,7 +95,6 @@ typedef struct cy_as_usb_enum_control_dep {
 	cy_bool mass_storage_callbacks;
 } cy_as_usb_enum_control_dep;
 
-
 typedef void (*cy_as_usb_event_callback_dep)(
 	/* Handle to the device to configure */
 	cy_as_device_handle			handle,
@@ -108,8 +104,6 @@ typedef void (*cy_as_usb_event_callback_dep)(
 	void *evdata
 );
 
-
-
 /* Register Callback api */
 EXTERN cy_as_return_status_t
 cy_as_usb_register_callback_dep(
@@ -118,7 +112,6 @@ cy_as_usb_register_callback_dep(
 	/* The function to call */
 	cy_as_usb_event_callback_dep		callback
 	);
-
 
 extern cy_as_return_status_t
 cy_as_usb_set_enum_config_dep(
@@ -131,7 +124,6 @@ cy_as_usb_set_enum_config_dep(
 	/* Client supplied data */
 	uint32_t client
 	);
-
 
 extern cy_as_return_status_t
 cy_as_usb_get_enum_config_dep(

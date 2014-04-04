@@ -200,8 +200,6 @@ static int nc_power_up_pb(unsigned int port)
 	}
 	retval =  sst_sc_reg_access(sc_access, PMIC_READ_MODIFY, 2);
 
-
-
 	sc_access[0].reg_addr = POWERCTRL1;
 	if (port == 0) {
 		sc_access[0].value = 0x40;
@@ -244,12 +242,10 @@ static int nc_power_up_cp(unsigned int port)
 	struct sc_reg_access sc_access[5];
 	int retval = 0;
 
-
 	if (snd_pmic_ops_nc.card_status == SND_CARD_UN_INIT)
 		retval = nc_init_card();
 	if (retval)
 		return retval;
-
 
 	pr_debug("powering up cp....\n");
 
@@ -268,7 +264,6 @@ static int nc_power_up_cp(unsigned int port)
 	}
 
 	retval =  sst_sc_reg_access(sc_access, PMIC_READ_MODIFY, 2);
-
 
 	sc_access[0].reg_addr = POWERCTRL1;
 	if (port == 0) {
@@ -302,7 +297,6 @@ static int nc_power_down(void)
 		return retval;
 	nc_enable_audiodac(MUTE);
 
-
 	pr_debug("powering dn nc_power_down ....\n");
 
 	if (snd_pmic_ops_nc.output_dev_id == MONO_EARPIECE ||
@@ -325,8 +319,6 @@ static int nc_power_down(void)
 	sc_access[1].value = 0x00;
 	sc_access[1].mask = 0x00;
 
-
-
 	sst_sc_reg_access(sc_access, PMIC_WRITE, 2);
 
 	msleep(30);
@@ -337,7 +329,6 @@ static int nc_power_down(void)
 	sc_access[1].reg_addr = VAUDIOCNT;
 	sc_access[1].value = 0x25;
 	sc_access[1].mask = 0x25;
-
 
 	retval =  sst_sc_reg_access(sc_access, PMIC_WRITE, 2);
 
@@ -360,9 +351,7 @@ static int nc_power_down_pb(unsigned int device)
 	mutex_lock(&snd_pmic_ops_nc.lock);
 	nc_enable_audiodac(MUTE);
 
-
 	msleep(30);
-
 
 	sc_access[0].reg_addr = DRVPOWERCTRL;
 	sc_access[0].value = 0x00;
@@ -438,7 +427,6 @@ static int nc_set_pcm_voice_params(void)
 	return 0;
 }
 
-
 static int nc_set_pcm_audio_params(int sfreq, int word_size, int num_channel)
 {
 	int config2 = 0;
@@ -495,7 +483,6 @@ static int nc_set_pcm_audio_params(int sfreq, int word_size, int num_channel)
 		sc_access.mask = MASK2;
 		sst_sc_reg_access(&sc_access, PMIC_READ_MODIFY, 1);
 
-
 	}
 
 	pr_debug("word_size = %d\n", word_size);
@@ -520,8 +507,6 @@ static int nc_set_pcm_audio_params(int sfreq, int word_size, int num_channel)
 		sc_access.value = 0xAB;
 
 	return sst_sc_reg_access(&sc_access, PMIC_READ_MODIFY, 1);
-
-
 
 }
 

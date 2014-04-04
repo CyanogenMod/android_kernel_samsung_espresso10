@@ -40,7 +40,6 @@ enum pid_type
  * processes.
  */
 
-
 /*
  * struct upid is used to get the id of the struct pid, as it is
  * seen in particular namespace. Later the struct pid is found with

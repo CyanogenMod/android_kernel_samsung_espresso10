@@ -1481,7 +1481,6 @@ qla2x00_handle_dif_error(srb_t *sp, struct sts_entry_24xx *sts24)
 	    cmd->cmnd[0], (u64)scsi_get_lba(cmd), a_ref_tag, e_ref_tag,
 	    a_app_tag, e_app_tag, a_guard, e_guard));
 
-
 	/* check guard */
 	if (e_guard != a_guard) {
 		scsi_build_sense_buffer(1, cmd->sense_buffer, ILLEGAL_REQUEST,
@@ -2555,7 +2554,6 @@ qla2x00_free_irqs(scsi_qla_host_t *vha)
 	} else
 		free_irq(ha->pdev->irq, rsp);
 }
-
 
 int qla25xx_request_irq(struct rsp_que *rsp)
 {

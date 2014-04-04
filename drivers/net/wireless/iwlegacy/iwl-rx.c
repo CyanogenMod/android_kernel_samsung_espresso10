@@ -209,7 +209,6 @@ err_bd:
 }
 EXPORT_SYMBOL(iwl_legacy_rx_queue_alloc);
 
-
 void iwl_legacy_rx_spectrum_measure_notif(struct iwl_priv *priv,
 					  struct iwl_rx_mem_buffer *rxb)
 {

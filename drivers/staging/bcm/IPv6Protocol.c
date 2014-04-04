@@ -30,8 +30,6 @@ static UCHAR * GetNextIPV6ChainedHeader(UCHAR **ppucPayload,UCHAR *pucNextHeader
 	//Get the Nextt Header Type
 	*bParseDone = FALSE;
 
-
-
 	switch(*pucNextHeader)
 	{
 	case IPV6HDR_TYPE_HOPBYHOP:
@@ -109,7 +107,6 @@ static UCHAR * GetNextIPV6ChainedHeader(UCHAR **ppucPayload,UCHAR *pucNextHeader
 		}
 		break;
 
-
 	}
 
 	if(*bParseDone == FALSE)
@@ -127,12 +124,9 @@ static UCHAR * GetNextIPV6ChainedHeader(UCHAR **ppucPayload,UCHAR *pucNextHeader
 
 	}
 
-
-
 	*ppucPayload = pucPayloadPtr;
 	return pucRetHeaderPtr;
 }
-
 
 static UCHAR GetIpv6ProtocolPorts(UCHAR *pucPayload,USHORT *pusSrcPort,USHORT *pusDestPort,USHORT usPayloadLength,UCHAR ucNextHeader)
 {
@@ -166,8 +160,6 @@ static UCHAR GetIpv6ProtocolPorts(UCHAR *pucPayload,USHORT *pusSrcPort,USHORT *p
 	}
 	return ucHeaderType;
 }
-
-
 
 USHORT	IpVersion6(PMINI_ADAPTER Adapter, /**< Pointer to the driver control structure */
 					PVOID pcIpHeader, /**<Pointer to the IP Hdr of the packet*/
@@ -260,7 +252,6 @@ USHORT	IpVersion6(PMINI_ADAPTER Adapter, /**< Pointer to the driver control stru
 	return bClassificationSucceed;
 }
 
-
 static BOOLEAN MatchSrcIpv6Address(S_CLASSIFIER_RULE *pstClassifierRule,IPV6Header *pstIpv6Header)
 {
 	UINT uiLoopIndex=0;
@@ -274,10 +265,8 @@ static BOOLEAN MatchSrcIpv6Address(S_CLASSIFIER_RULE *pstClassifierRule,IPV6Head
 	*/
 	UINT  uiCountIPSrcAddresses = (UINT)pstClassifierRule->ucIPSourceAddressLength;
 
-
 	if(0 == uiCountIPSrcAddresses)
 		return TRUE;
-
 
 	//First Convert the Ip Address in the packet to Host Endian order
 	for(uiIpv6AddIndex=0;uiIpv6AddIndex<uiIpv6AddrNoLongWords;uiIpv6AddIndex++)
@@ -327,10 +316,8 @@ static BOOLEAN MatchDestIpv6Address(S_CLASSIFIER_RULE *pstClassifierRule,IPV6Hea
 	*/
 	UINT  uiCountIPDestinationAddresses = (UINT)pstClassifierRule->ucIPDestinationAddressLength;
 
-
 	if(0 == uiCountIPDestinationAddresses)
 		return TRUE;
-
 
 	//First Convert the Ip Address in the packet to Host Endian order
 	for(uiIpv6AddIndex=0;uiIpv6AddIndex<uiIpv6AddrNoLongWords;uiIpv6AddIndex++)
@@ -399,6 +386,5 @@ static VOID DumpIpv6Header(IPV6Header *pstIpv6Header)
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_TX, IPV6_DBG, DBG_LVL_ALL, "Dest Address :\n");
 	DumpIpv6Address(pstIpv6Header->ulDestIpAddress);
 	BCM_DEBUG_PRINT( Adapter,DBG_TYPE_TX, IPV6_DBG, DBG_LVL_ALL, "----Ipv6 Header End---");
-
 
 }

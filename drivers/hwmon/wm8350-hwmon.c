@@ -40,7 +40,6 @@ static const char *input_names[] = {
 	[WM8350_AUXADC_BATT] = "Battery",
 };
 
-
 static ssize_t show_voltage(struct device *dev,
 			    struct device_attribute *attr, char *buf)
 {

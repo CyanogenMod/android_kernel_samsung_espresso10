@@ -24,7 +24,6 @@
 #include <linux/mtd/map.h>
 #include <linux/mtd/mtd.h>
 
-
 #define WINDOW_START 0xd8000
 #define WINDOW_LENGTH 0x2000
 #define WINDOW_SHIFT 25

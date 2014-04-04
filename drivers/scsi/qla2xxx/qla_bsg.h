@@ -88,7 +88,6 @@ struct qla84_mgmt_param {
 #define IC_PORT_STATISTICS_PORT_NUMBER_FC_PORT0         4
 #define IC_PORT_STATISTICS_PORT_NUMBER_FC_PORT1         5
 
-
 /*
 * context definitions for QLA84_MGMT_INFO_LIF_STAT
 */

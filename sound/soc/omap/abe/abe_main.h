@@ -135,7 +135,6 @@
 #define EIGHT_MSB 11
 #define NINE_MSB 12
 #define TEN_MSB 13
-#define MONO_16_16 14
 /*
  *	PORT PROTOCOL TYPE - abe_port_protocol_switch_id
  */
@@ -604,7 +603,6 @@ typedef struct {
 	s32 equ_param3;
 } abe_equ_t;
 
-
 /* subroutine with no parameter */
 typedef void (*abe_subroutine0) (void);
 /* subroutine with one parameter */
@@ -613,9 +611,7 @@ typedef void (*abe_subroutine2) (u32, u32);
 typedef void (*abe_subroutine3) (u32, u32, u32);
 typedef void (*abe_subroutine4) (u32, u32, u32, u32);
 
-
 extern u32 abe_irq_pingpong_player_id;
-
 
 void abe_init_mem(void __iomem **_io_base);
 u32 abe_reset_hal(void);
@@ -666,6 +662,5 @@ void abe_add_subroutine(u32 *id, abe_subroutine2 f,
 
 u32 abe_plug_subroutine(u32 *id, abe_subroutine2 f, u32 n,
 			u32 *params);
-void abe_write_select_pdm_output(u32 path);
 
 #endif				/* _ABE_MAIN_H_ */

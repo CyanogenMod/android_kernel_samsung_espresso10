@@ -27,7 +27,6 @@
 #define MEM_MAP_SIZE	0x400000
 #define IO_MAP_SIZE	0x1000
 
-
 /*
  * 3.3V cards only; all interfacing is done via gpios:
  *
@@ -240,7 +239,6 @@ static int __devinit xxs1500_pcmcia_probe(struct platform_device *pdev)
 		goto out0;
 	}
 	sock->phys_io = r->start;
-
 
 	/*
 	 * PCMCIA client drivers use the inb/outb macros to access

@@ -243,7 +243,6 @@ xfs_inotobp(
 	return 0;
 }
 
-
 /*
  * This routine is called to map an inode to the buffer containing
  * the on-disk version of the inode.  It returns a pointer to the
@@ -1445,7 +1444,6 @@ xfs_itruncate_finish(
 	ASSERT(ip->i_itemp != NULL);
 	ASSERT(ip->i_itemp->ili_lock_flags == 0);
 
-
 	ntp = *tp;
 	mp = (ntp)->t_mountp;
 	ASSERT(! XFS_NOT_DQATTACHED(mp, ip));
@@ -1965,7 +1963,6 @@ xfs_ifree_cluster(
 			lip = lip->li_bio_list;
 		}
 
-
 		/*
 		 * For each inode in memory attempt to add it to the inode
 		 * buffer and set it up for being staled on buffer IO
@@ -2266,7 +2263,6 @@ xfs_iroot_realloc(
 		XFS_IFORK_SIZE(ip, whichfork) + XFS_BROOT_SIZE_ADJ);
 	return;
 }
-
 
 /*
  * This is called when the amount of space needed for if_data
@@ -2701,7 +2697,6 @@ out_put:
 	xfs_perag_put(pag);
 	return 0;
 
-
 cluster_corrupt_out:
 	/*
 	 * Corruption detected in the clustering loop.  Invalidate the
@@ -2867,7 +2862,6 @@ cluster_corrupt_out:
 	xfs_iflush_abort(ip);
 	return XFS_ERROR(EFSCORRUPTED);
 }
-
 
 STATIC int
 xfs_iflush_int(

@@ -104,7 +104,6 @@
 #define UCB_MODE_DYN_VFLAG_ENA	(1 << 12)
 #define UCB_MODE_AUD_OFF_CAN	(1 << 13)
 
-
 struct ucb1x00_irq {
 	void *devid;
 	void (*fn)(int, void *);
@@ -215,7 +214,7 @@ static inline unsigned int ucb1x00_reg_read(struct ucb1x00 *ucb, unsigned int re
 	return mcp_reg_read(ucb->mcp, reg);
 }
 /**
- *	ucb1x00_set_audio_divisor - 
+ *	ucb1x00_set_audio_divisor -
  *	@ucb: UCB1x00 structure describing chip
  *	@div: SIB clock divisor
  */

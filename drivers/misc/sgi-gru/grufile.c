@@ -58,7 +58,6 @@ static int max_user_cbrs, max_user_dsr_bytes;
 
 static struct miscdevice gru_miscdev;
 
-
 /*
  * gru_vma_close
  *
@@ -615,4 +614,3 @@ MODULE_AUTHOR("Silicon Graphics, Inc.");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION(GRU_DRIVER_ID_STR GRU_DRIVER_VERSION_STR);
 MODULE_VERSION(GRU_DRIVER_VERSION_STR);
-

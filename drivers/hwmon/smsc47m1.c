@@ -141,7 +141,6 @@ struct smsc47m1_sio_data {
 	u8 activate;		/* Remember initial device state */
 };
 
-
 static int __exit smsc47m1_remove(struct platform_device *pdev);
 static struct smsc47m1_data *smsc47m1_update_device(struct device *dev,
 		int init);
@@ -337,7 +336,7 @@ static ssize_t set_pwm_en(struct device *dev, struct device_attribute
 	struct smsc47m1_data *data = dev_get_drvdata(dev);
 	int nr = attr->index;
 	long val = simple_strtol(buf, NULL, 10);
-	
+
 	if (val != 0 && val != 1)
 		return -EINVAL;
 

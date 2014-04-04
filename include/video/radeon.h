@@ -1,9 +1,7 @@
 #ifndef _RADEON_H
 #define _RADEON_H
 
-
 #define RADEON_REGSIZE			0x4000
-
 
 #define MM_INDEX                               0x0000
 #define MM_DATA                                0x0004
@@ -505,7 +503,6 @@
 #define PIXCLK_LVDS_ALWAYS_ONb                     (1 << 14)
 #define PIXCLK_TMDS_ALWAYS_ONb                     (1 << 15)
 
-
 /* CLOCK_CNTL_INDEX bit constants */
 #define PLL_WR_EN                                  0x00000080
 
@@ -524,7 +521,6 @@
 #define CRTC_VSYNC_DIS				   (1 << 9)
 #define CRTC_DISPLAY_DIS			   (1 << 10)
 #define CRTC_CRT_ON				   (1 << 15)
-
 
 /* DSTCACHE_CTLSTAT bit constants */
 #define RB2D_DC_FLUSH_2D			   (1 << 0)
@@ -572,7 +568,6 @@
 #define VGA_DDC_CLK_INPUT	GPIO_Y_1
 #define VGA_DDC_DATA_OUT_EN	GPIO_EN_0
 #define VGA_DDC_CLK_OUT_EN	GPIO_EN_1
-
 
 /* FP bit constants */
 #define FP_CRTC_H_TOTAL_MASK			   0x000003ff
@@ -635,7 +630,6 @@
 #define FP2_DV0_EN               (1 << 25)
 #define FP2_DV0_RATE_SEL_SDR     (1 << 26)
 
-
 /* LVDS_GEN_CNTL bit constants */
 #define LVDS_ON					   (1 << 0)
 #define LVDS_DISPLAY_DIS			   (1 << 1)
@@ -672,7 +666,6 @@
 #define HORZ_AUTO_RATIO				   (1 << 27)
 #define HORZ_FP_LOOP_STRETCH			   (0x7 << 28)
 #define HORZ_AUTO_RATIO_INC			   (1 << 31)
-
 
 /* FP_VERT_STRETCH bit constants */
 #define VERT_STRETCH_RATIO_MASK			   0xfff
@@ -734,7 +727,6 @@
 #define R300_MEM_NUM_CHANNELS_MASK                 0x00000003
 #define R300_MEM_USE_CD_CH_ONLY                    0x00000004
 
-
 /* RBBM_SOFT_RESET bit constants */
 #define SOFT_RESET_CP           		   (1 <<  0)
 #define SOFT_RESET_HI           		   (1 <<  1)
@@ -777,7 +769,6 @@
 #define COMPARE_SOURCE                             0x01000000
 #define COMPARE_SRC_AND_DST                        0x02000000
 
-
 /* DP_CNTL bit constants */
 #define DST_X_RIGHT_TO_LEFT                        0x00000000
 #define DST_X_LEFT_TO_RIGHT                        0x00000001
@@ -798,7 +789,6 @@
 #define DST_RASTER_STALL                           0x00010000
 #define DST_POLY_EDGE                              0x00040000
 
-
 /* DP_CNTL_YDIR_XDIR_YMAJOR bit constants (short version of DP_CNTL) */
 #define DST_X_MAJOR_S                              0x00000000
 #define DST_Y_MAJOR_S                              0x00000001
@@ -806,7 +796,6 @@
 #define DST_Y_TOP_TO_BOTTOM_S                      0x00008000
 #define DST_X_RIGHT_TO_LEFT_S                      0x00000000
 #define DST_X_LEFT_TO_RIGHT_S                      0x80000000
-
 
 /* DP_DATATYPE bit constants */
 #define DST_8BPP                                   0x00000002
@@ -829,7 +818,6 @@
 #define BYTE_ORDER_LSB_TO_MSB                      0x40000000
 #define DP_CONVERSION_TEMP                         0x80000000
 #define HOST_BIG_ENDIAN_EN			   (1 << 29)
-
 
 /* DP_GUI_MASTER_CNTL bit constants */
 #define GMC_SRC_PITCH_OFFSET_DEFAULT               0x00000000
@@ -1000,7 +988,6 @@
 
 #define GUI_ACTIVE			0x80000000
 
-
 #define MC_IND_INDEX                           0x01F8
 #define MC_IND_DATA                            0x01FC
 
@@ -1096,7 +1083,6 @@
 #define	PIXCLKS_CNTL__PIXCLK_LVDS_ALWAYS_ONb__SHIFT        0x0000000e
 #define	PIXCLKS_CNTL__PIXCLK_TMDS_ALWAYS_ONb__SHIFT        0x0000000f
 
-
 // pllPIXCLKS_CNTL
 #define PIXCLKS_CNTL__PIX2CLK_SRC_SEL_MASK                 0x00000003L
 #define PIXCLKS_CNTL__PIX2CLK_INVERT                       0x00000010L
@@ -1117,7 +1103,6 @@
 #define PIXCLKS_CNTL__R300_P2G2CLK_ALWAYS_ONb              (1 << 18)
 #define PIXCLKS_CNTL__R300_P2G2CLK_DAC_ALWAYS_ONb          (1 << 19)
 #define PIXCLKS_CNTL__R300_DISP_DAC_PIXCLK_DAC2_BLANK_OFF  (1 << 23)
-
 
 // pllP2PLL_DIV_0
 #define P2PLL_DIV_0__P2PLL_FB_DIV_MASK                     0x000007ffL
@@ -1988,6 +1973,4 @@
 #define ixR300_MC_DLL_CNTL                         0x002f
 #define NB_TOM                                     0x15C
 
-
 #endif	/* _RADEON_H */
-

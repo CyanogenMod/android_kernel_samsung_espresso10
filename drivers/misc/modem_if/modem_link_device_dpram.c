@@ -127,7 +127,6 @@ static inline void dpram_writeb(u8 value,  void __iomem *p_dest)
 	iowrite8(value, dest);
 }
 
-
 static void dpram_write_command(struct dpram_link_device *dpld, u16 cmd)
 {
 	dpram_writeh(cmd, &dpld->dpram->mbx_ap2cp);
@@ -279,7 +278,6 @@ static void command_handler(struct dpram_link_device *dpld, u16 cmd)
 	}
 }
 
-
 static int dpram_process_modem_update(struct dpram_link_device *dpld,
 					struct dpram_firmware *pfw)
 {
@@ -305,7 +303,6 @@ out:
 	vfree(buff);
 	return ret;
 }
-
 
 static int dpram_modem_update(struct link_device *ld, struct io_device *iod,
 							unsigned long _arg)

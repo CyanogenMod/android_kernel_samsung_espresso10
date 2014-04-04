@@ -66,5 +66,4 @@ struct user32 {
   int u_debugreg[8];
 };
 
-
 #endif /* _ASM_X86_USER32_H */

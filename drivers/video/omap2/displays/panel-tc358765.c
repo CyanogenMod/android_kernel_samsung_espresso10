@@ -66,7 +66,6 @@ struct tc358765_i2c {
 	struct mutex xfer_lock;
 } *sd1;
 
-
 #ifdef CONFIG_TC358765_DEBUG
 
 struct {
@@ -306,7 +305,6 @@ static int tc358765_write_register_i2c(u16 reg, u32 val)
 		return ret;
 	return 0;
 }
-
 
 static int tc358765_registers_show(struct seq_file *seq, void *pos)
 {
@@ -835,7 +833,6 @@ static struct i2c_driver tc358765_i2c_driver = {
 		   .owner = THIS_MODULE,
 	},
 };
-
 
 static int __init tc358765_init(void)
 {

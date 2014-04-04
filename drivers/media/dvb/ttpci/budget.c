@@ -31,7 +31,7 @@
  * Or, point your browser to http://www.gnu.org/copyleft/gpl.html
  *
  *
- * the project's page is at http://www.linuxtv.org/ 
+ * the project's page is at http://www.linuxtv.org/
  */
 
 #include "budget.h"
@@ -402,7 +402,6 @@ static int alps_tdhd1_204_request_firmware(struct dvb_frontend *fe, const struct
 
 	return request_firmware(fw, name, &budget->dev->pci->dev);
 }
-
 
 static int i2c_readreg(struct i2c_adapter *i2c, u8 adr, u8 reg)
 {

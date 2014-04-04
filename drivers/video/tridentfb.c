@@ -1657,4 +1657,3 @@ MODULE_AUTHOR("Jani Monoses <jani@iv.ro>");
 MODULE_DESCRIPTION("Framebuffer driver for Trident cards");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("cyblafb");
-

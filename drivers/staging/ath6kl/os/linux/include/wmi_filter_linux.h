@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -94,8 +94,6 @@ u8 sioctl_filter[] = {
 (INFRA_NETWORK | ADHOC_NETWORK | AP_NETWORK),   /* SIOCGIWPOWER    0x8B2D   */
 };
 
-
-
 u8 pioctl_filter[] = {
 (INFRA_NETWORK | ADHOC_NETWORK | AP_NETWORK),   /* IEEE80211_IOCTL_SETPARAM             (SIOCIWFIRSTPRIV+0)     */
 (INFRA_NETWORK | ADHOC_NETWORK | AP_NETWORK),   /* IEEE80211_IOCTL_SETKEY               (SIOCIWFIRSTPRIV+1)     */
@@ -129,8 +127,6 @@ u8 pioctl_filter[] = {
 (INFRA_NETWORK | ADHOC_NETWORK),                /* AR6000_IOCTL_WMI_SET_DISC_TIMEOUT    (SIOCIWFIRSTPRIV+29)    */
 (ADHOC_NETWORK),                                /* AR6000_IOCTL_WMI_SET_IBSS_PM_CAPS    (SIOCIWFIRSTPRIV+30)    */
 };
-
-
 
 u8 xioctl_filter[] = {
 (0xFF),                                         /* Dummy                                           0    */

@@ -64,7 +64,6 @@
 #endif				/* UGETH_VERBOSE_DEBUG */
 #define UGETH_MSG_DEFAULT	(NETIF_MSG_IFUP << 1 ) - 1
 
-
 static DEFINE_SPINLOCK(ugeth_lock);
 
 static struct {
@@ -3605,7 +3604,6 @@ static void ucc_geth_timeout(struct net_device *dev)
 
 	schedule_work(&ugeth->timeout_work);
 }
-
 
 #ifdef CONFIG_PM
 

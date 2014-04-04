@@ -173,7 +173,6 @@ void schedule_rt_mutex_test(struct rt_mutex *mutex)
 
 	schedule();
 
-
 	switch (op) {
 	case RTTEST_LOCK:
 	case RTTEST_LOCKINT:

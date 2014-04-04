@@ -487,7 +487,6 @@ static void mcs_unwrap_fir(struct mcs_cb *mcs, __u8 *buf, int len)
 	mcs->netdev->stats.rx_bytes += new_len;
 }
 
-
 /* Allocates urbs for both receive and transmit.
  * If alloc fails return error code 0 (fail) otherwise
  * return error code 1 (success).
@@ -911,7 +910,6 @@ static int mcs_probe(struct usb_interface *intf,
 	    IR_2400 | IR_9600 | IR_19200 | IR_38400 | IR_57600 | IR_115200
 		| IR_576000 | IR_1152000 | (IR_4000000 << 8);
 
-
 	mcs->qos.min_turn_time.bits &= qos_mtt_bits;
 	irda_qos_bits_to_value(&mcs->qos);
 
@@ -989,4 +987,3 @@ static void __exit mcs_exit(void)
 	usb_deregister(&mcs_driver);
 }
 module_exit(mcs_exit);
-

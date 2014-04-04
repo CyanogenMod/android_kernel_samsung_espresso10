@@ -140,7 +140,6 @@ static struct platform_driver tmio_mmc_driver = {
 	.resume = tmio_mmc_resume,
 };
 
-
 static int __init tmio_mmc_init(void)
 {
 	return platform_driver_register(&tmio_mmc_driver);

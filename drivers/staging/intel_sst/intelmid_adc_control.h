@@ -26,7 +26,6 @@
  *  Common private ADC declarations for SST
  */
 
-
 #define MSIC_ADC1CNTL1		0x1C0
 #define MSIC_ADC_ENBL		0x10
 #define MSIC_ADC_START		0x08
@@ -48,7 +47,6 @@
 #define ADC_CHNL_START_ADDR	0x1C5	/* increments by 1 */
 #define ADC_DATA_START_ADDR     0x1D4   /* increments by 2 */
 
-
 /**
  * configure_adc - enables/disables the ADC for conversion
  * @val: zero: disables the ADC non-zero:enables the ADC
@@ -61,7 +59,6 @@ static inline int configure_adc(int val)
 {
 	int ret;
 	struct sc_reg_access sc_access = {0,};
-
 
 	sc_access.reg_addr = MSIC_ADC1CNTL1;
 	ret = sst_sc_reg_access(&sc_access, PMIC_READ, 1);
@@ -190,4 +187,3 @@ static inline int mid_initialize_adc(void)
 	return chnl_addr;
 }
 #endif
-

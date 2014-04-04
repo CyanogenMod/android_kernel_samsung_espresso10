@@ -13,7 +13,6 @@
 #ifndef ASM_ARM_LEDS_H
 #define ASM_ARM_LEDS_H
 
-
 typedef enum {
 	led_idle_start,
 	led_idle_end,

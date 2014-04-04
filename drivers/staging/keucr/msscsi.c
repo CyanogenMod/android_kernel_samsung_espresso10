@@ -60,7 +60,6 @@ int MS_SCSI_Mode_Sense(struct us_data *us, struct scsi_cmnd *srb)
 	else
 		usb_stor_set_xfer_buf(us, mediaNoWP, 12, srb, TO_XFER_BUF);
 
-
 	return USB_STOR_TRANSPORT_GOOD;
 }
 
@@ -341,4 +340,3 @@ int MS_SCSIIrp(struct us_data *us, struct scsi_cmnd *srb)
 	}
 	return result;
 }
-

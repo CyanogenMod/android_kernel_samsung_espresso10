@@ -97,7 +97,6 @@ static struct snd_soc_dai_link t5325_dai[] = {
 },
 };
 
-
 static struct snd_soc_card t5325 = {
 	.name = "t5325",
 	.dai_link = t5325_dai,

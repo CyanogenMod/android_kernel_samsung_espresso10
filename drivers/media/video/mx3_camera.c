@@ -1308,7 +1308,6 @@ static struct platform_driver mx3_camera_driver = {
 	.remove		= __devexit_p(mx3_camera_remove),
 };
 
-
 static int __init mx3_camera_init(void)
 {
 	return platform_driver_register(&mx3_camera_driver);

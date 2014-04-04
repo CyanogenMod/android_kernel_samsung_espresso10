@@ -159,7 +159,6 @@ define_pll_div_clk(tdm, 0,		1);
 define_pll_div_clk(tdm, extra,		2);
 define_pll_div_clk(tdm, 1,		3);
 
-
 /* Level 3 - LPSC gated clocks */
 #define __lpsc_clk(cname, _parent, mod, flg)		\
 	static struct clk clk_##cname = {		\
@@ -222,7 +221,6 @@ lpsc_clk(spare,		sys_half_clk,		SPARE);
 
 /* LCD needs a full power down to clear controller state */
 __lpsc_clk(lcd, sys_lcd_clk, LCD, PSC_SWRSTDISABLE);
-
 
 /* Level 4 - leaf clocks for LPSC modules shared across drivers */
 static struct clk clk_rng = { .name = "rng", .parent = &clk_pktsec };

@@ -16,7 +16,6 @@ config SND_SOC_TXX9ACLC_AC97
 	select SND_AC97_CODEC
 	select SND_SOC_AC97_BUS
 
-
 ##
 ## Boards
 ##

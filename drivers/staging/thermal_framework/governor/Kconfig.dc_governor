@@ -11,4 +11,3 @@ config OMAP4_DUTY_CYCLE_GOVERNOR
 	  This governor will instituted the policy to define
 	  aggressiveness of duty cycle. The governor changes duty cycle
 	  threshold, depending on the PCB temperature sensor
-

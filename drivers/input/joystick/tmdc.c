@@ -108,7 +108,6 @@ static const struct tmdc_model {
 	{   0, "Unknown %d-axis, %d-button TM device %d", 0, 0, { 0, 0 }, { 0, 0 }, tmdc_abs, tmdc_btn_joy }
 };
 
-
 struct tmdc_port {
 	struct input_dev *dev;
 	char name[64];

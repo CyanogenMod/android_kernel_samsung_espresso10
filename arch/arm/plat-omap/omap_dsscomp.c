@@ -53,4 +53,3 @@ static int __init omap_init_dsscomp(void)
 }
 
 arch_initcall(omap_init_dsscomp);
-

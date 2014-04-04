@@ -232,7 +232,6 @@ bfa_fcs_rport_sm_plogi_sending(struct bfa_fcs_rport_s *rport,
 				bfa_fcs_rport_del_timeout);
 		break;
 
-
 	default:
 		bfa_sm_fault(rport->fcs, event);
 	}
@@ -1300,7 +1299,6 @@ bfa_fcs_rport_sm_nsdisc_sent(struct bfa_fcs_rport_s *rport,
 				bfa_fcs_rport_del_timeout);
 		break;
 
-
 	case RPSM_EVENT_PRLO_RCVD:
 		bfa_fcs_rport_send_prlo_acc(rport);
 		break;
@@ -1327,8 +1325,6 @@ bfa_fcs_rport_sm_nsdisc_sent(struct bfa_fcs_rport_s *rport,
 		bfa_sm_fault(rport->fcs, event);
 	}
 }
-
-
 
 /*
  *  fcs_rport_private FCS RPORT provate functions
@@ -1992,7 +1988,6 @@ bfa_fcs_rport_alloc(struct bfa_fcs_lport_s *port, wwn_t pwwn, u32 rpid)
 	return rport;
 }
 
-
 static void
 bfa_fcs_rport_free(struct bfa_fcs_rport_s *rport)
 {
@@ -2139,8 +2134,6 @@ bfa_fcs_rport_process_logo(struct bfa_fcs_rport_s *rport, struct fchs_s *fchs)
 	bfa_sm_send_event(rport, RPSM_EVENT_LOGO_RCVD);
 }
 
-
-
 /*
  *  fcs_rport_public FCS rport public interfaces
  */
@@ -2284,7 +2277,6 @@ bfa_fcs_rport_plogi(struct bfa_fcs_rport_s *rport, struct fchs_s *rx_fchs,
 	bfa_sm_send_event(rport, RPSM_EVENT_PLOGI_RCVD);
 }
 
-
 /*
  *	Called by bport/vport to notify SCN for the remote port
  */
@@ -2294,7 +2286,6 @@ bfa_fcs_rport_scn(struct bfa_fcs_rport_s *rport)
 	rport->stats.rscns++;
 	bfa_sm_send_event(rport, RPSM_EVENT_SCN);
 }
-
 
 /*
  *	brief
@@ -2505,7 +2496,6 @@ bfa_fcs_rport_get_state(struct bfa_fcs_rport_s *rport)
 	return bfa_sm_to_state(rport_sm_table, rport->sm);
 }
 
-
 /*
  *	brief
  *		 Called by the Driver to set rport delete/ageout timeout
@@ -2530,8 +2520,6 @@ bfa_fcs_rport_prlo(struct bfa_fcs_rport_s *rport, __be16 ox_id)
 	rport->reply_oxid = ox_id;
 	bfa_sm_send_event(rport, RPSM_EVENT_PRLO_RCVD);
 }
-
-
 
 /*
  * Remote port implementation.

@@ -59,7 +59,6 @@ static inline void oct5066_page(struct map_info *map, unsigned long ofs)
 		__oct5066_page(map, byte);
 }
 
-
 static map_word oct5066_read8(struct map_info *map, unsigned long ofs)
 {
 	map_word ret;

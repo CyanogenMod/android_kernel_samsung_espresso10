@@ -78,7 +78,6 @@ void gma_power_uninit(struct drm_device *dev)
 	pm_runtime_set_suspended(&dev->pdev->dev);
 }
 
-
 /**
  *	save_display_registers	-	save registers lost on suspend
  *	@dev: our DRM device
@@ -179,7 +178,6 @@ static void power_down(struct drm_device *dev)
 		dev_priv->display_power = false;
 	}
 }
-
 
 /**
  *	gma_suspend_display	-	suspend the display logic
@@ -379,7 +377,6 @@ int gma_power_suspend(struct pci_dev *pdev, pm_message_t state)
 	return 0;
 }
 
-
 /**
  *	gma_power_resume		-	resume power
  *	@pdev: PCI device
@@ -399,8 +396,6 @@ int gma_power_resume(struct pci_dev *pdev)
 	return 0;
 }
 
-
-
 /**
  *	gma_power_is_on		-	returne true if power is on
  *	@dev: our DRM device
@@ -412,7 +407,6 @@ bool gma_power_is_on(struct drm_device *dev)
 	struct drm_psb_private *dev_priv = dev->dev_private;
 	return dev_priv->display_power;
 }
-
 
 /**
  *	gma_power_begin		-	begin requiring power
@@ -450,7 +444,6 @@ bool gma_power_begin(struct drm_device *dev, bool force_on)
 	return false;
 }
 
-
 /**
  *	gma_power_end		-	end use of power
  *	@dev: Our DRM device
@@ -486,4 +479,3 @@ int psb_runtime_idle(struct device *dev)
 	else
 		return 1;
 }
-

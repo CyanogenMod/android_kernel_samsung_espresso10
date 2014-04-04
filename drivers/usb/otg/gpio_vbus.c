@@ -22,7 +22,6 @@
 #include <linux/usb/gpio_vbus.h>
 #include <linux/usb/otg.h>
 
-
 /*
  * A simple GPIO VBUS sensing driver for B peripheral only devices
  * with internal transceivers. It can control a D+ pullup GPIO and
@@ -39,7 +38,6 @@ struct gpio_vbus_data {
 	struct work_struct	work;
 };
 
-
 /*
  * This driver relies on "both edges" triggering.  VBUS has 100 msec to
  * stabilize, so the peripheral controller driver may need to cope with
@@ -52,7 +50,6 @@ struct gpio_vbus_data {
 #define VBUS_IRQ_FLAGS \
 	( IRQF_SAMPLE_RANDOM | IRQF_SHARED \
 	| IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING )
-
 
 /* interface to regulator framework */
 static void set_vbus_draw(struct gpio_vbus_data *gpio_vbus, unsigned mA)

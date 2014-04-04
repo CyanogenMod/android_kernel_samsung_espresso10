@@ -131,7 +131,6 @@ static int snd_cx18_mixer_tv_vol_put(struct snd_kcontrol *kctl,
 	return ret;
 }
 
-
 /* This is a bit of overkill, the slider is already in dB internally */
 static DECLARE_TLV_DB_SCALE(snd_cx18_mixer_tv_vol_db_scale, -9600, 100, 0);
 

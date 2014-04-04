@@ -186,7 +186,6 @@ static void tuner_detach(struct dvb_frontend *fe)
 }
 #endif
 
-
 static inline struct tuner *to_tuner(struct v4l2_subdev *sd)
 {
 	return container_of(sd, struct tuner, sd);

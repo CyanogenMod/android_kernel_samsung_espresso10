@@ -158,7 +158,7 @@ iiReset(i2eBordStrPtr pB)
 	// of all // P.O.S.T., write the message. We must not mistake data which
 	// might have been sent for testing as part of the reset message. To
 	// better utilize time, say, when resetting several boards, we allow the
-	// delay to be performed externally; in this way the caller can reset 
+	// delay to be performed externally; in this way the caller can reset
 	// several boards, delay a single time, then call the initialization
 	// routine for all.
 
@@ -251,7 +251,6 @@ iiInitialize(i2eBordStrPtr pB)
 	// In case there is a failure short of our completely reading the power-up
 	// message.
 	pB->i2eValid = I2E_INCOMPLETE;
-
 
 	// Now attempt to read the message.
 
@@ -363,7 +362,7 @@ iiInitialize(i2eBordStrPtr pB)
 
 		itemp = pB->i2ePom.e.porFifoSize;
 
-		// Implicit assumption that fifo would not grow beyond 32k, 
+		// Implicit assumption that fifo would not grow beyond 32k,
 		// nor would ever be less than 256.
 
 		if (itemp < 8 || itemp > 15)
@@ -392,7 +391,7 @@ iiInitialize(i2eBordStrPtr pB)
 			utemp &= POR_BOXES;
 			for (itemp = 0; itemp < ilimit; itemp++)
 			{
-				pB->i2eChannelMap[itemp] = 
+				pB->i2eChannelMap[itemp] =
 					((utemp & POR_BOX_16) ? 0xffff : 0x00ff);
 				utemp >>= 1;
 			}
@@ -439,7 +438,7 @@ iiInitialize(i2eBordStrPtr pB)
 		break;
 	}  // End the switch based on family
 
-	// Temporarily, claim there is no room in the outbound fifo. 
+	// Temporarily, claim there is no room in the outbound fifo.
 	// We will maintain this whenever we check for an empty outbound FIFO.
 	pB->i2eFifoRemains = 0;
 
@@ -606,7 +605,6 @@ ii2DelayTimer(unsigned int mseconds)
 //
 //******************************************************************************
 
-
 static int ii2DelValue = 1190;  // See timing calculations below
 						// 1666 for fastest theoretical machine
 						// 1190 safe for most fast 386 machines
@@ -615,7 +613,7 @@ static int ii2DelValue = 1190;  // See timing calculations below
 static void
 ii2DelayIO(unsigned int mseconds)
 {
-	if (!ii2Safe) 
+	if (!ii2Safe)
 		return;   /* Do nothing if this variable uninitialized */
 
 	while(mseconds--) {
@@ -625,7 +623,7 @@ ii2DelayIO(unsigned int mseconds)
 		}
 	}
 }
-#endif 
+#endif
 
 //******************************************************************************
 // Function:   ii2Nop()
@@ -891,16 +889,15 @@ iiWaitForTxEmptyII(i2eBordStrPtr pB, int mSdelay)
 		//
 		// By the nature of this routine, you would be using this as part of a
 		// larger atomic context: i.e., you would use this routine to ensure the
-		// fifo empty, then act on this information. Between these two halves, 
-		// you will generally not want to service interrupts or in any way 
+		// fifo empty, then act on this information. Between these two halves,
+		// you will generally not want to service interrupts or in any way
 		// disrupt the assumptions implicit in the larger context.
 		//
-		// Even worse, however, this routine "shifts" the status register to 
+		// Even worse, however, this routine "shifts" the status register to
 		// point to the local status register which is not the usual situation.
 		// Therefore for extra safety, we force the critical section to be
 		// completely atomic, and pick up after ourselves before allowing any
 		// interrupts of any kind.
-
 
 		write_lock_irqsave(&Dl_spinlock, flags);
 		outb(SEL_COMMAND, pB->i2ePointer);

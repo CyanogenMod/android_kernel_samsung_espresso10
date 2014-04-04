@@ -111,42 +111,42 @@ static unsigned short code_tab_102us[] = {
 	KEY_102ND,		//VK_OEM_102   henry+ 0x2B (43) BACKSLASH have been used,change to use 0X56 (86)
 	KEY_F11,		//VK_F11
 	KEY_F12,		//VK_F12
-	0, 
-	0, 
-	0, 
-	0, 
-	0, 
-	0, 
-	0, 
-	0, // 60 
 	0,
 	0,
-	KEY_SEARCH, // add search key map 
-	0,		
 	0,
 	0,
-	0,	
-	0,		
-	0, 
-	0, 
-	0, 
-	0, 
-	0, 
-	0, 
-	0, 
-	0, // 70 
+	0,
+	0,
+	0,
+	0, // 60
+	0,
+	0,
+	KEY_SEARCH, // add search key map
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0, // 70
 	0,
 	0,
 	KEY_KP5,  //73 for JP keyboard '\' key, report 0x4c
-	0,		
 	0,
 	0,
-	0,	
-	0,		
-	0, 
-	0, 
-    0, 
-	0, 
+	0,
+	0,
+	0,
+	0,
+	0,
+    0,
+	0,
 	KEY_KP9, //7d  for JP keyboard '|' key, report 0x49
 };
 
@@ -246,7 +246,7 @@ static unsigned short extcode_tab_us102[] = {
 	0,		//VK_RWIN
 	KEY_ESC,	//VK_APPS
 	KEY_KPMINUS, //for power button workaround
-	0, 
+	0,
 	0,
 	0,
 	0,

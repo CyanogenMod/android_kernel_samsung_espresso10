@@ -401,7 +401,6 @@
 
 #define DA850_N_CP_INTC_IRQ		101
 
-
 /* TNETV107X specific interrupts */
 #define IRQ_TNETV107X_TDM1_TXDMA		0
 #define IRQ_TNETV107X_EXT_INT_0			1

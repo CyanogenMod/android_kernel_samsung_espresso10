@@ -180,7 +180,6 @@ enum MPU_MEMORY_BANKS {
 	MPU_MEM_OTP_BANK_0 = 16
 };
 
-
 /*==== MPU6050B1 parameters ====*/
 
 #define NUM_REGS		(NUM_OF_MPU_REGISTERS)
@@ -196,7 +195,6 @@ enum MPU_MEMORY_BANKS {
 #define FIFO_HW_SIZE		(1024)
 
 #define NUM_EXT_SLAVES		(4)
-
 
 /*==== BITS FOR MPU6050B1 ====*/
 /*---- MPU6050B1 'XG_OFFS_TC' register (0, 1, 2) ----*/

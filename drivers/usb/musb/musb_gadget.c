@@ -47,7 +47,6 @@
 
 #include "musb_core.h"
 
-
 /* MUSB PERIPHERAL status 3-mar-2006:
  *
  * - EP0 seems solid.  It passes both USBCV and usbtest control cases.
@@ -207,8 +206,7 @@ __acquires(ep->musb->lock)
 				ep->end_point.name, request,
 				req->request.actual, req->request.length,
 				request->status);
-        
-	/* check the validation of function */
+	/*  check the validation of function */
 	if (req->request.complete)
 		req->request.complete(&req->ep->end_point, &req->request);
 	spin_lock(&musb->lock);
@@ -280,7 +278,6 @@ static inline int max_ep_writesize(struct musb *musb, struct musb_ep *ep)
 		return ep->packet_sz;
 }
 
-
 #ifdef CONFIG_USB_INVENTRA_DMA
 
 /* Peripheral tx (IN) using Mentor DMA works as follows:
@@ -332,6 +329,13 @@ static void txstate(struct musb *musb, struct musb_request *req)
 	int			use_dma = 0;
 
 	musb_ep = req->ep;
+
+	/* Check if EP is disabled */
+	if (!musb_ep->desc) {
+		dev_dbg(musb->controller, "ep:%s disabled - ignore request\n",
+						musb_ep->end_point.name);
+		return;
+	}
 
 	/* we shouldn't get here while DMA is active ... but we do ... */
 	if (dma_channel_status(musb_ep->dma) == MUSB_DMA_STATUS_BUSY) {
@@ -560,8 +564,7 @@ void musb_g_tx(struct musb *musb, u8 epnum)
 			&& (request->actual == request->length))
 #if defined(CONFIG_USB_INVENTRA_DMA) || defined(CONFIG_USB_UX500_DMA)
 			|| (is_dma && (!dma->desired_mode ||
-				(request->actual &
-					(musb_ep->packet_sz - 1))))
+				(request->actual % musb_ep->packet_sz)))
 #endif
 		) {
 			/*
@@ -573,8 +576,14 @@ void musb_g_tx(struct musb *musb, u8 epnum)
 
 			dev_dbg(musb->controller, "sending zero pkt\n");
 			musb_writew(epio, MUSB_TXCSR, MUSB_TXCSR_MODE
-					| MUSB_TXCSR_TXPKTRDY);
+					| MUSB_TXCSR_TXPKTRDY
+					| (csr & MUSB_TXCSR_P_ISO));
 			request->zero = 0;
+			/*
+			 * Return from here with the expectation of the endpoint
+			 * interrupt for further action.
+			 */
+			return;
 		}
 
 		if (request->actual == request->length) {
@@ -654,6 +663,13 @@ static void rxstate(struct musb *musb, struct musb_request *req)
 		musb_ep = &hw_ep->ep_out;
 
 	len = musb_ep->packet_sz;
+
+	/* Check if EP is disabled */
+	if (!musb_ep->desc) {
+		dev_dbg(musb->controller, "ep:%s disabled - ignore request\n",
+						musb_ep->end_point.name);
+		return;
+	}
 
 	/* We shouldn't get here while DMA is active, but we do... */
 	if (dma_channel_status(musb_ep->dma) == MUSB_DMA_STATUS_BUSY) {
@@ -1755,7 +1771,7 @@ void musb_platform_pullup(struct musb *musb, int is_on)
 	unsigned long	flags;
 	spin_lock_irqsave(&musb->lock, flags);
 	if (musb->softconnect)
-	musb_pullup(musb, is_on);
+		musb_pullup(musb, is_on);
 	spin_unlock_irqrestore(&musb->lock, flags);
 	dev_info(musb->controller, "%s is_on=%d\n", __func__, is_on);
 }
@@ -1785,7 +1801,6 @@ static void musb_gadget_release(struct device *dev)
 	/* kref_put(WHAT) */
 	dev_dbg(dev, "%s\n", __func__);
 }
-
 
 static void __init
 init_peripheral_ep(struct musb *musb, struct musb_ep *ep, u8 epnum, int is_in)
@@ -2152,7 +2167,6 @@ int usb_gadget_unregister_driver(struct usb_gadget_driver *driver)
 }
 EXPORT_SYMBOL(usb_gadget_unregister_driver);
 
-
 /* ----------------------------------------------------------------------- */
 
 /* lifecycle operations called through plat_uds.c */
@@ -2285,7 +2299,6 @@ __acquires(musb->lock)
 	/* clear HR */
 	else if (devctl & MUSB_DEVCTL_HR)
 		musb_writeb(mbase, MUSB_DEVCTL, MUSB_DEVCTL_SESSION);
-
 
 	/* what speed did we negotiate? */
 	power = musb_readb(mbase, MUSB_POWER);

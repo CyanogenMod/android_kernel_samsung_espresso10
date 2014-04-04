@@ -206,4 +206,3 @@ void __init at91rm9200_timer_init(void)
 struct sys_timer at91rm9200_timer = {
 	.init		= at91rm9200_timer_init,
 };
-

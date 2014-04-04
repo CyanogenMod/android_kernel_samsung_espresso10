@@ -40,7 +40,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #ifndef EHCA_TOOLS_H
 #define EHCA_TOOLS_H
 

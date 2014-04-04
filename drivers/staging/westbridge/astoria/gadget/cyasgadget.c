@@ -548,7 +548,6 @@ static void cyasgadget_stallcallback(
 	#endif
 }
 
-
 /*******************************************************************/
 /* All usb_ep_ops (cyasgadget_ep_ops) are placed in this subsection*/
 /*******************************************************************/
@@ -1187,8 +1186,6 @@ static int cyasgadget_ioctl(
 			/* block size is arbitrary , we'll use sector size*/
 			bh.b_size = SECTOR_SIZE;
 
-
-
 			/* clear dirty pages in page cache
 			 * (if were any allocated) */
 			nr_pages = (k_d.num_bytes) / (PAGE_CACHE_SIZE);
@@ -1602,7 +1599,6 @@ static const struct usb_gadget_ops cyasgadget_ops = {
 	.pullup		 = cyasgadget_pullup,
 	.ioctl	   = cyasgadget_ioctl,
 };
-
 
 /* keeping it simple:
  * - one bus driver, initted first;
@@ -2168,7 +2164,6 @@ static void __exit cyas_cleanup(void)
 		cyasgadget_deinit(cy_as_gadget_controller);
 }
 module_exit(cyas_cleanup);
-
 
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION(CY_AS_DRIVER_DESC);

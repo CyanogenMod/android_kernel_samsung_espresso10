@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -28,8 +28,8 @@
 
 #define ASSEMBLE_UNALIGNED_UINT16(p,highbyte,lowbyte) \
         (((u16)(((u8 *)(p))[(highbyte)])) << 8 | (u16)(((u8 *)(p))[(lowbyte)]))
-        
-/* alignment independent macros (little-endian) to fetch UINT16s or UINT8s from a 
+
+/* alignment independent macros (little-endian) to fetch UINT16s or UINT8s from a
  * structure using only the type and field name.
  * Use these macros if there is the potential for unaligned buffer accesses. */
 #define A_GET_UINT16_FIELD(p,type,field) \
@@ -42,23 +42,23 @@
     ((u8 *)(p))[A_OFFSETOF(type,field)] = (u8)(value);        \
     ((u8 *)(p))[A_OFFSETOF(type,field) + 1] = (u8)((value) >> 8); \
 }
-  
+
 #define A_GET_UINT8_FIELD(p,type,field) \
             ((u8 *)(p))[A_OFFSETOF(type,field)]
-            
+
 #define A_SET_UINT8_FIELD(p,type,field,value) \
     ((u8 *)(p))[A_OFFSETOF(type,field)] = (value)
 
 /****** DANGER DANGER ***************
- * 
+ *
  *   The frame header length and message formats defined herein were
  *   selected to accommodate optimal alignment for target processing.  This reduces code
  *   size and improves performance.
- * 
+ *
  *   Any changes to the header length may alter the alignment and cause exceptions
  *   on the target. When adding to the message structures insure that fields are
  *   properly aligned.
- * 
+ *
  */
 
 /* HTC frame header */
@@ -68,13 +68,13 @@ PREPACK struct htc_frame_hdr {
     u8 EndpointID;
     u8 Flags;
     u16 PayloadLen;       /* length of data (including trailer) that follows the header */
-    
+
     /***** end of 4-byte lookahead ****/
-    
+
     u8 ControlBytes[2];
-    
+
     /* message payload starts after the header */
-    
+
 } POSTPACK;
 
 /* frame header flags */
@@ -83,7 +83,7 @@ PREPACK struct htc_frame_hdr {
 #define HTC_FLAGS_NEED_CREDIT_UPDATE (1 << 0)
 #define HTC_FLAGS_SEND_BUNDLE        (1 << 1)  /* start or part of bundle */
     /* receive direction */
-#define HTC_FLAGS_RECV_UNUSED_0      (1 << 0)  /* bit 0 unused */    
+#define HTC_FLAGS_RECV_UNUSED_0      (1 << 0)  /* bit 0 unused */
 #define HTC_FLAGS_RECV_TRAILER       (1 << 1)  /* bit 1 trailer data present */
 #define HTC_FLAGS_RECV_UNUSED_2      (1 << 0)  /* bit 2 unused */
 #define HTC_FLAGS_RECV_UNUSED_3      (1 << 0)  /* bit 3 unused */
@@ -98,17 +98,17 @@ PREPACK struct htc_frame_hdr {
 
 #define HTC_MSG_READY_ID                    1
 #define HTC_MSG_CONNECT_SERVICE_ID          2
-#define HTC_MSG_CONNECT_SERVICE_RESPONSE_ID 3   
+#define HTC_MSG_CONNECT_SERVICE_RESPONSE_ID 3
 #define HTC_MSG_SETUP_COMPLETE_ID           4
 #define HTC_MSG_SETUP_COMPLETE_EX_ID        5
 
 #define HTC_MAX_CONTROL_MESSAGE_LENGTH  256
-         
+
 /* base message ID header */
 typedef PREPACK struct {
     u16 MessageID;
 } POSTPACK HTC_UNKNOWN_MSG;
-                                                     
+
 /* HTC ready message
  * direction : target-to-host  */
 typedef PREPACK struct {
@@ -127,7 +127,7 @@ typedef PREPACK struct {
     u8 MaxMsgsPerHTCBundle;
 } POSTPACK HTC_READY_EX_MSG;
 
-#define HTC_VERSION_2P0  0x00  
+#define HTC_VERSION_2P0  0x00
 #define HTC_VERSION_2P1  0x01  /* HTC 2.1 */
 
 #define HTC_SERVICE_META_DATA_MAX_LENGTH 128
@@ -139,19 +139,19 @@ typedef PREPACK struct {
     u16 ServiceID;           /* service ID of the service to connect to */
     u16 ConnectionFlags;     /* connection flags */
 
-#define HTC_CONNECT_FLAGS_REDUCE_CREDIT_DRIBBLE (1 << 2)  /* reduce credit dribbling when 
-                                                             the host needs credits */  
-#define HTC_CONNECT_FLAGS_THRESHOLD_LEVEL_MASK             (0x3)  
+#define HTC_CONNECT_FLAGS_REDUCE_CREDIT_DRIBBLE (1 << 2)  /* reduce credit dribbling when
+                                                             the host needs credits */
+#define HTC_CONNECT_FLAGS_THRESHOLD_LEVEL_MASK             (0x3)
 #define HTC_CONNECT_FLAGS_THRESHOLD_LEVEL_ONE_FOURTH        0x0
 #define HTC_CONNECT_FLAGS_THRESHOLD_LEVEL_ONE_HALF          0x1
 #define HTC_CONNECT_FLAGS_THRESHOLD_LEVEL_THREE_FOURTHS     0x2
 #define HTC_CONNECT_FLAGS_THRESHOLD_LEVEL_UNITY             0x3
-                                                             
+
     u8 ServiceMetaLength;   /* length of meta data that follows */
     u8 _Pad1;
-    
+
     /* service-specific meta data starts after the header */
-    
+
 } POSTPACK HTC_CONNECT_SERVICE_MSG;
 
 /* connect response
@@ -164,9 +164,9 @@ typedef PREPACK struct {
     u16 MaxMsgSize;           /* maximum expected message size on this endpoint */
     u8 ServiceMetaLength;    /* length of meta data that follows */
     u8 _Pad1;
-    
+
     /* service-specific meta data starts after the header */
-    
+
 } POSTPACK HTC_CONNECT_SERVICE_RESPONSE_MSG;
 
 typedef PREPACK struct {
@@ -188,8 +188,8 @@ typedef PREPACK struct {
 #define HTC_SERVICE_SUCCESS      0  /* success */
 #define HTC_SERVICE_NOT_FOUND    1  /* service could not be found */
 #define HTC_SERVICE_FAILED       2  /* specific service failed the connect */
-#define HTC_SERVICE_NO_RESOURCES 3  /* no resources (i.e. no more endpoints) */  
-#define HTC_SERVICE_NO_MORE_EP   4  /* specific service is not allowing any more 
+#define HTC_SERVICE_NO_RESOURCES 3  /* no resources (i.e. no more endpoints) */
+#define HTC_SERVICE_NO_MORE_EP   4  /* specific service is not allowing any more
                                        endpoints */
 
 /* report record IDs */
@@ -209,19 +209,18 @@ typedef PREPACK struct {
     u8 Credits;        /* credits to report since last report */
 } POSTPACK HTC_CREDIT_REPORT;
 
-typedef PREPACK struct {    
+typedef PREPACK struct {
     u8 PreValid;         /* pre valid guard */
     u8 LookAhead[4];     /* 4 byte lookahead */
     u8 PostValid;        /* post valid guard */
-    
+
    /* NOTE: the LookAhead array is guarded by a PreValid and Post Valid guard bytes.
     * The PreValid bytes must equal the inverse of the PostValid byte */
-    
+
 } POSTPACK HTC_LOOKAHEAD_REPORT;
 
-typedef PREPACK struct {    
+typedef PREPACK struct {
     u8 LookAhead[4];     /* 4 byte lookahead */
 } POSTPACK HTC_BUNDLED_LOOKAHEAD_REPORT;
 
 #endif /* __HTC_H__ */
-

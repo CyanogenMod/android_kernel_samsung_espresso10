@@ -95,7 +95,6 @@ static const char *version = "ne2.c:v0.91 Nov 16 1998 Wim Dumon <wimpie@kotnet.o
 /* Do we have a non std. amount of memory? (in units of 256 byte pages) */
 /* #define PACKETBUF_MEMSIZE	0x40 */
 
-
 /* ---- No user-serviceable parts below ---- */
 
 #define NE_BASE	 (dev->base_addr)
@@ -143,7 +142,6 @@ static void ne_block_input(struct net_device *dev, int count,
 		struct sk_buff *skb, int ring_offset);
 static void ne_block_output(struct net_device *dev, const int count,
 		const unsigned char *buf, const int start_page);
-
 
 /*
  * special code to read the DE-320's MAC address EEPROM.  In contrast to a
@@ -394,7 +392,6 @@ static int __init ne2_probe1(struct net_device *dev, int slot)
 		outb_p(0xff, base_addr + EN0_ISR);         /* Ack all intr. */
 	}
 #endif
-
 
 	/* Read the 16 bytes of station address PROM.
 	   We must first initialize registers, similar to
@@ -731,7 +728,6 @@ retry:
 	outb_p(ENISR_RDC, nic_base + EN0_ISR);	/* Ack intr. */
 	ei_status.dmaing &= ~0x01;
 }
-
 
 #ifdef MODULE
 #define MAX_NE_CARDS	4	/* Max number of NE cards per module */

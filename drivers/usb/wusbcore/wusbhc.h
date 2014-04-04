@@ -299,7 +299,6 @@ struct wusbhc {
 
 #define usb_hcd_to_wusbhc(u) container_of((u), struct wusbhc, usb_hcd)
 
-
 extern int wusbhc_create(struct wusbhc *);
 extern int wusbhc_b_create(struct wusbhc *);
 extern void wusbhc_b_destroy(struct wusbhc *);
@@ -370,7 +369,6 @@ static inline struct wusbhc *wusbhc_get_by_usb_dev(struct usb_device *usb_dev)
 	return wusbhc = usb_hcd_to_wusbhc(usb_hcd);
 }
 
-
 static inline void wusbhc_put(struct wusbhc *wusbhc)
 {
 	usb_put_hcd(&wusbhc->usb_hcd);
@@ -433,7 +431,6 @@ extern int wusb_dev_4way_handshake(struct wusbhc *, struct wusb_dev *,
 				   struct wusb_ckhdid *ck);
 void wusbhc_gtk_rekey(struct wusbhc *wusbhc);
 int wusb_dev_update_address(struct wusbhc *wusbhc, struct wusb_dev *wusb_dev);
-
 
 /* WUSB Cluster ID handling */
 extern u8 wusb_cluster_id_get(void);

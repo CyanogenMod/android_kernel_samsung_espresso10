@@ -40,7 +40,6 @@ struct zoran_sync {
 	struct timeval timestamp;	/* timestamp */
 };
 
-
 #define MAJOR_VERSION 0		/* driver major version */
 #define MINOR_VERSION 10	/* driver minor version */
 #define RELEASE_VERSION 0	/* release version */

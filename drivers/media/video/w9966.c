@@ -128,7 +128,6 @@ MODULE_AUTHOR("Jakob Kemi <jakob.kemi@post.utfors.se>");
 MODULE_DESCRIPTION("Winbond w9966cf WebCam driver (0.32)");
 MODULE_LICENSE("GPL");
 
-
 #ifdef MODULE
 static const char *pardev[] = {[0 ... W9966_MAXCAMS] = ""};
 #else
@@ -152,7 +151,6 @@ static struct w9966 w9966_cams[W9966_MAXCAMS];
 /*
  *	Private function defines
  */
-
 
 /* Set camera phase flags, so we know what to uninit when terminating */
 static inline void w9966_set_state(struct w9966 *cam, int mask, int val)
@@ -469,7 +467,6 @@ static int w9966_setup(struct w9966 *cam, int x1, int y1, int x2, int y2, int w,
 		0x48, 0x0c, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 		0x00, 0x00, 0x00, 0x71, 0xe7, 0x00, 0x00, 0xc0
 	};
-
 
 	if (w * h * 2 > W9966_SRAMSIZE) {
 		DPRINTF("capture window exceeds SRAM size!.\n");
@@ -833,7 +830,6 @@ static const struct v4l2_ioctl_ops w9966_ioctl_ops = {
 	.vidioc_try_fmt_vid_cap  	    = cam_try_fmt_vid_cap,
 };
 
-
 /* Initialize camera device. Setup all internal flags, set a
    default video mode, setup ccd-chip, register v4l device etc..
    Also used for 'probing' of hardware.
@@ -915,7 +911,6 @@ static int w9966_init(struct w9966 *cam, struct parport *port)
 	return 0;
 }
 
-
 /* Terminate everything gracefully */
 static void w9966_term(struct w9966 *cam)
 {
@@ -939,7 +934,6 @@ static void w9966_term(struct w9966 *cam)
 	}
 	memset(cam, 0, sizeof(*cam));
 }
-
 
 /* Called once for every parport on init */
 static void w9966_attach(struct parport *port)
@@ -966,7 +960,6 @@ static void w9966_detach(struct parport *port)
 		if (w9966_cams[i].dev_state != 0 && w9966_cams[i].pport == port)
 			w9966_term(&w9966_cams[i]);
 }
-
 
 static struct parport_driver w9966_ppd = {
 	.name = W9966_DRIVERNAME,

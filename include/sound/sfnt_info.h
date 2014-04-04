@@ -61,7 +61,6 @@ struct soundfont_patch_info {
 	/* the actual patch data begins after this */
 };
 
-
 /*
  * open patch
  */
@@ -79,7 +78,6 @@ struct soundfont_open_parm {
 	short reserved;
 	char name[SNDRV_SFNT_PATCH_NAME_LEN];
 };
-
 
 /*
  * raw voice information record
@@ -110,7 +108,6 @@ struct soundfont_voice_parm {
 	unsigned short reserved[4];	/* not used */
 };
 
-
 /* wave table parameters: 92 bytes */
 struct soundfont_voice_info {
 	unsigned short sf_id;		/* file id (should be zero) */
@@ -139,7 +136,6 @@ struct soundfont_voice_info {
 	unsigned short sample_mode;	/* sample mode_flag (set by driver) */
 };
 
-
 /* instrument info header: 4 bytes */
 struct soundfont_voice_rec_hdr {
 	unsigned char bank;		/* midi bank number */
@@ -150,7 +146,6 @@ struct soundfont_voice_rec_hdr {
 #define SNDRV_SFNT_WR_EXCLUSIVE		1	/* skip if already exists */
 #define SNDRV_SFNT_WR_REPLACE		2	/* replace if already exists */
 };
-
 
 /*
  * sample wave information
@@ -176,7 +171,6 @@ struct soundfont_sample_info {
 	unsigned int truesize;		/* used memory size (set by driver) */
 };
 
-
 /*
  * voice preset mapping (aliasing)
  */
@@ -185,7 +179,6 @@ struct soundfont_voice_map {
 	int map_bank, map_instr, map_key;	/* key = -1 means all keys */
 	int src_bank, src_instr, src_key;
 };
-
 
 /*
  * ioctls for hwdep

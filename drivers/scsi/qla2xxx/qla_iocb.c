@@ -422,6 +422,8 @@ qla2x00_start_scsi(srb_t *sp)
 			    __constant_cpu_to_le16(CF_SIMPLE_TAG);
 			break;
 		}
+	} else {
+		cmd_pkt->control_flags = __constant_cpu_to_le16(CF_SIMPLE_TAG);
 	}
 
 	/* Load SCSI command packet. */
@@ -796,7 +798,6 @@ qla24xx_set_t10dif_tags(struct scsi_cmnd *cmd, struct fw_dif_context *pkt,
 	    (int)scsi_get_lba(cmd), scsi_get_prot_type(cmd)));
 }
 
-
 static int
 qla24xx_walk_and_build_sglist(struct qla_hw_data *ha, srb_t *sp, uint32_t *dsd,
 	uint16_t tot_dsds)
@@ -890,7 +891,6 @@ qla24xx_walk_and_build_prot_sglist(struct qla_hw_data *ha, srb_t *sp,
 	uint16_t	used_dsds = tot_dsds;
 
 	uint8_t		*cp;
-
 
 	cmd = sp->cmd;
 	scsi_for_each_prot_sg(cmd, sg, tot_dsds, i) {
@@ -1099,11 +1099,11 @@ qla24xx_build_scsi_crc_2_iocbs(srb_t *sp, struct cmd_type_crc_2 *cmd_pkt,
 		    fcp_cmnd->task_attribute = TSK_ORDERED;
 		    break;
 		default:
-		    fcp_cmnd->task_attribute = 0;
+		    fcp_cmnd->task_attribute = TSK_SIMPLE;
 		    break;
 		}
 	} else {
-		fcp_cmnd->task_attribute = 0;
+		fcp_cmnd->task_attribute = TSK_SIMPLE;
 	}
 
 	cmd_pkt->fcp_rsp_dseg_len = 0; /* Let response come in status iocb */
@@ -1305,7 +1305,12 @@ qla24xx_start_scsi(srb_t *sp)
 		case ORDERED_QUEUE_TAG:
 			cmd_pkt->task = TSK_ORDERED;
 			break;
+		default:
+		    cmd_pkt->task = TSK_SIMPLE;
+		    break;
 		}
+	} else {
+		cmd_pkt->task = TSK_SIMPLE;
 	}
 
 	/* Load SCSI command packet. */
@@ -1353,7 +1358,6 @@ queuing_error:
 
 	return QLA_FUNCTION_FAILED;
 }
-
 
 /**
  * qla24xx_dif_start_scsi() - Send a SCSI command to the ISP
@@ -1539,7 +1543,6 @@ queuing_error:
 	    "CMD sent FAILED SCSI prot_op:%02x\n", scsi_get_prot_op(cmd)));
 	return QLA_FUNCTION_FAILED;
 }
-
 
 static void qla25xx_set_que(srb_t *sp, struct rsp_que **rsp)
 {

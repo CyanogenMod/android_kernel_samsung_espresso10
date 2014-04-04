@@ -6,7 +6,6 @@
 # Usage
 # mksysmap vmlinux System.map
 
-
 #####
 # Generate System.map (actual filename passed as second argument)
 
@@ -42,4 +41,3 @@
 # (At least sparc64 has __crc_ in the middle).
 
 $NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)' > $2
-

@@ -60,7 +60,6 @@ GCDBG_FILTERDEF(queue, GCZONE_NONE,
 	      list_empty(&gccmdbuf->events) ? "no events" : "has events"); \
 }
 
-
 /*******************************************************************************
  * Internal definitions.
  */
@@ -93,7 +92,6 @@ GCDBG_FILTERDEF(queue, GCZONE_NONE,
 #define GC_SIG_MASK_BUS_ERROR	(1 << GC_SIG_BUS_ERROR)
 #define GC_SIG_MASK_MMU_ERROR	(1 << GC_SIG_MMU_ERROR)
 #define GC_SIG_MASK_DMA_DONE	((1 << GC_SIG_DMA_DONE_BITS) - 1)
-
 
 /*******************************************************************************
  * ISR.
@@ -143,7 +141,6 @@ static irqreturn_t gcisr(int irq, void *_gccorecontext)
 	/* IRQ handled. */
 	return IRQ_HANDLED;
 }
-
 
 /*******************************************************************************
  * Command buffer event and queue management.
@@ -273,7 +270,6 @@ void gcqueue_free_cmdbuf(struct gcqueue *gcqueue,
 	GCEXIT(GCZONE_QUEUE);
 }
 
-
 /*******************************************************************************
  * Event handlers.
  */
@@ -338,7 +334,6 @@ static void event_unmap(struct gcevent *gcevent, unsigned int *flags)
 
 	GCEXIT(GCZONE_EVENT);
 }
-
 
 /*******************************************************************************
  * Command buffer thread.
@@ -1637,7 +1632,6 @@ enum gcerror gcqueue_wait_idle(struct gccorecontext *gccorecontext)
 			break;
 		}
 	}
-
 
 	GCEXIT(GCZONE_THREAD);
 	return gcerror;

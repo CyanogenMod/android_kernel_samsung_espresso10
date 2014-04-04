@@ -17,7 +17,6 @@ ip_vs-objs :=	ip_vs_conn.o ip_vs_core.o ip_vs_ctl.o ip_vs_sched.o	   \
 		ip_vs_est.o ip_vs_proto.o ip_vs_pe.o			   \
 		$(ip_vs_proto-objs-y) $(ip_vs-extra_objs-y)
 
-
 # IPVS core
 obj-$(CONFIG_IP_VS) += ip_vs.o
 

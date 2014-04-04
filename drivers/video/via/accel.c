@@ -49,7 +49,6 @@ static int viafb_set_bpp(void __iomem *engine, u8 bpp)
 	return 0;
 }
 
-
 static int hw_bitblt_1(void __iomem *engine, u8 op, u32 width, u32 height,
 	u8 dst_bpp, u32 dst_addr, u32 dst_pitch, u32 dst_x, u32 dst_y,
 	u32 *src_mem, u32 src_addr, u32 src_pitch, u32 src_x, u32 src_y,

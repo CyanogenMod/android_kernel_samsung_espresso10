@@ -123,5 +123,4 @@ struct mesh_regs {
  * The units of the sel_timeout register are 10ms.
  */
 
-
 #endif /* _MESH_H */

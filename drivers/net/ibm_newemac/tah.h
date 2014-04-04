@@ -36,7 +36,6 @@ struct tah_regs {
 	u32 tsr;
 };
 
-
 /* TAH device */
 struct tah_instance {
 	struct tah_regs __iomem		*base;
@@ -50,7 +49,6 @@ struct tah_instance {
 	/* OF device instance */
 	struct platform_device		*ofdev;
 };
-
 
 /* TAH engine */
 #define TAH_MR_CVR		0x80000000

@@ -21,4 +21,3 @@
 /* see regs-power.h for the other registers in the power block. */
 
 #endif	/* __ASM_ARCH_REGS_S3C2416_H */
-

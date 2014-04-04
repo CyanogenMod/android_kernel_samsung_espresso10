@@ -51,7 +51,6 @@ struct nfqnl_msg_verdict_hdr {
 	__be32 id;
 };
 
-
 enum nfqnl_msg_config_cmds {
 	NFQNL_CFG_CMD_NONE,
 	NFQNL_CFG_CMD_BIND,
@@ -76,7 +75,6 @@ struct nfqnl_msg_config_params {
 	__be32		copy_range;
 	__u8	copy_mode;	/* enum nfqnl_config_mode */
 } __attribute__ ((packed));
-
 
 enum nfqnl_attr_config {
 	NFQA_CFG_UNSPEC,

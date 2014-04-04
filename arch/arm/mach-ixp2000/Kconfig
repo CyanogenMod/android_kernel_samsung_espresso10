@@ -1,4 +1,3 @@
-
 if ARCH_IXP2000
 
 config ARCH_SUPPORTS_BIG_ENDIAN
@@ -33,7 +32,7 @@ config ARCH_IXDP2800
 config ARCH_IXDP2X00
 	bool
 	depends on ARCH_IXDP2400 || ARCH_IXDP2800
-	default y	
+	default y
 
 config ARCH_IXDP2401
 	bool "Support Intel IXDP2401"
@@ -57,7 +56,7 @@ config MACH_IXDP28X5
 config ARCH_IXDP2X01
 	bool
 	depends on ARCH_IXDP2401 || ARCH_IXDP2801
-	default y	
+	default y
 
 config IXP2000_SUPPORT_BROKEN_PCI_IO
 	bool "Support broken PCI I/O on older IXP2000s"

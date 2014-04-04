@@ -267,7 +267,6 @@ static int acpi_setter_handle(struct eeepc_laptop *eeepc, int cm,
 	return 0;
 }
 
-
 /*
  * Sys helpers
  */
@@ -428,7 +427,6 @@ static ssize_t store_cpufv_disabled(struct device *dev,
 	}
 }
 
-
 static struct device_attribute dev_attr_cpufv = {
 	.attr = {
 		.name = "cpufv",
@@ -451,7 +449,6 @@ static struct device_attribute dev_attr_cpufv_disabled = {
 	.show   = show_cpufv_disabled,
 	.store  = store_cpufv_disabled
 };
-
 
 static struct attribute *platform_attributes[] = {
 	&dev_attr_camera.attr,
@@ -573,7 +570,6 @@ static void eeepc_led_exit(struct eeepc_laptop *eeepc)
 	if (eeepc->led_workqueue)
 		destroy_workqueue(eeepc->led_workqueue);
 }
-
 
 /*
  * PCI hotplug (for wlan rfkill)
@@ -1197,7 +1193,6 @@ static void eeepc_backlight_exit(struct eeepc_laptop *eeepc)
 	eeepc->backlight_device = NULL;
 }
 
-
 /*
  * Input device (i.e. hotkeys)
  */
@@ -1507,7 +1502,6 @@ static int eeepc_acpi_remove(struct acpi_device *device, int type)
 	return 0;
 }
 
-
 static const struct acpi_device_id eeepc_device_ids[] = {
 	{EEEPC_ACPI_HID, 0},
 	{"", 0},
@@ -1526,7 +1520,6 @@ static struct acpi_driver eeepc_acpi_driver = {
 		.notify = eeepc_acpi_notify,
 	},
 };
-
 
 static int __init eeepc_laptop_init(void)
 {

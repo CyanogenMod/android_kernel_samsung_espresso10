@@ -127,7 +127,6 @@ int t3e3_if_start_xmit(struct sk_buff *skb, struct net_device *dev)
 	return 0;
 }
 
-
 void t3e3_read_card_serial_number(struct channel *sc)
 {
 	u32 i;

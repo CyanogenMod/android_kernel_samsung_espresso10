@@ -29,4 +29,3 @@ unsigned long __do_user_copy(void *to, const void *from, int n,
 	*fault_catcher = NULL;
 	return ret;
 }
-

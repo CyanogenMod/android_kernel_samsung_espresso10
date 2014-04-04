@@ -51,7 +51,6 @@
 #define SNAPSHOT_AVAIL_SWAP		_IOR(SNAPSHOT_IOC_MAGIC, 7, void *)
 #define SNAPSHOT_GET_SWAP_PAGE		_IOR(SNAPSHOT_IOC_MAGIC, 8, void *)
 
-
 #define SNAPSHOT_MINOR	231
 
 static struct snapshot_data {

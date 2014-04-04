@@ -177,7 +177,6 @@ xtags()
         fi
 }
 
-
 # Support um (which uses SUBARCH)
 if [ "${ARCH}" = "um" ]; then
 	if [ "$SUBARCH" = "i386" ]; then

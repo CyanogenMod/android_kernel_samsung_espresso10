@@ -164,7 +164,6 @@ static ssize_t hidraw_write(struct file *file, const char __user *buffer, size_t
 	return ret;
 }
 
-
 /* This function performs a Get_Report transfer over the control endpoint
  * per section 7.2.1 of the HID specification, version 1.1.  The first byte
  * of buffer is the report number to request, or 0x0 if the defice does not

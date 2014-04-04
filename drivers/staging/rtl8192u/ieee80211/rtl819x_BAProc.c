@@ -174,7 +174,6 @@ static struct sk_buff* ieee80211_ADDBA(struct ieee80211_device* ieee, u8* Dst, P
 	//return NULL;
 }
 
-
 /********************************************************************************************************************
  *function:  construct DELBA frame
  *   input:  u8* 		dst 	//DELBA frame's destination
@@ -462,7 +461,6 @@ int ieee80211_rx_ADDBARsp( struct ieee80211_device* ieee, struct sk_buff *skb)
 		goto OnADDBARsp_Reject;
 	}
 
-
 	//
 	// Search for related TS.
 	// If there is no TS found, we wil reject ADDBA Rsp by sending DELBA frame.
@@ -483,7 +481,6 @@ int ieee80211_rx_ADDBARsp( struct ieee80211_device* ieee, struct sk_buff *skb)
 	pTS->bAddBaReqInProgress = false;
 	pPendingBA = &pTS->TxPendingBARecord;
 	pAdmittedBA = &pTS->TxAdmittedBARecord;
-
 
 	//
 	// Check if related BA is waiting for setup.
@@ -507,7 +504,6 @@ int ieee80211_rx_ADDBARsp( struct ieee80211_device* ieee, struct sk_buff *skb)
 		DeActivateBAEntry(ieee, pPendingBA);
 	}
 
-
 	if(*pStatusCode == ADDBA_STATUS_SUCCESS)
 	{
 		//
@@ -523,7 +519,6 @@ int ieee80211_rx_ADDBARsp( struct ieee80211_device* ieee, struct sk_buff *skb)
 			ReasonCode = DELBA_REASON_END_BA;
 			goto OnADDBARsp_Reject;
 		}
-
 
 		//
 		// Admitted condition
@@ -734,4 +729,3 @@ void RxBaInactTimeout(unsigned long data)
 		DELBA_REASON_TIMEOUT);
 	return ;
 }
-

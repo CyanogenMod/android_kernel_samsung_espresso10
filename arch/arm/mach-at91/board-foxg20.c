@@ -56,7 +56,6 @@
  * For more info visit: http://www.acmesystems.it/foxg20
  */
 
-
 static void __init foxg20_init_early(void)
 {
 	/* Initialize processor: 18.432 MHz crystal */
@@ -106,7 +105,6 @@ static void __init foxg20_init_irq(void)
 	at91sam9260_init_interrupts(NULL);
 }
 
-
 /*
  * USB Host port
  */
@@ -122,7 +120,6 @@ static struct at91_udc_data __initdata foxg20_udc_data = {
 	.pullup_pin	= 0,		/* pull-up driven by UDC */
 };
 
-
 /*
  * SPI devices.
  */
@@ -136,7 +133,6 @@ static struct spi_board_info foxg20_spi_devices[] = {
 	},
 #endif
 };
-
 
 /*
  * MACB Ethernet device
@@ -155,7 +151,6 @@ static struct at91_mmc_data __initdata foxg20_mmc_data = {
 	.wire4		= 1,
 };
 
-
 /*
  * LEDs
  */
@@ -167,7 +162,6 @@ static struct gpio_led foxg20_leds[] = {
 		.default_trigger	= "heartbeat",
 	},
 };
-
 
 /*
  * GPIO Buttons
@@ -208,7 +202,6 @@ static void __init foxg20_add_device_buttons(void)
 static void __init foxg20_add_device_buttons(void) {}
 #endif
 
-
 #if defined(CONFIG_W1_MASTER_GPIO) || defined(CONFIG_W1_MASTER_GPIO_MODULE)
 static struct w1_gpio_platform_data w1_gpio_pdata = {
 	/* If you choose to use a pin other than PB16 it needs to be 3.3V */
@@ -231,13 +224,11 @@ static void __init at91_add_device_w1(void)
 
 #endif
 
-
 static struct i2c_board_info __initdata foxg20_i2c_devices[] = {
 	{
 		I2C_BOARD_INFO("24c512", 0x50),
 	},
 };
-
 
 static void __init foxg20_board_init(void)
 {

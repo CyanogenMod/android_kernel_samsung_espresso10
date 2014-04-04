@@ -33,7 +33,6 @@
 #include "dvb_frontend.h"
 #include "ves1x93.h"
 
-
 struct ves1x93_state {
 	struct i2c_adapter* i2c;
 	/* configuration settings */

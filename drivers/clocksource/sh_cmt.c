@@ -129,7 +129,6 @@ static unsigned long sh_cmt_get_counter(struct sh_cmt_priv *p,
 	return v2;
 }
 
-
 static void sh_cmt_start_stop_ch(struct sh_cmt_priv *p, int start)
 {
 	struct sh_timer_config *cfg = p->pdev->dev.platform_data;

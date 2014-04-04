@@ -2061,4 +2061,3 @@ found:
 	dwfl_end(dwfl);
 	return (ret < 0) ? ret : lf.found;
 }
-

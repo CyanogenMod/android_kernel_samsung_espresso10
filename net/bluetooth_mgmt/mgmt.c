@@ -128,83 +128,13 @@ struct pending_cmd {
 	void *user_data;
 };
 
-/* HCI to MGMT error code conversion table */
-static u8 mgmt_status_table[] = {
-	MGMT_STATUS_SUCCESS,
-	MGMT_STATUS_UNKNOWN_COMMAND,	/* Unknown Command */
-	MGMT_STATUS_NOT_CONNECTED,	/* No Connection */
-	MGMT_STATUS_FAILED,		/* Hardware Failure */
-	MGMT_STATUS_CONNECT_FAILED,	/* Page Timeout */
-	MGMT_STATUS_AUTH_FAILED,	/* Authentication Failed */
-	MGMT_STATUS_NOT_PAIRED,		/* PIN or Key Missing */
-	MGMT_STATUS_NO_RESOURCES,	/* Memory Full */
-	MGMT_STATUS_TIMEOUT,		/* Connection Timeout */
-	MGMT_STATUS_NO_RESOURCES,	/* Max Number of Connections */
-	MGMT_STATUS_NO_RESOURCES,	/* Max Number of SCO Connections */
-	MGMT_STATUS_ALREADY_CONNECTED,	/* ACL Connection Exists */
-	MGMT_STATUS_BUSY,		/* Command Disallowed */
-	MGMT_STATUS_NO_RESOURCES,	/* Rejected Limited Resources */
-	MGMT_STATUS_REJECTED,		/* Rejected Security */
-	MGMT_STATUS_REJECTED,		/* Rejected Personal */
-	MGMT_STATUS_TIMEOUT,		/* Host Timeout */
-	MGMT_STATUS_NOT_SUPPORTED,	/* Unsupported Feature */
-	MGMT_STATUS_INVALID_PARAMS,	/* Invalid Parameters */
-	MGMT_STATUS_DISCONNECTED,	/* OE User Ended Connection */
-	MGMT_STATUS_NO_RESOURCES,	/* OE Low Resources */
-	MGMT_STATUS_DISCONNECTED,	/* OE Power Off */
-	MGMT_STATUS_DISCONNECTED,	/* Connection Terminated */
-	MGMT_STATUS_BUSY,		/* Repeated Attempts */
-	MGMT_STATUS_REJECTED,		/* Pairing Not Allowed */
-	MGMT_STATUS_FAILED,		/* Unknown LMP PDU */
-	MGMT_STATUS_NOT_SUPPORTED,	/* Unsupported Remote Feature */
-	MGMT_STATUS_REJECTED,		/* SCO Offset Rejected */
-	MGMT_STATUS_REJECTED,		/* SCO Interval Rejected */
-	MGMT_STATUS_REJECTED,		/* Air Mode Rejected */
-	MGMT_STATUS_INVALID_PARAMS,	/* Invalid LMP Parameters */
-	MGMT_STATUS_FAILED,		/* Unspecified Error */
-	MGMT_STATUS_NOT_SUPPORTED,	/* Unsupported LMP Parameter Value */
-	MGMT_STATUS_FAILED,		/* Role Change Not Allowed */
-	MGMT_STATUS_TIMEOUT,		/* LMP Response Timeout */
-	MGMT_STATUS_FAILED,		/* LMP Error Transaction Collision */
-	MGMT_STATUS_FAILED,		/* LMP PDU Not Allowed */
-	MGMT_STATUS_REJECTED,		/* Encryption Mode Not Accepted */
-	MGMT_STATUS_FAILED,		/* Unit Link Key Used */
-	MGMT_STATUS_NOT_SUPPORTED,	/* QoS Not Supported */
-	MGMT_STATUS_TIMEOUT,		/* Instant Passed */
-	MGMT_STATUS_NOT_SUPPORTED,	/* Pairing Not Supported */
-	MGMT_STATUS_FAILED,		/* Transaction Collision */
-	MGMT_STATUS_INVALID_PARAMS,	/* Unacceptable Parameter */
-	MGMT_STATUS_REJECTED,		/* QoS Rejected */
-	MGMT_STATUS_NOT_SUPPORTED,	/* Classification Not Supported */
-	MGMT_STATUS_REJECTED,		/* Insufficient Security */
-	MGMT_STATUS_INVALID_PARAMS,	/* Parameter Out Of Range */
-	MGMT_STATUS_BUSY,		/* Role Switch Pending */
-	MGMT_STATUS_FAILED,		/* Slot Violation */
-	MGMT_STATUS_FAILED,		/* Role Switch Failed */
-	MGMT_STATUS_INVALID_PARAMS,	/* EIR Too Large */
-	MGMT_STATUS_NOT_SUPPORTED,	/* Simple Pairing Not Supported */
-	MGMT_STATUS_BUSY,		/* Host Busy Pairing */
-	MGMT_STATUS_REJECTED,		/* Rejected, No Suitable Channel */
-	MGMT_STATUS_BUSY,		/* Controller Busy */
-	MGMT_STATUS_INVALID_PARAMS,	/* Unsuitable Connection Interval */
-	MGMT_STATUS_TIMEOUT,		/* Directed Advertising Timeout */
-	MGMT_STATUS_AUTH_FAILED,	/* Terminated Due to MIC Failure */
-	MGMT_STATUS_CONNECT_FAILED,	/* Connection Establishment Failed */
-	MGMT_STATUS_CONNECT_FAILED,	/* MAC Connection Failed */
-};
-
 static u8 mgmt_status(u8 hci_status)
 {
-	/* bluetoothd is still checking hci status. so no need to check
-	* mgmt status but this should be checked after bluetoothd update */
-	return hci_status;
-
 	/*
-	* if (hci_status < ARRAY_SIZE(mgmt_status_table))
-	*		return mgmt_status_table[hci_status];
-	*
-	* return MGMT_STATUS_FAILED;
-	*/
+	 * bluetoothd is still checking hci status. so no need to check
+	 * mgmt status but this should be checked after bluetoothd update
+	 */
+	return hci_status;
 }
 
 static int cmd_status(struct sock *sk, u16 index, u16 cmd, u8 status)
@@ -213,8 +143,6 @@ static int cmd_status(struct sock *sk, u16 index, u16 cmd, u8 status)
 	struct mgmt_hdr *hdr;
 	struct mgmt_ev_cmd_status *ev;
 	int err;
-
-	BT_DBG("sock %p, index %u, cmd %u, status %u", sk, index, cmd, status);
 
 	skb = alloc_skb(sizeof(*hdr) + sizeof(*ev), GFP_ATOMIC);
 	if (!skb)
@@ -245,8 +173,6 @@ static int cmd_complete(struct sock *sk, u16 index, u16 cmd, void *rp,
 	struct mgmt_ev_cmd_complete *ev;
 	int err;
 
-	BT_DBG("sock %p", sk);
-
 	skb = alloc_skb(sizeof(*hdr) + sizeof(*ev) + rp_len, GFP_ATOMIC);
 	if (!skb)
 		return -ENOMEM;
@@ -274,8 +200,6 @@ static int read_version(struct sock *sk)
 {
 	struct mgmt_rp_read_version rp;
 
-	BT_DBG("sock %p", sk);
-
 	rp.version = MGMT_VERSION;
 	put_unaligned_le16(MGMT_REVISION, &rp.revision);
 
@@ -291,8 +215,6 @@ static int read_commands(struct sock *sk)
 	u16 *opcode;
 	size_t rp_size;
 	int i, err;
-
-	BT_DBG("sock %p", sk);
 
 	rp_size = sizeof(*rp) + ((num_commands + num_events) * sizeof(u16));
 
@@ -324,8 +246,6 @@ static int read_index_list(struct sock *sk)
 	u16 count;
 	int i, err;
 
-	BT_DBG("sock %p", sk);
-
 	read_lock(&hci_dev_list_lock);
 
 	count = 0;
@@ -352,7 +272,6 @@ static int read_index_list(struct sock *sk)
 
 		put_unaligned_le16(d->id, &rp->index[i++]);
 		put_unaligned_le16((u16)i, &rp->num_controllers);
-		BT_DBG("Added hci%u", d->id);
 	}
 
 	read_unlock(&hci_dev_list_lock);
@@ -392,8 +311,6 @@ static u32 get_supported_settings(struct hci_dev *hdev)
 static u32 get_current_settings(struct hci_dev *hdev)
 {
 	u32 settings = 0;
-
-	BT_DBG("hdev->flags %lx", hdev->flags);
 
 	if (test_bit(HCI_UP, &hdev->flags))
 		settings |= MGMT_SETTING_POWERED;
@@ -573,8 +490,6 @@ static int update_class(struct hci_dev *hdev)
 {
 	u8 cod[3];
 
-	BT_DBG("%s", hdev->name);
-
 	if (test_bit(HCI_SERVICE_CACHE, &hdev->dev_flags))
 		return 0;
 
@@ -617,8 +532,6 @@ static int read_controller_info(struct sock *sk, u16 index)
 {
 	struct mgmt_rp_read_info rp;
 	struct hci_dev *hdev;
-
-	BT_DBG("sock %p hci%u", sk, index);
 
 	hdev = hci_dev_get(index);
 	if (!hdev)
@@ -741,8 +654,6 @@ static int set_powered(struct sock *sk, u16 index, void *data, u16 len)
 	struct pending_cmd *cmd;
 	int err, up;
 
-	BT_DBG("request for hci%u", index);
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_POWERED,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -792,8 +703,6 @@ static int set_discoverable(struct sock *sk, u16 index, void *data, u16 len)
 	struct pending_cmd *cmd;
 	u8 scan;
 	int err;
-
-	BT_DBG("request for hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_DISCOVERABLE,
@@ -860,8 +769,6 @@ static int set_connectable(struct sock *sk, u16 index, void *data, u16 len)
 	struct pending_cmd *cmd;
 	u8 scan;
 	int err;
-
-	BT_DBG("request for hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_CONNECTABLE,
@@ -940,8 +847,6 @@ static int mgmt_event(u16 event, struct hci_dev *hdev, void *data,
 	hci_send_to_sock(NULL, skb, skip_sk);
 	kfree_skb(skb);
 
-	BT_DBG("-----> evt: %x", event);
-
 	return 0;
 }
 
@@ -959,8 +864,6 @@ static int set_pairable(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_dev *hdev;
 	__le32 ev;
 	int err;
-
-	BT_DBG("request for hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_PAIRABLE,
@@ -998,8 +901,6 @@ static int add_uuid(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_dev *hdev;
 	struct bt_uuid *uuid;
 	int err;
-
-	BT_DBG("request for hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_ADD_UUID,
@@ -1047,8 +948,6 @@ static int remove_uuid(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_dev *hdev;
 	u8 bt_uuid_any[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	int err, found;
-
-	BT_DBG("request for hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_REMOVE_UUID,
@@ -1106,8 +1005,6 @@ static int set_dev_class(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_dev *hdev;
 	struct mgmt_cp_set_dev_class *cp = data;
 	int err;
-
-	BT_DBG("request for hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_DEV_CLASS,
@@ -1167,9 +1064,6 @@ static int load_link_keys(struct sock *sk, u16 index, void *data, u16 len)
 	if (!hdev)
 		return cmd_status(sk, index, MGMT_OP_LOAD_LINK_KEYS,
 						MGMT_STATUS_INVALID_PARAMS);
-
-	BT_DBG("hci%u debug_keys %u key_count %u", index, cp->debug_keys,
-								key_count);
 
 	hci_dev_lock_bh(hdev);
 
@@ -1297,8 +1191,6 @@ static int disconnect(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_conn *conn;
 	int err;
 
-	BT_DBG("");
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_DISCONNECT,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -1382,8 +1274,6 @@ static int get_connections(struct sock *sk, u16 index)
 	int err;
 	u16 i;
 
-	BT_DBG("");
-
 	hdev = hci_dev_get(index);
 	if (!hdev)
 		return cmd_status(sk, index, MGMT_OP_GET_CONNECTIONS,
@@ -1460,12 +1350,9 @@ static int pin_code_reply(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_dev *hdev;
 	struct hci_conn *conn;
 	struct mgmt_cp_pin_code_reply *cp = data;
-	struct mgmt_cp_pin_code_neg_reply ncp;
 	struct hci_cp_pin_code_reply reply;
 	struct pending_cmd *cmd;
 	int err;
-
-	BT_DBG("");
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_PIN_CODE_REPLY,
@@ -1518,8 +1405,6 @@ static int pin_code_neg_reply(struct sock *sk, u16 index, void *data, u16 len)
 	struct mgmt_cp_pin_code_neg_reply *cp = data;
 	int err;
 
-	BT_DBG("");
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_PIN_CODE_NEG_REPLY,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -1551,8 +1436,6 @@ static int set_io_capability(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_dev *hdev;
 	struct mgmt_cp_set_io_capability *cp = data;
 
-	BT_DBG("");
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_IO_CAPABILITY,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -1565,9 +1448,6 @@ static int set_io_capability(struct sock *sk, u16 index, void *data, u16 len)
 	hci_dev_lock_bh(hdev);
 
 	hdev->io_capability = cp->io_capability;
-
-	BT_DBG("%s IO capability set to 0x%02x", hdev->name,
-							hdev->io_capability);
 
 	hci_dev_unlock_bh(hdev);
 	hci_dev_put(hdev);
@@ -1618,12 +1498,8 @@ static void pairing_complete_cb(struct hci_conn *conn, u8 status)
 {
 	struct pending_cmd *cmd;
 
-	BT_DBG("status %u", status);
-
 	cmd = find_pairing(conn);
-	if (!cmd)
-		BT_DBG("Unable to find a pending command");
-	else
+	if (cmd)
 		pairing_complete(cmd, status);
 }
 
@@ -1631,15 +1507,11 @@ static void le_connect_complete_cb(struct hci_conn *conn, u8 status)
 {
 	struct pending_cmd *cmd;
 
-	BT_DBG("status %u", status);
-
 	if (!status)
 		return;
 
 	cmd = find_pairing(conn);
-	if (!cmd)
-		BT_DBG("Unable to find a pending command");
-	else
+	if (cmd)
 		pairing_complete(cmd, mgmt_status(status));
 }
 
@@ -1652,8 +1524,6 @@ static int pair_device(struct sock *sk, u16 index, void *data, u16 len)
 	u8 sec_level, auth_type;
 	struct hci_conn *conn;
 	int err;
-
-	BT_DBG("");
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_PAIR_DEVICE,
@@ -1734,8 +1604,6 @@ static int cancel_pair_device(struct sock *sk, u16 index,
 	struct pending_cmd *cmd;
 	struct hci_conn *conn;
 	int err;
-
-	BT_DBG("");
 
 	if (len != sizeof(*addr))
 		return cmd_status(sk, index, MGMT_OP_CANCEL_PAIR_DEVICE,
@@ -1850,8 +1718,6 @@ static int user_confirm_reply(struct sock *sk, u16 index, void *data, u16 len)
 {
 	struct mgmt_cp_user_confirm_reply *cp = data;
 
-	BT_DBG("");
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_USER_CONFIRM_REPLY,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -1866,8 +1732,6 @@ static int user_confirm_neg_reply(struct sock *sk, u16 index, void *data,
 {
 	struct mgmt_cp_user_confirm_neg_reply *cp = data;
 
-	BT_DBG("");
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_USER_CONFIRM_NEG_REPLY,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -1880,8 +1744,6 @@ static int user_confirm_neg_reply(struct sock *sk, u16 index, void *data,
 static int user_passkey_reply(struct sock *sk, u16 index, void *data, u16 len)
 {
 	struct mgmt_cp_user_passkey_reply *cp = data;
-
-	BT_DBG("");
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_USER_PASSKEY_REPLY,
@@ -1897,8 +1759,6 @@ static int user_passkey_neg_reply(struct sock *sk, u16 index, void *data,
 									u16 len)
 {
 	struct mgmt_cp_user_passkey_neg_reply *cp = data;
-
-	BT_DBG("");
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_USER_PASSKEY_NEG_REPLY,
@@ -1917,8 +1777,6 @@ static int set_local_name(struct sock *sk, u16 index, void *data,
 	struct hci_dev *hdev;
 	struct pending_cmd *cmd;
 	int err;
-
-	BT_DBG("");
 
 	if (len != sizeof(*mgmt_cp))
 		return cmd_status(sk, index, MGMT_OP_SET_LOCAL_NAME,
@@ -1955,8 +1813,6 @@ static int read_local_oob_data(struct sock *sk, u16 index)
 	struct hci_dev *hdev;
 	struct pending_cmd *cmd;
 	int err;
-
-	BT_DBG("hci%u", index);
 
 	hdev = hci_dev_get(index);
 	if (!hdev)
@@ -2007,8 +1863,6 @@ static int add_remote_oob_data(struct sock *sk, u16 index, void *data,
 	struct mgmt_cp_add_remote_oob_data *cp = data;
 	int err;
 
-	BT_DBG("hci%u ", index);
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_ADD_REMOTE_OOB_DATA,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -2041,8 +1895,6 @@ static int remove_remote_oob_data(struct sock *sk, u16 index,
 	struct hci_dev *hdev;
 	struct mgmt_cp_remove_remote_oob_data *cp = data;
 	int err;
-
-	BT_DBG("hci%u ", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_REMOVE_REMOTE_OOB_DATA,
@@ -2077,8 +1929,6 @@ static int start_discovery(struct sock *sk, u16 index,
 	struct pending_cmd *cmd;
 	struct hci_dev *hdev;
 	int err;
-
-	BT_DBG("hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_START_DISCOVERY,
@@ -2137,8 +1987,6 @@ static int stop_discovery(struct sock *sk, u16 index)
 	struct hci_cp_remote_name_req_cancel cp;
 	struct inquiry_entry *e;
 	int err;
-
-	BT_DBG("hci%u", index);
 
 	hdev = hci_dev_get(index);
 	if (!hdev)
@@ -2208,8 +2056,6 @@ static int test_end_le(struct sock *sk, u16 index)
 	struct pending_cmd *cmd;
 	int err;
 
-	BT_DBG("test_end_le : hci%u", index);
-
 	hdev = hci_dev_get(index);
 	if (!hdev) {
 		BT_ERR("hci_dev_get : Failed !!!");
@@ -2240,15 +2086,12 @@ unlock:
 	return err;
 }
 
-
 static int confirm_name(struct sock *sk, u16 index, void *data, u16 len)
 {
 	struct mgmt_cp_confirm_name *cp = data;
 	struct inquiry_entry *e;
 	struct hci_dev *hdev;
 	int err;
-
-	BT_DBG("hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_CONFIRM_NAME,
@@ -2297,8 +2140,6 @@ static int block_device(struct sock *sk, u16 index, void *data, u16 len)
 	struct mgmt_cp_block_device *cp = data;
 	int err;
 
-	BT_DBG("hci%u", index);
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_BLOCK_DEVICE,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -2330,8 +2171,6 @@ static int unblock_device(struct sock *sk, u16 index, void *data, u16 len)
 	struct hci_dev *hdev;
 	struct mgmt_cp_unblock_device *cp = data;
 	int err;
-
-	BT_DBG("hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_UNBLOCK_DEVICE,
@@ -2367,8 +2206,6 @@ static int set_fast_connectable(struct sock *sk, u16 index,
 	struct hci_cp_write_page_scan_activity acp;
 	u8 type;
 	int err;
-
-	BT_DBG("hci%u", index);
 
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_FAST_CONNECTABLE,
@@ -2443,8 +2280,6 @@ static int load_long_term_keys(struct sock *sk, u16 index,
 		return cmd_status(sk, index, MGMT_OP_LOAD_LONG_TERM_KEYS,
 								ENODEV);
 
-	BT_DBG("hci%u key_count %u", index, key_count);
-
 	hci_dev_lock_bh(hdev);
 
 	hci_smp_ltks_clear(hdev);
@@ -2478,8 +2313,6 @@ static int encrypt_link(struct sock *sk, u16 index, unsigned char *data,
 	struct hci_cp_set_conn_encrypt enc;
 	struct hci_conn *conn;
 	int err = 0;
-
-	BT_DBG("");
 
 	cp = (void *) data;
 
@@ -2536,8 +2369,6 @@ static int set_le(struct sock *sk, u16 index, void *data, u16 len)
 	int err;
 	u8 val;
 
-	BT_DBG("request for hci%u", index);
-
 	if (len != sizeof(*cp))
 		return cmd_status(sk, index, MGMT_OP_SET_LE,
 						MGMT_STATUS_INVALID_PARAMS);
@@ -2562,7 +2393,6 @@ static int set_le(struct sock *sk, u16 index, void *data, u16 len)
 
 		if (val != test_bit(HCI_LE_ENABLED, &hdev->dev_flags)) {
 			change_bit(HCI_LE_ENABLED, &hdev->dev_flags);
-			BT_DBG("HCI_LE_ENABLED changed %d", changed);
 			changed = true;
 		}
 
@@ -2591,7 +2421,6 @@ static int set_le(struct sock *sk, u16 index, void *data, u16 len)
 
 	if (val) {
 		enable_le = true;
-		BT_DBG("enable_le %d", enable_le);
 		hci_cp.le = val;
 		hci_cp.simul = !!(hdev->features[6] & LMP_SIMUL_LE_BR);
 	}
@@ -2619,10 +2448,7 @@ static int read_rssi(struct sock *sk, u16 index, unsigned char *data, u16 len)
 	struct pending_cmd *cmd;
 	int err;
 
-	BT_DBG("hci%u", index);
-
 	if (len != sizeof(*cp)) {
-		BT_DBG("len %d, sizeof(*cp) %d", len, sizeof(*cp));
 		return cmd_status(sk, index,
 				MGMT_OP_READ_RSSI, MGMT_STATUS_INVALID_PARAMS);
 	}
@@ -2681,8 +2507,6 @@ int mgmt_read_rssi_failed(struct hci_dev *hdev)
 	struct pending_cmd *cmd;
 	int err = 0;
 
-	BT_DBG("");
-
 	cmd = mgmt_pending_find(MGMT_OP_READ_RSSI, hdev);
 	if (!cmd)
 		return -ENOENT;
@@ -2700,8 +2524,6 @@ int mgmt_read_rssi_complete(struct hci_dev *hdev, bdaddr_t *bdaddr,
 	struct pending_cmd *cmd;
 	struct mgmt_rp_read_rssi rp;
 	int err;
-
-	BT_DBG("");
 
 	cmd = mgmt_pending_find(MGMT_OP_READ_RSSI, hdev);
 	if (!cmd)
@@ -2734,8 +2556,6 @@ static int le_test_end_complete(struct hci_dev *hdev, u8 status, u16 num_pkts)
 	rp.status = status;
 	rp.num_pkts = num_pkts;
 
-	BT_DBG("le_test_end_complete : %s status %d, num_pkts 0x%x(%d)"
-		, hdev->name, rp.status, rp.num_pkts, rp.num_pkts);
 	err = cmd_complete(cmd->sk, hdev->id, MGMT_OP_LE_TEST_END
 		, &rp, sizeof(rp));
 	mgmt_pending_remove(cmd);
@@ -2749,8 +2569,6 @@ int mgmt_control(struct sock *sk, struct msghdr *msg, size_t msglen)
 	struct mgmt_hdr *hdr;
 	u16 opcode, index, len;
 	int err;
-
-	BT_DBG("got %zu bytes", msglen);
 
 	if (msglen < sizeof(*hdr))
 		return -EINVAL;
@@ -2775,8 +2593,6 @@ int mgmt_control(struct sock *sk, struct msghdr *msg, size_t msglen)
 	}
 
 	cp = buf + sizeof(*hdr);
-
-	BT_DBG("opcode 0x%2.2x", opcode);
 
 	switch (opcode) {
 	case MGMT_OP_READ_VERSION:
@@ -2898,9 +2714,7 @@ int mgmt_control(struct sock *sk, struct msghdr *msg, size_t msglen)
 		err = test_end_le(sk, index);
 		break;
 	default:
-		BT_DBG("Unknown op %u", opcode);
-		err = cmd_status(sk, index, opcode,
-						MGMT_STATUS_UNKNOWN_COMMAND);
+		err = cmd_status(sk, index, opcode, MGMT_STATUS_UNKNOWN_COMMAND);
 		break;
 	}
 
@@ -2963,8 +2777,6 @@ int mgmt_powered(struct hci_dev *hdev, u8 powered)
 	struct cmd_lookup match = { powered, NULL, hdev };
 	__le32 ev;
 	int ret;
-
-	BT_DBG("powered %u", powered);
 
 	mgmt_pending_foreach(MGMT_OP_SET_POWERED, hdev, settings_rsp, &match);
 
@@ -3259,8 +3071,6 @@ int mgmt_user_passkey_notification(struct hci_dev *hdev, bdaddr_t *bdaddr,
 {
 	struct mgmt_ev_user_passkey_notificaion ev;
 
-	BT_DBG("%s", hdev->name);
-
 	bacpy(&ev.bdaddr, bdaddr);
 	put_unaligned_le32(value, &ev.value);
 
@@ -3273,8 +3083,6 @@ int mgmt_user_confirm_request(struct hci_dev *hdev, bdaddr_t *bdaddr,
 				u8 confirm_hint)
 {
 	struct mgmt_ev_user_confirm_request ev;
-
-	BT_DBG("%s", hdev->name);
 
 	bacpy(&ev.addr.bdaddr, bdaddr);
 	ev.addr.type = link_to_mgmt(link_type, addr_type);
@@ -3289,8 +3097,6 @@ int mgmt_user_passkey_request(struct hci_dev *hdev, bdaddr_t *bdaddr,
 						u8 link_type, u8 addr_type)
 {
 	struct mgmt_ev_user_passkey_request ev;
-
-	BT_DBG("%s", hdev->name);
 
 	bacpy(&ev.addr.bdaddr, bdaddr);
 	ev.addr.type = link_to_mgmt(link_type, addr_type);
@@ -3403,8 +3209,6 @@ int mgmt_read_local_oob_data_reply_complete(struct hci_dev *hdev, u8 *hash,
 	struct pending_cmd *cmd;
 	int err;
 
-	BT_DBG("%s status %u", hdev->name, status);
-
 	cmd = mgmt_pending_find(MGMT_OP_READ_LOCAL_OOB_DATA, hdev);
 	if (!cmd)
 		return -ENOENT;
@@ -3449,17 +3253,11 @@ int mgmt_le_enable_complete(struct hci_dev *hdev, u8 enable, u8 status)
 	}
 
 	if (enable) {
-		if (!test_and_set_bit(HCI_LE_ENABLED, &hdev->dev_flags)) {
+		if (!test_and_set_bit(HCI_LE_ENABLED, &hdev->dev_flags))
 			changed = true;
-			BT_DBG("%s set HCI_LE_ENABLED  enable %d",
-											hdev->name, enable);
-			}
 	} else {
-		if (test_and_clear_bit(HCI_LE_ENABLED, &hdev->dev_flags)) {
+		if (test_and_clear_bit(HCI_LE_ENABLED, &hdev->dev_flags))
 			changed = true;
-			BT_DBG("%s clear HCI_LE_ENABLED  enable %d",
-											hdev->name, enable);
-			}
 	}
 
 	mgmt_pending_foreach(MGMT_OP_SET_LE, hdev, settings_rsp, &match);
@@ -3475,8 +3273,6 @@ int mgmt_le_enable_complete(struct hci_dev *hdev, u8 enable, u8 status)
 
 int mgmt_le_test_end_complete(struct hci_dev *hdev, u8 status, __u16 num_pkts)
 {
-	BT_DBG("mgmt_le_test_end_complete : %s status %d, num_pkts 0x%x(%d)"
-		, hdev->name, status, num_pkts, num_pkts);
 	return le_test_end_complete(hdev, status, num_pkts);
 }
 
@@ -3531,8 +3327,6 @@ int mgmt_remote_name(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 link_type,
 	eir_len = eir_append_data(ev->eir, 0, EIR_NAME_COMPLETE, name,
 								name_len);
 
-	BT_DBG("[NEO] mgmt_remote_name, name = %s", name);
-
 	put_unaligned_le16(eir_len, &ev->eir_len);
 
 	return mgmt_event(MGMT_EV_DEVICE_FOUND, hdev, ev,
@@ -3575,15 +3369,12 @@ int mgmt_discovering(struct hci_dev *hdev, u8 discovering)
 {
 	struct pending_cmd *cmd;
 
-	BT_DBG("%s discovering %u", hdev->name, discovering);
-
 	if (discovering)
 		cmd = mgmt_pending_find(MGMT_OP_START_DISCOVERY, hdev);
 	else
 		cmd = mgmt_pending_find(MGMT_OP_STOP_DISCOVERY, hdev);
 
 	if (cmd != NULL) {
-		BT_DBG("cmd is not NULL !!!!!");
 		cmd_complete(cmd->sk, hdev->id, cmd->opcode, NULL, 0);
 		mgmt_pending_remove(cmd);
 	}
@@ -3625,13 +3416,10 @@ int mgmt_encrypt_change(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 status)
 {
 	struct mgmt_ev_encrypt_change ev;
 
-	BT_DBG("status %u", status);
-
 	bacpy(&ev.bdaddr, bdaddr);
 	ev.status = status;
 
-	return mgmt_event(MGMT_EV_ENCRYPT_CHANGE, hdev, &ev, sizeof(ev),
-									NULL);
+	return mgmt_event(MGMT_EV_ENCRYPT_CHANGE, hdev, &ev, sizeof(ev), NULL);
 }
 
 int mgmt_remote_version(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 ver, u16 mnf,
@@ -3658,8 +3446,7 @@ int mgmt_remote_features(struct hci_dev *hdev, bdaddr_t *bdaddr, u8 features[8])
 	bacpy(&ev.bdaddr, bdaddr);
 	memcpy(ev.features, features, sizeof(ev.features));
 
-	return mgmt_event(MGMT_EV_REMOTE_FEATURES, hdev, &ev, sizeof(ev),
-									NULL);
+	return mgmt_event(MGMT_EV_REMOTE_FEATURES, hdev, &ev, sizeof(ev), NULL);
 }
 
 module_param(enable_le, bool, 0644);

@@ -39,14 +39,11 @@ typedef u64 unative_t;
 typedef u32 unative_t;
 #endif
 
-
-
 /*
  * IA-64 wants insane amounts of unrolling.  On other architectures that
  * is just a waste of space.
  */
 #if ($# <= 8) || defined(__ia64__)
-
 
 /*
  * These sub-operations are separate inlines since they can sometimes be
@@ -77,7 +74,6 @@ static inline __attribute_const__ unative_t MASK(unative_t v)
 	vv = (vv << 1) - (vv >> 7); /* Overflow on the top bit is OK */
 	return vv;
 }
-
 
 static void raid6_int$#_gen_syndrome(int disks, size_t bytes, void **ptrs)
 {

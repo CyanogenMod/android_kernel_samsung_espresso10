@@ -714,7 +714,6 @@ static s32 ixgbe_setup_mac_link_82598(struct ixgbe_hw *hw,
 	return status;
 }
 
-
 /**
  *  ixgbe_setup_copper_link_82598 - Set the PHY autoneg advertised field
  *  @hw: pointer to hardware structure
@@ -918,7 +917,6 @@ static s32 ixgbe_clear_vmdq_82598(struct ixgbe_hw *hw, u32 rar, u32 vmdq)
 {
 	u32 rar_high;
 	u32 rar_entries = hw->mac.num_rar_entries;
-
 
 	/* Make sure we are using a valid rar index range */
 	if (rar >= rar_entries) {
@@ -1307,4 +1305,3 @@ struct ixgbe_info ixgbe_82598_info = {
 	.eeprom_ops		= &eeprom_ops_82598,
 	.phy_ops		= &phy_ops_82598,
 };
-

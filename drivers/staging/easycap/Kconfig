@@ -55,4 +55,3 @@ config EASYCAP_DEBUG
           parameter:
 
           modprobe easycap debug=[0..9]
-

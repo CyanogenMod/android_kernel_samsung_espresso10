@@ -7,7 +7,6 @@ menuconfig NET_DSA
 	  This allows you to use hardware switch chips that use
 	  the Distributed Switch Architecture.
 
-
 if NET_DSA
 
 # tagging formats
@@ -22,7 +21,6 @@ config NET_DSA_TAG_EDSA
 config NET_DSA_TAG_TRAILER
 	bool
 	default n
-
 
 # switch drivers
 config NET_DSA_MV88E6XXX

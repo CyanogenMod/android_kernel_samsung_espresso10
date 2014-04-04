@@ -59,4 +59,3 @@ long omaprpc_recalc_off(phys_addr_t lpa, long uoff)
 	return (stride != 0) ? (stride*(uoff/PAGE_SIZE)) +
 		(uoff & (PAGE_SIZE-1)) : uoff;
 }
-

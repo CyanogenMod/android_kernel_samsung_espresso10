@@ -45,7 +45,6 @@
 #define dprintk(x...) do { } while (0)
 #endif
 
-
 static int check_mac_tt(u8 *buf)
 {
 	int i;
@@ -104,7 +103,6 @@ static int ttpci_eeprom_read_encodedMAC(struct i2c_adapter *adapter, u8 * encode
 
 	return 0;
 }
-
 
 int ttpci_eeprom_parse_mac(struct i2c_adapter *adapter, u8 *proposed_mac)
 {

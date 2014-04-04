@@ -338,7 +338,6 @@ static int snd_i2c_bit_probeaddr(struct snd_i2c_bus *bus, unsigned short addr)
 	return err;
 }
 
-
 static int __init alsa_i2c_init(void)
 {
 	return 0;

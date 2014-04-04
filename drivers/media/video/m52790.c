@@ -19,7 +19,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #include <linux/module.h>
 #include <linux/types.h>
 #include <linux/slab.h>
@@ -34,7 +33,6 @@
 MODULE_DESCRIPTION("i2c device driver for m52790 A/V switch");
 MODULE_AUTHOR("Hans Verkuil");
 MODULE_LICENSE("GPL");
-
 
 struct m52790_state {
 	struct v4l2_subdev sd;

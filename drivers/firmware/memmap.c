@@ -247,4 +247,3 @@ static int __init memmap_init(void)
 	return 0;
 }
 late_initcall(memmap_init);
-

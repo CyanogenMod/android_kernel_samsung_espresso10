@@ -277,7 +277,6 @@ struct be_txd {
 	  (bp)->tx_old + (TX_RING_SIZE - 1) - (bp)->tx_new :  \
 			    (bp)->tx_old - (bp)->tx_new - 1)
 
-
 #define RX_COPY_THRESHOLD  256
 #define RX_BUF_ALLOC_SIZE  (ETH_FRAME_LEN + (64 * 3))
 

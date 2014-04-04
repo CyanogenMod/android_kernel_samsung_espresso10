@@ -1,4 +1,3 @@
-
 /* FIXME driver should be able to handle IRQs...  */
 
 struct mcp23s08_chip_info {

@@ -1007,4 +1007,3 @@ struct dlm_config_info dlm_config = {
 	.ci_timewarn_cs = DEFAULT_TIMEWARN_CS,
 	.ci_waitwarn_us = DEFAULT_WAITWARN_US
 };
-

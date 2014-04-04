@@ -28,7 +28,6 @@
 
 #include "hyperv.h"
 
-
 /*
  * Data types
  */
@@ -53,7 +52,6 @@ struct hv_input_dev_info {
 #define SYNTHHID_INPUT_VERSION_MINOR	0
 #define SYNTHHID_INPUT_VERSION		(SYNTHHID_INPUT_VERSION_MINOR | \
 					 (SYNTHHID_INPUT_VERSION_MAJOR << 16))
-
 
 #pragma pack(push,1)
 /*
@@ -132,7 +130,6 @@ enum pipe_prot_msg_type {
 	PipeMessageMaximum
 };
 
-
 struct pipe_prt_msg {
 	enum pipe_prot_msg_type type;
 	u32 size;
@@ -175,7 +172,6 @@ struct mousevsc_dev {
 	u32			report_desc_size;
 	struct hv_input_dev_info hid_dev_info;
 };
-
 
 static const char *driver_name = "mousevsc";
 
@@ -734,7 +730,6 @@ static int mousevsc_on_device_remove(struct hv_device *device)
 
 	input_dev = release_input_device(device);
 
-
 	/*
 	 * At this point, all outbound traffic should be disable. We only
 	 * allow inbound traffic (responses) to proceed
@@ -762,7 +757,6 @@ static int mousevsc_on_device_remove(struct hv_device *device)
 	return ret;
 }
 
-
 /*
  * Data types
  */
@@ -772,7 +766,6 @@ struct input_device_context {
 	struct hv_input_dev_info device_info;
 	int			connected;
 };
-
 
 static void deviceinfo_callback(struct hv_device *dev, struct hv_input_dev_info *info)
 {
@@ -915,7 +908,6 @@ static void reportdesc_callback(struct hv_device *dev, void *packet, u32 len)
 	kfree(hid_dev);
 }
 
-
 static struct  hv_driver mousevsc_drv = {
 	.probe = mousevsc_probe,
 	.remove = mousevsc_remove,
@@ -973,4 +965,3 @@ MODULE_LICENSE("GPL");
 MODULE_VERSION(HV_DRV_VERSION);
 module_init(mousevsc_init);
 module_exit(mousevsc_exit);
-

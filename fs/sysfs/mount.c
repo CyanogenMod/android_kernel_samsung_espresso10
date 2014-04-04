@@ -10,7 +10,7 @@
  * Please see Documentation/filesystems/sysfs.txt for more information.
  */
 
-#define DEBUG 
+#define DEBUG
 
 #include <linux/fs.h>
 #include <linux/mount.h>
@@ -21,7 +21,6 @@
 #include <linux/slab.h>
 
 #include "sysfs.h"
-
 
 static struct vfsmount *sysfs_mnt;
 struct kmem_cache *sysfs_dir_cachep;

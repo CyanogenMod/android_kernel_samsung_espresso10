@@ -213,4 +213,3 @@ void tfh_exception(struct gru_tlb_fault_handle *tfh)
 	tfh->opc = TFHOP_EXCEPTION;
 	start_instruction(tfh);
 }
-

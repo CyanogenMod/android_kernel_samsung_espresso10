@@ -70,7 +70,6 @@ Channel manager Data Structure entry = 20 DWORD
 #define RISC_WRITEC		 0x50000000
 #define RISC_READC		 0xA0000000
 
-
 /* Audio and Video Core */
 #define HOST_REG1		0x00000000
 #define HOST_REG2		0x00000001

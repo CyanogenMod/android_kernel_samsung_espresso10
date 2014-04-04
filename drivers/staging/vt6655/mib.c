@@ -56,8 +56,6 @@ static int          msglevel                =MSG_LEVEL_INFO;
 
 /*---------------------  Export Functions  --------------------------*/
 
-
-
 /*
  * Description: Clear All Statistic Counter
  *
@@ -75,7 +73,6 @@ void STAvClearAllCounter (PSStatCounter pStatistic)
     // set memory to zero
 	memset(pStatistic, 0, sizeof(SStatCounter));
 }
-
 
 /*
  * Description: Update Isr Statistic Counter
@@ -158,7 +155,6 @@ void STAvUpdateIsrStatCounter (PSStatCounter pStatistic, unsigned long dwIsr)
         pStatistic->ISRStat.dwIsrSTIMER1Int++;
 
 }
-
 
 /*
  * Description: Update Rx Statistic Counter
@@ -322,7 +318,6 @@ void STAvUpdateRDStatCounter (PSStatCounter pStatistic,
     pStatistic->dwRsrRxPacket++;
     pStatistic->dwRsrRxOctet += cbFrameLength;
 
-
     if (IS_TYPE_DATA(pbyBuffer)) {
         pStatistic->dwRsrRxData++;
     } else if (IS_TYPE_MGMT(pbyBuffer)){
@@ -367,8 +362,6 @@ void STAvUpdateRDStatCounter (PSStatCounter pStatistic,
 
 }
 
-
-
 /*
  * Description: Update Rx Statistic Counter and copy Rx buffer
  *
@@ -411,7 +404,6 @@ STAvUpdateRDStatCounterEx (
     memcpy(pStatistic->abyCntRxPattern, (unsigned char *)pbyBuffer, 10);
 }
 
-
 /*
  * Description: Update Tx Statistic Counter
  *
@@ -442,8 +434,6 @@ STAvUpdateTDStatCounter (
     PWLAN_80211HDR_A4   pHeader;
     unsigned char *pbyDestAddr;
     unsigned char byTSR0_NCR = byTSR0 & TSR0_NCR;
-
-
 
     pHeader = (PWLAN_80211HDR_A4) pbyBuffer;
     if (WLAN_GET_FC_TODS(pHeader->wFrameCtl) == 0) {
@@ -504,7 +494,6 @@ STAvUpdateTDStatCounter (
 
 }
 
-
 /*
  * Description: Update Tx Statistic Counter and copy Tx buffer
  *
@@ -535,7 +524,6 @@ STAvUpdateTDStatCounterEx (
     // tx pattern, we just see 16 bytes for sample
     memcpy(pStatistic->abyCntTxPattern, pbyBuffer, 16);
 }
-
 
 /*
  * Description: Update 802.11 mib counter

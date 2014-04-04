@@ -22,11 +22,9 @@
 #include "sdio.h"
 #include "b43.h"
 
-
 #define HNBU_CHIPID		0x01	/* vendor & device id */
 
 #define B43_SDIO_BLOCK_SIZE	64	/* rx fifo max size in bytes */
-
 
 static const struct b43_sdio_quirk {
 	u16 vendor;
@@ -36,7 +34,6 @@ static const struct b43_sdio_quirk {
 	{ 0x14E4, 0x4318, SSB_QUIRK_SDIO_READ_AFTER_WRITE32, },
 	{ },
 };
-
 
 static unsigned int b43_sdio_get_quirks(u16 vendor, u16 device)
 {

@@ -143,12 +143,12 @@ int ion_carveout_heap_cache_operation(struct ion_buffer *buffer, size_t len,
 	}
 
 	flush_cache_user_range(vaddr, (vaddr+len));
-	
+
 	if (cacheop == CACHE_FLUSH)
 		outer_flush_range(buffer->priv_phys, buffer->priv_phys+len);
 	else
 		outer_inv_range(buffer->priv_phys, buffer->priv_phys+len);
-	
+
 	return 0;
 }
 

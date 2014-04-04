@@ -811,7 +811,6 @@ static struct fc_exch *fc_exch_find(struct fc_exch_mgr *mp, u16 xid)
 	return ep;
 }
 
-
 /**
  * fc_exch_done() - Indicate that an exchange/sequence tuple is complete and
  *		    the memory allocated for the related objects may be freed.
@@ -1909,7 +1908,6 @@ cleanup:
 	/* drop hold for rec qual */
 	fc_exch_release(aborted_ep);
 }
-
 
 /**
  * fc_exch_seq_send() - Send a frame using a new exchange and sequence

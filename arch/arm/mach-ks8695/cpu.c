@@ -33,7 +33,6 @@
 #include <mach/regs-sys.h>
 #include <mach/regs-misc.h>
 
-
 static struct __initdata map_desc ks8695_io_desc[] = {
 	{
 		.virtual	= KS8695_IO_VA,

@@ -72,7 +72,6 @@ static struct us_unusual_dev cypress_unusual_dev_list[] = {
 
 #undef UNUSUAL_DEV
 
-
 /*
  * ATACB is a protocol used on cypress usb<->ata bridge to
  * send raw ATA command over mass storage
@@ -150,7 +149,6 @@ static void cypress_atacb_passthrough(struct scsi_cmnd *srb, struct us_data *us)
 
 	if (srb->cmnd[12] == ATA_CMD_ID_ATA || srb->cmnd[12] == ATA_CMD_ID_ATAPI)
 		srb->cmnd[2] |= (1<<7); /* set  IdentifyPacketDevice for these cmds */
-
 
 	usb_stor_transparent_scsi_command(srb, us);
 
@@ -242,20 +240,31 @@ end:
 		srb->cmd_len = 12;
 }
 
-
 static int cypress_probe(struct usb_interface *intf,
 			 const struct usb_device_id *id)
 {
 	struct us_data *us;
 	int result;
+	struct usb_device *device;
 
 	result = usb_stor_probe1(&us, intf, id,
 			(id - cypress_usb_ids) + cypress_unusual_dev_list);
 	if (result)
 		return result;
 
-	us->protocol_name = "Transparent SCSI with Cypress ATACB";
-	us->proto_handler = cypress_atacb_passthrough;
+	/* Among CY7C68300 chips, the A revision does not support Cypress ATACB
+	 * Filter out this revision from EEPROM default descriptor values
+	 */
+	device = interface_to_usbdev(intf);
+	if (device->descriptor.iManufacturer != 0x38 ||
+	    device->descriptor.iProduct != 0x4e ||
+	    device->descriptor.iSerialNumber != 0x64) {
+		us->protocol_name = "Transparent SCSI with Cypress ATACB";
+		us->proto_handler = cypress_atacb_passthrough;
+	} else {
+		us->protocol_name = "Transparent SCSI";
+		us->proto_handler = usb_stor_transparent_scsi_command;
+	}
 
 	result = usb_stor_probe2(us);
 	return result;

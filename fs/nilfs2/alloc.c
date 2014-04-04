@@ -30,7 +30,6 @@
 #include "mdt.h"
 #include "alloc.h"
 
-
 /**
  * nilfs_palloc_groups_per_desc_block - get the number of groups that a group
  *					descriptor block can maintain

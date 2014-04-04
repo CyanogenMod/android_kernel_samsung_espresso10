@@ -1,6 +1,6 @@
-/******************************************************************* 
+/*******************************************************************
  *
- * Copyright (c) 2000 ATecoM GmbH 
+ * Copyright (c) 2000 ATecoM GmbH
  *
  * The author may be reached at ecd@atecom.com.
  *
@@ -28,7 +28,6 @@
 
 #ifndef _IDT77252_H
 #define _IDT77252_H 1
-
 
 #include <linux/ptrace.h>
 #include <linux/skbuff.h>
@@ -252,7 +251,6 @@ struct rct_entry
 #define SAR_RSQE_CRC        0x00000200
 #define SAR_RSQE_CELLCNT    0x000001FF
 
-
 #define RSQSIZE            8192
 #define RSQ_NUM_ENTRIES    (RSQSIZE / 16)
 #define RSQ_ALIGNMENT      8192
@@ -270,7 +268,6 @@ struct rsq_info {
 	struct rsq_entry	*last;
 	dma_addr_t		paddr;
 };
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -410,11 +407,9 @@ struct idt77252_dev
 	struct idt77252_dev	*next;
 };
 
-
 /* definition for flag field above */
 #define IDT77252_BIT_INIT		1
 #define IDT77252_BIT_INTERRUPT		2
-
 
 #define ATM_CELL_PAYLOAD         48
 
@@ -427,7 +422,6 @@ struct idt77252_dev
 /*****************************************************************************/
 #define ALIGN_ADDRESS(addr, alignment) \
         ((((u32)(addr)) + (((u32)(alignment))-1)) & ~(((u32)(alignment)) - 1))
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -483,7 +477,6 @@ struct idt77252_dev
 #define SAR_REG_FBQWP3	(card->membase + 0xB4)
 #define SAR_REG_NOW	(card->membase + 0xB8)
 
-
 /*****************************************************************************/
 /*                                                                           */
 /*   Commands                                                                */
@@ -499,7 +492,6 @@ struct idt77252_dev
 
 #define SAR_CMD_OPEN_CONNECTION     (SAR_CMD_OPENCLOSE_CONNECTION | 0x00080000)
 #define SAR_CMD_CLOSE_CONNECTION     SAR_CMD_OPENCLOSE_CONNECTION
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -555,7 +547,6 @@ struct idt77252_dev
 #define SAR_CFG_CNTBL_MASK     0x00030000
 #define SAR_CFG_RXINT_MASK     0x00007000
 
-
 /*****************************************************************************/
 /*                                                                           */
 /*   Status Register bits                                                    */
@@ -577,12 +568,11 @@ struct idt77252_dev
 #define SAR_STAT_FBQ2A      0x00000080 /* Free Buffer Queue 2 Attention   */
 #define SAR_STAT_RSQF       0x00000040 /* Receive Status Queue full       */
 #define SAR_STAT_EPDU       0x00000020 /* End Of PDU Flag                 */
-#define SAR_STAT_RAWCF      0x00000010 /* Raw Cell Flag                   */ 
+#define SAR_STAT_RAWCF      0x00000010 /* Raw Cell Flag                   */
 #define SAR_STAT_FBQ1A      0x00000008 /* Free Buffer Queue 1 Attention   */
 #define SAR_STAT_FBQ0A      0x00000004 /* Free Buffer Queue 0 Attention   */
-#define SAR_STAT_RSQAF      0x00000002 /* Receive Status Queue almost full*/  
+#define SAR_STAT_RSQAF      0x00000002 /* Receive Status Queue almost full*/
 #define SAR_STAT_RSVD2      0x00000001 /* Reserved                        */
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -601,7 +591,6 @@ struct idt77252_dev
 #define SAR_GP_EESCLK	    0x00000004	/* EEPROM SCLK			    */
 #define SAR_GP_EECS	    0x00000002	/* EEPROM Chip Select		    */
 #define SAR_GP_EEDO	    0x00000001	/* EEPROM Data Out		    */
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -639,7 +628,6 @@ struct idt77252_dev
 #define SAR_SRAM_FIFO_128_BASE   0x18000
 #define SAR_SRAM_FIFO_128_TOP    0x1ffff
 
-
 /*****************************************************************************/
 /*                                                                           */
 /*   SAR local SRAM layout for 32k work SRAM                                 */
@@ -671,7 +659,6 @@ struct idt77252_dev
 #define SAR_SRAM_FIFO_32_BASE    0x07000
 #define SAR_SRAM_FIFO_32_TOP     0x07fff
 
-
 /*****************************************************************************/
 /*                                                                           */
 /*   TSR - Transmit Status Request                                           */
@@ -682,7 +669,6 @@ struct idt77252_dev
 #define SAR_TSR_TYPE_TBD  0x00000000
 #define SAR_TSR_TSIF      0x20000000
 #define SAR_TSR_TAG_MASK  0x01F00000
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -706,7 +692,6 @@ struct idt77252_dev
 #define SAR_TBD_VPI_SHIFT 20
 #define SAR_TBD_VCI_SHIFT 4
 
-
 /*****************************************************************************/
 /*                                                                           */
 /*   RXFD - Receive FIFO Descriptor                                          */
@@ -726,7 +711,6 @@ struct idt77252_dev
 #define SAR_RXFD_SIZE_256K     0x09000000  /* 256k words                     */
 #define SAR_RXFD_ADDR_MASK     0x001ffc00
 
-
 /*****************************************************************************/
 /*                                                                           */
 /*   ABRSTD - ABR + VBR Schedule Tables                                      */
@@ -741,7 +725,6 @@ struct idt77252_dev
 #define SAR_ABRSTD_SIZE_8K     0x04000000  /* 8k words                       */
 #define SAR_ABRSTD_SIZE_16K    0x05000000  /* 16k words                      */
 #define SAR_ABRSTD_ADDR_MASK   0x001ffc00
-
 
 /*****************************************************************************/
 /*                                                                           */
@@ -781,7 +764,6 @@ struct idt77252_dev
 #define TCMDQ_INIT_ER		0x04000000
 #define TCMDQ_HALT		0x05000000
 
-
 struct idt77252_skb_prv {
 	struct scqe	tbd;	/* Transmit Buffer Descriptor */
 	dma_addr_t	paddr;	/* DMA handle */
@@ -808,6 +790,5 @@ struct idt77252_skb_prv {
 #ifndef PCI_DEVICE_ID_IDT_IDT77252
 #define PCI_DEVICE_ID_IDT_IDT77252 0x0003
 #endif /* PCI_DEVICE_ID_IDT_IDT772052 */
-
 
 #endif /* !(_IDT77252_H) */

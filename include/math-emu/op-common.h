@@ -218,10 +218,6 @@ do {								\
   __ret;							\
 })
 
-
-
-
-
 /*
  * Main addition routine.  The input values should be cooked.
  */
@@ -371,7 +367,6 @@ do {									     \
     _FP_ADD_INTERNAL(fs, wc, R, X, Y, '-');				     \
   } while (0)
 
-
 /*
  * Main negation routine.  FIXME -- when we care about setting exception
  * bits reliably, this will not do.  We should examine all of the fp classes.
@@ -384,7 +379,6 @@ do {									     \
     R##_e = X##_e;			\
     R##_s = 1 ^ X##_s;			\
   } while (0)
-
 
 /*
  * Main multiplication routine.  The input values should be cooked.
@@ -447,7 +441,6 @@ do {							\
     abort();						\
   }							\
 } while (0)
-
 
 /*
  * Main division routine.  The input values should be cooked.
@@ -517,7 +510,6 @@ do {							\
   }							\
 } while (0)
 
-
 /*
  * Main differential comparison routine.  The inputs should be raw not
  * cooked.  The return is -1,0,1 for normal values, 2 otherwise.
@@ -559,7 +551,6 @@ do {							\
 	  ret = 0;							\
       }									\
   } while (0)
-
 
 /* Simplification for strict equality.  */
 
@@ -810,7 +801,6 @@ do {									\
 	X##_c = FP_CLS_ZERO, X##_s = 0;					\
       }									\
   } while (0)
-
 
 #define FP_CONV(dfs,sfs,dwc,swc,D,S)			\
   do {							\

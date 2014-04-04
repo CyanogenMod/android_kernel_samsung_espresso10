@@ -32,7 +32,7 @@
  * 		sm_pm_bypass_req()
  * 		sm_pm_ls_latch()
  * 		sm_pm_get_ls()
- * 
+ *
  * 	The following HW dependent events are required :
  *		NONE
  *
@@ -146,7 +146,6 @@ static void ecm_fsm(struct s_smc *smc, int cmd)
 	int ls_b ;			/* current line state PHY B */
 	int	p ;			/* ports */
 
-
 	smc->mib.fddiSMTBypassPresent = sm_pm_bypass_present(smc) ;
 	if (cmd == EC_CONNECT)
 		smc->mib.fddiSMTRemoteDisconnectFlag = FALSE ;
@@ -166,7 +165,7 @@ static void ecm_fsm(struct s_smc *smc, int cmd)
 	else if (cmd == EC_DISCONNECT) {
 		smc->e.DisconnectFlag = TRUE ;
 	}
-	
+
 	switch(smc->mib.fddiSMTECMState) {
 	case ACTIONS(EC0_OUT) :
 		/*
@@ -514,7 +513,6 @@ static void prop_actions(struct s_smc *smc)
 	}
 }
 #endif
-
 
 /*
  * SMT timer interface

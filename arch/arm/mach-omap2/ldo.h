@@ -13,7 +13,6 @@
 #ifndef __ARCH_ARM_MACH_OMAP2_LDO_H
 #define __ARCH_ARM_MACH_OMAP2_LDO_H
 
-
 /**
  * struct omap_ldo_abb_ops - ABB LDO status operation pointers
  * @check_txdone:	check if the transaction is done

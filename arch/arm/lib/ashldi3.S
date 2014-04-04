@@ -25,7 +25,6 @@ along with this program; see the file COPYING.  If not, write to
 the Free Software Foundation, 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.  */
 
-
 #include <linux/linkage.h>
 
 #ifdef __ARMEB__

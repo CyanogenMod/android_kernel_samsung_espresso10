@@ -146,4 +146,3 @@ void rtl92se_led_control(struct ieee80211_hw *hw, enum led_ctl_mode ledaction)
 
 	_rtl92se_sw_led_control(hw, ledaction);
 }
-

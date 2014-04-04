@@ -117,12 +117,10 @@ static bool s_bRxMSRReq(PSMgmtObject pMgmt, PWLAN_FRAME_MSRREQ pMSRReq,
     return (bResult);
 }
 
-
 static bool s_bRxTPCReq(PSMgmtObject pMgmt, PWLAN_FRAME_TPCREQ pTPCReq, unsigned char byRate, unsigned char byRSSI)
 {
     PWLAN_FRAME_TPCREP  pFrame;
     PSTxMgmtPacket      pTxPacket = NULL;
-
 
     pTxPacket = (PSTxMgmtPacket)pMgmt->pbyMgmtPacketPool;
     memset(pTxPacket, 0, sizeof(STxMgmtPacket) + WLAN_A3FR_MAXLEN);
@@ -182,11 +180,9 @@ static bool s_bRxTPCReq(PSMgmtObject pMgmt, PWLAN_FRAME_TPCREQ pTPCReq, unsigned
 
 }
 
-
 /*---------------------  Export Variables  --------------------------*/
 
 /*---------------------  Export Functions  --------------------------*/
-
 
 /*+
  *
@@ -214,13 +210,11 @@ IEEE11hbMgrRxAction (
     unsigned int uLength = 0;
     PWLAN_IE_CH_SW          pChannelSwitch = NULL;
 
-
     // decode the frame
     uLength = ((PSRxMgmtPacket)pRxPacket)->cbMPDULen;
     if (uLength > WLAN_A3FR_MAXLEN) {
         return (false);
     }
-
 
     pAction = (PWLAN_FRAME_ACTION) (((PSRxMgmtPacket)pRxPacket)->p80211Header);
 
@@ -265,7 +259,6 @@ IEEE11hbMgrRxAction (
     return (true);
 }
 
-
 bool IEEE11hbMSRRepTx (
     void *pMgmtHandle
     )
@@ -278,7 +271,6 @@ bool IEEE11hbMSRRepTx (
     pTxPacket = (PSTxMgmtPacket)pMgmt->abyCurrentMSRRep;
     memset(pTxPacket, 0, sizeof(STxMgmtPacket) + WLAN_A3FR_MAXLEN);
     pTxPacket->p80211Header = (PUWLAN_80211HDR)((unsigned char *)pTxPacket + sizeof(STxMgmtPacket));
-
 
     pMSRRep->Header.wFrameCtl = (   WLAN_SET_FC_FTYPE(WLAN_FTYPE_MGMT) |
                                     WLAN_SET_FC_FSTYPE(WLAN_FSTYPE_ACTION)
@@ -302,4 +294,3 @@ bool IEEE11hbMSRRepTx (
 //    return (CARDbSendPacket(pMgmt->pAdapter, pMSRRep, PKT_TYPE_802_11_MNG, uLength));
 
 }
-

@@ -29,7 +29,6 @@
 #include <linux/usb/usbnet.h>
 #include <linux/usb/rndis_host.h>
 
-
 /*
  * RNDIS is NDIS remoted over USB.  It's a MSFT variant of CDC ACM ... of
  * course ACM was intended for modems, not Ethernet links!  USB's standard
@@ -578,7 +577,6 @@ fill:
 	return skb;
 }
 EXPORT_SYMBOL_GPL(rndis_tx_fixup);
-
 
 static const struct driver_info	rndis_info = {
 	.description =	"RNDIS device",

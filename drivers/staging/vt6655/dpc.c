@@ -57,7 +57,6 @@
 
 //#define	PLICE_DEBUG
 
-
 /*---------------------  Static Definitions -------------------------*/
 
 /*---------------------  Static Classes  ----------------------------*/
@@ -69,7 +68,6 @@ static int          msglevel                =MSG_LEVEL_INFO;
 const unsigned char acbyRxRate[MAX_RATE] =
 {2, 4, 11, 22, 12, 18, 24, 36, 48, 72, 96, 108};
 
-
 /*---------------------  Static Functions  --------------------------*/
 
 /*---------------------  Static Definitions -------------------------*/
@@ -77,7 +75,6 @@ const unsigned char acbyRxRate[MAX_RATE] =
 /*---------------------  Static Functions  --------------------------*/
 
 static unsigned char s_byGetRateIdx(unsigned char byRate);
-
 
 static void
 s_vGetDASA(unsigned char *pbyRxBufferAddr, unsigned int *pcbHeaderSize,
@@ -94,8 +91,6 @@ static bool s_bAPModeRxCtl(
     int      iSANodeIndex
     );
 
-
-
 static bool s_bAPModeRxData (
     PSDevice pDevice,
     struct sk_buff* skb,
@@ -104,7 +99,6 @@ static bool s_bAPModeRxData (
     int      iSANodeIndex,
     int      iDANodeIndex
     );
-
 
 static bool s_bHandleRxEncryption(
     PSDevice     pDevice,
@@ -162,7 +156,6 @@ s_vProcessRxMACHeader(PSDevice pDevice, unsigned char *pbyRxBufferAddr,
     unsigned short *pwType;
     PS802_11Header  pMACHeader;
     int             ii;
-
 
     pMACHeader = (PS802_11Header) (pbyRxBufferAddr + cbHeaderSize);
 
@@ -230,9 +223,6 @@ s_vProcessRxMACHeader(PSDevice pDevice, unsigned char *pbyRxBufferAddr,
     *pcbHeadSize = cbHeaderSize;
 }
 
-
-
-
 static unsigned char s_byGetRateIdx (unsigned char byRate)
 {
     unsigned char byRateIdx;
@@ -243,7 +233,6 @@ static unsigned char s_byGetRateIdx (unsigned char byRate)
     }
     return 0;
 }
-
 
 static void
 s_vGetDASA(unsigned char *pbyRxBufferAddr, unsigned int *pcbHeaderSize,
@@ -289,9 +278,6 @@ s_vGetDASA(unsigned char *pbyRxBufferAddr, unsigned int *pcbHeaderSize,
     *pcbHeaderSize = cbHeaderSize;
 }
 
-
-
-
 //PLICE_DEBUG ->
 
 void	MngWorkItem(void *Context)
@@ -308,10 +294,7 @@ void	MngWorkItem(void *Context)
 	spin_unlock_irq(&pDevice->lock);
 }
 
-
 //PLICE_DEBUG<-
-
-
 
 bool
 device_receive_frame (
@@ -363,7 +346,6 @@ device_receive_frame (
 //    DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"---------- device_receive_frame---\n");
 
     skb = pRDInfo->skb;
-
 
 //PLICE_DEBUG->
 #if 1
@@ -450,7 +432,6 @@ device_receive_frame (
         }
     }
 
-
     // Use for TKIP MIC
     s_vGetDASA(skb->data+4, &cbHeaderSize, &pDevice->sRxEthHeader);
 
@@ -474,7 +455,6 @@ device_receive_frame (
             return false;
         }
     }
-
 
     if (IS_FC_WEP(pbyFrame)) {
         bool bRxDecryOK = false;
@@ -544,7 +524,6 @@ device_receive_frame (
             FrameSize -= 4;         // 4 is ICV
     }
 
-
     //
     // RX OK
     //
@@ -567,7 +546,6 @@ device_receive_frame (
             return false;
         }
     }
-
 
 // Management & Control frame Handle
     if ((IS_TYPE_DATA((skb->data+4))) == false) {
@@ -685,9 +663,7 @@ device_receive_frame (
         }
     }
 
-
 // Data frame Handle
-
 
     if (pDevice->bEnablePSMode) {
         if (IS_FC_MOREDATA((skb->data+4))) {
@@ -709,7 +685,6 @@ device_receive_frame (
 	//printk("device_receive_frame: RxRate is %d\n",*pbyRxRate);
 		BBvAntennaDiversity(pDevice, s_byGetRateIdx(*pbyRxRate), 0);
     }
-
 
     if (pDevice->byLocalID != REV_ID_VT3253_B1) {
         pDevice->uCurrRSSI = *pbyRSSI;
@@ -769,7 +744,6 @@ device_receive_frame (
             return false;
     }
 
-
     if ((pKey != NULL) && (pKey->byCipherSuite == KEY_CTL_TKIP)) {
         if (bIsWEP) {
             FrameSize -= 8;  //MIC
@@ -787,7 +761,6 @@ device_receive_frame (
             unsigned long dwLocalMIC_L = 0;
             unsigned long dwLocalMIC_R = 0;
             viawget_wpa_header *wpahdr;
-
 
             if (pMgmt->eCurrMode == WMAC_MODE_ESS_AP) {
                 dwMICKey0 = cpu_to_le32(*(unsigned long *)(&pKey->abyKey[24]));
@@ -821,7 +794,6 @@ device_receive_frame (
             //DBG_PRN_GRP12(("RxL: %lx, RxR: %lx\n", *pdwMIC_L, *pdwMIC_R));
             //DBG_PRN_GRP12(("LocalL: %lx, LocalR: %lx\n", dwLocalMIC_L, dwLocalMIC_R));
             //DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"dwMICKey0= %lx,dwMICKey1= %lx \n", dwMICKey0, dwMICKey1);
-
 
             if ((cpu_to_le32(*pdwMIC_L) != dwLocalMIC_L) || (cpu_to_le32(*pdwMIC_R) != dwLocalMIC_R) ||
                 (pDevice->bRxMICFail == true)) {
@@ -861,7 +833,6 @@ device_receive_frame (
 
 				}
          #endif
-
 
                 if ((pDevice->bWPADEVUp) && (pDevice->skb != NULL)) {
                      wpahdr = (viawget_wpa_header *)pDevice->skb->data;
@@ -936,12 +907,9 @@ device_receive_frame (
         }
     } // ----- End of Reply Counter Check --------------------------
 
-
-
     if ((pKey != NULL) && (bIsWEP)) {
 //      pDevice->s802_11Counter.DecryptSuccessCount.QuadPart++;
     }
-
 
     s_vProcessRxMACHeader(pDevice, (unsigned char *)(skb->data+4), FrameSize, bIsWEP, bExtIV, &cbHeaderOffset);
     FrameSize -= cbHeaderOffset;
@@ -982,7 +950,6 @@ device_receive_frame (
     skb_put(skb, FrameSize);
     skb->protocol=eth_type_trans(skb, skb->dev);
 
-
 	//drop frame not met IEEE 802.3
 /*
 	if (pDevice->flags & DEVICE_FLAGS_VAL_PKT_LEN) {
@@ -1017,7 +984,6 @@ device_receive_frame (
     return true;
 }
 
-
 static bool s_bAPModeRxCtl (
     PSDevice pDevice,
     unsigned char *pbyFrame,
@@ -1027,7 +993,6 @@ static bool s_bAPModeRxCtl (
     PS802_11Header      p802_11Header;
     CMD_STATUS          Status;
     PSMgmtObject        pMgmt = pDevice->pMgmt;
-
 
     if (IS_CTL_PSPOLL(pbyFrame) || !IS_TYPE_CONTROL(pbyFrame)) {
 
@@ -1161,7 +1126,6 @@ static bool s_bHandleRxEncryption (
     unsigned char byDecMode = KEY_CTL_WEP;
     PSMgmtObject    pMgmt = pDevice->pMgmt;
 
-
     *pwRxTSC15_0 = 0;
     *pdwRxTSC47_16 = 0;
 
@@ -1287,7 +1251,6 @@ static bool s_bHandleRxEncryption (
     return true;
 }
 
-
 static bool s_bHostWepRxEncryption (
     PSDevice     pDevice,
     unsigned char *pbyFrame,
@@ -1307,8 +1270,6 @@ static bool s_bHostWepRxEncryption (
     unsigned char byDecMode = KEY_CTL_WEP;
     PS802_11Header  pMACHeader;
 
-
-
     *pwRxTSC15_0 = 0;
     *pdwRxTSC47_16 = 0;
 
@@ -1321,7 +1282,6 @@ static bool s_bHostWepRxEncryption (
     byKeyIdx = (*(pbyIV+3) & 0xc0);
     byKeyIdx >>= 6;
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO"\nKeyIdx: %d\n", byKeyIdx);
-
 
     if (pDevice->pMgmt->byCSSGK == KEY_CTL_TKIP)
         byDecMode = KEY_CTL_TKIP;
@@ -1417,8 +1377,6 @@ static bool s_bHostWepRxEncryption (
     return true;
 }
 
-
-
 static bool s_bAPModeRxData (
     PSDevice pDevice,
     struct sk_buff* skb,
@@ -1433,7 +1391,6 @@ static bool s_bAPModeRxData (
     bool bRelayOnly = false;
     unsigned char byMask[8] = {1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80};
     unsigned short wAID;
-
 
     struct sk_buff* skbcpy = NULL;
 
@@ -1507,4 +1464,3 @@ static bool s_bAPModeRxData (
 
     return true;
 }
-

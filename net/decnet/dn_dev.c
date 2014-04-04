@@ -419,7 +419,6 @@ static int dn_dev_set_ifa(struct net_device *dev, struct dn_ifaddr *ifa)
 	return rv;
 }
 
-
 int dn_dev_ioctl(unsigned int cmd, void __user *arg)
 {
 	char buffer[DN_IFREQ_SIZE];
@@ -870,7 +869,6 @@ static void dn_send_endnode_hello(struct net_device *dev, struct dn_ifaddr *ifa)
 	dn_rt_finish_output(skb, dn_rt_all_rt_mcast, msg->id);
 }
 
-
 #define DRDELAY (5 * HZ)
 
 static int dn_am_i_a_router(struct dn_neigh *dn, struct dn_dev *dn_db, struct dn_ifaddr *ifa)
@@ -1122,7 +1120,6 @@ static struct dn_dev *dn_dev_create(struct net_device *dev, int *err)
 	*err = 0;
 	return dn_db;
 }
-
 
 /*
  * This processes a device up event. We only start up
@@ -1414,9 +1411,9 @@ void __init dn_dev_init(void)
 
 	dn_dev_devices_on();
 
-	rtnl_register(PF_DECnet, RTM_NEWADDR, dn_nl_newaddr, NULL);
-	rtnl_register(PF_DECnet, RTM_DELADDR, dn_nl_deladdr, NULL);
-	rtnl_register(PF_DECnet, RTM_GETADDR, NULL, dn_nl_dump_ifaddr);
+	rtnl_register(PF_DECnet, RTM_NEWADDR, dn_nl_newaddr, NULL, NULL);
+	rtnl_register(PF_DECnet, RTM_DELADDR, dn_nl_deladdr, NULL, NULL);
+	rtnl_register(PF_DECnet, RTM_GETADDR, NULL, dn_nl_dump_ifaddr, NULL);
 
 	proc_net_fops_create(&init_net, "decnet_dev", S_IRUGO, &dn_dev_seq_fops);
 

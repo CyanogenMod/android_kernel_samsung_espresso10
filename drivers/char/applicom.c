@@ -19,7 +19,6 @@
 /* de code autre que le texte V2.6.1 en V2.8.0                               */
 /*****************************************************************************/
 
-
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/interrupt.h>
@@ -38,13 +37,11 @@
 
 #include "applicom.h"
 
-
-/* NOTE: We use for loops with {write,read}b() instead of 
+/* NOTE: We use for loops with {write,read}b() instead of
    memcpy_{from,to}io throughout this driver. This is because
    the board doesn't correctly handle word accesses - only
-   bytes. 
+   bytes.
 */
-
 
 #undef DEBUG
 
@@ -81,7 +78,6 @@ MODULE_LICENSE("GPL");
 MODULE_ALIAS_MISCDEV(AC_MINOR);
 
 MODULE_SUPPORTED_DEVICE("ac");
-
 
 static struct applicom_board {
 	unsigned long PhysIO;
@@ -127,7 +123,7 @@ static struct miscdevice ac_miscdev = {
 
 static int dummy;	/* dev_id for request_irq() */
 
-static int ac_register_board(unsigned long physloc, void __iomem *loc, 
+static int ac_register_board(unsigned long physloc, void __iomem *loc,
 		      unsigned char boardno)
 {
 	volatile unsigned char byte_reset_it;
@@ -148,7 +144,7 @@ static int ac_register_board(unsigned long physloc, void __iomem *loc,
 	}
 
 	if (apbs[boardno - 1].RamIO) {
-		printk(KERN_WARNING "Board #%d (at 0x%lx) conflicts with previous board #%d (at 0x%lx)\n", 
+		printk(KERN_WARNING "Board #%d (at 0x%lx) conflicts with previous board #%d (at 0x%lx)\n",
 		       boardno, physloc, boardno, apbs[boardno-1].PhysIO);
 		return 0;
 	}
@@ -198,7 +194,7 @@ static int __init applicom_init(void)
 
 		if (!pci_match_id(applicom_pci_tbl, dev))
 			continue;
-		
+
 		if (pci_enable_device(dev))
 			return -EIO;
 
@@ -241,7 +237,7 @@ static int __init applicom_init(void)
 		apbs[boardno - 1].irq = dev->irq;
 	}
 
-	/* Finished with PCI cards. If none registered, 
+	/* Finished with PCI cards. If none registered,
 	 * and there was no mem/irq specified, exit */
 
 	if (!mem || !irq) {
@@ -316,14 +312,13 @@ static int __init applicom_init(void)
 
 			boardname[serial] = 0;
 
-
 			printk(KERN_INFO "Applicom board %d: %s, PROM V%d.%d",
 			       i+1, boardname,
 			       (int)(readb(apbs[i].RamIO + VERS) >> 4),
 			       (int)(readb(apbs[i].RamIO + VERS) & 0xF));
-			
-			serial = (readb(apbs[i].RamIO + SERIAL_NUMBER) << 16) + 
-				(readb(apbs[i].RamIO + SERIAL_NUMBER + 1) << 8) + 
+
+			serial = (readb(apbs[i].RamIO + SERIAL_NUMBER) << 16) +
+				(readb(apbs[i].RamIO + SERIAL_NUMBER + 1) << 8) +
 				(readb(apbs[i].RamIO + SERIAL_NUMBER + 2) );
 
 			if (serial != 0)
@@ -352,7 +347,6 @@ out:
 module_init(applicom_init);
 module_exit(applicom_exit);
 
-
 static ssize_t ac_write(struct file *file, const char __user *buf, size_t count, loff_t * ppos)
 {
 	unsigned int NumCard;	/* Board number 1 -> 8           */
@@ -376,11 +370,11 @@ static ssize_t ac_write(struct file *file, const char __user *buf, size_t count,
 		return -EINVAL;
 	}
 
-	if(copy_from_user(&st_loc, buf, sizeof(struct st_ram_io))) 
+	if(copy_from_user(&st_loc, buf, sizeof(struct st_ram_io)))
 		return -EFAULT;
-	
+
 	if(copy_from_user(&tmpmailbox, &buf[sizeof(struct st_ram_io)],
-			  sizeof(struct mailbox))) 
+			  sizeof(struct mailbox)))
 		return -EFAULT;
 
 	NumCard = st_loc.num_card;	/* board number to send          */
@@ -395,7 +389,7 @@ static ssize_t ac_write(struct file *file, const char __user *buf, size_t count,
 	       IndexCard+1);
 
 		for (c = 0; c < sizeof(struct st_ram_io);) {
-		
+
 			printk("\n%5.5X: %2.2X", c, ((unsigned char *) &st_loc)[c]);
 
 			for (c++; c % 8 && c < sizeof(struct st_ram_io); c++) {
@@ -419,7 +413,7 @@ static ssize_t ac_write(struct file *file, const char __user *buf, size_t count,
 	spin_lock_irqsave(&apbs[IndexCard].mutex, flags);
 
 	/* Test octet ready correct */
-	if(readb(apbs[IndexCard].RamIO + DATA_FROM_PC_READY) > 2) { 
+	if(readb(apbs[IndexCard].RamIO + DATA_FROM_PC_READY) > 2) {
 		Dummy = readb(apbs[IndexCard].RamIO + VERS);
 		spin_unlock_irqrestore(&apbs[IndexCard].mutex, flags);
 		printk(KERN_WARNING "APPLICOM driver write error board %d, DataFromPcReady = %d\n",
@@ -427,7 +421,7 @@ static ssize_t ac_write(struct file *file, const char __user *buf, size_t count,
 		DeviceErrorCount++;
 		return -EIO;
 	}
-	
+
 	/* Place ourselves on the wait queue */
 	set_current_state(TASK_INTERRUPTIBLE);
 	add_wait_queue(&apbs[IndexCard].FlagSleepSend, &wait);
@@ -455,7 +449,7 @@ static ssize_t ac_write(struct file *file, const char __user *buf, size_t count,
 	writeb(1, apbs[IndexCard].RamIO + DATA_FROM_PC_READY);
 
 	/* Which is best - lock down the pages with rawio and then
-	   copy directly, or use bounce buffers? For now we do the latter 
+	   copy directly, or use bounce buffers? For now we do the latter
 	   because it works with 2.2 still */
 	{
 		unsigned char *from = (unsigned char *) &tmpmailbox;
@@ -489,7 +483,6 @@ static int do_ac_read(int IndexCard, char __user *buf,
 	st_loc->tic_owner_to_pc = readb(apbs[IndexCard].RamIO + TIC_OWNER_TO_PC);
 	st_loc->numcard_owner_to_pc = readb(apbs[IndexCard].RamIO + NUMCARD_OWNER_TO_PC);
 
-
 	{
 		int c;
 
@@ -499,7 +492,7 @@ static int do_ac_read(int IndexCard, char __user *buf,
 	writeb(1, apbs[IndexCard].RamIO + ACK_FROM_PC_READY);
 	writeb(1, apbs[IndexCard].RamIO + TYP_ACK_FROM_PC);
 	writeb(IndexCard+1, apbs[IndexCard].RamIO + NUMCARD_ACK_FROM_PC);
-	writeb(readb(apbs[IndexCard].RamIO + TIC_OWNER_TO_PC), 
+	writeb(readb(apbs[IndexCard].RamIO + TIC_OWNER_TO_PC),
 	       apbs[IndexCard].RamIO + TIC_ACK_FROM_PC);
 	writeb(2, apbs[IndexCard].RamIO + ACK_FROM_PC_READY);
 	writeb(0, apbs[IndexCard].RamIO + DATA_TO_PC_READY);
@@ -547,20 +540,20 @@ static ssize_t ac_read (struct file *filp, char __user *buf, size_t count, loff_
 			count,sizeof(struct st_ram_io) + sizeof(struct mailbox));
 		return -EINVAL;
 	}
-	
+
 	while(1) {
 		/* Stick ourself on the wait queue */
 		set_current_state(TASK_INTERRUPTIBLE);
 		add_wait_queue(&FlagSleepRec, &wait);
-		
+
 		/* Scan each board, looking for one which has a packet for us */
 		for (i=0; i < MAX_BOARD; i++) {
 			if (!apbs[i].RamIO)
 				continue;
 			spin_lock_irqsave(&apbs[i].mutex, flags);
-			
+
 			tmp = readb(apbs[i].RamIO + DATA_TO_PC_READY);
-			
+
 			if (tmp == 2) {
 				struct st_ram_io st_loc;
 				struct mailbox mailbox;
@@ -578,25 +571,25 @@ static ssize_t ac_read (struct file *filp, char __user *buf, size_t count, loff_
 					return -EFAULT;
 				return tmp;
 			}
-			
+
 			if (tmp > 2) {
 				/* Got an error */
 				Dummy = readb(apbs[i].RamIO + VERS);
-				
+
 				spin_unlock_irqrestore(&apbs[i].mutex, flags);
 				set_current_state(TASK_RUNNING);
 				remove_wait_queue(&FlagSleepRec, &wait);
-				
+
 				printk(KERN_WARNING "APPLICOM driver read error board %d, DataToPcReady = %d\n",
 				       i,(int)readb(apbs[i].RamIO + DATA_TO_PC_READY));
 				DeviceErrorCount++;
 				return -EIO;
 			}
-			
+
 			/* Nothing for us. Try the next board */
 			Dummy = readb(apbs[i].RamIO + VERS);
 			spin_unlock_irqrestore(&apbs[i].mutex, flags);
-			
+
 		} /* per board */
 
 		/* OK - No boards had data for us. Sleep now */
@@ -612,7 +605,7 @@ static ssize_t ac_read (struct file *filp, char __user *buf, size_t count, loff_
 			printk(KERN_DEBUG "Looping in ac_read. loopcount %d\n", loopcount);
 		}
 #endif
-	} 
+	}
 }
 
 static irqreturn_t ac_interrupt(int vec, void *dev_instance)
@@ -629,7 +622,7 @@ static irqreturn_t ac_interrupt(int vec, void *dev_instance)
 	do {
 		FlagInt = 0;
 		for (i = 0; i < MAX_BOARD; i++) {
-			
+
 			/* Skip if this board doesn't exist */
 			if (!apbs[i].RamIO)
 				continue;
@@ -652,9 +645,9 @@ static irqreturn_t ac_interrupt(int vec, void *dev_instance)
 				DeviceErrorCount++;
 			}
 
-			if((readb(apbs[i].RamIO + DATA_FROM_PC_READY) > 2) && 
+			if((readb(apbs[i].RamIO + DATA_FROM_PC_READY) > 2) &&
 			   (readb(apbs[i].RamIO + DATA_FROM_PC_READY) != 6)) {
-				
+
 				printk(KERN_WARNING "APPLICOM driver interrupt err board %d, DataFromPcReady = %d\n",
 				       i+1,(int)readb(apbs[i].RamIO + DATA_FROM_PC_READY));
 				DeviceErrorCount++;
@@ -689,10 +682,8 @@ static irqreturn_t ac_interrupt(int vec, void *dev_instance)
 	return IRQ_RETVAL(handled);
 }
 
-
-
 static long ac_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-     
+
 {				/* @ ADG ou ATO selon le cas */
 	int i;
 	unsigned char IndexCard;
@@ -709,9 +700,9 @@ static long ac_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	if (IS_ERR(adgl))
 		return PTR_ERR(adgl);
 
-	mutex_lock(&ac_mutex);	
+	mutex_lock(&ac_mutex);
 	IndexCard = adgl->num_card-1;
-	 
+
 	if(cmd != 6 && ((IndexCard >= MAX_BOARD) || !apbs[IndexCard].RamIO)) {
 		static int warncount = 10;
 		if (warncount) {
@@ -724,7 +715,7 @@ static long ac_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	}
 
 	switch (cmd) {
-		
+
 	case 0:
 		pmem = apbs[IndexCard].RamIO;
 		for (i = 0; i < sizeof(struct st_ram_io); i++)
@@ -745,9 +736,9 @@ static long ac_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		pmem = apbs[IndexCard].RamIO + TYPE_CARD;
 		for (i = 0; i < 20; i++)
 			adgl->reserv1[i] = readb(pmem++);
-		*(int *)&adgl->reserv1[20] =  
-			(readb(apbs[IndexCard].RamIO + SERIAL_NUMBER) << 16) + 
-			(readb(apbs[IndexCard].RamIO + SERIAL_NUMBER + 1) << 8) + 
+		*(int *)&adgl->reserv1[20] =
+			(readb(apbs[IndexCard].RamIO + SERIAL_NUMBER) << 16) +
+			(readb(apbs[IndexCard].RamIO + SERIAL_NUMBER + 1) << 8) +
 			(readb(apbs[IndexCard].RamIO + SERIAL_NUMBER + 2) );
 
 		if (copy_to_user(argp, adgl, sizeof(struct st_ram_io)))
@@ -757,11 +748,11 @@ static long ac_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 		pmem = apbs[IndexCard].RamIO + CONF_END_TEST;
 		for (i = 0; i < 10; i++)
 			writeb(0xff, pmem++);
-		writeb(adgl->data_from_pc_ready, 
+		writeb(adgl->data_from_pc_ready,
 		       apbs[IndexCard].RamIO + DATA_FROM_PC_READY);
 
 		writeb(1, apbs[IndexCard].RamIO + RAM_IT_FROM_PC);
-		
+
 		for (i = 0; i < MAX_BOARD; i++) {
 			if (apbs[i].RamIO) {
 				byte_reset_it = readb(apbs[i].RamIO + RAM_IT_TO_PC);
@@ -808,9 +799,8 @@ static long ac_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			       (int)(readb(apbs[IndexCard].RamIO + VERS) & 0xF),
 			       boardname);
 
-
-			serial = (readb(apbs[i].RamIO + SERIAL_NUMBER) << 16) + 
-				(readb(apbs[i].RamIO + SERIAL_NUMBER + 1) << 8) + 
+			serial = (readb(apbs[i].RamIO + SERIAL_NUMBER) << 16) +
+				(readb(apbs[i].RamIO + SERIAL_NUMBER + 1) << 8) +
 				(readb(apbs[i].RamIO + SERIAL_NUMBER + 2) );
 
 			if (serial != 0)
@@ -840,4 +830,3 @@ static long ac_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	mutex_unlock(&ac_mutex);
 	return 0;
 }
-

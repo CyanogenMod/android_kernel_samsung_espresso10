@@ -163,12 +163,10 @@ static int __init cy82c693_init(void)
 	return pci_register_driver(&cy82c693_pci_driver);
 }
 
-
 static void __exit cy82c693_exit(void)
 {
 	pci_unregister_driver(&cy82c693_pci_driver);
 }
-
 
 MODULE_AUTHOR("Alan Cox");
 MODULE_DESCRIPTION("low-level driver for the CY82C693 PATA controller");

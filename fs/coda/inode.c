@@ -1,9 +1,9 @@
 /*
  * Super block/filesystem wide operations
  *
- * Copyright (C) 1996 Peter J. Braam <braam@maths.ox.ac.uk> and 
- * Michael Callahan <callahan@maths.ox.ac.uk> 
- * 
+ * Copyright (C) 1996 Peter J. Braam <braam@maths.ox.ac.uk> and
+ * Michael Callahan <callahan@maths.ox.ac.uk>
+ *
  * Rewritten for Linux 2.1.  Peter Braam <braam@cs.cmu.edu>
  * Copyright (C) Carnegie Mellon University
  */
@@ -127,7 +127,7 @@ static int get_device_index(struct coda_mount_data *data)
 	inode = NULL;
 	if(file)
 		inode = file->f_path.dentry->d_inode;
-	
+
 	if(!inode || !S_ISCHR(inode->i_mode) ||
 	   imajor(inode) != CODA_PSDEV_MAJOR) {
 		if(file)
@@ -161,7 +161,7 @@ static int coda_fill_super(struct super_block *sb, void *data, int silent)
 	/* Ignore errors in data, for backward compatibility */
 	if(idx == -1)
 		idx = 0;
-	
+
 	printk(KERN_INFO "coda_read_super: device index: %i\n", idx);
 
 	vc = &coda_comms[idx];
@@ -203,15 +203,15 @@ static int coda_fill_super(struct super_block *sb, void *data, int silent)
 		goto error;
 	}
 	printk("coda_read_super: rootfid is %s\n", coda_f2s(&fid));
-	
+
 	/* make root inode */
         error = coda_cnode_make(&root, &fid, sb);
         if ( error || !root ) {
 	    printk("Failure of coda_cnode_make for root: error %d\n", error);
 	    goto error;
-	} 
+	}
 
-	printk("coda_read_super: rootinode is %ld dev %s\n", 
+	printk("coda_read_super: rootinode is %ld dev %s\n",
 	       root->i_ino, root->i_sb->s_id);
 	sb->s_root = d_alloc_root(root);
 	if (!sb->s_root) {
@@ -266,7 +266,7 @@ int coda_setattr(struct dentry *de, struct iattr *iattr)
 	struct coda_vattr vattr;
 	int error;
 
-	memset(&vattr, 0, sizeof(vattr)); 
+	memset(&vattr, 0, sizeof(vattr));
 
 	inode->i_ctime = CURRENT_TIME_SEC;
 	coda_iattr_to_vattr(iattr, &vattr);
@@ -276,7 +276,7 @@ int coda_setattr(struct dentry *de, struct iattr *iattr)
 	error = venus_setattr(inode->i_sb, coda_i2f(inode), &vattr);
 
 	if (!error) {
-	        coda_vattr_to_iattr(inode, &vattr); 
+	        coda_vattr_to_iattr(inode, &vattr);
 		coda_cache_clear_inode(inode);
 	}
 	return error;
@@ -291,7 +291,7 @@ const struct inode_operations coda_file_inode_operations = {
 static int coda_statfs(struct dentry *dentry, struct kstatfs *buf)
 {
 	int error;
-	
+
 	error = venus_statfs(dentry, buf);
 
 	if (error) {
@@ -308,7 +308,7 @@ static int coda_statfs(struct dentry *dentry, struct kstatfs *buf)
 	buf->f_bsize = 4096;
 	buf->f_namelen = CODA_MAXNAMLEN;
 
-	return 0; 
+	return 0;
 }
 
 /* init_coda: used by filesystems.c to register coda */
@@ -326,4 +326,3 @@ struct file_system_type coda_fs_type = {
 	.kill_sb	= kill_anon_super,
 	.fs_flags	= FS_BINARY_MOUNTDATA,
 };
-

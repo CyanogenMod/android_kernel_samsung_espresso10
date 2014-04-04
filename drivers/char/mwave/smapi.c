@@ -53,7 +53,6 @@
 
 static unsigned short g_usSmapiPort = 0;
 
-
 static int smapi_request(unsigned short inBX, unsigned short inCX,
 			 unsigned short inDI, unsigned short inSI,
 			 unsigned short *outAX, unsigned short *outBX,
@@ -123,7 +122,6 @@ static int smapi_request(unsigned short inBX, unsigned short inCX,
 	return retval;
 }
 
-
 int smapi_query_DSP_cfg(SMAPI_DSP_SETTINGS * pSettings)
 {
 	int bRC = -EIO;
@@ -160,7 +158,7 @@ int smapi_query_DSP_cfg(SMAPI_DSP_SETTINGS * pSettings)
 		pSettings->usDspBaseIO);
 
 	/* check for illegal values */
-	if ( pSettings->usDspBaseIO == 0 ) 
+	if ( pSettings->usDspBaseIO == 0 )
 		PRINTK_ERROR(KERN_ERR_MWAVE "smapi::smapi_query_DSP_cfg: Worry: DSP base I/O address is 0\n");
 	if ( pSettings->usDspIRQ == 0 )
 		PRINTK_ERROR(KERN_ERR_MWAVE "smapi::smapi_query_DSP_cfg: Worry: DSP IRQ line is 0\n");
@@ -170,7 +168,7 @@ int smapi_query_DSP_cfg(SMAPI_DSP_SETTINGS * pSettings)
 	if (bRC) {
 		PRINTK_ERROR("smapi::smapi_query_DSP_cfg: Error: Could not get DSP modem settings. Aborting.\n");
 		return bRC;
-	} 
+	}
 
 	PRINTK_1(TRACE_SMAPI, "smapi::smapi_query_DSP_cfg, smapi_request OK\n");
 
@@ -189,7 +187,7 @@ int smapi_query_DSP_cfg(SMAPI_DSP_SETTINGS * pSettings)
 		pSettings->usUartBaseIO);
 
 	/* check for illegal values */
-	if ( pSettings->usUartBaseIO == 0 ) 
+	if ( pSettings->usUartBaseIO == 0 )
 		PRINTK_ERROR(KERN_ERR_MWAVE "smapi::smapi_query_DSP_cfg: Worry: UART base I/O address is 0\n");
 	if ( pSettings->usUartIRQ == 0 )
 		PRINTK_ERROR(KERN_ERR_MWAVE "smapi::smapi_query_DSP_cfg: Worry: UART IRQ line is 0\n");
@@ -198,7 +196,6 @@ int smapi_query_DSP_cfg(SMAPI_DSP_SETTINGS * pSettings)
 
 	return bRC;
 }
-
 
 int smapi_set_DSP_cfg(void)
 {
@@ -254,7 +251,6 @@ int smapi_set_DSP_cfg(void)
 		}
 		uartio_index = i;
 	}
-
 
 	if (mwave_uart_irq) {
 		for (i = 0; i < numUartIrqs; i++) {
@@ -491,7 +487,6 @@ exit_smapi_request_error:
 	PRINTK_ERROR(KERN_ERR_MWAVE "smapi::smapi_set_DSP_cfg exit on smapi_request error bRC %x\n", bRC);
 	return bRC;
 }
-
 
 int smapi_set_DSP_power_state(BOOLEAN bOn)
 {

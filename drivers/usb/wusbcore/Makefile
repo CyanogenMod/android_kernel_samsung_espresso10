@@ -4,7 +4,6 @@ obj-$(CONFIG_USB_WUSB)		+= wusbcore.o
 obj-$(CONFIG_USB_HWA_HCD)	+= wusb-wa.o
 obj-$(CONFIG_USB_WUSB_CBAF)	+= wusb-cbaf.o
 
-
 wusbcore-y :=		\
 	crypto.o	\
 	devconnect.o	\

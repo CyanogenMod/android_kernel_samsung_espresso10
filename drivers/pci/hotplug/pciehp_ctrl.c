@@ -514,7 +514,6 @@ int pciehp_enable_slot(struct slot *p_slot)
 	return rc;
 }
 
-
 int pciehp_disable_slot(struct slot *p_slot)
 {
 	u8 getstatus = 0;

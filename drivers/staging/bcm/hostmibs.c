@@ -1,4 +1,3 @@
-
 /*
  * File Name: hostmibs.c
  *
@@ -59,7 +58,6 @@ INT  ProcessGetHostMibs(PMINI_ADAPTER Adapter, S_MIBS_HOST_STATS_MIBS *pstHostMi
 
 		pstClassifierTable = pstServiceFlowEntry->pstClassifierTable;
 
-
 		for(uiIndex = 0; uiIndex < MAX_PHSRULE_PER_SF; uiIndex++)
 		{
 			pstClassifierRule = &pstClassifierTable->stActivePhsRulesList[uiIndex];
@@ -81,7 +79,6 @@ INT  ProcessGetHostMibs(PMINI_ADAPTER Adapter, S_MIBS_HOST_STATS_MIBS *pstHostMi
 
 	}
 
-
 	//copy other Host Statistics parameters
 	pstHostMibs->stHostInfo.GoodTransmits = Adapter->dev->stats.tx_packets;
 	pstHostMibs->stHostInfo.GoodReceives = Adapter->dev->stats.rx_packets;
@@ -98,13 +95,11 @@ INT  ProcessGetHostMibs(PMINI_ADAPTER Adapter, S_MIBS_HOST_STATS_MIBS *pstHostMi
 	return STATUS_SUCCESS;
 }
 
-
 VOID GetDroppedAppCntrlPktMibs(S_MIBS_HOST_STATS_MIBS *pstHostMibs, const PPER_TARANG_DATA pTarang)
 {
 	memcpy(&(pstHostMibs->stDroppedAppCntrlMsgs),
 	       &(pTarang->stDroppedAppCntrlMsgs),sizeof(S_MIBS_DROPPED_APP_CNTRL_MESSAGES));
 }
-
 
 VOID CopyMIBSExtendedSFParameters(PMINI_ADAPTER Adapter,
 		CServiceFlowParamSI *psfLocalSet, UINT uiSearchRuleIndex)

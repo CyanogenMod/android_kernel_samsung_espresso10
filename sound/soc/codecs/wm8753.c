@@ -171,7 +171,6 @@ SOC_ENUM_SINGLE(WM8753_ADC, 7, 4, wm8753_dat_sel),
 SOC_ENUM_SINGLE(WM8753_OUTCTL, 2, 2, wm8753_rout2_phase),
 };
 
-
 static int wm8753_get_dai(struct snd_kcontrol *kcontrol,
 	struct snd_ctl_elem_value *ucontrol)
 {
@@ -204,7 +203,6 @@ static int wm8753_set_dai(struct snd_kcontrol *kcontrol,
 
 	ioctl = (ioctl & 0x1f3) | (wm8753->dai_func << 2);
 	snd_soc_write(codec, WM8753_IOCTL, ioctl);
-
 
 	wm8753_hifi_write_dai_fmt(codec, wm8753->hifi_fmt);
 	wm8753_voice_write_dai_fmt(codec, wm8753->voice_fmt);

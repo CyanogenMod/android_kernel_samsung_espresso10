@@ -64,7 +64,6 @@ enum fc_port_type {
 	FC_PORTTYPE_NPIV,		/* VPORT based on NPIV */
 };
 
-
 /*
  * fc_port_state: If you alter this, you also need to alter scsi_transport_fc.c
  * (for the ascii descriptions).
@@ -83,7 +82,6 @@ enum fc_port_state {
 	FC_PORTSTATE_DELETED,
 };
 
-
 /*
  * fc_vport_state: If you alter this, you also need to alter
  * scsi_transport_fc.c (for the ascii descriptions).
@@ -100,8 +98,6 @@ enum fc_vport_state {
 	FC_VPORT_FABRIC_REJ_WWN,
 	FC_VPORT_FAILED,
 };
-
-
 
 /*
  * FC Classes of Service
@@ -159,7 +155,6 @@ enum fc_tgtid_binding_type  {
 #define FC_RPORT_ROLE_FCP_TARGET		FC_PORT_ROLE_FCP_TARGET
 #define FC_RPORT_ROLE_FCP_INITIATOR		FC_PORT_ROLE_FCP_INITIATOR
 #define FC_RPORT_ROLE_IP_PORT			FC_PORT_ROLE_IP_PORT
-
 
 /* Macro for use in defining Virtual Port attributes */
 #define FC_VPORT_ATTR(_name,_mode,_show,_store)		\
@@ -261,7 +256,6 @@ struct fc_vport {
 #define vport_to_parent(v)			\
 	(v->dev.parent)
 
-
 /* Error return codes for vport_create() callback */
 #define VPCERR_UNSUPPORTED		-ENOSYS		/* no driver/adapter
 							   support */
@@ -286,12 +280,10 @@ struct fc_rport_identifiers {
 	u32 roles;
 };
 
-
 /* Macro for use in defining Remote Port attributes */
 #define FC_RPORT_ATTR(_name,_mode,_show,_store)				\
 struct device_attribute dev_attr_rport_##_name = 	\
 	__ATTR(_name,_mode,_show,_store)
-
 
 /*
  * FC Remote Port Attributes
@@ -396,7 +388,6 @@ struct fc_starget_attrs {	/* aka fc_target_attrs */
 #define starget_to_rport(s)			\
 	scsi_is_fc_rport(s->dev.parent) ? dev_to_rport(s->dev.parent) : NULL
 
-
 /*
  * FC Local Port (Host) Statistics
  */
@@ -428,7 +419,6 @@ struct fc_host_statistics {
 	u64 fcp_output_megabytes;
 };
 
-
 /*
  * FC Event Codes - Polled and Async, following FC HBAAPI v2.0 guidelines
  */
@@ -451,7 +441,6 @@ enum fc_host_event_code  {
 	FCH_EVT_LINK_UNKNOWN		= 0x500,
 	FCH_EVT_VENDOR_UNIQUE		= 0xffff,
 };
-
 
 /*
  * FC Local Port (Host) Attributes
@@ -584,7 +573,6 @@ struct fc_host_attrs {
 #define fc_host_dev_loss_tmo(x) \
 	(((struct fc_host_attrs *)(x)->shost_data)->dev_loss_tmo)
 
-
 struct fc_bsg_buffer {
 	unsigned int payload_len;
 	int sg_cnt;
@@ -624,7 +612,6 @@ struct fc_bsg_job {
 
 	void *dd_data;			/* Used for driver-specific storage */
 };
-
 
 /* The functions by which the transport class and the driver communicate */
 struct fc_function_template {
@@ -712,7 +699,6 @@ struct fc_function_template {
 
 	unsigned long	disable_target_scan:1;
 };
-
 
 /**
  * fc_remote_port_chkready - called to validate the remote port state

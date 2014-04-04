@@ -31,7 +31,6 @@ static int symcmp(struct hashtab *h, const void *key1, const void *key2)
 	return strcmp(keyp1, keyp2);
 }
 
-
 int symtab_init(struct symtab *s, unsigned int size)
 {
 	s->table = hashtab_create(symhash, symcmp, size);
@@ -40,4 +39,3 @@ int symtab_init(struct symtab *s, unsigned int size)
 	s->nprim = 0;
 	return 0;
 }
-

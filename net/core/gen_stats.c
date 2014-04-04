@@ -23,7 +23,6 @@
 #include <net/netlink.h>
 #include <net/gen_stats.h>
 
-
 static inline int
 gnet_stats_copy(struct gnet_dump *d, int type, void *buf, int size)
 {

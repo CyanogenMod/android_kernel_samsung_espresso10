@@ -275,7 +275,6 @@ static int subdev_s_ctrl(struct v4l2_ctrl *ctrl)
 	return -EINVAL;
 }
 
-
 static int subdev_log_status(struct v4l2_subdev *sd)
 {
 	struct ivtv *itv = sd_to_ivtv(sd);

@@ -18,13 +18,11 @@
 #include <linux/phy.h>
 #include <linux/brcmphy.h>
 
-
 #define BRCM_PHY_MODEL(phydev) \
 	((phydev)->drv->phy_id & (phydev)->drv->phy_id_mask)
 
 #define BRCM_PHY_REV(phydev) \
 	((phydev)->drv->phy_id & ~((phydev)->drv->phy_id_mask))
-
 
 #define MII_BCM54XX_ECR		0x10	/* BCM54xx extended control register */
 #define MII_BCM54XX_ECR_IM	0x1000	/* Interrupt mask */
@@ -76,7 +74,6 @@
 
 #define MII_BCM54XX_AUXCTL_SHDWSEL_AUXCTL	0x0000
 
-
 /*
  * Broadcom LED source encodings.  These are used in BCM5461, BCM5481,
  * BCM5482, and possibly some others.
@@ -94,7 +91,6 @@
 #define BCM_LED_SRC_OPENSHORT	0xb
 #define BCM_LED_SRC_OFF		0xe	/* Tied high */
 #define BCM_LED_SRC_ON		0xf	/* Tied low */
-
 
 /*
  * BCM5482: Shadow registers
@@ -122,7 +118,6 @@
 #define BCM5482_SHD_SSD_EN	0x0001	/* SSD enable */
 #define BCM5482_SHD_MODE	0x1f	/* 11111: Mode Control Register */
 #define BCM5482_SHD_MODE_1000BX	0x0001	/* Enable 1000BASE-X registers */
-
 
 /*
  * EXPANSION SHADOW ACCESS REGISTERS.  (PHY REG 0x15, 0x16, and 0x17)
@@ -152,7 +147,6 @@
 #define BCM5482_SSD_SGMII_SLAVE_EN	0x0002	/* Slave mode enable */
 #define BCM5482_SSD_SGMII_SLAVE_AD	0x0001	/* Slave auto-detection */
 
-
 /*****************************************************************************/
 /* Fast Ethernet Transceiver definitions. */
 /*****************************************************************************/
@@ -167,7 +161,6 @@
 #define MII_BRCM_FET_BRCMTEST		0x1f	/* Brcm test register */
 #define MII_BRCM_FET_BT_SRE		0x0080	/* Shadow register enable */
 
-
 /*** Shadow register definitions ***/
 
 #define MII_BRCM_FET_SHDW_MISCCTRL	0x10	/* Shadow misc ctrl */
@@ -179,7 +172,6 @@
 
 #define MII_BRCM_FET_SHDW_AUXSTAT2	0x1b	/* Auxiliary status 2 */
 #define MII_BRCM_FET_SHDW_AS2_APDE	0x0020	/* Auto power down enable */
-
 
 MODULE_DESCRIPTION("Broadcom PHY driver");
 MODULE_AUTHOR("Maciej W. Rozycki");

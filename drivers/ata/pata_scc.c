@@ -116,7 +116,6 @@
 #define INTSTS_INTRQ		0x00000002
 #define INTSTS_ACTEINT		0x00000001
 
-
 /* PIO transfer mode table */
 /* JCHST */
 static const unsigned long JCHSTtbl[2][7] = {

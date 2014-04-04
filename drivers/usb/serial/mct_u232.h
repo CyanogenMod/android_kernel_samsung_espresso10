@@ -10,8 +10,8 @@
  *
  * This driver is for the device MCT USB-RS232 Converter (25 pin, Model No.
  * U232-P25) from Magic Control Technology Corp. (there is also a 9 pin
- * Model No. U232-P9). See http://www.mct.com.tw/products/product_us232.html 
- * for further information. The properties of this device are listed at the end 
+ * Model No. U232-P9). See http://www.mct.com.tw/products/product_us232.html
+ * for further information. The properties of this device are listed at the end
  * of this file. This device was used in the Dlink DSB-S25.
  *
  * All of the information about the device was acquired by using SniffUSB
@@ -143,7 +143,6 @@ static int mct_u232_calculate_baud_rate(struct usb_serial *serial,
 #define MCT_U232_LSR_PE		0x04	/* parity error */
 #define MCT_U232_LSR_OE		0x02	/* overrun error */
 #define MCT_U232_LSR_DR		0x01	/* receive data ready */
-
 
 /* -----------------------------------------------------------------------------
  * Technical Specification reverse engineered with SniffUSB on Windows98
@@ -464,4 +463,3 @@ static int mct_u232_calculate_baud_rate(struct usb_serial *serial,
  */
 
 #endif /* __LINUX_USB_SERIAL_MCT_U232_H */
-

@@ -71,7 +71,6 @@ MODULE_PARM_DESC(debug_iscsi_tcp, "Turn on debugging for iscsi_tcp module "
 					     __func__, ##arg);	\
 	} while (0);
 
-
 /**
  * iscsi_sw_tcp_recv - TCP receive in sendfile fashion
  * @rd_desc: read descriptor

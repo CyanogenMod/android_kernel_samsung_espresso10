@@ -150,7 +150,6 @@ static void PRINT_PKT(u_char *buf, int length)
 #define PRINT_PKT(x...)  do { } while (0)
 #endif
 
-
 /* this enables an interrupt in the interrupt mask register */
 #define SMC_ENABLE_INT(lp, x) do {			\
 	unsigned int  __mask;				\
@@ -236,7 +235,6 @@ static void smc911x_reset(struct net_device *dev)
 //TODO: Figure out what appropriate pause time is
 	SMC_SET_FLOW(lp, FLOW_FCPT_ | FLOW_FCEN_);
 	SMC_SET_AFC_CFG(lp, lp->afc_cfg);
-
 
 	/* Set to LED outputs */
 	SMC_SET_GPIO_CFG(lp, 0x70070000);
@@ -627,7 +625,6 @@ static void smc911x_tx(struct net_device *dev)
 	}
 }
 
-
 /*---PHY CONTROL AND CONFIGURATION-----------------------------------------*/
 /*
  * Reads a register from the MII Management serial interface
@@ -644,7 +641,6 @@ static int smc911x_phy_read(struct net_device *dev, int phyaddr, int phyreg)
 		__func__, phyaddr, phyreg, phydata);
 	return phydata;
 }
-
 
 /*
  * Writes a register to the MII Management serial interface
@@ -1029,7 +1025,6 @@ static irqreturn_t smc911x_interrupt(int irq, void *dev_id)
 	/* set a timeout value, so I don't stay here forever */
 	timeout = 8;
 
-
 	do {
 		status = SMC_GET_INT(lp);
 
@@ -1391,7 +1386,6 @@ static void smc911x_set_multicast_list(struct net_device *dev)
 	}
 	spin_unlock_irqrestore(&lp->lock, flags);
 }
-
 
 /*
  * Open and Initialize the board

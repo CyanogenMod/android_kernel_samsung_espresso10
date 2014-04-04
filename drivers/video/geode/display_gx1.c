@@ -61,7 +61,6 @@ int gx1_frame_buffer_size(void)
 	if (!mc_regs)
 		return -ENOMEM;
 
-
 	/* Calculate the total size of both DIMM0 and DIMM1. */
 	bank_cfg = readl(mc_regs + MC_BANK_CFG);
 

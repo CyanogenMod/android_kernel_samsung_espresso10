@@ -46,8 +46,6 @@
 static int yaffs_wr_data_obj(struct yaffs_obj *in, int inode_chunk,
 			     const u8 * buffer, int n_bytes, int use_reserve);
 
-
-
 /* Function to calculate chunk and offset */
 
 static void yaffs_addr_to_chunk(struct yaffs_dev *dev, loff_t addr,
@@ -378,7 +376,6 @@ static int yaffs_verify_chunk_written(struct yaffs_dev *dev,
 	return retval;
 }
 
-
 int yaffs_check_alloc_available(struct yaffs_dev *dev, int n_chunks)
 {
 	int reserved_chunks;
@@ -560,7 +557,7 @@ static int yaffs_write_new_chunk(struct yaffs_dev *dev,
 		 * lot of checks that are most likely not needed.
 		 *
 		 * Mods to the above
-		 * If an erase check fails or the write fails we skip the 
+		 * If an erase check fails or the write fails we skip the
 		 * rest of the block.
 		 */
 
@@ -690,7 +687,7 @@ void yaffs_set_obj_name(struct yaffs_obj *obj, const YCHAR * name)
 {
 #ifndef CONFIG_YAFFS_NO_SHORT_NAMES
 	memset(obj->short_name, 0, sizeof(obj->short_name));
-	if (name && 
+	if (name &&
 	        strnlen(name, YAFFS_SHORT_NAME_LENGTH + 1) <=
 	    YAFFS_SHORT_NAME_LENGTH)
 		strcpy(obj->short_name, name);
@@ -1391,7 +1388,7 @@ static int yaffs_change_obj_name(struct yaffs_obj *obj,
  *   sequential writes. eg. scanning/writing a jpeg file.
  *   In these cases, a short read/write cache can provide a huge perfomance
  *   benefit with dumb-as-a-rock code.
- *   In Linux, the page cache provides read buffering and the short op cache 
+ *   In Linux, the page cache provides read buffering and the short op cache
  *   provides write buffering.
  *
  *   There are a limited number (~10) of cache chunks per device so that we don't
@@ -2046,7 +2043,6 @@ static struct yaffs_obj *yaffs_create_fake_dir(struct yaffs_dev *dev,
 
 }
 
-
 static void yaffs_init_tnodes_and_objs(struct yaffs_dev *dev)
 {
 	int i;
@@ -2294,8 +2290,6 @@ struct yaffs_obj *yaffs_link_obj(struct yaffs_obj *parent, const YCHAR * name,
 
 }
 
-
-
 /*------------------------- Block Management and Page Allocation ----------------*/
 
 static int yaffs_init_blocks(struct yaffs_dev *dev)
@@ -2436,8 +2430,6 @@ void yaffs_block_became_dirty(struct yaffs_dev *dev, int block_no)
 			"**>> Block %d retired", block_no);
 	}
 }
-
-
 
 static int yaffs_gc_block(struct yaffs_dev *dev, int block, int whole_block)
 {
@@ -3130,8 +3122,6 @@ static int yaffs_wr_data_obj(struct yaffs_obj *in, int inode_chunk,
 	return new_chunk_id;
 
 }
-
-
 
 static int yaffs_do_xattrib_mod(struct yaffs_obj *obj, int set,
 				const YCHAR * name, const void *value, int size,
@@ -3939,7 +3929,6 @@ int yaffs_flush_file(struct yaffs_obj *in, int update_time, int data_sync)
 
 }
 
-
 /* yaffs_del_file deletes the whole file data
  * and the inode associated with the file.
  * It does not delete the links associated with the file.
@@ -4197,8 +4186,8 @@ int yaffs_rename_obj(struct yaffs_obj *old_dir, const YCHAR * old_name,
 	 * While look-up is case insensitive, the name isn't.
 	 * Therefore we might want to change x.txt to X.txt
 	 */
-	if (old_dir == new_dir && 
-		old_name && new_name && 
+	if (old_dir == new_dir &&
+		old_name && new_name &&
 		strcmp(old_name, new_name) == 0)
 		force = 1;
 #endif
@@ -4214,7 +4203,6 @@ int yaffs_rename_obj(struct yaffs_obj *old_dir, const YCHAR * old_name,
 		obj = old_dir;
 		old_dir = obj->parent;
 	}
-
 
 	if (obj && obj->rename_allowed) {
 
@@ -4465,7 +4453,6 @@ static void yaffs_empty_l_n_f(struct yaffs_dev *dev)
 	yaffs_del_dir_contents(dev->lost_n_found);
 }
 
-
 struct yaffs_obj *yaffs_find_by_name(struct yaffs_obj *directory,
 				     const YCHAR * name)
 {
@@ -4552,7 +4539,7 @@ struct yaffs_obj *yaffs_get_equivalent_obj(struct yaffs_obj *obj)
  * system to share files.
  *
  * These automatic unicode are stored slightly differently...
- *  - If the name can fit in the ASCII character space then they are saved as 
+ *  - If the name can fit in the ASCII character space then they are saved as
  *    ascii names as per above.
  *  - If the name needs Unicode then the name is saved in Unicode
  *    starting at oh->name[1].
@@ -4800,9 +4787,9 @@ int yaffs_guts_initialise(struct yaffs_dev *dev)
 		(dev->param.inband_tags && !dev->param.is_yaffs2) ||
 		 dev->param.chunks_per_block < 2 ||
 		 dev->param.n_reserved_blocks < 2 ||
-		dev->internal_start_block <= 0 || 
-		dev->internal_end_block <= 0 || 
-		dev->internal_end_block <= 
+		dev->internal_start_block <= 0 ||
+		dev->internal_end_block <= 0 ||
+		dev->internal_end_block <=
 		(dev->internal_start_block + dev->param.n_reserved_blocks + 2)
 		) {
 		/* otherwise it is too small */

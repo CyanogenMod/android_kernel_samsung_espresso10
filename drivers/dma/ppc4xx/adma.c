@@ -1131,7 +1131,6 @@ static int ppc440spe_dma2_pq_slot_count(dma_addr_t *srcs,
 	return (addr_count + XOR_MAX_OPS - 1) / XOR_MAX_OPS;
 }
 
-
 /******************************************************************************
  * ADMA channel low-level routines
  ******************************************************************************/
@@ -1999,7 +1998,6 @@ static struct ppc440spe_adma_desc_slot *ppc440spe_adma_alloc_slots(
 	struct ppc440spe_adma_desc_slot *alloc_start = NULL;
 	struct list_head chain = LIST_HEAD_INIT(chain);
 	int slots_found, retry = 0;
-
 
 	BUG_ON(!num_slots || !slots_per_op);
 	/* start search from the last allocated descrtiptor

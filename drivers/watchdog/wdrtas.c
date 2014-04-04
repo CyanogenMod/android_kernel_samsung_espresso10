@@ -68,7 +68,6 @@ static int wdrtas_token_event_scan;
 #define WDRTAS_LOGBUFFER_LEN		128
 static char wdrtas_logbuffer[WDRTAS_LOGBUFFER_LEN];
 
-
 /*** watchdog access functions */
 
 /**

@@ -747,7 +747,6 @@ static void au1xmmc_reset_controller(struct au1xmmc_host *host)
 	au_sync();
 }
 
-
 static void au1xmmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
 {
 	struct au1xmmc_host *host = mmc_priv(mmc);

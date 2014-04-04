@@ -41,11 +41,9 @@
 #include "xfs_trace.h"
 #include "xfs_buf.h"
 
-
 /*
  * Prototypes for internal functions.
  */
-
 
 STATIC int xfs_rtallocate_range(xfs_mount_t *, xfs_trans_t *, xfs_rtblock_t,
 		xfs_extlen_t, xfs_buf_t **, xfs_fsblock_t *);

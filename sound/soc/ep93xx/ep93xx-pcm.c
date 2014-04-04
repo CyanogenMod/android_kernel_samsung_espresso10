@@ -34,15 +34,15 @@ static const struct snd_pcm_hardware ep93xx_pcm_hardware = {
 				   SNDRV_PCM_INFO_MMAP_VALID	|
 				   SNDRV_PCM_INFO_INTERLEAVED	|
 				   SNDRV_PCM_INFO_BLOCK_TRANSFER),
-				   
+
 	.rates			= SNDRV_PCM_RATE_8000_192000,
 	.rate_min		= SNDRV_PCM_RATE_8000,
 	.rate_max		= SNDRV_PCM_RATE_192000,
-	
+
 	.formats		= (SNDRV_PCM_FMTBIT_S16_LE |
 				   SNDRV_PCM_FMTBIT_S24_LE |
 				   SNDRV_PCM_FMTBIT_S32_LE),
-	
+
 	.buffer_bytes_max	= 131072,
 	.period_bytes_min	= 32,
 	.period_bytes_max	= 32768,
@@ -72,8 +72,8 @@ static void ep93xx_pcm_buffer_started(void *cookie,
 {
 }
 
-static void ep93xx_pcm_buffer_finished(void *cookie, 
-				       struct ep93xx_dma_buffer *buf, 
+static void ep93xx_pcm_buffer_finished(void *cookie,
+				       struct ep93xx_dma_buffer *buf,
 				       int bytes, int error)
 {
 	struct snd_pcm_substream *substream = cookie;
@@ -97,14 +97,14 @@ static int ep93xx_pcm_open(struct snd_pcm_substream *substream)
 	struct snd_soc_pcm_runtime *soc_rtd = substream->private_data;
 	struct snd_soc_dai *cpu_dai = soc_rtd->cpu_dai;
 	struct ep93xx_pcm_dma_params *dma_params;
-	struct ep93xx_runtime_data *rtd;    
+	struct ep93xx_runtime_data *rtd;
 	int ret;
 
 	dma_params = snd_soc_dai_get_dma_data(cpu_dai, substream);
 	snd_soc_set_runtime_hwparams(substream, &ep93xx_pcm_hardware);
 
 	rtd = kmalloc(sizeof(*rtd), GFP_KERNEL);
-	if (!rtd) 
+	if (!rtd)
 		return -ENOMEM;
 
 	memset(&rtd->period_tasklet, 0, sizeof(rtd->period_tasklet));
@@ -123,7 +123,7 @@ static int ep93xx_pcm_open(struct snd_pcm_substream *substream)
 		kfree(rtd);
 		return ret;
 	}
-	
+
 	substream->runtime->private_data = rtd;
 	return 0;
 }
@@ -249,11 +249,11 @@ static void ep93xx_pcm_free_dma_buffers(struct snd_pcm *pcm)
 	struct snd_dma_buffer *buf;
 	int stream;
 
-	for (stream = 0; stream < 2; stream++) {		
+	for (stream = 0; stream < 2; stream++) {
 		substream = pcm->streams[stream].substream;
 		if (!substream)
 			continue;
-		
+
 		buf = &substream->dma_buffer;
 		if (!buf->area)
 			continue;

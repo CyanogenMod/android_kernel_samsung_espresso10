@@ -2,7 +2,6 @@
 
 /* Written 1995-1998 by Werner Almesberger, EPFL LRC/ICA */
 
-
 #ifndef DRIVER_ATM_ZATM_H
 #define DRIVER_ATM_ZATM_H
 
@@ -11,7 +10,6 @@
 #include <linux/atmdev.h>
 #include <linux/sonet.h>
 #include <linux/pci.h>
-
 
 #define DEV_LABEL	"zatm"
 
@@ -88,10 +86,8 @@ struct zatm_dev {
 	spinlock_t lock;
 };
 
-
 #define ZATM_DEV(d) ((struct zatm_dev *) (d)->dev_data)
 #define ZATM_VCC(d) ((struct zatm_vcc *) (d)->dev_data)
-
 
 struct zatm_skb_prv {
 	struct atm_skb_data _;		/* reserved */

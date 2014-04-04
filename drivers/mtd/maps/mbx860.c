@@ -19,7 +19,6 @@
 #include <linux/mtd/map.h>
 #include <linux/mtd/partitions.h>
 
-
 #define WINDOW_ADDR 0xfe000000
 #define WINDOW_SIZE 0x00200000
 
@@ -44,7 +43,6 @@ static struct mtd_partition partition_info[]={
 	{ .name = "MBX flash APPLICATION partition",
 	.offset = (BOOT_PARTITION_SIZE_KiB+KERNEL_PARTITION_SIZE_KiB)*1024 }
 };
-
 
 static struct mtd_info *mymtd;
 

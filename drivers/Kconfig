@@ -8,10 +8,6 @@ source "drivers/mtd/Kconfig"
 
 source "drivers/of/Kconfig"
 
-source "drivers/parport/Kconfig"
-
-source "drivers/pnp/Kconfig"
-
 source "drivers/block/Kconfig"
 
 # misc before ide - BLK_DEV_SGIIOC4 depends on SGI_IOC4
@@ -30,15 +26,9 @@ source "drivers/target/Kconfig"
 
 source "drivers/message/fusion/Kconfig"
 
-source "drivers/firewire/Kconfig"
-
 source "drivers/message/i2o/Kconfig"
 
-source "drivers/macintosh/Kconfig"
-
 source "drivers/net/Kconfig"
-
-source "drivers/isdn/Kconfig"
 
 source "drivers/telephony/Kconfig"
 
@@ -102,8 +92,6 @@ source "drivers/accessibility/Kconfig"
 
 source "drivers/infiniband/Kconfig"
 
-source "drivers/edac/Kconfig"
-
 source "drivers/rtc/Kconfig"
 
 source "drivers/dma/Kconfig"
@@ -115,8 +103,6 @@ source "drivers/auxdisplay/Kconfig"
 source "drivers/uio/Kconfig"
 
 source "drivers/vlynq/Kconfig"
-
-source "drivers/xen/Kconfig"
 
 source "drivers/staging/Kconfig"
 

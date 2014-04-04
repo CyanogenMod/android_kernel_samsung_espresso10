@@ -8,10 +8,8 @@
  * (at your option) any later version.
  */
 
-
 #ifndef _LINUX_SERIAL_MAX3100_H
 #define _LINUX_SERIAL_MAX3100_H 1
-
 
 /**
  * struct plat_max3100 - MAX3100 SPI UART platform data

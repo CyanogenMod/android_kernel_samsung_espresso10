@@ -29,4 +29,3 @@ config JOYSTICK_IFORCE_232
 	  You will need an additional utility called inputattach, see
 	  <file:Documentation/input/joystick.txt>
 	  and <file:Documentation/input/ff.txt>.
-

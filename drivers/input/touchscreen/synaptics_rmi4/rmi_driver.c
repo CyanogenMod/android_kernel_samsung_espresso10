@@ -697,7 +697,6 @@ static int rmi_driver_reset_handler(struct rmi_device *rmi_dev)
 	if (error < 0)
 		return error;
 
-
 	error = rmi_driver_process_config_requests(rmi_dev);
 	if (error < 0)
 		return error;
@@ -710,8 +709,6 @@ static int rmi_driver_reset_handler(struct rmi_device *rmi_dev)
 
 	return 0;
 }
-
-
 
 /*
  * Construct a function's IRQ mask. This should
@@ -1076,7 +1073,6 @@ static int rmi_driver_probe(struct rmi_device *rmi_dev)
 	retval = do_initial_reset(rmi_dev);
 	if (retval)
 		dev_warn(dev, "RMI initial reset failed! Soldiering on.\n");
-
 
 	retval = rmi_scan_pdt(rmi_dev);
 	if (retval) {

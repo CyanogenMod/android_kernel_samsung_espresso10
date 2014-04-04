@@ -1031,7 +1031,6 @@ done:
 	return status;
 }
 
-
 /* 'full' flag tells us whether we clear out all blocks or if we just
  * mark the journal clean */
 int ocfs2_journal_wipe(struct ocfs2_journal *journal, int full)

@@ -114,7 +114,7 @@ static int (*check_part[])(struct parsed_partitions *) = {
 #endif
 	NULL
 };
- 
+
 /*
  * disk_name() is used by partition check code and the genhd driver.
  * It formats the devicename of the indicated disk into

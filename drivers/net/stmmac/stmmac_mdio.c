@@ -87,7 +87,6 @@ static int stmmac_mdio_write(struct mii_bus *bus, int phyaddr, int phyreg,
 
 	value |= MII_BUSY | ((priv->plat->clk_csr & 7) << 2);
 
-
 	/* Wait until any existing MII operation is complete */
 	do {} while (((readl(priv->ioaddr + mii_address)) & MII_BUSY) == 1);
 

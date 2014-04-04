@@ -6,17 +6,14 @@
 	<holger@convergence.de>,
 	<js@convergence.de>
 
-
     Philips SU1278/SH
 
     Copyright (C) 2002 by Peter Schildmann <peter.schildmann@web.de>
-
 
     LG TDQF-S001F
 
     Copyright (C) 2002 Felix Domke <tmbinc@elitedvb.net>
 		     & Andreas Oberritter <obi@linuxtv.org>
-
 
     Support for Samsung TBMU24112IMB used on Technisat SkyStar2 rev. 2.6B
 

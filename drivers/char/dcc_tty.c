@@ -85,7 +85,6 @@ static void dcc_poll_locked(void)
 		}
 	}
 
-
 	if (g_dcc_buffer_count)
 		hrtimer_start(&g_dcc_timer, ktime_set(0, g_dcc_write_delay_usecs * NSEC_PER_USEC), HRTIMER_MODE_REL);
 	else
@@ -244,7 +243,6 @@ static int __init dcc_console_setup(struct console *co, char *options)
 	return 0;
 }
 
-
 static struct console dcc_console =
 {
 	.name		= "ttyDCC",
@@ -322,5 +320,3 @@ static void  __exit dcc_tty_exit(void)
 
 module_init(dcc_tty_init);
 module_exit(dcc_tty_exit);
-
-

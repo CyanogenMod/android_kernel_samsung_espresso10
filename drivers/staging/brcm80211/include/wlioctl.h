@@ -564,7 +564,6 @@ typedef struct {
 	uint band;		/* band (optional) */
 } rw_reg_t;
 
-
 #ifdef BRCM_FULLMAC
 /* Used to get specific STA parameters */
 typedef struct {
@@ -597,7 +596,6 @@ typedef struct wl_ioctl {
 	uint needed;		/* bytes needed (optional) */
 } wl_ioctl_t;
 #endif /* BRCM_FULLMAC */
-
 
 /*
  * Structure for passing hardware and software
@@ -1179,7 +1177,6 @@ typedef struct {
 #define WL_TX_POWER_MCS40_FIRST	        28
 #define WL_TX_POWER_MCS40_NUM	        17
 
-
 #define WL_TX_POWER_RATES	       101
 #define WL_TX_POWER_CCK_FIRST	       0
 #define WL_TX_POWER_CCK_NUM	       4
@@ -1272,14 +1269,12 @@ struct ampdu_retry_tid {
 	u8 retry;		/* retry value */
 };
 
-
 /* Software feature flag defines used by wlfeatureflag */
 #define WL_SWFL_NOHWRADIO	0x0004
 #define WL_SWFL_FLOWCONTROL     0x0008	/* Enable backpressure to OS stack */
 #define WL_SWFL_WLBSSSORT	0x0010	/* Per-port supports sorting of BSS */
 
 #define WL_LIFETIME_MAX 0xFFFF	/* Max value in ms */
-
 
 /* Pattern matching filter. Specifies an offset within received packets to
  * start matching, the pattern to match, the size of the pattern, and a bitmask
@@ -1313,7 +1308,6 @@ typedef struct wl_pkt_filter_enable {
 	u32 id;		/* Unique filter id */
 	u32 enable;		/* Enable/disable bool */
 } wl_pkt_filter_enable_t;
-
 
 #define	WLC_RSSI_INVALID	 0	/* invalid RSSI value */
 

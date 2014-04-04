@@ -566,7 +566,6 @@ static const struct attribute_group adm9240_group = {
 	.attrs = adm9240_attributes,
 };
 
-
 /*** sensor chip detect and driver install ***/
 
 /* Return 0 if detection is successful, -ENODEV otherwise */
@@ -812,4 +811,3 @@ MODULE_LICENSE("GPL");
 
 module_init(sensors_adm9240_init);
 module_exit(sensors_adm9240_exit);
-

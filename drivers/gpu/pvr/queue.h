@@ -1,32 +1,31 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
 #ifndef QUEUE_H
 #define QUEUE_H
-
 
 #if defined(__cplusplus)
 extern "C" {
@@ -39,14 +38,14 @@ extern "C" {
  typedef struct _COMMAND_COMPLETE_DATA_
  {
 	IMG_BOOL			bInUse;
-		
-	IMG_UINT32			ui32DstSyncCount;	
-	IMG_UINT32			ui32SrcSyncCount;	
-	PVRSRV_SYNC_OBJECT	*psDstSync;			
-	PVRSRV_SYNC_OBJECT	*psSrcSync;			
-	IMG_UINT32			ui32AllocSize;		
-	PFN_QUEUE_COMMAND_COMPLETE	pfnCommandComplete;	
-	IMG_HANDLE					hCallbackData;		
+
+	IMG_UINT32			ui32DstSyncCount;
+	IMG_UINT32			ui32SrcSyncCount;
+	PVRSRV_SYNC_OBJECT	*psDstSync;
+	PVRSRV_SYNC_OBJECT	*psSrcSync;
+	IMG_UINT32			ui32AllocSize;
+	PFN_QUEUE_COMMAND_COMPLETE	pfnCommandComplete;
+	IMG_HANDLE					hCallbackData;
  }COMMAND_COMPLETE_DATA, *PCOMMAND_COMPLETE_DATA;
 
 #if !defined(USE_CODE)
@@ -55,13 +54,12 @@ IMG_VOID QueueDumpDebugInfo(IMG_VOID);
 IMG_IMPORT
 PVRSRV_ERROR PVRSRVProcessQueues (IMG_BOOL		bFlush);
 
-#if defined(__linux__) && defined(__KERNEL__) 
+#if defined(__linux__) && defined(__KERNEL__)
 #include <linux/types.h>
 #include <linux/seq_file.h>
 void* ProcSeqOff2ElementQueue(struct seq_file * sfile, loff_t off);
 void ProcSeqShowQueue(struct seq_file *sfile,void* el);
 #endif
-
 
 IMG_IMPORT
 PVRSRV_ERROR IMG_CALLCONV PVRSRVCreateCommandQueueKM(IMG_SIZE_T ui32QueueSize,
@@ -103,12 +101,10 @@ IMG_IMPORT
 PVRSRV_ERROR PVRSRVRemoveCmdProcListKM(IMG_UINT32	ui32DevIndex,
 									   IMG_UINT32	ui32CmdCount);
 
-#endif 
-
+#endif
 
 #if defined (__cplusplus)
 }
 #endif
 
-#endif 
-
+#endif

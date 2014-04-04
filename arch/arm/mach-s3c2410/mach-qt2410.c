@@ -167,7 +167,6 @@ static struct s3c2410fb_display qt2410_lcd_cfg[] __initdata = {
 	},
 };
 
-
 static struct s3c2410fb_mach_info qt2410_fb_info __initdata = {
 	.displays 	= qt2410_lcd_cfg,
 	.num_displays 	= ARRAY_SIZE(qt2410_lcd_cfg),
@@ -234,7 +233,6 @@ static struct s3c2410_spigpio_info spi_gpio_cfg = {
 	.pin_miso	= S3C2410_GPG(5),
 	.chip_select	= &spi_gpio_cs,
 };
-
 
 static struct platform_device qt2410_spi = {
 	.name		  = "s3c24xx-spi-gpio",
@@ -368,5 +366,3 @@ MACHINE_START(QT2410, "QT2410")
 	.init_machine	= qt2410_machine_init,
 	.timer		= &s3c24xx_timer,
 MACHINE_END
-
-

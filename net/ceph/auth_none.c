@@ -1,4 +1,3 @@
-
 #include <linux/ceph/ceph_debug.h>
 
 #include <linux/err.h>
@@ -37,6 +36,11 @@ static int should_authenticate(struct ceph_auth_client *ac)
 	struct ceph_auth_none_info *xi = ac->private;
 
 	return xi->starting;
+}
+
+static int build_request(struct ceph_auth_client *ac, void *buf, void *end)
+{
+	return 0;
 }
 
 /*
@@ -107,6 +111,7 @@ static const struct ceph_auth_client_ops ceph_auth_none_ops = {
 	.destroy = destroy,
 	.is_authenticated = is_authenticated,
 	.should_authenticate = should_authenticate,
+	.build_request = build_request,
 	.handle_reply = handle_reply,
 	.create_authorizer = ceph_auth_none_create_authorizer,
 	.destroy_authorizer = ceph_auth_none_destroy_authorizer,
@@ -129,4 +134,3 @@ int ceph_auth_none_init(struct ceph_auth_client *ac)
 	ac->ops = &ceph_auth_none_ops;
 	return 0;
 }
-

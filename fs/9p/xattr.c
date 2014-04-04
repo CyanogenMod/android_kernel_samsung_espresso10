@@ -71,7 +71,6 @@ error:
 
 }
 
-
 /*
  * v9fs_xattr_get()
  *

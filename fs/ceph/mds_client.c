@@ -51,7 +51,6 @@ static void __wake_requests(struct ceph_mds_client *mdsc,
 
 static const struct ceph_connection_operations mds_con_ops;
 
-
 /*
  * mds reply parsing
  */
@@ -296,7 +295,6 @@ static void destroy_reply_info(struct ceph_mds_reply_info_parsed *info)
 {
 	kfree(info->dir_in);
 }
-
 
 /*
  * sessions
@@ -743,7 +741,6 @@ random:
 	dout("choose_mds chose random mds%d\n", mds);
 	return mds;
 }
-
 
 /*
  * session messages
@@ -2108,7 +2105,6 @@ static void handle_reply(struct ceph_mds_session *session, struct ceph_msg *msg)
 		dout("have to return ESTALE on request %llu", req->r_tid);
 	}
 
-
 	if (head->safe) {
 		req->r_got_safe = true;
 		__unregister_request(mdsc, req);
@@ -2195,8 +2191,6 @@ out:
 	ceph_mdsc_put_request(req);
 	return;
 }
-
-
 
 /*
  * handle mds notification that our request has been forwarded.
@@ -2345,7 +2339,6 @@ bad:
 	return;
 }
 
-
 /*
  * called under session->mutex.
  */
@@ -2478,7 +2471,6 @@ out_dput:
 	return err;
 }
 
-
 /*
  * If an MDS fails and recovers, clients need to reconnect in order to
  * reestablish shared state.  This includes all caps issued through
@@ -2589,7 +2581,6 @@ fail_nopagelist:
 	return;
 }
 
-
 /*
  * compare old and new mdsmaps, kicking requests
  * and closing out old connections as necessary
@@ -2684,8 +2675,6 @@ static void check_new_map(struct ceph_mds_client *mdsc,
 		}
 	}
 }
-
-
 
 /*
  * leases
@@ -2908,8 +2897,6 @@ static void drop_leases(struct ceph_mds_client *mdsc)
 	}
 	mutex_unlock(&mdsc->mutex);
 }
-
-
 
 /*
  * delayed work -- periodically trim expired leases, renew caps with mds
@@ -3242,7 +3229,6 @@ void ceph_mdsc_destroy(struct ceph_fs_client *fsc)
 	dout("mdsc_destroy %p done\n", mdsc);
 }
 
-
 /*
  * handle mds map update.
  */
@@ -3418,7 +3404,6 @@ static int get_authorizer(struct ceph_connection *con,
 	*reply_len = s->s_authorizer_reply_buf_len;
 	return 0;
 }
-
 
 static int verify_authorizer_reply(struct ceph_connection *con, int len)
 {

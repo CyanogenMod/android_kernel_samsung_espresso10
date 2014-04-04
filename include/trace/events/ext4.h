@@ -380,7 +380,7 @@ TRACE_EVENT(ext4_da_writepages_result,
 		__field(	int,	pages_written		)
 		__field(	long,	pages_skipped		)
 		__field(	int,	sync_mode		)
-		__field(	char,	more_io			)	
+		__field(	char,	more_io			)
 		__field(       pgoff_t,	writeback_index		)
 	),
 

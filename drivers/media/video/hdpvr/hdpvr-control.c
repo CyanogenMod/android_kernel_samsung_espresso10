@@ -23,7 +23,6 @@
 
 #include "hdpvr.h"
 
-
 int hdpvr_config_call(struct hdpvr_device *dev, uint value, u8 valbuf)
 {
 	int ret;
@@ -118,7 +117,6 @@ int get_input_lines_info(struct hdpvr_device *dev)
 	mutex_unlock(&dev->usbc_mutex);
 	return lines;
 }
-
 
 int hdpvr_set_bitrate(struct hdpvr_device *dev)
 {

@@ -32,5 +32,4 @@ struct mbus_dram_target_info
 	} cs[4];
 };
 
-
 #endif

@@ -12,7 +12,6 @@
 *!
 *!***************************************************************************/
 
-
 #include <linux/fs.h>
 #include <linux/init.h>
 #include <linux/mm.h>
@@ -91,8 +90,6 @@ ds1302_wdisable(void)
 {
 	out_byte_rtc(0x8e,0x80);
 }
-
-
 
 /* Read a byte from the selected register in the DS1302. */
 
@@ -192,7 +189,6 @@ static long rtc_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 			min = rtc_tm.tm_min;
 			sec = rtc_tm.tm_sec;
 
-
 			if ((yrs < 1970) || (yrs > 2069))
 				return -EINVAL;
 
@@ -283,7 +279,6 @@ get_rtc_status(char *buf)
 	return  p - buf;
 }
 
-
 /* The various file operations we support. */
 
 static const struct file_operations rtc_fops = {
@@ -331,7 +326,6 @@ ds1302_probe(void)
 
 	return retval;
 }
-
 
 /* Just probe for the RTC and register the device to handle the ioctl needed. */
 

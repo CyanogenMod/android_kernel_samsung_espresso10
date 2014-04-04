@@ -63,4 +63,3 @@ static inline void ft1000_write_reg (struct net_device *dev, u16 offset, u16 val
 }
 
 #endif // _FT1000_DEVH_
-

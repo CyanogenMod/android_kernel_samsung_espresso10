@@ -116,7 +116,6 @@ static int tegra_sdhci_8bit(struct sdhci_host *host, int bus_width)
 	return 0;
 }
 
-
 static int tegra_sdhci_pltfm_init(struct sdhci_host *host,
 				  struct sdhci_pltfm_data *pdata)
 {

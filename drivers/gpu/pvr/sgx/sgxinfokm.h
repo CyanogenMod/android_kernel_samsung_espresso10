@@ -40,11 +40,9 @@ extern "C" {
 
 #define		SGX_HOSTPORT_PRESENT			0x00000001UL
 
-
 #define SGX_PDUMPREG_NAME		"SGXREG"
 
 typedef struct _PVRSRV_STUB_PBDESC_ PVRSRV_STUB_PBDESC;
-
 
 typedef struct _PVRSRV_SGX_CCB_INFO_ *PPVRSRV_SGX_CCB_INFO;
 
@@ -58,7 +56,6 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 	IMG_UINT32				ui32CoreConfig;
 	IMG_UINT32				ui32CoreFlags;
 
-
 	IMG_PVOID				pvRegsBaseKM;
 
 #if defined(SGX_FEATURE_HOST_PORT)
@@ -70,9 +67,7 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 	IMG_SYS_PHYADDR			sHPSysPAddr;
 #endif
 
-
 	IMG_HANDLE				hRegMapping;
-
 
 	IMG_SYS_PHYADDR			sRegsPhysBase;
 
@@ -91,14 +86,11 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 	IMG_SYS_PHYADDR			sExtSystemCacheRegsPTSysPAddr;
 #endif
 
-
 	IMG_UINT32				ui32CoreClockSpeed;
 	IMG_UINT32				ui32uKernelTimerClock;
 	IMG_BOOL				bSGXIdle;
 
 	PVRSRV_STUB_PBDESC		*psStubPBDescListKM;
-
-
 
 	IMG_DEV_PHYADDR			sKernelPDDevPAddr;
 
@@ -145,20 +137,13 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 
 	IMG_UINT32				ui32ClientRefCount;
 
-
 	IMG_UINT32				ui32CacheControl;
-
 
 	IMG_UINT32				ui32ClientBuildOptions;
 
-
 	SGX_MISCINFO_STRUCT_SIZES	sSGXStructSizes;
 
-
-
-
 	IMG_VOID				*pvMMUContextList;
-
 
 	IMG_BOOL				bForcePTOff;
 
@@ -176,7 +161,6 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 	IMG_UINT32				ui32MasterClkGateStatus2Mask;
 #endif
 	SGX_INIT_SCRIPTS		sScripts;
-
 
 	IMG_HANDLE				hBIFResetPDOSMemHandle;
 	IMG_DEV_PHYADDR			sBIFResetPDDevPAddr;
@@ -203,13 +187,10 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 	IMG_UINT32				ui32TimeStamp;
 #endif
 
-
 	IMG_UINT32				ui32NumResets;
-
 
 	PVRSRV_KERNEL_MEM_INFO			*psKernelSGXHostCtlMemInfo;
 	SGXMKIF_HOST_CTL				*psSGXHostCtl;
-
 
 	PVRSRV_KERNEL_MEM_INFO			*psKernelSGXTA3DCtlMemInfo;
 
@@ -218,7 +199,6 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 #endif
 
 	IMG_UINT32				ui32Flags;
-
 
 	IMG_UINT32				ui32MemTilingUsage;
 
@@ -246,7 +226,6 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 	IMG_HANDLE			hBRN31620DummyPageOSMemHandle;
 	IMG_DEV_PHYADDR			sBRN31620DummyPageDevPAddr;
 
-
 	IMG_VOID			*pvBRN31620DummyPTCpuVAddr;
 	IMG_HANDLE			hBRN31620DummyPTOSMemHandle;
 	IMG_DEV_PHYADDR			sBRN31620DummyPTDevPAddr;
@@ -255,7 +234,6 @@ typedef struct _PVRSRV_SGXDEV_INFO_
 #endif
 
 } PVRSRV_SGXDEV_INFO;
-
 
 typedef struct _SGX_TIMING_INFORMATION_
 {
@@ -270,7 +248,6 @@ typedef struct _SGX_DEVICE_MAP_
 {
 	IMG_UINT32				ui32Flags;
 
-
 	IMG_SYS_PHYADDR			sRegsSysPBase;
 	IMG_CPU_PHYADDR			sRegsCpuPBase;
 	IMG_CPU_VIRTADDR		pvRegsCpuVBase;
@@ -282,7 +259,6 @@ typedef struct _SGX_DEVICE_MAP_
 	IMG_UINT32				ui32HPSize;
 #endif
 
-
 	IMG_SYS_PHYADDR			sLocalMemSysPBase;
 	IMG_DEV_PHYADDR			sLocalMemDevPBase;
 	IMG_CPU_PHYADDR			sLocalMemCpuPBase;
@@ -292,7 +268,6 @@ typedef struct _SGX_DEVICE_MAP_
 	IMG_UINT32				ui32ExtSysCacheRegsSize;
 	IMG_DEV_PHYADDR			sExtSysCacheRegsDevPBase;
 #endif
-
 
 	IMG_UINT32				ui32IRQ;
 
@@ -305,7 +280,6 @@ typedef struct _SGX_DEVICE_MAP_
 	IMG_CHAR				*pszPDumpDevName;
 #endif
 } SGX_DEVICE_MAP;
-
 
 struct _PVRSRV_STUB_PBDESC_
 {
@@ -334,7 +308,6 @@ typedef struct _PVRSRV_SGX_CCB_INFO_
 	IMG_UINT32				ui32CCBDumpWOff;
 #endif
 } PVRSRV_SGX_CCB_INFO;
-
 
 typedef struct _SGX_BRIDGE_INIT_INFO_KM_
 {
@@ -392,13 +365,11 @@ typedef struct _SGX_BRIDGE_INIT_INFO_KM_
 
 } SGX_BRIDGE_INIT_INFO_KM;
 
-
 typedef struct _SGX_INTERNEL_STATUS_UPDATE_KM_
 {
 	CTL_STATUS				sCtlStatus;
 	IMG_HANDLE				hKernelMemInfo;
 } SGX_INTERNEL_STATUS_UPDATE_KM;
-
 
 typedef struct _SGX_CCB_KICK_KM_
 {
@@ -407,7 +378,6 @@ typedef struct _SGX_CCB_KICK_KM_
 
 	IMG_UINT32	ui32NumDstSyncObjects;
 	IMG_HANDLE	hKernelHWSyncListMemInfo;
-
 
 	IMG_HANDLE	*pahDstSyncHandles;
 
@@ -427,7 +397,6 @@ typedef struct _SGX_CCB_KICK_KM_
 	IMG_BOOL	bTerminateOrAbort;
 #endif
 
-
 	IMG_UINT32	ui32CCBOffset;
 
 #if defined(SUPPORT_SGX_GENERALISED_SYNCOBJECTS)
@@ -444,7 +413,6 @@ typedef struct _SGX_CCB_KICK_KM_
 	IMG_HANDLE	ahSrcKernelSyncInfo[SGX_MAX_SRC_SYNCS];
 #endif
 
-
 	IMG_BOOL	bTADependency;
 	IMG_HANDLE	hTA3DSyncInfo;
 
@@ -457,7 +425,6 @@ typedef struct _SGX_CCB_KICK_KM_
 	IMG_UINT32	ui32WriteOpsPendingVal;
 #endif
 } SGX_CCB_KICK_KM;
-
 
 #if defined(TRANSFER_QUEUE)
 typedef struct _PVRSRV_TRANSFER_SGX_KICK_KM_
@@ -495,12 +462,9 @@ typedef struct _PVRSRV_2D_SGX_KICK_KM_
 	IMG_UINT32		ui32NumSrcSync;
 	IMG_HANDLE		ahSrcSyncInfo[SGX_MAX_2D_SRC_SYNC_OPS];
 
-
 	IMG_HANDLE		hDstSyncInfo;
 
-
 	IMG_HANDLE		hTASyncInfo;
-
 
 	IMG_HANDLE		h3DSyncInfo;
 

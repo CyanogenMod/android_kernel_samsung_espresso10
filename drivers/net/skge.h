@@ -215,7 +215,6 @@ enum {
 	IS_PORT_2	= IS_XA2_F| IS_R2_F | IS_TO_PORT2 | IS_MAC2,
 };
 
-
 /*	B2_IRQM_HWE_MSK	32 bit	IRQ Moderation HW Error Mask */
 enum {
 	IS_IRQ_TIST_OV	= 1<<13, /* Time Stamp Timer Overflow (YUKON only) */
@@ -409,7 +408,6 @@ enum {
 #define PA_ENA_TO_ALL	(PA_ENA_TO_RX1 | PA_ENA_TO_RX2 |\
 						PA_ENA_TO_TX1 | PA_ENA_TO_TX2)
 
-
 /* Transmit Arbiter Registers MAC 1 and 2, use SK_REG() to access */
 /*	TXA_ITI_INI		32 bit	Tx Arb Interval Timer Init Val */
 /*	TXA_ITI_VAL		32 bit	Tx Arb Interval Timer Value */
@@ -443,7 +441,6 @@ enum {
 	TXA_TEST	= 0x0211,/*  8 bit	Tx Arbiter Test Register */
 	TXA_STAT	= 0x0212,/*  8 bit	Tx Arbiter Status Register */
 };
-
 
 enum {
 	B6_EXT_REG	= 0x0300,/* External registers (GENESIS only) */
@@ -600,7 +597,6 @@ enum {
 	MFF_TX_CTRL_DEF	 = MFF_ENA_PKT_REC | (u16) MFF_ENA_TIM_PAT | MFF_ENA_FLUSH,
 };
 
-
 /*	RX_MFF_TST2	 	 8 bit	Receive MAC FIFO Test Register 2 */
 /*	TX_MFF_TST2	 	 8 bit	Transmit MAC FIFO Test Register 2 */
 enum {
@@ -633,7 +629,6 @@ enum {
 	MFF_RST_CLR	= 1<<1,	/* Clear MAC FIFO Reset */
 	MFF_RST_SET	= 1<<0,	/* Set   MAC FIFO Reset */
 };
-
 
 /*	Link LED Counter Registers (GENESIS only) */
 
@@ -678,7 +673,6 @@ enum {
 	RX_GMF_RLEV	= 0x0c78,/* 32 bit	Rx GMAC FIFO Read Level */
 };
 
-
 /*	TXA_TEST		 8 bit	Tx Arbiter Test Register */
 enum {
 	TXA_INT_T_ON	= 1<<5,	/* Tx Arb Interval Timer Test On */
@@ -693,7 +687,6 @@ enum {
 enum {
 	TXA_PRIO_XS	= 1<<0,	/* sync queue has prio to send */
 };
-
 
 /*	Q_BC			32 bit	Current Byte Counter */
 
@@ -811,7 +804,6 @@ enum {
 #define SK_FACT_53		 85     /* on GENESIS:	53.12 MHz */
 #define SK_FACT_78		125	/* on YUKON:	78.12 MHz */
 
-
 /* Transmit GMAC FIFO (YUKON only) */
 enum {
 	TX_GMF_EA	= 0x0d40,/* 32 bit	Tx GMAC FIFO End Address */
@@ -838,7 +830,6 @@ enum {
 	GMAC_TI_ST_CTRL	= 0x0e18,/*  8 bit	Time Stamp Timer Ctrl Reg */
 	GMAC_TI_ST_TST	= 0x0e1a,/*  8 bit	Time Stamp Timer Test Reg */
 };
-
 
 enum {
 	LINKLED_OFF 	     = 0x01,
@@ -1107,7 +1098,6 @@ enum {
 	PHY_X_P_BOTH_MD	= 3<<7,/* Bit  8..7:	both Pause Mode */
 };
 
-
 /*****  PHY_XMAC_EXT_STAT	16 bit r/w	Extended Status Register *****/
 enum {
 	PHY_X_EX_FD	= 1<<15, /* Bit 15:	Device Supports Full Duplex */
@@ -1209,7 +1199,6 @@ enum {
 	PHY_B_AN_ASP	= 1<<11, /* Bit 11:	Asymmetric Pause */
 	PHY_B_AN_PC	= 1<<10, /* Bit 10:	Pause Capable */
 };
-
 
 /*****  PHY_BCOM_FC_CTR		16 bit r/w	False Carrier Counter *****/
 enum {
@@ -1494,7 +1483,6 @@ enum {
 	PULS_1300MS	= 7, /* 1.3 s to 2.7 s */
 };
 
-
 enum {
 	BLINK_42MS	= 0, /* 42 ms */
 	BLINK_84MS	= 1, /* 84 ms */
@@ -1602,7 +1590,6 @@ enum {
 	PHY_M_FESC_ENA_MCLK	= 1<<1, /* Enable MAC Rx Clock in sleep mode */
 	PHY_M_FESC_SEL_CL_A	= 1<<0, /* Select Class A driver (100B-TX) */
 };
-
 
 /*****  PHY_MARV_PHY_CTRL (page 3)		16 bit r/w	LED Control Reg. *****/
 enum {
@@ -1787,7 +1774,6 @@ enum {
 #define TX_JAM_IPG_VAL(x)	(((x)<<9)  & GM_TXPA_JAMIPG_MSK)
 #define TX_IPG_JAM_DATA(x)	(((x)<<4)  & GM_TXPA_JAMDAT_MSK)
 
-
 /*	GM_SERIAL_MODE			16 bit r/w	Serial Mode Register */
 enum {
 	GM_SMOD_DATABL_MSK	= 0x1f<<11, /* Bit 15..11:	Data Blinder (r/o) */
@@ -1871,7 +1857,6 @@ enum {
 
 	RX_GMF_FL_THR_DEF = 0xa,	/* flush threshold (default) */
 };
-
 
 /*	TX_GMF_CTRL_T	32 bit	Tx GMAC FIFO Control/Test */
 enum {
@@ -1971,7 +1956,6 @@ enum {
 	GMLC_RST_CLR	= 1<<1,	/* Clear GMAC Link Reset */
 	GMLC_RST_SET	= 1<<0,	/* Set   GMAC Link Reset */
 
-
 /*	WOL_CTRL_STAT	16 bit	WOL Control/Status Reg */
 	WOL_CTL_LINK_CHG_OCC		= 1<<15,
 	WOL_CTL_MAGIC_PKT_OCC		= 1<<14,
@@ -2001,7 +1985,6 @@ enum {
 
 /*	WOL_MATCH_CTL	 8 bit	WOL Match Control Reg */
 #define WOL_CTL_PATT_ENA(x)	(1 << (x))
-
 
 /* XMAC II registers				      */
 enum {
@@ -2125,7 +2108,6 @@ enum {
 	XM_MMU_ENA_TX	= 1<<0,	 /* Bit  0:	Enable Transmitter */
 };
 
-
 /*	XM_TX_CMD	16 bit r/w	Transmit Command Register */
 enum {
 	XM_TX_BK2BK	= 1<<6,	/* Bit  6:	Ignor Carrier Sense (Tx Bk2Bk)*/
@@ -2140,14 +2122,11 @@ enum {
 /*	XM_TX_RT_LIM	16 bit r/w	Transmit Retry Limit Register */
 #define XM_RT_LIM_MSK	0x1f	/* Bit  4..0:	Tx Retry Limit */
 
-
 /*	XM_TX_STIME	16 bit r/w	Transmit Slottime Register */
 #define XM_STIME_MSK	0x7f	/* Bit  6..0:	Tx Slottime bits */
 
-
 /*	XM_TX_IPG	16 bit r/w	Transmit Inter Packet Gap */
 #define XM_IPG_MSK		0xff	/* Bit  7..0:	IPG value bits */
-
 
 /*	XM_RX_CMD	16 bit r/w	Receive Command Register */
 enum {
@@ -2164,7 +2143,6 @@ enum {
 	XM_RX_DIS_CEXT	= 1<<0,	/* Bit  0:	Disable carrier ext. check */
 };
 
-
 /*	XM_GP_PORT	32 bit r/w	General Purpose Port Register */
 enum {
 	XM_GP_ANIP	= 1<<6,	/* Bit  6: (ro)	Auto-Neg. in progress */
@@ -2173,7 +2151,6 @@ enum {
 	XM_GP_RES_STAT	= 1<<2,	/* Bit  2: (sc)	Reset the statistics module */
 	XM_GP_INP_ASS	= 1<<0,	/* Bit  0: (ro) GP Input Pin asserted */
 };
-
 
 /*	XM_IMSK		16 bit r/w	Interrupt Mask Register */
 /*	XM_ISRC		16 bit r/o	Interrupt Status Register */
@@ -2204,7 +2181,6 @@ enum {
 	XM_HW_GMII_MD	= 1<<0,	/* Bit  0:	GMII Interface selected */
 };
 
-
 /*	XM_TX_LO_WM	16 bit r/w	Tx FIFO Low Water Mark */
 /*	XM_TX_HI_WM	16 bit r/w	Tx FIFO High Water Mark */
 #define XM_TX_WM_MSK	0x01ff	/* Bit  9.. 0	Tx FIFO Watermark bits */
@@ -2213,7 +2189,6 @@ enum {
 /*	XM_HT_THR	16 bit r/w	Host Request Threshold */
 /*	XM_RX_THR	16 bit r/w	Rx Request Threshold */
 #define XM_THR_MSK		0x03ff	/* Bit 10.. 0	Rx/Tx Request Threshold bits */
-
 
 /*	XM_TX_STAT	32 bit r/o	Tx Status LIFO Register */
 enum {
@@ -2238,11 +2213,9 @@ enum {
 /*	XM_RX_HI_WM	16 bit r/w	Receive High Water Mark */
 #define XM_RX_WM_MSK	0x03ff		/* Bit 11.. 0:	Rx FIFO Watermark bits */
 
-
 /*	XM_DEV_ID	32 bit r/o	Device ID Register */
 #define XM_DEV_OUI	(0x00ffffffUL<<8)	/* Bit 31..8:	Device OUI */
 #define XM_DEV_REV	(0x07L << 5)		/* Bit  7..5:	Chip Rev Num */
-
 
 /*	XM_MODE		32 bit r/w	Mode Register */
 enum {
@@ -2292,7 +2265,6 @@ enum {
 	XM_SC_CLR_RXC	= 1<<1,	/* Bit  1: (sc)	Clear Rx Counters */
 	XM_SC_CLR_TXC	= 1<<0,	/* Bit  0: (sc) Clear Tx Counters */
 };
-
 
 /*	XM_RX_CNT_EV	32 bit r/o	Rx Counter Event Register */
 /*	XM_RX_EV_MSK	32 bit r/w	Rx Counter Event Mask */
@@ -2404,7 +2376,6 @@ struct skge_ring {
 	unsigned long	    count;
 };
 
-
 struct skge_hw {
 	void __iomem  	     *regs;
 	struct pci_dev	     *pdev;
@@ -2444,7 +2415,6 @@ enum pause_status {
 	FLOW_STAT_SYMMETRIC,		/* Both station may send PAUSE */
 };
 
-
 struct skge_port {
 	struct skge_hw	     *hw;
 	struct net_device    *netdev;
@@ -2474,7 +2444,6 @@ struct skge_port {
 	struct dentry	     *debugfs;
 #endif
 };
-
 
 /* Register accessor for memory mapped device */
 static inline u32 skge_read32(const struct skge_hw *hw, int reg)

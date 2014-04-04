@@ -37,7 +37,6 @@
  * when a file system is mounted (see ext3_fill_super).
  */
 
-
 #define in_range(b, first, len)	((b) >= (first) && (b) <= (first) + (len) - 1)
 
 /*

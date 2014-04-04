@@ -582,7 +582,6 @@ static const struct bin_table bin_net_tr_table[] = {
 	{}
 };
 
-
 static const struct bin_table bin_net_decnet_conf_vars[] = {
 	{ CTL_INT,	NET_DECNET_CONF_DEV_FORWARDING,	"forwarding" },
 	{ CTL_INT,	NET_DECNET_CONF_DEV_PRIORITY,	"priority" },
@@ -871,7 +870,6 @@ static const struct bin_table bin_bus_table[] = {
 	{}
 };
 
-
 static const struct bin_table bin_s390dbf_table[] = {
 	{ CTL_INT,	5678 /* CTL_S390DBF_STOPPABLE */, "debug_stoppable" },
 	{ CTL_INT,	5679 /* CTL_S390DBF_ACTIVE */,	  "debug_active" },
@@ -923,7 +921,6 @@ static ssize_t bin_dir(struct file *file,
 {
 	return -ENOTDIR;
 }
-
 
 static ssize_t bin_string(struct file *file,
 	void __user *oldval, size_t oldlen, void __user *newval, size_t newlen)
@@ -1003,7 +1000,7 @@ static ssize_t bin_intvec(struct file *file,
 			value = simple_strtoul(str, &str, 10);
 			while (isspace(*str))
 				str++;
-			
+
 			result = -EFAULT;
 			if (put_user(value, vec + i))
 				goto out_kfree;
@@ -1081,7 +1078,7 @@ static ssize_t bin_ulongvec(struct file *file,
 			value = simple_strtoul(str, &str, 10);
 			while (isspace(*str))
 				str++;
-			
+
 			result = -EFAULT;
 			if (put_user(value, vec + i))
 				goto out_kfree;
@@ -1194,9 +1191,10 @@ static ssize_t bin_dn_node_address(struct file *file,
 
 		/* Convert the decnet address to binary */
 		result = -EIO;
-		nodep = strchr(buf, '.') + 1;
+		nodep = strchr(buf, '.');
 		if (!nodep)
 			goto out;
+		++nodep;
 
 		area = simple_strtoul(buf, NULL, 10);
 		node = simple_strtoul(nodep, NULL, 10);
@@ -1359,7 +1357,6 @@ out:
 	return result;
 }
 
-
 #else /* CONFIG_SYSCTL_SYSCALL */
 
 static ssize_t binary_sysctl(const int *name, int nlen,
@@ -1369,7 +1366,6 @@ static ssize_t binary_sysctl(const int *name, int nlen,
 }
 
 #endif /* CONFIG_SYSCTL_SYSCALL */
-
 
 static void deprecated_sysctl_warning(const int *name, int nlen)
 {
@@ -1469,7 +1465,6 @@ SYSCALL_DEFINE1(sysctl, struct __sysctl_args __user *, args)
 
 	return result;
 }
-
 
 #ifdef CONFIG_COMPAT
 #include <asm/compat.h>

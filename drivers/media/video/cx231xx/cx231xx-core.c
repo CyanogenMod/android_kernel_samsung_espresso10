@@ -116,7 +116,6 @@ void cx231xx_unregister_extension(struct cx231xx_ops *ops)
 	list_for_each_entry(dev, &cx231xx_devlist, devlist)
 		ops->fini(dev);
 
-
 	printk(KERN_INFO DRIVER_NAME ": %s removed\n", ops->name);
 	list_del(&ops->next);
 	mutex_unlock(&cx231xx_devlist_mutex);
@@ -221,7 +220,6 @@ int cx231xx_send_usb_command(struct cx231xx_i2c *i2c_bus,
 	/* set the buffer for read / write */
 	ven_req.pBuff = req_data->p_buffer;
 
-
 	/* call common vendor command request */
 	status = cx231xx_send_vendor_cmd(dev, &ven_req);
 	if (status < 0) {
@@ -292,7 +290,6 @@ static int __usb_control_msg(struct cx231xx *dev, unsigned int pipe,
 
 	return rc;
 }
-
 
 /*
  * cx231xx_read_ctrl_reg()
@@ -365,7 +362,6 @@ int cx231xx_send_vendor_cmd(struct cx231xx *dev,
 					(ven_req->bRequest == 0x6))) {
 		unsend_size = 0;
 		pdata = ven_req->pBuff;
-
 
 		unsend_size = ven_req->wLength;
 
@@ -674,8 +670,6 @@ int cx231xx_demod_reset(struct cx231xx *dev)
 						PWR_CTL_EN, value, 4);
 			msleep(10);
 
-
-
 	status = cx231xx_read_ctrl_reg(dev, VRT_GET_REGISTER, PWR_CTL_EN,
 				 value, 4);
 
@@ -914,7 +908,6 @@ void cx231xx_uninit_isoc(struct cx231xx *dev)
 	else
 		cx231xx_capture_start(dev, 0, TS1_serial_mode);
 
-
 }
 EXPORT_SYMBOL_GPL(cx231xx_uninit_isoc);
 
@@ -962,7 +955,6 @@ void cx231xx_uninit_bulk(struct cx231xx *dev)
 	else
 		cx231xx_capture_start(dev, 0, TS1_serial_mode);
 
-
 }
 EXPORT_SYMBOL_GPL(cx231xx_uninit_bulk);
 
@@ -988,8 +980,6 @@ int cx231xx_init_isoc(struct cx231xx *dev, int max_packets,
 		cx231xx_info("out of mem\n");
 		return -ENOMEM;
 	}
-
-
 
 	dev->video_mode.isoc_ctl.isoc_copy = isoc_copy;
 	dev->video_mode.isoc_ctl.num_bufs = num_bufs;
@@ -1036,7 +1026,6 @@ int cx231xx_init_isoc(struct cx231xx *dev, int max_packets,
 		dev->video_mode.end_point_addr = 0x81;
 	else
 		dev->video_mode.end_point_addr = 0x84;
-
 
 	/* allocate urbs and transfer buffers */
 	for (i = 0; i < dev->video_mode.isoc_ctl.num_bufs; i++) {
@@ -1169,7 +1158,6 @@ int cx231xx_init_bulk(struct cx231xx *dev, int max_packets,
 		dev->video_mode.end_point_addr = 0x81;
 	else
 		dev->video_mode.end_point_addr = 0x84;
-
 
 	/* allocate urbs and transfer buffers */
 	for (i = 0; i < dev->video_mode.bulk_ctl.num_bufs; i++) {
@@ -1459,7 +1447,6 @@ int cx231xx_send_gpio_cmd(struct cx231xx *dev, u32 gpio_bit, u8 *gpio_val,
 		memset(ven_req.pBuff, 0x00, ven_req.wLength);
 	} else
 		ven_req.direction = USB_DIR_OUT;
-
 
 	/* call common vendor command request */
 	status = cx231xx_send_vendor_cmd(dev, &ven_req);

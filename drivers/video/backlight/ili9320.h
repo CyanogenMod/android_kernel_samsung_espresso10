@@ -56,7 +56,6 @@ struct ili9320 {
 	int (*write)(struct ili9320 *ili, unsigned int reg, unsigned int val);
 };
 
-
 /* ILI9320 register access routines */
 
 extern int ili9320_write(struct ili9320 *ili,

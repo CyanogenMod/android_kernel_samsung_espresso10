@@ -411,7 +411,6 @@ static inline struct sk_buff *alloc_wr(int wrlen, int dlen, gfp_t gfp)
 	return skb;
 }
 
-
 /*
  * The number of WRs needed for an skb depends on the number of fragments
  * in the skb and whether it has any payload in its main body.  This maps the

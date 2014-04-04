@@ -82,7 +82,6 @@ static void __exit  cleanup_tsunami_flash(void)
 	tsunami_flash_mtd = 0;
 }
 
-
 static int __init init_tsunami_flash(void)
 {
 	static const char *rom_probe_types[] = { "cfi_probe", "jedec_probe", "map_rom", NULL };

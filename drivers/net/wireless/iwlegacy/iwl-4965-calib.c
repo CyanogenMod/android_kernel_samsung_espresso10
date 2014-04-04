@@ -305,7 +305,6 @@ static int iwl4965_sens_energy_cck(struct iwl_priv *priv,
 	return 0;
 }
 
-
 static int iwl4965_sens_auto_corr_ofdm(struct iwl_priv *priv,
 				       u32 norm_fa,
 				       u32 rx_enable_time)
@@ -790,8 +789,6 @@ static void iwl4965_gain_computation(struct iwl_priv *priv,
 		data->state = IWL_CHAIN_NOISE_CALIBRATED;
 	}
 }
-
-
 
 /*
  * Accumulate 16 beacons of signal and noise statistics for each of

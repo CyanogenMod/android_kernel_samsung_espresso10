@@ -232,4 +232,3 @@ int omap4_cm_wait_module_ready(void __iomem *clkctrl_reg)
 
 	return (i < MAX_MODULE_READY_TIME) ? 0 : -EBUSY;
 }
-

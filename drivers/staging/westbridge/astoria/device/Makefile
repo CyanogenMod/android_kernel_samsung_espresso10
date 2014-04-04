@@ -8,7 +8,6 @@ endif
 
 obj-$(CONFIG_WESTBRIDGE_DEVICE_DRIVER)  += cyasdev.o
 
-
 ifeq ($(CONFIG_MACH_OMAP3_WESTBRIDGE_AST_PNAND_HAL),y)
 #moved for staging compatbility
 #cyasdev-y		:= ../../../arch/arm/mach-omap2/cyashalomap_kernel.o cyasdevice.o

@@ -49,7 +49,6 @@ always  += $(offsets-file)
 targets += $(offsets-file)
 targets += arch/$(SRCARCH)/kernel/asm-offsets.s
 
-
 # Default sed regexp - multiline due to syntax constraints
 define sed-y
 	"/^->/{s:->#\(.*\):/* \1 */:; \

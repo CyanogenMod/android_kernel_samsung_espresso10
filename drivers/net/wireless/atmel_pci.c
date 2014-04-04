@@ -48,7 +48,6 @@ static struct pci_driver atmel_driver = {
 	.remove   = __devexit_p(atmel_pci_remove),
 };
 
-
 static int __devinit atmel_pci_probe(struct pci_dev *pdev,
 				     const struct pci_device_id *pent)
 {

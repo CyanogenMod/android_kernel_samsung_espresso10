@@ -498,7 +498,6 @@ static int __devinit bfin_adv7393_fb_probe(struct i2c_client *client,
 		goto out_1;
 	}
 
-
 	if (register_framebuffer(&fbdev->info) < 0) {
 		dev_err(&client->dev, "unable to register framebuffer\n");
 		ret = -EFAULT;

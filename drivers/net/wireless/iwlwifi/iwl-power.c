@@ -26,7 +26,6 @@
  * Intel Corporation, 5200 N.E. Elam Young Parkway, Hillsboro, OR 97124-6497
  *****************************************************************************/
 
-
 #include <linux/kernel.h>
 #include <linux/module.h>
 #include <linux/slab.h>
@@ -97,7 +96,6 @@ static const struct iwl_power_vec_entry range_0[IWL_POWER_NUM] = {
 	{{SLP, SLP_TOUT(25), SLP_TOUT(25), SLP_VEC(2, 2, 4, 6, 0xFF)}, 2}
 };
 
-
 /* for DTIM period IWL_DTIM_RANGE_0_MAX + 1 through IWL_DTIM_RANGE_1_MAX */
 /* DTIM 3 - 10 */
 static const struct iwl_power_vec_entry range_1[IWL_POWER_NUM] = {
@@ -132,7 +130,6 @@ static const struct iwl_power_vec_entry apm_range_0[IWL_POWER_NUM] = {
 	{{ASLP, 0, 0, ASLP_TOUT(50), ASLP_TOUT(50),
 		SLP_VEC(1, 2, 6, 8, 0xFF), ASLP_TOUT(2)}, 2}
 };
-
 
 /* for DTIM period IWL_DTIM_RANGE_0_MAX + 1 through IWL_DTIM_RANGE_1_MAX */
 /* DTIM 3 - 10 */
@@ -233,7 +230,6 @@ static void iwl_static_sleep_cmd(struct iwl_priv *priv,
 		else
 			cmd->flags &= ~IWL_POWER_BT_SCO_ENA;
 	}
-
 
 	slp_itrvl = le32_to_cpu(cmd->sleep_interval[IWL_POWER_VEC_SIZE - 1]);
 	if (slp_itrvl > IWL_CONN_MAX_LISTEN_INTERVAL)

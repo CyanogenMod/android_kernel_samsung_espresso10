@@ -9,7 +9,6 @@
 #error need to prove a real asm/page.h
 #endif
 
-
 /* PAGE_SHIFT determines the page size */
 
 #define PAGE_SHIFT	12

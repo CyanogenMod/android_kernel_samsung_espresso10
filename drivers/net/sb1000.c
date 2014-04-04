@@ -88,7 +88,6 @@ static netdev_tx_t sb1000_start_xmit(struct sk_buff *skb,
 static irqreturn_t sb1000_interrupt(int irq, void *dev_id);
 static int sb1000_close(struct net_device *dev);
 
-
 /* SB1000 hardware routines to be used during open/configuration phases */
 static int card_wait_for_busy_clear(const int ioaddr[],
 	const char* name);
@@ -182,7 +181,6 @@ sb1000_probe_one(struct pnp_dev *pdev, const struct pnp_device_id *id)
 		goto out_release_regions;
 	}
 
-
 	dev->base_addr = ioaddr[0];
 	/* mem_start holds the second I/O address */
 	dev->mem_start = ioaddr[1];
@@ -249,7 +247,6 @@ static struct pnp_driver sb1000_driver = {
 	.probe		= sb1000_probe_one,
 	.remove		= sb1000_remove_one,
 };
-
 
 /*
  * SB1000 hardware routines to be used during open/configuration phases
@@ -355,7 +352,6 @@ card_send_command(const int ioaddr[], const char* name,
 	return 0;
 }
 
-
 /*
  * SB1000 hardware routines to be used during frame rx interrupt
  */
@@ -449,7 +445,6 @@ sb1000_issue_read_command(const int ioaddr[], const char* name)
 	outb(0xa0, ioaddr[0] + 6);
 	sb1000_send_command(ioaddr, name, Command0);
 }
-
 
 /*
  * SB1000 commands for open/configuration
@@ -707,7 +702,6 @@ sb1000_set_PIDs(const int ioaddr[], const char* name, const short PID[])
 	return sb1000_end_get_set_command(ioaddr, name);
 }
 
-
 static void
 sb1000_print_status_buffer(const char* name, unsigned char st[],
 	unsigned char buffer[], int size)
@@ -924,7 +918,6 @@ sb1000_error_dpc(struct net_device *dev)
 		lp->rx_error_dpc_count = ErrorDpcCounterInitialize;
 }
 
-
 /*
  * Linux interface functions
  */
@@ -986,7 +979,6 @@ sb1000_open(struct net_device *dev)
 		printk(KERN_WARNING "%s: found firmware version %x.%02x "
 			"(should be %x.%02x)\n", name, version[0], version[1],
 			FirmwareVersion[0], FirmwareVersion[1]);
-
 
 	netif_start_queue(dev);
 	return 0;					/* Always succeed */

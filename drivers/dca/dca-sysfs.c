@@ -107,4 +107,3 @@ void __exit dca_sysfs_exit(void)
 	class_destroy(dca_class);
 	idr_destroy(&dca_idr);
 }
-

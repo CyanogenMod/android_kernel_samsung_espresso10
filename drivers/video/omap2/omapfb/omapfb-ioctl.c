@@ -67,8 +67,6 @@ static int omapfb_setup_plane(struct fb_info *fbi, struct omapfb_plane_info *pi)
 	struct omapfb2_mem_region *old_rg, *new_rg;
 	int r = 0;
 
-	DBG("omapfb_setup_plane\n");
-
 	if (ofbi->num_overlays != 1) {
 		r = -EINVAL;
 		goto out;
@@ -510,10 +508,8 @@ static int omapfb_memory_read(struct fb_info *fbi,
 		return -EINVAL;
 
 	buf = vmalloc(mr->buffer_size);
-	if (!buf) {
-		DBG("vmalloc failed\n");
+	if (!buf)
 		return -ENOMEM;
-	}
 
 	r = display->driver->memory_read(display, buf, mr->buffer_size,
 			mr->x, mr->y, mr->w, mr->h);
@@ -617,7 +613,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 
 	switch (cmd) {
 	case OMAPFB_SYNC_GFX:
-		DBG("ioctl SYNC_GFX\n");
 		if (!display || !display->driver->sync) {
 			/* DSS1 never returns an error here, so we neither */
 			/*r = -EINVAL;*/
@@ -628,7 +623,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_UPDATE_WINDOW_OLD:
-		DBG("ioctl UPDATE_WINDOW_OLD\n");
 		if (!display || !display->driver->update) {
 			r = -EINVAL;
 			break;
@@ -646,7 +640,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_UPDATE_WINDOW:
-		DBG("ioctl UPDATE_WINDOW\n");
 		if (!display || !display->driver->update) {
 			r = -EINVAL;
 			break;
@@ -663,7 +656,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_SETUP_PLANE:
-		DBG("ioctl SETUP_PLANE\n");
 		if (copy_from_user(&p.plane_info, (void __user *)arg,
 					sizeof(p.plane_info)))
 			r = -EFAULT;
@@ -672,7 +664,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_QUERY_PLANE:
-		DBG("ioctl QUERY_PLANE\n");
 		r = omapfb_query_plane(fbi, &p.plane_info);
 		if (r < 0)
 			break;
@@ -682,7 +673,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_SETUP_MEM:
-		DBG("ioctl SETUP_MEM\n");
 		if (copy_from_user(&p.mem_info, (void __user *)arg,
 					sizeof(p.mem_info)))
 			r = -EFAULT;
@@ -691,7 +681,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_QUERY_MEM:
-		DBG("ioctl QUERY_MEM\n");
 		r = omapfb_query_mem(fbi, &p.mem_info);
 		if (r < 0)
 			break;
@@ -701,7 +690,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_GET_CAPS:
-		DBG("ioctl GET_CAPS\n");
 		if (!display) {
 			r = -EINVAL;
 			break;
@@ -718,7 +706,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_GET_OVERLAY_COLORMODE:
-		DBG("ioctl GET_OVERLAY_COLORMODE\n");
 		if (copy_from_user(&p.ovl_colormode, (void __user *)arg,
 				   sizeof(p.ovl_colormode))) {
 			r = -EFAULT;
@@ -733,7 +720,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_SET_UPDATE_MODE:
-		DBG("ioctl SET_UPDATE_MODE\n");
 		if (get_user(p.update_mode, (int __user *)arg))
 			r = -EFAULT;
 		else
@@ -741,7 +727,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_GET_UPDATE_MODE:
-		DBG("ioctl GET_UPDATE_MODE\n");
 		r = omapfb_get_update_mode(fbi, &p.update_mode);
 		if (r)
 			break;
@@ -751,7 +736,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_SET_COLOR_KEY:
-		DBG("ioctl SET_COLOR_KEY\n");
 		if (copy_from_user(&p.color_key, (void __user *)arg,
 				   sizeof(p.color_key)))
 			r = -EFAULT;
@@ -760,7 +744,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_GET_COLOR_KEY:
-		DBG("ioctl GET_COLOR_KEY\n");
 		r = omapfb_get_color_key(fbi, &p.color_key);
 		if (r)
 			break;
@@ -781,7 +764,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		/* FALLTHROUGH */
 
 	case OMAPFB_WAITFORVSYNC:
-		DBG("ioctl WAITFORVSYNC\n");
 		if (!display) {
 			r = -EINVAL;
 			break;
@@ -791,7 +773,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_WAITFORGO:
-		DBG("ioctl WAITFORGO\n");
 		if (!display) {
 			r = -EINVAL;
 			break;
@@ -803,7 +784,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 	/* LCD and CTRL tests do the same thing for backward
 	 * compatibility */
 	case OMAPFB_LCD_TEST:
-		DBG("ioctl LCD_TEST\n");
 		if (get_user(p.test_num, (int __user *)arg)) {
 			r = -EFAULT;
 			break;
@@ -818,7 +798,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_CTRL_TEST:
-		DBG("ioctl CTRL_TEST\n");
 		if (get_user(p.test_num, (int __user *)arg)) {
 			r = -EFAULT;
 			break;
@@ -833,7 +812,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		break;
 
 	case OMAPFB_MEMORY_READ:
-		DBG("ioctl MEMORY_READ\n");
 
 		if (copy_from_user(&p.memory_read, (void __user *)arg,
 					sizeof(p.memory_read))) {
@@ -848,8 +826,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 	case OMAPFB_GET_VRAM_INFO: {
 		unsigned long vram, free, largest;
 
-		DBG("ioctl GET_VRAM_INFO\n");
-
 		omap_vram_get_info(&vram, &free, &largest);
 		p.vram_info.total = vram;
 		p.vram_info.free = free;
@@ -862,7 +838,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 	}
 
 	case OMAPFB_SET_TEARSYNC: {
-		DBG("ioctl SET_TEARSYNC\n");
 
 		if (copy_from_user(&p.tearsync_info, (void __user *)arg,
 					sizeof(p.tearsync_info))) {
@@ -884,8 +859,6 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 	case OMAPFB_GET_DISPLAY_INFO: {
 		u16 xres, yres;
 		u32 w, h;
-
-		DBG("ioctl GET_DISPLAY_INFO\n");
 
 		if (display == NULL) {
 			r = -ENODEV;
@@ -915,12 +888,15 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		omapfb_lock(fbdev);
 		fbdev->vsync_active = !!p.crt;
 
-		if (display->state == OMAP_DSS_DISPLAY_ACTIVE) {
-			if (p.crt)
-				omapfb_enable_vsync(fbdev);
+		if (p.crt)
+			if (display->state == OMAP_DSS_DISPLAY_ACTIVE)
+				omapfb_enable_vsync(fbdev, display->channel,
+						true);
 			else
-				omapfb_disable_vsync(fbdev);
-		}
+				r = -EBUSY;
+		else
+			omapfb_enable_vsync(fbdev, display->channel, false);
+
 		omapfb_unlock(fbdev);
 		break;
 
@@ -929,10 +905,5 @@ int omapfb_ioctl(struct fb_info *fbi, unsigned int cmd, unsigned long arg)
 		r = -EINVAL;
 	}
 
-	if (r < 0)
-		DBG("ioctl failed: %d\n", r);
-
 	return r;
 }
-
-

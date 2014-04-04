@@ -1,4 +1,3 @@
-
 struct ata_port_info;
 
 /* pata_sis.c */

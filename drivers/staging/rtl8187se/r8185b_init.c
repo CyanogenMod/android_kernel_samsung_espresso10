@@ -15,7 +15,6 @@ Major Change History:
 Notes:
 	This file is ported from RTL8185B Windows driver.
 
-
 --*/
 
 /*--------------------------Include File------------------------------------*/
@@ -27,7 +26,6 @@ Notes:
 #include "r8180_wx.h"
 
 #include "ieee80211/dot11d.h"
-
 
 /* #define CONFIG_RTL8180_IO_MAP */
 
@@ -58,7 +56,6 @@ static u8 MAC_REG_TABLE[][2] =	{
 						{0xC9, 0x22}, {0xCA, 0x22}, {0xCB, 0x22}, {0xCC, 0x22}, {0xCD, 0x22},/* lzm add 080826 */
 						{0xe2, 0x00},
 
-
 						/* PAGE 2: */
 						{0x5e, 0x02},
 						{0x0c, 0x04}, {0x4c, 0x30}, {0x4d, 0x08}, {0x50, 0x05}, {0x51, 0xf5},
@@ -72,7 +69,6 @@ static u8 MAC_REG_TABLE[][2] =	{
 						/* PAGA 0: */
 						{0x5e, 0x00}, {0x9f, 0x03}
 			};
-
 
 static u8  ZEBRA_AGC[]	=	{
 			0,
@@ -140,7 +136,6 @@ PlatformIOWrite2Byte(
 	write_nic_word(dev, offset, data);
 	read_nic_word(dev, offset); /* To make sure write operation is completed, 2005.11.09, by rcnjko. */
 
-
 }
 u8 PlatformIORead1Byte(struct net_device *dev, u32 offset);
 
@@ -172,7 +167,7 @@ if (offset == PhyAddr)	{
 		*/
 /*		NdisAcquireSpinLock( &(pDevice->IoSpinLock) );	*/
 
-		for (idx = 0; idx < 30; idx++)	{ 
+		for (idx = 0; idx < 30; idx++)	{
 		/* Make sure command bit is clear before access it.	*/
 			u1bTmp = PlatformIORead1Byte(dev, PhyAddr);
 			if ((u1bTmp & BIT7) == 0)
@@ -205,7 +200,6 @@ PlatformIORead1Byte(
 
 	data = read_nic_byte(dev, offset);
 
-
 	return data;
 }
 
@@ -219,7 +213,6 @@ PlatformIORead2Byte(
 
 	data = read_nic_word(dev, offset);
 
-
 	return data;
 }
 
@@ -232,7 +225,6 @@ PlatformIORead4Byte(
 	u32	data = 0;
 
 	data = read_nic_dword(dev, offset);
-
 
 	return data;
 }
@@ -279,7 +271,6 @@ HwHSSIThreeWire(
 
 		else
 			u1bTmp &= ~RF_SW_CFG_SI;  /* reg08[1]=0 Parallel Interface(PI)	*/
-
 
 		write_nic_byte(dev, RF_SW_CONFIG, u1bTmp);
 
@@ -341,7 +332,6 @@ HwHSSIThreeWire(
 		else
 			write_nic_byte(dev, SW_3W_CMD1, SW_3W_CMD1_RE);
 
-
 		/* Check if DONE is set. */
 		for (TryCnt = 0; TryCnt < TC_3W_POLL_MAX_TRY_CNT; TryCnt++)	{
 			u1bTmp = read_nic_byte(dev, SW_3W_CMD1);
@@ -397,7 +387,6 @@ u32 RF_ReadReg(struct net_device *dev, u8 offset)
 
 	return dataRead;
 }
-
 
 /* by Owen on 04/07/14 for writing BB register successfully */
 void
@@ -530,13 +519,11 @@ ZEBRA_Config_85BASIC_HardCode(
 	u8			u1b24E;
 	int d_cut = 0;
 
-
 /*
 =============================================================================
 	87S_PCIE :: RADIOCFG.TXT
 =============================================================================
 */
-
 
 	/* Page1 : reg16-reg30 */
 	RF_WriteReg(dev, 0x00, 0x013f);			mdelay(1); /* switch to page1 */
@@ -571,7 +558,6 @@ ZEBRA_Config_85BASIC_HardCode(
 	RF_WriteReg(dev, 0x0e, 0x0020);			mdelay(1);
 	RF_WriteReg(dev, 0x0f, 0x0990);			mdelay(1);
 
-
 	/*  Page1 : reg16-reg30 */
 	RF_WriteReg(dev, 0x00, 0x013f);			mdelay(1);
 
@@ -580,7 +566,6 @@ ZEBRA_Config_85BASIC_HardCode(
 	RF_WriteReg(dev, 0x04, 0x03a7);			mdelay(1);
 	RF_WriteReg(dev, 0x05, 0x059b);			mdelay(1);
 	RF_WriteReg(dev, 0x06, 0x0081);			mdelay(1);
-
 
 	RF_WriteReg(dev, 0x07, 0x01A0);			mdelay(1);
 /* Don't write RF23/RF24 to make a difference between 87S C cut and D cut. asked by SD3 stevenl. */
@@ -702,8 +687,6 @@ ZEBRA_Config_85BASIC_HardCode(
 	write_nic_byte(dev, OFDM_TXAGC, 0x1B);
 	write_nic_byte(dev, ANTSEL, 0x03);
 
-
-
 	/*
 	=============================================================================
 		AGC.txt
@@ -758,7 +741,6 @@ ZEBRA_Config_85BASIC_HardCode(
 /* by amy 080312} */
 /* by amy for antenna */
 }
-
 
 void
 UpdateInitialGain(
@@ -914,7 +896,6 @@ HwConfigureRTL8185(
 	}	else	{
 		val8 = val8 | 0x01 ;
 	}
-
 
 	write_nic_byte(dev, TXAGC_CTL, val8);
 
@@ -1267,8 +1248,6 @@ MgntDisconnectIBSS(
 	for (i = 0; i < 6 ; i++)
 		priv->ieee80211->current_network.bssid[i] = 0x55;
 
-
-
 	priv->ieee80211->state = IEEE80211_NOLINK;
 	/*
 		Stop Beacon.
@@ -1299,8 +1278,6 @@ MlmeDisassociateRequest(
 		/*ShuChen TODO: change media status.			*/
 		/*ShuChen TODO: What to do when disassociate.	*/
 		DrvIFIndicateDisassociation(dev, unspec_reason);
-
-
 
 		for (i = 0; i < 6; i++)
 			priv->ieee80211->current_network.bssid[i] = 0x22;
@@ -1723,7 +1700,6 @@ void rtl8185b_rx_enable(struct net_device *dev)
 	/* for now we accept data, management & ctl frame*/
 	struct r8180_priv *priv = (struct r8180_priv *)ieee80211_priv(dev);
 
-
 	if (dev->flags & IFF_PROMISC)
 		DMESG("NIC in promisc mode");
 
@@ -1735,7 +1711,6 @@ void rtl8185b_rx_enable(struct net_device *dev)
 
 	if (priv->ieee80211->iw_mode == IW_MODE_MONITOR)
 		priv->ReceiveConfig = priv->ReceiveConfig | RCR_ACF | RCR_APWRMGT | RCR_AICV;
-
 
 	if (priv->crcmon == 1 && priv->ieee80211->iw_mode == IW_MODE_MONITOR)
 		priv->ReceiveConfig = priv->ReceiveConfig | RCR_ACRC32;
@@ -1765,4 +1740,3 @@ void rtl8185b_tx_enable(struct net_device *dev)
 	cmd = read_nic_byte(dev, CMD);
 	write_nic_byte(dev, CMD, cmd | (1<<CMD_TX_ENABLE_SHIFT));
 }
-

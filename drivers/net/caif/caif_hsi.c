@@ -81,7 +81,6 @@ static void cfhsi_inactivity_tout(unsigned long arg)
 		queue_work(cfhsi->wq, &cfhsi->wake_down_work);
 }
 
-
 static void cfhsi_abort_tx(struct cfhsi *cfhsi)
 {
 	struct sk_buff *skb;
@@ -111,7 +110,6 @@ static int cfhsi_flush_fifo(struct cfhsi *cfhsi)
 
 	dev_dbg(&cfhsi->ndev->dev, "%s.\n",
 		__func__);
-
 
 	ret = cfhsi->dev->cfhsi_wake_up(cfhsi->dev);
 	if (ret) {
@@ -365,7 +363,6 @@ static int cfhsi_rx_desc(struct cfhsi_desc *desc, struct cfhsi *cfhsi)
 		len = *pfrm;
 		len |= ((*(pfrm+1)) << 8) & 0xFF00;
 		len += 2;	/* Add FCS fields. */
-
 
 		/* Allocate SKB (OK even in IRQ context). */
 		skb = alloc_skb(len + 1, GFP_KERNEL);

@@ -151,7 +151,6 @@ static int __init afeb9260_soc_init(void)
 	if (!(machine_is_afeb9260()))
 		return -ENODEV;
 
-
 	afeb9260_snd_device = platform_device_alloc("soc-audio", -1);
 	if (!afeb9260_snd_device) {
 		printk(KERN_ERR "ASoC: Platform device allocation failed\n");
@@ -182,4 +181,3 @@ module_exit(afeb9260_soc_exit);
 MODULE_AUTHOR("Sergey Lapin <slapin@ossfans.org>");
 MODULE_DESCRIPTION("ALSA SoC for AFEB9260");
 MODULE_LICENSE("GPL");
-

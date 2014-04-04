@@ -60,13 +60,11 @@ static int omap_hdmi_dai_startup(struct snd_pcm_substream *substream,
 	return 0;
 }
 
-
 static void omap_hdmi_dai_shutdown(struct snd_pcm_substream *substream,
 				    struct snd_soc_dai *dai)
 {
 	hdmi_lib_stop_acr_wa();
 }
-
 
 static int omap_hdmi_dai_hw_params(struct snd_pcm_substream *substream,
 				    struct snd_pcm_hw_params *params,

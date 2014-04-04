@@ -329,7 +329,6 @@ static struct ata_port_operations artop6260_ops = {
 	.prereset		= artop6260_pre_reset,
 };
 
-
 /**
  *	artop_init_one - Register ARTOP ATA PCI device with kernel services
  *	@pdev: PCI device to register
@@ -460,4 +459,3 @@ MODULE_DESCRIPTION("SCSI low-level driver for ARTOP PATA");
 MODULE_LICENSE("GPL");
 MODULE_DEVICE_TABLE(pci, artop_pci_tbl);
 MODULE_VERSION(DRV_VERSION);
-

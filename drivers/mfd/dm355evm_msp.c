@@ -19,7 +19,6 @@
 #include <linux/i2c.h>
 #include <linux/i2c/dm355evm_msp.h>
 
-
 /*
  * The DM355 is a DaVinci chip with video support but no C64+ DSP.  Its
  * EVM board has an MSP430 programmed with firmware for various board
@@ -55,7 +54,6 @@
 #else
 #define msp_has_tvp()		false
 #endif
-
 
 /*----------------------------------------------------------------------*/
 

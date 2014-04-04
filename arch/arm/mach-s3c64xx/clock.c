@@ -331,7 +331,6 @@ static struct clk init_clocks[] = {
 	}
 };
 
-
 static struct clk clk_fout_apll = {
 	.name		= "fout_apll",
 	.id		= -1,
@@ -837,7 +836,7 @@ static struct clk *clks[] __initdata = {
  * or resume code to re-set the clocks if the bootloader has changed
  * them.
  */
-void __init s3c64xx_register_clocks(unsigned long xtal, 
+void __init s3c64xx_register_clocks(unsigned long xtal,
 				    unsigned armclk_divlimit)
 {
 	armclk_mask = armclk_divlimit;

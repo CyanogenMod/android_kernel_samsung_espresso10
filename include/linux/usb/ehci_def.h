@@ -59,7 +59,6 @@ struct ehci_caps {
 	u8		portroute[8];	 /* nibbles for routing - offset 0xC */
 };
 
-
 /* Section 2.3 Host Controller Operational Registers */
 struct ehci_regs {
 

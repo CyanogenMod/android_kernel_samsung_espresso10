@@ -35,7 +35,6 @@
 #define SND_CS8403_ENCODE snd_cs8403_encode_spdif_bits
 #endif
 
-
 SND_CS8403_DECL void SND_CS8403_DECODE(struct snd_aes_iec958 *diga, unsigned char bits)
 {
 	if (bits & 0x01) {	/* consumer */
@@ -164,7 +163,6 @@ SND_CS8403_DECL unsigned char SND_CS8403_ENCODE(struct snd_aes_iec958 *diga)
 #ifndef SND_CS8404_ENCODE
 #define SND_CS8404_ENCODE snd_cs8404_encode_spdif_bits
 #endif
-
 
 SND_CS8404_DECL void SND_CS8404_DECODE(struct snd_aes_iec958 *diga, unsigned char bits)
 {

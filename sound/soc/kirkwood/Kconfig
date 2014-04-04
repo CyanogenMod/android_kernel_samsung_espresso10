@@ -26,4 +26,3 @@ config SND_KIRKWOOD_SOC_T5325
 	help
 	  Say Y if you want to add support for SoC audio on
 	  the HP t5325 thin client.
-

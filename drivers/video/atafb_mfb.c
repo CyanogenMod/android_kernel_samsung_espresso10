@@ -16,7 +16,6 @@
 #include "atafb.h"
 #include "atafb_utils.h"
 
-
     /*
      *  Monochrome
      */
@@ -101,7 +100,6 @@ void cleanup_module(void)
 {
 }
 #endif /* MODULE */
-
 
     /*
      *  Visible symbols for modules

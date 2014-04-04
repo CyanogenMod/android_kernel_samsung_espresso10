@@ -992,7 +992,6 @@ static void omap_dispc_resume(void)
 	}
 }
 
-
 static int omap_dispc_update_window(struct fb_info *fbi,
 				 struct omapfb_update_window *win,
 				 void (*complete_callback)(void *arg),

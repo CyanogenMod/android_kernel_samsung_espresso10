@@ -91,7 +91,7 @@ struct rpc_rqst {
 						/* A cookie used to track the
 						   state of the transport
 						   connection */
-	
+
 	/*
 	 * Partial send handling
 	 */

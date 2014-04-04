@@ -79,7 +79,6 @@ extern void __init mnt_init(void);
 
 DECLARE_BRLOCK(vfsmount_lock);
 
-
 /*
  * fs_struct.c
  */

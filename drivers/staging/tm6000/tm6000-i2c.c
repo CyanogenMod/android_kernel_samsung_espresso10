@@ -31,7 +31,6 @@
 #include <media/tuner.h>
 #include "tuner-xc2028.h"
 
-
 /* ----------------------------------------------------------- */
 
 static unsigned int i2c_debug;

@@ -220,8 +220,6 @@ static inline int send_control_msg(struct pwc_device *pdev,
 		request, value, pdev->vcinterface, buf, buflen, 500);
 }
 
-
-
 static int set_video_mode_Nala(struct pwc_device *pdev, int size, int frames)
 {
 	unsigned char buf[3];
@@ -288,7 +286,6 @@ static int set_video_mode_Nala(struct pwc_device *pdev, int size, int frames)
 	return 0;
 }
 
-
 static int set_video_mode_Timon(struct pwc_device *pdev, int size, int frames, int compression, int snapshot)
 {
 	unsigned char buf[13];
@@ -340,7 +337,6 @@ static int set_video_mode_Timon(struct pwc_device *pdev, int size, int frames, i
 		pdev->frame_size = (pdev->image.x * pdev->image.y * 12) / 8;
 	return 0;
 }
-
 
 static int set_video_mode_Kiara(struct pwc_device *pdev, int size, int frames, int compression, int snapshot)
 {
@@ -414,8 +410,6 @@ static int set_video_mode_Kiara(struct pwc_device *pdev, int size, int frames, i
 	    pdev->frame_size,pdev->vframes,pdev->vsize,pdev->vsnapshot,pdev->vbandlength);
 	return 0;
 }
-
-
 
 /**
    @pdev: device structure
@@ -553,8 +547,6 @@ static void pwc_set_image_buffer_size(struct pwc_device *pdev)
 	}
 }
 
-
-
 /* BRIGHTNESS */
 
 int pwc_get_brightness(struct pwc_device *pdev)
@@ -635,7 +627,6 @@ int pwc_set_gamma(struct pwc_device *pdev, int value)
 	return send_control_msg(pdev,
 		SET_LUM_CTL, GAMMA_FORMATTER, &buf, sizeof(buf));
 }
-
 
 /* SATURATION */
 
@@ -746,7 +737,6 @@ int pwc_set_shutter_speed(struct pwc_device *pdev, int mode, int value)
 	char buf[2];
 	int speed, ret;
 
-
 	if (mode)
 		buf[0] = 0x0;	/* auto */
 	else
@@ -799,7 +789,6 @@ int pwc_get_shutter_speed(struct pwc_device *pdev, int *value)
 	return 0;
 }
 
-
 /* POWER */
 
 int pwc_camera_power(struct pwc_device *pdev, int power)
@@ -817,8 +806,6 @@ int pwc_camera_power(struct pwc_device *pdev, int power)
 		SET_STATUS_CTL, SET_POWER_SAVE_MODE_FORMATTER,
 		&buf, sizeof(buf));
 }
-
-
 
 /* private calls */
 
@@ -915,7 +902,6 @@ int pwc_get_red_gain(struct pwc_device *pdev, int *value)
 	return 0;
 }
 
-
 int pwc_set_blue_gain(struct pwc_device *pdev, int value)
 {
 	unsigned char buf;
@@ -944,7 +930,6 @@ int pwc_get_blue_gain(struct pwc_device *pdev, int *value)
 	*value = buf << 8;
 	return 0;
 }
-
 
 /* The following two functions are different, since they only read the
    internal red/blue gains, which may be different from the manual
@@ -976,7 +961,6 @@ static int pwc_read_blue_gain(struct pwc_device *pdev, int *value)
 	return 0;
 }
 
-
 static int pwc_set_wb_speed(struct pwc_device *pdev, int speed)
 {
 	unsigned char buf;
@@ -1000,7 +984,6 @@ static int pwc_get_wb_speed(struct pwc_device *pdev, int *value)
 	return 0;
 }
 
-
 static int pwc_set_wb_delay(struct pwc_device *pdev, int delay)
 {
 	unsigned char buf;
@@ -1023,7 +1006,6 @@ static int pwc_get_wb_delay(struct pwc_device *pdev, int *value)
 	*value = buf << 10;
 	return 0;
 }
-
 
 int pwc_set_leds(struct pwc_device *pdev, int on_value, int off_value)
 {
@@ -1120,7 +1102,6 @@ int pwc_get_contour(struct pwc_device *pdev, int *contour)
 	return 0;
 }
 
-
 int pwc_set_backlight(struct pwc_device *pdev, int backlight)
 {
 	unsigned char buf;
@@ -1172,7 +1153,6 @@ int pwc_get_colour_mode(struct pwc_device *pdev, int *colour)
 	*colour = !!buf;
 	return 0;
 }
-
 
 int pwc_set_flicker(struct pwc_device *pdev, int flicker)
 {
@@ -1309,7 +1289,6 @@ static int pwc_mpt_get_status(struct pwc_device *pdev, struct pwc_mpt_status *st
 	return 0;
 }
 
-
 int pwc_get_cmos_sensor(struct pwc_device *pdev, int *sensor)
 {
 	unsigned char buf;
@@ -1332,7 +1311,6 @@ int pwc_get_cmos_sensor(struct pwc_device *pdev, int *sensor)
 		*sensor = buf;
 	return 0;
 }
-
 
  /* End of Add-Ons                                    */
  /* ************************************************* */
@@ -1536,7 +1514,6 @@ long pwc_ioctl(struct pwc_device *pdev, unsigned int cmd, void *arg)
 		ret = pwc_set_leds(pdev, ARGR(leds).led_on, ARGR(leds).led_off);
 		break;
 	}
-
 
 	case VIDIOCPWCGLED:
 	{
@@ -1760,6 +1737,5 @@ long pwc_ioctl(struct pwc_device *pdev, unsigned int cmd, void *arg)
 		return 0;
 	return ret;
 }
-
 
 /* vim: set cinoptions= formatoptions=croql cindent shiftwidth=8 tabstop=8: */

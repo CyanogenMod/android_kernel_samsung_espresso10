@@ -143,4 +143,3 @@ u32 omap2xxx_get_apll_clkin(void)
 
 	return srate;
 }
-

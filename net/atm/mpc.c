@@ -123,7 +123,6 @@ struct mpoa_client *mpcs = NULL; /* FIXME */
 static struct atm_mpoa_qos *qos_head = NULL;
 static DEFINE_TIMER(mpc_timer, NULL, 0, 0);
 
-
 static struct mpoa_client *find_mpc_by_itfnum(int itf)
 {
 	struct mpoa_client *mpc;
@@ -1080,7 +1079,6 @@ static int mpoa_event_listener(struct notifier_block *mpoa_notifier,
  * Msg is reused on purpose.
  */
 
-
 static void MPOA_trigger_rcvd(struct k_message *msg, struct mpoa_client *mpc)
 {
 	__be32 dst_ip = msg->content.in_info.in_dst_ip;
@@ -1394,7 +1392,6 @@ static void clean_up(struct k_message *msg, struct mpoa_client *mpc, int action)
 
 	eg_cache_entry *entry;
 	msg->type = SND_EGRESS_PURGE;
-
 
 	/* FIXME: This knows too much of the cache structure */
 	read_lock_irq(&mpc->egress_lock);

@@ -67,10 +67,10 @@ static int s3c24xx_gpiolib_bankf_toirq(struct gpio_chip *chip, unsigned offset)
 {
 	if (offset < 4)
 		return IRQ_EINT0 + offset;
-	
+
 	if (offset < 8)
 		return IRQ_EINT4 + offset - 4;
-	
+
 	return -EINVAL;
 }
 
@@ -209,7 +209,6 @@ struct s3c_gpio_chip s3c24xx_gpios[] = {
 		},
 	},
 };
-
 
 static __init int s3c24xx_gpiolib_init(void)
 {

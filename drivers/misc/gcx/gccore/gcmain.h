@@ -21,7 +21,6 @@
 
 #define GC_DEV_NAME	"gccore"
 
-
 /*******************************************************************************
  * Power management modes.
  */
@@ -32,7 +31,6 @@ enum gcpower {
 	GCPWR_LOW,
 	GCPWR_OFF
 };
-
 
 /*******************************************************************************
  * Driver context.
@@ -82,14 +80,12 @@ struct gccorecontext {
 	unsigned long  cur_freq;
 };
 
-
 /*******************************************************************************
  * Register access.
  */
 
 unsigned int gc_read_reg(unsigned int address);
 void gc_write_reg(unsigned int address, unsigned int data);
-
 
 /*******************************************************************************
  * Power management.

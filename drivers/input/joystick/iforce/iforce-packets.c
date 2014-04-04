@@ -32,7 +32,6 @@ static struct {
 	__s32 y;
 } iforce_hat_to_axis[16] = {{ 0,-1}, { 1,-1}, { 1, 0}, { 1, 1}, { 0, 1}, {-1, 1}, {-1, 0}, {-1,-1}};
 
-
 void iforce_dump_packet(char *msg, u16 cmd, unsigned char *data)
 {
 	int i;
@@ -62,7 +61,6 @@ int iforce_send_packet(struct iforce *iforce, u16 cmd, unsigned char* data)
 
 	head = iforce->xmit.head;
 	tail = iforce->xmit.tail;
-
 
 	if (CIRC_SPACE(head, tail, XMIT_SIZE) < n+2) {
 		dev_warn(&iforce->dev->dev,
@@ -300,4 +298,3 @@ int iforce_get_id_packet(struct iforce *iforce, char *packet)
 
 	return -(iforce->edata[0] != packet[0]);
 }
-

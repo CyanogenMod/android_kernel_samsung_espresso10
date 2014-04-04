@@ -1,4 +1,3 @@
-
 /* Copyright (c) 2009, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -88,7 +87,6 @@ void mdp4_display_intf_sel(int output, ulong intf)
 	default:
 		break;
 	}
-
 
 	bits &= ~mask;
 	bits |= intf;
@@ -217,7 +215,6 @@ void mdp4_hw_init(void)
 	/* MDP cmd block disable */
 	mdp_pipe_ctrl(MDP_CMD_BLOCK, MDP_BLOCK_POWER_OFF, FALSE);
 }
-
 
 void mdp4_clear_lcdc(void)
 {
@@ -358,7 +355,6 @@ irqreturn_t mdp4_isr(int irq, void *ptr)
 
 	return IRQ_HANDLED;
 }
-
 
 /*
  * QSEED tables
@@ -887,7 +883,6 @@ static uint32 vg_qseed_table2[] = {
 	0x00130000, 0x0ff201fb, 0x00080000, 0x0ff901ff
 };
 
-
 #define MDP4_QSEED_TABLE0_OFF 0x8100
 #define MDP4_QSEED_TABLE1_OFF 0x8200
 #define MDP4_QSEED_TABLE2_OFF 0x9000
@@ -947,7 +942,6 @@ void mdp4_mixer_blend_init(mixer_num)
 	outpdw(overlay_base + off + 0x108, 0xff);/* FG */
 	outpdw(overlay_base + off + 0x10c, 0x00);/* BG */
 }
-
 
 static uint32 csc_matrix_tab[9] = {
 	0x0254, 0x0000, 0x0331,

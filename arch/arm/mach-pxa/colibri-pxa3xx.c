@@ -148,4 +148,3 @@ void __init colibri_pxa3xx_init_nand(void)
 	pxa3xx_set_nand_info(&colibri_nand_info);
 }
 #endif
-

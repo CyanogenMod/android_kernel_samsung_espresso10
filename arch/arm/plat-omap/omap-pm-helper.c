@@ -237,8 +237,6 @@ static unsigned long remove_req_tput(struct device *dev)
 		}
 	}
 	if (!found) {
-		/* No such user exists */
-		pr_err("Invalid Device Structure\n");
 		ret = 0;
 		goto unlock;
 	}

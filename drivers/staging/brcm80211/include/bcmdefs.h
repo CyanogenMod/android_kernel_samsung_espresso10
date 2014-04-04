@@ -25,7 +25,6 @@
 #define USB_BUS			5
 #define SPI_BUS			6
 
-
 #ifndef OFF
 #define	OFF	0
 #endif
@@ -44,7 +43,6 @@
 #define USB_BUS			5	/* USB (does not support R/W REG) */
 #define SPI_BUS			6	/* gSPI target */
 #define RPC_BUS			7	/* RPC target */
-
 
 /* Defines for DMA Address Width - Shared between OSL and HNDDMA */
 #define DMADDR_MASK_32 0x0	/* Address mask for 32-bits */

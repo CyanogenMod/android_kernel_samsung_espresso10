@@ -3,7 +3,6 @@
 #ifndef	_SCC_H
 #define	_SCC_H
 
-
 /* selection of hardware types */
 
 #define PA0HZP		0x00	/* hardware type for PA0HZP SCC card and compatible */
@@ -117,7 +116,7 @@ struct scc_stat {
         long rxframes;          /* Number of Frames Actually Received */
         long rxerrs;            /* CRC Errors */
         long txerrs;		/* KISS errors */
-        
+
 	unsigned int nospace;	/* "Out of buffers" */
 	unsigned int rx_over;	/* Receiver Overruns */
 	unsigned int tx_under;	/* Transmitter Underruns */
@@ -132,7 +131,7 @@ struct scc_stat {
 struct scc_modem {
 	long speed;		/* Line speed, bps */
 	char clocksrc;		/* 0 = DPLL, 1 = external, 2 = divider */
-	char nrz;		/* NRZ instead of NRZI */	
+	char nrz;		/* NRZ instead of NRZI */
 };
 
 struct scc_kiss_cmd {
@@ -157,7 +156,6 @@ struct scc_hw_config {
 };
 
 /* (#) only one INTACK latch allowed. */
-
 
 struct scc_mem_config {
 	unsigned int dummy;
@@ -202,12 +200,11 @@ struct scc_kiss {
 	unsigned int  mintime;		/* Minimal offtime after MAXKEYUP timeout (seconds) */
 	unsigned int  idletime;		/* Maximum idle time in ALWAYS KEYED mode (seconds) */
 	unsigned int  maxdefer;		/* Timer for CSMA channel busy limit */
-	unsigned char tx_inhibit;	/* Transmit is not allowed when set */	
+	unsigned char tx_inhibit;	/* Transmit is not allowed when set */
 	unsigned char group;		/* Group ID for AX.25 TX interlocking */
 	unsigned char mode;		/* 'normal' or 'hwctrl' mode (unused) */
 	unsigned char softdcd;		/* Use DPLL instead of DCD pin for carrier detect */
 };
-
 
 /* SCC channel structure */
 
@@ -243,7 +240,7 @@ struct scc_channel {
 	/* Timer */
 	struct timer_list tx_t;		/* tx timer for this channel */
 	struct timer_list tx_wdog;	/* tx watchdogs */
-	
+
 	/* Channel lock */
 	spinlock_t	lock;		/* Channel guard lock */
 };

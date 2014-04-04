@@ -13,7 +13,6 @@
 #ifndef __ASM_ARM_REGS_NAND
 #define __ASM_ARM_REGS_NAND
 
-
 #define S3C2410_NFREG(x) (x)
 
 #define S3C2410_NFCONF  S3C2410_NFREG(0x00)
@@ -117,7 +116,4 @@
 #define S3C2412_NFECCERR_MULTIBIT	(2)
 #define S3C2412_NFECCERR_ECCAREA	(3)
 
-
-
 #endif /* __ASM_ARM_REGS_NAND */
-

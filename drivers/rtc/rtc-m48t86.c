@@ -41,7 +41,6 @@
 
 #define DRV_VERSION "0.1"
 
-
 static int m48t86_rtc_read_time(struct device *dev, struct rtc_time *tm)
 {
 	unsigned char reg;

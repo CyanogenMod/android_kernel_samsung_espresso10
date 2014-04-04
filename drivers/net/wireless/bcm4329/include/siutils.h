@@ -3,13 +3,13 @@
  * of Broadcom HNBU chips.
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,7 +17,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -25,31 +25,29 @@
  * $Id: siutils.h,v 13.197.4.2.4.3.8.16 2010/06/23 21:36:05 Exp $
  */
 
-
 #ifndef	_siutils_h_
 #define	_siutils_h_
 
-
 struct si_pub {
-	uint	socitype;		
+	uint	socitype;
 
-	uint	bustype;		
-	uint	buscoretype;		
-	uint	buscorerev;		
-	uint	buscoreidx;		
-	int	ccrev;			
-	uint32	cccaps;			
-	int	pmurev;			
-	uint32	pmucaps;		
-	uint	boardtype;		
-	uint	boardvendor;		
-	uint	boardflags;		
-	uint	chip;			
-	uint	chiprev;		
-	uint	chippkg;		
-	uint32	chipst;			
-	bool	issim;			
-	uint    socirev;		
+	uint	bustype;
+	uint	buscoretype;
+	uint	buscorerev;
+	uint	buscoreidx;
+	int	ccrev;
+	uint32	cccaps;
+	int	pmurev;
+	uint32	pmucaps;
+	uint	boardtype;
+	uint	boardvendor;
+	uint	boardflags;
+	uint	chip;
+	uint	chiprev;
+	uint	chippkg;
+	uint32	chipst;
+	bool	issim;
+	uint    socirev;
 	bool	pci_pr32414;
 };
 
@@ -59,34 +57,26 @@ typedef struct si_pub si_t;
 typedef const struct si_pub si_t;
 #endif
 
+#define	SI_OSH		NULL
 
-#define	SI_OSH		NULL	
+#define	XTAL			0x1
+#define	PLL			0x2
 
+#define	CLK_FAST		0
+#define	CLK_DYNAMIC		2
 
-#define	XTAL			0x1	
-#define	PLL			0x2	
-
-
-#define	CLK_FAST		0	
-#define	CLK_DYNAMIC		2	
-
-
-#define GPIO_DRV_PRIORITY	0	
-#define GPIO_APP_PRIORITY	1	
-#define GPIO_HI_PRIORITY	2	
-
+#define GPIO_DRV_PRIORITY	0
+#define GPIO_APP_PRIORITY	1
+#define GPIO_HI_PRIORITY	2
 
 #define GPIO_PULLUP		0
 #define GPIO_PULLDN		1
 
+#define GPIO_REGEVT		0
+#define GPIO_REGEVT_INTMSK	1
+#define GPIO_REGEVT_INTPOL	2
 
-#define GPIO_REGEVT		0	
-#define GPIO_REGEVT_INTMSK	1	
-#define GPIO_REGEVT_INTPOL	2	
-
-
-#define SI_DEVPATH_BUFSZ	16	
-
+#define SI_DEVPATH_BUFSZ	16
 
 #define	SI_DOATTACH	1
 #define SI_PCIDOWN	2
@@ -94,13 +84,11 @@ typedef const struct si_pub si_t;
 
 #define	ISSIM_ENAB(sih)	0
 
-
 #if defined(BCMPMUCTL)
 #define PMUCTL_ENAB(sih)	(BCMPMUCTL)
 #else
 #define PMUCTL_ENAB(sih)	((sih)->cccaps & CC_CAP_PMU)
 #endif
-
 
 #if defined(BCMPMUCTL) && BCMPMUCTL
 #define CCCTL_ENAB(sih)		(0)
@@ -111,8 +99,6 @@ typedef const struct si_pub si_t;
 #endif
 
 typedef void (*gpio_handler_t)(uint32 stat, void *arg);
-
-
 
 extern si_t *si_attach(uint pcidev, osl_t *osh, void *regs, uint bustype,
                        void *sdh, char **vars, uint *varsz);
@@ -187,11 +173,9 @@ extern uint32 si_gpiopull(si_t *sih, bool updown, uint32 mask, uint32 val);
 extern uint32 si_gpioevent(si_t *sih, uint regtype, uint32 mask, uint32 val);
 extern uint32 si_gpio_int_enable(si_t *sih, bool enable);
 
-
 extern void *si_gpio_handler_register(si_t *sih, uint32 e, bool lev, gpio_handler_t cb, void *arg);
 extern void si_gpio_handler_unregister(si_t *sih, void* gpioh);
 extern void si_gpio_handler_process(si_t *sih);
-
 
 extern bool si_pci_pmecap(si_t *sih);
 struct osl_info;
@@ -209,13 +193,10 @@ extern int si_corepciid(si_t *sih, uint func, uint16 *pcivendor, uint16 *pcidevi
 #define si_eci_init(sih) (0)
 #define si_eci_notify_bt(sih, type, val, interrupt)  (0)
 
-
-
 extern int si_devpath(si_t *sih, char *path, int size);
 
 extern char *si_getdevpathvar(si_t *sih, const char *name);
 extern int si_getdevpathintvar(si_t *sih, const char *name);
-
 
 extern uint8 si_pcieclkreq(si_t *sih, uint32 mask, uint32 val);
 extern void si_war42780_clkreq(si_t *sih, bool clkreq);
@@ -226,10 +207,4 @@ extern void si_pcie_war_ovr_disable(si_t *sih);
 extern void si_pcie_extendL1timer(si_t *sih, bool extend);
 extern int si_pci_fixcfg(si_t *sih);
 
-
-
-
-
-
-
-#endif	
+#endif

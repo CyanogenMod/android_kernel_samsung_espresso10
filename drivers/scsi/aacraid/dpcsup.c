@@ -74,13 +74,13 @@ unsigned int aac_response_normal(struct aac_queue * q)
 		fast = index & 0x01;
 		fib = &dev->fibs[index >> 2];
 		hwfib = fib->hw_fib_va;
-		
+
 		aac_consumer_free(dev, q, HostNormRespQueue);
 		/*
 		 *	Remove this fib from the Outstanding I/O queue.
 		 *	But only if it has not already been timed out.
 		 *
-		 *	If the fib has been timed out already, then just 
+		 *	If the fib has been timed out already, then just
 		 *	continue. The caller has already been notified that
 		 *	the fib timed out.
 		 */
@@ -111,11 +111,11 @@ unsigned int aac_response_normal(struct aac_queue * q)
 			if (*pstatus & cpu_to_le32(0xffff0000))
 				*pstatus = cpu_to_le32(ST_OK);
 		}
-		if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected | Async)) 
+		if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected | Async))
 		{
 	        	if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected))
 				FIB_COUNTER_INCREMENT(aac_config.NoResponseRecved);
-			else 
+			else
 				FIB_COUNTER_INCREMENT(aac_config.AsyncRecved);
 			/*
 			 *	NOTE:  we cannot touch the fib after this
@@ -151,24 +151,23 @@ unsigned int aac_response_normal(struct aac_queue * q)
 
 	if (consumed > aac_config.peak_fibs)
 		aac_config.peak_fibs = consumed;
-	if (consumed == 0) 
+	if (consumed == 0)
 		aac_config.zero_fibs++;
 
 	spin_unlock_irqrestore(q->lock, flags);
 	return 0;
 }
 
-
 /**
  *	aac_command_normal	-	handle commands
  *	@q: queue to process
  *
- *	This DPC routine will be queued when the adapter interrupts us to 
- *	let us know there is a command on our normal priority queue. We will 
+ *	This DPC routine will be queued when the adapter interrupts us to
+ *	let us know there is a command on our normal priority queue. We will
  *	pull off all QE there are and wake up all the waiters before exiting.
  *	We will take a spinlock out on the queue before operating on it.
  */
- 
+
 unsigned int aac_command_normal(struct aac_queue *q)
 {
 	struct aac_dev * dev = q->dev;
@@ -188,10 +187,10 @@ unsigned int aac_command_normal(struct aac_queue *q)
 		struct hw_fib * hw_fib;
 		u32 index;
 		struct fib *fib = &fibctx;
-		
+
 		index = le32_to_cpu(entry->addr) / sizeof(struct hw_fib);
 		hw_fib = &dev->aif_base_va[index];
-		
+
 		/*
 		 *	Allocate a FIB at all costs. For non queued stuff
 		 *	we can just use the stack so we are happy. We need
@@ -200,7 +199,7 @@ unsigned int aac_command_normal(struct aac_queue *q)
 		if (dev->aif_thread)
 			if((fib = kmalloc(sizeof(struct fib), GFP_ATOMIC)) == NULL)
 				fib = &fibctx;
-		
+
 		memset(fib, 0, sizeof(struct fib));
 		INIT_LIST_HEAD(&fib->fiblink);
 		fib->type = FSAFS_NTC_FIB_CONTEXT;
@@ -208,8 +207,7 @@ unsigned int aac_command_normal(struct aac_queue *q)
 		fib->hw_fib_va = hw_fib;
 		fib->data = hw_fib->data;
 		fib->dev = dev;
-		
-				
+
 		if (dev->aif_thread && fib != &fibctx) {
 		        list_add_tail(&fib->fiblink, &q->cmdq);
 	 	        aac_consumer_free(dev, q, HostNormCmdQueue);
@@ -223,7 +221,7 @@ unsigned int aac_command_normal(struct aac_queue *q)
 			*(__le32 *)hw_fib->data = cpu_to_le32(ST_OK);
 			aac_fib_adapter_complete(fib, sizeof(u32));
 			spin_lock_irqsave(q->lock, flags);
-		}		
+		}
 	}
 	spin_unlock_irqrestore(q->lock, flags);
 	return 0;
@@ -271,7 +269,6 @@ static void aac_aif_callback(void *context, struct fib * fibptr)
 		(fib_callback)aac_aif_callback, fibctx);
 }
 
-
 /**
  *	aac_intr_normal	-	Handle command replies
  *	@dev: Device
@@ -317,7 +314,7 @@ unsigned int aac_intr_normal(struct aac_dev *dev, u32 index,
 		fib->hw_fib_va = hw_fib;
 		fib->data = hw_fib->data;
 		fib->dev = dev;
-	
+
 		spin_lock_irqsave(q->lock, flags);
 		list_add_tail(&fib->fiblink, &q->cmdq);
 	        wake_up_interruptible(&q->cmdready);
@@ -349,7 +346,7 @@ unsigned int aac_intr_normal(struct aac_dev *dev, u32 index,
 		 *	Remove this fib from the Outstanding I/O queue.
 		 *	But only if it has not already been timed out.
 		 *
-		 *	If the fib has been timed out already, then just 
+		 *	If the fib has been timed out already, then just
 		 *	continue. The caller has already been notified that
 		 *	the fib timed out.
 		 */
@@ -377,11 +374,11 @@ unsigned int aac_intr_normal(struct aac_dev *dev, u32 index,
 			if (*pstatus & cpu_to_le32(0xffff0000))
 				*pstatus = cpu_to_le32(ST_OK);
 		}
-		if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected | Async)) 
+		if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected | Async))
 		{
 	        	if (hwfib->header.XferState & cpu_to_le32(NoResponseExpected))
 				FIB_COUNTER_INCREMENT(aac_config.NoResponseRecved);
-			else 
+			else
 				FIB_COUNTER_INCREMENT(aac_config.AsyncRecved);
 			/*
 			 *	NOTE:  we cannot touch the fib after this

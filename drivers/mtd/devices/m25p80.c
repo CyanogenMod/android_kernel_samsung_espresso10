@@ -816,7 +816,6 @@ static const struct spi_device_id *__devinit jedec_probe(struct spi_device *spi)
 	return ERR_PTR(-ENODEV);
 }
 
-
 /*
  * board specific setup should have ensured the SPI clock used here
  * matches what the READ command supports, at least until this driver
@@ -969,7 +968,6 @@ static int __devinit m25p_probe(struct spi_device *spi)
 				flash->mtd.eraseregions[i].erasesize / 1024,
 				flash->mtd.eraseregions[i].numblocks);
 
-
 	/* partitions should match sector boundaries; and it may be good to
 	 * use readonly partitions for writeprotected sectors (BP2..BP0).
 	 */
@@ -1010,7 +1008,6 @@ static int __devinit m25p_probe(struct spi_device *spi)
 		-ENODEV : 0;
 }
 
-
 static int __devexit m25p_remove(struct spi_device *spi)
 {
 	struct m25p	*flash = dev_get_drvdata(&spi->dev);
@@ -1024,7 +1021,6 @@ static int __devexit m25p_remove(struct spi_device *spi)
 	}
 	return 0;
 }
-
 
 static struct spi_driver m25p80_driver = {
 	.driver = {
@@ -1042,18 +1038,15 @@ static struct spi_driver m25p80_driver = {
 	 */
 };
 
-
 static int __init m25p80_init(void)
 {
 	return spi_register_driver(&m25p80_driver);
 }
 
-
 static void __exit m25p80_exit(void)
 {
 	spi_unregister_driver(&m25p80_driver);
 }
-
 
 module_init(m25p80_init);
 module_exit(m25p80_exit);

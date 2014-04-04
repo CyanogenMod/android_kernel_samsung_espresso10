@@ -2,13 +2,13 @@
  * Broadcom Dongle Host Driver (DHD), common DHD core.
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -297,7 +297,6 @@ dhd_doiovar(dhd_pub_t *dhd_pub, const bcm_iovar_t *vi, uint32 actionid, const ch
 		dhd_bus_clearcounts(dhd_pub);
 		break;
 
-
 	case IOV_GVAL(IOV_IOCTLTIMEOUT): {
 		int_val = (int32)dhd_os_get_ioctl_resp_timeout();
 		bcopy(&int_val, arg, sizeof(int_val));
@@ -311,7 +310,6 @@ dhd_doiovar(dhd_pub_t *dhd_pub, const bcm_iovar_t *vi, uint32 actionid, const ch
 			dhd_os_set_ioctl_resp_timeout((unsigned int)int_val);
 		break;
 	}
-
 
 	default:
 		bcmerror = BCME_UNSUPPORTED;
@@ -518,7 +516,6 @@ dhd_ioctl(dhd_pub_t *dhd_pub, dhd_ioctl_t *ioc, void *buf, uint buflen)
 
 	return bcmerror;
 }
-
 
 #ifdef SHOW_EVENTS
 static void
@@ -788,7 +785,6 @@ wl_show_host_event(wl_event_msg_t *event, void *event_data)
 		}
 		break;
 
-
 	case WLC_E_RSSI:
 		DHD_EVENT(("MACEVENT: %s %d\n", event_name, ntoh32(*((int *)event_data))));
 		break;
@@ -870,7 +866,6 @@ wl_host_event(struct dhd_info *dhd, int *ifidx, void *pktdata,
 			dhd_event(dhd, (char *)pvt_data, evlen, *ifidx);
 			break;
 
-
 #ifdef P2P
 		case WLC_E_NDIS_LINK:
 			break;
@@ -911,7 +906,6 @@ wl_host_event(struct dhd_info *dhd, int *ifidx, void *pktdata,
 
 	return (BCME_OK);
 }
-
 
 void
 wl_event_to_host_order(wl_event_msg_t *evt)
@@ -1226,7 +1220,6 @@ dhd_arp_offload_enable(dhd_pub_t * dhd, int arp_enable)
 }
 #endif
 
-
 void dhd_arp_cleanup(dhd_pub_t *dhd)
 {
 #ifdef ARP_OFFLOAD_SUPPORT
@@ -1274,7 +1267,6 @@ void dhd_arp_offload_add_ip(dhd_pub_t *dhd, u32 ipaddr)
 #endif /* ARP_OFFLOAD_SUPPORT */
 }
 
-
 int dhd_arp_get_arp_hostip_table(dhd_pub_t *dhd, void *buf, int buflen)
 {
 #ifdef ARP_OFFLOAD_SUPPORT
@@ -1300,7 +1292,6 @@ int dhd_arp_get_arp_hostip_table(dhd_pub_t *dhd, void *buf, int buflen)
 #endif /* ARP_OFFLOAD_SUPPORT */
 	return 0;
 }
-
 
 int
 dhd_preinit_ioctls(dhd_pub_t *dhd)
@@ -1599,8 +1590,6 @@ dhd_iscan_result_buf(void)
 	return iscan_chain;
 }
 
-
-
 /*
 * print scan cache
 * print partial iscan_skip list differently
@@ -1819,7 +1808,6 @@ dhd_iscan_request(void * dhdp, uint16 action)
 	dhd_pub_t *dhd = dhd_bus_pub(dhdp);
 	char buf[WLC_IOCTL_SMLEN];
 
-
 	memset(&params, 0, sizeof(wl_iscan_params_t));
 	memcpy(&params.params.bssid, &ether_bcast, ETHER_ADDR_LEN);
 
@@ -1852,7 +1840,6 @@ dhd_iscan_get_partial_result(void *dhdp, uint *scan_count)
 	int status = -1;
 	dhd_pub_t *dhd = dhd_bus_pub(dhdp);
 	int rc;
-
 
 	iscan_cur = dhd_iscan_allocate_buf(dhd, &iscan_chain);
 	if (!iscan_cur) {
@@ -1888,7 +1875,6 @@ dhd_iscan_get_partial_result(void *dhdp, uint *scan_count)
 		dhd_iscan_free_buf(dhdp, iscan_cur);
 	else
 		dhd_iscan_remove_duplicates(dhdp, iscan_cur);
-
 
 fail:
 	return status;

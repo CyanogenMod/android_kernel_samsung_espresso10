@@ -18,7 +18,6 @@
 
 #include <linux/interrupt.h>
 
-
 #define DEBUG_ALL
 
 struct ttystatics {
@@ -46,7 +45,6 @@ extern int rio_debug;
 #define RIO_DEBUG_SPINLOCK     0x010000
 #define RIO_DEBUG_DELAY        0x020000
 #define RIO_DEBUG_MOD_COUNT    0x040000
-
 
 /* Copied over from riowinif.h . This is ugly. The winif file declares
 also much other stuff which is incompatible with the headers from

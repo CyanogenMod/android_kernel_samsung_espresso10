@@ -56,7 +56,6 @@ MODULE_AUTHOR("Texas Instruments");
 MODULE_DESCRIPTION("OMAP Video for Linux Video out driver");
 MODULE_LICENSE("GPL");
 
-
 /* Driver Configuration macros */
 #define VOUT_NAME		"omap_vout"
 
@@ -938,7 +937,6 @@ void omap_vout_isr(void *arg, unsigned int irqstatus)
 vout_isr_err:
 	spin_unlock(&vout->vbq_lock);
 }
-
 
 /* Video buffer call backs */
 

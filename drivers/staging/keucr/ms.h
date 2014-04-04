@@ -142,7 +142,6 @@
 #define MS_LibClearPageMap(pdx) \
 	memset((pdx)->MS_Lib.pagemap, 0, sizeof((pdx)->MS_Lib.pagemap))
 
-
 #define MemStickLogAddr(logadr1, logadr0) \
 	((((WORD)(logadr1)) << 8) | (logadr0))
 

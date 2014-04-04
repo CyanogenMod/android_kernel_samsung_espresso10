@@ -109,7 +109,6 @@ static void it8172_set_dma_mode(ide_hwif_t *hwif, ide_drive_t *drive)
 	}
 }
 
-
 static const struct ide_port_ops it8172_port_ops = {
 	.set_pio_mode	= it8172_set_pio_mode,
 	.set_dma_mode	= it8172_set_dma_mode,

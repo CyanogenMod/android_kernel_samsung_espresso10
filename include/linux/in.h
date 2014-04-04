@@ -51,7 +51,6 @@ enum {
   IPPROTO_MAX
 };
 
-
 /* Internet address. */
 struct in_addr {
 	__be32	s_addr;
@@ -192,7 +191,6 @@ struct sockaddr_in {
 };
 #define sin_zero	__pad		/* for BSD UNIX comp. -FvK	*/
 
-
 /*
  * Definitions of the bits in an Internet address integer.
  * On subnets, host and network parts are found according
@@ -244,9 +242,8 @@ struct sockaddr_in {
 #define INADDR_ALLRTRS_GROUP    0xe0000002U	/* 224.0.0.2 */
 #define INADDR_MAX_LOCAL_GROUP  0xe00000ffU	/* 224.0.0.255 */
 
-
 /* <asm/byteorder.h> contains the htonl type stuff.. */
-#include <asm/byteorder.h> 
+#include <asm/byteorder.h>
 
 #ifdef __KERNEL__
 

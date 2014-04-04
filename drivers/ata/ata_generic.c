@@ -261,12 +261,10 @@ static int __init ata_generic_init(void)
 	return pci_register_driver(&ata_generic_pci_driver);
 }
 
-
 static void __exit ata_generic_exit(void)
 {
 	pci_unregister_driver(&ata_generic_pci_driver);
 }
-
 
 MODULE_AUTHOR("Alan Cox");
 MODULE_DESCRIPTION("low-level driver for generic ATA");

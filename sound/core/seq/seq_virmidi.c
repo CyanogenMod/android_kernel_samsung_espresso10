@@ -213,7 +213,7 @@ static int snd_virmidi_input_open(struct snd_rawmidi_substream *substream)
 	}
 	vmidi->seq_mode = rdev->seq_mode;
 	vmidi->client = rdev->client;
-	vmidi->port = rdev->port;	
+	vmidi->port = rdev->port;
 	runtime->private_data = vmidi;
 	write_lock_irqsave(&rdev->filelist_lock, flags);
 	list_add_tail(&vmidi->list, &rdev->filelist);
@@ -302,7 +302,6 @@ static int snd_virmidi_unsubscribe(void *private_data,
 	return 0;
 }
 
-
 /*
  * use callback - allow input to rawmidi device
  */
@@ -331,7 +330,6 @@ static int snd_virmidi_unuse(void *private_data,
 	module_put(rdev->card->module);
 	return 0;
 }
-
 
 /*
  *  Register functions
@@ -413,7 +411,6 @@ static int snd_virmidi_dev_attach_seq(struct snd_virmidi_dev *rdev)
 	return err;
 }
 
-
 /*
  * release the sequencer client
  */
@@ -450,7 +447,6 @@ static int snd_virmidi_dev_register(struct snd_rawmidi *rmidi)
 	}
 	return 0;
 }
-
 
 /*
  * unregister the device
@@ -491,7 +487,7 @@ int snd_virmidi_new(struct snd_card *card, int device, struct snd_rawmidi **rrmi
 	struct snd_rawmidi *rmidi;
 	struct snd_virmidi_dev *rdev;
 	int err;
-	
+
 	*rrmidi = NULL;
 	if ((err = snd_rawmidi_new(card, "VirMidi", device,
 				   16,	/* may be configurable */

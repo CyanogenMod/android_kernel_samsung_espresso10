@@ -276,7 +276,7 @@ static void *sysfs_follow_link(struct dentry *dentry, struct nameidata *nd)
 	int error = -ENOMEM;
 	unsigned long page = get_zeroed_page(GFP_KERNEL);
 	if (page) {
-		error = sysfs_getlink(dentry, (char *) page); 
+		error = sysfs_getlink(dentry, (char *) page);
 		if (error < 0)
 			free_page((unsigned long)page);
 	}
@@ -300,7 +300,6 @@ const struct inode_operations sysfs_symlink_inode_operations = {
 	.getattr	= sysfs_getattr,
 	.permission	= sysfs_permission,
 };
-
 
 EXPORT_SYMBOL_GPL(sysfs_create_link);
 EXPORT_SYMBOL_GPL(sysfs_remove_link);

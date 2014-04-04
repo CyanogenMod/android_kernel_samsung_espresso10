@@ -111,7 +111,6 @@ typedef struct io_window_t {
 /* Maximum number of memory windows per socket */
 #define MAX_WIN 4
 
-
 /*
  * Socket operations.
  */
@@ -150,7 +149,6 @@ struct pcmcia_socket {
 
 	/* deprecated */
 	unsigned int			sock;		/* socket number */
-
 
 	/* socket capabilities */
 	u_int				features;
@@ -228,7 +226,6 @@ struct pcmcia_socket {
 	int				resume_status;
 };
 
-
 /* socket drivers must define the resource operations type they use. There
  * are three options:
  * - pccard_static_ops		iomem and ioport areas are assigned statically
@@ -253,7 +250,6 @@ extern struct pccard_resource_ops pccard_nonstatic_ops;
 #define pccard_nonstatic_ops pccard_static_ops
 #endif
 
-
 /* socket drivers use this callback in their IRQ handler */
 extern void pcmcia_parse_events(struct pcmcia_socket *socket,
 				unsigned int events);
@@ -261,6 +257,5 @@ extern void pcmcia_parse_events(struct pcmcia_socket *socket,
 /* to register and unregister a socket */
 extern int pcmcia_register_socket(struct pcmcia_socket *socket);
 extern void pcmcia_unregister_socket(struct pcmcia_socket *socket);
-
 
 #endif /* _LINUX_SS_H */

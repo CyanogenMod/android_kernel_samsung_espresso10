@@ -55,7 +55,6 @@ static unsigned long ibmveth_get_desired_dma(struct vio_dev *vdev);
 
 static struct kobj_type ktype_veth_pool;
 
-
 static const char ibmveth_driver_name[] = "ibmveth";
 static const char ibmveth_driver_string[] = "IBM Power Virtual Ethernet Driver";
 #define ibmveth_driver_version "1.04"
@@ -1554,7 +1553,6 @@ static ssize_t veth_pool_store(struct kobject *kobj, struct attribute *attr,
 	ibmveth_interrupt(netdev->irq, netdev);
 	return count;
 }
-
 
 #define ATTR(_name, _mode)				\
 	struct attribute veth_##_name##_attr = {	\

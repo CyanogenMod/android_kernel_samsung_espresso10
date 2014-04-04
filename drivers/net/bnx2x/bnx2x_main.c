@@ -209,7 +209,6 @@ static inline void storm_memset_xstats_zero(struct bnx2x *bp,
 	__storm_memset_fill(bp, addr, size, 0);
 }
 
-
 static inline void storm_memset_spq_addr(struct bnx2x *bp,
 					 dma_addr_t mapping, u16 abs_fid)
 {
@@ -919,7 +918,6 @@ void bnx2x_panic_dump(struct bnx2x *bp)
 	       sp_sb_data.p_func.vf_id,
 	       sp_sb_data.p_func.vf_valid);
 
-
 	for_each_eth_queue(bp, i) {
 		struct bnx2x_fastpath *fp = &bp->fp[i];
 		int loop;
@@ -1469,7 +1467,6 @@ irqreturn_t bnx2x_interrupt(int irq, void *dev_instance)
 
 /* end of fast path */
 
-
 /* Link */
 
 /*
@@ -1556,7 +1553,6 @@ int bnx2x_release_hw_lock(struct bnx2x *bp, u32 resource)
 	REG_WR(bp, hw_lock_control_reg, resource_bit);
 	return 0;
 }
-
 
 int bnx2x_get_gpio(struct bnx2x *bp, int gpio_num, u8 port)
 {
@@ -2605,7 +2601,6 @@ static void bnx2x_pf_init(struct bnx2x *bp)
 	storm_memset_eq_data(bp, &eq_data, BP_FUNC(bp));
 }
 
-
 static void bnx2x_e1h_disable(struct bnx2x *bp)
 {
 	int port = BP_PORT(bp);
@@ -2783,7 +2778,6 @@ int bnx2x_sp_post(struct bnx2x *bp, int command, int cid,
 		else
 			atomic_dec(&bp->cq_spq_left);
 	}
-
 
 	DP(BNX2X_MSG_SP/*NETIF_MSG_TIMER*/,
 	   "SPQE[%x] (%x:%x)  command %d  hw_cid %x  data (%x:%x) "
@@ -3462,7 +3456,6 @@ bool bnx2x_chk_parity_attn(struct bnx2x *bp)
 					attn.sig[3]);
 }
 
-
 static inline void bnx2x_attn_int_deasserted4(struct bnx2x *bp, u32 attn)
 {
 	u32 val;
@@ -3715,12 +3708,10 @@ static void bnx2x_eq_int(struct bnx2x *bp)
 	for (; sw_cons != hw_cons;
 	      sw_prod = NEXT_EQ_IDX(sw_prod), sw_cons = NEXT_EQ_IDX(sw_cons)) {
 
-
 		elem = &bp->eq_ring[EQ_DESC(sw_cons)];
 
 		cid = SW_CID(elem->message.data.cfc_del_event.cid);
 		opcode = elem->message.opcode;
-
 
 		/* handle eq element */
 		switch (opcode) {
@@ -4041,7 +4032,6 @@ static inline void bnx2x_zero_sp_sb(struct bnx2x *bp)
 			CSTORM_SP_SYNC_BLOCK_SIZE);
 
 }
-
 
 static inline
 void bnx2x_setup_ndsb_state_machine(struct hc_status_block_sm *hc_sm,
@@ -5105,7 +5095,6 @@ static int bnx2x_init_hw_common(struct bnx2x *bp, u32 load_code)
 		REG_WR(bp, PXP2_REG_RQ_DRAM_ALIGN_SEL, 1);
 	}
 
-
 	REG_WR(bp, PXP2_REG_RQ_DISABLE_INPUTS, 0);
 	REG_WR(bp, PXP2_REG_RD_DISABLE_INPUTS, 0);
 
@@ -5956,7 +5945,6 @@ void bnx2x_free_mem(struct bnx2x *bp)
 	BNX2X_FREE(bp->rx_indir_table);
 }
 
-
 int bnx2x_alloc_mem(struct bnx2x *bp)
 {
 	if (bnx2x_gunzip_init(bp))
@@ -5973,7 +5961,6 @@ int bnx2x_alloc_mem(struct bnx2x *bp)
 	/* allocate searcher T2 table */
 	BNX2X_PCI_ALLOC(bp->t2, &bp->t2_mapping, SRC_T2_SZ);
 #endif
-
 
 	BNX2X_PCI_ALLOC(bp->def_status_blk, &bp->def_status_blk_mapping,
 			sizeof(struct host_sp_status_block));
@@ -6630,7 +6617,6 @@ static int bnx2x_setup_fw_client(struct bnx2x *bp,
 	 */
 	mmiowb();
 
-
 	bnx2x_sp_post(bp, ramrod, params->ramrod_params.cid,
 		      U64_HI(data_mapping), U64_LO(data_mapping), 0);
 
@@ -6859,7 +6845,6 @@ static int bnx2x_stop_fw_client(struct bnx2x *bp,
 	if (rc) /* timeout */
 		return rc;
 
-
 	/* delete cfc entry */
 	bnx2x_sp_post(bp, RAMROD_CMD_ID_COMMON_CFC_DEL, p->cid, 0, 0, 1);
 
@@ -6882,7 +6867,6 @@ static int bnx2x_stop_client(struct bnx2x *bp, int index)
 
 	return bnx2x_stop_fw_client(bp, &client_stop);
 }
-
 
 static void bnx2x_reset_func(struct bnx2x *bp)
 {
@@ -6918,7 +6902,6 @@ static void bnx2x_reset_func(struct bnx2x *bp)
 		CSTORM_SP_STATUS_BLOCK_DATA_OFFSET(func) +
 		pfunc_offset_sp + pfid_offset,
 		HC_FUNCTION_DISABLED);
-
 
 	for (i = 0; i < XSTORM_SPQ_DATA_SIZE / 4; i++)
 		REG_WR(bp, BAR_XSTRORM_INTMEM + XSTORM_SPQ_DATA_OFFSET(func),
@@ -7391,7 +7374,6 @@ static int bnx2x_process_kill(struct bnx2x *bp)
 	int cnt = 1000;
 	u32 val = 0;
 	u32 sr_cnt, blk_cnt, port_is_idle_0, port_is_idle_1, pgl_exp_rom2;
-
 
 	/* Empty the Tetris buffer, wait for 1s */
 	do {
@@ -8634,7 +8616,6 @@ static void __devinit bnx2x_read_fwinfo(struct bnx2x *bp)
 	if (i < 0)
 		goto out_not_found;
 
-
 	block_end = i + PCI_VPD_LRDT_TAG_SIZE +
 		    pci_vpd_lrdt_size(&vpd_data[i]);
 
@@ -8759,7 +8740,6 @@ static int __devinit bnx2x_init_bp(struct bnx2x *bp)
 	return rc;
 }
 
-
 /****************************************************************************
 * General service functions
 ****************************************************************************/
@@ -8834,7 +8814,6 @@ static inline u8 bnx2x_max_uc_list(struct bnx2x *bp)
 	else
 		return E2_MAX_UC_LIST;
 }
-
 
 static inline u8 bnx2x_uc_list_cam_offset(struct bnx2x *bp)
 {
@@ -9926,7 +9905,6 @@ static void bnx2x_cnic_sp_post(struct bnx2x *bp, int count)
 	BUG_ON(bp->cnic_spq_pending < count);
 	bp->cnic_spq_pending -= count;
 
-
 	for (; bp->cnic_kwq_pending; bp->cnic_kwq_pending--) {
 		u16 type =  (le16_to_cpu(bp->cnic_kwq_cons->hdr.type)
 				& SPE_HDR_CONN_TYPE) >>
@@ -10301,4 +10279,3 @@ struct cnic_eth_dev *bnx2x_cnic_probe(struct net_device *dev)
 EXPORT_SYMBOL(bnx2x_cnic_probe);
 
 #endif /* BCM_CNIC */
-

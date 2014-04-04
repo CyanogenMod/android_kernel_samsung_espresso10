@@ -94,4 +94,3 @@ err_gpio_request_failed:
 err_bad_keymap:
 	return ret;
 }
-

@@ -118,13 +118,11 @@ enum {
 	CYAN_FW_TRACE_MAX_LEVEL
 };
 
-
 /***********************************/
 /***********************************/
 /*	FUNCTIONS					*/
 /***********************************/
 /***********************************/
-
 
 EXTERN cy_an_return_status_t
 cy_an_misc_create_device(
@@ -611,4 +609,3 @@ cy_an_misc_set_sd_power_polarity(
 #include "cyas_cplus_end.h"
 
 #endif
-

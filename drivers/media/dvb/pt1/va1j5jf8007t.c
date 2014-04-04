@@ -111,7 +111,6 @@ va1j5jf8007t_read_status(struct dvb_frontend *fe, fe_status_t *status)
 		*status = 0;
 		return 0;
 
-
 	case VA1J5JF8007T_SET_MODULATION:
 	case VA1J5JF8007T_CHECK_MODULATION:
 	case VA1J5JF8007T_ABORT:

@@ -10,10 +10,10 @@
  *  <drew@colorado.edu>
  *
  *  Jiffies wrap fixes (host->resetting), 3 Dec 1998 Andrea Arcangeli
- *  Added QLOGIC QLA1280 SCSI controller kernel host support. 
+ *  Added QLOGIC QLA1280 SCSI controller kernel host support.
  *     August 4, 1999 Fred Lewis, Intel DuPont
  *
- *  Updated to reflect the new initialization scheme for the higher 
+ *  Updated to reflect the new initialization scheme for the higher
  *  level of scsi drivers (sd/sr/st)
  *  September 17, 2000 Torben Mathiasen <tmm@image.dk>
  *
@@ -41,9 +41,7 @@
 #include "scsi_priv.h"
 #include "scsi_logging.h"
 
-
 static atomic_t scsi_host_next_hn;	/* host_no for next new host */
-
 
 static void scsi_host_cls_release(struct device *dev)
 {
@@ -194,7 +192,7 @@ EXPORT_SYMBOL(scsi_remove_host);
  * virtualised host environments, so use the simpler scsi_add_host()
  * function instead.
  *
- * Return value: 
+ * Return value:
  * 	0 on success / != 0 for error
  **/
 int scsi_add_host_with_dma(struct Scsi_Host *shost, struct device *dev,

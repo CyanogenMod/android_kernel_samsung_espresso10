@@ -157,7 +157,6 @@
 #define MO_DMA31_CNT2       0x300168 // {11}RW* DMA Table Size : Ch#31
 #define MO_DMA32_CNT2       0x30016C // {11}RW* DMA Table Size : Ch#32
 
-
 /* ---------------------------------------------------------------------- */
 /* Video registers                                                        */
 
@@ -216,7 +215,6 @@
 #define MO_VBI_GPCNTRL      0x31C03C // {2}WO VBI general purpose counter
 #define MO_VID_DMACNTRL     0x31C040 // {8}RW Video DMA control
 #define MO_VID_XFR_STAT     0x31C044 // {1}RO Video transfer status
-
 
 /* ---------------------------------------------------------------------- */
 /* audio registers                                                        */
@@ -437,7 +435,6 @@
 #define AUD_PHACC_FREQ_8LSB      0x320d2b
 #define AUD_QAM_MODE             0x320d04
 
-
 /* ---------------------------------------------------------------------- */
 /* transport stream registers                                             */
 
@@ -454,7 +451,6 @@
 #define TS_SOP_STAT         0x33C058
 #define TS_FIFO_OVFL_STAT   0x33C05C
 #define TS_VALERR_CNTRL     0x33C060
-
 
 /* ---------------------------------------------------------------------- */
 /* VIP registers                                                          */
@@ -474,7 +470,6 @@
 #define MO_VIP_BRSTLN       0x340058 // VIP burst length
 #define MO_VIP_INTCNTRL     0x34C05C // VIP Interrupt Control
 #define MO_VIP_XFTERM       0x340060 // VIP transfer terminate
-
 
 /* ---------------------------------------------------------------------- */
 /* misc registers                                                         */
@@ -509,7 +504,6 @@
 #define MO_INT1_STAT        0x35C064 // DMA RISC interrupt status
 #define MO_INT1_MSTAT       0x35C068 // DMA RISC interrupt masked status
 
-
 /* ---------------------------------------------------------------------- */
 /* i2c bus registers                                                      */
 
@@ -519,7 +513,6 @@
 #define MO_I2C_W3B          (1<<2)
 #define MO_I2C_SCL          (1<<1)
 #define MO_I2C_SDA          (1<<0)
-
 
 /* ---------------------------------------------------------------------- */
 /* general purpose host registers                                         */
@@ -544,7 +537,6 @@
 #define MO_GPHST_DMACNTRL   0x38C040 // Host DMA control
 #define MO_GPHST_XFR_STAT   0x38C044 // Host transfer status
 #define MO_GPHST_SOFT_RST   0x38C06C // Host software reset
-
 
 /* ---------------------------------------------------------------------- */
 /* RISC instructions                                                      */
@@ -577,7 +569,6 @@
 #define RISC_CNT_RSVR		 0x00020000
 #define RISC_CNT_RESET		 0x00030000
 #define RISC_JMP_SRP         	 0x01
-
 
 /* ---------------------------------------------------------------------- */
 /* various constants                                                      */

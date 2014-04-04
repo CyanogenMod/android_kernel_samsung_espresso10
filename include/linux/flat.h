@@ -45,7 +45,7 @@ struct flat_hdr {
 	unsigned long reloc_start;  /* Offset of relocation records from
 	                               beginning of file */
 	unsigned long reloc_count;  /* Number of relocation records */
-	unsigned long flags;       
+	unsigned long flags;
 	unsigned long build_date;   /* When the program/library was built */
 	unsigned long filler[5];    /* Reservered, set to zero */
 };
@@ -55,7 +55,6 @@ struct flat_hdr {
 #define FLAT_FLAG_GZIP   0x0004 /* all but the header is compressed */
 #define FLAT_FLAG_GZDATA 0x0008 /* only data/relocs are compressed (for XIP) */
 #define FLAT_FLAG_KTRACE 0x0010 /* output useful kernel trace for debugging */
-
 
 #ifdef __KERNEL__ /* so systems without linux headers can compile the apps */
 /*

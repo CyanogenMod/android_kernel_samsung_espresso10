@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="miscdrv.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -23,7 +23,6 @@
 #ifndef _MISCDRV_H
 #define _MISCDRV_H
 
-
 #define HOST_INTEREST_ITEM_ADDRESS(target, item)    \
    AR6002_HOST_INTEREST_ITEM_ADDRESS(item)
 
@@ -39,4 +38,3 @@ u32 ar6kRev2Array[][128]   = {
 #define EEPROM_WAIT_LIMIT             4
 
 #endif
-

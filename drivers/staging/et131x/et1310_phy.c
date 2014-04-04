@@ -569,7 +569,6 @@ void et131x_setphy_normal(struct et131x_adapter *etdev)
 	et131x_xcvr_init(etdev);
 }
 
-
 /**
  * et131x_xcvr_init - Init the phy if we are setting it into force mode
  * @etdev: pointer to our private adapter structure
@@ -977,4 +976,3 @@ void ET1310_PhyInit(struct et131x_adapter *etdev)
 	MiWrite(etdev, PHY_CONTROL, 0x1040);
 	MiWrite(etdev, PHY_MPHY_CONTROL_REG, 0x0002);
 }
-

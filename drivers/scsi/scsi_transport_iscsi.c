@@ -1501,7 +1501,6 @@ iscsi_tgt_dscvr(struct iscsi_transport *transport,
 		return -ENODEV;
 	}
 
-
 	dst_addr = (struct sockaddr *)((char*)ev + sizeof(*ev));
 	err = transport->tgt_dscvr(shost, ev->u.tgt_dscvr.type,
 				   ev->u.tgt_dscvr.enable, dst_addr);
@@ -1747,7 +1746,7 @@ iscsi_if_rx(struct sk_buff *skb)
 				break;
 			err = iscsi_if_send_reply(group, nlh->nlmsg_seq,
 				nlh->nlmsg_type, 0, 0, ev, sizeof(*ev));
-		} while (err < 0 && err != -ECONNREFUSED);
+		} while (err < 0 && err != -ECONNREFUSED && err != -ESRCH);
 		skb_pull(skb, rlen);
 	}
 	mutex_unlock(&rx_queue_mutex);

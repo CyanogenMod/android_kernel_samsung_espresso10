@@ -1,4 +1,3 @@
-
 extern int acpi_suspend(u32 state);
 
 extern void acpi_enable_wakeup_devices(u8 sleep_state);

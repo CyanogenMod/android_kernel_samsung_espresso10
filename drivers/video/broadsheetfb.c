@@ -246,7 +246,6 @@ static u16 broadsheet_gpio_get_data(struct broadsheetfb_par *par)
 	return res;
 }
 
-
 static u16 broadsheet_get_data(struct broadsheetfb_par *par)
 {
 	if (par->board->mmio_read)
@@ -298,7 +297,6 @@ static void broadsheet_write_reg32(struct broadsheetfb_par *par, u16 reg,
 	broadsheet_write_reg(par, reg, cpu_to_le32(data) & 0xFFFF);
 	broadsheet_write_reg(par, reg + 2, (cpu_to_le32(data) >> 16) & 0xFFFF);
 }
-
 
 static u16 broadsheet_read_reg(struct broadsheetfb_par *par, u16 reg)
 {
@@ -1170,7 +1168,6 @@ static int __devinit broadsheetfb_probe(struct platform_device *dev)
 	printk(KERN_INFO
 	       "fb%d: Broadsheet frame buffer, using %dK of video memory\n",
 	       info->node, videomemorysize >> 10);
-
 
 	return 0;
 

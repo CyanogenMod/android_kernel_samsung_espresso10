@@ -8,4 +8,3 @@ endif
 
 obj-$(CONFIG_WESTBRIDGE_GADGET_DRIVER)  += cyasgadgetctrl.o
 cyasgadgetctrl-y		:= cyasgadget.o
-

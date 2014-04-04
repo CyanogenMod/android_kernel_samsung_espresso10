@@ -66,7 +66,6 @@ struct platform_device iop33x_uart0_device = {
 	.resource	= iop33x_uart0_resources,
 };
 
-
 static struct resource iop33x_uart1_resources[] = {
 	[0] = {
 		.start	= IOP33X_UART1_PHYS,

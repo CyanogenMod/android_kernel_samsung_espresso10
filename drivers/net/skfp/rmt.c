@@ -98,7 +98,6 @@ static const char * const rmt_events[] = {
  * in struct s_rmt
  */
 
-
 /*
  * function declarations
  */
@@ -565,7 +564,7 @@ static void rmt_new_dup_actions(struct s_smc *smc)
 	smc->r.jm_flag = FALSE ;
 	/*
 	 * we have three options : change address, jam or leave
-	 * we leave the ring as default 
+	 * we leave the ring as default
 	 * Optionally it's possible to reinsert after leaving the Ring
 	 * but this will not conform with SMT Spec.
 	 */
@@ -578,7 +577,6 @@ static void rmt_new_dup_actions(struct s_smc *smc)
 		rmt_leave_actions(smc) ;
 	}
 }
-
 
 /*
  * leave the ring
@@ -651,4 +649,3 @@ static void stop_rmt_timer2(struct s_smc *smc)
 	if (smc->r.rmt_timer2.tm_active)
 		smt_timer_stop(smc,&smc->r.rmt_timer2) ;
 }
-

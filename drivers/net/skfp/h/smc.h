@@ -87,7 +87,7 @@ struct s_queue {
 struct s_ecm {
 	u_char path_test ;		/* ECM path test variable */
 	u_char sb_flag ;		/* ECM stuck bypass */
-	u_char DisconnectFlag ;		/* jd 05-Aug-1999 Bug #10419 
+	u_char DisconnectFlag ;		/* jd 05-Aug-1999 Bug #10419
 					 * ECM disconnected */
 	u_char ecm_line_state ;		/* flag to dispatcher : line states */
 	u_long trace_prop ;		/* ECM Trace_Prop flag >= 16 bits !! */
@@ -98,7 +98,6 @@ struct s_ecm {
 	char	ec_pad[2] ;
 	struct smt_timer ecm_timer ;	/* timer */
 } ;
-
 
 /*
  * RMT - Ring Management
@@ -175,7 +174,6 @@ struct mib_path_config {
 #define SNMP_PATH_CONCATENATED	5	/* Current path is concatenated */
 #define SNMP_PATH_THRU		6	/* Current path is thru */
 };
-
 
 #endif
 
@@ -485,4 +483,3 @@ extern void read_address(struct s_smc *smc, u_char * mac_addr);
 extern void timer_irq(struct s_smc *smc);
 
 #endif	/* _SCMECM_ */
-

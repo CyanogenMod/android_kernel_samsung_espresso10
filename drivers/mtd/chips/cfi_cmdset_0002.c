@@ -78,9 +78,7 @@ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
 	.module		= THIS_MODULE
 };
 
-
 /* #define DEBUG_CFI_FEATURES */
-
 
 #ifdef DEBUG_CFI_FEATURES
 static void cfi_tell_features(struct cfi_pri_amdstd *extp)
@@ -107,7 +105,6 @@ static void cfi_tell_features(struct cfi_pri_amdstd *extp)
 		printk("  Block protection: Not supported\n");
 	else
 		printk("  Block protection: %d sectors per group\n", extp->BlkProt);
-
 
 	printk("  Temporary block unprotect: %s\n",
 	       extp->TmpBlkUnprotect ? "Supported" : "Not supported");
@@ -389,7 +386,6 @@ static struct cfi_fixup fixup_table[] = {
 	{ 0, 0, NULL }
 };
 
-
 static void cfi_fixup_major_minor(struct cfi_private *cfi,
 				  struct cfi_pri_amdstd *extp)
 {
@@ -463,7 +459,7 @@ struct mtd_info *cfi_cmdset_0002(struct map_info *map, int primary)
 
 			/*
 			 * Valid primary extension versions are: 1.0, 1.1, 1.2, 1.3, 1.4, 1.5
-			 * see: http://cs.ozerki.net/zap/pub/axim-x5/docs/cfi_r20.pdf, page 19 
+			 * see: http://cs.ozerki.net/zap/pub/axim-x5/docs/cfi_r20.pdf, page 19
 			 *      http://www.spansion.com/Support/AppNotes/cfi_100_20011201.pdf
 			 *      http://www.spansion.com/Support/Datasheets/s29ws-p_00_a12_e.pdf
 			 *      http://www.spansion.com/Support/Datasheets/S29GL_128S_01GS_00_02_e.pdf
@@ -754,7 +750,6 @@ static int get_chip(struct map_info *map, struct flchip *chip, unsigned long adr
 	}
 }
 
-
 static void put_chip(struct map_info *map, struct flchip *chip, unsigned long adr)
 {
 	struct cfi_private *cfi = map->fldrv_priv;
@@ -1006,7 +1001,6 @@ static inline int do_read_onechip(struct map_info *map, struct flchip *chip, lof
 	return 0;
 }
 
-
 static int cfi_amdstd_read (struct mtd_info *mtd, loff_t from, size_t len, size_t *retlen, u_char *buf)
 {
 	struct map_info *map = mtd->priv;
@@ -1019,7 +1013,6 @@ static int cfi_amdstd_read (struct mtd_info *mtd, loff_t from, size_t len, size_
 
 	chipnum = (from >> cfi->chipshift);
 	ofs = from - (chipnum <<  cfi->chipshift);
-
 
 	*retlen = 0;
 
@@ -1047,7 +1040,6 @@ static int cfi_amdstd_read (struct mtd_info *mtd, loff_t from, size_t len, size_
 	}
 	return ret;
 }
-
 
 static inline int do_read_secsi_onechip(struct map_info *map, struct flchip *chip, loff_t adr, size_t len, u_char *buf)
 {
@@ -1100,13 +1092,11 @@ static int cfi_amdstd_secsi_read (struct mtd_info *mtd, loff_t from, size_t len,
 	int chipnum;
 	int ret = 0;
 
-
 	/* ofs: offset within the first chip that the first read should start */
 
 	/* 8 secsi bytes per chip */
 	chipnum=from>>3;
 	ofs=from & 7;
-
 
 	*retlen = 0;
 
@@ -1134,7 +1124,6 @@ static int cfi_amdstd_secsi_read (struct mtd_info *mtd, loff_t from, size_t len,
 	}
 	return ret;
 }
-
 
 static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip, unsigned long adr, map_word datum)
 {
@@ -1242,7 +1231,6 @@ static int __xipram do_write_oneword(struct map_info *map, struct flchip *chip, 
 
 	return ret;
 }
-
 
 static int cfi_amdstd_write_words(struct mtd_info *mtd, loff_t to, size_t len,
 				  size_t *retlen, const u_char *buf)
@@ -1371,7 +1359,6 @@ static int cfi_amdstd_write_words(struct mtd_info *mtd, loff_t to, size_t len,
 	return 0;
 }
 
-
 /*
  * FIXME: interleaved mode not tested, and probably not supported!
  */
@@ -1485,7 +1472,6 @@ static int __xipram do_write_buffer(struct map_info *map, struct flchip *chip,
 	return ret;
 }
 
-
 static int cfi_amdstd_write_buffers(struct mtd_info *mtd, loff_t to, size_t len,
 				    size_t *retlen, const u_char *buf)
 {
@@ -1564,7 +1550,6 @@ static int cfi_amdstd_write_buffers(struct mtd_info *mtd, loff_t to, size_t len,
 
 	return 0;
 }
-
 
 /*
  * Handle devices with one erase region, that only implement
@@ -1658,7 +1643,6 @@ static int __xipram do_erase_chip(struct map_info *map, struct flchip *chip)
 	return ret;
 }
 
-
 static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip, unsigned long adr, int len, void *thunk)
 {
 	struct cfi_private *cfi = map->fldrv_priv;
@@ -1747,7 +1731,6 @@ static int __xipram do_erase_oneblock(struct map_info *map, struct flchip *chip,
 	return ret;
 }
 
-
 static int cfi_amdstd_erase_varsize(struct mtd_info *mtd, struct erase_info *instr)
 {
 	unsigned long ofs, len;
@@ -1765,7 +1748,6 @@ static int cfi_amdstd_erase_varsize(struct mtd_info *mtd, struct erase_info *ins
 
 	return 0;
 }
-
 
 static int cfi_amdstd_erase_chip(struct mtd_info *mtd, struct erase_info *instr)
 {
@@ -1863,7 +1845,6 @@ static int cfi_atmel_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
 	return cfi_varsize_frob(mtd, do_atmel_unlock, ofs, len, NULL);
 }
 
-
 static void cfi_amdstd_sync (struct mtd_info *mtd)
 {
 	struct map_info *map = mtd->priv;
@@ -1924,7 +1905,6 @@ static void cfi_amdstd_sync (struct mtd_info *mtd)
 	}
 }
 
-
 static int cfi_amdstd_suspend(struct mtd_info *mtd)
 {
 	struct map_info *map = mtd->priv;
@@ -1978,7 +1958,6 @@ static int cfi_amdstd_suspend(struct mtd_info *mtd)
 	return ret;
 }
 
-
 static void cfi_amdstd_resume(struct mtd_info *mtd)
 {
 	struct map_info *map = mtd->priv;
@@ -2003,7 +1982,6 @@ static void cfi_amdstd_resume(struct mtd_info *mtd)
 		mutex_unlock(&chip->mutex);
 	}
 }
-
 
 /*
  * Ensure that the flash device is put back into read array mode before
@@ -2037,7 +2015,6 @@ static int cfi_amdstd_reset(struct mtd_info *mtd)
 	return 0;
 }
 
-
 static int cfi_amdstd_reboot(struct notifier_block *nb, unsigned long val,
 			       void *v)
 {
@@ -2047,7 +2024,6 @@ static int cfi_amdstd_reboot(struct notifier_block *nb, unsigned long val,
 	cfi_amdstd_reset(mtd);
 	return NOTIFY_DONE;
 }
-
 
 static void cfi_amdstd_destroy(struct mtd_info *mtd)
 {

@@ -419,7 +419,6 @@ static void __devinit adp5588_report_switch_state(struct adp5588_kpad *kpad)
 	input_sync(kpad->input);
 }
 
-
 static int __devinit adp5588_probe(struct i2c_client *client,
 					const struct i2c_device_id *id)
 {

@@ -85,7 +85,6 @@ struct s3c24xx_spi {
 	struct s3c2410_spi_info *pdata;
 };
 
-
 #define SPCON_DEFAULT (S3C2410_SPCON_MSTR | S3C2410_SPCON_SMOD_INT)
 #define SPPIN_DEFAULT (S3C2410_SPPIN_KEEP)
 
@@ -685,7 +684,6 @@ static int __exit s3c24xx_spi_remove(struct platform_device *dev)
 	spi_master_put(hw->master);
 	return 0;
 }
-
 
 #ifdef CONFIG_PM
 

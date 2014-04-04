@@ -422,7 +422,6 @@ int nilfs_bmap_test_and_clear_dirty(struct nilfs_bmap *bmap)
 	return ret;
 }
 
-
 /*
  * Internal use only
  */

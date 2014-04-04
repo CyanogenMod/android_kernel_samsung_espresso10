@@ -90,7 +90,6 @@ struct sctp_ep_common;
 struct sctp_ssnmap;
 struct crypto_hash;
 
-
 #include <net/sctp/tsnmap.h>
 #include <net/sctp/ulpevent.h>
 #include <net/sctp/ulpqueue.h>
@@ -114,7 +113,6 @@ struct sctp_hashbucket {
 	rwlock_t	lock;
 	struct hlist_head	chain;
 } __attribute__((__aligned__(8)));
-
 
 /* The SCTP globals structure. */
 extern struct sctp_globals {
@@ -208,7 +206,7 @@ extern struct sctp_globals {
 
 	/* Lock that protects the local_addr_list writers */
 	spinlock_t addr_list_lock;
-	
+
 	/* Flag to indicate if addip is enabled. */
 	int addip_enable;
 	int addip_noauth_enable;
@@ -364,7 +362,6 @@ struct sctp6_sock {
 };
 #endif /* CONFIG_IPV6 */
 
-
 /* This is our APPLICATION-SPECIFIC state cookie.
  * THIS IS NOT DICTATED BY THE SPECIFICATION.
  */
@@ -413,7 +410,7 @@ struct sctp_cookie {
 	/* This holds the originating address of the INIT packet.  */
 	union sctp_addr peer_addr;
 
-	/* IG Section 2.35.3 
+	/* IG Section 2.35.3
 	 * Include the source port of the INIT-ACK
 	 */
 	__u16		my_port;
@@ -421,7 +418,7 @@ struct sctp_cookie {
 	__u8 prsctp_capable;
 
 	/* Padding for future use */
-	__u8 padding;  		
+	__u8 padding;
 
 	__u32 adaptation_ind;
 
@@ -438,7 +435,6 @@ struct sctp_cookie {
 	__u32 raw_addr_list_len;
 	struct sctp_init_chunk peer_init[0];
 };
-
 
 /* The format of our cookie that we send to our peer. */
 struct sctp_signed_cookie {
@@ -535,12 +531,12 @@ static inline __u16 sctp_ssn_next(struct sctp_stream *stream, __u16 id)
 }
 
 /* Skip over this ssn and all below. */
-static inline void sctp_ssn_skip(struct sctp_stream *stream, __u16 id, 
+static inline void sctp_ssn_skip(struct sctp_stream *stream, __u16 id,
 				 __u16 ssn)
 {
 	stream->ssn[id] = ssn+1;
 }
-              
+
 /*
  * Pointers to address related SCTP functions.
  * (i.e. things that depend on the address family.)
@@ -594,7 +590,7 @@ struct sctp_af {
 					    union sctp_addr_param *,
 					    __be16 port, int iif);
 	int		(*to_addr_param) (const union sctp_addr *,
-					  union sctp_addr_param *); 
+					  union sctp_addr_param *);
 	int		(*addr_valid)	(union sctp_addr *,
 					 struct sctp_sock *,
 					 const struct sk_buff *);
@@ -633,7 +629,6 @@ struct sctp_pf {
 	void (*addr_v4map) (struct sctp_sock *, union sctp_addr *);
 	struct sctp_af *af;
 };
-
 
 /* Structure to track chunk fragments that have been acked, but peer
  * fragments of the same message have not.
@@ -1076,7 +1071,6 @@ unsigned long sctp_transport_timeout(struct sctp_transport *);
 void sctp_transport_reset(struct sctp_transport *);
 void sctp_transport_update_pmtu(struct sctp_transport *, u32);
 
-
 /* This is the structure we use to queue packets as they come into
  * SCTP.  We write packets to it and read chunks from it.
  */
@@ -1241,7 +1235,6 @@ int sctp_in_scope(const union sctp_addr *addr, const sctp_scope_t scope);
 int sctp_is_any(struct sock *sk, const union sctp_addr *addr);
 int sctp_addr_is_valid(const union sctp_addr *addr);
 
-
 /* What type of endpoint?  */
 typedef enum {
 	SCTP_EP_TYPE_SOCKET,
@@ -1294,7 +1287,6 @@ struct sctp_ep_common {
 	 */
 	struct sctp_bind_addr bind_addr;
 };
-
 
 /* RFC Section 1.4 Key Terms
  *
@@ -1349,7 +1341,7 @@ struct sctp_endpoint {
  	 * 	    on every receive.
  	 */
  	__u8 *digest;
- 
+
 	/* sendbuf acct. policy.	*/
 	__u32 sndbuf_policy;
 
@@ -1426,7 +1418,6 @@ struct sctp_inithdr_host {
  * inside an SCTP TCB. Each implementation may need its own additional
  * parameters for optimization.
  */
-
 
 /* Here we have information about each individual association. */
 struct sctp_association {
@@ -1679,7 +1670,6 @@ struct sctp_association {
 	unsigned long sackdelay;
 	__u32 sackfreq;
 
-
 	unsigned long timeouts[SCTP_NUM_TIMEOUT_TYPES];
 	struct timer_list timers[SCTP_NUM_TIMEOUT_TYPES];
 
@@ -1822,8 +1812,6 @@ struct sctp_association {
 	 * or "ADDIP" for short.
 	 */
 
-
-
 	/* ADDIP Section 4.1.1 Congestion Control of ASCONF Chunks
 	 *
 	 * R1) One and only one ASCONF Chunk MAY be in transit and
@@ -1925,7 +1913,6 @@ struct sctp_association {
 	     temp:1;		/* Is it a temporary association? */
 };
 
-
 /* An eyecatcher for determining if we are really looking at an
  * association data structure.
  */
@@ -1943,7 +1930,6 @@ static inline struct sctp_association *sctp_assoc(struct sctp_ep_common *base)
 }
 
 /* These are function signatures for manipulating associations.	 */
-
 
 struct sctp_association *
 sctp_association_new(const struct sctp_endpoint *, const struct sock *,

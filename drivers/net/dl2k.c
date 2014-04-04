@@ -30,7 +30,6 @@ static int rx_coalesce=10;	/* Rx frame count each interrupt */
 static int rx_timeout=200;	/* Rx DMA wait time in 640ns increments */
 static int tx_coalesce=16;	/* HW xmit count each TxDMAComplete */
 
-
 MODULE_AUTHOR ("Edward Peng");
 MODULE_DESCRIPTION ("D-Link DL2000-based Gigabit Ethernet Adapter");
 MODULE_LICENSE("GPL");
@@ -44,7 +43,6 @@ module_param(copy_thresh, int, 0);
 module_param(rx_coalesce, int, 0);	/* Rx frame count each interrupt */
 module_param(rx_timeout, int, 0);	/* Rx DMA wait time in 64ns increments */
 module_param(tx_coalesce, int, 0); /* HW xmit count each TxDMAComplete */
-
 
 /* Enable the default interrupts */
 #define DEFAULT_INTR (RxDMAComplete | HostError | IntRequested | TxDMAComplete| \
@@ -1095,7 +1093,6 @@ clear_stats (struct net_device *dev)
 	return 0;
 }
 
-
 static int
 change_mtu (struct net_device *dev, int new_mtu)
 {
@@ -1720,7 +1717,6 @@ mii_set_media_pcs (struct net_device *dev)
 	return 0;
 }
 
-
 static int
 rio_close (struct net_device *dev)
 {
@@ -1821,4 +1817,3 @@ gcc -D__KERNEL__ -DMODULE -I/usr/src/linux/include -Wall -Wstrict-prototypes -O2
 Read Documentation/networking/dl2k.txt for details.
 
 */
-

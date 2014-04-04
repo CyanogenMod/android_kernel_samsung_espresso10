@@ -30,7 +30,6 @@
 #include "modem_prj.h"
 #include "modem_utils.h"
 
-
 #define HDLC_START	0x7F
 #define HDLC_END	0x7E
 #define SIZE_OF_HDLC_START	1
@@ -38,7 +37,6 @@
 
 static const char hdlc_start[1] = { HDLC_START };
 static const char hdlc_end[1] = { HDLC_END };
-
 
 static ssize_t show_waketime(struct device *dev,
 		struct device_attribute *attr, char *buf)
@@ -76,6 +74,35 @@ static ssize_t store_waketime(struct device *dev,
 
 static struct device_attribute attr_waketime =
 	__ATTR(waketime, S_IRUGO | S_IWUSR, show_waketime, store_waketime);
+
+static ssize_t show_loopback(struct device *dev,
+			struct device_attribute *attr, char *buf)
+{
+	struct miscdevice *miscdev = dev_get_drvdata(dev);
+	struct modem_shared *msd =
+	container_of(miscdev, struct io_device, miscdev)->msd;
+	unsigned char *ip = (unsigned char *)&msd->loopback_ipaddr;
+	char *p = buf;
+
+	p += sprintf(buf, "%u.%u.%u.%u\n", ip[0], ip[1], ip[2], ip[3]);
+
+	return p - buf;
+}
+
+static ssize_t store_loopback(struct device *dev,
+		struct device_attribute *attr, const char *buf, size_t count)
+{
+	struct miscdevice *miscdev = dev_get_drvdata(dev);
+	struct modem_shared *msd =
+	container_of(miscdev, struct io_device, miscdev)->msd;
+
+	msd->loopback_ipaddr = ipv4str_to_be32(buf, count);
+
+	return count;
+}
+
+static struct device_attribute attr_loopback =
+	__ATTR(loopback, S_IRUGO | S_IWUSR, show_loopback, store_loopback);
 
 static int get_header_size(struct io_device *iod)
 {
@@ -470,6 +497,9 @@ static int rx_iodev_skb(struct sk_buff *skb)
 
 		if (ch == CP_LOOPBACK_CHANNEL)
 			return rx_data_loopback(skb, iod, ld);
+
+		if (ch == DATA_LOOPBACK_CHANNEL && ld->msd->loopback_ipaddr)
+			ch = RMNET0_CH_ID;
 
 		real_iod = link_get_iod_with_channel(ld, 0x20 | ch);
 		if (!real_iod) {
@@ -946,11 +976,6 @@ static ssize_t misc_write(struct file *filp, const char __user *buf,
 	if (err < 0)
 		return err;
 
-	if (err != tx_size)
-		mif_err("WARNNING: wrong tx size: %s, format=%d "
-			"count=%d, tx_size=%d, return_size=%d",
-			iod->name, iod->format, count, tx_size, err);
-
 	return count;
 }
 
@@ -1022,6 +1047,7 @@ static int vnet_xmit(struct sk_buff *skb, struct net_device *ndev)
 	struct io_device *iod = vnet->iod;
 	struct link_device *ld = get_current_link(iod);
 	struct raw_hdr hd;
+	struct iphdr *ip_header = NULL;
 
 	/* ToDo - Add handling for over size data */
 
@@ -1037,9 +1063,17 @@ static int vnet_xmit(struct sk_buff *skb, struct net_device *ndev)
 			skb_pull(skb, sizeof(struct ethhdr));
 	}
 
+	/* ip loop-back */
+	ip_header = (struct iphdr *)skb->data;
+	if (iod->msd->loopback_ipaddr &&
+		ip_header->daddr == iod->msd->loopback_ipaddr) {
+		swap(ip_header->saddr, ip_header->daddr);
+		hd.channel = DATA_LOOPBACK_CHANNEL;
+	} else
+		hd.channel = iod->id & 0x1F;
+
 	hd.len = skb->len + sizeof(hd);
 	hd.control = 0;
-	hd.channel = iod->id & 0x1F;
 
 	headroom = sizeof(hd) + sizeof(hdlc_start);
 	tailroom = sizeof(hdlc_end);
@@ -1173,12 +1207,18 @@ int sipc4_init_io_device(struct io_device *iod)
 		if (ret)
 			mif_err("failed to register misc io device : %s\n",
 						iod->name);
+
 		ret = device_create_file(iod->miscdev.this_device,
 				&attr_waketime);
 		if (ret)
-			mif_err("failed to create sysfs file : %s\n",
+			mif_err("failed to create 'waketime' file : %s\n",
 					iod->name);
 
+		ret = device_create_file(iod->miscdev.this_device,
+				&attr_loopback);
+		if (ret)
+			mif_err("failed to create `loopback' file : %s\n",
+					iod->name);
 		break;
 
 	default:
@@ -1190,4 +1230,3 @@ int sipc4_init_io_device(struct io_device *iod)
 				iod->name, iod->io_typ, ret);
 	return ret;
 }
-

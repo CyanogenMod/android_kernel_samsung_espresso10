@@ -42,7 +42,6 @@ MODULE_DESCRIPTION("Philips SAA7110 video decoder driver");
 MODULE_AUTHOR("Pauline Middelink");
 MODULE_LICENSE("GPL");
 
-
 static int debug;
 module_param(debug, int, 0);
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
@@ -129,7 +128,6 @@ static inline int saa7110_read(struct v4l2_subdev *sd)
 
 #define FRESP_06H_COMPST 0x03	/*0x13*/
 #define FRESP_06H_SVIDEO 0x83	/*0xC0*/
-
 
 static int saa7110_selmux(struct v4l2_subdev *sd, int chan)
 {

@@ -49,7 +49,6 @@ struct zl10036_state {
 	u8 br, bf;
 };
 
-
 /* This driver assumes the tuner is driven by a 10.111MHz Cristal */
 #define _XTAL 10111
 

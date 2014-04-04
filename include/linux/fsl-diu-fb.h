@@ -114,7 +114,6 @@ struct diu_ad {
 	__u32 res8:5; */
 	__le32 offset_xyd;
 
-
 	/* Word 6(32-bit) in DDR memory */
 	__u8 ckmax_r;
 	__u8 ckmax_g;

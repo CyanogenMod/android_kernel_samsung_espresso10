@@ -622,7 +622,6 @@ typedef struct {
 	unsigned long		seg;
 } mm_segment_t;
 
-
 /*
  * create a kernel thread without removing it from tasklists
  */

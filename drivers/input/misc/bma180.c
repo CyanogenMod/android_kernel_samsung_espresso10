@@ -622,7 +622,6 @@ static int bma180_accel_device_hw_init(struct bma180_accel_data *data)
 	return ret;
 }
 
-
 static int __devinit bma180_accel_driver_probe(struct i2c_client *client,
 		const struct i2c_device_id *id)
 {
@@ -741,7 +740,6 @@ static int __devexit bma180_accel_driver_remove(struct i2c_client *client)
 
 	return ret;
 }
-
 
 #ifdef CONFIG_PM
 static int bma180_accel_driver_suspend(struct device *dev)

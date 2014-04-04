@@ -9,7 +9,6 @@
  * published by the Free Software Foundation.
  */
 
-
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/platform_device.h>
@@ -118,24 +117,6 @@ static int smb136_i2c_write(struct i2c_client *client, u8 reg, u8 data)
 	return ret;
 }
 
-static void smb136_test_read(struct smb136_chg_data *chg)
-{
-	u8 data = 0;
-	u32 addr = 0;
-
-	for (addr = 0; addr < 0x0c; addr++) {
-		smb136_i2c_read(chg->client, addr, &data);
-		dev_dbg(&chg->client->dev,
-			"SMB136 addr : 0x%02x data : 0x%02x\n",	addr, data);
-	}
-
-	for (addr = 0x31; addr < 0x3D; addr++) {
-		smb136_i2c_read(chg->client, addr, &data);
-		dev_dbg(&chg->client->dev,
-			"SMB136 addr : 0x%02x data : 0x%02x\n",	addr, data);
-	}
-}
-
 static int smb136_read_status(struct smb_charger_callbacks *ptr)
 {
 	struct smb136_chg_data *chg = container_of(ptr,
@@ -184,48 +165,6 @@ static int smb136_read_status(struct smb_charger_callbacks *ptr)
 	}
 
 	return res;
-}
-
-static int smb136_get_charging_current(struct smb136_chg_data *chg)
-{
-	u8 data = 0;
-	int get_current = 0;
-
-	smb136_i2c_read(chg->client, SMB_ChargeCurrent, &data);
-	switch (data >> 5) {
-	case 0:
-		get_current = 500;
-		break;
-	case 1:
-		get_current = 650;
-		break;
-	case 2:
-		get_current = 750;
-		break;
-	case 3:
-		get_current = 850;
-		break;
-	case 4:
-		get_current = 950;
-		break;
-	case 5:
-		get_current = 1100;
-		break;
-	case 6:
-		get_current = 1300;
-		break;
-	case 7:
-		get_current = 1500;
-		break;
-	default:
-		get_current = 500;
-		break;
-	}
-
-	dev_info(&chg->client->dev, "%s: Get charging current as %dmA.\n",
-		__func__, get_current);
-
-	return get_current;
 }
 
 static void smb136_set_charging_state(struct smb_charger_callbacks *ptr,
@@ -382,7 +321,6 @@ static const struct i2c_device_id smb136_id[] = {
 	{ }
 };
 
-
 static struct i2c_driver smb136_i2c_driver = {
 	.driver = {
 		.owner	= THIS_MODULE,
@@ -393,7 +331,6 @@ static struct i2c_driver smb136_i2c_driver = {
 	.remove	= __devexit_p(smb136_remove),
 	.command = NULL,
 };
-
 
 MODULE_DEVICE_TABLE(i2c, smb136_id);
 

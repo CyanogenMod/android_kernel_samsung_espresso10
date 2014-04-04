@@ -821,5 +821,3 @@ int usb_stor_port_reset(struct us_data *us)
 	}
 	return result;
 }
-
-

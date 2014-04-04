@@ -722,7 +722,6 @@ static void handle_crq(struct work_struct *work)
 	handle_cmd_queue(target);
 }
 
-
 static int ibmvstgt_eh_abort_handler(struct scsi_cmnd *sc)
 {
 	unsigned long flags;

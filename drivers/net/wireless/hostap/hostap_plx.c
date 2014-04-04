@@ -6,7 +6,6 @@
  * - linux-wlan-ng driver, Copyright (C) AbsoluteValue Systems, Inc.
  */
 
-
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/if.h>
@@ -23,9 +22,7 @@
 
 #include "hostap_wlan.h"
 
-
 static char *dev_info = "hostap_plx";
-
 
 MODULE_AUTHOR("Jouni Malinen");
 MODULE_DESCRIPTION("Support for Intersil Prism2-based 802.11 wireless LAN "
@@ -33,18 +30,15 @@ MODULE_DESCRIPTION("Support for Intersil Prism2-based 802.11 wireless LAN "
 MODULE_SUPPORTED_DEVICE("Intersil Prism2-based WLAN cards (PLX)");
 MODULE_LICENSE("GPL");
 
-
 static int ignore_cis;
 module_param(ignore_cis, int, 0444);
 MODULE_PARM_DESC(ignore_cis, "Do not verify manfid information in CIS");
-
 
 /* struct local_info::hw_priv */
 struct hostap_plx_priv {
 	void __iomem *attr_mem;
 	unsigned int cor_offset;
 };
-
 
 #define PLX_MIN_ATTR_LEN 512	/* at least 2 x 256 is needed for CIS */
 #define COR_SRESET       0x80
@@ -57,7 +51,6 @@ struct hostap_plx_priv {
 #define PLX_INTCSR_PCI_INTEN BIT(6) /* PCI Interrupt Enable */
 #define PLX_CNTRL        0x50
 #define PLX_CNTRL_SERIAL_EEPROM_PRESENT BIT(28)
-
 
 #define PLXDEV(vendor,dev,str) { vendor, dev, PCI_ANY_ID, PCI_ANY_ID }
 
@@ -78,7 +71,6 @@ static DEFINE_PCI_DEVICE_TABLE(prism2_plx_id_table) = {
 	PLXDEV(0xec80, 0xec00, "Belkin F5D6000"),
 	{ 0 }
 };
-
 
 /* Array of known Prism2/2.5 PC Card manufactured ids. If your card's manfid
  * is not listed here, you will need to add it here to get the driver
@@ -102,7 +94,6 @@ static struct prism2_plx_manfid {
 	{ 0xd601, 0x0005 } /* Zcomax XI-325H 200mW */,
 	{ 0, 0}
 };
-
 
 #ifdef PRISM2_IO_DEBUG
 
@@ -220,7 +211,6 @@ static inline void hfa384x_insw_debug(struct net_device *dev, int a,
 
 #endif /* PRISM2_IO_DEBUG */
 
-
 static int hfa384x_from_bap(struct net_device *dev, u16 bap, void *buf,
 			    int len)
 {
@@ -240,7 +230,6 @@ static int hfa384x_from_bap(struct net_device *dev, u16 bap, void *buf,
 	return 0;
 }
 
-
 static int hfa384x_to_bap(struct net_device *dev, u16 bap, void *buf, int len)
 {
 	u16 d_off;
@@ -259,10 +248,8 @@ static int hfa384x_to_bap(struct net_device *dev, u16 bap, void *buf, int len)
 	return 0;
 }
 
-
 /* FIX: This might change at some point.. */
 #include "hostap_hw.c"
-
 
 static void prism2_plx_cor_sreset(local_info_t *local)
 {
@@ -293,7 +280,6 @@ static void prism2_plx_cor_sreset(local_info_t *local)
 	}
 }
 
-
 static void prism2_plx_genesis_reset(local_info_t *local, int hcr)
 {
 	unsigned char corsave;
@@ -322,7 +308,6 @@ static void prism2_plx_genesis_reset(local_info_t *local, int hcr)
 	}
 }
 
-
 static struct prism2_helper_functions prism2_plx_funcs =
 {
 	.card_present	= NULL,
@@ -330,7 +315,6 @@ static struct prism2_helper_functions prism2_plx_funcs =
 	.genesis_reset	= prism2_plx_genesis_reset,
 	.hw_type	= HOSTAP_HW_PLX,
 };
-
 
 static int prism2_plx_check_cis(void __iomem *attr_mem, int attr_len,
 				unsigned int *cor_offset,
@@ -428,7 +412,6 @@ static int prism2_plx_check_cis(void __iomem *attr_mem, int attr_len,
 	return -1;
 }
 
-
 static int prism2_plx_probe(struct pci_dev *pdev,
 			    const struct pci_device_id *id)
 {
@@ -485,7 +468,6 @@ static int prism2_plx_probe(struct pci_dev *pdev,
 		pccard_attr_len = pci_resource_len(pdev, 2);
 		if (pccard_attr_len < PLX_MIN_ATTR_LEN)
 			goto fail;
-
 
 		attr_mem = ioremap(pccard_attr_mem, pccard_attr_len);
 		if (attr_mem == NULL) {
@@ -581,7 +563,6 @@ static int prism2_plx_probe(struct pci_dev *pdev,
 	return -ENODEV;
 }
 
-
 static void prism2_plx_remove(struct pci_dev *pdev)
 {
 	struct net_device *dev;
@@ -606,7 +587,6 @@ static void prism2_plx_remove(struct pci_dev *pdev)
 	pci_disable_device(pdev);
 }
 
-
 MODULE_DEVICE_TABLE(pci, prism2_plx_id_table);
 
 static struct pci_driver prism2_plx_driver = {
@@ -616,18 +596,15 @@ static struct pci_driver prism2_plx_driver = {
 	.remove		= prism2_plx_remove,
 };
 
-
 static int __init init_prism2_plx(void)
 {
 	return pci_register_driver(&prism2_plx_driver);
 }
 
-
 static void __exit exit_prism2_plx(void)
 {
 	pci_unregister_driver(&prism2_plx_driver);
 }
-
 
 module_init(init_prism2_plx);
 module_exit(exit_prism2_plx);

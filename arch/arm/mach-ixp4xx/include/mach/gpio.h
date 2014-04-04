@@ -73,4 +73,3 @@ extern int gpio_to_irq(int gpio);
 extern int irq_to_gpio(unsigned int irq);
 
 #endif
-

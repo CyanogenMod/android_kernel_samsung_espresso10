@@ -573,7 +573,6 @@ static inline int x86_this_cpu_variable_test_bit(int nr,
 	 ? x86_this_cpu_constant_test_bit((nr), (addr))	\
 	 : x86_this_cpu_variable_test_bit((nr), (addr)))
 
-
 #include <asm-generic/percpu.h>
 
 /* We can use this directly for local CPU (faster). */

@@ -272,7 +272,6 @@ int saa7146_pgtable_build_single(struct pci_dev *pci, struct saa7146_pgtable *pt
 		}
 	}
 
-
 	/* safety; fill the page table up with the last valid page */
 	fill = *(ptr-1);
 	for(i=nr_pages;i<1024;i++) {

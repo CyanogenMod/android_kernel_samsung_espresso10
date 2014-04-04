@@ -10,7 +10,6 @@ struct task_struct;
 extern int debug_locks;
 extern int debug_locks_silent;
 
-
 static inline int __debug_locks_off(void)
 {
 	return xchg(&debug_locks, 0);

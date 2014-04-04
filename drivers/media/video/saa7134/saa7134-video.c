@@ -49,7 +49,6 @@ MODULE_PARM_DESC(noninterlaced,"capture non interlaced video");
 module_param_string(secam, secam, sizeof(secam), 0644);
 MODULE_PARM_DESC(secam, "force SECAM variant, either DK,L or Lc");
 
-
 #define dprintk(fmt, arg...)	if (video_debug&0x04) \
 	printk(KERN_DEBUG "%s/video: " fmt, dev->name , ## arg)
 
@@ -567,7 +566,6 @@ static void video_mux(struct saa7134_dev *dev, int input)
 	set_tvnorm(dev, dev->tvnorm);
 	saa7134_tvaudio_setinput(dev, &card_in(dev, input));
 }
-
 
 static void saa7134_set_decoder(struct saa7134_dev *dev)
 {
@@ -2619,7 +2617,6 @@ void saa7134_irq_video_signalchange(struct saa7134_dev *dev)
 	if (dev->mops && dev->mops->signal_change)
 		dev->mops->signal_change(dev);
 }
-
 
 void saa7134_irq_video_done(struct saa7134_dev *dev, unsigned long status)
 {

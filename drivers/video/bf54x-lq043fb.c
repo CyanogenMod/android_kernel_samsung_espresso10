@@ -214,7 +214,6 @@ static void config_ppi(struct bfin_bf54xfb_info *fbi)
 		bfin_write_EPPI0_CONTROL(((EPPI_CONTROL & ~DLENGTH) | DLEN_24) &
 					 ~RGB_FMT_EN);
 
-
 }
 
 static int config_dma(struct bfin_bf54xfb_info *fbi)

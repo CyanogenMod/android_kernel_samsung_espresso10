@@ -75,7 +75,6 @@ int caif_connect_client(struct net *net,
  */
 int caif_disconnect_client(struct net *net, struct cflayer *client_layer);
 
-
 /**
  * caif_client_register_refcnt - register ref-count functions provided by client.
  *

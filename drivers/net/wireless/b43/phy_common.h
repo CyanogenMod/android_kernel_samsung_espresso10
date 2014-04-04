@@ -31,7 +31,6 @@ struct b43_c32 { s32 i, q; };
 /* Extended G-PHY registers. */
 #define B43_PHY_EXTG(reg)		((reg) | B43_PHYROUTE_EXT_GPHY)
 
-
 /* Masks for the PHY versioning registers. */
 #define B43_PHYVER_ANALOG		0xF000
 #define B43_PHYVER_ANALOG_SHIFT		12
@@ -272,7 +271,6 @@ struct b43_phy {
 	bool radio_locked;
 #endif /* B43_DEBUG */
 };
-
 
 /**
  * b43_phy_allocate - Allocate PHY structs

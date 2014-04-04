@@ -4,7 +4,6 @@
 
 #include <asm/elf.h>
 
-
 Elf_Half __weak elf_core_extra_phdrs(void)
 {
 	return 0;

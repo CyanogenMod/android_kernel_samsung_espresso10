@@ -28,7 +28,6 @@
 #define IOCTL_GET_HARD_VERSION	1
 #define IOCTL_GET_DRV_VERSION	2
 
-
 static DEFINE_MUTEX(lcd_mutex);
 static const struct usb_device_id id_table[] = {
 	{ .idVendor = 0x10D2, .match_flags = USB_DEVICE_ID_MATCH_VENDOR, },
@@ -37,7 +36,6 @@ static const struct usb_device_id id_table[] = {
 MODULE_DEVICE_TABLE (usb, id_table);
 
 static DEFINE_MUTEX(open_disc_mutex);
-
 
 struct usb_lcd {
 	struct usb_device *	udev;			/* init: probe_lcd */
@@ -57,7 +55,6 @@ struct usb_lcd {
 
 static struct usb_driver lcd_driver;
 
-
 static void lcd_delete(struct kref *kref)
 {
 	struct usb_lcd *dev = to_lcd_dev(kref);
@@ -66,7 +63,6 @@ static void lcd_delete(struct kref *kref)
 	kfree (dev->bulk_in_buffer);
 	kfree (dev);
 }
-
 
 static int lcd_open(struct inode *inode, struct file *file)
 {
@@ -135,7 +131,7 @@ static ssize_t lcd_read(struct file *file, char __user * buffer, size_t count, l
 	dev = file->private_data;
 
 	/* do a blocking bulk read to get data from the device */
-	retval = usb_bulk_msg(dev->udev, 
+	retval = usb_bulk_msg(dev->udev,
 			      usb_rcvbulkpipe(dev->udev, dev->bulk_in_endpointAddr),
 			      dev->bulk_in_buffer,
 			      min(dev->bulk_in_size, count),
@@ -161,7 +157,7 @@ static long lcd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	dev = file->private_data;
 	if (dev == NULL)
 		return -ENODEV;
-	
+
 	switch (cmd) {
 	case IOCTL_GET_HARD_VERSION:
 		mutex_lock(&lcd_mutex);
@@ -216,9 +212,9 @@ static ssize_t lcd_write(struct file *file, const char __user * user_buffer, siz
         int retval = 0, r;
 	struct urb *urb = NULL;
 	char *buf = NULL;
-	
+
 	dev = file->private_data;
-	
+
 	/* verify that we actually have some data to write */
 	if (count == 0)
 		goto exit;
@@ -233,18 +229,18 @@ static ssize_t lcd_write(struct file *file, const char __user * user_buffer, siz
 		retval = -ENOMEM;
 		goto err_no_buf;
 	}
-	
+
 	buf = usb_alloc_coherent(dev->udev, count, GFP_KERNEL, &urb->transfer_dma);
 	if (!buf) {
 		retval = -ENOMEM;
 		goto error;
 	}
-	
+
 	if (copy_from_user(buf, user_buffer, count)) {
 		retval = -EFAULT;
 		goto error;
 	}
-	
+
 	/* initialize the urb properly */
 	usb_fill_bulk_urb(urb, dev->udev,
 			  usb_sndbulkpipe(dev->udev, dev->bulk_out_endpointAddr),
@@ -252,14 +248,14 @@ static ssize_t lcd_write(struct file *file, const char __user * user_buffer, siz
 	urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
 
 	usb_anchor_urb(urb, &dev->submitted);
-	
+
 	/* send the data out the bulk port */
 	retval = usb_submit_urb(urb, GFP_KERNEL);
 	if (retval) {
 		err("USBLCD: %s - failed submitting write urb, error %d", __func__, retval);
 		goto error_unanchor;
 	}
-	
+
 	/* release our reference to this urb, the USB core will eventually free it entirely */
 	usb_free_urb(urb);
 
@@ -322,7 +318,7 @@ static int lcd_probe(struct usb_interface *interface, const struct usb_device_id
 		retval = -ENODEV;
 		goto error;
 	}
-	
+
 	/* set up the endpoint information */
 	/* use only the first bulk-in and bulk-out endpoints */
 	iface_desc = interface->cur_altsetting;
@@ -418,7 +414,7 @@ static void lcd_disconnect(struct usb_interface *interface)
 
         /* give back our minor */
         usb_deregister_dev(interface, &lcd_class);
- 
+
 	/* decrement our usage count */
 	kref_put(&dev->kref, lcd_delete);
 
@@ -438,14 +434,13 @@ static struct usb_driver lcd_driver = {
 static int __init usb_lcd_init(void)
 {
 	int result;
-	
+
 	result = usb_register(&lcd_driver);
 	if (result)
 		err("usb_register failed. Error number %d", result);
 
 	return result;
 }
-
 
 static void __exit usb_lcd_exit(void)
 {

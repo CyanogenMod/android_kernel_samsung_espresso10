@@ -3,7 +3,6 @@
 
 /* Definitions for the LP-PHY */
 
-
 /* The CCK PHY register range. */
 #define B43_LPPHY_B_VERSION			B43_PHY_CCK(0x00) /* B PHY version */
 #define B43_LPPHY_B_BBCONFIG			B43_PHY_CCK(0x01) /* B PHY BBConfig */
@@ -288,13 +287,10 @@
 #define B43_LPPHY_TR_LOOKUP_8			B43_PHY_OFDM(0xCA) /* TR Lookup 8 */
 #define B43_LPPHY_RF_PWR_OVERRIDE		B43_PHY_OFDM(0xD3) /* RF power override */
 
-
-
 /* Radio register access decorators. */
 #define B43_LP_RADIO(radio_reg)			(radio_reg)
 #define B43_LP_NORTH(radio_reg)			B43_LP_RADIO(radio_reg)
 #define B43_LP_SOUTH(radio_reg)			B43_LP_RADIO((radio_reg) | 0x4000)
-
 
 /*** Broadcom 2062 NORTH radio registers ***/
 #define B2062_N_COMM1				B43_LP_NORTH(0x000) /* Common 01 (north) */
@@ -510,8 +506,6 @@
 #define B2062_S_RXG_CNT15			B43_LP_SOUTH(0x066) /* RXG Counter 15 (south) */
 #define B2062_S_RXG_CNT16			B43_LP_SOUTH(0x067) /* RXG Counter 16 (south) */
 #define B2062_S_RXG_CNT17			B43_LP_SOUTH(0x068) /* RXG Counter 17 (south) */
-
-
 
 /*** Broadcom 2063 radio registers ***/
 #define B2063_RADIO_ID_CODE			B43_LP_RADIO(0x001) /* Radio ID code */
@@ -811,8 +805,6 @@
 #define B2063_EXT_TSSI_CTL1			B43_LP_RADIO(0x126) /* EXT TSSI Control 1 */
 #define B2063_EXT_TSSI_CTL2			B43_LP_RADIO(0x127) /* EXT TSSI Control 2 */
 #define B2063_AFE_CTL				B43_LP_RADIO(0x128) /* AFE Control */
-
-
 
 enum b43_lpphy_txpctl_mode {
 	B43_LPPHY_TXPCTL_UNKNOWN = 0,

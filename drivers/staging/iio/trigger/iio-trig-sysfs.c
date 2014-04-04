@@ -180,7 +180,6 @@ static int iio_sysfs_trigger_remove(int id)
 	return 0;
 }
 
-
 static int __init iio_sysfs_trig_init(void)
 {
 	device_initialize(&iio_sysfs_trig_dev);

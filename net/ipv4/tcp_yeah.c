@@ -57,7 +57,6 @@ static void tcp_yeah_init(struct sock *sk)
 
 }
 
-
 static void tcp_yeah_pkts_acked(struct sock *sk, u32 pkts_acked, s32 rtt_us)
 {
 	const struct inet_connection_sock *icsk = inet_csk(sk);

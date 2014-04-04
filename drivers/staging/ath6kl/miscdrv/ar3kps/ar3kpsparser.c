@@ -24,7 +24,6 @@
  *
  */
 
-
 #include "ar3kpsparser.h"
 
 #include <linux/ctype.h>
@@ -52,13 +51,12 @@
 #define MAX_RADIO_CFG_TABLE_SIZE  244
 #define RAMPS_MAX_PS_TAGS_PER_FILE        50
 
-#define PS_MAX_LEN                        500 
-#define LINE_SIZE_MAX                     (PS_MAX_LEN *2) 
+#define PS_MAX_LEN                        500
+#define LINE_SIZE_MAX                     (PS_MAX_LEN *2)
 
 /* Constant values used by parser */
 #define BYTES_OF_PS_DATA_PER_LINE         16
 #define RAMPS_MAX_PS_DATA_PER_TAG         20000
-
 
 /* Number pf PS/Patch entries in an HCI packet */
 #define MAX_BYTE_LENGTH                   244
@@ -84,7 +82,6 @@ enum eType {
    edecimal
 };
 
-
 typedef struct tPsTagEntry
 {
    u32 TagId;
@@ -97,8 +94,6 @@ typedef struct tRamPatch
    u16 Len;
    u8 *Data;
 } tRamPatch, *ptRamPatch;
-
-
 
 struct st_ps_data_format {
    enum eType   eDataType;
@@ -113,7 +108,6 @@ struct st_read_status {
     unsigned uByteCount;
 };
 
-
 /* Stores the number of PS Tags */
 static u32 Tag_Count = 0;
 
@@ -125,7 +119,6 @@ u32 StartTagId;
 
 tPsTagEntry PsTagEntry[RAMPS_MAX_PS_TAGS_PER_FILE];
 tRamPatch   RamPatch[MAX_NUM_PATCH_ENTRY];
-
 
 int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat);
 char AthReadChar(u8 *buffer, u32 len,u32 *pos);
@@ -189,7 +182,7 @@ unsigned int uGetInputDataFormat(char *pCharLine, struct st_ps_data_format *pstF
             }
             else {                            //[H:
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format\n"));
-                return 1;                    
+                return 1;
             }
         }
         else if(pCharLine[2]==']') {    //[H]
@@ -200,7 +193,7 @@ unsigned int uGetInputDataFormat(char *pCharLine, struct st_ps_data_format *pstF
         }
         else {                      //[H
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format\n"));
-            return 1;            
+            return 1;
         }
         break;
 
@@ -227,7 +220,7 @@ unsigned int uGetInputDataFormat(char *pCharLine, struct st_ps_data_format *pstF
             }
             else {                            //[A:
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 2\n"));
-                return 1;                    
+                return 1;
             }
         }
         else if(pCharLine[2]==']') {    //[H]
@@ -238,7 +231,7 @@ unsigned int uGetInputDataFormat(char *pCharLine, struct st_ps_data_format *pstF
         }
         else {                      //[H
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 3\n"));
-            return 1;            
+            return 1;
         }
         break;
 
@@ -265,7 +258,7 @@ unsigned int uGetInputDataFormat(char *pCharLine, struct st_ps_data_format *pstF
             }
             else {                            //[A:
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 6\n"));
-                return 1;                    
+                return 1;
             }
         }
         else if(pCharLine[2]==']') {    //[H]
@@ -276,10 +269,10 @@ unsigned int uGetInputDataFormat(char *pCharLine, struct st_ps_data_format *pstF
         }
         else {                      //[H
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 7\n"));
-            return 1;            
+            return 1;
         }
         break;
-    
+
         default:
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Illegal Data format 8\n"));
         return 1;
@@ -298,7 +291,6 @@ unsigned int uReadDataInSection(char *pCharLine, struct st_ps_data_format stPS_D
             return (0x0FFF);
         }
         pTokenPtr++;
-            
 
     }
     if(stPS_DataFormat.eDataType == eHex) {
@@ -323,8 +315,6 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
    u16 ByteCount;
    u8 ParseSection=RAM_PS_SECTION;
    u32 pos;
-
-
 
    int uReadCount;
    struct st_ps_data_format stPS_DataFormat;
@@ -356,8 +346,8 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
          {
             continue;
          }
-         
-         if ((pCharLine[0] == '#')) { 
+
+         if ((pCharLine[0] == '#')) {
              if (stReadStatus.uSection != 0)
              {
                  AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("error\n"));
@@ -390,7 +380,7 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
 
             continue;
     }
-         
+
          switch(ParseSection)
          {
              case RAM_PS_SECTION:
@@ -404,9 +394,9 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
                              kfree(Buffer);
                      }
                         return A_ERROR;
-                    }    
+                    }
                     //pCharLine +=5;
-                    PsTagEntry[TagCount].TagId = uReadDataInSection(pCharLine, stPS_DataFormat);                            
+                    PsTagEntry[TagCount].TagId = uReadDataInSection(pCharLine, stPS_DataFormat);
                     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,(" TAG ID %d \n",PsTagEntry[TagCount].TagId));
 
                     //AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("tag # %x\n", PsTagEntry[TagCount].TagId);
@@ -418,7 +408,7 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
                  }
                  else if (stReadStatus.uSection == 2) //TagLength
                  {
-            
+
                     if(uGetInputDataFormat(pCharLine, &stPS_DataFormat)) {
                         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("uGetInputDataFormat fail \n"));
                      if(Buffer != NULL) {
@@ -495,14 +485,14 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
                     }
 
                     stReadStatus.uLineCount++;
-                    
+
                     if(ByteCount == 0) {
                         stReadStatus.uSection = 0;
                         stReadStatus.uCharCount = 0;
                         stReadStatus.uLineCount = 0;
                         stReadStatus.uByteCount = 0;
                     }
-                    else { 
+                    else {
                         stReadStatus.uCharCount = 0;
                     }
 
@@ -516,7 +506,7 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
                        //Sleep (3000);
                        //exit(1);
                     }
-        
+
                  }
              }
 
@@ -536,7 +526,6 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
       AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("Number of Tags %d\n", Tag_Count));
    }
 
-
    if (TagCount > RAMPS_MAX_PS_TAGS_PER_FILE)
    {
 
@@ -553,10 +542,7 @@ int AthParseFilesUnified(u8 *srcbuffer,u32 srclen, int FileFormat)
 
 }
 
-
-
 /********************/
-
 
 int GetNextTwoChar(u8 *srcbuffer,u32 len, u32 *pos, char *buffer)
 {
@@ -565,14 +551,14 @@ int GetNextTwoChar(u8 *srcbuffer,u32 len, u32 *pos, char *buffer)
     ch = AthReadChar(srcbuffer,len,pos);
     if(ch != '\0' && isxdigit(ch)) {
         buffer[0] =  ch;
-    } else 
+    } else
     {
         return A_ERROR;
     }
     ch = AthReadChar(srcbuffer,len,pos);
     if(ch != '\0' && isxdigit(ch)) {
         buffer[1] =  ch;
-    } else 
+    } else
     {
         return A_ERROR;
     }
@@ -617,7 +603,6 @@ int AthDoParsePatch(u8 *patchbuffer, u32 patchlen)
         RamPatch[Patch_Count].Data = (u8 *)A_MALLOC(MAX_BYTE_LENGTH);
         Patch_Count ++;
 
-
         ByteCount= ByteCount - MAX_BYTE_LENGTH;
     }
 
@@ -636,7 +621,6 @@ int AthDoParsePatch(u8 *patchbuffer, u32 patchlen)
             data = A_STRTOUL(&Byte[0], NULL, 16);
             RamPatch[j].Data[k] = (data & 0xFF);
 
-
         }
         j++;
         ByteCount_Org = ByteCount_Org - MAX_BYTE_LENGTH;
@@ -652,11 +636,9 @@ int AthDoParsePatch(u8 *patchbuffer, u32 patchlen)
         data = A_STRTOUL(Byte, NULL, 16);
         RamPatch[j].Data[k] = (data & 0xFF);
 
-
     }
     return 0;
 }
-
 
 /********************/
 int AthDoParsePS(u8 *srcbuffer, u32 srclen)
@@ -670,17 +652,14 @@ int AthDoParsePS(u8 *srcbuffer, u32 srclen)
     Total_tag_lenght = 0;
     BDADDR = false;
 
-
     status = A_ERROR;
 
     if(NULL != srcbuffer && srclen != 0)
     {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("File Open Operation Successful\n"));
 
-        status = AthParseFilesUnified(srcbuffer,srclen,MB_FILEFORMAT_PATCH); 
+        status = AthParseFilesUnified(srcbuffer,srclen,MB_FILEFORMAT_PATCH);
     }
-    
-
 
         if(Tag_Count == 0){
                 Total_tag_lenght = 10;
@@ -710,7 +689,6 @@ int AthDoParsePS(u8 *srcbuffer, u32 srclen)
         Total_tag_lenght = Total_tag_lenght+ 10 + (Tag_Count*4);
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("** Total Length %d\n",Total_tag_lenght));
 
-
     return status;
 }
 char *AthGetLine(char *buffer, int maxlen, u8 *srcbuffer,u32 len,u32 *pos)
@@ -737,7 +715,7 @@ char *AthGetLine(char *buffer, int maxlen, u8 *srcbuffer,u32 len,u32 *pos)
 
         if(CharRead == 13) {
         } else if(CharRead == 10) {
-            buffer[count] ='\0';  
+            buffer[count] ='\0';
             flag = A_ERROR;
             return buffer;
         }else {
@@ -773,13 +751,12 @@ int AthCreateCommandList(struct ps_cmd_packet **HciPacketList, u32 *numPackets)
     u32 Crc = 0;
     *numPackets = 0;
 
-
     if(Patch_Count > 0)
             Crc |= RAM_PATCH_REGION;
     if(Tag_Count > 0)
             Crc |= RAM_PS_REGION;
     AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("PS Thread Started CRC %x Patch Count %d  Tag Count %d \n",Crc,Patch_Count,Tag_Count));
-    
+
     if(Patch_Count || Tag_Count ){
     NumcmdEntry+=(2 + Patch_Count + Tag_Count); /* CRC Packet + PS Reset Packet  + Patch List + PS List*/
         if(Patch_Count > 0) {
@@ -803,11 +780,11 @@ int AthCreateCommandList(struct ps_cmd_packet **HciPacketList, u32 *numPackets)
         if(Tag_Count > 0){
             AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("*** PS Write**** \r\n"));
                 AthPSCreateHCICommand(PS_WRITE,Tag_Count,*HciPacketList,numPackets);
-        }    
+        }
     }
     if(!BDADDR){
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,("BD ADDR not present \r\n"));
-    
+
     }
     for(count = 0; count < Patch_Count; count++) {
 
@@ -821,14 +798,13 @@ int AthCreateCommandList(struct ps_cmd_packet **HciPacketList, u32 *numPackets)
         kfree(PsTagEntry[count].TagData);
     }
 
-/* 
- *  SDIO Transport uses synchronous mode of data transfer 
- *  So, AthPSOperations() call returns only after receiving the 
+/*
+ *  SDIO Transport uses synchronous mode of data transfer
+ *  So, AthPSOperations() call returns only after receiving the
  *  command complete event.
  */
     return *numPackets;
 }
-
 
 ////////////////////////
 
@@ -838,11 +814,10 @@ static int AthPSCreateHCICommand(u8 Opcode, u32 Param1,struct ps_cmd_packet *PSP
     u8 *HCI_PS_Command;
     u32 Length;
     int i,j;
-    
+
     switch(Opcode)
     {
     case WRITE_PATCH:
-
 
          for(i=0;i< Param1;i++){
 
@@ -861,13 +836,11 @@ static int AthPSCreateHCICommand(u8 Opcode, u32 Param1,struct ps_cmd_packet *PSP
                  PSPatchPacket[*index].packetLen = RamPatch[i].Len+HCI_COMMAND_HEADER;
                  (*index)++;
 
-          
          }
 
     break;
 
     case ENABLE_PATCH:
-
 
          Length = 0;
          i= 0;
@@ -930,7 +903,6 @@ static int AthPSCreateHCICommand(u8 Opcode, u32 Param1,struct ps_cmd_packet *PSP
 
     break;
 
-
     case PS_VERIFY_CRC:
                         Length = 0x0;
 
@@ -963,7 +935,7 @@ int AthFreeCommandList(struct ps_cmd_packet **HciPacketList, u32 numPackets)
     }
     for(i = 0; i < numPackets;i++) {
         kfree((*HciPacketList)[i].Hcipacket);
-    }  
+    }
     kfree(*HciPacketList);
     return 0;
 }

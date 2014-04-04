@@ -75,7 +75,6 @@ If you do not specify any options, they will default to
    13-oct-2007
      + first try
 
-
 */
 
 #include "../comedidev.h"

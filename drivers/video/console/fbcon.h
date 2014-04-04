@@ -104,7 +104,6 @@ struct fbcon_ops {
 	((s) & 0x400)
 #define attr_blink(s) \
 	((s) & 0x8000)
-	
 
 static inline int mono_col(const struct fb_info *info)
 {
@@ -160,7 +159,7 @@ static inline int attr_col_ec(int shift, struct vc_data *vc,
     /*
      *  Scroll Method
      */
-     
+
 /* There are several methods fbcon can use to move text around the screen:
  *
  *                     Operation   Pan    Wrap
@@ -231,7 +230,6 @@ static inline int real_y(struct display *p, int ypos)
 	return ypos < rows ? ypos : ypos - rows;
 }
 
-
 static inline int get_attribute(struct fb_info *info, u16 c)
 {
 	int attribute = 0;
@@ -261,4 +259,3 @@ extern void fbcon_set_rotate(struct fbcon_ops *ops);
 #endif /* CONFIG_FRAMEBUFFER_CONSOLE_ROTATION */
 
 #endif /* _VIDEO_FBCON_H */
-

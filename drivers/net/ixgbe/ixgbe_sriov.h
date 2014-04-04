@@ -43,4 +43,3 @@ int ixgbe_ndo_get_vf_config(struct net_device *netdev,
 void ixgbe_check_vf_rate_limit(struct ixgbe_adapter *adapter);
 
 #endif /* _IXGBE_SRIOV_H_ */
-

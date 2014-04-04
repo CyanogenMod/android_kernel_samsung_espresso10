@@ -517,7 +517,6 @@ static ssize_t get_component_type(struct device *cdev,
 	return snprintf(buf, 40, "%s\n", enclosure_type[ecomp->type]);
 }
 
-
 static DEVICE_ATTR(fault, S_IRUGO | S_IWUSR, get_component_fault,
 		    set_component_fault);
 static DEVICE_ATTR(status, S_IRUGO | S_IWUSR, get_component_status,

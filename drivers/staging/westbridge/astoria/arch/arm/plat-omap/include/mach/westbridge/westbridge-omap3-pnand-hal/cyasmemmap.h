@@ -87,7 +87,6 @@
  */
 #define AST_CS	55
 
-
 /*
  *GPMC prefetch engine
  */
@@ -144,7 +143,6 @@
 	 */
 	#define PF_TRANSFERCOUNT (0x000)
 
-
 /* register and its bit fields */
 #define GPMC_PREFETCH_CONTROL 0x01EC
 	/*
@@ -163,7 +161,6 @@
  * GPMC posted write/prefetch engine end
  */
 
-
 /*
  * chip select number on GPMC ( 0..7 )
  */
@@ -173,7 +170,6 @@
  * not connected
  */
 #define AST_DACK	00
-
 
 /*
  * Physical address above the NAND flash
@@ -226,7 +222,6 @@
 #define GPIO6_BASE_ADDR 0x49058000
 #define GPIO_SPACE_SIZE 0x1000
 
-
 /*
  * OMAP3430 GPMC timing for pNAND interface
  */
@@ -243,7 +238,6 @@
  * WAIT2STATUS, must be (1 << 10)
  */
 #define AS_WAIT_PIN_MASK (1 << 10)
-
 
 /*
  * GPMC_CONFIG(reg number [1..7] [for chip sel CS[0..7])
@@ -551,7 +545,6 @@ omap_3430_mux_t omap_mux_pin_cfg[] = {
 	 */
 	{"END_OF_TABLE"}
 };
-
 
 #endif /* _INCLUDED_CYASMEMMAP_H_ */
 

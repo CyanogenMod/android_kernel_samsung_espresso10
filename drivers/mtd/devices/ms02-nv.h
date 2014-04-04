@@ -67,7 +67,6 @@
 #define MS02NV_CSR_BATT_OK	0x01		/* battery OK */
 #define MS02NV_CSR_BATT_OFF	0x02		/* battery disabled */
 
-
 /* MS02-NV memory offsets. */
 #define MS02NV_DIAG		0x0003f8	/* diagnostic status */
 #define MS02NV_MAGIC		0x0003fc	/* MS02-NV magic ID */
@@ -87,7 +86,6 @@
 #define MS02NV_VALID_ID		0xbd100248	/* valid data magic ID value */
 #define MS02NV_SLOT_SIZE	0x800000	/* size of the address space
 						   decoded by the module */
-
 
 typedef volatile u32 ms02nv_uint;
 

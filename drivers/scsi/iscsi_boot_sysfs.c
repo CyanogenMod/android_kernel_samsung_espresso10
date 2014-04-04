@@ -21,7 +21,6 @@
 #include <linux/capability.h>
 #include <linux/iscsi_boot_sysfs.h>
 
-
 MODULE_AUTHOR("Mike Christie <michaelc@cs.wisc.edu>");
 MODULE_DESCRIPTION("sysfs interface and helpers to export iSCSI boot information");
 MODULE_LICENSE("GPL");

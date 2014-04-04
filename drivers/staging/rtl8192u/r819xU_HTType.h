@@ -1,7 +1,6 @@
 #ifndef _R819XU_HTTYPE_H_
 #define _R819XU_HTTYPE_H_
 
-
 //------------------------------------------------------------
 // The HT Capability element is present in beacons, association request,
 //	reassociation request and probe response frames
@@ -22,7 +21,6 @@
 #define MIMO_PS_DYNAMIC			1
 #define MIMO_PS_NOLIMIT			3
 
-
 //
 //	There should be 128 bits to cover all of the MCS rates. However, since
 //	8190 does not support too much rates, one integer is quite enough.
@@ -30,11 +28,9 @@
 
 #define sHTCLng	4
 
-
 #define HT_SUPPORTED_MCS_1SS_BITMAP					0x000000ff
 #define HT_SUPPORTED_MCS_2SS_BITMAP					0x0000ff00
 #define HT_SUPPORTED_MCS_1SS_2SS_BITMAP			HT_MCS_1SS_BITMAP|HT_MCS_1SS_2SS_BITMAP
-
 
 typedef enum _HT_MCS_RATE{
 	HT_MCS0   = 0x00000001,
@@ -86,7 +82,6 @@ typedef enum _CHNLOP{
 #define CHHLOP_IN_PROGRESS(_pHTInfo)	\
 		((_pHTInfo)->ChnlOp > CHNLOP_NONE) ? TRUE : FALSE
 
-
 typedef enum _HT_ACTION{
 	ACT_RECOMMAND_WIDTH		= 0,
 	ACT_MIMO_PWR_SAVE 		= 1,
@@ -99,7 +94,6 @@ typedef enum _HT_ACTION{
 	ACT_MIMO_COMPR_STEER		= 8,
 	ACT_ANTENNA_SELECT		= 9,
 } HT_ACTION, *PHT_ACTION;
-
 
 /* 2007/06/07 MH Define sub-carrier mode for 40MHZ. */
 typedef enum _HT_Bandwidth_40MHZ_Sub_Carrier{
@@ -134,7 +128,6 @@ typedef	struct _HT_CAPABILITY_ELE{
 
 	//Supported MCS set
 	u8	MCS[16];
-
 
 	//Extended HT Capability Info
 	u16	ExtHTCapInfo;
@@ -226,7 +219,6 @@ typedef struct _RT_HIGH_THROUGHPUT{
 	// 802.11n spec version for "peer"
 	HT_SPEC_VER			ePeerHTSpecVer;
 
-
 	// HT related information for "Self"
 	HT_CAPABILITY_ELE	SelfHTCap;					// This is HT cap element sent to peer STA, which also indicate HT Rx capabilities.
 	HT_INFORMATION_ELE	SelfHTInfo;					// This is HT info element sent to peer STA, which also indicate HT Rx capabilities.
@@ -235,13 +227,11 @@ typedef struct _RT_HIGH_THROUGHPUT{
 	u8				PeerHTCapBuf[32];
 	u8				PeerHTInfoBuf[32];
 
-
 	// A-MSDU related
 	u8				bAMSDU_Support;			// This indicates Tx A-MSDU capability
 	u16				nAMSDU_MaxSize;			// This indicates Tx A-MSDU capability
 	u8				bCurrent_AMSDU_Support;	// This indicates Tx A-MSDU capability
 	u16				nCurrent_AMSDU_MaxSize;	// This indicates Tx A-MSDU capability
-
 
 	// AMPDU  related <2006.08.10 Emily>
 	u8				bAMPDUEnable;				// This indicate Tx A-MPDU capability
@@ -310,7 +300,6 @@ typedef struct _RT_HIGH_THROUGHPUT{
 	u32					IOTAction;
 }RT_HIGH_THROUGHPUT, *PRT_HIGH_THROUGHPUT;
 
-
 //------------------------------------------------------------
 // The Data structure is used to keep HT related variable for "each Sta"
 // when card is configured as "AP mode"
@@ -334,12 +323,7 @@ typedef struct _RT_HTINFO_STA_ENTRY{
 
 	u8			McsRateSet[16];
 
-
 }RT_HTINFO_STA_ENTRY, *PRT_HTINFO_STA_ENTRY;
-
-
-
-
 
 //------------------------------------------------------------
 // The Data structure is used to keep HT related variable for "each AP"
@@ -385,7 +369,4 @@ typedef struct _FALSE_ALARM_STATISTICS{
 	u32	Cnt_all;
 }FALSE_ALARM_STATISTICS, *PFALSE_ALARM_STATISTICS;
 
-
-
 #endif //__INC_HTTYPE_H
-

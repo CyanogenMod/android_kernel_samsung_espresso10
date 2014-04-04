@@ -128,8 +128,6 @@ extern u32 wl12xx_debug_level;
 				  CFG_RX_CTL_EN | CFG_RX_AUTH_EN | \
 				  CFG_RX_ASSOC_EN)
 
-
-
 #define WL1271_FW_NAME "ti-connectivity/wl1271-fw-2.bin"
 #define WL128X_FW_NAME "ti-connectivity/wl128x-fw.bin"
 #define WL127X_AP_FW_NAME "ti-connectivity/wl1271-fw-ap.bin"
@@ -295,7 +293,6 @@ struct wl1271_fw_full_status {
 		struct wl1271_fw_ap_status ap;
 	};
 } __packed;
-
 
 struct wl1271_rx_mem_pool_addr {
 	u32 addr;

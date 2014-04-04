@@ -39,7 +39,6 @@
 
 #define PIN_NUMBER 8
 
-
 /*
  * Some registers must be read back to modify.
  * To save time we cache them here in memory
@@ -56,7 +55,6 @@ static int mc33880_write_config(struct mc33880 *mc)
 	return spi_write(mc->spi, &mc->port_config, sizeof(mc->port_config));
 }
 
-
 static int __mc33880_set(struct mc33880 *mc, unsigned offset, int value)
 {
 	if (value)
@@ -66,7 +64,6 @@ static int __mc33880_set(struct mc33880 *mc, unsigned offset, int value)
 
 	return mc33880_write_config(mc);
 }
-
 
 static void mc33880_set(struct gpio_chip *chip, unsigned offset, int value)
 {
@@ -194,4 +191,3 @@ module_exit(mc33880_exit);
 
 MODULE_AUTHOR("Mocean Laboratories <info@mocean-labs.com>");
 MODULE_LICENSE("GPL v2");
-

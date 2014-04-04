@@ -15,4 +15,3 @@ config VIDEO_SAA7164
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called saa7164
-

@@ -133,7 +133,6 @@ static void devkit8000_panel_disable_dvi(struct omap_dss_device *dssdev)
 static struct regulator_consumer_supply devkit8000_vmmc1_supply =
 	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.0");
 
-
 /* ads7846 on SPI */
 static struct regulator_consumer_supply devkit8000_vio_supply =
 	REGULATOR_SUPPLY("vcc", "spi2.0");
@@ -172,7 +171,6 @@ static struct omap_dss_device devkit8000_tv_device = {
 	.type                   = OMAP_DISPLAY_TYPE_VENC,
 	.phy.venc.type          = OMAP_DSS_VENC_TYPE_SVIDEO,
 };
-
 
 static struct omap_dss_device *devkit8000_dss_devices[] = {
 	&devkit8000_lcd_device,
@@ -427,7 +425,6 @@ static struct platform_device keys_gpio = {
 		.platform_data	= &gpio_key_info,
 	},
 };
-
 
 static void __init devkit8000_init_early(void)
 {

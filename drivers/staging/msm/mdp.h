@@ -673,7 +673,6 @@ int get_img(struct mdp_img *img, struct fb_info *info,
 		unsigned long *start, unsigned long *len,
 		struct file **pp_file);
 
-
 /*int get_img(struct msmfb_data *img, struct fb_info *info,
 	unsigned long *start, unsigned long *len, struct file **pp_file);*/
 #endif /* MDP_H */

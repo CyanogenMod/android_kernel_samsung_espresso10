@@ -36,7 +36,6 @@
 #include "xfs_buf_item.h"
 #include "xfs_qm.h"
 
-
 STATIC void
 xfs_fill_statvfs_from_dquot(
 	struct kstatfs		*statp,
@@ -64,7 +63,6 @@ xfs_fill_statvfs_from_dquot(
 			 (statp->f_ffree - be64_to_cpu(dp->d_icount)) : 0;
 	}
 }
-
 
 /*
  * Directory tree accounting is implemented using project quotas, where

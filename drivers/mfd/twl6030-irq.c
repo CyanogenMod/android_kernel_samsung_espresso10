@@ -203,8 +203,6 @@ static int twl6030_irq_thread(void *data)
 			continue;
 		}
 
-
-
 		sts.bytes[3] = 0; /* Only 24 bits are valid*/
 
 		/*
@@ -490,7 +488,6 @@ int twl6030_vlow_init(int vlow_irq)
 	return 0;
 }
 
-
 int twl6030_init_irq(int irq_num, unsigned irq_base, unsigned irq_end,
 			unsigned long features)
 {
@@ -506,8 +503,6 @@ int twl6030_init_irq(int irq_num, unsigned irq_base, unsigned irq_end,
 
 	if (features & TWL6032_SUBCLASS)
 		twl6030_interrupt_mapping = twl6032_interrupt_mapping_table;
-
-
 
 	mask[1] = 0xFF;
 	mask[2] = 0xFF;
@@ -601,4 +596,3 @@ int twl6030_exit_irq(void)
 
 	return 0;
 }
-

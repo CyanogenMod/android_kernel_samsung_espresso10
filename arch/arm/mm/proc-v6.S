@@ -169,7 +169,6 @@ cpu_resume_l1_flags:
 #define cpu_v6_do_resume 0
 #endif
 
-
 	.type	cpu_v6_name, #object
 cpu_v6_name:
 	.asciz	"ARMv6-compatible processor"

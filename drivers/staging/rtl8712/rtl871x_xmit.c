@@ -35,7 +35,6 @@
 #include "osdep_intf.h"
 #include "usb_ops.h"
 
-
 static const u8 P802_1H_OUI[P80211_OUI_LEN] = {0x00, 0x00, 0xf8};
 static const u8 RFC1042_OUI[P80211_OUI_LEN] = {0x00, 0x00, 0x00};
 static void init_hwxmits(struct hw_xmit *phwxmit, sint entry);

@@ -15,7 +15,6 @@
 #define DETECT_RAM 0		/* needed for > 4MB RAM, 16 MB maximum */
 #define QUICC_MEMCPY_USES_PLX 1	/* must be used if the host has > 256 MB RAM */
 
-
 #define STATUS_CABLE_V35	2
 #define STATUS_CABLE_X21	3
 #define STATUS_CABLE_V24	4
@@ -133,7 +132,6 @@ typedef struct {
 	u32 address;		/* PCI address */
 	volatile u32 length;
 }desc_t;
-
 
 typedef struct {
 // Card to host

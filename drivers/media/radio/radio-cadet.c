@@ -88,7 +88,6 @@ static __u16 sigtable[2][4] = {
 	{ 28, 40, 63, 1000 }
 };
 
-
 static int cadet_getstereo(struct cadet *dev)
 {
 	int ret = V4L2_TUNER_SUB_MONO;
@@ -258,7 +257,6 @@ static void cadet_setfreq(struct cadet *dev, unsigned freq)
 	dev->sigstrength = 0;
 }
 
-
 static int cadet_getvol(struct cadet *dev)
 {
 	int ret = 0;
@@ -272,7 +270,6 @@ static int cadet_getvol(struct cadet *dev)
 	mutex_unlock(&dev->lock);
 	return ret;
 }
-
 
 static void cadet_setvol(struct cadet *dev, int vol)
 {
@@ -321,7 +318,6 @@ static void cadet_handler(unsigned long data)
 	add_timer(&dev->readtimer);
 }
 
-
 static ssize_t cadet_read(struct file *file, char __user *data, size_t count, loff_t *ppos)
 {
 	struct cadet *dev = video_drvdata(file);
@@ -353,7 +349,6 @@ static ssize_t cadet_read(struct file *file, char __user *data, size_t count, lo
 		return -EFAULT;
 	return i;
 }
-
 
 static int vidioc_querycap(struct file *file, void *priv,
 				struct v4l2_capability *v)
@@ -429,7 +424,6 @@ static int vidioc_g_frequency(struct file *file, void *priv,
 	f->frequency = cadet_getfreq(dev);
 	return 0;
 }
-
 
 static int vidioc_s_frequency(struct file *file, void *priv,
 				struct v4l2_frequency *f)
@@ -558,7 +552,6 @@ static unsigned int cadet_poll(struct file *file, struct poll_table_struct *wait
 		return POLLIN | POLLRDNORM;
 	return 0;
 }
-
 
 static const struct v4l2_file_operations cadet_fops = {
 	.owner		= THIS_MODULE,
@@ -714,4 +707,3 @@ static void __exit cadet_exit(void)
 
 module_init(cadet_init);
 module_exit(cadet_exit);
-

@@ -2,13 +2,13 @@
  * Byte order utilities
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -27,17 +27,14 @@
  * On big-endian architectures, IL_BIGENDIAN should be defined.
  */
 
-
 #ifndef _BCMENDIAN_H_
 #define _BCMENDIAN_H_
 
 #include <typedefs.h>
 
-
 #define BCMSWAP16(val) \
 	((uint16)((((uint16)(val) & (uint16)0x00ffU) << 8) | \
 		  (((uint16)(val) & (uint16)0xff00U) >> 8)))
-
 
 #define BCMSWAP32(val) \
 	((uint32)((((uint32)(val) & (uint32)0x000000ffU) << 24) | \
@@ -45,11 +42,9 @@
 		  (((uint32)(val) & (uint32)0x00ff0000U) >>  8) | \
 		  (((uint32)(val) & (uint32)0xff000000U) >> 24)))
 
-
 #define BCMSWAP32BY16(val) \
 	((uint32)((((uint32)(val) & (uint32)0x0000ffffU) << 16) | \
 		  (((uint32)(val) & (uint32)0xffff0000U) >> 16)))
-
 
 static INLINE uint16
 bcmswap16(uint16 val)
@@ -68,9 +63,6 @@ bcmswap32by16(uint32 val)
 {
 	return BCMSWAP32BY16(val);
 }
-
-
-
 
 static INLINE void
 bcmswap16_buf(uint16 *buf, uint len)
@@ -110,8 +102,8 @@ bcmswap16_buf(uint16 *buf, uint len)
 #define	ltoh32(i) bcmswap32(i)
 #define htol16(i) bcmswap16(i)
 #define htol32(i) bcmswap32(i)
-#endif 
-#endif 
+#endif
+#endif
 
 #ifndef IL_BIGENDIAN
 #define ltoh16_buf(buf, i)
@@ -119,8 +111,7 @@ bcmswap16_buf(uint16 *buf, uint len)
 #else
 #define ltoh16_buf(buf, i) bcmswap16_buf((uint16 *)buf, i)
 #define htol16_buf(buf, i) bcmswap16_buf((uint16 *)buf, i)
-#endif 
-
+#endif
 
 static INLINE void
 htol16_ua_store(uint16 val, uint8 *bytes)
@@ -128,7 +119,6 @@ htol16_ua_store(uint16 val, uint8 *bytes)
 	bytes[0] = val & 0xff;
 	bytes[1] = val >> 8;
 }
-
 
 static INLINE void
 htol32_ua_store(uint32 val, uint8 *bytes)
@@ -139,14 +129,12 @@ htol32_ua_store(uint32 val, uint8 *bytes)
 	bytes[3] = val >> 24;
 }
 
-
 static INLINE void
 hton16_ua_store(uint16 val, uint8 *bytes)
 {
 	bytes[0] = val >> 8;
 	bytes[1] = val & 0xff;
 }
-
 
 static INLINE void
 hton32_ua_store(uint32 val, uint8 *bytes)
@@ -162,13 +150,11 @@ hton32_ua_store(uint32 val, uint8 *bytes)
 #define _NTOH16_UA(cp)	(((cp)[0] << 8) | (cp)[1])
 #define _NTOH32_UA(cp)	(((cp)[0] << 24) | ((cp)[1] << 16) | ((cp)[2] << 8) | (cp)[3])
 
-
 static INLINE uint16
 ltoh16_ua(const void *bytes)
 {
 	return _LTOH16_UA((const uint8 *)bytes);
 }
-
 
 static INLINE uint32
 ltoh32_ua(const void *bytes)
@@ -176,13 +162,11 @@ ltoh32_ua(const void *bytes)
 	return _LTOH32_UA((const uint8 *)bytes);
 }
 
-
 static INLINE uint16
 ntoh16_ua(const void *bytes)
 {
 	return _NTOH16_UA((const uint8 *)bytes);
 }
-
 
 static INLINE uint32
 ntoh32_ua(const void *bytes)
@@ -202,4 +186,4 @@ ntoh32_ua(const void *bytes)
 	 sizeof(*(ptr)) == sizeof(uint32) ? _NTOH32_UA((const uint8 *)ptr) : \
 	 0xfeedf00d)
 
-#endif 
+#endif

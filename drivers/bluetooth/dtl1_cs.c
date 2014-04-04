@@ -49,19 +49,13 @@
 #include <net/bluetooth/bluetooth.h>
 #include <net/bluetooth/hci_core.h>
 
-
-
 /* ======================== Module parameters ======================== */
-
 
 MODULE_AUTHOR("Marcel Holtmann <marcel@holtmann.org>");
 MODULE_DESCRIPTION("Bluetooth driver for Nokia Connectivity Card DTL-1");
 MODULE_LICENSE("GPL");
 
-
-
 /* ======================== Local structures ======================== */
-
 
 typedef struct dtl1_info_t {
 	struct pcmcia_device *p_dev;
@@ -81,12 +75,10 @@ typedef struct dtl1_info_t {
 	struct sk_buff *rx_skb;
 } dtl1_info_t;
 
-
 static int dtl1_config(struct pcmcia_device *link);
 static void dtl1_release(struct pcmcia_device *link);
 
 static void dtl1_detach(struct pcmcia_device *p_dev);
-
 
 /* Transmit states  */
 #define XMIT_SENDING  1
@@ -97,7 +89,6 @@ static void dtl1_detach(struct pcmcia_device *p_dev);
 #define RECV_WAIT_NSH   0
 #define RECV_WAIT_DATA  1
 
-
 typedef struct {
 	u8 type;
 	u8 zero;
@@ -106,10 +97,7 @@ typedef struct {
 
 #define NSHL  4				/* Nokia Specific Header Length */
 
-
-
 /* ======================== Interrupt handling ======================== */
-
 
 static int dtl1_write(unsigned int iobase, int fifo_size, __u8 *buf, int len)
 {
@@ -128,7 +116,6 @@ static int dtl1_write(unsigned int iobase, int fifo_size, __u8 *buf, int len)
 
 	return actual;
 }
-
 
 static void dtl1_write_wakeup(dtl1_info_t *info)
 {
@@ -178,7 +165,6 @@ static void dtl1_write_wakeup(dtl1_info_t *info)
 	clear_bit(XMIT_SENDING, &(info->tx_state));
 }
 
-
 static void dtl1_control(dtl1_info_t *info, struct sk_buff *skb)
 {
 	u8 flowmask = *(u8 *)skb->data;
@@ -200,7 +186,6 @@ static void dtl1_control(dtl1_info_t *info, struct sk_buff *skb)
 
 	kfree_skb(skb);
 }
-
 
 static void dtl1_receive(dtl1_info_t *info)
 {
@@ -286,7 +271,6 @@ static void dtl1_receive(dtl1_info_t *info)
 	} while (inb(iobase + UART_LSR) & UART_LSR_DR);
 }
 
-
 static irqreturn_t dtl1_interrupt(int irq, void *dev_inst)
 {
 	dtl1_info_t *info = dev_inst;
@@ -352,10 +336,7 @@ static irqreturn_t dtl1_interrupt(int irq, void *dev_inst)
 	return r;
 }
 
-
-
 /* ======================== HCI interface ======================== */
-
 
 static int dtl1_hci_open(struct hci_dev *hdev)
 {
@@ -363,7 +344,6 @@ static int dtl1_hci_open(struct hci_dev *hdev)
 
 	return 0;
 }
-
 
 static int dtl1_hci_flush(struct hci_dev *hdev)
 {
@@ -375,7 +355,6 @@ static int dtl1_hci_flush(struct hci_dev *hdev)
 	return 0;
 }
 
-
 static int dtl1_hci_close(struct hci_dev *hdev)
 {
 	if (!test_and_clear_bit(HCI_RUNNING, &(hdev->flags)))
@@ -385,7 +364,6 @@ static int dtl1_hci_close(struct hci_dev *hdev)
 
 	return 0;
 }
-
 
 static int dtl1_hci_send_frame(struct sk_buff *skb)
 {
@@ -441,21 +419,16 @@ static int dtl1_hci_send_frame(struct sk_buff *skb)
 	return 0;
 }
 
-
 static void dtl1_hci_destruct(struct hci_dev *hdev)
 {
 }
-
 
 static int dtl1_hci_ioctl(struct hci_dev *hdev, unsigned int cmd,  unsigned long arg)
 {
 	return -ENOIOCTLCMD;
 }
 
-
-
 /* ======================== Card services HCI interaction ======================== */
-
 
 static int dtl1_open(dtl1_info_t *info)
 {
@@ -529,7 +502,6 @@ static int dtl1_open(dtl1_info_t *info)
 	return 0;
 }
 
-
 static int dtl1_close(dtl1_info_t *info)
 {
 	unsigned long flags;
@@ -575,7 +547,6 @@ static int dtl1_probe(struct pcmcia_device *link)
 
 	return dtl1_config(link);
 }
-
 
 static void dtl1_detach(struct pcmcia_device *link)
 {
@@ -625,7 +596,6 @@ failed:
 	return -ENODEV;
 }
 
-
 static void dtl1_release(struct pcmcia_device *link)
 {
 	dtl1_info_t *info = link->priv;
@@ -634,7 +604,6 @@ static void dtl1_release(struct pcmcia_device *link)
 
 	pcmcia_disable_device(link);
 }
-
 
 static const struct pcmcia_device_id dtl1_ids[] = {
 	PCMCIA_DEVICE_PROD_ID12("Nokia Mobile Phones", "DTL-1", 0xe1bfdd64, 0xe168480d),
@@ -657,7 +626,6 @@ static int __init init_dtl1_cs(void)
 {
 	return pcmcia_register_driver(&dtl1_driver);
 }
-
 
 static void __exit exit_dtl1_cs(void)
 {

@@ -1,4 +1,3 @@
-
 #include "../../../arch/x86/lib/memcpy_64.S"
 /*
  * We need to provide note.GNU-stack section, saying that we want

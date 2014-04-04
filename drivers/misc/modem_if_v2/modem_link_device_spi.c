@@ -100,7 +100,6 @@ static irqreturn_t spi_subsrdy_irq_handler(int irq, void *p_ld)
 		"[SPI] spi_main_subsrdy_rising_handler :",
 		(int)spild->spi_state);
 
-
 	return result;
 }
 
@@ -166,7 +165,6 @@ static int spi_send
 
 	return ret;
 }
-
 
 static int spi_register_isr
 (
@@ -298,7 +296,6 @@ static int spi_buff_write
 	return buf_length;
 }
 
-
 static void spi_prepare_tx_packet(void)
 {
 	struct sk_buff *skb;
@@ -316,7 +313,6 @@ static void spi_prepare_tx_packet(void)
 		}
 	}
 }
-
 
 static void spi_start_data_send(void)
 {
@@ -466,7 +462,6 @@ int spi_buff_read(struct spi_link_device *spild)
 	spi_packet_length = SPI_DATA_PACKET_HEADER_SIZE +
 		spi_packet_header->current_data_size;
 
-
 	do {
 		/* read spi data mux and set current queue */
 		memcpy(&spi_data_mux,
@@ -529,7 +524,6 @@ int spi_buff_read(struct spi_link_device *spild)
 
 	return 1;
 }
-
 
 static void spi_rx_work(void)
 {
@@ -813,7 +807,6 @@ int encode_msg(struct sprd_image_buf *img, int bcrc)
 	default:
 		*(dest_ptr + dest_len++) = low_crc;
 	}
-
 
 	*(dest_ptr + dest_len++) = HDLC_FLAG;
 
@@ -1261,9 +1254,18 @@ err3:
 
 static void if_spi_send_modem_bin(struct work_struct *send_modem_w)
 {
+	struct spi_link_device *spild;
+	struct io_device *iod;
 	int retval;
 	struct image_buf img;
 	unsigned long tick1, tick2 = 0;
+
+	spild = p_spild;
+	iod = link_get_iod_with_format(&spild->ld, IPC_FMT);
+	if (!iod) {
+		mif_err("no iodevice for modem control\n");
+		return;
+	}
 
 	tick1 = jiffies_to_msecs(jiffies);
 
@@ -1313,7 +1315,14 @@ static void if_spi_send_modem_bin(struct work_struct *send_modem_w)
 	p_spild->ril_send_cnt = 0;
 	p_spild->spi_state = SPI_STATE_IDLE;
 
+	if (iod)
+		iod->modem_state_changed(iod,
+			STATE_ONLINE);
+	return;
 err:
+	if (iod)
+		iod->modem_state_changed(iod,
+			STATE_OFFLINE);
 	return;
 
 }
@@ -1607,7 +1616,6 @@ void if_spi_set_restart(void)
 	wake_lock_destroy(&p_spild->spi_wake_lock);
 }
 
-
 void if_spi_thread_restart(void)
 {
 	int retval;
@@ -1726,4 +1734,3 @@ err1:
 err2:
 	return NULL;
 }
-

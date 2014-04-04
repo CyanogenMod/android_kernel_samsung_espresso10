@@ -116,7 +116,6 @@
 */
 #define CY_RESP_INVALID_LENGTH (2)
 
-
 /* Summary
    This response indicates a request was made to an
    invalid storage address.
@@ -160,7 +159,6 @@
    address
  */
 #define CY_RESP_NO_SUCH_ADDRESS (3)
-
 
 /******************************************************/
 
@@ -213,7 +211,6 @@
 	* CY_RESP_FIRMWARE_VERSION
  */
 #define CY_RQT_GET_FIRMWARE_VERSION	(0)
-
 
 /* Summary
    This command changes the trace level and trace information
@@ -703,7 +700,6 @@
    * CY_RESP_GPIO_STATE
  */
 
-
 /* Summary
    This response indicates success and contains the firmware
    version number, media types supported by the firmware and
@@ -807,7 +803,6 @@
  */
 #define CY_RESP_GPIO_STATE (18)
 
-
 /* Summary
    This command notifies West Bridge the polarity of the
    SD power pin
@@ -840,14 +835,9 @@
    * CY_RQT_RELEASE_RESOURCE
  */
 
-
-
-
-
 #ifndef __doxygen__
 #define CY_RQT_RESOURCE_RQT_CONTEXT	(1)
 #endif
-
 
 /* Summary
    This command is a request from the P port processor
@@ -885,7 +875,6 @@
  */
 #define CY_RQT_ACQUIRE_RESOURCE (0)
 
-
 /* Summary
    This command is a request from the P port processor
    to release ownership of a resource.
@@ -915,7 +904,6 @@
 	* CY_RESP_SUCCESS_FAILURE:CY_ERR_NOT_OWNER
  */
 #define CY_RQT_RELEASE_RESOURCE (1)
-
 
 /****************************/
 
@@ -983,7 +971,6 @@
  */
 #define CY_RQT_START_STORAGE (0)
 
-
 /* Summary
    This command requests shutdown of the storage stack.
 
@@ -1002,7 +989,6 @@
 	* CY_RESP_SUCCESS_FAILURE:CY_ERR_NOT_RUNNING
  */
 #define CY_RQT_STOP_STORAGE (1)
-
 
 /* Summary
    This command requests ownership of the given media
@@ -1028,7 +1014,6 @@
  */
 #define CY_RQT_CLAIM_STORAGE (2)
 
-
 /* Summary
    This command releases ownership of a given media type
    by the P port processor.
@@ -1052,7 +1037,6 @@
 	* CY_RESP_NO_SUCH_ADDRESS
  */
 #define CY_RQT_RELEASE_STORAGE (3)
-
 
 /* Summary
    This command returns the total number of logical devices
@@ -1085,7 +1069,6 @@
  */
 #define CY_RQT_QUERY_MEDIA (4)
 
-
 /* Summary
    This command queries a given device to determine
    information about the number of logical units on
@@ -1113,7 +1096,6 @@
  */
 #define CY_RQT_QUERY_DEVICE (5)
 
-
 /* Summary
    This command queries a given device to determine
    information about the size and location of a logical unit
@@ -1140,7 +1122,6 @@
 	* CY_RESP_NO_SUCH_ADDRESS
  */
 #define CY_RQT_QUERY_UNIT (6)
-
 
 /* Summary
    This command initiates the read of a specific block
@@ -1184,7 +1165,6 @@
 	* CY_RESP_ANTIOCH_DEFERRED_ERROR
  */
 #define CY_RQT_READ_BLOCK (7)
-
 
 /* Summary
    This command initiates the write of a specific block
@@ -1620,7 +1600,6 @@
    Bits 1 - 15  : 15 Least significant bits of Read address
    Bit  0	   : 0
 
-
    Responses
 	* CY_RESP_SUCCESS_FAILURE
 	* CY_RESP_SDIO_DIRECT
@@ -1656,7 +1635,6 @@
    D2
    Bits 1 - 15  : 15 Least significant bits of write address
    Bit  0	   : 0
-
 
    Responses
 	* CY_RESP_SUCCESS_FAILURE:CY_AS_ERROR_SUCCESS
@@ -1694,7 +1672,6 @@
    Bits 9 - 15  : 7 Least significant bits of address
    Bits 0 -  8  : Block/Byte Count
 
-
    Responses
 	* CY_RESP_SUCCESS_FAILURE:CY_AS_ERROR_SUCCESS
 	* CY_RESP_SDIO_EXT
@@ -1731,7 +1708,6 @@
    Bits 9 - 15  : 7 Least significant bits of address
    Bits 0 -  8  : Block/Byte Count
 
-
    Responses
 	* CY_RESP_SUCCESS_FAILURE:CY_AS_ERROR_SUCCESS
 	* CY_RESP_SDIO_EXT
@@ -1755,7 +1731,6 @@
    Bits 12 - 15 : Bus index
    Bits  8 - 11 : Zero based device index
    Bits  0 -  7 : Zero based function number
-
 
    Responses
 	* CY_RESP_SUCCESS_FAILURE:CY_AS_ERROR_SUCCESS
@@ -1830,7 +1805,6 @@
    Bits 12 - 15 : Bus index
    Bits  8 - 11 : Zero based device index
    Bits  0 -  7 : Zero based function number
-
 
    Responses
 	* CY_RESP_SUCCESS_FAILURE:CY_AS_ERROR_SUCCESS
@@ -1995,7 +1969,6 @@
  */
 #define	CY_RESP_MEDIA_CLAIMED_RELEASED	(16)
 
-
 /* Summary
    This response gives the number of physical devices
    associated with a given media type.
@@ -2022,7 +1995,6 @@
    Number of devices
  */
 #define CY_RESP_MEDIA_DESCRIPTOR (17)
-
 
 /* Summary
    This response gives description of a physical device.
@@ -2059,7 +2031,6 @@
 
  */
 #define CY_RESP_DEVICE_DESCRIPTOR (18)
-
 
 /* Summary
    This response gives description of a unit on a
@@ -2104,7 +2075,6 @@
    Unit Size High 16 bits
  */
 #define CY_RESP_UNIT_DESCRIPTOR (19)
-
 
 /* Summary
    This response is sent as error status for P2S
@@ -2188,7 +2158,6 @@
    Status of whether the SD card is password locked.
 */
 #define CY_RESP_SD_LOCK_STATUS	(22)
-
 
 /* Summary
    This response gives the types of physical devices
@@ -2283,7 +2252,6 @@
    * Context = 2
    * Request code = 35
 
-
    D0
    Bits 8-15 : Function Interface Code
    Bits 0-7: Extended Function Interface Code
@@ -2322,7 +2290,6 @@
    * Context = 2
    * Request code = 36
 
-
    D0
    Bits 8-15 : Number of IO functions present
    Bit 0: 1 if memory is present
@@ -2339,7 +2306,6 @@
    D4
    Bits 8-15 :SDIO Card Capability register
    Bits 0-7: SDIO Version
-
 
    Description
    Status of SDIO Card Query operation.
@@ -2491,7 +2457,6 @@
  */
 #define CY_RQT_START_USB (0)
 
-
 /* Summary
    This command requests shutdown of the USB stack.
 
@@ -2510,7 +2475,6 @@
 	* CY_RESP_SUCCESS_FAILURE:CY_RESP_NOT_RUNNING
  */
 #define CY_RQT_STOP_USB	 (1)
-
 
 /* Summary
    This command requests that the USB pins be connected
@@ -2537,7 +2501,6 @@
  */
 #define CY_RQT_SET_CONNECT_STATE (2)
 
-
 /* Summary
    This command requests the connection state of the
    West Bridge USB pins.
@@ -2557,7 +2520,6 @@
 	* CY_RESP_SUCCESS_FAILURE:CY_RESP_NOT_RUNNING
  */
 #define CY_RQT_GET_CONNECT_STATE (3)
-
 
 /* Summary
    This request configures the USB subsystem.
@@ -2604,7 +2566,6 @@
  */
 #define CY_RQT_SET_USB_CONFIG (4)
 
-
 /* Summary
    This request retrieves the current USB configuration from
    the West Bridge device.
@@ -2623,7 +2584,6 @@
 	* CY_RESP_USB_CONFIG
  */
 #define CY_RQT_GET_USB_CONFIG (5)
-
 
 /* Summary
    This request stalls the given endpoint.
@@ -2651,7 +2611,6 @@
  */
 #define CY_RQT_STALL_ENDPOINT (6)
 
-
 /* Summary
    This request retrieves the stall status of the
    requested endpoint.
@@ -2674,7 +2633,6 @@
 	* CY_RESP_SUCCESS_FAILURE:CY_RESP_INVALID_ENDPOINT
  */
 #define CY_RQT_GET_STALL (7)
-
 
 /* Summary
    This command sets the contents of a descriptor.
@@ -2849,7 +2807,6 @@
 */
 #define CY_RQT_USB_EP_DATA (12)
 
-
 /* Summary
    This request sets the NAK bit on an endpoint.
 
@@ -2875,7 +2832,6 @@
 	* CY_RESP_SUCCESS_FAILURE:CY_RESP_INVALID_ENDPOINT
  */
 #define CY_RQT_ENDPOINT_SET_NAK	(13)
-
 
 /* Summary
    This request retrieves the NAK config status of the
@@ -3224,7 +3180,6 @@
  */
 #define CY_RESP_USB_CONFIG (32)
 
-
 /* Summary
    This response contains the configuration information
    for the specified endpoint.
@@ -3263,7 +3218,6 @@
  */
 #define CY_RESP_ENDPOINT_CONFIG (33)
 
-
 /* Summary
    This response contains the stall status for
    the specified endpoint.
@@ -3284,7 +3238,6 @@
 	* 1 = Stalled
  */
 #define CY_RESP_ENDPOINT_STALL (34)
-
 
 /* Summary
    This response contains the connected/disconnected
@@ -3835,4 +3788,3 @@
 #endif
 
 #endif			/* _INCLUDED_CYASPROTOCOL_H_ */
-

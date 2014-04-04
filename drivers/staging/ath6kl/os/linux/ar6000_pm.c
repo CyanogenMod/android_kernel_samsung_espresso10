@@ -3,7 +3,7 @@
  * Copyright (c) 2004-2010 Atheros Communications Inc.
  * All rights reserved.
  *
- * 
+ *
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -93,7 +93,6 @@ static void ar6000_wow_resume(struct ar6_softc *ar)
        (void)fg_start_period;
        (void)bg_period;
 #endif
-
 
 #if WOW_ENABLE_MAX_INTERVAL /* we don't do it if the power consumption is already good enough. */
         if (wmi_listeninterval_cmd(ar->arWmi, ar->arListenIntervalT, ar->arListenIntervalB) == 0) {
@@ -324,7 +323,6 @@ ar6000_setup_cut_power_state(struct ar6_softc *ar,  AR6000_WLAN_STATE state)
             /* Change the state to ON */
             ar->arWlanPowerState = WLAN_POWER_STATE_ON;
 
-
             /* Indicate POWER_UP to HIF */
             config = HIF_DEVICE_POWER_UP;
             status = HIFConfigureDevice(ar->arHifDevice,
@@ -338,7 +336,6 @@ ar6000_setup_cut_power_state(struct ar6_softc *ar,  AR6000_WLAN_STATE state)
                 status = 0;
             }
         } else if (state == WLAN_DISABLED) {
-
 
             /* Already in cut power state.. exit */
             if (ar->arWlanPowerState == WLAN_POWER_STATE_CUT_PWR) {

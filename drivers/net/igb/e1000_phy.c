@@ -258,7 +258,6 @@ s32 igb_read_phy_reg_i2c(struct e1000_hw *hw, u32 offset, u16 *data)
 	struct e1000_phy_info *phy = &hw->phy;
 	u32 i, i2ccmd = 0;
 
-
 	/*
 	 * Set up Op-code, Phy Address, and register address in the I2CCMD
 	 * register.  The MAC will take care of interfacing with the
@@ -305,7 +304,6 @@ s32 igb_write_phy_reg_i2c(struct e1000_hw *hw, u32 offset, u16 data)
 	struct e1000_phy_info *phy = &hw->phy;
 	u32 i, i2ccmd = 0;
 	u16 phy_data_swapped;
-
 
 	/* Swap the data bytes for the I2C interface */
 	phy_data_swapped = ((data >> 8) & 0x00FF) | ((data << 8) & 0xFF00);
@@ -431,7 +429,6 @@ s32 igb_copper_link_setup_82580(struct e1000_hw *hw)
 	struct e1000_phy_info *phy = &hw->phy;
 	s32 ret_val;
 	u16 phy_data;
-
 
 	if (phy->reset_disable) {
 		ret_val = 0;
@@ -1036,7 +1033,6 @@ s32 igb_setup_copper_link(struct e1000_hw *hw)
 {
 	s32 ret_val;
 	bool link;
-
 
 	if (hw->mac.autoneg) {
 		/*
@@ -2162,7 +2158,6 @@ static s32 igb_check_polarity_82580(struct e1000_hw *hw)
 	s32 ret_val;
 	u16 data;
 
-
 	ret_val = phy->ops.read_reg(hw, I82580_PHY_STATUS_2, &data);
 
 	if (!ret_val)
@@ -2187,7 +2182,6 @@ s32 igb_phy_force_speed_duplex_82580(struct e1000_hw *hw)
 	s32 ret_val;
 	u16 phy_data;
 	bool link;
-
 
 	ret_val = phy->ops.read_reg(hw, PHY_CONTROL, &phy_data);
 	if (ret_val)
@@ -2260,7 +2254,6 @@ s32 igb_get_phy_info_82580(struct e1000_hw *hw)
 	u16 data;
 	bool link;
 
-
 	ret_val = igb_phy_has_link(hw, 1, 0, &link);
 	if (ret_val)
 		goto out;
@@ -2322,7 +2315,6 @@ s32 igb_get_cable_length_82580(struct e1000_hw *hw)
 	struct e1000_phy_info *phy = &hw->phy;
 	s32 ret_val;
 	u16 phy_data, length;
-
 
 	ret_val = phy->ops.read_reg(hw, I82580_PHY_DIAG_STATUS, &phy_data);
 	if (ret_val)

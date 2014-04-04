@@ -43,7 +43,6 @@ struct resource *res;
 //  For org mode
 //----------------------------------------------------------
 
-
 @r_org depends on !context && !patch && (org || report)@
 struct resource *res;
 position p;

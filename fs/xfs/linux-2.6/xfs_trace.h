@@ -1029,7 +1029,6 @@ DEFINE_SIMPLE_IO_EVENT(xfs_delalloc_enospc);
 DEFINE_SIMPLE_IO_EVENT(xfs_unwritten_convert);
 DEFINE_SIMPLE_IO_EVENT(xfs_get_blocks_notfound);
 
-
 TRACE_EVENT(xfs_itruncate_start,
 	TP_PROTO(struct xfs_inode *ip, xfs_fsize_t new_size, int flag,
 		 xfs_off_t toss_start, xfs_off_t toss_finish),

@@ -6,7 +6,6 @@
  *     Created 28 Aug 2001 by Ghozlane Toumi
  */
 
-
 #ifndef _SSTFB_H_
 #define _SSTFB_H_
 
@@ -298,7 +297,6 @@
 /* ioctl to enable/disable VGA passthrough */
 #define SSTFB_SET_VGAPASS	_IOW('F', 0xdd, __u32)
 #define SSTFB_GET_VGAPASS	_IOR('F', 0xdd, __u32)
-
 
 /* used to know witch clock to set */
 enum {

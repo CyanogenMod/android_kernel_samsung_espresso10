@@ -39,4 +39,3 @@ config PNPBIOS_PROC_FS
 
 	  Unless you are debugging or have other specific reasons, it is
 	  recommended that you say N here.
-

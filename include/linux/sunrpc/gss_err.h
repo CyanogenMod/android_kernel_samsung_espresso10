@@ -11,7 +11,7 @@
 
 /*
  * Copyright 1993 by OpenVision Technologies, Inc.
- * 
+ *
  * Permission to use, copy, modify, distribute, and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appears in all copies and
@@ -21,7 +21,7 @@
  * without specific, written prior permission. OpenVision makes no
  * representations about the suitability of this software for any
  * purpose.  It is provided "as is" without express or implied warranty.
- * 
+ *
  * OPENVISION DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
  * INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO
  * EVENT SHALL OPENVISION BE LIABLE FOR ANY SPECIAL, INDIRECT OR
@@ -64,13 +64,11 @@ typedef unsigned int OM_uint32;
 #define GSS_C_GSS_CODE 1
 #define GSS_C_MECH_CODE 2
 
-
 /*
  * Expiration time of 2^32-1 seconds means infinite lifetime for a
  * credential or security context
  */
 #define GSS_C_INDEFINITE ((OM_uint32) 0xfffffffful)
-
 
 /* Major status codes */
 

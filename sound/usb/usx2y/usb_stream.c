@@ -21,7 +21,6 @@
 
 #include "usb_stream.h"
 
-
 /*                             setup                                  */
 
 static unsigned usb_stream_next_packet_size(struct usb_stream_kernel *sk)
@@ -108,7 +107,6 @@ static void init_urbs(struct usb_stream_kernel *sk, unsigned use_packsize,
 	init_pipe_urbs(sk, use_packsize, sk->outurb, sk->write_page, dev,
 		       out_pipe);
 }
-
 
 /*
  * convert a sampling rate into our full speed format (fs/1000 in Q16.16)
@@ -230,7 +228,6 @@ struct usb_stream *usb_stream_new(struct usb_stream_kernel *sk,
 out:
 	return sk->s;
 }
-
 
 /*                             start                                  */
 
@@ -674,7 +671,7 @@ dotry:
 		inurb->transfer_buffer_length =
 			inurb->number_of_packets *
 			inurb->iso_frame_desc[0].length;
-		preempt_disable();
+
 		if (u == 0) {
 			int now;
 			struct usb_device *dev = inurb->dev;
@@ -686,19 +683,17 @@ dotry:
 		}
 		err = usb_submit_urb(inurb, GFP_ATOMIC);
 		if (err < 0) {
-			preempt_enable();
 			snd_printk(KERN_ERR"usb_submit_urb(sk->inurb[%i])"
 				   " returned %i\n", u, err);
 			return err;
 		}
 		err = usb_submit_urb(outurb, GFP_ATOMIC);
 		if (err < 0) {
-			preempt_enable();
 			snd_printk(KERN_ERR"usb_submit_urb(sk->outurb[%i])"
 				   " returned %i\n", u, err);
 			return err;
 		}
-		preempt_enable();
+
 		if (inurb->start_frame != outurb->start_frame) {
 			snd_printd(KERN_DEBUG
 				   "u[%i] start_frames differ in:%u out:%u\n",
@@ -738,7 +733,6 @@ check_retry:
 
 	return s->state == usb_stream_ready ? 0 : -EFAULT;
 }
-
 
 /*                             stop                                   */
 

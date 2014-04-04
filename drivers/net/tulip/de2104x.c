@@ -329,7 +329,6 @@ struct de_private {
 	unsigned		media_lock : 1;
 };
 
-
 static void de_set_rx_mode (struct net_device *dev);
 static void de_tx (struct de_private *de);
 static void de_clean_rings (struct de_private *de);
@@ -337,7 +336,6 @@ static void de_media_interrupt (struct de_private *de, u32 status);
 static void de21040_media_timer (unsigned long data);
 static void de21041_media_timer (unsigned long data);
 static unsigned int de_ok_to_advertise (struct de_private *de, u32 new_media);
-
 
 static DEFINE_PCI_DEVICE_TABLE(de_pci_tbl) = {
 	{ PCI_VENDOR_ID_DEC, PCI_DEVICE_ID_DEC_TULIP,
@@ -369,10 +367,8 @@ static u16 t21041_csr14[] = { 0xFFFF, 0xF7FD, 0xF7FD, 0x7F3F, 0x7F3D, };
 static u16 t21041_csr14_brk[] = { 0xFF3F, 0xF7FD, 0xF7FD, 0x7F3F, 0x7F3D, };
 static u16 t21041_csr15[] = { 0x0008, 0x0006, 0x000E, 0x0008, 0x0008, };
 
-
 #define dr32(reg)	ioread32(de->regs + (reg))
 #define dw32(reg, val)	iowrite32((val), de->regs + (reg))
-
 
 static void de_rx_err_acct (struct de_private *de, unsigned rx_tail,
 			    u32 status, u32 len)
@@ -717,7 +713,6 @@ static void build_setup_frame_perfect(u16 *setup_frm, struct net_device *dev)
 	*setup_frm++ = eaddrs[1]; *setup_frm++ = eaddrs[1];
 	*setup_frm++ = eaddrs[2]; *setup_frm++ = eaddrs[2];
 }
-
 
 static void __de_set_rx_mode (struct net_device *dev)
 {

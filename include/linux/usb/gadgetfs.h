@@ -60,7 +60,6 @@ struct usb_gadgetfs_event {
 	enum usb_gadgetfs_event_type	type;
 };
 
-
 /* The 'g' code is also used by printer gadget ioctl requests.
  * Don't add any colliding codes to either driver, and keep
  * them in unique ranges (size 0x20 for now).

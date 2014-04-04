@@ -1607,7 +1607,6 @@ static int dapm_power_widgets(struct snd_soc_dapm_context *dapm, int event)
 	list_for_each_entry(d, &card->dapm_list, list)
 		d->dev_power = power;
 
-
 	/* Run all the bias changes in parallel */
 	list_for_each_entry(d, &dapm->card->dapm_list, list)
 		async_schedule_domain(dapm_pre_sequence_async, d,

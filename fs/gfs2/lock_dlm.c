@@ -17,7 +17,6 @@
 #include "glock.h"
 #include "util.h"
 
-
 static void gdlm_ast(void *arg)
 {
 	struct gfs2_glock *gl = arg;
@@ -132,7 +131,7 @@ static u32 make_flags(const u32 lkid, const unsigned int gfs_flags,
 			BUG();
 	}
 
-	if (lkid != 0) 
+	if (lkid != 0)
 		lkf |= DLM_LKF_CONVERT;
 
 	lkf |= DLM_LKF_VALBLK;
@@ -232,4 +231,3 @@ const struct lm_lockops gfs2_dlm_ops = {
 	.lm_cancel = gdlm_cancel,
 	.lm_tokens = &dlm_tokens,
 };
-

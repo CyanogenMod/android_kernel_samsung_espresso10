@@ -55,7 +55,6 @@
 #define DMX_MAX_SECFEED_SIZE (DMX_MAX_SECTION_SIZE + 188)
 #endif
 
-
 /*
  * enum dmx_success: Success codes for the Demux Callback API.
  */
@@ -120,7 +119,6 @@ enum dmx_ts_pes
 #define DMX_TS_PES_TELETEXT DMX_TS_PES_TELETEXT0
 #define DMX_TS_PES_SUBTITLE DMX_TS_PES_SUBTITLE0
 #define DMX_TS_PES_PCR      DMX_TS_PES_PCR0
-
 
 struct dmx_ts_feed {
 	int is_filtering; /* Set to non-zero when filtering in progress */

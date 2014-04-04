@@ -723,7 +723,6 @@ static struct davinci_cpuidle_config da8xx_cpuidle_pdata = {
 	.ddr2_pdown	= 1,
 };
 
-
 static struct platform_device da8xx_cpuidle_device = {
 	.name			= "cpuidle-davinci",
 	.num_resources		= ARRAY_SIZE(da8xx_cpuidle_resources),

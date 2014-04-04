@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_services.c" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -36,11 +36,11 @@ void HTCControlRecv(void *Context, struct htc_packet *pPacket)
 
     if (pPacket->Status == A_ECANCELED) {
         /* this is a flush operation, return the control packet back to the pool */
-        HTC_FREE_CONTROL_RX((struct htc_target*)Context,pPacket);    
+        HTC_FREE_CONTROL_RX((struct htc_target*)Context,pPacket);
         return;
-    }  
-    
-        /* the only control messages we are expecting are NULL messages (credit resports) */   
+    }
+
+        /* the only control messages we are expecting are NULL messages (credit resports) */
     if (pPacket->ActualLength > 0) {
         AR_DEBUG_PRINTF(ATH_DEBUG_ERR,
                         ("HTCControlRecv, got message with length:%d \n",
@@ -74,29 +74,29 @@ int HTCSendSetupComplete(struct htc_target *target)
         if (target->HTCTargetVersion >= HTC_VERSION_2P1) {
             HTC_SETUP_COMPLETE_EX_MSG *pSetupCompleteEx;
             u32 setupFlags = 0;
-                   
+
             pSetupCompleteEx = (HTC_SETUP_COMPLETE_EX_MSG *)pSendPacket->pBuffer;
             A_MEMZERO(pSetupCompleteEx, sizeof(HTC_SETUP_COMPLETE_EX_MSG));
-            pSetupCompleteEx->MessageID = HTC_MSG_SETUP_COMPLETE_EX_ID;   
+            pSetupCompleteEx->MessageID = HTC_MSG_SETUP_COMPLETE_EX_ID;
             if (target->MaxMsgPerBundle > 0) {
                     /* host can do HTC bundling, indicate this to the target */
-                setupFlags |= HTC_SETUP_COMPLETE_FLAGS_ENABLE_BUNDLE_RECV; 
+                setupFlags |= HTC_SETUP_COMPLETE_FLAGS_ENABLE_BUNDLE_RECV;
                 pSetupCompleteEx->MaxMsgsPerBundledRecv = target->MaxMsgPerBundle;
-            }    
-            memcpy(&pSetupCompleteEx->SetupFlags, &setupFlags, sizeof(pSetupCompleteEx->SetupFlags));            
+            }
+            memcpy(&pSetupCompleteEx->SetupFlags, &setupFlags, sizeof(pSetupCompleteEx->SetupFlags));
             SET_HTC_PACKET_INFO_TX(pSendPacket,
                                    NULL,
                                    (u8 *)pSetupCompleteEx,
                                    sizeof(HTC_SETUP_COMPLETE_EX_MSG),
                                    ENDPOINT_0,
                                    HTC_SERVICE_TX_PACKET_TAG);
-      
-        }  else {            
+
+        }  else {
             HTC_SETUP_COMPLETE_MSG *pSetupComplete;
                 /* assemble setup complete message */
             pSetupComplete = (HTC_SETUP_COMPLETE_MSG *)pSendPacket->pBuffer;
             A_MEMZERO(pSetupComplete, sizeof(HTC_SETUP_COMPLETE_MSG));
-            pSetupComplete->MessageID = HTC_MSG_SETUP_COMPLETE_ID;   
+            pSetupComplete->MessageID = HTC_MSG_SETUP_COMPLETE_ID;
             SET_HTC_PACKET_INFO_TX(pSendPacket,
                                    NULL,
                                    (u8 *)pSetupComplete,
@@ -119,7 +119,6 @@ int HTCSendSetupComplete(struct htc_target *target)
 
     return status;
 }
-
 
 int HTCConnectService(HTC_HANDLE               HTCHandle,
                            struct htc_service_connect_req  *pConnectReq,
@@ -269,27 +268,27 @@ int HTCConnectService(HTC_HANDLE               HTCHandle,
         pEndpoint->CreditDist.pHTCReserved = pEndpoint;
         pEndpoint->CreditDist.Endpoint = assignedEndpoint;
         pEndpoint->CreditDist.TxCreditSize = target->TargetCreditSize;
-        
+
         if (pConnectReq->MaxSendMsgSize != 0) {
                 /* override TxCreditsPerMaxMsg calculation, this optimizes the credit-low indications
                  * since the host will actually issue smaller messages in the Send path */
             if (pConnectReq->MaxSendMsgSize > maxMsgSize) {
                     /* can't be larger than the maximum the target can support */
                 AR_DEBUG_ASSERT(false);
-                break;       
+                break;
             }
             pEndpoint->CreditDist.TxCreditsPerMaxMsg = pConnectReq->MaxSendMsgSize / target->TargetCreditSize;
         } else {
             pEndpoint->CreditDist.TxCreditsPerMaxMsg = maxMsgSize / target->TargetCreditSize;
         }
-        
+
         if (0 == pEndpoint->CreditDist.TxCreditsPerMaxMsg) {
             pEndpoint->CreditDist.TxCreditsPerMaxMsg = 1;
         }
-        
+
             /* save local connection flags */
         pEndpoint->LocalConnectionFlags = pConnectReq->LocalConnectionFlags;
-        
+
         status = 0;
 
     } while (false);
@@ -331,8 +330,6 @@ static void AddToEndpointDistList(struct htc_target *target, struct htc_endpoint
     pEpDist->pPrev = pLastEntry;
     pEpDist->pNext = NULL;
 }
-
-
 
 /* default credit init callback */
 static void HTCDefaultCreditInit(void                     *Context,

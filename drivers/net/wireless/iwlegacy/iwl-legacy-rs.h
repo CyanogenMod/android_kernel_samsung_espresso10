@@ -53,7 +53,6 @@ struct iwl3945_rate_info {
 	u8 prev_table_rs;	/* prev in rate table cmd */
 };
 
-
 /*
  * These serve as indexes into
  * struct iwl_rate_info iwlegacy_rates[IWL_RATE_COUNT];
@@ -415,7 +414,6 @@ static inline u8 iwl4965_first_antenna(u8 mask)
 		return ANT_B;
 	return ANT_C;
 }
-
 
 /**
  * iwl3945_rate_scale_init - Initialize the rate scale table based on assoc info

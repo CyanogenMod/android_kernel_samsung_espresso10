@@ -66,7 +66,6 @@
 # define RPCDBG_FACILITY        RPCDBG_AUTH
 #endif
 
-
 /* read_token is a mic token, and message_buffer is the data that the mic was
  * supposedly taken over. */
 
@@ -223,4 +222,3 @@ gss_verify_mic_kerberos(struct gss_ctx *gss_ctx,
 		return gss_verify_mic_v2(ctx, message_buffer, read_token);
 	}
 }
-

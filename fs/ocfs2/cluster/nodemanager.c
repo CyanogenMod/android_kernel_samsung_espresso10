@@ -929,7 +929,6 @@ void o2nm_undepend_this_node(void)
 	o2nm_node_put(local_node);
 }
 
-
 static void __exit exit_o2nm(void)
 {
 	/* XXX sync with hb callbacks and shut down hb? */

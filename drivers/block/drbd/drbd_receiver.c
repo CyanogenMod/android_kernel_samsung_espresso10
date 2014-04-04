@@ -22,7 +22,6 @@
    the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #include <linux/module.h>
 
 #include <asm/uaccess.h>
@@ -59,7 +58,6 @@ static int drbd_do_auth(struct drbd_conf *mdev);
 
 static enum finish_epoch drbd_may_finish_epoch(struct drbd_conf *, struct drbd_epoch *, enum epoch_event);
 static int e_end_block(struct drbd_conf *, struct drbd_work *, int);
-
 
 #define GFP_TRY	(__GFP_HIGHMEM | __GFP_NOWARN)
 
@@ -377,7 +375,6 @@ int drbd_release_ee(struct drbd_conf *mdev, struct list_head *list)
 	}
 	return count;
 }
-
 
 /*
  * This function is called from _asender only_
@@ -1935,7 +1932,6 @@ int drbd_rs_should_slow_down(struct drbd_conf *mdev, sector_t sector)
 	return throttle;
 }
 
-
 static int receive_DataRequest(struct drbd_conf *mdev, enum drbd_packets cmd, unsigned int digest_size)
 {
 	sector_t sector;
@@ -2225,7 +2221,6 @@ static int drbd_asb_recover_1p(struct drbd_conf *mdev) __must_hold(local)
 		if (hg == -1 && mdev->state.role == R_PRIMARY) {
 			enum drbd_state_rv rv2;
 
-			drbd_set_role(mdev, R_SECONDARY, 0);
 			 /* drbd_change_state() does not sleep while in SS_IN_TRANSIENT_STATE,
 			  * we might be here in C_WF_REPORT_PARAMS which is transient.
 			  * we do not need to wait for the after state change work either. */
@@ -2464,7 +2459,6 @@ static int drbd_uuid_compare(struct drbd_conf *mdev, int *rule_nr) __must_hold(l
 			return 1;
 		}
 	}
-
 
 	*rule_nr = 80;
 	peer = mdev->p_uuid[UI_CURRENT] & ~((u64)1);

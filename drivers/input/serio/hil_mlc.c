@@ -79,7 +79,6 @@ static int			hil_mlcs_probe;
 static void hil_mlcs_process(unsigned long unused);
 static DECLARE_TASKLET_DISABLED(hil_mlcs_tasklet, hil_mlcs_process, 0);
 
-
 /* #define HIL_MLC_DEBUG */
 
 /********************** Device info/instance management **********************/

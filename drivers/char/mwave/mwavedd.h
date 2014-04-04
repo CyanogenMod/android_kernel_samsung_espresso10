@@ -122,7 +122,6 @@ extern int mwave_uart_io;
 #define PRINTK_8(f,s,v1,v2,v3,v4,v5,v6,v7)
 #endif
 
-
 typedef struct _MWAVE_IPC {
 	unsigned short usIntCount;	/* 0=none, 1=first, 2=greater than 1st */
 	BOOLEAN bIsEnabled;

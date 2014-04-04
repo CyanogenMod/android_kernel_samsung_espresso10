@@ -165,7 +165,6 @@ static struct lpddr_private *lpddr_probe_chip(struct map_info *map)
 	struct lpddr_private *retlpddr;
 	int numvirtchips;
 
-
 	if ((map->pfow_base + 0x1000) >= map->size) {
 		printk(KERN_NOTICE"%s Probe at base (0x%08lx) past the end of"
 				"the map(0x%08lx)\n", map->name,
@@ -249,4 +248,3 @@ module_exit(lpddr_probe_exit);
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Vasiliy Leonenko <vasiliy.leonenko@gmail.com>");
 MODULE_DESCRIPTION("Driver to probe qinfo flash chips");
-

@@ -563,7 +563,6 @@ static ssize_t regulator_suspend_standby_state_show(struct device *dev,
 static DEVICE_ATTR(suspend_standby_state, 0444,
 		regulator_suspend_standby_state_show, NULL);
 
-
 /*
  * These are the only attributes are present for all regulators.
  * Other attributes are a function of regulator functionality.

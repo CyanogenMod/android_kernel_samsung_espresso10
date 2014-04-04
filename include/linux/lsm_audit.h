@@ -23,7 +23,6 @@
 #include <linux/skbuff.h>
 #include <asm/system.h>
 
-
 /* Auxiliary data to use in generating the audit record. */
 struct common_audit_data {
 	char type;

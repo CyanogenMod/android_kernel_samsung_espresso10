@@ -550,11 +550,6 @@
 #define SBE_2T3E3_FRAMER_VAL_E3_TX_LAPD_INTERRUPT_ENABLE	0x02
 #define SBE_2T3E3_FRAMER_VAL_E3_TX_LAPD_INTERRUPT_STATUS	0x01
 
-
-
-
-
-
 /**************************************************************
  *  LIU
  **************************************************************/
@@ -677,7 +672,6 @@ typedef struct {
 #define SBE_2T3E3_TX_DESC_DISABLE_PADDING		0x00800000
 #define SBE_2T3E3_TX_DESC_BUFFER_2_SIZE			0x003ff800
 #define SBE_2T3E3_TX_DESC_BUFFER_1_SIZE			0x000007ff
-
 
 #define SBE_2T3E3_MTU					1600
 #define SBE_2T3E3_CRC16_LENGTH				2
@@ -889,6 +883,5 @@ static inline void cpld_write(struct channel *channel, unsigned reg, u32 val)
 #define exar7300_clear_bit(sc, reg, bit)		\
 	exar7300_write((sc), (reg),			\
 		       exar7300_read(sc, reg) & ~(bit))
-
 
 #endif /* T3E3_H */

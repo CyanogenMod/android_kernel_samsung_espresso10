@@ -75,7 +75,6 @@ static void nes_process_iwarp_aeqe(struct nes_device *nesdev,
 static void process_critical_error(struct nes_device *nesdev);
 static void nes_process_mac_intr(struct nes_device *nesdev, u32 mac_number);
 static unsigned int nes_reset_adapter_ne020(struct nes_device *nesdev, u8 *OneG_Mode);
-static void nes_terminate_timeout(unsigned long context);
 static void nes_terminate_start_timer(struct nes_qp *nesqp);
 
 #ifdef CONFIG_INFINIBAND_NES_DEBUG
@@ -110,7 +109,6 @@ static unsigned char *nes_tcp_state_str[] = {
 };
 #endif
 
-
 /**
  * nes_nic_init_timer_defaults
  */
@@ -137,7 +135,6 @@ void  nes_nic_init_timer_defaults(struct nes_device *nesdev, u8 jumbomode)
 	/* todo use netdev->mtu to set thresholds */
 	spin_unlock_irqrestore(&nesadapter->periodic_timer_lock, flags);
 }
-
 
 /**
  * nes_nic_init_timer
@@ -166,7 +163,6 @@ static void  nes_nic_init_timer(struct nes_device *nesdev)
 	/* todo use netdev->mtu to set thresholds */
 	spin_unlock_irqrestore(&nesadapter->periodic_timer_lock, flags);
 }
-
 
 /**
  * nes_nic_tune_timer
@@ -240,7 +236,6 @@ static void nes_nic_tune_timer(struct nes_device *nesdev)
 	spin_unlock_irqrestore(&nesadapter->periodic_timer_lock, flags);
 }
 
-
 /**
  * nes_init_adapter - initialize adapter
  */
@@ -296,7 +291,6 @@ struct nes_adapter *nes_init_adapter(struct nes_device *nesdev, u8 hw_rev) {
 			nes_read_indexed(nesdev, NES_IDX_INT_CPU_STATUS + 8));
 
 	nes_debug(NES_DBG_INIT, "Reset and init NE020\n");
-
 
 	if ((port_count = nes_reset_adapter_ne020(nesdev, &OneG_Mode)) == 0)
 		return NULL;
@@ -436,7 +430,6 @@ struct nes_adapter *nes_init_adapter(struct nes_device *nesdev, u8 hw_rev) {
 	nesadapter->allocated_pds = &nesadapter->allocated_mrs[BITS_TO_LONGS(max_mr)];
 	nesadapter->allocated_arps = &nesadapter->allocated_pds[BITS_TO_LONGS(num_pds)];
 	nesadapter->qp_table = (struct nes_qp **)(&nesadapter->allocated_arps[BITS_TO_LONGS(arp_table_size)]);
-
 
 	/* mark the usual suspect QPs, MR and CQs as in use */
 	for (u32temp = 0; u32temp < NES_FIRST_QPN; u32temp++) {
@@ -630,7 +623,6 @@ struct nes_adapter *nes_init_adapter(struct nes_device *nesdev, u8 hw_rev) {
 	return nesadapter;
 }
 
-
 /**
  * nes_reset_adapter_ne020
  */
@@ -735,7 +727,6 @@ static unsigned int nes_reset_adapter_ne020(struct nes_device *nesdev, u8 *OneG_
 
 	return port_count;
 }
-
 
 /**
  * nes_init_serdes
@@ -852,7 +843,6 @@ static int nes_init_serdes(struct nes_device *nesdev, u8 hw_rev, u8 port_count,
 	return 0;
 }
 
-
 /**
  * nes_init_csr_ne020
  * Initialize registers for ne020 hardware
@@ -941,7 +931,6 @@ static void nes_init_csr_ne020(struct nes_device *nesdev, u8 hw_rev, u8 port_cou
 	}
 }
 
-
 /**
  * nes_destroy_adapter - destroy the adapter structure
  */
@@ -965,7 +954,6 @@ void nes_destroy_adapter(struct nes_adapter *nesadapter)
 		kfree(nesadapter);
 	}
 }
-
 
 /**
  * nes_init_cqp
@@ -1083,7 +1071,6 @@ int nes_init_cqp(struct nes_device *nesdev)
 	cqp_qp_context->context_words[2] = cpu_to_le32((u32)nesdev->cqp.sq_pbase);
 	cqp_qp_context->context_words[3] = cpu_to_le32(((u64)nesdev->cqp.sq_pbase) >> 32);
 
-
 	/* Write the address to Create CQP */
 	if ((sizeof(dma_addr_t) > 4)) {
 		nes_write_indexed(nesdev,
@@ -1196,7 +1183,6 @@ int nes_init_cqp(struct nes_device *nesdev)
 	return 0;
 }
 
-
 /**
  * nes_destroy_cqp
  */
@@ -1293,7 +1279,6 @@ int nes_destroy_cqp(struct nes_device *nesdev)
 	return 0;
 }
 
-
 /**
  * nes_init_1g_phy
  */
@@ -1346,7 +1331,6 @@ static int nes_init_1g_phy(struct nes_device *nesdev, u8 phy_type, u8 phy_index)
 
 	return ret;
 }
-
 
 /**
  * nes_init_2025_phy
@@ -1499,7 +1483,6 @@ static int nes_init_2025_phy(struct nes_device *nesdev, u8 phy_type, u8 phy_inde
 	return ret;
 }
 
-
 /**
  * nes_init_phy
  */
@@ -1542,7 +1525,6 @@ int nes_init_phy(struct nes_device *nesdev)
 
 	return ret;
 }
-
 
 /**
  * nes_replenish_nic_rq
@@ -1617,7 +1599,6 @@ static void nes_replenish_nic_rq(struct nes_vnic *nesvnic)
 	nesnic->replenishing_rq = 0;
 }
 
-
 /**
  * nes_rq_wqes_timeout
  */
@@ -1629,7 +1610,6 @@ static void nes_rq_wqes_timeout(unsigned long parm)
 	if (atomic_read(&nesvnic->rx_skbs_needed))
 		nes_replenish_nic_rq(nesvnic);
 }
-
 
 static int nes_lro_get_skb_hdr(struct sk_buff *skb, void **iphdr,
 			       void **tcph, u64 *hdr_flags, void *priv)
@@ -1648,7 +1628,6 @@ static int nes_lro_get_skb_hdr(struct sk_buff *skb, void **iphdr,
 	*iphdr = iph;
 	return 0;
 }
-
 
 /**
  * nes_init_nic_qp
@@ -1732,7 +1711,6 @@ int nes_init_nic_qp(struct nes_device *nesdev, struct net_device *netdev)
 	/* setup the RQ */
 	vmem += (NES_NIC_WQ_SIZE * sizeof(struct nes_hw_nic_sq_wqe));
 	pmem += (NES_NIC_WQ_SIZE * sizeof(struct nes_hw_nic_sq_wqe));
-
 
 	nesvnic->nic.rq_vbase = vmem;
 	nesvnic->nic.rq_pbase = pmem;
@@ -1883,7 +1861,6 @@ int nes_init_nic_qp(struct nes_device *nesdev, struct net_device *netdev)
 	nesvnic->lro_mgr.ip_summed_aggr = CHECKSUM_UNNECESSARY;
 	return 0;
 }
-
 
 /**
  * nes_destroy_nic_qp
@@ -2278,7 +2255,6 @@ void nes_dpc(unsigned long param)
 	nesdev->deepcq_count = 0;
 }
 
-
 /**
  * nes_process_ceq
  */
@@ -2317,7 +2293,6 @@ static void nes_process_ceq(struct nes_device *nesdev, struct nes_hw_ceq *ceq)
 
 	ceq->ceq_head = head;
 }
-
 
 /**
  * nes_process_aeq
@@ -2747,14 +2722,12 @@ void nes_recheck_link_status(struct work_struct *work)
 	spin_unlock_irqrestore(&nesadapter->phy_lock, flags);
 }
 
-
 static void nes_nic_napi_ce_handler(struct nes_device *nesdev, struct nes_hw_nic_cq *cq)
 {
 	struct nes_vnic *nesvnic = container_of(cq, struct nes_vnic, nic_cq);
 
 	napi_schedule(&nesvnic->napi);
 }
-
 
 /* The MAX_RQES_TO_PROCESS defines how many max read requests to complete before
 * getting out of nic_ce_handler
@@ -2916,7 +2889,6 @@ void nes_nic_ce_handler(struct nes_device *nesdev, struct nes_hw_nic_cq *cq)
 				if (rx_skb == NULL)
 					goto skip_rx_indicate0;
 
-
 				if ((cqe_misc & NES_NIC_CQE_TAG_VALID) &&
 				    (nesvnic->vlan_grp != NULL)) {
 					vlan_tag = (u16)(le32_to_cpu(
@@ -2986,7 +2958,6 @@ skip_rx_indicate0:
 	if (atomic_read(&nesvnic->rx_skbs_needed))
 		nes_replenish_nic_rq(nesvnic);
 }
-
 
 /**
  * nes_cqp_ce_handler
@@ -3097,7 +3068,6 @@ static void nes_cqp_ce_handler(struct nes_device *nesdev, struct nes_hw_cq *cq)
 			cq->cq_number);
 	nes_read32(nesdev->regs+NES_CQE_ALLOC);
 }
-
 
 static u8 *locate_mpa(u8 *pkt, u32 aeq_info)
 {
@@ -3496,7 +3466,7 @@ static void nes_terminate_received(struct nes_device *nesdev,
 }
 
 /* Timeout routine in case terminate fails to complete */
-static void nes_terminate_timeout(unsigned long context)
+void nes_terminate_timeout(unsigned long context)
 {
 	struct nes_qp *nesqp = (struct nes_qp *)(unsigned long)context;
 
@@ -3506,11 +3476,7 @@ static void nes_terminate_timeout(unsigned long context)
 /* Set a timer in case hw cannot complete the terminate sequence */
 static void nes_terminate_start_timer(struct nes_qp *nesqp)
 {
-	init_timer(&nesqp->terminate_timer);
-	nesqp->terminate_timer.function = nes_terminate_timeout;
-	nesqp->terminate_timer.expires = jiffies + HZ;
-	nesqp->terminate_timer.data = (unsigned long)nesqp;
-	add_timer(&nesqp->terminate_timer);
+	mod_timer(&nesqp->terminate_timer, (jiffies + HZ));
 }
 
 /**
@@ -3749,7 +3715,6 @@ void nes_iwarp_ce_handler(struct nes_device *nesdev, struct nes_hw_cq *hw_cq)
 	return;
 }
 
-
 /**
  * nes_manage_apbvt()
  */
@@ -3803,7 +3768,6 @@ int nes_manage_apbvt(struct nes_vnic *nesvnic, u32 accel_local_port,
 		return 0;
 }
 
-
 /**
  * nes_manage_arp_cache
  */
@@ -3856,7 +3820,6 @@ void nes_manage_arp_cache(struct net_device *netdev, unsigned char *mac_addr,
 	atomic_set(&cqp_request->refcount, 1);
 	nes_post_cqp_request(nesdev, cqp_request);
 }
-
 
 /**
  * flush_wqes

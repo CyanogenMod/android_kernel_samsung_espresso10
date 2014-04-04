@@ -439,7 +439,6 @@ static void sh_eth_set_receive_align(struct sk_buff *skb)
 }
 #endif
 
-
 /* CPU <-> EDMAC endian convert */
 static inline __u32 cpu_to_edmac(struct sh_eth_private *mdp, u32 x)
 {

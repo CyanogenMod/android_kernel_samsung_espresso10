@@ -200,7 +200,6 @@ static int ohci_hcd_ep93xx_drv_resume(struct platform_device *pdev)
 }
 #endif
 
-
 static struct platform_driver ohci_hcd_ep93xx_driver = {
 	.probe		= ohci_hcd_ep93xx_drv_probe,
 	.remove		= ohci_hcd_ep93xx_drv_remove,

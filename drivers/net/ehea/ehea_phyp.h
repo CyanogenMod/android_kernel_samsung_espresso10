@@ -243,7 +243,6 @@ struct hcp_ehea_port_cb0 {
 #define PXLY_RC_VLAN_FILTER     2
 #define PXLY_RC_VLAN_PERM       0
 
-
 #define H_PORT_CB1_ALL          0x8000000000000000ULL
 
 struct hcp_ehea_port_cb1 {

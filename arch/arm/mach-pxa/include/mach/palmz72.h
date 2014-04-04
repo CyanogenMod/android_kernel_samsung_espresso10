@@ -81,4 +81,3 @@ struct palmz72_resume_info {
 };
 #endif
 #endif
-

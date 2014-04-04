@@ -24,7 +24,6 @@
 
 #include "seq_oss_device.h"
 
-
 struct seq_oss_writeq {
 	struct seq_oss_devinfo *dp;
 	int maxlen;
@@ -33,7 +32,6 @@ struct seq_oss_writeq {
 	wait_queue_head_t sync_sleep;
 	spinlock_t sync_lock;
 };
-
 
 /*
  * seq_oss_writeq.c
@@ -45,6 +43,5 @@ int snd_seq_oss_writeq_sync(struct seq_oss_writeq *q);
 void snd_seq_oss_writeq_wakeup(struct seq_oss_writeq *q, abstime_t time);
 int snd_seq_oss_writeq_get_free_size(struct seq_oss_writeq *q);
 void snd_seq_oss_writeq_set_output(struct seq_oss_writeq *q, int size);
-
 
 #endif

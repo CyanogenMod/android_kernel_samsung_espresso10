@@ -5,7 +5,6 @@
 * last change: 2002/11/02				*
 ********************************************************/
 
-
 #ifndef _EATA_PIO_H
 #define _EATA_PIO_H
 
@@ -21,7 +20,7 @@
 #define ALLOW_DMA_BOARDS 1
 
 /************************************************************************
- * Debug options.							* 
+ * Debug options.							*
  * Enable DEBUG and whichever options you require.			*
  ************************************************************************/
 #define DEBUG_EATA	1	/* Enable debug code.                       */

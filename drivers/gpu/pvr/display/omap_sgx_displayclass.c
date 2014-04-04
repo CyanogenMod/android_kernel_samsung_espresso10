@@ -67,7 +67,6 @@ static void display_sync_handler(struct work_struct *work);
 static enum OMAP_ERROR get_pvr_dc_jtable (char *szFunctionName,
 	PFN_DC_GET_PVRJTABLE *ppfnFuncTable);
 
-
 /*
  * Swap to display buffer. This buffer refers to one inside the
  * framebuffer memory.
@@ -747,7 +746,6 @@ static PVRSRV_ERROR DestroyDCSwapChain(IMG_HANDLE hDevice,
 
 	return PVRSRV_OK;
 }
-
 
 /*
  * Get display buffers. These are the buffers that can be allocated

@@ -53,8 +53,6 @@ module_param(loudness, int, S_IRUGO);
 MODULE_PARM_DESC(maxvol,"Set maximium volume to +20db (0), default is 0db(1)");
 module_param(maxvol, int, S_IRUGO | S_IWUSR);
 
-
-
 /* Structure of address and subaddresses for the tda7432 */
 
 struct tda7432 {
@@ -97,7 +95,6 @@ static inline struct tda7432 *to_state(struct v4l2_subdev *sd)
 #define TDA7432_RR	0x06 /* Attenuation RR (Right Rear)  */
 #define TDA7432_LD	0x07 /* Loudness                     */
 
-
 		/* Masks for bits in TDA7432 subaddresses */
 
 /* Many of these not used - just for documentation */
@@ -138,7 +135,6 @@ static inline struct tda7432 *to_state(struct v4l2_subdev *sd)
 #define	TDA7432_VOL_0DB		0x20
 #define TDA7432_LD_ON		1 << 7
 
-
 /* Subaddress 0x02 - Tone control */
 
 /* Bits 0,1,2 control absolute treble gain from 0dB to 14dB
@@ -167,7 +163,6 @@ static inline struct tda7432 *to_state(struct v4l2_subdev *sd)
 #define TDA7432_BASS			7 << 4
 #define TDA7432_BASS_GAIN		1 << 7
 
-
 /* Subaddress 0x03 - Left  Front attenuation */
 /* Subaddress 0x04 - Left  Rear  attenuation */
 /* Subaddress 0x05 - Right Front attenuation */
@@ -187,7 +182,6 @@ static inline struct tda7432 *to_state(struct v4l2_subdev *sd)
 #define TDA7432_ATTEN_0DB	0x00
 #define TDA7432_MUTE        0x1 << 5
 
-
 /* Subaddress 0x07 - Loudness Control */
 
 /* Bits 0,1,2,3 control loudness from 0dB to -15dB in 1dB steps
@@ -201,8 +195,6 @@ static inline struct tda7432 *to_state(struct v4l2_subdev *sd)
  *
  * Bits 5,6,7 unused
  */
-
-
 
 /* Begin code */
 

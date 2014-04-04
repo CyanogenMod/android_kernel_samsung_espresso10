@@ -205,7 +205,6 @@ static void nand_dma_write(const void *buf, int len)
 
 	memcpy(virtPtr, buf, len);
 
-
 	hndl = dma_request_channel(DMA_DEVICE_NAND_MEM_TO_MEM);
 	if (hndl < 0) {
 		printk(KERN_ERR

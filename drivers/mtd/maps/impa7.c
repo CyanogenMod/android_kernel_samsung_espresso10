@@ -32,7 +32,6 @@
 
 static struct mtd_info *impa7_mtd[NUM_FLASHBANKS];
 
-
 static struct map_info impa7_map[NUM_FLASHBANKS] = {
 	{
 		.name = "impA7 NOR Flash Bank #0",

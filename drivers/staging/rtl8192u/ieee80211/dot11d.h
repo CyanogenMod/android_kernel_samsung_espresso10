@@ -3,7 +3,6 @@
 
 #include "ieee80211.h"
 
-
 //#define DOT11D_MAX_CHNL_NUM 83
 
 typedef struct _CHNL_TXPOWER_TRIPLE {
@@ -56,7 +55,6 @@ typedef struct _RT_DOT11D_INFO {
 #define UPDATE_CIE_WATCHDOG(__pIeeeDev) ++GET_CIE_WATCHDOG(__pIeeeDev)
 
 #define IS_DOT11D_STATE_DONE(__pIeeeDev) (GET_DOT11D_INFO(__pIeeeDev)->State == DOT11D_STATE_DONE)
-
 
 void
 Dot11d_Init(

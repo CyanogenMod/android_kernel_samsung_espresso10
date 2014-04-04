@@ -194,7 +194,6 @@ static int sd_config(struct gspca_dev *gspca_dev,
 	PDEBUG(D_PROBE, "Sensor ID is %i",
 	       (gspca_dev->usb_buf[4]*16) + (gspca_dev->usb_buf[5]>>4));
 
-
 	ret = stv0680_get_video_mode(gspca_dev);
 	if (ret < 0)
 		return ret;
@@ -228,7 +227,6 @@ static int sd_config(struct gspca_dev *gspca_dev,
 
 	cam->cam_mode = &sd->mode;
 	cam->nmodes = 1;
-
 
 	ret = stv0680_set_video_mode(gspca_dev, sd->orig_mode);
 	if (ret < 0)

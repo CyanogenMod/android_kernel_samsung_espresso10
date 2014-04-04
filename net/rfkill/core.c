@@ -90,12 +90,10 @@ struct rfkill_data {
 	bool			input_handler;
 };
 
-
 MODULE_AUTHOR("Ivo van Doorn <IvDoorn@gmail.com>");
 MODULE_AUTHOR("Johannes Berg <johannes@sipsolutions.net>");
 MODULE_DESCRIPTION("RF switch support");
 MODULE_LICENSE("GPL");
-
 
 /*
  * The locking here should be made much smarter, we currently have
@@ -122,7 +120,6 @@ static struct {
 } rfkill_global_states[NUM_RFKILL_TYPES];
 
 static bool rfkill_epo_lock_active;
-
 
 #ifdef CONFIG_RFKILL_LEDS
 static void rfkill_led_trigger_event(struct rfkill *rfkill)
@@ -225,8 +222,6 @@ static bool __rfkill_set_hw_state(struct rfkill *rfkill,
 {
 	unsigned long flags;
 	bool prev, any;
-
-	BUG_ON(!rfkill);
 
 	spin_lock_irqsave(&rfkill->lock, flags);
 	prev = !!(rfkill->state & RFKILL_BLOCK_HW);
@@ -450,7 +445,6 @@ bool rfkill_get_global_sw_state(const enum rfkill_type type)
 }
 #endif
 
-
 bool rfkill_set_hw_state(struct rfkill *rfkill, bool blocked)
 {
 	bool ret, change;
@@ -486,8 +480,6 @@ bool rfkill_set_sw_state(struct rfkill *rfkill, bool blocked)
 	unsigned long flags;
 	bool prev, hwblock;
 
-	BUG_ON(!rfkill);
-
 	spin_lock_irqsave(&rfkill->lock, flags);
 	prev = !!(rfkill->state & RFKILL_BLOCK_SW);
 	__rfkill_set_sw_state(rfkill, blocked);
@@ -511,9 +503,6 @@ void rfkill_init_sw_state(struct rfkill *rfkill, bool blocked)
 {
 	unsigned long flags;
 
-	BUG_ON(!rfkill);
-	BUG_ON(rfkill->registered);
-
 	spin_lock_irqsave(&rfkill->lock, flags);
 	__rfkill_set_sw_state(rfkill, blocked);
 	rfkill->persistent = true;
@@ -525,8 +514,6 @@ void rfkill_set_states(struct rfkill *rfkill, bool sw, bool hw)
 {
 	unsigned long flags;
 	bool swprev, hwprev;
-
-	BUG_ON(!rfkill);
 
 	spin_lock_irqsave(&rfkill->lock, flags);
 
@@ -829,7 +816,6 @@ bool rfkill_blocked(struct rfkill *rfkill)
 	return !!(state & RFKILL_BLOCK_ANY);
 }
 EXPORT_SYMBOL(rfkill_blocked);
-
 
 struct rfkill * __must_check rfkill_alloc(const char *name,
 					  struct device *parent,

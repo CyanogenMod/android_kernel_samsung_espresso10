@@ -1166,7 +1166,6 @@ static void __exit synaptics_rmi4_exit(void)
 	i2c_del_driver(&synaptics_rmi4_driver);
 }
 
-
 module_init(synaptics_rmi4_init);
 module_exit(synaptics_rmi4_exit);
 

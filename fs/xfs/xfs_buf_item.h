@@ -80,7 +80,6 @@ typedef struct xfs_buf_log_format {
 	{ XFS_BLI_STALE_INODE,	"STALE_INODE" }, \
 	{ XFS_BLI_INODE_BUF,	"INODE_BUF" }
 
-
 #ifdef __KERNEL__
 
 struct xfs_buf;

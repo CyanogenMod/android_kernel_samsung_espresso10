@@ -22,7 +22,6 @@
 #include <net/inet_ecn.h>
 #include <net/red.h>
 
-
 /*	Parameters, settable by user:
 	-----------------------------
 

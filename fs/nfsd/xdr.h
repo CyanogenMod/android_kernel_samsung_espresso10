@@ -56,7 +56,7 @@ struct nfsd_readlinkargs {
 	struct svc_fh		fh;
 	char *			buffer;
 };
-	
+
 struct nfsd_linkargs {
 	struct svc_fh		ffh;
 	struct svc_fh		tfh;
@@ -129,7 +129,6 @@ union nfsd_xdrstore {
 };
 
 #define NFS2_SVC_XDRSIZE	sizeof(union nfsd_xdrstore)
-
 
 int nfssvc_decode_void(struct svc_rqst *, __be32 *, void *);
 int nfssvc_decode_fhandle(struct svc_rqst *, __be32 *, struct nfsd_fhandle *);

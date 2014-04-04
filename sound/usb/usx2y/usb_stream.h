@@ -26,7 +26,6 @@ struct usb_stream_packet {
 	unsigned length;
 };
 
-
 struct usb_stream_config {
 	unsigned version;
 	unsigned sample_rate;
@@ -107,6 +106,5 @@ struct usb_stream *usb_stream_new(struct usb_stream_kernel *sk,
 void usb_stream_free(struct usb_stream_kernel *);
 int usb_stream_start(struct usb_stream_kernel *);
 void usb_stream_stop(struct usb_stream_kernel *);
-
 
 #endif

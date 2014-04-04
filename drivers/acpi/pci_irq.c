@@ -26,7 +26,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 
-
 #include <linux/dmi.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
@@ -214,7 +213,7 @@ static int acpi_pci_irq_add_entry(acpi_handle handle, struct pci_bus *bus,
 	 * configure the IRQ assigned to this slot|dev|pin.  The 'source_index'
 	 * indicates which resource descriptor in the resource template (of
 	 * the link device) this interrupt is allocated from.
-	 * 
+	 *
 	 * NOTE: Don't query the Link Device for IRQ information at this time
 	 *       because Link Device enumeration may not have occurred yet
 	 *       (e.g. exists somewhere 'below' this _PRT entry in the ACPI
@@ -316,7 +315,7 @@ static struct acpi_prt_entry *acpi_pci_irq_lookup(struct pci_dev *dev, int pin)
 		return entry;
 	}
 
-	/* 
+	/*
 	 * Attempt to derive an IRQ for this device from a parent bridge's
 	 * PCI interrupt routing entry (eg. yenta bridge and add-in card bridge).
 	 */
@@ -396,7 +395,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
 		gsi = -1;
 
 	/*
-	 * No IRQ known to the ACPI subsystem - maybe the BIOS / 
+	 * No IRQ known to the ACPI subsystem - maybe the BIOS /
 	 * driver reported one, then use it. Exit in any case.
 	 */
 	if (gsi < 0) {

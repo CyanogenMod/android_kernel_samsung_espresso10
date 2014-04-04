@@ -702,7 +702,6 @@ static void pasemi_mac_restart_tx_intr(const struct pasemi_mac *mac)
 	write_iob_reg(PAS_IOB_DMA_TXCH_RESET(tx_ring(mac)->chan.chno), reg);
 }
 
-
 static inline void pasemi_mac_rx_error(const struct pasemi_mac *mac,
 				       const u64 macrx)
 {
@@ -952,7 +951,6 @@ restart:
 	return total_count;
 }
 
-
 static irqreturn_t pasemi_mac_rx_intr(int irq, void *data)
 {
 	const struct pasemi_mac_rxring *rxring = data;
@@ -1110,7 +1108,6 @@ static int pasemi_mac_phy_init(struct net_device *dev)
 
 	return 0;
 }
-
 
 static int pasemi_mac_open(struct net_device *dev)
 {
@@ -1609,7 +1606,6 @@ static void pasemi_mac_set_rx_mode(struct net_device *dev)
 	write_mac_reg(mac, PAS_MAC_CFG_PCFG, flags);
 }
 
-
 static int pasemi_mac_poll(struct napi_struct *napi, int budget)
 {
 	struct pasemi_mac *mac = container_of(napi, struct pasemi_mac, napi);
@@ -1768,7 +1764,6 @@ pasemi_mac_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 	mac->lro_mgr.dev = mac->netdev;
 	mac->lro_mgr.ip_summed = CHECKSUM_UNNECESSARY;
 	mac->lro_mgr.ip_summed_aggr = CHECKSUM_UNNECESSARY;
-
 
 	mac->dma_pdev = pci_get_device(PCI_VENDOR_ID_PASEMI, 0xa007, NULL);
 	if (!mac->dma_pdev) {

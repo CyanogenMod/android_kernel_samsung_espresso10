@@ -184,7 +184,6 @@ static int __init mc13783_adc_probe(struct platform_device *pdev)
 		goto out_err_register;
 	}
 
-
 	return 0;
 
 out_err_register:

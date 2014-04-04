@@ -8,7 +8,7 @@
 #include "xyarray.h"
 #include "cgroup.h"
 #include "hist.h"
- 
+
 struct perf_counts_values {
 	union {
 		struct {

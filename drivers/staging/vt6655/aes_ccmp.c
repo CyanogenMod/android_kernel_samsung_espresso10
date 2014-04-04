@@ -122,7 +122,6 @@ unsigned long *dwPtrOut =(unsigned long *) out;
     (*dwPtrOut++) = (*dwPtrA++) ^ (*dwPtrB++);
 }
 
-
 void xor_32(unsigned char *a, unsigned char *b, unsigned char *out)
 {
 unsigned long *dwPtrA = (unsigned long *) a;
@@ -188,7 +187,6 @@ void MixColumns(unsigned char *in, unsigned char *out)
     out[2] = in[0] ^ in[1] ^ dot2_table[in[2]] ^ dot3_table[in[3]];
     out[3] = dot3_table[in[0]] ^ in[1] ^ in[2] ^ dot2_table[in[3]];
 }
-
 
 void AESv128(unsigned char *key, unsigned char *data, unsigned char *ciphertext)
 {
@@ -264,7 +262,6 @@ bool bA4 = false;
 unsigned char byTmp;
 unsigned short wCnt;
 int             ii,jj,kk;
-
 
     pbyIV = pbyFrame + WLAN_HDR_ADDR3_LEN;
     if ( WLAN_GET_FC_TODS(*(unsigned short *)pbyFrame) &&

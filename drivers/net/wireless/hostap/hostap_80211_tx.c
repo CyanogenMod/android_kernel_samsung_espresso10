@@ -51,7 +51,6 @@ void hostap_dump_tx_80211(const char *name, struct sk_buff *skb)
 	printk("\n");
 }
 
-
 /* hard_start_xmit function for data interfaces (wlan#, wlan#wds#, wlan#sta)
  * Convert Ethernet header into a suitable IEEE 802.11 header depending on
  * device configuration. */
@@ -262,7 +261,6 @@ netdev_tx_t hostap_data_start_xmit(struct sk_buff *skb,
 	return NETDEV_TX_OK;
 }
 
-
 /* hard_start_xmit function for hostapd wlan#ap interfaces */
 netdev_tx_t hostap_mgmt_start_xmit(struct sk_buff *skb,
 				   struct net_device *dev)
@@ -307,7 +305,6 @@ netdev_tx_t hostap_mgmt_start_xmit(struct sk_buff *skb,
 	dev_queue_xmit(skb);
 	return NETDEV_TX_OK;
 }
-
 
 /* Called only from software IRQ */
 static struct sk_buff * hostap_tx_encrypt(struct sk_buff *skb,
@@ -372,7 +369,6 @@ static struct sk_buff * hostap_tx_encrypt(struct sk_buff *skb,
 
 	return skb;
 }
-
 
 /* hard_start_xmit function for master radio interface wifi#.
  * AP processing (TX rate control, power save buffering, etc.).
@@ -547,6 +543,5 @@ netdev_tx_t hostap_master_start_xmit(struct sk_buff *skb,
 		hostap_handle_sta_release(tx.sta_ptr);
 	return ret;
 }
-
 
 EXPORT_SYMBOL(hostap_master_start_xmit);

@@ -112,7 +112,6 @@ struct bfa_dma_s {
 #define BFI_SMEM_CB_SIZE	0x200000U	/* ! 2MB for crossbow	*/
 #define BFI_SMEM_CT_SIZE	0x280000U	/* ! 2.5MB for catapult	*/
 
-
 #define bfa_dma_addr_set(dma_addr, pa)	\
 		__bfa_dma_addr_set(&dma_addr, (u64)pa)
 
@@ -122,7 +121,6 @@ __bfa_dma_addr_set(union bfi_addr_u *dma_addr, u64 pa)
 	dma_addr->a32.addr_lo = (__be32) pa;
 	dma_addr->a32.addr_hi = (__be32) (pa >> 32);
 }
-
 
 #define bfa_dma_be_addr_set(dma_addr, pa)	\
 		__bfa_dma_be_addr_set(&dma_addr, (u64)pa)
@@ -326,7 +324,6 @@ bfa_status_t bfa_ioc_ct_pll_init(void __iomem *rb, bfa_boolean_t fcmode);
 			((__ioc)->ioc_hwif->ioc_isr_mode_set(__ioc, __msix))
 #define	bfa_ioc_ownership_reset(__ioc)				\
 			((__ioc)->ioc_hwif->ioc_ownership_reset(__ioc))
-
 
 void bfa_ioc_set_ct_hwif(struct bfa_ioc_s *ioc);
 void bfa_ioc_set_cb_hwif(struct bfa_ioc_s *ioc);

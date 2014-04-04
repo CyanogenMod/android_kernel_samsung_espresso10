@@ -401,7 +401,6 @@ static void nop_mcount(Elf_Shdr const *const relhdr,
 	}
 }
 
-
 /*
  * Find a symbol in the given section, to be used as the base for relocating
  * the table of offsets of calls to mcount.  A local or global symbol suffices,
@@ -444,7 +443,6 @@ static unsigned find_secsym_ndx(unsigned const txtndx,
 	fail_file();
 }
 
-
 /* Evade ISO C restriction: no declaration after statement in has_rel_mcount. */
 static char const *
 __has_rel_mcount(Elf_Shdr const *const relhdr,  /* is SHT_REL or SHT_RELA */
@@ -477,7 +475,6 @@ static char const *has_rel_mcount(Elf_Shdr const *const relhdr,
 	return __has_rel_mcount(relhdr, shdr0, shstrtab, fname);
 }
 
-
 static unsigned tot_relsize(Elf_Shdr const *const shdr0,
 			    unsigned nhdr,
 			    const char *const shstrtab,
@@ -494,7 +491,6 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
 	}
 	return totrelsz;
 }
-
 
 /* Overall supervision for Elf32 ET_REL file. */
 static void

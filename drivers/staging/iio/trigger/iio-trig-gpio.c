@@ -101,7 +101,6 @@ static int iio_gpio_trigger_probe(struct platform_device *pdev)
 		irq_res_cnt++;
 	} while (irq_res != NULL);
 
-
 	return 0;
 
 /* First clean up the partly allocated trigger */

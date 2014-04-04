@@ -24,7 +24,6 @@ obj-$(CONFIG_SPU_BASE)			+= logo_spe_clut224.o
 logo-cfiles = $(notdir $(patsubst %.$(2), %.c, \
               $(wildcard $(srctree)/$(src)/*$(1).$(2))))
 
-
 # Mono logos
 extra-y += $(call logo-cfiles,_mono,pbm)
 

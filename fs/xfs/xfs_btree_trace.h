@@ -21,7 +21,6 @@
 struct xfs_btree_cur;
 struct xfs_buf;
 
-
 /*
  * Trace hooks.
  * i,j = integer (32 bit)

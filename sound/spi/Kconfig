@@ -35,4 +35,3 @@ config SND_AT73C213_TARGET_BITRATE
 	  Set to 48000 Hz by default.
 
 endif	# SND_SPI
-

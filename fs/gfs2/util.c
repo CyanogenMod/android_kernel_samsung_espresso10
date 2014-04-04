@@ -282,4 +282,3 @@ void gfs2_icbit_munge(struct gfs2_sbd *sdp, unsigned char **bitmap,
 	else
 		bitmap[c][o] &= ~(1 << b);
 }
-

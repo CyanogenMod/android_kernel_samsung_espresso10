@@ -38,7 +38,6 @@
 /* Magic helper macro to pad structures. Ignore those above. It's magic. */
 #define PAD_BYTES(nr_bytes)		P4D_BYTES( __LINE__ , (nr_bytes))
 
-
 extern int b43_modparam_verbose;
 
 /* Logmessage verbosity levels. Update the b43_modparam_verbose helptext, if
@@ -57,7 +56,6 @@ enum b43_verbosity {
 	B43_VERBOSITY_DEFAULT = B43_VERBOSITY_INFO,
 #endif
 };
-
 
 /* Lightweight function to convert a frequency (in Mhz) to a channel number. */
 static inline u8 b43_freq_to_channel_5ghz(int freq)
@@ -134,7 +132,6 @@ void b43_power_saving_ctl_bits(struct b43_wldev *dev, unsigned int ps_flags);
 void b43_mac_suspend(struct b43_wldev *dev);
 void b43_mac_enable(struct b43_wldev *dev);
 void b43_mac_phy_clock_set(struct b43_wldev *dev, bool on);
-
 
 struct b43_request_fw_context;
 int b43_do_request_fw(struct b43_request_fw_context *ctx,

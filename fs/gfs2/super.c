@@ -1582,4 +1582,3 @@ const struct super_operations gfs2_super_ops = {
 	.drop_inode		= gfs2_drop_inode,
 	.show_options		= gfs2_show_options,
 };
-

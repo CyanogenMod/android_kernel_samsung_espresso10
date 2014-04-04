@@ -1,9 +1,9 @@
 /*
  *	inet6 interface/address list definitions
- *	Linux INET6 implementation 
+ *	Linux INET6 implementation
  *
  *	Authors:
- *	Pedro Roque		<roque@di.fc.ul.pt>	
+ *	Pedro Roque		<roque@di.fc.ul.pt>
  *
  *
  *	This program is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ enum {
 struct inet6_ifaddr {
 	struct in6_addr		addr;
 	__u32			prefix_len;
-	
+
 	/* In seconds, relative to tstamp. Expiry is at tstamp + HZ * lft. */
 	__u32			valid_lft;
 	__u32			prefered_lft;
@@ -251,13 +251,13 @@ static inline void ipv6_tr_mc_map(const struct in6_addr *addr, char *buf)
 		buf[4]=0x00;
 		buf[5]=0x00;
 	} else {
-		unsigned char i ; 
-		
-		i = addr->s6_addr[15] & 7 ; 
+		unsigned char i ;
+
+		i = addr->s6_addr[15] & 7 ;
 		buf[0]=0xC0;
 		buf[1]=0x00;
 		buf[2]=0x00;
-		buf[3]=0x01 << i ; 
+		buf[3]=0x01 << i ;
 		buf[4]=0x00;
 		buf[5]=0x00;
 	}

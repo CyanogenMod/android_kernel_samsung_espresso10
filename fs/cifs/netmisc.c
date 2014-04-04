@@ -814,7 +814,6 @@ cifs_print_status(__u32 status_code)
 	return;
 }
 
-
 static void
 ntstatus_to_dos(__u32 ntstatus, __u8 *eclass, __u16 *ecode)
 {

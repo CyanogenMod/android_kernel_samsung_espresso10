@@ -711,7 +711,6 @@ static int max1363_monitor_mode_update(struct max1363_state *st, int enabled)
 			i += 3;
 		}
 
-
 	ret = i2c_master_send(st->client, tx_buf, len);
 	if (ret < 0)
 		goto error_ret;
@@ -826,7 +825,6 @@ static struct attribute_group max1363_event_attribute_group = {
 };
 
 #define MAX1363_EVENT_FUNCS						\
-
 
 static const struct iio_info max1238_info = {
 	.read_raw = &max1363_read_raw,
@@ -1227,8 +1225,6 @@ static const struct max1363_chip_info max1363_chip_info_tbl[] = {
 		.num_channels = ARRAY_SIZE(max11646_channels),
 	},
 };
-
-
 
 static int max1363_initial_setup(struct max1363_state *st)
 {

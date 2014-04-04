@@ -515,7 +515,6 @@ int omap4_espresso_get_adc(enum espresso_adc_ch ch)
 		for (i = 0; i < 5; i++) {
 			usleep_range(5000, 5500);
 			adc_tmp = stmpe811_adc_get_value(stmpe811_ch);
-			pr_info("adc_check_1 adc=%d\n", adc_tmp);
 			adc_sum += adc_tmp;
 			if (adc_max < adc_tmp)
 				adc_max = adc_tmp;
@@ -1128,7 +1127,6 @@ static int __init espresso_save_init_switch_param(char *str)
 	return 0;
 }
 __setup("switch_sel=", espresso_save_init_switch_param);
-
 
 #ifdef CONFIG_USB_HOST_NOTIFY
 static void espresso_booster(int enable)

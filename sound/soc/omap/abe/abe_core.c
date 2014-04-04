@@ -87,7 +87,6 @@ extern u32 abe_base_address_pingpong[];
 
 void abe_add_subroutine(u32 *id, abe_subroutine2 f, u32 nparam, u32 *params);
 
-
 /**
  * abe_omap_abe_reset_hal - reset the ABE/HAL
  * @abe: Pointer on abe handle

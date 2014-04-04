@@ -40,7 +40,6 @@
 /*                        */
 /*---------------------- -*/
 
-
 /* cf registers */
 #define		HW_R0B_ADDR_0_REG_ADDR			0x0000UL
 #define		HW_R0B_ADDR_1_REG_ADDR			0x0004UL

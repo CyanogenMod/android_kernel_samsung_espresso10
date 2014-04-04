@@ -699,7 +699,6 @@ static void kona_twl6034_init(void)
 	if (ret)
 		pr_err("%s:PHOENIX_MSK_TRANSITION write fail!\n", __func__);
 
-
 	ret = twl_i2c_read_u8(TWL6030_MODULE_ID0, &val, TWL6030_BBSPOR_CFG);
 
 	/* disable backup battery charge */
@@ -746,7 +745,6 @@ static struct twl4030_power_data kona_power_data __initdata = {
 	.twl4030_board_init	= kona_twl6034_init,
 	.resource_config	= kona_rconfig,
 };
-
 
 static struct platform_device *kona_pmic_devices[] __initdata = {
 	&kona_madc_device,

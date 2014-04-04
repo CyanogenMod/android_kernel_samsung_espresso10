@@ -1267,7 +1267,6 @@ void isci_phy_init(struct isci_phy *iphy, struct isci_host *ihost, int index)
 	memset(&iphy->frame_rcvd, 0, sizeof(iphy->frame_rcvd));
 }
 
-
 /**
  * isci_phy_control() - This function is one of the SAS Domain Template
  *    functions. This is a phy management function.

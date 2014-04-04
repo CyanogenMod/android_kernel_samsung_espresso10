@@ -19,7 +19,6 @@ enum ctnl_exp_msg_types {
 	IPCTNL_MSG_EXP_MAX
 };
 
-
 enum ctattr_type {
 	CTA_UNSPEC,
 	CTA_TUPLE_ORIG,

@@ -3,7 +3,7 @@
  *
  *  Copyright (C) 1993  Greg Harp
  *  Portions of this driver are based on code contributed by Brad Pepers
- *  
+ *
  *  revised 28.5.95 by Joerg Dorchain
  *  - now no bugs(?) any more for both HD & DD
  *  - added support for 40 Track 5.25" drives, 80-track hopefully behaves
@@ -15,7 +15,7 @@
  *  (portions based on messydos.device and various contributors)
  *  - currently only 9 and 18 sector disks
  *
- *  - fixed a bug with the internal trackbuffer when using multiple 
+ *  - fixed a bug with the internal trackbuffer when using multiple
  *    disks the same time
  *  - made formatting a bit safer
  *  - added command line and machine based default for "silent" df0
@@ -29,7 +29,7 @@
  *    is copied to area. (area should be large enough since no checking is
  *    done - 30K is currently sufficient). return the actual size of the
  *    trackbuffer
- *  - replaced udelays() by a timer (CIAA timer B) for the waits 
+ *  - replaced udelays() by a timer (CIAA timer B) for the waits
  *    needed for the disk mechanic.
  *
  *  february 1996 fixed error recovery and multiple disk access
@@ -155,7 +155,7 @@ static int on_attempts;
 static volatile int fdc_busy = -1;
 static volatile int fdc_nested;
 static DECLARE_WAIT_QUEUE_HEAD(fdc_wait);
- 
+
 static DECLARE_COMPLETION(motor_on_completion);
 
 static volatile int selected = -1;	/* currently selected drive */
@@ -215,7 +215,7 @@ static irqreturn_t ms_isr(int irq, void *dummy)
 	return IRQ_HANDLED;
 }
 
-/* all waits are queued up 
+/* all waits are queued up
    A more generic routine would do a schedule a la timer.device */
 static void ms_delay(int ms)
 {
@@ -652,7 +652,6 @@ static void post_write (unsigned long drive)
 	rel_fdc(); /* corresponds to get_fdc() in raw_write */
 }
 
-
 /*
  * The following functions are to convert the block contents into raw data
  * written to disk and vice versa.
@@ -861,14 +860,13 @@ static void amiga_write(int disk)
 	*(ushort *)ptr = (ptr[-1]&1) ? 0x2AA8 : 0xAAA8;
 }
 
-
 struct dos_header {
 	unsigned char track,   /* 0-80 */
 		side,    /* 0-1 */
 		sec,     /* 0-...*/
 		len_desc;/* 2 */
-	unsigned short crc;     /* on 68000 we got an alignment problem, 
-				   but this compiler solves it  by adding silently 
+	unsigned short crc;     /* on 68000 we got an alignment problem,
+				   but this compiler solves it  by adding silently
 				   adding a pad byte so data won't fit
 				   and this took about 3h to discover.... */
 	unsigned char gap1[22];     /* for longword-alignedness (0x4e) */
@@ -876,7 +874,7 @@ struct dos_header {
 
 /* crc routines are borrowed from the messydos-handler  */
 
-/* excerpt from the messydos-device           
+/* excerpt from the messydos-device
 ; The CRC is computed not only over the actual data, but including
 ; the SYNC mark (3 * $a1) and the 'ID/DATA - Address Mark' ($fe/$fb).
 ; As we don't read or encode these fields into our buffers, we have to
@@ -923,7 +921,6 @@ struct dos_header {
 ;
 ; Anyway, the end result is the same as the remainder of the division of
 ; the data by $11021. I am afraid I need to study theory a bit more...
-
 
 my only works was to code this from manx to C....
 
@@ -1644,7 +1641,7 @@ static int floppy_release(struct gendisk *disk, fmode_t mode)
 		del_timer (flush_track_timer + drive);
 		non_int_flush_track (drive);
 	}
-  
+
 	if (!fd_ref[drive]--) {
 		printk(KERN_CRIT "floppy_release with fd_ref == 0");
 		fd_ref[drive] = 0;
@@ -1750,7 +1747,7 @@ static int __init fd_probe_drives(void)
 	printk("\n");
 	return -ENOMEM;
 }
- 
+
 static struct kobject *floppy_find(dev_t dev, int *part, void *data)
 {
 	int drive = *part & 3;
@@ -1814,7 +1811,7 @@ static int __init amiga_floppy_probe(struct platform_device *pdev)
 	post_write_timer.expires = 0;
 	post_write_timer.data = 0;
 	post_write_timer.function = post_write;
-  
+
 	for (i = 0; i < 128; i++)
 		mfmdecode[i]=255;
 	for (i = 0; i < 16; i++)

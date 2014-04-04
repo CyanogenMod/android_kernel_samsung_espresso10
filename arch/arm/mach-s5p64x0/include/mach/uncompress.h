@@ -202,8 +202,6 @@ static void arch_decomp_setup(void)
 	arch_enable_uart_fifo();
 }
 
-
-
 static void arch_detect_cpu(void)
 {
 	/* we do not need to do any cpu detection here at the moment. */

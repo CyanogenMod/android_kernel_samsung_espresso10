@@ -108,7 +108,6 @@ static int dvb_usb_adapter_exit(struct dvb_usb_device *d)
 	return 0;
 }
 
-
 /* general initialization functions */
 static int dvb_usb_exit(struct dvb_usb_device *d)
 {

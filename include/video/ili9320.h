@@ -91,11 +91,9 @@
 #define ILI9320_ENTRYMODE_DFM		(1 << 14)
 #define ILI9320_ENTRYMODE_TRI		(1 << 15)
 
-
 #define ILI9320_RESIZING_RSZ(x)		((x) << 0)
 #define ILI9320_RESIZING_RCH(x)		((x) << 4)
 #define ILI9320_RESIZING_RCV(x)		((x) << 8)
-
 
 #define ILI9320_DISPLAY1_D(x)		((x) << 0)
 #define ILI9320_DISPLAY1_CL		(1 << 3)
@@ -104,10 +102,8 @@
 #define ILI9320_DISPLAY1_BASEE		(1 << 8)
 #define ILI9320_DISPLAY1_PTDE(x)	((x) << 12)
 
-
 #define ILI9320_DISPLAY2_BP(x)		((x) << 0)
 #define ILI9320_DISPLAY2_FP(x)		((x) << 8)
-
 
 #define ILI9320_RGBIF1_RIM_RGB18	(0 << 0)
 #define ILI9320_RGBIF1_RIM_RGB16	(1 << 0)
@@ -126,7 +122,6 @@
 #define ILI9320_RGBIF2_HSPL		(1 << 3)
 #define ILI9320_RGBIF2_VSPL		(1 << 4)
 
-
 #define ILI9320_POWER1_SLP		(1 << 1)
 #define ILI9320_POWER1_DSTB		(1 << 2)
 #define ILI9320_POWER1_AP(x)		((x) << 4)
@@ -134,29 +129,23 @@
 #define ILI9320_POWER1_BT(x)		((x) << 8)
 #define ILI9320_POWER1_SAP		(1 << 12)
 
-
 #define ILI9320_POWER2_VC(x)		((x) << 0)
 #define ILI9320_POWER2_DC0(x)		((x) << 4)
 #define ILI9320_POWER2_DC1(x)		((x) << 8)
-
 
 #define ILI9320_POWER3_VRH(x)		((x) << 0)
 #define ILI9320_POWER3_PON		(1 << 4)
 #define ILI9320_POWER3_VCMR		(1 << 8)
 
-
 #define ILI9320_POWER4_VREOUT(x)	((x) << 8)
-
 
 #define ILI9320_DRIVER2_SCNL(x)		((x) << 0)
 #define ILI9320_DRIVER2_NL(x)		((x) << 8)
 #define ILI9320_DRIVER2_GS		(1 << 15)
 
-
 #define ILI9320_BASEIMAGE_REV		(1 << 0)
 #define ILI9320_BASEIMAGE_VLE		(1 << 1)
 #define ILI9320_BASEIMAGE_NDL		(1 << 2)
-
 
 #define ILI9320_INTERFACE4_RTNE(x)	(x)
 #define ILI9320_INTERFACE4_DIVE(x)	((x) << 8)
@@ -198,4 +187,3 @@ struct ili9320_platdata {
 	unsigned short	interface5;
 	unsigned short	interface6;
 };
-

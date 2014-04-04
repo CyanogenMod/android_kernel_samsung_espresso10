@@ -517,7 +517,6 @@ static int mx_set_selected_output_dev(u8 dev_id)
 	return sst_sc_reg_access(sc_access, PMIC_WRITE, num_reg);
 }
 
-
 static int mx_set_voice_port(int status)
 {
 	int retval = 0;
@@ -597,7 +596,6 @@ static int mx_set_mute(int dev_id, u8 value)
 			return retval;
 	}
 
-
 	pr_debug("set_mute dev_id:0x%x , value:%d\n", dev_id, value);
 
 	switch (dev_id) {
@@ -675,7 +673,6 @@ static int mx_set_mute(int dev_id, u8 value)
 				sc_access[4].value = 0x20;
 			else
 				sc_access[4].value = 0x00;
-
 
 		}
 		if (snd_pmic_ops_mx.num_channel == 1)
@@ -975,4 +972,3 @@ struct snd_pmic_ops snd_pmic_ops_mx = {
 	.pmic_irq_enable =	mx_pmic_irq_enable,
 	.pmic_jack_enable =	mx_jack_enable,
 };
-

@@ -2,13 +2,13 @@
  * Linux Wireless Extensions support
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,14 +16,13 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
  * $Id: wl_iw.h,v 1.5.34.1.6.36.4.18 2011/02/10 19:33:12 Exp $
  */
-
 
 #ifndef _wl_iw_h_
 #define _wl_iw_h_
@@ -61,7 +60,6 @@
 #define MAC2STR(a) (a)[0], (a)[1], (a)[2], (a)[3], (a)[4], (a)[5]
 #define MACSTR "%02x:%02x:%02x:%02x:%02x:%02x"
 
-
 typedef struct wl_iw_extra_params {
 	int 	target_channel;
 } wl_iw_extra_params_t;
@@ -89,7 +87,6 @@ struct cntry_locales_custom {
 #define WL_IW_GET_CURR_MACADDR	(SIOCIWFIRSTPRIV+9)
 #define WL_IW_SET_STOP		(SIOCIWFIRSTPRIV+11)
 #define WL_IW_SET_START		(SIOCIWFIRSTPRIV+13)
-
 
 #define WL_SET_AP_CFG           (SIOCIWFIRSTPRIV+15)
 #define WL_AP_STA_LIST          (SIOCIWFIRSTPRIV+17)
@@ -173,7 +170,6 @@ struct ap_profile {
 	uint32  closednet;
 	char country_code[WLC_CNTRY_BUF_SZ];
 };
-
 
 #define MACLIST_MODE_DISABLED		0
 #define MACLIST_MODE_DENY		1

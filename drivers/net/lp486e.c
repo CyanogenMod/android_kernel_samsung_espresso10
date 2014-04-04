@@ -992,7 +992,6 @@ static int __init lp486e_probe(struct net_device *dev) {
 	dev->base_addr = IOADDR;
 	dev->irq = IRQ;
 
-
 	/*
 	 * How do we find the ethernet address? I don't know.
 	 * One possibility is to look at the EISA configuration area

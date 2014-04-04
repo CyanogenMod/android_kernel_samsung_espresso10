@@ -1,7 +1,6 @@
 #ifndef _ASM_X86_DEBUGREG_H
 #define _ASM_X86_DEBUGREG_H
 
-
 /* Indicate the register numbers for a number of the specific
    debug registers.  Registers 0-3 contain the addresses we wish to trap on */
 #define DR_FIRSTADDR 0        /* u_debugreg[DR_FIRSTADDR] */

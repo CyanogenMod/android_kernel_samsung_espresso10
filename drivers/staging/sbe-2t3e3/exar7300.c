@@ -96,7 +96,6 @@ void exar7300_set_frame_type(struct channel *sc, u32 type)
 	exar7300_write(sc, SBE_2T3E3_LIU_REG_REG4, val);
 }
 
-
 void exar7300_transmit_all_ones_onoff(struct channel *sc, u32 mode)
 {
 	if (sc->p.transmit_all_ones == mode)

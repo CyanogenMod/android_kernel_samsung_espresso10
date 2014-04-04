@@ -18,7 +18,6 @@
 #include "jfs_dinode.h"
 #include "jfs_inode.h"
 
-
 static struct {
 	long jfs_flag;
 	long ext2_flag;
@@ -50,7 +49,6 @@ static long jfs_map_ext2(unsigned long flags, int from)
 	}
 	return mapped;
 }
-
 
 long jfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {

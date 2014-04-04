@@ -19,5 +19,4 @@ bool CheckTxPwrTracking(struct net_device *dev);
 void rtl8180_rate_adapter(struct work_struct * work);
 void timer_rate_adaptive(unsigned long data);
 
-
 #endif

@@ -271,12 +271,10 @@ static void pxa27x_stop_hc(struct pxa27x_ohci *ohci, struct device *dev)
 	clk_disable(ohci->clk);
 }
 
-
 /*-------------------------------------------------------------------------*/
 
 /* configure so an HC device and id are always provided */
 /* always called with process context; sleeping is OK */
-
 
 /**
  * usb_hcd_pxa27x_probe - initialize pxa27x-based HCDs
@@ -374,7 +372,6 @@ int usb_hcd_pxa27x_probe (const struct hc_driver *driver, struct platform_device
 	clk_put(usb_clk);
 	return retval;
 }
-
 
 /* may be called without controller electrically present */
 /* may be called with controller, bus, and devices active */
@@ -549,4 +546,3 @@ static struct platform_driver ohci_hcd_pxa27x_driver = {
 #endif
 	},
 };
-

@@ -63,7 +63,7 @@ clps7111fb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 	level = (red * 77 + green * 151 + blue * 28) >> 20;
 
 	/*
-	 * On an LCD, a high value is dark, while a low value is light. 
+	 * On an LCD, a high value is dark, while a low value is light.
 	 * So we invert the level.
 	 *
 	 * This isn't true on all machines, so we only do it on EDB7211.
@@ -89,7 +89,7 @@ clps7111fb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 
 /*
  * Validate the purposed mode.
- */	
+ */
 static int
 clps7111fb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 {
@@ -102,7 +102,7 @@ clps7111fb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 	var->green		= var->red;
 	var->blue		= var->red;
 
-	if (var->bits_per_pixel > 4) 
+	if (var->bits_per_pixel > 4)
 		return -EINVAL;
 
 	return 0;
@@ -110,8 +110,8 @@ clps7111fb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
 
 /*
  * Set the hardware state.
- */ 
-static int 
+ */
+static int
 clps7111fb_set_par(struct fb_info *info)
 {
 	unsigned int lcdcon, syscon, pixclock;
@@ -178,7 +178,7 @@ static int clps7111fb_blank(int blank, struct fb_info *info)
 			clps_writeb(clps_readb(PDDR) & ~EDB_PD2_LCDEN, PDDR);
 
 			/* Power off the LCD controller. */
-			clps_writel(clps_readl(SYSCON1) & ~SYSCON1_LCDEN, 
+			clps_writel(clps_readl(SYSCON1) & ~SYSCON1_LCDEN,
 					SYSCON1);
 		}
 	} else {
@@ -240,7 +240,7 @@ static ssize_t backlight_proc_write(struct file *file, const char *buffer,
 		return -EINVAL;
 	}
 
-	if (copy_from_user(&char_value, buffer, 1)) 
+	if (copy_from_user(&char_value, buffer, 1))
 		return -EFAULT;
 
 	value = char_value - '0';

@@ -1,4 +1,3 @@
-
 /*
  * Radio tuning for GCT GRF5101 on RTL8180
  *

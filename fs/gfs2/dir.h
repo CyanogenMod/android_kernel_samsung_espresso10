@@ -41,7 +41,6 @@ static inline u32 gfs2_disk_hash(const char *data, int len)
         return crc32_le((u32)~0, data, len) ^ (u32)~0;
 }
 
-
 static inline void gfs2_str2qstr(struct qstr *name, const char *fname)
 {
 	name->name = fname;

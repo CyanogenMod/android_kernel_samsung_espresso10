@@ -49,7 +49,6 @@ static int port_to_mib(struct s_smc *smc, int p);
 #define MOFFAS(e)	offsetof(struct fddi_mib_a, e)
 #define MOFFPS(e)	offsetof(struct fddi_mib_p, e)
 
-
 #define AC_G	0x01		/* Get */
 #define AC_GR	0x02		/* Get/Set */
 #define AC_S	0x04		/* Set */
@@ -172,7 +171,6 @@ static const struct s_p_tab {
 	{ SMT_P203C,AC_G,	MOFFMS(fddiMACT_Pri4),		"T"	} ,
 	{ SMT_P203D,AC_G,	MOFFMS(fddiMACT_Pri5),		"T"	} ,
 	{ SMT_P203E,AC_G,	MOFFMS(fddiMACT_Pri6),		"T"	} ,
-
 
 	/* CountersGrp */
 	{ SMT_P2046,AC_GROUP	} ,
@@ -1414,7 +1412,7 @@ static int smt_set_para(struct s_smc *smc, struct smt_para *pa, int index,
 	case SMT_P3210 :
 		if (long_val > 5000)
 			goto val_error ;
-		
+
 		if (long_val != 0 && mib_a->fddiPATHSbaPayload == 0)
 			goto val_error ;
 
@@ -1436,7 +1434,7 @@ static int smt_set_para(struct s_smc *smc, struct smt_para *pa, int index,
 	case SMT_P3214 :		/* fddiPATHSbaAvailable */
 		if (long_val > 0x00BEBC20L)
 			goto val_error ;
-#ifdef SBA 
+#ifdef SBA
 		if (set && mib->fddiSBACommand == SB_STOP)
 			goto val_error ;
 #endif
@@ -1554,7 +1552,6 @@ static int port_to_mib(struct s_smc *smc, int p)
 #endif
 }
 
-
 #ifdef	DEBUG
 #ifndef	BOOT
 void dump_smt(struct s_smc *smc, struct smt_header *sm, char *text)
@@ -1658,6 +1655,5 @@ void dump_hex(char *p, int len)
 }
 #endif	/* no BOOT */
 #endif	/* DEBUG */
-
 
 #endif	/* no SLIM_SMT */

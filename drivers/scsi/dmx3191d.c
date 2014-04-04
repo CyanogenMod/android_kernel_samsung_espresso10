@@ -54,7 +54,6 @@
 #define DMX3191D_DRIVER_NAME	"dmx3191d"
 #define DMX3191D_REGION_LEN	8
 
-
 static struct scsi_host_template dmx3191d_driver_template = {
 	.proc_name		= DMX3191D_DRIVER_NAME,
 	.name			= "Domex DMX3191D",
@@ -88,7 +87,7 @@ static int __devinit dmx3191d_probe_one(struct pci_dev *pdev,
 	shost = scsi_host_alloc(&dmx3191d_driver_template,
 			sizeof(struct NCR5380_hostdata));
 	if (!shost)
-		goto out_release_region;       
+		goto out_release_region;
 	shost->io_port = io;
 	shost->irq = pdev->irq;
 

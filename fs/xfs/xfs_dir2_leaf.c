@@ -53,7 +53,6 @@ static void xfs_dir2_leaf_log_bests(struct xfs_trans *tp, struct xfs_dabuf *bp,
 				    int first, int last);
 static void xfs_dir2_leaf_log_tail(struct xfs_trans *tp, struct xfs_dabuf *bp);
 
-
 /*
  * Convert a block form directory to a leaf form directory.
  */

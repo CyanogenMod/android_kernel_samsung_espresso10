@@ -17,7 +17,6 @@
 #include <plat/omap_device.h>
 #include <plat/omap_hwmod.h>
 
-
 struct iommu_device {
 	resource_size_t base;
 	int irq;

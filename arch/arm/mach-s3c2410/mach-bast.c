@@ -179,7 +179,6 @@ static struct s3c24xx_uart_clksrc bast_serial_clocks[] = {
 	}
 };
 
-
 static struct s3c2410_uartcfg bast_uartcfgs[] __initdata = {
 	[0] = {
 		.hwport	     = 0,
@@ -651,7 +650,7 @@ static void __init bast_init(void)
 	simtec_audio_add(NULL, true, &bast_audio);
 
 	WARN_ON(gpio_request(S3C2410_GPA(21), "bast nreset"));
-	
+
 	s3c_cpufreq_setboard(&bast_cpufreq);
 }
 

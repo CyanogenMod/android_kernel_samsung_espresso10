@@ -217,7 +217,6 @@ hv_utils_pci_table[] __maybe_unused = {
 };
 MODULE_DEVICE_TABLE(pci, hv_utils_pci_table);
 
-
 static const struct dmi_system_id __initconst
 hv_utils_dmi_table[] __maybe_unused  = {
 	{
@@ -232,14 +231,12 @@ hv_utils_dmi_table[] __maybe_unused  = {
 };
 MODULE_DEVICE_TABLE(dmi, hv_utils_dmi_table);
 
-
 static int __init init_hyperv_utils(void)
 {
 	pr_info("Registering HyperV Utility Driver\n");
 
 	if (hv_kvp_init())
 		return -ENODEV;
-
 
 	if (!dmi_check_system(hv_utils_dmi_table))
 		return -ENODEV;

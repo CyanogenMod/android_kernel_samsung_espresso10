@@ -19,7 +19,6 @@ Proof:	All assignments to ps_tq_active and all scheduling of ps_tq happen
 	1 and schedule ps_tq, ps_tq is executed, ps_tq_int() is entered,
 	B resets ps_tq_active)*.
 
-
 consider the following area:
 	* in do_pd_request1(): to calls of pi_do_claimed() and return in
 	  case when pd_req is NULL.
@@ -101,7 +100,6 @@ in the area, under pi_spinlock and we do not release it until after leaving
 the area.
 
 QED.
-
 
 Corollary 1: ps_tq_active can be killed.  Indeed, the only place where we
 check its value is in ps_set_intr() and if it had been non-zero at that

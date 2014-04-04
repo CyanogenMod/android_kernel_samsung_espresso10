@@ -8,7 +8,6 @@
  * published by the Free Software Foundation.
 */
 
-
 #ifndef __ASM_ARCH_24A0_IRQS_H
 #define __ASM_ARCH_24A0_IRQS_H __FILE__
 
@@ -84,7 +83,6 @@
 #define IRQ_S3CUART_RX2		(0x0)
 #define IRQ_S3CUART_TX2		(0x0)
 #define IRQ_S3CUART_ERR2	(0x0)
-
 
 #define IRQ_IRDA	S3C2410_IRQ(57)
 #define IRQ_MSTICK	S3C2410_IRQ(58)

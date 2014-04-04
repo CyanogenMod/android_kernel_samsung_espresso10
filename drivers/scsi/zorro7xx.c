@@ -27,7 +27,6 @@ MODULE_AUTHOR("Alan Hourihane <alanh@fairlite.demon.co.uk> / Kars de Jong <jongk
 MODULE_DESCRIPTION("Amiga Zorro NCR53C710 driver");
 MODULE_LICENSE("GPL");
 
-
 static struct scsi_host_template zorro7xx_scsi_driver_template = {
 	.proc_name	= "zorro7xx",
 	.this_id	= 7,

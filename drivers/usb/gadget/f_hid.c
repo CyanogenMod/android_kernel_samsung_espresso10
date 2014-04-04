@@ -166,7 +166,6 @@ static ssize_t f_hidg_read(struct file *file, char __user *buffer,
 		spin_lock_irqsave(&hidg->spinlock, flags);
 	}
 
-
 	count = min_t(unsigned, count, hidg->set_report_length);
 	tmp_buff = hidg->set_report_buff;
 	hidg->set_report_buff = NULL;
@@ -462,7 +461,6 @@ static int __init hidg_bind(struct usb_configuration *c, struct usb_function *f)
 		goto fail;
 	hidg_interface_desc.bInterfaceNumber = status;
 
-
 	/* allocate instance-specific endpoints */
 	status = -ENODEV;
 	ep = usb_ep_autoconfig(c->cdev->gadget, &hidg_fs_in_ep_desc);
@@ -476,7 +474,6 @@ static int __init hidg_bind(struct usb_configuration *c, struct usb_function *f)
 	hidg->req = usb_ep_alloc_request(hidg->in_ep, GFP_KERNEL);
 	if (!hidg->req)
 		goto fail;
-
 
 	hidg->req->buf = kmalloc(hidg->report_length, GFP_KERNEL);
 	if (!hidg->req->buf)

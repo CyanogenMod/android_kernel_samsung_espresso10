@@ -980,7 +980,6 @@ static int saa7164_port_init(struct saa7164_dev *dev, int portnr)
 	INIT_LIST_HEAD(&port->list_buf_free.list);
 	init_waitqueue_head(&port->wait_read);
 
-
 	saa7164_histogram_reset(&port->irq_interval, "irq intervals");
 	saa7164_histogram_reset(&port->svc_interval, "deferred intervals");
 	saa7164_histogram_reset(&port->irq_svc_interval,
@@ -1523,4 +1522,3 @@ static void __exit saa7164_fini(void)
 
 module_init(saa7164_init);
 module_exit(saa7164_fini);
-

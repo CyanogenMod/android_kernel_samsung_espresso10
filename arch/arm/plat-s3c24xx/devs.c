@@ -392,7 +392,6 @@ void __init s3c24xx_mci_set_platdata(struct s3c24xx_mci_pdata *pdata)
 	s3c_device_sdi.dev.platform_data = npd;
 }
 
-
 /* SPI (0) */
 
 static struct resource s3c_spi0_resource[] = {

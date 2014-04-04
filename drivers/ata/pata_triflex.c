@@ -69,8 +69,6 @@ static int triflex_prereset(struct ata_link *link, unsigned long deadline)
 	return ata_sff_prereset(link, deadline);
 }
 
-
-
 /**
  *	triflex_load_timing		-	timing configuration
  *	@ap: ATA interface
@@ -90,7 +88,6 @@ static void triflex_load_timing(struct ata_port *ap, struct ata_device *adev, in
 	u32 triflex_timing, old_triflex_timing;
 	int channel_offset = ap->port_no ? 0x74: 0x70;
 	unsigned int is_slave	= (adev->devno != 0);
-
 
 	pci_read_config_dword(pdev, channel_offset, &old_triflex_timing);
 	triflex_timing = old_triflex_timing;

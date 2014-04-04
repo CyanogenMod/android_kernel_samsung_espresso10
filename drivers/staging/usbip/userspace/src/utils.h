@@ -1,4 +1,3 @@
-
 #ifdef HAVE_CONFIG_H
 #include "../config.h"
 #endif
@@ -19,8 +18,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <errno.h>
-
-
 
 /* Be sync to kernel header */
 #define BUS_ID_SIZE 20

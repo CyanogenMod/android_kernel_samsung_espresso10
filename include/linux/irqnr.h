@@ -34,7 +34,6 @@ unsigned int irq_get_next_irq(unsigned int offset);
 			;						\
 		else
 
-
 # define for_each_irq_desc_reverse(irq, desc)				\
 	for (irq = nr_irqs - 1, desc = irq_to_desc(irq); irq >= 0;	\
 	     irq--, desc = irq_to_desc(irq))				\

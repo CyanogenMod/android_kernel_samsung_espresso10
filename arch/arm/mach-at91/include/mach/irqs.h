@@ -26,13 +26,11 @@
 
 #define NR_AIC_IRQS 32
 
-
 /*
  * Acknowledge interrupt with AIC after interrupt has been handled.
  *   (by kernel/irq.c)
  */
 #define irq_finish(irq) do { at91_sys_write(AT91_AIC_EOICR, 0); } while (0)
-
 
 /*
  * IRQ interrupt symbols are the AT91xxx_ID_* symbols

@@ -1,9 +1,7 @@
 #ifndef _XGIFB_MAIN
 #define _XGIFB_MAIN
 
-
 /* ------------------- Constant Definitions ------------------------- */
-
 
 #include "XGIfb.h"
 #include "vb_struct.h"
@@ -36,8 +34,6 @@
 #ifndef PCI_DEVICE_ID_XG_27
 #define PCI_DEVICE_ID_XG_27      0x027
 #endif
-
-
 
 #define XGI_IOTYPE1 void __iomem
 #define XGI_IOTYPE2 __iomem
@@ -225,7 +221,6 @@ MODULE_DEVICE_TABLE(pci, xgifb_pci_table);
 /* Fbcon variables */
 static struct fb_info *fb_info;
 
-
 static int    video_type = FB_TYPE_PACKED_PIXELS;
 
 static struct fb_var_screeninfo default_var = {
@@ -266,7 +261,6 @@ static struct fb_fix_screeninfo XGIfb_fix = {
 static char myid[20];
 static u32 pseudo_palette[17];
 
-
 /* display status */
 static int XGIfb_off = 0;
 static int XGIfb_crt1off = 0;
@@ -281,7 +275,6 @@ static int XGIfb_pdc = 0;
 static int enable_dstn = 0;
 static int XGIfb_ypan = -1;
 
-
 static int XGIfb_CRT2_write_enable = 0;
 
 /* TW: CRT2 type (for overriding autodetection) */
@@ -292,9 +285,6 @@ static int XGIfb_tvplug = -1;
 static unsigned char XGIfb_detectedpdc = 0;
 
 static unsigned char XGIfb_detectedlcda = 0xff;
-
-
-
 
 /* TW: For ioctl XGIFB_GET_INFO */
 /* XGIfb_info XGIfbinfo; */

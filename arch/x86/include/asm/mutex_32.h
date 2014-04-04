@@ -37,7 +37,6 @@ do {								\
 		     : "memory", "ecx", "edx");			\
 } while (0)
 
-
 /**
  *  __mutex_fastpath_lock_retval - try to take the lock by moving the count
  *                                 from 1 to a 0 value

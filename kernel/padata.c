@@ -575,7 +575,6 @@ int padata_unregister_cpumask_notifier(struct padata_instance *pinst,
 }
 EXPORT_SYMBOL(padata_unregister_cpumask_notifier);
 
-
 /* If cpumask contains no active cpu, we mark the instance as invalid. */
 static bool padata_validate_cpumask(struct padata_instance *pinst,
 				    const struct cpumask *cpumask)
@@ -844,7 +843,6 @@ static inline int pinst_has_cpu(struct padata_instance *pinst, int cpu)
 	return cpumask_test_cpu(cpu, pinst->cpumask.pcpu) ||
 		cpumask_test_cpu(cpu, pinst->cpumask.cbcpu);
 }
-
 
 static int padata_cpu_callback(struct notifier_block *nfb,
 			       unsigned long action, void *hcpu)

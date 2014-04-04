@@ -1241,7 +1241,6 @@ ixgb_tso(struct ixgb_adapter *adapter, struct sk_buff *skb)
 						| IXGB_CONTEXT_DESC_CMD_IDE
 						| (skb->len - (hdr_len)));
 
-
 		if (++i == adapter->tx_ring.count) i = 0;
 		adapter->tx_ring.next_to_use = i;
 
@@ -1473,7 +1472,6 @@ static int ixgb_maybe_stop_tx(struct net_device *netdev,
 		return 0;
 	return __ixgb_maybe_stop_tx(netdev, size);
 }
-
 
 /* Tx Descriptors needed, worst case */
 #define TXD_USE_COUNT(S) (((S) >> IXGB_MAX_TXD_PWR) + \
@@ -2098,7 +2096,6 @@ ixgb_alloc_rx_buffers(struct ixgb_adapter *adapter, int cleaned_count)
 	buffer_info = &rx_ring->buffer_info[i];
 	cleancount = IXGB_DESC_UNUSED(rx_ring);
 
-
 	/* leave three descriptors unused */
 	while (--cleancount > 2 && cleaned_count--) {
 		/* recycle! its good for you */
@@ -2129,7 +2126,6 @@ map_skb:
 		 * this is the rest of the workaround for h/w double
 		 * writeback. */
 		rx_desc->status = 0;
-
 
 		if (++i == rx_ring->count) i = 0;
 		buffer_info = &rx_ring->buffer_info[i];

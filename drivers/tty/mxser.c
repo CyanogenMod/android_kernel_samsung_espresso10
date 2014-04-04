@@ -74,7 +74,6 @@
 #define PCI_DEVICE_ID_CB134I	0x1341
 #define PCI_DEVICE_ID_CP138U	0x1380
 
-
 #define C168_ASIC_ID    1
 #define C104_ASIC_ID    2
 #define C102_ASIC_ID	0xB
@@ -803,7 +802,6 @@ static int mxser_change_speed(struct tty_struct *tty,
 		}
 	}
 
-
 	outb(fcr, info->ioaddr + UART_FCR);	/* set fcr */
 	outb(cval, info->ioaddr + UART_LCR);
 
@@ -988,7 +986,6 @@ static void mxser_shutdown_port(struct tty_port *port)
 	/* read data port to reset things */
 	(void) inb(info->ioaddr + UART_RX);
 
-
 	if (info->board->chip_flag)
 		SET_MOXA_MUST_NO_SOFTWARE_FLOW_CONTROL(info->ioaddr);
 
@@ -1025,7 +1022,6 @@ static void mxser_flush_buffer(struct tty_struct *tty)
 	char fcr;
 	unsigned long flags;
 
-
 	spin_lock_irqsave(&info->slock, flags);
 	info->xmit_cnt = info->xmit_head = info->xmit_tail = 0;
 
@@ -1038,7 +1034,6 @@ static void mxser_flush_buffer(struct tty_struct *tty)
 
 	tty_wakeup(tty);
 }
-
 
 static void mxser_close_port(struct tty_port *port)
 {
@@ -1090,7 +1085,7 @@ static void mxser_close(struct tty_struct *tty, struct file *filp)
 	clear_bit(ASYNCB_INITIALIZED, &port->flags);
 	mutex_unlock(&port->mutex);
 	/* Right now the tty_port set is done outside of the close_end helper
-	   as we don't yet have everyone using refcounts */	
+	   as we don't yet have everyone using refcounts */
 	tty_port_close_end(port, tty);
 	tty_port_tty_set(port, NULL);
 }
@@ -1166,7 +1161,6 @@ static int mxser_put_char(struct tty_struct *tty, unsigned char ch)
 	}
 	return 1;
 }
-
 
 static void mxser_flush_chars(struct tty_struct *tty)
 {
@@ -1326,7 +1320,6 @@ static int mxser_tiocmget(struct tty_struct *tty)
 	unsigned char control, status;
 	unsigned long flags;
 
-
 	if (tty->index == MXSER_PORTS)
 		return -ENOIOCTLCMD;
 	if (test_bit(TTY_IO_ERROR, &tty->flags))
@@ -1352,7 +1345,6 @@ static int mxser_tiocmset(struct tty_struct *tty,
 {
 	struct mxser_port *info = tty->driver_data;
 	unsigned long flags;
-
 
 	if (tty->index == MXSER_PORTS)
 		return -ENOIOCTLCMD;
@@ -1520,7 +1512,7 @@ static int mxser_ioctl_special(unsigned int cmd, void __user *argp)
 				mutex_lock(&port->mutex);
 				if (!ip->ioaddr)
 					goto copy;
-				
+
 				tty = tty_port_tty_get(port);
 
 				if (!tty || !tty->termios)

@@ -80,7 +80,6 @@ static struct acpi_device_id lis3lv02d_device_ids[] = {
 };
 MODULE_DEVICE_TABLE(acpi, lis3lv02d_device_ids);
 
-
 /**
  * lis3lv02d_acpi_init - ACPI _INI method: initialize the device.
  * @lis3: pointer to the device struct
@@ -342,7 +341,6 @@ static int lis3lv02d_remove(struct acpi_device *device, int type)
 
 	return lis3lv02d_remove_fs(&lis3_dev);
 }
-
 
 #ifdef CONFIG_PM
 static int lis3lv02d_suspend(struct acpi_device *device, pm_message_t state)

@@ -1,6 +1,5 @@
 #include "headers.h"
 
-
 static void read_int_callback(struct urb *urb/*, struct pt_regs *regs*/)
 {
 	int		status = urb->status;
@@ -111,7 +110,6 @@ static void read_int_callback(struct urb *urb/*, struct pt_regs *regs*/)
 
 	StartInterruptUrb(psIntfAdapter);
 
-
 }
 
 int CreateInterruptUrb(PS_INTERFACE_ADAPTER psIntfAdapter)
@@ -142,7 +140,6 @@ int CreateInterruptUrb(PS_INTERFACE_ADAPTER psIntfAdapter)
 	return 0;
 }
 
-
 INT StartInterruptUrb(PS_INTERFACE_ADAPTER psIntfAdapter)
 {
 	INT status = 0;
@@ -166,4 +163,3 @@ INT StartInterruptUrb(PS_INTERFACE_ADAPTER psIntfAdapter)
 	}
 	return status;
 }
-

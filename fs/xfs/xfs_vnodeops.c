@@ -558,7 +558,6 @@ xfs_readlink(
 		goto out;
 	}
 
-
 	if (ip->i_df.if_flags & XFS_IFINLINE) {
 		memcpy(link, ip->i_df.if_u1.if_data, pathlen);
 		link[pathlen] = '\0';

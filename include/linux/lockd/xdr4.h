@@ -21,8 +21,6 @@
 #define	nlm4_fbig		cpu_to_be32(NLM_FBIG)
 #define	nlm4_failed		cpu_to_be32(NLM_FAILED)
 
-
-
 int	nlm4svc_decode_testargs(struct svc_rqst *, __be32 *, struct nlm_args *);
 int	nlm4svc_encode_testres(struct svc_rqst *, __be32 *, struct nlm_res *);
 int	nlm4svc_decode_lockargs(struct svc_rqst *, __be32 *, struct nlm_args *);

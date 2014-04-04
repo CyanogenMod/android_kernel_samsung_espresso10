@@ -55,14 +55,12 @@
 #include "mltypes.h"
 #include <linux/mpu.h>
 
-
 /*
  * NOTE : to properly support Yamaha compass reads,
  *	  the max transfer size should be at least 9 B.
  *	  Length in bytes, typically a power of 2 >= 2
  */
 #define SERIAL_MAX_TRANSFER_SIZE 128
-
 
 /**
  *  inv_serial_single_write() - used to write a single byte of data.

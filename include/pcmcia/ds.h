@@ -28,7 +28,6 @@
 #include <pcmcia/ss.h>
 #include <asm/atomic.h>
 
-
 /*
  * PCMCIA device drivers (16-bit cards only; 32-bit cards require CardBus
  * a.k.a. PCI drivers
@@ -142,7 +141,6 @@ struct pcmcia_device {
 #define to_pcmcia_dev(n) container_of(n, struct pcmcia_device, dev)
 #define to_pcmcia_drv(n) container_of(n, struct pcmcia_driver, drv)
 
-
 /*
  * CIS access.
  *
@@ -170,7 +168,6 @@ int pcmcia_loop_tuple(struct pcmcia_device *p_dev, cisdata_t code,
 /* get the MAC address from CISTPL_FUNCE */
 int pcmcia_get_mac_from_cis(struct pcmcia_device *p_dev,
 			    struct net_device *dev);
-
 
 /* parse a tuple_t */
 int pcmcia_parse_tuple(tuple_t *tuple, cisparse_t *parse);

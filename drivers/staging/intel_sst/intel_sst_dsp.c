@@ -40,7 +40,6 @@
 #include "intel_sst_fw_ipc.h"
 #include "intel_sst_common.h"
 
-
 /**
  * intel_sst_reset_dsp_mrst - Resetting SST DSP
  *
@@ -493,4 +492,3 @@ wake_free:
 wake:
 	return error;
 }
-

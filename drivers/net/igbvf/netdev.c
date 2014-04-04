@@ -833,7 +833,6 @@ static irqreturn_t igbvf_intr_msix_tx(int irq, void *data)
 	struct e1000_hw *hw = &adapter->hw;
 	struct igbvf_ring *tx_ring = adapter->tx_ring;
 
-
 	adapter->total_tx_bytes = 0;
 	adapter->total_tx_packets = 0;
 
@@ -1452,7 +1451,6 @@ int igbvf_up(struct igbvf_adapter *adapter)
 	hw->mac.get_link_status = 1;
 	mod_timer(&adapter->watchdog_timer, jiffies + 1);
 
-
 	return 0;
 }
 
@@ -1967,7 +1965,6 @@ static inline bool igbvf_tx_csum(struct igbvf_adapter *adapter,
 			info |= (skb_transport_header(skb) -
 			         skb_network_header(skb));
 
-
 		context_desc->vlan_macip_lens = cpu_to_le32(info);
 
 		tu_cmd |= (E1000_TXD_CMD_DEXT | E1000_ADVTXD_DTYP_CTXT);
@@ -2055,7 +2052,6 @@ static inline int igbvf_tx_map_adv(struct igbvf_adapter *adapter,
 					  DMA_TO_DEVICE);
 	if (dma_mapping_error(&pdev->dev, buffer_info->dma))
 		goto dma_error;
-
 
 	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++) {
 		struct skb_frag_struct *frag;
@@ -2347,7 +2343,6 @@ static int igbvf_change_mtu(struct net_device *netdev, int new_mtu)
 #else
 		adapter->rx_buffer_len = PAGE_SIZE / 2;
 #endif
-
 
 	/* adjust allocation if LPE protects us, and we aren't using SBP */
 	if ((max_frame == ETH_FRAME_LEN + ETH_FCS_LEN) ||
@@ -2863,7 +2858,6 @@ static void __exit igbvf_exit_module(void)
 	pci_unregister_driver(&igbvf_driver);
 }
 module_exit(igbvf_exit_module);
-
 
 MODULE_AUTHOR("Intel Corporation, <e1000-devel@lists.sourceforge.net>");
 MODULE_DESCRIPTION("Intel(R) 82576 Virtual Function Network Driver");

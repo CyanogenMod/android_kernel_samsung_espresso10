@@ -3,7 +3,7 @@
              monitoring
     Christian W. Zuckschwerdt  <zany@triq.net>  2000-11-23
     based on lm75.c by Frodo Looijaard <frodol@dds.nl>
-    Ported to Linux 2.6 by Aurelien Jarno <aurelien@aurel32.net> with 
+    Ported to Linux 2.6 by Aurelien Jarno <aurelien@aurel32.net> with
     the help of Jean Delvare <khali@linux-fr.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -111,10 +111,10 @@ static void ds1621_init_client(struct i2c_client *client)
 		new_conf &= ~DS1621_REG_CONFIG_POLARITY;
 	else if (polarity == 1)
 		new_conf |= DS1621_REG_CONFIG_POLARITY;
-	
+
 	if (conf != new_conf)
 		i2c_smbus_write_byte_data(client, DS1621_REG_CONF, new_conf);
-	
+
 	/* start conversion */
 	i2c_smbus_write_byte(client, DS1621_COM_START);
 }
@@ -221,7 +221,6 @@ static const struct attribute_group ds1621_group = {
 	.attrs = ds1621_attributes,
 };
 
-
 /* Return 0 if detection is successful, -ENODEV otherwise */
 static int ds1621_detect(struct i2c_client *client,
 			 struct i2c_board_info *info)
@@ -230,8 +229,8 @@ static int ds1621_detect(struct i2c_client *client,
 	int conf, temp;
 	int i;
 
-	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA 
-				     | I2C_FUNC_SMBUS_WORD_DATA 
+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA
+				     | I2C_FUNC_SMBUS_WORD_DATA
 				     | I2C_FUNC_SMBUS_WRITE_BYTE))
 		return -ENODEV;
 
@@ -332,7 +331,6 @@ static void __exit ds1621_exit(void)
 {
 	i2c_del_driver(&ds1621_driver);
 }
-
 
 MODULE_AUTHOR("Christian W. Zuckschwerdt <zany@triq.net>");
 MODULE_DESCRIPTION("DS1621 driver");

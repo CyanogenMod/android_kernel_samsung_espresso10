@@ -1,4 +1,3 @@
-
 #ifndef PERF_DWARF2_H
 #define PERF_DWARF2_H
 
@@ -8,4 +7,3 @@
 #define CFI_ENDPROC
 
 #endif	/* PERF_DWARF2_H */
-

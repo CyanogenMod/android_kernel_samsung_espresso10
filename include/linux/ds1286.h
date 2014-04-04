@@ -30,7 +30,6 @@
 /* RTC_*_alarm is always true if 2 MSBs are set */
 # define RTC_ALARM_DONT_CARE 	0xC0
 
-
 /*
  * Bits in the month register
  */

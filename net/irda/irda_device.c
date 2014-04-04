@@ -136,7 +136,6 @@ void irda_device_set_media_busy(struct net_device *dev, int status)
 }
 EXPORT_SYMBOL(irda_device_set_media_busy);
 
-
 /*
  * Function irda_device_is_receiving (dev)
  *

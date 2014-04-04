@@ -20,12 +20,12 @@
  *
  *
  *      This driver is for the 'Mark Of The Unicorn' (MOTU)
- *      MidiTimePiece AV multiport MIDI interface 
+ *      MidiTimePiece AV multiport MIDI interface
  *
  *      IOPORTS
  *      -------
  *      8 MIDI Ins and 8 MIDI outs
- *      Video Sync In (BNC), Word Sync Out (BNC), 
+ *      Video Sync In (BNC), Word Sync Out (BNC),
  *      ADAT Sync Out (DB9)
  *      SMPTE in/out (1/4")
  *      2 programmable pedal/footswitch inputs and 4 programmable MIDI controller knobs.
@@ -35,7 +35,7 @@
  *
  *      MISC FEATURES
  *      -------------
- *      Hardware MIDI routing, merging, and filtering   
+ *      Hardware MIDI routing, merging, and filtering
  *      MIDI Synchronization to Video, ADAT, SMPTE and other Clock sources
  *      128 'scene' memories, recallable from MIDI program change
  *
@@ -122,7 +122,6 @@ static struct platform_device *device;
 
 #define NUMPORTS (0x12+1)
 
-
 /*
  */
 
@@ -154,7 +153,6 @@ struct mtpav {
 	u32 outmidihwport;	/* selected output midi hw port */
 };
 
-
 /*
  * possible hardware ports (selected by 0xf5 port message)
  *      0x00		all ports
@@ -176,7 +174,6 @@ struct mtpav {
 #define MTPAV_PIDX_COMPUTER	0
 #define MTPAV_PIDX_ADAT		1
 #define MTPAV_PIDX_BROADCAST	2
-
 
 static int translate_subdevice_to_hwport(struct mtpav *chip, int subdev)
 {
@@ -213,7 +210,6 @@ static int translate_hwport_to_subdevice(struct mtpav *chip, int hwport)
 	else  /* ADAT */
 		return chip->num_ports + MTPAV_PIDX_ADAT;
 }
-
 
 /*
  */
@@ -278,7 +274,6 @@ static void snd_mtpav_send_byte(struct mtpav *chip, u8 byte)
 
 }
 
-
 /*
  */
 
@@ -314,7 +309,7 @@ static void snd_mtpav_output_port_write(struct mtpav *mtp_card,
 	do {
 		if (outbyte & 0x80)
 			portp->running_status = outbyte;
-		
+
 		snd_mtpav_send_byte(mtp_card, outbyte);
 	} while (snd_rawmidi_transmit(substream, &outbyte, 1) == 1);
 }
@@ -329,7 +324,6 @@ static void snd_mtpav_output_write(struct snd_rawmidi_substream *substream)
 	snd_mtpav_output_port_write(mtp_card, portp, substream);
 	spin_unlock_irqrestore(&mtp_card->spinlock, flags);
 }
-
 
 /*
  *      mtpav control
@@ -399,7 +393,6 @@ static void snd_mtpav_input_trigger(struct snd_rawmidi_substream *substream, int
 	spin_unlock_irqrestore(&mtp_card->spinlock, flags);
 
 }
-
 
 /*
  * timer interrupt for outputs
@@ -597,7 +590,6 @@ static int __devinit snd_mtpav_get_ISA(struct mtpav * mcard)
 	return 0;
 }
 
-
 /*
  */
 
@@ -612,7 +604,6 @@ static struct snd_rawmidi_ops snd_mtpav_input = {
 	.close =	snd_mtpav_input_close,
 	.trigger =	snd_mtpav_input_trigger,
 };
-
 
 /*
  * get RAWMIDI resources

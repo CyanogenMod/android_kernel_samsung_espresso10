@@ -274,7 +274,6 @@ extern struct oid_obj_priv oid_rtl_seg_87_12_00[32];
 
 #endif /* _RTL871X_MP_IOCTL_C_ */
 
-
 enum MP_MODE {
 	MP_START_MODE,
 	MP_STOP_MODE,
@@ -454,4 +453,3 @@ extern struct mp_ioctl_handler mp_ioctl_hdl[];
 #endif /* _RTL871X_MP_IOCTL_C_ */
 
 #endif
-

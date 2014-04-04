@@ -780,7 +780,6 @@ int hci_conn_set_encrypt(struct hci_conn *conn, __u8 enable)
 EXPORT_SYMBOL(hci_conn_set_encrypt);
 /* END SS_BLUEZ_BT */
 
-
 /* Enter active mode */
 void hci_conn_enter_active_mode(struct hci_conn *conn, __u8 force_active)
 {

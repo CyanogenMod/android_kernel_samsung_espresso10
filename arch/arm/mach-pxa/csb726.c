@@ -236,7 +236,6 @@ struct smsc911x_platform_config csb726_lan_config = {
 	.phy_interface	= PHY_INTERFACE_MODE_MII,
 };
 
-
 static struct platform_device csb726_lan = {
 	.name		= "smsc911x",
 	.id		= -1,

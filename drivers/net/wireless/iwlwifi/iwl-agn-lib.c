@@ -834,7 +834,6 @@ void iwlagn_rx_queue_restock(struct iwl_priv *priv)
 	if (rxq->free_count <= RX_LOW_WATERMARK)
 		queue_work(priv->workqueue, &priv->rx_replenish);
 
-
 	/* If we've added more space for the firmware to place data, tell it.
 	 * Increment device's write pointer in multiples of 8. */
 	if (rxq->write_actual != (rxq->write & ~0x7)) {
@@ -2083,7 +2082,6 @@ void iwlagn_set_rxon_chain(struct iwl_priv *priv, struct iwl_rxon_context *ctx)
 	/* How many receivers should we use? */
 	active_rx_cnt = iwl_get_active_rx_chain_count(priv);
 	idle_rx_cnt = iwl_get_idle_rx_chain_count(priv, active_rx_cnt);
-
 
 	/* correct rx chain count according hw settings
 	 * and chain noise calibration

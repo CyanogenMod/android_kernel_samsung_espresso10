@@ -68,7 +68,6 @@ enum {
 #define SNDRV_MINOR_RAWMIDIS		8
 #define SNDRV_MINOR_PCMS		8
 
-
 #ifdef CONFIG_SND_OSSEMUL
 
 #define SNDRV_MINOR_OSS_DEVICES		16

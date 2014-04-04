@@ -9,7 +9,7 @@
  *        + Module parameters  can now be specified only in the
  *          same format as the kernel boot options.
  *
- *             boot option    old module param 
+ *             boot option    old module param
  *             -----------    ------------------
  *             addr,...       io_port=addr,...
  *             lc:[y|n]       linked_comm=[1|0]
@@ -1863,7 +1863,6 @@ static irqreturn_t ihdlr(unsigned int j)
          for (c = 0; c <= sh[j]->max_channel; c++)
             for (k = 0; k < sh[j]->max_id; k++)
                HD(j)->target_redo[k][c] = TRUE;
-
 
       case 0x92:     /* Data over/under-run */
 

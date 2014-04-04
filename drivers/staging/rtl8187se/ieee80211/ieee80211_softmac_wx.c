@@ -13,7 +13,6 @@
  * released under the GPL
  */
 
-
 #include "ieee80211.h"
 
 /* FIXME: add A freqs */
@@ -24,7 +23,6 @@ const long ieee80211_wlan_frequencies[] = {
 	2452, 2457, 2462, 2467,
 	2472, 2484
 };
-
 
 int ieee80211_wx_set_freq(struct ieee80211_device *ieee, struct iw_request_info *a,
 			     union iwreq_data *wrqu, char *b)
@@ -61,7 +59,6 @@ int ieee80211_wx_set_freq(struct ieee80211_device *ieee, struct iw_request_info 
 
 	}else { /* Set the channel */
 
-
 		ieee->current_network.channel = fwrq->m;
 		ieee->set_chan(ieee->dev, ieee->current_network.channel);
 
@@ -78,7 +75,6 @@ out:
 	up(&ieee->wx_sem);
 	return ret;
 }
-
 
 int ieee80211_wx_get_freq(struct ieee80211_device *ieee,
 			     struct iw_request_info *a,
@@ -122,7 +118,6 @@ int ieee80211_wx_get_wap(struct ieee80211_device *ieee,
 
 	return 0;
 }
-
 
 int ieee80211_wx_set_wap(struct ieee80211_device *ieee,
 			 struct iw_request_info *info,
@@ -226,8 +221,6 @@ int ieee80211_wx_set_rate(struct ieee80211_device *ieee,
 	return 0;
 }
 
-
-
 int ieee80211_wx_get_rate(struct ieee80211_device *ieee,
 			     struct iw_request_info *info,
 			     union iwreq_data *wrqu, char *extra)
@@ -268,7 +261,6 @@ out:
 	up(&ieee->wx_sem);
 	return 0;
 }
-
 
 void ieee80211_wx_sync_scan_wq(struct work_struct *work)
 {
@@ -460,10 +452,8 @@ int ieee80211_wx_get_name(struct ieee80211_device *ieee,
 	else if(ieee->state != IEEE80211_NOLINK)
 		strlcat(wrqu->name," .....", IFNAMSIZ);
 
-
 	return 0;
 }
-
 
 /* this is mostly stolen from hostap */
 int ieee80211_wx_set_power(struct ieee80211_device *ieee,
@@ -553,7 +543,6 @@ int ieee80211_wx_get_power(struct ieee80211_device *ieee,
 		//wrqu->power.value = ieee->current_network.dtim_period *
 		//	ieee->current_network.beacon_interval * 1024;
 //	}
-
 
 	if (ieee->ps & IEEE80211_PS_MBCAST)
 		wrqu->power.flags |= IW_POWER_ALL_R;

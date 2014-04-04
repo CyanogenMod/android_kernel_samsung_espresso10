@@ -107,7 +107,6 @@ static struct notifier_block bpq_dev_notifier = {
 	.notifier_call =bpq_device_event,
 };
 
-
 struct bpqdev {
 	struct list_head bpq_list;	/* list of bpq devices chain */
 	struct net_device *ethdev;	/* link to ethernet device */
@@ -141,7 +140,6 @@ static void bpq_set_lockdep_class(struct net_device *dev)
 
 /* ------------------------------------------------------------------------ */
 
-
 /*
  *	Get the ethernet device for a BPQ device
  */
@@ -173,7 +171,6 @@ static inline int dev_is_ethdev(struct net_device *dev)
 
 /* ------------------------------------------------------------------------ */
 
-
 /*
  *	Receive an AX.25 frame via an ethernet interface.
  */
@@ -196,7 +193,7 @@ static int bpq_rcv(struct sk_buff *skb, struct net_device *dev, struct packet_ty
 	rcu_read_lock();
 	dev = bpq_get_ax25_dev(dev);
 
-	if (dev == NULL || !netif_running(dev)) 
+	if (dev == NULL || !netif_running(dev))
 		goto drop_unlock;
 
 	/*
@@ -296,7 +293,7 @@ static netdev_tx_t bpq_xmit(struct sk_buff *skb, struct net_device *dev)
 	dev_hard_header(skb, dev, ETH_P_BPQ, bpq->dest_addr, NULL, 0);
 	dev->stats.tx_packets++;
 	dev->stats.tx_bytes+=skb->len;
-  
+
 	dev_queue_xmit(skb);
 	netif_wake_queue(dev);
 	return NETDEV_TX_OK;
@@ -372,9 +369,7 @@ static int bpq_close(struct net_device *dev)
 	return 0;
 }
 
-
 /* ------------------------------------------------------------------------ */
-
 
 /*
  *	Proc filesystem
@@ -389,7 +384,7 @@ static void *bpq_seq_start(struct seq_file *seq, loff_t *pos)
 
 	if (*pos == 0)
 		return SEQ_START_TOKEN;
-	
+
 	list_for_each_entry_rcu(bpqdev, &bpq_devices, bpq_list) {
 		if (i == *pos)
 			return bpqdev;
@@ -409,7 +404,7 @@ static void *bpq_seq_next(struct seq_file *seq, void *v, loff_t *pos)
 	else
 		p = rcu_dereference(list_next_rcu(&bpqdev->bpq_list));
 
-	return (p == &bpq_devices) ? NULL 
+	return (p == &bpq_devices) ? NULL
 		: list_entry(p, struct bpqdev, bpq_list);
 }
 
@@ -419,11 +414,10 @@ static void bpq_seq_stop(struct seq_file *seq, void *v)
 	rcu_read_unlock();
 }
 
-
 static int bpq_seq_show(struct seq_file *seq, void *v)
 {
 	if (v == SEQ_START_TOKEN)
-		seq_puts(seq, 
+		seq_puts(seq,
 			 "dev   ether      destination        accept from\n");
 	else {
 		const struct bpqdev *bpqdev = v;
@@ -460,7 +454,6 @@ static const struct file_operations bpq_info_fops = {
 	.llseek = seq_lseek,
 	.release = seq_release,
 };
-
 
 /* ------------------------------------------------------------------------ */
 
@@ -507,7 +500,6 @@ static int bpq_new_device(struct net_device *edev)
 	if (!ndev)
 		return -ENOMEM;
 
-		
 	bpq = netdev_priv(ndev);
 	dev_hold(edev);
 	bpq->ethdev = edev;
@@ -529,7 +521,7 @@ static int bpq_new_device(struct net_device *edev)
 	dev_put(edev);
 	free_netdev(ndev);
 	return err;
-	
+
 }
 
 static void bpq_free_device(struct net_device *ndev)
@@ -576,7 +568,6 @@ static int bpq_device_event(struct notifier_block *this,unsigned long event, voi
 
 	return NOTIFY_DONE;
 }
-
 
 /* ------------------------------------------------------------------------ */
 

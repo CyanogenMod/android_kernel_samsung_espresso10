@@ -7,7 +7,6 @@
  *
  */
 
-
 #include <linux/module.h>
 
 #include <linux/kernel.h>
@@ -1085,7 +1084,6 @@ e100_tx_timeout(struct net_device *dev)
 	netif_wake_queue(dev);
 	spin_unlock_irqrestore(&np->lock, flags);
 }
-
 
 /* This will only be invoked if the driver is _not_ in XOFF state.
  * What this means is that we need not check it, and that this

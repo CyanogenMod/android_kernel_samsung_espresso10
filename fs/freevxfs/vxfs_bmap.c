@@ -38,7 +38,6 @@
 #include "vxfs_inode.h"
 #include "vxfs_extern.h"
 
-
 #ifdef DIAGNOSTIC
 static void
 vxfs_typdump(struct vxfs_typed *typ)

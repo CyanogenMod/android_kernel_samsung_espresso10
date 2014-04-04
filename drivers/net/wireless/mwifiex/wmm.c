@@ -25,10 +25,8 @@
 #include "wmm.h"
 #include "11n.h"
 
-
 /* Maximum value FW can accept for driver delay in packet transmission */
 #define DRV_PKT_DELAY_TO_FW_MAX   512
-
 
 #define WMM_QUEUED_PACKET_LOWER_LIMIT   180
 
@@ -405,6 +403,8 @@ mwifiex_wmm_init(struct mwifiex_adapter *adapter)
 		priv->add_ba_param.timeout = MWIFIEX_DEFAULT_BLOCK_ACK_TIMEOUT;
 		priv->add_ba_param.tx_win_size = MWIFIEX_AMPDU_DEF_TXWINSIZE;
 		priv->add_ba_param.rx_win_size = MWIFIEX_AMPDU_DEF_RXWINSIZE;
+
+		mwifiex_reset_11n_rx_seq_num(priv);
 
 		atomic_set(&priv->wmm.tx_pkts_queued, 0);
 		atomic_set(&priv->wmm.highest_queued_prio, HIGH_PRIO_TID);

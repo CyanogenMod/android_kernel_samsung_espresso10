@@ -1,4 +1,3 @@
-
 #ifndef XILINX_LL_TEMAC_H
 #define XILINX_LL_TEMAC_H
 
@@ -376,7 +375,6 @@ void temac_iow(struct temac_local *lp, int offset, u32 value);
 int temac_indirect_busywait(struct temac_local *lp);
 u32 temac_indirect_in32(struct temac_local *lp, int reg);
 void temac_indirect_out32(struct temac_local *lp, int reg, u32 value);
-
 
 /* xilinx_temac_mdio.c */
 int temac_mdio_setup(struct temac_local *lp, struct device_node *np);

@@ -701,4 +701,3 @@ static void __exit omap4_duty_module_exit(void)
 
 module_init(omap4_duty_module_init);
 module_exit(omap4_duty_module_exit);
-

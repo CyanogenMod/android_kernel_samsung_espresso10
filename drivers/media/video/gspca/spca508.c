@@ -422,7 +422,6 @@ static const u16 spca508_init_data[][2] = {
 	{0x007d, 0x8800},
 	/* READ { 0x0001, 0x8803 } -> 0000: 00  */
 
-
 	/* This chunk is seemingly redundant with */
 	/* earlier commands (A11 Coef...), but if I disable it, */
 	/* the image appears too dark.  Maybe there was some kind of */

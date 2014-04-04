@@ -77,7 +77,6 @@ static int ngene_command_i2c_write(struct ngene *dev, u8 adr,
 {
 	struct ngene_command com;
 
-
 	com.cmd.hdr.Opcode = CMD_I2C_WRITE;
 	com.cmd.hdr.Length = outlen + 1;
 	com.cmd.I2CRead.Device = adr << 1;
@@ -148,7 +147,6 @@ done:
 	return num;
 }
 
-
 static u32 ngene_i2c_functionality(struct i2c_adapter *adap)
 {
 	return I2C_FUNC_SMBUS_EMUL;
@@ -173,4 +171,3 @@ int ngene_i2c_init(struct ngene *dev, int dev_nr)
 
 	return i2c_add_adapter(adap);
 }
-

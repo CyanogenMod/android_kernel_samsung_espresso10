@@ -11,12 +11,9 @@
 #define TX_INTERRUPT			1	// endpoint 2
 #define MAX_INTERRUPT_LENGTH	64	// It must be 64 for EP2 hardware
 
-
-
 //====================================
 // Internal variable for module
 //====================================
-
 
 struct wb35_tx {
 	// For Tx buffer

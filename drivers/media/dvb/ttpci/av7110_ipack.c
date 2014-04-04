@@ -3,7 +3,6 @@
 #include <linux/string.h>	/* for memcpy() */
 #include <linux/vmalloc.h>
 
-
 void av7110_ipack_reset(struct ipack *p)
 {
 	p->found = 0;
@@ -19,7 +18,6 @@ void av7110_ipack_reset(struct ipack *p)
 	p->count = 0;
 }
 
-
 int av7110_ipack_init(struct ipack *p, int size,
 		      void (*func)(u8 *buf, int size, void *priv))
 {
@@ -34,12 +32,10 @@ int av7110_ipack_init(struct ipack *p, int size,
 	return 0;
 }
 
-
 void av7110_ipack_free(struct ipack *p)
 {
 	vfree(p->buf);
 }
-
 
 static void send_ipack(struct ipack *p)
 {
@@ -107,7 +103,6 @@ static void send_ipack(struct ipack *p)
 	}
 }
 
-
 void av7110_ipack_flush(struct ipack *p)
 {
 	if (p->plength != MMAX_PLENGTH - 6 || p->found <= 6)
@@ -117,7 +112,6 @@ void av7110_ipack_flush(struct ipack *p)
 	send_ipack(p);
 	av7110_ipack_reset(p);
 }
-
 
 static void write_ipack(struct ipack *p, const u8 *data, int count)
 {
@@ -140,7 +134,6 @@ static void write_ipack(struct ipack *p, const u8 *data, int count)
 			write_ipack(p, data + rest, count - rest);
 	}
 }
-
 
 int av7110_ipack_instant_repack (const u8 *buf, int count, struct ipack *p)
 {
@@ -380,7 +373,6 @@ int av7110_ipack_instant_repack (const u8 *buf, int count, struct ipack *p)
 			}
 			break;
 		}
-
 
 		if (p->done) {
 			if (p->found + count - c < p->plength + 6) {

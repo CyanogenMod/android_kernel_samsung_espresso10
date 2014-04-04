@@ -3,13 +3,13 @@
  * Pave over some 2.2 versus 2.4 versus 2.6 kernel differences.
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -17,14 +17,13 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
  * $Id: linuxver.h,v 13.38.8.1.8.6 2010/04/29 05:00:46 Exp $
  */
-
 
 #ifndef _linuxver_h_
 #define _linuxver_h_
@@ -44,14 +43,13 @@
 #else
 #define __NO_VERSION__
 #endif
-#endif	
+#endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 5, 0)
 #define module_param(_name_, _type_, _perm_)	MODULE_PARM(_name_, "i")
 #define module_param_string(_name_, _string_, _size_, _perm_) \
 		MODULE_PARM(_string_, "c" __MODULE_STRING(_size_))
 #endif
-
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 4, 9))
 #include <linux/malloc.h>
@@ -69,7 +67,7 @@
 #include <linux/semaphore.h>
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 28))
 #undef IP_TOS
-#endif 
+#endif
 #include <asm/io.h>
 
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 5, 41))
@@ -88,14 +86,14 @@
 #ifndef flush_scheduled_work
 #define flush_scheduled_work() flush_scheduled_tasks()
 #endif
-#endif	
+#endif
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 19)
 #define	MY_INIT_WORK(_work, _func, _data)	INIT_WORK(_work, _func)
 #else
 #define	MY_INIT_WORK(_work, _func, _data)	INIT_WORK(_work, _func, _data)
 typedef void (*work_func_t)(void *work);
-#endif	
+#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 0))
 
@@ -107,24 +105,23 @@ typedef void irqreturn_t;
 #endif
 #else
 typedef irqreturn_t(*FN_ISR) (int irq, void *dev_id, struct pt_regs *ptregs);
-#endif	
+#endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 18)
 #define IRQF_SHARED	SA_SHIRQ
-#endif 
+#endif
 
 #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 17)
 #ifdef	CONFIG_NET_RADIO
 #define	CONFIG_WIRELESS_EXT
 #endif
-#endif	
+#endif
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 5, 67)
 #ifndef SANDGATE2G
 #define MOD_INC_USE_COUNT
-#endif 
-#endif 
-
+#endif
+#endif
 
 #ifndef __exit
 #define __exit
@@ -147,35 +144,32 @@ typedef irqreturn_t(*FN_ISR) (int irq, void *dev_id, struct pt_regs *ptregs);
 #define pci_get_drvdata(dev)		(dev)->sysdata
 #define pci_set_drvdata(dev, value)	(dev)->sysdata = (value)
 
-
-
 struct pci_device_id {
-	unsigned int vendor, device;		
-	unsigned int subvendor, subdevice;	
-	unsigned int class, class_mask;		
-	unsigned long driver_data;		
+	unsigned int vendor, device;
+	unsigned int subvendor, subdevice;
+	unsigned int class, class_mask;
+	unsigned long driver_data;
 };
 
 struct pci_driver {
 	struct list_head node;
 	char *name;
-	const struct pci_device_id *id_table;	
+	const struct pci_device_id *id_table;
 	int (*probe)(struct pci_dev *dev,
-	             const struct pci_device_id *id); 
-	void (*remove)(struct pci_dev *dev);	
-	void (*suspend)(struct pci_dev *dev);	
-	void (*resume)(struct pci_dev *dev);	
+	             const struct pci_device_id *id);
+	void (*remove)(struct pci_dev *dev);
+	void (*suspend)(struct pci_dev *dev);
+	void (*resume)(struct pci_dev *dev);
 };
 
 #define MODULE_DEVICE_TABLE(type, name)
 #define PCI_ANY_ID (~0)
 
-
 #define pci_module_init pci_register_driver
 extern int pci_register_driver(struct pci_driver *drv);
 extern void pci_unregister_driver(struct pci_driver *drv);
 
-#endif 
+#endif
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 18))
 #define pci_module_init pci_register_driver
@@ -189,7 +183,7 @@ extern void pci_unregister_driver(struct pci_driver *drv);
 #define module_init(x)	__initcall(x);
 #define module_exit(x)	__exitcall(x);
 #endif
-#endif	
+#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 3, 48))
 #define list_for_each(pos, head) \
@@ -212,15 +206,12 @@ extern void pci_unregister_driver(struct pci_driver *drv);
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 3, 42))
 
-
-
 #ifndef PCI_DMA_TODEVICE
 #define	PCI_DMA_TODEVICE	1
 #define	PCI_DMA_FROMDEVICE	2
 #endif
 
 typedef u32 dma_addr_t;
-
 
 static inline int get_order(unsigned long size)
 {
@@ -257,17 +248,14 @@ static inline void pci_free_consistent(struct pci_dev *hwdev, size_t size,
 #define pci_map_single(cookie, address, size, dir)	virt_to_bus(address)
 #define pci_unmap_single(cookie, address, size, dir)
 
-#endif 
+#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 3, 43))
 
 #define dev_kfree_skb_any(a)		dev_kfree_skb(a)
 #define netif_down(dev)			do { (dev)->start = 0; } while (0)
 
-
 #ifndef _COMPAT_NETDEVICE_H
-
-
 
 #define dev_kfree_skb_irq(a)	dev_kfree_skb(a)
 #define netif_wake_queue(dev) \
@@ -284,11 +272,10 @@ static inline void netif_start_queue(struct net_device *dev)
 #define netif_queue_stopped(dev)	(dev)->tbusy
 #define netif_running(dev)		(dev)->start
 
-#endif 
+#endif
 
 #define netif_device_attach(dev)	netif_start_queue(dev)
 #define netif_device_detach(dev)	netif_stop_queue(dev)
-
 
 #define tasklet_struct				tq_struct
 static inline void tasklet_schedule(struct tasklet_struct *tasklet)
@@ -308,24 +295,21 @@ static inline void tasklet_init(struct tasklet_struct *tasklet,
 }
 #define tasklet_kill(tasklet)	{ do {} while (0); }
 
-
 #define del_timer_sync(timer) del_timer(timer)
 
 #else
 
 #define netif_down(dev)
 
-#endif 
+#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 4, 3))
-
 
 #define PREPARE_TQUEUE(_tq, _routine, _data)			\
 	do {							\
 		(_tq)->routine = _routine;			\
 		(_tq)->data = _data;				\
 	} while (0)
-
 
 #define INIT_TQUEUE(_tq, _routine, _data)			\
 	do {							\
@@ -334,11 +318,9 @@ static inline void tasklet_init(struct tasklet_struct *tasklet,
 		PREPARE_TQUEUE((_tq), (_routine), (_data));	\
 	} while (0)
 
-#endif	
+#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 4, 6))
-
-
 
 static inline int
 pci_save_state(struct pci_dev *dev, u32 *buffer)
@@ -360,7 +342,7 @@ pci_restore_state(struct pci_dev *dev, u32 *buffer)
 		for (i = 0; i < 16; i++)
 			pci_write_config_dword(dev, i * 4, buffer[i]);
 	}
-	
+
 	else {
 		for (i = 0; i < 6; i ++)
 			pci_write_config_dword(dev,
@@ -371,13 +353,11 @@ pci_restore_state(struct pci_dev *dev, u32 *buffer)
 	return 0;
 }
 
-#endif 
-
+#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 4, 19))
 #define read_c0_count() read_32bit_cp0_register(CP0_COUNT)
 #endif
-
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 24))
 #ifndef SET_MODULE_OWNER
@@ -388,7 +368,7 @@ pci_restore_state(struct pci_dev *dev, u32 *buffer)
 #define OLD_MOD_INC_USE_COUNT		do {} while (0)
 #define OLD_MOD_DEC_USE_COUNT		do {} while (0)
 #endif
-#else 
+#else
 #ifndef SET_MODULE_OWNER
 #define SET_MODULE_OWNER(dev)		do {} while (0)
 #endif
@@ -400,7 +380,7 @@ pci_restore_state(struct pci_dev *dev, u32 *buffer)
 #endif
 #define OLD_MOD_INC_USE_COUNT		MOD_INC_USE_COUNT
 #define OLD_MOD_DEC_USE_COUNT		MOD_DEC_USE_COUNT
-#endif 
+#endif
 
 #ifndef SET_NETDEV_DEV
 #define SET_NETDEV_DEV(net, pdev)	do {} while (0)
@@ -414,7 +394,6 @@ pci_restore_state(struct pci_dev *dev, u32 *buffer)
 
 #define af_packet_priv			data
 #endif
-
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 11)
 #define DRV_SUSPEND_STATE_TYPE pm_message_t
@@ -438,10 +417,10 @@ pci_restore_state(struct pci_dev *dev, u32 *buffer)
 { \
 	kill_proc(pid, sig, 1); \
 }
-#endif 
+#endif
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 0))
 #define netdev_priv(dev) dev->priv
 #endif
 
-#endif 
+#endif

@@ -92,7 +92,6 @@ static void usb_terminate_communication(
 				ld->com_state);
 }
 
-
 static int usb_rx_submit(struct if_usb_devdata *pipe, struct urb *urb, gfp_t gfp_flags)
 {
 	int ret;
@@ -839,7 +838,6 @@ static void __exit if_usb_exit(void)
 {
 	usb_deregister(&if_usb_driver);
 }
-
 
 static int lte_wake_resume(struct device *pdev)
 {

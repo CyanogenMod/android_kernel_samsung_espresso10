@@ -224,9 +224,9 @@ static int wm2000_power_up(struct i2c_client *i2c, int analogue)
 
 	ret = wm2000_read(i2c, WM2000_REG_SPEECH_CLARITY);
 	if (wm2000->speech_clarity)
-		ret &= ~WM2000_SPEECH_CLARITY;
-	else
 		ret |= WM2000_SPEECH_CLARITY;
+	else
+		ret &= ~WM2000_SPEECH_CLARITY;
 	wm2000_write(i2c, WM2000_REG_SPEECH_CLARITY, ret);
 
 	wm2000_write(i2c, WM2000_REG_SYS_START0, 0x33);
@@ -327,7 +327,7 @@ static int wm2000_exit_bypass(struct i2c_client *i2c, int analogue)
 	struct wm2000_priv *wm2000 = dev_get_drvdata(&i2c->dev);
 
 	BUG_ON(wm2000->anc_mode != ANC_BYPASS);
-	
+
 	wm2000_write(i2c, WM2000_REG_SYS_CTL1, 0);
 
 	if (analogue) {
@@ -802,7 +802,7 @@ static int __devinit wm2000_i2c_probe(struct i2c_client *i2c,
 	wm2000_reset(wm2000);
 
 	/* This will trigger a transition to standby mode by default */
-	wm2000_anc_set_mode(wm2000);	
+	wm2000_anc_set_mode(wm2000);
 
 	wm2000_i2c = i2c;
 

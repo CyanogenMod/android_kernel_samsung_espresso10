@@ -571,7 +571,6 @@ static inline u32 armv7_pmnc_disable_counter(unsigned int idx)
 {
 	u32 val;
 
-
 	if ((idx != ARMV7_CYCLE_COUNTER) &&
 	    ((idx < ARMV7_COUNTER0) || (idx > ARMV7_COUNTER_LAST))) {
 		pr_err("CPU%u disabling wrong PMNC counter"

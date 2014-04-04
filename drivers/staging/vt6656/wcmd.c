@@ -58,9 +58,6 @@
 
 /*---------------------  Static Definitions -------------------------*/
 
-
-
-
 /*---------------------  Static Classes  ----------------------------*/
 
 /*---------------------  Static Variables  --------------------------*/
@@ -74,7 +71,6 @@ s_vProbeChannel(
      PSDevice pDevice
     );
 
-
 static
 PSTxMgmtPacket
 s_MgrMakeProbeRequest(
@@ -86,13 +82,11 @@ s_MgrMakeProbeRequest(
      PWLAN_IE_SUPP_RATES pCurrExtSuppRates
     );
 
-
 static
 BOOL
 s_bCommandComplete (
     PSDevice pDevice
     );
-
 
 static BOOL s_bClearBSSID_SCAN(void *hDeviceContext);
 
@@ -157,7 +151,6 @@ vAdHocBeaconStop(PSDevice  pDevice)
 
 } /* vAdHocBeaconStop */
 
-
 /*
  * Description:
  *      Restart AdHoc beacon after scan process complete
@@ -192,7 +185,6 @@ vAdHocBeaconRestart(PSDevice pDevice)
 
 }
 
-
 /*+
  *
  * Routine Description:
@@ -220,7 +212,6 @@ s_vProbeChannel(
     PSTxMgmtPacket  pTxPacket;
     PSMgmtObject    pMgmt = &(pDevice->sMgmtObj);
     unsigned int            ii;
-
 
     if (pDevice->byBBType == BB_TYPE_11A) {
         pbyRate = &abyCurrSuppRatesA[0];
@@ -253,9 +244,6 @@ s_vProbeChannel(
 
 }
 
-
-
-
 /*+
  *
  * Routine Description:
@@ -266,7 +254,6 @@ s_vProbeChannel(
  *    A ptr to Tx frame or NULL on allocation failue
  *
 -*/
-
 
 PSTxMgmtPacket
 s_MgrMakeProbeRequest(
@@ -281,7 +268,6 @@ s_MgrMakeProbeRequest(
 {
     PSTxMgmtPacket      pTxPacket = NULL;
     WLAN_FR_PROBEREQ    sFrame;
-
 
     pTxPacket = (PSTxMgmtPacket)pMgmt->pbyMgmtPacketPool;
     memset(pTxPacket, 0, sizeof(STxMgmtPacket) + WLAN_PROBEREQ_FR_MAXLEN);
@@ -316,17 +302,19 @@ s_MgrMakeProbeRequest(
     return pTxPacket;
 }
 
-void vCommandTimerWait(void *hDeviceContext, unsigned int MSecond)
+void vCommandTimerWait(void *hDeviceContext, unsigned long MSecond)
 {
-    PSDevice        pDevice = (PSDevice)hDeviceContext;
+	PSDevice pDevice = (PSDevice)hDeviceContext;
 
-    init_timer(&pDevice->sTimerCommand);
-    pDevice->sTimerCommand.data = (unsigned long)pDevice;
-    pDevice->sTimerCommand.function = (TimerFunction)vRunCommand;
-    // RUN_AT :1 msec ~= (HZ/1024)
-    pDevice->sTimerCommand.expires = (unsigned int)RUN_AT((MSecond * HZ) >> 10);
-    add_timer(&pDevice->sTimerCommand);
-    return;
+	init_timer(&pDevice->sTimerCommand);
+
+	pDevice->sTimerCommand.data = (unsigned long)pDevice;
+	pDevice->sTimerCommand.function = (TimerFunction)vRunCommand;
+	pDevice->sTimerCommand.expires = RUN_AT((MSecond * HZ) / 1000);
+
+	add_timer(&pDevice->sTimerCommand);
+
+	return;
 }
 
 void vRunCommand(void *hDeviceContext)
@@ -340,7 +328,6 @@ void vRunCommand(void *hDeviceContext)
     BYTE            byMask[8] = {1, 2, 4, 8, 0x10, 0x20, 0x40, 0x80};
     struct sk_buff  *skb;
     BYTE            byData;
-
 
     if (pDevice->dwDiagRefCount != 0)
         return;
@@ -554,7 +541,6 @@ void vRunCommand(void *hDeviceContext)
                 CARDbRadioPowerOff(pDevice);
             s_bCommandComplete(pDevice);
             break;
-
 
         case WLAN_CMD_SSID_START:
 
@@ -968,7 +954,6 @@ void vRunCommand(void *hDeviceContext)
             s_bCommandComplete(pDevice);
             break;
 
-
         case WLAN_CMD_CHANGE_BBSENSITIVITY_START:
 
             pDevice->bStopDataPkt = TRUE;
@@ -1019,7 +1004,6 @@ void vRunCommand(void *hDeviceContext)
             s_bCommandComplete(pDevice);
             break;
 
-
         case WLAN_CMD_MAC_DISPOWERSAVING_START:
             ControlvReadByte (pDevice, MESSAGE_REQUEST_MACREG, MAC_REG_PSCTL, &byData);
             if ( (byData & PSCTL_PS) != 0 ) {
@@ -1052,7 +1036,6 @@ void vRunCommand(void *hDeviceContext)
     return;
 }
 
-
 static
 BOOL
 s_bCommandComplete (
@@ -1064,7 +1047,6 @@ s_bCommandComplete (
     //WORD          wDeAuthenReason = 0;
     BOOL          bForceSCAN = TRUE;
     PSMgmtObject  pMgmt = &(pDevice->sMgmtObj);
-
 
     pDevice->eCommandState = WLAN_CMD_IDLE;
     if (pDevice->cbFreeCmdQueue == CMD_Q_SIZE) {
@@ -1168,7 +1150,6 @@ BOOL bScheduleCommand(void *hDeviceContext,
 {
     PSDevice        pDevice = (PSDevice)hDeviceContext;
 
-
     if (pDevice->cbFreeCmdQueue == 0) {
         return (FALSE);
     }
@@ -1249,7 +1230,6 @@ static BOOL s_bClearBSSID_SCAN(void *hDeviceContext)
     }
     return TRUE;
 }
-
 
 //mike add:reset command timer
 void vResetCommandTimer(void *hDeviceContext)

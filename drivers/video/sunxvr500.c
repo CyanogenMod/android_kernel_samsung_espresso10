@@ -128,7 +128,6 @@ static int e3d_setcolreg(unsigned regno,
 	if (info->fix.visual == FB_VISUAL_TRUECOLOR && regno < 16)
 		((u32 *)info->pseudo_palette)[regno] = value;
 
-
 	red_10 = red >> 6;
 	green_10 = green >> 6;
 	blue_10 = blue >> 6;

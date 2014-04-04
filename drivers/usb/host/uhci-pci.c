@@ -138,7 +138,6 @@ static int uhci_pci_init(struct usb_hcd *hcd)
 	uhci->global_suspend_mode_is_broken =
 		uhci_pci_global_suspend_mode_is_broken;
 
-
 	/* Kick BIOS off this hardware and reset if the controller
 	 * isn't already safely quiescent.
 	 */

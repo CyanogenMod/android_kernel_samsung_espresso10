@@ -43,7 +43,6 @@ struct netns_xfrm {
 	unsigned int		policy_count[XFRM_POLICY_MAX * 2];
 	struct work_struct	policy_hash_work;
 
-
 	struct sock		*nlsk;
 	struct sock		*nlsk_stash;
 

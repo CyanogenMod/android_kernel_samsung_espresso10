@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
  * Licensed under the GPL
  */
@@ -7,4 +7,3 @@
 #define __SYSDEP_IA64_SIGCONTEXT_H
 
 #endif
-

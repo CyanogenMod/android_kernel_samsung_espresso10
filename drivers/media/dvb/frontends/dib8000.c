@@ -2457,7 +2457,6 @@ struct dvb_frontend *dib8000_get_slave_frontend(struct dvb_frontend *fe, int sla
 }
 EXPORT_SYMBOL(dib8000_get_slave_frontend);
 
-
 int dib8000_i2c_enumeration(struct i2c_adapter *host, int no_of_demods, u8 default_addr, u8 first_addr)
 {
 	int k = 0, ret = 0;

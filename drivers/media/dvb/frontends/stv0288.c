@@ -59,7 +59,6 @@ static int debug_legacy_dish_switch;
 			printk(KERN_DEBUG "stv0288: " args); \
 	} while (0)
 
-
 static int stv0288_writeregI(struct stv0288_state *state, u8 reg, u8 data)
 {
 	int ret;
@@ -392,13 +391,11 @@ static int stv0288_read_ber(struct dvb_frontend *fe, u32 *ber)
 	return 0;
 }
 
-
 static int stv0288_read_signal_strength(struct dvb_frontend *fe, u16 *strength)
 {
 	struct stv0288_state *state = fe->demodulator_priv;
 
 	s32 signal =  0xffff - ((stv0288_readreg(state, 0x10) << 8));
-
 
 	signal = signal * 5 / 4;
 	*strength = (signal > 0xffff) ? 0xffff : (signal < 0) ? 0 : signal;
@@ -621,4 +618,3 @@ MODULE_PARM_DESC(debug, "Turn on/off frontend debugging (default:off).");
 MODULE_DESCRIPTION("ST STV0288 DVB Demodulator driver");
 MODULE_AUTHOR("Georg Acher, Bob Liu, Igor liplianin");
 MODULE_LICENSE("GPL");
-

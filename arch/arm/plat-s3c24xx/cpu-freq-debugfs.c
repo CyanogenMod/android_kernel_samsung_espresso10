@@ -58,7 +58,6 @@ static int board_show(struct seq_file *seq, void *p)
 
 	show_max(seq, &brd->max);
 
-
 	return 0;
 }
 
@@ -174,7 +173,6 @@ static const struct file_operations fops_io = {
 	.owner		= THIS_MODULE,
 };
 
-
 static int __init s3c_freq_debugfs_init(void)
 {
 	dbgfs_root = debugfs_create_dir("s3c-cpufreq", NULL);
@@ -196,4 +194,3 @@ static int __init s3c_freq_debugfs_init(void)
 }
 
 late_initcall(s3c_freq_debugfs_init);
-

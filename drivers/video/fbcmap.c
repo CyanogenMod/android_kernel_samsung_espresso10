@@ -73,8 +73,6 @@ static const struct fb_cmap default_16_colors = {
     .len=16, .red=red16, .green=green16, .blue=blue16
 };
 
-
-
 /**
  *	fb_alloc_cmap - allocate a colormap
  *	@cmap: frame buffer colormap structure
@@ -320,7 +318,6 @@ const struct fb_cmap *fb_default_cmap(int len)
     return &default_16_colors;
 }
 
-
 /**
  *	fb_invert_cmaps - invert all defaults colormaps
  *
@@ -353,7 +350,6 @@ void fb_invert_cmaps(void)
 	blue16[i] = ~blue16[i];
     }
 }
-
 
     /*
      *  Visible symbols for modules

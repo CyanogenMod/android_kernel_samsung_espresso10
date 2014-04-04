@@ -91,7 +91,6 @@ struct shared_hw_cfg {					 /* NVRAM Offset */
 #define SHARED_HW_CFG_LED_PHY8			    0x000d0000
 #define SHARED_HW_CFG_LED_EXTPHY1		    0x000e0000
 
-
 #define SHARED_HW_CFG_AN_ENABLE_MASK		    0x3f000000
 #define SHARED_HW_CFG_AN_ENABLE_SHIFT		    24
 #define SHARED_HW_CFG_AN_ENABLE_CL37		    0x01000000
@@ -191,7 +190,6 @@ struct shared_hw_cfg {					 /* NVRAM Offset */
 
 };
 
-
 /****************************************************************************
  * Port HW configuration						    *
  ****************************************************************************/
@@ -242,7 +240,6 @@ struct port_hw_cfg {			    /* port 0: 0x12c  port 1: 0x2bc */
 
 #define PORT_HW_CFG_SERDES_RX_DRV_EQUALIZER_MASK	      0xFFFF0000
 #define PORT_HW_CFG_SERDES_RX_DRV_EQUALIZER_SHIFT	      16
-
 
 	u32 Reserved0[3];				    /* 0x158 */
 	/*	Controls the TX laser of the SFP+ module */
@@ -394,7 +391,6 @@ struct port_hw_cfg {			    /* port 0: 0x12c  port 1: 0x2bc */
 #define PORT_HW_CFG_PHY_SWAPPED_DISABLED	     0x00000000
 #define PORT_HW_CFG_PHY_SWAPPED_ENABLED		     0x00000008
 
-
 	/* Address of the second external phy */
 	u32 external_phy_config2;				/* 0x294 */
 #define PORT_HW_CFG_XGXS_EXT_PHY2_ADDR_MASK	    0x000000FF
@@ -516,7 +512,6 @@ struct port_hw_cfg {			    /* port 0: 0x12c  port 1: 0x2bc */
 
 };
 
-
 /****************************************************************************
  * Shared Feature configuration 					    *
  ****************************************************************************/
@@ -538,7 +533,6 @@ struct shared_feat_cfg {				 /* NVRAM Offset */
 #define SHARED_FEAT_CFG_FORCE_SF_MODE_SWITCH_INDEPT	      0x00000300
 
 };
-
 
 /****************************************************************************
  * Port Feature configuration						    *
@@ -597,7 +591,6 @@ struct port_feat_cfg {			    /* port 0: 0x454  port 1: 0x4c8 */
 #define PORT_FEAT_CFG_OPT_MDL_ENFRCMNT_DISABLE_TX_LASER       0x20000000
 #define PORT_FEAT_CFG_OPT_MDL_ENFRCMNT_WARNING_MSG	      0x40000000
 #define PORT_FEAT_CFG_OPT_MDL_ENFRCMNT_POWER_DOWN	      0x60000000
-
 
 	u32 wol_config;
 	/* Default is used when driver sets to "auto" mode */
@@ -742,7 +735,6 @@ struct port_feat_cfg {			    /* port 0: 0x454  port 1: 0x4c8 */
 
 };
 
-
 /****************************************************************************
  * Device Information							    *
  ****************************************************************************/
@@ -759,7 +751,6 @@ struct shm_dev_info {						    /* size */
 	struct port_feat_cfg	 port_feature_config[PORT_MAX];/* 116*2=232 */
 
 };
-
 
 #define FUNC_0				0
 #define FUNC_1				1
@@ -882,7 +873,6 @@ struct drv_port_mb {
 	u32 ext_phy_fw_version;
 
 };
-
 
 struct drv_func_mb {
 
@@ -1013,7 +1003,6 @@ struct drv_func_mb {
 
 };
 
-
 /****************************************************************************
  * Management firmware state						    *
  ****************************************************************************/
@@ -1023,7 +1012,6 @@ struct drv_func_mb {
 struct mgmtfw_state {
 	u32 opaque[MGMTFW_STATE_WORD_SIZE];
 };
-
 
 /****************************************************************************
  * Multi-Function configuration 					    *
@@ -1136,7 +1124,6 @@ struct mf_cfg {
 	struct func_ext_cfg func_ext_config[E1H_FUNC_MAX];
 };
 
-
 /****************************************************************************
  * Shared Memory Region 						    *
  ****************************************************************************/
@@ -1241,7 +1228,6 @@ do {									   \
 	a[SHMEM_ARRAY_ENTRY(i, eb)] |= (((val) & SHMEM_ARRAY_MASK(eb)) <<  \
 	SHMEM_ARRAY_BITPOS(i, eb, fb));				   \
 } while (0)
-
 
 /****START OF DCBX STRUCTURES DECLARATIONS****/
 #define DCBX_MAX_NUM_PRI_PG_ENTRIES	8
@@ -1477,7 +1463,6 @@ struct shmem2_region {
 #define SHMEM_LLDP_DCBX_STAT_NONE		   0x00000000
 };
 
-
 struct emac_stats {
     u32     rx_stat_ifhcinoctets;
     u32     rx_stat_ifhcinbadoctets;
@@ -1528,7 +1513,6 @@ struct emac_stats {
     u32     tx_stat_etherstatspktsover1522octets;
     u32     tx_stat_dot3statsinternalmactransmiterrors;
 };
-
 
 struct bmac1_stats {
     u32     tx_stat_gtpkt_lo;
@@ -1756,7 +1740,6 @@ union mac_stats {
 	struct bmac2_stats	 bmac2_stats;
 };
 
-
 struct mac_stx {
     /* in_bad_octets */
     u32     rx_stat_ifhcinbadoctets_hi;
@@ -1878,7 +1861,6 @@ struct mac_stx {
     u32     tx_stat_bmac_ufl_lo;
 };
 
-
 #define MAC_STX_IDX_MAX 		    2
 
 struct host_port_stats {
@@ -1891,7 +1873,6 @@ struct host_port_stats {
 
     u32 	   host_port_stats_end;
 };
-
 
 struct host_func_stats {
     u32     host_func_stats_start;
@@ -1926,13 +1907,11 @@ struct host_func_stats {
     u32     host_func_stats_end;
 };
 
-
 #define BCM_5710_FW_MAJOR_VERSION			6
 #define BCM_5710_FW_MINOR_VERSION			2
 #define BCM_5710_FW_REVISION_VERSION			9
 #define BCM_5710_FW_ENGINEERING_VERSION			0
 #define BCM_5710_FW_COMPILE_FLAGS			1
-
 
 /*
  * attention bits
@@ -1945,7 +1924,6 @@ struct atten_sp_status_block {
 	__le16 attn_bits_index;
 	__le32 reserved1;
 };
-
 
 /*
  * common data for all protocols
@@ -1977,7 +1955,6 @@ struct doorbell {
 #endif
 };
 
-
 /*
  * doorbell message sent to the chip
  */
@@ -1992,7 +1969,6 @@ struct doorbell_set_prod {
 	u16 prod;
 #endif
 };
-
 
 /*
  * 3 lines. status block
@@ -2010,7 +1986,6 @@ struct host_hc_status_block_e1x {
 	struct hc_status_block_e1x sb;
 };
 
-
 /*
  * 3 lines. status block
  */
@@ -2026,7 +2001,6 @@ struct hc_status_block_e2 {
 struct host_hc_status_block_e2 {
 	struct hc_status_block_e2 sb;
 };
-
 
 /*
  * 5 lines. slow-path status block
@@ -2045,7 +2019,6 @@ struct host_sp_status_block {
 	struct atten_sp_status_block atten_status_block;
 	struct hc_sp_status_block sp_sb;
 };
-
 
 /*
  * IGU driver acknowledgment register
@@ -2080,7 +2053,6 @@ struct igu_ack_register {
 #endif
 };
 
-
 /*
  * IGU driver acknowledgement register
  */
@@ -2100,7 +2072,6 @@ struct igu_backward_compatible {
 #define IGU_BACKWARD_COMPATIBLE_RESERVED_0_SHIFT 27
 	u32 reserved_2;
 };
-
 
 /*
  * IGU driver acknowledgement register
@@ -2136,7 +2107,6 @@ union igu_consprod_reg {
 	struct igu_backward_compatible backward_compatible;
 };
 
-
 /*
  * Control register for the IGU command register
  */
@@ -2153,7 +2123,6 @@ struct igu_ctrl_reg {
 #define IGU_CTRL_REG_UNUSED (0x7FF<<21)
 #define IGU_CTRL_REG_UNUSED_SHIFT 21
 };
-
 
 /*
  * Parser parsing flags field
@@ -2188,12 +2157,10 @@ struct parsing_flags {
 #define PARSING_FLAGS_RESERVED0_SHIFT 14
 };
 
-
 struct regpair {
 	__le32 lo;
 	__le32 hi;
 };
-
 
 /*
  * dmae command structure
@@ -2271,14 +2238,12 @@ struct dmae_command {
 #endif
 };
 
-
 struct double_regpair {
 	u32 regpair0_lo;
 	u32 regpair0_hi;
 	u32 regpair1_lo;
 	u32 regpair1_hi;
 };
-
 
 /*
  * SDM operation gen command (generate aggregative interrupt)
@@ -2312,8 +2277,6 @@ struct eth_rx_sge {
 	__le32 addr_lo;
 	__le32 addr_hi;
 };
-
-
 
 /*
  * The eth storm context of Ustorm
@@ -2353,14 +2316,12 @@ struct tstorm_eth_ag_context {
 	u32 __reserved0[14];
 };
 
-
 /*
  * The eth aggregative context of Cstorm
  */
 struct cstorm_eth_ag_context {
 	u32 __reserved0[10];
 };
-
 
 /*
  * The eth aggregative context of Ustorm
@@ -2526,7 +2487,6 @@ union eth_tx_bd_types {
 	struct eth_tx_next_bd next_bd;
 };
 
-
 /*
  * The eth storm context of Xstorm
  */
@@ -2556,7 +2516,6 @@ struct eth_context {
 	struct cstorm_eth_st_context cstorm_st_context;
 };
 
-
 /*
  * Ethernet doorbell
  */
@@ -2584,7 +2543,6 @@ struct eth_tx_doorbell {
 #endif
 };
 
-
 /*
  * client init fc data
  */
@@ -2604,7 +2562,6 @@ struct client_init_fc_data {
 	__le32 reserved2;
 };
 
-
 /*
  * client init ramrod data
  */
@@ -2618,7 +2575,6 @@ struct client_init_general_data {
 	__le16 reserved0;
 	__le32 reserved1[2];
 };
-
 
 /*
  * client init rx data
@@ -2676,7 +2632,6 @@ struct client_init_ramrod_data {
 	struct client_init_fc_data fc;
 };
 
-
 /*
  * The data contain client ID need to the ramrod
  */
@@ -2684,7 +2639,6 @@ struct eth_common_ramrod_data {
 	u32 client_id;
 	u32 reserved1;
 };
-
 
 /*
  * union for sgl and raw data.
@@ -2736,7 +2690,6 @@ struct eth_fast_path_rx_cqe {
 	union eth_sgl_or_raw_data sgl_or_raw_data;
 };
 
-
 /*
  * The data for RSS setup ramrod
  */
@@ -2761,7 +2714,6 @@ struct common_query_ramrod_data {
 	u32 ctr_id_vector;
 };
 
-
 /*
  * Place holder for ramrods protocol specific data
  */
@@ -2776,7 +2728,6 @@ struct ramrod_data {
 union eth_ramrod_data {
 	struct ramrod_data general;
 };
-
 
 /*
  * Eth Rx Cqe structure- general structure for ramrods
@@ -2818,7 +2769,6 @@ union eth_rx_cqe {
 	struct eth_rx_cqe_next_page next_page_cqe;
 };
 
-
 /*
  * common data for all protocols
  */
@@ -2855,14 +2805,12 @@ struct eth_spe {
 	union eth_specific_data data;
 };
 
-
 /*
  * array of 13 bds as appears in the eth xstorm context
  */
 struct eth_tx_bds_array {
 	union eth_tx_bd_types bds[13];
 };
-
 
 /*
  * Common configuration parameters per function in Tstorm
@@ -2947,7 +2895,6 @@ struct eth_update_ramrod_data {
 	struct rss_update_config rss_config;
 };
 
-
 /*
  * MAC filtering configuration command header
  */
@@ -2993,14 +2940,12 @@ struct mac_configuration_cmd {
 	struct mac_configuration_entry config_table[64];
 };
 
-
 /*
  * approximate-match multicast filtering for E1H per function in Tstorm
  */
 struct tstorm_eth_approximate_match_multicast_filtering {
 	u32 mcast_add_hash_bit_array[8];
 };
-
 
 /*
  * MAC filtering configuration parameters per port in Tstorm
@@ -3017,7 +2962,6 @@ struct tstorm_eth_mac_filter_config {
 	u32 reserved;
 };
 
-
 /*
  * common flag to indicate existence of TPA.
  */
@@ -3033,7 +2977,6 @@ struct tstorm_eth_tpa_exist {
 #endif
 	u32 reserved2;
 };
-
 
 /*
  * Three RX producers for ETH
@@ -3055,7 +2998,6 @@ struct ustorm_eth_rx_producers {
 #endif
 };
 
-
 /*
  * cfc delete event data
  */
@@ -3066,7 +3008,6 @@ struct cfc_del_event_data {
 	u16 reserved1;
 	u32 reserved2;
 };
-
 
 /*
  * per-port SAFC demo variables
@@ -3089,7 +3030,6 @@ struct cmng_flags_per_port {
 #define __CMNG_FLAGS_PER_PORT_RESERVED0 (0x3FFFFFF<<6)
 #define __CMNG_FLAGS_PER_PORT_RESERVED0_SHIFT 6
 };
-
 
 /*
  * per-port rate shaping variables
@@ -3180,8 +3120,6 @@ struct cmng_struct_per_port {
 	struct cmng_flags_per_port flags;
 };
 
-
-
 /*
  * Dynamic HC counters set by the driver
  */
@@ -3208,7 +3146,6 @@ struct dynamic_hc_config {
 	u8 hc_timeout2[HC_SB_MAX_DYNAMIC_INDICES];
 	u8 hc_timeout3[HC_SB_MAX_DYNAMIC_INDICES];
 };
-
 
 /*
  * Protocol-common statistics collected by the Xstorm (per client)
@@ -3300,7 +3237,6 @@ struct eth_stats_query {
 	struct ustorm_common_stats ustorm_common;
 };
 
-
 /*
  * set mac event data
  */
@@ -3319,7 +3255,6 @@ union event_data {
 	struct cfc_del_event_data cfc_del_event;
 };
 
-
 /*
  * per PF event ring data
  */
@@ -3336,7 +3271,6 @@ struct event_ring_data {
 #endif
 	u32 reserved0;
 };
-
 
 /*
  * event ring message element (each element is 128 bits)
@@ -3364,7 +3298,6 @@ union event_ring_elem {
 	struct event_ring_next next_page;
 };
 
-
 /*
  * per-vnic fairness variables
  */
@@ -3374,7 +3307,6 @@ struct fairness_vars_per_vn {
 	u32 vn_credit_delta;
 	u32 __reserved0;
 };
-
 
 /*
  * The data for flow control configuration
@@ -3393,7 +3325,6 @@ struct flow_control_configuration {
 #endif
 	u32 reserved2;
 };
-
 
 /*
  * FW version stored in the Xstorm RAM
@@ -3421,14 +3352,12 @@ struct fw_version {
 #define __FW_VERSION_RESERVED_SHIFT 4
 };
 
-
 /*
  * Dynamic Host-Coalescing - Driver(host) counters
  */
 struct hc_dynamic_sb_drv_counters {
 	u32 dynamic_hc_drv_counter[HC_SB_MAX_DYNAMIC_INDICES];
 };
-
 
 /*
  * 2 bytes. configuration/state parameters for a single protocol index
@@ -3458,7 +3387,6 @@ struct hc_index_data {
 #define HC_INDEX_DATA_RESERVE_SHIFT 3
 #endif
 };
-
 
 /*
  * HC state-machine
@@ -3516,7 +3444,6 @@ struct hc_sb_data {
 	struct regpair rsrv1[2];
 };
 
-
 /*
  * The fast-path status block meta-data
  */
@@ -3534,7 +3461,6 @@ struct hc_sp_status_block_data {
 	struct pci_entity p_func;
 };
 
-
 /*
  * The fast-path status block meta-data
  */
@@ -3543,7 +3469,6 @@ struct hc_status_block_data_e1x {
 	struct hc_sb_data common;
 };
 
-
 /*
  * The fast-path status block meta-data
  */
@@ -3551,7 +3476,6 @@ struct hc_status_block_data_e2 {
 	struct hc_index_data index_data[HC_SB_MAX_INDICES_E2];
 	struct hc_sb_data common;
 };
-
 
 /*
  * FW version stored in first line of pram
@@ -3574,7 +3498,6 @@ struct pram_fw_version {
 #define __PRAM_FW_VERSION_RESERVED0_SHIFT 6
 };
 
-
 /*
  * Ethernet slow path element
  */
@@ -3593,7 +3516,6 @@ struct protocol_common_spe {
 	union protocol_common_specific_data data;
 };
 
-
 /*
  * a single rate shaping counter. can be used as protocol or vnic counter
  */
@@ -3608,7 +3530,6 @@ struct rate_shaping_counter {
 #endif
 };
 
-
 /*
  * per-vnic rate shaping variables
  */
@@ -3616,7 +3537,6 @@ struct rate_shaping_vars_per_vn {
 	struct rate_shaping_counter protocol_counters[NUM_OF_PROTOCOLS];
 	struct rate_shaping_counter vn_counter;
 };
-
 
 /*
  * The send queue element
@@ -3626,7 +3546,6 @@ struct slow_path_element {
 	struct regpair protocol_data;
 };
 
-
 /*
  * eth/toe flags that indicate if to query
  */
@@ -3634,7 +3553,6 @@ struct stats_indication_flags {
 	u32 collect_eth;
 	u32 collect_toe;
 };
-
 
 /*
  * per-port PFC variables
@@ -3663,7 +3581,6 @@ struct storm_cmng_struct_per_port {
 	struct storm_pfc_struct_per_port pfc_vars;
 };
 
-
 /*
  * zone A per-queue data
  */
@@ -3671,14 +3588,12 @@ struct tstorm_queue_zone_data {
 	struct regpair reserved[4];
 };
 
-
 /*
  * zone B per-VF data
  */
 struct tstorm_vf_zone_data {
 	struct regpair reserved;
 };
-
 
 /*
  * zone A per-queue data
@@ -3688,14 +3603,12 @@ struct ustorm_queue_zone_data {
 	struct regpair reserved[3];
 };
 
-
 /*
  * zone B per-VF data
  */
 struct ustorm_vf_zone_data {
 	struct regpair reserved;
 };
-
 
 /*
  * data per VF-PF channel
@@ -3713,14 +3626,12 @@ struct vf_pf_channel_data {
 	u32 reserved1;
 };
 
-
 /*
  * zone A per-queue data
  */
 struct xstorm_queue_zone_data {
 	struct regpair reserved[4];
 };
-
 
 /*
  * zone B per-VF data

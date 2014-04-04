@@ -100,7 +100,6 @@
 #define MCE_CMD_DEVICE_RESET	0xaa	/* Reset the hardware */
 #define MCE_RSP_CMD_INVALID	0xfe	/* Invalid command issued */
 
-
 /* module parameters */
 #ifdef CONFIG_USB_DEBUG
 static int debug = 1;
@@ -1252,7 +1251,6 @@ mem_alloc_fail:
 
 	return -ENOMEM;
 }
-
 
 static void __devexit mceusb_dev_disconnect(struct usb_interface *intf)
 {

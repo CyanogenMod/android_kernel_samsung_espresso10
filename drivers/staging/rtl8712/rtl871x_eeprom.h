@@ -79,4 +79,3 @@ void r8712_eeprom_write16(struct _adapter *padapter, u16 reg, u16 data);
 u16 r8712_eeprom_read16(struct _adapter *padapter, u16 reg);
 
 #endif  /*__RTL871X_EEPROM_H__*/
-

@@ -117,7 +117,6 @@
 
 #else	/* MULTI_OMAP2 */
 
-
 /*
  * Optimized irq functions for omap2, 3 and 4
  */
@@ -152,7 +151,6 @@
 
 		.endm
 #endif
-
 
 #ifdef CONFIG_ARCH_OMAP4
 #define HAVE_GET_IRQNR_PREAMBLE

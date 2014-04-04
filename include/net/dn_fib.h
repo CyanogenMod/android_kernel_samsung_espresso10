@@ -56,7 +56,6 @@ struct dn_fib_info {
 #define dn_fib_dev		fib_nh[0].nh_dev
 };
 
-
 #define DN_FIB_RES_RESET(res)	((res).nh_sel = 0)
 #define DN_FIB_RES_NH(res)	((res).fi->fib_nh[(res).nh_sel])
 
@@ -87,13 +86,12 @@ struct dn_fib_node {
 	u8		fn_state;
 };
 
-
 struct dn_fib_table {
 	struct hlist_node hlist;
 	u32 n;
 
-	int (*insert)(struct dn_fib_table *t, struct rtmsg *r, 
-			struct dn_kern_rta *rta, struct nlmsghdr *n, 
+	int (*insert)(struct dn_fib_table *t, struct rtmsg *r,
+			struct dn_kern_rta *rta, struct nlmsghdr *n,
 			struct netlink_skb_parms *req);
 	int (*delete)(struct dn_fib_table *t, struct rtmsg *r,
 			struct dn_kern_rta *rta, struct nlmsghdr *n,
@@ -113,12 +111,12 @@ struct dn_fib_table {
 extern void dn_fib_init(void);
 extern void dn_fib_cleanup(void);
 
-extern int dn_fib_ioctl(struct socket *sock, unsigned int cmd, 
+extern int dn_fib_ioctl(struct socket *sock, unsigned int cmd,
 			unsigned long arg);
-extern struct dn_fib_info *dn_fib_create_info(const struct rtmsg *r, 
-				struct dn_kern_rta *rta, 
+extern struct dn_fib_info *dn_fib_create_info(const struct rtmsg *r,
+				struct dn_kern_rta *rta,
 				const struct nlmsghdr *nlh, int *errp);
-extern int dn_fib_semantic_match(int type, struct dn_fib_info *fi, 
+extern int dn_fib_semantic_match(int type, struct dn_fib_info *fi,
 			const struct flowidn *fld,
 			struct dn_fib_res *res);
 extern void dn_fib_release_info(struct dn_fib_info *fi);

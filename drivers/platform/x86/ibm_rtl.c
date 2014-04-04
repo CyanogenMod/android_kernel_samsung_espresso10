@@ -218,7 +218,6 @@ static struct sysdev_class_attribute *rtl_attributes[] = {
 	NULL
 };
 
-
 static int rtl_setup_sysfs(void) {
 	int ret, i;
 	ret = sysdev_class_register(&class_rtl);
@@ -236,7 +235,6 @@ static void rtl_teardown_sysfs(void) {
 		sysdev_class_remove_file(&class_rtl, rtl_attributes[i]);
 	sysdev_class_unregister(&class_rtl);
 }
-
 
 static struct dmi_system_id __initdata ibm_rtl_dmi_table[] = {
 	{                                                  \

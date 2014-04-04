@@ -56,7 +56,6 @@ extern      "C"
 
 #include "pmcc4_defs.h"
 
-
 /*------------------------------------------------------------------------
 //      Vendor, Board Identification definitions
 //------------------------------------------------------------------------
@@ -279,7 +278,6 @@ extern      "C"
 #define INTRPTS_INTCNT_S       0
 #define INTRPTS_INTCNT(x)      ((x & INTRPTS_INTCNT_M) >> INTRPTS_INTCNT_S)
 
-
 /****************************************************************************
  * Interrupt Descriptor
  ***/
@@ -318,7 +316,6 @@ extern      "C"
 #define INTRPT_BLEN_M          0x00003FFF
 #define INTRPT_BLEN_S          0
 #define INTRPT_BLEN(x)         ((x & INTRPT_BLEN_M) >> INTRPT_BLEN_S)
-
 
 /* Buffer Descriptor bit macros */
 #define OWNER_BIT       0x80000000      /* Set for MUSYCC owner on xmit, host

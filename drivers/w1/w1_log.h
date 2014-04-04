@@ -35,4 +35,3 @@
 #endif
 
 #endif /* __W1_LOG_H */
-

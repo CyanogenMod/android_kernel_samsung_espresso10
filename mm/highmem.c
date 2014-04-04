@@ -29,7 +29,6 @@
 #include <linux/kgdb.h>
 #include <asm/tlbflush.h>
 
-
 #if defined(CONFIG_HIGHMEM) || defined(CONFIG_X86_32)
 DEFINE_PER_CPU(int, __kmap_atomic_idx);
 #endif
@@ -46,7 +45,6 @@ DEFINE_PER_CPU(int, __kmap_atomic_idx);
 
 unsigned long totalhigh_pages __read_mostly;
 EXPORT_SYMBOL(totalhigh_pages);
-
 
 EXPORT_PER_CPU_SYMBOL(__kmap_atomic_idx);
 

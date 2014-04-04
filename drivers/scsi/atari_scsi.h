@@ -11,7 +11,6 @@
  *
  */
 
-
 #ifndef ATARI_SCSI_H
 #define ATARI_SCSI_H
 
@@ -42,7 +41,6 @@ int atari_scsi_release (struct Scsi_Host *);
 #define ATARI_FALCON_SG_TABLESIZE	SG_NONE
 
 #define	DEFAULT_USE_TAGGED_QUEUING	0
-
 
 #define	NCR5380_implementation_fields	/* none */
 
@@ -177,8 +175,5 @@ int atari_scsi_release (struct Scsi_Host *);
 #define NCR_PRINT_STATUS(mask) \
 	((NDEBUG & (mask)) ? NCR5380_print_status(instance) : (void)0)
 
-
 #endif /* ndef ASM */
 #endif /* ATARI_SCSI_H */
-
-

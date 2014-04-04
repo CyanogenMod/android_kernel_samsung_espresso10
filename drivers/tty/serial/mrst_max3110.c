@@ -279,7 +279,6 @@ static void send_circ_buf(struct uart_max3110 *max,
 	u8 valid_str[WORDS_PER_XFER];
 	int i, j, len, blen, dma_size, left, ret = 0;
 
-
 	dma_size = WORDS_PER_XFER * sizeof(u16) * 2;
 	buf = kzalloc(dma_size, GFP_KERNEL | GFP_DMA);
 	if (!buf)
@@ -580,7 +579,6 @@ serial_m3110_verify_port(struct uart_port *port, struct serial_struct *ser)
 	/* we don't want the core code to modify any port params */
 	return -EINVAL;
 }
-
 
 static const char *serial_m3110_type(struct uart_port *port)
 {

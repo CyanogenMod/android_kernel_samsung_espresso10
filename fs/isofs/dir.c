@@ -284,5 +284,3 @@ const struct inode_operations isofs_dir_inode_operations =
 {
 	.lookup = isofs_lookup,
 };
-
-

@@ -28,7 +28,6 @@
 #include <linux/spi/spi.h>
 #include <linux/spi/spi_bitbang.h>
 
-
 /*----------------------------------------------------------------------*/
 
 /*
@@ -502,4 +501,3 @@ int spi_bitbang_stop(struct spi_bitbang *bitbang)
 EXPORT_SYMBOL_GPL(spi_bitbang_stop);
 
 MODULE_LICENSE("GPL");
-

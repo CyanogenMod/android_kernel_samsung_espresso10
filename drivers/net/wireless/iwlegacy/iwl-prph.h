@@ -233,7 +233,6 @@
 #define BSM_SRAM_LOWER_BOUND         (PRPH_BASE + 0x3800)
 #define BSM_SRAM_SIZE			(1024) /* bytes */
 
-
 /* 3945 Tx scheduler registers */
 #define ALM_SCD_BASE                        (PRPH_BASE + 0x2E00)
 #define ALM_SCD_MODE_REG                    (ALM_SCD_BASE + 0x000)

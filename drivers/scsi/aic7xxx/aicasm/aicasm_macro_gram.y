@@ -75,7 +75,6 @@ void mmerror(const char *string);
 	symbol_t	*sym;
 }
 
-
 %token <str> T_ARG
 
 %token <sym> T_SYMBOL

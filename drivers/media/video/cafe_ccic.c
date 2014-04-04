@@ -4,7 +4,7 @@
  * sensor.
  *
  * The data sheet for this device can be found at:
- *    http://www.marvell.com/products/pc_connectivity/88alp01/ 
+ *    http://www.marvell.com/products/pc_connectivity/88alp01/
  *
  * Copyright 2006 One Laptop Per Child Association, Inc.
  * Copyright 2006-7 Jonathan Corbet <corbet@lwn.net>
@@ -51,7 +51,6 @@
 #include "cafe_ccic-regs.h"
 
 #define CAFE_VERSION 0x000002
-
 
 /*
  * Parameters.
@@ -114,7 +113,6 @@ module_param(flip, bool, 0444);
 MODULE_PARM_DESC(flip,
 		"If set, the sensor will be instructed to flip the image "
 		"vertically.");
-
 
 enum cafe_state {
 	S_NOTREADY,	/* Not yet initialized */
@@ -280,9 +278,6 @@ static void cafe_set_config_needed(struct cafe_camera *cam, int needed)
 		clear_bit(CF_CONFIG_NEEDED, &cam->flags);
 }
 
-
-
-
 /*
  * Debugging and related.
  */
@@ -292,7 +287,6 @@ static void cafe_set_config_needed(struct cafe_camera *cam, int needed)
 	dev_warn(&(cam)->pdev->dev, fmt, ##arg);
 #define cam_dbg(cam, fmt, arg...) \
 	dev_dbg(&(cam)->pdev->dev, fmt, ##arg);
-
 
 /* ---------------------------------------------------------------------*/
 
@@ -310,7 +304,6 @@ static inline unsigned int cafe_reg_read(struct cafe_camera *cam,
 {
 	return ioread32(cam->regs + reg);
 }
-
 
 static inline void cafe_reg_write_mask(struct cafe_camera *cam, unsigned int reg,
 		unsigned int val, unsigned int mask)
@@ -332,8 +325,6 @@ static inline void cafe_reg_set_bit(struct cafe_camera *cam,
 {
 	cafe_reg_write_mask(cam, reg, val, val);
 }
-
-
 
 /* -------------------------------------------------------------------- */
 /*
@@ -417,8 +408,6 @@ static int cafe_smbus_write_data(struct cafe_camera *cam,
 	return 0;
 }
 
-
-
 static int cafe_smbus_read_done(struct cafe_camera *cam)
 {
 	unsigned long flags;
@@ -435,8 +424,6 @@ static int cafe_smbus_read_done(struct cafe_camera *cam)
 	spin_unlock_irqrestore(&cam->dev_lock, flags);
 	return c1 & (TWSIC1_RVALID|TWSIC1_ERROR);
 }
-
-
 
 static int cafe_smbus_read_data(struct cafe_camera *cam,
 		u16 addr, u8 command, u8 *value)
@@ -504,7 +491,6 @@ static int cafe_smbus_xfer(struct i2c_adapter *adapter, u16 addr,
 	return ret;
 }
 
-
 static void cafe_smbus_enable_irq(struct cafe_camera *cam)
 {
 	unsigned long flags;
@@ -550,7 +536,6 @@ static void cafe_smbus_shutdown(struct cafe_camera *cam)
 {
 	i2c_del_adapter(&cam->i2c_adapter);
 }
-
 
 /* ------------------------------------------------------------------- */
 /*
@@ -625,7 +610,6 @@ static void cafe_ctlr_image(struct cafe_camera *cam)
 	cafe_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC,
 			C0_SIFM_MASK);
 }
-
 
 /*
  * Configure the controller for operation; caller holds the
@@ -722,7 +706,6 @@ static void cafe_ctlr_init(struct cafe_camera *cam)
 	cafe_reg_write_mask(cam, REG_CLKCTRL, 2, CLK_DIV_MASK);
 	spin_unlock_irqrestore(&cam->dev_lock, flags);
 }
-
 
 /*
  * Stop the controller, and don't return until we're really sure that no
@@ -853,7 +836,6 @@ static int cafe_cam_set_flip(struct cafe_camera *cam)
 	return sensor_call(cam, core, s_ctrl, &ctrl);
 }
 
-
 static int cafe_cam_configure(struct cafe_camera *cam)
 {
 	struct v4l2_mbus_framefmt mbus_fmt;
@@ -934,10 +916,6 @@ static void cafe_free_dma_bufs(struct cafe_camera *cam)
 	cam->nbufs = 0;
 }
 
-
-
-
-
 /* ----------------------------------------------------------------------- */
 /*
  * Here starts the V4L2 interface code.
@@ -1010,7 +988,6 @@ static int cafe_read_setup(struct cafe_camera *cam, enum cafe_state state)
 	return 0;
 }
 
-
 static ssize_t cafe_v4l_read(struct file *filp,
 		char __user *buffer, size_t len, loff_t *pos)
 {
@@ -1075,18 +1052,9 @@ static ssize_t cafe_v4l_read(struct file *filp,
 	return ret;
 }
 
-
-
-
-
-
-
-
 /*
  * Streaming I/O support.
  */
-
-
 
 static int cafe_vidioc_streamon(struct file *filp, void *priv,
 		enum v4l2_buf_type type)
@@ -1109,7 +1077,6 @@ static int cafe_vidioc_streamon(struct file *filp, void *priv,
 	return ret;
 }
 
-
 static int cafe_vidioc_streamoff(struct file *filp, void *priv,
 		enum v4l2_buf_type type)
 {
@@ -1130,8 +1097,6 @@ static int cafe_vidioc_streamoff(struct file *filp, void *priv,
   out:
 	return ret;
 }
-
-
 
 static int cafe_setup_siobuf(struct cafe_camera *cam, int index)
 {
@@ -1181,8 +1146,6 @@ static int cafe_free_sio_buffers(struct cafe_camera *cam)
 	INIT_LIST_HEAD(&cam->sb_full);
 	return 0;
 }
-
-
 
 static int cafe_vidioc_reqbufs(struct file *filp, void *priv,
 		struct v4l2_requestbuffers *req)
@@ -1248,7 +1211,6 @@ static int cafe_vidioc_reqbufs(struct file *filp, void *priv,
 	mutex_unlock(&cam->s_mutex);
 	return ret;
 }
-
 
 static int cafe_vidioc_querybuf(struct file *filp, void *priv,
 		struct v4l2_buffer *buf)
@@ -1343,8 +1305,6 @@ static int cafe_vidioc_dqbuf(struct file *filp, void *priv,
 	return ret;
 }
 
-
-
 static void cafe_v4l_vm_open(struct vm_area_struct *vma)
 {
 	struct cafe_sio_buffer *sbuf = vma->vm_private_data;
@@ -1354,7 +1314,6 @@ static void cafe_v4l_vm_open(struct vm_area_struct *vma)
 	 */
 	sbuf->mapcount++;
 }
-
 
 static void cafe_v4l_vm_close(struct vm_area_struct *vma)
 {
@@ -1372,7 +1331,6 @@ static const struct vm_operations_struct cafe_v4l_vm_ops = {
 	.open = cafe_v4l_vm_open,
 	.close = cafe_v4l_vm_close
 };
-
 
 static int cafe_v4l_mmap(struct file *filp, struct vm_area_struct *vma)
 {
@@ -1410,8 +1368,6 @@ static int cafe_v4l_mmap(struct file *filp, struct vm_area_struct *vma)
 	return ret;
 }
 
-
-
 static int cafe_v4l_open(struct file *filp)
 {
 	struct cafe_camera *cam = video_drvdata(filp);
@@ -1429,7 +1385,6 @@ static int cafe_v4l_open(struct file *filp)
 	mutex_unlock(&cam->s_mutex);
 	return 0;
 }
-
 
 static int cafe_v4l_release(struct file *filp)
 {
@@ -1451,8 +1406,6 @@ static int cafe_v4l_release(struct file *filp)
 	return 0;
 }
 
-
-
 static unsigned int cafe_v4l_poll(struct file *filp,
 		struct poll_table_struct *pt)
 {
@@ -1463,8 +1416,6 @@ static unsigned int cafe_v4l_poll(struct file *filp,
 		return POLLIN | POLLRDNORM;
 	return 0;
 }
-
-
 
 static int cafe_vidioc_queryctrl(struct file *filp, void *priv,
 		struct v4l2_queryctrl *qc)
@@ -1478,7 +1429,6 @@ static int cafe_vidioc_queryctrl(struct file *filp, void *priv,
 	return ret;
 }
 
-
 static int cafe_vidioc_g_ctrl(struct file *filp, void *priv,
 		struct v4l2_control *ctrl)
 {
@@ -1490,7 +1440,6 @@ static int cafe_vidioc_g_ctrl(struct file *filp, void *priv,
 	mutex_unlock(&cam->s_mutex);
 	return ret;
 }
-
 
 static int cafe_vidioc_s_ctrl(struct file *filp, void *priv,
 		struct v4l2_control *ctrl)
@@ -1504,10 +1453,6 @@ static int cafe_vidioc_s_ctrl(struct file *filp, void *priv,
 	return ret;
 }
 
-
-
-
-
 static int cafe_vidioc_querycap(struct file *file, void *priv,
 		struct v4l2_capability *cap)
 {
@@ -1518,7 +1463,6 @@ static int cafe_vidioc_querycap(struct file *file, void *priv,
 		V4L2_CAP_READWRITE | V4L2_CAP_STREAMING;
 	return 0;
 }
-
 
 /*
  * The default format we use until somebody says otherwise.
@@ -1816,13 +1760,10 @@ static struct video_device cafe_v4l_template = {
 	.release = video_device_release_empty,
 };
 
-
 /* ---------------------------------------------------------------------- */
 /*
  * Interrupt handler stuff
  */
-
-
 
 static void cafe_frame_tasklet(unsigned long data)
 {
@@ -1864,8 +1805,6 @@ static void cafe_frame_tasklet(unsigned long data)
 		wake_up(&cam->iowait);
 	spin_unlock_irqrestore(&cam->dev_lock, flags);
 }
-
-
 
 static void cafe_frame_complete(struct cafe_camera *cam, int frame)
 {
@@ -1920,9 +1859,6 @@ static void cafe_frame_complete(struct cafe_camera *cam, int frame)
 	}
 }
 
-
-
-
 static void cafe_frame_irq(struct cafe_camera *cam, unsigned int irqs)
 {
 	unsigned int frame;
@@ -1945,8 +1881,6 @@ static void cafe_frame_irq(struct cafe_camera *cam, unsigned int irqs)
 		set_bit(CF_DMA_ACTIVE, &cam->flags);
 }
 
-
-
 static irqreturn_t cafe_irq(int irq, void *data)
 {
 	struct cafe_camera *cam = data;
@@ -1967,7 +1901,6 @@ static irqreturn_t cafe_irq(int irq, void *data)
 	spin_unlock(&cam->dev_lock);
 	return IRQ_HANDLED;
 }
-
 
 /* -------------------------------------------------------------------------- */
 /*
@@ -2121,7 +2054,6 @@ out:
 	return ret;
 }
 
-
 /*
  * Shut down an initialized device
  */
@@ -2140,7 +2072,6 @@ static void cafe_shutdown(struct cafe_camera *cam)
 	video_unregister_device(&cam->vdev);
 }
 
-
 static void cafe_pci_remove(struct pci_dev *pdev)
 {
 	struct v4l2_device *v4l2_dev = dev_get_drvdata(&pdev->dev);
@@ -2158,7 +2089,6 @@ static void cafe_pci_remove(struct pci_dev *pdev)
 	kfree(cam);
 /* No unlock - it no longer exists */
 }
-
 
 #ifdef CONFIG_PM
 /*
@@ -2181,7 +2111,6 @@ static int cafe_pci_suspend(struct pci_dev *pdev, pm_message_t state)
 	cam->state = cstate;
 	return 0;
 }
-
 
 static int cafe_pci_resume(struct pci_dev *pdev)
 {
@@ -2217,7 +2146,6 @@ static int cafe_pci_resume(struct pci_dev *pdev)
 
 #endif  /* CONFIG_PM */
 
-
 static struct pci_device_id cafe_ids[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_MARVELL,
 		     PCI_DEVICE_ID_MARVELL_88ALP01_CCIC) },
@@ -2237,9 +2165,6 @@ static struct pci_driver cafe_pci_driver = {
 #endif
 };
 
-
-
-
 static int __init cafe_init(void)
 {
 	int ret;
@@ -2256,7 +2181,6 @@ static int __init cafe_init(void)
   out:
 	return ret;
 }
-
 
 static void __exit cafe_exit(void)
 {

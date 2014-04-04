@@ -531,7 +531,6 @@ busy:
 	ft_sess_put(sess);		/* undo get from lookup */
 }
 
-
 /*
  * Handle incoming FCP frame.
  * Caller has verified that the frame is type FCP.
@@ -613,7 +612,6 @@ static void ft_send_cmd(struct ft_cmd *cmd)
 		default:
 			task_attr = MSG_SIMPLE_TAG;
 		}
-
 
 		task_attr = fcp->fc_pri_ta & FCP_PTA_MASK;
 		data_len = ntohl(fcp->fc_dl);

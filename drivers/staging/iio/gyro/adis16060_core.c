@@ -14,7 +14,6 @@
 #include <linux/slab.h>
 #include <linux/sysfs.h>
 
-
 #include "../iio.h"
 #include "../sysfs.h"
 #include "gyro.h"

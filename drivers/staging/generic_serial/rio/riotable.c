@@ -46,7 +46,6 @@
 
 #include <linux/generic_serial.h>
 
-
 #include "linux_compat.h"
 #include "rio_linux.h"
 #include "pkt.h"
@@ -511,12 +510,12 @@ int RIODeleteRta(struct rio_info *p, struct Map *MapP)
 
 							rio_dprintk(RIO_DEBUG_TABLE, "Gob on port\n");
 							PortP->TxBufferIn = PortP->TxBufferOut = 0;
-							/* What should I do 
+							/* What should I do
 							   wakeup( &PortP->TxBufferIn );
 							   wakeup( &PortP->TxBufferOut);
 							 */
 							PortP->InUse = NOT_INUSE;
-							/* What should I do 
+							/* What should I do
 							   wakeup( &PortP->InUse );
 							   signal(PortP->TtyP->t_pgrp,SIGKILL);
 							   ttyflush(PortP->TtyP,(FREAD|FWRITE));
@@ -587,7 +586,6 @@ int RIOAssignRta(struct rio_info *p, struct Map *MapP)
 	struct Map *HostMapP;
 	char *sptr;
 	int link;
-
 
 	rio_dprintk(RIO_DEBUG_TABLE, "Assign entry on host %x, rta %x, ID %d, Sysport %d\n", MapP->HostUniqueNum, MapP->RtaUniqueNum, MapP->ID, (int) MapP->SysPort);
 
@@ -729,7 +727,6 @@ int RIOAssignRta(struct rio_info *p, struct Map *MapP)
 	rio_dprintk(RIO_DEBUG_TABLE, "Unknown host %x\n", MapP->HostUniqueNum);
 	return -ENXIO;
 }
-
 
 int RIOReMapPorts(struct rio_info *p, struct Host *HostP, struct Map *HostMapP)
 {

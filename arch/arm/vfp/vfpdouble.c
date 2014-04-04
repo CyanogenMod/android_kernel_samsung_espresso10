@@ -657,7 +657,6 @@ static u32 vfp_double_ftosiz(int dd, int unused, int dm, u32 fpscr)
 	return vfp_double_ftosi(dd, unused, dm, FPSCR_ROUND_TOZERO);
 }
 
-
 static struct op fops_ext[32] = {
 	[FEXT_TO_IDX(FEXT_FCPY)]	= { vfp_double_fcpy,   0 },
 	[FEXT_TO_IDX(FEXT_FABS)]	= { vfp_double_fabs,   0 },
@@ -675,9 +674,6 @@ static struct op fops_ext[32] = {
 	[FEXT_TO_IDX(FEXT_FTOSI)]	= { vfp_double_ftosi,  OP_SCALAR|OP_SD },
 	[FEXT_TO_IDX(FEXT_FTOSIZ)]	= { vfp_double_ftosiz, OP_SCALAR|OP_SD },
 };
-
-
-
 
 static u32
 vfp_double_fadd_nonnumber(struct vfp_double *vdd, struct vfp_double *vdn,

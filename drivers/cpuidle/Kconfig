@@ -1,4 +1,3 @@
-
 config CPU_IDLE
 	bool "CPU idle PM support"
 	default ACPI

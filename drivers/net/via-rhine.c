@@ -20,7 +20,6 @@
 	410 Severn Ave., Suite 210
 	Annapolis MD 21403
 
-
 	This driver contains some changes from the original Donald Becker
 	version. He may or may not be interested in bug reports on this
 	code. You can find his versions at:
@@ -32,9 +31,8 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #define DRV_NAME	"via-rhine"
-#define DRV_VERSION	"1.5.0"
+#define DRV_VERSION	"1.5.1"
 #define DRV_RELDATE	"2010-10-09"
-
 
 /* A few user-configurable values.
    These may be modified when a driver module is loaded. */
@@ -65,7 +63,6 @@ static int avoid_D3;
 /* Maximum number of multicast addresses to filter (vs. rx-all-multicast).
    The Rhine has a 64 element 8390-like hash table. */
 static const int multicast_filter_limit = 32;
-
 
 /* Operational parameters that are set at compile time. */
 
@@ -221,7 +218,6 @@ http://www.scyld.com/expert/NWay.html
 ftp://ftp.via.com.tw/public/lan/Products/NIC/VT86C100A/Datasheet/VT86C100A03.pdf
 ftp://ftp.via.com.tw/public/lan/Products/NIC/VT6102/Datasheet/VT6102_021.PDF
 
-
 IVc. Errata
 
 The VT86C100A manual is not reliable information.
@@ -231,7 +227,6 @@ and unaligned IP headers on receive.
 The chip does not pad to minimum transmit length.
 
 */
-
 
 /* This table drives the PCI probe routines. It's mostly boilerplate in all
    of the drivers, and will likely be provided by some future kernel.
@@ -280,7 +275,6 @@ static DEFINE_PCI_DEVICE_TABLE(rhine_pci_tbl) = {
 	{ }	/* terminate list */
 };
 MODULE_DEVICE_TABLE(pci, rhine_pci_tbl);
-
 
 /* Offsets to the device registers. */
 enum register_offsets {
@@ -469,7 +463,6 @@ struct rhine_private {
 #define BYTE_REG_BITS_SET(x, m, p)   do { iowrite8((ioread8((p)) & (~(m)))|(x), (p)); } while (0)
 #define WORD_REG_BITS_SET(x, m, p)   do { iowrite16((ioread16((p)) & (~(m)))|(x), (p)); } while (0)
 #define DWORD_REG_BITS_SET(x, m, p)  do { iowrite32((ioread32((p)) & (~(m)))|(x), (p)); } while (0)
-
 
 static int  mdio_read(struct net_device *dev, int phy_id, int location);
 static void mdio_write(struct net_device *dev, int phy_id, int location, int value);
@@ -1518,7 +1511,12 @@ static netdev_tx_t rhine_start_tx(struct sk_buff *skb,
 		cpu_to_le32(TXDESC | (skb->len >= ETH_ZLEN ? skb->len : ETH_ZLEN));
 
 	if (unlikely(vlan_tx_tag_present(skb))) {
-		rp->tx_ring[entry].tx_status = cpu_to_le32((vlan_tx_tag_get(skb)) << 16);
+		u16 vid_pcp = vlan_tx_tag_get(skb);
+
+		/* drop CFI/DEI bit, register needs VID and PCP */
+		vid_pcp = (vid_pcp & VLAN_VID_MASK) |
+			  ((vid_pcp & VLAN_PRIO_MASK) >> 1);
+		rp->tx_ring[entry].tx_status = cpu_to_le32((vid_pcp) << 16);
 		/* request tagging */
 		rp->tx_ring[entry].desc_length |= cpu_to_le32(0x020000);
 	}
@@ -2158,7 +2156,6 @@ static int rhine_close(struct net_device *dev)
 	return 0;
 }
 
-
 static void __devexit rhine_remove_one(struct pci_dev *pdev)
 {
 	struct net_device *dev = pci_get_drvdata(pdev);
@@ -2329,12 +2326,10 @@ static int __init rhine_init(void)
 	return pci_register_driver(&rhine_driver);
 }
 
-
 static void __exit rhine_cleanup(void)
 {
 	pci_unregister_driver(&rhine_driver);
 }
-
 
 module_init(rhine_init);
 module_exit(rhine_cleanup);

@@ -244,7 +244,7 @@ static int msnd_wait_TXDE(multisound_dev_t *dev)
 {
 	register unsigned int io = dev->io;
 	register int timeout = 1000;
-    
+
 	while(timeout-- > 0)
 		if (msnd_inb(io + HP_ISR) & HPISR_TXDE)
 			return 0;
@@ -303,7 +303,7 @@ int msnd_upload_host(multisound_dev_t *dev, char *bin, int len)
 	int i;
 
 	if (len % 3 != 0) {
-		printk(KERN_WARNING LOGNAME ": Upload host data not multiple of 3!\n");		
+		printk(KERN_WARNING LOGNAME ": Upload host data not multiple of 3!\n");
 		return -EINVAL;
 	}
 
@@ -400,7 +400,6 @@ EXPORT_SYMBOL(msnd_disable_irq);
 MODULE_AUTHOR				("Andrew Veliath <andrewtv@usa.net>");
 MODULE_DESCRIPTION			("Turtle Beach MultiSound Driver Base");
 MODULE_LICENSE("GPL");
-
 
 int init_module(void)
 {

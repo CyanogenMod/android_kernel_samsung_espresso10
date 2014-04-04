@@ -10,12 +10,10 @@
 #include <linux/usb.h>
 #include <linux/usb/serial.h>
 
-
 #define DRIVER_VERSION "v1.0"
 #define DRIVER_DESC "ViVOpay USB Serial Driver"
 
 #define VIVOPAY_VENDOR_ID 0x1d5f
-
 
 static struct usb_device_id id_table [] = {
 	/* ViVOpay 8800 */

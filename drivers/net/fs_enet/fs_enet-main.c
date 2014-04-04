@@ -768,7 +768,6 @@ static void generic_adjust_link(struct  net_device *dev)
 		phy_print_status(phydev);
 }
 
-
 static void fs_adjust_link(struct net_device *dev)
 {
 	struct fs_enet_private *fep = netdev_priv(dev);

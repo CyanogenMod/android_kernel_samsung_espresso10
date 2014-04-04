@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
 ******************************************************************************/
 
@@ -39,7 +39,6 @@
  * (e.g. SGX_BUILD_OPTIONS2) so that the bitfield remains backwards
  * compatible.
  */
-
 
 #if defined(DEBUG) || defined (INTERNAL_TEST)
 #define DEBUG_SET_OFFSET	OPTIONS_BIT0
@@ -68,8 +67,6 @@
 #else
 #define OPTIONS_BIT3		0x0
 #endif /* SUPPORT_HW_RECOVERY */
-
-
 
 #if defined (SUPPORT_SID_INTERFACE)
 #define PVR_SECURE_HANDLES_SET_OFFSET	OPTIONS_BIT4
@@ -125,15 +122,12 @@
 #define OPTIONS_BIT11		0x0
 #endif /* SGX_FEATURE_MULTITHREADED_UKERNEL */
 
-
-
 #if defined(SGX_FEATURE_OVERLAPPED_SPM) || defined (INTERNAL_TEST)
 #define SGX_FEATURE_OVERLAPPED_SPM_SET_OFFSET	OPTIONS_BIT12
 #define OPTIONS_BIT12		(0x1U << 12)
 #else
 #define OPTIONS_BIT12		0x0
 #endif /* SGX_FEATURE_RENDER_TARGET_ARRAYS */
-
 
 #if defined(SGX_FEATURE_SYSTEM_CACHE) || defined (INTERNAL_TEST)
 #define SGX_FEATURE_SYSTEM_CACHE_SET_OFFSET	OPTIONS_BIT13
@@ -148,8 +142,6 @@
 #else
 #define OPTIONS_BIT14		0x0
 #endif /* SGX_SUPPORT_HWPROFILING */
-
-
 
 #if defined(SUPPORT_ACTIVE_POWER_MANAGEMENT) || defined (INTERNAL_TEST)
 #define SUPPORT_ACTIVE_POWER_MANAGEMENT_SET_OFFSET	OPTIONS_BIT15
@@ -178,8 +170,6 @@
 #else
 #define OPTIONS_BIT18		0x0
 #endif /* SUPPORT_SGX_HWPERF */
-
-
 
 #if defined(SUPPORT_SGX_MMU_DUMMY_PAGE) || defined (INTERNAL_TEST)
 #define SUPPORT_SGX_MMU_DUMMY_PAGE_SET_OFFSET	OPTIONS_BIT19
@@ -225,8 +215,6 @@
 #define OPTIONS_HIGHBYTE	0x0
 #endif /* SGX_FEATURE_MP */
 
-
-
 #define SGX_BUILD_OPTIONS	\
 	OPTIONS_BIT0 |\
 	OPTIONS_BIT1 |\
@@ -251,4 +239,3 @@
 	OPTIONS_BIT21 |\
 	OPTIONS_BIT22 |\
 	OPTIONS_HIGHBYTE
-

@@ -1,7 +1,6 @@
 #ifndef US122L_H
 #define US122L_H
 
-
 struct us122l {
 	struct usb_device	*dev;
 	int			card_index;
@@ -17,7 +16,6 @@ struct us122l {
 
 	atomic_t		mmap_count;
 };
-
 
 #define US122L(c) ((struct us122l *)(c)->private_data)
 

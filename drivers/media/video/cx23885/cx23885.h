@@ -563,7 +563,6 @@ extern void mc417_gpio_set(struct cx23885_dev *dev, u32 mask);
 extern void mc417_gpio_clear(struct cx23885_dev *dev, u32 mask);
 extern void mc417_gpio_enable(struct cx23885_dev *dev, u32 mask, int asoutput);
 
-
 /* ----------------------------------------------------------- */
 /* tv norms                                                    */
 

@@ -74,7 +74,6 @@ void usbhs_fifo_stall(struct usbhs_pipe *pipe);
 
 void usbhs_fifo_send_terminator(struct usbhs_pipe *pipe);
 
-
 /*
  * usb request
  */

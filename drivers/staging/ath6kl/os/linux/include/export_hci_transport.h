@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +38,6 @@ extern int    (*_HCI_TransportRecvHCIEventSync)(HCI_TRANSPORT_HANDLE HciTrans,
 extern int    (*_HCI_TransportSetBaudRate)(HCI_TRANSPORT_HANDLE HciTrans, u32 Baud);
 extern int    (*_HCI_TransportEnablePowerMgmt)(HCI_TRANSPORT_HANDLE HciTrans, bool Enable);
 
-
 #define HCI_TransportAttach(HTCHandle, pInfo)   \
             _HCI_TransportAttach((HTCHandle), (pInfo))
 #define HCI_TransportDetach(HciTrans)    \
@@ -59,7 +58,6 @@ extern int    (*_HCI_TransportEnablePowerMgmt)(HCI_TRANSPORT_HANDLE HciTrans, bo
             _HCI_TransportSetBaudRate((HciTrans), (Baud))
 #define HCI_TransportEnablePowerMgmt(HciTrans, Enable)    \
             _HCI_TransportEnablePowerMgmt((HciTrans), (Enable))
-
 
 extern int ar6000_register_hci_transport(struct hci_transport_callbacks *hciTransCallbacks);
 

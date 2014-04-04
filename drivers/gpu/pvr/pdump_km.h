@@ -27,7 +27,6 @@
 #ifndef _PDUMP_KM_H_
 #define _PDUMP_KM_H_
 
-
 #include "pdump_osfunc.h"
 
 #if defined(__cplusplus)
@@ -306,7 +305,6 @@ extern IMG_UINT32 g_ui32EveryLineCounter;
 
 	IMG_VOID PDumpSuspendKM(IMG_VOID);
 	IMG_VOID PDumpResumeKM(IMG_VOID);
-
 
 	PVRSRV_ERROR PDumpStoreMemToFile(PDUMP_MMU_ATTRIB *psMMUAttrib,
 							         IMG_CHAR *pszFileName,

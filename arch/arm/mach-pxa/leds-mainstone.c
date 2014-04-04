@@ -21,7 +21,6 @@
 
 #include "leds.h"
 
-
 /* 8 discrete leds available for general use: */
 #define D28			(1 << 0)
 #define D27			(1 << 1)

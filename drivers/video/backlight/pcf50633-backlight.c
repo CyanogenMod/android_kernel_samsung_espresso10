@@ -60,7 +60,6 @@ static int pcf50633_bl_update_status(struct backlight_device *bl)
 	struct pcf50633_bl *pcf_bl = bl_get_data(bl);
 	unsigned int new_brightness;
 
-
 	if (bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK) ||
 		bl->props.power != FB_BLANK_UNBLANK)
 		new_brightness = 0;
@@ -68,7 +67,6 @@ static int pcf50633_bl_update_status(struct backlight_device *bl)
 		new_brightness = bl->props.brightness;
 	else
 		new_brightness = pcf_bl->brightness_limit;
-
 
 	if (pcf_bl->brightness == new_brightness)
 		return 0;

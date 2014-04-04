@@ -573,7 +573,6 @@ static c_char srom_repair_info[][100] = {
      0x00,0x18,}
 };
 
-
 #ifdef DE4X5_DEBUG
 static int de4x5_debug = DE4X5_DEBUG;
 #else
@@ -622,7 +621,6 @@ struct parameters {
 #define PKT_HDR_LEN     14              /* Addresses and data length info */
 #define FAKE_FRAME_LEN  (MAX_PKT_SZ + 1)
 #define QUEUE_PKT_TIMEOUT (3*HZ)        /* 3 second timeout */
-
 
 /*
 ** EISA bus defines
@@ -1091,7 +1089,6 @@ static const struct net_device_ops de4x5_netdev_ops = {
     .ndo_validate_addr	= eth_validate_addr,
 };
 
-
 static int __devinit
 de4x5_hw_init(struct net_device *dev, u_long iobase, struct device *gendev)
 {
@@ -1287,7 +1284,6 @@ de4x5_hw_init(struct net_device *dev, u_long iobase, struct device *gendev)
 
     return status;
 }
-
 
 static int
 de4x5_open(struct net_device *dev)

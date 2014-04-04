@@ -45,7 +45,6 @@ static const fixp_t cos_table[46] = {
 	0x002C,	0x0023,	0x001A,	0x0011,	0x0008, 0x0000
 };
 
-
 /* a: 123 -> 123.0 */
 static inline fixp_t fixp_new(s16 a)
 {

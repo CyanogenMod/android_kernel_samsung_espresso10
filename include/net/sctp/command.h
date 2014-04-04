@@ -35,13 +35,11 @@
  * be incorporated into the next SCTP release.
  */
 
-
 #ifndef __net_sctp_command_h__
 #define __net_sctp_command_h__
 
 #include <net/sctp/constants.h>
 #include <net/sctp/structs.h>
-
 
 typedef enum {
 	SCTP_CMD_NOP = 0,	/* Do nothing. */
@@ -202,7 +200,6 @@ typedef struct {
 	__u8 next_cmd;
 } sctp_cmd_seq_t;
 
-
 /* Initialize a block of memory as a command sequence.
  * Return 0 if the initialization fails.
  */
@@ -221,4 +218,3 @@ void sctp_add_cmd_sf(sctp_cmd_seq_t *seq, sctp_verb_t verb, sctp_arg_t obj);
 sctp_cmd_t *sctp_next_cmd(sctp_cmd_seq_t *seq);
 
 #endif /* __net_sctp_command_h__ */
-

@@ -27,7 +27,6 @@
 #define BOOTROM_SIZE     0x80
 #define BOOTROM_WIDTH    4
 
-
 static struct mtd_info *flash_mtd;
 
 struct map_info cdb89712_flash_map = {
@@ -94,10 +93,6 @@ out:
 	return err;
 }
 
-
-
-
-
 static struct mtd_info *sram_mtd;
 
 struct map_info cdb89712_sram_map = {
@@ -159,12 +154,6 @@ out_resource:
 out:
 	return err;
 }
-
-
-
-
-
-
 
 static struct mtd_info *bootrom_mtd;
 
@@ -228,10 +217,6 @@ out:
 	return err;
 }
 
-
-
-
-
 static int __init init_cdb89712_maps(void)
 {
 
@@ -244,7 +229,6 @@ static int __init init_cdb89712_maps(void)
 
 	return 0;
 }
-
 
 static void __exit cleanup_cdb89712_maps(void)
 {

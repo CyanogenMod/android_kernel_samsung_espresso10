@@ -140,7 +140,6 @@ int rds_iw_ring_low(struct rds_iw_work_ring *ring)
 	return __rds_iw_ring_used(ring) <= (ring->w_nr >> 1);
 }
 
-
 /*
  * returns the oldest alloced ring entry.  This will be the next one
  * freed.  This can't be called if there are none allocated.

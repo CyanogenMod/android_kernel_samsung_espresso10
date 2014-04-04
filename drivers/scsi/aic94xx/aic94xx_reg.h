@@ -126,7 +126,6 @@ static inline u8 asd_ddbsite_read_byte(struct asd_ha_struct *asd_ha,
 					     offs) & 0xFF;
 }
 
-
 #define ASD_DDBSITE_WRITE(type, ord)                                       \
 static inline void asd_ddbsite_write_##ord (struct asd_ha_struct *asd_ha,  \
 					u16 ddb_site_no,                   \
@@ -153,7 +152,6 @@ static inline void asd_ddbsite_write_byte(struct asd_ha_struct *asd_ha,
 	asd_ddbsite_write_word(asd_ha, ddb_site_no, base, rval);
 }
 
-
 #define ASD_SCBSITE_READ(type, ord)                                        \
 static inline type asd_scbsite_read_##ord (struct asd_ha_struct *asd_ha,   \
 					   u16 scb_site_no,                \
@@ -178,7 +176,6 @@ static inline u8 asd_scbsite_read_byte(struct asd_ha_struct *asd_ha,
 		return asd_scbsite_read_word(asd_ha, scb_site_no,
 					     offs) & 0xFF;
 }
-
 
 #define ASD_SCBSITE_WRITE(type, ord)                                       \
 static inline void asd_scbsite_write_##ord (struct asd_ha_struct *asd_ha,  \

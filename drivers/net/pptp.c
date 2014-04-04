@@ -181,7 +181,6 @@ static int pptp_xmit(struct ppp_channel *chan, struct sk_buff *skb)
 	unsigned char *data;
 	__u32 seq_recv;
 
-
 	struct rtable *rt;
 	struct net_device *tdev;
 	struct iphdr  *iph;
@@ -282,7 +281,7 @@ static int pptp_xmit(struct ppp_channel *chan, struct sk_buff *skb)
 	nf_reset(skb);
 
 	skb->ip_summed = CHECKSUM_NONE;
-	ip_select_ident(iph, &rt->dst, NULL);
+	ip_select_ident(skb, &rt->dst, NULL);
 	ip_send_check(iph);
 
 	ip_local_out(skb);

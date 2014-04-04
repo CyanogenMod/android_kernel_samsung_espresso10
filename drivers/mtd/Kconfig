@@ -282,7 +282,6 @@ config SSFDC
 	  This enables read only access to SmartMedia formatted NAND
 	  flash. You can mount it with FAT file system.
 
-
 config SM_FTL
 	tristate "SmartMedia/xD new translation layer"
 	depends on EXPERIMENTAL && BLOCK

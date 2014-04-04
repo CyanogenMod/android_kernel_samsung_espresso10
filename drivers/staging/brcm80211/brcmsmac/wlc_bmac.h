@@ -166,7 +166,6 @@ extern void wlc_bmac_retrylimit_upd(struct wlc_hw_info *wlc_hw, u16 SRL,
 
 extern void wlc_bmac_fifoerrors(struct wlc_hw_info *wlc_hw);
 
-
 /* API for BMAC driver (e.g. wlc_phy.c etc) */
 
 extern void wlc_bmac_bw_set(struct wlc_hw_info *wlc_hw, u16 bw);

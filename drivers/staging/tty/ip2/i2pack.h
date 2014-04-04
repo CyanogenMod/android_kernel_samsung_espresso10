@@ -347,18 +347,17 @@ typedef struct _failStat
 // Outgoing (host to board)
 //--------------------------
 //
-#define MB_OUT_STUFFED     0x80  // Host has placed output in fifo 
-#define MB_IN_STRIPPED     0x40  // Host has read in all input from fifo 
+#define MB_OUT_STUFFED     0x80  // Host has placed output in fifo
+#define MB_IN_STRIPPED     0x40  // Host has read in all input from fifo
 
 //--------------------------
 // Incoming (board to host)
 //--------------------------
 //
-#define MB_IN_STUFFED      0x80  // Board has placed input in fifo 
-#define MB_OUT_STRIPPED    0x40  // Board has read all output from fifo 
+#define MB_IN_STUFFED      0x80  // Board has placed input in fifo
+#define MB_OUT_STRIPPED    0x40  // Board has read all output from fifo
 #define MB_FATAL_ERROR     0x20  // Board has encountered a fatal error
 
 #pragma pack()                  // Reset padding to command-line default
 
 #endif      // I2PACK_H
-

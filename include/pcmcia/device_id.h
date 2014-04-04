@@ -95,7 +95,6 @@
 	.prod_id = { (v1), NULL, NULL, NULL }, \
 	.prod_id_hash = { (vh1), 0, 0, 0 }, }
 
-
 /* multi-function devices */
 
 #define PCMCIA_MFC_DEVICE_MANF_CARD(mfc, manf, card) { \
@@ -221,7 +220,6 @@
 	.prod_id_hash = { (vh1), (vh2), (vh3), 0 }, \
 	.cisfile = (_cisfile)}
 
-
 #define PCMCIA_DEVICE_CIS_PROD_ID2(v2, vh2, _cisfile) { \
 	.match_flags =  PCMCIA_DEV_ID_MATCH_FAKE_CIS | \
 			PCMCIA_DEV_ID_MATCH_PROD_ID2, \
@@ -267,7 +265,6 @@
 	.prod_id_hash = { 0, 0, 0, (vh4) }, \
 	.function = (mfc), \
 	.cisfile = (_cisfile)}
-
 
 #define PCMCIA_DEVICE_NULL { .match_flags = 0, }
 

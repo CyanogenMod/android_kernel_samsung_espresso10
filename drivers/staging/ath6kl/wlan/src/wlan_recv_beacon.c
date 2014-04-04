@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="wlan_recv_beacon.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -45,7 +45,6 @@
     }                               \
 } while (0)
 
-
 /* unaligned little endian access */
 #define LE_READ_2(p)                            \
     ((u16)                            \
@@ -55,7 +54,6 @@
     ((u32)                            \
      ((((u8 *)(p))[0]      ) | (((u8 *)(p))[1] <<  8) | \
       (((u8 *)(p))[2] << 16) | (((u8 *)(p))[3] << 24)))
-
 
 static int __inline
 iswpaoui(const u8 *frm)

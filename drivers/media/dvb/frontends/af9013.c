@@ -373,7 +373,6 @@ static int af9013_set_freq_ctrl(struct af9013_state *state, fe_bandwidth_t bw)
 		buf[1] = (u8) ((freq_cw & 0x0000ff00) >> 8);
 		buf[2] = (u8) ((freq_cw & 0x007f0000) >> 16);
 
-
 		deb_info("%s: freq_cw:", __func__);
 		debug_dump(buf, sizeof(buf), deb_info);
 
@@ -1088,7 +1087,6 @@ static int af9013_read_status(struct dvb_frontend *fe, fe_status_t *status)
 error:
 	return ret;
 }
-
 
 static int af9013_read_ber(struct dvb_frontend *fe, u32 *ber)
 {

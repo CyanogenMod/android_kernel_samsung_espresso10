@@ -359,7 +359,6 @@ int altera_ci_slot_reset(struct dvb_ca_en50221 *en50221, int slot)
 			break;
 	}
 
-
 	ci_dbg_print("%s: %d msecs\n", __func__,
 		jiffies_to_msecs(jiffies + msecs_to_jiffies(9999) - t_out));
 
@@ -499,7 +498,6 @@ void altera_ci_release(void *dev, int ci_nr)
 	if (temp_int != NULL) {
 		state = temp_int->internal->state[ci_nr - 1];
 		altera_hw_filt_release(dev, ci_nr);
-
 
 		if (((temp_int->internal->filts_used) <= 0) &&
 				((--(temp_int->internal->cis_used)) <= 0)) {

@@ -1262,11 +1262,9 @@ struct vxge_hw_fifo_txd {
 #define VXGE_HW_FIFO_TXD_T_CODE(val) 			vxge_vBIT(val, 12, 4)
 #define VXGE_HW_FIFO_TXD_T_CODE_UNUSED		VXGE_HW_FIFO_T_CODE_UNUSED
 
-
 #define VXGE_HW_FIFO_TXD_GATHER_CODE(val) 		vxge_vBIT(val, 22, 2)
 #define VXGE_HW_FIFO_TXD_GATHER_CODE_FIRST	VXGE_HW_FIFO_GATHER_CODE_FIRST
 #define VXGE_HW_FIFO_TXD_GATHER_CODE_LAST	VXGE_HW_FIFO_GATHER_CODE_LAST
-
 
 #define VXGE_HW_FIFO_TXD_LSO_EN				vxge_mBIT(30)
 
@@ -1952,7 +1950,6 @@ __vxge_hw_mempool_item_priv(
 {
 	ptrdiff_t offset;
 	void *memblock = mempool->memblocks_arr[memblock_idx];
-
 
 	offset = (u32)((u8 *)item - (u8 *)memblock);
 	vxge_assert(offset >= 0 && (u32)offset < mempool->memblock_size);

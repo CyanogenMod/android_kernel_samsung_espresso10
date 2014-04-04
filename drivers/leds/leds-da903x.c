@@ -85,7 +85,7 @@ static void da903x_led_set(struct led_classdev *led_cdev,
 			   enum led_brightness value)
 {
 	struct da903x_led *led;
-	
+
 	led = container_of(led_cdev, struct da903x_led, cdev);
 	led->new_brightness = value;
 	schedule_work(&led->work);

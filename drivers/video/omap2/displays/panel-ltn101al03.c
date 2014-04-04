@@ -64,9 +64,12 @@ struct ltn101al03 {
 	struct backlight_device *bd;
 	struct omap_dm_timer *gptimer;	/*For OMAP4430 "gptimer" */
 	struct class *lcd_class;
+	struct workqueue_struct *workqueue;
+	struct delayed_work panel_delayed_work;
 };
 
 static struct brightness_data ltn101al03_brightness_data;
+static void ltn101al03_panel_shutdown_worker(struct work_struct *work);
 
 static void backlight_gptimer_update(struct omap_dss_device *dssdev)
 {
@@ -89,16 +92,12 @@ static void backlight_gptimer_stop(struct omap_dss_device *dssdev)
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 	ret = omap_dm_timer_stop(lcd->gptimer);
-	if (ret)
-		pr_err("failed to stop pwm timer. ret=%d\n", ret);
 }
 
 static int backlight_gptimer_init(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
-
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
 
 	if (lcd->pdata->set_gptimer_idle)
 		lcd->pdata->set_gptimer_idle();
@@ -128,7 +127,6 @@ err_dm_timer_request:
 static int ltn101al03_hw_reset(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
 
 	gpio_set_value(lcd->pdata->lvds_nshdn_gpio, 0);
 	mdelay(1);
@@ -183,8 +181,6 @@ static int ltn101al03_power_on(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret = 0;
-
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
 
 	if (lcd->enabled != 1) {
 		if (lcd->pdata->set_power)
@@ -267,8 +263,6 @@ static int ltn101al03_set_brightness(struct backlight_device *bd)
 		(lcd->enabled) &&
 		(lcd->current_brightness != lcd->bl)) {
 		update_brightness(dssdev);
-		dev_info(&bd->dev, "[%d] brightness=%d, bl=%d\n",
-			 lcd->pdata->panel_id, bd->props.brightness, lcd->bl);
 	}
 	mutex_unlock(&lcd->lock);
 	return ret;
@@ -308,8 +302,6 @@ static ssize_t ltn101al03_sysfs_store_lcd_power(struct device *dev,
 	if (rc < 0)
 		return rc;
 
-	dev_info(dev, "ltn101al03_sysfs_store_lcd_power - %d\n", lcd_enable);
-
 	mutex_lock(&lcd->lock);
 	if (lcd_enable) {
 		if (dssdev->state != OMAP_DSS_DISPLAY_SUSPENDED) {
@@ -345,8 +337,6 @@ static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 		.max_brightness = 255,
 		.type = BACKLIGHT_RAW,
 	};
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
-	dev_dbg(&dssdev->dev, "ltn101al03_probe\n");
 
 	lcd = kzalloc(sizeof(*lcd), GFP_KERNEL);
 	if (!lcd)
@@ -392,7 +382,13 @@ static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 	gpio_direction_output(lcd->pdata->led_backlight_reset_gpio, 1);
 
 	mutex_init(&lcd->lock);
+	lcd->workqueue = create_singlethread_workqueue("panel_shutdown");
+	if (lcd->workqueue == NULL) {
+		ret = -ENOMEM;
+		goto err_wq;
 
+	}
+	INIT_DELAYED_WORK(&lcd->panel_delayed_work, ltn101al03_panel_shutdown_worker);
 	dev_set_drvdata(&dssdev->dev, lcd);
 
 	/* Register DSI backlight  control */
@@ -446,7 +442,6 @@ static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 
 	update_brightness(dssdev);
 
-	dev_dbg(&dssdev->dev, "%s\n", __func__);
 	return ret;
 
 err_gptimer_init:
@@ -460,8 +455,10 @@ err_device_create:
 err_class_create:
 	backlight_device_unregister(lcd->bd);
 err_backlight_device_register:
-	mutex_destroy(&lcd->lock);
+	destroy_workqueue(lcd->workqueue);
 	gpio_free(lcd->pdata->led_backlight_reset_gpio);
+err_wq:
+	 mutex_destroy(&lcd->lock);
 err_backlight_reset_gpio_request:
 	gpio_free(lcd->pdata->lvds_nshdn_gpio);
 err_no_platform_data:
@@ -479,6 +476,8 @@ static void ltn101al03_panel_remove(struct omap_dss_device *dssdev)
 	class_destroy(lcd->lcd_class);
 	backlight_device_unregister(lcd->bd);
 	mutex_destroy(&lcd->lock);
+	cancel_delayed_work(&lcd->panel_delayed_work);
+	destroy_workqueue(lcd->workqueue);
 	gpio_free(lcd->pdata->led_backlight_reset_gpio);
 	gpio_free(lcd->pdata->lvds_nshdn_gpio);
 	kfree(lcd);
@@ -491,7 +490,6 @@ static int ltn101al03_start(struct omap_dss_device *dssdev)
 	r = ltn101al03_power_on(dssdev);
 
 	if (r) {
-		dev_dbg(&dssdev->dev, "enable failed\n");
 		dssdev->state = OMAP_DSS_DISPLAY_DISABLED;
 	} else {
 		dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
@@ -513,8 +511,6 @@ static int ltn101al03_panel_enable(struct omap_dss_device *dssdev)
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 
-	dev_dbg(&dssdev->dev, "enable\n");
-
 	mutex_lock(&lcd->lock);
 	if (dssdev->state != OMAP_DSS_DISPLAY_DISABLED) {
 		ret = -EINVAL;
@@ -531,8 +527,6 @@ static void ltn101al03_panel_disable(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 
-	dev_dbg(&dssdev->dev, "disable\n");
-
 	mutex_lock(&lcd->lock);
 	if (dssdev->state == OMAP_DSS_DISPLAY_ACTIVE)
 		ltn101al03_stop(dssdev);
@@ -540,13 +534,39 @@ static void ltn101al03_panel_disable(struct omap_dss_device *dssdev)
 	dssdev->state = OMAP_DSS_DISPLAY_DISABLED;
 	mutex_unlock(&lcd->lock);
 }
+static void ltn101al03_panel_shutdown_worker(struct work_struct *work)
+{
+	struct ltn101al03 *lcd = container_of(work, struct ltn101al03,
+			panel_delayed_work.work);
+	struct omap_dss_device *dssdev = lcd->dssdev;
+
+	mutex_lock(&lcd->lock);
+	if (dssdev->state == OMAP_DSS_DISPLAY_DISABLED) {
+		mutex_unlock(&lcd->lock);
+		return;
+	}
+
+	if (dssdev->state == OMAP_DSS_DISPLAY_ACTIVE)
+		ltn101al03_stop(dssdev);
+
+	dssdev->state = OMAP_DSS_DISPLAY_DISABLED;
+	mutex_unlock(&lcd->lock);
+
+}
+static int ltn101al03_panel_shutdown(struct omap_dss_device *dssdev)
+{
+	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
+	queue_delayed_work(lcd->workqueue, &lcd->panel_delayed_work,
+			msecs_to_jiffies(550));
+
+	return 0;
+
+}
 
 static int ltn101al03_panel_suspend(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret = 0;
-
-	pr_info("Enter ltn101al03_panel_suspend\n");
 
 	mutex_lock(&lcd->lock);
 	if (dssdev->state != OMAP_DSS_DISPLAY_ACTIVE) {
@@ -565,8 +585,6 @@ static int ltn101al03_panel_resume(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
-
-	pr_info("Enter ltn101al03_panel_resume\n");
 
 	mutex_lock(&lcd->lock);
 	if (dssdev->state != OMAP_DSS_DISPLAY_SUSPENDED) {
@@ -614,6 +632,7 @@ static struct omap_dss_driver ltn101al03_omap_dss_driver = {
 	.disable	= ltn101al03_panel_disable,
 	.get_resolution	= ltn101al03_panel_get_resolution,
 	.suspend	= ltn101al03_panel_suspend,
+	.shutdown	= ltn101al03_panel_shutdown,
 	.resume		= ltn101al03_panel_resume,
 
 	.set_timings	= ltn101al03_panel_set_timings,

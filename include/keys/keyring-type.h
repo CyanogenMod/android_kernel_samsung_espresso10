@@ -27,5 +27,4 @@ struct keyring_list {
 	struct key	*keys[0];
 };
 
-
 #endif /* _KEYS_KEYRING_TYPE_H */

@@ -236,7 +236,6 @@ typedef struct xfs_fsop_resblks {
 #define XFS_FSOP_GEOM_FLAGS_DIRV2CI	0x1000	/* ASCII only CI names */
 #define XFS_FSOP_GEOM_FLAGS_LAZYSB	0x4000	/* lazy superblock counters */
 
-
 /*
  * Minimum and maximum sizes need for growth checks
  */
@@ -266,7 +265,6 @@ typedef struct xfs_growfs_rt {
 	__u64		newblocks;	/* new realtime size, fsblocks */
 	__u32		extsize;	/* new realtime extent size, fsblocks */
 } xfs_growfs_rt_t;
-
 
 /*
  * Structures returned from ioctl XFS_IOC_FSBULKSTAT & XFS_IOC_FSBULKSTAT_SINGLE
@@ -313,7 +311,6 @@ typedef struct xfs_fsop_bulkreq {
 	__s32		__user *ocount;	/* output count pointer		*/
 } xfs_fsop_bulkreq_t;
 
-
 /*
  * Structures returned from xfs_inumbers routine (XFS_IOC_FSINUMBERS).
  */
@@ -323,7 +320,6 @@ typedef struct xfs_inogrp {
 	__u64		xi_allocmask;	/* mask of allocated inodes	*/
 } xfs_inogrp_t;
 
-
 /*
  * Error injection.
  */
@@ -331,7 +327,6 @@ typedef struct xfs_error_injection {
 	__s32		fd;
 	__s32		errtag;
 } xfs_error_injection_t;
-
 
 /*
  * The user-level Handle Request interface structure.
@@ -482,7 +477,6 @@ typedef struct xfs_handle {
 #define XFS_IOC_FSGEOMETRY	     _IOR ('X', 124, struct xfs_fsop_geom)
 #define XFS_IOC_GOINGDOWN	     _IOR ('X', 125, __uint32_t)
 /*	XFS_IOC_GETFSUUID ---------- deprecated 140	 */
-
 
 #ifndef HAVE_BBMACROS
 /*

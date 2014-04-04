@@ -14,7 +14,6 @@
  * Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 /*
  * Cache avoiding checksumming functions utilizing KNI instructions
  * Copyright (C) 1999 Zach Brown (with obvious credit due Ingo)
@@ -86,7 +85,6 @@ do {						\
 #define XO4(x, y)	"       xorps   "OFFS(x)"(%[p5]), %%xmm"#y"	;\n"
 #define XO5(x, y)	"       xorps   "OFFS(x)"(%[p6]), %%xmm"#y"	;\n"
 
-
 static void
 xor_sse_2(unsigned long bytes, unsigned long *p1, unsigned long *p2)
 {
@@ -115,7 +113,6 @@ xor_sse_2(unsigned long bytes, unsigned long *p1, unsigned long *p2)
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)
@@ -173,7 +170,6 @@ xor_sse_3(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)
@@ -238,7 +234,6 @@ xor_sse_4(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)
@@ -311,7 +306,6 @@ xor_sse_5(unsigned long bytes, unsigned long *p1, unsigned long *p2,
 			ST(i + 1, 1)			\
 				ST(i + 2, 2)		\
 					ST(i + 3, 3)	\
-
 
 		PF0(0)
 				PF0(2)

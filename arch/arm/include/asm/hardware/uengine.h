@@ -58,5 +58,4 @@ int ixp2000_uengine_load(int uengine, struct ixp2000_uengine_code *c);
 #define IXP2000_UENGINE_LM_ADDR0_GLOBAL		0x00010000
 #define IXP2000_UENGINE_LM_ADDR0_PER_CONTEXT	0x00000000
 
-
 #endif

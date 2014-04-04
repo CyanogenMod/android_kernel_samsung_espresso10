@@ -40,4 +40,3 @@ config SND_PXA2XX_AC97
 	  the PXA2xx AC97 interface.
 
 endif	# SND_ARM
-

@@ -104,5 +104,3 @@ config FB_OMAP_DMA_TUNE
           If you have such a system and want to use rotation
           answer yes. Answer no if you have a dedicated video
           memory, or don't use any of the accelerated features.
-
-

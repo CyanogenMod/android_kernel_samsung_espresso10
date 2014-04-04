@@ -151,7 +151,6 @@ static struct v4l2_format pvr_format [] = {
 	}
 };
 
-
 /*
  * pvr_ioctl()
  *
@@ -907,7 +906,6 @@ static void pvr2_v4l2_dev_destroy(struct pvr2_v4l2_dev *dip)
 
 }
 
-
 static void pvr2_v4l2_dev_disassociate_parent(struct pvr2_v4l2_dev *dip)
 {
 	if (!dip) return;
@@ -915,7 +913,6 @@ static void pvr2_v4l2_dev_disassociate_parent(struct pvr2_v4l2_dev *dip)
 	dip->devbase.parent = NULL;
 	device_move(&dip->devbase.dev, NULL, DPM_ORDER_NONE);
 }
-
 
 static void pvr2_v4l2_destroy_no_lock(struct pvr2_v4l2 *vp)
 {
@@ -933,14 +930,12 @@ static void pvr2_v4l2_destroy_no_lock(struct pvr2_v4l2 *vp)
 	kfree(vp);
 }
 
-
 static void pvr2_video_device_release(struct video_device *vdev)
 {
 	struct pvr2_v4l2_dev *dev;
 	dev = container_of(vdev,struct pvr2_v4l2_dev,devbase);
 	kfree(dev);
 }
-
 
 static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
 {
@@ -953,14 +948,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
 	pvr2_v4l2_destroy_no_lock(vp);
 }
 
-
 static long pvr2_v4l2_ioctl(struct file *file,
 			   unsigned int cmd, unsigned long arg)
 {
 
 	return video_usercopy(file, cmd, arg, pvr2_v4l2_do_ioctl);
 }
-
 
 static int pvr2_v4l2_release(struct file *file)
 {
@@ -1008,7 +1001,6 @@ static int pvr2_v4l2_release(struct file *file)
 	}
 	return 0;
 }
-
 
 static int pvr2_v4l2_open(struct file *file)
 {
@@ -1107,7 +1099,6 @@ static int pvr2_v4l2_open(struct file *file)
 	return 0;
 }
 
-
 static void pvr2_v4l2_notify(struct pvr2_v4l2_fh *fhp)
 {
 	wake_up(&fhp->wait_data);
@@ -1147,7 +1138,6 @@ static int pvr2_v4l2_iosetup(struct pvr2_v4l2_fh *fh)
 	if ((ret = pvr2_hdw_set_streaming(hdw,!0)) < 0) return ret;
 	return pvr2_ioread_set_enabled(fh->rhp,!0);
 }
-
 
 static ssize_t pvr2_v4l2_read(struct file *file,
 			      char __user *buff, size_t count, loff_t *ppos)
@@ -1210,7 +1200,6 @@ static ssize_t pvr2_v4l2_read(struct file *file,
 	return ret;
 }
 
-
 static unsigned int pvr2_v4l2_poll(struct file *file, poll_table *wait)
 {
 	unsigned int mask = 0;
@@ -1236,7 +1225,6 @@ static unsigned int pvr2_v4l2_poll(struct file *file, poll_table *wait)
 	return mask;
 }
 
-
 static const struct v4l2_file_operations vdev_fops = {
 	.owner      = THIS_MODULE,
 	.open       = pvr2_v4l2_open,
@@ -1246,11 +1234,9 @@ static const struct v4l2_file_operations vdev_fops = {
 	.poll       = pvr2_v4l2_poll,
 };
 
-
 static struct video_device vdev_template = {
 	.fops       = &vdev_fops,
 };
-
 
 static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
 			       struct pvr2_v4l2 *vp,
@@ -1319,7 +1305,6 @@ static void pvr2_v4l2_dev_init(struct pvr2_v4l2_dev *dip,
 	pvr2_hdw_v4l_store_minor_number(vp->channel.mc_head->hdw,
 					dip->minor_type,dip->devbase.minor);
 }
-
 
 struct pvr2_v4l2 *pvr2_v4l2_create(struct pvr2_context *mnp)
 {

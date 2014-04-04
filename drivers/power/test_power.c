@@ -138,7 +138,6 @@ static struct power_supply test_power_supplies[] = {
 	},
 };
 
-
 static int __init test_power_init(void)
 {
 	int i;
@@ -178,8 +177,6 @@ static void __exit test_power_exit(void)
 		power_supply_unregister(&test_power_supplies[i]);
 }
 module_exit(test_power_exit);
-
-
 
 #define MAX_KEYLENGTH 256
 struct battery_property_map {
@@ -226,7 +223,6 @@ static struct battery_property_map map_technology[] = {
 	{ -1,				NULL   },
 };
 
-
 static int map_get_value(struct battery_property_map *map, const char *key,
 				int def_val)
 {
@@ -248,7 +244,6 @@ static int map_get_value(struct battery_property_map *map, const char *key,
 
 	return def_val;
 }
-
 
 static const char *map_get_key(struct battery_property_map *map, int value,
 				const char *def_key)
@@ -350,8 +345,6 @@ static int param_set_battery_capacity(const char *key,
 
 #define param_get_battery_capacity param_get_int
 
-
-
 static struct kernel_param_ops param_ops_ac_online = {
 	.set = param_set_ac_online,
 	.get = param_get_ac_online,
@@ -382,14 +375,12 @@ static struct kernel_param_ops param_ops_battery_capacity = {
 	.get = param_get_battery_capacity,
 };
 
-
 #define param_check_ac_online(name, p) __param_check(name, p, void);
 #define param_check_battery_status(name, p) __param_check(name, p, void);
 #define param_check_battery_present(name, p) __param_check(name, p, void);
 #define param_check_battery_technology(name, p) __param_check(name, p, void);
 #define param_check_battery_health(name, p) __param_check(name, p, void);
 #define param_check_battery_capacity(name, p) __param_check(name, p, void);
-
 
 module_param(ac_online, ac_online, 0644);
 MODULE_PARM_DESC(ac_online, "AC charging state <on|off>");
@@ -412,7 +403,6 @@ MODULE_PARM_DESC(battery_health,
 
 module_param(battery_capacity, battery_capacity, 0644);
 MODULE_PARM_DESC(battery_capacity, "battery capacity (percentage)");
-
 
 MODULE_DESCRIPTION("Power supply driver for testing");
 MODULE_AUTHOR("Anton Vorontsov <cbouatmailru@gmail.com>");

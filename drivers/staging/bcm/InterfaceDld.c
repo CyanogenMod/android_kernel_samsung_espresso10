@@ -1,6 +1,5 @@
 #include "headers.h"
 
-
 int InterfaceFileDownload( PVOID arg,
                         struct file *flp,
                         unsigned int on_chip_loc)
@@ -98,7 +97,6 @@ int InterfaceFileReadbackFromChip( PVOID arg,
             }
             break;
         }
-
 
 		Status = InterfaceRDM(psIntfAdapter, on_chip_loc, buff_readback, len);
 		if(Status)
@@ -216,7 +214,6 @@ static int bcm_download_config_file(PMINI_ADAPTER Adapter,
 		}
 	}
 
-
 	retval =buffDnldVerify(Adapter,(PUCHAR)Adapter->pstargetparams,sizeof(STARGETPARAMS),CONFIG_BEGIN_ADDR);
 
 	if(retval)
@@ -225,7 +222,6 @@ static int bcm_download_config_file(PMINI_ADAPTER Adapter,
 	}
 	else
 		Adapter->bCfgDownloaded = TRUE;
-
 
 	return retval;
 }
@@ -398,5 +394,3 @@ INT buffDnldVerify(PMINI_ADAPTER Adapter, unsigned char *mappedbuffer, unsigned 
 error:
 	return status;
 }
-
-

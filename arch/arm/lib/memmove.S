@@ -125,7 +125,6 @@ ENTRY(memmove)
 		beq	17f
 		blt	18f
 
-
 		.macro	backward_copy_shift push pull
 
 		subs	r2, r2, #28
@@ -188,7 +187,6 @@ ENTRY(memmove)
 		b	8b
 
 		.endm
-
 
 		backward_copy_shift	push=8	pull=24
 

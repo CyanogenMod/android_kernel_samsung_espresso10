@@ -412,4 +412,3 @@ struct r8a66597_platdata {
 #define	RTPORT		0x0001
 
 #endif /* __LINUX_USB_R8A66597_H */
-

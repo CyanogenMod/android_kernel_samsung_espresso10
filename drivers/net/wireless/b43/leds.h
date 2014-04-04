@@ -10,7 +10,6 @@ struct b43_wldev;
 #include <linux/leds.h>
 #include <linux/workqueue.h>
 
-
 #define B43_LED_MAX_NAME_LEN	31
 
 struct b43_led {
@@ -65,7 +64,6 @@ void b43_leds_unregister(struct b43_wl *wl);
 void b43_leds_init(struct b43_wldev *dev);
 void b43_leds_exit(struct b43_wldev *dev);
 void b43_leds_stop(struct b43_wldev *dev);
-
 
 #else /* CONFIG_B43_LEDS */
 /* LED support disabled */

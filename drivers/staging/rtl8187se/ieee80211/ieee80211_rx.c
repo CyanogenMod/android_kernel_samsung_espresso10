@@ -20,7 +20,6 @@
 
 ******************************************************************************/
 
-
 #include <linux/compiler.h>
 //#include <linux/config.h>
 #include <linux/errno.h>
@@ -60,7 +59,6 @@ static inline void ieee80211_monitor_rx(struct ieee80211_device *ieee,
 	memset(skb->cb, 0, sizeof(skb->cb));
 	netif_rx(skb);
 }
-
 
 /* Called only as a tasklet (software IRQ) */
 static struct ieee80211_frag_entry *
@@ -161,7 +159,6 @@ ieee80211_frag_cache_get(struct ieee80211_device *ieee,
 	return skb;
 }
 
-
 /* Called only as a tasklet (software IRQ) */
 static int ieee80211_frag_cache_invalidate(struct ieee80211_device *ieee,
 					   struct ieee80211_hdr_4addr *hdr)
@@ -202,8 +199,6 @@ static int ieee80211_frag_cache_invalidate(struct ieee80211_device *ieee,
 	return 0;
 }
 
-
-
 /* ieee80211_rx_frame_mgtmt
  *
  * Responsible for handling management control frames
@@ -239,8 +234,6 @@ ieee80211_rx_frame_mgmt(struct ieee80211_device *ieee, struct sk_buff *skb,
 	return 0;
 
 }
-
-
 
 /* See IEEE 802.1H for LLC/SNAP encapsulation/decapsulation */
 /* Ethernet-II snap header (RFC1042 for most EtherTypes) */
@@ -336,7 +329,6 @@ ieee80211_rx_frame_decrypt(struct ieee80211_device* ieee, struct sk_buff *skb,
 	return res;
 }
 
-
 /* Called only as a tasklet (software IRQ), by ieee80211_rx */
 static inline int
 ieee80211_rx_frame_decrypt_msdu(struct ieee80211_device* ieee, struct sk_buff *skb,
@@ -363,7 +355,6 @@ ieee80211_rx_frame_decrypt_msdu(struct ieee80211_device* ieee, struct sk_buff *s
 
 	return 0;
 }
-
 
 /* this function is stolen from ipw2200 driver*/
 #define IEEE_PACKET_RETRY_TIME (5*HZ)
@@ -465,7 +456,6 @@ drop:
 	return 1;
 }
 
-
 /* All received frames are sent to this function. @skb contains the frame in
  * IEEE 802.11 format, i.e., in the format it was sent over air.
  * This function is called only as a tasklet (software IRQ). */
@@ -524,7 +514,6 @@ int ieee80211_rtl_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 
 	hdrlen = ieee80211_get_hdrlen(fc);
 
-
 	if (ieee->iw_mode == IW_MODE_MONITOR) {
 		ieee80211_monitor_rx(ieee, skb, rx_stats);
 		stats->rx_packets++;
@@ -564,7 +553,6 @@ int ieee80211_rtl_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 	if (is_duplicate_packet(ieee, hdr))
 		goto rx_dropped;
 
-
 	if (type == IEEE80211_FTYPE_MGMT) {
 		if (ieee80211_rx_frame_mgmt(ieee, skb, rx_stats, type, stype))
 			goto rx_dropped;
@@ -598,9 +586,7 @@ int ieee80211_rtl_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 		break;
 	}
 
-
 	dev->last_rx = jiffies;
-
 
 	/* Nullfunc frames may have PS-bit set, so they must be passed to
 	 * hostap_handle_sta_rx() before being dropped here. */
@@ -743,7 +729,6 @@ int ieee80211_rtl_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 	payload = skb->data + hdrlen;
 	ethertype = (payload[6] << 8) | payload[7];
 
-
 	/* convert hdr + possible LLC headers into Ethernet header */
 	if (skb->len - hdrlen >= 8 &&
 	    ((memcmp(payload, rfc1042_header, SNAP_SIZE) == 0 &&
@@ -763,7 +748,6 @@ int ieee80211_rtl_rx(struct ieee80211_device *ieee, struct sk_buff *skb,
 		memcpy(skb_push(skb, ETH_ALEN), src, ETH_ALEN);
 		memcpy(skb_push(skb, ETH_ALEN), dst, ETH_ALEN);
 	}
-
 
 	stats->rx_packets++;
 	stats->rx_bytes += skb->len;
@@ -1256,7 +1240,6 @@ inline void update_network(struct ieee80211_network *dst,
 //	printk("==================>stats.signal is %d\n",dst->stats.signal);
 	dst->stats.noise = noise;
 
-
 	dst->capability = src->capability;
 	memcpy(dst->rates, src->rates, src->rates_len);
 	dst->rates_len = src->rates_len;
@@ -1320,7 +1303,6 @@ inline void update_network(struct ieee80211_network *dst,
 	dst->CountryIeLen = src->CountryIeLen;
 	memcpy(dst->CountryIeBuf, src->CountryIeBuf, src->CountryIeLen);
 }
-
 
 inline void ieee80211_process_probe_response(
 	struct ieee80211_device *ieee,
@@ -1475,7 +1457,6 @@ inline void ieee80211_process_probe_response(
 					    struct ieee80211_network, list);
 			list_del(ieee->network_free_list.next);
 		}
-
 
 #ifdef CONFIG_IEEE80211_DEBUG
 		IEEE80211_DEBUG_SCAN("Adding '%s' (%pM) via %s.\n",

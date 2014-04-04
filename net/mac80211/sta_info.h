@@ -174,7 +174,6 @@ struct sta_ampdu_mlme {
 	u8 dialog_token_allocator;
 };
 
-
 /**
  * struct sta_info - STA information
  *
@@ -413,7 +412,6 @@ rcu_dereference_protected_tid_tx(struct sta_info *sta, int tid)
 
 #define STA_HASH_SIZE 256
 #define STA_HASH(sta) (sta[5])
-
 
 /* Maximum number of frames to buffer per power saving station */
 #define STA_MAX_TX_BUFFER 128

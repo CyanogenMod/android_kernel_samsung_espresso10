@@ -258,7 +258,6 @@ static int atbm8830_init(struct dvb_frontend *fe)
 	return 0;
 }
 
-
 static void atbm8830_release(struct dvb_frontend *fe)
 {
 	struct atbm_state *state = fe->demodulator_priv;

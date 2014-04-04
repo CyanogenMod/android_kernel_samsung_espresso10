@@ -78,6 +78,7 @@ struct dst_entry {
 #define DST_NOHASH		0x0008
 #define DST_NOCACHE		0x0010
 #define DST_NOCOUNT		0x0020
+#define DST_XFRM_TUNNEL		0x0100
 	union {
 		struct dst_entry	*next;
 		struct rtable __rcu	*rt_next;
@@ -313,7 +314,6 @@ static inline void skb_dst_force(struct sk_buff *skb)
 	}
 }
 
-
 /**
  *	__skb_tunnel_rx - prepare skb for rx reinsert
  *	@skb: buffer
@@ -448,7 +448,7 @@ static inline struct dst_entry *xfrm_lookup(struct net *net,
 					    int flags)
 {
 	return dst_orig;
-} 
+}
 #else
 extern struct dst_entry *xfrm_lookup(struct net *net, struct dst_entry *dst_orig,
 				     const struct flowi *fl, struct sock *sk,

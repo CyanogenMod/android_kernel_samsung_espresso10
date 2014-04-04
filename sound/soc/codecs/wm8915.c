@@ -497,7 +497,7 @@ static void wm8915_set_retune_mobile(struct snd_soc_codec *codec, int block)
 		wm8915->rx_rate[iface]);
 
 	/* The EQ will be disabled while reconfiguring it, remember the
-	 * current configuration. 
+	 * current configuration.
 	 */
 	save = snd_soc_read(codec, base);
 	save &= WM8915_DSP1RX_EQ_ENA;
@@ -961,7 +961,6 @@ SOC_DAPM_SINGLE("IN1 Switch", WM8915_DSP2_TX_RIGHT_MIXER_ROUTING,
 SOC_DAPM_SINGLE("DAC Switch", WM8915_DSP2_TX_RIGHT_MIXER_ROUTING,
 		0, 1, 0),
 };
-
 
 static const struct snd_soc_dapm_widget wm8915_dapm_widgets[] = {
 SND_SOC_DAPM_INPUT("IN1LN"),
@@ -2419,14 +2418,14 @@ static void wm8915_retune_mobile_pdata(struct snd_soc_codec *codec)
 
 		/* Expand the array... */
 		t = krealloc(wm8915->retune_mobile_texts,
-			     sizeof(char *) * 
+			     sizeof(char *) *
 			     (wm8915->num_retune_mobile_texts + 1),
 			     GFP_KERNEL);
 		if (t == NULL)
 			continue;
 
 		/* ...store the new entry... */
-		t[wm8915->num_retune_mobile_texts] = 
+		t[wm8915->num_retune_mobile_texts] =
 			pdata->retune_mobile_cfgs[i].name;
 
 		/* ...and remember the new version. */
@@ -2525,7 +2524,7 @@ static int wm8915_probe(struct snd_soc_codec *codec)
 			ret);
 		goto err_enable;
 	}
-	
+
 	dev_info(codec->dev, "revision %c\n",
 		 (ret & WM8915_CHIP_REV_MASK) + 'A');
 

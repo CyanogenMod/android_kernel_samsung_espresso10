@@ -307,7 +307,6 @@ static int ircomm_tty_set_serial_info(struct ircomm_tty_cb *self,
 	if (copy_from_user(&new_serial,new_info,sizeof(new_serial)))
 		return -EFAULT;
 
-
 	state = self
 	old_state = *self;
 
@@ -422,6 +421,3 @@ int ircomm_tty_ioctl(struct tty_struct *tty,
 	}
 	return ret;
 }
-
-
-

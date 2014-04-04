@@ -127,4 +127,3 @@ static void __exit htcherald_panel_drv_cleanup(void)
 
 module_init(htcherald_panel_drv_init);
 module_exit(htcherald_panel_drv_cleanup);
-

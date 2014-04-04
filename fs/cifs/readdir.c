@@ -85,9 +85,12 @@ cifs_readdir_lookup(struct dentry *parent, struct qstr *name,
 
 	dentry = d_lookup(parent, name);
 	if (dentry) {
-		/* FIXME: check for inode number changes? */
-		if (dentry->d_inode != NULL)
+		inode = dentry->d_inode;
+		/* update inode in place if i_ino didn't change */
+		if (inode && CIFS_I(inode)->uniqueid == fattr->cf_uniqueid) {
+			cifs_fattr_to_inode(inode, fattr);
 			return dentry;
+		}
 		d_drop(dentry);
 		dput(dentry);
 	}
@@ -758,7 +761,6 @@ static int cifs_filldir(char *pfindEntry, struct file *file, filldir_t filldir,
 	dput(tmp_dentry);
 	return rc;
 }
-
 
 int cifs_readdir(struct file *file, void *direntry, filldir_t filldir)
 {

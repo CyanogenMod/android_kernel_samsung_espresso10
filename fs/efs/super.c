@@ -53,7 +53,6 @@ static struct pt_types sgi_pt_types[] = {
 	{0,		NULL}
 };
 
-
 static struct kmem_cache * efs_inode_cachep;
 
 static struct inode *efs_alloc_inode(struct super_block *sb)
@@ -245,8 +244,8 @@ static int efs_validate_super(struct efs_sb_info *sb, struct efs_super *super) {
 	sb->inode_free   = be32_to_cpu(super->fs_tinode);
 	sb->inode_blocks = be16_to_cpu(super->fs_cgisize);
 	sb->total_groups = be16_to_cpu(super->fs_ncg);
-    
-	return 0;    
+
+	return 0;
 }
 
 static int efs_fill_super(struct super_block *s, void *d, int silent)
@@ -260,14 +259,14 @@ static int efs_fill_super(struct super_block *s, void *d, int silent)
 	if (!sb)
 		return -ENOMEM;
 	s->s_fs_info = sb;
- 
+
 	s->s_magic		= EFS_SUPER_MAGIC;
 	if (!sb_set_blocksize(s, EFS_BLOCKSIZE)) {
 		printk(KERN_ERR "EFS: device does not support %d byte blocks\n",
 			EFS_BLOCKSIZE);
 		goto out_no_fs_ul;
 	}
-  
+
 	/* read the vh (volume header) block */
 	bh = sb_bread(s, 0);
 
@@ -293,7 +292,7 @@ static int efs_fill_super(struct super_block *s, void *d, int silent)
 		printk(KERN_ERR "EFS: cannot read superblock\n");
 		goto out_no_fs_ul;
 	}
-		
+
 	if (efs_validate_super(sb, (struct efs_super *) bh->b_data)) {
 #ifdef DEBUG
 		printk(KERN_WARNING "EFS: invalid superblock at block %u\n", sb->fs_start + EFS_SUPER);
@@ -356,4 +355,3 @@ static int efs_statfs(struct dentry *dentry, struct kstatfs *buf) {
 
 	return 0;
 }
-

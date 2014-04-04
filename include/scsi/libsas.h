@@ -26,7 +26,6 @@
 #ifndef _LIBSAS_H_
 #define _LIBSAS_H_
 
-
 #include <linux/timer.h>
 #include <linux/pci.h>
 #include <scsi/sas.h>
@@ -222,7 +221,6 @@ struct sas_discovery {
 	u8     eeds_b[8];
 	int    max_level;
 };
-
 
 /* The port struct is Class:RW, driver:RO */
 struct asd_sas_port {

@@ -567,7 +567,6 @@ void *fm_v4l2_deinit_video_device(void)
 {
 	struct fmdev *fmdev;
 
-
 	fmdev = video_get_drvdata(gradio_dev);
 
 	/* Unregister to v4l2 ctrl handler framework*/

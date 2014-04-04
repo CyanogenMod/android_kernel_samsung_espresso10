@@ -129,7 +129,7 @@ int psb_gem_dumb_map_gtt(struct drm_file *file, struct drm_device *dev,
 
 	if (!(dev->driver->driver_features & DRIVER_GEM))
 		return -ENODEV;
-		
+
 	mutex_lock(&dev->struct_mutex);
 
 	/* GEM does all our handle to object mapping */
@@ -139,7 +139,7 @@ int psb_gem_dumb_map_gtt(struct drm_file *file, struct drm_device *dev,
 		goto unlock;
 	}
 	/* What validation is needed here ? */
-	
+
 	/* Make it mmapable */
 	if (!obj->map_list.map) {
 		ret = psb_gem_create_mmap_offset(obj);
@@ -175,7 +175,7 @@ static int psb_gem_create(struct drm_file *file,
 
 	size = roundup(size, PAGE_SIZE);
 
-	/* Allocate our object - for now a direct gtt range which is not 
+	/* Allocate our object - for now a direct gtt range which is not
 	   stolen memory backed */
 	r = psb_gtt_alloc_range(dev, size, "gem", 0);
 	if (r == NULL)

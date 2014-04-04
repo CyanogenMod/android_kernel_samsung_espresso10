@@ -944,7 +944,7 @@ static int dscc4_found1(struct pci_dev *pdev, void __iomem *ioaddr)
 		dscc4_init_registers(dpriv, d);
 		dpriv->parity = PARITY_CRC16_PR0_CCITT;
 		dpriv->encoding = ENCODING_NRZ;
-	
+
 		ret = dscc4_init_ring(d);
 		if (ret < 0)
 			goto err_unregister;
@@ -1119,7 +1119,7 @@ static int dscc4_open(struct net_device *dev)
 		printk(KERN_ERR "%s: %s timeout\n", DRV_NAME, "XPR");
 		goto err_disable_scc_events;
 	}
-	
+
 	if (debug > 2)
 		dscc4_tx_print(dev, dpriv, "Open");
 

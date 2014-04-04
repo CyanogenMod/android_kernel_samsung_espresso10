@@ -20,12 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-
 /*
  * ToDo:
  * - add firmware download/update support
  */
-
 
 /* driver definitions */
 #define DRIVER_AUTHOR "Tobias Lorenz <tobias.lorenz@gmx.net>"
@@ -41,7 +39,6 @@
 
 #include "radio-si470x.h"
 
-
 /* USB Device ID List */
 static struct usb_device_id si470x_usb_driver_id_table[] = {
 	/* Silicon Labs USB FM Radio Reference Design */
@@ -56,8 +53,6 @@ static struct usb_device_id si470x_usb_driver_id_table[] = {
 	{ }
 };
 MODULE_DEVICE_TABLE(usb, si470x_usb_driver_id_table);
-
-
 
 /**************************************************************************
  * Module Parameters
@@ -86,8 +81,6 @@ static unsigned short max_rds_errors = 1;
 /* 3 means   6+ errors or errors in checkword, correction not possible */
 module_param(max_rds_errors, ushort, 0644);
 MODULE_PARM_DESC(max_rds_errors, "RDS maximum block errors: *1*");
-
-
 
 /**************************************************************************
  * USB HID Reports
@@ -136,16 +129,12 @@ MODULE_PARM_DESC(max_rds_errors, "RDS maximum block errors: *1*");
 /* interrupt out endpoint 2 every 1 millisecond */
 #define UNUSED_REPORT		23
 
-
-
 /**************************************************************************
  * Software/Hardware Versions from Scratch Page
  **************************************************************************/
 #define RADIO_SW_VERSION_NOT_BOOTLOADABLE	6
 #define RADIO_SW_VERSION			7
 #define RADIO_HW_VERSION			1
-
-
 
 /**************************************************************************
  * LED State Definitions
@@ -161,16 +150,12 @@ MODULE_PARM_DESC(max_rds_errors, "RDS maximum block errors: *1*");
 #define SOLID_RED_LED		0x40	/* bootload state */
 #define SOLID_ORANGE_LED	0x80
 
-
-
 /**************************************************************************
  * Stream State Definitions
  **************************************************************************/
 #define STREAM_COMMAND	0x36
 #define STREAM_VIDPID	0x00
 #define STREAM_AUDIO	0xff
-
-
 
 /**************************************************************************
  * Bootloader / Flash Commands
@@ -198,8 +183,6 @@ MODULE_PARM_DESC(max_rds_errors, "RDS maximum block errors: *1*");
 #define COMMAND_FAILED		0x02
 #define COMMAND_PENDING		0x03
 
-
-
 /**************************************************************************
  * General Driver Functions - REGISTER_REPORTs
  **************************************************************************/
@@ -226,7 +209,6 @@ static int si470x_get_report(struct si470x_device *radio, void *buf, int size)
 	return retval;
 }
 
-
 /*
  * si470x_set_report - send a HID report
  */
@@ -249,7 +231,6 @@ static int si470x_set_report(struct si470x_device *radio, void *buf, int size)
 	return retval;
 }
 
-
 /*
  * si470x_get_register - read register
  */
@@ -268,7 +249,6 @@ int si470x_get_register(struct si470x_device *radio, int regnr)
 	return (retval < 0) ? -EINVAL : 0;
 }
 
-
 /*
  * si470x_set_register - write register
  */
@@ -284,8 +264,6 @@ int si470x_set_register(struct si470x_device *radio, int regnr)
 
 	return (retval < 0) ? -EINVAL : 0;
 }
-
-
 
 /**************************************************************************
  * General Driver Functions - ENTIRE_REPORT
@@ -312,8 +290,6 @@ static int si470x_get_all_registers(struct si470x_device *radio)
 	return (retval < 0) ? -EINVAL : 0;
 }
 
-
-
 /**************************************************************************
  * General Driver Functions - LED_REPORT
  **************************************************************************/
@@ -335,8 +311,6 @@ static int si470x_set_led_state(struct si470x_device *radio,
 
 	return (retval < 0) ? -EINVAL : 0;
 }
-
-
 
 /**************************************************************************
  * General Driver Functions - SCRATCH_REPORT
@@ -365,8 +339,6 @@ static int si470x_get_scratch_page_versions(struct si470x_device *radio)
 	return (retval < 0) ? -EINVAL : 0;
 }
 
-
-
 /**************************************************************************
  * General Driver Functions - DISCONNECT_CHECK
  **************************************************************************/
@@ -381,8 +353,6 @@ int si470x_disconnect_check(struct si470x_device *radio)
 	else
 		return 0;
 }
-
-
 
 /**************************************************************************
  * RDS Driver Functions
@@ -503,8 +473,6 @@ resubmit:
 	}
 }
 
-
-
 /**************************************************************************
  * File Operations Interface
  **************************************************************************/
@@ -562,7 +530,6 @@ done:
 	return retval;
 }
 
-
 /*
  * si470x_fops_release - file release
  */
@@ -608,8 +575,6 @@ done:
 	return retval;
 }
 
-
-
 /**************************************************************************
  * Video4Linux Interface
  **************************************************************************/
@@ -632,8 +597,6 @@ int si470x_vidioc_querycap(struct file *file, void *priv,
 
 	return 0;
 }
-
-
 
 /**************************************************************************
  * USB Interface
@@ -798,7 +761,6 @@ err_initial:
 	return retval;
 }
 
-
 /*
  * si470x_usb_driver_suspend - suspend the device
  */
@@ -810,7 +772,6 @@ static int si470x_usb_driver_suspend(struct usb_interface *intf,
 	return 0;
 }
 
-
 /*
  * si470x_usb_driver_resume - resume the device
  */
@@ -820,7 +781,6 @@ static int si470x_usb_driver_resume(struct usb_interface *intf)
 
 	return 0;
 }
-
 
 /*
  * si470x_usb_driver_disconnect - disconnect the device
@@ -849,7 +809,6 @@ static void si470x_usb_driver_disconnect(struct usb_interface *intf)
 	}
 }
 
-
 /*
  * si470x_usb_driver - usb driver interface
  */
@@ -862,8 +821,6 @@ static struct usb_driver si470x_usb_driver = {
 	.id_table		= si470x_usb_driver_id_table,
 	.supports_autosuspend	= 1,
 };
-
-
 
 /**************************************************************************
  * Module Interface
@@ -878,7 +835,6 @@ static int __init si470x_module_init(void)
 	return usb_register(&si470x_usb_driver);
 }
 
-
 /*
  * si470x_module_exit - module exit
  */
@@ -886,7 +842,6 @@ static void __exit si470x_module_exit(void)
 {
 	usb_deregister(&si470x_usb_driver);
 }
-
 
 module_init(si470x_module_init);
 module_exit(si470x_module_exit);

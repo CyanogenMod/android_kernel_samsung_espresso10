@@ -1,4 +1,3 @@
-
 #ifndef __VENDOR_EXTN_NVM_H__
 #define __VENDOR_EXTN_NVM_H__
 

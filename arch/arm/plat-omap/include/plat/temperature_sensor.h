@@ -35,7 +35,6 @@
 
 #define OMAP_TSHUT_GPIO		86
 
-
 /*
  * omap_temp_sensor platform data
  * @name - name

@@ -176,7 +176,6 @@ struct Xmit_resp {
 		status;
 };
 
-
 struct Netstat {
 	dword	tot_recv,
 		tot_xmit;
@@ -185,7 +184,6 @@ struct Netstat {
 		err_res,
 		err_ovrrun;
 };
-
 
 struct Selftest {
 	word	error;

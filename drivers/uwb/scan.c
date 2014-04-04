@@ -38,7 +38,6 @@
 #include <linux/slab.h>
 #include "uwb-internal.h"
 
-
 /**
  * Start/stop scanning in a radio controller
  *

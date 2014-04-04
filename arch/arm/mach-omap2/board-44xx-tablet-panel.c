@@ -435,7 +435,6 @@ static struct omap_dss_board_info tablet_dss_data_tc35876x_sharp_lq101k1lyxx = {
 	.default_device = &lcd_tc35876x_sharp_lq101k1lyxx,
 };
 
-
 static struct omap_dss_board_info tablet_dss_data_hdmi_default_display = {
 	.num_devices	= ARRAY_SIZE(dss_devices_hdmi_default_display),
 	.devices	= dss_devices_hdmi_default_display,

@@ -199,7 +199,6 @@ static int nfs_call_unlink(struct dentry *dentry, struct nfs_unlinkdata *data)
 	struct inode *dir;
 	int ret = 0;
 
-
 	parent = dget_parent(dentry);
 	if (parent == NULL)
 		goto out_free;

@@ -32,7 +32,6 @@
 #define WM8775_AIN3 4
 #define WM8775_AIN4 8
 
-
 struct wm8775_platform_data {
 	/*
 	 * FIXME: Instead, we should parametrize the params

@@ -420,7 +420,6 @@ enum {
 	PINMUX_DATA(PORT##nr##_DATA, PORT##nr##_FN0, PORT##nr##_OUT, \
 		    PORT##nr##_IN, PORT##nr##_IN_PD, PORT##nr##_IN_PU)
 
-
 static pinmux_enum_t pinmux_data[] = {
 
 	/* specify valid pin states for each pin in GPIO mode */

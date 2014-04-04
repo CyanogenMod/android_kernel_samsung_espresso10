@@ -37,7 +37,6 @@
 #define CY8CTMG110_X_MAX		759
 #define CY8CTMG110_Y_MAX		465
 
-
 /* cy8ctmg110 register definitions */
 #define CY8CTMG110_TOUCH_WAKEUP_TIME	0
 #define CY8CTMG110_TOUCH_SLEEP_TIME	2
@@ -48,7 +47,6 @@
 #define CY8CTMG110_FINGERS		11
 #define CY8CTMG110_GESTURE		12
 #define CY8CTMG110_REG_MAX		13
-
 
 /*
  * The touch driver structure.

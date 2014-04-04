@@ -84,7 +84,7 @@
 #define PSR_ENDSTATE	0
 #endif
 
-/* 
+/*
  * These are 'magic' values for PTRACE_PEEKUSR that return info about where a
  * process is located in memory.
  */
@@ -240,4 +240,3 @@ static inline unsigned long kernel_stack_pointer(struct pt_regs *regs)
 #endif /* __ASSEMBLY__ */
 
 #endif
-

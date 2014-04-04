@@ -274,7 +274,6 @@ out:
 	return xfer->len - count;
 }
 
-
 static void orion_spi_work(struct work_struct *work)
 {
 	struct orion_spi *orion_spi =
@@ -433,7 +432,6 @@ static int orion_spi_transfer(struct spi_device *spi, struct spi_message *m)
 		}
 	}
 
-
 	spin_lock_irqsave(&orion_spi->lock, flags);
 	list_add_tail(&m->queue, &orion_spi->msg_queue);
 	queue_work(orion_spi_wq, &orion_spi->work);
@@ -517,7 +515,6 @@ out:
 	spi_master_put(master);
 	return status;
 }
-
 
 static int __exit orion_spi_remove(struct platform_device *pdev)
 {

@@ -50,7 +50,6 @@ struct c4iw_create_cq_resp {
 	__u32 qid_mask;
 };
 
-
 enum {
 	C4IW_QPF_ONCHIP = (1<<0)
 };

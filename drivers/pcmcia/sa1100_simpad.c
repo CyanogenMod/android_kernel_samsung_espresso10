@@ -14,9 +14,9 @@
 #include <asm/irq.h>
 #include <mach/simpad.h>
 #include "sa1100_generic.h"
- 
+
 extern long get_cs3_shadow(void);
-extern void set_cs3_bit(int value); 
+extern void set_cs3_bit(int value);
 extern void clear_cs3_bit(int value);
 
 static struct pcmcia_irqs irqs[] = {
@@ -39,7 +39,7 @@ static void simpad_pcmcia_hw_shutdown(struct soc_pcmcia_socket *skt)
 
 	/* Disable CF bus: */
 	//set_cs3_bit(PCMCIA_BUFF_DIS);
-	clear_cs3_bit(PCMCIA_RESET);       
+	clear_cs3_bit(PCMCIA_RESET);
 }
 
 static void
@@ -54,7 +54,7 @@ simpad_pcmcia_socket_state(struct soc_pcmcia_socket *skt,
 	state->bvd1=1; /* Not available on Simpad. */
 	state->bvd2=1; /* Not available on Simpad. */
 	state->wrprot=0; /* Not available on Simpad. */
-  
+
 	if((cs3reg & 0x0c) == 0x0c) {
 		state->vs_3v=0;
 		state->vs_Xv=0;
@@ -78,7 +78,7 @@ simpad_pcmcia_configure_socket(struct soc_pcmcia_socket *skt,
 		clear_cs3_bit(VCC_3V_EN|VCC_5V_EN|EN0|EN1);
 		break;
 
-	case 33:  
+	case 33:
 		clear_cs3_bit(VCC_3V_EN|EN1);
 		set_cs3_bit(VCC_5V_EN|EN0);
 		break;
@@ -96,7 +96,6 @@ simpad_pcmcia_configure_socket(struct soc_pcmcia_socket *skt,
 		return -1;
 	}
 
-
 	local_irq_restore(flags);
 
 	return 0;
@@ -113,7 +112,7 @@ static void simpad_pcmcia_socket_suspend(struct soc_pcmcia_socket *skt)
 	set_cs3_bit(PCMCIA_RESET);
 }
 
-static struct pcmcia_low_level simpad_pcmcia_ops = { 
+static struct pcmcia_low_level simpad_pcmcia_ops = {
 	.owner			= THIS_MODULE,
 	.hw_init		= simpad_pcmcia_hw_init,
 	.hw_shutdown		= simpad_pcmcia_hw_shutdown,

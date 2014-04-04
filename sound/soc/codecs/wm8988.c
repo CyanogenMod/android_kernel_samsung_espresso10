@@ -55,7 +55,6 @@ struct wm8988_priv {
 	struct snd_pcm_hw_constraint_list *sysclk_constraints;
 };
 
-
 #define wm8988_reset(c)	snd_soc_write(c, WM8988_RESET, 0)
 
 /*
@@ -926,7 +925,6 @@ static void __exit wm8988_exit(void)
 #endif
 }
 module_exit(wm8988_exit);
-
 
 MODULE_DESCRIPTION("ASoC WM8988 driver");
 MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");

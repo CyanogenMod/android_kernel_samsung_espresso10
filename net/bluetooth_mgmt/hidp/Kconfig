@@ -9,4 +9,3 @@ config BT_HIDP
 
 	  Say Y here to compile HIDP support into the kernel or say M to
 	  compile it as module (hidp).
-

@@ -40,7 +40,6 @@ config S3C_BOOT_UART_FORCE_FIFO
          Say Y here to force the UART FIFOs on during the kernel
 	 uncompressor
 
-
 config S3C_LOWLEVEL_UART_PORT
 	int "S3C UART to use for low-level messages"
 	default 0

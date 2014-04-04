@@ -1,7 +1,6 @@
 #ifndef _LINUX_SECCOMP_H
 #define _LINUX_SECCOMP_H
 
-
 #ifdef CONFIG_SECCOMP
 
 #include <linux/thread_info.h>

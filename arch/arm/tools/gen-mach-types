@@ -20,7 +20,6 @@ NF == 3 {
 	  num[nr] = ""; nr++
 	}
 
-
 END	{
 	  printf("/*\n");
 	  printf(" * This was automagically generated from %s!\n", FILENAME);

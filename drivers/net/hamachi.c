@@ -30,7 +30,6 @@
 #define DRV_VERSION	"2.1"
 #define DRV_RELDATE	"Sept 11, 2006"
 
-
 /* A few user-configurable values. */
 
 static int debug = 1;		/* 1 normal messages, 0 quiet .. 7 verbose.  */
@@ -61,7 +60,6 @@ static int rx_copybreak;
 	Add 2 to disable parity detection.
 */
 static int force32;
-
 
 /* Used to pass the media type, etc.
    These exist for driver interoperability.
@@ -171,7 +169,6 @@ KERN_INFO DRV_NAME ".c:v" DRV_VERSION " " DRV_RELDATE "  Written by Donald Becke
 "   Some modifications by Eric kasten <kasten@nscl.msu.edu>\n"
 "   Further modifications by Keith Underwood <keithu@parl.clemson.edu>\n";
 
-
 /* IP_MF appears to be only defined in <netinet/ip.h>, however,
    we need it for hardware checksumming support.  FYI... some of
    the definitions in <netinet/ip.h> conflict/duplicate those in
@@ -204,7 +201,6 @@ KERN_INFO DRV_NAME ".c:v" DRV_VERSION " " DRV_RELDATE "  Written by Donald Becke
 #define cpu_to_leXX(addr)	cpu_to_le32(addr)
 #define leXX_to_cpu(addr)	le32_to_cpu(addr)
 #endif
-
 
 /*
 				Theory of Operation
@@ -575,7 +571,6 @@ static const struct net_device_ops hamachi_netdev_ops = {
 	.ndo_do_ioctl		= netdev_ioctl,
 };
 
-
 static int __devinit hamachi_init_one (struct pci_dev *pdev,
 				    const struct pci_device_id *ent)
 {
@@ -723,7 +718,6 @@ static int __devinit hamachi_init_one (struct pci_dev *pdev,
 	hmp->tx_int_var = tx_int_var >= 0 ? tx_int_var :
 		(min_tx_pkt << 16 | max_tx_gap << 8 | max_tx_latency);
 
-
 	/* The Hamachi-specific entries in the device structure. */
 	dev->netdev_ops = &hamachi_netdev_ops;
 	if (chip_tbl[hmp->chip_id].flags & CanHaveMII)
@@ -850,7 +844,6 @@ static void mdio_write(struct net_device *dev, int phy_id, int location, int val
 			break;
 }
 
-
 static int hamachi_open(struct net_device *dev)
 {
 	struct hamachi_private *hmp = netdev_priv(dev);
@@ -918,7 +911,6 @@ static int hamachi_open(struct net_device *dev)
 
 	if (dev->if_port == 0)
 		dev->if_port = hmp->default_port;
-
 
 	/* Setting the Rx mode will start the Rx process. */
 	/* If someone didn't choose a duplex, default to full-duplex */
@@ -1162,7 +1154,6 @@ static void hamachi_tx_timeout(struct net_device *dev)
 	netif_wake_queue(dev);
 }
 
-
 /* Initialize the Rx and Tx rings, along with various 'dev' bits. */
 static void hamachi_init_ring(struct net_device *dev)
 {
@@ -1210,7 +1201,6 @@ static void hamachi_init_ring(struct net_device *dev)
 	/* Mark the last entry of the ring */
 	hmp->tx_ring[TX_RING_SIZE-1].status_n_length |= cpu_to_le32(DescEndRing);
 }
-
 
 static netdev_tx_t hamachi_start_xmit(struct sk_buff *skb,
 				      struct net_device *dev)
@@ -1367,7 +1357,6 @@ static irqreturn_t hamachi_interrupt(int irq, void *dev_instance)
 			}
 		}
 
-
 		/* Abnormal error summary/uncommon events handlers. */
 		if (intr_status &
 			(IntrTxPCIFault | IntrTxPCIErr | IntrRxPCIFault | IntrRxPCIErr |
@@ -1470,7 +1459,6 @@ static int hamachi_rx(struct net_device *dev)
 			u32 pfck = *(u32 *) &buf_addr[data_size - 8];
 #endif
 
-
 #ifndef final_version
 			if (hamachi_debug > 4)
 				printk(KERN_DEBUG "  hamachi_rx() normal Rx pkt length %d"
@@ -1519,7 +1507,6 @@ static int hamachi_rx(struct net_device *dev)
 				hmp->rx_skbuff[entry] = NULL;
 			}
 			skb->protocol = eth_type_trans(skb, dev);
-
 
 #ifdef RX_CHECKSUM
 			/* TCP or UDP on ipv4, DIX encoding */
@@ -1900,7 +1887,6 @@ static int netdev_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
 	return rc;
 }
 
-
 static void __devexit hamachi_remove_one (struct pci_dev *pdev)
 {
 	struct net_device *dev = pci_get_drvdata(pdev);
@@ -1946,7 +1932,6 @@ static void __exit hamachi_exit (void)
 {
 	pci_unregister_driver(&hamachi_driver);
 }
-
 
 module_init(hamachi_init);
 module_exit(hamachi_exit);

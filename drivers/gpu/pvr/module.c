@@ -169,7 +169,6 @@ struct ion_client *gpsIONClient;
 EXPORT_SYMBOL(gpsIONClient);
 #endif
 
-
 EXPORT_SYMBOL(PVRGetDisplayClassJTable);
 EXPORT_SYMBOL(PVRGetBufferClassJTable);
 
@@ -328,7 +327,6 @@ static int __devinit PVRSRVDriverProbe(LDM_DEV *pDevice, const struct pci_device
 	return 0;
 }
 
-
 #if defined (PVR_LDM_PLATFORM_MODULE)
 static int PVRSRVDriverRemove(LDM_DEV *pDevice)
 #endif
@@ -376,7 +374,6 @@ static void __devexit PVRSRVDriverRemove(LDM_DEV *pDevice)
 }
 #endif
 
-
 #if defined(PVR_LDM_MODULE) || defined(PVR_DRI_DRM_PLATFORM_DEV)
 #if defined(SUPPORT_DRI_DRM) && !defined(PVR_DRI_DRM_PLATFORM_DEV) && \
 	!defined(SUPPORT_DRI_DRM_PLUGIN)
@@ -401,7 +398,6 @@ PVR_MOD_STATIC void PVRSRVDriverShutdown(LDM_DEV *pDevice)
 
 #endif
 
-
 #if defined(PVR_LDM_MODULE) || defined(SUPPORT_DRI_DRM)
 #if defined(SUPPORT_DRI_DRM) && !defined(PVR_DRI_DRM_PLATFORM_DEV) && \
 	!defined(SUPPORT_DRI_DRM_PLUGIN)
@@ -421,7 +417,6 @@ PVR_MOD_STATIC int PVRSRVDriverSuspend(LDM_DEV *pDevice, pm_message_t state)
 	return 0;
 }
 
-
 #if defined(SUPPORT_DRI_DRM) && !defined(PVR_DRI_DRM_PLATFORM_DEV) && \
 	!defined(SUPPORT_DRI_DRM_PLUGIN)
 int PVRSRVDriverResume(struct drm_device *pDevice)
@@ -440,7 +435,6 @@ PVR_MOD_STATIC int PVRSRVDriverResume(LDM_DEV *pDevice)
 	return 0;
 }
 #endif
-
 
 #if defined(DEBUG) && defined(PVR_MANUAL_POWER_CONTROL) && !defined(SUPPORT_DRI_DRM)
 IMG_INT PVRProcSetPowerLevel(struct file *file, const IMG_CHAR *buffer, IMG_UINT32 count, IMG_VOID *data)
@@ -548,7 +542,6 @@ err_unlock:
 	return iRet;
 }
 
-
 #if defined(SUPPORT_DRI_DRM)
 void PVRSRVRelease(void *pvPrivData)
 #else
@@ -575,7 +568,6 @@ static int PVRSRVRelease(struct inode unref__ * pInode, struct file *pFile)
 		{
 			PVRSRV_KERNEL_MEM_INFO *psKernelMemInfo;
 
-
 			if(PVRSRVLookupHandle(KERNEL_HANDLE_BASE,
 								  (IMG_PVOID *)&psKernelMemInfo,
 								  psPrivateData->hKernelMemInfo,
@@ -586,7 +578,6 @@ static int PVRSRVRelease(struct inode unref__ * pInode, struct file *pFile)
 				goto err_unlock;
 			}
 
-
 			if(FreeMemCallBackCommon(psKernelMemInfo, 0,
 									 PVRSRV_FREE_CALLBACK_ORIGIN_EXTERNAL) != PVRSRV_OK)
 			{
@@ -595,7 +586,6 @@ static int PVRSRVRelease(struct inode unref__ * pInode, struct file *pFile)
 				goto err_unlock;
 			}
 		}
-
 
 		gui32ReleasePID = psPrivateData->ui32OpenPID;
 		PVRSRVProcessDisconnect(psPrivateData->ui32OpenPID);
@@ -618,7 +608,6 @@ err_unlock:
 	return err;
 #endif
 }
-
 
 #if defined(SUPPORT_DRI_DRM)
 int PVRCore_Init(void)
@@ -798,7 +787,6 @@ init_failed:
 	return error;
 
 }
-
 
 #if defined(SUPPORT_DRI_DRM)
 void PVRCore_Cleanup(void)

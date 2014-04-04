@@ -870,5 +870,3 @@ static void word_memcpy_fromcard(void *tp, unsigned long fp, int count)
 	while (count--)
 		*to++ = *from++;
 }
-
-

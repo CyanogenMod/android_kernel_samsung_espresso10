@@ -285,4 +285,3 @@ EXPORT_SYMBOL(sys_imageblit);
 MODULE_AUTHOR("Antonino Daplas <adaplas@pol.net>");
 MODULE_DESCRIPTION("1-bit/8-bit to 1-32 bit color expansion (sys-to-sys)");
 MODULE_LICENSE("GPL");
-

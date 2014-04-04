@@ -2,13 +2,13 @@
  *  'Standard' SDIO HOST CONTROLLER driver
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -36,7 +36,6 @@
 #include <bcmsdbus.h>	/* bcmsdh to/from specific controller APIs */
 #include <sdiovar.h>	/* ioctl/iovars */
 #include <pcicfg.h>
-
 
 #define SD_PAGE_BITS	12
 #define SD_PAGE 	(1 << SD_PAGE_BITS)
@@ -98,7 +97,6 @@ static void sd_create_adma_descriptor(sdioh_info_t *sd,
 static void sd_dump_adma_dscr(sdioh_info_t *sd);
 static void sdstd_dumpregs(sdioh_info_t *sd);
 
-
 /*
  * Private register access routines.
  */
@@ -142,7 +140,6 @@ sdstd_mod_reg16(sdioh_info_t *sd, uint reg, int16 mask, uint16 val)
 	data |= (val & mask);
 	*(volatile uint16 *)(sd->mem_space + reg) = (uint16)data;
 }
-
 
 /* 32 bit PCI regs */
 static uint32
@@ -705,7 +702,6 @@ sdioh_iovar_op(sdioh_info_t *si, const char *name,
 		break;
 	}
 
-
 	default:
 		bcmerror = BCME_UNSUPPORTED;
 		break;
@@ -1184,8 +1180,6 @@ sdstd_check_errs(sdioh_info_t *sdioh_info, uint32 cmd, uint32 arg)
 	return ERROR;
 }
 
-
-
 /*
  * Private/Static work routines
  */
@@ -1404,7 +1398,6 @@ sdstd_host_init(sdioh_info_t *sd)
 		OSL_PCI_READ_CONFIG(sd->osh, PCI_CFG_BAR0 + (4*(full_slot + first_bar)), 4),
 		sd->mem_space));
 
-
 	sd->adapter_slot = full_slot;
 
 	sd->version = sdstd_rreg16(sd, SD_HostControllerVersion) & 0xFF;
@@ -1428,7 +1421,6 @@ sdstd_host_init(sdioh_info_t *sd)
 	sd->curr_caps = sdstd_rreg(sd, SD_MaxCurCap);
 
 	sdstd_set_dma_mode(sd, sd->sd_dma_mode);
-
 
 	sdstd_reset(sd, 1, 0);
 
@@ -1482,7 +1474,6 @@ sdstd_client_init(sdioh_info_t *sd)
 	uint32 cmd_arg, cmd_rsp;
 	int status;
 	uint8 fn_ints;
-
 
 	sd_trace(("%s: Powering up slot %d\n", __FUNCTION__, sd->adapter_slot));
 
@@ -1613,7 +1604,6 @@ sdstd_set_highspeed_mode(sdioh_info_t *sd, bool HSMode)
 	uint8 reg8;
 
 	reg8 = sdstd_rreg8(sd, SD_HostCntrl);
-
 
 	if (HSMode == TRUE) {
 		if (sd_hiok && (GFIELD(sd->caps, CAP_HIGHSPEED)) == 0) {
@@ -1756,7 +1746,6 @@ sdstd_set_dma_mode(sdioh_info_t *sd, int8 dma_mode)
 
 	return BCME_OK;
 }
-
 
 bool
 sdstd_start_clock(sdioh_info_t *sd, uint16 new_sd_divisor)
@@ -2032,7 +2021,6 @@ sdstd_card_regread(sdioh_info_t *sd, int func, uint32 regaddr, int regsize, uint
 	int status;
 	uint32 cmd_arg;
 	uint32 rsp5;
-
 
 	cmd_arg = 0;
 
@@ -2328,7 +2316,6 @@ sdstd_cmd_issue(sdioh_info_t *sdioh_info, bool use_dma, uint32 cmd, uint32 arg)
 	uint32 cmd_arg;
 	uint16 xfer_reg = 0;
 
-
 	if ((sdioh_info->sd_mode == SDIOH_MODE_SPI) &&
 	    ((cmd == SDIOH_CMD_3) || (cmd == SDIOH_CMD_7) || (cmd == SDIOH_CMD_15))) {
 		sd_err(("%s: Cmd %d is not for SPI\n", __FUNCTION__, cmd));
@@ -2347,7 +2334,6 @@ sdstd_cmd_issue(sdioh_info_t *sdioh_info, bool use_dma, uint32 cmd, uint32 arg)
 			ASSERT(0);
 		return ERROR;
 	}
-
 
 	cmd_reg = 0;
 	switch (cmd) {
@@ -2634,7 +2620,6 @@ sdstd_cmd_issue(sdioh_info_t *sdioh_info, bool use_dma, uint32 cmd, uint32 arg)
 	return SUCCESS;
 }
 
-
 static int
 sdstd_card_buf(sdioh_info_t *sd, int rw, int func, bool fifo, uint32 addr, int nbytes, uint32 *data)
 {
@@ -2873,7 +2858,6 @@ set_client_block_size(sdioh_info_t *sd, int func, int block_size)
 	int base;
 	int err = 0;
 
-
 	sd_err(("%s: Setting block size %d, func %d\n", __FUNCTION__, block_size, func));
 	sd->client_block_size[func] = block_size;
 
@@ -2913,7 +2897,6 @@ sdioh_sdio_reset(sdioh_info_t *si)
 	si->card_init_done = FALSE;
 	return sdstd_client_init(si);
 }
-
 
 static void
 sd_map_dma(sdioh_info_t * sd)
@@ -2986,7 +2969,6 @@ static void sd_fill_dma_data_buf(sdioh_info_t *sd, uint8 data)
 	memset((char *)sd->dma_buf, data, SD_PAGE);
 }
 
-
 static void sd_create_adma_descriptor(sdioh_info_t *sd, uint32 index,
                                       uint32 addr_phys, uint16 length, uint16 flags)
 {
@@ -3026,7 +3008,6 @@ static void sd_create_adma_descriptor(sdioh_info_t *sd, uint32 index,
 			break;
 	}
 }
-
 
 static void sd_dump_adma_dscr(sdioh_info_t *sd)
 {

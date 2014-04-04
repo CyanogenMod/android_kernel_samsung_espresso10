@@ -44,7 +44,6 @@ enum {
 	PWRDM_STATE_PREV,
 };
 
-
 /* pwrdm_list contains all registered struct powerdomains */
 static LIST_HEAD(pwrdm_list);
 
@@ -237,7 +236,6 @@ static int _pwrdm_post_transition_cb(struct powerdomain *pwrdm, void *unused)
 void pwrdm_init(struct powerdomain **pwrdm_list, struct pwrdm_ops *custom_funcs)
 {
 	struct powerdomain **p = NULL;
-
 
 	if (!custom_funcs)
 		WARN(1, "powerdomain: No custom pwrdm functions registered\n");
@@ -1054,7 +1052,6 @@ bool pwrdm_can_ever_lose_context(struct powerdomain *pwrdm)
 
 	return 0;
 }
-
 
 /**
  * pwrdm_wakeuplat_set_constraint - Set powerdomain wakeup latency constraint

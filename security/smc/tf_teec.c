@@ -241,8 +241,6 @@ void TEEC_finish_operation(TEEC_Operation *operation)
 	}
 }
 
-
-
 TEEC_Result TEEC_InitializeContext(const char *name,
 				   TEEC_Context *context)
 {

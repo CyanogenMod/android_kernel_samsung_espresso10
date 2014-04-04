@@ -15,7 +15,7 @@
  *  Rewritten for 2.6 by Cesar Eduardo Barros
  *
  *  A datasheet for this chip can be found at
- *  http://www.silan.com.cn/english/product/pdf/SC92031AY.pdf 
+ *  http://www.silan.com.cn/english/product/pdf/SC92031AY.pdf
  */
 
 /* Note about set_mac_address: I don't know how to change the hardware
@@ -1382,7 +1382,6 @@ static const struct ethtool_ops sc92031_ethtool_ops = {
 	.get_sset_count		= sc92031_ethtool_get_sset_count,
 	.get_ethtool_stats	= sc92031_ethtool_get_ethtool_stats,
 };
-
 
 static const struct net_device_ops sc92031_netdev_ops = {
 	.ndo_get_stats		= sc92031_get_stats,

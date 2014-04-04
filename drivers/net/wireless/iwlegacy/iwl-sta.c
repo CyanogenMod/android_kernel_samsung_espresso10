@@ -762,7 +762,6 @@ int iwl_legacy_send_lq_cmd(struct iwl_priv *priv, struct iwl_rxon_context *ctx,
 	if (WARN_ON(lq->sta_id == IWL_INVALID_STATION))
 		return -EINVAL;
 
-
 	spin_lock_irqsave(&priv->sta_lock, flags_spin);
 	if (!(priv->stations[lq->sta_id].used & IWL_STA_DRIVER_ACTIVE)) {
 		spin_unlock_irqrestore(&priv->sta_lock, flags_spin);

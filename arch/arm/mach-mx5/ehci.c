@@ -153,4 +153,3 @@ error:
 	iounmap(usb_base);
 	return ret;
 }
-

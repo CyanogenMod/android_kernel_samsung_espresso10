@@ -41,6 +41,7 @@
 #include <video/omapdss.h>
 #include <plat/clock.h>
 #include <plat/omap_apps_brd_id.h>
+#include <plat/omap_hwmod.h>
 
 #include "dss.h"
 #include "dss_features.h"
@@ -531,7 +532,6 @@ static void print_irq_status(u32 status)
 	if ((status & ~DSI_IRQ_CHANNEL_MASK) == 0)
 		return;
 #endif
-	printk(KERN_DEBUG "DSI IRQ: 0x%x: ", status);
 
 #define PIS(x) \
 	if (status & DSI_IRQ_##x) \
@@ -569,7 +569,6 @@ static void print_irq_status_vc(int channel, u32 status)
 	if ((status & ~DSI_VC_IRQ_PACKET_SENT) == 0)
 		return;
 #endif
-	printk(KERN_DEBUG "DSI VC(%d) IRQ 0x%x: ", channel, status);
 
 #define PIS(x) \
 	if (status & DSI_VC_IRQ_##x) \
@@ -593,8 +592,6 @@ static void print_irq_status_cio(u32 status)
 {
 	if (status == 0)
 		return;
-
-	printk(KERN_DEBUG "DSI CIO IRQ 0x%x: ", status);
 
 #define PIS(x) \
 	if (status & DSI_CIO_IRQ_##x) \
@@ -1157,8 +1154,6 @@ static void _dsi_print_reset_status(struct platform_device *dsidev)
 	 * I/O. */
 	l = dsi_read_reg(dsidev, DSI_DSIPHY_CFG5);
 
-	printk(KERN_DEBUG "DSI resets: ");
-
 	l = dsi_read_reg(dsidev, DSI_PLL_STATUS);
 	printk("PLL (%d) ", FLD_GET(l, 0, 0));
 
@@ -1194,6 +1189,13 @@ static inline int dsi_if_enable(struct platform_device *dsidev, bool enable)
 
 	enable = enable ? 1 : 0;
 	REG_FLD_MOD(dsidev, DSI_CTRL, enable, 0, 0); /* IF_EN */
+
+#if (CONFIG_OMAP2_DSS_DSI_SAMSUNG_DELAY_DISABLE_IF > 0)
+	/* Workaround to flush very long packets in TX fifo after disabling */
+	if (!enable)
+		usleep_range(CONFIG_OMAP2_DSS_DSI_SAMSUNG_DELAY_DISABLE_IF,
+			     CONFIG_OMAP2_DSS_DSI_SAMSUNG_DELAY_DISABLE_IF + 1);
+#endif
 
 	if (wait_for_bit_change(dsidev, DSI_CTRL, 0, enable) != enable) {
 			DSSERR("Failed to set dsi_if_enable to %d\n", enable);
@@ -2863,7 +2865,6 @@ static int dsi_vc_config_vp(struct platform_device *dsidev, int channel)
 	return 0;
 }
 
-
 void omapdss_dsi_vc_enable_hs(struct omap_dss_device *dssdev, int channel,
 		bool enable)
 {
@@ -3077,6 +3078,8 @@ static int dsi_vc_send_long(struct platform_device *dsidev, int channel,
 	int r = 0;
 	u8 b1, b2, b3, b4;
 
+	len += CONFIG_OMAP2_DSS_DSI_SAMSUNG_NUM_DUMMY_PAYLOAD * 4;
+
 	DSSDBG("dsi_vc_send_long, %d bytes\n", len);
 
 	/* len + header */
@@ -3088,6 +3091,7 @@ static int dsi_vc_send_long(struct platform_device *dsidev, int channel,
 	dsi_vc_config_l4(dsidev, channel);
 
 	dsi_vc_write_long_header(dsidev, channel, data_type, len, ecc);
+	len -= CONFIG_OMAP2_DSS_DSI_SAMSUNG_NUM_DUMMY_PAYLOAD * 4;
 
 	p = data;
 	for (i = 0; i < len >> 2; i++) {
@@ -3124,6 +3128,9 @@ static int dsi_vc_send_long(struct platform_device *dsidev, int channel,
 
 		dsi_vc_write_long_payload(dsidev, channel, b1, b2, b3, 0);
 	}
+
+	for (i = 0; i < CONFIG_OMAP2_DSS_DSI_SAMSUNG_NUM_DUMMY_PAYLOAD; i++)
+		dsi_vc_write_long_payload(dsidev, channel, 0, 0, 0, 0);
 
 	/* wait for IRQ for long packet transmission confirmation */
 	for (i = 0; i < 1000; i++) {
@@ -3399,7 +3406,6 @@ int dsi_vc_dcs_read_2(struct omap_dss_device *dssdev, int channel, u8 dcs_cmd,
 }
 EXPORT_SYMBOL(dsi_vc_dcs_read_2);
 
-
 int dsi_vc_gen_write_nosync(struct omap_dss_device *dssdev, int channel,
 		u8 *data, int len)
 {
@@ -3565,7 +3571,6 @@ err:
 
 }
 EXPORT_SYMBOL(dsi_vc_gen_read_2);
-
 
 int dsi_vc_set_max_rx_packet_size(struct omap_dss_device *dssdev, int channel,
 		u16 len)
@@ -3839,6 +3844,7 @@ static int dsi_video_proto_config(struct omap_dss_device *dssdev)
 {
 	struct platform_device *dsidev = dsi_get_dsidev_from_dssdev(dssdev);
 	struct omap_video_timings *timings = &dssdev->panel.timings;
+	struct omap_display_platform_data *dss_plat_data;
 	struct omap_dsi_timings t;
 	int buswidth = 0;
 	u32 r;
@@ -3900,6 +3906,11 @@ static int dsi_video_proto_config(struct omap_dss_device *dssdev)
 	r = FLD_MOD(r, 1, 22, 22);	/* HBP_BLANKING */
 	r = FLD_MOD(r, 1, 23, 23);	/* HSA_BLANKING */
 	dsi_write_reg(dsidev, DSI_CTRL, r);
+
+	dss_plat_data = dsidev->dev.platform_data;
+	dss_plat_data->device_scale(&dssdev->dev,
+			omap_hwmod_name_get_dev("dss_dispc"),
+			dssdev->panel.timings.pixel_clock * 1000);
 
 	if (!dssdev->skip_init) {
 		dsi_vc_initial_config(dsidev, 0);
@@ -4114,7 +4125,6 @@ static void dsi_proto_timings(struct omap_dss_device *dssdev)
 	DSSDBG("enter_hs_mode_lat %u, exit_hs_mode_lat %u\n",
 			enter_hs_mode_lat, exit_hs_mode_lat);
 }
-
 
 #define DSI_DECL_VARS \
 	int __dsi_cb = 0; u32 __dsi_cv = 0;
@@ -4526,7 +4536,6 @@ static int dsi_display_init_dispc(struct omap_dss_device *dssdev)
 	dispc_set_lcd_display_type(dssdev->manager->id,
 			OMAP_DSS_LCD_DISPLAY_TFT);
 
-
 	dispc_set_tft_data_lines(dssdev->manager->id, dssdev->ctrl.pixel_size);
 
 	if (dssdev->phy.dsi.type == OMAP_DSS_DSI_TYPE_CMD_MODE) {
@@ -4629,7 +4638,6 @@ static int dsi_save_dsi_clocks(struct omap_dss_device *dssdev)
 
 	return 0;
 }
-
 
 static int dsi_configure_dispc_clocks(struct omap_dss_device *dssdev)
 {
@@ -4784,6 +4792,7 @@ int omapdss_dsi_display_enable(struct omap_dss_device *dssdev)
 {
 	struct platform_device *dsidev = dsi_get_dsidev_from_dssdev(dssdev);
 	struct dsi_data *dsi = dsi_get_dsidrv_data(dsidev);
+	struct omap_display_platform_data *dss_plat_data;
 	int r = 0;
 
 	DSSDBG("dsi_display_enable\n");
@@ -4832,6 +4841,9 @@ err_init_dsi:
 	dsi_display_uninit_dispc(dssdev);
 err_init_dispc:
 	dsi_enable_pll_clock(dsidev, 0);
+	dss_plat_data = dsidev->dev.platform_data;
+	dss_plat_data->device_scale(&dssdev->dev,
+			omap_hwmod_name_get_dev("dss_dispc"), 0);
 	dsi_runtime_put(dsidev);
 err_get_dsi:
 	omap_dss_stop_device(dssdev);
@@ -4847,6 +4859,7 @@ void omapdss_dsi_display_disable(struct omap_dss_device *dssdev,
 {
 	struct platform_device *dsidev = dsi_get_dsidev_from_dssdev(dssdev);
 	struct dsi_data *dsi = dsi_get_dsidrv_data(dsidev);
+	struct omap_display_platform_data *dss_plat_data;
 
 	DSSDBG("dsi_display_disable\n");
 
@@ -4857,6 +4870,10 @@ void omapdss_dsi_display_disable(struct omap_dss_device *dssdev,
 	dsi_display_uninit_dispc(dssdev);
 
 	dsi_display_uninit_dsi(dssdev, disconnect_lanes, enter_ulps);
+
+	dss_plat_data = dsidev->dev.platform_data;
+	dss_plat_data->device_scale(&dssdev->dev,
+			omap_hwmod_name_get_dev("dss_dispc"), 0);
 
 	dsi_runtime_put(dsidev);
 #ifdef CONFIG_FB_OMAP_BOOTLOADER_INIT

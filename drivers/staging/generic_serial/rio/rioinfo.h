@@ -45,7 +45,6 @@ struct RioHostInfo {
 	*Sg;			/* pointer to default term characteristics */
 };
 
-
 /* Mode in rio device info */
 #define INTERRUPTED_MODE	0x01	/* Interrupt is generated */
 #define POLLED_MODE		0x02	/* No interrupt */
@@ -53,7 +52,6 @@ struct RioHostInfo {
 
 #define WORD_ACCESS_MODE	0x10	/* Word Access Mode */
 #define BYTE_ACCESS_MODE	0x20	/* Byte Access Mode */
-
 
 /* Bus type that RIO supports */
 #define ISA_BUS			0x01	/* The card is ISA */

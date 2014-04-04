@@ -359,7 +359,6 @@ static struct clk gpt0_clk = {
 	.recalc = &follow_parent,
 };
 
-
 /* Note: gpt0 and gpt1 share same parent clocks */
 /* gpt parent select structure */
 static struct pclk_sel gpt1_pclk_sel = {

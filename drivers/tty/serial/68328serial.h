@@ -11,7 +11,6 @@
 #ifndef _MC683XX_SERIAL_H
 #define _MC683XX_SERIAL_H
 
-
 struct serial_struct {
 	int	type;
 	int	line;
@@ -39,7 +38,7 @@ struct serial_struct {
 /*
  * Definitions for S_struct (and serial_struct) flags field
  */
-#define S_HUP_NOTIFY 0x0001 /* Notify getty on hangups and closes 
+#define S_HUP_NOTIFY 0x0001 /* Notify getty on hangups and closes
 				   on the callout port */
 #define S_FOURPORT  0x0002	/* Set OU1, OUT2 per AST Fourport settings */
 #define S_SAK	0x0004	/* Secure Attention Key (Orange book) */
@@ -77,7 +76,7 @@ struct serial_struct {
 /*
  * I believe this is the optimal setting that reduces the number of interrupts.
  * At high speeds the output might become a little "bursted" (use USTCNT_TXHE
- * if that bothers you), but in most cases it will not, since we try to 
+ * if that bothers you), but in most cases it will not, since we try to
  * transmit characters every time rs_interrupt is called. Thus, quite often
  * you'll see that a receive interrupt occures before the transmit one.
  *                                  -- Vladimir Gurevich
@@ -115,7 +114,7 @@ struct serial_struct {
 
 /*
  * This is our internal structure for each serial port's state.
- * 
+ *
  * Many fields are paralleled by the structure used by the serial_struct
  * structure.
  *
@@ -163,7 +162,6 @@ struct m68k_serial {
 	wait_queue_head_t	close_wait;
 };
 
-
 #define SERIAL_MAGIC 0x5301
 
 /*
@@ -177,7 +175,7 @@ struct m68k_serial {
  */
 #define RS_EVENT_WRITE_WAKEUP	0
 
-/* 
+/*
  * Define the number of ports supported and their irqs.
  */
 #define NR_PORTS 1

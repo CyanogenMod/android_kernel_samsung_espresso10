@@ -36,7 +36,6 @@ extern struct s_hdw_info hdw_info[MAX_BOARDS];
 /* procfs stuff                                                     */
 /********************************************************************/
 
-
 void
 sbecom_proc_brd_cleanup (ci_t * ci)
 {
@@ -49,7 +48,6 @@ sbecom_proc_brd_cleanup (ci_t * ci)
         ci->dir_dev = NULL;
     }
 }
-
 
 static int
 sbecom_proc_get_sbe_info (char *buffer, char **start, off_t offset,
@@ -352,6 +350,5 @@ sbecom_proc_brd_init (ci_t * ci)
 }
 
 #endif                          /*** CONFIG_PROC_FS ***/
-
 
 /*** End-of-File ***/

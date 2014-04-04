@@ -10,11 +10,9 @@
 #include <sys/socket.h>
 #include <netinet/tcp.h>
 
-
 /* -------------------------------------------------- */
 /* Define Protocol Format                             */
 /* -------------------------------------------------- */
-
 
 /* ---------------------------------------------------------------------- */
 /* Common header for all the kinds of PDUs. */
@@ -38,7 +36,6 @@ struct op_common {
 	pack_uint32_t(pack, &(op_common)->status );\
 } while (0)
 
-
 /* ---------------------------------------------------------------------- */
 /* Dummy Code */
 #define OP_UNSPEC	0x00
@@ -59,7 +56,6 @@ struct op_devinfo_reply {
 	struct usb_device udev;
 	struct usb_interface uinf[];
 } __attribute__((packed));
-
 
 /* ---------------------------------------------------------------------- */
 /* Import a remote USB device. */
@@ -83,8 +79,6 @@ struct op_import_reply {
 	pack_usb_device(pack, &(reply)->udev);\
 } while (0)
 
-
-
 /* ---------------------------------------------------------------------- */
 /* Export a USB device to a remote host. */
 #define OP_EXPORT	0x06
@@ -98,7 +92,6 @@ struct op_export_request {
 struct op_export_reply {
 	int returncode;
 } __attribute__((packed));
-
 
 #define PACK_OP_EXPORT_REQUEST(pack, request)  do {\
 	pack_usb_device(pack, &(request)->udev);\
@@ -128,8 +121,6 @@ struct op_unexport_reply {
 #define PACK_OP_UNEXPORT_REPLY(pack, reply)  do {\
 } while (0)
 
-
-
 /* ---------------------------------------------------------------------- */
 /* Negotiate IPSec encryption key. (still not used) */
 #define OP_CRYPKEY	0x04
@@ -144,7 +135,6 @@ struct op_crypkey_request {
 struct op_crypkey_reply {
 	uint32_t __reserved;
 } __attribute__((packed));
-
 
 /* ---------------------------------------------------------------------- */
 /* Retrieve the list of exported USB devices. */
@@ -171,7 +161,6 @@ struct op_devlist_reply_extra {
 #define PACK_OP_DEVLIST_REPLY(pack, reply)  do {\
 	pack_uint32_t(pack, &(reply)->ndev);\
 } while (0)
-
 
 /* -------------------------------------------------- */
 /* Declare Prototype Function                         */

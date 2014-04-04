@@ -74,7 +74,6 @@ static int __init versatile_pci_slot_ignore(char *str)
 
 __setup("pci_slot_ignore=", versatile_pci_slot_ignore);
 
-
 static void __iomem *__pci_addr(struct pci_bus *bus,
 				unsigned int devfn, int offset)
 {
@@ -302,7 +301,6 @@ int __init pci_versatile_setup(int nr, struct pci_sys_data *sys)
  out:
 	return ret;
 }
-
 
 struct pci_bus * __init pci_versatile_scan_bus(int nr, struct pci_sys_data *sys)
 {

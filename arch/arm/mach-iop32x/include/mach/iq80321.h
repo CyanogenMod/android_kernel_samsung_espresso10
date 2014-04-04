@@ -13,5 +13,4 @@
 #define IQ80321_ROTARY_SW	0xfe8d0000	/* Rotary Switch */
 #define IQ80321_BATT_STAT	0xfe8f0000	/* Battery Status */
 
-
 #endif

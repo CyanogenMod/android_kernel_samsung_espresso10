@@ -1,4 +1,3 @@
-
 /*
  *  rio_linux.h
  *
@@ -20,8 +19,8 @@
  *
  *  RIO serial driver.
  *
- *  Version 1.0 -- July, 1999. 
- * 
+ *  Version 1.0 -- July, 1999.
+ *
  */
 
 #define RIO_NBOARDS        4
@@ -34,7 +33,6 @@
 
 #define RIO_MAGIC 0x12345678
 
-
 struct vpd_prom {
 	unsigned short id;
 	char hwrev;
@@ -46,7 +44,6 @@ struct vpd_prom {
 	char oem_id;
 	char identifier[16];
 };
-
 
 #define RIO_DEBUG_ALL           0xffffffff
 
@@ -73,18 +70,14 @@ struct vpd_prom {
       (I_IUCLC(tty))   ||\
       (L_ISIG(tty)))
 
-
 #endif				/* __KERNEL__ */
 
-
 #define RIO_BOARD_INTR_LOCK  1
-
 
 #ifndef RIOCTL_MISC_MINOR
 /* Allow others to gather this into "major.h" or something like that */
 #define RIOCTL_MISC_MINOR    169
 #endif
-
 
 /* Allow us to debug "in the field" without requiring clients to
    recompile.... */
@@ -127,8 +120,6 @@ struct vpd_prom {
 
 #endif
 
-
-
 #ifdef CONFIG_RIO_OLDPCI
 static inline void __iomem *rio_memcpy_toio(void __iomem *dummy, void __iomem *dest, void *source, int n)
 {
@@ -154,7 +145,6 @@ static inline void __iomem *rio_copy_toio(void __iomem *dest, void *source, int 
 	return dest;
 }
 
-
 static inline void *rio_memcpy_fromio(void *dest, void __iomem *source, int n)
 {
 	char *dst = dest;
@@ -174,14 +164,13 @@ static inline void *rio_memcpy_fromio(void *dest, void __iomem *source, int n)
 
 #define DEBUG 1
 
-
-/* 
+/*
    This driver can spew a whole lot of debugging output at you. If you
    need maximum performance, you should disable the DEBUG define. To
    aid in debugging in the field, I'm leaving the compile-time debug
    features enabled, and disable them "runtime". That allows me to
    instruct people with problems to enable debugging without requiring
-   them to recompile... 
+   them to recompile...
 */
 
 #ifdef DEBUG

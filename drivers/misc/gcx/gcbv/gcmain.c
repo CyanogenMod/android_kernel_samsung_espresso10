@@ -15,7 +15,6 @@
 #include <plat/cpu.h>
 #include "gcmain.h"
 
-
 /*******************************************************************************
  * BLTsville interface exposure.
  */
@@ -45,7 +44,6 @@ void gcbv_init(struct bventry *entry)
 	*entry = ops;
 }
 EXPORT_SYMBOL(gcbv_init);
-
 
 /*******************************************************************************
  * Convert floating point in 0..1 range to an 8-bit value in range 0..255.
@@ -98,7 +96,6 @@ unsigned char gcfp2norm8(float value)
 	return (unsigned char) mantissa;
 }
 
-
 /*******************************************************************************
  * Cache operation wrapper.
  */
@@ -132,7 +129,6 @@ enum bverror gcbvcacheop(int count, struct c2dmrgn rgn[],
 
 	return err;
 }
-
 
 /*******************************************************************************
  * Device init/cleanup.

@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -139,7 +139,7 @@ IMG_VOID SysGetSGXTimingInformation(SGX_TIMING_INFORMATION *psTimingInfo)
 	psTimingInfo->bEnableActivePM = IMG_TRUE;
 #else
 	psTimingInfo->bEnableActivePM = IMG_FALSE;
-#endif 
+#endif
 	psTimingInfo->ui32ActivePowManLatencyms = sgx_apm_latency;
 }
 
@@ -184,7 +184,6 @@ PVRSRV_ERROR EnableSGXClocks(SYS_DATA *psSysData)
 #if !defined(NO_HARDWARE)
 	SYS_SPECIFIC_DATA *psSysSpecData = (SYS_SPECIFIC_DATA *) psSysData->pvSysSpecificData;
 
-	
 	if (atomic_read(&psSysSpecData->sSGXClocksEnabled) != 0)
 	{
 		return PVRSRV_OK;
@@ -209,25 +208,22 @@ PVRSRV_ERROR EnableSGXClocks(SYS_DATA *psSysData)
 #endif
 	SysEnableSGXInterrupts(psSysData);
 
-	
 	atomic_set(&psSysSpecData->sSGXClocksEnabled, 1);
 
-#else	
+#else
 	PVR_UNREFERENCED_PARAMETER(psSysData);
-#endif	
+#endif
 
 	sgx_idle_log_on();
 
 	return PVRSRV_OK;
 }
 
-
 IMG_VOID DisableSGXClocks(SYS_DATA *psSysData)
 {
 #if !defined(NO_HARDWARE)
 	SYS_SPECIFIC_DATA *psSysSpecData = (SYS_SPECIFIC_DATA *) psSysData->pvSysSpecificData;
 
-	
 	if (atomic_read(&psSysSpecData->sSGXClocksEnabled) == 0)
 	{
 		return;
@@ -254,12 +250,11 @@ IMG_VOID DisableSGXClocks(SYS_DATA *psSysData)
 	}
 #endif
 
-	
 	atomic_set(&psSysSpecData->sSGXClocksEnabled, 0);
 
-#else	
+#else
 	PVR_UNREFERENCED_PARAMETER(psSysData);
-#endif	
+#endif
 }
 
 #if (defined(DEBUG) || defined(TIMING)) && !defined(PVR_NO_OMAP_TIMER)
@@ -269,25 +264,21 @@ static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 {
 	PVR_ASSERT(psSysSpecData->psGPTimer == NULL);
 
-	
 	psSysSpecData->psGPTimer = omap_dm_timer_request_specific(GPTIMER_TO_USE);
 	if (psSysSpecData->psGPTimer == NULL)
 	{
-	
+
 		PVR_DPF((PVR_DBG_WARNING, "%s: omap_dm_timer_request_specific failed", __FUNCTION__));
 		return PVRSRV_ERROR_CLOCK_REQUEST_FAILED;
 	}
 
-	
 	omap_dm_timer_set_source(psSysSpecData->psGPTimer, OMAP_TIMER_SRC_SYS_CLK);
 	omap_dm_timer_enable(psSysSpecData->psGPTimer);
 
-	
 	omap_dm_timer_set_load_start(psSysSpecData->psGPTimer, 1, 0);
 
 	omap_dm_timer_start(psSysSpecData->psGPTimer);
 
-	
 	psSysSpecData->sTimerRegPhysBase.uiAddr = SYS_OMAP4430_GP11TIMER_REGS_SYS_PHYS_BASE;
 
 	return PVRSRV_OK;
@@ -297,7 +288,7 @@ static void ReleaseGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 {
 	if (psSysSpecData->psGPTimer != NULL)
 	{
-			
+
 		(void) omap_dm_timer_stop(psSysSpecData->psGPTimer);
 
 		omap_dm_timer_disable(psSysSpecData->psGPTimer);
@@ -310,7 +301,7 @@ static void ReleaseGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 	}
 
 }
-#else	
+#else
 static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 {
 #if defined(PVR_OMAP4_TIMING_PRCM)
@@ -328,7 +319,7 @@ static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 	PVR_ASSERT(psSysSpecData->sTimerRegPhysBase.uiAddr == 0);
 
 #if defined(PVR_OMAP4_TIMING_PRCM)
-	
+
 	psCLK = clk_get(NULL, "gpt11_fck");
 	if (IS_ERR(psCLK))
 	{
@@ -379,9 +370,8 @@ static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 		PVR_DPF((PVR_DBG_ERROR, "EnableSystemClocks: Couldn't enable GPTIMER11 interface clock (%d)", res));
 		goto ExitDisableGPT11FCK;
 	}
-#endif	
+#endif
 
-	
 	sTimerRegPhysBase.uiAddr = SYS_OMAP4430_GP11TIMER_TSICR_SYS_PHYS_BASE;
 	pui32TimerEnable = OSMapPhysToLin(sTimerRegPhysBase,
                   4,
@@ -398,7 +388,6 @@ static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 	{
 		PVR_TRACE(("Setting GPTIMER11 mode to posted (currently is non-posted)"));
 
-		
 		*pui32TimerEnable |= 4;
 	}
 
@@ -407,7 +396,6 @@ static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 		    PVRSRV_HAP_KERNEL_ONLY|PVRSRV_HAP_UNCACHED,
 		    hTimerEnable);
 
-	
 	sTimerRegPhysBase.uiAddr = SYS_OMAP4430_GP11TIMER_ENABLE_SYS_PHYS_BASE;
 	pui32TimerEnable = OSMapPhysToLin(sTimerRegPhysBase,
                   4,
@@ -420,7 +408,6 @@ static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 		goto ExitDisableGPT11ICK;
 	}
 
-	
 	*pui32TimerEnable = 3;
 
 	OSUnMapPhysToLin(pui32TimerEnable,
@@ -440,7 +427,7 @@ ExitDisableGPT11ICK:
 ExitDisableGPT11FCK:
 	clk_disable(psSysSpecData->psGPT11_FCK);
 ExitError:
-#endif	
+#endif
 	eError = PVRSRV_ERROR_CLOCK_REQUEST_FAILED;
 Exit:
 	return eError;
@@ -456,7 +443,6 @@ static void ReleaseGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 		return;
 	}
 
-	
 	pui32TimerDisable = OSMapPhysToLin(psSysSpecData->sTimerRegPhysBase,
 				4,
 				PVRSRV_HAP_KERNEL_ONLY|PVRSRV_HAP_UNCACHED,
@@ -482,10 +468,10 @@ static void ReleaseGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 	clk_disable(psSysSpecData->psGPT11_ICK);
 
 	clk_disable(psSysSpecData->psGPT11_FCK);
-#endif	
+#endif
 }
-#endif	
-#else	
+#endif
+#else
 static PVRSRV_ERROR AcquireGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 {
 	PVR_UNREFERENCED_PARAMETER(psSysSpecData);
@@ -496,7 +482,7 @@ static void ReleaseGPTimer(SYS_SPECIFIC_DATA *psSysSpecData)
 {
 	PVR_UNREFERENCED_PARAMETER(psSysSpecData);
 }
-#endif 
+#endif
 
 PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData)
 {
@@ -522,7 +508,6 @@ IMG_VOID DisableSystemClocks(SYS_DATA *psSysData)
 
 	PVR_TRACE(("DisableSystemClocks: Disabling System Clocks"));
 
-	
 	DisableSGXClocks(psSysData);
 
 	ReleaseGPTimer(psSysSpecData);

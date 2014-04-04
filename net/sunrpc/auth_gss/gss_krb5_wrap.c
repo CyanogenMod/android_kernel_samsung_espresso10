@@ -194,7 +194,6 @@ gss_wrap_kerberos_v1(struct krb5_ctx *kctx, int offset,
 				GSS_KRB5_TOK_HDR_LEN +
 				kctx->gk5e->cksumlength + plainlen, &ptr);
 
-
 	/* ptr now at header described in rfc 1964, section 1.2.1: */
 	ptr[0] = (unsigned char) ((KG_TOK_WRAP_MSG >> 8) & 0xff);
 	ptr[1] = (unsigned char) (KG_TOK_WRAP_MSG & 0xff);
@@ -466,7 +465,6 @@ gss_unwrap_kerberos_v2(struct krb5_ctx *kctx, int offset, struct xdr_buf *buf)
 	u8		decrypted_hdr[GSS_KRB5_TOK_HDR_LEN];
 	unsigned int	movelen;
 
-
 	dprintk("RPC:       %s\n", __func__);
 
 	if (kctx->gk5e->decrypt_v2 == NULL)
@@ -584,4 +582,3 @@ gss_unwrap_kerberos(struct gss_ctx *gctx, int offset, struct xdr_buf *buf)
 		return gss_unwrap_kerberos_v2(kctx, offset, buf);
 	}
 }
-

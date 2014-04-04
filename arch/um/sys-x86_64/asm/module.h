@@ -17,4 +17,3 @@ struct mod_arch_specific
 #define Elf_Ehdr Elf64_Ehdr
 
 #endif
-

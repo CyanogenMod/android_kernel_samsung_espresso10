@@ -123,7 +123,6 @@ void ath_hw_setbssidmask(struct ath_common *common)
 }
 EXPORT_SYMBOL(ath_hw_setbssidmask);
 
-
 /**
  * ath_hw_cycle_counters_update - common function to update cycle counters
  *

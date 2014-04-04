@@ -23,16 +23,5 @@ obj-$(CONFIG_DRM_KMS_HELPER) += drm_kms_helper.o
 CFLAGS_drm_trace_points.o := -I$(src)
 
 obj-$(CONFIG_DRM)	+= drm.o
-obj-$(CONFIG_DRM_TTM)	+= ttm/
-obj-$(CONFIG_DRM_TDFX)	+= tdfx/
-obj-$(CONFIG_DRM_R128)	+= r128/
-obj-$(CONFIG_DRM_RADEON)+= radeon/
-obj-$(CONFIG_DRM_MGA)	+= mga/
-obj-$(CONFIG_DRM_I810)	+= i810/
-obj-$(CONFIG_DRM_I915)  += i915/
-obj-$(CONFIG_DRM_SIS)   += sis/
-obj-$(CONFIG_DRM_SAVAGE)+= savage/
 obj-$(CONFIG_DRM_VMWGFX)+= vmwgfx/
-obj-$(CONFIG_DRM_VIA)	+=via/
-obj-$(CONFIG_DRM_NOUVEAU) +=nouveau/
 obj-y			+= i2c/

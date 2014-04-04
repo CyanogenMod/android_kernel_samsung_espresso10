@@ -595,7 +595,6 @@ mptfc_dump_lun_info(MPT_ADAPTER *ioc, struct fc_rport *rport, struct scsi_device
 		(unsigned long long)nn));
 }
 
-
 /*
  *	OS entry point to allow host driver to alloc memory
  *	for each scsi device. Called once per device the bus scan.
@@ -628,7 +627,6 @@ mptfc_slave_alloc(struct scsi_device *sdev)
 		return -ENOMEM;
 	}
 
-
 	sdev->hostdata = vdevice;
 	vtarget = starget->hostdata;
 
@@ -641,7 +639,6 @@ mptfc_slave_alloc(struct scsi_device *sdev)
 	vdevice->lun = sdev->lun;
 
 	vtarget->num_luns++;
-
 
 	mptfc_dump_lun_info(ioc, rport, sdev, vtarget);
 
@@ -979,7 +976,6 @@ mptfc_SetFcPortPage1_defaults(MPT_ADAPTER *ioc)
 		mptfc_WriteFcPortPage1(ioc, ii);
 	}
 }
-
 
 static void
 mptfc_init_host_attr(MPT_ADAPTER *ioc,int portnum)
@@ -1419,7 +1415,6 @@ mptfc_ioc_reset(MPT_ADAPTER *ioc, int reset_phase)
 	rc = mptscsih_ioc_reset(ioc,reset_phase);
 	if ((ioc->bus_type != FC) || (!rc))
 		return rc;
-
 
 	dtmprintk(ioc, printk(MYIOC_s_DEBUG_FMT
 		": IOC %s_reset routed to FC host driver!\n",ioc->name,

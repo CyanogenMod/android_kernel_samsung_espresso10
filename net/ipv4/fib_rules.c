@@ -102,7 +102,6 @@ errout:
 	return err;
 }
 
-
 static int fib4_rule_match(struct fib_rule *rule, struct flowi *fl, int flags)
 {
 	struct fib4_rule *r = (struct fib4_rule *) rule;

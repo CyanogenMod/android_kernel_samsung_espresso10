@@ -304,7 +304,6 @@ static bool get_features(struct usb_device *dev, struct hanwang *hanwang)
 	return false;
 }
 
-
 static int hanwang_probe(struct usb_interface *intf, const struct usb_device_id *id)
 {
 	struct usb_device *dev = interface_to_usbdev(intf);

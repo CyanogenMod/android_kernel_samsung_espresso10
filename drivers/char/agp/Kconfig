@@ -74,8 +74,6 @@ config AGP_INTEL
 	  E7205 and E7505 chipsets and full support for the 810, 815, 830M,
 	  845G, 852GM, 855GM, 865G and I915 integrated graphics chipsets.
 
-
-
 config AGP_NVIDIA
 	tristate "NVIDIA nForce/nForce2 chipset support"
 	depends on AGP && X86_32
@@ -91,7 +89,6 @@ config AGP_SIS
 	  X on Silicon Integrated Systems [SiS] chipsets.
 
 	  Note that 5591/5592 AGP chipsets are NOT supported.
-
 
 config AGP_SWORKS
 	tristate "Serverworks LE/HE chipset support"
@@ -154,4 +151,3 @@ config AGP_SGI_TIOCA
         help
           This option gives you AGP GART support for the SGI TIO chipset
           for IA64 processors.
-

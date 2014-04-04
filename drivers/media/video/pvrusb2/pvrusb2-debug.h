@@ -55,7 +55,6 @@ extern int pvrusb2_debug;
 #define PVR2_TRACE_GPIO       (1 << 27) /* GPIO state bit changes */
 #define PVR2_TRACE_DVB_FEED   (1 << 28) /* DVB transport feed debug */
 
-
 #endif /* __PVRUSB2_HDW_INTERNAL_H */
 
 /*

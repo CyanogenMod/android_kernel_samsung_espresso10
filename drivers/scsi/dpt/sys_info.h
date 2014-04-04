@@ -49,7 +49,6 @@
  *
  *****************************************************************************/
 
-
 /*Include Files ------------------------------------------------------------- */
 
 #include        "osd_util.h"
@@ -61,7 +60,6 @@
 #pragma pack(1)
 #endif  /* aix */
 #endif  // no unpack
-
 
 /*struct - driveParam_S - start
  *===========================================================================
@@ -97,7 +95,6 @@
    } driveParam_S;
 #endif
 /*driveParam_S - end */
-
 
 /*struct - sysInfo_S - start
  *===========================================================================
@@ -176,7 +173,6 @@
 #endif
 /*sysInfo_S - end */
 
-
 /*struct - DOS_Info_S - start
  *===========================================================================
  *
@@ -216,7 +212,6 @@
    } DOS_Info_S;
 #endif
 /*DOS_Info_S - end */
-
 
 /*struct - Netware_Info_S - start
  *===========================================================================
@@ -265,7 +260,6 @@
 #endif
 /*Netware_Info_S - end */
 
-
 /*struct - OS2_Info_S - start
  *===========================================================================
  *
@@ -298,7 +292,6 @@
    } OS2_Info_S;
 #endif
 /*OS2_Info_S - end */
-
 
 /*struct - WinNT_Info_S - start
  *===========================================================================
@@ -333,7 +326,6 @@
 #endif
 /*WinNT_Info_S - end */
 
-
 /*struct - SCO_Info_S - start
  *===========================================================================
  *
@@ -366,7 +358,6 @@
    } SCO_Info_S;
 #endif
 /*SCO_Info_S - end */
-
 
 /*struct - USL_Info_S - start
  *===========================================================================
@@ -401,7 +392,6 @@
 #endif
 /*USL_Info_S - end */
 
-
   /* Restore default structure packing */
 #ifndef NO_UNPACK
 #if defined (_DPT_AIX)
@@ -414,4 +404,3 @@
 #endif  // no unpack
 
 #endif  // __SYS_INFO_H
-

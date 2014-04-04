@@ -226,7 +226,6 @@ static void feroceon_l2_flush_range(unsigned long start, unsigned long end)
 	dsb();
 }
 
-
 /*
  * Routines to disable and re-enable the D-cache and I-cache at run
  * time.  These are necessary because the L2 cache can only be enabled

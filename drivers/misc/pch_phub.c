@@ -703,7 +703,6 @@ static int __devinit pch_phub_probe(struct pci_dev *pdev,
 
 	chip->pch_phub_base_address = pci_iomap(pdev, 1, 0);
 
-
 	if (chip->pch_phub_base_address == 0) {
 		dev_err(&pdev->dev, "%s : pci_iomap FAILED", __func__);
 		ret = -ENOMEM;
@@ -789,11 +788,11 @@ static int __devinit pch_phub_probe(struct pci_dev *pdev,
                                            &dev_attr_pch_mac.attr);
                 if (retval)
                         goto err_sysfs_create;
- 
+
                 retval = sysfs_create_bin_file(&pdev->dev.kobj, &pch_bin_attr);
                 if (retval)
                         goto exit_bin_attr;
- 
+
                 /* set the prefech value */
                 iowrite32(0x000affaa, chip->pch_phub_base_address + 0x14);
                 /* set the interrupt delay value */

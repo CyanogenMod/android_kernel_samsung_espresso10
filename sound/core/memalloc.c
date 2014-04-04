@@ -1,7 +1,7 @@
 /*
  *  Copyright (c) by Jaroslav Kysela <perex@perex.cz>
  *                   Takashi Iwai <tiwai@suse.de>
- * 
+ *
  *  Generic memory allocators
  *
  *
@@ -34,11 +34,9 @@
 #include <linux/mutex.h>
 #include <sound/memalloc.h>
 
-
 MODULE_AUTHOR("Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>");
 MODULE_DESCRIPTION("Memory allocator for ALSA system.");
 MODULE_LICENSE("GPL");
-
 
 /*
  */
@@ -165,7 +163,6 @@ static void snd_free_dev_pages(struct device *dev, size_t size, void *ptr,
  *
  */
 
-
 /**
  * snd_dma_alloc_pages - allocate the buffer area according to the given type
  * @type: the DMA buffer type
@@ -175,7 +172,7 @@ static void snd_free_dev_pages(struct device *dev, size_t size, void *ptr,
  *
  * Calls the memory-allocator function for the corresponding
  * buffer type.
- * 
+ *
  * Returns zero if the buffer with the given size is allocated successfuly,
  * other a negative value at error.
  */
@@ -229,7 +226,7 @@ int snd_dma_alloc_pages(int type, struct device *device, size_t size,
  * buffer type.  When no space is left, this function reduces the size and
  * tries to allocate again.  The size actually allocated is stored in
  * res_size argument.
- * 
+ *
  * Returns zero if the buffer with the given size is allocated successfuly,
  * other a negative value at error.
  */
@@ -254,7 +251,6 @@ int snd_dma_alloc_pages_fallback(int type, struct device *device, size_t size,
 		return -ENOMEM;
 	return 0;
 }
-
 
 /**
  * snd_dma_free_pages - release the allocated buffer
@@ -282,7 +278,6 @@ void snd_dma_free_pages(struct snd_dma_buffer *dmab)
 		printk(KERN_ERR "snd-malloc: invalid device type %d\n", dmab->dev.type);
 	}
 }
-
 
 /**
  * snd_dma_get_reserved - get the reserved buffer for the given device
@@ -326,7 +321,7 @@ size_t snd_dma_get_reserved_buf(struct snd_dma_buffer *dmab, unsigned int id)
  * @id: the buffer id
  *
  * Reserves the given buffer as a reserved buffer.
- * 
+ *
  * Returns zero if successful, or a negative code at error.
  */
 int snd_dma_reserve_buf(struct snd_dma_buffer *dmab, unsigned int id)
@@ -364,7 +359,6 @@ static void free_all_reserved_pages(void)
 	}
 	mutex_unlock(&list_mutex);
 }
-
 
 #ifdef CONFIG_PROC_FS
 /*
@@ -528,10 +522,8 @@ static void __exit snd_mem_exit(void)
 		printk(KERN_ERR "snd-malloc: Memory leak?  pages not freed = %li\n", snd_allocated_pages);
 }
 
-
 module_init(snd_mem_init)
 module_exit(snd_mem_exit)
-
 
 /*
  * exports

@@ -26,7 +26,6 @@
 
 #include <linux/types.h>
 
-
 #define MPU_NAME "mpu3050"
 #define DEFAULT_MPU_SLAVEADDR       0x68
 

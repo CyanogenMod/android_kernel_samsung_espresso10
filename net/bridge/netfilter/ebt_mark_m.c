@@ -35,7 +35,6 @@ static int ebt_mark_mt_check(const struct xt_mtchk_param *par)
 	return 0;
 }
 
-
 #ifdef CONFIG_COMPAT
 struct compat_ebt_mark_m_info {
 	compat_ulong_t mark, mask;

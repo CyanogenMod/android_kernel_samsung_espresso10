@@ -17,7 +17,6 @@
  *
  */
 
-
 #ifndef _MACH_TEGRA_SUSPEND_H_
 #define _MACH_TEGRA_SUSPEND_H_
 

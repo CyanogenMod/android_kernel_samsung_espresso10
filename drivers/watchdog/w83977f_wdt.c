@@ -284,7 +284,6 @@ static int wdt_get_status(int *status)
 	return 0;
 }
 
-
 /*
  *	/dev/watchdog handling
  */

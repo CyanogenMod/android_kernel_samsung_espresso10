@@ -927,7 +927,6 @@ static int nfs_flush_multi(struct nfs_pageio_descriptor *desc)
 	     desc->pg_count > wsize))
 		desc->pg_ioflags &= ~FLUSH_COND_STABLE;
 
-
 	nbytes = desc->pg_count;
 	do {
 		size_t len = min(nbytes, wsize);
@@ -1185,7 +1184,6 @@ static const struct rpc_call_ops nfs_write_full_ops = {
 	.rpc_release = nfs_writeback_release_full,
 };
 
-
 /*
  * This function is called when the WRITE call is complete.
  */
@@ -1268,7 +1266,6 @@ void nfs_writeback_done(struct rpc_task *task, struct nfs_write_data *data)
 	}
 	return;
 }
-
 
 #if defined(CONFIG_NFS_V3) || defined(CONFIG_NFS_V4)
 static int nfs_commit_set_lock(struct nfs_inode *nfsi, int may_wait)
@@ -1662,7 +1659,7 @@ out_error:
 
 #ifdef CONFIG_MIGRATION
 int nfs_migrate_page(struct address_space *mapping, struct page *newpage,
-		struct page *page)
+		struct page *page, enum migrate_mode mode)
 {
 	/*
 	 * If PagePrivate is set, then the page is currently associated with
@@ -1677,7 +1674,7 @@ int nfs_migrate_page(struct address_space *mapping, struct page *newpage,
 
 	nfs_fscache_release_page(page, GFP_KERNEL);
 
-	return migrate_page(mapping, newpage, page);
+	return migrate_page(mapping, newpage, page, mode);
 }
 #endif
 
@@ -1729,4 +1726,3 @@ void nfs_destroy_writepagecache(void)
 	mempool_destroy(nfs_wdata_mempool);
 	kmem_cache_destroy(nfs_wdata_cachep);
 }
-

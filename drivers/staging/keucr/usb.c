@@ -32,7 +32,6 @@ static struct usb_device_id eucr_usb_ids [] = {
 };
 MODULE_DEVICE_TABLE (usb, eucr_usb_ids);
 
-
 #ifdef CONFIG_PM
 
 static int eucr_suspend(struct usb_interface *iface, pm_message_t message)
@@ -68,16 +67,14 @@ static int eucr_resume(struct usb_interface *iface)
 	if (us->suspend_resume_hook)
 		(us->suspend_resume_hook)(us, US_RESUME);
 
-
 	mutex_unlock(&us->dev_mutex);
 
-	
          us->Power_IsResum = true;
 	//
 	//us->SD_Status.Ready = 0; //??
     	us->MS_Status = *(PMS_STATUS)&tmp;
     	us->SM_Status = *(PSM_STATUS)&tmp;
-    	
+
 	return 0;
 }
 //EXPORT_SYMBOL_GPL(eucr_resume);
@@ -177,7 +174,7 @@ static int usb_stor_control_thread(void * __us)
 	{
 		if (wait_for_completion_interruptible(&us->cmnd_ready))
 			break;
-			
+
 		/* lock the device pointers */
 		mutex_lock(&(us->dev_mutex));
 
@@ -273,7 +270,7 @@ SkipForAbort:
 	}
 	__set_current_state(TASK_RUNNING);
 	return 0;
-}	
+}
 
 //----- associate_dev() ---------------------
 static int associate_dev(struct us_data *us, struct usb_interface *intf)

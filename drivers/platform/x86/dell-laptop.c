@@ -409,7 +409,6 @@ static void dell_update_rfkill(struct work_struct *ignored)
 }
 static DECLARE_DELAYED_WORK(dell_rfkill_work, dell_update_rfkill);
 
-
 static int __init dell_setup_rfkill(void)
 {
 	int status;

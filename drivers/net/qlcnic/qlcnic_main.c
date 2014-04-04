@@ -115,7 +115,6 @@ static DEFINE_PCI_DEVICE_TABLE(qlcnic_pci_tbl) = {
 
 MODULE_DEVICE_TABLE(pci, qlcnic_pci_tbl);
 
-
 inline void
 qlcnic_update_cmd_producer(struct qlcnic_adapter *adapter,
 		struct qlcnic_host_tx_ring *tx_ring)
@@ -381,7 +380,6 @@ static int qlcnic_enable_msix(struct qlcnic_adapter *adapter, u32 num_msix)
 	}
 	return err;
 }
-
 
 static void qlcnic_enable_msi_legacy(struct qlcnic_adapter *adapter)
 {
@@ -3093,7 +3091,6 @@ qlcnic_fw_poll_work(struct work_struct *work)
 
 	if (test_bit(__QLCNIC_RESETTING, &adapter->state))
 		goto reschedule;
-
 
 	if (qlcnic_check_health(adapter))
 		return;

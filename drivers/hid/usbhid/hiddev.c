@@ -229,7 +229,6 @@ static int hiddev_fasync(int fd, struct file *file, int on)
 	return fasync_helper(fd, file, on, &list->fasync);
 }
 
-
 /*
  * release file op
  */
@@ -390,7 +389,6 @@ static ssize_t hiddev_read(struct file * file, char __user * buffer, size_t coun
 			mutex_unlock(&list->thread_lock);
 			return retval;
 		}
-
 
 		while (list->head != list->tail &&
 		       retval + event_size <= count) {

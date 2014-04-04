@@ -80,7 +80,6 @@ int ocfs2_dir_resv_allowed(struct ocfs2_super *osb);
 void ocfs2_resv_discard(struct ocfs2_reservation_map *resmap,
 			struct ocfs2_alloc_reservation *resv);
 
-
 /**
  * ocfs2_resmap_init() - Initialize fields of a reservations bitmap
  * @resmap: struct ocfs2_reservation_map to initialize

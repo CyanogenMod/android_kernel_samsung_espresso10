@@ -35,7 +35,6 @@
 #define			AT91_TC_TC2XC2S_TIOA0		(2 << 4)
 #define			AT91_TC_TC2XC2S_TIOA1		(3 << 4)
 
-
 #define AT91_TC_CCR		0x00		/* Channel Control Register */
 #define		AT91_TC_CLKEN		(1 << 0)	/* Counter Clock Enable Command */
 #define		AT91_TC_CLKDIS		(1 << 1)	/* Counter CLock Disable Command */

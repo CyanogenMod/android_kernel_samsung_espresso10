@@ -36,7 +36,7 @@
  * 	the attempted open will fail with ENODEV.
  *
  *	Required method.
- *     
+ *
  * void (*close)(struct tty_struct * tty, struct file * filp);
  *
  * 	This routine is called when a particular tty device is closed.
@@ -84,12 +84,12 @@
  * void (*flush_chars)(struct tty_struct *tty);
  *
  * 	This routine is called by the kernel after it has written a
- * 	series of characters to the tty device using put_char().  
+ * 	series of characters to the tty device using put_char().
  *
  *	Optional:
  *
  *	Note: Do not call this function directly, call tty_driver_flush_chars
- * 
+ *
  * int  (*write_room)(struct tty_struct *tty);
  *
  * 	This routine returns the numbers of characters the tty driver
@@ -100,7 +100,7 @@
  *	Required if write method is provided else not needed.
  *
  *	Note: Do not call this function directly, call tty_write_room
- * 
+ *
  * int  (*ioctl)(struct tty_struct *tty, unsigned int cmd, unsigned long arg);
  *
  * 	This routine allows the tty driver to implement
@@ -115,7 +115,7 @@
  * 	implement ioctl processing for 32 bit process on 64 bit system
  *
  *	Optional
- * 
+ *
  * void (*set_termios)(struct tty_struct *tty, struct ktermios * old);
  *
  * 	This routine allows the tty driver to be notified when
@@ -130,7 +130,7 @@
  * 	device's termios settings have changed.
  *
  *	Optional: Called under BKL (currently)
- * 
+ *
  * void (*throttle)(struct tty_struct * tty);
  *
  * 	This routine notifies the tty driver that input buffers for
@@ -139,25 +139,25 @@
  *
  *	Optional: Always invoke via tty_throttle(), called under the
  *	termios lock.
- * 
+ *
  * void (*unthrottle)(struct tty_struct * tty);
  *
  * 	This routine notifies the tty drivers that it should signals
  * 	that characters can now be sent to the tty without fear of
  * 	overrunning the input buffers of the line disciplines.
- * 
+ *
  *	Optional: Always invoke via tty_unthrottle(), called under the
  *	termios lock.
  *
  * void (*stop)(struct tty_struct *tty);
  *
  * 	This routine notifies the tty driver that it should stop
- * 	outputting characters to the tty device.  
+ * 	outputting characters to the tty device.
  *
  *	Optional:
  *
  *	Note: Call stop_tty not this method.
- * 
+ *
  * void (*start)(struct tty_struct *tty);
  *
  * 	This routine notifies the tty driver that it resume sending
@@ -166,7 +166,7 @@
  *	Optional:
  *
  *	Note: Call start_tty not this method.
- * 
+ *
  * void (*hangup)(struct tty_struct *tty);
  *
  * 	This routine notifies the tty driver that it should hang up the
@@ -192,7 +192,7 @@
  *	Optional: Required for TCSBRK/BRKP/etc handling.
  *
  * void (*wait_until_sent)(struct tty_struct *tty, int timeout);
- * 
+ *
  * 	This routine waits until the device has written out all of the
  * 	characters in its transmitter FIFO.
  *
@@ -344,11 +344,11 @@ static inline struct tty_driver *tty_driver_kref_get(struct tty_driver *d)
 
 /*
  * tty driver flags
- * 
+ *
  * TTY_DRIVER_RESET_TERMIOS --- requests the tty layer to reset the
  * 	termios setting when the last process has closed the device.
  * 	Used for PTY's, in particular.
- * 
+ *
  * TTY_DRIVER_REAL_RAW --- if set, indicates that the driver will
  * 	guarantee never not to set any special character handling
  * 	flags if ((IGNBRK || (!BRKINT && !PARMRK)) && (IGNPAR ||

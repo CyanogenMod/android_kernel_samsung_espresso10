@@ -67,7 +67,6 @@ static struct ext_phys_mem_pool ext_mem_pool;
 /*  ----------------------------------- Function Prototypes */
 static int request_bridge_resources(struct cfg_hostres *res);
 
-
 /* GPP PROCESS CLEANUP CODE */
 
 static int drv_proc_free_node_res(int id, void *p, void *data);

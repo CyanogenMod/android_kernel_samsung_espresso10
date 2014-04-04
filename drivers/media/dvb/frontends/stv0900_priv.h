@@ -327,7 +327,6 @@ struct stv0900_internal{
 	struct stv0900_signal_info	result[2];
 	enum fe_stv0900_error		err[2];
 
-
 	struct i2c_adapter	*i2c_adap;
 	u8			i2c_addr;
 	u8			clkmode;/* 0 for CLKI, 2 for XTALI */

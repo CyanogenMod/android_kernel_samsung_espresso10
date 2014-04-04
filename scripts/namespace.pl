@@ -141,7 +141,6 @@ my %nameexception = (
     'VDSO32_sigreturn'	=> 1,
 );
 
-
 &find(\&linux_objects, '.');	# find the objects and do_nm on them
 &list_multiply_defined();
 &resolve_external_references();

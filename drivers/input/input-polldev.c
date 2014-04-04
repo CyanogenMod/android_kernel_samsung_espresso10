@@ -110,7 +110,6 @@ static ssize_t input_polldev_set_poll(struct device *dev,
 static DEVICE_ATTR(poll, S_IRUGO | S_IWUSR, input_polldev_get_poll,
 					    input_polldev_set_poll);
 
-
 static ssize_t input_polldev_get_max(struct device *dev,
 				     struct device_attribute *attr, char *buf)
 {

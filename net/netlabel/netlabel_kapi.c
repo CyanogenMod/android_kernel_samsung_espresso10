@@ -194,7 +194,6 @@ cfg_unlbl_map_add_failure:
 	return ret_val;
 }
 
-
 /**
  * netlbl_cfg_unlbl_static_add - Adds a new static label
  * @net: network namespace

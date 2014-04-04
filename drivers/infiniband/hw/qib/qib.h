@@ -1184,7 +1184,6 @@ static inline struct qib_ibport *to_iport(struct ib_device *ibdev, u8 port)
 /* IB dword length mask in PBC (lower 11 bits); same for all chips */
 #define QIB_PBC_LENGTH_MASK                     ((1 << 11) - 1)
 
-
 /* ctxt_flag bit offsets */
 		/* waiting for a packet to arrive */
 #define QIB_CTXT_WAITING_RCV   2

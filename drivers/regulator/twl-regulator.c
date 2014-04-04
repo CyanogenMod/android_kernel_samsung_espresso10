@@ -18,7 +18,6 @@
 #include <linux/regulator/machine.h>
 #include <linux/i2c/twl.h>
 
-
 /*
  * The TWL4030/TW5030/TPS659x0/TWL6030 family chips include power management, a
  * USB OTG transceiver, an RTC, ADC, PWM, and lots more.  Some versions
@@ -60,7 +59,6 @@ struct twlreg_info {
 	/* chip specific features */
 	unsigned long		features;
 };
-
 
 /* LDO control registers ... offset is from the base of its register bank.
  * The first three registers of all power resource banks help hardware to
@@ -496,7 +494,6 @@ static int twl6030reg_suspend_disable(struct regulator_dev *rdev)
 #define UNSUP(x)	(UNSUP_MASK | (x))
 #define IS_UNSUP(x)	(UNSUP_MASK & (x))
 #define LDO_MV(x)	(~UNSUP_MASK & (x))
-
 
 static const u16 VAUX1_VSEL_table[] = {
 	UNSUP(1500), UNSUP(1800), 2500, 2800,
@@ -1372,12 +1369,12 @@ static u8 twl_get_smps_mult(int id)
 
 static int __devinit twlreg_probe(struct platform_device *pdev)
 {
-	int				i;
-	struct twlreg_info		*info;
-	struct regulator_init_data	*initdata;
+	struct twlreg_info				*info;
+	struct regulator_init_data		*initdata;
 	struct regulation_constraints	*c;
-	struct regulator_dev		*rdev;
-	int ret;
+	struct regulator_dev			*rdev;
+	int	i=0;
+	int ret=0;
 
 	for (i = 0, info = NULL; i < ARRAY_SIZE(twl_regs); i++) {
 		if (twl_regs[i].desc.id != pdev->id)

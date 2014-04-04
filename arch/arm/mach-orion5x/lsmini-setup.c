@@ -164,14 +164,12 @@ static struct platform_device lsmini_button_device = {
 	},
 };
 
-
 /*****************************************************************************
  * SATA
  ****************************************************************************/
 static struct mv_sata_platform_data lsmini_sata_data = {
 	.n_ports	= 2,
 };
-
 
 /*****************************************************************************
  * Linkstation Mini specific power off method: reboot
@@ -188,7 +186,6 @@ static void lsmini_power_off(void)
 {
 	arm_machine_restart('h', NULL);
 }
-
 
 /*****************************************************************************
  * General Setup

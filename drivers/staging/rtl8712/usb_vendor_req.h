@@ -30,4 +30,3 @@ enum RT_USB_WVALUE {
 };
 
 #endif
-

@@ -106,14 +106,12 @@ struct tboot {
 	u8 num_mac_regions;
 	struct tboot_mac_region mac_regions[MAX_TB_MAC_REGIONS];
 
-
 	/*
 	 * version 4+ fields:
 	 */
 
 	/* symmetric key for use by kernel; will be encrypted on S3 */
 	u8 s3_key[TB_KEY_SIZE];
-
 
 	/*
 	 * version 5+ fields:

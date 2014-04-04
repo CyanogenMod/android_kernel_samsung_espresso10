@@ -189,5 +189,4 @@ void ir_raw_init(void);
 #define load_lirc_codec()	0
 #endif
 
-
 #endif /* _RC_CORE_PRIV */

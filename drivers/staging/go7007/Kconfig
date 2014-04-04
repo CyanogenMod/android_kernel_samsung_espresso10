@@ -106,4 +106,3 @@ config VIDEO_GO7007_TW2804
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called wis-tw2804
-

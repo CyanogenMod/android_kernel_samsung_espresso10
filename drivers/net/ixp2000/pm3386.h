@@ -25,5 +25,4 @@ void pm3386_disable_rx(int port);
 void pm3386_enable_tx(int port);
 void pm3386_disable_tx(int port);
 
-
 #endif

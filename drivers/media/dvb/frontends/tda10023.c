@@ -95,7 +95,6 @@ static int tda10023_writereg (struct tda10023_state* state, u8 reg, u8 data)
 	return (ret != 1) ? -EREMOTEIO : 0;
 }
 
-
 static int tda10023_writebit (struct tda10023_state* state, u8 reg, u8 mask,u8 data)
 {
 	if (mask==0xff)
@@ -564,7 +563,6 @@ static struct dvb_frontend_ops tda10023_ops = {
 	.read_snr = tda10023_read_snr,
 	.read_ucblocks = tda10023_read_ucblocks,
 };
-
 
 MODULE_DESCRIPTION("Philips TDA10023 DVB-C demodulator driver");
 MODULE_AUTHOR("Georg Acher, Hartmut Birr");

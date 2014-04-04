@@ -73,7 +73,6 @@ int __acpi_release_global_lock(unsigned int *lock);
 	    : "r"(d32),				     \
 	     "0"(n_lo), "1"(n_hi))
 
-
 #define ACPI_SHIFT_RIGHT_64(n_hi, n_lo) \
 	asm("shrl   $1,%2	;"	\
 	    "rcrl   $1,%3;"		\

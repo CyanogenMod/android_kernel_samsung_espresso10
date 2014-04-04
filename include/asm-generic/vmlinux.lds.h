@@ -149,7 +149,6 @@
 #define TRACE_SYSCALLS()
 #endif
 
-
 #define KERNEL_DTB()							\
 	STRUCT_ALIGN();							\
 	VMLINUX_SYMBOL(__dtb_start) = .;				\
@@ -402,7 +401,6 @@
 	MEM_KEEP(init.text)						\
 	MEM_KEEP(exit.text)						\
 		*(.text.unlikely)
-
 
 /* sched.text is aling to function alignment to secure we have same
  * address even at second ld pass when generating System.map */
@@ -764,12 +762,10 @@
 		PERCPU_INPUT(cacheline)					\
 	}
 
-
 /*
  * Definition of the high level *_SECTION macros
  * They will fit only a subset of the architectures
  */
-
 
 /*
  * Writeable data.

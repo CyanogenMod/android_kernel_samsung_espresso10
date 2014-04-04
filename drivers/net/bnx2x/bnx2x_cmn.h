@@ -20,7 +20,6 @@
 #include <linux/types.h>
 #include <linux/netdevice.h>
 
-
 #include "bnx2x.h"
 
 extern int num_queues;
@@ -558,7 +557,6 @@ static inline void bnx2x_igu_clear_sb_gen(struct bnx2x *bp,
 	/* wait for clean up to finish */
 	while (!(REG_RD(bp, igu_addr_ack) & sb_bit) && --cnt)
 		msleep(20);
-
 
 	if (!(REG_RD(bp, igu_addr_ack) & sb_bit)) {
 		DP(NETIF_MSG_HW, "Unable to finish IGU cleanup: "

@@ -58,7 +58,6 @@
  */
 static int tf_device_register(void);
 
-
 /*
  * Implements the device Open callback.
  */
@@ -66,14 +65,12 @@ static int tf_device_open(
 		struct inode *inode,
 		struct file *file);
 
-
 /*
  * Implements the device Release callback.
  */
 static int tf_device_release(
 		struct inode *inode,
 		struct file *file);
-
 
 /*
  * Implements the device ioctl callback.
@@ -83,24 +80,20 @@ static long tf_device_ioctl(
 		unsigned int ioctl_num,
 		unsigned long ioctl_param);
 
-
 /*
  * Implements the device shutdown callback.
  */
 static void tf_device_shutdown(void);
-
 
 /*
  * Implements the device suspend callback.
  */
 static int tf_device_suspend(void);
 
-
 /*
  * Implements the device resume callback.
  */
 static void tf_device_resume(void);
-
 
 /*---------------------------------------------------------------------------
  * Module Parameters
@@ -842,14 +835,12 @@ static int tf_device_suspend(void)
 	return tf_power_management(&g_tf_dev.sm, TF_POWER_OPERATION_HIBERNATE);
 }
 
-
 /*----------------------------------------------------------------------------*/
 
 static void tf_device_resume(void)
 {
 	tf_power_management(&g_tf_dev.sm, TF_POWER_OPERATION_RESUME);
 }
-
 
 /*----------------------------------------------------------------------------*/
 

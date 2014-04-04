@@ -39,7 +39,6 @@ int orig_seq_print_text(struct seq_file *seq, void *offset);
 int orig_hash_add_if(struct hard_iface *hard_iface, int max_if_num);
 int orig_hash_del_if(struct hard_iface *hard_iface, int max_if_num);
 
-
 /* returns 1 if they are the same originator */
 static inline int compare_orig(struct hlist_node *node, void *data2)
 {

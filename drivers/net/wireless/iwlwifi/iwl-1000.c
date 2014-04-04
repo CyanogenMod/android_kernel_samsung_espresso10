@@ -61,7 +61,6 @@
 #define IWL100_FW_PRE "iwlwifi-100-"
 #define IWL100_MODULE_FIRMWARE(api) IWL100_FW_PRE __stringify(api) ".ucode"
 
-
 /*
  * For 1000, use advance thermal throttling critical temperature threshold,
  * but legacy thermal management implementation for now.

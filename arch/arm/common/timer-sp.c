@@ -76,7 +76,6 @@ void __init sp804_clocksource_init(void __iomem *base, const char *name)
 		rate, 200, 32, clocksource_mmio_readl_down);
 }
 
-
 static void __iomem *clkevt_base;
 static unsigned long clkevt_reload;
 

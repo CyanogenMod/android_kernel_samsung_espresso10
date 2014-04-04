@@ -185,7 +185,6 @@ struct syscall_args {
 		val;							\
 	})
 
-
 #define UPT_SET(regs, reg, val) \
 	({      unsigned long __upt_val = val;	\
 		switch(reg){						\

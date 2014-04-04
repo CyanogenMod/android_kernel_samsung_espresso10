@@ -94,7 +94,6 @@ static IMPLEMENT_LIST_FOR_EACH(DEBUG_MEM_ALLOC_REC)
 static IMPLEMENT_LIST_INSERT(DEBUG_MEM_ALLOC_REC)
 static IMPLEMENT_LIST_REMOVE(DEBUG_MEM_ALLOC_REC)
 
-
 static DEBUG_MEM_ALLOC_REC *g_MemoryRecords;
 
 static IMG_UINT32 g_WaterMarkData[DEBUG_MEM_ALLOC_TYPE_COUNT];
@@ -119,14 +118,12 @@ static IMG_VOID DebugMemAllocRecordRemove(DEBUG_MEM_ALLOC_TYPE eAllocType, IMG_V
 
 static IMG_CHAR *DebugMemAllocRecordTypeToString(DEBUG_MEM_ALLOC_TYPE eAllocType);
 
-
 static struct proc_dir_entry *g_SeqFileMemoryRecords =0;
 static void* ProcSeqNextMemoryRecords(struct seq_file *sfile,void* el,loff_t off);
 static void ProcSeqShowMemoryRecords(struct seq_file *sfile,void* el);
 static void* ProcSeqOff2ElementMemoryRecords(struct seq_file * sfile, loff_t off);
 
 #endif
-
 
 #if defined(DEBUG_LINUX_MEM_AREAS)
 typedef struct _DEBUG_LINUX_MEM_AREA_REC
@@ -139,20 +136,15 @@ typedef struct _DEBUG_LINUX_MEM_AREA_REC
 	struct _DEBUG_LINUX_MEM_AREA_REC  **ppsThis;
 }DEBUG_LINUX_MEM_AREA_REC;
 
-
 static IMPLEMENT_LIST_ANY_VA(DEBUG_LINUX_MEM_AREA_REC)
 static IMPLEMENT_LIST_FOR_EACH(DEBUG_LINUX_MEM_AREA_REC)
 static IMPLEMENT_LIST_INSERT(DEBUG_LINUX_MEM_AREA_REC)
 static IMPLEMENT_LIST_REMOVE(DEBUG_LINUX_MEM_AREA_REC)
 
-
-
-
 static DEBUG_LINUX_MEM_AREA_REC *g_LinuxMemAreaRecords;
 static IMG_UINT32 g_LinuxMemAreaCount;
 static IMG_UINT32 g_LinuxMemAreaWaterMark;
 static IMG_UINT32 g_LinuxMemAreaHighWaterMark;
-
 
 static struct proc_dir_entry *g_SeqFileMemArea=0;
 
@@ -171,7 +163,6 @@ static void ProcSeqStartstopDebugMutex(struct seq_file *sfile,IMG_BOOL start);
 #endif
 
 static LinuxKMemCache *psLinuxMemAreaCache;
-
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,15))
 static IMG_VOID ReservePages(IMG_VOID *pvAddress, IMG_UINT32 ui32Length);
@@ -209,7 +200,6 @@ LinuxMMInit(IMG_VOID)
         }
     }
 #endif
-
 
 #if defined(DEBUG_LINUX_MEMORY_ALLOCATIONS)
     {
@@ -298,7 +288,6 @@ static IMG_VOID LinuxMMCleanup_MemRecords_ForEachVa(DEBUG_MEM_ALLOC_REC *psCurre
 }
 #endif
 
-
 IMG_VOID
 LinuxMMCleanup(IMG_VOID)
 {
@@ -318,10 +307,8 @@ LinuxMMCleanup(IMG_VOID)
     }
 #endif
 
-
 #if defined(DEBUG_LINUX_MEMORY_ALLOCATIONS)
     {
-
 
 		List_DEBUG_MEM_ALLOC_REC_ForEach(g_MemoryRecords,
 										LinuxMMCleanup_MemRecords_ForEachVa);
@@ -336,7 +323,6 @@ LinuxMMCleanup(IMG_VOID)
         psLinuxMemAreaCache=NULL;
     }
 }
-
 
 IMG_VOID *
 _KMallocWrapper(IMG_UINT32 ui32ByteSize, gfp_t uFlags, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
@@ -363,7 +349,6 @@ _KMallocWrapper(IMG_UINT32 ui32ByteSize, gfp_t uFlags, IMG_CHAR *pszFileName, IM
     return pvRet;
 }
 
-
 IMG_VOID
 _KFreeWrapper(IMG_VOID *pvCpuVAddr, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
 {
@@ -375,7 +360,6 @@ _KFreeWrapper(IMG_VOID *pvCpuVAddr, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
 #endif
     kfree(pvCpuVAddr);
 }
-
 
 #if defined(DEBUG_LINUX_MEMORY_ALLOCATIONS)
 static IMG_VOID
@@ -436,7 +420,6 @@ DebugMemAllocRecordAdd(DEBUG_MEM_ALLOC_TYPE eAllocType,
     LinuxUnLockMutex(&g_sDebugMutex);
 }
 
-
 static IMG_BOOL DebugMemAllocRecordRemove_AnyVaCb(DEBUG_MEM_ALLOC_REC *psCurrentRecord, va_list va)
 {
 	DEBUG_MEM_ALLOC_TYPE eAllocType;
@@ -475,12 +458,10 @@ static IMG_BOOL DebugMemAllocRecordRemove_AnyVaCb(DEBUG_MEM_ALLOC_REC *psCurrent
 	}
 }
 
-
 static IMG_VOID
 DebugMemAllocRecordRemove(DEBUG_MEM_ALLOC_TYPE eAllocType, IMG_VOID *pvKey, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
 {
     LinuxLockMutex(&g_sDebugMutex);
-
 
 	if(!List_DEBUG_MEM_ALLOC_REC_IMG_BOOL_Any_va(g_MemoryRecords,
 												DebugMemAllocRecordRemove_AnyVaCb,
@@ -494,7 +475,6 @@ DebugMemAllocRecordRemove(DEBUG_MEM_ALLOC_TYPE eAllocType, IMG_VOID *pvKey, IMG_
 
     LinuxUnLockMutex(&g_sDebugMutex);
 }
-
 
 static IMG_CHAR *
 DebugMemAllocRecordTypeToString(DEBUG_MEM_ALLOC_TYPE eAllocType)
@@ -510,8 +490,6 @@ DebugMemAllocRecordTypeToString(DEBUG_MEM_ALLOC_TYPE eAllocType)
     return apszDebugMemoryRecordTypes[eAllocType];
 }
 #endif
-
-
 
 IMG_VOID *
 _VMallocWrapper(IMG_UINT32 ui32Bytes,
@@ -541,7 +519,6 @@ _VMallocWrapper(IMG_UINT32 ui32Bytes,
             return NULL;
     }
 
-
     pvRet = __vmalloc(ui32Bytes, GFP_KERNEL | __GFP_HIGHMEM, PGProtFlags);
 
 #if defined(DEBUG_LINUX_MEMORY_ALLOCATIONS)
@@ -565,7 +542,6 @@ _VMallocWrapper(IMG_UINT32 ui32Bytes,
     return pvRet;
 }
 
-
 IMG_VOID
 _VFreeWrapper(IMG_VOID *pvCpuVAddr, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
 {
@@ -577,7 +553,6 @@ _VFreeWrapper(IMG_VOID *pvCpuVAddr, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
 #endif
     vfree(pvCpuVAddr);
 }
-
 
 LinuxMemArea *
 NewVMallocLinuxMemArea(IMG_UINT32 ui32Bytes, IMG_UINT32 ui32AreaFlags)
@@ -612,7 +587,6 @@ NewVMallocLinuxMemArea(IMG_UINT32 ui32Bytes, IMG_UINT32 ui32AreaFlags)
     DebugLinuxMemAreaRecordAdd(psLinuxMemArea, ui32AreaFlags);
 #endif
 
-
     if(ui32AreaFlags & (PVRSRV_HAP_WRITECOMBINE | PVRSRV_HAP_UNCACHED))
         OSInvalidateCPUCacheRangeKM(psLinuxMemArea, pvCpuVAddr, ui32Bytes);
 
@@ -624,7 +598,6 @@ failed:
         LinuxMemAreaStructFree(psLinuxMemArea);
     return NULL;
 }
-
 
 IMG_VOID
 FreeVMallocLinuxMemArea(LinuxMemArea *psLinuxMemArea)
@@ -649,7 +622,6 @@ FreeVMallocLinuxMemArea(LinuxMemArea *psLinuxMemArea)
     LinuxMemAreaStructFree(psLinuxMemArea);
 }
 
-
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,15))
 static IMG_VOID
 ReservePages(IMG_VOID *pvAddress, IMG_UINT32 ui32Length)
@@ -667,7 +639,6 @@ ReservePages(IMG_VOID *pvAddress, IMG_UINT32 ui32Length)
 	}
 }
 
-
 static IMG_VOID
 UnreservePages(IMG_VOID *pvAddress, IMG_UINT32 ui32Length)
 {
@@ -684,7 +655,6 @@ UnreservePages(IMG_VOID *pvAddress, IMG_UINT32 ui32Length)
 	}
 }
 #endif
-
 
 IMG_VOID *
 _IORemapWrapper(IMG_CPU_PHYADDR BasePAddr,
@@ -732,7 +702,6 @@ _IORemapWrapper(IMG_CPU_PHYADDR BasePAddr,
     return pvIORemapCookie;
 }
 
-
 IMG_VOID
 _IOUnmapWrapper(IMG_VOID *pvIORemapCookie, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
 {
@@ -744,7 +713,6 @@ _IOUnmapWrapper(IMG_VOID *pvIORemapCookie, IMG_CHAR *pszFileName, IMG_UINT32 ui3
 #endif
     iounmap(pvIORemapCookie);
 }
-
 
 LinuxMemArea *
 NewIORemapLinuxMemArea(IMG_CPU_PHYADDR BasePAddr,
@@ -781,7 +749,6 @@ NewIORemapLinuxMemArea(IMG_CPU_PHYADDR BasePAddr,
     return psLinuxMemArea;
 }
 
-
 IMG_VOID
 FreeIORemapLinuxMemArea(LinuxMemArea *psLinuxMemArea)
 {
@@ -796,7 +763,6 @@ FreeIORemapLinuxMemArea(LinuxMemArea *psLinuxMemArea)
     LinuxMemAreaStructFree(psLinuxMemArea);
 }
 
-
 #if !defined(PVR_MAKE_ALL_PFNS_SPECIAL)
 static IMG_BOOL
 TreatExternalPagesAsContiguous(IMG_SYS_PHYADDR *psSysPhysAddr, IMG_UINT32 ui32Bytes, IMG_BOOL bPhysContig)
@@ -804,7 +770,6 @@ TreatExternalPagesAsContiguous(IMG_SYS_PHYADDR *psSysPhysAddr, IMG_UINT32 ui32By
 	IMG_UINT32 ui32;
 	IMG_UINT32 ui32AddrChk;
 	IMG_UINT32 ui32NumPages = RANGE_TO_PAGES(ui32Bytes);
-
 
 	for (ui32 = 0, ui32AddrChk = psSysPhysAddr[0].uiAddr;
 		ui32 < ui32NumPages;
@@ -875,7 +840,6 @@ LinuxMemArea *NewExternalKVLinuxMemArea(IMG_SYS_PHYADDR *pBasePAddr, IMG_VOID *p
     return psLinuxMemArea;
 }
 
-
 IMG_VOID
 FreeExternalKVLinuxMemArea(LinuxMemArea *psLinuxMemArea)
 {
@@ -888,7 +852,6 @@ FreeExternalKVLinuxMemArea(LinuxMemArea *psLinuxMemArea)
     LinuxMemAreaStructFree(psLinuxMemArea);
 }
 
-
 LinuxMemArea *
 NewIOLinuxMemArea(IMG_CPU_PHYADDR BasePAddr,
                   IMG_UINT32 ui32Bytes,
@@ -899,7 +862,6 @@ NewIOLinuxMemArea(IMG_CPU_PHYADDR BasePAddr,
     {
         return NULL;
     }
-
 
     psLinuxMemArea->eAreaType = LINUX_MEM_AREA_IO;
     psLinuxMemArea->uData.sIO.CPUPhysAddr.uiAddr = BasePAddr.uiAddr;
@@ -926,7 +888,6 @@ NewIOLinuxMemArea(IMG_CPU_PHYADDR BasePAddr,
     return psLinuxMemArea;
 }
 
-
 IMG_VOID
 FreeIOLinuxMemArea(LinuxMemArea *psLinuxMemArea)
 {
@@ -941,11 +902,8 @@ FreeIOLinuxMemArea(LinuxMemArea *psLinuxMemArea)
                               (IMG_VOID *)psLinuxMemArea->uData.sIO.CPUPhysAddr.uiAddr, __FILE__, __LINE__);
 #endif
 
-
-
     LinuxMemAreaStructFree(psLinuxMemArea);
 }
-
 
 LinuxMemArea *
 NewAllocPagesLinuxMemArea(IMG_UINT32 ui32Bytes, IMG_UINT32 ui32AreaFlags)
@@ -1008,7 +966,6 @@ NewAllocPagesLinuxMemArea(IMG_UINT32 ui32Bytes, IMG_UINT32 ui32AreaFlags)
     psLinuxMemArea->ui32AreaFlags = ui32AreaFlags;
     INIT_LIST_HEAD(&psLinuxMemArea->sMMapOffsetStructList);
 
-
     if(ui32AreaFlags & (PVRSRV_HAP_WRITECOMBINE | PVRSRV_HAP_UNCACHED))
     {
         psLinuxMemArea->bNeedsCacheInvalidate = IMG_TRUE;
@@ -1034,7 +991,6 @@ failed_area_alloc:
 
     return NULL;
 }
-
 
 IMG_VOID
 FreeAllocPagesLinuxMemArea(LinuxMemArea *psLinuxMemArea)
@@ -1107,11 +1063,9 @@ NewIONLinuxMemArea(IMG_UINT32 ui32Bytes, IMG_UINT32 ui32AreaFlags,
         goto err_out;
     }
 
-
     BUG_ON(ui32PrivDataLength != ui32AllocDataLen &&
            ui32PrivDataLength != ui32AllocDataLen * 2);
     ui32NumHandlesPerFd = ui32PrivDataLength / ui32AllocDataLen;
-
 
     for(i = 0; i < ui32NumHandlesPerFd; i++)
     {
@@ -1131,10 +1085,8 @@ NewIONLinuxMemArea(IMG_UINT32 ui32Bytes, IMG_UINT32 ui32AreaFlags,
         }
     }
 
-
     BUG_ON(ui32Bytes != (iNumPages[0] + iNumPages[1]) * PAGE_SIZE);
     BUG_ON(sizeof(IMG_CPU_PHYADDR) != sizeof(int));
-
 
     pCPUPhysAddrs = vmalloc(sizeof(IMG_CPU_PHYADDR) * (iNumPages[0] + iNumPages[1]));
     if(!pCPUPhysAddrs)
@@ -1168,7 +1120,6 @@ NewIONLinuxMemArea(IMG_UINT32 ui32Bytes, IMG_UINT32 ui32AreaFlags,
     psLinuxMemArea->ui32AreaFlags = ui32AreaFlags;
     INIT_LIST_HEAD(&psLinuxMemArea->sMMapOffsetStructList);
 
-
     if(ui32AreaFlags & (PVRSRV_HAP_WRITECOMBINE | PVRSRV_HAP_UNCACHED))
     {
         psLinuxMemArea->bNeedsCacheInvalidate = IMG_TRUE;
@@ -1186,7 +1137,6 @@ err_free:
     psLinuxMemArea = IMG_NULL;
     goto err_out;
 }
-
 
 IMG_VOID
 FreeIONLinuxMemArea(LinuxMemArea *psLinuxMemArea)
@@ -1210,7 +1160,6 @@ FreeIONLinuxMemArea(LinuxMemArea *psLinuxMemArea)
         ion_free(gpsIONClient, psLinuxMemArea->uData.sIONTilerAlloc.psIONHandle[i]);
         psLinuxMemArea->uData.sIONTilerAlloc.psIONHandle[i] = IMG_NULL;
     }
-
 
     vfree(psLinuxMemArea->uData.sIONTilerAlloc.pCPUPhysAddrs);
     psLinuxMemArea->uData.sIONTilerAlloc.pCPUPhysAddrs = IMG_NULL;
@@ -1251,7 +1200,6 @@ LinuxMemAreaOffsetToPage(LinuxMemArea *psLinuxMemArea,
     }
 }
 
-
 LinuxKMemCache *
 KMemCacheCreateWrapper(IMG_CHAR *pszName,
                        size_t Size,
@@ -1268,13 +1216,11 @@ KMemCacheCreateWrapper(IMG_CHAR *pszName,
 			    );
 }
 
-
 IMG_VOID
 KMemCacheDestroyWrapper(LinuxKMemCache *psCache)
 {
     kmem_cache_destroy(psCache);
 }
-
 
 IMG_VOID *
 _KMemCacheAllocWrapper(LinuxKMemCache *psCache,
@@ -1308,7 +1254,6 @@ _KMemCacheAllocWrapper(LinuxKMemCache *psCache,
     return pvRet;
 }
 
-
 IMG_VOID
 _KMemCacheFreeWrapper(LinuxKMemCache *psCache, IMG_VOID *pvObject, IMG_CHAR *pszFileName, IMG_UINT32 ui32Line)
 {
@@ -1322,16 +1267,13 @@ _KMemCacheFreeWrapper(LinuxKMemCache *psCache, IMG_VOID *pvObject, IMG_CHAR *psz
     kmem_cache_free(psCache, pvObject);
 }
 
-
 const IMG_CHAR *
 KMemCacheNameWrapper(LinuxKMemCache *psCache)
 {
     PVR_UNREFERENCED_PARAMETER(psCache);
 
-
     return "";
 }
-
 
 LinuxMemArea *
 NewSubLinuxMemArea(LinuxMemArea *psParentLinuxMemArea,
@@ -1367,7 +1309,6 @@ NewSubLinuxMemArea(LinuxMemArea *psParentLinuxMemArea,
     return psLinuxMemArea;
 }
 
-
 static IMG_VOID
 FreeSubLinuxMemArea(LinuxMemArea *psLinuxMemArea)
 {
@@ -1377,11 +1318,8 @@ FreeSubLinuxMemArea(LinuxMemArea *psLinuxMemArea)
     DebugLinuxMemAreaRecordRemove(psLinuxMemArea);
 #endif
 
-
-
     LinuxMemAreaStructFree(psLinuxMemArea);
 }
-
 
 static LinuxMemArea *
 LinuxMemAreaStructAlloc(IMG_VOID)
@@ -1397,15 +1335,12 @@ LinuxMemAreaStructAlloc(IMG_VOID)
 #endif
 }
 
-
 static IMG_VOID
 LinuxMemAreaStructFree(LinuxMemArea *psLinuxMemArea)
 {
     KMemCacheFreeWrapper(psLinuxMemAreaCache, psLinuxMemArea);
 
-
 }
-
 
 IMG_VOID
 LinuxMemAreaDeepFree(LinuxMemArea *psLinuxMemArea)
@@ -1440,7 +1375,6 @@ LinuxMemAreaDeepFree(LinuxMemArea *psLinuxMemArea)
     }
 }
 
-
 #if defined(DEBUG_LINUX_MEM_AREAS)
 static IMG_VOID
 DebugLinuxMemAreaRecordAdd(LinuxMemArea *psLinuxMemArea, IMG_UINT32 ui32Flags)
@@ -1460,7 +1394,6 @@ DebugLinuxMemAreaRecordAdd(LinuxMemArea *psLinuxMemArea, IMG_UINT32 ui32Flags)
     }
     g_LinuxMemAreaCount++;
 
-
     psNewRecord = kmalloc(sizeof(DEBUG_LINUX_MEM_AREA_REC), GFP_KERNEL);
     if(psNewRecord)
     {
@@ -1478,7 +1411,6 @@ DebugLinuxMemAreaRecordAdd(LinuxMemArea *psLinuxMemArea, IMG_UINT32 ui32Flags)
                  __FUNCTION__));
     }
 
-
     pi8FlagsString = HAPFlagsToString(ui32Flags);
     if(strstr(pi8FlagsString, "UNKNOWN"))
     {
@@ -1492,8 +1424,6 @@ DebugLinuxMemAreaRecordAdd(LinuxMemArea *psLinuxMemArea, IMG_UINT32 ui32Flags)
 
     LinuxUnLockMutex(&g_sDebugMutex);
 }
-
-
 
 static IMG_VOID* MatchLinuxMemArea_AnyVaCb(DEBUG_LINUX_MEM_AREA_REC *psCurrentRecord,
 										   va_list va)
@@ -1511,7 +1441,6 @@ static IMG_VOID* MatchLinuxMemArea_AnyVaCb(DEBUG_LINUX_MEM_AREA_REC *psCurrentRe
 	}
 }
 
-
 static DEBUG_LINUX_MEM_AREA_REC *
 DebugLinuxMemAreaRecordFind(LinuxMemArea *psLinuxMemArea)
 {
@@ -1527,7 +1456,6 @@ DebugLinuxMemAreaRecordFind(LinuxMemArea *psLinuxMemArea)
     return psCurrentRecord;
 }
 
-
 static IMG_VOID
 DebugLinuxMemAreaRecordRemove(LinuxMemArea *psLinuxMemArea)
 {
@@ -1540,7 +1468,6 @@ DebugLinuxMemAreaRecordRemove(LinuxMemArea *psLinuxMemArea)
         g_LinuxMemAreaWaterMark -= psLinuxMemArea->ui32ByteSize;
     }
     g_LinuxMemAreaCount--;
-
 
 	psCurrentRecord = List_DEBUG_LINUX_MEM_AREA_REC_Any_va(g_LinuxMemAreaRecords,
 														MatchLinuxMemArea_AnyVaCb,
@@ -1560,7 +1487,6 @@ DebugLinuxMemAreaRecordRemove(LinuxMemArea *psLinuxMemArea)
     LinuxUnLockMutex(&g_sDebugMutex);
 }
 #endif
-
 
 IMG_VOID *
 LinuxMemAreaToCpuVAddr(LinuxMemArea *psLinuxMemArea)
@@ -1587,7 +1513,6 @@ LinuxMemAreaToCpuVAddr(LinuxMemArea *psLinuxMemArea)
             return NULL;
     }
 }
-
 
 IMG_CPU_PHYADDR
 LinuxMemAreaToCpuPAddr(LinuxMemArea *psLinuxMemArea, IMG_UINT32 ui32ByteOffset)
@@ -1673,7 +1598,6 @@ LinuxMemAreaToCpuPAddr(LinuxMemArea *psLinuxMemArea, IMG_UINT32 ui32ByteOffset)
     return CpuPAddr;
 }
 
-
 IMG_BOOL
 LinuxMemAreaPhysIsContig(LinuxMemArea *psLinuxMemArea)
 {
@@ -1703,7 +1627,6 @@ LinuxMemAreaPhysIsContig(LinuxMemArea *psLinuxMemArea)
     return IMG_FALSE;
 }
 
-
 const IMG_CHAR *
 LinuxMemAreaTypeToString(LINUX_MEM_AREA_TYPE eMemAreaType)
 {
@@ -1730,7 +1653,6 @@ LinuxMemAreaTypeToString(LINUX_MEM_AREA_TYPE eMemAreaType)
 
     return "";
 }
-
 
 #if defined(DEBUG_LINUX_MEM_AREAS) || defined(DEBUG_LINUX_MEMORY_ALLOCATIONS)
 static void ProcSeqStartstopDebugMutex(struct seq_file *sfile, IMG_BOOL start)
@@ -1761,7 +1683,6 @@ static IMG_VOID* DecOffMemAreaRec_AnyVaCb(DEBUG_LINUX_MEM_AREA_REC *psNode, va_l
 	}
 }
 
-
 static void* ProcSeqNextMemArea(struct seq_file *sfile,void* el,loff_t off)
 {
     DEBUG_LINUX_MEM_AREA_REC *psRecord;
@@ -1786,7 +1707,6 @@ static void* ProcSeqOff2ElementMemArea(struct seq_file * sfile, loff_t off)
 													&off);
 	return (void*)psRecord;
 }
-
 
 static void ProcSeqShowMemArea(struct seq_file *sfile,void* el)
 {
@@ -1856,7 +1776,6 @@ static void ProcSeqShowMemArea(struct seq_file *sfile,void* el)
 
 #endif
 
-
 #if defined(DEBUG_LINUX_MEMORY_ALLOCATIONS)
 
 static IMG_VOID* DecOffMemAllocRec_AnyVaCb(DEBUG_MEM_ALLOC_REC *psNode, va_list va)
@@ -1871,8 +1790,6 @@ static IMG_VOID* DecOffMemAllocRec_AnyVaCb(DEBUG_MEM_ALLOC_REC *psNode, va_list 
 		return psNode;
 	}
 }
-
-
 
 static void* ProcSeqNextMemoryRecords(struct seq_file *sfile,void* el,loff_t off)
 {
@@ -1985,7 +1902,6 @@ static void ProcSeqShowMemoryRecords(struct seq_file *sfile,void* el)
                            "Filename:Line");
 
 #else
-
 
 		seq_printf( sfile, "<meminfo>\n<meminfo_header>\n");
 		seq_printf( sfile,
@@ -2101,7 +2017,6 @@ static void ProcSeqShowMemoryRecords(struct seq_file *sfile,void* el)
 
 #endif
 
-
 #if defined(DEBUG_LINUX_MEM_AREAS) || defined(DEBUG_LINUX_MMAP_AREAS)
 const IMG_CHAR *
 HAPFlagsToString(IMG_UINT32 ui32Flags)
@@ -2124,7 +2039,6 @@ HAPFlagsToString(IMG_UINT32 ui32Flags)
         "UNKNOWN"
     };
 
-
     if(ui32Flags & PVRSRV_HAP_UNCACHED){
         ui32CacheTypeIndex=0;
     }else if(ui32Flags & PVRSRV_HAP_CACHED){
@@ -2136,7 +2050,6 @@ HAPFlagsToString(IMG_UINT32 ui32Flags)
         PVR_DPF((PVR_DBG_ERROR, "%s: unknown cache type (%u)",
                  __FUNCTION__, (ui32Flags & PVRSRV_HAP_CACHETYPE_MASK)));
     }
-
 
     if(ui32Flags & PVRSRV_HAP_KERNEL_ONLY){
         ui32MapTypeIndex = 0;

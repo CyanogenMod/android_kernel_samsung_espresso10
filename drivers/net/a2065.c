@@ -58,7 +58,6 @@
 
 #include "a2065.h"
 
-
 	/*
 	 *		Transmit/Receive Ring Definitions
 	 */
@@ -76,11 +75,9 @@
 #define RX_BUFF_SIZE            PKT_BUF_SIZE
 #define TX_BUFF_SIZE            PKT_BUF_SIZE
 
-
 	/*
 	 *		Layout of the Lance's RAM Buffer
 	 */
-
 
 struct lance_init_block {
 	unsigned short mode;		/* Pre-set mode (reg. 15) */
@@ -100,7 +97,6 @@ struct lance_init_block {
 	char   rx_buf [RX_RING_SIZE][RX_BUFF_SIZE];
 	char   tx_buf [TX_RING_SIZE][TX_BUFF_SIZE];
 };
-
 
 	/*
 	 *		Private Device Data
@@ -132,7 +128,6 @@ struct lance_private {
 #define TX_BUFFS_AVAIL ((lp->tx_old<=lp->tx_new)?\
 			lp->tx_old+lp->tx_ring_mod_mask-lp->tx_new:\
 			lp->tx_old - lp->tx_new-1)
-
 
 #define LANCE_ADDR(x) ((int)(x) & ~0xff000000)
 
@@ -665,7 +660,6 @@ static int __devinit a2065_init_one(struct zorro_dev *z,
 				    const struct zorro_device_id *ent);
 static void __devexit a2065_remove_one(struct zorro_dev *z);
 
-
 static struct zorro_device_id a2065_zorro_tbl[] __devinitdata = {
 	{ ZORRO_PROD_CBM_A2065_1 },
 	{ ZORRO_PROD_CBM_A2065_2 },
@@ -776,7 +770,6 @@ static int __devinit a2065_init_one(struct zorro_dev *z,
 
 	return 0;
 }
-
 
 static void __devexit a2065_remove_one(struct zorro_dev *z)
 {

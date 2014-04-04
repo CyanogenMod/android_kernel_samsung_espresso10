@@ -157,7 +157,6 @@ static void __init himalaya_init(void)
 	platform_add_devices(devices, ARRAY_SIZE(devices));
 }
 
-
 MACHINE_START(HIMALAYA, "HTC Himalaya")
 	.boot_params = 0xa0000100,
 	.map_io = pxa25x_map_io,

@@ -161,7 +161,6 @@ static inline void arch_enable_uart_fifo(void)
 #define arch_enable_uart_fifo() do { } while(0)
 #endif
 
-
 static void
 arch_decomp_setup(void)
 {
@@ -179,6 +178,5 @@ arch_decomp_setup(void)
 
 	arch_enable_uart_fifo();
 }
-
 
 #endif /* __ASM_PLAT_UNCOMPRESS_H */

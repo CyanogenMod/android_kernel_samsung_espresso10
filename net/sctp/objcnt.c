@@ -144,5 +144,3 @@ void sctp_dbg_objcnt_exit(void)
 {
 	remove_proc_entry("sctp_dbg_objcnt", proc_net_sctp);
 }
-
-

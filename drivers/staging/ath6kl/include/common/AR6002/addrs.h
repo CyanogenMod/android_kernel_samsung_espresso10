@@ -72,7 +72,6 @@
 #define BOARD_DATA_SZ AR6002_BOARD_DATA_SZ
 #endif
 
-
 /*
  * Constants used by ASM code to access fields of host_interest_s,
  * which is at a fixed location in RAM.
@@ -85,6 +84,3 @@
 #define FLASH_IS_PRESENT_TARGADDR       HOST_INTEREST_FLASH_IS_PRESENT_ADDR
 
 #endif /* __ADDRS_H__ */
-
-
-

@@ -111,7 +111,6 @@ static void __exit w1_bq27000_exit(void)
 	w1_unregister_family(&w1_bq27000_family);
 }
 
-
 module_init(w1_bq27000_init);
 module_exit(w1_bq27000_exit);
 

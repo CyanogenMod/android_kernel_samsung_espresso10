@@ -1583,4 +1583,3 @@ extern unsigned int	sisfb_read_mio_pci_word(struct SiS_Private *SiS_Pr, int reg)
 #endif
 
 #endif
-

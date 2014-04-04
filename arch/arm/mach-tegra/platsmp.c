@@ -68,7 +68,6 @@ int __cpuinit boot_secondary(unsigned int cpu, struct task_struct *idle)
 	 */
 	spin_lock(&boot_lock);
 
-
 	/* set the reset vector to point to the secondary_startup routine */
 
 	boot_vector = virt_to_phys(tegra_secondary_startup);

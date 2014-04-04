@@ -70,7 +70,6 @@ struct pvr2_buffer *pvr2_stream_get_buffer(struct pvr2_stream *sp,int id);
 /* Find out how many buffers are idle or ready */
 int pvr2_stream_get_ready_count(struct pvr2_stream *);
 
-
 /* Kill all pending buffers and throw away any ready buffers as well */
 void pvr2_stream_kill(struct pvr2_stream *);
 

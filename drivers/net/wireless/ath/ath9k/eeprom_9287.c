@@ -902,7 +902,6 @@ static void ath9k_hw_ar9287_set_board_values(struct ath_hw *ah,
 			      pModal->rxTxMarginCh[i]);
 	}
 
-
 	if (IS_CHAN_HT40(chan))
 		REG_RMW_FIELD(ah, AR_PHY_SETTLING,
 			      AR_PHY_SETTLING_SWITCH, pModal->swSettleHt40);

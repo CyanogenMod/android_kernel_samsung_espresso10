@@ -17,7 +17,6 @@
  *
  */
 
-
 /*
  * There are some special registers on the RF chip
  * that control various operation settings related mostly to
@@ -42,7 +41,6 @@
  *
  * http://www.google.com/patents?id=qNURAAAAEBAJ
  */
-
 
 /*
  * Struct to hold default mode specific RF
@@ -130,7 +128,6 @@ enum ath5k_rf_regs_idx {
 	AR5K_RF_PD_PERIOD_B,
 	AR5K_RF_PD_PERIOD_XR,
 };
-
 
 /*******************\
 * RF5111 (Sombrero) *
@@ -230,8 +227,6 @@ static const struct ath5k_ini_rfbuffer rfb_5111[] = {
 	{ 7, 0x989c, { 0x0000125a, 0x0000129a, 0x0000125a } },
 	{ 7, 0x98cc, { 0x0000000e, 0x0000000f, 0x0000000e } },
 };
-
-
 
 /***********************\
 * RF5112/RF2112 (Derby) *
@@ -486,8 +481,6 @@ static const struct ath5k_ini_rfbuffer rfb_5112a[] = {
 	{ 7, 0x98c4, { 0x00000003, 0x00000003, 0x00000003 } },
 };
 
-
-
 /******************\
 * RF2413 (Griffin) *
 \******************/
@@ -545,8 +538,6 @@ static const struct ath5k_ini_rfbuffer rfb_2413[] = {
 	{ 7, 0x98cc, { 0x0000000e, 0x0000000e, 0x0000000e } },
 };
 
-
-
 /***************************\
 * RF2315/RF2316 (Cobra SoC) *
 \***************************/
@@ -603,8 +594,6 @@ static const struct ath5k_ini_rfbuffer rfb_2316[] = {
 	{ 7, 0x989c, { 0x00000800, 0x00000800, 0x00000800 } },
 	{ 7, 0x98cc, { 0x0000000e, 0x0000000e, 0x0000000e } },
 };
-
-
 
 /******************************\
 * RF5413/RF5424 (Eagle/Condor) *
@@ -676,8 +665,6 @@ static const struct ath5k_ini_rfbuffer rfb_5413[] = {
 	{ 7, 0x989c, { 0x00000800, 0x00000800, 0x00000800 } },
 	{ 7, 0x98cc, { 0x0000000e, 0x0000000e, 0x0000000e } },
 };
-
-
 
 /***************************\
 * RF2425/RF2417 (Swan/Nala) *

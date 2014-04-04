@@ -77,7 +77,6 @@ static void early_suspend(struct work_struct *work)
 	struct early_suspend *pos;
 	unsigned long irqflags;
 	int abort = 0;
-	char symname[KSYM_NAME_LEN];
 
 	mutex_lock(&early_suspend_lock);
 	spin_lock_irqsave(&state_lock, irqflags);
@@ -88,22 +87,12 @@ static void early_suspend(struct work_struct *work)
 	spin_unlock_irqrestore(&state_lock, irqflags);
 
 	if (abort) {
-		if (debug_mask & DEBUG_SUSPEND)
-			pr_info("early_suspend: abort, state %d\n", state);
 		mutex_unlock(&early_suspend_lock);
 		goto abort;
 	}
 
-	if (debug_mask & DEBUG_SUSPEND)
-		pr_info("early_suspend: call handlers\n");
 	list_for_each_entry(pos, &early_suspend_handlers, link) {
 		if (pos->suspend != NULL) {
-			if (debug_mask & DEBUG_VERBOSE) {
-				lookup_symbol_name(
-					(unsigned long)pos->suspend, symname);
-				pr_info("early_suspend: %s\n", symname);
-			}
-
 			pos->suspend(pos);
 		}
 	}
@@ -111,9 +100,6 @@ static void early_suspend(struct work_struct *work)
 
 	/*run sys_sync workqueue*/
 	suspend_sys_sync_queue();
-
-	if (debug_mask & DEBUG_SUSPEND)
-		pr_info("early_suspend: sync\n");
 
 abort:
 	spin_lock_irqsave(&state_lock, irqflags);
@@ -127,7 +113,6 @@ static void late_resume(struct work_struct *work)
 	struct early_suspend *pos;
 	unsigned long irqflags;
 	int abort = 0;
-	char symname[KSYM_NAME_LEN];
 
 	mutex_lock(&early_suspend_lock);
 	spin_lock_irqsave(&state_lock, irqflags);
@@ -138,25 +123,14 @@ static void late_resume(struct work_struct *work)
 	spin_unlock_irqrestore(&state_lock, irqflags);
 
 	if (abort) {
-		if (debug_mask & DEBUG_SUSPEND)
-			pr_info("late_resume: abort, state %d\n", state);
 		goto abort;
 	}
-	if (debug_mask & DEBUG_SUSPEND)
-		pr_info("late_resume: call handlers\n");
 	list_for_each_entry_reverse(pos, &early_suspend_handlers, link) {
 		if (pos->resume != NULL) {
-			if (debug_mask & DEBUG_VERBOSE) {
-				lookup_symbol_name(
-					(unsigned long)pos->resume, symname);
-				pr_info("late_resume: %s\n", symname);
-			}
-
 			pos->resume(pos);
 		}
 	}
-	if (debug_mask & DEBUG_SUSPEND)
-		pr_info("late_resume: done\n");
+
 abort:
 	mutex_unlock(&early_suspend_lock);
 }
@@ -173,13 +147,6 @@ void request_suspend_state(suspend_state_t new_state)
 		struct rtc_time tm;
 		getnstimeofday(&ts);
 		rtc_time_to_tm(ts.tv_sec, &tm);
-		pr_info("request_suspend_state: %s (%d->%d) at %lld "
-			"(%d-%02d-%02d %02d:%02d:%02d.%09lu UTC)\n",
-			new_state != PM_SUSPEND_ON ? "sleep" : "wakeup",
-			requested_suspend_state, new_state,
-			ktime_to_ns(ktime_get()),
-			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-			tm.tm_hour, tm.tm_min, tm.tm_sec, ts.tv_nsec);
 	}
 	if (!old_sleep && new_state != PM_SUSPEND_ON) {
 		state |= SUSPEND_REQUESTED;

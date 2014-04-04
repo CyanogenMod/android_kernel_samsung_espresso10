@@ -17,4 +17,3 @@ config IWMC3200TOP_DEBUGFS
 	depends on IWMC3200TOP
 	---help---
 	  Enable creation of debugfs files for iwmc3200top
-

@@ -120,7 +120,6 @@ int 		mptscsih_resume(struct pci_dev *pdev);
 
 #define SNS_LEN(scp)	SCSI_SENSE_BUFFERSIZE
 
-
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 /*
  *	mptscsih_getFreeChainBuffer - Function to get a free chain
@@ -339,7 +338,6 @@ nextSGEset:
 		}
 
 		sges_left -= sg_done;
-
 
 		/* NOTE: psge points to the beginning of the chain element
 		 * in current buffer. Get a chain buffer.
@@ -863,7 +861,6 @@ mptscsih_io_done(MPT_ADAPTER *ioc, MPT_FRAME_HDR *mf, MPT_FRAME_HDR *mr)
 					sc->result = DID_RESET << 16;
 				}
 			}
-
 
 			dreplyprintk(ioc, printk(MYIOC_s_DEBUG_FMT
 			    "  sc->underflow={report ERR if < %02xh bytes xfer'd}\n",
@@ -1463,7 +1460,6 @@ mptscsih_qcmd(struct scsi_cmnd *SCpnt, void (*done)(struct scsi_cmnd *))
 	} else
 		scsictl = scsidir | MPI_SCSIIO_CONTROL_UNTAGGED;
 
-
 	/* Use the above information to set up the message frame
 	 */
 	pScsiReq->TargetID = (u8) vdevice->vtarget->id;
@@ -1934,7 +1930,6 @@ mptscsih_dev_reset(struct scsi_cmnd * SCpnt)
 		return FAILED;
 }
 
-
 /*=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 /**
  *	mptscsih_bus_reset - Perform a SCSI BUS_RESET!	new_eh variant
@@ -2259,7 +2254,6 @@ mptscsih_is_phys_disk(MPT_ADAPTER *ioc, u8 channel, u8 id)
 		}
 		kfree(phys_disk);
 	}
-
 
 	/*
 	 * Check inactive list for matching phys disks
@@ -2755,7 +2749,6 @@ mptscsih_scandv_complete(MPT_ADAPTER *ioc, MPT_FRAME_HDR *req,
 	complete(&ioc->internal_cmds.done);
 	return 1;
 }
-
 
 /**
  *	mptscsih_get_completion_code - get completion code from MPT request

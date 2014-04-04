@@ -78,7 +78,6 @@ struct mpu_config
 #define	COMDPORT(base)   (base+1)
 #define	STATPORT(base)   (base+1)
 
-
 static void mpu401_close(int dev);
 
 static inline int mpu401_status(struct mpu_config *devc)
@@ -122,12 +121,12 @@ static void mpu_timer_interrupt(void);
 static void timer_ext_event(struct mpu_config *devc, int event, int parm);
 
 static struct synth_info mpu_synth_info_proto = {
-	"MPU-401 MIDI interface", 
-	0, 
-	SYNTH_TYPE_MIDI, 
-	MIDI_TYPE_MPU401, 
-	0, 128, 
-	0, 128, 
+	"MPU-401 MIDI interface",
+	0,
+	SYNTH_TYPE_MIDI,
+	MIDI_TYPE_MPU401,
+	0, 128,
+	0, 128,
 	SYNTH_CAP_INPUT
 };
 
@@ -502,7 +501,7 @@ static int mpu401_open(int dev, int mode,
 			return err;
 		}
 	}
-	
+
 	set_uart_mode(dev, devc, 1);
 	devc->mode = MODE_MIDI;
 	devc->synthno = 0;
@@ -727,7 +726,7 @@ static int mpu401_ioctl(int dev, unsigned cmd, void __user *arg)
 	int val, ret;
 
 	devc = &dev_conf[dev];
-	switch (cmd) 
+	switch (cmd)
 	{
 		case SNDCTL_MIDI_MPUMODE:
 			if (!(devc->capabilities & MPU_CAP_INTLG)) { /* No intelligent mode */
@@ -853,7 +852,7 @@ static int mpu_synth_open(int dev, int mode)
 }
 
 static void mpu_synth_close(int dev)
-{ 
+{
 	int midi_dev;
 	struct mpu_config *devc;
 	struct coproc_operations *coprocessor;
@@ -1014,7 +1013,6 @@ int attach_mpu401(struct address_info *hw_config, struct module *owner)
 			if (mpu_cmd(m, 0xE0, 120) >= 0)		/* Set tempo OK */
 				devc->capabilities |= MPU_CAP_INTLG;	/* Supports intelligent mode */
 
-
 	mpu401_synth_operations[m] = kmalloc(sizeof(struct synth_operations), GFP_KERNEL);
 
 	if (mpu401_synth_operations[m] == NULL)
@@ -1094,13 +1092,13 @@ int attach_mpu401(struct address_info *hw_config, struct module *owner)
 		hw_config->slots[2] = mpu_timer_init(m);
 
 	midi_devs[m] = &mpu401_midi_operations[devc->devno];
-	
+
 	if (owner)
 		midi_devs[m]->owner = owner;
 
 	hw_config->slots[1] = m;
 	sequencer_init();
-	
+
 	return 0;
 
 out_irq:
@@ -1215,7 +1213,7 @@ void unload_mpu401(struct address_info *hw_config)
 {
 	void *p;
 	int n=hw_config->slots[1];
-		
+
 	if (n != -1) {
 		release_region(hw_config->io_base, 2);
 		if (hw_config->always_detect == 0 && hw_config->irq > 0)
@@ -1494,7 +1492,7 @@ static int mpu_timer_ioctl(int dev, unsigned int command, void __user *arg)
 				if (parm != 0)
 				{
 					timer_mode = parm;
-	
+
 					if (timer_mode & TMR_MODE_CLS)
 						mpu_cmd(midi_dev, 0x3c, 0);		/* Use CLS sync */
 					else if (timer_mode & TMR_MODE_SMPTE)
@@ -1731,7 +1729,6 @@ static int mpu_timer_init(int midi_dev)
 		if (devc->revision & 0x02)
 			timer_caps |= TMR_MODE_CLS;
 
-
 		if (devc->revision & 0x40)
 			max_timebase = 10;	/* Has the 216 and 240 ppqn modes */
 	}
@@ -1772,7 +1769,7 @@ static int __init init_mpu401(void)
 		if ((ret = attach_mpu401(&cfg, THIS_MODULE)))
 			return ret;
 	}
-	
+
 	return 0;
 }
 
@@ -1792,9 +1789,9 @@ static int __init setup_mpu401(char *str)
 {
         /* io, irq */
 	int ints[3];
-	
+
 	str = get_options(str, ARRAY_SIZE(ints), ints);
-	
+
 	io = ints[1];
 	irq = ints[2];
 

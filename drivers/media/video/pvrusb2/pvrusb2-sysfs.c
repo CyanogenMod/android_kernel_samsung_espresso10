@@ -460,7 +460,6 @@ static void pvr2_sysfs_add_debugifc(struct pvr2_sysfs *sfp)
 	}
 }
 
-
 static void pvr2_sysfs_tear_down_debugifc(struct pvr2_sysfs *sfp)
 {
 	if (!sfp->debugifc) return;
@@ -477,7 +476,6 @@ static void pvr2_sysfs_tear_down_debugifc(struct pvr2_sysfs *sfp)
 }
 #endif /* CONFIG_VIDEO_PVRUSB2_DEBUGIFC */
 
-
 static void pvr2_sysfs_add_controls(struct pvr2_sysfs *sfp)
 {
 	unsigned int idx,cnt;
@@ -486,7 +484,6 @@ static void pvr2_sysfs_add_controls(struct pvr2_sysfs *sfp)
 		pvr2_sysfs_add_control(sfp,idx);
 	}
 }
-
 
 static void pvr2_sysfs_tear_down_controls(struct pvr2_sysfs *sfp)
 {
@@ -501,7 +498,6 @@ static void pvr2_sysfs_tear_down_controls(struct pvr2_sysfs *sfp)
 	}
 }
 
-
 static void pvr2_sysfs_class_release(struct class *class)
 {
 	struct pvr2_sysfs_class *clp;
@@ -510,13 +506,11 @@ static void pvr2_sysfs_class_release(struct class *class)
 	kfree(clp);
 }
 
-
 static void pvr2_sysfs_release(struct device *class_dev)
 {
 	pvr2_sysfs_trace("Releasing class_dev id=%p",class_dev);
 	kfree(class_dev);
 }
-
 
 static void class_dev_destroy(struct pvr2_sysfs *sfp)
 {
@@ -559,7 +553,6 @@ static void class_dev_destroy(struct pvr2_sysfs *sfp)
 	sfp->class_dev = NULL;
 }
 
-
 static ssize_t v4l_minor_number_show(struct device *class_dev,
 				     struct device_attribute *attr, char *buf)
 {
@@ -571,7 +564,6 @@ static ssize_t v4l_minor_number_show(struct device *class_dev,
 						       pvr2_v4l_type_video));
 }
 
-
 static ssize_t bus_info_show(struct device *class_dev,
 			     struct device_attribute *attr, char *buf)
 {
@@ -581,7 +573,6 @@ static ssize_t bus_info_show(struct device *class_dev,
 	return scnprintf(buf,PAGE_SIZE,"%s\n",
 			 pvr2_hdw_get_bus_info(sfp->channel.hdw));
 }
-
 
 static ssize_t hdw_name_show(struct device *class_dev,
 			     struct device_attribute *attr, char *buf)
@@ -593,7 +584,6 @@ static ssize_t hdw_name_show(struct device *class_dev,
 			 pvr2_hdw_get_type(sfp->channel.hdw));
 }
 
-
 static ssize_t hdw_desc_show(struct device *class_dev,
 			     struct device_attribute *attr, char *buf)
 {
@@ -603,7 +593,6 @@ static ssize_t hdw_desc_show(struct device *class_dev,
 	return scnprintf(buf,PAGE_SIZE,"%s\n",
 			 pvr2_hdw_get_desc(sfp->channel.hdw));
 }
-
 
 static ssize_t v4l_radio_minor_number_show(struct device *class_dev,
 					   struct device_attribute *attr,
@@ -617,7 +606,6 @@ static ssize_t v4l_radio_minor_number_show(struct device *class_dev,
 						       pvr2_v4l_type_radio));
 }
 
-
 static ssize_t unit_number_show(struct device *class_dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -627,7 +615,6 @@ static ssize_t unit_number_show(struct device *class_dev,
 	return scnprintf(buf,PAGE_SIZE,"%d\n",
 			 pvr2_hdw_get_unit_number(sfp->channel.hdw));
 }
-
 
 static void class_dev_create(struct pvr2_sysfs *sfp,
 			     struct pvr2_sysfs_class *class_ptr)
@@ -755,7 +742,6 @@ static void class_dev_create(struct pvr2_sysfs *sfp,
 #endif /* CONFIG_VIDEO_PVRUSB2_DEBUGIFC */
 }
 
-
 static void pvr2_sysfs_internal_check(struct pvr2_channel *chp)
 {
 	struct pvr2_sysfs *sfp;
@@ -766,7 +752,6 @@ static void pvr2_sysfs_internal_check(struct pvr2_channel *chp)
 	pvr2_channel_done(&sfp->channel);
 	kfree(sfp);
 }
-
 
 struct pvr2_sysfs *pvr2_sysfs_create(struct pvr2_context *mp,
 				     struct pvr2_sysfs_class *class_ptr)
@@ -781,8 +766,6 @@ struct pvr2_sysfs *pvr2_sysfs_create(struct pvr2_context *mp,
 	class_dev_create(sfp,class_ptr);
 	return sfp;
 }
-
-
 
 struct pvr2_sysfs_class *pvr2_sysfs_class_create(void)
 {
@@ -803,13 +786,11 @@ struct pvr2_sysfs_class *pvr2_sysfs_class_create(void)
 	return clp;
 }
 
-
 void pvr2_sysfs_class_destroy(struct pvr2_sysfs_class *clp)
 {
 	pvr2_sysfs_trace("Unregistering pvr2_sysfs_class id=%p", clp);
 	class_unregister(&clp->class);
 }
-
 
 #ifdef CONFIG_VIDEO_PVRUSB2_DEBUGIFC
 static ssize_t debuginfo_show(struct device *class_dev,
@@ -822,7 +803,6 @@ static ssize_t debuginfo_show(struct device *class_dev,
 	return pvr2_debugifc_print_info(sfp->channel.hdw,buf,PAGE_SIZE);
 }
 
-
 static ssize_t debugcmd_show(struct device *class_dev,
 			     struct device_attribute *attr, char *buf)
 {
@@ -831,7 +811,6 @@ static ssize_t debugcmd_show(struct device *class_dev,
 	if (!sfp) return -EINVAL;
 	return pvr2_debugifc_print_status(sfp->channel.hdw,buf,PAGE_SIZE);
 }
-
 
 static ssize_t debugcmd_store(struct device *class_dev,
 			      struct device_attribute *attr,
@@ -848,7 +827,6 @@ static ssize_t debugcmd_store(struct device *class_dev,
 	return count;
 }
 #endif /* CONFIG_VIDEO_PVRUSB2_DEBUGIFC */
-
 
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:

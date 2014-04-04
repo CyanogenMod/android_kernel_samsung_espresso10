@@ -49,7 +49,6 @@ struct ntfy_event {
 	struct sync_object sync_obj;
 };
 
-
 /**
  * dsp_notifier_event() - callback function to nofity events
  * @this:		pointer to itself struct notifier_block
@@ -112,8 +111,6 @@ static inline void ntfy_notify(struct ntfy_object *ntfy_obj, u32 event)
 	raw_notifier_call_chain(&ntfy_obj->head, event, NULL);
 	spin_unlock_bh(&ntfy_obj->ntfy_lock);
 }
-
-
 
 /**
  * ntfy_init() - Create and initialize a ntfy_event structure.

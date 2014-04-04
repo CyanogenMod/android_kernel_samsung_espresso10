@@ -119,7 +119,6 @@ typedef struct t3e3_stats {
 	u32 LCV, FRAMING_BIT, PARITY_ERROR, FEBE_count, CP_BIT;
 } t3e3_stats_t;
 
-
 typedef struct t3e3_resp {
 	union {
 		t3e3_param_t param;

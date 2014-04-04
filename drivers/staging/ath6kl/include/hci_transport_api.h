@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2009-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -31,7 +31,7 @@ extern "C" {
 
 typedef void *HCI_TRANSPORT_HANDLE;
 
-typedef HTC_ENDPOINT_ID HCI_TRANSPORT_PACKET_TYPE; 
+typedef HTC_ENDPOINT_ID HCI_TRANSPORT_PACKET_TYPE;
 
     /* we map each HCI packet class to a static Endpoint ID */
 #define HCI_COMMAND_TYPE   ENDPOINT_1
@@ -87,7 +87,7 @@ struct hci_transport_properties {
 
 struct hci_transport_config_info {
     int      ACLRecvBufferWaterMark;     /* low watermark to trigger recv refill */
-    int      EventRecvBufferWaterMark;   /* low watermark to trigger recv refill */  
+    int      EventRecvBufferWaterMark;   /* low watermark to trigger recv refill */
     int      MaxSendQueueDepth;          /* max number of packets in the single send queue */
     void     *pContext;                  /* context for all callbacks */
     void     (*TransportFailure)(void *pContext, int Status); /* transport failure callback */
@@ -121,10 +121,10 @@ HCI_TRANSPORT_HANDLE HCI_TransportAttach(void *HTCHandle, struct hci_transport_c
   @input:  HciTrans - HCI transport handle
            pInfo - initialization information
   @output:
-  @return: 
-  @notes:  
+  @return:
+  @notes:
   @example:
-  @see also: 
+  @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 void HCI_TransportDetach(HCI_TRANSPORT_HANDLE HciTrans);
 
@@ -137,7 +137,7 @@ void HCI_TransportDetach(HCI_TRANSPORT_HANDLE HciTrans);
   @return: 0 on success
   @notes:  user must supply HTC packets for capturing incomming HCI packets.  The caller
            must initialize each HTC packet using the SET_HTC_PACKET_INFO_RX_REFILL()
-           macro. Each packet in the queue must be of the same type and length 
+           macro. Each packet in the queue must be of the same type and length
   @example:
   @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -152,27 +152,26 @@ int    HCI_TransportAddReceivePkts(HCI_TRANSPORT_HANDLE HciTrans, struct htc_pac
   @output:
   @return: 0
   @notes:  Caller must initialize packet using SET_HTC_PACKET_INFO_TX() and
-           HCI_SET_PACKET_TYPE() macros to prepare the packet. 
+           HCI_SET_PACKET_TYPE() macros to prepare the packet.
            If Synchronous is set to false the call is fully asynchronous.  On error or completion,
            the registered send complete callback will be called.
            If Synchronous is set to true, the call will block until the packet is sent, if the
-           interface cannot send the packet within a 2 second timeout, the function will return 
+           interface cannot send the packet within a 2 second timeout, the function will return
            the failure code : A_EBUSY.
-           
-           Synchronous Mode should only be used at start-up to initialize the HCI device using 
+
+           Synchronous Mode should only be used at start-up to initialize the HCI device using
            custom HCI commands.  It should NOT be mixed with Asynchronous operations.  Mixed synchronous
            and asynchronous operation behavior is undefined.
-           
+
   @example:
-  @see also: 
+  @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 int    HCI_TransportSendPkt(HCI_TRANSPORT_HANDLE HciTrans, struct htc_packet *pPacket, bool Synchronous);
-
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Stop HCI transport
   @function name: HCI_TransportStop
-  @input:  HciTrans - hci transport handle 
+  @input:  HciTrans - hci transport handle
   @output:
   @return:
   @notes: HCI transport communication will be halted.  All receive and pending TX packets will
@@ -185,7 +184,7 @@ void        HCI_TransportStop(HCI_TRANSPORT_HANDLE HciTrans);
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Start the HCI transport
   @function name: HCI_TransportStart
-  @input:  HciTrans - hci transport handle 
+  @input:  HciTrans - hci transport handle
   @output:
   @return: 0 on success
   @notes: HCI transport communication will begin, the caller can expect the arrival
@@ -198,7 +197,7 @@ int    HCI_TransportStart(HCI_TRANSPORT_HANDLE HciTrans);
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Enable or Disable Asynchronous Recv
   @function name: HCI_TransportEnableDisableAsyncRecv
-  @input:  HciTrans - hci transport handle 
+  @input:  HciTrans - hci transport handle
            Enable - enable or disable asynchronous recv
   @output:
   @return: 0 on success
@@ -211,10 +210,10 @@ int    HCI_TransportEnableDisableAsyncRecv(HCI_TRANSPORT_HANDLE HciTrans, bool E
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Receive an event packet from the HCI transport synchronously using polling
   @function name: HCI_TransportRecvHCIEventSync
-  @input:  HciTrans - hci transport handle 
+  @input:  HciTrans - hci transport handle
            pPacket - HTC packet to hold the recv data
            MaxPollMS - maximum polling duration in Milliseconds;
-  @output: 
+  @output:
   @return: 0 on success
   @notes: This API should be used only during HCI device initialization, the caller must call
           HCI_TransportEnableDisableAsyncRecv with Enable=false prior to using this API.
@@ -229,26 +228,26 @@ int    HCI_TransportRecvHCIEventSync(HCI_TRANSPORT_HANDLE HciTrans,
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Set the desired baud rate for the underlying transport layer
   @function name: HCI_TransportSetBaudRate
-  @input:  HciTrans - hci transport handle 
+  @input:  HciTrans - hci transport handle
            Baud - baud rate in bps
-  @output: 
+  @output:
   @return: 0 on success
   @notes: This API should be used only after HCI device initialization
   @example:
-  @see also: 
+  @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 int    HCI_TransportSetBaudRate(HCI_TRANSPORT_HANDLE HciTrans, u32 Baud);
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Enable/Disable HCI Transport Power Management
   @function name: HCI_TransportEnablePowerMgmt
-  @input:  HciTrans - hci transport handle 
+  @input:  HciTrans - hci transport handle
            Enable - 1 = Enable, 0 = Disable
-  @output: 
+  @output:
   @return: 0 on success
-  @notes: 
+  @notes:
   @example:
-  @see also: 
+  @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 int HCI_TransportEnablePowerMgmt(HCI_TRANSPORT_HANDLE HciTrans, bool Enable);
 

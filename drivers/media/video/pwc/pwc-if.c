@@ -177,8 +177,6 @@ static struct video_device pwc_template = {
  * This is used when initializing the contents of the area.
  */
 
-
-
 static void *pwc_rvmalloc(unsigned long size)
 {
 	void * mem;
@@ -215,9 +213,6 @@ static void pwc_rvfree(void * mem, unsigned long size)
 	 }
 	vfree(mem);
 }
-
-
-
 
 static int pwc_allocate_buffers(struct pwc_device *pdev)
 {
@@ -443,7 +438,6 @@ static int pwc_next_fill_frame(struct pwc_device *pdev)
 	return ret;
 }
 
-
 /**
   \brief Reset all buffers, pointers and lists, except for the image_used[] buffer.
 
@@ -479,7 +473,6 @@ static void pwc_reset_buffers(struct pwc_device *pdev)
 	PWC_DEBUG_MEMORY("<< %s __leaving__\n", __func__);
 }
 
-
 /**
   \brief Do all the handling for getting one frame: get pointer, decompress, advance pointers.
  */
@@ -497,7 +490,6 @@ int pwc_handle_frame(struct pwc_device *pdev)
 		spin_unlock_irqrestore(&pdev->ptrlock, flags);
 		return ret;
 	}
-
 
 	if (pdev->full_frames == NULL) {
 		PWC_ERROR("Woops. No frames ready.\n");
@@ -776,7 +768,6 @@ handler_end:
 	if (i != 0)
 		PWC_ERROR("Error (%d) re-submitting urb in pwc_isoc_handler.\n", i);
 }
-
 
 int pwc_isoc_init(struct pwc_device *pdev)
 {
@@ -1088,7 +1079,6 @@ static int pwc_video_open(struct file *file)
 	/* Set LED on/off time */
 	if (pwc_set_leds(pdev, led_on, led_off) < 0)
 		PWC_DEBUG_OPEN("Failed to set LED on/off time.\n");
-
 
 	/* So far, so good. Allocate memory. */
 	i = pwc_allocate_buffers(pdev);
@@ -1803,7 +1793,6 @@ disconnect_out:
 		input_unregister_device(pdev->button_dev);
 #endif
 }
-
 
 /*
  * Initialization code & module stuff

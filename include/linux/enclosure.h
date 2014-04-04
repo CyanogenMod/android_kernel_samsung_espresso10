@@ -81,7 +81,6 @@ struct enclosure_component_callbacks {
 			  enum enclosure_component_setting);
 };
 
-
 struct enclosure_component {
 	void *scratch;
 	struct device cdev;

@@ -16,7 +16,6 @@
  * WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  */
 
-
 #include <linux/errno.h>
 #include <linux/module.h>
 #include <linux/types.h>

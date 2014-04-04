@@ -194,7 +194,6 @@ static struct pci_error_handlers igb_err_handler = {
 	.resume = igb_io_resume,
 };
 
-
 static struct pci_driver igb_driver = {
 	.name     = igb_driver_name,
 	.id_table = igb_pci_tbl,
@@ -542,7 +541,6 @@ rx_ring_summary:
 exit:
 	return;
 }
-
 
 /**
  * igb_read_clock - read raw cycle counter (to be used by time counter)
@@ -1188,7 +1186,6 @@ static int igb_init_interrupt_scheme(struct igb_adapter *adapter)
 		dev_err(&pdev->dev, "Invalid q_vector to ring mapping\n");
 		goto err_map_queues;
 	}
-
 
 	return 0;
 err_map_queues:
@@ -2224,7 +2221,6 @@ static void __devinit igb_probe_vfs(struct igb_adapter * adapter)
 	}
 #endif /* CONFIG_PCI_IOV */
 }
-
 
 /**
  * igb_init_hw_timer - Initialize hardware timer used with IEEE 1588 timestamp
@@ -4521,11 +4517,13 @@ void igb_update_stats(struct igb_adapter *adapter,
 	bytes = 0;
 	packets = 0;
 	for (i = 0; i < adapter->num_rx_queues; i++) {
-		u32 rqdpc_tmp = rd32(E1000_RQDPC(i)) & 0x0FFF;
+		u32 rqdpc = rd32(E1000_RQDPC(i));
 		struct igb_ring *ring = adapter->rx_ring[i];
 
-		ring->rx_stats.drops += rqdpc_tmp;
-		net_stats->rx_fifo_errors += rqdpc_tmp;
+		if (rqdpc) {
+			ring->rx_stats.drops += rqdpc;
+			net_stats->rx_fifo_errors += rqdpc;
+		}
 
 		do {
 			start = u64_stats_fetch_begin_bh(&ring->rx_syncp);

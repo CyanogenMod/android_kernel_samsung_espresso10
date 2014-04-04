@@ -2,13 +2,13 @@
  *  'Standard' SDIO HOST CONTROLLER driver
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -81,7 +81,6 @@ extern void sdstd_osfree(sdioh_info_t *sd);
 #define sdstd_os_yield(sd)	do {} while (0)
 #define RETRIES_SMALL 100
 
-
 #define USE_BLOCKMODE		0x2	/* Block mode can be single block or multi */
 #define USE_MULTIBLOCK		0x4
 
@@ -90,7 +89,6 @@ extern void sdstd_osfree(sdioh_info_t *sd);
 #define CLIENT_INTR 		0x100	/* Get rid of this! */
 
 #define HC_INTR_RETUNING	0x1000
-
 
 #ifdef BCMSDIOH_TXGLOM
 /* Setting the MAX limit to 10 */
@@ -220,7 +218,6 @@ extern void sdstd_intrs_off(sdioh_info_t *sd, uint16 norm, uint16 err);
 
 /* Wait for specified interrupt and error bits to be set */
 extern void sdstd_spinbits(sdioh_info_t *sd, uint16 norm, uint16 err);
-
 
 /**************************************************************
  * Internal interfaces: bcmsdstd.c references to per-port code

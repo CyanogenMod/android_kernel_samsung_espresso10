@@ -207,7 +207,6 @@ static long _rtl92se_signal_scale_mapping(struct ieee80211_hw *hw,
 	return retsig;
 }
 
-
 static void _rtl92se_query_rxphystatus(struct ieee80211_hw *hw,
 				       struct rtl_stats *pstats, u8 *pdesc,
 				       struct rx_fwinfo *p_drvinfo,
@@ -661,7 +660,6 @@ bool rtl92se_rx_query_desc(struct ieee80211_hw *hw, struct rtl_stats *stats,
 			(u8)GET_RX_STATUS_DESC_RX_MCS(pdesc),
 			(bool)GET_RX_STATUS_DESC_PAGGR(pdesc));
 
-
 	rx_status->mactime = GET_RX_STATUS_DESC_TSFL(pdesc);
 	if (phystatus == true) {
 		p_drvinfo = (struct rx_fwinfo *)(skb->data +
@@ -764,7 +762,6 @@ void rtl92se_tx_fill_desc(struct ieee80211_hw *hw,
 		       DESC92S_RATE54M) ?
 		       (ptcb_desc->rts_use_shortpreamble ? 1 : 0)
 		       : (ptcb_desc->rts_use_shortgi ? 1 : 0)));
-
 
 		/* Set Bandwidth and sub-channel settings. */
 		if (bw_40) {

@@ -188,7 +188,6 @@ struct cfpkt *cfpkt_fromnative(enum caif_direction dir, void *nativepkt);
  */
 void *cfpkt_tonative(struct cfpkt *pkt);
 
-
 /*
  * Returns packet information for a packet.
  * pkt Packet to get info from;

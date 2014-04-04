@@ -70,7 +70,6 @@ struct sysv_inode_info {
 	struct inode	vfs_inode;
 };
 
-
 static inline struct sysv_inode_info *SYSV_I(struct inode *inode)
 {
 	return list_entry(inode, struct sysv_inode_info, vfs_inode);
@@ -80,7 +79,6 @@ static inline struct sysv_sb_info *SYSV_SB(struct super_block *sb)
 {
 	return sb->s_fs_info;
 }
-
 
 /* identify the FS in memory */
 enum {
@@ -101,7 +99,6 @@ enum {
 #define SYSV2_SUPER_MAGIC	(SYSV_MAGIC_BASE+FSTYPE_SYSV2)
 #define COH_SUPER_MAGIC		(SYSV_MAGIC_BASE+FSTYPE_COH)
 
-
 /* Admissible values for i_nlink: 0.._LINK_MAX */
 enum {
 	XENIX_LINK_MAX	=	126,	/* ?? */
@@ -109,7 +106,6 @@ enum {
 	V7_LINK_MAX     =	126,	/* ?? */
 	COH_LINK_MAX	=	10000,
 };
-
 
 static inline void dirty_sb(struct super_block *sb)
 {
@@ -120,7 +116,6 @@ static inline void dirty_sb(struct super_block *sb)
 		mark_buffer_dirty(sbi->s_bh2);
 	sb->s_dirt = 1;
 }
-
 
 /* ialloc.c */
 extern struct sysv_inode *sysv_raw_inode(struct super_block *, unsigned,
@@ -147,7 +142,6 @@ extern int sysv_getattr(struct vfsmount *, struct dentry *, struct kstat *);
 extern int sysv_init_icache(void);
 extern void sysv_destroy_icache(void);
 
-
 /* dir.c */
 extern struct sysv_dir_entry *sysv_find_entry(struct dentry *, struct page **);
 extern int sysv_add_link(struct dentry *, struct inode *);
@@ -159,7 +153,6 @@ extern void sysv_set_link(struct sysv_dir_entry *, struct page *,
 extern struct sysv_dir_entry *sysv_dotdot(struct inode *, struct page **);
 extern ino_t sysv_inode_by_name(struct dentry *);
 
-
 extern const struct inode_operations sysv_file_inode_operations;
 extern const struct inode_operations sysv_dir_inode_operations;
 extern const struct inode_operations sysv_fast_symlink_inode_operations;
@@ -168,7 +161,6 @@ extern const struct file_operations sysv_dir_operations;
 extern const struct address_space_operations sysv_aops;
 extern const struct super_operations sysv_sops;
 extern const struct dentry_operations sysv_dentry_operations;
-
 
 enum {
 	BYTESEX_LE,

@@ -270,7 +270,6 @@ static long tf_self_test_ioctl_blkcipher_update(struct file *filp,
 	int (*crypt)(struct blkcipher_desc *, struct scatterlist *,
 		     struct scatterlist *, unsigned int);
 
-
 	switch (data->type & CRYPTO_ALG_TYPE_MASK) {
 	case CRYPTO_ALG_TYPE_BLKCIPHER:
 	case CRYPTO_ALG_TYPE_ABLKCIPHER:
@@ -411,8 +410,6 @@ static ssize_t tf_self_test_device_write(struct file *filp,
 	}
 	return count;
 }
-
-
 
 static const struct file_operations tf_self_test_device_file_ops = {
 	.owner = THIS_MODULE,

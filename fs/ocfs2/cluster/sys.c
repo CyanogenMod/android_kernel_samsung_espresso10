@@ -34,7 +34,6 @@
 #include "masklog.h"
 #include "sys.h"
 
-
 static ssize_t version_show(struct kobject *kobj, struct kobj_attribute *attr,
 			    char *buf)
 {

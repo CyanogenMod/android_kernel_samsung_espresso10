@@ -508,7 +508,6 @@ irqreturn_t ehca_interrupt_eq(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 static inline void process_eqe(struct ehca_shca *shca, struct ehca_eqe *eqe)
 {
 	u64 eqe_value;

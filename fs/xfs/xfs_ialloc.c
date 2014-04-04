@@ -37,7 +37,6 @@
 #include "xfs_error.h"
 #include "xfs_bmap.h"
 
-
 /*
  * Allocation group level functions.
  */
@@ -667,7 +666,6 @@ xfs_dialloc(
 	xfs_inobt_rec_incore_t trec;	/* temp inode allocation record */
 	struct xfs_perag *pag;
 
-
 	if (*IO_agbp == NULL) {
 		/*
 		 * We do not have an agbp, so select an initial allocation
@@ -824,7 +822,6 @@ nextag:
 			 */
 			goto alloc_inode;
 		}
-
 
 		/*
 		 * In the same AG as parent, but parent's chunk is full.
@@ -1167,7 +1164,7 @@ xfs_difree(
 			goto error0;
 		}
 
-		/* 
+		/*
 		 * Change the inode free counts and log the ag/sb changes.
 		 */
 		be32_add_cpu(&agi->agi_freecount, 1);

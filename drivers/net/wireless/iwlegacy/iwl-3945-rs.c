@@ -436,7 +436,6 @@ static void iwl3945_rs_free_sta(void *iwl_priv, struct ieee80211_sta *sta,
 	del_timer_sync(&rs_sta->rate_scale_flush);
 }
 
-
 /**
  * iwl3945_rs_tx_status - Update rate control values based on Tx results
  *
@@ -478,7 +477,6 @@ static void iwl3945_rs_tx_status(void *priv_rate, struct ieee80211_supported_ban
 		return;
 	}
 
-
 	rs_sta->tx_packets++;
 
 	scale_rate_index = first_index;
@@ -516,7 +514,6 @@ static void iwl3945_rs_tx_status(void *priv_rate, struct ieee80211_supported_ban
 
 		scale_rate_index = last_index;
 	}
-
 
 	/* Update the last index window with success/failure based on ACK */
 	IWL_DEBUG_RATE(priv, "Update rate %d with %s.\n",

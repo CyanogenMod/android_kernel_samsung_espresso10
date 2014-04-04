@@ -18,7 +18,6 @@ config SND_SOC_AU1XPSC_AC97
 	select SND_AC97_CODEC
 	select SND_SOC_AC97_BUS
 
-
 ##
 ## Boards
 ##

@@ -277,7 +277,6 @@ struct ath5k_vif_iter_data {
 };
 void ath5k_vif_iter(void *data, u8 *mac, struct ieee80211_vif *vif);
 
-
 #define ath5k_hw_hasbssidmask(_ah) \
 	(ath5k_hw_get_capability(_ah, AR5K_CAP_BSSIDMASK, 0, NULL) == 0)
 #define ath5k_hw_hasveol(_ah) \

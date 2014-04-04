@@ -24,7 +24,6 @@
 #include <asm/mach/irq.h>
 #include <asm/irq.h>
 
-
 #define IOP13XX_NUM_MSI_IRQS 128
 static DECLARE_BITMAP(msi_irq_in_use, IOP13XX_NUM_MSI_IRQS);
 

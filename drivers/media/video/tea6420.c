@@ -27,7 +27,6 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
   */
 
-
 #include <linux/module.h>
 #include <linux/ioctl.h>
 #include <linux/slab.h>
@@ -44,7 +43,6 @@ static int debug;
 module_param(debug, int, 0644);
 
 MODULE_PARM_DESC(debug, "Debug level (0-1)");
-
 
 /* make a connection between the input 'i' and the output 'o'
    with gain 'g' (note: i = 6 means 'mute') */

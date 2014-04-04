@@ -78,7 +78,7 @@
  * Note: The temperature and voltage sensors are relocated on a different
  *	 I2C bus.
  */
-#define I2C_ADDR_VPD	0xA0	/* I2C address for the VPD EEPROM */ 
+#define I2C_ADDR_VPD	0xA0	/* I2C address for the VPD EEPROM */
 
 /*
  * Define Bits and Values of the registers
@@ -562,7 +562,6 @@
 #define	ALL_IRSR	0x01ffff77L	/* (DV) */
 #define	ALL_IRSR_ML	0x0ffff077L	/* (ML) */
 
-
 /*	B0_IMSK		32 bit Interrupt mask register */
 /*
  * The Bit definnition of this register are the same as of the interrupt
@@ -789,7 +788,6 @@
 			CSR_DREAD_RST|CSR_DWRITE_RST|CSR_TRANS_RST)
 #define CSR_CLR_RESET	(CSR_DESC_CLEAR|CSR_FIFO_CLEAR|CSR_HPI_RUN|CSR_SV_RUN|\
 			CSR_DREAD_RUN|CSR_DWRITE_RUN|CSR_TRANS_RUN)
-
 
 /*	B5_<xx>_F	32 bit flag register		 (xx) */
 					/* Bit 28..31:	reserved	      */
@@ -1034,7 +1032,6 @@
 #define CMDR1	FM_A(FM_CMDREG1)	/* command register 1 */
 #define CMDR2	FM_A(FM_CMDREG2)	/* command register 2 */
 
-
 /*
  * function defines
  */
@@ -1088,7 +1085,6 @@
 				/* timer access over data bus bit 8..15 */
 #define	OUT_82c54_TIMER(port,val)	outpw(TI_A(port),(val)<<8)
 #define	IN_82c54_TIMER(port)		((inpw(TI_A(port))>>8) & 0xff)
-
 
 #ifdef	DEBUG
 #define	DB_MAC(mac,st) {if (debug_mac & 0x1)\

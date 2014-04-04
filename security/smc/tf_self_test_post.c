@@ -34,8 +34,6 @@
 #include "tf_defs.h"
 #include "tf_util.h"
 
-
-
 /*** Test vectors ***/
 
 struct digest_test_vector {
@@ -172,8 +170,6 @@ struct blkcipher_test_vector aes_cbc_256_test_vector = {
 	"\xb2\xeb\x05\xe2\xc3\x9b\xe9\xfc\xda\x6c\x19\x07\x8c\x6a\x9d\x1b",
 	64
 };
-
-
 
 /*** Helper functions ***/
 
@@ -378,8 +374,6 @@ static int tf_self_test_blkcipher(const char *alg_name,
 	}
 }
 
-
-
 /*** Integrity check ***/
 
 #if defined(CONFIG_MODULE_EXTRA_COPY) && defined(MODULE)
@@ -554,7 +548,6 @@ abort:
 
 #endif /*defined(CONFIG_MODULE_EXTRA_COPY) && defined(MODULE)*/
 
-
 /*** Sysfs entries ***/
 
 struct tf_post_data {
@@ -587,8 +580,6 @@ static struct kobj_type tf_post_data_ktype = {
 };
 
 static struct tf_post_data tf_post_data;
-
-
 
 /*** POST entry point ***/
 

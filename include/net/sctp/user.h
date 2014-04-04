@@ -162,16 +162,14 @@ enum sctp_sinfo_flags {
 	SCTP_ADDR_OVER = 2,  /* Override the primary destination. */
 	SCTP_ABORT=4,        /* Send an ABORT message to the peer. */
 	SCTP_SACK_IMMEDIATELY = 8,	/* SACK should be sent without delay */
-	SCTP_EOF=MSG_FIN,    /* Initiate graceful shutdown process. */	
+	SCTP_EOF=MSG_FIN,    /* Initiate graceful shutdown process. */
 };
-
 
 /* These are cmsg_types.  */
 typedef enum sctp_cmsg_type {
 	SCTP_INIT,              /* 5.2.1 SCTP Initiation Structure */
 	SCTP_SNDRCV,            /* 5.2.2 SCTP Header Information Structure */
 } sctp_cmsg_t;
-
 
 /*
  * 5.3.1.1 SCTP_ASSOC_CHANGE
@@ -243,7 +241,6 @@ enum sctp_spc_state {
 	SCTP_ADDR_CONFIRMED,
 };
 
-
 /*
  * 5.3.1.3 SCTP_REMOTE_ERROR
  *
@@ -262,7 +259,6 @@ struct sctp_remote_error {
 	sctp_assoc_t sre_assoc_id;
 	__u8 sre_data[0];
 };
-
 
 /*
  * 5.3.1.4 SCTP_SEND_FAILED
@@ -451,7 +447,7 @@ typedef enum sctp_sn_error {
  *
  *   The protocol parameters used to initialize and bound retransmission
  *   timeout (RTO) are tunable.  See [SCTP] for more information on how
- *   these parameters are used in RTO calculation. 
+ *   these parameters are used in RTO calculation.
  */
 struct sctp_rtoinfo {
 	sctp_assoc_t	srto_assoc_id;
@@ -592,7 +588,6 @@ struct sctp_authkeyid {
 	__u16		scact_keynumber;
 };
 
-
 /*
  * 7.1.23.  Get or set delayed ack timer (SCTP_DELAYED_SACK)
  *
@@ -701,9 +696,9 @@ struct sctp_assoc_ids {
 
 /*
  * 8.3, 8.5 get all peer/local addresses in an association.
- * This parameter struct is used by SCTP_GET_PEER_ADDRS and 
+ * This parameter struct is used by SCTP_GET_PEER_ADDRS and
  * SCTP_GET_LOCAL_ADDRS socket options used internally to implement
- * sctp_getpaddrs() and sctp_getladdrs() API. 
+ * sctp_getpaddrs() and sctp_getladdrs() API.
  */
 struct sctp_getaddrs_old {
 	sctp_assoc_t            assoc_id;

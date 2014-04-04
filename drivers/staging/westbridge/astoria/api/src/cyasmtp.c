@@ -300,7 +300,6 @@ destroy:
 	return ret;
 }
 
-
 cy_as_return_status_t
 cy_as_mtp_start(cy_as_device_handle handle,
 			 cy_as_mtp_event_callback event_c_b,
@@ -565,7 +564,6 @@ async_write_request_callback(cy_as_device *dev_p,
 	(void)buf_p;
 	(void)ep;
 
-
 	cy_as_log_debug_message(6, "async_write_request_callback called");
 
 	h = (cy_as_device_handle)dev_p;
@@ -786,7 +784,6 @@ my_handle_response_cancel_send_object(cy_as_device *dev_p,
 	if (ret != CY_AS_ERROR_SUCCESS)
 		goto destroy;
 
-
 destroy:
 	cy_as_ll_destroy_request(dev_p, req_p);
 	cy_as_ll_destroy_response(dev_p, reply_p);
@@ -873,7 +870,6 @@ my_handle_response_cancel_get_object(cy_as_device *dev_p,
 	ret = cy_as_ll_request_response__get_word(reply_p, 0);
 	if (ret != CY_AS_ERROR_SUCCESS)
 		goto destroy;
-
 
 destroy:
 	cy_as_ll_destroy_request(dev_p, req_p);
@@ -1133,4 +1129,3 @@ destroy:
 	return ret;
 }
 EXPORT_SYMBOL(cy_as_mtp_storage_only_stop);
-

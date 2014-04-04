@@ -6,7 +6,6 @@
  * by the Free Software Foundation.
  */
 
-
 #ifndef	PEGASUS_DEV
 
 #define	PEGASUS_II		0x80000000
@@ -81,7 +80,6 @@ enum pegasus_registers {
 	Reg81 = 0x81,
 };
 
-
 typedef struct pegasus {
 	struct usb_device	*usb;
 	struct usb_interface	*intf;
@@ -109,7 +107,6 @@ typedef struct pegasus {
 	__u8			phy;
 	__u8			gpio_res;
 } pegasus_t;
-
 
 struct usb_eth_dev {
 	char	*name;
@@ -150,7 +147,6 @@ struct usb_eth_dev {
 #define	VENDOR_SMC		0x0707
 #define	VENDOR_SOHOWARE		0x15e8
 #define	VENDOR_SIEMENS		0x067c
-
 
 #else	/* PEGASUS_DEV */
 
@@ -310,6 +306,5 @@ PEGASUS_DEV("SOHOware NUB110 Ethernet", VENDOR_SOHOWARE, 0x9110,
 		DEFAULT_GPIO_RESET | PEGASUS_II)
 PEGASUS_DEV("SpeedStream USB 10/100 Ethernet", VENDOR_SIEMENS, 0x1001,
 		DEFAULT_GPIO_RESET | PEGASUS_II)
-
 
 #endif	/* PEGASUS_DEV */

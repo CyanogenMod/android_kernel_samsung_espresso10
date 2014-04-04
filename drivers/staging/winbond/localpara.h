@@ -62,7 +62,6 @@
 #define LOCAL_11A_BASIC_RATE_BITMAP		0x01001040 /* 6, 12, 24 */
 #define LOCAL_11A_OPERATION_RATE_BITMAP		0x120c0200 /* 9, 18, 36, 48, 54 */
 
-
 #define PWR_ACTIVE				0
 #define PWR_SAVE				1
 #define PWR_TX_IDLE_CYCLE			6
@@ -168,7 +167,6 @@ struct wb_local_para {
 	u32	dwBasicRateBitmap;	/* bit map of basic rates */
 
 	u32	dwSupportRateBitmap;	/* bit map of all support rates including basic and operational rates */
-
 
 	/* For SME/MLME handler */
 

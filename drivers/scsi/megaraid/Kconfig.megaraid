@@ -13,7 +13,6 @@ config MEGARAID_MM
 	To compile this driver as a module, choose M here: the
 	module will be called megaraid_mm
 
-
 config MEGARAID_MAILBOX
 	tristate "LSI Logic MegaRAID Driver (New Driver)"
 	depends on PCI && SCSI && MEGARAID_MM
@@ -82,4 +81,3 @@ config MEGARAID_SAS
 	Module for LSI Logic's SAS based RAID controllers.
 	To compile this driver as a module, choose 'm' here.
 	Module will be called megaraid_sas
-

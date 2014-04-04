@@ -143,7 +143,6 @@
 #define RXSTAT_SHORTPACKET	(1 << 11)
 #define RXSTAT_DONE		(1 << 15)
 
-
 #define TX_START	0x0000
 #define TX_END		0x6000
 #define RX_START	0x6000

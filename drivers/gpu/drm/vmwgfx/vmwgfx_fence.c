@@ -25,7 +25,6 @@
  *
  **************************************************************************/
 
-
 #include "vmwgfx_drv.h"
 
 struct vmw_fence {
@@ -130,7 +129,6 @@ static struct timespec vmw_fifo_lag(struct vmw_fence_queue *queue)
 	return queue->lag;
 }
 
-
 static bool vmw_lag_lt(struct vmw_fence_queue *queue,
 		       uint32_t us)
 {
@@ -169,5 +167,3 @@ int vmw_wait_lag(struct vmw_private *dev_priv,
 	}
 	return 0;
 }
-
-

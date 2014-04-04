@@ -149,7 +149,6 @@ void tf_dump_l1_shared_buffer(struct tf_l1_shared_buffer *buffer)
 		buffer->first_free_answer);
 }
 
-
 /*
  * Dump the specified SChannel message using dprintk.
  */
@@ -455,7 +454,6 @@ void tf_dump_command(union tf_command *command)
 	}
 }
 
-
 /*
  * Dump the specified SChannel answer using dprintk.
  */
@@ -496,7 +494,6 @@ void tf_dump_answer(union tf_answer *answer)
 			answer->destroy_device_context.error_code,
 			answer->destroy_device_context.device_context_id);
 		break;
-
 
 	case TF_MESSAGE_TYPE_OPEN_CLIENT_SESSION:
 		dprintk(KERN_INFO
@@ -673,7 +670,6 @@ static inline u32 rol(u32 value, u32 bits)
 	z += (w ^ x ^ y) + blk(i) + 0xCA62C1D6 + rol(v, 5); \
 	w = rol(w, 30); } while (0)
 
-
 /* Hash a single 512-bit block. This is the core of the algorithm. */
 static void sha1_transform(u32 *state, const u8 *in)
 {
@@ -751,7 +747,6 @@ static void sha1_transform(u32 *state, const u8 *in)
 	memset(block32, 0x00, sizeof(block32));
 }
 
-
 static void sha1_init(void *ctx)
 {
 	struct sha1_ctx *sctx = ctx;
@@ -763,7 +758,6 @@ static void sha1_init(void *ctx)
 
 	*sctx = initstate;
 }
-
 
 static void sha1_update(void *ctx, const u8 *data, unsigned int len)
 {
@@ -783,7 +777,6 @@ static void sha1_update(void *ctx, const u8 *data, unsigned int len)
 		i = 0;
 	memcpy(&sctx->buffer[j], &data[i], len - i);
 }
-
 
 /* Add padding and return the message digest. */
 static void sha1_final(void *ctx, u8 *out)
@@ -824,9 +817,6 @@ static void sha1_final(void *ctx, u8 *out)
 	/* Wipe context */
 	memset(sctx, 0, sizeof(*sctx));
 }
-
-
-
 
 /*----------------------------------------------------------------------------
  * Process identification

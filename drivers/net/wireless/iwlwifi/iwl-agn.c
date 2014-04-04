@@ -60,7 +60,6 @@
 #include "iwl-agn-calib.h"
 #include "iwl-agn.h"
 
-
 /******************************************************************************
  *
  * module boiler plate
@@ -79,7 +78,6 @@
 #endif
 
 #define DRV_VERSION     IWLWIFI_VERSION VD
-
 
 MODULE_DESCRIPTION(DRV_DESCRIPTION);
 MODULE_VERSION(DRV_VERSION);
@@ -305,7 +303,6 @@ static void iwl_bg_statistics_periodic(unsigned long data)
 
 	iwl_send_statistics_request(priv, CMD_ASYNC, false);
 }
-
 
 static void iwl_print_cont_event_trace(struct iwl_priv *priv, u32 base,
 					u32 start_idx, u32 num_events,
@@ -867,9 +864,7 @@ static ssize_t store_debug_level(struct device *d,
 static DEVICE_ATTR(debug_level, S_IWUSR | S_IRUGO,
 			show_debug_level, store_debug_level);
 
-
 #endif /* CONFIG_IWLWIFI_DEBUG */
-
 
 static ssize_t show_temperature(struct device *d,
 				struct device_attribute *attr, char *buf)
@@ -1971,7 +1966,6 @@ static int iwlagn_send_calib_cfg_rt(struct iwl_priv *priv, u32 cfg)
 	return iwl_send_cmd(priv, &cmd);
 }
 
-
 /**
  * iwl_alive_start - called after REPLY_ALIVE notification received
  *                   from protocol/runtime uCode (initialization uCode's
@@ -2230,7 +2224,6 @@ static int __iwl_up(struct iwl_priv *priv)
 	IWL_ERR(priv, "Unable to initialize device.\n");
 	return ret;
 }
-
 
 /*****************************************************************************
  *
@@ -2504,7 +2497,6 @@ static int iwl_mac_setup_register(struct iwl_priv *priv,
 
 	return 0;
 }
-
 
 static int iwlagn_mac_start(struct ieee80211_hw *hw)
 {
@@ -3466,7 +3458,6 @@ static int iwl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
 
 	pci_set_drvdata(pdev, priv);
 
-
 	/***********************
 	 * 3. Read REV register
 	 ***********************/
@@ -3683,7 +3674,6 @@ static void __devexit iwl_pci_remove(struct pci_dev *pdev)
 
 	iwl_eeprom_free(priv);
 
-
 	/*netif_stop_queue(dev); */
 	flush_workqueue(priv->workqueue);
 
@@ -3709,7 +3699,6 @@ static void __devexit iwl_pci_remove(struct pci_dev *pdev)
 
 	ieee80211_free_hw(priv->hw);
 }
-
 
 /*****************************************************************************
  *

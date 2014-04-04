@@ -21,4 +21,3 @@ config CAN_MPC5XXX
 	  will be called mscan-mpc5xxx.ko.
 
 endif
-

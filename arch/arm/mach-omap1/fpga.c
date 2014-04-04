@@ -45,7 +45,6 @@ static void fpga_mask_irq(struct irq_data *d)
 			      & ~(1 << (irq - 16))), INNOVATOR_FPGA_IMR2);
 }
 
-
 static inline u32 get_fpga_unmasked_irqs(void)
 {
 	return
@@ -56,7 +55,6 @@ static inline u32 get_fpga_unmasked_irqs(void)
 		((__raw_readb(INNOVATOR_FPGA_ISR2) &
 		  __raw_readb(INNOVATOR_FPGA_IMR2)) << 16);
 }
-
 
 static void fpga_ack_irq(struct irq_data *d)
 {
@@ -109,7 +107,6 @@ static struct irq_chip omap_fpga_irq_ack = {
 	.irq_mask	= fpga_mask_irq,
 	.irq_unmask	= fpga_unmask_irq,
 };
-
 
 static struct irq_chip omap_fpga_irq = {
 	.name		= "FPGA",

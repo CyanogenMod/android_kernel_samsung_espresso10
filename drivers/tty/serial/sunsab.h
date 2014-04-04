@@ -318,5 +318,4 @@ union sab82532_irq_status {
 #define SAB82532_CCR4_TST1		0x20
 #define SAB82532_CCR4_ICD		0x10
 
-
 #endif /* !(_SUNSAB_H) */

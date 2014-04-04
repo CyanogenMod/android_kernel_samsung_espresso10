@@ -707,7 +707,6 @@ MODULE_DESCRIPTION("Driver to integrate MMA845X sensor with the MPU");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("mma845x_mod");
 
-
 /**
  *  @}
  */

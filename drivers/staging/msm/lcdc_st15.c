@@ -182,7 +182,6 @@ static int hdmi_sii_probe(struct i2c_client *client,
 	return rc;
 }
 
-
 static struct i2c_driver hdmi_sii_i2c_driver = {
 	.driver = {
 		.name = DEVICE_NAME,

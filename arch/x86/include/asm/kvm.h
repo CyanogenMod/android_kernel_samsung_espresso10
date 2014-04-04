@@ -118,7 +118,6 @@ struct kvm_dtable {
 	__u16 padding[3];
 };
 
-
 /* for KVM_GET_SREGS and KVM_SET_SREGS */
 struct kvm_sregs {
 	/* out (KVM_GET_SREGS) / in (KVM_SET_SREGS) */
@@ -165,7 +164,6 @@ struct kvm_msr_list {
 	__u32 nmsrs; /* number of msrs in entries */
 	__u32 indices[0];
 };
-
 
 struct kvm_cpuid_entry {
 	__u32 function;

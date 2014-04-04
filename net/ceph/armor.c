@@ -1,4 +1,3 @@
-
 #include <linux/errno.h>
 
 int ceph_armor(char *dst, const char *src, const char *end);

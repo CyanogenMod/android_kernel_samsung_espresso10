@@ -16,7 +16,6 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/slab.h>
@@ -28,13 +27,11 @@
 
 MODULE_LICENSE("GPL");
 
-
 struct cmpc_accel {
 	int sensitivity;
 };
 
 #define CMPC_ACCEL_SENSITIVITY_DEFAULT		5
-
 
 #define CMPC_ACCEL_HID		"ACCE0000"
 #define CMPC_TABLET_HID		"TBLT0000"
@@ -305,7 +302,6 @@ static struct acpi_driver cmpc_accel_acpi_driver = {
 	}
 };
 
-
 /*
  * Tablet mode code.
  */
@@ -388,7 +384,6 @@ static struct acpi_driver cmpc_tablet_acpi_driver = {
 		.notify = cmpc_tablet_handler,
 	}
 };
-
 
 /*
  * Backlight code.
@@ -631,7 +626,6 @@ static struct acpi_driver cmpc_ipml_acpi_driver = {
 	}
 };
 
-
 /*
  * Extra keys code.
  */
@@ -697,7 +691,6 @@ static struct acpi_driver cmpc_keys_acpi_driver = {
 		.notify = cmpc_keys_handler,
 	}
 };
-
 
 /*
  * General init/exit code.

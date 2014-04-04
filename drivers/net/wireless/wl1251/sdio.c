@@ -65,7 +65,6 @@ static const struct sdio_device_id wl1251_devices[] = {
 };
 MODULE_DEVICE_TABLE(sdio, wl1251_devices);
 
-
 static void wl1251_sdio_read(struct wl1251 *wl, int addr,
 			     void *buf, size_t len)
 {
@@ -259,6 +258,7 @@ static int wl1251_sdio_probe(struct sdio_func *func,
 	}
 
 	if (wl->irq) {
+		irq_set_status_flags(wl->irq, IRQ_NOAUTOEN);
 		ret = request_irq(wl->irq, wl1251_line_irq, 0, "wl1251", wl);
 		if (ret < 0) {
 			wl1251_error("request_irq() failed: %d", ret);
@@ -266,7 +266,6 @@ static int wl1251_sdio_probe(struct sdio_func *func,
 		}
 
 		irq_set_irq_type(wl->irq, IRQ_TYPE_EDGE_RISING);
-		disable_irq(wl->irq);
 
 		wl1251_sdio_ops.enable_irq = wl1251_enable_line_irq;
 		wl1251_sdio_ops.disable_irq = wl1251_disable_line_irq;

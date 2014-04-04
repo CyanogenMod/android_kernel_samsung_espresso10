@@ -501,7 +501,6 @@ static irqreturn_t ni5010_interrupt(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 static void dump_packet(void *buf, int len)
 {
 	int i;

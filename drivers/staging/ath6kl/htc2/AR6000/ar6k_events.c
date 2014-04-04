@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="ar6k_events.c" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -189,7 +189,6 @@ static int DevServiceCPUInterrupt(struct ar6k_device *pDev)
     A_ASSERT(status == 0);
     return status;
 }
-
 
 static int DevServiceErrorInterrupt(struct ar6k_device *pDev)
 {
@@ -592,7 +591,6 @@ static int ProcessPendingIRQs(struct ar6k_device *pDev, bool *pDone, bool *pASyn
 
     } while (false);
 
-
     do {
 
             /* did the interrupt status fetches succeed? */
@@ -677,7 +675,6 @@ static int ProcessPendingIRQs(struct ar6k_device *pDev, bool *pDone, bool *pASyn
 
     return status;
 }
-
 
 /* Synchronousinterrupt handler, this handler kicks off all interrupt processing.*/
 int DevDsrHandler(void *context)
@@ -779,5 +776,3 @@ void DumpAR6KDevState(struct ar6k_device *pDev)
 
 }
 #endif
-
-

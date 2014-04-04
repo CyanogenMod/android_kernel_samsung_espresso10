@@ -43,7 +43,6 @@ static const int m2ThreshLowExt_off = 127;
 static const int m1ThreshExt_off = 127;
 static const int m2ThreshExt_off = 127;
 
-
 static void ar5008_rf_bank_setup(u32 *bank, struct ar5416IniArray *array,
 				 int col)
 {
@@ -52,7 +51,6 @@ static void ar5008_rf_bank_setup(u32 *bank, struct ar5416IniArray *array,
 	for (i = 0; i < array->ia_rows; i++)
 		bank[i] = INI_RA(array, i, col);
 }
-
 
 #define REG_WRITE_RF_ARRAY(iniarray, regData, regWr) \
 	ar5008_write_rf_array(ah, iniarray, regData, &(regWr))
@@ -495,7 +493,6 @@ static int ar5008_hw_rf_alloc_ext_banks(struct ath_hw *ah)
 #undef ATH_ALLOC_BANK
 }
 
-
 /**
  * ar5008_hw_rf_free_ext_banks - Free memory for analog bank scratch buffers
  * @ah: atheros hardware struture
@@ -636,7 +633,6 @@ static void ar5008_hw_init_chain_masks(struct ath_hw *ah)
 	rx_chainmask = ah->rxchainmask;
 	tx_chainmask = ah->txchainmask;
 
-
 	switch (rx_chainmask) {
 	case 0x5:
 		REG_SET_BIT(ah, AR_PHY_ANALOG_SWAP,
@@ -748,7 +744,6 @@ static void ar5008_hw_set_channel_regs(struct ath_hw *ah,
 
 	REGWRITE_BUFFER_FLUSH(ah);
 }
-
 
 static int ar5008_hw_process_ini(struct ath_hw *ah,
 				 struct ath9k_channel *chan)

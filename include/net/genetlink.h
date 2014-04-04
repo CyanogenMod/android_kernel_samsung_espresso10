@@ -306,5 +306,4 @@ static inline struct sk_buff *genlmsg_new(size_t payload, gfp_t flags)
 	return nlmsg_new(genlmsg_total_size(payload), flags);
 }
 
-
 #endif	/* __NET_GENERIC_NETLINK_H */

@@ -2,7 +2,7 @@
  * DLCI		Implementation of Frame Relay protocol for Linux, according to
  *		RFC 1490.  This generic device provides en/decapsulation for an
  *		underlying hardware driver.  Routes & IPs are assigned to these
- *		interfaces.  Requires 'dlcicfg' program to create usable 
+ *		interfaces.  Requires 'dlcicfg' program to create usable
  *		interfaces, the initial one, 'dlci' is for IOCTL use only.
  *
  * Version:	@(#)dlci.c	0.35	4 Jan 1997
@@ -59,13 +59,13 @@ static LIST_HEAD(dlci_devs);
 
 static void dlci_setup(struct net_device *);
 
-/* 
- * these encapsulate the RFC 1490 requirements as well as 
+/*
+ * these encapsulate the RFC 1490 requirements as well as
  * deal with packet transmission and reception, working with
- * the upper network layers 
+ * the upper network layers
  */
 
-static int dlci_header(struct sk_buff *skb, struct net_device *dev, 
+static int dlci_header(struct sk_buff *skb, struct net_device *dev,
 		       unsigned short type, const void *daddr,
 		       const void *saddr, unsigned len)
 {
@@ -139,7 +139,7 @@ static void dlci_receive(struct sk_buff *skb, struct net_device *dev)
 					dev->stats.rx_errors++;
 					break;
 				}
-	 
+
 				if (hdr->OUI[0] + hdr->OUI[1] + hdr->OUI[2] != 0)
 				{
 					printk(KERN_NOTICE "%s: Unsupported organizationally unique identifier 0x%02X-%02X-%02X.\n", dev->name, hdr->OUI[0], hdr->OUI[1], hdr->OUI[2]);
@@ -170,7 +170,7 @@ static void dlci_receive(struct sk_buff *skb, struct net_device *dev)
 			default:
 				printk(KERN_NOTICE "%s: Invalid pad byte 0x%02X.\n", dev->name, hdr->pad);
 				dev->stats.rx_errors++;
-				break;				
+				break;
 		}
 
 	if (process)
@@ -255,7 +255,7 @@ static int dlci_dev_ioctl(struct net_device *dev, struct ifreq *ifr, int cmd)
 			return dlci_config(dev, ifr->ifr_data, cmd == DLCI_GET_CONF);
 			break;
 
-		default: 
+		default:
 			return -EOPNOTSUPP;
 	}
 	return 0;
@@ -315,7 +315,6 @@ static int dlci_add(struct dlci_add *dlci)
 	struct frad_local	*flp;
 	int			err = -EINVAL;
 
-
 	/* validate slave device */
 	slave = dev_get_by_name(&init_net, dlci->devname);
 	if (!slave)
@@ -353,7 +352,7 @@ static int dlci_add(struct dlci_add *dlci)
 		goto err2;
 
 	err = register_netdevice(master);
-	if (err < 0) 
+	if (err < 0)
 		goto err2;
 
 	strcpy(dlci->devname, master->name);
@@ -377,21 +376,37 @@ static int dlci_del(struct dlci_add *dlci)
 	struct frad_local	*flp;
 	struct net_device	*master, *slave;
 	int			err;
+	bool			found = false;
+
+	rtnl_lock();
 
 	/* validate slave device */
 	master = __dev_get_by_name(&init_net, dlci->devname);
-	if (!master)
-		return -ENODEV;
+	if (!master) {
+		err = -ENODEV;
+		goto out;
+	}
+
+	list_for_each_entry(dlp, &dlci_devs, list) {
+		if (dlp->master == master) {
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		err = -ENODEV;
+		goto out;
+	}
 
 	if (netif_running(master)) {
-		return -EBUSY;
+		err = -EBUSY;
+		goto out;
 	}
 
 	dlp = netdev_priv(master);
 	slave = dlp->slave;
 	flp = netdev_priv(slave);
 
-	rtnl_lock();
 	err = (*flp->deassoc)(slave, master);
 	if (!err) {
 		list_del(&dlp->list);
@@ -400,8 +415,8 @@ static int dlci_del(struct dlci_add *dlci)
 
 		dev_put(slave);
 	}
+out:
 	rtnl_unlock();
-
 	return err;
 }
 
@@ -409,7 +424,7 @@ static int dlci_ioctl(unsigned int cmd, void __user *arg)
 {
 	struct dlci_add add;
 	int err;
-	
+
 	if (!capable(CAP_NET_ADMIN))
 		return -EPERM;
 
@@ -507,7 +522,7 @@ static int __init init_dlci(void)
 static void __exit dlci_exit(void)
 {
 	struct dlci_local	*dlp, *nxt;
-	
+
 	dlci_ioctl_set(NULL);
 	unregister_netdevice_notifier(&dlci_notifier);
 

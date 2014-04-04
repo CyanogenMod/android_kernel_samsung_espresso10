@@ -124,4 +124,3 @@ int vde_user_write(void *conn, void *buf, int len)
 
 	return vde_send(vconn, buf, len, 0);
 }
-

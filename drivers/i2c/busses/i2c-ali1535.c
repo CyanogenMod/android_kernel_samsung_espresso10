@@ -1,9 +1,9 @@
 /*
-    Copyright (c) 2000  Frodo Looijaard <frodol@dds.nl>, 
-                        Philip Edelbrock <phil@netroedge.com>, 
+    Copyright (c) 2000  Frodo Looijaard <frodol@dds.nl>,
+                        Philip Edelbrock <phil@netroedge.com>,
                         Mark D. Studebaker <mdsxyz123@yahoo.com>,
-                        Dan Eaton <dan.eaton@rocketlogix.com> and 
-                        Stephen Rousset<stephen.rousset@rocketlogix.com> 
+                        Dan Eaton <dan.eaton@rocketlogix.com> and
+                        Stephen Rousset<stephen.rousset@rocketlogix.com>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,7 +48,6 @@
     This driver does not use interrupts.
 */
 
-
 /* Note: we assume there can only be one ALI1535, with one SMBus interface */
 
 #include <linux/module.h>
@@ -61,7 +60,6 @@
 #include <linux/init.h>
 #include <linux/acpi.h>
 #include <linux/io.h>
-
 
 /* ALI1535 SMBus address offsets */
 #define SMBHSTSTS	(0 + ali1535_smba)
@@ -463,7 +461,6 @@ static s32 ali1535_access(struct i2c_adapter *adap, u16 addr,
 EXIT:
 	return result;
 }
-
 
 static u32 ali1535_func(struct i2c_adapter *adapter)
 {

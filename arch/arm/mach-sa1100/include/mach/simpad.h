@@ -11,7 +11,6 @@
 #ifndef __ASM_ARCH_SIMPAD_H
 #define __ASM_ARCH_SIMPAD_H
 
-
 #define GPIO_UART1_RTS	GPIO_GPIO14
 #define GPIO_UART1_DTR	GPIO_GPIO7
 #define GPIO_UART1_CTS	GPIO_GPIO8
@@ -36,7 +35,6 @@
 
 #define IRQ_GPIO_UCB1300_IRQ IRQ_GPIO22
 #define IRQ_GPIO_POWER_BUTTON IRQ_GPIO0
-
 
 /*---  PCMCIA  ---*/
 #define GPIO_CF_CD              GPIO_GPIO24
@@ -73,7 +71,6 @@
 #define RS232_ENABLE    0x0440
 #define PCMCIAMASK      0x402f
 
-
 struct simpad_battery {
 	unsigned char ac_status;	/* line connected yes/no */
 	unsigned char status;		/* battery loading yes/no */
@@ -102,11 +99,3 @@ struct simpad_battery {
 extern int simpad_get_battery(struct simpad_battery* );
 
 #endif // __ASM_ARCH_SIMPAD_H
-
-
-
-
-
-
-
-

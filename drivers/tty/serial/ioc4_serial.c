@@ -6,7 +6,6 @@
  * Copyright (C) 2003-2006 Silicon Graphics, Inc.  All Rights Reserved.
  */
 
-
 /*
  * This file contains a module version of the ioc4 serial driver. This
  * includes all the support functions needed (support functions, etc.)
@@ -40,7 +39,6 @@
 				(_n == 1) ? (IOC4_OTHER_IR_S1_MEMERR) : \
 				(_n == 2) ? (IOC4_OTHER_IR_S2_MEMERR) : \
 				(IOC4_OTHER_IR_S3_MEMERR)
-
 
 /*
  * All IOC4 registers are 32 bits wide.
@@ -330,7 +328,6 @@ static unsigned int Num_of_ioc4_cards;
 #define DEVICE_MINOR_RS232 50
 #define DEVICE_MINOR_RS422 84
 
-
 /* register offsets */
 #define IOC4_SERIAL_OFFSET	0x300
 
@@ -515,7 +512,6 @@ struct ioc4_port {
 #define PORT_ACTIVE	0x10
 #define PORT_INACTIVE	0	/* This is the value when "off" */
 
-
 /* Since each port has different register offsets and bitmasks
  * for everything, we'll store those that we need in tables so we
  * don't have to be constantly checking the port we are dealing with.
@@ -652,7 +648,6 @@ static inline int port_is_active(struct ioc4_port *port,
 	return 0;
 }
 
-
 /**
  * write_ireg - write the interrupt regs
  * @ioc4_soft: ptr to soft struct for this port
@@ -733,7 +728,6 @@ static int set_baud(struct ioc4_port *port, int baud)
 	writeb(lcr, &uart->i4u_lcr);
 	return 0;
 }
-
 
 /**
  * get_ioc4_port - given a uart port, return the control structure
@@ -2632,7 +2626,6 @@ static struct uart_driver ioc4_uart_rs422 = {
 	.nr		= IOC4_NUM_CARDS * IOC4_NUM_SERIAL_PORTS,
 };
 
-
 /**
  * ioc4_serial_remove_one - detach function
  *
@@ -2699,7 +2692,6 @@ static int ioc4_serial_remove_one(struct ioc4_driver_data *idd)
 	return 0;
 }
 
-
 /**
  * ioc4_serial_core_attach_rs232 - register with serial core
  *		This is done during pci probing
@@ -2715,7 +2707,6 @@ ioc4_serial_core_attach(struct pci_dev *pdev, int port_type)
 	int port_num;
 	int port_type_idx;
 	struct uart_driver *u_driver;
-
 
 	DPRINT_CONFIG(("%s: attach pdev 0x%p - control 0x%p\n",
 			__func__, pdev, (void *)control));
@@ -2778,7 +2769,6 @@ ioc4_serial_attach_one(struct ioc4_driver_data *idd)
 	struct ioc4_soft *soft;
 	struct ioc4_control *control;
 	int ret = 0;
-
 
 	DPRINT_CONFIG(("%s (0x%p, 0x%p)\n", __func__, idd->idd_pdev,
 							idd->idd_pci_id));
@@ -2894,7 +2884,6 @@ out1:
 
 	return ret;
 }
-
 
 static struct ioc4_submodule ioc4_serial_submodule = {
 	.is_name = "IOC4_serial",

@@ -760,7 +760,6 @@ int iwm_set_key(struct iwm_priv *iwm, bool remove, struct iwm_key *key)
 	return ret;
 }
 
-
 int iwm_send_mlme_profile(struct iwm_priv *iwm)
 {
 	int ret;
@@ -818,7 +817,6 @@ int iwm_tx_power_trigger(struct iwm_priv *iwm)
 	pwr_trigger.hdr.buf_size =
 		cpu_to_le16(sizeof(struct iwm_umac_pwr_trigger) -
 			    sizeof(struct iwm_umac_wifi_if));
-
 
 	return iwm_send_wifi_if_cmd(iwm, &pwr_trigger, sizeof(pwr_trigger), 1);
 }

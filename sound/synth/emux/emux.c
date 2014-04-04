@@ -71,7 +71,7 @@ static int sf_sample_new(void *private_data, struct snd_sf_sample *sp,
 {
 	struct snd_emux *emu = private_data;
 	return emu->ops.sample_new(emu, sp, hdr, buf, count);
-	
+
 }
 
 static int sf_sample_free(void *private_data, struct snd_sf_sample *sp,
@@ -79,7 +79,7 @@ static int sf_sample_free(void *private_data, struct snd_sf_sample *sp,
 {
 	struct snd_emux *emu = private_data;
 	return emu->ops.sample_free(emu, sp, hdr);
-	
+
 }
 
 static void sf_sample_reset(void *private_data)
@@ -172,7 +172,6 @@ int snd_emux_free(struct snd_emux *emu)
 }
 
 EXPORT_SYMBOL(snd_emux_free);
-
 
 /*
  *  INIT part

@@ -7,7 +7,6 @@
 #error "BITS_PER_LONG not defined or not valid"
 #endif
 
-
 struct rr_regs {
 
 	u32	pad0[16];
@@ -307,7 +306,6 @@ struct rr_regs {
 #define HALF_DUP_TX		0x1000
 #define HALF_DUP_RX		0x2000
 
-
 /*
  * Error codes
  */
@@ -344,7 +342,6 @@ struct rr_regs {
 #define ERR_READ_DMA		0x0102
 #define ERR_EXT_SERIAL		0x0103
 #define ERR_TX_INT_PARITY	0x0104
-
 
 /*
  * Event definitions
@@ -447,7 +444,6 @@ struct event {
 
 #define E_NOT_IMPLEMENTED 0x40
 
-
 /*
  * Commands
  */
@@ -473,7 +469,6 @@ struct cmd {
 #define C_NEW_RNG	0x0A
 #define C_CONN		0x0D
 
-
 /*
  * Mode bits
  */
@@ -485,7 +480,6 @@ struct cmd {
 #define  PACKET_START		0x10
 #define  SAME_IFIELD		0x80
 
-
 typedef struct {
 #if (BITS_PER_LONG == 64)
 	u64 addrlo;
@@ -494,7 +488,6 @@ typedef struct {
 	u32 addrlo;
 #endif
 } rraddr;
-
 
 static inline void set_rraddr(rraddr *ra, dma_addr_t addr)
 {
@@ -507,7 +500,6 @@ static inline void set_rraddr(rraddr *ra, dma_addr_t addr)
 #endif
 	mb();
 }
-
 
 static inline void set_rxaddr(struct rr_regs __iomem *regs, volatile dma_addr_t addr)
 {
@@ -525,7 +517,6 @@ static inline void set_rxaddr(struct rr_regs __iomem *regs, volatile dma_addr_t 
 	mb();
 }
 
-
 static inline void set_infoaddr(struct rr_regs __iomem *regs, volatile dma_addr_t addr)
 {
 	unsigned long baddr = addr;
@@ -541,7 +532,6 @@ static inline void set_infoaddr(struct rr_regs __iomem *regs, volatile dma_addr_
 #endif
 	mb();
 }
-
 
 /*
  * TX ring
@@ -568,7 +558,6 @@ struct tx_desc{
 #endif
 };
 
-
 #ifdef CONFIG_ROADRUNNER_LARGE_RINGS
 #define RX_RING_ENTRIES	32
 #else
@@ -590,7 +579,6 @@ struct rx_desc{
 #endif
 };
 
-
 /*
  * ioctl's
  */
@@ -599,13 +587,11 @@ struct rx_desc{
 #define SIOCRRGFW	SIOCDEVPRIVATE+1	/* get firmware */
 #define SIOCRRID	SIOCDEVPRIVATE+2	/* identify */
 
-
 struct seg_hdr {
 	u32	seg_start;
 	u32	seg_len;
 	u32	seg_eestart;
 };
-
 
 #define EEPROM_BASE 0x80000000
 #define EEPROM_WORDS 8192
@@ -648,7 +634,6 @@ struct eeprom_manf {
 	u32	pad4[13];
 };
 
-
 struct eeprom_phase_info {
 	char	phase1File[12];
 	u32	phase1Rev;
@@ -668,7 +653,6 @@ struct eeprom_rncd_info {
 	char	File[13][8];
 };
 
-
 /* Phase 1 region (starts are word offset 0x80) */
 struct phase1_hdr{
 	u32	jump;
@@ -686,7 +670,6 @@ struct eeprom {
 	u32			hdr_checksum;
 	struct phase1_hdr	phase1;
 };
-
 
 struct rr_stats {
 	u32	NicTimeStamp;
@@ -756,7 +739,6 @@ struct rr_stats {
 	u32	RxIdle;
 };
 
-
 /*
  * This struct is shared with the NIC firmware.
  */
@@ -821,7 +803,6 @@ struct rr_private
 	volatile short		fw_running;
 	struct pci_dev		*pci_dev;
 };
-
 
 /*
  * Prototypes

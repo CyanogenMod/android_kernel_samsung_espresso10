@@ -611,7 +611,6 @@ static int sis190_rx_interrupt(struct net_device *dev,
 				continue;
 			}
 
-
 			if (sis190_try_rx_copy(tp, &skb, pkt_size, addr)) {
 				pci_dma_sync_single_for_device(pdev, addr,
 					tp->rx_buf_sz, PCI_DMA_FROMDEVICE);

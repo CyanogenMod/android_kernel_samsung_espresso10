@@ -19,8 +19,7 @@
  * published by the Free Software Foundation.
  *
  * XXX Some of the ES1 clocks have been removed/changed; once support
- * is added for discriminating clocks by ES level, these should be added back
- * in.
+ * is added for discriminating clocks by ES level, these should be added back in.
  */
 
 #include <linux/kernel.h>
@@ -267,7 +266,6 @@ static struct dpll_data dpll_abe_dd = {
 	.min_divider	= 1,
 };
 
-
 static struct clk dpll_abe_ck = {
 	.name		= "dpll_abe_ck",
 	.parent		= &abe_dpll_refclk_mux_ck,
@@ -450,7 +448,6 @@ static struct dpll_data dpll_core_dd = {
 	.max_divider	= OMAP4430_MAX_DPLL_DIV,
 	.min_divider	= 1,
 };
-
 
 static struct clk dpll_core_ck = {
 	.name		= "dpll_core_ck",
@@ -714,7 +711,6 @@ static struct dpll_data dpll_iva_dd = {
 	.min_divider	= 1,
 };
 
-
 static struct clk dpll_iva_ck = {
 	.name		= "dpll_iva_ck",
 	.parent		= &sys_clkin_ck,
@@ -783,6 +779,14 @@ static struct clk virt_dsp_ck = {
 	.set_rate	= &omap4_virt_dsp_set_rate,
 };
 
+static struct clk virt_lcd_pclk = {
+	.name		= "virt_lcd_pclk",
+	.parent		= NULL,
+	.ops		= &clkops_null,
+	.round_rate	= &clk_dummy_round_rate,
+	.set_rate	= &clk_dummy_set_rate,
+};
+
 /* DPLL_MPU */
 static struct dpll_data dpll_mpu_dd = {
 	.mult_div1_reg	= OMAP4430_CM_CLKSEL_DPLL_MPU,
@@ -801,7 +805,6 @@ static struct dpll_data dpll_mpu_dd = {
 	.max_divider	= OMAP4430_MAX_DPLL_DIV,
 	.min_divider	= 1,
 };
-
 
 static struct clk dpll_mpu_ck = {
 	.name		= "dpll_mpu_ck",
@@ -887,7 +890,6 @@ static struct dpll_data dpll_per_dd = {
 	.max_divider	= OMAP4430_MAX_DPLL_DIV,
 	.min_divider	= 1,
 };
-
 
 static struct clk dpll_per_ck = {
 	.name		= "dpll_per_ck",
@@ -1034,7 +1036,6 @@ static struct dpll_data dpll_unipro_dd = {
 	.min_divider	= 1,
 };
 
-
 static struct clk dpll_unipro_ck = {
 	.name		= "dpll_unipro_ck",
 	.parent		= &sys_clkin_ck,
@@ -1103,7 +1104,6 @@ static struct dpll_data dpll_usb_dd = {
 	.max_divider	= OMAP4430_MAX_DPLL_DIV,
 	.min_divider	= 1,
 };
-
 
 static struct clk dpll_usb_ck = {
 	.name		= "dpll_usb_ck",
@@ -3495,7 +3495,6 @@ static struct clk smp_twd_446x = {
 /*
  * clkdev
  */
-
 static struct omap_clk omap44xx_clks[] = {
 	CLK(NULL,	"extalt_clkin_ck",		&extalt_clkin_ck,	CK_44XX),
 	CLK(NULL,	"pad_clks_ck",			&pad_clks_ck,	CK_44XX),
@@ -3515,26 +3514,26 @@ static struct omap_clk omap44xx_clks[] = {
 	CLK(NULL,	"utmi_phy_clkout_ck",		&utmi_phy_clkout_ck,	CK_44XX),
 	CLK(NULL,	"xclk60mhsp1_ck",		&xclk60mhsp1_ck,	CK_44XX),
 	CLK(NULL,	"xclk60mhsp2_ck",		&xclk60mhsp2_ck,	CK_44XX),
-	CLK(NULL,	"xclk60motg_ck",		&xclk60motg_ck,	CK_44XX),
+	CLK(NULL,	"xclk60motg_ck",		&xclk60motg_ck,		CK_44XX),
 	CLK(NULL,	"abe_dpll_bypass_clk_mux_ck",	&abe_dpll_bypass_clk_mux_ck,	CK_44XX),
 	CLK(NULL,	"abe_dpll_refclk_mux_ck",	&abe_dpll_refclk_mux_ck,	CK_44XX),
-	CLK(NULL,	"dpll_abe_ck",			&dpll_abe_ck,	CK_44XX),
+	CLK(NULL,	"dpll_abe_ck",			&dpll_abe_ck,		CK_44XX),
 	CLK(NULL,	"dpll_abe_x2_ck",		&dpll_abe_x2_ck,	CK_44XX),
 	CLK(NULL,	"dpll_abe_m2x2_ck",		&dpll_abe_m2x2_ck,	CK_44XX),
-	CLK(NULL,	"abe_24m_fclk",			&abe_24m_fclk,	CK_44XX),
-	CLK(NULL,	"abe_clk",			&abe_clk,	CK_44XX),
-	CLK(NULL,	"aess_fclk",			&aess_fclk,	CK_44XX),
+	CLK(NULL,	"abe_24m_fclk",			&abe_24m_fclk,		CK_44XX),
+	CLK(NULL,	"abe_clk",			&abe_clk,		CK_44XX),
+	CLK(NULL,	"aess_fclk",			&aess_fclk,		CK_44XX),
 	CLK(NULL,	"dpll_abe_m3x2_ck",		&dpll_abe_m3x2_ck,	CK_44XX),
-	CLK(NULL,	"core_hsd_byp_clk_mux_ck",	&core_hsd_byp_clk_mux_ck,	CK_44XX),
-	CLK(NULL,	"dpll_core_ck",			&dpll_core_ck,	CK_44XX),
+	CLK(NULL,	"core_hsd_byp_clk_mux_ck",	&core_hsd_byp_clk_mux_ck, CK_44XX),
+	CLK(NULL,	"dpll_core_ck",			&dpll_core_ck,		CK_44XX),
 	CLK(NULL,	"dpll_core_x2_ck",		&dpll_core_x2_ck,	CK_44XX),
 	CLK(NULL,	"dpll_core_m6x2_ck",		&dpll_core_m6x2_ck,	CK_44XX),
-	CLK(NULL,	"dbgclk_mux_ck",		&dbgclk_mux_ck,	CK_44XX),
+	CLK(NULL,	"dbgclk_mux_ck",		&dbgclk_mux_ck,		CK_44XX),
 	CLK(NULL,	"dpll_core_m2_ck",		&dpll_core_m2_ck,	CK_44XX),
-	CLK(NULL,	"ddrphy_ck",			&ddrphy_ck,	CK_44XX),
+	CLK(NULL,	"ddrphy_ck",			&ddrphy_ck,		CK_44XX),
 	CLK(NULL,	"dpll_core_m5x2_ck",		&dpll_core_m5x2_ck,	CK_44XX),
-	CLK(NULL,	"virt_l3_ck",			&virt_l3_ck,	CK_44XX),
-	CLK(NULL,	"div_core_ck",			&div_core_ck,	CK_44XX),
+	CLK(NULL,	"virt_l3_ck",			&virt_l3_ck,		CK_44XX),
+	CLK(NULL,	"div_core_ck",			&div_core_ck,		CK_44XX),
 	CLK(NULL,	"div_iva_hs_clk",		&div_iva_hs_clk,	CK_44XX),
 	CLK(NULL,	"div_mpu_hs_clk",		&div_mpu_hs_clk,	CK_44XX),
 	CLK(NULL,	"dpll_core_m4x2_ck",		&dpll_core_m4x2_ck,	CK_44XX),
@@ -3547,16 +3546,15 @@ static struct omap_clk omap44xx_clks[] = {
 	CLK(NULL,	"dpll_iva_x2_ck",		&dpll_iva_x2_ck,	CK_44XX),
 	CLK(NULL,	"dpll_iva_m4x2_ck",		&dpll_iva_m4x2_ck,	CK_44XX),
 	CLK(NULL,	"dpll_iva_m5x2_ck",		&dpll_iva_m5x2_ck,	CK_44XX),
-	CLK(NULL,	"virt_iva_ck",
-			&virt_iva_ck,	CK_44XX),
-	CLK(NULL,	"virt_dsp_ck",
-			&virt_dsp_ck,	CK_44XX),
-	CLK(NULL,	"dpll_mpu_ck",			&dpll_mpu_ck,	CK_44XX),
+	CLK(NULL,	"virt_iva_ck", 			&virt_iva_ck,		CK_44XX),
+	CLK(NULL,	"virt_dsp_ck", 			&virt_dsp_ck,		CK_44XX),
+	CLK(NULL,	"virt_lcd_pclk",		&virt_lcd_pclk,		CK_44XX),
+	CLK(NULL,	"dpll_mpu_ck",			&dpll_mpu_ck,		CK_44XX),
 	CLK(NULL,	"virt_dpll_mpu_ck",		&virt_dpll_mpu_ck,	(CK_446X | CK_447X)),
 	CLK(NULL,	"dpll_mpu_m2_ck",		&dpll_mpu_m2_ck,	CK_44XX),
 	CLK(NULL,	"per_hs_clk_div_ck",		&per_hs_clk_div_ck,	CK_44XX),
-	CLK(NULL,	"per_hsd_byp_clk_mux_ck",	&per_hsd_byp_clk_mux_ck,	CK_44XX),
-	CLK(NULL,	"dpll_per_ck",			&dpll_per_ck,	CK_44XX),
+	CLK(NULL,	"per_hsd_byp_clk_mux_ck",	&per_hsd_byp_clk_mux_ck, CK_44XX),
+	CLK(NULL,	"dpll_per_ck",			&dpll_per_ck,		CK_44XX),
 	CLK(NULL,	"dpll_per_m2_ck",		&dpll_per_m2_ck,	CK_44XX),
 	CLK(NULL,	"dpll_per_x2_ck",		&dpll_per_x2_ck,	CK_44XX),
 	CLK(NULL,	"dpll_per_m2x2_ck",		&dpll_per_m2x2_ck,	CK_44XX),
@@ -3569,22 +3567,22 @@ static struct omap_clk omap44xx_clks[] = {
 	CLK(NULL,	"dpll_unipro_x2_ck",		&dpll_unipro_x2_ck,	CK_44XX),
 	CLK(NULL,	"dpll_unipro_m2x2_ck",		&dpll_unipro_m2x2_ck,	CK_44XX),
 	CLK(NULL,	"usb_hs_clk_div_ck",		&usb_hs_clk_div_ck,	CK_44XX),
-	CLK(NULL,	"dpll_usb_ck",			&dpll_usb_ck,	CK_44XX),
+	CLK(NULL,	"dpll_usb_ck",			&dpll_usb_ck,		CK_44XX),
 	CLK(NULL,	"dpll_usb_clkdcoldo_ck",	&dpll_usb_clkdcoldo_ck,	CK_44XX),
 	CLK(NULL,	"dpll_usb_m2_ck",		&dpll_usb_m2_ck,	CK_44XX),
 	CLK(NULL,	"ducati_clk_mux_ck",		&ducati_clk_mux_ck,	CK_44XX),
-	CLK(NULL,	"func_12m_fclk",		&func_12m_fclk,	CK_44XX),
-	CLK(NULL,	"func_24m_clk",			&func_24m_clk,	CK_44XX),
+	CLK(NULL,	"func_12m_fclk",		&func_12m_fclk,		CK_44XX),
+	CLK(NULL,	"func_24m_clk",			&func_24m_clk,		CK_44XX),
 	CLK(NULL,	"func_24mc_fclk",		&func_24mc_fclk,	CK_44XX),
-	CLK(NULL,	"func_48m_fclk",		&func_48m_fclk,	CK_44XX),
+	CLK(NULL,	"func_48m_fclk",		&func_48m_fclk,		CK_44XX),
 	CLK(NULL,	"func_48mc_fclk",		&func_48mc_fclk,	CK_44XX),
-	CLK(NULL,	"func_64m_fclk",		&func_64m_fclk,	CK_44XX),
-	CLK(NULL,	"func_96m_fclk",		&func_96m_fclk,	CK_44XX),
-	CLK(NULL,	"hsmmc6_fclk",			&hsmmc6_fclk,	CK_44XX),
-	CLK(NULL,	"init_60m_fclk",		&init_60m_fclk,	CK_44XX),
-	CLK(NULL,	"l3_div_ck",			&l3_div_ck,	CK_44XX),
-	CLK(NULL,	"l4_div_ck",			&l4_div_ck,	CK_44XX),
-	CLK(NULL,	"lp_clk_div_ck",		&lp_clk_div_ck,	CK_44XX),
+	CLK(NULL,	"func_64m_fclk",		&func_64m_fclk,		CK_44XX),
+	CLK(NULL,	"func_96m_fclk",		&func_96m_fclk,		CK_44XX),
+	CLK(NULL,	"hsmmc6_fclk",			&hsmmc6_fclk,		CK_44XX),
+	CLK(NULL,	"init_60m_fclk",		&init_60m_fclk,		CK_44XX),
+	CLK(NULL,	"l3_div_ck",			&l3_div_ck,		CK_44XX),
+	CLK(NULL,	"l4_div_ck",			&l4_div_ck,		CK_44XX),
+	CLK(NULL,	"lp_clk_div_ck",		&lp_clk_div_ck,		CK_44XX),
 	CLK(NULL,	"l4_wkup_clk_mux_ck",		&l4_wkup_clk_mux_ck,	CK_44XX),
 	CLK(NULL,	"div_ts_ck",			&div_ts_ck,	(CK_446X | CK_447X)),
 	CLK(NULL,	"per_abe_nc_fclk",		&per_abe_nc_fclk,	CK_44XX),
@@ -4070,7 +4068,6 @@ static int omap4_virt_dsp_set_rate(struct clk *clk, unsigned long rate)
 	clk->rate = rate;
 	return 0;
 };
-
 
 int __init omap4xxx_clk_init(void)
 {

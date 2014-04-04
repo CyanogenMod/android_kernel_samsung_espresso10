@@ -29,7 +29,6 @@
 
 #include "soc_common.h"
 
-
 static struct pcmcia_irqs irqs[] = {
 	{ 0, MAINSTONE_S0_CD_IRQ, "PCMCIA0 CD" },
 	{ 1, MAINSTONE_S1_CD_IRQ, "PCMCIA1 CD" },

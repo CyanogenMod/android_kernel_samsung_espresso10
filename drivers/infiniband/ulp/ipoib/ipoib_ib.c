@@ -135,7 +135,6 @@ static int ipoib_ib_post_receive(struct net_device *dev, int id)
 	priv->rx_sge[0].addr = priv->rx_ring[id].mapping[0];
 	priv->rx_sge[1].addr = priv->rx_ring[id].mapping[1];
 
-
 	ret = ib_post_recv(priv->qp, &priv->rx_wr, &bad_wr);
 	if (unlikely(ret)) {
 		ipoib_warn(priv, "receive failed for buf %d (%d)\n", id, ret);

@@ -39,7 +39,6 @@ MODULE_LICENSE("GPL");
 static void ak4113_stats(struct work_struct *work);
 static void ak4113_init_regs(struct ak4113 *chip);
 
-
 static void reg_write(struct ak4113 *ak4113, unsigned char reg,
 		unsigned char val)
 {

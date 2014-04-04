@@ -103,7 +103,7 @@ extern void mac_drv_tx_complete(struct s_smc *smc,
 extern void mac_drv_rx_complete(struct s_smc *smc,
 				volatile struct s_smt_fp_rxd *rxd,
 				int frag_count, int len);
-extern void mac_drv_requeue_rxd(struct s_smc *smc, 
+extern void mac_drv_requeue_rxd(struct s_smc *smc,
 				volatile struct s_smt_fp_rxd *rxd,
 				int frag_count);
 extern void mac_drv_clear_rxd(struct s_smc *smc,
@@ -211,7 +211,6 @@ SMbuf* smt_get_mbuf(struct s_smc *smc);
 	INIT- AND SMT FUNCTIONS:
 	-------------------------------------------------------------
 */
-
 
 /*
  *	BEGIN_MANUAL_ENTRY(mac_drv_check_space)
@@ -482,7 +481,6 @@ void init_fddi_driver(struct s_smc *smc, u_char *mac_addr)
 	init_plc(smc) ;
 }
 
-
 SMbuf *smt_get_mbuf(struct s_smc *smc)
 {
 	register SMbuf	*mb ;
@@ -530,7 +528,6 @@ void smt_free_mbuf(struct s_smc *smc, SMbuf *mb)
 	else
 		SMT_PANIC(smc,HWM_E0003,HWM_E0003_MSG) ;
 }
-
 
 /*
  *	BEGIN_MANUAL_ENTRY(mac_drv_repair_descr)
@@ -633,7 +630,7 @@ static u_long repair_txd_ring(struct s_smc *smc, struct s_smt_tx_queue *queue)
  *	  bit set.
  *	o The BMU should start working at beginning of the next frame.
  *	  RxDs with an OWN bit set but with a reset STF bit should be
- *	  skipped and owned by the driver (OWN = 0). 
+ *	  skipped and owned by the driver (OWN = 0).
  */
 static u_long repair_rxd_ring(struct s_smc *smc, struct s_smt_rx_queue *queue)
 {
@@ -675,7 +672,6 @@ static u_long repair_rxd_ring(struct s_smc *smc, struct s_smt_rx_queue *queue)
 	}
 	return phys;
 }
-
 
 /*
 	-------------------------------------------------------------
@@ -888,7 +884,6 @@ void fddi_isr(struct s_smc *smc)
 	smc->os.hwm.isr_flag = FALSE ;
 	NDD_TRACE("CH0E",0,0,0) ;
 }
-
 
 /*
 	-------------------------------------------------------------
@@ -1516,7 +1511,6 @@ void mac_drv_clear_rx_queue(struct s_smc *smc)
 	}
 }
 
-
 /*
 	-------------------------------------------------------------
 	SEND FUNCTIONS:
@@ -1701,12 +1695,12 @@ void hwm_tx_frag(struct s_smc *smc, char far *virt, u_long phys, int len,
 #ifdef	USE_OS_CPY
 #ifndef PASS_1ST_TXD_2_TX_COMP
 				/*
-				 * hwm_cpy_txd2mb(txd,data,len) copies 'len' 
+				 * hwm_cpy_txd2mb(txd,data,len) copies 'len'
 				 * bytes from the virtual pointer in 'rxd'
-				 * to 'data'. The virtual pointer of the 
+				 * to 'data'. The virtual pointer of the
 				 * os-specific tx-buffer should be written
 				 * in the LAST txd.
-				 */ 
+				 */
 				hwm_cpy_txd2mb(t,smc->os.hwm.tx_data,
 					smc->os.hwm.tx_len) ;
 #endif	/* nPASS_1ST_TXD_2_TX_COMP */
@@ -1726,7 +1720,6 @@ void hwm_tx_frag(struct s_smc *smc, char far *virt, u_long phys, int len,
 	}
 	NDD_TRACE("THfE",t,queue->tx_free,0) ;
 }
-
 
 /*
  * queues a receive for later send
@@ -2085,7 +2078,6 @@ void mac_drv_clear_tx_queue(struct s_smc *smc)
 		queue->tx_curr_get = queue->tx_curr_put ;
 	}
 }
-
 
 /*
 	-------------------------------------------------------------

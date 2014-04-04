@@ -227,7 +227,6 @@ static int ade7754_reset(struct device *dev)
 	return ade7754_spi_write_reg_8(dev, ADE7754_OPMODE, val);
 }
 
-
 static ssize_t ade7754_write_reset(struct device *dev,
 		struct device_attribute *attr,
 		const char *buf, size_t len)

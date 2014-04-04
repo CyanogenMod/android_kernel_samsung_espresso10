@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="common_drv.c" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -60,7 +60,6 @@ ATH_DEBUG_INSTANTIATE_MODULE_VAR(misc,
 #define HOST_INTEREST_ITEM_ADDRESS(target, item) \
         ((((target) == TARGET_TYPE_AR6002) ? AR6002_HOST_INTEREST_ITEM_ADDRESS(item) : \
          (((target) == TARGET_TYPE_AR6003) ? AR6003_HOST_INTEREST_ITEM_ADDRESS(item) : 0)))
-
 
 #define AR6001_LOCAL_COUNT_ADDRESS 0x0c014080
 #define AR6002_LOCAL_COUNT_ADDRESS 0x00018080
@@ -133,10 +132,7 @@ int ar6000_SetAddressWindowRegister(struct hif_device *hifDevice, u32 RegisterAd
 
     return 0;
 
-
-
 }
-
 
 #else
 
@@ -211,7 +207,6 @@ ar6000_ReadRegDiag(struct hif_device *hifDevice, u32 *address, u32 *data)
 
     return status;
 }
-
 
 /*
  * Write to the AR6000 through its diagnostic window.
@@ -341,7 +336,6 @@ _do_write_diag(struct hif_device *hifDevice, u32 addr, u32 value)
 }
 #endif
 
-
 /*
  * Delay up to wait_msecs millisecs to allow Target to enter BMI phase,
  * which is a good sign that it's alive and well.  This is used after
@@ -405,7 +399,7 @@ int ar6000_reset_device(struct hif_device *hifDevice, u32 TargetType, bool waitF
     do {
 // Workaround BEGIN
         // address = RESET_CONTROL_ADDRESS;
-    	
+
     	if (coldReset) {
             data = RESET_CONTROL_COLD_RST_MASK;
     	}
@@ -421,7 +415,6 @@ int ar6000_reset_device(struct hif_device *hifDevice, u32 TargetType, bool waitF
         } else {
             A_ASSERT(0);
         }
-
 
         status = ar6000_WriteRegDiag(hifDevice, &address, &data);
 
@@ -500,7 +493,7 @@ ar6000_copy_cust_data_from_target(struct hif_device *hifDevice, u32 TargetType)
             if (BMIReadSOCRegister(hifDevice, eepHeaderAddr, (u32 *)&AR6003CustDataShadow[i])!= 0) {
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("BMIReadSOCRegister () failed \n"));
                 return ;
-            }  
+            }
             eepHeaderAddr +=4;
         }
 
@@ -514,7 +507,7 @@ ar6000_copy_cust_data_from_target(struct hif_device *hifDevice, u32 TargetType)
             if (BMIReadSOCRegister(hifDevice, eepHeaderAddr, (u32 *)&custDataAR6002[i])!= 0) {
                 AR_DEBUG_PRINTF(ATH_DEBUG_ERR, ("BMIReadSOCRegister () failed \n"));
                 return ;
-            }  
+            }
             eepHeaderAddr +=4;
         }
     }
@@ -547,7 +540,6 @@ u8 *ar6000_get_cust_data_buffer(u32 TargetType)
 #if REG_DUMP_COUNT_AR6003 > REGISTER_DUMP_LEN_MAX
 #error "REG_DUMP_COUNT_AR6003 too large"
 #endif
-
 
 void ar6000_dump_target_assert_info(struct hif_device *hifDevice, u32 TargetType)
 {
@@ -750,7 +742,6 @@ void a_dump_module_debug_info(ATH_DEBUG_MODULE_DBG_INFO *pInfo)
 
 }
 
-
 static ATH_DEBUG_MODULE_DBG_INFO *FindModule(char *module_name)
 {
     ATH_DEBUG_MODULE_DBG_INFO *pInfo = g_pModuleInfoHead;
@@ -769,7 +760,6 @@ static ATH_DEBUG_MODULE_DBG_INFO *FindModule(char *module_name)
 
     return pInfo;
 }
-
 
 void a_register_module_debug_info(ATH_DEBUG_MODULE_DBG_INFO *pInfo)
 {
@@ -842,7 +832,6 @@ int a_set_module_mask(char *module_name, u32 Mask)
     return 0;
 }
 
-
 void a_module_debug_support_init(void)
 {
     if (g_ModuleDebugInit) {
@@ -902,9 +891,7 @@ int ar6000_set_hci_bridge_flags(struct hif_device *hifDevice,
                                 (u8 *)&Flags,
                                 4);
 
-
     } while (false);
 
     return status;
 }
-

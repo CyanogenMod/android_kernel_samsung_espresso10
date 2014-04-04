@@ -42,13 +42,11 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/i2c.h>
 #include <linux/slab.h>
 #include <linux/delay.h>
-
 
 #define BMP085_I2C_ADDRESS		0x77
 #define BMP085_CHIP_ID			0x55
@@ -67,7 +65,6 @@
 
 #define BMP085_CLIENT_NAME		"bmp085"
 
-
 static const unsigned short normal_i2c[] = { BMP085_I2C_ADDRESS,
 							I2C_CLIENT_END };
 
@@ -77,7 +74,6 @@ struct bmp085_calibration_data {
 	s16 B1, B2;
 	s16 MB, MC, MD;
 };
-
 
 /* Each client has this additional data */
 struct bmp085_data {
@@ -90,7 +86,6 @@ struct bmp085_data {
 	u32 last_temp_measurement;
 	s32 b6; /* calculated temperature correction coefficient */
 };
-
 
 static s32 bmp085_read_calibration_data(struct i2c_client *client)
 {
@@ -120,7 +115,6 @@ static s32 bmp085_read_calibration_data(struct i2c_client *client)
 	cali->MD = be16_to_cpu(tmp[10]);
 	return 0;
 }
-
 
 static s32 bmp085_update_raw_temperature(struct bmp085_data *data)
 {
@@ -192,7 +186,6 @@ exit:
 	mutex_unlock(&data->lock);
 	return status;
 }
-
 
 /*
  * This function starts the temperature measurement and returns the value
@@ -326,7 +319,6 @@ static ssize_t show_oversampling(struct device *dev,
 static DEVICE_ATTR(oversampling, S_IWUSR | S_IRUGO,
 					show_oversampling, set_oversampling);
 
-
 static ssize_t show_temperature(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
@@ -343,7 +335,6 @@ static ssize_t show_temperature(struct device *dev,
 }
 static DEVICE_ATTR(temp0_input, S_IRUGO, show_temperature, NULL);
 
-
 static ssize_t show_pressure(struct device *dev,
 			     struct device_attribute *attr, char *buf)
 {
@@ -359,7 +350,6 @@ static ssize_t show_pressure(struct device *dev,
 		return sprintf(buf, "%d\n", pressure);
 }
 static DEVICE_ATTR(pressure0_input, S_IRUGO, show_pressure, NULL);
-
 
 static struct attribute *bmp085_attributes[] = {
 	&dev_attr_temp0_input.attr,
@@ -473,7 +463,6 @@ static void __exit bmp085_exit(void)
 {
 	i2c_del_driver(&bmp085_driver);
 }
-
 
 MODULE_AUTHOR("Christoph Mair <christoph.mair@gmail.com");
 MODULE_DESCRIPTION("BMP085 driver");

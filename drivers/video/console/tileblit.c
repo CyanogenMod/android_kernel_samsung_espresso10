@@ -156,4 +156,3 @@ EXPORT_SYMBOL(fbcon_set_tileops);
 MODULE_AUTHOR("Antonino Daplas <adaplas@pol.net>");
 MODULE_DESCRIPTION("Tile Blitting Operation");
 MODULE_LICENSE("GPL");
-

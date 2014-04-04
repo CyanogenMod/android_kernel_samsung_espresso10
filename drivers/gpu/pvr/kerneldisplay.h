@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -41,15 +41,15 @@ typedef PVRSRV_ERROR (*PFN_ENUM_DC_DIMS)(IMG_HANDLE,
 typedef PVRSRV_ERROR (*PFN_GET_DC_SYSTEMBUFFER)(IMG_HANDLE, IMG_HANDLE*);
 typedef PVRSRV_ERROR (*PFN_GET_DC_INFO)(IMG_HANDLE, DISPLAY_INFO*);
 typedef PVRSRV_ERROR (*PFN_CREATE_DC_SWAPCHAIN)(IMG_HANDLE,
-												IMG_UINT32, 
-												DISPLAY_SURF_ATTRIBUTES*, 
+												IMG_UINT32,
 												DISPLAY_SURF_ATTRIBUTES*,
-												IMG_UINT32, 
+												DISPLAY_SURF_ATTRIBUTES*,
+												IMG_UINT32,
 												PVRSRV_SYNC_DATA**,
 												IMG_UINT32,
-												IMG_HANDLE*, 
+												IMG_HANDLE*,
 												IMG_UINT32*);
-typedef PVRSRV_ERROR (*PFN_DESTROY_DC_SWAPCHAIN)(IMG_HANDLE, 
+typedef PVRSRV_ERROR (*PFN_DESTROY_DC_SWAPCHAIN)(IMG_HANDLE,
 												 IMG_HANDLE);
 typedef PVRSRV_ERROR (*PFN_SET_DC_DSTRECT)(IMG_HANDLE, IMG_HANDLE, IMG_RECT*);
 typedef PVRSRV_ERROR (*PFN_SET_DC_SRCRECT)(IMG_HANDLE, IMG_HANDLE, IMG_RECT*);
@@ -132,57 +132,42 @@ typedef struct PVRSRV_DC_DISP2SRV_KMJTABLE_TAG
 
 } PVRSRV_DC_DISP2SRV_KMJTABLE, *PPVRSRV_DC_DISP2SRV_KMJTABLE;
 
-
 typedef struct DISPLAYCLASS_FLIP_COMMAND_TAG
 {
-	
+
 	IMG_HANDLE hExtDevice;
 
-	
 	IMG_HANDLE hExtSwapChain;
 
-	
 	IMG_HANDLE hExtBuffer;
 
-	
 	IMG_HANDLE hPrivateTag;
 
-	
 	IMG_UINT32 ui32ClipRectCount;
 
-	
 	IMG_RECT *psClipRect;
 
-	
 	IMG_UINT32	ui32SwapInterval;
 
 } DISPLAYCLASS_FLIP_COMMAND;
 
-
 typedef struct DISPLAYCLASS_FLIP_COMMAND2_TAG
 {
-	
+
 	IMG_HANDLE hExtDevice;
 
-	
 	IMG_HANDLE hExtSwapChain;
 
-	
 	IMG_HANDLE hUnused;
 
-	
 	IMG_UINT32 ui32SwapInterval;
 
-	
 	IMG_PVOID  pvPrivData;
 
-	
 	IMG_UINT32 ui32PrivDataLength;
 
-	
 	PDC_MEM_INFO *ppsMemInfos;
 
-	
 	IMG_UINT32 ui32NumMemInfos;
 
 } DISPLAYCLASS_FLIP_COMMAND2;
@@ -192,15 +177,12 @@ typedef struct DISPLAYCLASS_FLIP_COMMAND2_TAG
 #define DC_STATE_NO_FLUSH_COMMANDS		0
 #define DC_STATE_FLUSH_COMMANDS			1
 
-
 typedef IMG_BOOL (*PFN_DC_GET_PVRJTABLE)(PPVRSRV_DC_DISP2SRV_KMJTABLE);
 
 IMG_IMPORT IMG_BOOL PVRGetDisplayClassJTable(PVRSRV_DC_DISP2SRV_KMJTABLE *psJTable);
-
 
 #if defined (__cplusplus)
 }
 #endif
 
 #endif
-

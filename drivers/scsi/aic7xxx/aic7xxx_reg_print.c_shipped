@@ -410,4 +410,3 @@ ahc_scb_tag_print(u_int regvalue, u_int *cur_col, u_int wrap)
 	return (ahc_print_register(NULL, 0, "SCB_TAG",
 	    0xbb, regvalue, cur_col, wrap));
 }
-

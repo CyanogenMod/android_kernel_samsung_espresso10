@@ -1,5 +1,3 @@
-# arch/arm/mach-omap2/Kconfig.sec
-#
 # Copyright (C) 2011 Samsung Electronics Co, Ltd.
 #
 # This software is licensed under the terms of the GNU General Public
@@ -10,7 +8,6 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-#
 
 config MACH_OMAP_SAMSUNG
 	bool "OMAP based Samsung Board Type"
@@ -51,12 +48,6 @@ config FW_SAMSUNG_ESPRESSO_10_TSP
 	bool
 	default n
 
-config MACH_SAMSUNG_PALAU
-	bool "Samsung Palau (GT-I9270) Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-	select REGULATOR_FIXED_VOLTAGE
-
 config MACH_SAMSUNG_KONA
 	bool "Samsung Kona (GT-N5100) Board"
 	default n
@@ -94,19 +85,19 @@ config BT_BCM4330
 	bool "Enable BCM4330 driver"
 	default n
 	help
-		Adds BCM4330 RFKILL driver for Broadcom BCM4330 chipset
+	   Adds BCM4330 RFKILL driver for Broadcom BCM4330 chipset
 
 config BT_BCM4334
 	bool "Enable BCM4334 driver"
 	default n
 	help
-		Adds BCM4334 RFKILL driver for Broadcom BCM4334 chipset
+	   Adds BCM4334 RFKILL driver for Broadcom BCM4334 chipset
 
 config BT_MGMT
 	bool "Bluetooth Mgmt"
 	default n
 	help
-		This is for bluetooth mgmt
+	   This is for bluetooth mgmt
 endif
 
 config OMAP_STMPE_NR
@@ -114,11 +105,11 @@ config OMAP_STMPE_NR
 	default 1
 	depends on ARCH_OMAP && MFD_STMPE
 	help
-		Define a number of used STMPE MFD device attached to OMAP.
-		STMPE is can be used for a GPIO-Expander / Key-Matrix
-		device, and it rquires its own IRQ number. Generally, only
-		one STMPE is used on one device but two or more STMPE device
-		are also used if number of GPIOs are not enough on OMAP.
+	   Define a number of used STMPE MFD device attached to OMAP.
+	   STMPE is can be used for a GPIO-Expander / Key-Matrix
+	   device, and it rquires its own IRQ number. Generally, only
+	   one STMPE is used on one device but two or more STMPE device
+	   are also used if number of GPIOs are not enough on OMAP.
 
 menu "OMAP Samsung Specific Configurations"
 	depends on MACH_OMAP_SAMSUNG
@@ -146,133 +137,124 @@ config SAMSUNG_USE_GETLOG
 	bool "Samsung getLog Debuging Feature"
 	default n
 	help
-		Add a MARK string to the kernel log message indicating
-		starting addresses of 'FrameBuffer / printk Log buffer /
-		Platform log buffer'. This feature is used to extract
-		debuging infomration from RAM-Dump.
+	   Add a MARK string to the kernel log message indicating
+	   starting addresses of 'FrameBuffer / printk Log buffer /
+	   Platform log buffer'. This feature is used to extract
+	   debuging infomration from RAM-Dump.
 
 config SAMSUNG_ADD_GAFORENSICINFO
 	bool "Samsung GAF Debuging Feature"
 	default n
 	help
-		Add additional information to the RAM-Dump.
-		This information
-		will be analized in
-		GAF Tool.
+	   Add additional information to the RAM-Dump.
+	   This information will be analized in GAF Tool.
 
 config SAMSUNG_USE_LOGGER_ADDON
 	bool "Samsung Use add-ons for android's logger"
 	default n
 	help
-		This feature make a log message which is started
-		with !@ is displayed throught printk function.
-		This also adds more platform logges in RAM-CONSOLE.
+	   This feature make a log message which is started
+	   with !@ is displayed throught printk function.
+	   This also adds more platform logges in RAM-CONSOLE.
 
 config SAMSUNG_PRINT_PLATFORM_LOG
 	bool "Samsung Print Platform log into Console"
 	depends on SAMSUNG_USE_LOGGER_ADDON
 	default n
 	help
-		This feature will print some critical(?) platfomr logs on
-		the console device. If ANDROID_RAM_CONSOLE feature is
-		enabled at the same time, platform log will not be displayed
-		except 'ram-1'.
+	   This feature will print some critical(?) platfomr logs on
+	   the console device. If ANDROID_RAM_CONSOLE feature is
+	   enabled at the same time, platform log will not be displayed
+	   except 'ram-1'.
 
 config SAMSUNG_USE_SEC_LOG_BUF
 	bool "Samsung Use SEC_LOG_BUF"
 	default n
 	help
-		This feature stores
-		all serial log messages
-		into the
-		SEC_LOG_BUF area.
+	   This feature stores all serial log messages
+	   into the SEC_LOG_BUF area.
 
 config SAMSUNG_USE_LAST_SEC_LOG_BUF
 	bool "Samsung Use LAST_SEC_LOG_BUF"
 	depends on SAMSUNG_USE_SEC_LOG_BUF
 	default n
 	help
-		This feature creats a node to read contents of sec_log_buf
-		area just before booting into kernel from bootloader.
-		This is very helpful to read sec_log_buf area without reset
-		or entering upload mode.
+	   This feature creats a node to read contents of sec_log_buf
+	   area just before booting into kernel from bootloader.
+	   This is very helpful to read sec_log_buf area without reset
+	   or entering upload mode.
 
 config SAMSUNG_REPLACE_LAST_KMSG
 	bool "Samsung Replace last_kmsg with SEC_LOG_BUF"
 	depends on SAMSUNG_USE_LAST_SEC_LOG_BUF && !ANDROID_RAM_CONSOLE
 	default n
 	help
-		This feture will replace '/proc/last_kmsg' with SEC_LOG_BUF.
-		SEC_LOG_BUF and ANDROID_RAM_CONSOLE are similar features so,
-		they are sometimes not needed at the same time. As a result,
-		if this feature is enabled, SEC_LOG_BUF can be read through
-		out '/proc/last_kmsg' node.
+	   This feture will replace '/proc/last_kmsg' with SEC_LOG_BUF.
+	   SEC_LOG_BUF and ANDROID_RAM_CONSOLE are similar features so,
+	   they are sometimes not needed at the same time. As a result,
+	   if this feature is enabled, SEC_LOG_BUF can be read through
+	   out '/proc/last_kmsg' node.
 
 config SAMSUNG_DIABLE_SEC_LOG_WHEN_TTY
 	bool "Samsung disable SEC_LOG_BUF when tty is used"
 	depends on SAMSUNG_USE_SEC_LOG_BUF && MACH_OMAP4_SAMSUNG
 	default y
 	help
-		Device is hanging when sec_log_buf and ttyOx are enabled at
-		the same time. This feature disables sec_log_buf when ttyOx
-		is used. Disabling sec_log_buf is not a big problem because,
-		developer can whatching a serial log through out the teminal
-		program.
+	   Device is hanging when sec_log_buf and ttyOx are enabled at
+	   the same time. This feature disables sec_log_buf when ttyOx
+	   is used. Disabling sec_log_buf is not a big problem because,
+	   developer can whatching a serial log through out the teminal
+	   program.
+
+config SAMSUNG_Y_CABLE
+	bool "Y Cable Support"
+	default n
+	help
+	   This is a proto-type implementation for Y-Cable support
+	   on p5113 Chipset (still needs to be worked-out)
+
+config SAMSUNG_EXFAT
+	bool "Support exFAT filesystem driver"
+	default y
 
 menu "SAMSUNG Common Debugging Features"
 menuconfig SEC_DEBUG
 	bool "Samsung TN Ramdump Feature"
 	default y
 	help
-		Samsung TN
-		Ramdump Feature.
-		Use INFORM3
-		and magic number.
+	   Samsung TN
+	   Ramdump Feature. Use INFORM3 and magic number.
 
 config SEC_DEBUG_SCHED_LOG
 	bool "Samsung Scheduler Logging Feature"
 	depends on SEC_DEBUG
 	default n
 	help
-		Samsung Scheduler
-		Logging Feature
-		for
-		Debug use.
+	   Samsung Scheduler
+	   Logging Feature for Debug use.
 
 config SEC_DEBUG_SEMAPHORE_LOG
 	bool "Samsung Semaphore Logging Feature"
 	depends on SEC_DEBUG
 	default n
 	help
-		Samsung
-		Semaphore
-		Logging Feature
-		for Debug use.
+	   Samsung Semaphore
+	   Logging Feature for Debug use.
 
 config SEC_DEBUG_USER
 	bool "Panic on Userspace fault"
 	depends on SEC_DEBUG
 	default y
 	help
-		Panic
-		on
-		Userspace
-		fault.
+	   Panic on Userspace fault.
 
 config SEC_DEBUG_IRQ_EXIT_LOG
 	bool "Temporary Logging for IRQ delay"
 	depends on SEC_DEBUG
 	default n
 	help
-		Verbose
-		Logging
-		for IRQ
-		dealy.
+	   Verbose Logging for IRQ dealy.
 
 endmenu
 
 endmenu
-
-config SAMSUNG_EXFAT
-	bool "Support exFAT filesystem driver"
-	default y

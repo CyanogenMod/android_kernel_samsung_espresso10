@@ -20,14 +20,12 @@ struct vme_master {
 #endif
 };
 
-
 /*
  * IOCTL Commands and structures
  */
 
 /* Magic number for use in ioctls */
 #define VME_IOC_MAGIC 0xAE
-
 
 /* VMEbus Slave Window Configuration Structure */
 struct vme_slave {
@@ -49,4 +47,3 @@ struct vme_slave {
 #define VME_SET_MASTER _IOW(VME_IOC_MAGIC, 4, struct vme_master)
 
 #endif /* _VME_USER_H_ */
-

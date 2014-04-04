@@ -214,7 +214,6 @@ static int raw_rcv_skb(struct sock *sk, struct sk_buff *skb)
 	return NET_RX_SUCCESS;
 }
 
-
 void ieee802154_raw_deliver(struct net_device *dev, struct sk_buff *skb)
 {
 	struct sock *sk;
@@ -264,4 +263,3 @@ struct proto ieee802154_raw_prot = {
 	.getsockopt	= raw_getsockopt,
 	.setsockopt	= raw_setsockopt,
 };
-

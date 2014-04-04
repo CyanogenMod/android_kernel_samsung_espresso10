@@ -13,7 +13,6 @@
 
 #include <scsi/scsi_host.h>
 
-
 static int __init init_this_scsi_driver(void)
 {
 	struct scsi_host_template *sht = &driver_template;

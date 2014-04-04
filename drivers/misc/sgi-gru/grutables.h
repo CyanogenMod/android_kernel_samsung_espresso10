@@ -261,7 +261,6 @@ extern struct mcs_op_statistic mcs_op_statistics[mcsop_last];
 #define OPT_DPRINT		1
 #define OPT_STATS		2
 
-
 #define IRQ_GRU			110	/* Starting IRQ number for interrupts */
 
 /* Delay in jiffies between attempts to assign a GRU context */

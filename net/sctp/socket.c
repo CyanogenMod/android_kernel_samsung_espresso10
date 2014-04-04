@@ -124,7 +124,6 @@ static void sctp_enter_memory_pressure(struct sock *sk)
 	sctp_memory_pressure = 1;
 }
 
-
 /* Get the sndbuf space available at the time on the association.  */
 static inline int sctp_wspace(struct sctp_association *asoc)
 {
@@ -1044,7 +1043,6 @@ static int __sctp_connect(struct sock* sk,
 		if (asoc && asoc->peer.port && asoc->peer.port != port)
 			goto out_free;
 
-
 		/* Check if there already is a matching association on the
 		 * endpoint (other than the one created here).
 		 */
@@ -1160,8 +1158,14 @@ out_free:
 	SCTP_DEBUG_PRINTK("About to exit __sctp_connect() free asoc: %p"
 			  " kaddrs: %p err: %d\n",
 			  asoc, kaddrs, err);
-	if (asoc)
+	if (asoc) {
+		/* sctp_primitive_ASSOCIATE may have added this association
+		 * To the hash table, try to unhash it, just in case, its a noop
+		 * if it wasn't hashed so we're safe
+		 */
+		sctp_unhash_established(asoc);
 		sctp_association_free(asoc);
+	}
 	return err;
 }
 
@@ -1831,8 +1835,8 @@ SCTP_STATIC int sctp_sendmsg(struct kiocb *iocb, struct sock *sk,
 
 	/* Break the message into multiple chunks of maximum size. */
 	datamsg = sctp_datamsg_from_user(asoc, sinfo, msg, msg_len);
-	if (!datamsg) {
-		err = -ENOMEM;
+	if (IS_ERR(datamsg)) {
+		err = PTR_ERR(datamsg);
 		goto out_free;
 	}
 
@@ -1871,8 +1875,10 @@ SCTP_STATIC int sctp_sendmsg(struct kiocb *iocb, struct sock *sk,
 	goto out_unlock;
 
 out_free:
-	if (new_asoc)
+	if (new_asoc) {
+		sctp_unhash_established(asoc);
 		sctp_association_free(asoc);
+	}
 out_unlock:
 	sctp_release_sock(sk);
 
@@ -2942,7 +2948,6 @@ static int sctp_setsockopt_maxseg(struct sock *sk, char __user *optval, unsigned
 	return 0;
 }
 
-
 /*
  *  7.1.9 Set Peer Primary Address (SCTP_SET_PEER_PRIMARY_ADDR)
  *
@@ -3296,7 +3301,7 @@ static int sctp_setsockopt_auth_key(struct sock *sk,
 
 	ret = sctp_auth_set_key(sctp_sk(sk)->ep, asoc, authkey);
 out:
-	kfree(authkey);
+	kzfree(authkey);
 	return ret;
 }
 
@@ -3357,7 +3362,6 @@ static int sctp_setsockopt_del_key(struct sock *sk,
 				    val.scact_keynumber);
 
 }
-
 
 /* API 6.2 setsockopt(), getsockopt()
  *
@@ -3801,6 +3805,12 @@ SCTP_STATIC void sctp_destroy_sock(struct sock *sk)
 
 	/* Release our hold on the endpoint. */
 	ep = sctp_sk(sk)->ep;
+	/* This could happen during socket init, thus we bail out
+	 * early, since the rest of the below is not setup either.
+	 */
+	if (ep == NULL)
+		return;
+
 	sctp_endpoint_free(ep);
 	local_bh_disable();
 	percpu_counter_dec(&sctp_sockets_allocated);
@@ -3920,7 +3930,6 @@ static int sctp_getsockopt_sctp_status(struct sock *sk, int len,
 out:
 	return retval;
 }
-
 
 /* 7.2.2 Peer Address Information (SCTP_GET_PEER_ADDR_INFO)
  *
@@ -4415,7 +4424,6 @@ static int sctp_getsockopt_initmsg(struct sock *sk, int len, char __user *optval
 	return 0;
 }
 
-
 static int sctp_getsockopt_peer_addrs(struct sock *sk, int len,
 				      char __user *optval, int __user *optlen)
 {
@@ -4509,7 +4517,6 @@ static int sctp_copy_laddrs(struct sock *sk, __u16 port, void *to,
 
 	return cnt;
 }
-
 
 static int sctp_getsockopt_local_addrs(struct sock *sk, int len,
 				       char __user *optval, int __user *optlen)
@@ -4686,7 +4693,6 @@ static int sctp_getsockopt_adaptation_layer(struct sock *sk, int len,
  *   specify a default set of parameters that would normally be supplied
  *   through the inclusion of ancillary data.  This socket option allows
  *   such an application to set the default sctp_sndrcvinfo structure.
-
 
  *   The application that wishes to use this socket option simply passes
  *   in to this call the sctp_sndrcvinfo structure defined in Section
@@ -6236,7 +6242,6 @@ void sctp_sock_rfree(struct sk_buff *skb)
 	sk_mem_uncharge(sk, event->rmem_len);
 }
 
-
 /* Helper function to wait for space in the sndbuf.  */
 static int sctp_wait_for_sndbuf(struct sctp_association *asoc, long *timeo_p,
 				size_t msg_len)
@@ -6416,7 +6421,6 @@ static int sctp_wait_for_accept(struct sock *sk, long timeo)
 	DEFINE_WAIT(wait);
 
 	ep = sctp_sk(sk)->ep;
-
 
 	for (;;) {
 		prepare_to_wait_exclusive(sk_sleep(sk), &wait,
@@ -6652,7 +6656,6 @@ static void sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
 	newsk->sk_state = SCTP_SS_ESTABLISHED;
 	sctp_release_sock(newsk);
 }
-
 
 /* This proto struct describes the ULP interface for SCTP.  */
 struct proto sctp_prot = {

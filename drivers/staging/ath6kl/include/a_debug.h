@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="a_debug.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -158,7 +158,6 @@ extern ATH_DEBUG_MODULE_DBG_INFO GET_ATH_MODULE_DEBUG_VAR_NAME(ATH_MODULE_NAME);
     extern ATH_DEBUG_MODULE_DBG_INFO GET_ATH_MODULE_DEBUG_VAR_NAME(s)
 
 #define AR_DEBUG_PRINTBUF(buffer, length, desc) DebugDumpBytes(buffer,length,desc)
-
 
 #define AR_DEBUG_ASSERT A_ASSERT
 

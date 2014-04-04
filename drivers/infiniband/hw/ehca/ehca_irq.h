@@ -42,7 +42,6 @@
 #ifndef __EHCA_IRQ_H
 #define __EHCA_IRQ_H
 
-
 struct ehca_shca;
 
 #include <linux/interrupt.h>

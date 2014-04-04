@@ -22,4 +22,3 @@
 #define __LINUX_KERNEL_DRIVER__
 #include <linux/yas.h>
 #include "yas_general_kernel_driver.c"
-

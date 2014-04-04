@@ -137,7 +137,6 @@ static struct posix_acl *ocfs2_get_acl_nolock(struct inode *inode,
 	return acl;
 }
 
-
 /*
  * Get posix acl.
  */

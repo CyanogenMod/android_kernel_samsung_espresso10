@@ -96,7 +96,6 @@
 	PU_PD_REG(pu_pd_reg, pu_pd_status)		\
 },
 
-
 /*
  * OMAP730/850 has a slightly different config for the pin mux.
  * - config regs are the OMAP7XX_IO_CONF_x regs (see omap730.h) regs and

@@ -83,7 +83,6 @@
 /* Print buffers like C arrays. */
 #define GC_C_BUFFER		0
 
-
 /*******************************************************************************
  * Miscellaneous macros.
  */
@@ -145,7 +144,6 @@ struct itemhead {
 	enum itemtype type;
 };
 
-
 /*******************************************************************************
  * Supported dump items.
  */
@@ -193,7 +191,6 @@ struct itembuffer {
 	unsigned int gpuaddr;
 };
 
-
 /*******************************************************************************
  * Debug output buffer.
  */
@@ -230,7 +227,6 @@ static struct buffout g_outputbuffer = {
 	.enable = GC_DUMP_ENABLE
 };
 
-
 /*******************************************************************************
  * Internal structures.
  */
@@ -242,7 +238,6 @@ struct copypos {
 	unsigned char *logical;
 };
 
-
 /*******************************************************************************
  * Globals.
  */
@@ -250,7 +245,6 @@ struct copypos {
 static bool g_initdone;
 static DEFINE_MUTEX(g_lockmutex);
 static struct list_head gc_filterlist = LIST_HEAD_INIT(gc_filterlist);
-
 
 /*******************************************************************************
  * Item size functions.
@@ -286,7 +280,6 @@ static getitemsize g_itemsize[] = {
 };
 #endif
 #endif
-
 
 /*******************************************************************************
  * Printing functions.
@@ -748,7 +741,6 @@ static void gc_print_buffer(struct seq_file *s, struct itembuffer *itembuffer,
 	}
 }
 
-
 /*******************************************************************************
  * Print function wrappers.
  */
@@ -798,7 +790,6 @@ static printitem g_printarray[] = {
 	gc_print_buffer_wrapper
 };
 #endif
-
 
 /*******************************************************************************
  * Private functions.
@@ -1280,7 +1271,6 @@ static void gc_print(struct buffout *buffout, unsigned int argsize,
 	mutex_unlock(&g_lockmutex);
 }
 
-
 /*******************************************************************************
  * Dumping functions.
  */
@@ -1565,7 +1555,6 @@ void gc_dump_phys_surface(struct gcdbgfilter *filter, unsigned int zone,
 }
 EXPORT_SYMBOL(gc_dump_phys_surface);
 
-
 /*******************************************************************************
  * MMU dumping functions.
  */
@@ -1707,7 +1696,6 @@ void gc_dump_mmu(struct gcdbgfilter *filter, unsigned int zone,
 }
 EXPORT_SYMBOL(gc_dump_mmu);
 
-
 /*******************************************************************************
  * Dumping control functions.
  */
@@ -1843,7 +1831,6 @@ void gc_dump_reset(void)
 #endif
 }
 EXPORT_SYMBOL(gc_dump_reset);
-
 
 /*******************************************************************************
  * Command buffer parser.
@@ -2135,7 +2122,6 @@ char *gc_bvblend_name(enum bvblend blend)
 	}
 }
 EXPORT_SYMBOL(gc_bvblend_name);
-
 
 /*******************************************************************************
  * Initialization/cleanup.

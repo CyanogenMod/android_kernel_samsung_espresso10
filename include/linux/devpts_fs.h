@@ -45,5 +45,4 @@ static inline void devpts_pty_kill(struct tty_struct *tty) { }
 
 #endif
 
-
 #endif /* _LINUX_DEVPTS_FS_H */

@@ -76,7 +76,7 @@ typedef struct xfs_dir2_sf_entry {
 	xfs_dir2_sf_off_t	offset;		/* saved offset */
 	__uint8_t		name[1];	/* name, variable size */
 	xfs_dir2_inou_t		inumber;	/* inode number, var. offset */
-} __arch_pack xfs_dir2_sf_entry_t; 
+} __arch_pack xfs_dir2_sf_entry_t;
 
 typedef struct xfs_dir2_sf {
 	xfs_dir2_sf_hdr_t	hdr;		/* shortform header */

@@ -171,7 +171,6 @@ static const u8 twl6040_reg[TWL6040_CACHEREGNUM] = {
 	0x00, /* TWL6040_STATUS (ro)	0x2E	*/
 };
 
-
 /* twl6040 vio/gnd registers: registers under vio/gnd supply can be accessed
  * twl6040 vdd/vss registers: registers under vdd/vss supplies can only be
  * accessed after the power-up sequence */
@@ -646,7 +645,6 @@ static void twl6040_pga_hf_work(struct work_struct *work)
 		schedule_timeout_interruptible(
 				msecs_to_jiffies(handsfree->step_delay));
 	}
-
 
 	if (handsfree->ramp == TWL6040_RAMP_DOWN) {
 		handsfree->active = 0;

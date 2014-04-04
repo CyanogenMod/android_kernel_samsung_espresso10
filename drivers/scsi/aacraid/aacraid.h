@@ -48,7 +48,6 @@ struct diskparm
 	int cylinders;
 };
 
-
 /*
  *	Firmware constants
  */
@@ -155,7 +154,6 @@ struct creation_info
 	__le32		serial[2];			/* e.g., 0x1DEADB0BFAFAF001 */
 };
 
-
 /*
  *	Define all the constants needed for the communication interface
  */
@@ -181,7 +179,6 @@ struct creation_info
 #define TOTAL_QUEUE_ENTRIES  \
     (HOST_NORM_CMD_ENTRIES + HOST_HIGH_CMD_ENTRIES + ADAP_NORM_CMD_ENTRIES + ADAP_HIGH_CMD_ENTRIES + \
 	    HOST_NORM_RESP_ENTRIES + HOST_HIGH_RESP_ENTRIES + ADAP_NORM_RESP_ENTRIES + ADAP_HIGH_RESP_ENTRIES)
-
 
 /*
  *	Set the queues on a 16 byte alignment
@@ -627,7 +624,6 @@ struct sa_drawbridge_CSR {
 #define DoorbellReg_s SaDbCSR.SECSETIRQ
 #define DoorbellClrReg_p SaDbCSR.PRICLEARIRQ
 
-
 #define	DOORBELL_0	0x0001
 #define DOORBELL_1	0x0002
 #define DOORBELL_2	0x0004
@@ -636,14 +632,12 @@ struct sa_drawbridge_CSR {
 #define DOORBELL_5	0x0020
 #define DOORBELL_6	0x0040
 
-
 #define PrintfReady	DOORBELL_5
 #define PrintfDone	DOORBELL_5
 
 struct sa_registers {
 	struct sa_drawbridge_CSR	SaDbCSR;			/* 98h - c4h */
 };
-
 
 #define Sa_MINIPORT_REVISION			1
 
@@ -1209,7 +1203,6 @@ struct aac_dev
 
 #define		MAX_FSACOMMAND_NUM	38
 
-
 /*
  *	Define the status returns. These are very unixlike although
  *	most are not in fact used
@@ -1614,7 +1607,6 @@ struct aac_get_container_count_resp {
 	__le32		MaxPartitions;
 };
 
-
 /*
  *	Query for "mountable" objects, ie, objects that are typically
  *	associated with a drive letter on the client (host) side.
@@ -1734,7 +1726,6 @@ struct revision
 	__le32 build;
 };
 
-
 /*
  *	Ugly - non Linux like ioctl coding for back compat.
  */
@@ -1768,7 +1759,6 @@ struct revision
 #define FSACTL_GET_CONTAINERS			2131
 #define FSACTL_SEND_LARGE_FIB			CTL_CODE(2138, METHOD_BUFFERED)
 
-
 struct aac_common
 {
 	/*
@@ -1795,7 +1785,6 @@ struct aac_common
 };
 
 extern struct aac_common aac_config;
-
 
 /*
  *	The following macro is used when sending and receiving FIBs. It is

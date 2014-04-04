@@ -1237,7 +1237,6 @@ static void setup_range_channel(struct comedi_device *dev,
 	outb(chan_reg, dev->iobase + PCL812_MUX);	/* select channel */
 	outb(gain_reg, dev->iobase + PCL812_GAIN);	/* select gain */
 
-
 	if (wait)
 		/*
 		 * XXX this depends on selected range and can be very long for

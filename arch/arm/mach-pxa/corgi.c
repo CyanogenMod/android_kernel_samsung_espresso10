@@ -448,7 +448,6 @@ static struct pxamci_platform_data corgi_mci_platform_data = {
 	.gpio_power		= CORGI_GPIO_SD_PWR,
 };
 
-
 /*
  * Irda
  */
@@ -456,7 +455,6 @@ static struct pxaficp_platform_data corgi_ficp_platform_data = {
 	.gpio_pwdown		= CORGI_GPIO_IR_ON,
 	.transceiver_cap	= IR_SIRMODE | IR_OFF,
 };
-
 
 /*
  * USB Device Controller
@@ -746,4 +744,3 @@ MACHINE_START(HUSKY, "SHARP Husky")
 	.timer		= &pxa_timer,
 MACHINE_END
 #endif
-

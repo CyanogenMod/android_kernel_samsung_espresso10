@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_internal.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -26,7 +26,6 @@
 /* for debugging, uncomment this to capture the last frame header, on frame header
  * processing errors, the last frame header is dump for comparison */
 //#define HTC_CAPTURE_LAST_FRAME
-
 
 #ifdef __cplusplus
 extern "C" {
@@ -203,7 +202,7 @@ static INLINE struct htc_packet *HTC_ALLOC_CONTROL_TX(struct htc_target *target)
 
 #define HTC_UNPREPARE_SEND_PKT(pP)     \
     (pP)->pBuffer += HTC_HDR_LENGTH;   \
-    
+
 #ifdef __cplusplus
 }
 #endif

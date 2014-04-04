@@ -18,7 +18,6 @@
 #define NR_IXP23XX_IRQS			IRQ_IXP23XX_INTB+1
 #define IRQ_IXP23XX_EXTIRQS		NR_IXP23XX_IRQS
 
-
 #define IRQ_IXP23XX_DBG0		0	/* Debug/Execution/MBox */
 #define IRQ_IXP23XX_DBG1		1	/* Debug/Execution/MBox */
 #define IRQ_IXP23XX_NPE_TRG		2	/* npe_trigger */
@@ -157,7 +156,6 @@
 
 #define IXP23XX_MACH_IRQ(irq) 		(NR_IXP23XX_IRQ + (irq))
 
-
 /*
  * IXDP2351-specific interrupts
  */
@@ -206,7 +204,6 @@
 #define IXDP2351_INTA_IRQ_VALID 	0xFF3F
 #define IXDP2351_INTA_IRQ_NUM 		16
 
-
 /*
  * ADI RoadRunner IRQs
  */
@@ -218,6 +215,5 @@
 /*
  * Put new board definitions here
  */
-
 
 #endif

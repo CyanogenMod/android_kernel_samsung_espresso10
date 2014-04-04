@@ -110,13 +110,11 @@ out:
 	return len;
 }
 
-
 static const struct watchdog_info ident = {
 	.options	= WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT |
 				WDIOF_KEEPALIVEPING,
 	.identity	= WATCHDOG_NAME,
 };
-
 
 static long fitpc2_wdt_ioctl(struct file *file, unsigned int cmd,
 							unsigned long arg)
@@ -181,7 +179,6 @@ static int fitpc2_wdt_release(struct inode *inode, struct file *file)
 
 	return 0;
 }
-
 
 static const struct file_operations fitpc2_wdt_fops = {
 	.owner		= THIS_MODULE,
@@ -266,4 +263,3 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started");
 
 MODULE_LICENSE("GPL");
 MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
-

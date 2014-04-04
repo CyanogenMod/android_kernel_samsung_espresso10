@@ -26,7 +26,6 @@
 
  Version : 0.01
 
-
                             Mods
  ----------------------------------------------------------------------------
   Date     By                Description
@@ -46,7 +45,6 @@
 #define BOOT_SEQUENCE      ((ushort) 2)	/* Packet with the number of packets
 					   and load address */
 #define BOOT_COMPLETED     ((ushort) 3)	/* Boot completed */
-
 
 struct LPB {
 	u16 link_number;	/* Link Number */

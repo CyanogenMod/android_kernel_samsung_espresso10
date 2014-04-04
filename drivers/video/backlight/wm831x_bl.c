@@ -210,7 +210,6 @@ static int wm831x_backlight_probe(struct platform_device *pdev)
 	/* Disable the DCDC if it was started so we can bootstrap */
 	wm831x_set_bits(wm831x, WM831X_DCDC_ENABLE, WM831X_DC4_ENA, 0);
 
-
 	backlight_update_status(bl);
 
 	return 0;

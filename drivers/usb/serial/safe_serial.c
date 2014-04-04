@@ -62,7 +62,6 @@
  *
  */
 
-
 #include <linux/kernel.h>
 #include <linux/errno.h>
 #include <linux/gfp.h>
@@ -75,7 +74,6 @@
 #include <linux/uaccess.h>
 #include <linux/usb.h>
 #include <linux/usb/serial.h>
-
 
 #ifndef CONFIG_USB_SERIAL_SAFE_PADDED
 #define CONFIG_USB_SERIAL_SAFE_PADDED 0
@@ -123,7 +121,6 @@ MODULE_PARM_DESC(padded, "Pad to full wMaxPacketSize On/Off");
 #define LINEO_INTERFACE_SUBCLASS_SAFESERIAL     0x02
 #define LINEO_SAFESERIAL_CRC                    0x01
 #define LINEO_SAFESERIAL_CRC_PADDED             0x02
-
 
 #define MY_USB_DEVICE(vend, prod, dc, ic, isc) \
 	.match_flags = USB_DEVICE_ID_MATCH_DEVICE | \

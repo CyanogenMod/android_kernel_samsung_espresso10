@@ -232,7 +232,6 @@ static struct scsi_host_template it8213_sht = {
 	ATA_BMDMA_SHT(DRV_NAME),
 };
 
-
 static struct ata_port_operations it8213_ops = {
 	.inherits		= &ata_bmdma_port_ops,
 	.cable_detect		= it8213_cable_detect,
@@ -240,7 +239,6 @@ static struct ata_port_operations it8213_ops = {
 	.set_dmamode		= it8213_set_dmamode,
 	.prereset		= it8213_pre_reset,
 };
-
 
 /**
  *	it8213_init_one - Register 8213 ATA PCI device with kernel services

@@ -20,4 +20,3 @@
 			((u8 *)(_pAddr))[5] == 0xff)
 
 #endif /* #ifndef __INC_ETHERNET_H */
-

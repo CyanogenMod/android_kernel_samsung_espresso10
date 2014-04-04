@@ -93,7 +93,6 @@ static void hardware_send_packet(struct net_device *dev, char *buf, int length);
 extern void seeq8005_init(struct net_device *dev, int startp);
 static inline void wait_for_buffer(struct net_device *dev);
 
-
 /* Check for a network adaptor of this type, and return '0' iff one exists.
    If dev->base_addr == 0, probe all likely locations.
    If dev->base_addr == 1, always return failure.
@@ -221,7 +220,6 @@ static int __init seeq8005_probe1(struct net_device *dev, int ioaddr)
 	outw( SEEQCMD_FIFO_WRITE | SEEQCMD_SET_ALL_OFF, SEEQ_CMD);	/* setup for reading PROM */
 	outw( 0, SEEQ_DMAAR);						/* set starting PROM address */
 	outw( SEEQCFG1_BUFFER_PROM, SEEQ_CFG1);				/* set buffer to look at PROM */
-
 
 	j=0;
 	for(i=0; i <32; i++) {
@@ -352,7 +350,6 @@ out:
 	release_region(ioaddr, SEEQ8005_IO_EXTENT);
 	return retval;
 }
-
 
 /* Open/initialize the board.  This is called (in the current kernel)
    sometime after booting when the 'ifconfig' program is run.
@@ -685,7 +682,6 @@ void seeq8005_init(struct net_device *dev, int startp)
 	}
 }
 
-
 static void hardware_send_packet(struct net_device * dev, char *buf, int length)
 {
 	int ioaddr = dev->base_addr;
@@ -723,7 +719,6 @@ static void hardware_send_packet(struct net_device * dev, char *buf, int length)
 	outw( SEEQCMD_WINDOW_INT_ACK | SEEQCMD_SET_TX_ON | (status & SEEQCMD_INT_MASK), SEEQ_CMD);
 
 }
-
 
 #ifdef MODULE
 

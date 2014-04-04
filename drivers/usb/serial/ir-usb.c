@@ -503,7 +503,6 @@ static void __exit ir_exit(void)
 	usb_serial_deregister(&ir_device);
 }
 
-
 module_init(ir_init);
 module_exit(ir_exit);
 
@@ -517,4 +516,3 @@ module_param(xbof, int, 0);
 MODULE_PARM_DESC(xbof, "Force specific number of XBOFs");
 module_param(buffer_size, int, 0);
 MODULE_PARM_DESC(buffer_size, "Size of the transfer buffers");
-

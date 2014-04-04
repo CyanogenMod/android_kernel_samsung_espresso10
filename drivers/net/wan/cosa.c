@@ -462,7 +462,7 @@ static int cosa_probe(int base, int irq, int dma)
 		printk (KERN_INFO "cosa_probe: invalid DMA %d\n", dma);
 		return -1;
 	}
-	/* and finally, on 16-bit COSA DMA should be 4-7 and 
+	/* and finally, on 16-bit COSA DMA should be 4-7 and
 	 * I/O base should not be multiple of 0x10 */
 	if (((base & 0x8) && dma < 4) || (!(base & 0x8) && dma > 3)) {
 		printk (KERN_INFO "cosa_probe: 8/16 bit base and DMA mismatch"
@@ -477,7 +477,7 @@ static int cosa_probe(int base, int irq, int dma)
 
 	if (!request_region(base, is_8bit(cosa)?2:4,"cosa"))
 		return -1;
-	
+
 	if (cosa_reset_and_read_id(cosa, cosa->id_string) < 0) {
 		printk(KERN_DEBUG "cosa: probe at 0x%x failed.\n", base);
 		err = -1;
@@ -498,7 +498,7 @@ static int cosa_probe(int base, int irq, int dma)
 		err = -1;
 		goto err_out;
 	}
-	/* Update the name of the region now we know the type of card */ 
+	/* Update the name of the region now we know the type of card */
 	release_region(base, is_8bit(cosa)?2:4);
 	if (!request_region(base, is_8bit(cosa)?2:4, cosa->type)) {
 		printk(KERN_DEBUG "cosa: changing name at 0x%x failed.\n", base);
@@ -510,8 +510,8 @@ static int cosa_probe(int base, int irq, int dma)
 		unsigned long irqs;
 /*		printk(KERN_INFO "IRQ autoprobe\n"); */
 		irqs = probe_irq_on();
-		/* 
-		 * Enable interrupt on tx buffer empty (it sure is) 
+		/*
+		 * Enable interrupt on tx buffer empty (it sure is)
 		 * really sure ?
 		 * FIXME: When this code is not used as module, we should
 		 * probably call udelay() instead of the interruptible sleep.
@@ -551,7 +551,7 @@ static int cosa_probe(int base, int irq, int dma)
 		err = -1;
 		goto err_out1;
 	}
-	
+
 	cosa->bouncebuf = kmalloc(COSA_MTU, GFP_KERNEL|GFP_DMA);
 	if (!cosa->bouncebuf) {
 		err = -ENOMEM;
@@ -800,7 +800,7 @@ static ssize_t cosa_read(struct file *file,
 	}
 	if (mutex_lock_interruptible(&chan->rlock))
 		return -ERESTARTSYS;
-	
+
 	if ((chan->rxdata = kmalloc(COSA_MTU, GFP_DMA|GFP_KERNEL)) == NULL) {
 		printk(KERN_INFO "%s: cosa_read() - OOM\n", cosa->name);
 		mutex_unlock(&chan->rlock);
@@ -858,7 +858,6 @@ static int chrdev_rx_done(struct channel_data *chan)
 	return 1;
 }
 
-
 static ssize_t cosa_write(struct file *file,
 	const char __user *buf, size_t count, loff_t *ppos)
 {
@@ -878,7 +877,7 @@ static ssize_t cosa_write(struct file *file,
 
 	if (count > COSA_MTU)
 		count = COSA_MTU;
-	
+
 	/* Allocate the buffer */
 	if ((kbuf = kmalloc(count, GFP_KERNEL|GFP_DMA)) == NULL) {
 		printk(KERN_NOTICE "%s: cosa_write() OOM - dropping packet\n",
@@ -958,7 +957,7 @@ static int cosa_open(struct inode *inode, struct file *file)
 		goto out;
 	}
 	chan = cosa->chan + n;
-	
+
 	file->private_data = chan;
 
 	spin_lock_irqsave(&cosa->lock, flags);
@@ -1044,7 +1043,7 @@ static inline int cosa_download(struct cosa_data *cosa, void __user *arg)
 			cosa->name, cosa->firmware_status);
 		return -EPERM;
 	}
-	
+
 	if (copy_from_user(&d, arg, sizeof(d)))
 		return -EFAULT;
 
@@ -1052,7 +1051,6 @@ static inline int cosa_download(struct cosa_data *cosa, void __user *arg)
 		return -EINVAL;
 	if (d.len < 0 || d.len > COSA_MAX_FIRMWARE_SIZE)
 		return -EINVAL;
-
 
 	/* If something fails, force the user to reset the card */
 	cosa->firmware_status &= ~(COSA_FW_RESET|COSA_FW_DOWNLOAD);
@@ -1130,7 +1128,7 @@ static inline int cosa_start(struct cosa_data *cosa, int address)
 	cosa->firmware_status |= COSA_FW_START;
 	return 0;
 }
-		
+
 /* Buffer of size at least COSA_MAX_ID_STRING is expected */
 static inline int cosa_getidstr(struct cosa_data *cosa, char __user *string)
 {
@@ -1165,7 +1163,7 @@ static int cosa_ioctl_common(struct cosa_data *cosa,
 	case COSAIODOWNLD:	/* Download the firmware */
 		if (!capable(CAP_SYS_RAWIO))
 			return -EACCES;
-		
+
 		return cosa_download(cosa, argp);
 	case COSAIORMEM:
 		if (!capable(CAP_SYS_RAWIO))
@@ -1353,7 +1351,7 @@ static void cosa_kick(struct cosa_data *cosa)
 	if (test_bit(TXBIT, &cosa->rxtx))
 		s = "TX DMA";
 
-	printk(KERN_INFO "%s: %s timeout - restarting.\n", cosa->name, s); 
+	printk(KERN_INFO "%s: %s timeout - restarting.\n", cosa->name, s);
 	spin_lock_irqsave(&cosa->lock, flags);
 	cosa->rxtx = 0;
 
@@ -1444,7 +1442,6 @@ static int download(struct cosa_data *cosa, const char __user *microcode, int le
 	return 0;
 }
 
-
 /*
  * Starting microcode is done via the "g" command of the SRP monitor.
  * The chat should be the following: "g" "g=" "<addr><CR>"
@@ -1458,7 +1455,7 @@ static int startmicrocode(struct cosa_data *cosa, int address)
 
 	if (puthexnumber(cosa, address) < 0) return -4;
 	if (put_wait_data(cosa, '\r') == -1) return -5;
-	
+
 	if (get_wait_data(cosa) != '\r') return -6;
 	if (get_wait_data(cosa) != '\r') return -7;
 	if (get_wait_data(cosa) != '\n') return -8;
@@ -1620,8 +1617,8 @@ static int put_wait_data(struct cosa_data *cosa, int data)
 		cosa->num, cosa_getstatus(cosa));
 	return -1;
 }
-	
-/* 
+
+/*
  * The following routine puts the hexadecimal number into the SRP monitor
  * and verifies the proper echo of the sent bytes. Returns 0 on success,
  * negative number on failure (-1,-3,-5,-7) means that put_wait_data() failed,
@@ -1661,7 +1658,7 @@ static int puthexnumber(struct cosa_data *cosa, int number)
  * COSA status byte. I have moved the rx/tx/eot interrupt handling into
  * separate functions to make it more readable. These functions are inline,
  * so there should be no overhead of function call.
- * 
+ *
  * In the COSA bus-master mode, we need to tell the card the address of a
  * buffer. Unfortunately, COSA may be too slow for us, so we must busy-wait.
  * It's time to use the bottom half :-(
@@ -1924,7 +1921,7 @@ static inline void eot_interrupt(struct cosa_data *cosa, int status)
 #ifdef DEBUG_DATA
 	{
 		int i;
-		printk(KERN_INFO "cosa%dc%d: done rx(0x%x)", cosa->num, 
+		printk(KERN_INFO "cosa%dc%d: done rx(0x%x)", cosa->num,
 			cosa->rxchan->num, cosa->rxsize);
 		for (i=0; i<cosa->rxsize; i++)
 			printk (" %02x", cosa->rxbuf[i]&0xff);

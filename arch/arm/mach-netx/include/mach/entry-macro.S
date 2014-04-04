@@ -36,4 +36,3 @@
 		rsb     \irqnr, \irqnr, #31
 		cmp	\irqstat, #0
 		.endm
-

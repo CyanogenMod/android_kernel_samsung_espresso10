@@ -47,7 +47,6 @@
  */
 #define VXFS_BLOCK_PER_PAGE(sbp)  ((PAGE_CACHE_SIZE / (sbp)->s_blocksize))
 
-
 static struct dentry *	vxfs_lookup(struct inode *, struct dentry *, struct nameidata *);
 static int		vxfs_readdir(struct file *, void *, filldir_t);
 
@@ -61,13 +60,12 @@ const struct file_operations vxfs_dir_operations = {
 	.readdir =		vxfs_readdir,
 };
 
- 
 static inline u_long
 dir_pages(struct inode *inode)
 {
 	return (inode->i_size + PAGE_CACHE_SIZE - 1) >> PAGE_CACHE_SHIFT;
 }
- 
+
 static inline u_long
 dir_blocks(struct inode *ip)
 {
@@ -121,7 +119,7 @@ vxfs_find_entry(struct inode *ip, struct dentry *dp, struct page **ppp)
 	npages = dir_pages(ip);
 	nblocks = dir_blocks(ip);
 	pblocks = VXFS_BLOCK_PER_PAGE(ip->i_sb);
-	
+
 	for (page = 0; page < npages; page++) {
 		caddr_t			kaddr;
 		struct page		*pp;
@@ -138,7 +136,7 @@ vxfs_find_entry(struct inode *ip, struct dentry *dp, struct page **ppp)
 
 			baddr = kaddr + (block * bsize);
 			limit = baddr + bsize - VXFS_DIRLEN(1);
-			
+
 			dbp = (struct vxfs_dirblk *)baddr;
 			de = (struct vxfs_direct *)(baddr + VXFS_DIRBLKOV(dbp));
 
@@ -184,7 +182,7 @@ vxfs_inode_by_name(struct inode *dip, struct dentry *dp)
 		kunmap(pp);
 		page_cache_release(pp);
 	}
-	
+
 	return (ino);
 }
 
@@ -207,10 +205,10 @@ vxfs_lookup(struct inode *dip, struct dentry *dp, struct nameidata *nd)
 {
 	struct inode		*ip = NULL;
 	ino_t			ino;
-			 
+
 	if (dp->d_name.len > VXFS_NAMELEN)
 		return ERR_PTR(-ENAMETOOLONG);
-				 
+
 	ino = vxfs_inode_by_name(dip, dp);
 	if (ino) {
 		ip = vxfs_iget(dip->i_sb, ino);
@@ -257,7 +255,7 @@ vxfs_readdir(struct file *fp, void *retp, filldir_t filler)
 	}
 
 	pos = fp->f_pos - 2;
-	
+
 	if (pos > VXFS_DIRROUND(ip->i_size))
 		return 0;
 
@@ -285,7 +283,7 @@ vxfs_readdir(struct file *fp, void *retp, filldir_t filler)
 
 			baddr = kaddr + (block * bsize);
 			limit = baddr + bsize - VXFS_DIRLEN(1);
-	
+
 			dbp = (struct vxfs_dirblk *)baddr;
 			de = (struct vxfs_direct *)
 				(offset ?

@@ -40,7 +40,7 @@ static int softsynth_is_alive(struct spk_synth *synth);
 static unsigned char get_index(void);
 
 static struct miscdevice synth_device;
-static int initialized;
+static int init_pos;
 static int misc_registered;
 
 static struct var_t vars[] = {
@@ -194,7 +194,7 @@ static int softsynth_close(struct inode *inode, struct file *fp)
 	unsigned long flags;
 	spk_lock(flags);
 	synth_soft.alive = 0;
-	initialized = 0;
+	init_pos = 0;
 	spk_unlock(flags);
 	/* Make sure we let applications go before leaving */
 	speakup_start_ttys();
@@ -239,13 +239,8 @@ static ssize_t softsynth_read(struct file *fp, char *buf, size_t count,
 			ch = '\x18';
 		} else if (synth_buffer_empty()) {
 			break;
-		} else if (!initialized) {
-			if (*init) {
-				ch = *init;
-				init++;
-			} else {
-				initialized = 1;
-			}
+		} else if (init[init_pos]) {
+			ch = init[init_pos++];
 		} else {
 			ch = synth_buffer_getc();
 		}
@@ -321,7 +316,6 @@ static const struct file_operations softsynth_fops = {
 	.release = softsynth_close,
 };
 
-
 static int softsynth_probe(struct spk_synth *synth)
 {
 
@@ -359,7 +353,6 @@ module_param_named(start, synth_soft.startup, short, S_IRUGO);
 
 MODULE_PARM_DESC(start, "Start the synthesizer once it is loaded.");
 
-
 static int __init soft_init(void)
 {
 	return synth_add(&synth_soft);
@@ -376,4 +369,3 @@ MODULE_AUTHOR("Kirk Reiser <kirk@braille.uwo.ca>");
 MODULE_DESCRIPTION("Speakup userspace software synthesizer support");
 MODULE_LICENSE("GPL");
 MODULE_VERSION(DRV_VERSION);
-

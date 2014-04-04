@@ -621,7 +621,14 @@ void *idr_get_next(struct idr *idp, int *nextidp)
 			return p;
 		}
 
-		id += 1 << n;
+		/*
+		 * Proceed to the next layer at the current level.  Unlike
+		 * idr_for_each(), @id isn't guaranteed to be aligned to
+		 * layer boundary at this point and adding 1 << n may
+		 * incorrectly skip IDs.  Make sure we jump to the
+		 * beginning of the next layer using round_up().
+		 */
+		id = round_up(id + 1, 1 << n);
 		while (n < fls(id)) {
 			n += IDR_BITS;
 			p = *--paa;
@@ -630,7 +637,6 @@ void *idr_get_next(struct idr *idp, int *nextidp)
 	return NULL;
 }
 EXPORT_SYMBOL(idr_get_next);
-
 
 /**
  * idr_replace - replace pointer for given id
@@ -696,7 +702,6 @@ void idr_init(struct idr *idp)
 	spin_lock_init(&idp->lock);
 }
 EXPORT_SYMBOL(idr_init);
-
 
 /**
  * DOC: IDA description

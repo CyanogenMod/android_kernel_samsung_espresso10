@@ -176,7 +176,6 @@ static int devboard_isp1105_init(struct otg_transceiver *otg)
 	return 0;
 }
 
-
 static int devboard_isp1105_set_vbus(struct otg_transceiver *otg, bool on)
 {
 	if (on)
@@ -213,7 +212,6 @@ static int __init devboard_usbh1_init(void)
 
 	return 0;
 }
-
 
 static const struct fsl_usb2_platform_data usb_pdata __initconst = {
 	.operating_mode	= FSL_USB2_DR_DEVICE,

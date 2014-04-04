@@ -329,4 +329,3 @@ void fnic_clear_intr_mode(struct fnic *fnic)
 
 	vnic_dev_set_intr_mode(fnic->vdev, VNIC_DEV_INTR_MODE_INTX);
 }
-

@@ -173,7 +173,6 @@ struct omap3isp_stat_data {
 	__u16 config_counter;
 };
 
-
 /* Histogram related structs */
 
 /* Flags for number of bins */

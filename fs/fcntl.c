@@ -440,7 +440,7 @@ static int check_fcntl_cmd(unsigned cmd)
 }
 
 SYSCALL_DEFINE3(fcntl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
-{	
+{
 	struct file *filp;
 	long err = -EBADF;
 
@@ -471,7 +471,7 @@ out:
 #if BITS_PER_LONG == 32
 SYSCALL_DEFINE3(fcntl64, unsigned int, fd, unsigned int, cmd,
 		unsigned long, arg)
-{	
+{
 	struct file * filp;
 	long err;
 
@@ -493,7 +493,7 @@ SYSCALL_DEFINE3(fcntl64, unsigned int, fd, unsigned int, cmd,
 		return err;
 	}
 	err = -EBADF;
-	
+
 	switch (cmd) {
 		case F_GETLK64:
 			err = fcntl_getlk64(filp, (struct flock64 __user *) arg);
@@ -557,8 +557,8 @@ static void send_sigio_to_task(struct task_struct *p,
 		siginfo_t si;
 		default:
 			/* Queue a rt signal with the appropriate fd as its
-			   value.  We use SI_SIGIO as the source, not 
-			   SI_KERNEL, since kernel signals always get 
+			   value.  We use SI_SIGIO as the source, not
+			   SI_KERNEL, since kernel signals always get
 			   delivered even if we can't queue.  Failure to
 			   queue in this case _should_ be reported; we fall
 			   back to SIGIO in that case. --sct */
@@ -588,7 +588,7 @@ void send_sigio(struct fown_struct *fown, int fd, int band)
 	enum pid_type type;
 	struct pid *pid;
 	int group = 1;
-	
+
 	read_lock(&fown->lock);
 
 	type = fown->pid_type;
@@ -600,7 +600,7 @@ void send_sigio(struct fown_struct *fown, int fd, int band)
 	pid = fown->pid;
 	if (!pid)
 		goto out_unlock_fown;
-	
+
 	read_lock(&tasklist_lock);
 	do_each_pid_task(pid, type, p) {
 		send_sigio_to_task(p, fown, fd, band, group);
@@ -624,7 +624,7 @@ int send_sigurg(struct fown_struct *fown)
 	struct pid *pid;
 	int group = 1;
 	int ret = 0;
-	
+
 	read_lock(&fown->lock);
 
 	type = fown->pid_type;
@@ -638,7 +638,7 @@ int send_sigurg(struct fown_struct *fown)
 		goto out_unlock_fown;
 
 	ret = 1;
-	
+
 	read_lock(&tasklist_lock);
 	do_each_pid_task(pid, type, p) {
 		send_sigurg_to_task(p, fown, group);

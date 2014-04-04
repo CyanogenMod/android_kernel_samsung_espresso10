@@ -16,7 +16,7 @@
  */
 #define MAX_ZS_PORTS	4
 
-/* 
+/*
  * We wrap our port structure around the generic uart_port.
  */
 #define NUM_ZSREGS    17
@@ -308,7 +308,6 @@ static inline void zssync(struct uart_pmac_port *port)
 #define	CTSIE	0x20	/* CTS IE */
 #define	TxUIE	0x40	/* Tx Underrun/EOM IE */
 #define	BRKIE	0x80	/* Break/Abort IE */
-
 
 /* Read Register 0 */
 #define	Rx_CH_AV	0x1	/* Rx Character Available */

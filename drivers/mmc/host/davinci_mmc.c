@@ -219,7 +219,6 @@ struct mmc_davinci_host {
 #endif
 };
 
-
 /* PIO only */
 static void mmc_davinci_sg_to_buf(struct mmc_davinci_host *host)
 {
@@ -1476,4 +1475,3 @@ module_exit(davinci_mmcsd_exit);
 MODULE_AUTHOR("Texas Instruments India");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("MMC/SD driver for Davinci MMC controller");
-

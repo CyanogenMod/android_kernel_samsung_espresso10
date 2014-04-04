@@ -1,5 +1,5 @@
 /*
- *	PCI BIOS function numbering for conventional PCI BIOS 
+ *	PCI BIOS function numbering for conventional PCI BIOS
  *	systems
  */
 
@@ -16,4 +16,3 @@
 #define PCIBIOS_WRITE_CONFIG_DWORD	0xb10d
 #define PCIBIOS_GET_ROUTING_OPTIONS	0xb10e
 #define PCIBIOS_SET_PCI_HW_INT		0xb10f
-

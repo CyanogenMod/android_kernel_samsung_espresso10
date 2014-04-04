@@ -444,7 +444,6 @@ int ps3av_cmd_video_format_black(u32 head, u32 video_fmt, u32 mute)
 	return res;
 }
 
-
 int ps3av_cmd_av_audio_mute(int num_of_port, u32 *port, u32 mute)
 {
 	int i, res;
@@ -933,4 +932,3 @@ int ps3av_cmd_video_get_monitor_info(struct ps3av_pkt_av_get_monitor_info *info,
 		| PS3AV_CMD_AV_LAYOUT_96 \
 		| PS3AV_CMD_AV_LAYOUT_176 \
 		| PS3AV_CMD_AV_LAYOUT_192)
-

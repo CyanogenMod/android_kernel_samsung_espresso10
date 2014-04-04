@@ -24,4 +24,3 @@ struct crypto_authenc_key_param {
 };
 
 #endif	/* _CRYPTO_AUTHENC_H */
-

@@ -416,7 +416,6 @@ static void tifm_ms_data_event(struct tifm_dev *sock)
 	spin_unlock(&sock->lock);
 }
 
-
 /* Called from interrupt handler */
 static void tifm_ms_card_event(struct tifm_dev *sock)
 {

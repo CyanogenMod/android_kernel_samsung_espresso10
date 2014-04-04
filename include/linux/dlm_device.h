@@ -105,4 +105,3 @@ struct dlm_lock_result {
 #define DLM_USER_LSFLG_FORCEFREE  2
 
 #endif
-

@@ -33,7 +33,6 @@
 #define INTC		9
 #define INTD		8
 
-
 void __init ixdp425_pci_preinit(void)
 {
 	irq_set_irq_type(IXP4XX_GPIO_IRQ(INTA), IRQ_TYPE_LEVEL_LOW);

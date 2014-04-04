@@ -70,10 +70,8 @@
  */
 #include "i2400m-usb.h"
 
-
 #define D_SUBMODULE tx
 #include "usb-debug-levels.h"
-
 
 /*
  * Get the next TX message in the TX FIFO and send it to the device
@@ -164,7 +162,6 @@ retry:
 	return result;
 }
 
-
 /*
  * Get the next TX message in the TX FIFO and send it to the device
  *
@@ -220,7 +217,6 @@ int i2400mu_txd(void *_i2400mu)
 	return result;
 }
 
-
 /*
  * i2400m TX engine notifies us that there is data in the FIFO ready
  * for TX
@@ -238,7 +234,6 @@ void i2400mu_bus_tx_kick(struct i2400m *i2400m)
 	wake_up_all(&i2400mu->tx_wq);
 	d_fnend(3, dev, "(i2400m %p) = void\n", i2400m);
 }
-
 
 int i2400mu_tx_setup(struct i2400mu *i2400mu)
 {

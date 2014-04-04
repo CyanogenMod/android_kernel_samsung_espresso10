@@ -546,7 +546,6 @@ int hci_conn_switch_role(struct hci_conn *conn, __u8 role);
 int hci_conn_change_policy(struct hci_conn *conn, __u8 policy);
 int hci_conn_set_encrypt(struct hci_conn *conn, __u8 enable);
 
-
 void hci_conn_enter_active_mode(struct hci_conn *conn, __u8 force_active);
 void hci_conn_enter_sniff_mode(struct hci_conn *conn);
 
@@ -980,7 +979,6 @@ static inline size_t eir_length(u8 *eir, size_t maxlen)
 
 	return length;
 }
-
 
 int hci_register_cb(struct hci_cb *hcb);
 int hci_unregister_cb(struct hci_cb *hcb);

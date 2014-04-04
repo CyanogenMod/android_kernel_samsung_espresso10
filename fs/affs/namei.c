@@ -37,7 +37,6 @@ const struct dentry_operations affs_intl_dentry_operations = {
 	.d_compare	= affs_intl_compare_dentry,
 };
 
-
 /* Simple toupper() for DOS\1 */
 
 static int

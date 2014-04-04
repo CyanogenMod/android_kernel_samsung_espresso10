@@ -680,7 +680,6 @@ struct p9_rreaddir {
 	u8 *data;
 };
 
-
 struct p9_tclunk {
 	u32 fid;
 };

@@ -48,7 +48,6 @@ void ocfs2_dentry_attach_gen(struct dentry *dentry)
 	dentry->d_fsdata = (void *)gen;
 }
 
-
 static int ocfs2_dentry_revalidate(struct dentry *dentry,
 				   struct nameidata *nd)
 {

@@ -327,47 +327,10 @@ int set_dss_ovl_info(struct dss2_ovl_info *oi)
 	info.max_y_decim = cfg->decim.max_y ? : 255;
 	info.min_x_decim = cfg->decim.min_x ? : 1;
 	info.min_y_decim = cfg->decim.min_y ? : 1;
-#if 0
-	info.pic_height = cfg->height;
-
-	info.field = 0;
-	if (cfg->ilace & OMAP_DSS_ILACE_SEQ)
-		info.field |= OMAP_FLAG_IBUF;
-	if (cfg->ilace & OMAP_DSS_ILACE_SWAP)
-		info.field |= OMAP_FLAG_ISWAP;
-	/*
-	 * Ignore OMAP_DSS_ILACE as there is no real support yet for
-	 * interlaced interleaved vs progressive buffers
-	 */
-	if (ovl->manager &&
-	    ovl->manager->device &&
-	    !strcmp(ovl->manager->device->name, "hdmi") &&
-	    is_hdmi_interlaced())
-		info.field |= OMAP_FLAG_IDEV;
-
-	info.out_wb = 0;
-#endif
 
 	info.cconv = cfg->cconv;
 
 done:
-#if 0
-	pr_debug("ovl%d: en=%d %x/%x (%dx%d|%d) => (%dx%d) @ (%d,%d) rot=%d "
-		"mir=%d col=%x z=%d al=%02x prem=%d pich=%d ilace=%d\n",
-		ovl->id, info.enabled, info.paddr, info.p_uv_addr, info.width,
-		info.height, info.screen_width, info.out_width, info.out_height,
-		info.pos_x, info.pos_y, info.rotation, info.mirror,
-		info.color_mode, info.zorder, info.global_alpha,
-		info.pre_mult_alpha, info.pic_height, info.field);
-#else
-	pr_debug("ovl%d: en=%d %x/%x (%dx%d|%d) => (%dx%d) @ (%d,%d) rot=%d "
-		"mir=%d col=%x z=%d al=%02x prem=%d\n",
-		ovl->id, info.enabled, info.paddr, info.p_uv_addr, info.width,
-		info.height, info.screen_width, info.out_width, info.out_height,
-		info.pos_x, info.pos_y, info.rotation, info.mirror,
-		info.color_mode, info.zorder, info.global_alpha,
-		info.pre_mult_alpha);
-#endif
 	/* set overlay info */
 	return ovl->set_overlay_info(ovl, &info);
 }
@@ -420,12 +383,6 @@ int set_dss_wb_info(struct dss2_ovl_info *oi)
 	else
 		info.rotation_type = OMAP_DSS_ROT_DMA;
 done:
-
-	pr_debug("Writeback: en=%d %x/%x (%dx%d => (%dx%d) "
-		"col=%x src=%d mode=%d capt=%d\n",
-		info.enabled, info.paddr, info.p_uv_addr, info.width,
-		info.height, info.out_width, info.out_height, info.dss_mode,
-		info.source, info.mode, info.capturemode);
 
 	/* set overlay info */
 	return wb->set_wb_info(wb, &info);
@@ -518,21 +475,8 @@ void dump_ovl_info(struct dsscomp_dev *cdev, struct dss2_ovl_info *oi)
 
 	ci = get_color_info(c->color_mode);
 	if (c->zonly) {
-		dev_info(DEV(cdev), "ovl%d(%s z%d)\n",
-			c->ix, c->enabled ? "ON" : "off", c->zorder);
 		return;
 	}
-	dev_info(DEV(cdev), "ovl%d(%s z%d %s%s *%d%% %d*%d:%d,%d+%d,%d rot%d%s"
-						" => %d,%d+%d,%d %p/%p|%d)\n",
-		c->ix, c->enabled ? "ON" : "off", c->zorder,
-		ci->name ? : "(none)",
-		c->pre_mult_alpha ? " premult" : "",
-		(c->global_alpha * 100 + 128) / 255,
-		c->width, c->height, c->crop.x, c->crop.y,
-		c->crop.w, c->crop.h,
-		c->rotation, c->mirror ? "+mir" : "",
-		c->win.x, c->win.y, c->win.w, c->win.h,
-		(void *) oi->ba, (void *) oi->uv, c->stride);
 }
 
 static void print_mgr_info(struct dsscomp_dev *cdev,
@@ -552,11 +496,6 @@ void dump_comp_info(struct dsscomp_dev *cdev, struct dsscomp_setup_mgr_data *d,
 	if (!(debug & DEBUG_COMPOSITIONS))
 		return;
 
-	dev_info(DEV(cdev), "[%p] %s: %c%c%c ",
-		 *phase == 'q' ? (void *) d->sync_id : d, phase,
-		 (d->mode & DSSCOMP_SETUP_MODE_APPLY) ? 'A' : '-',
-		 (d->mode & DSSCOMP_SETUP_MODE_DISPLAY) ? 'D' : '-',
-		 (d->mode & DSSCOMP_SETUP_MODE_CAPTURE) ? 'C' : '-');
 	print_mgr_info(cdev, &d->mgr);
 	printk("n=%d\n", d->num_ovls);
 }
@@ -569,12 +508,6 @@ void dump_total_comp_info(struct dsscomp_dev *cdev,
 
 	if (!(debug & DEBUG_COMPOSITIONS))
 		return;
-
-	dev_info(DEV(cdev), "[%p] %s: %c%c%c ",
-		 *phase == 'q' ? (void *) d->sync_id : d, phase,
-		 (d->mode & DSSCOMP_SETUP_MODE_APPLY) ? 'A' : '-',
-		 (d->mode & DSSCOMP_SETUP_MODE_DISPLAY) ? 'D' : '-',
-		 (d->mode & DSSCOMP_SETUP_MODE_CAPTURE) ? 'C' : '-');
 
 	for (i = 0; i < d->num_mgrs && i < ARRAY_SIZE(d->mgrs); i++)
 		print_mgr_info(cdev, d->mgrs + i);

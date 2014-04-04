@@ -17,7 +17,6 @@ virtual patch
 virtual org
 virtual report
 
-
 @ depends on context && !patch && !org && !report@
 expression x;
 @@

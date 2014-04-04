@@ -13,4 +13,3 @@ rts_pstor-y :=				\
 		xd.o			\
 		ms.o			\
 		spi.o
-

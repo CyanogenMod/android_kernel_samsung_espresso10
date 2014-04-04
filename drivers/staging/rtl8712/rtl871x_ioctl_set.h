@@ -29,4 +29,3 @@ void r8712_set_802_11_ssid(struct _adapter *padapter,
 			   struct ndis_802_11_ssid *ssid);
 
 #endif
-

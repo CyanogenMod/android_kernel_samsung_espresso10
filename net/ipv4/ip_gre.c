@@ -106,8 +106,6 @@
    fatal route to network, even if it were you who configured
    fatal static route: you are innocent. :-)
 
-
-
    3. Really, ipv4/ipip.c, ipv4/ip_gre.c and ipv6/sit.c contain
    practically identical code. It would be good to glue them
    together, but it is not very evident, how to make them modular.
@@ -440,7 +438,6 @@ static void ipgre_tunnel_uninit(struct net_device *dev)
 	dev_put(dev);
 }
 
-
 static void ipgre_err(struct sk_buff *skb, u32 info)
 {
 
@@ -716,6 +713,7 @@ static netdev_tx_t ipgre_tunnel_xmit(struct sk_buff *skb, struct net_device *dev
 		tiph = &tunnel->parms.iph;
 	}
 
+	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
 	if ((dst = tiph->daddr) == 0) {
 		/* NBMA tunnel */
 
@@ -853,7 +851,6 @@ static netdev_tx_t ipgre_tunnel_xmit(struct sk_buff *skb, struct net_device *dev
 	skb_reset_transport_header(skb);
 	skb_push(skb, gre_hlen);
 	skb_reset_network_header(skb);
-	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
 	IPCB(skb)->flags &= ~(IPSKB_XFRM_TUNNEL_SIZE | IPSKB_XFRM_TRANSFORMED |
 			      IPSKB_REROUTED);
 	skb_dst_drop(skb);
@@ -1125,7 +1122,6 @@ static int ipgre_tunnel_change_mtu(struct net_device *dev, int new_mtu)
    It allows to construct virtual multiprotocol broadcast "LAN"
    over the Internet, provided multicast routing is tuned.
 
-
    I have no idea was this bicycle invented before me,
    so that I had to set ARPHRD_IPGRE to a random value.
    I have an impression, that Cisco could make something similar,
@@ -1312,7 +1308,6 @@ static void ipgre_fb_tunnel_init(struct net_device *dev)
 
 	dev_hold(dev);
 }
-
 
 static const struct gre_protocol ipgre_protocol = {
 	.handler     = ipgre_rcv,

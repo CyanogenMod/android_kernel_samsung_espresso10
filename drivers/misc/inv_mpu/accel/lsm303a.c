@@ -387,7 +387,6 @@ static int lsm303dlha_resume(void *mlsl_handle,
 	struct lsm303dlha_private_data *private_data =
 		(struct lsm303dlha_private_data *)(pdata->private_data);
 
-
 	result = inv_serial_single_write(mlsl_handle, pdata->address,
 				       LIS331_CTRL_REG1,
 				       private_data->resume.ctrl_reg1);

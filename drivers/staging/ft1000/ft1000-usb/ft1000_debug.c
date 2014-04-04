@@ -98,9 +98,6 @@ struct dpram_blk *ft1000_get_buffer(struct list_head *bufflist)
     return ptr;
 }
 
-
-
-
 //---------------------------------------------------------------------------
 // Function:    ft1000_free_buffer
 //
@@ -156,7 +153,6 @@ int ft1000_create_dev(struct ft1000_device *dev)
 	DEBUG("%s: \"%s\" already registered\n", __func__, info->DeviceName);
 	return -EIO;
     }
-
 
     // register the device
     DEBUG("%s: \"%s\" debugfs device registration\n", __func__, info->DeviceName);
@@ -236,8 +232,6 @@ void ft1000_destroy_dev(struct net_device *dev)
 
     DEBUG("%s called\n", __func__);
 
-
-
     if (info->DeviceCreated)
 	{
         ft1000_flarion_cnt--;
@@ -275,7 +269,6 @@ void ft1000_destroy_dev(struct net_device *dev)
         }
 		info->DeviceCreated = FALSE;
 	}
-
 
 }
 
@@ -332,7 +325,6 @@ static int ft1000_open (struct inode *inode, struct file *file)
 	nonseekable_open(inode, file);
     return 0;
 }
-
 
 //---------------------------------------------------------------------------
 // Function:    ft1000_poll_dev
@@ -500,7 +492,6 @@ static long ft1000_ioctl (struct file *file, unsigned int command,
                 get_stat_data.ConStat = 0x0f;
             }
 
-
         get_stat_data.nTxPkts = info->stats.tx_packets;
         get_stat_data.nRxPkts = info->stats.rx_packets;
         get_stat_data.nTxBytes = info->stats.tx_bytes;
@@ -528,7 +519,6 @@ static long ft1000_ioctl (struct file *file, unsigned int command,
             u16 status;
 
             //DEBUG("FT1000:ft1000_ioctl: IOCTL_FT1000_SET_DPRAM called\n");
-
 
             if (ft1000_flarion_cnt == 0) {
                 return (-EBADF);
@@ -643,7 +633,6 @@ static long ft1000_ioctl (struct file *file, unsigned int command,
                             pmsg++;
 				ppseudo_hdr = (struct pseudo_hdr *)pmsg;
                            card_send_command(ft1000dev,(unsigned short*)dpram_data,total_len+2);
-
 
                             info->app_info[app_index].nTxMsg++;
                         }
@@ -779,4 +768,3 @@ static int ft1000_release (struct inode *inode, struct file *file)
 
     return 0;
 }
-

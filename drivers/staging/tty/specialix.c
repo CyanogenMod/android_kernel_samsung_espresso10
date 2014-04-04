@@ -68,7 +68,6 @@
 
 #define VERSION "1.11"
 
-
 /*
  * There is a bunch of documentation about the card, jumpers, config
  * settings, restrictions, cables, device names and numbers in
@@ -97,7 +96,6 @@
 
 #include "specialix_io8.h"
 #include "cd1865.h"
-
 
 /*
    This driver can spew a whole lot of debugging output at you. If you
@@ -132,10 +130,8 @@ static int sx_rtscts;
 #define SX_DEBUG_SIGNALS 0x0400
 #define SX_DEBUG_FIFO    0x0800
 
-
 #define func_enter() dprintk(SX_DEBUG_FLOW, "io8: enter %s\n", __func__)
 #define func_exit()  dprintk(SX_DEBUG_FLOW, "io8: exit  %s\n", __func__)
-
 
 /* Configurable options: */
 
@@ -148,9 +144,6 @@ static int sx_rtscts;
  */
 #undef SX_REPORT_FIFO
 #undef SX_REPORT_OVERRUN
-
-
-
 
 #define SPECIALIX_LEGAL_FLAGS \
 	(ASYNC_HUP_NOTIFY   | ASYNC_SAK          | ASYNC_SPLIT_TERMIOS   | \
@@ -167,7 +160,6 @@ static struct specialix_board sx_board[SX_NBOARD] =  {
 };
 
 static struct specialix_port sx_port[SX_NBOARD * SX_NPORT];
-
 
 static int sx_paranoia_check(struct specialix_port const *port,
 				    char *name, const char *routine)
@@ -190,7 +182,6 @@ static int sx_paranoia_check(struct specialix_port const *port,
 	return 0;
 }
 
-
 /*
  *
  *  Service functions for specialix IO8+ driver.
@@ -203,13 +194,11 @@ static inline int board_No(struct specialix_board *bp)
 	return bp - sx_board;
 }
 
-
 /* Get port number from pointer */
 static inline int port_No(struct specialix_port const *port)
 {
 	return SX_PORT(port - sx_port);
 }
-
 
 /* Get pointer to board from pointer to port */
 static inline struct specialix_board *port_Board(
@@ -217,7 +206,6 @@ static inline struct specialix_board *port_Board(
 {
 	return &sx_board[SX_BOARD(port - sx_port)];
 }
-
 
 /* Input Byte from CL CD186x register */
 static inline unsigned char sx_in(struct specialix_board *bp,
@@ -228,7 +216,6 @@ static inline unsigned char sx_in(struct specialix_board *bp,
 	return inb(bp->base + SX_DATA_REG);
 }
 
-
 /* Output Byte to CL CD186x register */
 static inline void sx_out(struct specialix_board *bp, unsigned short reg,
 			  unsigned char val)
@@ -237,7 +224,6 @@ static inline void sx_out(struct specialix_board *bp, unsigned short reg,
 	outb(reg | 0x80, bp->base + SX_ADDR_REG);
 	outb(val, bp->base + SX_DATA_REG);
 }
-
 
 /* Input Byte from CL CD186x register */
 static inline unsigned char sx_in_off(struct specialix_board *bp,
@@ -248,7 +234,6 @@ static inline unsigned char sx_in_off(struct specialix_board *bp,
 	return inb(bp->base + SX_DATA_REG);
 }
 
-
 /* Output Byte to CL CD186x register */
 static inline void sx_out_off(struct specialix_board  *bp,
 				unsigned short reg, unsigned char val)
@@ -257,7 +242,6 @@ static inline void sx_out_off(struct specialix_board  *bp,
 	outb(reg, bp->base + SX_ADDR_REG);
 	outb(val, bp->base + SX_DATA_REG);
 }
-
 
 /* Wait for Channel Command Register ready */
 static void sx_wait_CCR(struct specialix_board  *bp)
@@ -276,7 +260,6 @@ static void sx_wait_CCR(struct specialix_board  *bp)
 
 	printk(KERN_ERR "sx%d: Timeout waiting for CCR.\n", board_No(bp));
 }
-
 
 /* Wait for Channel Command Register ready */
 static void sx_wait_CCR_off(struct specialix_board  *bp)
@@ -297,7 +280,6 @@ static void sx_wait_CCR_off(struct specialix_board  *bp)
 	printk(KERN_ERR "sx%d: Timeout waiting for CCR.\n", board_No(bp));
 }
 
-
 /*
  *  specialix IO8+ IO range functions.
  */
@@ -309,13 +291,11 @@ static int sx_request_io_range(struct specialix_board *bp)
 		"specialix IO8+") == NULL;
 }
 
-
 static void sx_release_io_range(struct specialix_board *bp)
 {
 	release_region(bp->base, bp->flags & SX_BOARD_IS_PCI ?
 					SX_PCI_IO_SPACE : SX_IO_SPACE);
 }
-
 
 /* Set the IRQ using the RTS lines that run to the PAL on the board.... */
 static int sx_set_irq(struct specialix_board *bp)
@@ -352,7 +332,6 @@ static int sx_set_irq(struct specialix_board *bp)
 	spin_unlock_irqrestore(&bp->lock, flags);
 	return 1;
 }
-
 
 /* Reset and setup CD186x chip */
 static int sx_init_CD186x(struct specialix_board  *bp)
@@ -393,7 +372,6 @@ static int sx_init_CD186x(struct specialix_board  *bp)
 	return rv;
 }
 
-
 static int read_cross_byte(struct specialix_board *bp, int reg, int bit)
 {
 	int i;
@@ -410,7 +388,6 @@ static int read_cross_byte(struct specialix_board *bp, int reg, int bit)
 
 	return t;
 }
-
 
 /* Main probing routine, also sets irq. */
 static int sx_probe(struct specialix_board *bp)
@@ -434,7 +411,6 @@ static int sx_probe(struct specialix_board *bp)
 	sx_out_off(bp, CD186x_PPRL, 0xa5);
 	udelay(1);
 	val2 = sx_in_off(bp, CD186x_PPRL);
-
 
 	if (val1 != 0x5a || val2 != 0xa5) {
 		printk(KERN_INFO
@@ -466,7 +442,6 @@ static int sx_probe(struct specialix_board *bp)
 		func_exit();
 		return 1;
 	}
-
 
 	/* Reset CD186x again  */
 	if (!sx_init_CD186x(bp)) {
@@ -550,7 +525,6 @@ static struct specialix_port *sx_get_port(struct specialix_board *bp,
 	return NULL;
 }
 
-
 static void sx_receive_exc(struct specialix_board *bp)
 {
 	struct specialix_port *port;
@@ -625,7 +599,6 @@ static void sx_receive_exc(struct specialix_board *bp)
 	func_exit();
 }
 
-
 static void sx_receive(struct specialix_board *bp)
 {
 	struct specialix_port *port;
@@ -651,7 +624,6 @@ static void sx_receive(struct specialix_board *bp)
 	tty_flip_buffer_push(tty);
 	func_exit();
 }
-
 
 static void sx_transmit(struct specialix_board *bp)
 {
@@ -732,7 +704,6 @@ static void sx_transmit(struct specialix_board *bp)
 	func_exit();
 }
 
-
 static void sx_check_modem(struct specialix_board *bp)
 {
 	struct specialix_port *port;
@@ -791,7 +762,6 @@ static void sx_check_modem(struct specialix_board *bp)
 	/* Clear change bits */
 	sx_out(bp, CD186x_MCR, 0);
 }
-
 
 /* The main interrupt processing routine */
 static irqreturn_t sx_interrupt(int dummy, void *dev_id)
@@ -867,7 +837,6 @@ static irqreturn_t sx_interrupt(int dummy, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 /*
  *  Routines for open & close processing.
  */
@@ -897,7 +866,6 @@ static void turn_ints_on(struct specialix_board *bp)
 	func_exit();
 }
 
-
 /* Called with disabled interrupts */
 static int sx_setup_board(struct specialix_board *bp)
 {
@@ -921,7 +889,6 @@ static int sx_setup_board(struct specialix_board *bp)
 
 	return 0;
 }
-
 
 /* Called with disabled interrupts */
 static void sx_shutdown_board(struct specialix_board *bp)
@@ -1173,7 +1140,6 @@ static void sx_change_speed(struct specialix_board *bp,
 	func_exit();
 }
 
-
 /* Must be called with interrupts enabled */
 static int sx_setup_port(struct specialix_board *bp,
 						struct specialix_port *port)
@@ -1216,11 +1182,9 @@ static int sx_setup_port(struct specialix_board *bp,
 
 	spin_unlock_irqrestore(&port->lock, flags);
 
-
 	func_exit();
 	return 0;
 }
-
 
 /* Must be called with interrupts disabled */
 static void sx_shutdown_port(struct specialix_board *bp,
@@ -1277,7 +1241,6 @@ static void sx_shutdown_port(struct specialix_board *bp,
 		sx_shutdown_board(bp);
 	func_exit();
 }
-
 
 static int block_til_ready(struct tty_struct *tty, struct file *filp,
 						struct specialix_port *port)
@@ -1385,7 +1348,6 @@ static int block_til_ready(struct tty_struct *tty, struct file *filp,
 	func_exit();
 	return 0;
 }
-
 
 static int sx_open(struct tty_struct *tty, struct file *filp)
 {
@@ -1582,7 +1544,6 @@ static void sx_close(struct tty_struct *tty, struct file *filp)
 	func_exit();
 }
 
-
 static int sx_write(struct tty_struct *tty,
 					const unsigned char *buf, int count)
 {
@@ -1635,7 +1596,6 @@ static int sx_write(struct tty_struct *tty,
 	return total;
 }
 
-
 static int sx_put_char(struct tty_struct *tty, unsigned char ch)
 {
 	struct specialix_port *port = tty->driver_data;
@@ -1674,7 +1634,6 @@ static int sx_put_char(struct tty_struct *tty, unsigned char ch)
 	return 1;
 }
 
-
 static void sx_flush_chars(struct tty_struct *tty)
 {
 	struct specialix_port *port = tty->driver_data;
@@ -1701,7 +1660,6 @@ static void sx_flush_chars(struct tty_struct *tty)
 	func_exit();
 }
 
-
 static int sx_write_room(struct tty_struct *tty)
 {
 	struct specialix_port *port = tty->driver_data;
@@ -1721,7 +1679,6 @@ static int sx_write_room(struct tty_struct *tty)
 	func_exit();
 	return ret;
 }
-
 
 static int sx_chars_in_buffer(struct tty_struct *tty)
 {
@@ -1777,7 +1734,6 @@ static int sx_tiocmget(struct tty_struct *tty)
 	return result;
 }
 
-
 static int sx_tiocmset(struct tty_struct *tty,
 		       unsigned int set, unsigned int clear)
 {
@@ -1818,7 +1774,6 @@ static int sx_tiocmset(struct tty_struct *tty,
 	return 0;
 }
 
-
 static int sx_send_break(struct tty_struct *tty, int length)
 {
 	struct specialix_port *port = tty->driver_data;
@@ -1848,7 +1803,6 @@ static int sx_send_break(struct tty_struct *tty, int length)
 	func_exit();
 	return 0;
 }
-
 
 static int sx_set_serial_info(struct specialix_port *port,
 					struct serial_struct __user *newinfo)
@@ -1896,7 +1850,6 @@ static int sx_set_serial_info(struct specialix_port *port,
 	return 0;
 }
 
-
 static int sx_get_serial_info(struct specialix_port *port,
 				     struct serial_struct __user *retinfo)
 {
@@ -1927,7 +1880,6 @@ static int sx_get_serial_info(struct specialix_port *port,
 	return 0;
 }
 
-
 static int sx_ioctl(struct tty_struct *tty,
 				unsigned int cmd, unsigned long arg)
 {
@@ -1955,7 +1907,6 @@ static int sx_ioctl(struct tty_struct *tty,
 	func_exit();
 	return 0;
 }
-
 
 static void sx_throttle(struct tty_struct *tty)
 {
@@ -2001,7 +1952,6 @@ static void sx_throttle(struct tty_struct *tty)
 	func_exit();
 }
 
-
 static void sx_unthrottle(struct tty_struct *tty)
 {
 	struct specialix_port *port = tty->driver_data;
@@ -2042,7 +1992,6 @@ static void sx_unthrottle(struct tty_struct *tty)
 	func_exit();
 }
 
-
 static void sx_stop(struct tty_struct *tty)
 {
 	struct specialix_port *port = tty->driver_data;
@@ -2068,7 +2017,6 @@ static void sx_stop(struct tty_struct *tty)
 
 	func_exit();
 }
-
 
 static void sx_start(struct tty_struct *tty)
 {
@@ -2130,7 +2078,6 @@ static void sx_hangup(struct tty_struct *tty)
 
 	func_exit();
 }
-
 
 static void sx_set_termios(struct tty_struct *tty,
 					struct ktermios *old_termios)

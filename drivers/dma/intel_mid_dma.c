@@ -441,7 +441,6 @@ static dma_cookie_t intel_mid_dma_tx_submit(struct dma_async_tx_descriptor *tx)
 	midc->chan.cookie = cookie;
 	desc->txd.cookie = cookie;
 
-
 	if (list_empty(&midc->active_list))
 		list_add_tail(&desc->desc_node, &midc->active_list);
 	else
@@ -572,7 +571,6 @@ static int intel_mid_dma_device_control(struct dma_chan *chan,
 	}
 	return 0;
 }
-
 
 /**
  * intel_mid_dma_prep_memcpy -	Prep memcpy txn

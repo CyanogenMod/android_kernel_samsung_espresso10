@@ -99,7 +99,6 @@ MECR_SET((mecr), (sock), MECR_FAST_SHIFT, MECR_FAST_MODE_MASK, (fast))
 #define MECR_FAST_GET(mecr, sock) \
 MECR_GET((mecr), (sock), MECR_FAST_SHIFT, MECR_FAST_MODE_MASK)
 
-
 /* This function implements the BS value calculation for setting the MECR
  * using integer arithmetic:
  */
@@ -116,7 +115,6 @@ static inline unsigned int sa1100_pcmcia_cmd_time(unsigned int cpu_clock_khz,
 						  unsigned int pcmcia_mecr_bs){
   return (((10000000 * 2) / cpu_clock_khz) * (3 * (pcmcia_mecr_bs + 1))) / 10;
 }
-
 
 int sa11xx_drv_pcmcia_add_one(struct soc_pcmcia_socket *skt);
 void sa11xx_drv_pcmcia_ops(struct pcmcia_low_level *ops);

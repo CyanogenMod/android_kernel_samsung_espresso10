@@ -57,7 +57,7 @@ static int mxc_audmux_v1_init(void)
 	else
 #endif
 		(void)0;
-	
+
 	return 0;
 }
 

@@ -5896,7 +5896,6 @@ err:
 	return bcmerror;
 }
 
-
 static int
 dhd_bcmsdh_send_buf(dhd_bus_t *bus, u32 addr, uint fn, uint flags,
 		    u8 *buf, uint nbytes, struct sk_buff *pkt,

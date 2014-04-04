@@ -472,7 +472,6 @@ static ssize_t arcfb_write(struct fb_info *info, const char __user *buf,
 		err = -EFAULT;
 	}
 
-
 	bitppos = p*8;
 	startpos = floorXres(bitppos, xres);
 	endpos = ceilXres((bitppos + (count*8)), xres);
@@ -665,4 +664,3 @@ module_exit(arcfb_exit);
 MODULE_DESCRIPTION("fbdev driver for Arc monochrome LCD board");
 MODULE_AUTHOR("Jaya Kumar");
 MODULE_LICENSE("GPL");
-

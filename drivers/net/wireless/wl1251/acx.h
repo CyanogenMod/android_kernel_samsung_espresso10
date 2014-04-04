@@ -159,7 +159,6 @@ struct acx_data_path_params {
 	u32 tx_complete_timeout;
 } __packed;
 
-
 struct acx_data_path_params_resp {
 	struct acx_header header;
 
@@ -331,7 +330,6 @@ struct acx_packet_detection {
 	u32 threshold;
 } __packed;
 
-
 enum acx_slot_type {
 	SLOT_TIME_LONG = 0,
 	SLOT_TIME_SHORT = 1,
@@ -349,7 +347,6 @@ struct acx_slot {
 	u8 reserved[6];
 } __packed;
 
-
 #define ADDRESS_GROUP_MAX	(8)
 #define ADDRESS_GROUP_MAX_LEN	(ETH_ALEN * ADDRESS_GROUP_MAX)
 
@@ -361,7 +358,6 @@ struct acx_dot11_grp_addr_tbl {
 	u8 pad[2];
 	u8 mac_table[ADDRESS_GROUP_MAX_LEN];
 } __packed;
-
 
 #define  RX_TIMEOUT_PS_POLL_MIN    0
 #define  RX_TIMEOUT_PS_POLL_MAX    (200000)
@@ -1125,7 +1121,6 @@ struct wl1251_acx_memory {
 	__le16 debug_buffer_size;
 } __packed;
 
-
 #define ACX_RX_DESC_MIN                1
 #define ACX_RX_DESC_MAX                127
 #define ACX_RX_DESC_DEF                32
@@ -1189,7 +1184,6 @@ struct wl1251_acx_mem_map {
 	/* Number of blocks FW allocated for RX packets */
 	u32 num_rx_mem_blocks;
 } __packed;
-
 
 struct wl1251_acx_wr_tbtt_and_dtim {
 
@@ -1261,7 +1255,6 @@ struct wl1251_acx_ac_cfg {
 	/* The TX Op Limit (in microseconds) for the access class. */
 	u16 txop_limit;
 } __packed;
-
 
 enum wl1251_acx_channel_type {
 	CHANNEL_TYPE_DCF	= 0,
@@ -1429,7 +1422,6 @@ enum {
 
 	MAX_IE = 0xFFFF
 };
-
 
 int wl1251_acx_frame_rates(struct wl1251 *wl, u8 ctrl_rate, u8 ctrl_mod,
 			   u8 mgt_rate, u8 mgt_mod);

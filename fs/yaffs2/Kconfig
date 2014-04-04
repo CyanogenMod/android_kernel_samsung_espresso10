@@ -11,14 +11,10 @@ config YAFFS_FS
 	help
 	  YAFFS2, or Yet Another Flash Filing System, is a filing system
 	  optimised for NAND Flash chips.
-
 	  To compile the YAFFS2 file system support as a module, choose M
 	  here: the module will be called yaffs2.
 
 	  If unsure, say N.
-
-	  Further information on YAFFS2 is available at
-	  <http://www.aleph1.co.uk/yaffs/>.
 
 config YAFFS_YAFFS1
 	bool "512 byte / page devices"
@@ -26,7 +22,6 @@ config YAFFS_YAFFS1
 	default y
 	help
 	  Enable YAFFS1 support -- yaffs for 512 byte / page devices
-
 	  Not needed for 2K-page devices.
 
 	  If unsure, say Y.

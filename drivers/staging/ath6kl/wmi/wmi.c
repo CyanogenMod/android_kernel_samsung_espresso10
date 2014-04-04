@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -105,7 +105,6 @@ static int wmi_dset_data_req_rx(struct wmi_t *wmip, u8 *datap,
                                      int len);
 #endif /* CONFIG_HOST_DSET_SUPPORT */
 
-
 static int wmi_scanComplete_rx(struct wmi_t *wmip, u8 *datap,
                                      int len);
 static int wmi_errorEvent_rx(struct wmi_t *wmip, u8 *datap, int len);
@@ -126,7 +125,6 @@ wmi_get_pmkid_list_event_rx(struct wmi_t *wmip, u8 *datap, u32 len);
 
 static int
 wmi_set_params_event_rx(struct wmi_t *wmip, u8 *datap, u32 len);
-
 
 #ifdef CONFIG_HOST_TCMD_SUPPORT
 static int
@@ -513,7 +511,6 @@ wmi_data_hdr_add(struct wmi_t *wmip, void *osbuf, u8 msgType, bool bMoreData,
     return (0);
 }
 
-
 u8 wmi_implicit_create_pstream(struct wmi_t *wmip, void *osbuf, u32 layer2Priority, bool wmmEnabled)
 {
     u8 *datap;
@@ -551,7 +548,6 @@ u8 wmi_implicit_create_pstream(struct wmi_t *wmip, void *osbuf, u32 layer2Priori
              llcHdr = (ATH_LLC_SNAP_HDR *)(datap + sizeof(WMI_DATA_HDR) + metasize +
                           hdrsize);
 
-
         }
         else
         {
@@ -570,7 +566,6 @@ u8 wmi_implicit_create_pstream(struct wmi_t *wmip, void *osbuf, u32 layer2Priori
             userPriority = layer2Priority & 0x7;
         }
     }
-
 
     /* workaround for WMM S5 */
     if ((WMM_AC_VI == wmip->wmi_traffic_class) && ((5 == userPriority) || (4 == userPriority)))
@@ -1206,7 +1201,6 @@ iswmmparam(const u8 *frm)
     return frm[1] > 5 && frm[6] == WMM_PARAM_OUI_SUBTYPE;
 }
 
-
 static int
 wmi_connect_event_rx(struct wmi_t *wmip, u8 *datap, int len)
 {
@@ -1699,7 +1693,6 @@ wmi_keepalive_reply_rx(struct wmi_t *wmip, u8 *datap, int len)
     return 0;
 }
 
-
 static int
 wmi_dset_open_req_rx(struct wmi_t *wmip, u8 *datap, int len)
 {
@@ -1803,7 +1796,6 @@ wmi_errorEvent_rx(struct wmi_t *wmip, u8 *datap, int len)
 
     return 0;
 }
-
 
 static int
 wmi_statsEvent_rx(struct wmi_t *wmip, u8 *datap, int len)
@@ -1919,7 +1911,6 @@ wmi_rssiThresholdEvent_rx(struct wmi_t *wmip, u8 *datap, int len)
     return 0;
 }
 
-
 static int
 wmi_reportErrorEvent_rx(struct wmi_t *wmip, u8 *datap, int len)
 {
@@ -1988,7 +1979,6 @@ wmi_cac_event_rx(struct wmi_t *wmip, u8 *datap, int len)
         wmip->wmi_streamExistsForAC[reply->ac] &= ~(1<<tsid);
         activeTsids = wmip->wmi_streamExistsForAC[reply->ac];
         UNLOCK_WMI(wmip);
-
 
         /* Indicate stream inactivity to driver layer only if all tsids
          * within this AC are deleted.
@@ -3254,7 +3244,6 @@ wmi_delete_pstream_cmd(struct wmi_t *wmip, u8 trafficClass, u8 tsid)
     activeTsids = wmip->wmi_streamExistsForAC[trafficClass];
     UNLOCK_WMI(wmip);
 
-
         /* Indicate stream inactivity to driver layer only if all tsids
          * within this AC are deleted.
          */
@@ -3350,7 +3339,6 @@ wmi_set_bitrate_cmd(struct wmi_t *wmip, s32 dataRate, s32 mgmtRate, s32 ctlRate)
     cmd->rateIndex = drix;
     cmd->mgmtRateIndex = mrix;
     cmd->ctlRateIndex  = crix;
-
 
     return (wmi_cmd_send(wmip, osbuf, WMI_SET_BITRATE_CMDID, NO_SYNC_WMIFLAG));
 }
@@ -3465,7 +3453,6 @@ wmi_set_fixrates_cmd(struct wmi_t *wmip, u32 fixRatesMask)
        }
     }
 #endif
-
 
     osbuf = A_NETBUF_ALLOC(sizeof(*cmd));
     if (osbuf == NULL) {
@@ -3800,7 +3787,6 @@ int wmi_add_wow_pattern_cmd(struct wmi_t *wmip,
 
     filter_mask = (u8 *)(cmd->filter + cmd->filter_size);
     memcpy(filter_mask, mask, addWowCmd->filter_size);
-
 
     return (wmi_cmd_send(wmip, osbuf, WMI_ADD_WOW_PATTERN_CMDID,
                             NO_SYNC_WMIFLAG));
@@ -4344,7 +4330,6 @@ wmi_set_adhoc_bconIntvl_cmd(struct wmi_t *wmip, u16 intvl)
             NO_SYNC_WMIFLAG));
 }
 
-
 int
 wmi_set_voice_pkt_size_cmd(struct wmi_t *wmip, u16 voicePktSize)
 {
@@ -4365,7 +4350,6 @@ wmi_set_voice_pkt_size_cmd(struct wmi_t *wmip, u16 voicePktSize)
     return (wmi_cmd_send(wmip, osbuf, WMI_SET_VOICE_PKT_SIZE_CMDID,
             NO_SYNC_WMIFLAG));
 }
-
 
 int
 wmi_set_max_sp_len_cmd(struct wmi_t *wmip, u8 maxSPLen)
@@ -4600,7 +4584,6 @@ wmi_set_qos_supp_cmd(struct wmi_t *wmip, u8 status)
             NO_SYNC_WMIFLAG));
 }
 
-
 int
 wmi_set_wmm_txop(struct wmi_t *wmip, WMI_TXOP_CFG cfg)
 {
@@ -4779,7 +4762,6 @@ wmi_set_btcoex_fe_ant_cmd(struct wmi_t *wmip, WMI_SET_BTCOEX_FE_ANT_CMD * cmd)
                          NO_SYNC_WMIFLAG));
 
 }
-
 
 int
 wmi_set_btcoex_colocated_bt_dev_cmd(struct wmi_t *wmip,
@@ -5014,7 +4996,6 @@ wmi_set_params_cmd(struct wmi_t *wmip, u32 opcode, u32 length, char *buffer)
                          NO_SYNC_WMIFLAG));
 }
 
-
 int
 wmi_set_mcast_filter_cmd(struct wmi_t *wmip, u8 dot1, u8 dot2, u8 dot3, u8 dot4)
 {
@@ -5039,7 +5020,6 @@ wmi_set_mcast_filter_cmd(struct wmi_t *wmip, u8 dot1, u8 dot2, u8 dot3, u8 dot4)
     return (wmi_cmd_send(wmip, osbuf, WMI_SET_MCAST_FILTER_CMDID,
                          NO_SYNC_WMIFLAG));
 }
-
 
 int
 wmi_del_mcast_filter_cmd(struct wmi_t *wmip, u8 dot1, u8 dot2, u8 dot3, u8 dot4)
@@ -5166,7 +5146,6 @@ wmi_find_Ssidnode (struct wmi_t *wmip, u8 *pSsid,
     return node;
 }
 
-
 #ifdef THREAD_X
 void
 wmi_refresh_scan_table (struct wmi_t *wmip)
@@ -5259,7 +5238,6 @@ wmi_get_pmkid_list_event_rx(struct wmi_t *wmip, u8 *datap, u32 len)
     return 0;
 }
 
-
 static int
 wmi_set_params_event_rx(struct wmi_t *wmip, u8 *datap, u32 len)
 {
@@ -5281,7 +5259,6 @@ wmi_set_params_event_rx(struct wmi_t *wmip, u8 *datap, u32 len)
 
     return 0;
 }
-
 
 #ifdef CONFIG_HOST_DSET_SUPPORT
 int
@@ -5461,7 +5438,6 @@ wmi_scan_indication (struct wmi_t *wmip)
 
     ++nt->nt_si_gen;
 
-
     gen = nt->nt_si_gen;
 
     size = offsetof(struct ar6kScanIndication, slist) +
@@ -5547,7 +5523,6 @@ wmi_scan_indication (struct wmi_t *wmip)
             psi->Bssid.Length = bsssize;
 
             memcpy (psi->Bssid.MacAddress, bss->ni_macaddr, ETHERNET_MAC_ADDRESS_LENGTH);
-
 
 //if (((bss->ni_macaddr[3] == 0xCE) && (bss->ni_macaddr[4] == 0xF0) && (bss->ni_macaddr[5] == 0xE7)) ||
 //  ((bss->ni_macaddr[3] == 0x03) && (bss->ni_macaddr[4] == 0xE2) && (bss->ni_macaddr[5] == 0x70)))
@@ -5775,7 +5750,6 @@ wmi_addba_req_event_rx(struct wmi_t *wmip, u8 *datap, int len)
     return 0;
 }
 
-
 static int
 wmi_addba_resp_event_rx(struct wmi_t *wmip, u8 *datap, int len)
 {
@@ -5805,7 +5779,6 @@ wmi_btcoex_config_event_rx(struct wmi_t *wmip, u8 *datap, int len)
 
      return 0;
 }
-
 
 int
 wmi_btcoex_stats_event_rx(struct wmi_t * wmip,u8 *datap,int len)
@@ -6206,7 +6179,6 @@ wmi_set_tx_select_rates_cmd(struct wmi_t *wmip, u32 *pMaskArray)
                          NO_SYNC_WMIFLAG));
 }
 
-
 int
 wmi_send_hci_cmd(struct wmi_t *wmip, u8 *buf, u16 sz)
 {
@@ -6309,7 +6281,6 @@ wmi_set_rx_frame_format_cmd(struct wmi_t *wmip, u8 rxMetaVersion,
     return (wmi_cmd_send(wmip, osbuf, WMI_RX_FRAME_FORMAT_CMDID, NO_SYNC_WMIFLAG));
 }
 
-
 int
 wmi_set_thin_mode_cmd(struct wmi_t *wmip, bool bThinMode)
 {
@@ -6329,7 +6300,6 @@ wmi_set_thin_mode_cmd(struct wmi_t *wmip, bool bThinMode)
     /* Delete the local aggr state, on host */
     return (wmi_cmd_send(wmip, osbuf, WMI_SET_THIN_MODE_CMDID, NO_SYNC_WMIFLAG));
 }
-
 
 int
 wmi_set_wlan_conn_precedence_cmd(struct wmi_t *wmip, BT_WLAN_CONN_PRECEDENCE precedence)

@@ -103,7 +103,6 @@ enum s3c2410_dma_loadst {
 	S3C2410_DMALOAD_1LOADED_1RUNNING,
 };
 
-
 /* flags */
 
 #define S3C2410_DMAF_SLOW         (1<<0)   /* slow, so don't worry about

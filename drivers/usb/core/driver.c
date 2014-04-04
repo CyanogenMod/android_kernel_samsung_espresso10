@@ -30,7 +30,6 @@
 
 #include "usb.h"
 
-
 #ifdef CONFIG_HOTPLUG
 
 /*
@@ -215,7 +214,6 @@ static const struct usb_device_id *usb_match_dynamic_id(struct usb_interface *in
 	spin_unlock(&drv->dynids.lock);
 	return NULL;
 }
-
 
 /* called from driver core with dev locked */
 static int usb_probe_device(struct device *dev)

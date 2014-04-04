@@ -19,13 +19,11 @@
 
 #include <mach/at91_pit.h>
 
-
 #define PIT_CPIV(x)	((x) & AT91_PIT_CPIV)
 #define PIT_PICNT(x)	(((x) & AT91_PIT_PICNT) >> 20)
 
 static u32 pit_cycle;		/* write-once */
 static u32 pit_cnt;		/* access only w/system irq blocked */
-
 
 /*
  * Clocksource:  just a monotonic counter of MCK/16 cycles.
@@ -53,7 +51,6 @@ static struct clocksource pit_clk = {
 	.read		= read_pit_clk,
 	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
 };
-
 
 /*
  * Clockevent device:  interrupts every 1/HZ (== pit_cycles * MCK/16)
@@ -88,7 +85,6 @@ static struct clock_event_device pit_clkevt = {
 	.rating		= 100,
 	.set_mode	= pit_clkevt_mode,
 };
-
 
 /*
  * IRQ handler for the timer.

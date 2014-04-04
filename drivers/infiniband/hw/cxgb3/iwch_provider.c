@@ -617,7 +617,6 @@ static int iwch_reregister_phys_mem(struct ib_mr *mr,
 	return 0;
 }
 
-
 static struct ib_mr *iwch_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
 				      u64 virt, int acc, struct ib_udata *udata)
 {
@@ -1079,7 +1078,6 @@ static int iwch_ib_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
 				IB_ACCESS_REMOTE_WRITE) ? 1 : 0;
 	attrs.enable_bind = (attr->qp_access_flags & IB_ACCESS_MW_BIND) ? 1 : 0;
 
-
 	mask |= (attr_mask & IB_QP_STATE) ? IWCH_QP_ATTR_NEXT_STATE : 0;
 	mask |= (attr_mask & IB_QP_ACCESS_FLAGS) ?
 			(IWCH_QP_ATTR_ENABLE_RDMA_READ |
@@ -1107,7 +1105,6 @@ static struct ib_qp *iwch_get_qp(struct ib_device *dev, int qpn)
 	PDBG("%s ib_dev %p qpn 0x%x\n", __func__, dev, qpn);
 	return (struct ib_qp *)get_qhp(to_iwch_dev(dev), qpn);
 }
-
 
 static int iwch_query_pkey(struct ib_device *ibdev,
 			   u8 port, u16 index, u16 * pkey)

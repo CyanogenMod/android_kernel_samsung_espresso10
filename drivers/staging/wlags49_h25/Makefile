@@ -78,4 +78,3 @@ install: default
 	install -d $(INSTALLDIR)
 	install -m 0644 -o root -g root $(WLNAME).ko $(INSTALLDIR)
 	/sbin/depmod -aq
-

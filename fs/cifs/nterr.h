@@ -22,8 +22,6 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
-
-
 #ifndef _NTERR_H
 #define _NTERR_H
 

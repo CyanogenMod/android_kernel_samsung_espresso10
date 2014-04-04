@@ -34,12 +34,10 @@
 
 #include "b43legacy.h"
 
-
 #define P4D_BYT3S(magic, nr_bytes)	u8 __p4dding##magic[nr_bytes]
 #define P4D_BYTES(line, nr_bytes)	P4D_BYT3S(line, nr_bytes)
 /* Magic helper macro to pad structures. Ignore those above. It's magic. */
 #define PAD_BYTES(nr_bytes)		P4D_BYTES(__LINE__ , (nr_bytes))
-
 
 /* Lightweight function to convert a frequency (in Mhz) to a channel number. */
 static inline

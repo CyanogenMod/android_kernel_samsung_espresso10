@@ -37,7 +37,6 @@
 #include <linux/i2c.h>
 #include <linux/uaccess.h>
 
-
 #include <video/omapdss.h>
 
 #include <linux/platform_data/panel-s6e8aa0.h>
@@ -1516,7 +1515,6 @@ static ssize_t acl_enable_store(struct device *dev,
 
 static DEVICE_ATTR(acl_set, S_IRUGO|S_IWUSR,
 		acl_enable_show, acl_enable_store);
-
 
 static ssize_t acl_average_show(struct device *dev,
 		struct device_attribute *attr, char *buf)

@@ -68,8 +68,6 @@ out_unlock:
 	return 0;
 }
 
-
-
 /*
  * for readdir, we encode the directory frag and offset within that
  * frag into f_pos.
@@ -1055,8 +1053,6 @@ static int ceph_snapdir_d_revalidate(struct dentry *dentry,
 	 */
 	return 1;
 }
-
-
 
 /*
  * read() on a dir.  This weird interface hack only works if mounted

@@ -7,7 +7,6 @@
  * by the Free Software Foundation, incorporated herein by reference.
  */
 
-
 #ifndef MCDI_PCOL_H
 #define MCDI_PCOL_H
 
@@ -197,7 +196,6 @@
 #define MC_CMD_ERR_ETIME 62
 
 #define MC_CMD_ERR_CODE_OFST 0
-
 
 /* MC_CMD_READ32: (debug, variadic out)
  * Read multiple 32byte words from MC memory
@@ -450,7 +448,6 @@
  * transaction should have the DONE bit set and all other bits clear.
  */
 #define MC_CMD_MDIO_STATUS_GOOD 0x08
-
 
 /* MC_CMD_DBI_WRITE: (debug)
  * Write DBI register(s)
@@ -925,7 +922,6 @@
 /* Data read here */
 #define MC_CMD_PHY_SPI_OUT_READ_BUFFER_OFST 0
 
-
 /* MC_CMD_GET_LOOPBACK_MODES:
  * Returns a bitmask of loopback modes evailable at each speed.
  *
@@ -1203,7 +1199,6 @@
 #define MC_CMD_SFT9001_SET_IN_FLAGS_OFST 0
 #define MC_CMD_SFT9001_SET_OUT_LEN 0
 
-
 /* MC_CMD_WOL_FILTER_SET:
  * Set a WoL filter
  *
@@ -1284,7 +1279,6 @@
 #define MC_CMD_WOL_FILTER_REMOVE_IN_LEN 4
 #define MC_CMD_WOL_FILTER_REMOVE_IN_FILTER_ID_OFST 0
 #define MC_CMD_WOL_FILTER_REMOVE_OUT_LEN 0
-
 
 /* MC_CMD_WOL_FILTER_RESET:
  * Reset (i.e. remove all) WoL filters
@@ -1448,7 +1442,6 @@
 #define MC_CMD_SCHEDINFO 0x3e
 #define MC_CMD_SCHEDINFO_IN_LEN 0
 
-
 /* MC_CMD_SET_REBOOT_MODE: (debug)
  * Set the mode for the next MC reboot.
  *
@@ -1493,7 +1486,6 @@
 #define MC_CMD_SENSOR_IN_2V5 10			/* mV */
 #define MC_CMD_SENSOR_IN_3V3 11			/* mV */
 #define MC_CMD_SENSOR_IN_12V0 12		/* mV */
-
 
 /* Sensor state */
 #define MC_CMD_SENSOR_STATE_OK 0
@@ -1554,7 +1546,6 @@
 #define MC_CMD_READ_SENSOR_STATE_LBN 16
 #define MC_CMD_READ_SENSOR_STATE_WIDTH 8
 
-
 /* MC_CMD_GET_PHY_STATE:
  * Report current state of PHY.  A "zombie" PHY is a PHY that has failed to
  * boot (e.g. due to missing or corrupted firmware).
@@ -1571,14 +1562,12 @@
 #define MC_CMD_PHY_STATE_OK 1
 #define MC_CMD_PHY_STATE_ZOMBIE 2
 
-
 /* 802.1Qbb control. 8 Tx queues that map to priorities 0 - 7. Use all 1s to
  * disable 802.Qbb for a given priority. */
 #define MC_CMD_SETUP_8021QBB 0x44
 #define MC_CMD_SETUP_8021QBB_IN_LEN 32
 #define MC_CMD_SETUP_8021QBB_OUT_LEN 0
 #define MC_CMD_SETUP_8021QBB_IN_TXQS_OFFST 0
-
 
 /* MC_CMD_WOL_FILTER_GET:
  * Retrieve ID of any WoL filters
@@ -1590,7 +1579,6 @@
 #define MC_CMD_WOL_FILTER_GET_IN_LEN 0
 #define MC_CMD_WOL_FILTER_GET_OUT_LEN 4
 #define MC_CMD_WOL_FILTER_GET_OUT_FILTER_ID_OFST 0
-
 
 /* MC_CMD_ADD_LIGHTSOUT_OFFLOAD:
  * Offload a protocol to NIC for lights-out state
@@ -1615,7 +1603,6 @@
 #define MC_CMD_ADD_LIGHTSOUT_OFFLOAD_OUT_LEN 4
 #define MC_CMD_ADD_LIGHTSOUT_OFFLOAD_OUT_FILTER_ID_OFST 0
 
-
 /* MC_CMD_REMOVE_LIGHTSOUT_PROTOCOL_OFFLOAD:
  * Offload a protocol to NIC for lights-out state
  *
@@ -1633,7 +1620,6 @@
 #define MC_CMD_LIGHTSOUT_OFFLOAD_PROTOCOL_ARP 0x1
 #define MC_CMD_LIGHTSOUT_OFFLOAD_PROTOCOL_NS  0x2
 
-
 /* MC_CMD_MAC_RESET_RESTORE:
  * Restore MAC after block reset
  *
@@ -1644,7 +1630,6 @@
 #define MC_CMD_MAC_RESET_RESTORE 0x48
 #define MC_CMD_MAC_RESET_RESTORE_IN_LEN 0
 #define MC_CMD_MAC_RESET_RESTORE_OUT_LEN 0
-
 
 /* MC_CMD_TEST_ASSERT:
  * Deliberately trigger an assert-detonation in the firmware for testing

@@ -207,7 +207,6 @@ static void dm9000_inblk_8bit(void __iomem *reg, void *data, int count)
 	readsb(reg, data, count);
 }
 
-
 static void dm9000_inblk_16bit(void __iomem *reg, void *data, int count)
 {
 	readsw(reg, data, (count+1) >> 1);
@@ -269,7 +268,6 @@ static void dm9000_set_io(struct board_info *db, int byte_width)
 		db->outblk  = dm9000_outblk_8bit;
 		db->inblk   = dm9000_inblk_8bit;
 		break;
-
 
 	case 3:
 		dev_dbg(db->dev, ": 3 byte IO, falling back to 16bit\n");
@@ -656,7 +654,7 @@ dm9000_poll_work(struct work_struct *w)
 		}
 	} else
 		mii_check_media(&db->mii, netif_msg_link(db), 0);
-	
+
 	if (netif_running(ndev))
 		dm9000_schedule_poll(db);
 }
@@ -1173,7 +1171,7 @@ dm9000_open(struct net_device *dev)
 
 	mii_check_media(&db->mii, netif_msg_link(db), 1);
 	netif_start_queue(dev);
-	
+
 	dm9000_schedule_poll(db);
 
 	return 0;
@@ -1556,7 +1554,7 @@ dm9000_probe(struct platform_device *pdev)
 
 	if (!is_valid_ether_addr(ndev->dev_addr)) {
 		/* try reading from mac */
-		
+
 		mac_src = "chip";
 		for (i = 0; i < 6; i++)
 			ndev->dev_addr[i] = ior(db, i+DM9000_PAR);
@@ -1569,7 +1567,6 @@ dm9000_probe(struct platform_device *pdev)
 		random_ether_addr(ndev->dev_addr);
 		mac_src = "random";
 	}
-
 
 	platform_set_drvdata(pdev, ndev);
 	ret = register_netdev(ndev);

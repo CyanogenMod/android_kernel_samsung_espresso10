@@ -2,13 +2,13 @@
  * Byte order utilities
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -32,11 +32,9 @@
 
 #include <typedefs.h>
 
-
 #define BCMSWAP16(val) \
 	((uint16)((((uint16)(val) & (uint16)0x00ffU) << 8) | \
 		  (((uint16)(val) & (uint16)0xff00U) >> 8)))
-
 
 #define BCMSWAP32(val) \
 	((uint32)((((uint32)(val) & (uint32)0x000000ffU) << 24) | \
@@ -44,11 +42,9 @@
 		  (((uint32)(val) & (uint32)0x00ff0000U) >>  8) | \
 		  (((uint32)(val) & (uint32)0xff000000U) >> 24)))
 
-
 #define BCMSWAP32BY16(val) \
 	((uint32)((((uint32)(val) & (uint32)0x0000ffffU) << 16) | \
 		  (((uint32)(val) & (uint32)0xffff0000U) >> 16)))
-
 
 #ifndef hton16
 #define HTON16(i) BCMSWAP16(i)
@@ -67,11 +63,10 @@
 #define htol16(i) (i)
 #define HTOL32(i) (i)
 #define htol32(i) (i)
-#endif 
+#endif
 
 #define ltoh16_buf(buf, i)
 #define htol16_buf(buf, i)
-
 
 #define load32_ua(a)		ltoh32_ua(a)
 #define store32_ua(a, v)	htol32_ua_store(v, a)
@@ -96,8 +91,6 @@
 	 *(uint8 *)0)
 
 #ifdef __GNUC__
-
-
 
 #define bcmswap16(val) ({ \
 	uint16 _val = (val); \
@@ -175,8 +168,7 @@
 	_NTOH32_UA(_bytes); \
 })
 
-#else 
-
+#else
 
 static INLINE uint16
 bcmswap16(uint16 val)
@@ -196,9 +188,6 @@ bcmswap32by16(uint32 val)
 	return BCMSWAP32BY16(val);
 }
 
-
-
-
 static INLINE void
 bcmswap16_buf(uint16 *buf, uint len)
 {
@@ -210,14 +199,12 @@ bcmswap16_buf(uint16 *buf, uint len)
 	}
 }
 
-
 static INLINE void
 htol16_ua_store(uint16 val, uint8 *bytes)
 {
 	bytes[0] = val & 0xff;
 	bytes[1] = val >> 8;
 }
-
 
 static INLINE void
 htol32_ua_store(uint32 val, uint8 *bytes)
@@ -228,14 +215,12 @@ htol32_ua_store(uint32 val, uint8 *bytes)
 	bytes[3] = val >> 24;
 }
 
-
 static INLINE void
 hton16_ua_store(uint16 val, uint8 *bytes)
 {
 	bytes[0] = val >> 8;
 	bytes[1] = val & 0xff;
 }
-
 
 static INLINE void
 hton32_ua_store(uint32 val, uint8 *bytes)
@@ -246,13 +231,11 @@ hton32_ua_store(uint32 val, uint8 *bytes)
 	bytes[3] = val & 0xff;
 }
 
-
 static INLINE uint16
 ltoh16_ua(const void *bytes)
 {
 	return _LTOH16_UA((const uint8 *)bytes);
 }
-
 
 static INLINE uint32
 ltoh32_ua(const void *bytes)
@@ -260,13 +243,11 @@ ltoh32_ua(const void *bytes)
 	return _LTOH32_UA((const uint8 *)bytes);
 }
 
-
 static INLINE uint16
 ntoh16_ua(const void *bytes)
 {
 	return _NTOH16_UA((const uint8 *)bytes);
 }
-
 
 static INLINE uint32
 ntoh32_ua(const void *bytes)
@@ -274,5 +255,5 @@ ntoh32_ua(const void *bytes)
 	return _NTOH32_UA((const uint8 *)bytes);
 }
 
-#endif 
-#endif 
+#endif
+#endif

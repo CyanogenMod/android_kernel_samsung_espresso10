@@ -49,4 +49,3 @@ void tmio_core_mmc_clk_div(void __iomem *cnf, int shift, int state)
 	sd_config_write8(cnf, shift, CNF_SD_CLK_MODE, state ? 1 : 0);
 }
 EXPORT_SYMBOL(tmio_core_mmc_clk_div);
-

@@ -102,7 +102,6 @@ struct sa1100_dram_regs {
 	u32 mdcas2;
 };
 
-
 static struct cpufreq_driver sa1100_driver;
 
 static struct sa1100_dram_regs sa1100_dram_settings[] = {

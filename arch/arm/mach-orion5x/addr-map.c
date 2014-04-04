@@ -73,7 +73,6 @@
 #define CPU_WIN_REMAP_LO(n)	ORION5X_BRIDGE_REG(0x008 | ((n) << 4))
 #define CPU_WIN_REMAP_HI(n)	ORION5X_BRIDGE_REG(0x00c | ((n) << 4))
 
-
 struct mbus_dram_target_info orion5x_mbus_dram_info;
 static int __initdata win_alloc_count;
 

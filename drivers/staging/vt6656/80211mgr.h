@@ -137,13 +137,9 @@
 #define WLAN_MGMT_STATUS_INVALID_RSN_IE_CAP             45
 #define WLAN_MGMT_STATUS_CIPHER_REJECT                  46
 
-
-
 // Auth Algorithm
 #define WLAN_AUTH_ALG_OPENSYSTEM                0
 #define WLAN_AUTH_ALG_SHAREDKEY                 1
-
-
 
 // Management Frame Field Offsets
 // Note: Not all fields are listed because of variable lengths.
@@ -188,7 +184,6 @@
 #define WLAN_AUTHEN_OFF_CHALLENGE           6
 
 #define WLAN_DEAUTHEN_OFF_REASON            0
-
 
 //
 // Cipher Suite Selectors defiened in 802.11i
@@ -348,7 +343,6 @@ typedef struct tagWLAN_IE_RSN {
     BYTE   abyRSN[WLAN_MIN_ARRAY];
 } WLAN_IE_RSN, *PWLAN_IE_RSN;
 
-
 // CCX Identity DavidWang
 #pragma pack(1)
 typedef struct tagWLAN_IE_CCX {
@@ -370,8 +364,6 @@ BYTE   byElementID;
 BYTE   len;
 BYTE   abyCCXVer[5];
 } WLAN_IE_CCX_Ver, *PWLAN_IE_CCX_Ver;
-
-
 
 // ERP
 #pragma pack(1)
@@ -494,7 +486,6 @@ typedef struct _WLAN_IE_TPC_REP {
     BYTE                byLinkMargin;
 } WLAN_IE_TPC_REP, *PWLAN_IE_TPC_REP;
 
-
 typedef struct _WLAN_IE_IBSS_DFS {
     BYTE                byElementID;
     BYTE                len;
@@ -504,8 +495,6 @@ typedef struct _WLAN_IE_IBSS_DFS {
 } WLAN_IE_IBSS_DFS, *PWLAN_IE_IBSS_DFS;
 
 #pragma pack()
-
-
 
 // Frame Types
 // prototype structure, all mgmt frame types will start with these members
@@ -548,7 +537,6 @@ typedef struct tagWLAN_FR_BEACON {
     PWLAN_IE_QUIET          pIE_Quiet;
 
 } WLAN_FR_BEACON, *PWLAN_FR_BEACON;
-
 
 // IBSS ATIM frame
 typedef struct tagWLAN_FR_IBSSATIM {

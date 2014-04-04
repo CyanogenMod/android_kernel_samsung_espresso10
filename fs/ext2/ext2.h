@@ -65,7 +65,6 @@ struct ext2_inode_info {
  */
 #define EXT2_STATE_NEW			0x00000001 /* inode is newly created */
 
-
 /*
  * Function prototypes
  */

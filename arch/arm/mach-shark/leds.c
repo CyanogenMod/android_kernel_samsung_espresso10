@@ -151,7 +151,7 @@ static int __init leds_init(void)
 {
 	extern void (*leds_event)(led_event_t);
 	short temp;
-	
+
 	leds_event = sequoia_leds_event;
 
 	/* Make LEDs independent of power-state */

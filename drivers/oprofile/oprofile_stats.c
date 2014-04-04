@@ -37,7 +37,6 @@ void oprofile_reset_stats(void)
 	atomic_set(&oprofile_stats.multiplex_counter, 0);
 }
 
-
 void oprofile_create_stats_files(struct super_block *sb, struct dentry *root)
 {
 	struct oprofile_cpu_buffer *cpu_buf;

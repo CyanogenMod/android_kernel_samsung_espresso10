@@ -676,7 +676,6 @@ static inline int em28xx_isoc_copy_vbi(struct em28xx *dev, struct urb *urb)
 	return rc;
 }
 
-
 /* ------------------------------------------------------------------
 	Videobuf operations
    ------------------------------------------------------------------*/
@@ -1337,7 +1336,6 @@ static int vidioc_s_audio(struct file *file, void *priv, struct v4l2_audio *a)
 	struct em28xx_fh   *fh  = priv;
 	struct em28xx      *dev = fh->dev;
 
-
 	if (!dev->audio_mode.has_audio)
 		return -EINVAL;
 
@@ -1582,7 +1580,6 @@ static int vidioc_g_chip_ident(struct file *file, void *priv,
 	return 0;
 }
 
-
 static int vidioc_g_register(struct file *file, void *priv,
 			     struct v4l2_dbg_register *reg)
 {
@@ -1662,7 +1659,6 @@ static int vidioc_s_register(struct file *file, void *priv,
 			       em28xx_reg_len(reg->reg));
 }
 #endif
-
 
 static int vidioc_cropcap(struct file *file, void *priv,
 					struct v4l2_cropcap *cc)
@@ -2089,7 +2085,6 @@ static int em28xx_v4l2_open(struct file *filp)
 			video_device_node_name(vdev), v4l2_type_names[fh_type],
 			dev->users);
 
-
 	fh = kzalloc(sizeof(struct em28xx_fh), GFP_KERNEL);
 	if (!fh) {
 		em28xx_errdev("em28xx-video.c: Out of memory?!\n");
@@ -2259,7 +2254,6 @@ em28xx_v4l2_read(struct file *filp, char __user *buf, size_t count,
 					filp->f_flags & O_NONBLOCK);
 	}
 
-
 	if (fh->type == V4L2_BUF_TYPE_VBI_CAPTURE) {
 		if (!res_get(fh, EM28XX_RESOURCE_VBI))
 			return -EBUSY;
@@ -2419,8 +2413,6 @@ static struct video_device em28xx_radio_template = {
 };
 
 /******************************** usb interface ******************************/
-
-
 
 static struct video_device *em28xx_vdev_init(struct em28xx *dev,
 					const struct video_device *template,

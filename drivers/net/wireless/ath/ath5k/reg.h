@@ -90,7 +90,6 @@
 #define AR5K_IER_DISABLE	0x00000000	/* Disable card interrupts */
 #define AR5K_IER_ENABLE		0x00000001	/* Enable card interrupts */
 
-
 /*
  * 0x0028 is Beacon Control Register on 5210
  * and first RTS duration register on 5211
@@ -119,7 +118,6 @@
 #define	AR5K_RTSD0_12_S		16
 #define	AR5K_RTSD0_18		0xff000000	/* 16Mb*/
 #define	AR5K_RTSD0_18_S		24
-
 
 /*
  * 0x002c is Beacon Status Register on 5210
@@ -160,7 +158,6 @@
 #define	AR5K_RTSD1_48_S		16
 #define	AR5K_RTSD1_54		0xff000000	/* 54Mb */
 #define	AR5K_RTSD1_54_S		24
-
 
 /*
  * Transmit configuration register
@@ -523,7 +520,6 @@
 #define AR5K_CPC3		0x061c		/* Compression performance counter 3 */
 #define AR5K_CPCOVF		0x0620		/* Compression performance overflow */
 
-
 /*
  * Queue control unit (QCU) registers [5211+]
  *
@@ -618,7 +614,6 @@
 #define AR5K_QCU_MISC_DCU_CMP_EN	0x00001000	/* Enable frame compression */
 #define AR5K_QUEUE_MISC(_q)		AR5K_QUEUE_REG(AR5K_QCU_MISC_BASE, _q)
 
-
 /*
  * QCU status registers
  */
@@ -645,8 +640,6 @@
  * (buffer size)
  */
 #define AR5K_QCU_CBCFG		0x0b08
-
-
 
 /*
  * Distributed Coordination Function (DCF) control unit (DCU)
@@ -1099,7 +1092,6 @@
 #define AR5K_EEPROM_CFG_PROT_KEY_S	8
 #define AR5K_EEPROM_CFG_LIND_EN		0x01000000	/* Enable length indicator (?) */
 
-
 /*
  * TODO: Wake On Wireless registers
  * Range 0x7000 - 0x7ce0
@@ -1292,7 +1284,6 @@
 #define AR5K_TIMER3		(ah->ah_version == AR5K_AR5210 ? \
 				AR5K_TIMER3_5210 : AR5K_TIMER3_5211)
 
-
 /*
  * 5210 First inter frame spacing register (IFS)
  */
@@ -1363,7 +1354,6 @@
 #define AR5K_MCAST_FILTER1	(ah->ah_version == AR5K_AR5210 ? \
 				AR5K_MCAST_FILTER1_5210 : AR5K_MCAST_FILTER1_5211)
 
-
 /*
  * Transmit mask register (lower 32 bits) [5210]
  */
@@ -1383,7 +1373,6 @@
  * Trigger level register (before transmission) [5210]
  */
 #define AR5K_TRIG_LVL	0x8064
-
 
 /*
  * PCU Diagnostic register
@@ -1503,8 +1492,6 @@
 #define AR5K_BACKOFF_CW		0x000003ff	/* Backoff Contention Window (?) */
 #define AR5K_BACKOFF_CNT	0x03ff0000	/* Backoff count (?) */
 
-
-
 /*
  * NAV register (current)
  */
@@ -1559,7 +1546,6 @@
 #define AR5K_BEACON_CNT_5211	0x8098
 #define	AR5K_BEACON_CNT		(ah->ah_version == AR5K_AR5210 ? \
 				AR5K_BEACON_CNT_5210 : AR5K_BEACON_CNT_5211)
-
 
 /*===5212 Specific PCU registers===*/
 
@@ -1882,7 +1868,6 @@
 #define	AR5K_PHY_TST1_TXSRC_ALT		0x00000080	/* Set input to tsdac (?) */
 #define	AR5K_PHY_TST1_TXSRC_ALT_S	7
 
-
 /*
  * PHY timing register 3 [5112+]
  */
@@ -2046,7 +2031,6 @@
 #define AR5K_PHY_WEAK_OFDM_LOW_THR_M1_S		14
 #define AR5K_PHY_WEAK_OFDM_LOW_THR_M2		0x0fe00000
 #define AR5K_PHY_WEAK_OFDM_LOW_THR_M2_S		21
-
 
 /*
  * PHY sleep registers [5112+]
@@ -2456,7 +2440,6 @@
 #define AR5K_PHY_SDELAY			0x99f4
 #define AR5K_PHY_SDELAY_32MHZ		0x000000ff
 #define AR5K_PHY_SPENDING		0x99f8
-
 
 /*
  * PHY PAPD I (power?) table (?)

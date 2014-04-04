@@ -574,7 +574,6 @@
 
 #define OP_PCL_SSL30_RC4_40_SHA                  0x0028
 
-
 /* For TLS 1.0 - OP_PCLID_TLS10 */
 #define OP_PCL_TLS10_AES_128_CBC_SHA             0x002f
 #define OP_PCL_TLS10_AES_128_CBC_SHA_2           0x0030
@@ -645,7 +644,6 @@
 #define OP_PCL_TLS10_DES40_CBC_SHA_6             0x0019
 #define OP_PCL_TLS10_DES40_CBC_SHA_7             0x0026
 
-
 #define OP_PCL_TLS10_DES_CBC_SHA                 0x001e
 #define OP_PCL_TLS10_DES_CBC_SHA_2               0x0009
 #define OP_PCL_TLS10_DES_CBC_SHA_3               0x000c
@@ -696,8 +694,6 @@
 #define OP_PCL_TLS10_AES_256_CBC_SHA256          0xff66
 #define OP_PCL_TLS10_AES_256_CBC_SHA384          0xff63
 #define OP_PCL_TLS10_AES_256_CBC_SHA512          0xff65
-
-
 
 /* For TLS 1.1 - OP_PCLID_TLS11 */
 #define OP_PCL_TLS11_AES_128_CBC_SHA             0x002f
@@ -819,7 +815,6 @@
 #define OP_PCL_TLS11_AES_256_CBC_SHA256          0xff66
 #define OP_PCL_TLS11_AES_256_CBC_SHA384          0xff63
 #define OP_PCL_TLS11_AES_256_CBC_SHA512          0xff65
-
 
 /* For TLS 1.2 - OP_PCLID_TLS12 */
 #define OP_PCL_TLS12_AES_128_CBC_SHA             0x002f
@@ -1029,7 +1024,6 @@
 #define OP_PCL_DTLS_DES40_CBC_SHA_6              0x0019
 #define OP_PCL_DTLS_DES40_CBC_SHA_7              0x0026
 
-
 #define OP_PCL_DTLS_DES_CBC_SHA                  0x001e
 #define OP_PCL_DTLS_DES_CBC_SHA_2                0x0009
 #define OP_PCL_DTLS_DES_CBC_SHA_3                0x000c
@@ -1037,7 +1031,6 @@
 #define OP_PCL_DTLS_DES_CBC_SHA_5                0x0012
 #define OP_PCL_DTLS_DES_CBC_SHA_6                0x0015
 #define OP_PCL_DTLS_DES_CBC_SHA_7                0x001a
-
 
 #define OP_PCL_DTLS_3DES_EDE_CBC_MD5             0xff23
 #define OP_PCL_DTLS_3DES_EDE_CBC_SHA160          0xff30
@@ -1161,7 +1154,6 @@
 #define OP_ALG_AAI_F9		(0xc8 << OP_ALG_AAI_SHIFT)
 #define OP_ALG_AAI_GSM		(0x10 << OP_ALG_AAI_SHIFT)
 #define OP_ALG_AAI_EDGE		(0x20 << OP_ALG_AAI_SHIFT)
-
 
 #define OP_ALG_AS_SHIFT		2
 #define OP_ALG_AS_MASK		(0x3 << OP_ALG_AS_SHIFT)
@@ -1289,7 +1281,6 @@
 
 #define SQOUT_LEN_SHIFT           0
 #define SQOUT_LEN_MASK           (0xffff << SQOUT_LEN_SHIFT)
-
 
 /*
  * SIGNATURE Command Constructs
@@ -1546,7 +1537,6 @@
 #define NFIFOENTRY_DTYPE_PK_A      (0xC  << NFIFOENTRY_DTYPE_SHIFT)
 #define NFIFOENTRY_DTYPE_PK_B      (0xD  << NFIFOENTRY_DTYPE_SHIFT)
 
-
 #define NFIFOENTRY_BND_SHIFT	19
 #define NFIFOENTRY_BND_MASK		(1 << NFIFOENTRY_BND_SHIFT)
 #define NFIFOENTRY_BND			(1 << NFIFOENTRY_BND_SHIFT)
@@ -1578,7 +1568,6 @@
 #define NFIFOENTRY_PS_SHIFT		10
 #define NFIFOENTRY_PS_MASK		(1 << NFIFOENTRY_PS_SHIFT)
 #define NFIFOENTRY_PS			(1 << NFIFOENTRY_PS_SHIFT)
-
 
 #define NFIFOENTRY_DLEN_SHIFT	0
 #define NFIFOENTRY_DLEN_MASK	(0xFFF << NFIFOENTRY_DLEN_SHIFT)

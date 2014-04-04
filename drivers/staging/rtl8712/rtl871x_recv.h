@@ -33,7 +33,6 @@ struct	stainfo_rxcache	{
 #define		PHY_RSSI_SLID_WIN_MAX			100
 #define		PHY_LINKQUALITY_SLID_WIN_MAX		20
 
-
 struct smooth_rssi_data {
 	u32	elements[100];	/* array to store values */
 	u32	index;		/* index to current array to store */
@@ -327,4 +326,3 @@ void  r8712_mgt_dispatcher(struct _adapter *padapter, u8 *pframe, uint len);
 int r8712_amsdu_to_msdu(struct _adapter *padapter, union recv_frame *prframe);
 
 #endif
-

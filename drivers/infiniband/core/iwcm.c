@@ -218,7 +218,6 @@ struct iw_cm_id *iw_create_cm_id(struct ib_device *device,
 }
 EXPORT_SYMBOL(iw_create_cm_id);
 
-
 static int iwcm_modify_qp_err(struct ib_qp *qp)
 {
 	struct ib_qp_attr qp_attr;

@@ -84,7 +84,6 @@ int spi_xmit(struct lte_modem_bootloader *loader,
 	return ret;
 }
 
-
 static
 int bootloader_write(struct lte_modem_bootloader *loader,
 		const char *addr, const int len)
@@ -113,7 +112,6 @@ int bootloader_write(struct lte_modem_bootloader *loader,
 
 	return 0;
 }
-
 
 static
 int bootloader_open(struct inode *inode, struct file *flip)

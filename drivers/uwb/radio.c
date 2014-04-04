@@ -20,7 +20,6 @@
 
 #include "uwb-internal.h"
 
-
 static int uwb_radio_select_channel(struct uwb_rc *rc)
 {
 	/*
@@ -33,7 +32,6 @@ static int uwb_radio_select_channel(struct uwb_rc *rc)
 		return rc->beaconing_forced;
 	return 9;
 }
-
 
 /*
  * Notify all active PALs that the channel has changed.

@@ -1237,7 +1237,6 @@ static int wm8350_set_bias_level(struct snd_soc_codec *codec,
 			wm8350_reg_write(wm8350, WM8350_POWER_MGMT_1,
 					 pm1);
 
-
 			/* enable analogue bias */
 			pm1 |= WM8350_BIASEN;
 			wm8350_reg_write(wm8350, WM8350_POWER_MGMT_1, pm1);
@@ -1367,7 +1366,7 @@ static void wm8350_hpr_work(struct work_struct *work)
 {
 	struct wm8350_data *priv =
 	    container_of(work, struct wm8350_data, hpr.work.work);
-	
+
 	wm8350_hp_work(priv, &priv->hpr, WM8350_JACK_R_LVL);
 }
 
@@ -1640,7 +1639,6 @@ static  int wm8350_codec_probe(struct snd_soc_codec *codec)
 			    wm8350_mic_handler, 0, "Microphone short", priv);
 	wm8350_register_irq(wm8350, WM8350_IRQ_CODEC_MICD,
 			    wm8350_mic_handler, 0, "Microphone detect", priv);
-
 
 	snd_soc_add_controls(codec, wm8350_snd_controls,
 				ARRAY_SIZE(wm8350_snd_controls));

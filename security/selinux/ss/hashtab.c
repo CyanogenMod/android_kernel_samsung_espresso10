@@ -137,7 +137,6 @@ int hashtab_map(struct hashtab *h,
 	return 0;
 }
 
-
 void hashtab_stat(struct hashtab *h, struct hashtab_info *info)
 {
 	u32 i, chain_len, slots_used, max_chain_len;

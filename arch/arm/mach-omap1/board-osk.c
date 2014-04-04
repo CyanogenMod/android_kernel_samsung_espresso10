@@ -474,7 +474,6 @@ static void __init osk_mistral_init(void)
 	} else
 		pr_debug("OSK+Mistral: CAM_PWDN is awol\n");
 
-
 	/* omap_cfg_reg(P19_1610_GPIO6); */	/* BUSY */
 	gpio_request(6, "ts_busy");
 	gpio_direction_input(6);

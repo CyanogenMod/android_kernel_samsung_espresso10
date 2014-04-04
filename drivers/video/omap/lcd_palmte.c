@@ -120,4 +120,3 @@ static void __exit palmte_panel_drv_cleanup(void)
 
 module_init(palmte_panel_drv_init);
 module_exit(palmte_panel_drv_cleanup);
-

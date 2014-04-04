@@ -929,7 +929,6 @@
 #define PM3ZStartL						0x89b8
 #define PM3ZStartU						0x89b0
 
-
 /**********************************************
 *  GLINT Permedia3 2D setup Unit	      *
 ***********************************************/

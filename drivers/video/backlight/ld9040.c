@@ -475,7 +475,6 @@ static int ld9040_gamma_ctl(struct ld9040 *lcd, int gamma)
 	return ret;
 }
 
-
 static int ld9040_ldi_init(struct ld9040 *lcd)
 {
 	int ret, i;
@@ -660,7 +659,6 @@ static const struct backlight_ops ld9040_backlight_ops  = {
 	.get_brightness = ld9040_get_brightness,
 	.update_status = ld9040_set_brightness,
 };
-
 
 static int ld9040_probe(struct spi_device *spi)
 {

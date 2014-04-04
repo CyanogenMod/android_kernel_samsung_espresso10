@@ -56,7 +56,7 @@
  */
 
 /*
- * MFI stands for  MegaRAID SAS FW Interface. This is just a moniker for 
+ * MFI stands for  MegaRAID SAS FW Interface. This is just a moniker for
  * protocol between the software and firmware. Commands are issued using
  * "message frames"
  */
@@ -331,7 +331,6 @@ enum MR_PD_STATE {
 	MR_PD_STATE_COPYBACK            = 0x20,
 	MR_PD_STATE_SYSTEM              = 0x40,
  };
-
 
  /*
  * defines the physical drive address structure
@@ -784,7 +783,7 @@ struct megasas_ctrl_info {
 * register set for both 1068 and 1078 controllers
 * structure extended for 1078 registers
 */
- 
+
 struct megasas_register_set {
 	u32	doorbell;                       /*0000h*/
 	u32	fusion_seq_offset;		/*0004h*/
@@ -1409,7 +1408,6 @@ struct megasas_cmd {
 	u8 cmd_status;
 	u8 abort_aen;
 	u8 retry_for_fw_reset;
-
 
 	struct list_head list;
 	struct scsi_cmnd *scmd;

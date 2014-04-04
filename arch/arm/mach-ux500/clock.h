@@ -139,7 +139,6 @@ struct clk clk_##_name = {						\
 		.data		= (void *) _data			\
 	}
 
-
 #define CLK(_clk, _devname, _conname)			\
 	{						\
 		.clk	= &clk_##_clk,			\

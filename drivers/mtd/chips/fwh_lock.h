@@ -1,7 +1,6 @@
 #ifndef FWH_LOCK_H
 #define FWH_LOCK_H
 
-
 enum fwh_lock_state {
         FWH_UNLOCKED   = 0,
 	FWH_DENY_WRITE = 1,
@@ -13,7 +12,6 @@ struct fwh_xxlock_thunk {
 	enum fwh_lock_state val;
 	flstate_t state;
 };
-
 
 #define FWH_XXLOCK_ONEBLOCK_LOCK   ((struct fwh_xxlock_thunk){ FWH_DENY_WRITE, FL_LOCKING})
 #define FWH_XXLOCK_ONEBLOCK_UNLOCK ((struct fwh_xxlock_thunk){ FWH_UNLOCKED,   FL_UNLOCKING})
@@ -76,7 +74,6 @@ static int fwh_xxlock_oneblock(struct map_info *map, struct flchip *chip,
 	return 0;
 }
 
-
 static int fwh_lock_varsize(struct mtd_info *mtd, loff_t ofs, uint64_t len)
 {
 	int ret;
@@ -86,7 +83,6 @@ static int fwh_lock_varsize(struct mtd_info *mtd, loff_t ofs, uint64_t len)
 
 	return ret;
 }
-
 
 static int fwh_unlock_varsize(struct mtd_info *mtd, loff_t ofs, uint64_t len)
 {

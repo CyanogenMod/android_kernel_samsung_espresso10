@@ -37,7 +37,6 @@
  * inodes of the Veritas Filesystem.
  */
 
-
 #define VXFS_ISIZE		0x100		/* Inode size */
 
 #define VXFS_NDADDR		10		/* Number of direct addrs in inode */
@@ -145,7 +144,6 @@ struct vxfs_dinode {
 #define vdi_immed	vdi_org.immed
 #define vdi_ext4	vdi_org.ext4
 #define vdi_typed	vdi_org.typed
-
 
 /*
  * The inode as represented in the main memory.

@@ -393,7 +393,6 @@ static void b43_nphy_tx_power_fix(struct b43_wldev *dev)
 		b43_nphy_stay_in_carrier_search(dev, 0);
 }
 
-
 /* http://bcm-v4.sipsolutions.net/802.11/PHY/Radio/2055Setup */
 static void b43_radio_2055_setup(struct b43_wldev *dev,
 				const struct b43_nphy_channeltab_entry_rev2 *e)
@@ -1583,7 +1582,6 @@ static u16 b43_nphy_gen_load_samples(struct b43_wldev *dev, u32 freq, u16 max,
 	int i;
 	u16 bw, len, rot, angle;
 	struct b43_c32 *samples;
-
 
 	bw = (dev->phy.is_40mhz) ? 40 : 20;
 	len = bw << 3;

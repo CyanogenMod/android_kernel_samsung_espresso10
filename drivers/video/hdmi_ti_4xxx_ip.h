@@ -198,7 +198,6 @@ struct hdmi_reg { u16 idx; };
 #define HDMI_TXPHY_POWER_CTRL			HDMI_PHY_REG(0x8)
 #define HDMI_TXPHY_PAD_CFG_CTRL		HDMI_PHY_REG(0xC)
 
-
 /**************************************
 * HDMI CEC registers *
 ***************************************/
@@ -302,7 +301,6 @@ enum hdmi_packing_mode {
 	HDMI_PACK_20b_YUV422 = 2,
 	HDMI_PACK_ALREADYPACKED = 7
 };
-
 
 struct hdmi_core_video_config {
 	enum hdmi_core_inputbus_width	ip_bus_width;

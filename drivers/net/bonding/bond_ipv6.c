@@ -222,4 +222,3 @@ void bond_unregister_ipv6_notifier(void)
 {
 	unregister_inet6addr_notifier(&bond_inet6addr_notifier);
 }
-

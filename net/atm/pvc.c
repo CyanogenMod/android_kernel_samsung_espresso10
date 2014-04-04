@@ -2,7 +2,6 @@
 
 /* Written 1995-2000 by Werner Almesberger, EPFL LRC/ICA */
 
-
 #include <linux/net.h>		/* struct socket, struct proto_ops */
 #include <linux/atm.h>		/* ATM stuff */
 #include <linux/atmdev.h>	/* ATM devices */
@@ -15,7 +14,6 @@
 
 #include "resources.h"		/* devs and vccs */
 #include "common.h"		/* common for PVCs and SVCs */
-
 
 static int pvc_shutdown(struct socket *sock, int how)
 {
@@ -94,6 +92,7 @@ static int pvc_getname(struct socket *sock, struct sockaddr *sockaddr,
 		return -ENOTCONN;
 	*sockaddr_len = sizeof(struct sockaddr_atmpvc);
 	addr = (struct sockaddr_atmpvc *)sockaddr;
+	memset(addr, 0, sizeof(*addr));
 	addr->sap_family = AF_ATMPVC;
 	addr->sap_addr.itf = vcc->dev->number;
 	addr->sap_addr.vpi = vcc->vpi;
@@ -126,7 +125,6 @@ static const struct proto_ops pvc_proto_ops = {
 	.sendpage =	sock_no_sendpage,
 };
 
-
 static int pvc_create(struct net *net, struct socket *sock, int protocol,
 		      int kern)
 {
@@ -143,11 +141,9 @@ static const struct net_proto_family pvc_family_ops = {
 	.owner = THIS_MODULE,
 };
 
-
 /*
  *	Initialize the ATM PVC protocol family
  */
-
 
 int __init atmpvc_init(void)
 {

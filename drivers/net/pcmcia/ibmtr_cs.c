@@ -9,15 +9,15 @@
     Written 1995,1996.
 
     This code is based on pcnet_cs.c from David Hinds.
-    
+
     V2.2.0 February 1999 - Mike Phillips phillim@amtrak.com
 
     Linux V2.2.x presented significant changes to the underlying
     ibmtr.c code.  Mainly the code became a lot more organized and
     modular.
 
-    This caused the old PCMCIA Token Ring driver to give up and go 
-    home early. Instead of just patching the old code to make it 
+    This caused the old PCMCIA Token Ring driver to give up and go
+    home early. Instead of just patching the old code to make it
     work, the PCMCIA code has been streamlined, updated and possibly
     improved.
 
@@ -33,11 +33,11 @@
 
     v2.2.5 April 1999 Mike Phillips (phillim@amtrak.com)
     Obscure bug fix, required changed to ibmtr.c not ibmtr_cs.c
-    
+
     v2.2.7 May 1999 Mike Phillips (phillim@amtrak.com)
     Updated to version 2.2.7 to match the first version of the kernel
     that the modification to ibmtr.c were incorporated into.
-    
+
     v2.2.17 July 2000 Burt Silverman (burts@us.ibm.com)
     Address translation feature of PCMCIA controller is usable so
     memory windows can be placed in High memory (meaning above
@@ -67,7 +67,6 @@
 
 #define PCMCIA
 #include "../tokenring/ibmtr.c"
-
 
 /*====================================================================*/
 
@@ -149,15 +148,15 @@ static void ibmtr_detach(struct pcmcia_device *link)
      struct tok_info *ti = netdev_priv(dev);
 
     dev_dbg(&link->dev, "ibmtr_detach\n");
-    
-    /* 
-     * When the card removal interrupt hits tok_interrupt(), 
-     * bail out early, so we don't crash the machine 
+
+    /*
+     * When the card removal interrupt hits tok_interrupt(),
+     * bail out early, so we don't crash the machine
      */
     ti->sram_phys |= 1;
 
     unregister_netdev(dev);
-    
+
     del_timer_sync(&(ti->tr_timer));
 
     ibmtr_release(link);
@@ -298,7 +297,6 @@ static int __devinit ibmtr_resume(struct pcmcia_device *link)
 	return 0;
 }
 
-
 /*====================================================================*/
 
 static void ibmtr_hw_setup(struct net_device *dev, u_int mmiobase)
@@ -306,9 +304,9 @@ static void ibmtr_hw_setup(struct net_device *dev, u_int mmiobase)
     int i;
 
     /* Bizarre IBM behavior, there are 16 bits of information we
-       need to set, but the card only allows us to send 4 bits at a 
+       need to set, but the card only allows us to send 4 bits at a
        time.  For each byte sent to base_addr, bits 7-4 tell the
-       card which part of the 16 bits we are setting, bits 3-0 contain 
+       card which part of the 16 bits we are setting, bits 3-0 contain
        the actual information */
 
     /* First nibble provides 4 bits of mmio */
@@ -325,7 +323,7 @@ static void ibmtr_hw_setup(struct net_device *dev, u_int mmiobase)
 
     /* Fourth nibble sets shared ram page size */
 
-    /* 8 = 00, 16 = 01, 32 = 10, 64 = 11 */          
+    /* 8 = 00, 16 = 01, 32 = 10, 64 = 11 */
     i = (sramsize >> 4) & 0x07;
     i = ((i == 4) ? 3 : i) << 2;
     i |= 0x30;

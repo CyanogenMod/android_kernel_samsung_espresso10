@@ -86,7 +86,6 @@ int get_expired_time(struct wake_lock *lock, ktime_t *expire_time)
 	return 1;
 }
 
-
 static int print_lock_stat(struct seq_file *m, struct wake_lock *lock)
 {
 	int lock_count = lock->stat.count;
@@ -135,12 +134,23 @@ static int wakelock_stats_show(struct seq_file *m, void *unused)
 
 	ret = seq_puts(m, "name\tcount\texpire_count\twake_count\tactive_since"
 			"\ttotal_time\tsleep_time\tmax_time\tlast_change\n");
-	list_for_each_entry(lock, &inactive_locks, link)
+	list_for_each_entry(lock, &inactive_locks, link) {
+		if (!lock)
+			goto active_list;
+
 		ret = print_lock_stat(m, lock);
-	for (type = 0; type < WAKE_LOCK_TYPE_COUNT; type++) {
-		list_for_each_entry(lock, &active_wake_locks[type], link)
-			ret = print_lock_stat(m, lock);
 	}
+active_list:
+	for (type = 0; type < WAKE_LOCK_TYPE_COUNT; type++) {
+		list_for_each_entry(lock, &active_wake_locks[type], link) {
+			if (!lock)
+				goto exit;
+
+			ret = print_lock_stat(m, lock);
+		}
+	}
+
+exit:
 	spin_unlock_irqrestore(&list_lock, irqflags);
 	return 0;
 }
@@ -197,7 +207,6 @@ static void update_sleep_wait_stats_locked(int done)
 	last_sleep_time_update = now;
 }
 #endif
-
 
 static void expire_wake_lock(struct wake_lock *lock)
 {
@@ -306,14 +315,12 @@ endofprint:
 }
 EXPORT_SYMBOL(debug_print_active_locks);
 
-
 static void suspend_backoff(void)
 {
 	pr_info("suspend: too many immediate wakeups, back off\n");
 	wake_lock_timeout(&suspend_backoff_lock,
 			  msecs_to_jiffies(SUSPEND_BACKOFF_INTERVAL));
 }
-
 
 static void suspend_sys_sync(struct work_struct *work)
 {

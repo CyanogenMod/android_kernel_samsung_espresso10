@@ -19,7 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 /*
  * Gadget Zero only needs two bulk endpoints, and is an example of how you
  * can write a hardware-agnostic gadget driver running inside a USB device.
@@ -56,7 +55,6 @@
 
 #include "g_zero.h"
 #include "gadget_chips.h"
-
 
 /*-------------------------------------------------------------------------*/
 
@@ -319,7 +317,6 @@ static int __init zero_bind(struct usb_composite_dev *cdev)
 			longname, gadget->name);
 		device_desc.bcdDevice = cpu_to_le16(0x9999);
 	}
-
 
 	INFO(cdev, "%s, version: " DRIVER_VERSION "\n", longname);
 

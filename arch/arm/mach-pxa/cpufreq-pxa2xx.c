@@ -486,7 +486,6 @@ static void __exit pxa_cpu_exit(void)
 	cpufreq_unregister_driver(&pxa_cpufreq_driver);
 }
 
-
 MODULE_AUTHOR("Intrinsyc Software Inc.");
 MODULE_DESCRIPTION("CPU frequency changing driver for the PXA architecture");
 MODULE_LICENSE("GPL");

@@ -152,7 +152,6 @@ static void mx27_3ds_sdhc1_enable_level_translator(void)
 	gpio_direction_output(SD1_EN_GPIO, 1);
 }
 
-
 static int otg_phy_init(void)
 {
 	gpio_request(OTG_PHY_RESET_GPIO, "usb-otg-reset");

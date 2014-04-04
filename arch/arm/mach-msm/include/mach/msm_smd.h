@@ -56,7 +56,6 @@ int smd_cur_packet_size(smd_channel_t *ch);
 */
 void smd_kick(smd_channel_t *ch);
 
-
 #if 0
 /* these are interruptable waits which will block you until the specified
 ** number of bytes are readable or writable.

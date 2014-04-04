@@ -71,7 +71,6 @@ static void iio_trigger_unregister_sysfs(struct iio_trigger *trig_info)
 					   NULL);
 }
 
-
 /**
  * iio_trigger_register_id() - get a unique id for this trigger
  * @trig_info:	the trigger

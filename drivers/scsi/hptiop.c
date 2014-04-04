@@ -444,7 +444,6 @@ static void __iomem *hptiop_map_pci_bar(struct hptiop_hba *hba, int index)
 
 	struct pci_dev *pcidev = hba->pcidev;
 
-
 	if (!(pci_resource_flags(pcidev, index) & IORESOURCE_MEM)) {
 		printk(KERN_ERR "scsi%d: pci resource invalid\n",
 				hba->host->host_no);
@@ -1130,7 +1129,6 @@ static int __devinit hptiop_probe(struct pci_dev *pcidev,
 		goto free_request_mem;
 	}
 
-
 	scsi_scan_host(host);
 
 	dprintk("scsi%d: hptiop_probe successfully\n", hba->host->host_no);
@@ -1303,9 +1301,7 @@ static void __exit hptiop_module_exit(void)
 	pci_unregister_driver(&hptiop_pci_driver);
 }
 
-
 module_init(hptiop_module_init);
 module_exit(hptiop_module_exit);
 
 MODULE_LICENSE("GPL");
-

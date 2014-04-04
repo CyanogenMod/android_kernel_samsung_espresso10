@@ -211,7 +211,6 @@ PVRSRV_ERROR EnableSGXClocks(SYS_DATA *psSysData)
 	omap_pm_set_min_bus_tput(&gpsPVRLDMDev->dev, OCP_INITIATOR_AGENT, OMAP_MEMORY_BUS_CLOCK_MAX);
 #endif
 
-
 	atomic_set(&psSysSpecData->sSGXClocksEnabled, 1);
 
 #else	/* !defined(NO_HARDWARE) */
@@ -219,7 +218,6 @@ PVRSRV_ERROR EnableSGXClocks(SYS_DATA *psSysData)
 #endif	/* !defined(NO_HARDWARE) */
 	return PVRSRV_OK;
 }
-
 
 IMG_VOID DisableSGXClocks(SYS_DATA *psSysData)
 {
@@ -374,7 +372,6 @@ PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData)
 		goto ExitDisableGPT11FCK;
 	}
 
-
 	TimerRegPhysBase.uiAddr = SYS_OMAP3430_GP11TIMER_TSICR_SYS_PHYS_BASE;
 	pui32TimerEnable = OSMapPhysToLin(TimerRegPhysBase,
                   4,
@@ -392,7 +389,6 @@ PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData)
 	{
 		PVR_TRACE(("Setting GPTIMER11 mode to posted (currently is non-posted)"));
 
-
 		*pui32TimerEnable = rate | 4;
 	}
 
@@ -400,7 +396,6 @@ PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData)
 		    4,
 		    PVRSRV_HAP_KERNEL_ONLY|PVRSRV_HAP_UNCACHED,
 		    hTimerEnable);
-
 
 	TimerRegPhysBase.uiAddr = SYS_OMAP3430_GP11TIMER_ENABLE_SYS_PHYS_BASE;
 	pui32TimerEnable = OSMapPhysToLin(TimerRegPhysBase,
@@ -413,7 +408,6 @@ PVRSRV_ERROR EnableSystemClocks(SYS_DATA *psSysData)
 		PVR_DPF((PVR_DBG_ERROR, "EnableSystemClocks: OSMapPhysToLin failed"));
 		goto ExitDisableGPT11ICK;
 	}
-
 
 	*pui32TimerEnable = 3;
 
@@ -450,7 +444,6 @@ IMG_VOID DisableSystemClocks(SYS_DATA *psSysData)
 #endif
 
 	PVR_TRACE(("DisableSystemClocks: Disabling System Clocks"));
-
 
 	DisableSGXClocks(psSysData);
 

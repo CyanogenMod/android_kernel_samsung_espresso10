@@ -40,7 +40,6 @@ static const char version1[] =
 static const char version2[] =
 "Last modified Nov 1, 2000 by Paul Gortmaker\n";
 
-
 #include <linux/module.h>
 #include <linux/kernel.h>
 #include <linux/errno.h>
@@ -181,7 +180,6 @@ static void ne_block_input(struct net_device *dev, int count,
 			  struct sk_buff *skb, int ring_offset);
 static void ne_block_output(struct net_device *dev, const int count,
 		const unsigned char *buf, const int start_page);
-
 
 /*  Probe for various non-shared-memory ethercards.
 
@@ -814,6 +812,7 @@ static int __init ne_drv_probe(struct platform_device *pdev)
 		dev->irq = irq[this_dev];
 		dev->mem_end = bad[this_dev];
 	}
+	SET_NETDEV_DEV(dev, &pdev->dev);
 	err = do_ne_probe(dev);
 	if (err) {
 		free_netdev(dev);

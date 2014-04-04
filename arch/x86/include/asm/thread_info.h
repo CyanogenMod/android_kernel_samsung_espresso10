@@ -180,7 +180,6 @@ struct thread_info {
  */
 #ifndef __ASSEMBLY__
 
-
 /* how to get the current stack pointer from C */
 register unsigned long current_stack_pointer asm("esp") __used;
 

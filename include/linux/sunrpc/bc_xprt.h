@@ -64,4 +64,3 @@ static inline void xprt_free_bc_request(struct rpc_rqst *req)
 }
 #endif /* CONFIG_NFS_V4_1 */
 #endif /* _LINUX_SUNRPC_BC_XPRT_H */
-

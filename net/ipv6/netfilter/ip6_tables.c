@@ -1375,7 +1375,6 @@ do_add_counters(struct net *net, const void __user *user, unsigned int len,
 		goto free;
 	}
 
-
 	local_bh_disable();
 	private = t->private;
 	if (private->number != num_counters) {
@@ -2264,7 +2263,6 @@ static int __init ip6_tables_init(void)
 	if (ret < 0)
 		goto err5;
 
-	pr_info("(C) 2000-2006 Netfilter Core Team\n");
 	return 0;
 
 err5:

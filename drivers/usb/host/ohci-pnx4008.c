@@ -450,4 +450,3 @@ static struct platform_driver usb_hcd_pnx4008_driver = {
 	.probe = usb_hcd_pnx4008_probe,
 	.remove = usb_hcd_pnx4008_remove,
 };
-

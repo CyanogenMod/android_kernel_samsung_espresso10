@@ -3,7 +3,7 @@
  * Copyright (c) 2010 Atheros Communications Inc.
  * All rights reserved.
  *
- * 
+ *
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -170,7 +170,6 @@ aggr_module_destroy(void *cntxt)
     A_PRINTF("out aggr_module_destroy\n");
 }
 
-
 void
 aggr_register_rx_dispatcher(void *cntxt, void * dev, RX_CALLBACK fn)
 {
@@ -181,7 +180,6 @@ aggr_register_rx_dispatcher(void *cntxt, void * dev, RX_CALLBACK fn)
     p_aggr->rx_fn = fn;
     p_aggr->dev = dev;
 }
-
 
 void
 aggr_process_bar(void *cntxt, u8 tid, u16 seq_no)
@@ -195,7 +193,6 @@ aggr_process_bar(void *cntxt, u8 tid, u16 seq_no)
 
     aggr_deque_frms(p_aggr, tid, seq_no, ALL_SEQNO);
 }
-
 
 void
 aggr_recv_addba_req_evt(void *cntxt, u8 tid, u16 seq_no, u8 win_sz)
@@ -350,7 +347,6 @@ aggr_get_osbuf(struct aggr_info *p_aggr)
 
     return buf;
 }
-
 
 static void
 aggr_slice_amsdu(struct aggr_info *p_aggr, struct rxtid *rxtid, void **osbuf)
@@ -567,7 +563,6 @@ aggr_reset_state(void *cntxt)
         aggr_delete_tid_state(p_aggr, tid);
     }
 }
-
 
 static void
 aggr_timeout(unsigned long arg)

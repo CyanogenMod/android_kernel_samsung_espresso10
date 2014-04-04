@@ -15,4 +15,3 @@ config ZORRO_NAMES
 	  ID numbers instead of names.
 
 	  When in doubt, say Y.
-

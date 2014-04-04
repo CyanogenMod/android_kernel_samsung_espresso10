@@ -275,7 +275,6 @@ struct iwm_umac_cmd_get_channel_list {
 	struct iwm_umac_channel_info ch[0];
 } __packed;
 
-
 /* UMAC WiFi interface commands */
 
 /* Coexistence mode */
@@ -346,7 +345,6 @@ struct iwm_umac_cmd_scan_request {
 #define UMAC_SEC_FLG_WSC_ON_SEED	1
 #define UMAC_SEC_FLG_WSC_ON_MSK         (UMAC_SEC_FLG_WSC_ON_SEED << \
 					 UMAC_SEC_FLG_WSC_ON_POS)
-
 
 /* Legacy profile can use only WEP40 and WEP104 for encryption and
  * OPEN or PSK for authentication */

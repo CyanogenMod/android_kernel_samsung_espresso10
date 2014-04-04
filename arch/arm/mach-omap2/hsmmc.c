@@ -31,7 +31,6 @@ static u16 control_mmc1;
 
 #define HSMMC_NAME_LEN	9
 
-
 static void omap_hsmmc1_before_set_reg(struct device *dev, int slot,
 				  int power_on, int vdd)
 {

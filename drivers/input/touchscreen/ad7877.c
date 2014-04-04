@@ -35,7 +35,6 @@
  *	Copyright (C) 2005 Dirk Behme
  */
 
-
 #include <linux/device.h>
 #include <linux/init.h>
 #include <linux/delay.h>

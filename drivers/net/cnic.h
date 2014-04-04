@@ -8,7 +8,6 @@
  *
  */
 
-
 #ifndef CNIC_H
 #define CNIC_H
 
@@ -457,4 +456,3 @@ struct bnx2x_bd_chain_next {
 
 #define TCP_TSTORM_OOO_DROP_AND_PROC_ACK	(0<<4)
 #endif
-

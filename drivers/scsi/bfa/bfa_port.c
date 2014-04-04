@@ -21,7 +21,6 @@
 #include "bfi.h"
 #include "bfa_ioc.h"
 
-
 BFA_TRC_FILE(CNA, PORT);
 
 #define bfa_ioc_portid(__ioc) ((__ioc)->port_id)

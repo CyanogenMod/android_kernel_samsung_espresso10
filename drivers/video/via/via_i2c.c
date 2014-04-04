@@ -192,7 +192,6 @@ struct i2c_adapter *viafb_find_i2c_adapter(enum viafb_i2c_adap which)
 }
 EXPORT_SYMBOL_GPL(viafb_find_i2c_adapter);
 
-
 static int create_i2c_bus(struct i2c_adapter *adapter,
 			  struct i2c_algo_bit_data *algo,
 			  struct via_port_cfg *adap_cfg,

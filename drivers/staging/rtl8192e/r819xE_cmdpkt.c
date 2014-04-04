@@ -147,8 +147,6 @@ static void cmpk_count_txstatistic(struct r8192_priv *priv, cmpk_txfb_t *pstx_fb
 	}
 }
 
-
-
 /*
  * The function is responsible for extract the message inside TX
  * feedbck message from firmware. It will contain dedicated info in
@@ -166,7 +164,6 @@ static void cmpk_handle_tx_feedback(struct r8192_priv *priv, u8 *pmsg)
 	/* Use tx feedback info to count TX statistics. */
 	cmpk_count_txstatistic(priv, &rx_tx_fb);
 }
-
 
 /*
  * The function is responsible for extract the message from
@@ -193,7 +190,6 @@ static void cmpk_handle_interrupt_status(struct r8192_priv *priv, u8 *pmsg)
 		return;
 	}
 
-
 	// Statistics of beacon for ad-hoc mode.
 	if(	priv->ieee80211->iw_mode == IW_MODE_ADHOC)
 	{
@@ -217,11 +213,9 @@ static void cmpk_handle_interrupt_status(struct r8192_priv *priv, u8 *pmsg)
 
 	 // Other informations in interrupt status we need?
 
-
 	DMESG("<---- cmpk_handle_interrupt_status()\n");
 
 }
-
 
 /*
  * The function is responsible for extract the message from
@@ -254,7 +248,6 @@ static void cmpk_handle_query_config_rx(struct r8192_priv *priv, u8 *pmsg)
 
 }
 
-
 /*
  * Count aggregated tx status from firmwar of one type rx command
  * packet element id = RX_TX_STATUS.
@@ -283,8 +276,6 @@ static void cmpk_count_tx_status(struct r8192_priv *priv, cmpk_tx_status_t *pstx
 	priv->stats.txbytesunicast		+= pstx_status->txuclength;
 }
 
-
-
 /*
  * Firmware add a new tx feedback status to reduce rx command
  * packet buffer operation load.
@@ -298,7 +289,6 @@ static void cmpk_handle_tx_status(struct r8192_priv *priv, u8 *pmsg)
 	cmpk_count_tx_status(priv, &rx_tx_sts);
 
 }
-
 
 /* Firmware add a new tx rate history */
 static void cmpk_handle_tx_rate_history(struct r8192_priv *priv, u8 *pmsg)
@@ -334,7 +324,6 @@ static void cmpk_handle_tx_rate_history(struct r8192_priv *priv, u8 *pmsg)
 		ptemp[i] = (temp1<<16)|temp2;
 	}
 }
-
 
 /*
  * In the function, we will capture different RX command packet

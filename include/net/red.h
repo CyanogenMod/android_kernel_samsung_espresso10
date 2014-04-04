@@ -40,7 +40,6 @@
 	is a negative power of two in order arithmetics to contain
 	only shifts.
 
-
 	Parameters, settable by user:
 	-----------------------------
 
@@ -60,7 +59,6 @@
 	Stab
 
 	Lookup table for log((1-W)^(t/t_ave).
-
 
 	NOTES:
 

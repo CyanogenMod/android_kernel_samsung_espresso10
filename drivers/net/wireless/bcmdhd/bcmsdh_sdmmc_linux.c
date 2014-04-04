@@ -2,13 +2,13 @@
  * BCMSDH Function Driver for the native SDIO/MMC driver in the Linux Kernel
  *
  * Copyright (C) 1999-2012, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,12 +16,12 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: bcmsdh_sdmmc_linux.c 353908 2012-08-29 08:09:02Z $
+ * $Id: bcmsdh_sdmmc_linux.c 381545 2013-01-28 17:04:40Z $
  */
 
 #include <typedefs.h>
@@ -67,7 +67,6 @@
 #if !defined(SDIO_DEVICE_ID_BROADCOM_43239)
 #define SDIO_DEVICE_ID_BROADCOM_43239    43239
 #endif /* !defined(SDIO_DEVICE_ID_BROADCOM_43239) */
-
 
 #include <bcmsdh_sdmmc.h>
 
@@ -136,6 +135,8 @@ static int bcmsdh_sdmmc_probe(struct sdio_func *func,
 	#endif
 			sd_trace(("F2 found, calling bcmsdh_probe...\n"));
 			ret = bcmsdh_probe(&func->dev);
+			if (ret < 0 && gInstance)
+				gInstance->func[2] = NULL;
 		}
 	} else {
 		ret = -ENODEV;
@@ -153,10 +154,12 @@ static void bcmsdh_sdmmc_remove(struct sdio_func *func)
 		sd_info(("sdio_device: 0x%04x\n", func->device));
 		sd_info(("Function#: 0x%04x\n", func->num));
 
-		if (func->num == 2) {
+		if (gInstance->func[2]) {
 			sd_trace(("F2 found, calling bcmsdh_remove...\n"));
 			bcmsdh_remove(&func->dev);
-		} else if (func->num == 1) {
+			gInstance->func[2] = NULL;
+		}
+		if (func->num == 1) {
 			sdio_claim_host(func);
 			sdio_disable_func(func);
 			sdio_release_host(func);
@@ -192,7 +195,7 @@ static int bcmsdh_sdmmc_suspend(struct device *pdev)
 	if (func->num != 2)
 		return 0;
 
-	sd_trace(("%s Enter\n", __FUNCTION__));
+	sd_trace_hw4(("%s Enter\n", __FUNCTION__));
 
 	if (dhd_os_check_wakelock(bcmsdh_get_drvdata()))
 		return -EBUSY;
@@ -232,7 +235,7 @@ static int bcmsdh_sdmmc_resume(struct device *pdev)
 	struct sdio_func *func = dev_to_sdio_func(pdev);
 #endif /* defined(OOB_INTR_ONLY) */
 #endif /* defined(CUSTOMER_HW4) */
-	sd_trace(("%s Enter\n", __FUNCTION__));
+	sd_trace_hw4(("%s Enter\n", __FUNCTION__));
 
 	dhd_mmc_suspend = FALSE;
 #if !defined(CUSTOMER_HW4)
@@ -307,7 +310,6 @@ struct sdos_info {
 	spinlock_t lock;
 };
 
-
 int
 sdioh_sdmmc_osinit(sdioh_info_t *sd)
 {
@@ -373,7 +375,6 @@ sdioh_interrupt_set(sdioh_info_t *sd, bool enable)
 	return SDIOH_API_RC_SUCCESS;
 }
 
-
 #ifdef BCMSDH_MODULE
 static int __init
 bcmsdh_module_init(void)
@@ -425,7 +426,6 @@ extern int bcmsdh_remove(struct device *dev);
 void sdio_function_cleanup(void)
 {
 	sd_trace(("%s Enter\n", __FUNCTION__));
-
 
 	sdio_unregister_driver(&bcmsdh_sdmmc_driver);
 

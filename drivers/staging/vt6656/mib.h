@@ -35,7 +35,6 @@
 
 /*---------------------  Export Definitions -------------------------*/
 
-
 //
 // USB counter
 //
@@ -44,12 +43,9 @@ typedef struct tagSUSBCounter {
 
 } SUSBCounter, *PSUSBCounter;
 
-
-
 //
 // 802.11 counter
 //
-
 
 typedef struct tagSDot11Counters {
   /* unsigned long Length; // Length of structure */
@@ -81,7 +77,6 @@ typedef struct tagSDot11Counters {
    * unsigned long long   DecryptFailureCount;
    */
 } SDot11Counters, *PSDot11Counters;
-
 
 //
 // MIB2 counter
@@ -120,7 +115,6 @@ typedef struct tagSMib2Counter {
 #define UP                  1           //
 #define DOWN                2           //
 #define TESTING             3           //
-
 
 //
 // RMON counter
@@ -187,7 +181,6 @@ typedef struct tagSCustomCounters {
 
 } SCustomCounters, *PSCustomCounters;
 
-
 //
 // Custom counter
 //
@@ -218,13 +211,11 @@ typedef struct tagSISRCounters {
     /////////////////////////////////////
 } SISRCounters, *PSISRCounters;
 
-
 // Value in the etherStatsStatus entry
 #define VALID               1           //
 #define CREATE_REQUEST      2           //
 #define UNDER_CREATION      3           //
 #define INVALID             4           //
-
 
 //
 // Tx packet information
@@ -235,7 +226,6 @@ typedef struct tagSTxPktInfo {
     WORD    wFIFOCtl;
     BYTE    abyDestAddr[ETH_ALEN];
 } STxPktInfo, *PSTxPktInfo;
-
 
 #define MAX_RATE            12
 //
@@ -323,13 +313,10 @@ typedef struct tagSStatCounter {
     BYTE    abyCntRxPattern[16];
     BYTE    abyCntTxPattern[16];
 
-
-
     // Software check....
     DWORD   dwCntRxDataErr;             // rx buffer data software compare CRC err count
     DWORD   dwCntDecryptErr;            // rx buffer data software compare CRC err count
     DWORD   dwCntRxICVErr;              // rx buffer data software compare CRC err count
-
 
     // 64-bit OID
     unsigned long long   ullTsrOK;

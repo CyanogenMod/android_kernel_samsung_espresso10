@@ -11,7 +11,6 @@
 
 /* Vendor commands: */
 
-
 /* port table -- the chip supports up to 4 channels */
 
 /* baud rates */
@@ -32,8 +31,6 @@ enum {
 /* data bits */
 #define kl5kusb105a_dtb_7   7
 #define kl5kusb105a_dtb_8   8
-
-
 
 /* requests: */
 #define KL5KUSB105A_SIO_SET_DATA  1

@@ -31,7 +31,6 @@
 #include <linux/mtd/map.h>
 #include <linux/mtd/partitions.h>
 
-
 /*
 ** The single, 16 megabyte flash bank is divided into four virtual
 ** partitions.  The first partition is 768 KiB and is intended to

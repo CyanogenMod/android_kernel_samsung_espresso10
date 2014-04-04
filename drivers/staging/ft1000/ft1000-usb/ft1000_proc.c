@@ -24,11 +24,9 @@
 #include <linux/proc_fs.h>
 #include <linux/netdevice.h>
 
-
 #include "ft1000_usb.h"
 
 #define FT1000_PROC_DIR "ft1000"
-
 
 #define PUTM_TO_PAGE(len,page,args...) \
 	len += snprintf(page+len, PAGE_SIZE - len, args)
@@ -47,13 +45,10 @@
 	} \
 	len += snprintf(page+len, PAGE_SIZE - len, "%d\n", var[i])
 
-
 #define FTNET_PROC init_net.proc_net
-
 
 int ft1000_read_dpram16 (struct ft1000_device *ft1000dev, u16 indx,
 			 u8 *buffer, u8 highlow);
-
 
 static int
 ft1000ReadProc(char *page, char **start, off_t off, int count, int *eof,
@@ -67,8 +62,8 @@ ft1000ReadProc(char *page, char **start, off_t off, int count, int *eof,
 
 	struct ft1000_info *info;
 
-	char *status[] = { 
-		"Idle (Disconnect)", 
+	char *status[] = {
+		"Idle (Disconnect)",
 		"Searching",
 		"Active (Connected)",
 		"Waiting for L2",
@@ -91,7 +86,6 @@ ft1000ReadProc(char *page, char **start, off_t off, int count, int *eof,
 		*eof = 1;
 		return 0;
 	}
-
 
 	if (info->ProgConStat != 0xFF) {
 		ft1000_read_dpram16(info->pFt1000Dev, FT1000_MAG_DSP_LED,
@@ -199,7 +193,6 @@ ft1000NotifyProc(struct notifier_block *this, unsigned long event, void *ptr)
 static struct notifier_block ft1000_netdev_notifier = {
 	.notifier_call = ft1000NotifyProc,
 };
-
 
 int ft1000_init_proc(struct net_device *dev)
 {

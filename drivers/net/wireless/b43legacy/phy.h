@@ -64,7 +64,6 @@ enum {
 /* Extended G-PHY registers */
 #define B43legacy_PHY_EXTG(reg)	((reg) | B43legacy_PHYROUTE_EXT_GPHY)
 
-
 /* Extended G-PHY Registers */
 #define B43legacy_PHY_CLASSCTL		B43legacy_PHY_EXTG(0x02)	/* Classify control */
 #define B43legacy_PHY_GTABCTL		B43legacy_PHY_EXTG(0x03)	/* G-PHY table control (see below) */

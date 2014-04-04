@@ -49,7 +49,6 @@
 #define CHANNEL_STATE_SIZE		24	// in bytes
 #define CHANNEL_STATE_SHIFT		5	// ceil(log2(state size))
 
-
 	.sig volatile sig1
 	.sig volatile sig2
 	.sig volatile sig3
@@ -389,7 +388,6 @@ mpacket_receive_loop#:
 		.end
 	.end
 
-
 abort_rswerr#:
 	halt
 
@@ -404,5 +402,3 @@ buffer_overflow#:
 
 rx_done_ring_overflow#:
 	halt
-
-

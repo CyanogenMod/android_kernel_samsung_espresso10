@@ -46,14 +46,11 @@
 #include <linux/wimax.h>
 #include "wimax-internal.h"
 
-
 #define D_SUBMODULE id_table
 #include "debug-levels.h"
 
-
 static DEFINE_SPINLOCK(wimax_id_table_lock);
 static struct list_head wimax_id_table = LIST_HEAD_INIT(wimax_id_table);
-
 
 /*
  * wimax_id_table_add - add a gennetlink familiy ID / wimax_dev mapping
@@ -72,7 +69,6 @@ void wimax_id_table_add(struct wimax_dev *wimax_dev)
 	spin_unlock(&wimax_id_table_lock);
 	d_fnend(3, NULL, "(wimax_dev %p)\n", wimax_dev);
 }
-
 
 /*
  * wimax_get_netdev_by_info - lookup a wimax_dev from the gennetlink info
@@ -107,7 +103,6 @@ found:
 	return wimax_dev;
 }
 
-
 /*
  * wimax_id_table_rm - Remove a gennetlink familiy ID / wimax_dev mapping
  *
@@ -119,7 +114,6 @@ void wimax_id_table_rm(struct wimax_dev *wimax_dev)
 	list_del_init(&wimax_dev->id_table_node);
 	spin_unlock(&wimax_id_table_lock);
 }
-
 
 /*
  * Release the gennetlink family id / mapping table

@@ -109,7 +109,7 @@ for_each_frame:	tst	frame, mask		@ Check for address exceptions
 no_frame:	ldmfd	sp!, {r4 - r8, pc}
 ENDPROC(__backtrace)
 ENDPROC(c_backtrace)
-		
+
 		.pushsection __ex_table,"a"
 		.align	3
 		.long	1001b, 1006b

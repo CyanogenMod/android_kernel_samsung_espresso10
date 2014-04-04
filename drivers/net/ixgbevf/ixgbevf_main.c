@@ -25,7 +25,6 @@
 
 *******************************************************************************/
 
-
 /******************************************************************************
  Copyright (c)2006 - 2007 Myricom, Inc. for some LRO specific code
 ******************************************************************************/
@@ -688,7 +687,6 @@ static int ixgbevf_clean_rxonly_many(struct napi_struct *napi, int budget)
 	return work_done;
 }
 
-
 /**
  * ixgbevf_configure_msix - Configure MSI-X hardware
  * @adapter: board private structure
@@ -784,7 +782,6 @@ static u8 ixgbevf_update_itr(struct ixgbevf_adapter *adapter,
 
 	if (packets == 0)
 		goto update_itr_done;
-
 
 	/* simple throttlerate management
 	 *    0-20MB/s lowest (100000 ints/s)
@@ -1001,7 +998,6 @@ static irqreturn_t ixgbevf_msix_clean_rx(int irq, void *data)
 	/* disable interrupts on this vector only */
 	IXGBE_WRITE_REG(hw, IXGBE_VTEIMC, rx_ring->v_idx);
 	napi_schedule(&q_vector->napi);
-
 
 	return IRQ_HANDLED;
 }

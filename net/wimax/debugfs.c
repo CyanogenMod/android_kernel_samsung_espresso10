@@ -27,14 +27,12 @@
 #define D_SUBMODULE debugfs
 #include "debug-levels.h"
 
-
 #define __debugfs_register(prefix, name, parent)			\
 do {									\
 	result = d_level_register_debugfs(prefix, name, parent);	\
 	if (result < 0)							\
 		goto error;						\
 } while (0)
-
 
 int wimax_debugfs_add(struct wimax_dev *wimax_dev)
 {
@@ -76,5 +74,3 @@ void wimax_debugfs_rm(struct wimax_dev *wimax_dev)
 {
 	debugfs_remove_recursive(wimax_dev->debugfs_dentry);
 }
-
-

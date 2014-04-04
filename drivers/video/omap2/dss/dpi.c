@@ -44,7 +44,6 @@ static struct {
 #endif
 } dpi;
 
-
 static struct platform_device *dpi_get_dsidev(enum omap_dss_clk_source clk)
 {
 	int dsi_module;
@@ -151,13 +150,8 @@ static int dpi_set_mode(struct omap_dss_device *dssdev)
 
 	pck = fck / lck_div / pck_div / 1000;
 
-	if (pck != t->pixel_clock) {
-		DSSWARN("Could not find exact pixel clock. "
-				"Requested %d kHz, got %lu kHz\n",
-				t->pixel_clock, pck);
-
+	if (pck != t->pixel_clock)
 		t->pixel_clock = pck;
-	}
 
 	dispc_set_lcd_timings(dssdev->manager->id, t);
 
@@ -387,4 +381,3 @@ int dpi_init(void)
 void dpi_exit(void)
 {
 }
-

@@ -36,7 +36,6 @@
 #define DRV_NAME	"pata_octeon_cf"
 #define DRV_VERSION	"2.1"
 
-
 struct octeon_cf_port {
 	struct workqueue_struct *wq;
 	struct delayed_work delayed_finish;
@@ -133,7 +132,6 @@ static void octeon_cf_set_piomode(struct ata_port *ap, struct ata_device *dev)
 	if (ocd->dma_engine >= 0)
 		/* True IDE mode, program both chip selects.  */
 		octeon_cf_set_boot_reg_cfg(cs + 1);
-
 
 	use_iordy = ata_pio_need_iordy(dev);
 
@@ -456,7 +454,6 @@ static void octeon_cf_tf_load16(struct ata_port *ap,
 	ata_wait_idle(ap);
 }
 
-
 static void octeon_cf_dev_select(struct ata_port *ap, unsigned int device)
 {
 /*  There is only one device, do nothing. */
@@ -484,7 +481,6 @@ static void octeon_cf_exec_command16(struct ata_port *ap,
 	DPRINTK("ata%u: cmd 0x%X\n", ap->print_id, tf->command);
 	blob |= (tf->command << 8);
 	__raw_writew(blob, base + 6);
-
 
 	ata_wait_idle(ap);
 }
@@ -591,7 +587,6 @@ static unsigned int octeon_cf_dma_finished(struct ata_port *ap,
 
 	VPRINTK("ata%u: protocol %d task_state %d\n",
 		ap->print_id, qc->tf.protocol, ap->hsm_task_state);
-
 
 	if (ap->hsm_task_state != HSM_ST_LAST)
 		return 0;
@@ -904,11 +899,9 @@ static int __devinit octeon_cf_probe(struct platform_device *pdev)
 
 	ata_port_desc(ap, "cmd %p ctl %p", base, ap->ioaddr.ctl_addr);
 
-
 	dev_info(&pdev->dev, "version " DRV_VERSION" %d bit%s.\n",
 		 (ocd->is16bit) ? 16 : 8,
 		 (cs1) ? ", True IDE" : "");
-
 
 	return ata_host_activate(host, irq, irq_handler, 0, &octeon_cf_sht);
 
@@ -929,7 +922,6 @@ static int __init octeon_cf_init(void)
 {
 	return platform_driver_register(&octeon_cf_driver);
 }
-
 
 MODULE_AUTHOR("David Daney <ddaney@caviumnetworks.com>");
 MODULE_DESCRIPTION("low-level driver for Cavium OCTEON Compact Flash PATA");

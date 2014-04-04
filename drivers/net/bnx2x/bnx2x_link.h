@@ -17,15 +17,11 @@
 #ifndef BNX2X_LINK_H
 #define BNX2X_LINK_H
 
-
-
 /***********************************************************/
 /*                         Defines                         */
 /***********************************************************/
 #define DEFAULT_PHY_DEV_ADDR	3
 #define E2_DEFAULT_PHY_DEV_ADDR	5
-
-
 
 #define BNX2X_FLOW_CTRL_AUTO		PORT_FEATURE_FLOW_CONTROL_AUTO
 #define BNX2X_FLOW_CTRL_TX		PORT_FEATURE_FLOW_CONTROL_TX
@@ -380,7 +376,6 @@ struct bnx2x_nig_brb_pfc_port_params {
 void bnx2x_update_pfc(struct link_params *params,
 		      struct link_vars *vars,
 		      struct bnx2x_nig_brb_pfc_port_params *pfc_params);
-
 
 /* Used to configure the ETS to disable */
 void bnx2x_ets_disabled(struct link_params *params);

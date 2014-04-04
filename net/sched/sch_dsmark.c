@@ -2,7 +2,6 @@
 
 /* Written 1998-2000 by Werner Almesberger, EPFL ICA */
 
-
 #include <linux/module.h>
 #include <linux/init.h>
 #include <linux/slab.h>
@@ -31,7 +30,6 @@
  *   ...	 ...		...
  * 0xffff	0x10000		use entry [indices-1]
  */
-
 
 #define NO_DEFAULT_INDEX	(1 << 16)
 

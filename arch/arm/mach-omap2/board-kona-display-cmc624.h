@@ -149,7 +149,6 @@ static const struct cmc624_register_set cmc624_init[] = {
 	{0xD5, 0x0006}, /* VSYNC COUNT = 6 */
 	{0xC0, 0x0001}, /* DEVICE READY */
 
-
 	{0x00, 0x0002}, /* BANK 2 */
 	{0x3F, 0x011B}, /* MON_CLK : TXBYTECLKHS ( 60MHz ) */
 

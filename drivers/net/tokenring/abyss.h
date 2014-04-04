@@ -1,4 +1,4 @@
-/* 
+/*
  * abyss.h: Header for the abyss tms380tr module
  *
  * Authors:
@@ -52,7 +52,6 @@
 #define PCIBM2_SEEPROM_RAM_SIZE     0x1A
 #define PCIBM2_SEEPROM_HWF1         0x1C
 #define PCIBM2_SEEPROM_HWF2         0x1E
-
 
 #endif /* __KERNEL__ */
 #endif /* __LINUX_MADGETR_H */

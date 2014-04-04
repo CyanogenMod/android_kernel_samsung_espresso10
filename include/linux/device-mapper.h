@@ -263,7 +263,6 @@ union map_info *dm_get_rq_mapinfo(struct request *rq);
 int dm_get_geometry(struct mapped_device *md, struct hd_geometry *geo);
 int dm_set_geometry(struct mapped_device *md, struct hd_geometry *geo);
 
-
 /*-----------------------------------------------------------------
  * Functions for manipulating device-mapper tables.
  *---------------------------------------------------------------*/

@@ -1701,7 +1701,6 @@ static void __exit pc87360_exit(void)
 	platform_driver_unregister(&pc87360_driver);
 }
 
-
 MODULE_AUTHOR("Jean Delvare <khali@linux-fr.org>");
 MODULE_DESCRIPTION("PC8736x hardware monitor");
 MODULE_LICENSE("GPL");

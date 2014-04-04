@@ -148,8 +148,6 @@ static int dmp_start(struct mldl_cfg *pdata, void *mlsl_handle)
 	return result;
 }
 
-
-
 static int mpu3050_set_i2c_bypass(struct mldl_cfg *mldl_cfg,
 				  void *mlsl_handle, unsigned char enable)
 {
@@ -250,7 +248,6 @@ static int mpu_set_i2c_bypass(struct mldl_cfg *mldl_cfg,
 {
 	return mpu3050_set_i2c_bypass(mldl_cfg, mlsl_handle, enable);
 }
-
 
 #define NUM_OF_PROD_REVS (ARRAY_SIZE(prod_rev_map))
 
@@ -360,7 +357,6 @@ static int inv_get_silicon_rev_mpu3050(
 }
 #define inv_get_silicon_rev inv_get_silicon_rev_mpu3050
 
-
 /**
  *  @brief  Enable / Disable the use MPU's secondary I2C interface level
  *          shifters.
@@ -428,7 +424,6 @@ static int inv_mpu_set_level_shifter_bit(struct mldl_cfg *pdata,
 	return result;
 	return INV_SUCCESS;
 }
-
 
 /**
  * @internal
@@ -607,7 +602,6 @@ static int mpu3050_pwr_mgmt(struct mldl_cfg *mldl_cfg,
 	return INV_SUCCESS;
 }
 
-
 /**
  *  @brief  sets the clock source for the gyros.
  *  @param  mldl_cfg
@@ -631,7 +625,6 @@ static int mpu_set_clock_source(void *gyro_handle, struct mldl_cfg *mldl_cfg)
 	}
 	cur_clk_src = reg & BITS_CLKSEL;
 	reg &= ~BITS_CLKSEL;
-
 
 	result = inv_serial_single_write(gyro_handle, mldl_cfg->addr,
 					 MPUREG_PWR_MGM,
@@ -904,7 +897,6 @@ static int mpu_set_slave_mpu3050(struct mldl_cfg *mldl_cfg,
 
 	return result;
 }
-
 
 static int mpu_set_slave(struct mldl_cfg *mldl_cfg,
 			 void *gyro_handle,

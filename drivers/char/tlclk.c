@@ -249,7 +249,6 @@ static ssize_t tlclk_read(struct file *filp, char __user *buf, size_t count,
 	if (mutex_lock_interruptible(&tlclk_mutex))
 		return -EINTR;
 
-
 	wait_event_interruptible(wq, got_event);
 	if (copy_to_user(buf, alarm_events, sizeof(struct tlclk_alarms))) {
 		mutex_unlock(&tlclk_mutex);
@@ -291,7 +290,6 @@ static ssize_t show_current_ref(struct device *d,
 }
 
 static DEVICE_ATTR(current_ref, S_IRUGO, show_current_ref, NULL);
-
 
 static ssize_t show_telclock_version(struct device *d,
 		struct device_attribute *attr, char *buf)
@@ -345,7 +343,6 @@ static ssize_t store_received_ref_clk3a(struct device *d,
 static DEVICE_ATTR(received_ref_clk3a, (S_IWUSR|S_IWGRP), NULL,
 		store_received_ref_clk3a);
 
-
 static ssize_t store_received_ref_clk3b(struct device *d,
 		 struct device_attribute *attr, const char *buf, size_t count)
 {
@@ -366,7 +363,6 @@ static ssize_t store_received_ref_clk3b(struct device *d,
 
 static DEVICE_ATTR(received_ref_clk3b, (S_IWUSR|S_IWGRP), NULL,
 		store_received_ref_clk3b);
-
 
 static ssize_t store_enable_clk3b_output(struct device *d,
 		 struct device_attribute *attr, const char *buf, size_t count)
@@ -430,7 +426,6 @@ static ssize_t store_enable_clkb1_output(struct device *d,
 
 static DEVICE_ATTR(enable_clkb1_output, (S_IWUSR|S_IWGRP), NULL,
 		store_enable_clkb1_output);
-
 
 static ssize_t store_enable_clka1_output(struct device *d,
 		 struct device_attribute *attr, const char *buf, size_t count)

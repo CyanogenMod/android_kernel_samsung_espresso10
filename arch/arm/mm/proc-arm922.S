@@ -59,7 +59,6 @@
  */
 #define CACHE_DLIMIT	8192
 
-
 	.text
 /*
  * cpu_arm922_proc_init()
@@ -107,7 +106,6 @@ ENTRY(cpu_arm922_reset)
 ENTRY(cpu_arm922_do_idle)
 	mcr	p15, 0, r0, c7, c0, 4		@ Wait for interrupt
 	mov	pc, lr
-
 
 #ifndef CONFIG_CPU_DCACHE_WRITETHROUGH
 
@@ -331,7 +329,6 @@ ENTRY(arm922_cache_fns)
 
 #endif
 
-
 ENTRY(cpu_arm922_dcache_clean_area)
 #ifndef CONFIG_CPU_DCACHE_WRITETHROUGH
 1:	mcr	p15, 0, r0, c7, c10, 1		@ clean D entry
@@ -413,7 +410,7 @@ __arm922_setup:
 	 *  R
 	 * .RVI ZFRS BLDP WCAM
 	 * ..11 0001 ..11 0101
-	 * 
+	 *
 	 */
 	.type	arm922_crval, #object
 arm922_crval:

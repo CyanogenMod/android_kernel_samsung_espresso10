@@ -1,4 +1,3 @@
-
 /*
  * drm_sysfs.c - Modifications to drm_sysfs_class.c to support
  *               extra sysfs attribute from DRM. Normal drm_sysfs_class
@@ -534,7 +533,6 @@ void drm_sysfs_device_remove(struct drm_minor *minor)
 {
 	device_unregister(&minor->kdev);
 }
-
 
 /**
  * drm_class_device_register - Register a struct device in the drm class.

@@ -166,7 +166,6 @@ static int nfsaclsvc_decode_getaclargs(struct svc_rqst *rqstp, __be32 *p,
 	return xdr_argsize_check(rqstp, p);
 }
 
-
 static int nfsaclsvc_decode_setaclargs(struct svc_rqst *rqstp, __be32 *p,
 		struct nfsd3_setaclargs *argp)
 {

@@ -31,7 +31,6 @@
  *
  */
 
-
 #include <linux/if_vlan.h>
 
 #include <linux/mlx4/device.h>
@@ -39,7 +38,6 @@
 
 #include "en_port.h"
 #include "mlx4_en.h"
-
 
 int mlx4_SET_MCAST_FLTR(struct mlx4_dev *dev, u8 port,
 			u64 mac, u64 clear, u8 mode)
@@ -81,7 +79,6 @@ int mlx4_SET_VLAN_FLTR(struct mlx4_dev *dev, u8 port, struct vlan_group *grp)
 	mlx4_free_cmd_mailbox(dev, mailbox);
 	return err;
 }
-
 
 int mlx4_SET_PORT_general(struct mlx4_dev *dev, u8 port, int mtu,
 			  u8 pptx, u8 pfctx, u8 pprx, u8 pfcrx)
@@ -278,4 +275,3 @@ out:
 	mlx4_free_cmd_mailbox(mdev->dev, mailbox);
 	return err;
 }
-

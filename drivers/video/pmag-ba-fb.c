@@ -37,12 +37,10 @@
 
 #include <video/pmag-ba-fb.h>
 
-
 struct pmagbafb_par {
 	volatile void __iomem *mmio;
 	volatile u32 __iomem *dac;
 };
-
 
 static struct fb_var_screeninfo pmagbafb_defined __devinitdata = {
 	.xres		= 1024,
@@ -77,7 +75,6 @@ static struct fb_fix_screeninfo pmagbafb_fix __devinitdata = {
 	.mmio_len	= PMAG_BA_SIZE - PMAG_BA_BT459,
 };
 
-
 static inline void dac_write(struct pmagbafb_par *par, unsigned int reg, u8 v)
 {
 	writeb(v, par->dac + reg / 4);
@@ -87,7 +84,6 @@ static inline u8 dac_read(struct pmagbafb_par *par, unsigned int reg)
 {
 	return readb(par->dac + reg / 4);
 }
-
 
 /*
  * Set the palette.
@@ -126,7 +122,6 @@ static struct fb_ops pmagbafb_ops = {
 	.fb_imageblit	= cfb_imageblit,
 };
 
-
 /*
  * Turn the hardware cursor off.
  */
@@ -140,7 +135,6 @@ static void __init pmagbafb_erase_cursor(struct fb_info *info)
 	wmb();
 	dac_write(par, BT459_DATA, 0x00);
 }
-
 
 static int __devinit pmagbafb_probe(struct device *dev)
 {
@@ -218,7 +212,6 @@ static int __devinit pmagbafb_probe(struct device *dev)
 
 	return 0;
 
-
 err_smem_map:
 	iounmap(info->screen_base);
 
@@ -255,7 +248,6 @@ static int __exit pmagbafb_remove(struct device *dev)
 	return 0;
 }
 
-
 /*
  * Initialize the framebuffer.
  */
@@ -288,7 +280,6 @@ static void __exit pmagbafb_exit(void)
 {
 	tc_unregister_driver(&pmagbafb_driver);
 }
-
 
 module_init(pmagbafb_init);
 module_exit(pmagbafb_exit);

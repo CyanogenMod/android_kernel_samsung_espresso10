@@ -79,4 +79,3 @@
 #define VIC_REG_IRQSR1		0x20
 
 #endif /* __ASM_ARCH_IRQS_H */
-

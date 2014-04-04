@@ -54,7 +54,6 @@
 /* Delay for clearing interrupt in us */
 #define CMA3000_INTDELAY    44
 
-
 /*
  * Bit weights in mg for bit 0, other bits need
  * multipy factor 2^n. Eight bit is the sign bit.
@@ -266,7 +265,6 @@ void cma3000_suspend(struct cma3000_accl_data *data)
 }
 EXPORT_SYMBOL(cma3000_suspend);
 
-
 void cma3000_resume(struct cma3000_accl_data *data)
 {
 	mutex_lock(&data->mutex);
@@ -294,7 +292,6 @@ struct cma3000_accl_data *cma3000_init(struct device *dev, int irq,
 		error = -EINVAL;
 		goto err_out;
 	}
-
 
 	/* if no IRQ return error */
 	if (irq == 0) {

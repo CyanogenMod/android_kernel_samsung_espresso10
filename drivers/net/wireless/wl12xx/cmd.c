@@ -650,7 +650,6 @@ int wl1271_cmd_build_null_data(struct wl1271 *wl)
 	void *ptr;
 	int ret = -ENOMEM;
 
-
 	if (wl->bss_type == BSS_TYPE_IBSS) {
 		size = sizeof(struct wl12xx_null_data_template);
 		ptr = NULL;

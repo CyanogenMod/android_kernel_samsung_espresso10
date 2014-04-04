@@ -94,7 +94,6 @@ static ssize_t compass_heading_data_show(struct device *dev,
 	return sprintf(buf, "%d.%d\n", ret/10, ret%10);
 }
 
-
 static DEVICE_ATTR(heading0_input, S_IRUGO, compass_heading_data_show, NULL);
 static DEVICE_ATTR(calibration, S_IWUSR, NULL, compass_calibration_store);
 static DEVICE_ATTR(power_state, S_IWUSR, NULL, compass_power_mode_store);

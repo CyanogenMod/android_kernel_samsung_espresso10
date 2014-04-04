@@ -55,7 +55,6 @@ static int          msglevel                =MSG_LEVEL_INFO;
 
 /*---------------------  Export Functions  --------------------------*/
 
-
 BOOL
 FIRMWAREbDownload(
      PSDevice pDevice
@@ -139,7 +138,6 @@ FIRMWAREbBrach2Sram(
         return (TRUE);
     }
 }
-
 
 BOOL
 FIRMWAREbCheckVersion(

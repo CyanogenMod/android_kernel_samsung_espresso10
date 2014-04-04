@@ -29,7 +29,6 @@
 #include "alloc.h"
 #include "ifile.h"
 
-
 struct nilfs_ifile_info {
 	struct nilfs_mdt_info mi;
 	struct nilfs_palloc_cache palloc_cache;

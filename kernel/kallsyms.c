@@ -140,7 +140,6 @@ static char kallsyms_get_symbol_type(unsigned int off)
 	return kallsyms_token_table[kallsyms_token_index[kallsyms_names[off + 1]]];
 }
 
-
 /*
  * Find the offset on the compressed stream given and index in the
  * kallsyms array.

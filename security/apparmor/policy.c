@@ -89,7 +89,6 @@
 #include "include/resource.h"
 #include "include/sid.h"
 
-
 /* root profile namespace */
 struct aa_namespace *root_ns;
 

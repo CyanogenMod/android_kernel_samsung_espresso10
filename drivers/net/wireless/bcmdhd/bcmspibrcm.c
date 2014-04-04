@@ -21,7 +21,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: bcmspibrcm.c 355377 2012-09-06 13:25:35Z $
+ * $Id: bcmspibrcm.c 373329 2012-12-07 04:46:09Z $
  */
 
 #define HSMODE
@@ -44,7 +44,6 @@
 
 #include <pcicfg.h>
 
-
 #include <bcmspibrcm.h>
 #ifdef BCMSPI_ANDROID
 extern void spi_sendrecv(sdioh_info_t *sd, uint8 *msg_out, uint8 *msg_in, int msglen);
@@ -56,7 +55,6 @@ extern void spi_sendrecv(sdioh_info_t *sd, uint8 *msg_out, uint8 *msg_in, int ms
 #define F0_RESPONSE_DELAY	16
 #define F1_RESPONSE_DELAY	16
 #define F2_RESPONSE_DELAY	F0_RESPONSE_DELAY
-
 
 #define GSPI_F0_RESP_DELAY		0
 #define GSPI_F1_RESP_DELAY		F1_RESPONSE_DELAY
@@ -78,7 +76,6 @@ uint sd_hiok = FALSE;		/* Use hi-speed mode if available? */
 uint sd_sdmode = SDIOH_MODE_SPI;		/* Use SD4 mode by default */
 uint sd_f2_blocksize = 64;		/* Default blocksize */
 
-
 uint sd_divisor = 2;
 uint sd_power = 1;		/* Default to SD Slot powered ON */
 uint sd_clock = 1;		/* Default to SD Clock turned ON */
@@ -94,6 +91,9 @@ uint8	spi_inbuf[SPI_MAX_PKT_LEN];
 #define BUF2_PKT_LEN	128
 uint8	spi_outbuf2[BUF2_PKT_LEN];
 uint8	spi_inbuf2[BUF2_PKT_LEN];
+#ifdef BCMSPI_ANDROID
+uint *dhd_spi_lockcount = NULL;
+#endif /* BCMSPI_ANDROID */
 
 #if !(defined(SPI_PIO_RW_BIGENDIAN) && defined(SPI_PIO_32BIT_RW))
 #define SPISWAP_WD4(x) bcmswap32(x);
@@ -164,6 +164,10 @@ sdioh_attach(osl_t *osh, void *bar0, uint irq)
 	 */
 	sd->wordlen = 2;
 
+#ifdef BCMSPI_ANDROID
+	dhd_spi_lockcount = &sd->lockcount;
+#endif /* BCMSPI_ANDROID */
+
 #ifndef BCMSPI_ANDROID
 	if (!spi_hw_attach(sd)) {
 		sd_err(("%s: spi_hw_attach() failed\n", __FUNCTION__));
@@ -209,6 +213,9 @@ sdioh_detach(osl_t *osh, sdioh_info_t *sd)
 		spi_hw_detach(sd);
 #endif /* !BCMSPI_ANDROID */
 		spi_osfree(sd);
+#ifdef BCMSPI_ANDROID
+		dhd_spi_lockcount = NULL;
+#endif /* !BCMSPI_ANDROID */
 		MFREE(sd->osh, sd, sizeof(sdioh_info_t));
 	}
 	return SDIOH_API_RC_SUCCESS;
@@ -218,24 +225,24 @@ sdioh_detach(osl_t *osh, sdioh_info_t *sd)
 extern SDIOH_API_RC
 sdioh_interrupt_register(sdioh_info_t *sd, sdioh_cb_fn_t fn, void *argh)
 {
-#ifndef BCMSPI_ANDROID
 	sd_trace(("%s: Entering\n", __FUNCTION__));
+#if !defined(OOB_INTR_ONLY)
 	sd->intr_handler = fn;
 	sd->intr_handler_arg = argh;
 	sd->intr_handler_valid = TRUE;
-#endif /* !BCMSPI_ANDROID */
+#endif /* !defined(OOB_INTR_ONLY) */
 	return SDIOH_API_RC_SUCCESS;
 }
 
 extern SDIOH_API_RC
 sdioh_interrupt_deregister(sdioh_info_t *sd)
 {
-#ifndef BCMSPI_ANDROID
 	sd_trace(("%s: Entering\n", __FUNCTION__));
+#if !defined(OOB_INTR_ONLY)
 	sd->intr_handler_valid = FALSE;
 	sd->intr_handler = NULL;
 	sd->intr_handler_arg = NULL;
-#endif /* !BCMSPI_ANDROID */
+#endif /* !defined(OOB_INTR_ONLY) */
 	return SDIOH_API_RC_SUCCESS;
 }
 
@@ -306,7 +313,6 @@ sdioh_dwordmode(sdioh_info_t *sd, bool set)
 		return;
 	}
 }
-
 
 uint
 sdioh_query_iofnum(sdioh_info_t *sd)
@@ -533,7 +539,6 @@ sdioh_iovar_op(sdioh_info_t *si, const char *name,
 		}
 		break;
 	}
-
 
 	case IOV_GVAL(IOV_SPIERRSTATS):
 	{
@@ -782,7 +787,6 @@ bcmspi_card_byterewrite(sdioh_info_t *sd, int func, uint32 regaddr, uint8 byte)
 
 	sd_trace(("%s cmd_arg = 0x%x\n", __FUNCTION__, cmd_arg));
 
-
 	/* Set up and issue the SPI command.  MSByte goes out on bus first.  Increase datalen
 	 * according to the wordlen mode(16/32bit) the device is in.
 	 */
@@ -867,7 +871,6 @@ static int
 bcmspi_resync_f1(sdioh_info_t *sd)
 {
 	uint32 cmd_arg = GSPI_RESYNC_PATTERN, data = 0, datalen = 0;
-
 
 	/* Set up and issue the SPI command.  MSByte goes out on bus first.  Increase datalen
 	 * according to the wordlen mode(16/32bit) the device is in.
@@ -997,7 +1000,6 @@ sdioh_waitlockfree(sdioh_info_t *sd)
 {
 	return SUCCESS;
 }
-
 
 /*
  * Private/Static work routines
@@ -1151,7 +1153,6 @@ bcmspi_client_init(sdioh_info_t *sd)
 		}
 	}
 
-
 	sd->card_init_done = TRUE;
 
 	/* get the device rev to program the prop respdelays */
@@ -1170,7 +1171,6 @@ bcmspi_set_highspeed_mode(sdioh_info_t *sd, bool hsmode)
 		return status;
 
 	sd_trace(("In %s spih-ctrl = 0x%x \n", __FUNCTION__, regdata));
-
 
 	if (hsmode == TRUE) {
 		sd_trace(("Attempting to enable High-Speed mode.\n"));
@@ -1342,7 +1342,6 @@ bcmspi_host_device_init_adapt(sdioh_info_t *sd)
 		}
 	}
 
-
 	return TRUE;
 }
 
@@ -1361,7 +1360,6 @@ bcmspi_test_card(sdioh_info_t *sd)
 		sd_trace(("Incorrect 32bit LE regdata = 0x%x\n", regdata));
 		return FALSE;
 	}
-
 
 #define RW_PATTERN1	0xA0A1A2A3
 #define RW_PATTERN2	0x4B5B6B7B
@@ -1799,7 +1797,6 @@ bcmspi_card_buf(sdioh_info_t *sd, int rw, int func, bool fifo,
 	sd_data(("%s: %s func %d, %s, addr 0x%x, len %d bytes, r_cnt %d t_cnt %d\n",
 	         __FUNCTION__, write ? "Wd" : "Rd", func, "INCR",
 	         addr, nbytes, sd->r_cnt, sd->t_cnt));
-
 
 	if ((status = bcmspi_cmd_issue(sd, sd->sd_use_dma, cmd_arg, data, nbytes)) != SUCCESS) {
 		sd_err(("%s: cmd_issue failed for %s\n", __FUNCTION__,

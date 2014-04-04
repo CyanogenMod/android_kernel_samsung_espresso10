@@ -42,7 +42,6 @@ void handle_IPI(int ipinr, struct pt_regs *regs);
  */
 extern void smp_init_cpus(void);
 
-
 /*
  * Provide a function to raise an IPI cross call on CPUs in callmap.
  */

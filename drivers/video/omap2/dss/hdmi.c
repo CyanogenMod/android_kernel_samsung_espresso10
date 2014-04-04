@@ -684,7 +684,6 @@ int omapdss_hdmi_register_hdcp_callbacks(void (*hdmi_start_frame_cb)(void),
 					 bool (*hdmi_power_on_cb)(void))
 {
 	if (!hdmi.dssdev) {
-		DSSERR("HDMI is not active\n");
 		return 0;
 	}
 
@@ -820,6 +819,11 @@ int omapdss_hdmi_display_set_mode(struct omap_dss_device *dssdev,
 	return r1 ? : r2;
 }
 
+void hdmi_disable_video_boot(void)
+{
+	hdmi_ti_4xxx_wp_video_start(&hdmi.hdmi_data, 0);
+}
+
 void omapdss_hdmi_display_set_timing(struct omap_dss_device *dssdev)
 {
 	struct fb_videomode t;
@@ -871,14 +875,16 @@ int omapdss_hdmi_display_enable(struct omap_dss_device *dssdev)
 		DSSERR("failed to enable hdmi_vref regulator\n");
 		goto err3;
 	}
+	/* don't power on HDMI , if we are in LPM mode */
+	if (sec_bootmode != 5) {
+		r = hdmi_power_on(dssdev);
+		if (r) {
+			DSSERR("failed to power on device\n");
+			goto err4;
+		}
 
-	r = hdmi_power_on(dssdev);
-	if (r) {
-		DSSERR("failed to power on device\n");
-		goto err4;
+		hdmi.enabled = true;
 	}
-
-	hdmi.enabled = true;
 
 	mutex_unlock(&hdmi.lock);
 	return 0;
@@ -992,7 +998,6 @@ static int omapdss_hdmihw_probe(struct platform_device *pdev)
 			hdmi.dssdev = board_data->devices[r];
 	}
 	if (!hdmi.dssdev) {
-		DSSERR("can't get HDMI device\n");
 		return -EINVAL;
 	}
 

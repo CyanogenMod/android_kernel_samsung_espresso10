@@ -451,7 +451,6 @@ bool flash_end(struct wacom_i2c *wac_i2c)
 	return true;
 }
 
-
 bool flash_devcieType(struct wacom_i2c *wac_i2c)
 {
 	int rv;
@@ -734,7 +733,6 @@ bool is_flash_marking(struct wacom_i2c *wac_i2c,
 		return false;
 	}
 
-
 	mdelay(10);
 
 	len = 0;
@@ -751,7 +749,6 @@ bool is_flash_marking(struct wacom_i2c *wac_i2c,
 		return false;
 	}
 
-
 	len = 0;
 	buf[len++] = 5;
 	buf[len++] = 0;
@@ -764,7 +761,6 @@ bool is_flash_marking(struct wacom_i2c *wac_i2c,
 		return false;
 	}
 
-
 	pr_info("wacom: %s receiving GET_FEATURE\n", __func__);
 	rv = wacom_i2c_recv(wac_i2c, response, RSP_SIZE, false);
 	if (rv < 0) {
@@ -772,7 +768,6 @@ bool is_flash_marking(struct wacom_i2c *wac_i2c,
 			__func__, rv, __LINE__);
 		return false;
 	}
-
 
 	pr_info("wacom: %s checking response\n", __func__);
 	if ((response[3] != MARK_CMD) ||
@@ -1079,7 +1074,6 @@ bool flash_marking(struct wacom_i2c *wac_i2c,
 
 	/* Report:data checksum */
 	command[MAX_CMD_SIZE - 1] = ~sum + 1;
-
 
 	rv = wacom_i2c_send(wac_i2c,
 		command, BOOT_CMD_SIZE, false);
@@ -1431,7 +1425,6 @@ int wacom_i2c_flash(struct wacom_i2c *wac_i2c)
 			"wacom: failed to verify the firmware\n");
 		return EXIT_FAIL_VERIFY_FIRMWARE;
 	}
-
 
 	pr_info(
 		"wacom: checking the mark\n");

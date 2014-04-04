@@ -18,7 +18,6 @@ set -e
 tmpdir="${objtree}/tar-install"
 tarball="${objtree}/linux-${KERNELRELEASE}.tar"
 
-
 #
 # Figure out how to compress, if requested at all
 #
@@ -45,13 +44,11 @@ case "${1}" in
 		;;
 esac
 
-
 #
 # Clean-up and re-create the temporary directory
 #
 rm -rf -- "${tmpdir}"
 mkdir -p -- "${tmpdir}/boot"
-
 
 #
 # Try to install modules
@@ -60,14 +57,12 @@ if grep -q '^CONFIG_MODULES=y' "${objtree}/.config"; then
 	make ARCH="${ARCH}" O="${objtree}" KBUILD_SRC= INSTALL_MOD_PATH="${tmpdir}" modules_install
 fi
 
-
 #
 # Install basic kernel files
 #
 cp -v -- "${objtree}/System.map" "${tmpdir}/boot/System.map-${KERNELRELEASE}"
 cp -v -- "${objtree}/.config" "${tmpdir}/boot/config-${KERNELRELEASE}"
 cp -v -- "${objtree}/vmlinux" "${tmpdir}/boot/vmlinux-${KERNELRELEASE}"
-
 
 #
 # Install arch-specific kernel image(s)
@@ -99,7 +94,6 @@ case "${ARCH}" in
 		;;
 esac
 
-
 #
 # Create the tarball
 #
@@ -115,4 +109,3 @@ esac
 echo "Tarball successfully created in ${tarball}${file_ext}"
 
 exit 0
-

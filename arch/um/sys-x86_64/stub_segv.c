@@ -19,4 +19,3 @@ stub_segv_handler(int sig)
 			      &uc->uc_mcontext);
 	trap_myself();
 }
-

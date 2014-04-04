@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -27,11 +27,9 @@
 
 #include "ar6000_drv.h"
 
-
 extern A_WAITQUEUE_HEAD arEvent;
 extern unsigned int wmitimeout;
 extern int reconnect_flag;
-
 
 #define RATETAB_ENT(_rate, _rateid, _flags) {   \
     .bitrate    = (_rate),                  \
@@ -688,7 +686,6 @@ ar6k_cfg80211_disconnect_event(struct ar6_softc *ar, u8 reason,
 					return;
 				}
 
-
 				ar->arDot11AuthMode = SHARED_AUTH;
 				ar->arAutoAuthStage = AUTH_IDLE;
 
@@ -979,7 +976,6 @@ ar6k_cfg80211_add_key(struct wiphy *wiphy, struct net_device *ndev,
                     key->key_len, key->seq, key->key, KEY_OP_INIT_VAL,
                     (u8 *)mac_addr, SYNC_BOTH_WMIFLAG);
 
-
     if (status) {
         return -EIO;
     }
@@ -1021,7 +1017,6 @@ ar6k_cfg80211_del_key(struct wiphy *wiphy, struct net_device *ndev,
     return wmi_deleteKey_cmd(ar->arWmi, key_index);
 }
 
-
 static int
 ar6k_cfg80211_get_key(struct wiphy *wiphy, struct net_device *ndev,
                       u8 key_index, bool pairwise, const u8 *mac_addr,
@@ -1062,7 +1057,6 @@ ar6k_cfg80211_get_key(struct wiphy *wiphy, struct net_device *ndev,
 
     return key->key_len ? 0 : -ENOENT;
 }
-
 
 static int
 ar6k_cfg80211_set_default_key(struct wiphy *wiphy, struct net_device *ndev,
@@ -1458,7 +1452,6 @@ ar6k_cfg80211_leave_ibss(struct wiphy *wiphy, struct net_device *dev)
     return 0;
 }
 
-
 static const
 u32 cipher_suites[] = {
     WLAN_CIPHER_SUITE_WEP40,
@@ -1703,10 +1696,3 @@ ar6k_cfg80211_deinit(struct ar6_softc *ar)
     wiphy_free(wdev->wiphy);
     kfree(wdev);
 }
-
-
-
-
-
-
-

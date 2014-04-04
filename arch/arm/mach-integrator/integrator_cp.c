@@ -374,7 +374,6 @@ static struct amba_device aaci_device = {
 	.periphid	= 0,
 };
 
-
 /*
  * CLCD support
  */

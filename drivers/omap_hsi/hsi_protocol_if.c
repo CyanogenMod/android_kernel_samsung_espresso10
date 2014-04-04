@@ -42,10 +42,8 @@
 #define HSI_CHANNEL_STATE_READING       (1 << 1)
 #define HSI_CHANNEL_STATE_WRITING       (1 << 2)
 
-
 struct if_hsi_iface hsi_protocol_iface;
 wait_queue_head_t ipc_read_wait, ipc_write_wait;
-
 
 static void if_hsi_protocol_port_event(struct hsi_device *dev, unsigned int event,
 				       void *arg);
@@ -169,7 +167,6 @@ static int if_hsi_write_on(int ch, u32 *address, unsigned int count)
 	return ret;
 }
 
-
 static void if_hsi_proto_write_done(struct hsi_device *dev, unsigned int size)
 {
 	struct if_hsi_channel *channel;
@@ -236,7 +233,6 @@ void if_hsi_set_wakeline(int ch, unsigned int state)
 		  state ? HSI_IOCTL_ACWAKE_UP : HSI_IOCTL_ACWAKE_DOWN, NULL);
 }
 
-
 static void if_hsi_protocol_port_event(struct hsi_device *dev, unsigned int event,
 				       void *arg)
 {
@@ -246,7 +242,6 @@ static void if_hsi_protocol_port_event(struct hsi_device *dev, unsigned int even
 	ev.event = HSI_EV_EXCEP;
 	ev.data = (u32 *) 0;
 	ev.count = 0;
-
 
 	switch (event) {
 	case HSI_EVENT_BREAK_DETECTED:
@@ -364,7 +359,6 @@ leave:
 	return ret;
 }
 
-
 /* Read Thread
 * Should be responsible for handling commands
 * Should wait on port events - waitqueue
@@ -402,7 +396,6 @@ static int hsi_read_thrd(void *data)
 	}
 	return 0;
 }
-
 
 int hsi_start_protocol(void)
 {
@@ -538,7 +531,6 @@ int __devinit hsi_protocol_probe(struct hsi_device *dev)
 
 }
 
-
 int __init if_hsi_init(void)
 {
 	struct if_hsi_channel *channel;
@@ -666,10 +658,8 @@ int write_hsi(u32 ch, u32 *data, int length)
 
 	return	channel->tx_count;
 
-
 }
 EXPORT_SYMBOL(write_hsi);
-
 
 int read_hsi(u8 *data, u32 ch, u32 *length)
 {
@@ -716,7 +706,6 @@ int read_hsi(u8 *data, u32 ch, u32 *length)
 }
 EXPORT_SYMBOL(read_hsi);
 
-
 //========================================================//
 //                ++ Flashless Boot. ++                   //
 //========================================================//
@@ -734,7 +723,6 @@ int hsi_start_protocol_single(void)
 		goto err;
 	} else
 		printk(KERN_INFO "if_hsi_openchannel() returned %d\n", ret);
-
 
 	/*Set Tx Config*/
 	hsi_ioctl(hsi_protocol_iface.channels[0].dev, HSI_IOCTL_GET_TX, &tx_config);
@@ -780,14 +768,12 @@ int hsi_reconfigure_protocol(void)
 	else
 		printk(KERN_INFO "ACWAKE down fail!! %d\n", ret);
 
-
 	/*Clse channel 0 */
 	ret = if_hsi_closechannel(&hsi_protocol_iface.channels[0]);
 	if (ret < 0) {
 		pr_err("Can not Close channel 0. Can not Stop HSI protocol for flashless\n");
 		goto err;
 	}
-
 
 	printk(KERN_INFO "(%s)(%d) hsi_start_protocol Start.\n", __func__, __LINE__);
 	hsi_start_protocol();
@@ -804,7 +790,6 @@ int write_hsi_direct(u32 *data, int length)
 	int retval = 0;
 #if 0
 	struct hst_ctx tx_config;
-
 
 	printk(KERN_INFO "write_hsi_direct : len : %d\n", length);
 	hsi_ioctl(hsi_protocol_iface.channels[0].dev, HSI_IOCTL_GET_TX, &tx_config);
@@ -850,7 +835,6 @@ int read_hsi_direct(u32 *data, int length)
 	int retval = 0;
 #if 0
 	struct hsr_ctx rx_config;
-
 
 	printk(KERN_INFO "read_hsi_direct : len : %d\n", length);
 	hsi_ioctl(hsi_protocol_iface.channels[0].dev, HSI_IOCTL_GET_RX, &rx_config);

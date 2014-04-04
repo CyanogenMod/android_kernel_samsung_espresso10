@@ -58,7 +58,6 @@ config SOC_IMX35
 	select ARCH_MX35
 	select MXC_AVIC
 
-
 if ARCH_MX1
 
 comment "MX1 platforms:"

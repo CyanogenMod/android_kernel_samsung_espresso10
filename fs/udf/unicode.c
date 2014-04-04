@@ -257,7 +257,6 @@ static int udf_CS0toNLS(struct nls_table *nls, struct ustr *utf_o,
 	uint8_t cmp_id, ocu_len;
 	int i, len;
 
-
 	ocu_len = ocu_i->u_len;
 	if (ocu_len == 0) {
 		memset(utf_o, 0, sizeof(struct ustr));

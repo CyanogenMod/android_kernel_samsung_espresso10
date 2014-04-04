@@ -114,7 +114,6 @@ int omap2_sdrc_get_params(unsigned long r,
 	return 0;
 }
 
-
 void __init omap2_set_globals_sdrc(struct omap_globals *omap2_globals)
 {
 	/* Static mapping, never released */
@@ -180,4 +179,3 @@ void omap2_sms_write_rot_physical_ba(u32 val, unsigned ctx)
 {
 	sms_write_reg(val, SMS_ROT_PHYSICAL_BA(ctx));
 }
-

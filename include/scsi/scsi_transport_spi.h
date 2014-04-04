@@ -1,4 +1,4 @@
-/* 
+/*
  *  Parallel SCSI (SPI) transport specific attributes exported to sysfs.
  *
  *  Copyright (c) 2003 Silicon Graphics, Inc.  All rights reserved.
@@ -100,8 +100,6 @@ struct spi_host_attrs {
 
 #define spi_flags(x)	(((struct spi_transport_attrs *)&(x)->starget_data)->flags)
 #define spi_signalling(h)	(((struct spi_host_attrs *)(h)->shost_data)->signalling)
-
-
 
 /* The functions by which the transport class and the driver communicate */
 struct spi_function_template {

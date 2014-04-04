@@ -61,9 +61,6 @@
 #ifndef __WAVELAN2_ENCRYPTION_H__
 #define __WAVELAN2_ENCRYPTION_H__
 
-
-
-
 /*******************************************************************************
  * constant definitions
  ******************************************************************************/
@@ -87,9 +84,6 @@
 #define KEY_LENGTH_64_BIT_HEX       ( KEY_LENGTH_64_BIT_ASCII  * sizeof( unsigned short ))
 #define KEY_LENGTH_128_BIT_HEX      ( KEY_LENGTH_128_BIT_ASCII * sizeof( unsigned short ))
 
-
-
-
 /*******************************************************************************
  * type definitions
  ******************************************************************************/
@@ -102,17 +96,11 @@ typedef struct _encstct
 }
 ENCSTRCT, *PENCSTRCT;
 
-
-
-
 /*******************************************************************************
  * function prrottypes
  ******************************************************************************/
 int wl_wep_code( char *szCrypt, char *szDest, void *Data, int nLen );
 
 int wl_wep_decode( char *szCrypt, void *Dest, char *szData );
-
-
-
 
 #endif  // __WAVELAN2_ENCRYPTION_H__

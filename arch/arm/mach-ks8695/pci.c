@@ -36,10 +36,8 @@
 #include <mach/devices.h>
 #include <mach/regs-pci.h>
 
-
 static int pci_dbg;
 static int pci_cfg_dbg;
-
 
 static void ks8695_pci_setupconfig(unsigned int bus_nr, unsigned int devfn, unsigned int where)
 {
@@ -58,7 +56,6 @@ static void ks8695_pci_setupconfig(unsigned int bus_nr, unsigned int devfn, unsi
 		__raw_writel(pbca | PBCA_TYPE1, KS8695_PCI_VA + KS8695_PBCA);
 	}
 }
-
 
 /*
  * The KS8695 datasheet prohibits anything other than 32bit accesses
@@ -298,7 +295,6 @@ static void ks8695_show_pciregs(void)
 	printk(KERN_INFO "PCI: PIOBAM = %08x\n", __raw_readl(KS8695_PCI_VA + KS8695_PIOBAM));
 	printk(KERN_INFO "PCI: PIOBAT = %08x\n", __raw_readl(KS8695_PCI_VA + KS8695_PIOBAT));
 }
-
 
 static struct hw_pci ks8695_pci __initdata = {
 	.nr_controllers	= 1,

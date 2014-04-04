@@ -41,7 +41,6 @@ typedef struct ca_slot_info {
 #define CA_CI_MODULE_READY   2
 } ca_slot_info_t;
 
-
 /* descrambler types and info */
 
 typedef struct ca_descr_info {

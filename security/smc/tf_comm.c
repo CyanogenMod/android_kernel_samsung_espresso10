@@ -256,7 +256,6 @@ struct tf_coarse_page_table *tf_alloc_coarse_page_table(
 	return coarse_pg_table;
 }
 
-
 void tf_free_coarse_page_table(
 	struct tf_coarse_page_table_allocation_context *alloc_context,
 	struct tf_coarse_page_table *coarse_pg_table,
@@ -333,7 +332,6 @@ void tf_free_coarse_page_table(
 	spin_unlock(&(alloc_context->lock));
 }
 
-
 void tf_init_coarse_page_table_allocator(
 	struct tf_coarse_page_table_allocation_context *alloc_context)
 {
@@ -396,7 +394,6 @@ u32 tf_get_l1_coarse_descriptor(
 
 	return descriptor;
 }
-
 
 #define dprintk_desc(...)
 /*
@@ -483,7 +480,6 @@ error:
 	return 0;
 }
 
-
 /*
  * Changes an L2 page descriptor back to a pointer to a physical page
  */
@@ -491,7 +487,6 @@ inline struct page *tf_l2_page_descriptor_to_page(u32 l2_page_descriptor)
 {
 	return pte_page(l2_page_descriptor & L2_DESCRIPTOR_ADDR_MASK);
 }
-
 
 /*
  * Returns the L1 descriptor for the 1KB-aligned coarse page table. The address
@@ -552,7 +547,6 @@ static void tf_get_l2_page_descriptor(
 
 	*l2_page_descriptor = descriptor;
 }
-
 
 /*
  * Unlocks the physical memory pages
@@ -693,7 +687,6 @@ int tf_fill_descriptor_table(
 		 */
 		page_shift = DESCRIPTOR_V13_12_GET(buffer);
 	page_count += page_shift;
-
 
 	/*
 	 * Check the number of pages fit in the coarse pages
@@ -941,7 +934,6 @@ error:
 
 	return ret;
 }
-
 
 /*----------------------------------------------------------------------------
  * Standard communication operations
@@ -1467,7 +1459,6 @@ int tf_send_receive(struct tf_comm *comm,
 		dprintk(KERN_ERR "sched_setaffinity #1 -> 0x%lX", ret_affinity);
 #endif
 
-
 	/*
 	 * Send the command
 	 */
@@ -1621,7 +1612,6 @@ exit:
 /*----------------------------------------------------------------------------
  * Power management
  *----------------------------------------------------------------------------*/
-
 
 /*
  * Handles all the power management calls.

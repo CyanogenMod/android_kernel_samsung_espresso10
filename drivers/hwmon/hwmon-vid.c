@@ -40,7 +40,7 @@
  * available at http://developer.intel.com/.
  *
  * AMD Athlon 64 and AMD Opteron Processors, AMD Publication 26094,
- * http://support.amd.com/us/Processor_TechDocs/26094.PDF 
+ * http://support.amd.com/us/Processor_TechDocs/26094.PDF
  * Table 74. VID Code Voltages
  * This corresponds to an arbitrary VRM code of 24 in the functions below.
  * These CPU models (K8 revision <= E) have 5 VID pins. See also:
@@ -153,7 +153,6 @@ int vid_from_reg(int val, u8 vrm)
 		return 0;
 	}
 }
-
 
 /*
  * After this point is the code to automatically determine which

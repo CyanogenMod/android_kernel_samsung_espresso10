@@ -2,7 +2,7 @@
 // Copyright (c) 2004-2010 Atheros Communications Inc.
 // All rights reserved.
 //
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -28,7 +28,6 @@
 extern "C" {
 #endif
 
-
 /*
  * There are two types of ioctl's here: Standard ioctls and
  * eXtended ioctls.  All extended ioctls (XIOCTL) are multiplexed
@@ -51,8 +50,6 @@ extern "C" {
 //#define IEEE80211_IOCTL_GETOPTIE             (SIOCIWFIRSTPRIV+9)
 //#define IEEE80211_IOCTL_SETAUTHALG           (SIOCIWFIRSTPRIV+10)
 #define IEEE80211_IOCTL_LASTONE              (SIOCIWFIRSTPRIV+10)
-
-
 
 /*                      ====WMI Ioctls====                                    */
 /*
@@ -209,7 +206,6 @@ extern "C" {
  */
 #define AR6000_IOCTL_EXTENDED                (SIOCIWFIRSTPRIV+31)
 
-
 /*                         ====BMI Extended Ioctls====                        */
 
 #define AR6000_XIOCTL_BMI_DONE                                  1
@@ -293,8 +289,6 @@ extern "C" {
  *   UINT32 count
  */
 
-
-
 /* Historical Host-side DataSet support */
 #define AR6000_XIOCTL_UNUSED9                                   9
 #define AR6000_XIOCTL_UNUSED10                                  10
@@ -307,7 +301,6 @@ extern "C" {
  * arguments:
  *   UINT32 cmd (AR6000_XIOCTL_FORCE_TARGET_RESET)
  */
-
 
 #ifdef HTC_RAW_INTERFACE
 /* HTC Raw Interface Ioctls */
@@ -351,8 +344,6 @@ extern "C" {
  * arguments:
  *   UINT32 cmd (AR6000_XIOCTL_CHECK_TARGET_READY)
  */
-
-
 
 /*                ====GPIO (General Purpose I/O) Extended Ioctls====          */
 
@@ -401,8 +392,6 @@ extern "C" {
  *   UINT32 cmd (AR6000_XIOCTL_GPIO_INTR_WAIT)
  */
 
-
-
 /*                    ====more wireless commands====                          */
 
 #define AR6000_XIOCTL_SET_ADHOC_BSSID                           24
@@ -436,9 +425,7 @@ extern "C" {
  * uses: WMI_SET_BEACON_INT_CMDID
  */
 
-
 #define IEEE80211_IOCTL_SETAUTHALG                              28
-
 
 #define AR6000_XIOCTL_SET_VOICE_PKT_SIZE                        29
 /*
@@ -447,7 +434,6 @@ extern "C" {
  *   WMI_SET_VOICE_PKT_SIZE_CMD setVoicePktSizeCmd (see include/wmi.h)
  * uses: WMI_SET_VOICE_PKT_SIZE_CMDID
  */
-
 
 #define AR6000_XIOCTL_SET_MAX_SP                                30
 /*
@@ -462,7 +448,6 @@ extern "C" {
 #define AR6000_XIOCTL_WMI_SET_ROAM_CTRL                         32
 
 #define AR6000_XIOCTRL_WMI_SET_POWERSAVE_TIMERS                 33
-
 
 /*
  * arguments:
@@ -538,7 +523,6 @@ typedef enum {
 #define AR6000_XIOCTL_WMI_SETFIXRATES                   42
 
 #define AR6000_XIOCTL_WMI_GETFIXRATES                   43
-
 
 #define AR6000_XIOCTL_WMI_SET_RSSITHRESHOLD             44
 /*
@@ -752,8 +736,6 @@ typedef enum {
 #define AR6000_XIOCTL_WMI_ADD_WOW_PATTERN           76
 #define AR6000_XIOCTL_WMI_DEL_WOW_PATTERN           77
 
-
-
 #define AR6000_XIOCTL_TARGET_INFO                   78
 /*
  * arguments:
@@ -822,10 +804,8 @@ typedef enum {
 #define AR6000_XIOCTL_WMI_SET_MCAST_FILTER     86
 #define AR6000_XIOCTL_WMI_DEL_MCAST_FILTER     87
 
-
 /* Historical DSETPATCH support for INI patches */
 #define AR6000_XIOCTL_UNUSED90                      90
-
 
 /* Support LZ-compressed firmware download */
 #define AR6000_XIOCTL_BMI_LZ_STREAM_START           91
@@ -890,9 +870,6 @@ typedef enum {
 #define AR6000_XIOCTL_AP_SET_COUNTRY                108
 
 #define AR6000_XIOCTL_AP_SET_DTIM                   109
-
-
-
 
 #define AR6000_XIOCTL_WMI_TARGET_EVENT_REPORT       110
 
@@ -981,11 +958,11 @@ typedef enum {
  *   UINT8  mode
  * uses: WMI_SET_QOS_SUPP_CMDID
  */
-#define AR6000_XIOCTL_WMI_SET_QOS_SUPP                  148 
+#define AR6000_XIOCTL_WMI_SET_QOS_SUPP                  148
 
 #define AR6000_XIOCTL_GET_WLAN_SLEEP_STATE              149
 
-#define AR6000_XIOCTL_SET_BT_HW_POWER_STATE             150 
+#define AR6000_XIOCTL_SET_BT_HW_POWER_STATE             150
 
 #define AR6000_XIOCTL_GET_BT_HW_POWER_STATE             151
 
@@ -1179,7 +1156,6 @@ struct ar6000_diag_window_cmd_s {
     unsigned int value;
 };
 
-
 struct ar6000_traffic_activity_change {
     u32 StreamID;   /* stream ID to indicate activity change */
     u32 Active;     /* active (1) or inactive (0) */
@@ -1191,7 +1167,6 @@ struct prof_count_s {
     u32 count;      /* hit count */
 };
 
-
 /* used by AR6000_XIOCTL_MODULE_DEBUG_SET_MASK */
 /*         AR6000_XIOCTL_MODULE_DEBUG_GET_MASK */
 /*         AR6000_XIOCTL_DUMP_MODULE_DEBUG_INFO */
@@ -1200,16 +1175,14 @@ struct drv_debug_module_s {
     u32 mask;              /* new mask to set .. or .. current mask */
 };
 
-
 /* All HCI related rx events are sent up to the host app
- * via a wmi event id. It can contain ACL data or HCI event, 
+ * via a wmi event id. It can contain ACL data or HCI event,
  * based on which it will be de-multiplexed.
  */
 typedef enum {
     PAL_HCI_EVENT = 0,
     PAL_HCI_RX_DATA,
 } WMI_PAL_EVENT_INFO;
-
 
 #ifdef __cplusplus
 }

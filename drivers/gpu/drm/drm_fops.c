@@ -135,8 +135,11 @@ int drm_open(struct inode *inode, struct file *filp)
 	retcode = drm_open_helper(inode, filp, dev);
 	if (!retcode) {
 		atomic_inc(&dev->counts[_DRM_STAT_OPENS]);
-		if (!dev->open_count++)
+		if (!dev->open_count++) {
 			retcode = drm_setup(dev);
+			if (retcode)
+				dev->open_count--;
+		}
 	}
 	if (!retcode) {
 		mutex_lock(&dev->struct_mutex);
@@ -269,7 +272,6 @@ static int drm_open_helper(struct inode *inode, struct file *filp,
 		if (ret < 0)
 			goto out_free;
 	}
-
 
 	/* if there is no current master make this fd it */
 	mutex_lock(&dev->struct_mutex);
@@ -413,7 +415,6 @@ static void drm_master_release(struct drm_device *dev, struct file *filp)
 		dev->driver->reclaim_buffers_idlelocked(dev, file_priv);
 		drm_idlelock_release(&file_priv->master->lock);
 	}
-
 
 	if (drm_i_have_hw_lock(dev, file_priv)) {
 		DRM_DEBUG("File %p released, freeing lock for context %d\n",

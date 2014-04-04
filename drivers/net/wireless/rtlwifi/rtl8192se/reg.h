@@ -340,7 +340,6 @@
 #define	ISO_PWC_DV2RP				BIT(11)
 #define	ISO_PWC_RV2RP				BIT(12)
 
-
 #define	FEN_MREGEN				BIT(15)
 #define	FEN_DCORE				BIT(11)
 #define	FEN_CPUEN				BIT(10)
@@ -484,7 +483,6 @@
 #define	RCR_AAP					BIT(0)
 #define	RCR_MXDMA_OFFSET			8
 #define	RCR_FIFO_OFFSET				13
-
 
 #define MSR_LINK_MASK				((1 << 0) | (1 << 1))
 #define MSR_LINK_MANAGED			2
@@ -734,7 +732,6 @@
 #define	CCX_CLM_RESULT_READY			BIT(16)
 #define	CCX_NHM_RESULT_READY			BIT(16)
 #define	CCX_CMD_RESET				0x0
-
 
 #define	HWSET_MAX_SIZE_92S			128
 #define EFUSE_MAX_SECTION			16
@@ -1061,7 +1058,6 @@
 #define	ROFDM0_TXCOEFF5				0xcb4
 #define	ROFDM0_TXCOEFF6				0xcb8
 
-
 #define	ROFDM1_LSTF				0xd00
 #define	ROFDM1_TRXPATHENABLE			0xd04
 
@@ -1094,7 +1090,6 @@
 #define	ROFDM_RXEVMCSI				0xdd8
 #define	ROFDM_SIG_REPORT			0xddc
 
-
 #define	RTXAGC_RATE18_06			0xe00
 #define	RTXAGC_RATE54_24			0xe04
 #define	RTXAGC_CCK_MCS32			0xe08
@@ -1102,7 +1097,6 @@
 #define	RTXAGC_MCS07_MCS04			0xe14
 #define	RTXAGC_MCS11_MCS08			0xe18
 #define	RTXAGC_MCS15_MCS12			0xe1c
-
 
 #define	RF_AC					0x00
 #define	RF_IQADJ_G1				0x01

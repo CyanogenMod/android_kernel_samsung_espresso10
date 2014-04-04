@@ -89,7 +89,6 @@ static int au6610_i2c_msg(struct dvb_usb_device *d, u8 addr,
 	return au6610_usb_msg(d, request, addr, wbuf, wlen, rbuf, rlen);
 }
 
-
 /* I2C */
 static int au6610_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
 			   int num)
@@ -119,7 +118,6 @@ static int au6610_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
 	mutex_unlock(&d->i2c_mutex);
 	return i;
 }
-
 
 static u32 au6610_i2c_func(struct i2c_adapter *adapter)
 {

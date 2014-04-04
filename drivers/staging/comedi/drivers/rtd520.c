@@ -833,7 +833,6 @@ static int rtd_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	if (!devpriv->las0 || !devpriv->las1 || !devpriv->lcfg)
 		return -ENOMEM;
 
-
 	DPRINTK("%s: LAS0=%llx, LAS1=%llx, CFG=%llx.\n", dev->board_name,
 		(unsigned long long)physLas0, (unsigned long long)physLas1,
 		(unsigned long long)physLcfg);
@@ -877,7 +876,6 @@ static int rtd_attach(struct comedi_device *dev, struct comedi_devconfig *it)
 	 */
 	if (alloc_subdevices(dev, 4) < 0)
 		return -ENOMEM;
-
 
 	s = dev->subdevices + 0;
 	dev->read_subdev = s;
@@ -1739,24 +1737,20 @@ static int rtd_ai_cmdtest(struct comedi_device *dev,
 	if (!cmd->scan_begin_src || tmp != cmd->scan_begin_src)
 		err++;
 
-
 	tmp = cmd->convert_src;
 	cmd->convert_src &= TRIG_TIMER | TRIG_EXT;
 	if (!cmd->convert_src || tmp != cmd->convert_src)
 		err++;
-
 
 	tmp = cmd->scan_end_src;
 	cmd->scan_end_src &= TRIG_COUNT;
 	if (!cmd->scan_end_src || tmp != cmd->scan_end_src)
 		err++;
 
-
 	tmp = cmd->stop_src;
 	cmd->stop_src &= TRIG_COUNT | TRIG_NONE;
 	if (!cmd->stop_src || tmp != cmd->stop_src)
 		err++;
-
 
 	if (err)
 		return 1;
@@ -1878,7 +1872,6 @@ static int rtd_ai_cmdtest(struct comedi_device *dev,
 
 	if (err)
 		return 3;
-
 
 	/* step 4: fix up any arguments */
 
@@ -2262,7 +2255,6 @@ static int rtd_ao_rinsn(struct comedi_device *dev,
 
 	for (i = 0; i < insn->n; i++)
 		data[i] = devpriv->aoValue[chan];
-
 
 	return i;
 }

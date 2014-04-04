@@ -349,4 +349,3 @@ int lifebook_init(struct psmouse *psmouse)
 
 	return 0;
 }
-

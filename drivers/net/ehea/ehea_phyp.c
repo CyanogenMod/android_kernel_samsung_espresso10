@@ -30,7 +30,6 @@
 
 #include "ehea_phyp.h"
 
-
 static inline u16 get_order_of_qentries(u16 queue_entries)
 {
 	u8 ld = 1;		/*  logarithmus dualis */

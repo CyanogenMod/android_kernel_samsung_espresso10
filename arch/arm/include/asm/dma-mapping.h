@@ -215,7 +215,6 @@ extern void dma_free_coherent(struct device *, size_t, void *, dma_addr_t);
 int dma_mmap_coherent(struct device *, struct vm_area_struct *,
 		void *, dma_addr_t, size_t);
 
-
 /**
  * dma_alloc_writecombine - allocate writecombining memory for DMA
  * @dev: valid struct device pointer, or NULL for ISA and EISA-like devices
@@ -341,7 +340,6 @@ static inline int dmabounce_sync_for_device(struct device *d, dma_addr_t addr,
 {
 	return 1;
 }
-
 
 static inline dma_addr_t __dma_map_single(struct device *dev, void *cpu_addr,
 		size_t size, enum dma_data_direction dir)
@@ -538,7 +536,6 @@ extern void dma_sync_sg_for_cpu(struct device *, struct scatterlist *, int,
 		enum dma_data_direction);
 extern void dma_sync_sg_for_device(struct device *, struct scatterlist *, int,
 		enum dma_data_direction);
-
 
 #endif /* __KERNEL__ */
 #endif

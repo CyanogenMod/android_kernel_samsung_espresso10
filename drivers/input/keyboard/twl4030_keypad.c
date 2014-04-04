@@ -34,7 +34,6 @@
 #include <linux/i2c/twl.h>
 #include <linux/slab.h>
 
-
 /*
  * The TWL4030 family chips include a keypad controller that supports
  * up to an 8x8 switch matrix.  The controller can issue system wakeup
@@ -131,7 +130,6 @@ struct twl4030_keypad {
 #define KEYP_EDR_TO_RISING		0x20
 #define KEYP_EDR_MIS_FALLING		0x40
 #define KEYP_EDR_MIS_RISING		0x80
-
 
 /*----------------------------------------------------------------------*/
 
@@ -477,4 +475,3 @@ MODULE_AUTHOR("Texas Instruments");
 MODULE_DESCRIPTION("TWL4030 Keypad Driver");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform:twl4030_keypad");
-

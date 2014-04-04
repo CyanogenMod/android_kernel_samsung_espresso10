@@ -34,7 +34,6 @@ struct bvrect {
 	unsigned int height;
 };
 
-
 /*
  * BVFLAG_* - These define the type of BLT to be performed and are placed in
  * the bvparams.flags element.
@@ -67,7 +66,6 @@ struct bvrect {
 #define BVFLAG_TILE_SRC2	0x00000400 /* source 2 is tiled */
 #define BVFLAG_TILE_MASK	0x00000800 /* mask is tiled */
 
-
 #define BVFLAG_BATCH_SHIFT	12
 #define BVFLAG_BATCH_MASK	(3 << BVFLAG_BATCH_SHIFT)
 
@@ -76,7 +74,6 @@ struct bvrect {
 #define BVFLAG_BATCH_CONTINUE	(2 << BVFLAG_BATCH_SHIFT) /* continue batch */
 #define BVFLAG_BATCH_END	(3 << BVFLAG_BATCH_SHIFT) /* end batch */
 
-
 #define BVFLAG_HORZ_FLIP_SRC1	0x00004000 /* flip src1 horizontally */
 #define BVFLAG_VERT_FLIP_SRC1	0x00008000 /* flip src1 vertically */
 #define BVFLAG_HORZ_FLIP_SRC2	0x00010000 /* flip src2 horizontally */
@@ -84,10 +81,12 @@ struct bvrect {
 #define BVFLAG_HORZ_FLIP_MASK	0x00040000 /* flip mask horizontally */
 #define BVFLAG_VERT_FLIP_MASK	0x00080000 /* flip mask vertically */
 
-
 #define BVFLAG_SCALE_RETURN	0x00100000 /* return scale type used */
 #define BVFLAG_DITHER_RETURN	0x00200000 /* return dither type used */
-/**** Bits 31-22 reserved ****/
+
+#define BVFLAG_SRC2_AUXDSTRECT	0x00400000 /* src2auxdstrect used */
+#define BVFLAG_MASK_AUXDSTRECT	0x00800000 /* maskauxdstrect used */
+/**** Bits 31-24 reserved ****/
 
 /*
  * BVIMPL_* - BLTsville implementations may be combined under managers to
@@ -99,7 +98,6 @@ struct bvrect {
 #define BVIMPL_ANY		0
 #define BVIMPL_FIRST_HW		(1 << 31) /* Continues to the right */
 #define BVIMPL_FIRST_CPU	(1 << 0)  /* Continues to the left */
-
 
 /*
  * bvscalemode - This specifies the type of scaling to perform.
@@ -118,7 +116,7 @@ struct bvrect {
 #define BVSCALEDEF_IMPLICIT	(0 << BVSCALEDEF_CLASS_SHIFT)
 #define BVSCALEDEF_EXPLICIT	(1 << BVSCALEDEF_CLASS_SHIFT)
 /* 2-3 reserved */
-#define BVSCALEDEF_CLASS_MASK	(3 << BVSCALEDEF_CLASS_MASK)
+#define BVSCALEDEF_CLASS_MASK	(3 << BVSCALEDEF_CLASS_SHIFT)
 
 /**** IMPLICIT definitions ****/
 /*** Bits 21-16 indicate the quality (speed) desired ***/
@@ -127,7 +125,7 @@ struct bvrect {
 #define BVSCALEDEF_GOOD		(0x15 << BVSCALEDEF_QUALITY_SHIFT)
 #define BVSCALEDEF_BETTER	(0x2A << BVSCALEDEF_QUALITY_SHIFT)
 #define BVSCALEDEF_BEST		(0x3F << BVSCALEDEF_QUALITY_SHIFT)
-#define BVSCALEDEF_QUALITY_MASK	(0x3F << BVSCALEDEF_QUALITY_MASK)
+#define BVSCALEDEF_QUALITY_MASK	(0x3F << BVSCALEDEF_QUALITY_SHIFT)
 /* Bits 15-12 are reserved */
 /*** Bits 11-8 indicate the desired technique ***/
 #define BVSCALEDEF_TECHNIQUE_SHIFT 8
@@ -143,7 +141,7 @@ struct bvrect {
 #define BVSCALEDEF_PHOTO	(1 << BVSCALEDEF_TYPE_SHIFT)
 #define BVSCALEDEF_DRAWING	(2 << BVSCALEDEF_TYPE_SHIFT)
 /* 3 reserved */
-#define BVSCALEDEF_TYPE_MASK	(3 << BVSCALEDEF_TYPE_MASK)
+#define BVSCALEDEF_TYPE_MASK	(3 << BVSCALEDEF_TYPE_SHIFT)
 
 /**** EXPLICIT definitions ****/
 /* Bits 21-16 reserved */
@@ -285,7 +283,6 @@ enum bvscalemode {
 #endif
 };
 
-
 /*
  * bvdithermode - This defines the type of dithering to use.
  */
@@ -414,7 +411,6 @@ enum bvdithermode {
 #endif
 };
 
-
 /*
  * BVTILE_* flags - These specify parameters used when tiling.
  */
@@ -519,7 +515,6 @@ union bvop {
 	struct bvfilter *filter;	/* when BVFLAG_FILTER set */
 };
 
-
 /*
  * bvbltparams - This structure is passed into bv_blt() to specify the
  * parameters for a BLT.
@@ -587,6 +582,9 @@ struct bvbltparams {
 							 error; handle contains
 							 callbackdata below */
 	unsigned long callbackdata;	/* (i) callback data */
+
+	struct bvrect src2auxdstrect;
+	struct bvrect maskauxdstrect;
 };
 
 #endif /* BLTSVILLE_H */

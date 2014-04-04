@@ -1159,7 +1159,6 @@ int lancer_cmd_get_pport_stats(struct be_adapter *adapter,
 	be_cmd_hdr_prepare(&req->hdr, CMD_SUBSYSTEM_ETH,
 			OPCODE_ETH_GET_PPORT_STATS, nonemb_cmd->size);
 
-
 	req->cmd_params.params.pport_num = cpu_to_le16(adapter->port_num);
 	req->cmd_params.params.reset_stats = 0;
 

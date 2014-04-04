@@ -64,7 +64,6 @@ error_rpipes_create:
 }
 EXPORT_SYMBOL_GPL(wa_create);
 
-
 void __wa_destroy(struct wahc *wa)
 {
 	if (wa->dti_urb) {

@@ -584,7 +584,6 @@ static ssize_t fill_async_buffer(struct debug_buffer *buf)
 	return strlen(buf->output_buf);
 }
 
-
 static char array[BUF_SIZE];
 void print_async_list(void)
 {

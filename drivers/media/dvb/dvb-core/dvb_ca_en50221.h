@@ -37,8 +37,6 @@
 #define DVB_CA_EN50221_CAMCHANGE_REMOVED		0
 #define DVB_CA_EN50221_CAMCHANGE_INSERTED		1
 
-
-
 /* Structure describing a CA interface */
 struct dvb_ca_en50221 {
 
@@ -76,9 +74,6 @@ struct dvb_ca_en50221 {
 	void* private;
 };
 
-
-
-
 /* ******************************************************************************** */
 /* Functions for reporting IRQ events */
 
@@ -107,8 +102,6 @@ void dvb_ca_en50221_camready_irq(struct dvb_ca_en50221* pubca, int slot);
  */
 void dvb_ca_en50221_frda_irq(struct dvb_ca_en50221* ca, int slot);
 
-
-
 /* ******************************************************************************** */
 /* Initialisation/shutdown functions */
 
@@ -130,7 +123,5 @@ extern int dvb_ca_en50221_init(struct dvb_adapter *dvb_adapter, struct dvb_ca_en
  * @param ca The associated dvb_ca instance.
  */
 extern void dvb_ca_en50221_release(struct dvb_ca_en50221* ca);
-
-
 
 #endif

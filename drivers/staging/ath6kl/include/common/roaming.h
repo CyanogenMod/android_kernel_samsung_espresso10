@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="roaming.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -24,11 +24,11 @@
 #ifndef _ROAMING_H_
 #define _ROAMING_H_
 
-/* 
- * The signal quality could be in terms of either snr or rssi. We should 
- * have an enum for both of them. For the time being, we are going to move 
- * it to wmi.h that is shared by both host and the target, since we are 
- * repartitioning the code to the host 
+/*
+ * The signal quality could be in terms of either snr or rssi. We should
+ * have an enum for both of them. For the time being, we are going to move
+ * it to wmi.h that is shared by both host and the target, since we are
+ * repartitioning the code to the host
  */
 #define SIGNAL_QUALITY_NOISE_FLOOR        -96
 #define SIGNAL_QUALITY_METRICS_NUM_MAX    2

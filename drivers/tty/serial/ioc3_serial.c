@@ -35,7 +35,6 @@
 /* determine given the sio_ir what port it applies to */
 #define GET_PORT_FROM_SIO_IR(_x)	(_x & SIO_IR_SA) ? 0 : 1
 
-
 /*
  * we have 2 logical ports (rs232, rs422) for each physical port
  * evens are rs232, odds are rs422
@@ -297,7 +296,6 @@ struct ring_buffer {
 
 /* for Infinite loop detection  */
 #define MAXITER		10000000
-
 
 /**
  * set_baud - Baud rate setting code

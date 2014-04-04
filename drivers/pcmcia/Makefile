@@ -14,7 +14,6 @@ pcmcia_rsrc-$(CONFIG_PCCARD_NONSTATIC)		+= rsrc_nonstatic.o
 pcmcia_rsrc-$(CONFIG_PCCARD_IODYN)		+= rsrc_iodyn.o
 obj-$(CONFIG_PCCARD)				+= pcmcia_rsrc.o
 
-
 # socket drivers
 
 obj-$(CONFIG_YENTA) 				+= yenta_socket.o

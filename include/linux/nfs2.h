@@ -23,7 +23,6 @@
 #define NFS2MODE_SOCK	0140000
 #define NFS2MODE_FIFO	0010000
 
-
 /* NFSv2 file types - beware, these are not the same in NFSv3 */
 enum nfs2_ftype {
 	NF2NON = 0,

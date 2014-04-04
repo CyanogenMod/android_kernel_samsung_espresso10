@@ -335,4 +335,3 @@ struct psb_intel_sdvo_set_target_input_args {
 #define        SDVO_DEVICE_TV 0x02
 #define        SDVO_DEVICE_LVDS 0x04
 #define        SDVO_DEVICE_TMDS 0x08
-

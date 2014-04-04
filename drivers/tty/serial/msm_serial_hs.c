@@ -1462,7 +1462,6 @@ static int msm_hs_startup(struct uart_port *uport)
 	tx->command_ptr->dst_row_addr =
 	    msm_uport->uport.mapbase + UARTDM_TF_ADDR;
 
-
 	/* Turn on Uart Receive */
 	rx->xfer.complete_func = msm_hs_dmov_rx_callback;
 	rx->xfer.execute_func = NULL;
@@ -1475,13 +1474,11 @@ static int msm_hs_startup(struct uart_port *uport)
 	rx->command_ptr->row_offset =  MSM_UARTDM_BURST_SIZE;
 	rx->command_ptr->src_row_addr = uport->mapbase + UARTDM_RF_ADDR;
 
-
 	msm_uport->imr_reg |= UARTDM_ISR_RXSTALE_BMSK;
 	/* Enable reading the current CTS, no harm even if CTS is ignored */
 	msm_uport->imr_reg |= UARTDM_ISR_CURRENT_CTS_BMSK;
 
 	msm_hs_write(uport, UARTDM_TFWR_ADDR, 0);  /* TXLEV on empty TX fifo */
-
 
 	ret = request_irq(uport->irq, msm_hs_isr, IRQF_TRIGGER_HIGH,
 			  "msm_hs_uart", msm_uport);

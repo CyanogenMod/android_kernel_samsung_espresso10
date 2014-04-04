@@ -79,4 +79,3 @@ int mx27_initialize_usb_hw(int port, unsigned int flags)
 
 	return 0;
 }
-

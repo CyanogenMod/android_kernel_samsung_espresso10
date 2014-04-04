@@ -60,7 +60,6 @@ config CFG80211_DEVELOPER_WARNINGS
 	  Say Y only if you are developing cfg80211 or a driver based
 	  on it (or mac80211).
 
-
 config CFG80211_REG_DEBUG
 	bool "cfg80211 regulatory debugging"
 	depends on CFG80211

@@ -54,7 +54,6 @@
 #define UDELAY_COUNT 3
 #define UDELAY_DELAY 100
 
-
 #define TX_DESC_PER_IOCB 8
 /* The maximum number of frags we handle is based
  * on PAGE_SIZE...

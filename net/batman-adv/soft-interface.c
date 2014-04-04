@@ -36,7 +36,6 @@
 #include <linux/if_vlan.h>
 #include "unicast.h"
 
-
 static int bat_get_settings(struct net_device *dev, struct ethtool_cmd *cmd);
 static void bat_get_drvinfo(struct net_device *dev,
 			    struct ethtool_drvinfo *info);
@@ -924,4 +923,3 @@ static u32 bat_get_link(struct net_device *dev)
 {
 	return 1;
 }
-

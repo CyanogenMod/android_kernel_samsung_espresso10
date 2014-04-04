@@ -996,7 +996,6 @@ static int serdes_init_1g_serdes(struct niu *np)
 			return err;
 	}
 
-
 	sig = nr64(ESR_INT_SIGNALS);
 	switch (np->port) {
 	case 0:
@@ -1329,7 +1328,6 @@ static int bcm8706_init_user_dev3(struct niu *np)
 {
 	int err;
 
-
 	err = mdio_read(np, np->phy_addr, BCM8704_USER_DEV3_ADDR,
 			BCM8704_USER_OPT_DIGITAL_CTRL);
 	if (err < 0)
@@ -1475,7 +1473,6 @@ static int xcvr_init_10g_mrvl88x2011(struct niu *np)
 	return mdio_write(np, np->phy_addr, MRVL88X2011_USER_DEV1_ADDR,
 			  MRVL88X2011_10G_PMD_TX_DIS, MRVL88X2011_ENA_PMDTX);
 }
-
 
 static int xcvr_diag_bcm870x(struct niu *np)
 {
@@ -2456,7 +2453,6 @@ static int serdes_init_10g_serdes(struct niu *np)
 		if (err)
 			return err;
 	}
-
 
 	sig = nr64(ESR_INT_SIGNALS);
 	switch (np->port) {
@@ -3845,7 +3841,6 @@ static int niu_rx_error(struct niu *np, struct rx_ring_info *rp)
 {
 	u64 stat = nr64(RX_DMA_CTL_STAT(rp->rx_channel));
 	int err = 0;
-
 
 	if (stat & (RX_DMA_CTL_STAT_CHAN_FATAL |
 		    RX_DMA_CTL_STAT_PORT_FATAL))
@@ -5457,7 +5452,6 @@ static int niu_init_pcs(struct niu *np)
 		(void) nr64_xpcs(XPCS_SYMERR_CNT01);
 		(void) nr64_xpcs(XPCS_SYMERR_CNT23);
 		break;
-
 
 	case NIU_FLAGS_XCVR_SERDES:
 		/* 1G SERDES */
@@ -7963,7 +7957,6 @@ static int niu_set_ldg_timer_res(struct niu *np, int res)
 {
 	if (res < 0 || res > LDG_TIMER_RES_VAL)
 		return -EINVAL;
-
 
 	nw64(LDG_TIMER_RES, res);
 

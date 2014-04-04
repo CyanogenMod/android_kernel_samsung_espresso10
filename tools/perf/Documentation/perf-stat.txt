@@ -16,12 +16,10 @@ DESCRIPTION
 This command runs a command and gathers performance counter statistics
 from it.
 
-
 OPTIONS
 -------
 <command>...::
 	Any command you can specify in a shell.
-
 
 -e::
 --event=::
@@ -40,7 +38,6 @@ OPTIONS
 -t::
 --tid=<tid>::
         stat events on existing thread id
-
 
 -a::
 --all-cpus::

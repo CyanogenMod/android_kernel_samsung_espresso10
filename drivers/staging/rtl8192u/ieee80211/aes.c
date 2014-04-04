@@ -431,7 +431,6 @@ static void aes_decrypt(void *ctx_arg, u8 *out, const u8 *in)
 	u32_out (out + 12, b0[3]);
 }
 
-
 static struct crypto_alg aes_alg = {
 	.cra_name		=	"aes",
 	.cra_flags		=	CRYPTO_ALG_TYPE_CIPHER,
@@ -466,4 +465,3 @@ module_exit(aes_fini);
 
 MODULE_DESCRIPTION("Rijndael (AES) Cipher Algorithm");
 MODULE_LICENSE("Dual BSD/GPL");
-

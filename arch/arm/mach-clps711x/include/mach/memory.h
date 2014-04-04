@@ -34,7 +34,6 @@
 
 #endif
 
-
 /*
  * Like the SA1100, the EDB7211 has a large gap between physical RAM
  * banks.  In 2.2, the Psion (CL-PS7110) port added custom support for
@@ -55,17 +54,17 @@
  */
 
 /*
- * Because of the wide memory address space between physical RAM banks on the 
+ * Because of the wide memory address space between physical RAM banks on the
  * SA1100, it's much more convenient to use Linux's NUMA support to implement
- * our memory map representation.  Assuming all memory nodes have equal access 
+ * our memory map representation.  Assuming all memory nodes have equal access
  * characteristics, we then have generic discontiguous memory support.
  *
  * Of course, all this isn't mandatory for SA1100 implementations with only
  * one used memory bank.  For those, simply undefine CONFIG_DISCONTIGMEM.
  *
- * The nodes are matched with the physical memory bank addresses which are 
+ * The nodes are matched with the physical memory bank addresses which are
  * incidentally the same as virtual addresses.
- * 
+ *
  * 	node 0:  0xc0000000 - 0xc7ffffff
  * 	node 1:  0xc8000000 - 0xcfffffff
  * 	node 2:  0xd0000000 - 0xd7ffffff
@@ -75,4 +74,3 @@
 #define MAX_PHYSMEM_BITS	32
 
 #endif
-

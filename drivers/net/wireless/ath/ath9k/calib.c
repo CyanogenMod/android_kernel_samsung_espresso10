@@ -19,7 +19,6 @@
 
 /* Common calibration code */
 
-
 static int16_t ath9k_hw_get_nf_hist_mid(int16_t *nfCalBuffer)
 {
 	int16_t nfval;
@@ -61,7 +60,6 @@ static s16 ath9k_hw_get_default_nf(struct ath_hw *ah,
 {
 	return ath9k_hw_get_nf_limits(ah, chan)->nominal;
 }
-
 
 static void ath9k_hw_update_nfcal_hist_buffer(struct ath_hw *ah,
 					      struct ath9k_hw_cal_data *cal,
@@ -314,7 +312,6 @@ void ath9k_hw_loadnf(struct ath_hw *ah, struct ath9k_channel *chan)
 	REGWRITE_BUFFER_FLUSH(ah);
 }
 
-
 static void ath9k_hw_nf_sanitize(struct ath_hw *ah, s16 *nf)
 {
 	struct ath_common *common = ath9k_hw_common(ah);
@@ -408,7 +405,6 @@ void ath9k_init_nfcal_hist_buffer(struct ath_hw *ah,
 	}
 }
 
-
 void ath9k_hw_bstuck_nfcal(struct ath_hw *ah)
 {
 	struct ath9k_hw_cal_data *caldata = ah->caldata;
@@ -432,4 +428,3 @@ void ath9k_hw_bstuck_nfcal(struct ath_hw *ah)
 	caldata->nfcal_interference = true;
 }
 EXPORT_SYMBOL(ath9k_hw_bstuck_nfcal);
-

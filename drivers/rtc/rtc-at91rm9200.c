@@ -32,7 +32,6 @@
 
 #include <mach/at91_rtc.h>
 
-
 #define AT91_RTC_EPOCH		1900UL	/* just like arch/arm/common/rtctime.c */
 
 static DECLARE_COMPLETION(at91_rtc_updated);

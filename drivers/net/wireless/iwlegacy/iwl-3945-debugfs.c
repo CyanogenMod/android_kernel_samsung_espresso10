@@ -28,7 +28,6 @@
 
 #include "iwl-3945-debugfs.h"
 
-
 static int iwl3945_statistics_flag(struct iwl_priv *priv, char *buf, int bufsz)
 {
 	int p = 0;

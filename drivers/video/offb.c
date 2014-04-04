@@ -398,7 +398,7 @@ static void __init offb_init_fb(const char *name, const char *full_name,
 	}
 
 	info = framebuffer_alloc(sizeof(u32) * 16, NULL);
-	
+
 	if (info == 0) {
 		release_mem_region(res_start, res_size);
 		return;
@@ -516,7 +516,6 @@ out_aper:
 	framebuffer_release(info);
 	release_mem_region(res_start, res_size);
 }
-
 
 static void __init offb_init_nodriver(struct device_node *dp, int no_real_node)
 {
@@ -658,7 +657,6 @@ static int __init offb_init(void)
 
 	return 0;
 }
-
 
 module_init(offb_init);
 MODULE_LICENSE("GPL");

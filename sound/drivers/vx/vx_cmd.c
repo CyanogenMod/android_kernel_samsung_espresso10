@@ -106,4 +106,3 @@ void vx_init_rmh(struct vx_rmh *rmh, unsigned int cmd)
 	rmh->DspStat = vx_dsp_cmds[cmd].st_type;
 	rmh->Cmd[0] = vx_dsp_cmds[cmd].opcode;
 }
-

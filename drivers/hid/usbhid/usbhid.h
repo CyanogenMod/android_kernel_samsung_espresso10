@@ -103,4 +103,3 @@ struct usbhid_device {
 	container_of(hid_dev->dev.parent->parent, struct usb_device, dev)
 
 #endif
-

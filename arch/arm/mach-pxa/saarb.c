@@ -110,4 +110,3 @@ MACHINE_START(SAARB, "PXA955 Handheld Platform (aka SAARB)")
 	.timer          = &pxa_timer,
 	.init_machine   = saarb_init,
 MACHINE_END
-

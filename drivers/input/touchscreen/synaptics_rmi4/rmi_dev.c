@@ -52,9 +52,7 @@ struct rmidev_data {
 /*store dynamically allocated major number of char device*/
 static int rmidev_major_num;
 
-
 static struct class *rmidev_device_class;
-
 
 /* file operations for RMI char device */
 

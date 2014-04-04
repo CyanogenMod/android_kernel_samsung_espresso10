@@ -523,7 +523,6 @@ static void snd_disconnect(struct usb_interface *intf)
 	usb_reset_device(interface_to_usbdev(intf));
 }
 
-
 MODULE_DEVICE_TABLE(usb, snd_usb_id_table);
 static struct usb_driver snd_usb_driver = {
 	.name 		= MODNAME,
@@ -544,4 +543,3 @@ static void __exit snd_module_exit(void)
 
 module_init(snd_module_init)
 module_exit(snd_module_exit)
-

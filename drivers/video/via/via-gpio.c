@@ -144,7 +144,6 @@ static int via_gpio_get(struct gpio_chip *chip, unsigned int nr)
 	return reg & (0x04 << gpio->vg_mask_shift);
 }
 
-
 static struct viafb_gpio_cfg viafb_gpio_config = {
 	.gpio_chip = {
 		.label = "VIAFB onboard GPIO",
@@ -264,7 +263,6 @@ static __devinit int viafb_gpio_probe(struct platform_device *platdev)
 #endif
 	return ret;
 }
-
 
 static int viafb_gpio_remove(struct platform_device *platdev)
 {

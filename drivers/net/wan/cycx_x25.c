@@ -463,7 +463,6 @@ static int cycx_wan_del_if(struct wan_device *wandev, struct net_device *dev)
 	return 0;
 }
 
-
 /* Network Device Interface */
 
 static const struct header_ops cycx_header_ops = {

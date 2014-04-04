@@ -631,7 +631,6 @@ static pci_ers_result_t pcifront_common_process(int cmd,
 	return result;
 }
 
-
 static void pcifront_do_aer(struct work_struct *data)
 {
 	struct pcifront_device *pdev =
@@ -836,7 +835,6 @@ static int __devinit pcifront_try_connect(struct pcifront_device *pdev)
 	char str[64];
 	unsigned int domain, bus;
 
-
 	/* Only connect once */
 	if (xenbus_read_driver_state(pdev->xdev->nodename) !=
 	    XenbusStateInitialised)
@@ -900,7 +898,6 @@ static int pcifront_try_disconnect(struct pcifront_device *pdev)
 {
 	int err = 0;
 	enum xenbus_state prev_state;
-
 
 	prev_state = xenbus_read_driver_state(pdev->xdev->nodename);
 

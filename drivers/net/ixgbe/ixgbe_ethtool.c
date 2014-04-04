@@ -38,7 +38,6 @@
 
 #include "ixgbe.h"
 
-
 #define IXGBE_ALL_RAR_ENTRIES 16
 
 enum {NETDEV_STATS, IXGBE_STATS};
@@ -1286,7 +1285,6 @@ static bool reg_set_and_check(struct ixgbe_adapter *adapter, u64 *data, int reg,
 		if (reg_pattern_test(adapter, data, reg, mask, write))	      \
 			return 1;					      \
 	} while (0)							      \
-
 
 #define REG_SET_AND_CHECK(reg, mask, write)				      \
 	do {								      \

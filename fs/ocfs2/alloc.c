@@ -146,7 +146,6 @@ struct ocfs2_extent_tree_operations {
 				    struct ocfs2_extent_rec *insert_rec);
 };
 
-
 /*
  * Pre-declare ocfs2_dinode_et_ops so we can use it as a sanity check
  * in the methods.
@@ -254,7 +253,6 @@ static void ocfs2_dinode_fill_root_el(struct ocfs2_extent_tree *et)
 
 	et->et_root_el = &di->id2.i_list;
 }
-
 
 static void ocfs2_xattr_value_fill_root_el(struct ocfs2_extent_tree *et)
 {
@@ -951,7 +949,6 @@ int ocfs2_read_extent_block(struct ocfs2_caching_info *ci, u64 eb_blkno,
 
 	return rc;
 }
-
 
 /*
  * How many free extents have we got before we need more meta data?
@@ -3038,7 +3035,6 @@ static int ocfs2_remove_rightmost_path(handle_t *handle,
 	struct ocfs2_path *left_path = NULL;
 	struct ocfs2_extent_block *eb;
 	struct ocfs2_extent_list *el;
-
 
 	ret = ocfs2_et_sanity_check(et);
 	if (ret)

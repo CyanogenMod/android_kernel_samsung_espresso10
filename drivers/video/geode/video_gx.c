@@ -20,7 +20,6 @@
 
 #include "gxfb.h"
 
-
 /*
  * Tables of register settings for various DOTCLKs.
  */

@@ -554,7 +554,6 @@ static size_t callchain__fprintf_flat(FILE *fp, struct callchain_node *self,
 
 	ret += callchain__fprintf_flat(fp, self->parent, total_samples);
 
-
 	list_for_each_entry(chain, &self->val, list) {
 		if (chain->ip >= PERF_CONTEXT_MAX)
 			continue;

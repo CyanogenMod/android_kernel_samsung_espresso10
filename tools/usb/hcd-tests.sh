@@ -36,7 +36,6 @@ BUFLEN=2048
 # NOTE:  the 'in' and 'out' cases are usually bulk, but can be
 # set up to use interrupt transfers by 'usbtest' module options
 
-
 if [ "$DEVICE" = "" ]; then
 	echo "testing ALL recognized usbtest devices"
 	echo ""
@@ -80,7 +79,6 @@ check_config ()
     echo "** device must be in $1 config, but it's $CONFIG instead"
     exit 1
 }
-
 
 echo "TESTING:  $ARGS"
 

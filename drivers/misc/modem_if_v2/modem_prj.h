@@ -22,6 +22,7 @@
 #include <linux/rbtree.h>
 #include <linux/spinlock.h>
 #include <linux/cdev.h>
+#include <linux/types.h>
 
 #define MAX_CPINFO_SIZE		512
 
@@ -71,12 +72,15 @@
 #define IP6VERSION	6
 #define SOURCE_MAC_ADDR	{0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC}
 
+/* ip loopback */
+#define RMNET0_CH_ID   10
+#define DATA_LOOPBACK_CHANNEL  31
+
 #define FMT_WAKE_TIME	(HZ/2)
 #define RFS_WAKE_TIME	(HZ*3)
 #define RAW_WAKE_TIME	(HZ*6)
 
 #define CP_LOOPBACK_CHANNEL	30
-
 
 /* Does modem ctl structure will use state ? or status defined below ?*/
 /* Be careful!! below sequence shouldn't be changed*/
@@ -319,6 +323,13 @@ struct modem_shared {
 	/* for IPC Logger */
 	struct mif_storage storage;
 	spinlock_t lock;
+
+	/* loopbacked IP address
+	 * default is 0.0.0.0 (disabled)
+	 * after you setted this, you can use IP packet loopback using this IP.
+	 * exam: echo 1.2.3.4 > /sys/devices/virtual/misc/umtx_multipdp/loopback
+	 */
+	__be32 loopback_ipaddr;
 };
 
 struct modem_ctl {

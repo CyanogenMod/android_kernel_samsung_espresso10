@@ -684,7 +684,6 @@ void __devexit max8925_device_exit(struct max8925_chip *chip)
 	mfd_remove_devices(chip->dev);
 }
 
-
 MODULE_DESCRIPTION("PMIC Driver for Maxim MAX8925");
 MODULE_AUTHOR("Haojian Zhuang <haojian.zhuang@marvell.com");
 MODULE_LICENSE("GPL");

@@ -257,7 +257,6 @@ void iwl4965_rx_queue_restock(struct iwl_priv *priv)
 	if (rxq->free_count <= RX_LOW_WATERMARK)
 		queue_work(priv->workqueue, &priv->rx_replenish);
 
-
 	/* If we've added more space for the firmware to place data, tell it.
 	 * Increment device's write pointer in multiples of 8. */
 	if (rxq->write_actual != (rxq->write & ~0x7)) {
@@ -464,7 +463,6 @@ static int iwl4965_calc_rssi(struct iwl_priv *priv,
 	 * Higher AGC (higher radio gain) means lower signal. */
 	return max_rssi - agc - IWL4965_RSSI_OFFSET;
 }
-
 
 static u32 iwl4965_translate_rx_status(struct iwl_priv *priv, u32 decrypt_in)
 {
@@ -1152,7 +1150,6 @@ void iwl4965_set_rxon_chain(struct iwl_priv *priv, struct iwl_rxon_context *ctx)
 	/* How many receivers should we use? */
 	active_rx_cnt = iwl4965_get_active_rx_chain_count(priv);
 	idle_rx_cnt = iwl4965_get_idle_rx_chain_count(priv, active_rx_cnt);
-
 
 	/* correct rx chain count according hw settings
 	 * and chain noise calibration

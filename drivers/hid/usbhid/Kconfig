@@ -80,5 +80,3 @@ config USB_MOUSE
 	  If even remotely unsure, say N.
 
 endmenu
-
-

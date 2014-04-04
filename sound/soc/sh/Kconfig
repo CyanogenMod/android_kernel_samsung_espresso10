@@ -7,7 +7,6 @@ config SND_SOC_PCM_SH7760
 	help
 	  Enable this option for SH7760 AC97/I2S audio support.
 
-
 ##
 ## Audio unit modules
 ##

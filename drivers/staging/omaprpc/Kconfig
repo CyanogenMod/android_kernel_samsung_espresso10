@@ -1,4 +1,3 @@
-
 config RPC_OMAP
 	tristate "OMAP Remote Procedure Call driver"
 	default y
@@ -11,5 +10,4 @@ config RPC_OMAP
 	  user space, in order to allow applications to distribute
 	  remote calls to more power-efficient remote processors on OMAP4+ systems.
 
-	  If unsure, say N.
-
+	  If unsure, say Y.

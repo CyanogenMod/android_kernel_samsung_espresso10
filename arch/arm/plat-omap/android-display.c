@@ -216,7 +216,6 @@ static void set_ion_carveouts(struct sgx_omaplfb_config *sgx_config,
 	if (sgx_config)
 		num_buffers = sgx_config->tiler2d_buffers;
 
-
 	/* width must be aligned to 128 bytes */
 	width = ALIGN(mem->width, 128 / mem->bpp);
 	fmt = mem->bpp <= 2 ? TILFMT_16BIT : TILFMT_32BIT;

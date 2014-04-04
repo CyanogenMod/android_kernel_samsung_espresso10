@@ -272,7 +272,7 @@ int __register_chrdev(unsigned int major, unsigned int baseminor,
 	cd = __register_chrdev_region(major, baseminor, count, name);
 	if (IS_ERR(cd))
 		return PTR_ERR(cd);
-	
+
 	cdev = cdev_alloc();
 	if (!cdev)
 		goto out2;
@@ -280,7 +280,7 @@ int __register_chrdev(unsigned int major, unsigned int baseminor,
 	cdev->owner = fops->owner;
 	cdev->ops = fops;
 	kobject_set_name(&cdev->kobj, "%s", name);
-		
+
 	err = cdev_add(cdev, MKDEV(cd->major, baseminor), count);
 	if (err)
 		goto out;
@@ -494,7 +494,6 @@ void cdev_del(struct cdev *p)
 	kobject_put(&p->kobj);
 }
 
-
 static void cdev_default_release(struct kobject *kobj)
 {
 	struct cdev *p = container_of(kobj, struct cdev, kobj);
@@ -560,7 +559,6 @@ void __init chrdev_init(void)
 	cdev_map = kobj_map_init(base_probe, &chrdevs_lock);
 	bdi_init(&directly_mappable_cdev_bdi);
 }
-
 
 /* Let modules do char dev stuff */
 EXPORT_SYMBOL(register_chrdev_region);

@@ -155,4 +155,3 @@ void fc_vports_linkchange(struct fc_lport *n_port)
 		mutex_unlock(&vn_port->lp_mutex);
 	}
 }
-

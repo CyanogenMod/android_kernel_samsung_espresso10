@@ -104,7 +104,6 @@ static int  belkin_sa_tiocmget(struct tty_struct *tty);
 static int  belkin_sa_tiocmset(struct tty_struct *tty,
 					unsigned int set, unsigned int clear);
 
-
 static const struct usb_device_id id_table_combined[] = {
 	{ USB_DEVICE(BELKIN_SA_VID, BELKIN_SA_PID) },
 	{ USB_DEVICE(BELKIN_OLD_VID, BELKIN_OLD_PID) },
@@ -153,7 +152,6 @@ struct belkin_sa_private {
 	unsigned char		last_msr;
 	int			bad_flow_control;
 };
-
 
 /*
  * ***************************************************************************
@@ -565,7 +563,6 @@ exit:
 	return retval;
 }
 
-
 static int __init belkin_sa_init(void)
 {
 	int retval;
@@ -589,7 +586,6 @@ static void __exit belkin_sa_exit (void)
 	usb_deregister(&belkin_driver);
 	usb_serial_deregister(&belkin_device);
 }
-
 
 module_init(belkin_sa_init);
 module_exit(belkin_sa_exit);

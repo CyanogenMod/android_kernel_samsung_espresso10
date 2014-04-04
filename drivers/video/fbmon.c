@@ -1293,7 +1293,6 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
 	u32 interlace = 1, dscan = 1;
 	u32 hfmin, hfmax, vfmin, vfmax, dclkmin, dclkmax, err = 0;
 
-
 	timings = kzalloc(sizeof(struct __fb_timings), GFP_KERNEL);
 
 	if (!timings)

@@ -9,7 +9,7 @@
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See
  * the License for the specific language governing rights and
- * limitations under the License. 
+ * limitations under the License.
  *
  * The initial developer of the original code is David A. Hinds
  * <dahinds@users.sourceforge.net>.  Portions created by David A. Hinds
@@ -29,7 +29,6 @@
 
 #ifndef _LINUX_TI113X_H
 #define _LINUX_TI113X_H
-
 
 /* Register definitions for TI 113X PCI-to-CardBus bridges */
 
@@ -54,7 +53,7 @@
 #define  TI113X_SCR_CDMA_EN		0x00000008
 #define  TI113X_SCR_ASYNC_IRQ		0x00000004
 #define  TI113X_SCR_KEEPCLK		0x00000002
-#define  TI113X_SCR_CLKRUN_ENA		0x00000001  
+#define  TI113X_SCR_CLKRUN_ENA		0x00000001
 
 #define  TI122X_SCR_SER_STEP		0xc0000000
 #define  TI122X_SCR_INTRTIE		0x20000000
@@ -92,7 +91,6 @@
 #define TI125X_MFUNC0_INTB		0x00000001
 #define TI122X_MFUNC1_INTB		0x00000020
 #define TI122X_MFUNC3_IRQSER		0x00001000
-
 
 /* Retry Status Register */
 #define TI113X_RETRY_STATUS		0x0090	/* 8 bit */
@@ -225,9 +223,9 @@ static void ti_zoom_video(struct pcmcia_socket *sock, int onoff)
  *	to know a lot more about socket pairings in pcmcia_socket than
  *	we do now.. uggh.
  */
- 
+
 static void ti1250_zoom_video(struct pcmcia_socket *sock, int onoff)
-{	
+{
 	struct yenta_socket *socket = container_of(sock, struct yenta_socket, socket);
 	int shift = 0;
 	u8 reg;
@@ -239,7 +237,7 @@ static void ti1250_zoom_video(struct pcmcia_socket *sock, int onoff)
 
 	if(PCI_FUNC(socket->dev->devfn)==1)
 		shift = 1;
-	
+
 	if(onoff)
 	{
 		reg &= ~(1<<6); 	/* Clear select bit */
@@ -268,7 +266,7 @@ static void ti_set_zv(struct yenta_socket *socket)
 			case PCI_DEVICE_ID_TI_1225:
 			case PCI_DEVICE_ID_TI_4510:
 				socket->socket.zoom_video = ti_zoom_video;
-				break;	
+				break;
 			case PCI_DEVICE_ID_TI_1250:
 			case PCI_DEVICE_ID_TI_1251A:
 			case PCI_DEVICE_ID_TI_1251B:
@@ -277,7 +275,6 @@ static void ti_set_zv(struct yenta_socket *socket)
 		}
 	}
 }
-
 
 /*
  * Generic TI init - TI has an extension for the
@@ -345,7 +342,6 @@ static void ti113x_use_isa_irq(struct yenta_socket *socket)
 		"Yenta TI113x: using isa irq %d for CardBus\n", isa_irq);
 }
 
-
 static int ti113x_override(struct yenta_socket *socket)
 {
 	u8 cardctl;
@@ -361,7 +357,6 @@ static int ti113x_override(struct yenta_socket *socket)
 
 	return ti_override(socket);
 }
-
 
 /* irqrouting for func0, probes PCI interrupt and ISA interrupts */
 static void ti12xx_irqroute_func0(struct yenta_socket *socket)
@@ -479,7 +474,6 @@ out:
 	}
 }
 
-
 /* changes the irq of func1 to match that of func0 */
 static int ti12xx_align_irqs(struct yenta_socket *socket, int *old_irq)
 {
@@ -535,7 +529,7 @@ static void ti12xx_untie_interrupts(struct yenta_socket *socket, int old_irq)
 	socket->cb_irq = socket->dev->irq = old_irq;
 }
 
-/* 
+/*
  * irqrouting for func1, plays with INTB routing
  * only touches MFUNC for INTB routing. all other bits are taken
  * care of in func0 already.
@@ -648,7 +642,6 @@ out:
 			   "TI: no PCI interrupts. Fish. Please report.\n");
 	}
 }
-
 
 /* Returns true value if the second slot of a two-slot controller is empty */
 static int ti12xx_2nd_slot_empty(struct yenta_socket *socket)
@@ -885,7 +878,6 @@ static int ti12xx_override(struct yenta_socket *socket)
 	return ti_override(socket);
 }
 
-
 static int ti1250_override(struct yenta_socket *socket)
 {
 	u8 old, diag;
@@ -904,7 +896,6 @@ static int ti1250_override(struct yenta_socket *socket)
 
 	return ti12xx_override(socket);
 }
-
 
 /**
  * EnE specific part. EnE bridges are register compatible with TI bridges but
@@ -981,4 +972,3 @@ static int ene_override(struct yenta_socket *socket)
 #endif /* !CONFIG_YENTA_ENE_TUNE */
 
 #endif /* _LINUX_TI113X_H */
-

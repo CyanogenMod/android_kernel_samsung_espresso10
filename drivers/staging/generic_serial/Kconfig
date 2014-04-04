@@ -41,5 +41,3 @@ config RIO_OLDPCI
 	  Older RIO PCI cards need some initialization-time configuration to
 	  determine the IRQ and some control addresses.  If you have a RIO and
 	  this doesn't seem to work, try setting this to Y.
-
-

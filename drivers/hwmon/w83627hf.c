@@ -381,7 +381,6 @@ struct w83627hf_data {
 	u8 vrm_ovt;		/* Register value, 627THF/637HF/687THF only */
 };
 
-
 static int w83627hf_probe(struct platform_device *pdev);
 static int __devexit w83627hf_remove(struct platform_device *pdev);
 
@@ -511,7 +510,7 @@ static ssize_t store_regs_in_min0(struct device *dev, struct device_attribute *a
 	val = simple_strtoul(buf, NULL, 10);
 
 	mutex_lock(&data->update_lock);
-	
+
 	if ((data->vrm_ovt & 0x01) &&
 		(w83627thf == data->type || w83637hf == data->type
 		 || w83687thf == data->type))
@@ -542,7 +541,7 @@ static ssize_t store_regs_in_max0(struct device *dev, struct device_attribute *a
 	if ((data->vrm_ovt & 0x01) &&
 		(w83627thf == data->type || w83637hf == data->type
 		 || w83687thf == data->type))
-		
+
 		/* use VRM9 calculation */
 		data->in_max[0] =
 			SENSORS_LIMIT(((val * 100) - 70000 + 244) / 488, 0,
@@ -1452,7 +1451,6 @@ static int __devexit w83627hf_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 /* Registers 0x50-0x5f are banked */
 static inline void w83627hf_set_bank(struct w83627hf_data *data, u16 reg)
 {
@@ -1605,7 +1603,7 @@ static void __devinit w83627hf_init_device(struct platform_device *pdev)
 
 	/* Read VRM & OVT Config only once */
 	if (type == w83627thf || type == w83637hf || type == w83687thf) {
-		data->vrm_ovt = 
+		data->vrm_ovt =
 			w83627hf_read_value(data, W83627THF_REG_VRM_OVT_CFG);
 	}
 

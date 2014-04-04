@@ -101,7 +101,6 @@
    TO DO:
    ------
 
-
    Revision History
    ----------------
 
@@ -576,7 +575,6 @@ ewrk3_hw_init(struct net_device *dev, u_long iobase)
 			u_char irqnum;
 			unsigned long irq_mask;
 
-
 			irq_mask = probe_irq_on();
 
 			/*
@@ -627,7 +625,6 @@ ewrk3_hw_init(struct net_device *dev, u_long iobase)
 
 	return 0;
 }
-
 
 static int ewrk3_open(struct net_device *dev)
 {
@@ -794,7 +791,6 @@ static netdev_tx_t ewrk3_queue_pkt(struct sk_buff *skb, struct net_device *dev)
 		     (u_char) page);
 		goto err_out;
 	}
-
 
 	/*
 	 ** Set up shared memory window and pointer into the window
@@ -1313,7 +1309,6 @@ static int __init eisa_probe(struct net_device *dev, u_long ioaddr)
  out:
 	return ret;
 }
-
 
 /*
    ** Read the EWRK3 EEPROM using this routine
@@ -1955,7 +1950,6 @@ static __init int ewrk3_init_module(void)
 
 	return ndevs ? 0 : -EIO;
 }
-
 
 /* Hack for breakage in new module stuff */
 module_exit(ewrk3_exit_module);

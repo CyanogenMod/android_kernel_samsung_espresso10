@@ -185,7 +185,6 @@ struct bfa_fw_port_fpg_stats_s {
     u32    prim_unknown;
 };
 
-
 struct bfa_fw_port_lksm_stats_s {
     u32    hwsm_success;       /*  hwsm state machine success          */
     u32    hwsm_fails;         /*  hwsm fails                          */
@@ -583,7 +582,6 @@ struct bfa_itnim_iostats_s {
 	u32	iocom_sqer_needed;	/*  fcp-2 error recovery failed	*/
 	u32	iocom_res_free;		/*  Delayed freeing of IO tag	*/
 
-
 	u32	io_aborts;		/*  Host IO abort requests	*/
 	u32	iocom_hostabrts;	/*  Host IO abort completions	*/
 	u32	io_cleanups;		/*  IO clean-up requests	*/
@@ -703,8 +701,6 @@ enum bfa_port_linkstate_rsn {
 	BFA_PORT_LINKSTATE_RSN_LOCAL_FAULT	= 9,
 	BFA_PORT_LINKSTATE_RSN_REMOTE_FAULT	= 10,
 	BFA_PORT_LINKSTATE_RSN_TIMEOUT		= 11,
-
-
 
 	/* CEE related reason codes/errors */
 	CEE_LLDP_INFO_AGED_OUT			= 20,

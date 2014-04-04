@@ -233,7 +233,6 @@ typedef enum {
 	SMEM_NUM_ITEMS,
 } smem_mem_type;
 
-
 #define SMD_SS_CLOSED		0x00000000
 #define SMD_SS_OPENING		0x00000001
 #define SMD_SS_OPENED		0x00000002
@@ -398,6 +397,5 @@ static inline void msm_a2m_int(uint32_t irq)
 	writel(1, MSM_CSR_BASE + 0x400 + (irq * 4));
 }
 #endif /* CONFIG_ARCH_MSM7X30 */
-
 
 #endif

@@ -2,7 +2,7 @@
  *  proteon.c: A network driver for Proteon ISA token ring cards.
  *
  *  Based on tmspci written 1999 by Adam Fritzler
- *  
+ *
  *  Written 2003 by Jochen Friedrich
  *
  *  This software may be used and distributed according to the terms
@@ -95,10 +95,9 @@ static int __init proteon_probe1(struct net_device *dev, int ioaddr)
 
 	if (!request_region(ioaddr, PROTEON_IO_EXTENT, cardname))
 		return -ENODEV;
-		
 
 	chk1 = inb(ioaddr + 0x1f);      /* Get Proteon ID reg 1 */
-	if (chk1 != 0x1f) 
+	if (chk1 != 0x1f)
 		goto nodev;
 
 	chk1 = inb(ioaddr + 0x1e) & 0x07;       /* Get Proteon ID reg 0 */
@@ -112,7 +111,7 @@ static int __init proteon_probe1(struct net_device *dev, int ioaddr)
 	dev->base_addr = ioaddr;
 	return 0;
 nodev:
-	release_region(ioaddr, PROTEON_IO_EXTENT); 
+	release_region(ioaddr, PROTEON_IO_EXTENT);
 	return -ENODEV;
 }
 
@@ -150,21 +149,21 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 	if (tmsdev_init(dev, pdev))
 		goto out4;
 
-	dev->base_addr &= ~3; 
-		
+	dev->base_addr &= ~3;
+
 	proteon_read_eeprom(dev);
 
 	printk(KERN_DEBUG "proteon.c:    Ring Station Address: %pM\n",
 	       dev->dev_addr);
-		
+
 	tp = netdev_priv(dev);
 	tp->setnselout = proteon_setnselout_pins;
-		
+
 	tp->sifreadb = proteon_sifreadb;
 	tp->sifreadw = proteon_sifreadw;
 	tp->sifwriteb = proteon_sifwriteb;
 	tp->sifwritew = proteon_sifwritew;
-	
+
 	memcpy(tp->ProductID, cardname, PROD_ID_SIZE + 1);
 
 	tp->tmspriv = NULL;
@@ -176,11 +175,11 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 		for(j = 0; irqlist[j] != 0; j++)
 		{
 			dev->irq = irqlist[j];
-			if (!request_irq(dev->irq, tms380tr_interrupt, 0, 
+			if (!request_irq(dev->irq, tms380tr_interrupt, 0,
 				cardname, dev))
 				break;
                 }
-		
+
                 if(irqlist[j] == 0)
                 {
                         printk(KERN_INFO "proteon.c: AutoSelect no IRQ available\n");
@@ -198,7 +197,7 @@ static int __init setup_card(struct net_device *dev, struct device *pdev)
 				dev->irq);
 			goto out3;
 		}
-		if (request_irq(dev->irq, tms380tr_interrupt, 0, 
+		if (request_irq(dev->irq, tms380tr_interrupt, 0,
 			cardname, dev))
 		{
                         printk(KERN_INFO "proteon.c: Selected IRQ %d not available\n",
@@ -263,7 +262,7 @@ out5:
 
 /*
  * Reads MAC address from adapter RAM, which should've read it from
- * the onboard ROM.  
+ * the onboard ROM.
  *
  * Calling this on a board that does not support it can be a very
  * dangerous thing.  The Madge board, for instance, will lock your
@@ -273,11 +272,11 @@ out5:
 static void proteon_read_eeprom(struct net_device *dev)
 {
 	int i;
-	
+
 	/* Address: 0000:0000 */
 	proteon_sifwritew(dev, 0, SIFADX);
-	proteon_sifwritew(dev, 0, SIFADR);	
-	
+	proteon_sifwritew(dev, 0, SIFADR);
+
 	/* Read six byte MAC address data */
 	dev->addr_len = 6;
 	for(i = 0; i < 6; i++)
@@ -290,7 +289,7 @@ static unsigned short proteon_setnselout_pins(struct net_device *dev)
 }
 
 static int proteon_open(struct net_device *dev)
-{  
+{
 	struct net_local *tp = netdev_priv(dev);
 	unsigned short val = 0;
 	int i;
@@ -403,7 +402,7 @@ static void __exit proteon_cleanup(void)
 
 	for (i = 0; i < ISATR_MAX_ADAPTERS ; i++) {
 		struct platform_device *pdev = proteon_dev[i];
-		
+
 		if (!pdev)
 			continue;
 		dev = platform_get_drvdata(pdev);

@@ -169,7 +169,6 @@ MODULE_AUTHOR(DRIVER_AUTHOR);
 MODULE_DESCRIPTION(DRIVER_DESC);
 MODULE_LICENSE("GPL");
 
-
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:
   *** Local Variables: ***

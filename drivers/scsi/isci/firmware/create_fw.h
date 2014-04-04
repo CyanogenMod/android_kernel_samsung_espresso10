@@ -2,7 +2,6 @@
 #define _CREATE_FW_H_
 #include "../probe_roms.h"
 
-
 /* we are configuring for 2 SCUs */
 static const int num_elements = 2;
 

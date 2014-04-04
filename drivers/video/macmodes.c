@@ -128,7 +128,6 @@ static const struct fb_videomode mac_modedb[] = {
 #endif
 };
 
-
     /*
      *  Mapping between MacOS video mode numbers and video mode definitions
      *
@@ -172,7 +171,6 @@ static const struct mode_map {
     { VMODE_1600_1024_60, &mac_modedb[17] },
     { -1, NULL }
 };
-
 
     /*
      *  Mapping between monitor sense values and MacOS video mode numbers
@@ -236,7 +234,7 @@ int mac_vmode_to_var(int vmode, int cmode, struct fb_var_screeninfo *var)
 	case CMODE_8:
 	    var->bits_per_pixel = 8;
 	    var->red.offset = 0;
-	    var->red.length = 8;   
+	    var->red.length = 8;
 	    var->green.offset = 0;
 	    var->green.length = 8;
 	    var->blue.offset = 0;

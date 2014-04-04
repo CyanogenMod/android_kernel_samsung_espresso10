@@ -28,7 +28,6 @@
 
 #include "pvrusb2-wm8775.h"
 
-
 #include "pvrusb2-hdw-internal.h"
 #include "pvrusb2-debug.h"
 #include <linux/videodev2.h>
@@ -56,8 +55,6 @@ void pvr2_wm8775_subdev_update(struct pvr2_hdw *hdw, struct v4l2_subdev *sd)
 		sd->ops->audio->s_routing(sd, input, 0, 0);
 	}
 }
-
-
 
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:

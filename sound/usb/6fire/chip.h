@@ -29,4 +29,3 @@ struct sfire_chip {
 	struct comm_runtime *comm;
 };
 #endif /* USB6FIRE_CHIP_H */
-

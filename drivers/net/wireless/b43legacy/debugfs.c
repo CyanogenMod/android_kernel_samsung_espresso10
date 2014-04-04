@@ -37,7 +37,6 @@
 #include "pio.h"
 #include "xmit.h"
 
-
 /* The root directory. */
 static struct dentry *rootdir;
 
@@ -63,7 +62,6 @@ struct b43legacy_dfs_file * fops_to_dfs_file(struct b43legacy_wldev *dev,
 	return p;
 }
 
-
 #define fappend(fmt, x...)	\
 	do {							\
 		if (bufsize - count)				\
@@ -73,7 +71,6 @@ struct b43legacy_dfs_file * fops_to_dfs_file(struct b43legacy_wldev *dev,
 		else						\
 			printk(KERN_ERR "b43legacy: fappend overflow\n"); \
 	} while (0)
-
 
 /* wl->irq_lock is locked */
 static ssize_t tsf_read_file(struct b43legacy_wldev *dev, char *buf, size_t bufsize)
@@ -325,7 +322,6 @@ out_unlock:
 	return err ? err : count;
 }
 
-
 #define B43legacy_DEBUGFS_FOPS(name, _read, _write, _take_irqlock)	\
 	static struct b43legacy_debugfs_fops fops_##name = {		\
 		.read	= _read,				\
@@ -346,7 +342,6 @@ B43legacy_DEBUGFS_FOPS(ucode_regs, ucode_regs_read_file, NULL, 1);
 B43legacy_DEBUGFS_FOPS(shm, shm_read_file, NULL, 1);
 B43legacy_DEBUGFS_FOPS(txstat, txstat_read_file, NULL, 0);
 B43legacy_DEBUGFS_FOPS(restart, NULL, restart_write_file, 1);
-
 
 int b43legacy_debug(struct b43legacy_wldev *dev, enum b43legacy_dyndbg feature)
 {
@@ -436,7 +431,6 @@ void b43legacy_debugfs_add_device(struct b43legacy_wldev *dev)
 		if (!IS_ERR(d))					\
 			e->file_##name.dentry = d;		\
 	} while (0)
-
 
 	ADD_FILE(tsf, 0600);
 	ADD_FILE(ucode_regs, 0400);

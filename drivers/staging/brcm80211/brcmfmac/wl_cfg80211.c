@@ -1083,7 +1083,6 @@ wl_cfg80211_join_ibss(struct wiphy *wiphy, struct net_device *dev,
 
 	wl->ibss_starter = false;
 
-
 	err = wl_dev_ioctl(dev, WLC_SET_SSID, &join_params, join_params_size);
 	if (unlikely(err)) {
 		WL_ERR("WLC_SET_SSID failed (%d)\n", err);
@@ -2421,7 +2420,6 @@ static s32 wl_inform_bss(struct wl_priv *wl)
 	return err;
 }
 
-
 static s32 wl_inform_single_bss(struct wl_priv *wl, struct wl_bss_info *bi)
 {
 	struct wiphy *wiphy = wl_to_wiphy(wl);
@@ -2760,7 +2758,6 @@ static void wl_clear_assoc_ies(struct wl_priv *wl)
 	conn_info->resp_ie = NULL;
 	conn_info->resp_ie_len = 0;
 }
-
 
 static void wl_ch_to_chanspec(int ch, struct wl_join_params *join_params,
 	size_t *join_params_size)
@@ -4231,7 +4228,6 @@ static __used s32 wl_add_ie(struct wl_priv *wl, u8 t, u8 l, u8 *v)
 
 	return err;
 }
-
 
 static void wl_link_down(struct wl_priv *wl)
 {

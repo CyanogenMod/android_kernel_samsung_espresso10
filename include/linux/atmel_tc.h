@@ -65,7 +65,6 @@ extern void atmel_tc_free(struct atmel_tc *tc);
 /* platform-specific ATMEL_TC_TIMER_CLOCKx divisors (0 means 32KiHz) */
 extern const u8 atmel_tc_divisors[5];
 
-
 /*
  * Two registers have block-wide controls.  These are: configuring the three
  * "external" clocks (or event sources) used by the timer channels; and
@@ -95,7 +94,6 @@ extern const u8 atmel_tc_divisors[5];
 #define        ATMEL_TC_TC2XC2S_NONE	(1 << 4)
 #define        ATMEL_TC_TC2XC2S_TIOA0	(2 << 4)
 #define        ATMEL_TC_TC2XC2S_TIOA1	(3 << 4)
-
 
 /*
  * Each TC block has three "channels", each with one counter and controls.

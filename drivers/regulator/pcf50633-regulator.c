@@ -93,12 +93,10 @@ static unsigned int auto_voltage_value(u8 bits)
 	return 625 + (bits * 25);
 }
 
-
 static unsigned int down_voltage_value(u8 bits)
 {
 	return 625 + (bits * 25);
 }
-
 
 static unsigned int ldo_voltage_value(u8 bits)
 {

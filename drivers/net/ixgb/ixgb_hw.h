@@ -771,7 +771,6 @@ extern void ixgb_rar_set(struct ixgb_hw *hw,
 				u8 *addr,
 				u32 index);
 
-
 /* Filters (multicast, vlan, receive) */
 extern void ixgb_mc_addr_list_update(struct ixgb_hw *hw,
 				   u8 *mc_addr_list,
@@ -796,6 +795,5 @@ void ixgb_led_off(struct ixgb_hw *hw);
 void ixgb_write_pci_cfg(struct ixgb_hw *hw,
 			 u32 reg,
 			 u16 * value);
-
 
 #endif /* _IXGB_HW_H_ */

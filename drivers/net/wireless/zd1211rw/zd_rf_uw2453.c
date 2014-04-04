@@ -537,4 +537,3 @@ int zd_rf_init_uw2453(struct zd_rf *rf)
 
 	return 0;
 }
-

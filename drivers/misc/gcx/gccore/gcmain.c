@@ -40,7 +40,6 @@ GCDBG_FILTERDEF(core, GCZONE_NONE,
 		"mapping",
 		"probe")
 
-
 #if !defined(GC_ENABLE_SUSPEND)
 #define GC_ENABLE_SUSPEND 1
 #endif
@@ -51,7 +50,6 @@ GCDBG_FILTERDEF(core, GCZONE_NONE,
 
 /* Driver private data. */
 static struct gccorecontext g_context;
-
 
 /*******************************************************************************
  * Context management.
@@ -161,7 +159,6 @@ struct device *gc_get_dev(void)
 }
 EXPORT_SYMBOL(gc_get_dev);
 
-
 /*******************************************************************************
 ** Register access.
 */
@@ -175,7 +172,6 @@ void gc_write_reg(unsigned int address, unsigned int data)
 {
 	writel(data, (unsigned char *) g_context.regbase + address);
 }
-
 
 /*******************************************************************************
  * Power management.
@@ -441,7 +437,6 @@ void gcpwr_reset(struct gccorecontext *gccorecontext)
 
 	GCEXIT(GCZONE_POWER);
 }
-
 
 /*******************************************************************************
  * Command buffer submission.
@@ -740,7 +735,7 @@ static int gc_probe_opp(struct platform_device *pdev)
 	}
 
 	core->opp_freqs = kzalloc((core->opp_count) * sizeof(unsigned long),
-			GFP_KERNEL);
+			GFP_ATOMIC);
 	if (!core->opp_freqs) {
 		core->opp_count = 0;
 		goto done;
@@ -860,7 +855,6 @@ static struct early_suspend early_suspend_info = {
 	.level = EARLY_SUSPEND_LEVEL_DISABLE_FB,
 };
 #endif
-
 
 /*******************************************************************************
  * Driver init/shutdown.

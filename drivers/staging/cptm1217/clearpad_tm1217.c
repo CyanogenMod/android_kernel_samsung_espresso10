@@ -82,7 +82,6 @@
 #define TMA1217_PRODUCT_ID_START	0x7E /* Start address for 10 byte ID */
 #define TMA1217_DEVICE_CAPABILITY	0x8B /* Reporting capability */
 
-
 /*
  * The touch position structure.
  */
@@ -126,7 +125,6 @@ struct cp_tm1217_device {
 
 	int gpio;
 };
-
 
 /* The following functions are used to read/write registers on the device
  * as per the RMI prorocol. Technically, a page select should be written
@@ -528,7 +526,6 @@ static int cp_tm1217_probe(struct i2c_client *client,
 	}
 
 	client->irq = retval;
-
 
 	retval = request_threaded_irq(client->irq,
 		NULL, cp_tm1217_sample_thread,

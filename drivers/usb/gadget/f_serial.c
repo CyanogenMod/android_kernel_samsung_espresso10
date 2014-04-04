@@ -17,7 +17,6 @@
 #include "u_serial.h"
 #include "gadget_chips.h"
 
-
 /*
  * This function packages a simple "generic serial" port with no real
  * control mechanisms, just raw data transfer over two bulk endpoints.
@@ -197,7 +196,6 @@ gser_bind(struct usb_configuration *c, struct usb_function *f)
 			f->descriptors, &gser_fs_in_desc);
 	gser->fs.out = usb_find_endpoint(gser_fs_function,
 			f->descriptors, &gser_fs_out_desc);
-
 
 	/* support all relevant hardware speeds... we expect that when
 	 * hardware is dual speed, all bulk-capable endpoints work at

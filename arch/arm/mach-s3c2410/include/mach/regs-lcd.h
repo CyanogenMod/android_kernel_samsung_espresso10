@@ -8,7 +8,6 @@
  * published by the Free Software Foundation.
 */
 
-
 #ifndef ___ASM_ARCH_REGS_LCD_H
 #define ___ASM_ARCH_REGS_LCD_H
 

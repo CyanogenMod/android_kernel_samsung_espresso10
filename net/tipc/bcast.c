@@ -97,7 +97,6 @@ struct bclink {
 	struct tipc_node *retransmit_to;
 };
 
-
 static struct bcbearer *bcbearer;
 static struct bclink *bclink;
 static struct link *bcl;
@@ -131,7 +130,6 @@ static void bcbuf_decr_acks(struct sk_buff *buf)
 {
 	bcbuf_set_acks(buf, bcbuf_acks(buf) - 1);
 }
-
 
 static void bclink_set_last_sent(void)
 {
@@ -176,7 +174,6 @@ static int bclink_ack_allowed(u32 n)
 {
 	return (n % TIPC_MIN_LINK_WIN) == tipc_own_tag;
 }
-
 
 /**
  * tipc_bclink_retransmit_to - get most recent node to request retransmission
@@ -531,7 +528,6 @@ u32 tipc_bclink_acks_missing(struct tipc_node *n_ptr)
 		(tipc_bclink_get_last_sent() != n_ptr->bclink.acked));
 }
 
-
 /**
  * tipc_bcbearer_send - send a packet through the broadcast pseudo-bearer
  *
@@ -684,7 +680,6 @@ void tipc_bcbearer_push(void)
 	spin_unlock_bh(&bc_lock);
 }
 
-
 int tipc_bclink_stats(char *buf, const u32 buf_size)
 {
 	struct print_buf pb;
@@ -801,7 +796,6 @@ void tipc_bclink_stop(void)
 	spin_unlock_bh(&bc_lock);
 }
 
-
 /**
  * tipc_nmap_add - add a node to a node map
  */
@@ -911,4 +905,3 @@ void tipc_port_list_free(struct port_list *pl_ptr)
 		kfree(item);
 	}
 }
-

@@ -51,7 +51,6 @@ struct slave;
 				 * because the key hash table is BYTE wide !
 				 */
 
-
 #define TLB_NULL_INDEX		0xffffffff
 #define MAX_LP_BURST		3
 
@@ -67,7 +66,6 @@ struct slave;
  * promiscuous after failover
  */
 #define RLB_PROMISC_TIMEOUT	(10*ALB_TIMER_TICKS_PER_SEC)
-
 
 struct tlb_client_info {
 	struct slave *tx_slave;	/* A pointer to slave used for transmiting
@@ -164,4 +162,3 @@ void bond_alb_monitor(struct work_struct *);
 int bond_alb_set_mac_address(struct net_device *bond_dev, void *addr);
 void bond_alb_clear_vlan(struct bonding *bond, unsigned short vlan_id);
 #endif /* __BOND_ALB_H__ */
-

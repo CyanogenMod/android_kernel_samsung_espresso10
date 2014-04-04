@@ -214,8 +214,6 @@ trace
    you want to turn the initialization and probing tracing off, set trace=0.
    The default value for trace is 35 (0x23).
 
-
-
 Example:
 
      # modprobe pwc size=cif fps=15 power_save=1
@@ -233,4 +231,3 @@ preference for all camera's, but this parameter can be set per camera with
 the VIDIOCPWCSCQUAL ioctl() call.
 
 All parameters are optional.
-

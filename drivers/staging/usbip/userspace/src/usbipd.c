@@ -32,13 +32,11 @@
 
 static const char version[] = PACKAGE_STRING;
 
-
 static int send_reply_devlist(int sockfd)
 {
 	int ret;
 	struct usbip_exported_device *edev;
 	struct op_devlist_reply reply;
-
 
 	reply.ndev = 0;
 
@@ -94,7 +92,6 @@ static int send_reply_devlist(int sockfd)
 	return 0;
 }
 
-
 static int recv_request_devlist(int sockfd)
 {
 	int ret;
@@ -116,7 +113,6 @@ static int recv_request_devlist(int sockfd)
 
 	return 0;
 }
-
 
 static int recv_request_import(int sockfd)
 {
@@ -159,7 +155,6 @@ static int recv_request_import(int sockfd)
 		error = 1;
 	}
 
-
 	ret = usbip_send_op_common(sockfd, OP_REP_IMPORT, (!error ? ST_OK : ST_NA));
 	if (ret < 0) {
 		err("send import reply");
@@ -182,20 +177,16 @@ static int recv_request_import(int sockfd)
 	return 0;
 }
 
-
-
 static int recv_pdu(int sockfd)
 {
 	int ret;
 	uint16_t code = OP_UNSPEC;
-
 
 	ret = usbip_recv_op_common(sockfd, &code);
 	if (ret < 0) {
 		err("recv op_common, %d", ret);
 		return ret;
 	}
-
 
 	ret = usbip_stub_refresh_device_list();
 	if (ret < 0)
@@ -218,12 +209,8 @@ static int recv_pdu(int sockfd)
 			ret = -1;
 	}
 
-
 	return ret;
 }
-
-
-
 
 static void log_addrinfo(struct addrinfo *ai)
 {
@@ -365,7 +352,6 @@ static int my_accept(int lsock)
 	return csock;
 }
 
-
 GMainLoop *main_loop;
 
 static void signal_handler(int i)
@@ -387,7 +373,6 @@ static void set_signal(void)
 	sigaction(SIGINT, &act, NULL);
 }
 
-
 gboolean process_comming_request(GIOChannel *gio, GIOCondition condition,
 				 gpointer data __attribute__((unused)))
 {
@@ -395,7 +380,6 @@ gboolean process_comming_request(GIOChannel *gio, GIOCondition condition,
 
 	if (condition & (G_IO_ERR | G_IO_HUP | G_IO_NVAL))
 		g_error("unknown condition");
-
 
 	if (condition & G_IO_IN) {
 		int lsock;
@@ -417,15 +401,12 @@ gboolean process_comming_request(GIOChannel *gio, GIOCondition condition,
 	return TRUE;
 }
 
-
 static void do_standalone_mode(gboolean daemonize)
 {
 	int ret;
 	int lsock[MAXSOCK];
 	struct addrinfo *ai_head;
 	int n;
-
-
 
 	ret = usbip_names_init(USBIDS_FILE);
 	if (ret)
@@ -460,9 +441,7 @@ static void do_standalone_mode(gboolean daemonize)
 				process_comming_request, NULL);
 	}
 
-
 	info("usbipd start (%s)", version);
-
 
 	main_loop = g_main_loop_new(FALSE, FALSE);
 	g_main_loop_run(main_loop);
@@ -475,7 +454,6 @@ static void do_standalone_mode(gboolean daemonize)
 
 	return;
 }
-
 
 static const char help_message[] = "\
 Usage: usbipd [options]				\n\
@@ -513,7 +491,6 @@ int main(int argc, char *argv[])
 		cmd_help,
 		cmd_version
 	} cmd = cmd_standalone_mode;
-
 
 	usbip_use_stderr = 1;
 	usbip_use_syslog = 0;

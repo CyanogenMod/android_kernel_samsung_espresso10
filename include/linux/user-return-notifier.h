@@ -11,7 +11,6 @@ struct user_return_notifier {
 	struct hlist_node link;
 };
 
-
 void user_return_notifier_register(struct user_return_notifier *urn);
 void user_return_notifier_unregister(struct user_return_notifier *urn);
 

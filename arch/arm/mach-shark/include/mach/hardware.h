@@ -19,4 +19,3 @@
 #define PCIMEM_BASE		0xe8000000
 
 #endif
-

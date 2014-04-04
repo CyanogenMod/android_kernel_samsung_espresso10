@@ -22,7 +22,6 @@ struct sleep_params {
 	uint16_t sp_reserved;
 };
 
-
 /* Private structure for the MV device */
 struct lbs_private {
 

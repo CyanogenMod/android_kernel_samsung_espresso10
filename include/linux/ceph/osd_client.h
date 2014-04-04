@@ -287,4 +287,3 @@ extern int ceph_osdc_wait_event(struct ceph_osd_event *event,
 				unsigned long timeout);
 extern void ceph_osdc_put_event(struct ceph_osd_event *event);
 #endif
-

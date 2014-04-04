@@ -121,6 +121,4 @@
 /*TXFF_PG_NUM*/
 #define	_TXFF_PG_NUM_MSK	0x0FFF
 
-
 #endif	/*	__RTL8712_FIFOCTRL_BITDEF_H__ */
-

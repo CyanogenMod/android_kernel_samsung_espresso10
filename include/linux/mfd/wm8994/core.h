@@ -97,7 +97,6 @@ int wm8994_bulk_read(struct wm8994 *wm8994, unsigned short reg,
 int wm8994_bulk_write(struct wm8994 *wm8994, unsigned short reg,
 		     int count, const u16 *buf);
 
-
 /* Helper to save on boilerplate */
 static inline int wm8994_request_irq(struct wm8994 *wm8994, int irq,
 				     irq_handler_t handler, const char *name,

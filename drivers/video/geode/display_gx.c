@@ -107,7 +107,6 @@ void gx_set_mode(struct fb_info *info)
 	write_dc(par, DC_LINE_SIZE,
 		((info->var.xres * info->var.bits_per_pixel/8) >> 3) + 2);
 
-
 	/* Enable graphics and video data and unmask address lines. */
 	dcfg |= DC_DISPLAY_CFG_GDEN | DC_DISPLAY_CFG_VDEN |
 		DC_DISPLAY_CFG_A20M | DC_DISPLAY_CFG_A18M;

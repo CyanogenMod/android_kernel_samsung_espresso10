@@ -65,56 +65,13 @@ static void print_bvparams(struct bvbltparams *bltparams,
                            unsigned int pSrc1DescInfo, unsigned int pSrc2DescInfo)
 {
 	struct bvphysdesc *physdesc = NULL;
-	if (bltparams->flags & BVFLAG_BLEND)
-	{
-		printk(KERN_INFO "%s: param %s %x (%s), flags %ld\n",
-			"bv", "blend", bltparams->op.blend,
-			bltparams->op.blend == BVBLEND_SRC1OVER ? "src1over" : "??",
-			bltparams->flags);
-	}
-
-	if (bltparams->flags & BVFLAG_ROP)
-	{
-		printk(KERN_INFO "%s: param %s %x (%s), flags %ld\n",
-			"bv", "rop", bltparams->op.rop,
-			bltparams->op.rop == 0xCCCC ? "srccopy" : "??",
-			bltparams->flags);
-	}
 
 	if (bltparams->dstdesc->auxtype == BVAT_PHYSDESC)
 		physdesc = bltparams->dstdesc->auxptr;
 
-	printk(KERN_INFO "%s: dst %d,%d rect{%d,%d sz %d,%d}"
-		" stride %ld desc 0x%p\n", "bv",
-		bltparams->dstgeom->width,
-		bltparams->dstgeom->height,
-		bltparams->dstrect.left, bltparams->dstrect.top,
-		bltparams->dstrect.width, bltparams->dstrect.height,
-		bltparams->dstgeom->virtstride,
-		physdesc ? physdesc->pagearray : NULL);
-
-	printk(KERN_INFO "%s: src1 %d,%d rect{%d,%d sz %d,%d}"
-		" stride %ld, %s 0x%x (0x%x)\n", "bv",
-		bltparams->src1geom->width,
-		bltparams->src1geom->height, bltparams->src1rect.left,
-		bltparams->src1rect.top, bltparams->src1rect.width,
-		bltparams->src1rect.height, bltparams->src1geom->virtstride,
-		bltparams->src1.desc->auxtype == BVAT_PHYSDESC ? "phys" : "unk",
-		bltparams->src1.desc->auxtype == BVAT_PHYSDESC ? (unsigned int)bltparams->src1.desc : 0,
-		pSrc1DescInfo);
-
 	if (!(bltparams->flags & BVFLAG_BLEND))
 		return;
 
-	printk(KERN_INFO "%s: src2 %d,%d rect{%d,%d sz %d,%d}"
-		" stride %ld, %s 0x%x (0x%x)\n", "bv",
-		bltparams->src2geom->width,
-		bltparams->src2geom->height, bltparams->src2rect.left,
-		bltparams->src2rect.top, bltparams->src2rect.width,
-		bltparams->src2rect.height, bltparams->src2geom->virtstride,
-		bltparams->src2.desc->auxtype == BVAT_PHYSDESC ? "phys" : "unk",
-		bltparams->src2.desc->auxtype == BVAT_PHYSDESC ? (unsigned int)bltparams->src2.desc : 0,
-		pSrc2DescInfo);
 }
 
 void OMAPLFBGetBltFBsBvHndl(OMAPLFB_FBINFO *psPVRFBInfo, IMG_UINTPTR_T *ppPhysAddr)
@@ -231,8 +188,6 @@ static OMAPLFB_ERROR InitBltFBsVram(OMAPLFB_DEVINFO *psDevInfo)
 		iBvErr = gsBvInterface.bv_map(pBvDesc);
 		if (iBvErr)
 		{
-			WARN(1, "%s: BV map Blt FB buffer failed %d\n",
-					__func__, iBvErr);
 			kfree(pBvDesc);
 			kfree(pBvPhysDesc);
 			kfree(pPaddrs);
@@ -273,9 +228,6 @@ static PVRSRV_ERROR InitBltFBsMapTiler2D(OMAPLFB_DEVINFO *psDevInfo)
 				wpages * h * sizeof(*pPageList),
 		                GFP_KERNEL);
 		if ( !pPageList) {
-			printk(KERN_WARNING DRIVER_PREFIX
-					": %s: Could not allocate page list\n",
-					__FUNCTION__);
 			return OMAPLFB_ERROR_INIT_FAILURE;
 		}
 		tilview_create(&view, phys, psLINFBInfo->var.xres, h);
@@ -302,7 +254,6 @@ static PVRSRV_ERROR InitBltFBsMapTiler2D(OMAPLFB_DEVINFO *psDevInfo)
 
 		if (eBvErr)
 		{
-			WARN(1, "%s: BV map blt buffer failed %d\n",__func__, eBvErr);
 			psPVRFBInfo->psBltFBsBvHndl[iFB]= NULL;
 			kfree(pBvDesc);
 			kfree(pBvPhysDesc);
@@ -351,14 +302,9 @@ static OMAPLFB_ERROR InitBltFBsTiler2D(OMAPLFB_DEVINFO *psDevInfo)
 	sAllocData.h = h;
 	sAllocData.w = psPVRFBInfo->psBltFBsNo * w;
 
-	printk(KERN_INFO DRIVER_PREFIX
-		":BltFBs alloc %d x (%d x %d) [stride %d]\n",
-		psPVRFBInfo->psBltFBsNo, w, h, psPVRFBInfo->uiBltFBsByteStride);
 	res = omap_ion_nonsecure_tiler_alloc(gpsIONClient, &sAllocData);
 	if (res < 0)
 	{
-		printk(KERN_ERR DRIVER_PREFIX
-			"Could not allocate BltFBs\n");
 		return OMAPLFB_ERROR_INIT_FAILURE;
 	}
 
@@ -376,12 +322,10 @@ static struct bvbuffdesc *GetBvDescriptor(OMAPLFB_DEVINFO *psDevInfo, PDC_MEM_IN
 {
 	struct bvbuffdesc *pBvDesc;
 	if (!meminfo_idx_valid(ui32Idx, ui32NumMemInfos)) {
-		WARN(1, "%s: index out of range\n", __func__);
 		return NULL;
 	}
 
 	psDevInfo->sPVRJTable.pfnPVRSRVDCMemInfoGetBvHandle(ppsMemInfos[ui32Idx], (IMG_VOID**)&pBvDesc);
-	WARN(!pBvDesc, "%s: null handle\n", __func__);
 	return pBvDesc;
 }
 
@@ -440,8 +384,6 @@ void OMAPLFBDoBlits(OMAPLFB_DEVINFO *psDevInfo, PDC_MEM_INFO *ppsMemInfos, struc
 			}
 			else
 			{
-				WARN(1, "%s: Unable to determine scr1 buffer\n",
-						__func__);
 				continue;
 			}
 		}
@@ -475,8 +417,6 @@ void OMAPLFBDoBlits(OMAPLFB_DEVINFO *psDevInfo, PDC_MEM_INFO *ppsMemInfos, struc
 				}
 				else
 				{
-					WARN(1, "%s: Unable to determine scr2 buffer\n",
-							__func__);
 					continue;
 				}
 			}

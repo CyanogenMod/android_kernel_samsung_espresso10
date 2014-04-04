@@ -130,7 +130,6 @@ static inline struct cx25840_ir_state *to_ir_state(struct v4l2_subdev *sd)
 	return state ? state->ir_state : NULL;
 }
 
-
 /*
  * Rx and Tx Clock Divider register computations
  *
@@ -1030,7 +1029,6 @@ static int cx25840_ir_tx_s_parameters(struct v4l2_subdev *sd,
 	return 0;
 }
 
-
 /*
  * V4L2 Subdevice Core Ops support
  */
@@ -1173,7 +1171,6 @@ int cx25840_ir_log_status(struct v4l2_subdev *sd)
 	return 0;
 }
 
-
 const struct v4l2_subdev_ir_ops cx25840_ir_ops = {
 	.rx_read = cx25840_ir_rx_read,
 	.rx_g_parameters = cx25840_ir_rx_g_parameters,
@@ -1183,7 +1180,6 @@ const struct v4l2_subdev_ir_ops cx25840_ir_ops = {
 	.tx_g_parameters = cx25840_ir_tx_g_parameters,
 	.tx_s_parameters = cx25840_ir_tx_s_parameters,
 };
-
 
 static const struct v4l2_subdev_ir_parameters default_rx_params = {
 	.bytes_per_data_element = sizeof(union cx25840_ir_fifo_rec),

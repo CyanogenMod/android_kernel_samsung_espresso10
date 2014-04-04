@@ -122,7 +122,6 @@ static void ProcSeqStartstopBridgeStats(struct seq_file *sfile,IMG_BOOL start)
 	}
 }
 
-
 static void* ProcSeqOff2ElementBridgeStats(struct seq_file *sfile, loff_t off)
 {
 	if(!off)
@@ -135,7 +134,6 @@ static void* ProcSeqOff2ElementBridgeStats(struct seq_file *sfile, loff_t off)
 		return (void*)0;
 	}
 
-
 	return (void*)&g_BridgeDispatchTable[off-1];
 }
 
@@ -143,7 +141,6 @@ static void* ProcSeqNextBridgeStats(struct seq_file *sfile,void* el,loff_t off)
 {
 	return ProcSeqOff2ElementBridgeStats(sfile,off);
 }
-
 
 static void ProcSeqShowBridgeStats(struct seq_file *sfile,void* el)
 {
@@ -181,7 +178,6 @@ static void ProcSeqShowBridgeStats(struct seq_file *sfile,void* el)
 
 #endif
 
-
 #if defined(SUPPORT_DRI_DRM)
 int
 PVRSRV_BridgeDispatchKM(struct drm_device unref__ *dev, void *arg, struct drm_file *pFile)
@@ -217,7 +213,6 @@ PVRSRV_BridgeDispatchKM(struct file *pFile, unsigned int unref__ ioctlCmd, unsig
 
 		goto unlock_and_return;
 	}
-
 
 	if(OSCopyFromUser(IMG_NULL,
 					  psBridgePackageKM,
@@ -335,7 +330,6 @@ PVRSRV_BridgeDispatchKM(struct file *pFile, unsigned int unref__ ioctlCmd, unsig
 				break;
 			}
 
-
 			psEnvPerProc = (PVRSRV_ENV_PER_PROCESS_DATA *)PVRSRVProcessPrivateData(psPerProc);
 			if (psEnvPerProc == IMG_NULL)
 			{
@@ -391,7 +385,6 @@ PVRSRV_BridgeDispatchKM(struct file *pFile, unsigned int unref__ ioctlCmd, unsig
 				goto unlock_and_return;
 			}
 
-
 			if(PVRSRVLookupHandle(KERNEL_HANDLE_BASE,
 								  (IMG_PVOID *)&psKernelMemInfo,
 								  hMemInfo,
@@ -401,7 +394,6 @@ PVRSRV_BridgeDispatchKM(struct file *pFile, unsigned int unref__ ioctlCmd, unsig
 				err = -EFAULT;
 				goto unlock_and_return;
 			}
-
 
 			PVRSRVKernelMemInfoIncRef(psKernelMemInfo);
 

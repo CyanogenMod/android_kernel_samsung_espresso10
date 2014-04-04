@@ -5,7 +5,6 @@
 #define DTLK_INTERROGATE 0xa390	/* get settings from the DoubleTalk */
 #define DTLK_STATUS 0xa391	/* get status from the DoubleTalk */
 
-
 #define DTLK_CLEAR 0x18		/* stops speech */
 
 #define DTLK_MAX_RETRIES (loops_per_jiffy/(10000/HZ))

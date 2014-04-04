@@ -362,7 +362,6 @@
 #define     MIN_MAX_BANK__MIN_VALUE			0x0003
 #define     MIN_MAX_BANK__MAX_VALUE			0x000c
 
-
 /* ffsdefs.h */
 #define CLEAR 0                 /*use this to clear a field instead of "fail"*/
 #define SET   1                 /*use this to set a field instead of "pass"*/
@@ -427,7 +426,6 @@
 #define MODE_01    0x04000000
 #define MODE_10    0x08000000
 #define MODE_11    0x0C000000
-
 
 #define DATA_TRANSFER_MODE              0
 #define PROTECTION_PER_BLOCK            1

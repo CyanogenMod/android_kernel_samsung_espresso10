@@ -490,7 +490,6 @@ vxge_rx_1b_compl(struct __vxge_hw_ring *ringh, void *dtr,
 		else
 			skb_checksum_none_assert(skb);
 
-
 		if (ring->rx_hwts) {
 			struct skb_shared_hwtstamps *skb_hwts;
 			u32 ns = *(u32 *)(skb->head + pkt_length);
@@ -1158,7 +1157,6 @@ static void vxge_set_multicast(struct net_device *dev)
 			vdev->all_multi_flg = 0;
 		}
 	}
-
 
 	if (!vdev->config.addr_learn_en) {
 		for (i = 0; i < vdev->no_of_vpath; i++) {

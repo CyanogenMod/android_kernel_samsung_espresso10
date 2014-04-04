@@ -184,7 +184,6 @@ static struct platform_driver regulator_userspace_consumer_driver = {
 	},
 };
 
-
 static int __init regulator_userspace_consumer_init(void)
 {
 	return platform_driver_register(&regulator_userspace_consumer_driver);

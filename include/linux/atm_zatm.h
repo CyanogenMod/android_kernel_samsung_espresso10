@@ -3,7 +3,6 @@
 
 /* Written 1995-1999 by Werner Almesberger, EPFL LRC/ICA */
 
-
 #ifndef LINUX_ATM_ZATM_H
 #define LINUX_ATM_ZATM_H
 
@@ -39,7 +38,6 @@ struct zatm_t_hist {
 	struct timeval real;		/* real (wall-clock) time */
 	struct timeval expected;	/* expected real time */
 };
-
 
 #define ZATM_OAM_POOL		0	/* free buffer pool for OAM cells */
 #define ZATM_AAL0_POOL		1	/* free buffer pool for AAL0 cells */

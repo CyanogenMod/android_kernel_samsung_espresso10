@@ -172,7 +172,6 @@ acpi_status acpi_disable_gpe(acpi_handle gpe_device, u32 gpe_number)
 }
 ACPI_EXPORT_SYMBOL(acpi_disable_gpe)
 
-
 /*******************************************************************************
  *
  * FUNCTION:    acpi_setup_gpe_for_wake

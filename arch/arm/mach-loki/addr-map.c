@@ -44,7 +44,6 @@
 #define CPU_WIN_REMAP_LO(n)	BRIDGE_REG(0x008 | ((n) << 4))
 #define CPU_WIN_REMAP_HI(n)	BRIDGE_REG(0x00c | ((n) << 4))
 
-
 struct mbus_dram_target_info loki_mbus_dram_info;
 
 static void __init setup_cpu_win(int win, u32 base, u32 size,

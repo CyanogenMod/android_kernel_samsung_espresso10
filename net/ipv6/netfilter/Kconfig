@@ -215,10 +215,9 @@ config IP6_NF_SECURITY
        help
          This option adds a `security' table to iptables, for use
          with Mandatory Access Control (MAC) policy.
-        
+
          If unsure, say N.
 
 endif # IP6_NF_IPTABLES
 
 endmenu
-

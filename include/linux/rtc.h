@@ -97,7 +97,6 @@ struct rtc_pll_info {
 #define RTC_AF 0x20	/* Alarm interrupt */
 #define RTC_UF 0x10	/* Update interrupt for 1Hz RTC */
 
-
 #define RTC_MAX_FREQ	8192
 
 #ifdef __KERNEL__
@@ -112,7 +111,6 @@ extern int rtc_tm_to_time(struct rtc_time *tm, unsigned long *time);
 extern void rtc_time_to_tm(unsigned long time, struct rtc_time *tm);
 ktime_t rtc_tm_to_ktime(struct rtc_time tm);
 struct rtc_time rtc_ktime_to_tm(ktime_t kt);
-
 
 #include <linux/device.h>
 #include <linux/seq_file.h>
@@ -160,14 +158,12 @@ typedef struct rtc_task {
 	void *private_data;
 } rtc_task_t;
 
-
 struct rtc_timer {
 	struct rtc_task	task;
 	struct timerqueue_node node;
 	ktime_t period;
 	int enabled;
 };
-
 
 /* flags */
 #define RTC_DEV_BUSY 0
@@ -202,7 +198,6 @@ struct rtc_device
 	struct hrtimer pie_timer; /* sub second exp, so needs hrtimer */
 	int pie_enabled;
 	struct work_struct irqwork;
-
 
 #ifdef CONFIG_RTC_INTF_DEV_UIE_EMUL
 	struct work_struct uie_task;

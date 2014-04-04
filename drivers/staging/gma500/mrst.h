@@ -214,4 +214,3 @@ struct mrst_gct_data {
 #define MODE_SETTING_ENCODER_DONE 0x8
 #define GCT_R10_HEADER_SIZE	16
 #define GCT_R10_DISPLAY_DESC_SIZE	28
-

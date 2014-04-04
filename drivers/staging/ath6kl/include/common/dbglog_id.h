@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="dbglog_id.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -28,11 +28,11 @@
 extern "C" {
 #endif
 
-/* 
+/*
  * The nomenclature for the debug identifiers is MODULE_DESCRIPTION.
  * Please ensure that the definition of any new debugid introduced is captured
- * between the <MODULE>_DBGID_DEFINITION_START and 
- * <MODULE>_DBGID_DEFINITION_END defines. The structure is required for the 
+ * between the <MODULE>_DBGID_DEFINITION_START and
+ * <MODULE>_DBGID_DEFINITION_END defines. The structure is required for the
  * parser to correctly pick up the values for different debug identifiers.
  */
 
@@ -109,17 +109,17 @@ extern "C" {
 #define TLPM_ON                                      12
 #define TLPM_OFF                                     13
 #define TLPM_WAKEUP_FROM_HOST                        14
-#define TLPM_WAKEUP_FROM_BT                          15 
+#define TLPM_WAKEUP_FROM_BT                          15
 #define TLPM_TX_BREAK_RECIVED                        16
 #define TLPM_IDLE_TIMER_NOT_RUNNING                  17
 #define MISC_DBGID_DEFINITION_END
-    
+
 /* TXRX debug identifier definitions */
 #define TXRX_TXBUF_DBGID_DEFINITION_START
 #define TXRX_TXBUF_ALLOCATE_BUF                      1
 #define TXRX_TXBUF_QUEUE_BUF_TO_MBOX                 2
 #define TXRX_TXBUF_QUEUE_BUF_TO_TXQ                  3
-#define TXRX_TXBUF_TXQ_DEPTH                         4   
+#define TXRX_TXBUF_TXQ_DEPTH                         4
 #define TXRX_TXBUF_IBSS_QUEUE_TO_SFQ                 5
 #define TXRX_TXBUF_IBSS_QUEUE_TO_TXQ_FRM_SFQ         6
 #define TXRX_TXBUF_INITIALIZE_TIMER                  7
@@ -127,8 +127,8 @@ extern "C" {
 #define TXRX_TXBUF_DISARM_TIMER                      9
 #define TXRX_TXBUF_UNINITIALIZE_TIMER                10
 #define TXRX_TXBUF_DBGID_DEFINITION_END
- 
-#define TXRX_RXBUF_DBGID_DEFINITION_START    
+
+#define TXRX_RXBUF_DBGID_DEFINITION_START
 #define TXRX_RXBUF_ALLOCATE_BUF                      1
 #define TXRX_RXBUF_QUEUE_TO_HOST                     2
 #define TXRX_RXBUF_QUEUE_TO_WLAN                     3
@@ -141,9 +141,9 @@ extern "C" {
 #define TXRX_RXBUF_REQUEUE_ERROR                     10
 #define TXRX_RXBUF_DBGID_DEFINITION_END
 
-#define TXRX_MGMTBUF_DBGID_DEFINITION_START 
+#define TXRX_MGMTBUF_DBGID_DEFINITION_START
 #define TXRX_MGMTBUF_ALLOCATE_BUF                    1
-#define TXRX_MGMTBUF_ALLOCATE_SM_BUF                 2    
+#define TXRX_MGMTBUF_ALLOCATE_SM_BUF                 2
 #define TXRX_MGMTBUF_ALLOCATE_RMBUF                  3
 #define TXRX_MGMTBUF_GET_BUF                         4
 #define TXRX_MGMTBUF_GET_SM_BUF                      5
@@ -167,7 +167,7 @@ extern "C" {
 #define TXRX_MGMTBUF_PROCESS_ADDBA_REQ               23
 #define TXRX_MGMTBUF_PROCESS_DELBA                   24
 #define TXRX_MGMTBUF_PERFORM_BA                      25
-#define TXRX_MGMTBUF_WLAN_RESET_ON_ERROR             26 
+#define TXRX_MGMTBUF_WLAN_RESET_ON_ERROR             26
 #define TXRX_MGMTBUF_DBGID_DEFINITION_END
 
 /* PM (Power Module) debug identifier definitions */
@@ -190,7 +190,7 @@ extern "C" {
 #define PM_ADHOC_SET_PM_PARAMS                       16
 #define PM_ADHOC_STATE1                              18
 #define PM_ADHOC_STATE2                              19
-#define PM_ADHOC_CONN_MAP                            20 
+#define PM_ADHOC_CONN_MAP                            20
 #define PM_FAKE_SLEEP                                21
 #define PM_AP_STATE1                                 22
 #define PM_AP_SET_PM_PARAMS                          23
@@ -199,7 +199,7 @@ extern "C" {
 /* Wake on Wireless debug identifier definitions */
 #define WOW_DBGID_DEFINITION_START
 #define WOW_INIT                                        1
-#define WOW_GET_CONFIG_DSET                             2   
+#define WOW_GET_CONFIG_DSET                             2
 #define WOW_NO_CONFIG_DSET                              3
 #define WOW_INVALID_CONFIG_DSET                         4
 #define WOW_USE_DEFAULT_CONFIG                          5
@@ -208,12 +208,12 @@ extern "C" {
 #define WOW_SET_GPIO_PIN                                8
 #define WOW_CLEAR_GPIO_PIN                              9
 #define WOW_SET_WOW_MODE_CMD                            10
-#define WOW_SET_HOST_MODE_CMD                           11  
-#define WOW_ADD_WOW_PATTERN_CMD                         12    
-#define WOW_NEW_WOW_PATTERN_AT_INDEX                    13    
-#define WOW_DEL_WOW_PATTERN_CMD                         14    
-#define WOW_LIST_CONTAINS_PATTERNS                      15    
-#define WOW_GET_WOW_LIST_CMD                            16 
+#define WOW_SET_HOST_MODE_CMD                           11
+#define WOW_ADD_WOW_PATTERN_CMD                         12
+#define WOW_NEW_WOW_PATTERN_AT_INDEX                    13
+#define WOW_DEL_WOW_PATTERN_CMD                         14
+#define WOW_LIST_CONTAINS_PATTERNS                      15
+#define WOW_GET_WOW_LIST_CMD                            16
 #define WOW_INVALID_FILTER_ID                           17
 #define WOW_INVALID_FILTER_LISTID                       18
 #define WOW_NO_VALID_FILTER_AT_ID                       19
@@ -242,7 +242,7 @@ extern "C" {
 #define WHAL_ERROR_EEPROM_MACADDR                   5
 #define WHAL_ERROR_INTERRUPT_HIU                    6
 #define WHAL_ERROR_KEYCACHE_RESET                   7
-#define WHAL_ERROR_KEYCACHE_SET                     8 
+#define WHAL_ERROR_KEYCACHE_SET                     8
 #define WHAL_ERROR_KEYCACHE_TYPE                    9
 #define WHAL_ERROR_KEYCACHE_TKIPENTRY              10
 #define WHAL_ERROR_KEYCACHE_WEPLENGTH              11
@@ -264,9 +264,9 @@ extern "C" {
 #define WHAL_ERROR_XMIT_ACTIVEQUEUE                27
 #define WHAL_ERROR_XMIT_BADTYPE                    28
 #define WHAL_ERROR_XMIT_STOPDMA                    29
-#define WHAL_ERROR_INTERRUPT_BB_PANIC              30 
-#define WHAL_ERROR_RESET_TXIQCAL                   31 
-#define WHAL_ERROR_PAPRD_MAXGAIN_ABOVE_WINDOW      32 
+#define WHAL_ERROR_INTERRUPT_BB_PANIC              30
+#define WHAL_ERROR_RESET_TXIQCAL                   31
+#define WHAL_ERROR_PAPRD_MAXGAIN_ABOVE_WINDOW      32
 #define WHAL_DBGID_DEFINITION_END
 
 /* DC debug identifier definitions */
@@ -294,7 +294,7 @@ extern "C" {
 #define DC_BEACON_UPDATE_COMPLETE                  21
 #define DC_END_SEARCH_BEACON_UPDATE_COMP_CB        22
 #define DC_BSSINFO_EVENT_DROPPED                   23
-#define DC_IEEEPS_ENABLED_BUT_ATIM_ABSENT          24 
+#define DC_IEEEPS_ENABLED_BUT_ATIM_ABSENT          24
 #define DC_DBGID_DEFINITION_END
 
 /* CO debug identifier definitions */
@@ -352,9 +352,8 @@ extern "C" {
 #define CM_SET_HANDOFF_TRIGGERS                     7
 #define CM_CONNECT_REQUEST                          8
 #define CM_CONNECT_REQUEST_CB                       9
-#define CM_CONTINUE_SCAN_CB                         10 
+#define CM_CONTINUE_SCAN_CB                         10
 #define CM_DBGID_DEFINITION_END
-
 
 /* mgmt debug identifier definitions */
 #define MGMT_DBGID_DEFINITION_START
@@ -365,7 +364,7 @@ extern "C" {
 #define MLME_NEW_STATE                              5
 #define MLME_CONN_INIT                              6
 #define MLME_CONN_COMPLETE                          7
-#define MLME_CONN_CLOSE                             8 
+#define MLME_CONN_CLOSE                             8
 #define MGMT_DBGID_DEFINITION_END
 
 /* TMR debug identifier definitions */

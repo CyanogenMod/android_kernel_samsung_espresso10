@@ -188,7 +188,6 @@ enum dvbfe_search {
 	DVBFE_ALGO_SEARCH_ERROR		= (1 << 31),
 };
 
-
 struct dvb_tuner_ops {
 
 	struct dvb_tuner_info info;

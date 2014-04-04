@@ -28,8 +28,6 @@
 #include <asm/irq.h>
 #include <asm/unaligned.h>
 
-
-
 /* undefine, or define to various debugging levels (>4 == obscene levels) */
 #define TULIP_DEBUG 1
 
@@ -39,8 +37,6 @@
 #define TULIP_BAR	0	/* CBIO */
 #endif
 
-
-
 struct tulip_chip_table {
 	char *chip_name;
 	int io_size;
@@ -49,7 +45,6 @@ struct tulip_chip_table {
 	void (*media_timer) (unsigned long);
 	work_func_t media_task;
 };
-
 
 enum tbl_flag {
 	HAS_MII			= 0x00001,
@@ -70,7 +65,6 @@ enum tbl_flag {
 	NEEDS_FAKE_MEDIA_TABLE	= 0x08000,
 	COMET_PM		= 0x10000,
 };
-
 
 /* chip types.  careful!  order is VERY IMPORTANT here, as these
  * are used throughout the driver as indices into arrays */
@@ -93,7 +87,6 @@ enum chips {
 	CONEXANT,
 };
 
-
 enum MediaIs {
 	MediaIsFD = 1,
 	MediaAlwaysFD = 2,
@@ -101,7 +94,6 @@ enum MediaIs {
 	MediaIsFx = 8,
 	MediaIs100 = 16
 };
-
 
 /* Offsets to the Command and Status Registers, "CSRs".  All accesses
    must be longword instructions and quadword aligned. */
@@ -174,7 +166,6 @@ enum tulip_mode_bits {
 	RxTx			= (TxOn | RxOn),
 };
 
-
 enum tulip_busconfig_bits {
 	MWI			= (1 << 24),
 	MRL			= (1 << 23),
@@ -182,7 +173,6 @@ enum tulip_busconfig_bits {
 	CALShift		= 14,
 	BurstLenShift		= 8,
 };
-
 
 /* The Tulip Rx and Tx buffer descriptors. */
 struct tulip_rx_desc {
@@ -192,14 +182,12 @@ struct tulip_rx_desc {
 	__le32 buffer2;
 };
 
-
 struct tulip_tx_desc {
 	__le32 status;
 	__le32 length;
 	__le32 buffer1;
 	__le32 buffer2;		/* We use only buffer 1.  */
 };
-
 
 enum desc_status_bits {
 	DescOwned    = 0x80000000,
@@ -241,7 +229,6 @@ enum desc_status_bits {
 	 */
 	RxLengthOver2047 = 0x38000010
 };
-
 
 enum t21143_csr6_bits {
 	csr6_sc = (1<<31),
@@ -349,7 +336,6 @@ enum tulip_comet_csr20_bits {
 #define TULIP_MAX_CACHE_LINE	32	/* in units of 32-bit words */
 #endif
 
-
 /* Ring-wrap flag in length field, use for last ring entry.
 	0x01000000 means chain on buffer2 address,
 	0x02000000 means use the ring start address in CSR2/3.
@@ -360,9 +346,7 @@ enum tulip_comet_csr20_bits {
 */
 #define DESC_RING_WRAP 0x02000000
 
-
 #define EEPROM_SIZE 512 	/* 2 << EEPROM_ADDRLEN */
-
 
 #define RUN_AT(x) (jiffies + (x))
 
@@ -373,7 +357,6 @@ struct medialeaf {
 	u8 media;
 	unsigned char *leafdata;
 };
-
 
 struct mediatable {
 	u16 defaultmedia;
@@ -387,7 +370,6 @@ struct mediatable {
 	struct medialeaf mleaf[0];
 };
 
-
 struct mediainfo {
 	struct mediainfo *next;
 	int info_type;
@@ -399,7 +381,6 @@ struct ring_info {
 	struct sk_buff	*skb;
 	dma_addr_t	mapping;
 };
-
 
 struct tulip_private {
 	const char *product_name;
@@ -460,7 +441,6 @@ struct tulip_private {
 	struct net_device *dev;
 };
 
-
 struct eeprom_fixup {
 	char *name;
 	unsigned char addr0;
@@ -469,13 +449,11 @@ struct eeprom_fixup {
 	u16 newtable[32];	/* Max length below. */
 };
 
-
 /* 21142.c */
 extern u16 t21142_csr14[];
 void t21142_media_task(struct work_struct *work);
 void t21142_start_nway(struct net_device *dev);
 void t21142_lnk_change(struct net_device *dev, int csr5);
-
 
 /* PNIC2.c */
 void pnic2_lnk_change(struct net_device *dev, int csr5);
@@ -495,7 +473,6 @@ int tulip_refill_rx(struct net_device *dev);
 #ifdef CONFIG_TULIP_NAPI
 int tulip_poll(struct napi_struct *napi, int budget);
 #endif
-
 
 /* media.c */
 int tulip_mdio_read(struct net_device *dev, int phy_id, int location);

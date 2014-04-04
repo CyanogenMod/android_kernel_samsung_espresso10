@@ -24,7 +24,6 @@
 
 /* End code defines used for epca_setup */
 
-
 #define FEPCLR      0x00
 #define FEPMEM      0x02
 #define FEPRST      0x04
@@ -34,7 +33,7 @@
 
 #define PCXE    0
 #define PCXEVE  1
-#define PCXEM   2   
+#define PCXEM   2
 #define EISAXEM 3
 #define PC64XE  4
 #define PCXI    5
@@ -44,8 +43,7 @@
 #define PCIXRJ  10
 #define EPCA_NUM_TYPES 6
 
-
-static char *board_desc[] = 
+static char *board_desc[] =
 {
 	"PC/Xe",
 	"PC/Xeve",
@@ -64,7 +62,6 @@ static char *board_desc[] =
 #define STOPC       023
 #define IAIXON      0x2000
 
-
 #define TXSTOPPED  0x1
 #define LOWWAIT    0x2
 #define EMPTYWAIT  0x4
@@ -76,12 +73,12 @@ static char *board_desc[] =
 #define OFF        0
 #define ON         1
 
-#define FEPTIMEOUT 200000  
+#define FEPTIMEOUT 200000
 #define SERIAL_TYPE_INFO    3
 #define EPCA_EVENT_HANGUP   1
 #define EPCA_MAGIC          0x5c6df104L
 
-struct channel 
+struct channel
 {
 	long   magic;
 	struct tty_port port;
@@ -134,7 +131,7 @@ struct channel
 	struct global_data 	    __iomem *mailbox;
 };
 
-struct board_info	
+struct board_info
 {
 	unsigned char status;
 	unsigned char type;
@@ -155,4 +152,3 @@ struct board_info
 	void ( * assertmemoff )	(struct channel *) ;
 	unsigned char poller_inhibited ;
 };
-

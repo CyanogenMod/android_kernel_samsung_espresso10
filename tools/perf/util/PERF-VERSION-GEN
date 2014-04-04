@@ -38,5 +38,3 @@ test "$VN" = "$VC" || {
 	echo >&2 "PERF_VERSION = $VN"
 	echo "PERF_VERSION = $VN" >$GVF
 }
-
-

@@ -132,7 +132,6 @@ DEVICE_PARAM(TxDescriptors0,"Number of transmit descriptors0");
 #define TX_DESC_DEF1     64
 DEVICE_PARAM(TxDescriptors1,"Number of transmit descriptors1");
 
-
 #define IP_ALIG_DEF     0
 /* IP_byte_align[] is used for IP header unsigned long byte aligned
    0: indicate the IP header won't be unsigned long byte aligned.(Default) .
@@ -141,7 +140,6 @@ DEVICE_PARAM(TxDescriptors1,"Number of transmit descriptors1");
       or the packet will be droped when we receive it. (eg: IPVS)
 */
 DEVICE_PARAM(IP_byte_align,"Enable IP header dword aligned");
-
 
 #define INT_WORKS_DEF   20
 #define INT_WORKS_MIN   10
@@ -155,7 +153,6 @@ DEVICE_PARAM(int_works,"Number of packets per interrupt services");
 
 DEVICE_PARAM(Channel, "Channel number");
 
-
 /* PreambleType[] is the preamble length used for transmit.
    0: indicate allows long preamble type
    1: indicate allows short preamble type
@@ -165,20 +162,17 @@ DEVICE_PARAM(Channel, "Channel number");
 
 DEVICE_PARAM(PreambleType, "Preamble Type");
 
-
 #define RTS_THRESH_MIN     512
 #define RTS_THRESH_MAX     2347
 #define RTS_THRESH_DEF     2347
 
 DEVICE_PARAM(RTSThreshold, "RTS threshold");
 
-
 #define FRAG_THRESH_MIN     256
 #define FRAG_THRESH_MAX     2346
 #define FRAG_THRESH_DEF     2346
 
 DEVICE_PARAM(FragThreshold, "Fragmentation threshold");
-
 
 #define DATA_RATE_MIN     0
 #define DATA_RATE_MAX     13
@@ -212,7 +206,6 @@ DEVICE_PARAM(OPMode, "Infrastruct, adhoc, AP mode ");
    2: indicate AP mode used
 */
 
-
 /* PSMode[]
    0: indicate disable power saving mode
    1: indicate enable power saving mode
@@ -222,11 +215,9 @@ DEVICE_PARAM(OPMode, "Infrastruct, adhoc, AP mode ");
 
 DEVICE_PARAM(PSMode, "Power saving mode");
 
-
 #define SHORT_RETRY_MIN     0
 #define SHORT_RETRY_MAX     31
 #define SHORT_RETRY_DEF     8
-
 
 DEVICE_PARAM(ShortRetryLimit, "Short frame retry limits");
 
@@ -234,9 +225,7 @@ DEVICE_PARAM(ShortRetryLimit, "Short frame retry limits");
 #define LONG_RETRY_MAX     15
 #define LONG_RETRY_DEF     4
 
-
 DEVICE_PARAM(LongRetryLimit, "long frame retry limits");
-
 
 /* BasebandType[] baseband type selected
    0: indicate 802.11a type
@@ -248,8 +237,6 @@ DEVICE_PARAM(LongRetryLimit, "long frame retry limits");
 #define BBP_TYPE_DEF     2
 
 DEVICE_PARAM(BasebandType, "baseband type");
-
-
 
 /* 80211hEnable[]
    0: indicate disable 802.11h
@@ -269,11 +256,9 @@ DEVICE_PARAM(b80211hEnable, "802.11h mode");
 
 DEVICE_PARAM(bDiversityANTEnable, "ANT diversity mode");
 
-
 //
 // Static vars definitions
 //
-
 
 static int          device_nics             =0;
 static PSDevice     pDevice_Infos           =NULL;
@@ -291,7 +276,6 @@ DEFINE_PCI_DEVICE_TABLE(vt6655_pci_id_table) = {
 };
 
 /*---------------------  Static Functions  --------------------------*/
-
 
 static int  vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent);
 static bool vt6655_init_info(struct pci_dev* pcid, PSDevice* ppDevice, PCHIP_INFO);
@@ -318,7 +302,6 @@ struct notifier_block device_notifier = {
 };
 #endif
 
-
 static void device_init_rd0_ring(PSDevice pDevice);
 static void device_init_rd1_ring(PSDevice pDevice);
 static void device_init_defrag_cb(PSDevice pDevice);
@@ -344,12 +327,9 @@ static void device_free_frag_buf(PSDevice pDevice);
 static int Config_FileGetParameter(unsigned char *string,
 		unsigned char *dest, unsigned char *source);
 
-
 /*---------------------  Export Variables  --------------------------*/
 
 /*---------------------  Export Functions  --------------------------*/
-
-
 
 static char* get_chip_name(int chip_id) {
     int i;
@@ -425,7 +405,6 @@ pOpts->flags|=DEVICE_FLAGS_OP_MODE;
 pOpts->flags|=DEVICE_FLAGS_80211h_MODE;
 pOpts->flags|=DEVICE_FLAGS_DiversityANT;
 
-
 }
 
 static void
@@ -434,7 +413,6 @@ device_set_options(PSDevice pDevice) {
     unsigned char abyBroadcastAddr[ETH_ALEN] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
     unsigned char abySNAP_RFC1042[ETH_ALEN] = {0xAA, 0xAA, 0x03, 0x00, 0x00, 0x00};
     unsigned char abySNAP_Bridgetunnel[ETH_ALEN] = {0xAA, 0xAA, 0x03, 0x00, 0x00, 0xF8};
-
 
     memcpy(pDevice->abyBroadcastAddr, abyBroadcastAddr, ETH_ALEN);
     memcpy(pDevice->abySNAP_RFC1042, abySNAP_RFC1042, ETH_ALEN);
@@ -464,7 +442,6 @@ pDevice->bUpdateBBVGA = true;
     pDevice->byFOETuning = 0;
     pDevice->wCTSDuration = 0;
     pDevice->byPreambleType = 0;
-
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO" uChannel= %d\n",(int)pDevice->uChannel);
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO" byOpMode= %d\n",(int)pDevice->byOpMode);
@@ -518,8 +495,6 @@ static void s_vCompleteCurrentMeasure (PSDevice pDevice, unsigned char byResult)
     }
 
 }
-
-
 
 //
 // Initialiation of MAC & BBP registers
@@ -700,7 +675,6 @@ else
 //printk("CCKPwrdBm is 0x%x,byOFDMPwrdBm is 0x%x\n",byCCKPwrdBm,byOFDMPwrdBm);
 		// Load power Table
 
-
         for (ii=0;ii<CB_MAX_CHANNEL_24G;ii++) {
             pDevice->abyCCKPwrTbl[ii+1] = SROMbyReadEmbedded(pDevice->PortOffset, (unsigned char)(ii + EEP_OFS_CCK_PWR_TBL));
             if (pDevice->abyCCKPwrTbl[ii+1] == 0) {
@@ -725,7 +699,6 @@ else
 	    }
 	  }
 
-
         // Load OFDM A Power Table
         for (ii=0;ii<CB_MAX_CHANNEL_5G;ii++) { //RobertYu:20041224, bug using CB_MAX_CHANNEL
             pDevice->abyOFDMPwrTbl[ii+CB_MAX_CHANNEL_24G+1] = SROMbyReadEmbedded(pDevice->PortOffset, (unsigned char)(ii + EEP_OFS_OFDMA_PWR_TBL));
@@ -733,13 +706,11 @@ else
         }
         init_channel_table((void *)pDevice);
 
-
         if (pDevice->byLocalID > REV_ID_VT3253_B1) {
             MACvSelectPage1(pDevice->PortOffset);
             VNSvOutPortB(pDevice->PortOffset + MAC_REG_MSRCTL + 1, (MSRCTL1_TXPWR | MSRCTL1_CSAPAREN));
             MACvSelectPage0(pDevice->PortOffset);
         }
-
 
          // use relative tx timeout and 802.11i D4
         MACvWordRegBitsOn(pDevice->PortOffset, MAC_REG_CFG, (CFG_TKIPOPT | CFG_NOTXTIMEOUT));
@@ -823,7 +794,6 @@ else  CARDbRadioPowerOn(pDevice);
         pDevice->abyCurrentNetAddr[4],
         pDevice->abyCurrentNetAddr[5]);
 
-
     // reset Tx pointer
     CARDvSafeResetRx(pDevice);
     // reset Rx pointer
@@ -844,10 +814,7 @@ else  CARDbRadioPowerOn(pDevice);
 
     netif_stop_queue(pDevice->dev);
 
-
 }
-
-
 
 static void device_init_diversity_timer(PSDevice pDevice) {
 
@@ -868,7 +835,6 @@ static void device_init_diversity_timer(PSDevice pDevice) {
 
     return;
 }
-
 
 static bool device_release_WPADEV(PSDevice pDevice)
 {
@@ -904,7 +870,6 @@ static bool device_release_WPADEV(PSDevice pDevice)
     return true;
 }
 
-
 static const struct net_device_ops device_netdev_ops = {
     .ndo_open               = device_open,
     .ndo_stop               = device_close,
@@ -913,8 +878,6 @@ static const struct net_device_ops device_netdev_ops = {
     .ndo_start_xmit         = device_xmit,
     .ndo_set_multicast_list = device_set_multi,
 };
-
-
 
 static int __devinit
 vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
@@ -928,7 +891,6 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
         printk(KERN_NOTICE DEVICE_NAME ": already found %d NICs\n", device_nics);
         return -ENODEV;
     }
-
 
     dev = alloc_etherdev(sizeof(DEVICE_INFO));
 
@@ -1017,7 +979,6 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
 	}
 #endif
 
-
 #endif
 
 #ifdef	DEBUG
@@ -1031,9 +992,6 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
        device_free_info(pDevice);
         return -ENODEV;
     }
-
-
-
 
     rc = pci_request_regions(pcid, DEVICE_NAME);
     if (rc) {
@@ -1053,8 +1011,6 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
 	VNSvInPortB(pDevice->PortOffset+0x4F, &value);
 	printk("After write: value is %x\n",value);
 #endif
-
-
 
 #ifdef IO_MAP
     pDevice->PortOffset = pDevice->ioaddr;
@@ -1270,7 +1226,6 @@ device_release_WPADEV(pDevice);
 static bool device_init_rings(PSDevice pDevice) {
     void*   vir_pool;
 
-
     /*allocate all RD/TD rings a single pool*/
     vir_pool = pci_alloc_consistent(pDevice->pcid,
                     pDevice->sOpts.nRxDescs0 * sizeof(SRxDesc) +
@@ -1294,7 +1249,6 @@ static bool device_init_rings(PSDevice pDevice) {
     pDevice->aRD0Ring = vir_pool;
     pDevice->aRD1Ring = vir_pool +
                         pDevice->sOpts.nRxDescs0 * sizeof(SRxDesc);
-
 
     pDevice->rd0_pool_dma = pDevice->pool_dma;
     pDevice->rd1_pool_dma = pDevice->rd0_pool_dma +
@@ -1332,7 +1286,6 @@ static bool device_init_rings(PSDevice pDevice) {
     pDevice->td1_pool_dma = pDevice->td0_pool_dma +
             pDevice->sOpts.nTxDescs[0] * sizeof(STxDesc);
 
-
     // vir_pool: pvoid type
     pDevice->apTD0Rings = vir_pool
                           + pDevice->sOpts.nRxDescs0 * sizeof(SRxDesc)
@@ -1343,10 +1296,8 @@ static bool device_init_rings(PSDevice pDevice) {
             + pDevice->sOpts.nRxDescs1 * sizeof(SRxDesc)
             + pDevice->sOpts.nTxDescs[0] * sizeof(STxDesc);
 
-
     pDevice->tx1_bufs = pDevice->tx0_bufs +
             pDevice->sOpts.nTxDescs[0] * PKT_BUF_SZ;
-
 
     pDevice->tx_beacon_bufs = pDevice->tx1_bufs +
             pDevice->sOpts.nTxDescs[1] * PKT_BUF_SZ;
@@ -1357,10 +1308,8 @@ static bool device_init_rings(PSDevice pDevice) {
     pDevice->tx_bufs_dma1 = pDevice->tx_bufs_dma0 +
             pDevice->sOpts.nTxDescs[0] * PKT_BUF_SZ;
 
-
     pDevice->tx_beacon_dma = pDevice->tx_bufs_dma1 +
             pDevice->sOpts.nTxDescs[1] * PKT_BUF_SZ;
-
 
     return true;
 }
@@ -1410,7 +1359,6 @@ static void device_init_rd0_ring(PSDevice pDevice) {
     pDevice->pCurrRD[0] = &(pDevice->aRD0Ring[0]);
 }
 
-
 static void device_init_rd1_ring(PSDevice pDevice) {
     int i;
     dma_addr_t      curr = pDevice->rd1_pool_dma;
@@ -1435,7 +1383,6 @@ static void device_init_rd1_ring(PSDevice pDevice) {
     pDevice->pCurrRD[1] = &(pDevice->aRD1Ring[0]);
 }
 
-
 static void device_init_defrag_cb(PSDevice pDevice) {
     int i;
     PSDeFragControlBlock pDeF;
@@ -1451,9 +1398,6 @@ static void device_init_defrag_cb(PSDevice pDevice) {
     pDevice->cbDFCB = CB_MAX_RX_FRAG;
     pDevice->cbFreeDFCB = pDevice->cbDFCB;
 }
-
-
-
 
 static void device_free_rd0_ring(PSDevice pDevice) {
     int i;
@@ -1474,7 +1418,6 @@ static void device_free_rd0_ring(PSDevice pDevice) {
 
 static void device_free_rd1_ring(PSDevice pDevice) {
     int i;
-
 
     for (i = 0; i < pDevice->sOpts.nRxDescs1; i++) {
         PSRxDesc        pDesc=&(pDevice->aRD1Ring[i]);
@@ -1555,8 +1498,6 @@ static void device_init_td1_ring(PSDevice pDevice) {
     pDevice->apTailTD[1] = pDevice->apCurrTD[1] = &(pDevice->apTD1Rings[0]);
 }
 
-
-
 static void device_free_td0_ring(PSDevice pDevice) {
     int i;
     for (i = 0; i < pDevice->sOpts.nTxDescs[0]; i++) {
@@ -1593,14 +1534,11 @@ static void device_free_td1_ring(PSDevice pDevice) {
 
 }
 
-
-
 /*-----------------------------------------------------------------*/
 
 static int device_rx_srv(PSDevice pDevice, unsigned int uIdx) {
     PSRxDesc    pRD;
     int works = 0;
-
 
     for (pRD = pDevice->pCurrRD[uIdx];
          pRD->m_rd0RD0.f1Owner == OWNED_BY_HOST;
@@ -1624,11 +1562,9 @@ static int device_rx_srv(PSDevice pDevice, unsigned int uIdx) {
     return works;
 }
 
-
 static bool device_alloc_rx_buf(PSDevice pDevice, PSRxDesc pRD) {
 
     PDEVICE_RD_INFO pRDInfo=pRD->pRDInfo;
-
 
     pRDInfo->skb = dev_alloc_skb((int)pDevice->rx_buf_sz);
 #ifdef	PLICE_DEBUG
@@ -1650,8 +1586,6 @@ static bool device_alloc_rx_buf(PSDevice pDevice, PSRxDesc pRD) {
     return true;
 }
 
-
-
 bool device_alloc_frag_buf(PSDevice pDevice, PSDeFragControlBlock pDeF) {
 
     pDeF->skb = dev_alloc_skb((int)pDevice->rx_buf_sz);
@@ -1662,8 +1596,6 @@ bool device_alloc_frag_buf(PSDevice pDevice, PSDeFragControlBlock pDeF) {
 
     return true;
 }
-
-
 
 static int device_tx_srv(PSDevice pDevice, unsigned int uIdx) {
     PSTxDesc                 pTD;
@@ -1677,7 +1609,6 @@ static int device_tx_srv(PSDevice pDevice, unsigned int uIdx) {
     struct sk_buff*          skb;
     unsigned int	uNodeIndex;
     PSMgmtObject             pMgmt = pDevice->pMgmt;
-
 
     for (pTD = pDevice->apTailTD[uIdx]; pDevice->iTDUsed[uIdx] >0; pTD = pTD->next) {
 
@@ -1703,7 +1634,6 @@ static int device_tx_srv(PSDevice pDevice, unsigned int uIdx) {
                         byTsr0, byTsr1,
                         (unsigned char *)(pTD->pTDInfo->buf + uFIFOHeaderSize),
                         uFrameSize, uIdx);
-
 
                 BSSvUpdateNodeTxCounter(pDevice,
                          byTsr0, byTsr1,
@@ -1779,7 +1709,6 @@ static int device_tx_srv(PSDevice pDevice, unsigned int uIdx) {
         }
     }
 
-
     if (uIdx == TYPE_AC0DMA) {
         // RESERV_AC0DMA reserved for relay
 
@@ -1792,12 +1721,10 @@ static int device_tx_srv(PSDevice pDevice, unsigned int uIdx) {
         }
     }
 
-
     pDevice->apTailTD[uIdx] = pTD;
 
     return works;
 }
-
 
 static void device_error(PSDevice pDevice, unsigned short status) {
 
@@ -1833,8 +1760,6 @@ static void device_free_tx_buf(PSDevice pDevice, PSTxDesc pDesc) {
     pTDInfo->byFlags = 0;
 }
 
-
-
 //PLICE_DEBUG ->
 void	InitRxManagementQueue(PSDevice  pDevice)
 {
@@ -1842,10 +1767,6 @@ void	InitRxManagementQueue(PSDevice  pDevice)
 	pDevice->rxManeQueue.head = pDevice->rxManeQueue.tail = 0;
 }
 //PLICE_DEBUG<-
-
-
-
-
 
 //PLICE_DEBUG ->
 int MlmeThread(
@@ -1895,8 +1816,6 @@ int MlmeThread(
 
 }
 
-
-
 static int  device_open(struct net_device *dev) {
     PSDevice    pDevice=(PSDevice) netdev_priv(dev);
     int i;
@@ -1929,7 +1848,6 @@ device_init_rd0_ring(pDevice);
     device_init_td1_ring(pDevice);
 //    VNTWIFIvSet11h(pDevice->pMgmt, pDevice->b11hEnable);
 
-
     if (pDevice->bDiversityRegCtlON) {
         device_init_diversity_timer(pDevice);
     }
@@ -1952,8 +1870,6 @@ device_init_rd0_ring(pDevice);
 	mlme_kill = 1;
 #endif
 
-
-
 #if 0
 	pDevice->MLMEThr_pid = kernel_thread(MlmeThread, pDevice, CLONE_VM);
 	if (pDevice->MLMEThr_pid <0 )
@@ -1966,9 +1882,6 @@ device_init_rd0_ring(pDevice);
 	//printk("thread id is %d\n",pDevice->MLMEThr_pid);
 	//printk("Create thread time is %x\n",jiffies);
 	//wait_for_completion(&pDevice->notify);
-
-
-
 
   // if (( SROMbyReadEmbedded(pDevice->PortOffset, EEP_OFS_RADIOCTL)&0x06)==0x04)
     //    return -ENOMEM;
@@ -2010,7 +1923,6 @@ DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "call device_init_registers\n");
 
 //printk("DEBUG2\n");
 
-
 DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "call MACvIntEnable\n");
 	MACvIntEnable(pDevice->PortOffset, IMR_MASK_VALUE);
 
@@ -2026,7 +1938,6 @@ DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "call MACvIntEnable\n");
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "device_open success.. \n");
     return 0;
 }
-
 
 static int  device_close(struct net_device *dev) {
     PSDevice  pDevice=(PSDevice) netdev_priv(dev);
@@ -2082,13 +1993,10 @@ device_release_WPADEV(pDevice);
     return 0;
 }
 
-
-
 static int device_dma0_tx_80211(struct sk_buff *skb, struct net_device *dev) {
     PSDevice        pDevice=netdev_priv(dev);
     unsigned char *pbMPDU;
     unsigned int cbMPDULen = 0;
-
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "device_dma0_tx_80211\n");
     spin_lock_irq(&pDevice->lock);
@@ -2117,8 +2025,6 @@ static int device_dma0_tx_80211(struct sk_buff *skb, struct net_device *dev) {
 
 }
 
-
-
 bool device_dma0_xmit(PSDevice pDevice, struct sk_buff *skb, unsigned int uNodeIndex) {
     PSMgmtObject    pMgmt = pDevice->pMgmt;
     PSTxDesc        pHeadTD, pLastTD;
@@ -2131,7 +2037,6 @@ bool device_dma0_xmit(PSDevice pDevice, struct sk_buff *skb, unsigned int uNodeI
     unsigned int ii;
     SKeyItem        STempKey;
 //    unsigned char byKeyIndex = 0;
-
 
     if (pDevice->bStopTx0Pkt == true) {
         dev_kfree_skb_irq(skb);
@@ -2171,7 +2076,6 @@ bool device_dma0_xmit(PSDevice pDevice, struct sk_buff *skb, unsigned int uNodeI
     }
     byPktType = (unsigned char)pDevice->byPacketType;
 
-
     if (pDevice->bFixRate) {
         if (pDevice->eCurrentPHYType == PHY_TYPE_11B) {
             if (pDevice->uConnectionRate >= RATE_11M) {
@@ -2199,7 +2103,6 @@ bool device_dma0_xmit(PSDevice pDevice, struct sk_buff *skb, unsigned int uNodeI
     }
 
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "dma0: pDevice->wCurrentRate = %d \n", pDevice->wCurrentRate);
-
 
     if (pDevice->wCurrentRate <= RATE_11M) {
         byPktType = PK_TYPE_11B;
@@ -2263,7 +2166,6 @@ bool device_dma0_xmit(PSDevice pDevice, struct sk_buff *skb, unsigned int uNodeI
 
     MACvTransmit0(pDevice->PortOffset);
 
-
     return true;
 }
 
@@ -2289,8 +2191,6 @@ static int  device_xmit(struct sk_buff *skb, struct net_device *dev) {
     unsigned char *pbyBSSID;
     bool bNodeExist = false;
 
-
-
     spin_lock_irq(&pDevice->lock);
     if (pDevice->bLinkPass == false) {
         dev_kfree_skb_irq(skb);
@@ -2303,7 +2203,6 @@ static int  device_xmit(struct sk_buff *skb, struct net_device *dev) {
         spin_unlock_irq(&pDevice->lock);
         return 0;
     }
-
 
     if (pMgmt->eCurrMode == WMAC_MODE_ESS_AP) {
         if (pDevice->uAssocCount == 0) {
@@ -2359,14 +2258,12 @@ static int  device_xmit(struct sk_buff *skb, struct net_device *dev) {
 
     pHeadTD->m_td1TD1.byTCR = (TCR_EDP|TCR_STP);
 
-
     memcpy(pDevice->sTxEthHeader.abyDstAddr, (unsigned char *)(skb->data), ETH_HLEN);
     cbFrameBodySize = skb->len - ETH_HLEN;
     // 802.1H
     if (ntohs(pDevice->sTxEthHeader.wType) > ETH_DATA_LEN) {
         cbFrameBodySize += 8;
     }
-
 
     if (pDevice->bEncryptionEnable == true) {
         bNeedEncryption = true;
@@ -2514,7 +2411,6 @@ pDevice->byTopCCKBasicRate,pDevice->byTopOFDMBasicRate);
 	pDevice->byTopOFDMBasicRate = 8;
 #endif
 
-
 		}
     }
 
@@ -2578,7 +2474,6 @@ pDevice->byTopCCKBasicRate,pDevice->byTopOFDMBasicRate);
             }
         }
     }
-
 
 #ifdef	PLICE_DEBUG
 	//if (skb->len == 98)
@@ -2685,7 +2580,6 @@ static  irqreturn_t  device_intr(int irq,  void *dev_instance) {
     unsigned char byData = 0;
     int             ii= 0;
 //    unsigned char byRSSI;
-
 
     MACvReadISR(pDevice->PortOffset, &pDevice->dwIsr);
 
@@ -2964,7 +2858,6 @@ static  irqreturn_t  device_intr(int irq,  void *dev_instance) {
     return IRQ_RETVAL(handled);
 }
 
-
 static unsigned const ethernet_polynomial = 0x04c11db7U;
 static inline u32 ether_crc(int length, unsigned char *data)
 {
@@ -3080,15 +2973,12 @@ error2:
   return result;
 }
 
-
-
 static void device_set_multi(struct net_device *dev) {
     PSDevice         pDevice = (PSDevice) netdev_priv(dev);
 
     PSMgmtObject     pMgmt = pDevice->pMgmt;
     u32              mc_filter[2];
     struct netdev_hw_addr *ha;
-
 
     VNSvInPortB(pDevice->PortOffset + MAC_REG_RCR, &(pDevice->byRxMode));
 
@@ -3129,14 +3019,11 @@ static void device_set_multi(struct net_device *dev) {
     DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "pDevice->byRxMode = %x\n", pDevice->byRxMode );
 }
 
-
 static struct net_device_stats *device_get_stats(struct net_device *dev) {
     PSDevice pDevice=(PSDevice) netdev_priv(dev);
 
     return &pDevice->stats;
 }
-
-
 
 static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 	PSDevice	        pDevice = (PSDevice)netdev_priv(dev);
@@ -3145,7 +3032,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 	int                 rc =0;
     PSMgmtObject        pMgmt = pDevice->pMgmt;
     PSCmdRequest        pReq;
-
 
     if (pMgmt == NULL) {
         rc = -EFAULT;
@@ -3195,7 +3081,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 		}
 		break;
 
-
 		// Get current network name (ESSID)
 	case SIOCGIWESSID:
 
@@ -3216,12 +3101,10 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 		rc = iwctl_siwap(dev, NULL, &(wrq->u.ap_addr), NULL);
 		break;
 
-
 		// Get current Access Point (BSSID)
 	case SIOCGIWAP:
 		rc = iwctl_giwap(dev, NULL, &(wrq->u.ap_addr), NULL);
 		break;
-
 
 		// Set desired station name
 	case SIOCSIWNICKN:
@@ -3286,7 +3169,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
             char abyKey[WLAN_WEP232_KEYLEN];
 
 			if (wrq->u.encoding.pointer) {
-
 
 				if (wrq->u.encoding.length > WLAN_WEP232_KEYLEN) {
 					rc = -E2BIG;
@@ -3367,12 +3249,10 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 		rc = iwctl_giwpower(dev, NULL, &(wrq->u.power), NULL);
 		break;
 
-
 	case SIOCSIWPOWER:
 
 		rc = iwctl_siwpower(dev, NULL, &(wrq->u.power), NULL);
 		break;
-
 
 	case SIOCGIWSENS:
 
@@ -3400,7 +3280,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
             }
         }
 		break;
-
 
 #ifdef WIRELESS_SPY
 		// Set the spy list
@@ -3433,7 +3312,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 		}
 */
 		break;
-
 
 //2008-0409-07, <Add> by Einsn Liu
 #ifdef  WPA_SUPPLICANT_DRIVER_WEXT_SUPPORT
@@ -3529,7 +3407,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 
     case IOCTL_CMD_HOSTAPD:
 
-
 	rc = vt6655_hostap_ioctl(pDevice, &wrq->u.data);
         break;
 
@@ -3545,7 +3422,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 	default:
 		rc = -EOPNOTSUPP;
         DBG_PRT(MSG_LEVEL_DEBUG, KERN_INFO "Ioctl command not support..%x\n", cmd);
-
 
     }
 
@@ -3576,7 +3452,6 @@ static int  device_ioctl(struct net_device *dev, struct ifreq *rq, int cmd) {
 
     return rc;
 }
-
 
 static int ethtool_ioctl(struct net_device *dev, void *useraddr)
 {
@@ -3619,7 +3494,6 @@ static int __init vt6655_init_module(void)
 {
     int ret;
 
-
 //    ret=pci_module_init(&device_driver);
 	//ret = pcie_port_service_register(&device_driver);
 	ret = pci_register_driver(&device_driver);
@@ -3634,7 +3508,6 @@ static int __init vt6655_init_module(void)
 static void __exit vt6655_cleanup_module(void)
 {
 
-
 #ifdef CONFIG_PM
     unregister_reboot_notifier(&device_notifier);
 #endif
@@ -3644,7 +3517,6 @@ static void __exit vt6655_cleanup_module(void)
 
 module_init(vt6655_init_module);
 module_exit(vt6655_cleanup_module);
-
 
 #ifdef CONFIG_PM
 static int
@@ -3700,7 +3572,6 @@ viawget_resume(struct pci_dev *pcid)
     PSMgmtObject  pMgmt = pDevice->pMgmt;
     int power_status;   // to silence the compiler
 
-
     power_status = pci_set_power_state(pcid, 0);
     power_status = pci_enable_wake(pcid, 0, 0);
     pci_restore_state(pcid);
@@ -3732,7 +3603,3 @@ viawget_resume(struct pci_dev *pcid)
 }
 
 #endif
-
-
-
-

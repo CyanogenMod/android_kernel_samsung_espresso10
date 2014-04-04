@@ -164,7 +164,6 @@ enum ext_slave_bus {
 	EXT_SLAVE_BUS_SECONDARY = 1
 };
 
-
 /**
  *  struct ext_slave_platform_data - Platform data for mpu3050 and mpu6050
  *  slave devices
@@ -325,6 +324,5 @@ struct mpu_platform_data {
 #define MPU_RESUME		_IO(MPU_IOCTL, 0x31)
 /* Userspace PM Event response */
 #define MPU_PM_EVENT_HANDLED	_IO(MPU_IOCTL, 0x32)
-
 
 #endif				/* __MPU_H_ */

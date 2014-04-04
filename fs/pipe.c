@@ -36,10 +36,10 @@ unsigned int pipe_max_size = 1048576;
 unsigned int pipe_min_size = PAGE_SIZE;
 
 /*
- * We use a start+len construction, which provides full use of the 
+ * We use a start+len construction, which provides full use of the
  * allocated memory.
  * -- Florian Coosmann (FGC)
- * 
+ *
  * Reads with count = 0 should always return 0.
  * -- Julian Bradfield 1999-06-07.
  *
@@ -764,7 +764,6 @@ pipe_read_fasync(int fd, struct file *filp, int on)
 	return retval;
 }
 
-
 static int
 pipe_write_fasync(int fd, struct file *filp, int on)
 {
@@ -777,7 +776,6 @@ pipe_write_fasync(int fd, struct file *filp, int on)
 
 	return retval;
 }
-
 
 static int
 pipe_rdwr_fasync(int fd, struct file *filp, int on)
@@ -796,7 +794,6 @@ pipe_rdwr_fasync(int fd, struct file *filp, int on)
 	mutex_unlock(&inode->i_mutex);
 	return retval;
 }
-
 
 static int
 pipe_read_release(struct inode *inode, struct file *filp)
@@ -858,6 +855,9 @@ static int
 pipe_rdwr_open(struct inode *inode, struct file *filp)
 {
 	int ret = -ENOENT;
+
+	if (!(filp->f_mode & (FMODE_READ|FMODE_WRITE)))
+		return -EINVAL;
 
 	mutex_lock(&inode->i_mutex);
 

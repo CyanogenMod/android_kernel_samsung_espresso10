@@ -29,7 +29,6 @@
 
 #include "cinergyT2.h"
 
-
 /**
  *  convert linux-dvb frontend parameter set into TPS.
  *  See ETSI ETS-300744, section 4.6.2, table 9 for details.
@@ -313,7 +312,6 @@ struct dvb_frontend *cinergyt2_fe_attach(struct dvb_usb_device *d)
 	s->fe.demodulator_priv = s;
 	return &s->fe;
 }
-
 
 static struct dvb_frontend_ops cinergyt2_fe_ops = {
 	.info = {

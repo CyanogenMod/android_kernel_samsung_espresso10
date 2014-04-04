@@ -76,10 +76,8 @@
 #include <linux/gfp.h>
 #include "i2400m-usb.h"
 
-
 #define D_SUBMODULE fw
 #include "usb-debug-levels.h"
-
 
 /*
  * Synchronous write to the device
@@ -163,7 +161,6 @@ retry:
 	return result;
 }
 
-
 /*
  * Send a boot-mode command over the bulk-out pipe
  *
@@ -224,13 +221,11 @@ error_too_big:
 	return result;
 }
 
-
 static
 void __i2400mu_bm_notif_cb(struct urb *urb)
 {
 	complete(urb->context);
 }
-
 
 /*
  * submit a read to the notification endpoint
@@ -258,7 +253,6 @@ int i2400mu_notif_submit(struct i2400mu *i2400mu, struct urb *urb,
 			 epd->bInterval);
 	return usb_submit_urb(urb, GFP_KERNEL);
 }
-
 
 /*
  * Read an ack from  the notification endpoint

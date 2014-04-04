@@ -6,4 +6,3 @@ config WESTBRIDGE_BLOCK_DRIVER
 	tristate "West Bridge Block Driver"
 	help
 		Include the West Bridge based block driver
-

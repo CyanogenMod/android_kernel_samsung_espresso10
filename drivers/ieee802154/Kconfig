@@ -19,4 +19,3 @@ config IEEE802154_FAKEHARD
 
           This driver can also be built as a module. To do so say M here.
 	  The module will be called 'fakehard'.
-

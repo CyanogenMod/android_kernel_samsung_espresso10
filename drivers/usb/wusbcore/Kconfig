@@ -38,4 +38,3 @@ config USB_WUSB_CBAF_DEBUG
 	  Say Y here if you want the CBA to produce a bunch of debug messages
 	  to the system log. Select this if you are having a problem with
 	  CBA support and want to see more of what is going on.
-

@@ -63,7 +63,6 @@
  *
  */
 
-
 /**
  * enum scu_ssp_task_type - This enumberation defines the various SSP task
  *    types the SCU hardware will accept. The definition for the various task
@@ -100,7 +99,6 @@ typedef enum {
 	SCU_TASK_TYPE_FPDMAQ_WRITE,     /* /< NCQ write Request */
 	SCU_TASK_TYPE_PACKET_DMA_OUT    /* /< Packet write request */
 } scu_sata_task_type;
-
 
 /**
  *
@@ -213,7 +211,6 @@ typedef enum {
 #define SCU_CONTEXT_COMMAND_LOGICAL_PORT_MASK            0x00007000
 #define scu_get_command_reqeust_logical_port(x)	\
 	((x) & SCU_CONTEXT_COMMAND_LOGICAL_PORT_MASK)
-
 
 #define MAKE_SCU_CONTEXT_COMMAND_TYPE(type) \
 	((u32)(type) << SCU_CONTEXT_COMMAND_REQUEST_TYPE_SHIFT)

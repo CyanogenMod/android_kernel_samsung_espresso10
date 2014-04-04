@@ -67,9 +67,7 @@ static const char version[] =
 #define NESM_START_PG	0x40	/* First page of TX buffer */
 #define NESM_STOP_PG	0x80	/* Last page +1 of RX ring */
 
-
 #define WORDSWAP(a)	((((a)>>8)&0xff) | ((a)<<8))
-
 
 static struct card_info {
     zorro_id id;

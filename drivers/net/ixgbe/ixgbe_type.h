@@ -59,11 +59,14 @@
 #define IXGBE_SUBDEV_ID_82599_SFP        0x11A9
 #define IXGBE_DEV_ID_82599_SFP_EM        0x1507
 #define IXGBE_DEV_ID_82599_SFP_SF2       0x154D
+#define IXGBE_DEV_ID_82599EN_SFP         0x1557
 #define IXGBE_DEV_ID_82599_XAUI_LOM      0x10FC
 #define IXGBE_DEV_ID_82599_COMBO_BACKPLANE 0x10F8
 #define IXGBE_SUBDEV_ID_82599_KX4_KR_MEZZ  0x000C
 #define IXGBE_DEV_ID_82599_LS            0x154F
+#define IXGBE_DEV_ID_82599_SFP_SF_QP     0x154A
 #define IXGBE_DEV_ID_X540T               0x1528
+#define IXGBE_DEV_ID_X540T1              0x1560
 
 /* General Registers */
 #define IXGBE_CTRL      0x00000
@@ -411,7 +414,6 @@
 #define IXGBE_TDPT2TCCR(_i)     (0x0CD20 + ((_i) * 4)) /* 8 of these (0-7) */
 #define IXGBE_TDPT2TCSR(_i)     (0x0CD40 + ((_i) * 4)) /* 8 of these (0-7) */
 
-
 /* Security Control Registers */
 #define IXGBE_SECTXCTRL         0x08800
 #define IXGBE_SECTXSTAT         0x08804
@@ -534,7 +536,6 @@
 #define IXGBE_RTTBCNRC_RF_INT_SHIFT	14
 #define IXGBE_RTTBCNRC_RF_INT_MASK	\
 	(IXGBE_RTTBCNRC_RF_DEC_MASK << IXGBE_RTTBCNRC_RF_INT_SHIFT)
-
 
 /* FCoE DMA Context Registers */
 #define IXGBE_FCPTRL    0x02410 /* FC User Desc. PTR Low */
@@ -2224,7 +2225,6 @@ typedef u32 ixgbe_link_speed;
                                         IXGBE_LINK_SPEED_1GB_FULL | \
                                         IXGBE_LINK_SPEED_10GB_FULL)
 
-
 /* Physical layer type */
 typedef u32 ixgbe_physical_layer;
 #define IXGBE_PHYSICAL_LAYER_UNKNOWN      0
@@ -2772,7 +2772,6 @@ struct ixgbe_info {
 	struct ixgbe_phy_operations	*phy_ops;
 	struct ixgbe_mbx_operations	*mbx_ops;
 };
-
 
 /* Error Codes */
 #define IXGBE_ERR_EEPROM                        -1

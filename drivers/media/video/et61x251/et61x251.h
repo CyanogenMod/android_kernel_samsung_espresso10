@@ -153,7 +153,6 @@ et61x251_match_id(struct et61x251_device* cam, const struct usb_device_id *id)
 	return usb_match_id(usb_ifnum_to_if(cam->usbdev, 0), id) ? cam : NULL;
 }
 
-
 void
 et61x251_attach_sensor(struct et61x251_device* cam,
 		       const struct et61x251_sensor* sensor)

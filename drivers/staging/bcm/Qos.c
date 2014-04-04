@@ -12,7 +12,6 @@ static USHORT	IpVersion4(PMINI_ADAPTER Adapter, struct iphdr *iphd,
 
 static VOID PruneQueue(PMINI_ADAPTER Adapter, INT iIndex);
 
-
 /*******************************************************************
 * Function    - MatchSrcIpAddress()
 *
@@ -45,7 +44,6 @@ BOOLEAN MatchSrcIpAddress(S_CLASSIFIER_RULE *pstClassifierRule,ULONG ulSrcIP)
     BCM_DEBUG_PRINT(Adapter,DBG_TYPE_TX, IPV4_DBG, DBG_LVL_ALL, "Src Ip Address Not Matched");
    	return FALSE;
 }
-
 
 /*******************************************************************
 * Function    - MatchDestIpAddress()
@@ -80,7 +78,6 @@ BOOLEAN MatchDestIpAddress(S_CLASSIFIER_RULE *pstClassifierRule,ULONG ulDestIP)
     return FALSE;
 }
 
-
 /************************************************************************
 * Function    - MatchTos()
 *
@@ -105,7 +102,6 @@ BOOLEAN MatchTos(S_CLASSIFIER_RULE *pstClassifierRule,UCHAR ucTypeOfService)
     BCM_DEBUG_PRINT(Adapter,DBG_TYPE_TX, IPV4_DBG, DBG_LVL_ALL, "Type Of Service Not Matched");
     return FALSE;
 }
-
 
 /***************************************************************************
 * Function    - MatchProtocol()
@@ -135,7 +131,6 @@ BOOLEAN MatchProtocol(S_CLASSIFIER_RULE *pstClassifierRule,UCHAR ucProtocol)
    	return FALSE;
 }
 
-
 /***********************************************************************
 * Function    - MatchSrcPort()
 *
@@ -152,7 +147,6 @@ BOOLEAN MatchSrcPort(S_CLASSIFIER_RULE *pstClassifierRule,USHORT ushSrcPort)
 
 		PMINI_ADAPTER Adapter = GET_BCM_ADAPTER(gblpnetdev);
 
-
     	if(0 == pstClassifierRule->ucSrcPortRangeLength)
         	return TRUE;
     	for(ucLoopIndex=0;ucLoopIndex<pstClassifierRule->ucSrcPortRangeLength;ucLoopIndex++)
@@ -166,7 +160,6 @@ BOOLEAN MatchSrcPort(S_CLASSIFIER_RULE *pstClassifierRule,USHORT ushSrcPort)
 		BCM_DEBUG_PRINT(Adapter,DBG_TYPE_TX, IPV4_DBG, DBG_LVL_ALL, "Src Port: %x Not Matched ",ushSrcPort);
     	return FALSE;
 }
-
 
 /***********************************************************************
 * Function    - MatchDestPort()
@@ -315,7 +308,6 @@ VOID PruneQueueAllSF(PMINI_ADAPTER Adapter)
 	}
 }
 
-
 /**
 @ingroup tx_functions
 This function checks if the max queue size for a queue
@@ -360,7 +352,7 @@ static VOID PruneQueue(PMINI_ADAPTER Adapter, INT iIndex)
 		if(PacketToDrop)
 		{
 			if (netif_msg_tx_err(Adapter))
-				pr_info(PFX "%s: tx queue %d overlimit\n", 
+				pr_info(PFX "%s: tx queue %d overlimit\n",
 					Adapter->dev->name, iIndex);
 
 			netstats->tx_dropped++;
@@ -560,8 +552,6 @@ USHORT ClassifyPacket(PMINI_ADAPTER Adapter,struct sk_buff* skb)
 					break;
 				}
 
-
-
 				BCM_DEBUG_PRINT(Adapter, DBG_TYPE_TX, IPV4_DBG, DBG_LVL_ALL,  "Performing ETH CS Classification on Classifier Rule ID : %x Service Flow ID : %lx\n",pstClassifierRule->uiClassifierRuleIndex,Adapter->PackInfo[uiSfIndex].ulSFID);
 				bClassificationSucceed = EThCSClassifyPkt(Adapter,skb,&stEthCsPktInfo,pstClassifierRule, Adapter->PackInfo[uiSfIndex].bEthCSSupport);
 
@@ -639,7 +629,6 @@ USHORT ClassifyPacket(PMINI_ADAPTER Adapter,struct sk_buff* skb)
 			stFragPktInfo.bOutOfOrderFragment = FALSE;
 			AddFragIPClsEntry(Adapter,&stFragPktInfo);
 		}
-
 
 	}
 
@@ -767,7 +756,6 @@ static BOOLEAN EthCSMatchVLANRules(S_CLASSIFIER_RULE *pstClassifierRule,struct s
 	return TRUE;
 }
 
-
 static BOOLEAN EThCSClassifyPkt(PMINI_ADAPTER Adapter,struct sk_buff* skb,
 				PS_ETHCS_PKT_INFO pstEthCsPktInfo,
 				S_CLASSIFIER_RULE *pstClassifierRule,
@@ -850,6 +838,3 @@ static void EThCSGetPktInfo(PMINI_ADAPTER Adapter,PVOID pvEthPayload,
 	BCM_DEBUG_PRINT(Adapter, DBG_TYPE_TX, IPV4_DBG, DBG_LVL_ALL,  "EthCsPktInfo->eNwpktEthFrameType : %x\n",pstEthCsPktInfo->eNwpktEthFrameType);
 	BCM_DEBUG_PRINT(Adapter, DBG_TYPE_TX, IPV4_DBG, DBG_LVL_ALL,  "EthCsPktInfo->usEtherType : %x\n",pstEthCsPktInfo->usEtherType);
 }
-
-
-

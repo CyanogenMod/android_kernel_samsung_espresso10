@@ -41,7 +41,6 @@ MODULE_LICENSE("GPL");
 #define   I2C_ADV7175        0xd4
 #define   I2C_ADV7176        0x54
 
-
 static int debug;
 module_param(debug, int, 0);
 MODULE_PARM_DESC(debug, "Debug level (0-1)");

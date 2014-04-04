@@ -14,7 +14,6 @@
 #define CLK_TYPE_PERIPHERAL	0x8
 #define CLK_TYPE_SYSTEM		0x10
 
-
 struct clk {
 	struct list_head node;
 	const char	*name;		/* unique clock name */
@@ -27,7 +26,6 @@ struct clk {
 	unsigned	type;		/* clock type */
 	u16		users;
 };
-
 
 extern int __init clk_register(struct clk *clk);
 extern struct clk mck;

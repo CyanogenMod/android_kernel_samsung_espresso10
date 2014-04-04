@@ -1,10 +1,10 @@
 /* drivers/atm/firestream.h - FireStream 155 (MB86697) and
- *                            FireStream  50 (MB86695) device driver 
+ *                            FireStream  50 (MB86695) device driver
  */
- 
-/* Written & (C) 2000 by R.E.Wolff@BitWizard.nl 
- * Copied snippets from zatm.c by Werner Almesberger, EPFL LRC/ICA 
- * and ambassador.c Copyright (C) 1995-1999  Madge Networks Ltd 
+
+/* Written & (C) 2000 by R.E.Wolff@BitWizard.nl
+ * Copied snippets from zatm.c by Werner Almesberger, EPFL LRC/ICA
+ * and ambassador.c Copyright (C) 1995-1999  Madge Networks Ltd
  */
 
 /*
@@ -26,27 +26,22 @@
   system and in the file COPYING in the Linux kernel source.
 */
 
-
 /***********************************************************************
  *                  first the defines for the chip.                    *
  ***********************************************************************/
-
 
 /********************* General chip parameters. ************************/
 
 #define FS_NR_FREE_POOLS   8
 #define FS_NR_RX_QUEUES    4
 
-
 /********************* queues and queue access macros ******************/
-
 
 /* A queue entry. */
 struct FS_QENTRY {
 	u32 cmd;
 	u32 p0, p1, p2;
 };
-
 
 /* A freepool entry. */
 struct FS_BPENTRY {
@@ -61,9 +56,7 @@ struct FS_BPENTRY {
 	struct fs_dev *dev;
 };
 
-
 #define STATUS_CODE(qe)  ((qe->cmd >> 22) & 0x3f)
-
 
 /* OFFSETS against the base of a QUEUE... */
 #define QSA     0x00
@@ -72,7 +65,6 @@ struct FS_BPENTRY {
 #define QWP     0x0c
 #define QCNF    0x10   /* Only for Release queues! */
 /* Not for the transmit pending queue. */
-
 
 /* OFFSETS against the base of a FREE POOL... */
 #define FPCNF   0x00
@@ -105,9 +97,6 @@ struct FS_BPENTRY {
 #define RBFP_CME    (0x1 << 12)
 #define RBFP_DLP    (0x1 << 11)
 #define RBFP_BFPWT  (0x1 <<  0)
-
-
-
 
 /* FireStream commands. */
 #define QE_CMD_NULL             (0x00 << 22)
@@ -171,13 +160,11 @@ struct FS_BPENTRY {
 
 #define FP_FLAGS_EPI            (0x1 << 27)
 
-
 #define TX_PQ(i)  (0x00  + (i) * 0x10)
 #define TXB_RQ    (0x20)
 #define ST_Q      (0x48)
 #define RXB_FP(i) (0x90  + (i) * 0x14)
 #define RXB_RQ(i) (0x134 + (i) * 0x14)
-
 
 #define TXQ_HP 0
 #define TXQ_LP 1
@@ -187,16 +174,13 @@ struct FS_BPENTRY {
  * they are now. -- REW
  */
 
-
-/* And now for something completely different: 
+/* And now for something completely different:
  * The rest of the registers... */
-
 
 #define CMDR0 0x34
 #define CMDR1 0x38
 #define CMDR2 0x3c
 #define CMDR3 0x40
-
 
 #define SARMODE0     0x5c
 
@@ -218,7 +202,7 @@ struct FS_BPENTRY {
 #define SARMODE0_ABRVCS_8k  (0x5 << 4)
 #define SARMODE0_ABRVCS_16k (0x6 << 4)
 #define SARMODE0_ABRVCS_32k (0x7 << 4)
-#define SARMODE0_ABRVCS_32  (0x9 << 4) /* The others are "8", this one really has to 
+#define SARMODE0_ABRVCS_32  (0x9 << 4) /* The others are "8", this one really has to
 					  be 9. Tell me you don't believe me. -- REW */
 
 #define SARMODE0_RXVCS_0    (0x0 << 8)
@@ -229,7 +213,7 @@ struct FS_BPENTRY {
 #define SARMODE0_RXVCS_16k  (0x5 << 8)
 #define SARMODE0_RXVCS_32k  (0x6 << 8)
 #define SARMODE0_RXVCS_64k  (0x7 << 8)
-#define SARMODE0_RXVCS_32   (0x8 << 8) 
+#define SARMODE0_RXVCS_32   (0x8 << 8)
 
 #define SARMODE0_CALSUP_1  (0x0 << 12)
 #define SARMODE0_CALSUP_2  (0x1 << 12)
@@ -254,7 +238,6 @@ struct FS_BPENTRY {
 #define SARMODE0_UNLOCK    (0x1 << 26)
 #define SARMODE0_CWRE      (0x1 << 27)
 
-
 #define SARMODE0_INTMODE_READCLEAR          (0x0 << 28)
 #define SARMODE0_INTMODE_READNOCLEAR        (0x1 << 28)
 #define SARMODE0_INTMODE_READNOCLEARINHIBIT (0x2 << 28)
@@ -263,9 +246,7 @@ struct FS_BPENTRY {
 #define SARMODE0_GINT      (0x1 << 30)
 #define SARMODE0_SHADEN    (0x1 << 31)
 
-
 #define SARMODE1     0x60
-
 
 #define SARMODE1_TRTL_SHIFT 0   /* Program to 0 */
 #define SARMODE1_RRTL_SHIFT 4   /* Program to 0 */
@@ -290,7 +271,6 @@ struct FS_BPENTRY {
 #define SARMODE1_DCRM       (0x1 << 27)
 #define SARMODE1_TSTLP      (0x1 << 28)
 #define SARMODE1_DEFHEC     (0x1 << 29)
-
 
 #define ISR      0x64
 #define IUSR     0x68
@@ -324,10 +304,8 @@ struct FS_BPENTRY {
 #define ISR_EXT_INT       (0x1 << 25)
 #define ISR_RXDMA_S       (0x1 << 26)
 
-
 #define TMCONF 0x78
 /* Bits? */
-
 
 #define CALPRESCALE 0x7c
 /* Bits? */
@@ -354,21 +332,16 @@ struct FS_BPENTRY {
 #define RAS1 0x1c0
 #define RAS1_UTREG    (0x1 << 5)
 
-
 #define DMAMR 0x1cc
 #define DMAMR_TX_MODE_FULL (0x0 << 0)
 #define DMAMR_TX_MODE_PART (0x1 << 0)
 #define DMAMR_TX_MODE_NONE (0x2 << 0) /* And 3 */
-
-
 
 #define RAS2 0x280
 
 #define RAS2_NNI  (0x1 << 0)
 #define RAS2_USEL (0x1 << 1)
 #define RAS2_UBS  (0x1 << 2)
-
-
 
 struct fs_transmit_config {
 	u32 flags;
@@ -382,7 +355,7 @@ struct fs_transmit_config {
 #define TC_FLAGS_TRANSPARENT_PAYLOAD (0x1 << 29)
 #define TC_FLAGS_TRANSPARENT_CELL    (0x2 << 29)
 #define TC_FLAGS_STREAMING (0x1 << 28)
-#define TC_FLAGS_PACKET    (0x0) 
+#define TC_FLAGS_PACKET    (0x0)
 #define TC_FLAGS_TYPE_ABR  (0x0 << 22)
 #define TC_FLAGS_TYPE_CBR  (0x1 << 22)
 #define TC_FLAGS_TYPE_VBR  (0x2 << 22)
@@ -391,7 +364,6 @@ struct fs_transmit_config {
 #define TC_FLAGS_CAL1      (0x1 << 20)
 #define TC_FLAGS_CAL2      (0x2 << 20)
 #define TC_FLAGS_CAL3      (0x3 << 20)
-
 
 #define RC_FLAGS_NAM        (0x1 << 13)
 #define RC_FLAGS_RXBM_PSB   (0x0 << 14)
@@ -433,11 +405,8 @@ struct fs_transmit_config {
 #define RC_FLAGS_HOAM       (0x1 << 30)
 #define RC_FLAGS_CRC10      (0x1 << 31)
 
-
 #define RAC 0x1c8
 #define RAM 0x1c4
-
-
 
 /************************************************************************
  *         Then the datastructures that the DRIVER uses.                *
@@ -446,16 +415,14 @@ struct fs_transmit_config {
 #define TXQ_NENTRIES  32
 #define RXRQ_NENTRIES 1024
 
-
 struct fs_vcc {
 	int channo;
 	wait_queue_head_t close_wait;
 	struct sk_buff *last_skb;
 };
 
-
 struct queue {
-	struct FS_QENTRY *sa, *ea;  
+	struct FS_QENTRY *sa, *ea;
 	int offset;
 };
 
@@ -465,7 +432,6 @@ struct freepool {
 	int nr_buffers;
 	int n;
 };
-
 
 struct fs_dev {
 	struct fs_dev *next;		/* other FS devices */
@@ -491,24 +457,19 @@ struct fs_dev {
 	int ntxpckts;
 };
 
-
-
-
 /* Number of channesl that the FS50 supports. */
 #define FS50_CHANNEL_BITS  5
 #define FS50_NR_CHANNELS      (1 << FS50_CHANNEL_BITS)
 
-         
 #define FS_DEV(atm_dev) ((struct fs_dev *) (atm_dev)->dev_data)
 #define FS_VCC(atm_vcc) ((struct fs_vcc *) (atm_vcc)->dev_data)
-
 
 #define FS_IS50  0x1
 #define FS_IS155 0x2
 
 #define IS_FS50(dev)  (dev->flags & FS_IS50)
 #define IS_FS155(dev) (dev->flags & FS_IS155)
- 
+
 /* Within limits this is user-configurable. */
 /* Note: Currently the sum (10 -> 1k channels) is hardcoded in the driver. */
 #define FS155_VPI_BITS 4

@@ -329,13 +329,11 @@
 #define CPIA2_VC_VC_JPEG_OPT_DEFAULT      (CPIA2_VC_VC_JPEG_OPT_DOUBLE_SQUEEZE|\
 					   CPIA2_VC_VC_JPEG_OPT_AUTO_SQUEEZE)
 
-
 #define CPIA2_VC_VC_CREEP_PERIOD             0xD7
 #define CPIA2_VC_VC_USER_SQUEEZE             0xD8
 #define CPIA2_VC_VC_TARGET_KB                0xD9
 
 #define CPIA2_VC_VC_AUTO_SQUEEZE             0xE6
-
 
 /***
  * VP register set (Bank 2)
@@ -450,9 +448,7 @@
 #define CPIA2_VP5_MYCEILING                           0x3C   //60
 #define CPIA2_VP5_MCUVSATURATION                      0x3D   //61
 
-
 #define CPIA2_VP_REHASH_VALUES                        0x60
-
 
 /***
  * Common sensor registers

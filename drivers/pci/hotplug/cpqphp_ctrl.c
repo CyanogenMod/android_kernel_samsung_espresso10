@@ -45,7 +45,6 @@ static int configure_new_function(struct controller* ctrl, struct pci_func *func
 			u8 behind_bridge, struct resource_lists *resources);
 static void interrupt_event_handler(struct controller *ctrl);
 
-
 static struct task_struct *cpqhp_event_thread;
 static unsigned long pushbutton_pending;	/* = 0 */
 
@@ -60,7 +59,6 @@ static void long_delay(int delay)
 	 */
 	msleep_interruptible(jiffies_to_msecs(delay));
 }
-
 
 /* FIXME: The following line needs to be somewhere else... */
 #define WRONG_BUS_FREQUENCY 0x07
@@ -136,7 +134,6 @@ static struct slot *cpqhp_find_slot(struct controller *ctrl, u8 device)
 
 	return slot;
 }
-
 
 static u8 handle_presence_change(u16 change, struct controller * ctrl)
 {
@@ -231,7 +228,6 @@ static u8 handle_presence_change(u16 change, struct controller * ctrl)
 	return rc;
 }
 
-
 static u8 handle_power_fault(u8 change, struct controller * ctrl)
 {
 	int hp_slot;
@@ -304,7 +300,6 @@ static u8 handle_power_fault(u8 change, struct controller * ctrl)
 	return rc;
 }
 
-
 /**
  * sort_by_size - sort nodes on the list by their length, smallest first.
  * @head: list to sort
@@ -351,7 +346,6 @@ static int sort_by_size(struct pci_resource **head)
 
 	return 0;
 }
-
 
 /**
  * sort_by_max_size - sort nodes on the list by their length, largest first.
@@ -400,7 +394,6 @@ static int sort_by_max_size(struct pci_resource **head)
 	return 0;
 }
 
-
 /**
  * do_pre_bridge_resource_split - find node of resources that are unused
  * @head: new list head
@@ -430,7 +423,6 @@ static struct pci_resource *do_pre_bridge_resource_split(struct pci_resource **h
 
 	if ((*head)->length == (*orig_head)->length)
 		return NULL;
-
 
 	/* If we got here, there the bridge requires some of the resource, but
 	 * we may be able to split some off of the front
@@ -477,7 +469,6 @@ static struct pci_resource *do_pre_bridge_resource_split(struct pci_resource **h
 
 	return node;
 }
-
 
 /**
  * do_bridge_resource_split - find one node of resources that aren't in use
@@ -526,7 +517,6 @@ error:
 	kfree(node);
 	return NULL;
 }
-
 
 /**
  * get_io_resource - find first node of given size not in ISA aliasing window.
@@ -624,7 +614,6 @@ static struct pci_resource *get_io_resource(struct pci_resource **head, u32 size
 	return node;
 }
 
-
 /**
  * get_max_resource - get largest node which has at least the given size.
  * @head: the list to search the node in
@@ -719,7 +708,6 @@ static struct pci_resource *get_max_resource(struct pci_resource **head, u32 siz
 	return max;
 }
 
-
 /**
  * get_resource - find resource of given size and split up larger ones.
  * @head: the list to search for resources
@@ -813,7 +801,6 @@ static struct pci_resource *get_resource(struct pci_resource **head, u32 size)
 	return node;
 }
 
-
 /**
  * cpqhp_resource_sort_and_combine - sort nodes by base addresses and clean up
  * @head: the list to sort and clean up
@@ -887,7 +874,6 @@ int cpqhp_resource_sort_and_combine(struct pci_resource **head)
 	return 0;
 }
 
-
 irqreturn_t cpqhp_ctrl_intr(int IRQ, void *data)
 {
 	struct controller *ctrl = data;
@@ -896,7 +882,6 @@ irqreturn_t cpqhp_ctrl_intr(int IRQ, void *data)
 	u16 misc;
 	u32 Diff;
 	u32 temp_dword;
-
 
 	misc = readw(ctrl->hpc_reg + MISC);
 	/*
@@ -959,7 +944,6 @@ irqreturn_t cpqhp_ctrl_intr(int IRQ, void *data)
 	return IRQ_HANDLED;
 }
 
-
 /**
  * cpqhp_slot_create - Creates a node and adds it to the proper bus.
  * @busnumber: bus where new node is to be located
@@ -988,7 +972,6 @@ struct pci_func *cpqhp_slot_create(u8 busnumber)
 	}
 	return new_slot;
 }
-
 
 /**
  * slot_remove - Removes a node from the linked list of slots.
@@ -1025,7 +1008,6 @@ static int slot_remove(struct pci_func * old_slot)
 	} else
 		return 2;
 }
-
 
 /**
  * bridge_slot_remove - Removes a node from the linked list of slots.
@@ -1070,7 +1052,6 @@ out:
 	return 0;
 }
 
-
 /**
  * cpqhp_slot_find - Looks for a node by bus, and device, multiple functions accessed
  * @bus: bus to find
@@ -1105,7 +1086,6 @@ struct pci_func *cpqhp_slot_find(u8 bus, u8 device, u8 index)
 	return NULL;
 }
 
-
 /* DJZ: I don't think is_bridge will work as is.
  * FIXME */
 static int is_bridge(struct pci_func * func)
@@ -1116,7 +1096,6 @@ static int is_bridge(struct pci_func * func)
 	else
 		return 0;
 }
-
 
 /**
  * set_controller_speed - set the frequency and/or mode of a specific controller segment.
@@ -1231,7 +1210,7 @@ static u8 set_controller_speed(struct controller *ctrl, u8 adapter_speed, u8 hp_
 
 	/* Only if mode change...*/
 	if (((bus->cur_bus_speed == PCI_SPEED_66MHz) && (adapter_speed == PCI_SPEED_66MHz_PCIX)) ||
-		((bus->cur_bus_speed == PCI_SPEED_66MHz_PCIX) && (adapter_speed == PCI_SPEED_66MHz))) 
+		((bus->cur_bus_speed == PCI_SPEED_66MHz_PCIX) && (adapter_speed == PCI_SPEED_66MHz)))
 			set_SOGO(ctrl);
 
 	wait_for_ctrl_irq(ctrl);
@@ -1255,7 +1234,6 @@ static u8 set_controller_speed(struct controller *ctrl, u8 adapter_speed, u8 hp_
 /* the following routines constitute the bulk of the
  * hotplug controller logic
  */
-
 
 /**
  * board_replaced - Called after a board has been replaced in the system.
@@ -1409,7 +1387,6 @@ static u32 board_replaced(struct pci_func *func, struct controller *ctrl)
 	return rc;
 
 }
-
 
 /**
  * board_added - Called after a board has been added to the system.
@@ -1573,7 +1550,6 @@ static u32 board_added(struct pci_func *func, struct controller *ctrl)
 			cpqhp_save_slot_config(ctrl, func);
 		}
 
-
 		func->status = 0;
 		func->switch_save = 0x10;
 		func->is_a_board = 0x01;
@@ -1616,7 +1592,6 @@ static u32 board_added(struct pci_func *func, struct controller *ctrl)
 	}
 	return 0;
 }
-
 
 /**
  * remove_board - Turns off slot and LEDs
@@ -1739,7 +1714,6 @@ static void pushbutton_helper_thread(unsigned long data)
 	wake_up_process(cpqhp_event_thread);
 }
 
-
 /* this is the main worker thread */
 static int event_thread(void* data)
 {
@@ -1774,12 +1748,10 @@ int cpqhp_event_start_thread(void)
 	return 0;
 }
 
-
 void cpqhp_event_stop_thread(void)
 {
 	kthread_stop(cpqhp_event_thread);
 }
-
 
 static int update_slot_info(struct controller *ctrl, struct slot *slot)
 {
@@ -1828,7 +1800,7 @@ static void interrupt_event_handler(struct controller *ctrl)
 
 				if (ctrl->event_queue[loop].event_type == INT_BUTTON_PRESS) {
 					dbg("button pressed\n");
-				} else if (ctrl->event_queue[loop].event_type == 
+				} else if (ctrl->event_queue[loop].event_type ==
 					   INT_BUTTON_CANCEL) {
 					dbg("button cancel\n");
 					del_timer(&p_slot->task_event);
@@ -1914,7 +1886,6 @@ static void interrupt_event_handler(struct controller *ctrl)
 	return;
 }
 
-
 /**
  * cpqhp_pushbutton_thread - handle pushbutton events
  * @slot: target slot (struct)
@@ -1984,7 +1955,6 @@ void cpqhp_pushbutton_thread(unsigned long slot)
 
 	return;
 }
-
 
 int cpqhp_process_SI(struct controller *ctrl, struct pci_func *func)
 {
@@ -2079,7 +2049,6 @@ int cpqhp_process_SI(struct controller *ctrl, struct pci_func *func)
 
 	return rc;
 }
-
 
 int cpqhp_process_SS(struct controller *ctrl, struct pci_func *func)
 {
@@ -2260,7 +2229,6 @@ int cpqhp_hardware_test(struct controller *ctrl, int test_num)
 	return 0;
 }
 
-
 /**
  * configure_new_device - Configures the PCI header information of one board.
  * @ctrl: pointer to controller structure
@@ -2349,12 +2317,10 @@ static u32 configure_new_device(struct controller * ctrl, struct pci_func * func
 	return 0;
 }
 
-
 /*
  * Configuration logic that involves the hotplug data structures and
  * their bookkeeping
  */
-
 
 /**
  * configure_new_function - Configures the PCI header information of one device

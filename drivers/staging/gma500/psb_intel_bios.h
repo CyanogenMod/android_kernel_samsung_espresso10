@@ -35,7 +35,6 @@ struct vbt_header {
 	u32 aim_offset[4];		/**< from beginning of VBT */
 } __attribute__((packed));
 
-
 struct bdb_header {
 	u8 signature[16];		/**< Always 'BIOS_DATA_BLOCK' */
 	u16 version;			/**< decimal */
@@ -301,7 +300,6 @@ struct bdb_sdvo_lvds_options {
 	u8 panel_misc_bits_3;
 	u8 panel_misc_bits_4;
 } __attribute__((packed));
-
 
 extern bool psb_intel_init_bios(struct drm_device *dev);
 extern void psb_intel_destroy_bios(struct drm_device *dev);

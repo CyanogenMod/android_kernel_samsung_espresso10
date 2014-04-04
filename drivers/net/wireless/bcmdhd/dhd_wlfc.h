@@ -1,12 +1,12 @@
 /*
 * Copyright (C) 1999-2012, Broadcom Corporation
-* 
+*
 *      Unless you and Broadcom execute a separate written software license
 * agreement governing use of this software, this software is licensed to you
 * under the terms of the GNU General Public License version 2 (the "GPL"),
 * available at http://www.broadcom.com/licenses/GPLv2.php, with the
 * following added to such license:
-* 
+*
 *      As a special exception, the copyright holders of this software give you
 * permission to link this software with independent modules, and to copy and
 * distribute the resulting executable under terms of your choice, provided that
@@ -14,11 +14,11 @@
 * the license of that module.  An independent module is a module which is not
 * derived from this software.  The special exception does not apply to any
 * modifications of the software.
-* 
+*
 *      Notwithstanding the above, under no circumstances may you combine this
 * software in any way with any other Broadcom software provided under a license
 * other than the GPL, without Broadcom's express prior written consent.
-* $Id: dhd_wlfc.h 341930 2012-06-29 04:51:25Z $
+* $Id: dhd_wlfc.h 361006 2012-10-05 07:45:51Z $
 *
 */
 #ifndef __wlfc_host_driver_definitions_h__
@@ -85,6 +85,7 @@ typedef struct wlfc_hanger {
 	uint32 failed_to_pop;
 	uint32 failed_slotfind;
 	wlfc_hanger_item_t items[1];
+	uint32 slot_pos;
 } wlfc_hanger_t;
 
 #define WLFC_HANGER_SIZE(n)	((sizeof(wlfc_hanger_t) - \
@@ -99,10 +100,8 @@ typedef struct wlfc_hanger {
 
 #define WLFC_SENDQ_LEN			256
 
-
 #define WLFC_FLOWCONTROL_HIWATER	(2048 - 256)
 #define WLFC_FLOWCONTROL_LOWATER	256
-
 
 typedef struct wlfc_mac_descriptor {
 	uint8 occupied;

@@ -165,7 +165,6 @@ void _m_unregister_buf(struct __buf_info *_b)
 	kfree(_b);
 }
 
-
 /*
  *  File operations (mmap, ioctl, open, close)
  *  ==========================================================================
@@ -504,7 +503,6 @@ static const struct file_operations tiler_fops = {
 };
 #endif
 
-
 void tiler_ioctl_init(struct tiler_ops *tiler)
 {
 	ops = tiler;
@@ -517,7 +515,6 @@ void tiler_ioctl_init(struct tiler_ops *tiler)
 #endif
 	BLOCKING_INIT_NOTIFIER_HEAD(&notifier);
 }
-
 
 s32 tiler_reg_notifier(struct notifier_block *nb)
 {

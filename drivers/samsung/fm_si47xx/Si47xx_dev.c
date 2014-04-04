@@ -23,7 +23,6 @@
 #include "commanddefs.h"
 #include "propertydefs.h"
 
-
 enum {
 	eTRUE,
 	eFALSE,
@@ -107,7 +106,6 @@ static irqreturn_t Si47xx_isr(int irq, void *unused)
 	return IRQ_HANDLED;
 }
 
-
 /*-----------------------------------------------------------------------------
  This command returns the status
 -----------------------------------------------------------------------------*/
@@ -127,7 +125,6 @@ static u8 si47xx_readStatus(void)
 
 	return status;
 }
-
 
 /*-----------------------------------------------------------------------------
  Command that will wait for CTS before returning
@@ -565,7 +562,6 @@ static int tune_freq(u32 frequency)
 
 	return ret;
 }
-
 
 int Si47xx_dev_init(struct Si47xx_device_t *si47xx_dev)
 {

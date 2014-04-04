@@ -2,7 +2,7 @@
  *  linux/drivers/video/tgafb.h -- DEC 21030 TGA frame buffer device
  *
  *  	Copyright (C) 1999,2000 Martin Lucina, Tom Zerucha
- *  
+ *
  *  $Id: tgafb.h,v 1.4.2.3 2000/04/04 06:44:56 mato Exp $
  *
  *  This file is subject to the terms and conditions of the GNU General Public
@@ -64,8 +64,7 @@
 #define	TGA_RAMDAC_REG			0x01f0
 #define	TGA_CMD_STAT_REG		0x01f8
 
-
-/* 
+/*
  * Useful defines for managing the registers
  */
 
@@ -105,14 +104,12 @@
 #define TGA_MODE_DMA_READ_COPY_D	0x37
 #define TGA_MODE_DMA_WRITE_COPY		0x1f
 
-
 /*
  * Useful defines for managing the ICS1562 PLL clock
  */
 
 #define TGA_PLL_BASE_FREQ 		14318		/* .18 */
 #define TGA_PLL_MAX_FREQ 		230000
-
 
 /*
  * Useful defines for managing the BT485 on the 8-plane TGA
@@ -138,7 +135,6 @@
 #define	BT485_CUR_HIGH_X		0x1a
 #define	BT485_CUR_LOW_Y			0x1c
 #define	BT485_CUR_HIGH_Y		0x1e
-
 
 /*
  * Useful defines for managing the BT463 on the 24-plane TGAs/SFB+s
@@ -218,7 +214,6 @@ struct tga_par {
 	u32 sync_on_green;		/* set if sync is on green */
 	u32 palette[16];
 };
-
 
 /*
  * Macros for reading/writing TGA and RAMDAC registers

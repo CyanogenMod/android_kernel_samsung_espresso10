@@ -95,7 +95,7 @@ static int ams_delta_led_probe(struct platform_device *pdev)
 fail:
 	while (--i >= 0)
 		led_classdev_unregister(&ams_delta_leds[i].cdev);
-	return ret;	
+	return ret;
 }
 
 static int ams_delta_led_remove(struct platform_device *pdev)

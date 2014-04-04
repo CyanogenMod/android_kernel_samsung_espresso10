@@ -58,7 +58,6 @@ int xfs_filestream_associate(struct xfs_inode *dip, struct xfs_inode *ip);
 void xfs_filestream_deassociate(struct xfs_inode *ip);
 int xfs_filestream_new_ag(struct xfs_bmalloca *ap, xfs_agnumber_t *agp);
 
-
 /* filestreams for the inode? */
 static inline int
 xfs_inode_is_filestream(

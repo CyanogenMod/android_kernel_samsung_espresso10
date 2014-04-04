@@ -1,12 +1,12 @@
-/* 
+/*
  * QNX4 file system, Linux implementation.
- * 
+ *
  * Version : 0.2.1
- * 
+ *
  * Using parts of the xiafs filesystem.
- * 
+ *
  * History :
- * 
+ *
  * 01-06-1998 by Richard Frowijn : first release.
  * 21-06-1998 by Frank Denis : dcache support, fixed error codes.
  * 04-07-1998 by Frank Denis : first step for rmdir/unlink.
@@ -14,7 +14,6 @@
 
 #include <linux/buffer_head.h>
 #include "qnx4.h"
-
 
 /*
  * check if the filename is correct. For some obscure reason, qnx writes a

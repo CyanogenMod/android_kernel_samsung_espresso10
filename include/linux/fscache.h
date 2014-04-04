@@ -31,7 +31,6 @@
 #define fscache_cookie_valid(cookie) (0)
 #endif
 
-
 /*
  * overload PG_private_2 to give us PG_fscache - this is used to indicate that
  * a page is currently backed by a local disk cache

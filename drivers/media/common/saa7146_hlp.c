@@ -171,7 +171,6 @@ static int calculate_h_scale_registers(struct saa7146_dev *dev,
 	else
 		pfuv = 0x33;
 
-
 	*hps_v_gain  &= MASK_W0|MASK_B2;
 	*hps_v_gain  |= (pfuv << 24);
 

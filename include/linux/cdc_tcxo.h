@@ -67,4 +67,3 @@ static inline int cdc_tcxo_set_req_prio(int clk_id, int req_prio) { return 0; }
 #endif
 
 #endif /* _LINUX_CDC_TCXO_H_ */
-

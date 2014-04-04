@@ -25,7 +25,6 @@ static u32 iobase;
 
 static struct mtd_info *mymtd;
 
-
 /* Is this really the vpp port? */
 static void l440gx_set_vpp(struct map_info *map, int vpp)
 {
@@ -115,7 +114,6 @@ static int __init init_l440gx(void)
 	/* Set the iobase */
 	iobase = pm_iobase->start;
 	pci_write_config_dword(pm_dev, 0x40, iobase | 1);
-
 
 	/* Set XBCS# */
 	pci_read_config_word(dev, 0x4e, &word);

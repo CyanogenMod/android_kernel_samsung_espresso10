@@ -719,7 +719,6 @@ static const struct videobuf_queue_ops cx8800_video_qops = {
 
 /* ------------------------------------------------------------------ */
 
-
 /* ------------------------------------------------------------------ */
 
 static struct videobuf_queue* get_queue(struct cx8800_fh *fh)
@@ -1319,8 +1318,6 @@ static int vidioc_s_input (struct file *file, void *priv, unsigned int i)
 	mutex_unlock(&core->lock);
 	return 0;
 }
-
-
 
 static int vidioc_queryctrl (struct file *file, void *priv,
 				struct v4l2_queryctrl *qctrl)

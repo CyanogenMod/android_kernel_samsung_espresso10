@@ -71,7 +71,7 @@ struct nubus_board* nubus_boards;
 
    Etcetera, etcetera.  Hopefully this clears up some confusion over
    what the following code actually does.  */
- 
+
 static inline int not_useful(void *p, int map)
 {
 	unsigned long pv=(unsigned long)p;
@@ -80,7 +80,7 @@ static inline int not_useful(void *p, int map)
 		return 0;
 	return 1;
 }
- 
+
 static unsigned long nubus_get_rom(unsigned char **ptr, int len, int map)
 {
 	/* This will hold the result */
@@ -156,7 +156,7 @@ static inline long nubus_expand32(long foo)
 }
 
 static inline void *nubus_rom_addr(int slot)
-{	
+{
 	/*
 	 *	Returns the first byte after the card. We then walk
 	 *	backwards to get the lane register and the config
@@ -230,7 +230,7 @@ int nubus_get_board_dir(const struct nubus_board* board,
 			struct nubus_dir* dir)
 {
 	struct nubus_dirent ent;
-	
+
 	dir->ptr = dir->base = board->directory;
 	dir->done = 0;
 	dir->mask = board->lanes;
@@ -339,7 +339,7 @@ nubus_find_slot(unsigned int slot,
 {
 	struct nubus_dev* itor =
 		from ? from->next : nubus_devices;
-	
+
 	while (itor) {
 		if (itor->board->slot == slot)
 			return itor;
@@ -356,7 +356,7 @@ nubus_find_rsrc(struct nubus_dir* dir, unsigned char rsrc_type,
 	while (nubus_readdir(dir, ent) != -1) {
 		if (ent->type == rsrc_type)
 			return 0;
-	}	
+	}
 	return -1;
 }
 EXPORT_SYMBOL(nubus_find_rsrc);
@@ -396,7 +396,7 @@ static int __init nubus_show_network_resource(struct nubus_dev* dev,
 	{
 		char addr[6];
 		int i;
-		
+
 		nubus_get_rsrc_mem(addr, ent, 6);
 		printk(KERN_INFO "    MAC address: ");
 		for (i = 0; i < 6; i++)
@@ -467,25 +467,25 @@ static struct nubus_dev* __init
 	struct nubus_dir    dir;
 	struct nubus_dirent ent;
 	struct nubus_dev*   dev;
-	
+
 	printk(KERN_INFO "  Function 0x%02x:\n", parent->type);
 	nubus_get_subdir(parent, &dir);
 
 	/* Apple seems to have botched the ROM on the IIx */
 	if (slot == 0 && (unsigned long)dir.base % 2)
 		dir.base += 1;
-	
+
 	if (console_loglevel >= 10)
 		printk(KERN_DEBUG "nubus_get_functional_resource: parent is 0x%p, dir is 0x%p\n",
 		       parent->base, dir.base);
 
 	/* Actually we should probably panic if this fails */
 	if ((dev = kzalloc(sizeof(*dev), GFP_ATOMIC)) == NULL)
-		return NULL;	
+		return NULL;
 	dev->resid = parent->type;
 	dev->directory = dir.base;
 	dev->board = board;
-	
+
 	while (nubus_readdir(&dir, &ent) != -1)
 	{
 		switch(ent.type)
@@ -534,7 +534,7 @@ static struct nubus_dev* __init
 			nubus_get_rsrc_mem(&dev->iosize, &ent, 4);
 			printk(KERN_INFO "    memory length: 0x%08lx\n",
 			       dev->iosize);
-			break;			
+			break;
 		case NUBUS_RESID_FLAGS:
 			dev->flags = ent.data;
 			printk(KERN_INFO "    flags: 0x%06x\n", dev->flags);
@@ -549,7 +549,7 @@ static struct nubus_dev* __init
 			nubus_show_private_resource(dev, &ent);
 		}
 	}
-		
+
 	return dev;
 }
 
@@ -581,7 +581,7 @@ static int __init nubus_get_vidnames(struct nubus_board* board,
 
 		/* First get the length */
 		nubus_get_rsrc_mem(&size, &ent, 4);
-		
+
 		/* Now clobber the whole thing */
 		if (size > sizeof(mode) - 1)
 			size = sizeof(mode) - 1;
@@ -600,7 +600,7 @@ static int __init nubus_get_icon(struct nubus_board* board,
 	/* Should be 32x32 if my memory serves me correctly */
 	unsigned char icon[128];
 	int x, y;
-	
+
 	nubus_get_rsrc_mem(&icon, ent, 128);
 	printk(KERN_INFO "    icon:\n");
 
@@ -638,7 +638,7 @@ static int __init nubus_get_vendorinfo(struct nubus_board* board,
 	while(nubus_readdir(&dir, &ent) != -1)
 	{
 		char name[64];
-		
+
 		/* These are all strings, we think */
 		nubus_get_rsrc_str(name, &ent, 64);
 		if (ent.type > 5)
@@ -654,7 +654,7 @@ static int __init nubus_get_board_resource(struct nubus_board* board, int slot,
 {
 	struct nubus_dir    dir;
 	struct nubus_dirent ent;
-	
+
 	nubus_get_subdir(parent, &dir);
 	if (console_loglevel >= 10)
 		printk(KERN_DEBUG "nubus_get_board_resource: parent is 0x%p, dir is 0x%p\n",
@@ -703,7 +703,7 @@ static int __init nubus_get_board_resource(struct nubus_board* board, int slot,
 		case NUBUS_RESID_SECONDINIT:
 			printk(KERN_INFO "    secondary init offset: 0x%06x\n", ent.data);
 			break;
-			/* WTF isn't this in the functional resources? */ 
+			/* WTF isn't this in the functional resources? */
 		case NUBUS_RESID_VIDNAMES:
 			nubus_get_vidnames(board, &ent);
 			break;
@@ -711,7 +711,7 @@ static int __init nubus_get_board_resource(struct nubus_board* board, int slot,
 		case NUBUS_RESID_VIDMODES:
 			printk(KERN_INFO "    video mode parameter directory offset: 0x%06x\n",
 			       ent.data);
-			break;			
+			break;
 		default:
 			printk(KERN_INFO "    unknown resource %02X, data 0x%06x\n",
 			       ent.type, ent.data);
@@ -758,14 +758,14 @@ static void __init nubus_find_rom_dir(struct nubus_board* board)
 	if (console_loglevel >= 10)
 		printk(KERN_INFO "nubus_get_rom_dir: entry %02x %06x\n", ent.type, ent.data);
 	/* This one takes us to where we want to go. */
-	if (nubus_readdir(&dir, &ent) == -1) 
+	if (nubus_readdir(&dir, &ent) == -1)
 		goto badrom;
 	if (console_loglevel >= 10)
 		printk(KERN_DEBUG "nubus_get_rom_dir: entry %02x %06x\n", ent.type, ent.data);
 	nubus_get_subdir(&ent, &dir);
 
 	/* Resource ID 01, also an "Unknown Macintosh" */
-	if (nubus_readdir(&dir, &ent) == -1) 
+	if (nubus_readdir(&dir, &ent) == -1)
 		goto badrom;
 	if (console_loglevel >= 10)
 		printk(KERN_DEBUG "nubus_get_rom_dir: entry %02x %06x\n", ent.type, ent.data);
@@ -784,12 +784,12 @@ static void __init nubus_find_rom_dir(struct nubus_board* board)
 		goto badrom;
 	if (console_loglevel >= 10)
 		printk(KERN_DEBUG "nubus_get_rom_dir: entry %02x %06x\n", ent.type, ent.data);
-	
+
 	/* Bwahahahaha... */
 	nubus_get_subdir(&ent, &dir);
 	board->directory = dir.base;
 	return;
-	
+
 	/* Even more evil laughter... */
  badrom:
 	board->directory = board->fblock;
@@ -809,12 +809,12 @@ static struct nubus_board* __init nubus_add_board(int slot, int bytelanes)
 	struct nubus_dirent ent;
 
 	/* Move to the start of the format block */
-	rp = nubus_rom_addr(slot);		
+	rp = nubus_rom_addr(slot);
 	nubus_rewind(&rp, FORMAT_BLOCK_SIZE, bytelanes);
 
 	/* Actually we should probably panic if this fails */
 	if ((board = kzalloc(sizeof(*board), GFP_ATOMIC)) == NULL)
-		return NULL;	
+		return NULL;
 	board->fblock = rp;
 
 	/* Dump the format block for debugging purposes */
@@ -832,7 +832,7 @@ static struct nubus_board* __init nubus_add_board(int slot, int bytelanes)
 		printk("\n");
 		rp = board->fblock;
 	}
-	
+
 	board->slot = slot;
 	board->slot_addr = (unsigned long) nubus_slot_addr(slot);
 	board->doffset = nubus_get_rom(&rp, 4, bytelanes);
@@ -854,7 +854,7 @@ static struct nubus_board* __init nubus_add_board(int slot, int bytelanes)
 	dpat = nubus_get_rom(&rp, 4, bytelanes);
 	if(dpat != NUBUS_TEST_PATTERN)
 		printk(KERN_WARNING "Wrong test pattern %08lx!\n", dpat);
-		
+
 	/*
 	 *	I wonder how the CRC is meant to work -
 	 *		any takers ?
@@ -864,7 +864,7 @@ static struct nubus_board* __init nubus_add_board(int slot, int bytelanes)
 
 	/* Attempt to work around slot zero weirdness */
 	nubus_find_rom_dir(board);
-	nubus_get_root_dir(board, &dir);	
+	nubus_get_root_dir(board, &dir);
 
 	/* We're ready to rock */
 	printk(KERN_INFO "Slot %X:\n", slot);
@@ -896,12 +896,12 @@ static struct nubus_board* __init nubus_add_board(int slot, int bytelanes)
 		/* We zeroed this out above */
 		if (board->first_dev == NULL)
 			board->first_dev = dev;
-		
+
 		/* Put it on the global NuBus device chain. Keep entries in order. */
 		for (devp=&nubus_devices; *devp!=NULL; devp=&((*devp)->next))
 			/* spin */;
 		*devp = dev;
-		dev->next = NULL;		
+		dev->next = NULL;
 	}
 
 	/* Put it on the global NuBus board chain. Keep entries in order. */
@@ -909,7 +909,7 @@ static struct nubus_board* __init nubus_add_board(int slot, int bytelanes)
 		/* spin */;
 	*boardp = board;
 	board->next = NULL;
-	
+
 	return board;
 }
 
@@ -919,7 +919,7 @@ void __init nubus_probe_slot(int slot)
 	unsigned char* rp;
 	int i;
 
-	rp = nubus_rom_addr(slot);	
+	rp = nubus_rom_addr(slot);
 	for(i = 4; i; i--)
 	{
 		unsigned long flags;
@@ -929,7 +929,7 @@ void __init nubus_probe_slot(int slot)
 		local_irq_save(flags);
 		card_present = hwreg_present(rp);
 		local_irq_restore(flags);
-	       
+
 		if (!card_present)
 			continue;
 
@@ -963,10 +963,10 @@ static int sprint_nubus_board(struct nubus_board* board, char* ptr, int len)
 {
 	if(len < 100)
 		return -1;
-	
+
 	sprintf(ptr, "Slot %X: %s\n",
 		board->slot, board->name);
-	
+
 	return strlen(ptr);
 }
 
@@ -976,7 +976,7 @@ static int nubus_read_proc(char *page, char **start, off_t off,
 	int nprinted, len, begin = 0;
 	int size = PAGE_SIZE;
 	struct nubus_board* board;
-	
+
 	len   = sprintf(page, "Nubus devices found:\n");
 	/* Walk the list of NuBus boards */
 	for (board = nubus_boards; board != NULL; board = board->next)
@@ -1020,7 +1020,7 @@ void __init nubus_scan_bus(void)
 
 static int __init nubus_init(void)
 {
-	if (!MACH_IS_MAC) 
+	if (!MACH_IS_MAC)
 		return 0;
 
 	/* Initialize the NuBus interrupts */
@@ -1036,7 +1036,7 @@ static int __init nubus_init(void)
 	   gurus can fix the real cause of the problem. */
 	mdelay(1000);
 #endif
-	
+
 	/* And probe */
 	printk("NuBus: Scanning NuBus slots.\n");
 	nubus_devices = NULL;

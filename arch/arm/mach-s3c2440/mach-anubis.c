@@ -111,7 +111,6 @@ static struct s3c24xx_uart_clksrc anubis_serial_clocks[] = {
 	}
 };
 
-
 static struct s3c2410_uartcfg anubis_uartcfgs[] __initdata = {
 	[0] = {
 		.hwport	     = 0,
@@ -494,7 +493,6 @@ static void __init anubis_init(void)
 	i2c_register_board_info(0, anubis_i2c_devs,
 				ARRAY_SIZE(anubis_i2c_devs));
 }
-
 
 MACHINE_START(ANUBIS, "Simtec-Anubis")
 	/* Maintainer: Ben Dooks <ben@simtec.co.uk> */

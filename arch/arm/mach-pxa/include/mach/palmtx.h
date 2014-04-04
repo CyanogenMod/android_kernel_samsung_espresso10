@@ -90,7 +90,6 @@
 /* TOUCHSCREEN */
 #define AC97_LINK_FRAME			21
 
-
 /* BATTERY */
 #define PALMTX_BAT_MAX_VOLTAGE		4000	/* 4.00v current voltage */
 #define PALMTX_BAT_MIN_VOLTAGE		3550	/* 3.55v critical voltage */

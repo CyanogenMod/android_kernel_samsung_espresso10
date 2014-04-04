@@ -224,7 +224,6 @@ int mdp_lcdc_on(struct platform_device *pdev)
 		active_v_end = 0;
 	}
 
-
 #ifdef CONFIG_FB_MSM_MDP40
 	if (mfd->panel.type == HDMI_PANEL) {
 		block = MDP_DMA_E_BLOCK;

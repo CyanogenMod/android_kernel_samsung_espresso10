@@ -81,7 +81,6 @@ xfs_trans_log_efi_extent(xfs_trans_t		*tp,
 	extp->ext_len = ext_len;
 }
 
-
 /*
  * This routine is called to allocate an "extent free done"
  * log item that will hold nextents worth of extents.  The

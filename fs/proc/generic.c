@@ -3,7 +3,7 @@
  *
  * This file contains generic proc-fs routines for handling
  * directories and files.
- * 
+ *
  * Copyright (C) 1991, 1992 Linus Torvalds.
  * Copyright (C) 1997 Theodore Ts'o
  */
@@ -89,11 +89,11 @@ __proc_file_read(struct file *file, char __user *buf, size_t nbytes,
 			 *    offset within the buffer.  Return the number (n)
 			 *    of bytes there are from the beginning of the
 			 *    buffer up to the last byte of data.  If the
-			 *    number of supplied bytes (= n - offset) is 
+			 *    number of supplied bytes (= n - offset) is
 			 *    greater than zero and you didn't signal eof
 			 *    and the reader is prepared to take more data
 			 *    you will be called again with the requested
-			 *    offset advanced by the number of bytes 
+			 *    offset advanced by the number of bytes
 			 *    absorbed.  This interface is useful for files
 			 *    no larger than the buffer.
 			 * 1) Set *start = an unsigned long value less than
@@ -167,7 +167,7 @@ __proc_file_read(struct file *file, char __user *buf, size_t nbytes,
 			if (n > count)
 				n = count;
 		}
-		
+
  		n -= copy_to_user(buf, start < page ? page : start, n);
 		if (n == 0) {
 			if (retval == 0)
@@ -228,7 +228,6 @@ proc_file_write(struct file *file, const char __user *buffer,
 	return rv;
 }
 
-
 static loff_t
 proc_file_lseek(struct file *file, loff_t offset, int orig)
 {
@@ -270,7 +269,7 @@ static int proc_notify_change(struct dentry *dentry, struct iattr *iattr)
 
 	setattr_copy(inode, iattr);
 	mark_inode_dirty(inode);
-	
+
 	de->uid = inode->i_uid;
 	de->gid = inode->i_gid;
 	de->mode = inode->i_mode;
@@ -395,9 +394,9 @@ static const struct inode_operations proc_link_inode_operations = {
 };
 
 /*
- * As some entries in /proc are volatile, we want to 
- * get rid of unused dentries.  This could be made 
- * smarter: we could keep a "volatile" flag in the 
+ * As some entries in /proc are volatile, we want to
+ * get rid of unused dentries.  This could be made
+ * smarter: we could keep a "volatile" flag in the
  * inode to indicate which ones to keep.
  */
 static int proc_delete_dentry(const struct dentry * dentry)
@@ -522,7 +521,7 @@ int proc_readdir_de(struct proc_dir_entry *de, struct file *filp, void *dirent,
 	}
 	ret = 1;
 out:
-	return ret;	
+	return ret;
 }
 
 int proc_readdir(struct file *filp, void *dirent, filldir_t filldir)
@@ -556,7 +555,7 @@ static int proc_register(struct proc_dir_entry * dir, struct proc_dir_entry * dp
 {
 	unsigned int i;
 	struct proc_dir_entry *tmp;
-	
+
 	i = get_inode_number();
 	if (i == 0)
 		return -EAGAIN;

@@ -56,7 +56,6 @@ MODULE_AUTHOR("SCE Inc.");
 MODULE_DESCRIPTION("Gelic Network driver");
 MODULE_LICENSE("GPL");
 
-
 static inline void gelic_card_enable_rxdmac(struct gelic_card *card);
 static inline void gelic_card_disable_rxdmac(struct gelic_card *card);
 static inline void gelic_card_disable_txdmac(struct gelic_card *card);
@@ -1742,7 +1741,6 @@ static int __devinit ps3_gelic_driver_probe(struct ps3_system_bus_device *dev)
 	card->irq_mask = GELIC_CARD_RXINT | GELIC_CARD_TXINT |
 		GELIC_CARD_PORT_STATUS_CHANGED;
 
-
 	if (gelic_card_init_chain(card, &card->tx_chain,
 			card->descr, GELIC_NET_TX_DESCRIPTORS))
 		goto fail_alloc_tx;
@@ -1891,4 +1889,3 @@ module_init(ps3_gelic_driver_init);
 module_exit(ps3_gelic_driver_exit);
 
 MODULE_ALIAS(PS3_MODULE_ALIAS_GELIC);
-

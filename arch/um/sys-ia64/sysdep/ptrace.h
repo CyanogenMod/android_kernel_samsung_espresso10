@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
  * Licensed under the GPL
  */
@@ -13,4 +13,3 @@ struct sys_pt_regs {
 #define EMPTY_REGS { 0 }
 
 #endif
-

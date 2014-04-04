@@ -63,7 +63,6 @@ static void __gfs2_ail_flush(struct gfs2_glock *gl)
 	spin_unlock(&sdp->sd_ail_lock);
 }
 
-
 static void gfs2_ail_empty_gl(struct gfs2_glock *gl)
 {
 	struct gfs2_sbd *sdp = gl->gl_sbd;
@@ -199,7 +198,7 @@ static void inode_go_sync(struct gfs2_glock *gl)
  * inode_go_inval - prepare a inode glock to be released
  * @gl: the glock
  * @flags:
- * 
+ *
  * Normally we invlidate everything, but if we are moving into
  * LM_ST_DEFERRED from LM_ST_SHARED or LM_ST_EXCLUSIVE then we
  * can keep hold of the metadata, since it won't have changed.
@@ -602,4 +601,3 @@ const struct gfs2_glock_operations *gfs2_glops_list[] = {
 	[LM_TYPE_QUOTA] = &gfs2_quota_glops,
 	[LM_TYPE_JOURNAL] = &gfs2_journal_glops,
 };
-

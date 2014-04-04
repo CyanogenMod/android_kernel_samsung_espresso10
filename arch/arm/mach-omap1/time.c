@@ -183,7 +183,6 @@ static __init void omap_init_mpu_timer(unsigned long rate)
 	clockevents_register_device(&clockevent_mpu_timer1);
 }
 
-
 /*
  * ---------------------------------------------------------------------------
  * MPU timer 2 ... free running 32-bit clock source and scheduler clock

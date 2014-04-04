@@ -35,4 +35,3 @@ r8192e_pci-objs :=		\
 	ieee80211/ieee80211_crypt_wep.o
 
 obj-$(CONFIG_RTL8192E) += r8192e_pci.o
-

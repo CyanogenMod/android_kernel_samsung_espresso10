@@ -95,7 +95,6 @@ xfs_filestreams_trace(
 #define TRACE_ORPHAN(mp, ip, ag) \
 		TRACE2(mp, XFS_FSTRM_KTRACE_ORPHAN, ip, ag);
 
-
 #else
 #define TRACE_AG_SCAN(mp, ag, ag2)
 #define TRACE_AG_PICK1(mp, max_ag, maxfree)

@@ -28,7 +28,6 @@
 
 #include "pvrusb2-cs53l32a.h"
 
-
 #include "pvrusb2-hdw-internal.h"
 #include "pvrusb2-debug.h"
 #include <linux/videodev2.h>
@@ -39,7 +38,6 @@ struct routing_scheme {
 	const int *def;
 	unsigned int cnt;
 };
-
 
 static const int routing_scheme1[] = {
 	[PVR2_CVAL_INPUT_TV] = 2,  /* 1 or 2 seems to work here */
@@ -56,7 +54,6 @@ static const struct routing_scheme routing_def1 = {
 static const struct routing_scheme *routing_schemes[] = {
 	[PVR2_ROUTING_SCHEME_ONAIR] = &routing_def1,
 };
-
 
 void pvr2_cs53l32a_subdev_update(struct pvr2_hdw *hdw, struct v4l2_subdev *sd)
 {
@@ -82,7 +79,6 @@ void pvr2_cs53l32a_subdev_update(struct pvr2_hdw *hdw, struct v4l2_subdev *sd)
 		sd->ops->audio->s_routing(sd, input, 0, 0);
 	}
 }
-
 
 /*
   Stuff for Emacs to see, in order to encourage consistent editing style:

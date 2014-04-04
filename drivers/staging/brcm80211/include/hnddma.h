@@ -195,7 +195,6 @@ extern const di_fcn_t dma64proc;
 #define dma_txpending(di)		(dma64proc.txpending(di))
 #define dma_txcommitted(di)		(dma64proc.txcommitted(di))
 
-
 /* return addresswidth allowed
  * This needs to be done after SB attach but before dma attach.
  * SB attach provides ability to probe backplane and dma core capabilities

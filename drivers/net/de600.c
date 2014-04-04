@@ -67,7 +67,6 @@ static unsigned int delay_time = 10;
 module_param(delay_time, int, 0);
 MODULE_PARM_DESC(delay_time, "DE-600 deley on I/O in microseconds");
 
-
 /*
  * D-Link driver variables:
  */
@@ -375,7 +374,6 @@ static const struct net_device_ops de600_netdev_ops = {
 	.ndo_validate_addr	= eth_validate_addr,
 };
 
-
 static struct net_device * __init de600_probe(void)
 {
 	int	i;
@@ -385,7 +383,6 @@ static struct net_device * __init de600_probe(void)
 	dev = alloc_etherdev(0);
 	if (!dev)
 		return ERR_PTR(-ENOMEM);
-
 
 	if (!request_region(DE600_IO, 3, "de600")) {
 		printk(KERN_WARNING "DE600: port 0x%x busy\n", DE600_IO);
@@ -488,7 +485,6 @@ static int adapter_init(struct net_device *dev)
 	tx_fifo_in = 0;
 	tx_fifo_out = 0;
 	free_tx_pages = TX_PAGES;
-
 
 	/* set the ether address. */
 	de600_setup_address(NODE_ADDRESS, RW_ADDR);

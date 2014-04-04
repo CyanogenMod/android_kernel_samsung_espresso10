@@ -11,7 +11,6 @@
 #include <linux/dma-mapping.h>
 #include <asm/mach-jz4740/dma.h>
 
-
 struct jz4740_pcm_config {
 	struct jz4740_dma_config dma_config;
 	phys_addr_t fifo_addr;

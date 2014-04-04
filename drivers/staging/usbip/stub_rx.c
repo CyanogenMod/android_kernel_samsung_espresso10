@@ -175,7 +175,7 @@ static int tweak_reset_device_cmd(struct urb *urb)
 	dev_info(&urb->dev->dev, "usb_queue_reset_device\n");
 
 	/*
-	 * With the implementation of pre_reset and post_reset the driver no 
+	 * With the implementation of pre_reset and post_reset the driver no
 	 * longer unbinds. This allows the use of synchronous reset.
 	 */
 
@@ -518,7 +518,6 @@ static void stub_recv_cmd_submit(struct stub_device *sdev,
 	priv->urb->complete               = stub_complete;
 
 	usbip_pack_pdu(pdu, priv->urb, USBIP_CMD_SUBMIT, 0);
-
 
 	if (usbip_recv_xbuff(ud, priv->urb) < 0)
 		return;

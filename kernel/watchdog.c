@@ -27,6 +27,8 @@
 #include <asm/irq_regs.h>
 #include <linux/perf_event.h>
 
+#include <mach/sec_addon.h>
+
 int watchdog_enabled = 1;
 int __read_mostly watchdog_thresh = 10;
 
@@ -113,7 +115,7 @@ static unsigned long get_timestamp(int this_cpu)
 	return cpu_clock(this_cpu) >> 30LL;  /* 2^30 ~= 10^9 */
 }
 
-static unsigned long get_sample_period(void)
+static u64 get_sample_period(void)
 {
 	/*
 	 * convert watchdog_thresh from seconds to ns
@@ -121,7 +123,7 @@ static unsigned long get_sample_period(void)
 	 * increment before the hardlockup detector generates
 	 * a warning
 	 */
-	return get_softlockup_thresh() * (NSEC_PER_SEC / 5);
+	return get_softlockup_thresh() * ((u64)NSEC_PER_SEC / 5);
 }
 
 /* Commands for resetting the watchdog */
@@ -261,6 +263,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
 	struct pt_regs *regs = get_irq_regs();
 	int duration;
 
+	sec_debug_wdtkick_regs_log(regs);
+
 	/* kick the hardlockup detector */
 	watchdog_interrupt_count();
 
@@ -314,7 +318,6 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
 	return HRTIMER_RESTART;
 }
 
-
 /*
  * The watchdog thread - touches the timestamp.
  */
@@ -353,7 +356,6 @@ static int watchdog(void *unused)
 	return 0;
 }
 
-
 #ifdef CONFIG_HARDLOCKUP_DETECTOR
 static int watchdog_nmi_enable(int cpu)
 {
@@ -376,7 +378,6 @@ static int watchdog_nmi_enable(int cpu)
 		printk(KERN_INFO "NMI watchdog enabled, takes one hw-pmu counter.\n");
 		goto out_save;
 	}
-
 
 	/* vary the KERN level based on the returned errno */
 	if (PTR_ERR(event) == -EOPNOTSUPP)
@@ -506,7 +507,6 @@ static void watchdog_disable_all_cpus(void)
 	watchdog_enabled = 0;
 }
 
-
 /* sysctl functions */
 #ifdef CONFIG_SYSCTL
 /*
@@ -531,7 +531,6 @@ out:
 	return ret;
 }
 #endif /* CONFIG_SYSCTL */
-
 
 /*
  * Create/destroy watchdog threads as CPUs come and go:

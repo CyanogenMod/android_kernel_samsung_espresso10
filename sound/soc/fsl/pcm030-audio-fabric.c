@@ -60,7 +60,6 @@ static __init int pcm030_fabric_init(void)
 	if (!of_machine_is_compatible("phytec,pcm030"))
 		return -ENODEV;
 
-
 	card.name = "pcm030";
 	card.dai_link = pcm030_fabric_dai;
 	card.num_links = ARRAY_SIZE(pcm030_fabric_dai);
@@ -84,8 +83,6 @@ static __init int pcm030_fabric_init(void)
 
 module_init(pcm030_fabric_init);
 
-
 MODULE_AUTHOR("Jon Smirl <jonsmirl@gmail.com>");
 MODULE_DESCRIPTION(DRV_NAME ": mpc5200 pcm030 fabric driver");
 MODULE_LICENSE("GPL");
-

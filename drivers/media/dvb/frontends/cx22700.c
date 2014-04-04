@@ -28,7 +28,6 @@
 #include "dvb_frontend.h"
 #include "cx22700.h"
 
-
 struct cx22700_state {
 
 	struct i2c_adapter* i2c;
@@ -37,7 +36,6 @@ struct cx22700_state {
 
 	struct dvb_frontend frontend;
 };
-
 
 static int debug;
 #define dprintk(args...) \
@@ -65,7 +63,6 @@ static u8 init_tab [] = {
 	0x46, 0x02,
 	0x47, 0x05,
 };
-
 
 static int cx22700_writereg (struct cx22700_state* state, u8 reg, u8 data)
 {

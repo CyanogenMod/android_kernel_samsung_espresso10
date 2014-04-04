@@ -275,7 +275,6 @@ static inline int atomic64_add_unless(atomic64_t *v, long long a, long long u)
 	return (int)a;
 }
 
-
 static inline int atomic64_inc_not_zero(atomic64_t *v)
 {
 	int r;

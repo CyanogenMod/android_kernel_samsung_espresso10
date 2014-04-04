@@ -102,7 +102,6 @@ static const struct i2c_device_id wm8350_i2c_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, wm8350_i2c_id);
 
-
 static struct i2c_driver wm8350_i2c_driver = {
 	.driver = {
 		   .name = "wm8350",

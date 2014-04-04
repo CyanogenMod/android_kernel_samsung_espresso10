@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-
 #ifndef ASM_ARCH_PFIFO_H
 #define ASM_ARCH_PFIFO_H
 

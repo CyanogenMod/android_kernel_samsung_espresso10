@@ -91,7 +91,6 @@
 #include <plat/iic.h>
 #include <plat/ts.h>
 
-
 static struct pcf50633 *gta02_pcf;
 
 /*
@@ -108,7 +107,6 @@ static long gta02_panic_blink(int state)
 
 	return delay;
 }
-
 
 static struct map_desc gta02_iodesc[] __initdata = {
 	{
@@ -247,7 +245,6 @@ static void gta02_udc_vbus_draw(unsigned int ma)
 
 static void gta02_pmu_attach_child_devices(struct pcf50633 *pcf);
 
-
 static char *gta02_batteries[] = {
 	"battery",
 };
@@ -377,7 +374,6 @@ struct pcf50633_platform_data gta02_pcf_pdata = {
 	.mbc_event_callback = gta02_pmu_event_callback,
 };
 
-
 /* NOR Flash. */
 
 #define GTA02_FLASH_BASE	0x18000000 /* GCS3 */
@@ -402,7 +398,6 @@ static struct platform_device gta02_nor_flash = {
 	.resource	= &gta02_nor_flash_resource,
 	.num_resources	= 1,
 };
-
 
 struct platform_device s3c24xx_pwm_device = {
 	.name		= "s3c24xx_pwm",
@@ -450,7 +445,6 @@ static struct s3c2410_platform_nand __initdata gta02_nand_info = {
 	.nr_sets	= ARRAY_SIZE(gta02_nand_sets),
 	.sets		= gta02_nand_sets,
 };
-
 
 /* Get PMU to set USB current limit accordingly. */
 static struct s3c2410_udc_mach_info gta02_udc_cfg __initdata = {
@@ -513,7 +507,6 @@ static void __init gta02_map_io(void)
 	s3c24xx_init_uarts(gta02_uartcfgs, ARRAY_SIZE(gta02_uartcfgs));
 }
 
-
 /* These are the guys that don't need to be children of PMU. */
 
 static struct platform_device *gta02_devices[] __initdata = {
@@ -537,7 +530,6 @@ static struct platform_device *gta02_devices[] __initdata = {
 
 static struct platform_device *gta02_devices_pmu_children[] = {
 };
-
 
 /*
  * This is called when pc50633 is probed, quite late in the day since it is an
@@ -592,7 +584,6 @@ static void __init gta02_machine_init(void)
 
 	regulator_has_full_constraints();
 }
-
 
 MACHINE_START(NEO1973_GTA02, "GTA02")
 	/* Maintainer: Nelson Castillo <arhuaco@freaks-unidos.net> */

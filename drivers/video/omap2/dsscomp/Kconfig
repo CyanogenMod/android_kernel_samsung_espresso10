@@ -10,7 +10,7 @@ menuconfig DSSCOMP
 
 config DSSCOMP_DEBUG_LOG
 	bool "Log event timestamps in debugfs"
-	default y
+	default n
 	depends on DEBUG_FS
 
 	help

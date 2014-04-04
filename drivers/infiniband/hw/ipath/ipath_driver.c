@@ -1842,7 +1842,6 @@ bail:
 	return ret;
 }
 
-
 /*
  * Flush all sends that might be in the ready to send state, as well as any
  * that are in the process of being sent.   Used whenever we need to be
@@ -2209,7 +2208,6 @@ int ipath_set_lid(struct ipath_devdata *dd, u32 lid, u8 lmc)
 
 	return 0;
 }
-
 
 /**
  * ipath_write_kreg_port - write a device's per-port 64-bit kernel register
@@ -2672,7 +2670,6 @@ static void ipath_hol_signal_down(struct ipath_devdata *dd)
 		ipath_dbg("Stopped some processes\n");
 	ipath_cancel_sends(dd, 1);
 }
-
 
 static void ipath_hol_signal_up(struct ipath_devdata *dd)
 {

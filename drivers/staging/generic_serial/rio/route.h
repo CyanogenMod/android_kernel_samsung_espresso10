@@ -26,7 +26,6 @@
 
  Version : 0.01
 
-
                             Mods
  ----------------------------------------------------------------------------
   Date     By                Description
@@ -77,12 +76,10 @@ struct ROUTE_STR {
 	ushort favoured;	/* favoured link */
 };
 
-
 #define NO_LINK            (short) 5	/* Link unattached */
 #define ROUTE_NO_ID        (short) 100	/* No Id */
 #define ROUTE_DISCONNECT   (ushort) 0xff	/* Not connected */
 #define ROUTE_INTERCONNECT (ushort) 0x40	/* Sub-net interconnect */
-
 
 #define SYNC_RUP         (ushort) 255
 #define COMMAND_RUP      (ushort) 254

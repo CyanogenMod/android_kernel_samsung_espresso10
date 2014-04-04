@@ -90,7 +90,6 @@
 
 #define BT878_RISC_SYNC_MASK	(1 << 15)
 
-
 #define BTTV_BOARD_UNKNOWN                 0x00
 #define BTTV_BOARD_PINNACLESAT             0x5e
 #define BTTV_BOARD_NEBULA_DIGITV           0x68

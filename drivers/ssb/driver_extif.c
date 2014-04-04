@@ -16,7 +16,6 @@
 
 #include "ssb_private.h"
 
-
 static inline u32 extif_read32(struct ssb_extif *extif, u16 offset)
 {
 	return ssb_read32(extif->dev, offset);

@@ -420,7 +420,6 @@ struct rcv_desc {
 #define netxen_get_lro_sts_seq_number(sts_data)		\
 	((sts_data) & 0x0FFFFFFFF)
 
-
 struct status_desc {
 	__le64 status_desc_data[2];
 } __attribute__ ((aligned(16)));
@@ -924,7 +923,6 @@ typedef struct {
 #define NX_HOST_INT_CRB_MODE_NORX	2
 #define NX_HOST_INT_CRB_MODE_NOTX	3
 #define NX_HOST_INT_CRB_MODE_NORXTX	4
-
 
 /* MAC */
 

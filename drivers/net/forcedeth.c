@@ -4953,7 +4953,6 @@ static void nv_mgmt_release_sema(struct net_device *dev)
 	}
 }
 
-
 static int nv_mgmt_get_version(struct net_device *dev)
 {
 	struct fe_priv *np = netdev_priv(dev);

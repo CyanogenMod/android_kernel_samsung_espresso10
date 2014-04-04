@@ -459,5 +459,4 @@ struct hexline {
 extern int usb_cypress_load_firmware(struct usb_device *udev, const struct firmware *fw, int type);
 extern int dvb_usb_get_hexline(const struct firmware *fw, struct hexline *hx, int *pos);
 
-
 #endif

@@ -393,7 +393,6 @@
 #define SOLO_CAP_CH_INTV(ch)			(0x04C0+((ch)*4))
 #define SOLO_CAP_CH_INTV_E(ch)			(0x0500+((ch)*4))
 
-
 #define SOLO_VE_CFG0				0x0610
 #define	  SOLO_VE_TWO_PAGE_MODE			(1<<31)
 #define	  SOLO_VE_INTR_CTRL(n)			((n)<<24)
@@ -511,7 +510,6 @@
 
 #define SOLO_VD_WR_PAGE(n)			(0x03F0 + ((n) * 4))
 
-
 #define SOLO_GPIO_CONFIG_0			0x0B00
 #define SOLO_GPIO_CONFIG_1			0x0B04
 #define SOLO_GPIO_DATA_OUT			0x0B08
@@ -520,7 +518,6 @@
 #define SOLO_GPIO_INT_ENA			0x0B14
 #define SOLO_GPIO_INT_CFG_0			0x0B18
 #define SOLO_GPIO_INT_CFG_1			0x0B1C
-
 
 #define SOLO_IIC_CFG				0x0B20
 #define	  SOLO_IIC_ENABLE			(1<<8)
@@ -628,7 +625,6 @@
 #define SOLO_AUDIO_EVOL_1			0x0D10
 #define	  SOLO_AUDIO_EVOL(ch, value)		((value)<<((ch)%10))
 #define SOLO_AUDIO_STA				0x0D14
-
 
 #define SOLO_WATCHDOG				0x0BE4
 #define WATCHDOG_STAT(status)			(status<<8)

@@ -188,7 +188,6 @@ void ax25_register_sysctl(void)
 		ax25_table[n].procname     = ax25_dev->dev->name;
 		ax25_table[n].mode         = 0555;
 
-
 		for (k = 0; k < AX25_MAX_VALUES; k++)
 			child[k].data = &ax25_dev->values[k];
 

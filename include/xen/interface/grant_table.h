@@ -142,7 +142,6 @@ struct grant_entry {
 #define _GTF_transfer_completed (3)
 #define GTF_transfer_completed  (1U<<_GTF_transfer_completed)
 
-
 /***********************************
  * GRANT TABLE QUERIES AND USES
  */

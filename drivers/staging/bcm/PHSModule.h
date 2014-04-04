@@ -17,13 +17,11 @@ int PHSRecieve(PMINI_ADAPTER Adapter,
 					UINT
 					);
 
-
 void DumpDataPacketHeader(PUCHAR pPkt);
 
 void DumpFullPacket(UCHAR *pBuf,UINT nPktLen);
 
 void DumpPhsRules(PPHS_DEVICE_EXTENSION pDeviceExtension);
-
 
 int phs_init(PPHS_DEVICE_EXTENSION pPhsdeviceExtension,PMINI_ADAPTER Adapter);
 
@@ -38,13 +36,10 @@ ULONG PhsDeleteClassifierRule(void* pvContext, B_UINT16 uiVcid ,B_UINT16  uiClsI
 
 ULONG PhsDeleteSFRules(void* pvContext,B_UINT16 uiVcid) ;
 
-
 BOOLEAN ValidatePHSRule(S_PHS_RULE *psPhsRule);
 
 UINT GetServiceFlowEntry(S_SERVICEFLOW_TABLE *psServiceFlowTable,B_UINT16 uiVcid,S_SERVICEFLOW_ENTRY **ppstServiceFlowEntry);
 
-
 void DumpPhsRules(PPHS_DEVICE_EXTENSION pDeviceExtension);
-
 
 #endif

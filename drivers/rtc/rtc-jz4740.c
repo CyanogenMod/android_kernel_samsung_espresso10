@@ -315,7 +315,6 @@ static int __devexit jz4740_rtc_remove(struct platform_device *pdev)
 	return 0;
 }
 
-
 #ifdef CONFIG_PM
 static int jz4740_rtc_suspend(struct device *dev)
 {

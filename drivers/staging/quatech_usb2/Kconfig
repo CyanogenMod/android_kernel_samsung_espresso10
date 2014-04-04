@@ -12,4 +12,3 @@ config USB_SERIAL_QUATECH_USB2
 
 	  To compile this driver as a module, choose M here: the module will be
 	  called quatech_usb2 .
-

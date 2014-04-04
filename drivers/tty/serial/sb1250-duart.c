@@ -47,7 +47,6 @@
 #include <asm/sibyte/sb1250_uart.h>
 #include <asm/sibyte/swarm.h>
 
-
 #if defined(CONFIG_SIBYTE_BCM1x55) || defined(CONFIG_SIBYTE_BCM1x80)
 #include <asm/sibyte/bcm1480_regs.h>
 #include <asm/sibyte/bcm1480_int.h>
@@ -75,11 +74,9 @@
 
 #endif
 
-
 MODULE_AUTHOR("Maciej W. Rozycki <macro@linux-mips.org>");
 MODULE_DESCRIPTION("BCM1xxx on-chip DUART serial driver");
 MODULE_LICENSE("GPL");
-
 
 #define DUART_MAX_CHIP 2
 #define DUART_MAX_SIDE 2
@@ -107,7 +104,6 @@ struct sbd_duart {
 #define to_sport(uport) container_of(uport, struct sbd_port, port)
 
 static struct sbd_duart sbd_duarts[DUART_MAX_CHIP];
-
 
 /*
  * Reading and writing SB1250 DUART registers.
@@ -192,7 +188,6 @@ static void write_sbdshr(struct sbd_port *sport, int reg, unsigned int value)
 		__war_sbd1956(sport);
 }
 
-
 static int sbd_receive_ready(struct sbd_port *sport)
 {
 	return read_sbdchn(sport, R_DUART_STATUS) & M_DUART_RX_RDY;
@@ -234,7 +229,6 @@ static int sbd_line_drain(struct sbd_port *sport)
 		udelay(2);
 	return loops;
 }
-
 
 static unsigned int sbd_tx_empty(struct uart_port *uport)
 {
@@ -332,7 +326,6 @@ static void sbd_break_ctl(struct uart_port *uport, int break_state)
 	else
 		write_sbdchn(sport, R_DUART_CMD, V_DUART_MISC_CMD_STOP_BREAK);
 }
-
 
 static void sbd_receive_chars(struct sbd_port *sport)
 {
@@ -471,7 +464,6 @@ static irqreturn_t sbd_interrupt(int irq, void *dev_id)
 	return status;
 }
 
-
 static int sbd_startup(struct uart_port *uport)
 {
 	struct sbd_port *sport = to_sport(uport);
@@ -514,7 +506,6 @@ static void sbd_shutdown(struct uart_port *uport)
 	sport->tx_stopped = 1;
 	free_irq(sport->port.irq, sport);
 }
-
 
 static void sbd_init_port(struct sbd_port *sport)
 {
@@ -642,7 +633,6 @@ static void sbd_set_termios(struct uart_port *uport, struct ktermios *termios,
 	spin_unlock(&uport->lock);
 }
 
-
 static const char *sbd_type(struct uart_port *uport)
 {
 	return "SB1250 DUART";
@@ -756,7 +746,6 @@ static int sbd_verify_port(struct uart_port *uport, struct serial_struct *ser)
 	return ret;
 }
 
-
 static const struct uart_ops sbd_ops = {
 	.tx_empty	= sbd_tx_empty,
 	.set_mctrl	= sbd_set_mctrl,
@@ -822,7 +811,6 @@ static void __init sbd_probe_duarts(void)
 		}
 	}
 }
-
 
 #ifdef CONFIG_SERIAL_SB1250_DUART_CONSOLE
 /*
@@ -918,7 +906,6 @@ console_initcall(sbd_serial_console_init);
 #else
 #define SERIAL_SB1250_DUART_CONSOLE	NULL
 #endif /* CONFIG_SERIAL_SB1250_DUART_CONSOLE */
-
 
 static struct uart_driver sbd_reg = {
 	.owner		= THIS_MODULE,

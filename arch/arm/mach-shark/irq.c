@@ -105,4 +105,3 @@ void __init shark_init_irq(void)
 	cascade.name = "cascade";
 	setup_irq(2,&cascade);
 }
-

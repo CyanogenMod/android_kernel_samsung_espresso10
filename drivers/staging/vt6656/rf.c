@@ -66,9 +66,6 @@ static int          msglevel                =MSG_LEVEL_INFO;
 
 /*---------------------  Static Variables  --------------------------*/
 
-
-
-
 BYTE abyAL2230InitTable[CB_AL2230_INIT_SEQ][3] = {
     {0x03, 0xF7, 0x90},
     {0x03, 0x33, 0x31},
@@ -388,7 +385,6 @@ BYTE abyVT3226D0_InitTable[CB_VT3226_INIT_SEQ][3] = {
     {0x02, 0x01, 0xAA}  //RobertYu:20060523
     };
 
-
 BYTE abyVT3226_ChannelTable0[CB_MAX_CHANNEL_24G][3] = {
     {0x01, 0x97, 0x83}, // channel = 1, Tf = 2412MHz
     {0x01, 0x97, 0x83}, // channel = 2, Tf = 2417MHz
@@ -424,7 +420,6 @@ BYTE abyVT3226_ChannelTable1[CB_MAX_CHANNEL_24G][3] = {
     };
 ///}}RobertYu
 
-
 //{{RobertYu:20060502, TWIF 1.14, LO Current for 11b mode
 DWORD dwVT3226D0LoCurrentTable[CB_MAX_CHANNEL_24G] = {
     0x0135C600+(BY_VT3226_REG_LEN<<3)+IFREGCTL_REGW, // channel = 1, Tf = 2412MHz
@@ -443,7 +438,6 @@ DWORD dwVT3226D0LoCurrentTable[CB_MAX_CHANNEL_24G] = {
     0x0135C600+(BY_VT3226_REG_LEN<<3)+IFREGCTL_REGW  // channel = 14, Tf = 2484MHz
 };
 //}}
-
 
 //{{RobertYu:20060609
 BYTE abyVT3342A0_InitTable[CB_VT3342_INIT_SEQ][3] = { // 11b/g mode
@@ -599,7 +593,6 @@ BYTE abyVT3342_ChannelTable1[CB_MAX_CHANNEL][3] = {
     {0x03, 0x00, 0x04}  // channel = 165, Tf = 5825MHz (56), TBD
     };
 
-
 /*+
  *
  * Power Table
@@ -738,10 +731,8 @@ BOOL IFRFbWriteEmbeded (PSDevice pDevice, DWORD dwData)
                     pbyData
                         );
 
-
     return TRUE;
 }
-
 
 /*
  * Description: Set Tx power
@@ -769,6 +760,9 @@ BYTE    byPwr = pDevice->byCCKPwr;
         return TRUE;
     }
 
+	if (uCH == 0)
+		return -EINVAL;
+
     switch (uRATE) {
     case RATE_1M:
     case RATE_2M:
@@ -795,7 +789,6 @@ BYTE    byPwr = pDevice->byCCKPwr;
 
     return bResult;
 }
-
 
 /*
  * Description: Set Tx power
@@ -847,7 +840,6 @@ BOOL        bResult = TRUE;
                 bResult &= IFRFbWriteEmbeded(pDevice, 0x00099B00+(BY_AL2230_REG_LEN<<3)+IFREGCTL_REGW);
             }
             break;
-
 
         case RF_AIROHA7230:
             {
@@ -981,8 +973,6 @@ RFvRSSITodBm (
 
     *pldBm = -1 * (a + b * 2);
 }
-
-
 
 void
 RFbRFTableDownload (
@@ -1147,5 +1137,3 @@ BOOL s_bVT3226D0_11bLoCurrentAdjust(
 
     return bResult;
 }
-
-

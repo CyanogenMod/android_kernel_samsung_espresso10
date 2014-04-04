@@ -11,7 +11,6 @@
  * files in this 'mach' directory.
  */
 
-
 #include <linux/init.h>
 
 #include <mach/hardware.h>

@@ -5,7 +5,7 @@
  *	    (gentzel@nova.enet.dec.com)
  *  scatter/gather added by Scott Taylor (n217cg@tamuts.tamu.edu)
  *  24F support by John F. Carr (jfc@athena.mit.edu)
- *    John's work modified by Caleb Epstein (cae@jpmorgan.com) and 
+ *    John's work modified by Caleb Epstein (cae@jpmorgan.com) and
  *    Eric Youngdale (eric@tantalus.nrl.navy.mil).
  *	Thanks to UltraStor for providing the necessary documentation
  */
@@ -21,7 +21,6 @@ static int ultrastor_host_reset(struct scsi_cmnd *);
 static int ultrastor_biosparam(struct scsi_device *, struct block_device *,
 				sector_t, int *);
 
-
 #define ULTRASTOR_14F_MAX_SG 16
 #define ULTRASTOR_24F_MAX_SG 33
 
@@ -29,7 +28,6 @@ static int ultrastor_biosparam(struct scsi_device *, struct block_device *,
 #define ULTRASTOR_MAX_CMDS 16
 
 #define ULTRASTOR_24F_PORT 0xC80
-
 
 #ifdef ULTRASTOR_PRIVATE
 

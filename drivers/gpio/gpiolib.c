@@ -27,7 +27,6 @@
  * only an instruction or two per bit.
  */
 
-
 /* When debugging, extend minimal trust to callers and platform code.
  * Also emit diagnostic messages that may help initial bringup, when
  * board setup or driver bugs are most common.
@@ -680,7 +679,6 @@ static struct class gpio_class = {
 	.class_attrs =	gpio_class_attrs,
 };
 
-
 /**
  * gpio_export - export a GPIO through sysfs
  * @gpio: gpio to make available, already requested
@@ -815,7 +813,6 @@ done:
 	return status;
 }
 EXPORT_SYMBOL_GPL(gpio_export_link);
-
 
 /**
  * gpio_sysfs_set_active_low - set the polarity of gpio sysfs value
@@ -995,7 +992,6 @@ static int __init gpiolib_sysfs_init(void)
 		spin_lock_irqsave(&gpio_lock, flags);
 	}
 	spin_unlock_irqrestore(&gpio_lock, flags);
-
 
 	return status;
 }
@@ -1355,7 +1351,6 @@ const char *gpiochip_is_requested(struct gpio_chip *chip, unsigned offset)
 }
 EXPORT_SYMBOL_GPL(gpiochip_is_requested);
 
-
 /* Drivers MUST set GPIO direction before making get/set calls.  In
  * some cases this is done in early boot, before IRQs are enabled.
  *
@@ -1620,8 +1615,6 @@ int __gpio_to_irq(unsigned gpio)
 }
 EXPORT_SYMBOL_GPL(__gpio_to_irq);
 
-
-
 /* There's no value in making it easy to inline GPIO calls that may sleep.
  * Common examples include ones connected to I2C or SPI chips.
  */
@@ -1649,7 +1642,6 @@ void gpio_set_value_cansleep(unsigned gpio, int value)
 	chip->set(chip, gpio - chip->base, value);
 }
 EXPORT_SYMBOL_GPL(gpio_set_value_cansleep);
-
 
 #ifdef CONFIG_DEBUG_FS
 

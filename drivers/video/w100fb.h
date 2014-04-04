@@ -387,7 +387,6 @@ union cif_write_dbg_u {
 	struct cif_write_dbg_t f;
 } __attribute__((packed));
 
-
 struct intf_cntl_t {
 	unsigned char ad_inc_a            : 1;
 	unsigned char ring_buf_a          : 1;
@@ -745,7 +744,6 @@ union pclk_cntl_u {
 	struct pclk_cntl_t f;
 } __attribute__((packed));
 
-
 #define TESTCLK_SRC_PLL   0x01
 #define TESTCLK_SRC_SCLK  0x02
 #define TESTCLK_SRC_PCLK  0x03
@@ -925,4 +923,3 @@ union dp_cntl_dst_dir_u {
 } __attribute__((packed));
 
 #endif
-

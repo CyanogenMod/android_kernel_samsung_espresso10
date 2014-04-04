@@ -261,7 +261,6 @@ static void beiscsi_cq_notify(struct beiscsi_hba *phba, u16 qid, bool arm,
 	iowrite32(val, phba->db_va + DB_CQ_OFFSET);
 }
 
-
 int beiscsi_process_mcc(struct beiscsi_hba *phba)
 {
 	struct be_mcc_compl *compl;
@@ -515,7 +514,6 @@ struct be_mcc_wrb *wrb_from_mccq(struct beiscsi_hba *phba)
 	atomic_inc(&mccq->used);
 	return wrb;
 }
-
 
 int beiscsi_cmd_eq_create(struct be_ctrl_info *ctrl,
 			  struct be_queue_info *eq, int eq_delay)

@@ -112,7 +112,6 @@ static void ulog_send(unsigned int nlgroupnum)
 	ub->lastnlh = NULL;
 }
 
-
 /* timer function to flush queue in flushtimeout time */
 static void ulog_timer(unsigned long data)
 {

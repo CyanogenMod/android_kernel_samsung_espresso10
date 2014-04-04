@@ -33,11 +33,9 @@ struct clk clk_##_name = {				\
 		.cken	= (1 << _ctrlbit),		\
 	}
 
-
 #define DEF_CLKLOOK(_clk, _devname, _conname)		\
 	{						\
 		.clk		= _clk,			\
 		.dev_id		= _devname,		\
 		.con_id		= _conname,		\
 	}
-

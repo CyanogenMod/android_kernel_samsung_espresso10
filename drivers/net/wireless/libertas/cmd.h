@@ -8,7 +8,6 @@
 #include "host.h"
 #include "dev.h"
 
-
 /* Command & response transfer between host and card */
 
 struct cmd_ctrl_node {
@@ -25,7 +24,6 @@ struct cmd_ctrl_node {
 	u16 cmdwaitqwoken;
 	wait_queue_head_t cmdwait_q;
 };
-
 
 /* lbs_cmd() infers the size of the buffer to copy data back into, from
    the size of the target of the pointer. Since the command to be sent
@@ -63,17 +61,13 @@ void lbs_complete_command(struct lbs_private *priv, struct cmd_ctrl_node *cmd,
 			  int result);
 int lbs_process_command_response(struct lbs_private *priv, u8 *data, u32 len);
 
-
 /* From cmdresp.c */
 
 void lbs_mac_event_disconnected(struct lbs_private *priv);
 
-
-
 /* Events */
 
 int lbs_process_event(struct lbs_private *priv, u32 event);
-
 
 /* Actual commands */
 
@@ -101,7 +95,6 @@ int lbs_get_tx_power(struct lbs_private *priv, s16 *curlevel, s16 *minlevel,
 int lbs_set_snmp_mib(struct lbs_private *priv, u32 oid, u16 val);
 
 int lbs_get_snmp_mib(struct lbs_private *priv, u32 oid, u16 *out_val);
-
 
 /* Commands only used in wext.c, assoc. and scan.c */
 

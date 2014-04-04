@@ -138,7 +138,6 @@
 
 #define BBLT_SOLID_FILL			0x0c
 
-
 /* Note: all above defines should go in separate header files
    when implementing other S1D13xxx chip support. */
 
@@ -171,4 +170,3 @@ struct s1d13xxxfb_pdata {
 };
 
 #endif
-

@@ -2,7 +2,7 @@
 #define _PFXLEN_H
 
 #include <asm/byteorder.h>
-#include <linux/netfilter.h> 
+#include <linux/netfilter.h>
 
 /* Prefixlen maps, by Jan Engelhardt  */
 extern const union nf_inet_addr ip_set_netmask_map[];

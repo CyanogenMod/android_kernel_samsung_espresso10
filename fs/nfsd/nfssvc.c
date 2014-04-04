@@ -463,7 +463,6 @@ out:
 	return error;
 }
 
-
 /*
  * This is the NFS server kernel thread
  */
@@ -527,7 +526,6 @@ nfsd(void *vrqstp)
 			schedule_timeout_uninterruptible(HZ);
 			continue;
 		}
-
 
 		/* Lock the export hash tables for reading. */
 		exp_readlock();
@@ -599,7 +597,7 @@ nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
 	}
 
 	/* need to grab the location to store the status, as
-	 * nfsv4 does some encoding while processing 
+	 * nfsv4 does some encoding while processing
 	 */
 	nfserrp = rqstp->rq_res.head[0].iov_base
 		+ rqstp->rq_res.head[0].iov_len;

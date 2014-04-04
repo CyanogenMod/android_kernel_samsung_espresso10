@@ -687,7 +687,6 @@ int altera_irscan(struct altera_state *astate,
 		if (js->irstop_state != IRPAUSE)
 			status = altera_goto_jstate(astate, js->irstop_state);
 
-
 	return status;
 }
 
@@ -786,7 +785,6 @@ int altera_swap_ir(struct altera_state *astate,
 	if (status == 0)
 		if (js->irstop_state != IRPAUSE)
 			status = altera_goto_jstate(astate, js->irstop_state);
-
 
 	if (status == 0)
 		/* Now extract the returned data from the buffer */

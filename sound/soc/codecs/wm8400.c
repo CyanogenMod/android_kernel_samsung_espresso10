@@ -151,7 +151,6 @@ static int wm8400_outpga_put_volsw_vu(struct snd_kcontrol *kcontrol,
 	.get = snd_soc_get_volsw, .put = wm8400_outpga_put_volsw_vu, \
 	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert) }
 
-
 static const char *wm8400_digital_sidetone[] =
 	{"None", "Left ADC", "Right ADC", "Reserved"};
 

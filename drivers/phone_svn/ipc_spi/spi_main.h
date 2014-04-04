@@ -65,7 +65,6 @@ extern int send_modem_spi;
 extern int boot_done;
 extern struct semaphore srdy_sem;
 
-
 extern enum SPI_MAIN_STATE_T spi_main_state;
 
 extern void spi_main(unsigned long argc, void *argv);

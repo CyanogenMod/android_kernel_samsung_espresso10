@@ -1027,7 +1027,6 @@ static int das16_cmd_exec(struct comedi_device *dev, struct comedi_subdevice *s)
 	if (thisboard->size > 0x400)
 		outb(0, dev->iobase + DAS1600_CONV);
 
-
 	return 0;
 }
 
@@ -1051,7 +1050,6 @@ static int das16_cancel(struct comedi_device *dev, struct comedi_subdevice *s)
 	/* disable burst mode */
 	if (thisboard->size > 0x400)
 		outb(0, dev->iobase + DAS1600_BURST);
-
 
 	spin_unlock_irqrestore(&dev->spinlock, flags);
 
@@ -1355,12 +1353,10 @@ static int das16_probe(struct comedi_device *dev, struct comedi_devconfig *it)
 	else
 		devpriv->ai_unipolar = 0;
 
-
 	if ((status & DAS16_MUXBIT))
 		devpriv->ai_singleended = 1;
 	else
 		devpriv->ai_singleended = 0;
-
 
 	/* diobits indicates boards */
 

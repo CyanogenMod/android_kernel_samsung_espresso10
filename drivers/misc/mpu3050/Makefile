@@ -1,4 +1,3 @@
-
 # Kernel makefile for motions sensors
 #
 #
@@ -136,4 +135,3 @@ obj-$(CONFIG_MPU_SENSORS_TIMERIRQ_V333)+= timerirq.o
 ifdef CONFIG_MPU_SENSORS_DEBUG_V333
 EXTRA_CFLAGS += -DDEBUG
 endif
-

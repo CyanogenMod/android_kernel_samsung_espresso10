@@ -100,8 +100,6 @@ struct scu_unsolicited_frame_header {
 
 };
 
-
-
 /**
  * enum unsolicited_frame_state -
  *

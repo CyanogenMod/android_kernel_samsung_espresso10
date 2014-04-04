@@ -49,7 +49,6 @@
 #include "sam9_smc.h"
 #include "generic.h"
 
-
 static void __init cap9adk_init_early(void)
 {
 	/* Initialize processor: 12 MHz crystal */
@@ -69,7 +68,6 @@ static void __init cap9adk_init_irq(void)
 {
 	at91cap9_init_interrupts(NULL);
 }
-
 
 /*
  * USB Host port
@@ -119,7 +117,6 @@ static void __init cap9adk_add_device_ts(void)
 static void __init cap9adk_add_device_ts(void) {}
 #endif
 
-
 /*
  * SPI devices.
  */
@@ -144,7 +141,6 @@ static struct spi_board_info cap9adk_spi_devices[] = {
 #endif
 };
 
-
 /*
  * MCI (SD/MMC)
  */
@@ -155,14 +151,12 @@ static struct at91_mmc_data __initdata cap9adk_mmc_data = {
 //	.vcc_pin	= ... not connected
 };
 
-
 /*
  * MACB Ethernet device
  */
 static struct at91_eth_data __initdata cap9adk_macb_data = {
 	.is_rmii	= 1,
 };
-
 
 /*
  * NAND flash
@@ -227,7 +221,6 @@ static void __init cap9adk_add_device_nand(void)
 
 	at91_add_device_nand(&cap9adk_nand_data);
 }
-
 
 /*
  * NOR flash
@@ -298,7 +291,6 @@ static __init void cap9adk_add_device_nor(void)
 	platform_device_register(&cap9adk_nor_flash);
 }
 
-
 /*
  * LCD Controller
  */
@@ -357,14 +349,12 @@ static struct atmel_lcdfb_info __initdata cap9adk_lcdc_data = {
 static struct atmel_lcdfb_info __initdata cap9adk_lcdc_data;
 #endif
 
-
 /*
  * AC97
  */
 static struct ac97c_platform_data cap9adk_ac97_data = {
 //	.reset_pin	= ... not connected
 };
-
 
 static void __init cap9adk_board_init(void)
 {

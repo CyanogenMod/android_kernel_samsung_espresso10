@@ -908,8 +908,6 @@ static void rdac_bus_detach( struct scsi_device *sdev )
 	sdev_printk(KERN_NOTICE, sdev, "%s: Detached\n", RDAC_NAME);
 }
 
-
-
 static int __init rdac_init(void)
 {
 	int r;

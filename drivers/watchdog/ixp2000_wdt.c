@@ -99,7 +99,6 @@ static ssize_t ixp2000_wdt_write(struct file *file, const char *data,
 	return len;
 }
 
-
 static const struct watchdog_info ident = {
 	.options	= WDIOF_MAGICCLOSE | WDIOF_SETTIMEOUT |
 				WDIOF_KEEPALIVEPING,
@@ -166,7 +165,6 @@ static int ixp2000_wdt_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
-
 static const struct file_operations ixp2000_wdt_fops = {
 	.owner		= THIS_MODULE,
 	.llseek		= no_llseek,
@@ -212,4 +210,3 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started");
 
 MODULE_LICENSE("GPL");
 MODULE_ALIAS_MISCDEV(WATCHDOG_MINOR);
-

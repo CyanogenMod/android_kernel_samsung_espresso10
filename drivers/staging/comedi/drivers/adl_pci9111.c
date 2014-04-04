@@ -663,7 +663,6 @@ pci9111_ai_do_cmd_test(struct comedi_device *dev,
 	      (cmd->scan_begin_src == TRIG_FOLLOW)))
 		error++;
 
-
 	if (cmd->scan_end_src != TRIG_COUNT)
 		error++;
 	if ((cmd->stop_src != TRIG_COUNT) && (cmd->stop_src != TRIG_NONE))

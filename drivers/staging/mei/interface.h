@@ -14,21 +14,17 @@
  *
  */
 
-
-
 #ifndef _MEI_INTERFACE_H_
 #define _MEI_INTERFACE_H_
 
 #include "mei.h"
 #include "mei_dev.h"
 
-
 #define AMT_WD_VALUE 120	/* seconds */
 
 #define MEI_WATCHDOG_DATA_SIZE         16
 #define MEI_START_WD_DATA_SIZE         20
 #define MEI_WD_PARAMS_SIZE             4
-
 
 void mei_read_slots(struct mei_device *dev,
 		     unsigned char *buffer, unsigned long buffer_length);

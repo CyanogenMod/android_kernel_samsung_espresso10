@@ -395,7 +395,6 @@ struct c2_port {
 #define C2_HINT_GET_INDEX(hint) (((hint) & 0x7FFF0000) >> 16)
 #define C2_HINT_GET_COUNT(hint) ((hint) & 0x0000FFFF)
 
-
 /*
  * The following defines the offset in SDRAM for the c2_adapter_pci_regs_t
  * struct.

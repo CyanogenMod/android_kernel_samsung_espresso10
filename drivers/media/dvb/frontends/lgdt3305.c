@@ -726,7 +726,6 @@ static int lgdt3304_set_parameters(struct dvb_frontend *fe,
 		return -EINVAL;
 	}
 
-
 	ret = lgdt3305_spectral_inversion(state, param,
 					  state->cfg->spectral_inversion
 					  ? 1 : 0);

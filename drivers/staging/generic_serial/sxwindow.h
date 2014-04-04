@@ -144,7 +144,7 @@ typedef	struct	_SXMODULE
 
 #define		TX_BUFF_OFFSET		0x60	/* Transmit buffer offset in channel structure */
 #define		BUFF_POINTER(a)		(((a)+TX_BUFF_OFFSET)|0x8000)
-#define		UNBUFF_POINTER(a)	(jet_channel*)(((a)&~0x8000)-TX_BUFF_OFFSET) 
+#define		UNBUFF_POINTER(a)	(jet_channel*)(((a)&~0x8000)-TX_BUFF_OFFSET)
 #define 	BUFFER_SIZE		256
 #define 	HIGH_WATER		((BUFFER_SIZE / 4) * 3)
 #define 	LOW_WATER		(BUFFER_SIZE / 4)
@@ -390,4 +390,3 @@ typedef	struct	_SXCHANNEL
 #endif						/* _sxwindow_h */
 
 /* End of SXWINDOW.H */
-

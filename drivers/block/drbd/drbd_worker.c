@@ -42,8 +42,6 @@ static int w_make_ov_request(struct drbd_conf *mdev, struct drbd_work *w, int ca
 static int w_make_resync_request(struct drbd_conf *mdev,
 				 struct drbd_work *w, int cancel);
 
-
-
 /* endio handlers:
  *   drbd_md_io_complete (defined here)
  *   drbd_endio_pri (defined here)
@@ -56,7 +54,6 @@ static int w_make_resync_request(struct drbd_conf *mdev,
  * Try to get the locking right :)
  *
  */
-
 
 /* About the global_state_lock
    Each state transition on an device holds a read lock. In case we have
@@ -709,7 +706,6 @@ static int w_make_ov_request(struct drbd_conf *mdev, struct drbd_work *w, int ca
 	mod_timer(&mdev->resync_timer, jiffies + SLEEP_TIME);
 	return 1;
 }
-
 
 void start_resync_timer_fn(unsigned long data)
 {

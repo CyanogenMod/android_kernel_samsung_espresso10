@@ -112,7 +112,6 @@ static const struct hv_guid
 
 };
 
-
 /**
  * prep_negotiate_resp() - Create default response for Hyper-V Negotiate message
  * @icmsghdrp: Pointer to msg header structure
@@ -325,8 +324,6 @@ void free_channel(struct vmbus_channel *channel)
 	INIT_WORK(&channel->work, release_channel);
 	queue_work(vmbus_connection.work_queue, &channel->work);
 }
-
-
 
 /*
  * vmbus_process_rescind_offer -
@@ -764,7 +761,6 @@ int vmbus_request_offers(void)
 
 	msg->msgtype = CHANNELMSG_REQUESTOFFERS;
 
-
 	ret = vmbus_post_msg(msg,
 			       sizeof(struct vmbus_channel_message_header));
 	if (ret != 0) {
@@ -778,8 +774,6 @@ int vmbus_request_offers(void)
 		ret = -ETIMEDOUT;
 		goto cleanup;
 	}
-
-
 
 cleanup:
 	kfree(msginfo);

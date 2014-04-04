@@ -47,7 +47,6 @@ int sas_ata_eh(struct Scsi_Host *shost, struct list_head *work_q,
 
 #else
 
-
 static inline int dev_is_sata(struct domain_device *dev)
 {
 	return 0;

@@ -132,7 +132,6 @@ struct cx18_av_state {
 	int slicer_line_offset;
 };
 
-
 /* Registers */
 #define CXADEC_CHIP_TYPE_TIGER     0x837
 #define CXADEC_CHIP_TYPE_MAKO      0x843
@@ -324,7 +323,6 @@ struct cx18_av_state {
 #define CXADEC_PREF_MODE_DUAL_LANG_AC      5
 #define CXADEC_PREF_MODE_DUAL_LANG_BC      6
 #define CXADEC_PREF_MODE_DUAL_LANG_AB      7
-
 
 #define CXADEC_DETECT_STEREO               1
 #define CXADEC_DETECT_DUAL                 2

@@ -156,8 +156,6 @@ static ssize_t rmi_f19_hysteresis_threshold_store(struct device *dev,
 				struct device_attribute *attr,
 				const char *buf, size_t count);
 
-
-
 static int rmi_f19_alloc_memory(struct rmi_function_container *fc);
 
 static void rmi_f19_free_memory(struct rmi_function_container *fc);
@@ -203,7 +201,6 @@ static struct device_attribute attrs[] = {
 		rmi_f19_hysteresis_threshold_show,
 		rmi_f19_hysteresis_threshold_store)
 };
-
 
 int rmi_f19_read_control_parameters(struct rmi_device *rmi_dev,
 	struct f19_data *f19)
@@ -303,7 +300,6 @@ int rmi_f19_read_control_parameters(struct rmi_device *rmi_dev,
 	return 0;
 }
 
-
 static int rmi_f19_init(struct rmi_function_container *fc)
 {
 	int rc;
@@ -331,7 +327,6 @@ err_free_data:
 
 	return rc;
 }
-
 
 static int rmi_f19_alloc_memory(struct rmi_function_container *fc)
 {
@@ -397,8 +392,6 @@ static int rmi_f19_alloc_memory(struct rmi_function_container *fc)
 	return 0;
 }
 
-
-
 static void rmi_f19_free_memory(struct rmi_function_container *fc)
 {
 	struct f19_data *f19 = fc->data;
@@ -413,7 +406,6 @@ static void rmi_f19_free_memory(struct rmi_function_container *fc)
 		fc->data = NULL;
 	}
 }
-
 
 static int rmi_f19_initialize(struct rmi_function_container *fc)
 {
@@ -464,8 +456,6 @@ static int rmi_f19_initialize(struct rmi_function_container *fc)
 	return 0;
 }
 
-
-
 static int rmi_f19_register_device(struct rmi_function_container *fc)
 {
 	struct rmi_device *rmi_dev = fc->rmi_dev;
@@ -509,7 +499,6 @@ error_free_device:
 	return rc;
 }
 
-
 static int rmi_f19_create_sysfs(struct rmi_function_container *fc)
 {
 	int attr_count = 0;
@@ -550,8 +539,6 @@ err_remove_sysfs:
 	return rc;
 
 }
-
-
 
 static int rmi_f19_config(struct rmi_function_container *fc)
 {
@@ -627,13 +614,11 @@ static int rmi_f19_config(struct rmi_function_container *fc)
 	return 0;
 }
 
-
 static int rmi_f19_reset(struct rmi_function_container *fc)
 {
 	/* we do nnothing here */
 	return 0;
 }
-
 
 static void rmi_f19_remove(struct rmi_function_container *fc)
 {
@@ -1109,7 +1094,6 @@ static ssize_t rmi_f19_sensor_map_show(struct device *dev,
 			__func__);
 	return total_len;
 
-
 }
 
 static ssize_t rmi_f19_sensor_map_store(struct device *dev,
@@ -1446,7 +1430,6 @@ static ssize_t rmi_f19_button_map_store(struct device *dev,
 	unsigned short *temp_button_map;
 	char *p = (char *) buf;
 	char *tail;
-
 
 	fc = to_rmi_function_container(dev);
 	data = fc->data;

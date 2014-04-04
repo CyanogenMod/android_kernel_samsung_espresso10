@@ -159,4 +159,3 @@ void __init rpc_init_irq(void)
 
 	init_FIQ();
 }
-

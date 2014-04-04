@@ -11,8 +11,6 @@
 #define LMC_CONSOLE_LOG(x,y,z)
 #endif
 
-
-
 /* Debug --- Event log definitions --- */
 /* EVENTLOGSIZE*EVENTLOGARGS needs to be a power of 2 */
 #define LMC_EVENTLOGSIZE 1024	/* number of events in eventlog */
@@ -35,7 +33,6 @@
 #define LMC_EVENT_BADPKTSURGE  14
 #define LMC_EVENT_TBUSY0       15
 #define LMC_EVENT_TBUSY1       16
-
 
 #ifdef DEBUG
 extern u32 lmcEventLogIndex;

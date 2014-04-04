@@ -424,7 +424,6 @@ int cyasblkdev_revalidate_disk(struct gendisk *gd)
 	return 0;
 }
 
-
 /*standard block device driver interface */
 static struct block_device_operations cyasblkdev_bdops = {
 	.open			= cyasblkdev_blk_open,
@@ -678,7 +677,6 @@ static int cyasblkdev_blk_issue_rq(
 
 static unsigned long
 dev_use[CYASBLKDEV_NUM_MINORS / (8 * sizeof(unsigned long))];
-
 
 /* storage event callback (note: called in astoria isr context) */
 static void cyasblkdev_storage_callback(
@@ -1523,7 +1521,6 @@ out:
 	return bd;
 }
 
-
 /*init west bridge block device */
 static int cyasblkdev_blk_initialize(void)
 {
@@ -1577,7 +1574,6 @@ static int __init cyasblkdev_blk_init(void)
 	#endif
 	return res;
 }
-
 
 static void cyasblkdev_blk_deinit(struct cyasblkdev_blk_data *bd)
 {

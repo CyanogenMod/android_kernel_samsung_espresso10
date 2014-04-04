@@ -42,7 +42,6 @@ extern int sipc_write(struct sipc *, struct sk_buff_head *);
 extern int sipc_read(struct sipc *, u32 mailbox, int *cond);
 extern int sipc_rx(struct sipc *);
 
-
 /* TODO: use PN_CMD ?? */
 extern int sipc_check_skb(struct sipc *, struct sk_buff *skb);
 extern int sipc_do_cmd(struct sipc *, struct sk_buff *skb);

@@ -44,7 +44,6 @@
 #define I2C_PCA_MODE_FASTP      0x02 /* Fast Plus mode */
 #define I2C_PCA_MODE_TURBO      0x03 /* Turbo mode */
 
-
 #define I2C_PCA_CON_AA		0x80 /* Assert Acknowledge */
 #define I2C_PCA_CON_ENSIO	0x40 /* Enable */
 #define I2C_PCA_CON_STA		0x20 /* Start */

@@ -21,7 +21,6 @@
 #include <linux/skbuff.h>
 #include <linux/wakelock.h>
 
-
 #define MAX_LINK_DEVTYPE 3
 #define MAX_RAW_DEVS 32
 #define MAX_NUM_IO_DEV	(MAX_RAW_DEVS + 4)
@@ -100,7 +99,6 @@ struct dpram_firmware {
 	int size;
 	int is_delta;
 };
-
 
 struct vnet {
 	struct io_device *iod;

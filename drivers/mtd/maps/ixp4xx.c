@@ -301,7 +301,6 @@ static void __exit ixp4xx_flash_exit(void)
 	platform_driver_unregister(&ixp4xx_flash_driver);
 }
 
-
 module_init(ixp4xx_flash_init);
 module_exit(ixp4xx_flash_exit);
 

@@ -24,7 +24,6 @@
  *
  */
 
-
 #include <linux/module.h>
 #include <linux/fs.h>
 #include <linux/types.h>
@@ -36,7 +35,6 @@
 #include <linux/socket.h>
 #include <linux/inet.h>
 #include <linux/spinlock.h>
-
 
 #include "cluster/heartbeat.h"
 #include "cluster/nodemanager.h"
@@ -177,7 +175,6 @@ static enum dlm_status __dlmconvert_master(struct dlm_ctxt *dlm,
 				break;
 		}
 	}
-
 
 	/* in-place downconvert? */
 	if (type <= lock->ml.type)

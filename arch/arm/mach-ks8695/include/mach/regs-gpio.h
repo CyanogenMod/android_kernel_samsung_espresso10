@@ -17,11 +17,9 @@
 #define KS8695_GPIO_VA		(KS8695_IO_VA + KS8695_GPIO_OFFSET)
 #define KS8695_GPIO_PA		(KS8695_IO_PA + KS8695_GPIO_OFFSET)
 
-
 #define KS8695_IOPM		(0x00)		/* I/O Port Mode Register */
 #define KS8695_IOPC		(0x04)		/* I/O Port Control Register */
 #define KS8695_IOPD		(0x08)		/* I/O Port Data Register */
-
 
 /* Port Mode Register */
 #define IOPM(x)			(1 << (x))	/* Mode for GPIO Pin x */

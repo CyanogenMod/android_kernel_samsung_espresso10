@@ -123,7 +123,6 @@
 #define REG_WR(__hba, offset, val)			\
 		writel(val, __hba->regview + offset)
 
-
 /**
  * struct generic_pdu_resc - login pdu resource structure
  *
@@ -164,7 +163,6 @@ struct generic_pdu_resc {
 	dma_addr_t resp_bd_dma;
 };
 
-
 /**
  * struct bd_resc_page - tracks DMA'able memory allocated for BD tables
  *
@@ -182,7 +180,6 @@ struct bd_resc_page {
 	void *page[1];
 };
 
-
 /**
  * struct io_bdt - I/O buffer destricptor table
  *
@@ -197,7 +194,6 @@ struct io_bdt {
 	dma_addr_t bd_tbl_dma;
 	u16 bd_valid;
 };
-
 
 /**
  * bnx2i_cmd - iscsi command structure
@@ -216,7 +212,6 @@ struct bnx2i_cmd {
 	dma_addr_t bd_tbl_dma;
 	struct bnx2i_cmd_request req;
 };
-
 
 /**
  * struct bnx2i_conn - iscsi connection structure
@@ -253,8 +248,6 @@ struct bnx2i_conn {
 	struct generic_pdu_resc gen_pdu;
 	u64 violation_notified;
 };
-
-
 
 /**
  * struct iscsi_cid_queue - Per adapter iscsi cid queue
@@ -419,7 +412,6 @@ struct bnx2i_hba {
 	unsigned int ctx_ccell_tasks;
 };
 
-
 /*******************************************************************************
  * 	QP [ SQ / RQ / CQ ] info.
  ******************************************************************************/
@@ -439,7 +431,6 @@ struct 	cqe {
 	u8 cqe_byte[BNX2I_CQE_SIZE];
 };
 
-
 enum {
 #if defined(__LITTLE_ENDIAN)
 	CNIC_EVENT_COAL_INDEX	= 0x0,
@@ -454,7 +445,6 @@ enum {
 #endif
 };
 
-
 /*
  * CQ DB
  */
@@ -465,7 +455,6 @@ struct bnx2x_iscsi_cq_pend_cmpl {
 	u16 pend_cntr;
 };
 
-
 struct bnx2i_5771x_cq_db {
 	struct bnx2x_iscsi_cq_pend_cmpl qp_pend_cmpl[BNX2X_MAX_CQS];
 	/* CQ pending completion ITT array */
@@ -475,12 +464,10 @@ struct bnx2i_5771x_cq_db {
 	u32 reserved[4] /* 16 byte allignment */;
 };
 
-
 struct bnx2i_5771x_sq_rq_db {
 	u16 prod_idx;
 	u8 reserved0[14]; /* Pad structure size to 16 bytes */
 };
-
 
 struct bnx2i_5771x_dbell_hdr {
 	u8 header;
@@ -614,8 +601,6 @@ struct qp_info {
 	u32 rq_pgtbl_size;	/* set to PAGE_SIZE for 5708 & 5709 */
 };
 
-
-
 /*
  * CID handles
  */
@@ -625,7 +610,6 @@ struct ep_handles {
 	u16 pg_cid;
 	u16 rsvd;
 };
-
 
 enum {
 	EP_STATE_IDLE                   = 0x0,
@@ -699,8 +683,6 @@ struct bnx2i_endpoint {
 	wait_queue_head_t ofld_wait;
 };
 
-
-
 /* Global variables */
 extern unsigned int error_mask1, error_mask2;
 extern u64 iscsi_error_mask;
@@ -716,8 +698,6 @@ extern unsigned int sq_size;
 extern unsigned int rq_size;
 
 extern struct device_attribute *bnx2i_dev_attributes[];
-
-
 
 /*
  * Function Prototypes

@@ -1,12 +1,12 @@
 /* -*- linux-c -*- */
 
-/* 
+/*
  * Driver for USB Rio 500
  *
  * Cesar Miquel (miquel@df.uba.ar)
- * 
+ *
  * based on hp_scanner.c by David E. Nelson (dnelson@jump.net)
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the
@@ -255,7 +255,6 @@ static long ioctl_rio(struct file *file, unsigned int cmd, unsigned long arg)
 		break;
 	}
 
-
 err_out:
 	mutex_unlock(&(rio->lock));
 	return retval;
@@ -285,8 +284,6 @@ write_rio(struct file *file, const char __user *buffer,
 		mutex_unlock(&(rio->lock));
 		return -ENODEV;
 	}
-
-
 
 	do {
 		unsigned long thistime;
@@ -375,7 +372,6 @@ read_rio(struct file *file, char __user *buffer, size_t count, loff_t * ppos)
 	ibuf = rio->ibuf;
 
 	read_count = 0;
-
 
 	while (count > 0) {
 		if (signal_pending(current)) {
@@ -545,14 +541,12 @@ out:
 	return retval;
 }
 
-
 static void __exit usb_rio_cleanup(void)
 {
 	struct rio_usb_data *rio = &rio_instance;
 
 	rio->present = 0;
 	usb_deregister(&rio_driver);
-
 
 }
 
@@ -562,4 +556,3 @@ module_exit(usb_rio_cleanup);
 MODULE_AUTHOR( DRIVER_AUTHOR );
 MODULE_DESCRIPTION( DRIVER_DESC );
 MODULE_LICENSE("GPL");
-

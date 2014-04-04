@@ -50,7 +50,6 @@ static inline int br_is_designated_port(const struct net_bridge_port *p)
 		(p->designated_port == p->port_id);
 }
 
-
 /* br_stp.c */
 extern void br_become_root_bridge(struct net_bridge *br);
 extern void br_config_bpdu_generation(struct net_bridge *);

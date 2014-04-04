@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="htc_api.h" company="Atheros">
 //    Copyright (c) 2007-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -88,11 +88,11 @@ typedef void   (*HTC_EP_RECV_REFILL)(void *, HTC_ENDPOINT_ID Endpoint);
  * HTC header length plus the length of payload.  The callback can return a pointer to
  * the allocated HTC packet for immediate use.
  *
- * Alternatively a variant of this handler can be used to allocate large receive packets as needed.  
- * For example an application can use the refill mechanism for normal packets and the recv-alloc mechanism to 
+ * Alternatively a variant of this handler can be used to allocate large receive packets as needed.
+ * For example an application can use the refill mechanism for normal packets and the recv-alloc mechanism to
  * handle the case where a large packet buffer is required.  This can significantly reduce the
  * amount of "committed" memory used to receive packets.
- *  
+ *
  * */
 typedef struct htc_packet *(*HTC_EP_RECV_ALLOC)(void *, HTC_ENDPOINT_ID Endpoint, int Length);
 
@@ -127,14 +127,14 @@ struct htc_ep_callbacks {
     HTC_EP_SEND_PKT_COMP_MULTIPLE EpTxCompleteMultiple; /* OPTIONAL completion handler for multiple complete
                                                              indications (EpTxComplete must be NULL) */
     HTC_EP_RECV_PKT_MULTIPLE      EpRecvPktMultiple;      /* OPTIONAL completion handler for multiple
-                                                             recv packet indications (EpRecv must be NULL) */           
-    int                      RecvAllocThreshold;    /* if EpRecvAllocThresh is non-NULL, HTC will compare the 
+                                                             recv packet indications (EpRecv must be NULL) */
+    int                      RecvAllocThreshold;    /* if EpRecvAllocThresh is non-NULL, HTC will compare the
                                                        threshold value to the current recv packet length and invoke
                                                        the EpRecvAllocThresh callback to acquire a packet buffer */
     int                      RecvRefillWaterMark;   /* if a EpRecvRefill handler is provided, this value
-                                                       can be used to set a trigger refill callback 
-                                                       when the recv queue drops below this value 
-                                                       if set to 0, the refill is only called when packets 
+                                                       can be used to set a trigger refill callback
+                                                       when the recv queue drops below this value
+                                                       if set to 0, the refill is only called when packets
                                                        are empty */
 };
 
@@ -189,7 +189,7 @@ struct htc_endpoint_credit_dist {
                                                and endpoint needs credits in order to transmit */
     int                 TxCreditSize;       /* size in bytes of each credit (set by HTC) */
     int                 TxCreditsPerMaxMsg; /* credits required for a maximum sized messages (set by HTC) */
-    void                *pHTCReserved;      /* reserved for HTC use */    
+    void                *pHTCReserved;      /* reserved for HTC use */
     int                 TxQueueDepth;       /* current depth of TX queue , i.e. messages waiting for credits
                                                This field is valid only when HTC_CREDIT_DIST_ACTIVITY_CHANGE
                                                or HTC_CREDIT_DIST_SEND_COMPLETE is indicated on an endpoint
@@ -265,7 +265,7 @@ struct htc_endpoint_stats {
            pInfo - initialization information
   @output:
   @return: HTC_HANDLE on success, NULL on failure
-  @notes: 
+  @notes:
   @example:
   @see also: HTCDestroy
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -393,7 +393,7 @@ void        HTCStop(HTC_HANDLE HTCHandle);
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Destroy HTC service
   @function name: HTCDestroy
-  @input: HTCHandle 
+  @input: HTCHandle
   @output:
   @return:
   @notes:  This cleans up all resources allocated by HTCCreate().
@@ -494,7 +494,7 @@ bool       HTCGetEndpointStatistics(HTC_HANDLE               HTCHandle,
 void HTCUnblockRecv(HTC_HANDLE HTCHandle);
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  @desc: send a series of HTC packets  
+  @desc: send a series of HTC packets
   @function name: HTCSendPktsMultiple
   @input:  HTCHandle - HTC handle
            pPktQueue - local queue holding packets to send
@@ -505,7 +505,7 @@ void HTCUnblockRecv(HTC_HANDLE HTCHandle);
            Caller supplies a pointer to an struct htc_packet_queue structure holding the TX packets in FIFO order.
            This API will remove the packets from the pkt queue and place them into the HTC Tx Queue
            and bundle messages where possible.
-           The caller may allocate the pkt queue on the stack to hold the packets.           
+           The caller may allocate the pkt queue on the stack to hold the packets.
            This interface is fully asynchronous.  On error, HTCSendPkts will
            call the registered Endpoint callback to cleanup the packet.
   @example:
@@ -526,7 +526,7 @@ int    HTCSendPktsMultiple(HTC_HANDLE HTCHandle, struct htc_packet_queue *pPktQu
            Caller supplies a pointer to an struct htc_packet_queue structure holding the recv packet.
            This API will remove the packets from the pkt queue and place them into internal
            recv packet list.
-           The caller may allocate the pkt queue on the stack to hold the packets.           
+           The caller may allocate the pkt queue on the stack to hold the packets.
   @example:
   @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -539,13 +539,12 @@ int    HTCAddReceivePktMultiple(HTC_HANDLE HTCHandle, struct htc_packet_queue *p
            Endpoint - endpoint to check for active state
   @output:
   @return: returns true if Endpoint is Active
-  @notes:  
+  @notes:
   @example:
   @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 bool      HTCIsEndpointActive(HTC_HANDLE      HTCHandle,
                                 HTC_ENDPOINT_ID Endpoint);
-
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   @desc: Get the number of recv buffers currently queued into an HTC endpoint
@@ -554,13 +553,13 @@ bool      HTCIsEndpointActive(HTC_HANDLE      HTCHandle,
            Endpoint - endpoint to check
   @output:
   @return: returns number of buffers in queue
-  @notes:  
+  @notes:
   @example:
   @see also:
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 int         HTCGetNumRecvBuffers(HTC_HANDLE      HTCHandle,
                                  HTC_ENDPOINT_ID Endpoint);
-                                                                      
+
 /* internally used functions for testing... */
 void HTCEnableRecv(HTC_HANDLE HTCHandle);
 void HTCDisableRecv(HTC_HANDLE HTCHandle);

@@ -94,7 +94,6 @@ static int usb_hcd_ppc_soc_probe(const struct hc_driver *driver,
 	return retval;
 }
 
-
 /* may be called without controller electrically present */
 /* may be called with controller, bus, and devices active */
 

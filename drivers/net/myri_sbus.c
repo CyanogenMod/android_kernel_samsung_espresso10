@@ -809,7 +809,6 @@ static int myri_header_cache(const struct neighbour *neigh, struct hh_cache *hh)
 	return 0;
 }
 
-
 /* Called by Address Resolution module to notify changes in address. */
 void myri_header_cache_update(struct hh_cache *hh,
 			      const struct net_device *dev,

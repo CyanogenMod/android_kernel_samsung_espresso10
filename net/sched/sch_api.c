@@ -73,8 +73,6 @@ static int tclass_notify(struct net *net, struct sk_buff *oskb,
 
    All real intelligent work is done inside qdisc modules.
 
-
-
    Every discipline has two major routines: enqueue and dequeue.
 
    ---dequeue
@@ -125,11 +123,9 @@ static int tclass_notify(struct net *net, struct sk_buff *oskb,
 /* Protects list of registered TC modules. It is pure SMP lock. */
 static DEFINE_RWLOCK(qdisc_mod_lock);
 
-
 /************************************************
  *	Queueing disciplines manipulation.	*
  ************************************************/
-
 
 /* The list of all installed queueing disciplines. */
 
@@ -1349,13 +1345,9 @@ done:
 	return skb->len;
 }
 
-
-
 /************************************************
  *	Traffic classes manipulation.		*
  ************************************************/
-
-
 
 static int tc_ctl_tclass(struct sk_buff *skb, struct nlmsghdr *n, void *arg)
 {
@@ -1480,7 +1472,6 @@ out:
 
 	return err;
 }
-
 
 static int tc_fill_tclass(struct sk_buff *skb, struct Qdisc *q,
 			  unsigned long cl,
@@ -1792,12 +1783,12 @@ static int __init pktsched_init(void)
 	register_qdisc(&pfifo_head_drop_qdisc_ops);
 	register_qdisc(&mq_qdisc_ops);
 
-	rtnl_register(PF_UNSPEC, RTM_NEWQDISC, tc_modify_qdisc, NULL);
-	rtnl_register(PF_UNSPEC, RTM_DELQDISC, tc_get_qdisc, NULL);
-	rtnl_register(PF_UNSPEC, RTM_GETQDISC, tc_get_qdisc, tc_dump_qdisc);
-	rtnl_register(PF_UNSPEC, RTM_NEWTCLASS, tc_ctl_tclass, NULL);
-	rtnl_register(PF_UNSPEC, RTM_DELTCLASS, tc_ctl_tclass, NULL);
-	rtnl_register(PF_UNSPEC, RTM_GETTCLASS, tc_ctl_tclass, tc_dump_tclass);
+	rtnl_register(PF_UNSPEC, RTM_NEWQDISC, tc_modify_qdisc, NULL, NULL);
+	rtnl_register(PF_UNSPEC, RTM_DELQDISC, tc_get_qdisc, NULL, NULL);
+	rtnl_register(PF_UNSPEC, RTM_GETQDISC, tc_get_qdisc, tc_dump_qdisc, NULL);
+	rtnl_register(PF_UNSPEC, RTM_NEWTCLASS, tc_ctl_tclass, NULL, NULL);
+	rtnl_register(PF_UNSPEC, RTM_DELTCLASS, tc_ctl_tclass, NULL, NULL);
+	rtnl_register(PF_UNSPEC, RTM_GETTCLASS, tc_ctl_tclass, tc_dump_tclass, NULL);
 
 	return 0;
 }

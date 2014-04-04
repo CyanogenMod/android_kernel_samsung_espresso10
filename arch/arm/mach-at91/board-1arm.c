@@ -39,7 +39,6 @@
 
 #include "generic.h"
 
-
 static void __init onearm_init_early(void)
 {
 	/* Set cpu type: PQFP */

@@ -342,7 +342,6 @@ void mddi_set_auto_hibernate(struct msm_mddi_client_data *cdata, int on)
 	mddi_wait_interrupt(mddi, MDDI_INT_NO_CMD_PKTS_PEND);
 }
 
-
 static uint16_t mddi_init_registers(struct mddi_info *mddi)
 {
 	mddi_writel(0x0001, VERSION);
@@ -372,7 +371,6 @@ static uint16_t mddi_init_registers(struct mddi_info *mddi)
 
 	/* Recommendation from PAD hw team */
 	mddi_writel(0xa850f, PAD_CTL);
-
 
 	/* Need an even number for counts */
 	mddi_writel(0x60006, DRIVER_START_CNT);
@@ -506,7 +504,6 @@ int mddi_check_status(struct mddi_info *mddi)
 	mutex_unlock(&mddi->reg_read_lock);
 	return ret;
 }
-
 
 void mddi_remote_write(struct msm_mddi_client_data *cdata, uint32_t val,
 		       uint32_t reg)
@@ -810,7 +807,6 @@ error_ioremap:
 	printk(KERN_INFO "mddi: mddi_init() failed (%d)\n", ret);
 	return ret;
 }
-
 
 static struct platform_driver mddi_driver = {
 	.probe = mddi_probe,

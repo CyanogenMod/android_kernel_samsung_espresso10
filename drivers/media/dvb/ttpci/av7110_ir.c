@@ -21,7 +21,6 @@
  *
  */
 
-
 #include <linux/types.h>
 #include <linux/init.h>
 #include <linux/module.h>
@@ -32,7 +31,6 @@
 #include "av7110.h"
 #include "av7110_hw.h"
 
-
 #define AV_CNT		4
 
 #define IR_RC5		0
@@ -42,7 +40,6 @@
 #define IR_ALL		0xffffffff
 
 #define UP_TIMEOUT	(HZ*7/25)
-
 
 /* Note: enable ir debugging by or'ing debug with 16 */
 
@@ -57,7 +54,6 @@ MODULE_PARM_DESC(ir_inversion, "Inversion of infrared signal: 0 not inverted (de
 static uint ir_device_mask[AV_CNT] = { IR_ALL, IR_ALL, IR_ALL, IR_ALL };
 module_param_array(ir_device_mask, uint, NULL, 0644);
 MODULE_PARM_DESC(ir_device_mask, "Bitmask of infrared devices: bit 0..31 = device 0..31 (default: all)");
-
 
 static int av_cnt;
 static struct av7110 *av_list[AV_CNT];
@@ -85,7 +81,6 @@ static u16 default_key_map [256] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, KEY_VCR
 };
 
-
 /* key-up timer */
 static void av7110_emit_keyup(unsigned long parm)
 {
@@ -97,7 +92,6 @@ static void av7110_emit_keyup(unsigned long parm)
 	input_report_key(ir->input_dev, ir->last_key, 0);
 	input_sync(ir->input_dev);
 }
-
 
 /* tasklet */
 static void av7110_emit_key(unsigned long parm)
@@ -180,7 +174,6 @@ static void av7110_emit_key(unsigned long parm)
 
 }
 
-
 /* register with input layer */
 static void input_register_keys(struct infrared *ir)
 {
@@ -207,7 +200,6 @@ static void input_register_keys(struct infrared *ir)
 	ir->input_dev->keycodemax = ARRAY_SIZE(ir->key_map);
 }
 
-
 /* called by the input driver after rep[REP_DELAY] ms */
 static void input_repeat_key(unsigned long parm)
 {
@@ -215,7 +207,6 @@ static void input_repeat_key(unsigned long parm)
 
 	ir->delay_timer_finished = 1;
 }
-
 
 /* check for configuration changes */
 int av7110_check_ir_config(struct av7110 *av7110, int force)
@@ -265,7 +256,6 @@ int av7110_check_ir_config(struct av7110 *av7110, int force)
 
 	return ret;
 }
-
 
 /* /proc/av7110_ir interface */
 static ssize_t av7110_ir_proc_write(struct file *file, const char __user *buffer,
@@ -322,7 +312,6 @@ static void ir_handler(struct av7110 *av7110, u32 ircom)
 	av7110->ir.ir_command = ircom;
 	tasklet_schedule(&av7110->ir.ir_tasklet);
 }
-
 
 int __devinit av7110_ir_init(struct av7110 *av7110)
 {
@@ -383,7 +372,6 @@ int __devinit av7110_ir_init(struct av7110 *av7110)
 
 	return 0;
 }
-
 
 void __devexit av7110_ir_exit(struct av7110 *av7110)
 {

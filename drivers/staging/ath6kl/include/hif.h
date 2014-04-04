@@ -1,7 +1,7 @@
 //------------------------------------------------------------------------------
 // <copyright file="hif.h" company="Atheros">
 //    Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -34,7 +34,6 @@ extern "C" {
 #include "athdefs.h"
 #include "a_osapi.h"
 #include "dl_list.h"
-
 
 typedef struct htc_callbacks HTC_CALLBACKS;
 struct hif_device;
@@ -87,7 +86,7 @@ struct hif_device;
 #define HIF_DMODE_MASK              (HIF_BYTE_BASIS | HIF_BLOCK_BASIS)
 
 /*
- *     amode - This indicates if the address has to be incremented on AR6000 
+ *     amode - This indicates if the address has to be incremented on AR6000
  *             after every read/write operation (HIF?FIXED_ADDRESS/
  *             HIF_INCREMENTAL_ADDRESS).
  */
@@ -127,7 +126,7 @@ struct hif_device;
     (HIF_READ | HIF_SYNCHRONOUS | HIF_EXTENDED_IO | HIF_BLOCK_BASIS | HIF_INCREMENTAL_ADDRESS)
 #define HIF_RD_SYNC_BLOCK_FIX  \
     (HIF_READ | HIF_SYNCHRONOUS | HIF_EXTENDED_IO | HIF_BLOCK_BASIS | HIF_FIXED_ADDRESS)
-    
+
 typedef enum {
     HIF_DEVICE_POWER_STATE = 0,
     HIF_DEVICE_GET_MBOX_BLOCK_SIZE,
@@ -153,7 +152,7 @@ typedef enum {
  *   HIF_DEVICE_GET_MBOX_ADDR
  *   input : none
  *   output : struct hif_device_mbox_info
- *   notes: 
+ *   notes:
  *
  *   HIF_DEVICE_GET_PENDING_EVENTS_FUNC
  *   input : none
@@ -187,39 +186,39 @@ typedef enum {
  *         is powered down.
  *
  *   HIF_DEVICE_GET_IRQ_YIELD_PARAMS
- * 
+ *
  *   input : none
  *   output : struct hif_device_irq_yield_params
  *   note: This query checks if the HIF layer wishes to impose a processing yield count for the DSR handler.
- *   The DSR callback handler will exit after a fixed number of RX packets or events are processed.  
- *   This query is only made if the device reports an IRQ processing mode of HIF_DEVICE_IRQ_SYNC_ONLY. 
+ *   The DSR callback handler will exit after a fixed number of RX packets or events are processed.
+ *   This query is only made if the device reports an IRQ processing mode of HIF_DEVICE_IRQ_SYNC_ONLY.
  *   The HIF implementation can ignore this command if it does not desire the DSR callback to yield.
  *   The HIF layer can indicate the maximum number of IRQ processing units (RX packets) before the
- *   DSR handler callback must yield and return control back to the HIF layer.  When a yield limit is 
- *   used the DSR callback will not call HIFAckInterrupts() as it would normally do before returning.  
+ *   DSR handler callback must yield and return control back to the HIF layer.  When a yield limit is
+ *   used the DSR callback will not call HIFAckInterrupts() as it would normally do before returning.
  *   The HIF implementation that requires a yield count must call HIFAckInterrupt() when it is prepared
  *   to process interrupts again.
- *   
+ *
  *   HIF_CONFIGURE_QUERY_SCATTER_REQUEST_SUPPORT
  *   input : none
  *   output : struct hif_device_scatter_support_info
  *   note:  This query checks if the HIF layer implements the SCATTER request interface.  Scatter requests
  *   allows upper layers to submit mailbox I/O operations using a list of buffers.  This is useful for
  *   multi-message transfers that can better utilize the bus interconnect.
- * 
- * 
+ *
+ *
  *   HIF_DEVICE_GET_OS_DEVICE
  *   intput : none
  *   output : struct hif_device_os_device_info;
  *   note: On some operating systems, the HIF layer has a parent device object for the bus.  This object
  *         may be required to register certain types of logical devices.
- * 
+ *
  *   HIF_DEVICE_DEBUG_BUS_STATE
  *   input : none
  *   output : none
- *   note: This configure option triggers the HIF interface to dump as much bus interface state.  This 
+ *   note: This configure option triggers the HIF interface to dump as much bus interface state.  This
  *   configuration request is optional (No-OP on some HIF implementations)
- * 
+ *
  */
 
 struct hif_mbox_properties {
@@ -231,13 +230,13 @@ struct hif_mbox_properties {
 
 typedef enum _MBOX_BUF_IF_TYPE {
     MBOX_BUS_IF_SDIO = 0,
-    MBOX_BUS_IF_SPI = 1,    
+    MBOX_BUS_IF_SPI = 1,
 } MBOX_BUF_IF_TYPE;
 
 struct hif_device_mbox_info {
     u32 MboxAddresses[4];  /* must be first element for legacy HIFs that return the address in
                                    and ARRAY of 32-bit words */
-    
+
         /* the following describe extended mailbox properties */
     struct hif_mbox_properties MboxProp[4];
         /* if the HIF supports the GMbox extended address region it can report it
@@ -268,7 +267,6 @@ struct hif_device_irq_yield_params {
     int     RecvPacketYieldCount; /* max number of packets to force DSR to return */
 };
 
-
 struct hif_scatter_item {
     u8 *pBuffer;             /* CPU accessible address of buffer */
     int          Length;              /* length of transfer to/from this buffer */
@@ -281,7 +279,7 @@ typedef void ( *HIF_SCATTER_COMP_CB)(struct hif_scatter_req *);
 typedef enum _HIF_SCATTER_METHOD {
     HIF_SCATTER_NONE = 0,
     HIF_SCATTER_DMA_REAL,              /* Real SG support no restrictions */
-    HIF_SCATTER_DMA_BOUNCE,            /* Uses SG DMA but HIF layer uses an internal bounce buffer */    
+    HIF_SCATTER_DMA_BOUNCE,            /* Uses SG DMA but HIF layer uses an internal bounce buffer */
 } HIF_SCATTER_METHOD;
 
 struct hif_scatter_req {
@@ -294,7 +292,7 @@ struct hif_scatter_req {
     int            CompletionStatus;   /* status of completion */
     void                *Context;           /* caller context for this request */
     int                 ValidScatterEntries;  /* number of valid entries set by caller */
-    HIF_SCATTER_METHOD  ScatterMethod;        /* scatter method handled by HIF */  
+    HIF_SCATTER_METHOD  ScatterMethod;        /* scatter method handled by HIF */
     void                *HIFPrivate[4];     /* HIF private area */
     u8 *pScatterBounceBuffer;  /* bounce buffer for upper layers to copy to/from */
     struct hif_scatter_item    ScatterList[1];     /* start of scatter list */
@@ -308,15 +306,15 @@ struct hif_device_scatter_support_info {
         /* information returned from HIF layer */
     HIF_ALLOCATE_SCATTER_REQUEST    pAllocateReqFunc;
     HIF_FREE_SCATTER_REQUEST        pFreeReqFunc;
-    HIF_READWRITE_SCATTER           pReadWriteScatterFunc;    
+    HIF_READWRITE_SCATTER           pReadWriteScatterFunc;
     int                             MaxScatterEntries;
     int                             MaxTransferSizePerScatterReq;
 };
-                      
+
 struct hif_device_os_device_info {
     void    *pOSDevice;
 };
-                      
+
 #define HIF_MAX_DEVICES                 1
 
 struct htc_callbacks {
@@ -327,7 +325,7 @@ struct htc_callbacks {
 };
 
 typedef struct osdrv_callbacks {
-    void      *context;     /* context to pass for all callbacks except deviceRemovedHandler 
+    void      *context;     /* context to pass for all callbacks except deviceRemovedHandler
                                the deviceRemovedHandler is only called if the device is claimed */
     int (* deviceInsertedHandler)(void *context, void *hif_handle);
     int (* deviceRemovedHandler)(void *claimedContext, void *hif_handle);
@@ -364,11 +362,10 @@ typedef int ( *HIF_MASK_UNMASK_RECV_EVENT)(struct hif_device  *device,
                                                 bool      Mask,
                                                 void        *AsyncContext);
 
-
 /*
  * This API is used to perform any global initialization of the HIF layer
  * and to set OS driver callbacks (i.e. insertion/removal) to the HIF layer
- * 
+ *
  */
 int HIFInit(OSDRV_CALLBACKS *callbacks);
 
@@ -422,7 +419,7 @@ void HIFAckInterrupt(struct hif_device *device);
 void HIFMaskInterrupt(struct hif_device *device);
 
 void HIFUnMaskInterrupt(struct hif_device *device);
- 
+
 #ifdef THREAD_X
 /*
  * This set of functions are to be used by the bus driver to notify
@@ -443,7 +440,7 @@ int
 HIFConfigureDevice(struct hif_device *device, HIF_DEVICE_CONFIG_OPCODE opcode,
                    void *config, u32 configLen);
 
-/* 
+/*
  * This API wait for the remaining MBOX messages to be drained
  * This should be moved to HTC AR6K layer
  */

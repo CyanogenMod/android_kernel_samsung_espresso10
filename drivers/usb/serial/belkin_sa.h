@@ -62,7 +62,6 @@
 
 #define BELKIN_SA_SET_FLOW_CTRL_REQUEST	16 /* Set flow control mode */
 
-
 #ifdef WHEN_I_LEARN_THIS
 #define BELKIN_SA_SET_MAGIC_REQUEST	17 /* I don't know, possibly flush */
 					   /* (always in Wininit sequence before flow control) */
@@ -121,4 +120,3 @@
 #define BELKIN_SA_MSR_CD		0x80	/* Current CD */
 
 #endif /* __LINUX_USB_SERIAL_BSA_H */
-

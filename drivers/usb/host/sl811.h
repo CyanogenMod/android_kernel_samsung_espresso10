@@ -3,7 +3,7 @@
  *
  * Copyright (C) 2004 Psion Teklogix
  * Copyright (C) 2004 David Brownell
- * Copyright (C) 2001 Cypress Semiconductor Inc. 
+ * Copyright (C) 2001 Cypress Semiconductor Inc.
  */
 
 /*
@@ -22,7 +22,6 @@
 #define SL811_PERIPH_EP1	0x10
 #define SL811_PERIPH_EP2	0x20
 #define SL811_PERIPH_EP3	0x30
-
 
 /* TRANSFER REGISTERS:  host and peripheral sides are similar
  * except for the control models (master vs slave).
@@ -59,7 +58,6 @@
 #	define	SL_DATA1	0xb0
 #define SL11H_XFERCNTREG	4	/* read */
 #define SL11H_DEVADDRREG	4	/* write */
-
 
 /* CONTROL REGISTERS:  host and peripheral are very different.
  */
@@ -98,7 +96,6 @@
 #	define SL811HS_CTL2MASK_HOST		0x80
 
 #define SL811HS_CTL2_INIT	(SL811HS_CTL2MASK_HOST | 0x2e)
-
 
 /* DATA BUFFERS: registers from 0x10..0xff are for data buffers;
  * that's 240 bytes, which we'll split evenly between A and B sides.
@@ -263,4 +260,3 @@ sl811_read_buf(struct sl811 *sl811, int addr, void *buf, size_t count)
 #define ERR(stuff...)		printk(KERN_ERR "sl811: " stuff)
 #define WARNING(stuff...)	printk(KERN_WARNING "sl811: " stuff)
 #define INFO(stuff...)		printk(KERN_INFO "sl811: " stuff)
-

@@ -350,7 +350,6 @@ struct cx18_dvb {
 struct cx18;	 /* forward reference */
 struct cx18_scb; /* forward reference */
 
-
 #define CX18_MAX_MDL_ACKS 2
 #define CX18_MAX_IN_WORK_ORDERS (CX18_MAX_FW_MDLS_PER_STREAM + 7)
 /* CPU_DE_RELEASE_MDL can burst CX18_MAX_FW_MDLS_PER_STREAM orders in a group */

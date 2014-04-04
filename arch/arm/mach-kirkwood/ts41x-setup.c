@@ -30,7 +30,6 @@
 /* for the PCIe reset workaround */
 #include <plat/pcie.h>
 
-
 #define QNAP_TS41X_JUMPER_JP1	45
 
 static struct i2c_board_info __initdata qnap_ts41x_i2c_rtc = {

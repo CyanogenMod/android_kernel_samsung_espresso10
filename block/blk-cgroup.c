@@ -665,7 +665,6 @@ static uint64_t blkio_fill_stat(char *str, int chars_left, uint64_t val,
 	return val;
 }
 
-
 static uint64_t blkio_read_stat_cpu(struct blkio_group *blkg,
 			enum stat_type_cpu type, enum stat_sub_type sub_type)
 {

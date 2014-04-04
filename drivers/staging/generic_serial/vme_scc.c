@@ -46,7 +46,6 @@
 #include <linux/generic_serial.h>
 #include "scc.h"
 
-
 #define CHANNEL_A	0
 #define CHANNEL_B	1
 
@@ -107,7 +106,6 @@ static struct real_driver scc_real_driver = {
         NULL
 };
 
-
 static const struct tty_operations scc_ops = {
 	.open	= scc_open,
 	.close = gs_close,
@@ -167,7 +165,6 @@ static int __init scc_init_drivers(void)
 	return 0;
 }
 
-
 /* ports[] array is indexed by line no (i.e. [0] for ttyS0, [1] for ttyS1).
  */
 
@@ -191,7 +188,6 @@ static void __init scc_init_portstructs(void)
 		init_waitqueue_head(&port->gs.port.close_wait);
 	}
 }
-
 
 #ifdef CONFIG_MVME147_SCC
 static int __init mvme147_scc_init(void)
@@ -294,7 +290,6 @@ fail:
 	return error;
 }
 #endif
-
 
 #ifdef CONFIG_MVME162_SCC
 static int __init mvme162_scc_init(void)
@@ -401,7 +396,6 @@ fail:
 }
 #endif
 
-
 #ifdef CONFIG_BVME6000_SCC
 static int __init bvme6000_scc_init(void)
 {
@@ -501,7 +495,6 @@ fail_free_b_rx:
 }
 #endif
 
-
 static int __init vme_scc_init(void)
 {
 	int res = -ENODEV;
@@ -522,7 +515,6 @@ static int __init vme_scc_init(void)
 }
 
 module_init(vme_scc_init);
-
 
 /*---------------------------------------------------------------------------
  * Interrupt handlers
@@ -559,7 +551,6 @@ static irqreturn_t scc_rx_int(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
-
 static irqreturn_t scc_spcond_int(int irq, void *data)
 {
 	struct scc_port *port = data;
@@ -568,7 +559,7 @@ static irqreturn_t scc_spcond_int(int irq, void *data)
 	int		int_pending_mask = port->channel == CHANNEL_A ?
 			                   IPR_A_RX : IPR_B_RX;
 	SCC_ACCESS_INIT(port);
-	
+
 	if (!tty) {
 		printk(KERN_WARNING "scc_spcond_int with NULL tty!\n");
 		SCCwrite(COMMAND_REG, CR_ERROR_RESET);
@@ -603,7 +594,6 @@ static irqreturn_t scc_spcond_int(int irq, void *data)
 	tty_flip_buffer_push(tty);
 	return IRQ_HANDLED;
 }
-
 
 static irqreturn_t scc_tx_int(int irq, void *data)
 {
@@ -647,7 +637,6 @@ static irqreturn_t scc_tx_int(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
-
 static irqreturn_t scc_stat_int(int irq, void *data)
 {
 	struct scc_port *port = data;
@@ -676,7 +665,6 @@ static irqreturn_t scc_stat_int(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
-
 /*---------------------------------------------------------------------------
  * generic_serial.c callback funtions
  *--------------------------------------------------------------------------*/
@@ -693,7 +681,6 @@ static void scc_disable_tx_interrupts(void *ptr)
 	local_irq_restore(flags);
 }
 
-
 static void scc_enable_tx_interrupts(void *ptr)
 {
 	struct scc_port *port = ptr;
@@ -707,7 +694,6 @@ static void scc_enable_tx_interrupts(void *ptr)
 	local_irq_restore(flags);
 }
 
-
 static void scc_disable_rx_interrupts(void *ptr)
 {
 	struct scc_port *port = ptr;
@@ -719,7 +705,6 @@ static void scc_disable_rx_interrupts(void *ptr)
 	    ~(IDR_RX_INT_MASK|IDR_PARERR_AS_SPCOND|IDR_EXTSTAT_INT_ENAB), 0);
 	local_irq_restore(flags);
 }
-
 
 static void scc_enable_rx_interrupts(void *ptr)
 {
@@ -733,7 +718,6 @@ static void scc_enable_rx_interrupts(void *ptr)
 	local_irq_restore(flags);
 }
 
-
 static int scc_carrier_raised(struct tty_port *port)
 {
 	struct scc_port *sc = container_of(port, struct scc_port, gs.port);
@@ -741,7 +725,6 @@ static int scc_carrier_raised(struct tty_port *port)
 
 	return !!(scc_last_status_reg[channel] & SR_DCD);
 }
-
 
 static void scc_shutdown_port(void *ptr)
 {
@@ -752,7 +735,6 @@ static void scc_shutdown_port(void *ptr)
 		scc_setsignals (port, 0, 0);
 	}
 }
-
 
 static int scc_set_real_termios (void *ptr)
 {
@@ -835,7 +817,6 @@ static int scc_set_real_termios (void *ptr)
 	return 0;
 }
 
-
 static int scc_chars_in_buffer (void *ptr)
 {
 	struct scc_port *port = ptr;
@@ -843,7 +824,6 @@ static int scc_chars_in_buffer (void *ptr)
 
 	return (SCCread (SPCOND_STATUS_REG) & SCSR_ALL_SENT) ? 0  : 1;
 }
-
 
 /* Comment taken from sx.c (2.4.0):
    I haven't the foggiest why the decrement use count has to happen
@@ -860,13 +840,11 @@ static void scc_hungup(void *ptr)
 	scc_disable_rx_interrupts(ptr);
 }
 
-
 static void scc_close(void *ptr)
 {
 	scc_disable_tx_interrupts(ptr);
 	scc_disable_rx_interrupts(ptr);
 }
-
 
 /*---------------------------------------------------------------------------
  * Internal support functions
@@ -886,7 +864,6 @@ static void scc_setsignals(struct scc_port *port, int dtr, int rts)
 	local_irq_restore(flags);
 }
 
-
 static void scc_send_xchar(struct tty_struct *tty, char ch)
 {
 	struct scc_port *port = tty->driver_data;
@@ -895,7 +872,6 @@ static void scc_send_xchar(struct tty_struct *tty, char ch)
 	if (ch)
 		scc_enable_tx_interrupts(port);
 }
-
 
 /*---------------------------------------------------------------------------
  * Driver entrypoints referenced from above
@@ -1013,7 +989,6 @@ static int scc_open (struct tty_struct * tty, struct file * filp)
 	return 0;
 }
 
-
 static void scc_throttle (struct tty_struct * tty)
 {
 	struct scc_port *port = tty->driver_data;
@@ -1028,7 +1003,6 @@ static void scc_throttle (struct tty_struct * tty)
 	if (I_IXOFF(tty))
 		scc_send_xchar(tty, STOP_CHAR(tty));
 }
-
 
 static void scc_unthrottle (struct tty_struct * tty)
 {
@@ -1045,13 +1019,11 @@ static void scc_unthrottle (struct tty_struct * tty)
 		scc_send_xchar(tty, START_CHAR(tty));
 }
 
-
 static int scc_ioctl(struct tty_struct *tty,
 		     unsigned int cmd, unsigned long arg)
 {
 	return -ENOIOCTLCMD;
 }
-
 
 static int scc_break_ctl(struct tty_struct *tty, int break_state)
 {
@@ -1060,12 +1032,11 @@ static int scc_break_ctl(struct tty_struct *tty, int break_state)
 	SCC_ACCESS_INIT(port);
 
 	local_irq_save(flags);
-	SCCmod(TX_CTRL_REG, ~TCR_SEND_BREAK, 
+	SCCmod(TX_CTRL_REG, ~TCR_SEND_BREAK,
 			break_state ? TCR_SEND_BREAK : 0);
 	local_irq_restore(flags);
 	return 0;
 }
-
 
 /*---------------------------------------------------------------------------
  * Serial console stuff...
@@ -1076,7 +1047,7 @@ static int scc_break_ctl(struct tty_struct *tty, int break_state)
 static void scc_ch_write (char ch)
 {
 	volatile char *p = NULL;
-	
+
 #ifdef CONFIG_MVME147_SCC
 	if (MACH_IS_MVME147)
 		p = (volatile char *)M147_SCC_A_ADDR;
@@ -1130,7 +1101,6 @@ static struct console sercons = {
 	.flags		= CON_PRINTBUFFER,
 	.index		= -1,
 };
-
 
 static int __init vme_scc_console_init(void)
 {

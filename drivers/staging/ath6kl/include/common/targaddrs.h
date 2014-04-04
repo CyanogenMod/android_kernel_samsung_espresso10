@@ -56,7 +56,6 @@
 #define AR6002_HOST_INTEREST_ADDRESS    0x00500400
 #define AR6003_HOST_INTEREST_ADDRESS    0x00540600
 
-
 #define HOST_INTEREST_MAX_SIZE          0x100
 
 #if !defined(__ASSEMBLER__)
@@ -347,13 +346,11 @@ valid */
 #define AR6004_HOST_INTEREST_ITEM_ADDRESS(item) \
         ((u32)&((((struct host_interest_s *)(AR6004_HOST_INTEREST_ADDRESS))->item)))
 
-
 #define HOST_INTEREST_DBGLOG_IS_ENABLED() \
         (!(HOST_INTEREST->hi_option_flag & HI_OPTION_DISABLE_DBGLOG))
 
 #define HOST_INTEREST_PKTLOG_IS_ENABLED() \
         ((HOST_INTEREST->hi_pktlog_num_buffers))
-
 
 #define HOST_INTEREST_PROFILE_IS_ENABLED() \
         (HOST_INTEREST->hi_option_flag & HI_OPTION_ENABLE_PROFILE)

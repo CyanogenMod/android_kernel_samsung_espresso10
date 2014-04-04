@@ -371,7 +371,6 @@ ppp_asynctty_wakeup(struct tty_struct *tty)
 	ap_put(ap);
 }
 
-
 static struct tty_ldisc_ops ppp_ldisc = {
 	.owner  = THIS_MODULE,
 	.magic	= TTY_LDISC_MAGIC,

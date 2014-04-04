@@ -44,7 +44,6 @@ void sram_free(void *addr, size_t len)
 }
 EXPORT_SYMBOL(sram_free);
 
-
 /*
  * REVISIT This supports CPU and DMA access to/from SRAM, but it
  * doesn't (yet?) support some other notable uses of SRAM:  as TCM
@@ -68,4 +67,3 @@ static int __init sram_init(void)
 	return status;
 }
 core_initcall(sram_init);
-

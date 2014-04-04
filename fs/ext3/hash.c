@@ -33,7 +33,6 @@ static void TEA_transform(__u32 buf[4], __u32 const in[])
 	buf[1] += b1;
 }
 
-
 /* The old legacy hash */
 static __u32 dx_hack_hash_unsigned(const char *name, int len)
 {

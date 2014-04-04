@@ -58,7 +58,6 @@ typedef struct							/* Station ID address */
 	PI_UINT32  octet_3_0;
 	} PI_STATION_ID;
 
-
 /* Define general constants */
 
 #define PI_ALIGN_K_DESC_BLK	  			8192	/* Descriptor block boundary		*/
@@ -275,7 +274,6 @@ typedef struct									/* Response header */
 	PI_UINT32  status;
 	} PI_RSP_HEADER;
 
-
 /* Start Command */
 
 typedef struct
@@ -328,7 +326,6 @@ typedef struct
 	PI_UINT32		implementor_all;
 	} PI_CMD_FILTERS_GET_RSP;
 
-
 /* Chars_Set Request */
 
 #define PI_CMD_CHARS_SET_K_ITEMS_MAX 42		/* Fits in a 512 byte buffer */
@@ -351,7 +348,6 @@ typedef struct
 	PI_RSP_HEADER   header;
 	} PI_CMD_CHARS_SET_RSP;
 
-
 /* SNMP_Set Request */
 
 #define PI_CMD_SNMP_SET_K_ITEMS_MAX 42	   	/* Fits in a 512 byte buffer */
@@ -373,7 +369,6 @@ typedef struct
 	{
 	PI_RSP_HEADER   header;
 	} PI_CMD_SNMP_SET_RSP;
-
 
 /* SMT_MIB_Set Request */
 
@@ -500,7 +495,6 @@ typedef struct						  /* Refer to ANSI FDDI SMT Rev. 7.3 */
 	PI_CNTR	   		path_ring_latency;
 
 	} PI_CMD_SMT_MIB_GET_RSP;
-
 
 /*
  *  Item and group code definitions for SMT 7.3 mandatory objects.  These
@@ -1058,7 +1052,6 @@ typedef union
 	PI_DMA_CMD_REQ	request;
 	PI_DMA_CMD_RSP	response;
 	} PI_DMA_CMD_BUFFER;
-
 
 /* Define format of Consumer Block (resident in host memory) */
 

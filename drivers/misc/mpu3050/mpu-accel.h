@@ -1,4 +1,3 @@
-
 #define MPUACC_DEBUG 0
 #define MPUACC_DEBUG_CFG 0
 #define MPUACCEL_INPUT_NAME "mpu-accel"
@@ -11,5 +10,3 @@ int mpu_accel_exit(struct mldl_cfg *mldl_cfg);
 int mpu_accel_suspend(struct mldl_cfg *mldl_cfg);
 int mpu_accel_resume(struct mldl_cfg *mldl_cfg);
 int mpu_accel_read(struct mldl_cfg *mldl_cfg, unsigned char *buffer);
-
-

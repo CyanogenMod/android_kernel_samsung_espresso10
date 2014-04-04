@@ -23,7 +23,6 @@
 
 #include "generic.h"
 
-
 /*
  * Ethernet IRQ mappings
  */
@@ -51,7 +50,6 @@ static struct resource smc91x_resources[] = {
 #endif
 };
 
-
 static struct platform_device smc91x_device = {
 	.name		= "smc91x",
 	.id		= 0,
@@ -62,7 +60,6 @@ static struct platform_device smc91x_device = {
 static struct platform_device *devices[] __initdata = {
 	&smc91x_device,
 };
-
 
 /*
  * Pleb's memory map
@@ -82,7 +79,6 @@ static struct resource pleb_flash_resources[] = {
 	}
 };
 
-
 static struct mtd_partition pleb_partitions[] = {
 	{
 		.name		= "blob",
@@ -99,23 +95,19 @@ static struct mtd_partition pleb_partitions[] = {
 	}
 };
 
-
 static struct flash_platform_data pleb_flash_data = {
 	.map_name = "cfi_probe",
 	.parts = pleb_partitions,
 	.nr_parts = ARRAY_SIZE(pleb_partitions),
 };
 
-
 static void __init pleb_init(void)
 {
 	sa11x0_register_mtd(&pleb_flash_data, pleb_flash_resources,
 			      ARRAY_SIZE(pleb_flash_resources));
 
-
 	platform_add_devices(devices, ARRAY_SIZE(devices));
 }
-
 
 static void __init pleb_map_io(void)
 {

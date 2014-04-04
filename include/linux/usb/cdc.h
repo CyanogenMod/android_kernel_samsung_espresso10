@@ -247,7 +247,6 @@ struct usb_cdc_line_coding {
 #define	USB_CDC_PACKET_TYPE_BROADCAST		(1 << 3)
 #define	USB_CDC_PACKET_TYPE_MULTICAST		(1 << 4) /* filtered */
 
-
 /*-------------------------------------------------------------------------*/
 
 /*

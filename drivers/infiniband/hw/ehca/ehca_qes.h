@@ -40,7 +40,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #ifndef _EHCA_QES_H_
 #define _EHCA_QES_H_
 

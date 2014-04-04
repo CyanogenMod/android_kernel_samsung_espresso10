@@ -48,7 +48,6 @@ MODULE_LICENSE("GPL");
 	if (debug >= level)						\
 		printk(KERN_DEBUG "vbuf-vmalloc: " fmt , ## arg)
 
-
 /***************************************************************************/
 
 static void videobuf_vm_open(struct vm_area_struct *vma)
@@ -346,4 +345,3 @@ void videobuf_vmalloc_free(struct videobuf_buffer *buf)
 	return;
 }
 EXPORT_SYMBOL_GPL(videobuf_vmalloc_free);
-

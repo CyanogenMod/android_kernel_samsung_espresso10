@@ -8,7 +8,6 @@
 #ifndef _QLA4X_FW_H
 #define _QLA4X_FW_H
 
-
 #define MAX_PRST_DEV_DB_ENTRIES		64
 #define MIN_DISC_DEV_DB_ENTRY		MAX_PRST_DEV_DB_ENTRIES
 #define MAX_DEV_DB_ENTRIES		512
@@ -119,7 +118,6 @@ struct isp_reg {
 	} u2;
 };				/* 256 x100 */
 
-
 /* Semaphore Defines for 4010 */
 #define QL4010_DRVR_SEM_BITS	0x00000030
 #define QL4010_GPIO_SEM_BITS	0x000000c0
@@ -139,14 +137,11 @@ struct isp_reg {
 #define QL4022_RESOURCE_MASK_BASE_CODE 0x7
 #define QL4022_RESOURCE_BITS_BASE_CODE 0x4
 
-
 #define QL4022_DRVR_SEM_MASK	(QL4022_RESOURCE_MASK_BASE_CODE << (1+16))
 #define QL4022_DDR_RAM_SEM_MASK (QL4022_RESOURCE_MASK_BASE_CODE << (4+16))
 #define QL4022_PHY_GIO_SEM_MASK (QL4022_RESOURCE_MASK_BASE_CODE << (7+16))
 #define QL4022_NVRAM_SEM_MASK	(QL4022_RESOURCE_MASK_BASE_CODE << (10+16))
 #define QL4022_FLASH_SEM_MASK	(QL4022_RESOURCE_MASK_BASE_CODE << (13+16))
-
-
 
 /* Page # defines for 4022 */
 #define PORT_CTRL_STAT_PAGE			0	/* 4022 */
@@ -159,7 +154,6 @@ static inline uint32_t set_rmask(uint32_t val)
 {
 	return (val & 0xffff) | (val << 16);
 }
-
 
 static inline uint32_t clr_rmask(uint32_t val)
 {
@@ -209,7 +203,6 @@ struct shadow_regs {
 	/* SCSI Completion Queue Producer Index */
 	__le32 rsp_q_in;	/*  4 x4   R */
 };		  /*  8 x8 */
-
 
 /*  External hardware configuration register */
 union external_hw_config_reg {
@@ -842,7 +835,6 @@ struct command_t3_entry {
 	struct data_seg_a64 dataseg[COMMAND_SEG_A64];	/* 34-3F */
 
 };
-
 
 /* Continuation Type 1 entry structure*/
 struct continuation_t1_entry {

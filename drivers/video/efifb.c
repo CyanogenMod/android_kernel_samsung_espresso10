@@ -249,7 +249,6 @@ static int set_system(const struct dmi_system_id *id)
 			 screen_info.lfb_base, screen_info.lfb_width,
 			 screen_info.lfb_height, screen_info.lfb_linelength);
 
-
 	return 1;
 }
 

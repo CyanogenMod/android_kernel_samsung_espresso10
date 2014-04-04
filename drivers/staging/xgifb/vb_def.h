@@ -21,7 +21,6 @@
 
 /* ~shampoo */
 
-
 #define VB_XGI301       0x0001 /*301b*/
 #define VB_XGI301B      0x0002
 #define VB_XGI302B      0x0004
@@ -210,7 +209,6 @@
 #define SetCRT2ToSCART          0x0010
 #define Ext2StructSize          5
 
-
 #define YPbPr525iVCLK           0x03B
 #define YPbPr525iVCLK_2         0x03A
 
@@ -228,13 +226,11 @@
 #define HotPlugFunction         0x08
 #define StStructSize            0x06
 
-
 #define XGI_CRT2_PORT_00        (0x00 - 0x030)
 #define XGI_CRT2_PORT_04        (0x04 - 0x030)
 #define XGI_CRT2_PORT_10        (0x10 - 0x30)
 #define XGI_CRT2_PORT_12        (0x12 - 0x30)
 #define XGI_CRT2_PORT_14        (0x14 - 0x30)
-
 
 #define LCDNonExpanding         0x10
 #define ADR_CRT2PtrData         0x20E
@@ -390,7 +386,6 @@
 /* Modify from 310.inc */
 /*  */
 /*  */
-
 
 #define ShowMsgFlag                  0x20    /* SoftSetting */
 #define ShowVESAFlag                 0x10
@@ -639,7 +634,6 @@
 #define ClearBufferFlag      0x20
 #endif
 
-
 #define LCDRGB18Bit          0x01               /* CR37 */
 #define LCDNonExpanding      0x10
 #define LCDNonExpandingShift 4
@@ -832,7 +826,6 @@
 
 #define CRT2Delay1           0x04 /* XGI301 */
 #define CRT2Delay2           0x0A /* 301B,302 */
-
 
 #define VCLK25_175           0x00
 #define VCLK28_322           0x01

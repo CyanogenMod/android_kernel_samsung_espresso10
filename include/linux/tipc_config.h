@@ -188,7 +188,6 @@
 #define TIPC_DEF_LINK_WIN 50
 #define TIPC_MAX_LINK_WIN 150
 
-
 struct tipc_node_info {
 	__be32 addr;			/* network address of node */
 	__be32 up;			/* 0=down, 1= up */

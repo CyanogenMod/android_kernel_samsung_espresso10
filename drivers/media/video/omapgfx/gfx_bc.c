@@ -32,7 +32,6 @@ do {	\
 		printk(KERN_INFO BCLOGNM fmt, ## arg);	\
 } while (0)
 
-
 struct bc_buffer {
 	u32 size;
 	unsigned long *paddrp;		/* physical addr. array */
@@ -491,4 +490,3 @@ int bc_sync_status(int id, int bufidx)
 
 	return ui32ReadOpsComplete == ui32ReadOpsPending ? 1 : 0;
 }
-

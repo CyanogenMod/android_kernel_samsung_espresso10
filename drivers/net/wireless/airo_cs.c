@@ -41,7 +41,6 @@
 
 #include "airo.h"
 
-
 /*====================================================================*/
 
 MODULE_AUTHOR("Benjamin Reed");
@@ -100,7 +99,6 @@ static int airo_cs_config_check(struct pcmcia_device *p_dev, void *priv_data)
 
 	return pcmcia_request_io(p_dev);
 }
-
 
 static int airo_config(struct pcmcia_device *link)
 {

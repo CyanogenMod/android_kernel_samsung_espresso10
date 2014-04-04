@@ -15,7 +15,6 @@
 
 #include "ieee80211/dot11d.h"
 
-
 static void write_rtl8225(struct net_device *dev, u8 adr, u16 data)
 {
 	int i;

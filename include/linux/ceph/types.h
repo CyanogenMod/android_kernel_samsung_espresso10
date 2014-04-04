@@ -19,11 +19,9 @@ struct ceph_vino {
 	u64 snap;
 };
 
-
 /* context for the caps reservation mechanism */
 struct ceph_cap_reservation {
 	int count;
 };
-
 
 #endif

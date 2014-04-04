@@ -308,7 +308,6 @@ static u32 audit_to_op(u32 op)
 	return n;
 }
 
-
 /* Translate struct audit_rule to kernel's rule respresentation.
  * Exists for backward compatibility with userspace. */
 static struct audit_entry *audit_rule_to_entry(struct audit_rule *rule)

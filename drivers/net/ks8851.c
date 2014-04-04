@@ -489,7 +489,7 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
 	for (; rxfc != 0; rxfc--) {
 		rxh = ks8851_rdreg32(ks, KS_RXFHSR);
 		rxstat = rxh & 0xffff;
-		rxlen = rxh >> 16;
+		rxlen = (rxh >> 16) & 0xfff;
 
 		netif_dbg(ks, rx_status, ks->netdev,
 			  "rx: stat 0x%04x, len 0x%04x\n", rxstat, rxlen);
@@ -1398,7 +1398,6 @@ static int ks8851_set_eeprom(struct net_device *dev,
 		eeprom_buff[last_word - first_word] =
 					ks8851_eeprom_read(dev, last_word);
 
-
 	/* Device's eeprom is little-endian, word addressable */
 	le16_to_cpus(&eeprom_buff[0]);
 	le16_to_cpus(&eeprom_buff[last_word - first_word]);
@@ -1678,7 +1677,6 @@ static int __devinit ks8851_probe(struct spi_device *spi)
 		    ndev->dev_addr, ndev->irq);
 
 	return 0;
-
 
 err_netdev:
 	free_irq(ndev->irq, ndev);

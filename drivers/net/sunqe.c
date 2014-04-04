@@ -919,7 +919,6 @@ static int __devinit qec_ether_init(struct platform_device *op)
 			i == 5 ? ' ': ':');
 	printk("\n");
 
-
 	return 0;
 
 fail:

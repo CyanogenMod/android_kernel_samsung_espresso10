@@ -23,7 +23,6 @@ struct _PACKETTOSEND
 }__attribute__((packed));
 typedef struct _PACKETTOSEND PACKETTOSEND, *PPACKETTOSEND;
 
-
 struct _CONTROL_PACKET
 {
 	PVOID	ControlBuff;
@@ -32,14 +31,12 @@ struct _CONTROL_PACKET
 }__attribute__((packed));
 typedef struct _CONTROL_PACKET CONTROL_PACKET,*PCONTROL_PACKET;
 
-
 struct link_request
 {
 	LEADER	Leader;
 	UCHAR	szData[4];
 }__attribute__((packed));
 typedef struct link_request LINK_REQUEST, *PLINK_REQUEST;
-
 
 //classification extension is added
 typedef struct _ADD_CONNECTION
@@ -61,7 +58,6 @@ typedef struct _ADD_CONNECTION
     UCHAR 		SrcTOS;
     UCHAR 		SrcProtocol;
 } ADD_CONNECTION,*PADD_CONNECTION;
-
 
 typedef struct _CLASSIFICATION_RULE
 {
@@ -86,7 +82,6 @@ typedef struct _CLASSIFICATION_ONLY
     BOOLEAN		bIpVersion;
     UCHAR		ucDestinationAddress[16];
 } CLASSIFICATION_ONLY, *PCLASSIFICATION_ONLY;
-
 
 #define MAX_IP_RANGE_LENGTH 4
 #define MAX_PORT_RANGE 4
@@ -126,7 +121,6 @@ typedef struct _S_HDR_SUPRESSION_CONTEXTINFO
 	UCHAR      ucaHdrSupressionOutBuf[MAX_PHS_LENGTHS + PHSI_LEN]; //Intermediate buffer containing pkt Header after PHS
 
 }S_HDR_SUPRESSION_CONTEXTINFO;
-
 
 typedef struct _S_CLASSIFIER_RULE
 {
@@ -266,7 +260,6 @@ struct _packet_info
 };
 typedef struct _packet_info PacketInfo;
 
-
 typedef struct _PER_TARANG_DATA
 {
     struct _PER_TARANG_DATA * next;
@@ -279,7 +272,6 @@ typedef struct _PER_TARANG_DATA
 	S_MIBS_DROPPED_APP_CNTRL_MESSAGES stDroppedAppCntrlMsgs;
 	ULONG 				RxCntrlMsgBitMask;
 } PER_TARANG_DATA, *PPER_TARANG_DATA;
-
 
 #ifdef REL_4_1
 typedef struct _TARGET_PARAMS
@@ -329,7 +321,6 @@ typedef struct _TARGET_PARAMS
       B_UINT32   m_u32Customize;
       B_UINT32   m_u32ConfigBW;  /* In Hz */
       B_UINT32   m_u32ShutDownTimer;
-
 
       B_UINT32  m_u32RadioParameter;
       B_UINT32  m_u32PhyParameter1;
@@ -536,7 +527,6 @@ struct _MINI_ADAPTER
 	FP_FLASH_WRITE          fpFlashWrite;
 	FP_FLASH_WRITE_STATUS   fpFlashWriteWithStatusCheck;
 
-
 	struct semaphore	NVMRdmWrmLock;
 
 	struct device *pstCreatedClassDevice;
@@ -583,7 +573,6 @@ struct _ETH_HEADER_STRUC {
 }__attribute__((packed));
 typedef struct _ETH_HEADER_STRUC ETH_HEADER_STRUC, *PETH_HEADER_STRUC;
 
-
 typedef struct FirmwareInfo
 {
 	void __user *	pvMappedFirmwareAddress;
@@ -629,14 +618,12 @@ InitAdapter(PMINI_ADAPTER psAdapter);
 #define ISO_MPS_REG  0x0F0110C8
 #define ISO_MPS      0x00000000
 
-
 #define EP1 0
 #define EP2 1
 #define EP3 2
 #define EP4 3
 #define EP5 4
 #define EP6 5
-
 
 typedef enum eInterface_setting
 {
@@ -645,4 +632,3 @@ typedef enum eInterface_setting
 }INTERFACE_SETTING;
 
 #endif	//__ADAPTER_H__
-

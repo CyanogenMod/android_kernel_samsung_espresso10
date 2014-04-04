@@ -36,7 +36,6 @@
 
 #define HW_CH_BASE 4
 
-
 #define HW_CH_0	"Hw1"
 #define HW_CH_1	"Hw2"
 #define HW_CH_2	"Hw3"
@@ -766,7 +765,6 @@ static int snd_intelmad_device_dmic_info_mfld(struct snd_kcontrol *kcontrol,
 	router_dmics[uinfo->value.enumerated.item],
 	sizeof(uinfo->value.enumerated.name)-1);
 
-
 	msic_set_bit(kcontrol->private_value, &scard_ops->available_dmics);
 	pr_debug("info function. avl_dmic = 0x%x",
 		scard_ops->available_dmics);
@@ -918,4 +916,3 @@ snd_intelmad_controls_mfld[MAX_CTRL_MFLD] __devinitdata = {
 	.private_value	=	3
 }
 };
-

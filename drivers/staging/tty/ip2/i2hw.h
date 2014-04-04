@@ -114,7 +114,6 @@ Addr  R/W      IntelliPort-II    IntelliPort-IIEX
 7     R        Guaranteed to have no effect
 7     W        Hardware reset of board.
 
-
 Rules:
 All data transfers are performed using the even i/o address. If byte-wide data
 transfers are being used, do INB/OUTB operations on the data port. If word-wide
@@ -223,7 +222,7 @@ registers, use byte operations only.
 #define SEL_CMD_UNSH   0	// Am4701 command to "unshift": port maps into its
 							// own status register.
 #define SEL_MASK     0x2	// Selects the Am4701 interrupt mask register. The
-							// interrupt mask register is bit-mapped to match 
+							// interrupt mask register is bit-mapped to match
 							// the status register (FIFO_STATUS) except for
 							// STN_MR. (See above.)
 #define SEL_BYTE_DET 0x3	// Selects the Am4701 byte-detect register. (Not
@@ -361,15 +360,15 @@ typedef union _porStr		// "por" stands for Power On Reset
 	{
 		// The first two bytes out of the FIFO are two magic numbers. These are
 		// intended to establish that there is indeed a member of the
-		// IntelliPort-II(EX) family present. The remaining bytes may be 
-		// expected // to be valid. When reading the Power-on Reset message, 
+		// IntelliPort-II(EX) family present. The remaining bytes may be
+		// expected // to be valid. When reading the Power-on Reset message,
 		// if the magic numbers do not match it is probably best to stop
 		// reading immediately. You are certainly not reading our board (unless
 		// hardware is faulty), and may in fact be reading some other piece of
 		// hardware.
 
-		unsigned char porMagic1;   // magic number: first byte == POR_MAGIC_1 
-		unsigned char porMagic2;   // magic number: second byte == POR_MAGIC_2 
+		unsigned char porMagic1;   // magic number: first byte == POR_MAGIC_1
+		unsigned char porMagic2;   // magic number: second byte == POR_MAGIC_2
 
 		// The Version, Revision, and Subrevision are stored as absolute numbers
 		// and would normally be displayed in the format V.R.S (e.g. 1.0.2)
@@ -391,12 +390,12 @@ typedef union _porStr		// "por" stands for Power On Reset
 		unsigned char porMemory;	// On-board DRAM size: in 32k blocks
 
 		// porPorts1 (and porPorts2) are used to determine the ports which are
-		// available to the board. For non-expandable product, a single number 
+		// available to the board. For non-expandable product, a single number
 		// is sufficient. For expandable product, the board may be connected
 		// to as many as four boxes. Each box may be (so far) either a 16-port
 		// or an 8-port size. Whenever an 8-port box is used, the remaining 8
 		// ports leave gaps between existing channels. For that reason,
-		// expandable products must report a MAP of available channels. Since 
+		// expandable products must report a MAP of available channels. Since
 		// each UART supports four ports, we represent each UART found by a
 		// single bit. Using two bytes to supply the mapping information we
 		// report the presence or absence of up to 16 UARTS, or 64 ports in
@@ -407,7 +406,7 @@ typedef union _porStr		// "por" stands for Power On Reset
 		// -II:   Number of ports (Derived actually from product ID). See
 		// Diag1&2 to indicate if uart was actually detected.
 		// -IIEX: Bit-map of UARTS found, LSB (see below for MSB of this). This
-		//        bitmap is based on detecting the uarts themselves; 
+		//        bitmap is based on detecting the uarts themselves;
 		//        see porFlags for information from the box i.d's.
 		unsigned char  porPorts1;
 
@@ -485,7 +484,7 @@ typedef union _porStr		// "por" stands for Power On Reset
 
 // IntelliPort-IIEX only: DIP switch #8 is on, selecting 16-bit host interface
 // operation.
-// 
+//
 #define POR_BUS_DIP16   0x10
 
 // Bits 0-2 indicate type of bus: This information is stored in the bootstrap
@@ -559,7 +558,7 @@ Loadware may be sent to the board in two ways:
 
 2) It may be hard-coded into your source by including a .h file (typically
 	supplied by Computone), which declares a data array and initializes every
-	element. This achieves the same result as if an entire loadware file had 
+	element. This achieves the same result as if an entire loadware file had
 	been read into the array.
 
 	This requires more data space in your program, but access to the file system
@@ -572,7 +571,6 @@ All Loadware begins with a header area which has a particular format. This
 includes a magic number which identifies the file as being (purportedly)
 loadware, CRC (for the loader), and version information.
 */
-
 
 //-----------------------------------------------------------------------------
 // Format of loadware block
@@ -649,4 +647,3 @@ typedef union _loadHdrStr
 #define I2_INSB(port, addr, count)	insb((port), (addr), (((count)+1))&-2)
 
 #endif   // I2HW_H
-

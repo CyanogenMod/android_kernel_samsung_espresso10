@@ -62,7 +62,6 @@ static irqreturn_t rpcmouse_irq(int irq, void *dev_id)
 	return IRQ_HANDLED;
 }
 
-
 static int __init rpcmouse_init(void)
 {
 	int err;

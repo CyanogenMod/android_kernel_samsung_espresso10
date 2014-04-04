@@ -52,12 +52,10 @@ extern void klist_remove(struct klist_node *n);
 
 extern int klist_node_attached(struct klist_node *n);
 
-
 struct klist_iter {
 	struct klist		*i_klist;
 	struct klist_node	*i_cur;
 };
-
 
 extern void klist_iter_init(struct klist *k, struct klist_iter *i);
 extern void klist_iter_init_node(struct klist *k, struct klist_iter *i,

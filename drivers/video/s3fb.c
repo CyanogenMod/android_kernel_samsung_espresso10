@@ -47,7 +47,6 @@ struct s3fb_info {
 #endif
 };
 
-
 /* ------------------------------------------------------------------------- */
 
 static const struct svga_fb_format s3fb_formats[] = {
@@ -69,7 +68,6 @@ static const struct svga_fb_format s3fb_formats[] = {
 		FB_TYPE_PACKED_PIXELS, 0,		FB_VISUAL_TRUECOLOR, 1, 2},
 	SVGA_FORMAT_END
 };
-
 
 static const struct svga_pll s3_pll = {3, 129, 3, 33, 0, 3,
 	35000, 240000, 14318};
@@ -146,11 +144,9 @@ static const struct svga_timing_regs s3_timing_regs     = {
 	s3_v_blank_end_regs, s3_v_sync_start_regs, s3_v_sync_end_regs,
 };
 
-
 /* ------------------------------------------------------------------------- */
 
 /* Module parameters */
-
 
 static char *mode_option __devinitdata;
 
@@ -159,7 +155,6 @@ static int mtrr __devinitdata = 1;
 #endif
 
 static int fasttext = 1;
-
 
 MODULE_AUTHOR("(c) 2006-2007 Ondrej Zajicek <santiago@crfreenet.org>");
 MODULE_LICENSE("GPL");
@@ -177,7 +172,6 @@ MODULE_PARM_DESC(mtrr, "Enable write-combining with MTRR (1=enable, 0=disable, d
 
 module_param(fasttext, int, 0644);
 MODULE_PARM_DESC(fasttext, "Enable S3 fast text mode (1=enable, 0=disable, default=1)");
-
 
 /* ------------------------------------------------------------------------- */
 
@@ -291,7 +285,6 @@ static int __devinit s3fb_setup_ddc_bus(struct fb_info *info)
 }
 #endif /* CONFIG_FB_S3_DDC */
 
-
 /* ------------------------------------------------------------------------- */
 
 /* Set font in S3 fast text mode */
@@ -342,7 +335,6 @@ static struct fb_tile_ops s3fb_fast_tile_ops = {
 	.fb_tilecursor  = s3fb_tilecursor,
 	.fb_get_tilemax = svga_get_tilemax,
 };
-
 
 /* ------------------------------------------------------------------------- */
 
@@ -401,7 +393,6 @@ static void s3fb_iplan_fillrect(struct fb_info *info, const struct fb_fillrect *
 	}
 }
 
-
 /* image data is MSB-first, fb structure is high-nibble-in-low-byte-first */
 static inline u32 expand_pixel(u32 c)
 {
@@ -459,10 +450,7 @@ static void s3fb_fillrect(struct fb_info *info, const struct fb_fillrect *rect)
 		cfb_fillrect(info, rect);
 }
 
-
-
 /* ------------------------------------------------------------------------- */
-
 
 static void s3_set_pixclock(struct fb_info *info, u32 pixclock)
 {
@@ -502,7 +490,6 @@ static void s3_set_pixclock(struct fb_info *info, u32 pixclock)
 	vga_wseq(par->state.vgabase, 0x15, regval |  (1<<5));
 	vga_wseq(par->state.vgabase, 0x15, regval & ~(1<<5));
 }
-
 
 /* Open framebuffer */
 
@@ -680,7 +667,6 @@ static int s3fb_set_par(struct fb_info *info)
 
 /*	svga_wcrt_mask(par->state.vgabase, 0x53, 0x12, 0x13); */ /* enable MMIO */
 /*	svga_wcrt_mask(par->state.vgabase, 0x40, 0x08, 0x08); */ /* enable write buffer */
-
 
 	/* Set the offset register */
 	pr_debug("fb%d: offset register       : %d\n", info->node, offset_value);
@@ -972,7 +958,6 @@ static int s3fb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
 	return 0;
 }
 
-
 /* Set the display blanking state */
 
 static int s3fb_blank(int blank_mode, struct fb_info *info)
@@ -1009,7 +994,6 @@ static int s3fb_blank(int blank_mode, struct fb_info *info)
 
 	return 0;
 }
-
 
 /* Pan the display */
 
@@ -1108,7 +1092,6 @@ static int __devinit s3_identification(struct s3fb_info *par)
 	return CHIP_UNKNOWN;
 }
 
-
 /* PCI probe */
 
 static int __devinit s3_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
@@ -1152,7 +1135,6 @@ static int __devinit s3_pci_probe(struct pci_dev *dev, const struct pci_device_i
 		dev_err(info->device, "cannot reserve framebuffer region\n");
 		goto err_request_regions;
 	}
-
 
 	info->fix.smem_start = pci_resource_start(dev, 0);
 	info->fix.smem_len = pci_resource_len(dev, 0);
@@ -1363,7 +1345,6 @@ err_enable_device:
 	return rc;
 }
 
-
 /* PCI remove */
 
 static void __devexit s3_pci_remove(struct pci_dev *dev)
@@ -1429,7 +1410,6 @@ static int s3_pci_suspend(struct pci_dev* dev, pm_message_t state)
 	return 0;
 }
 
-
 /* PCI resume */
 
 static int s3_pci_resume(struct pci_dev* dev)
@@ -1469,7 +1449,6 @@ static int s3_pci_resume(struct pci_dev* dev)
 	return 0;
 }
 
-
 /* List of boards that we are trying to support */
 
 static struct pci_device_id s3_devices[] __devinitdata = {
@@ -1491,7 +1470,6 @@ static struct pci_device_id s3_devices[] __devinitdata = {
 
 	{0, 0, 0, 0, 0, 0, 0}
 };
-
 
 MODULE_DEVICE_TABLE(pci, s3_devices);
 

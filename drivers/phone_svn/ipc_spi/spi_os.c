@@ -27,7 +27,6 @@
 #include "spi_main.h"
 #include "spi_os.h"
 
-
 /**************************************************************
 	Preprocessor by platform
 	(Android)
@@ -63,7 +62,6 @@ void *spi_os_malloc(unsigned int length)
 	return kmalloc(length, GFP_ATOMIC);
 }
 
-
 /*====================================
 Prototype		void * spi_os_vmalloc ( unsigned int length )
 
@@ -84,7 +82,6 @@ void *spi_os_vmalloc(unsigned int length)
 	}
 	return vmalloc(length);
 }
-
 
 /**********************************************************
 Prototype		int spi_os_free ( void * addr )
@@ -109,7 +106,6 @@ int spi_os_free(void *addr)
 	return 1;
 }
 
-
 /**********************************************************
 Prototype		int spi_os_vfree ( void * addr )
 
@@ -133,7 +129,6 @@ int spi_os_vfree(void *addr)
 
 	return 1;
 }
-
 
 /**********************************************************
 Prototype	int spi_os_memcpy ( void * dest, void * src, unsigned int length )
@@ -161,7 +156,6 @@ int spi_os_memcpy(void *dest, void *src, unsigned int length)
 	return 1;
 }
 
-
 /**********************************************************
 Prototype	void * spi_os_memset ( void * addr, int value, unsigned int length )
 
@@ -185,7 +179,6 @@ void *spi_os_memset(void *addr, int value, unsigned int length)
 	return memset(addr, value, length);
 }
 
-
 /**********************************************************
 Prototype		void spi_os_sleep ( unsigned long msec )
 
@@ -208,7 +201,6 @@ void spi_os_sleep(unsigned long msec)
 		msleep(msec);
 }
 
-
 /**********************************************************
 Prototype		void spi_os_loop_delay ( unsigned long cnt )
 
@@ -228,7 +220,6 @@ void spi_os_loop_delay(unsigned long cnt)
 		;
 }
 
-
 /**********************************************************
 Prototype		unsigned long spi_os_get_tick (void)
 
@@ -245,7 +236,6 @@ unsigned long spi_os_get_tick(void)
 {
 	return jiffies_to_msecs(jiffies);
 }
-
 
 /**********************************************************
 Prototype		void spi_os_trace_dump (char * name, void * data, int length)

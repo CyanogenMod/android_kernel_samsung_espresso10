@@ -631,4 +631,3 @@ u32 rtl8192seagctab_array[AGCTAB_ARRAYLENGTH] = {
 	0xc78, 0x721e001e,
 	0xc78, 0x721f001e,
 };
-

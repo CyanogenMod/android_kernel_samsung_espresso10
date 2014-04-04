@@ -206,7 +206,6 @@ static void rds_iw_ic_info(struct socket *sock, unsigned int len,
 				sizeof(struct rds_info_rdma_connection));
 }
 
-
 /*
  * Early RDS/IB was built to only bind to an address if there is an IPoIB
  * device with that address set.
@@ -324,4 +323,3 @@ out:
 }
 
 MODULE_LICENSE("GPL");
-

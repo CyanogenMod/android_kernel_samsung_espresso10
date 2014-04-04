@@ -38,7 +38,6 @@ struct _ddebug {
 	char enabled;
 } __attribute__((aligned(8)));
 
-
 int ddebug_add_module(struct _ddebug *tab, unsigned int n,
 				const char *modname);
 
@@ -56,7 +55,6 @@ extern int __dynamic_pr_debug(struct _ddebug *descriptor, const char *fmt, ...)
 	if (unlikely(descriptor.enabled))				\
 		__dynamic_pr_debug(&descriptor, pr_fmt(fmt), ##__VA_ARGS__); \
 	} while (0)
-
 
 #define dynamic_dev_dbg(dev, fmt, ...) do {				\
 	static struct _ddebug descriptor				\

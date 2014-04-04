@@ -118,14 +118,12 @@ static struct cdev *vme_user_cdev;		/* Character device */
 static struct class *vme_user_sysfs_class;	/* Sysfs class */
 static struct device *vme_user_bridge;		/* Pointer to bridge device */
 
-
 static const int type[VME_DEVS] = {	MASTER_MINOR,	MASTER_MINOR,
 					MASTER_MINOR,	MASTER_MINOR,
 					SLAVE_MINOR,	SLAVE_MINOR,
 					SLAVE_MINOR,	SLAVE_MINOR,
 					CONTROL_MINOR
 				};
-
 
 static int vme_user_open(struct inode *, struct file *);
 static int vme_user_release(struct inode *, struct file *);
@@ -146,7 +144,6 @@ static struct file_operations vme_user_fops = {
 	.llseek = vme_user_llseek,
 	.unlocked_ioctl = vme_user_unlocked_ioctl,
 };
-
 
 /*
  * Reset all the statistic counters
@@ -567,7 +564,6 @@ vme_user_unlocked_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	return ret;
 }
 
-
 /*
  * Unallocate a previously allocated buffer
  */
@@ -599,7 +595,6 @@ static struct vme_driver vme_user_driver = {
 	.remove = __devexit_p(vme_user_remove),
 };
 
-
 static int __init vme_user_init(void)
 {
 	int retval = 0;
@@ -623,7 +618,6 @@ static int __init vme_user_init(void)
 			driver_name, USER_BUS_MAX);
 		bus_num = USER_BUS_MAX;
 	}
-
 
 	/* Dynamically create the bind table based on module parameters */
 	ids = kmalloc(sizeof(struct vme_device_id) * (bus_num + 1), GFP_KERNEL);
@@ -878,7 +872,6 @@ static void __exit vme_user_exit(void)
 
 	kfree(vme_user_driver.bind_table);
 }
-
 
 MODULE_PARM_DESC(bus, "Enumeration of VMEbus to which the driver is connected");
 module_param_array(bus, int, &bus_num, 0);

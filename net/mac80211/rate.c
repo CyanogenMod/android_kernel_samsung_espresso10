@@ -412,4 +412,3 @@ void rate_control_deinitialize(struct ieee80211_local *local)
 	local->rate_ctrl = NULL;
 	rate_control_put(ref);
 }
-

@@ -2,7 +2,7 @@
  * scsicam.c - SCSI CAM support functions, use for HDIO_GETGEO, etc.
  *
  * Copyright 1993, 1994 Drew Eckhardt
- *      Visionary Computing 
+ *      Visionary Computing
  *      (Unix and Linux consulting and custom programming)
  *      drew@Colorado.EDU
  *      +1 (303) 786-7975
@@ -20,7 +20,6 @@
 #include <asm/unaligned.h>
 
 #include <scsi/scsicam.h>
-
 
 static int setsize(unsigned long capacity, unsigned int *cyls, unsigned int *hds,
 		   unsigned int *secs);
@@ -118,7 +117,7 @@ EXPORT_SYMBOL(scsicam_bios_param);
  * @secs: put sectors here
  *
  * Description: determine the BIOS mapping/geometry used to create the partition
- *      table, storing the results in *cyls, *hds, and *secs 
+ *      table, storing the results in *cyls, *hds, and *secs
  *
  * Returns: -1 on failure, 0 on success.
  */
@@ -130,7 +129,6 @@ int scsi_partsize(unsigned char *buf, unsigned long capacity,
 	int i, largest_cyl;
 	int cyl, ext_cyl, end_head, end_cyl, end_sector;
 	unsigned int logical_end, physical_end, ext_physical_end;
-
 
 	if (*(unsigned short *) (buf + 64) == 0xAA55) {
 		for (largest_cyl = -1, i = 0; i < 4; ++i, ++p) {
@@ -215,7 +213,7 @@ EXPORT_SYMBOL(scsi_partsize);
  * Information technology -
  * SCSI-2 Common access method
  * transport and SCSI interface module
- * 
+ *
  * ANNEX A :
  *
  * setsize() converts a read capacity value to int 13h
@@ -225,7 +223,7 @@ EXPORT_SYMBOL(scsi_partsize);
  * will not fit in 4 bits (or 6 bits). This algorithm also
  * minimizes the number of sectors that will be unused at the end
  * of the disk while allowing for very large disks to be
- * accommodated. This algorithm does not use physical geometry. 
+ * accommodated. This algorithm does not use physical geometry.
  */
 
 static int setsize(unsigned long capacity, unsigned int *cyls, unsigned int *hds,

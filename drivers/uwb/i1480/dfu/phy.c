@@ -32,7 +32,6 @@
 #include <linux/usb/wusb.h>
 #include "i1480-dfu.h"
 
-
 /**
  * Write a value array to an address of the MPI interface
  *
@@ -74,7 +73,6 @@ int i1480_mpi_write(struct i1480 *i1480, const void *data, size_t size)
 out:
 	return result;
 }
-
 
 /**
  * Read a value array to from an address of the MPI interface
@@ -143,7 +141,6 @@ int i1480_mpi_read(struct i1480 *i1480, u8 *data, u16 srcaddr, size_t size)
 out:
 	return result;
 }
-
 
 /**
  * Upload a PHY firmware, wait for it to start

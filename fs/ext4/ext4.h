@@ -288,9 +288,9 @@ struct ext4_group_desc
  */
 
 struct flex_groups {
-	atomic_t free_inodes;
-	atomic_t free_blocks;
-	atomic_t used_dirs;
+	atomic64_t	free_blocks;
+	atomic_t	free_inodes;
+	atomic_t	used_dirs;
 };
 
 #define EXT4_BG_INODE_UNINIT	0x0001 /* Inode table/bitmap not in use */
@@ -1561,7 +1561,6 @@ struct dx_hash_info
  */
 #define HASH_NB_ALWAYS		1
 
-
 /*
  * Describe an inode's exact location on disk and in memory
  */
@@ -1713,7 +1712,7 @@ struct mmpd_data {
 # define NORET_AND	noreturn,
 
 /* bitmap.c */
-extern unsigned int ext4_count_free(struct buffer_head *, unsigned);
+extern unsigned int ext4_count_free(char *bitmap, unsigned numchars);
 
 /* balloc.c */
 extern unsigned int ext4_block_group(struct super_block *sb,
@@ -1931,13 +1930,6 @@ extern __le16 ext4_group_desc_csum(struct ext4_sb_info *sbi, __u32 group,
 				   struct ext4_group_desc *gdp);
 extern int ext4_group_desc_csum_verify(struct ext4_sb_info *sbi, __u32 group,
 				       struct ext4_group_desc *gdp);
-/* for debugging, sangwoo2.lee */
-extern void print_bh(struct super_block *sb,
-		     struct buffer_head *bh, int start, int len);
-extern void print_block_data(struct super_block *sb, sector_t blocknr,
-			     unsigned char *data_to_dump, int start, int len);
-/* for debugging */
-
 
 static inline ext4_fsblk_t ext4_blocks_count(struct ext4_super_block *es)
 {

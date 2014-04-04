@@ -69,7 +69,6 @@ struct iovm_struct {
 
 #define IOVMF_DA_FIXED		(1 << (4 + IOVMF_SW_SHIFT))
 
-
 extern struct iovm_struct *find_iovm_area(struct iommu *obj, u32 da);
 extern u32 iommu_vmap(struct iommu *obj, u32 da,
 			const struct sg_table *sgt, u32 flags);

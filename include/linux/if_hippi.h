@@ -18,7 +18,7 @@
  *		as published by the Free Software Foundation; either version
  *		2 of the License, or (at your option) any later version.
  */
- 
+
 #ifndef _LINUX_IF_HIPPI_H
 #define _LINUX_IF_HIPPI_H
 
@@ -42,15 +42,14 @@
 #define HIPPI_EXTENDED_SAP	0xAA
 #define HIPPI_UI_CMD		0x03
 
-
 /*
  *	Do we need to list some sort of ID's here?
  */
 
 /*
- *	HIPPI statistics collection data. 
+ *	HIPPI statistics collection data.
  */
- 
+
 struct hipnet_statistics {
 	int	rx_packets;		/* total packets received	*/
 	int	tx_packets;		/* total packets transmitted	*/
@@ -74,7 +73,6 @@ struct hipnet_statistics {
 	int	tx_heartbeat_errors;
 	int	tx_window_errors;
 };
-
 
 struct hippi_fp_hdr {
 #if 0

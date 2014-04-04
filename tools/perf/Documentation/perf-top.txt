@@ -14,7 +14,6 @@ DESCRIPTION
 -----------
 This command generates and displays a performance counter profile in real time.
 
-
 OPTIONS
 -------
 -a::
@@ -140,7 +139,6 @@ INTERACTIVE PROMPTING KEYS
 	Quit.
 
 Pressing any unmapped key displays a menu, and prompts for input.
-
 
 SEE ALSO
 --------

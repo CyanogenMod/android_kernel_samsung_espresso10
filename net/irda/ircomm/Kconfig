@@ -9,4 +9,3 @@ config IRCOMM
 	  use all existing applications that understands TTY's with an
 	  infrared link.  Thus you should be able to use application like PPP,
 	  minicom and others.
-

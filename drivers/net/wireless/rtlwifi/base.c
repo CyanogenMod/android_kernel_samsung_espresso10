@@ -235,7 +235,6 @@ static void _rtl_init_mac80211(struct ieee80211_hw *hw)
 	struct rtl_efuse *rtlefuse = rtl_efuse(rtl_priv(hw));
 	struct ieee80211_supported_band *sband;
 
-
 	if (rtlhal->macphymode == SINGLEMAC_SINGLEPHY && rtlhal->bandset ==
 	    BAND_ON_BOTH) {
 		/* 1: 2.4 G bands */
@@ -790,7 +789,6 @@ u8 rtl_is_special_data(struct ieee80211_hw *hw, struct sk_buff *skb, u8 is_tx)
 
 	if (!ieee80211_is_data(fc))
 		return false;
-
 
 	ip = (struct iphdr *)((u8 *) skb->data + mac_hdr_len +
 			      SNAP_SIZE + PROTOC_TYPE_SIZE);

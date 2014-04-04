@@ -53,7 +53,6 @@
  */
 #define INPUT1		(1<<11)
 
-
 /* LCD firmwares exist only for MTS STD/MN (PAL or NTSC/M)
 	and for non-MTS STD/MN (PAL, NTSC/M or NTSC/Kr)
 	There are variants both with and without NOGD
@@ -94,7 +93,6 @@
    The MTS firmwares support mono only
   */
 #define SCODE_TYPES (SCODE | MTS)
-
 
 /* Newer types not defined on videodev2.h.
    The original idea were to move all those types to videodev2.h, but

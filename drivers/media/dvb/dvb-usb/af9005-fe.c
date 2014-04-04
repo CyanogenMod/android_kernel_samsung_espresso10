@@ -1000,7 +1000,6 @@ static int af9005_fe_init(struct dvb_frontend *fe)
 	state->original_fcw =
 	    ((u32) temp2 << 16) + ((u32) temp1 << 8) + (u32) temp0;
 
-
 	/* save original TOPs */
 	deb_info("save original TOPs\n");
 

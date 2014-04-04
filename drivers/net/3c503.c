@@ -12,7 +12,6 @@
 	410 Severn Ave., Suite 210
 	Annapolis MD 21403
 
-
     This driver should work with the 3c503 and 3c503/16.  It should be used
     in shared memory mode for best performance, although it may also work
     in programmed-I/O mode.
@@ -36,7 +35,6 @@
 #define DRV_NAME	"3c503"
 #define DRV_VERSION	"1.10a"
 #define DRV_RELDATE	"11/17/2001"
-
 
 static const char version[] =
     DRV_NAME ".c:v" DRV_VERSION " " DRV_RELDATE "  Donald Becker (becker@scyld.com)\n";
@@ -80,7 +78,6 @@ static void el2_block_input(struct net_device *dev, int count, struct sk_buff *s
 static void el2_get_8390_hdr(struct net_device *dev, struct e8390_pkt_hdr *hdr,
 			 int ring_page);
 static const struct ethtool_ops netdev_ethtool_ops;
-
 
 /* This routine probes for a memory-mapped 3c503 board by looking for
    the "location register" at the end of the jumpered boot PROM space.
@@ -617,7 +614,6 @@ el2_get_8390_hdr(struct net_device *dev, struct e8390_pkt_hdr *hdr, int ring_pag
     outb_p(ei_status.interface_num == 0 ? ECNTRL_THIN : ECNTRL_AUI, E33G_CNTRL);
 }
 
-
 static void
 el2_block_input(struct net_device *dev, int count, struct sk_buff *skb, int ring_offset)
 {
@@ -690,7 +686,6 @@ el2_block_input(struct net_device *dev, int count, struct sk_buff *skb, int ring
     blocked:;
     outb_p(ei_status.interface_num == 0 ? ECNTRL_THIN : ECNTRL_AUI, E33G_CNTRL);
 }
-
 
 static void netdev_get_drvinfo(struct net_device *dev,
 			       struct ethtool_drvinfo *info)

@@ -1,4 +1,3 @@
-
 #include <linux/kernel.h>
 #include <linux/fs.h>
 #include <linux/minix_fs.h>
@@ -13,7 +12,6 @@
 #include "../fs/squashfs/squashfs_fs.h"
 
 #include <linux/decompress/generic.h>
-
 
 int __initdata rd_prompt = 1;/* 1 = prompt for RAM disk, 0 = don't prompt */
 

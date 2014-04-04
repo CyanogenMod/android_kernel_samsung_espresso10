@@ -121,7 +121,6 @@ struct yld_ctl_packet {
 
 #endif /* INPUT_YEALINK_H */
 
-
 #if defined(_SEG) && defined(_PIC)
 /* This table maps the LCD segments onto individual bit positions in the
  * yld_status struct.

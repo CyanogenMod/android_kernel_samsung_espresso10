@@ -339,7 +339,6 @@ static void ssm2602_shutdown(struct snd_pcm_substream *substream,
 	ssm2602->slave_substream = NULL;
 }
 
-
 static int ssm2602_mute(struct snd_soc_dai *dai, int mute)
 {
 	struct snd_soc_codec *codec = dai->codec;
@@ -698,7 +697,6 @@ static struct i2c_driver ssm2602_i2c_driver = {
 	.id_table = ssm2602_i2c_id,
 };
 #endif
-
 
 static int __init ssm2602_modinit(void)
 {

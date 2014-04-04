@@ -1097,14 +1097,12 @@ static s32 atl1_setup_ring_resources(struct atl1_adapter *adapter)
 	rfd_ring->desc = (u8 *) tpd_ring->desc + (tpd_ring->size + offset);
 	rfd_ring->size = sizeof(struct rx_free_desc) * rfd_ring->count;
 
-
 	/* init RRD ring */
 	rrd_ring->dma = rfd_ring->dma + rfd_ring->size;
 	offset = (rrd_ring->dma & 0x7) ? (8 - (rrd_ring->dma & 0x7)) : 0;
 	rrd_ring->dma += offset;
 	rrd_ring->desc = (u8 *) rfd_ring->desc + (rfd_ring->size + offset);
 	rrd_ring->size = sizeof(struct rx_return_desc) * rrd_ring->count;
-
 
 	/* init CMB */
 	adapter->cmb.dma = rrd_ring->dma + rrd_ring->size;
@@ -2526,7 +2524,6 @@ static irqreturn_t atl1_intr(int irq, void *data)
 	iowrite32(ISR_DIS_SMB | ISR_DIS_DMA, adapter->hw.hw_addr + REG_ISR);
 	return IRQ_HANDLED;
 }
-
 
 /*
  * atl1_phy_config - Timer Call-back

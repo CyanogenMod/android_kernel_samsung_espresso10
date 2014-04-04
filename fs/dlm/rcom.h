@@ -22,4 +22,3 @@ void dlm_receive_rcom(struct dlm_ls *ls, struct dlm_rcom *rc, int nodeid);
 int dlm_send_ls_not_ready(int nodeid, struct dlm_rcom *rc_in);
 
 #endif
-

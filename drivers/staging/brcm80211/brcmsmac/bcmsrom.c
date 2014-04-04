@@ -706,7 +706,6 @@ static int initvars_srom_pci(si_t *sih, void *curmap, char **vars, uint *count)
 	return err;
 }
 
-
 static int initvars_srom_si(si_t *sih, void *curmap, char **vars, uint *varsz)
 {
 	/* Search flash nvram section for srom variables */

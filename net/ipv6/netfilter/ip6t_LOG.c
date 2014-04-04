@@ -475,7 +475,6 @@ log_tg6(struct sk_buff *skb, const struct xt_action_param *par)
 	return XT_CONTINUE;
 }
 
-
 static int log_tg6_check(const struct xt_tgchk_param *par)
 {
 	const struct ip6t_log_info *loginfo = par->targinfo;

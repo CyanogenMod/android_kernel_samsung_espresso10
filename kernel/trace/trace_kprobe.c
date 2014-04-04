@@ -554,7 +554,6 @@ struct trace_probe {
 	(offsetof(struct trace_probe, args) +	\
 	(sizeof(struct probe_arg) * (n)))
 
-
 static __kprobes int probe_is_return(struct trace_probe *tp)
 {
 	return tp->rp.handler != NULL;
@@ -1157,7 +1156,6 @@ static void cleanup_all_probes(void)
 	}
 	mutex_unlock(&probe_lock);
 }
-
 
 /* Probes listing interfaces */
 static void *probes_seq_start(struct seq_file *m, loff_t *pos)
@@ -1866,7 +1864,6 @@ static __init int init_kprobe_trace(void)
 	return 0;
 }
 fs_initcall(init_kprobe_trace);
-
 
 #ifdef CONFIG_FTRACE_STARTUP_TEST
 

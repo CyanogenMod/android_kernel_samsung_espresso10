@@ -85,7 +85,6 @@ static inline unsigned pin_to_mask(unsigned pin)
 	return 1 << (pin % 32);
 }
 
-
 /*--------------------------------------------------------------------------*/
 
 /* Not all hardware capabilities are exposed through these calls; they
@@ -100,7 +99,6 @@ static inline unsigned pin_to_mask(unsigned pin)
  * For bootloaders doing all that setup, these calls could be inlined
  * as NOPs so Linux won't duplicate any setup code
  */
-
 
 /*
  * mux the pin to the "GPIO" peripheral role.
@@ -118,7 +116,6 @@ int __init_or_module at91_set_GPIO_periph(unsigned pin, int use_pullup)
 	return 0;
 }
 EXPORT_SYMBOL(at91_set_GPIO_periph);
-
 
 /*
  * mux the pin to the "A" internal peripheral role.
@@ -139,7 +136,6 @@ int __init_or_module at91_set_A_periph(unsigned pin, int use_pullup)
 }
 EXPORT_SYMBOL(at91_set_A_periph);
 
-
 /*
  * mux the pin to the "B" internal peripheral role.
  */
@@ -158,7 +154,6 @@ int __init_or_module at91_set_B_periph(unsigned pin, int use_pullup)
 	return 0;
 }
 EXPORT_SYMBOL(at91_set_B_periph);
-
 
 /*
  * mux the pin to the gpio controller (instead of "A" or "B" peripheral), and
@@ -180,7 +175,6 @@ int __init_or_module at91_set_gpio_input(unsigned pin, int use_pullup)
 }
 EXPORT_SYMBOL(at91_set_gpio_input);
 
-
 /*
  * mux the pin to the gpio controller (instead of "A" or "B" peripheral),
  * and configure it for an output.
@@ -201,7 +195,6 @@ int __init_or_module at91_set_gpio_output(unsigned pin, int value)
 	return 0;
 }
 EXPORT_SYMBOL(at91_set_gpio_output);
-
 
 /*
  * enable/disable the glitch filter; mostly used with IRQ handling.
@@ -249,7 +242,6 @@ int at91_set_gpio_value(unsigned pin, int value)
 	return 0;
 }
 EXPORT_SYMBOL(at91_set_gpio_value);
-
 
 /*
  * read the pin's value (works even if it's not muxed as a gpio).
@@ -331,7 +323,6 @@ void at91_gpio_resume(void)
 #else
 #define gpio_irq_set_wake	NULL
 #endif
-
 
 /* Several AIC controller irqs are dispatched through this GPIO handler.
  * To use any AT91_PIN_* as an externally triggered IRQ, first call

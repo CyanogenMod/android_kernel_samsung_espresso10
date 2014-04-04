@@ -173,7 +173,6 @@ bad_name:
 	return n;
 }
 
-
 ssize_t wake_unlock_show(
 	struct kobject *kobj, struct kobj_attribute *attr, char *buf)
 {

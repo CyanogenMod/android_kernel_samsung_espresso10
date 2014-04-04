@@ -297,7 +297,6 @@ static int sd_start(struct gspca_dev *gspca_dev)
 	else
 		fps_val = 0x0f;
 
-
 	/* turn off IR-reset function */
 	write_register(gspca_dev, 0x105, 0x00);
 

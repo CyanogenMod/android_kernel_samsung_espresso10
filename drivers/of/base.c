@@ -921,4 +921,3 @@ out_unlock:
 	write_unlock_irqrestore(&devtree_lock, flags);
 }
 #endif /* defined(CONFIG_OF_DYNAMIC) */
-

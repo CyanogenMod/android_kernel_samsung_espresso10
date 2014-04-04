@@ -100,7 +100,6 @@ struct pvscsi_adapter {
 	struct pvscsi_ctx		*cmd_map;
 };
 
-
 /* Command line parameters */
 static int pvscsi_ring_pages     = PVSCSI_DEFAULT_NUM_PAGES_PER_RING;
 static int pvscsi_msg_ring_pages = PVSCSI_DEFAULT_NUM_PAGES_MSG_RING;

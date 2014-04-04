@@ -111,7 +111,6 @@ out:
 	return rt == NULL ? -EAGAIN : 0;
 }
 
-
 static int fib6_rule_match(struct fib_rule *rule, struct flowi *fl, int flags)
 {
 	struct fib6_rule *r = (struct fib6_rule *) rule;
@@ -266,7 +265,6 @@ static int __net_init fib6_rules_net_init(struct net *net)
 		return PTR_ERR(ops);
 	net->ipv6.fib6_rules_ops = ops;
 
-
 	err = fib_default_rule_add(net->ipv6.fib6_rules_ops, 0,
 				   RT6_TABLE_LOCAL, 0);
 	if (err)
@@ -299,7 +297,6 @@ int __init fib6_rules_init(void)
 {
 	return register_pernet_subsys(&fib6_rules_net_ops);
 }
-
 
 void fib6_rules_cleanup(void)
 {

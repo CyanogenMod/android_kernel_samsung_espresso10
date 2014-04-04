@@ -75,7 +75,6 @@ struct mma8450_private_data {
 	struct mma8450_config resume;
 };
 
-
 /* -------------------------------------------------------------------------- */
 
 static int mma8450_set_ths(void *mlsl_handle,

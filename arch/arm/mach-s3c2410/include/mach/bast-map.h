@@ -72,7 +72,6 @@
 #define BAST_PA_LCD_WDATA2    (0xB000000)
 #define BAST_VA_LCD_WDATA2    BAST_IOADDR(0x00E00000)
 
-
 /* 0xE0000000 contains the IO space that is split by speed and
  * wether the access is for 8 or 16bit IO... this ensures that
  * the correct access is made

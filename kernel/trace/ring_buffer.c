@@ -644,7 +644,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_normalize_time_stamp);
 #define RB_PAGE_HEAD		1UL
 #define RB_PAGE_UPDATE		2UL
 
-
 #define RB_FLAG_MASK		3UL
 
 /* PAGE_MOVED is not part of the mask */
@@ -2926,6 +2925,8 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
 	 * Splice the empty reader page into the list around the head.
 	 */
 	reader = rb_set_head_page(cpu_buffer);
+	if (!reader)
+		goto out;
 	cpu_buffer->reader_page->list.next = rb_list_head(reader->list.next);
 	cpu_buffer->reader_page->list.prev = reader->list.prev;
 
@@ -4010,7 +4011,6 @@ static const struct file_operations rb_simple_fops = {
 	.write		= rb_simple_write,
 	.llseek		= default_llseek,
 };
-
 
 static __init int rb_init_debugfs(void)
 {

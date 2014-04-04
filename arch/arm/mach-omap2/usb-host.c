@@ -8,8 +8,7 @@
  * Author: Vikram Pandita <vikram.pandita@ti.com>
  * Author: Keshava Munegowda <keshava_mgowda@ti.com>
  *
- * Generalization by:
- * Felipe Balbi <balbi@ti.com>
+ * Generalization by: Felipe Balbi <balbi@ti.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -46,14 +45,13 @@
 static struct usbhs_omap_platform_data		usbhs_data;
 static struct ehci_hcd_omap_platform_data	ehci_data;
 static struct ohci_hcd_omap_platform_data	ohci_data;
-static int usbhs_update_sar;
 
 static struct omap_device_pm_latency omap_uhhtll_latency[] = {
-	  {
+	{
 		.deactivate_func = omap_device_idle_hwmods,
 		.activate_func	 = omap_device_enable_hwmods,
 		.flags = OMAP_DEVICE_LATENCY_AUTO_ADJUST,
-	  },
+	},
 };
 
 static struct usbhs_wakeup {
@@ -181,8 +179,7 @@ static struct omap_device_pad port2_phy_pads[] __initdata = {
 		.name = "usbb2_ulpitll_dir.usbb2_ulpiphy_dir",
 		.flags  = OMAP_DEVICE_PAD_REMUX | OMAP_DEVICE_PAD_WAKEUP,
 		.enable = (OMAP_PIN_INPUT_PULLDOWN | OMAP_MUX_MODE4) & ~(OMAP_WAKEUP_EN),
-		.idle	= OMAP_PIN_INPUT_PULLDOWN | OMAP_WAKEUP_EN
-							| OMAP_MUX_MODE4,
+		.idle	= OMAP_PIN_INPUT_PULLDOWN | OMAP_WAKEUP_EN | OMAP_MUX_MODE4,
 	},
 	{
 		.name = "usbb2_ulpitll_nxt.usbb2_ulpiphy_nxt",
@@ -192,8 +189,7 @@ static struct omap_device_pad port2_phy_pads[] __initdata = {
 		.name = "usbb2_ulpitll_dat0.usbb2_ulpiphy_dat0",
 		.flags  = OMAP_DEVICE_PAD_REMUX | OMAP_DEVICE_PAD_WAKEUP,
 		.enable = (OMAP_PIN_INPUT_PULLDOWN | OMAP_MUX_MODE4) & ~(OMAP_WAKEUP_EN),
-		.idle	= OMAP_PIN_INPUT_PULLDOWN | OMAP_WAKEUP_EN
-							| OMAP_MUX_MODE4,
+		.idle	= OMAP_PIN_INPUT_PULLDOWN | OMAP_WAKEUP_EN | OMAP_MUX_MODE4,
 	},
 	{
 		.name = "usbb2_ulpitll_dat1.usbb2_ulpiphy_dat1",
@@ -454,10 +450,10 @@ static void setup_ehci_io_mux(const enum usbhs_omap_port_mode *port_mode)
 {
 	switch (port_mode[0]) {
 	case OMAP_EHCI_PORT_MODE_PHY:
-		omap_mux_init_signal("hsusb1_stp", OMAP_PIN_OUTPUT);
-		omap_mux_init_signal("hsusb1_clk", OMAP_PIN_OUTPUT);
-		omap_mux_init_signal("hsusb1_dir", OMAP_PIN_INPUT_PULLDOWN);
-		omap_mux_init_signal("hsusb1_nxt", OMAP_PIN_INPUT_PULLDOWN);
+		omap_mux_init_signal("hsusb1_stp",   OMAP_PIN_OUTPUT);
+		omap_mux_init_signal("hsusb1_clk",   OMAP_PIN_OUTPUT);
+		omap_mux_init_signal("hsusb1_dir",   OMAP_PIN_INPUT_PULLDOWN);
+		omap_mux_init_signal("hsusb1_nxt",   OMAP_PIN_INPUT_PULLDOWN);
 		omap_mux_init_signal("hsusb1_data0", OMAP_PIN_INPUT_PULLDOWN);
 		omap_mux_init_signal("hsusb1_data1", OMAP_PIN_INPUT_PULLDOWN);
 		omap_mux_init_signal("hsusb1_data2", OMAP_PIN_INPUT_PULLDOWN);
@@ -806,16 +802,6 @@ setup_4430ohci_io_mux(const enum usbhs_omap_port_mode *port_mode)
 	return omap_hwmod_mux_init(pads, pads_cnt);
 }
 
-int omap4430_usbhs_update_sar(void)
-{
-	if (usbhs_update_sar) {
-		usbhs_update_sar = 0;
-		return 1;
-	}
-
-	return 0;
-}
-
 void usbhs_wakeup()
 {
 	int workq = 0;
@@ -874,8 +860,6 @@ void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
 	}
 	ehci_data.phy_reset = pdata->phy_reset;
 	ohci_data.es2_compatibility = pdata->es2_compatibility;
-	ehci_data.usbhs_update_sar = &usbhs_update_sar;
-	ohci_data.usbhs_update_sar = &usbhs_update_sar;
 	usbhs_data.ehci_data = &ehci_data;
 	usbhs_data.ohci_data = &ohci_data;
 
@@ -940,14 +924,10 @@ void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
 
 #else
 
-void usbhs_wakeup()
-{
+void usbhs_wakeup() {
 }
 
-void __init usbhs_init(const struct usbhs_omap_board_data *pdata)
-{
+void __init usbhs_init(const struct usbhs_omap_board_data *pdata) {
 }
 
 #endif
-
-

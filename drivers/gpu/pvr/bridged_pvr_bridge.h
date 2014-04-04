@@ -1,26 +1,26 @@
 /**********************************************************************
  *
  * Copyright (C) Imagination Technologies Ltd. All rights reserved.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
  * version 2, as published by the Free Software Foundation.
- * 
- * This program is distributed in the hope it will be useful but, except 
- * as otherwise stated in writing, without any warranty; without even the 
- * implied warranty of merchantability or fitness for a particular purpose. 
+ *
+ * This program is distributed in the hope it will be useful but, except
+ * as otherwise stated in writing, without any warranty; without even the
+ * implied warranty of merchantability or fitness for a particular purpose.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
- * 
+ *
  * The full GNU General Public License is included in this distribution in
  * the file called "COPYING".
  *
  * Contact Information:
  * Imagination Technologies Ltd. <gpl-support@imgtec.com>
- * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK 
+ * Home Park Estate, Kings Langley, Herts, WD4 8LZ, UK
  *
  ******************************************************************************/
 
@@ -57,7 +57,7 @@ CopyFromUserWrapper(PVRSRV_PER_PROCESS_DATA *pProcData,
 					IMG_VOID *pvSrc,
 					IMG_UINT32 ui32Size);
 PVRSRV_ERROR
-CopyToUserWrapper(PVRSRV_PER_PROCESS_DATA *pProcData, 
+CopyToUserWrapper(PVRSRV_PER_PROCESS_DATA *pProcData,
 				  IMG_UINT32 ui32BridgeID,
 				  IMG_VOID *pvDest,
 				  IMG_VOID *pvSrc,
@@ -68,7 +68,6 @@ CopyToUserWrapper(PVRSRV_PER_PROCESS_DATA *pProcData,
 #define CopyToUserWrapper(pProcData, ui32BridgeID, pvDest, pvSrc, ui32Size) \
 	OSCopyToUser(pProcData, pvDest, pvSrc, ui32Size)
 #endif
-
 
 #define ASSIGN_AND_RETURN_ON_ERROR(error, src, res)		\
 	do							\
@@ -121,7 +120,6 @@ CommitHandleBatch(PVRSRV_PER_PROCESS_DATA *psPerProc)
 	return PVRSRVCommitHandleBatch(psPerProc->psHandleBase);
 }
 
-
 #define COMMIT_HANDLE_BATCH_OR_ERROR(error, psPerProc) 			\
 	ASSIGN_AND_EXIT_ON_ERROR(error, CommitHandleBatch(psPerProc))
 
@@ -138,11 +136,11 @@ ReleaseHandleBatch(PVRSRV_PER_PROCESS_DATA *psPerProc)
 		PVRSRVReleaseHandleBatch(psPerProc->psHandleBase);
 	}
 }
-#else	
+#else
 #define NEW_HANDLE_BATCH_OR_ERROR(error, psPerProc, ui32BatchSize)
 #define COMMIT_HANDLE_BATCH_OR_ERROR(error, psPerProc)
 #define ReleaseHandleBatch(psPerProc)
-#endif	
+#endif
 
 IMG_INT
 DummyBW(IMG_UINT32 ui32BridgeID,
@@ -157,13 +155,13 @@ typedef IMG_INT (*BridgeWrapperFunction)(IMG_UINT32 ui32BridgeID,
 
 typedef struct _PVRSRV_BRIDGE_DISPATCH_TABLE_ENTRY
 {
-	BridgeWrapperFunction pfFunction; 
+	BridgeWrapperFunction pfFunction;
 #if defined(DEBUG_BRIDGE_KM)
-	const IMG_CHAR *pszIOCName; 
-	const IMG_CHAR *pszFunctionName; 
-	IMG_UINT32 ui32CallCount; 
-	IMG_UINT32 ui32CopyFromUserTotalBytes; 
-	IMG_UINT32 ui32CopyToUserTotalBytes; 
+	const IMG_CHAR *pszIOCName;
+	const IMG_CHAR *pszFunctionName;
+	IMG_UINT32 ui32CallCount;
+	IMG_UINT32 ui32CopyFromUserTotalBytes;
+	IMG_UINT32 ui32CopyToUserTotalBytes;
 #endif
 }PVRSRV_BRIDGE_DISPATCH_TABLE_ENTRY;
 
@@ -193,8 +191,6 @@ _SetDispatchTableEntry(IMG_UINT32 ui32Index,
 					   BridgeWrapperFunction pfFunction,
 					   const IMG_CHAR *pszFunctionName);
 
-
- 
 #define SetDispatchTableEntry(ui32Index, pfFunction) \
 	_SetDispatchTableEntry(PVRSRV_GET_BRIDGE_ID(ui32Index), #ui32Index, (BridgeWrapperFunction)pfFunction, #pfFunction)
 
@@ -205,7 +201,6 @@ _SetDispatchTableEntry(IMG_UINT32 ui32Index,
 #else
 #define PVRSRV_BRIDGE_ASSERT_CMD(X, Y) PVR_UNREFERENCED_PARAMETER(X)
 #endif
-
 
 #if defined(DEBUG_BRIDGE_KM)
 typedef struct _PVRSRV_BRIDGE_GLOBAL_STATS
@@ -218,7 +213,6 @@ typedef struct _PVRSRV_BRIDGE_GLOBAL_STATS
 extern PVRSRV_BRIDGE_GLOBAL_STATS g_BridgeGlobalStats;
 #endif
 
-
 PVRSRV_ERROR CommonBridgeInit(IMG_VOID);
 
 IMG_INT BridgedDispatchKM(PVRSRV_PER_PROCESS_DATA * psPerProc,
@@ -228,5 +222,4 @@ IMG_INT BridgedDispatchKM(PVRSRV_PER_PROCESS_DATA * psPerProc,
 }
 #endif
 
-#endif 
-
+#endif

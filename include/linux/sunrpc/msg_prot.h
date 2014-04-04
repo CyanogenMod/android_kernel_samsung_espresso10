@@ -112,7 +112,6 @@ typedef __be32	rpc_fraghdr;
 #define RPC_CALLHDRSIZE		(6)
 #define RPC_REPHDRSIZE		(4)
 
-
 /*
  * Maximum RPC header size, including authentication,
  * as number of 32bit words (see RFCs 1831, 1832).

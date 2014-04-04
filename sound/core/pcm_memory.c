@@ -40,7 +40,6 @@ MODULE_PARM_DESC(maximum_substreams, "Maximum substreams with preallocated DMA m
 
 static const size_t snd_minimum_buffer = 16384;
 
-
 /*
  * try to allocate as the large pages as possible.
  * stores the resultant memory size in *res_size.
@@ -247,7 +246,6 @@ static int snd_pcm_lib_preallocate_pages1(struct snd_pcm_substream *substream,
 	preallocate_info_init(substream);
 	return 0;
 }
-
 
 /**
  * snd_pcm_lib_preallocate_pages - pre-allocation for the given DMA type

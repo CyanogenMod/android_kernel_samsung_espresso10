@@ -66,4 +66,3 @@ static inline void colibri_pxa3xx_init_nand(void) {}
 #define GPIO28_COLIBRI_PXA320_SD_DETECT	28
 
 #endif /* _COLIBRI_H_ */
-

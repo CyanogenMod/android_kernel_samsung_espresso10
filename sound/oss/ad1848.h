@@ -1,4 +1,3 @@
-
 #include <linux/interrupt.h>
 
 #define AD_F_CS4231     0x0001  /* Returned if a CS4232 (or compatible) detected */
@@ -9,7 +8,6 @@
 
 #define AD1848_REROUTE(oldctl, newctl) \
                 ad1848_control(AD1848_MIXER_REROUTE, ((oldctl)<<8)|(newctl))
-		
 
 int ad1848_init(char *name, struct resource *ports, int irq, int dma_playback,
 	int dma_capture, int share_dma, int *osp, struct module *owner);

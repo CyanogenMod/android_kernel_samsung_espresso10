@@ -286,7 +286,6 @@ static void vbi_buffer_release(struct videobuf_queue *vq,
 	struct cx231xx_buffer *buf =
 	    container_of(vb, struct cx231xx_buffer, vb);
 
-
 	free_buffer(vq, buf);
 }
 

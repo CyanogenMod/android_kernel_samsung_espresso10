@@ -33,7 +33,6 @@
 
 #include <linux/remoteproc.h>
 
-
 #define RPROC_USER_NAME		"rproc_user"
 #define RPROC_USER_DEVICES	1
 

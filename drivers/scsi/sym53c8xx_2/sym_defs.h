@@ -1,5 +1,5 @@
 /*
- * Device driver for the SYMBIOS/LSILOGIC 53C8XX and 53C1010 family 
+ * Device driver for the SYMBIOS/LSILOGIC 53C8XX and 53C1010 family
  * of PCI-SCSI IO processors.
  *
  * Copyright (C) 1999-2001  Gerard Roudier <groudier@free.fr>
@@ -7,7 +7,7 @@
  * This driver is derived from the Linux sym53c8xx driver.
  * Copyright (C) 1998-2000  Gerard Roudier
  *
- * The sym53c8xx driver is derived from the ncr53c8xx driver that had been 
+ * The sym53c8xx driver is derived from the ncr53c8xx driver that had been
  * a port of the FreeBSD ncr driver to Linux-1.2.13.
  *
  * The original ncr driver has been written for 386bsd and FreeBSD by
@@ -281,7 +281,6 @@ struct sym_reg {
 	#define   SCLK    0x80	/* Use the PCI clock as SCSI clock	*/
 	#define   DBLEN   0x08	/* clock doubler running		*/
 	#define   DBLSEL  0x04	/* clock doubler selected		*/
-  
 
 /*4e*/  u8	nc_stest2;
 	#define   ROF     0x40	/* reset scsi offset (after gross error!) */
@@ -371,7 +370,7 @@ struct sym_reg {
 /*e4*/	u32    nc_crcdata;	/* CRC data register                */
 /*e8*/	u32    nc_e8_;
 /*ec*/	u32    nc_ec_;
-/*f0*/	u16    nc_dfbc;		/* DMA FIFO byte count              */ 
+/*f0*/	u16    nc_dfbc;		/* DMA FIFO byte count              */
 };
 
 /*-----------------------------------------------------------
@@ -528,7 +527,6 @@ struct sym_tblsel {
 #define	SCR_ACK		0x00000040
 #define	SCR_ATN		0x00000008
 
-
 /*-----------------------------------------------------------
  *
  *	Memory to memory move
@@ -570,16 +568,16 @@ struct sym_tblsel {
  *
  *-----------------------------------------------------------
  *
- *	On 825A, 875, 895 and 896 chips the content 
+ *	On 825A, 875, 895 and 896 chips the content
  *	of SFBR register can be used as data (SCR_SFBR_DATA).
- *	The 896 has additionnal IO registers starting at 
- *	offset 0x80. Bit 7 of register offset is stored in 
+ *	The 896 has additionnal IO registers starting at
+ *	offset 0x80. Bit 7 of register offset is stored in
  *	bit 7 of the SCRIPTS instruction first DWORD.
  *
  *-----------------------------------------------------------
  */
 
-#define SCR_REG_OFS(ofs) ((((ofs) & 0x7f) << 16ul) + ((ofs) & 0x80)) 
+#define SCR_REG_OFS(ofs) ((((ofs) & 0x7f) << 16ul) + ((ofs) & 0x80))
 
 #define SCR_SFBR_REG(reg,op,data) \
         (0x68000000 | (SCR_REG_OFS(REG(reg))) | (op) | (((data)&0xff)<<8ul))
@@ -589,7 +587,6 @@ struct sym_tblsel {
 
 #define SCR_REG_REG(reg,op,data) \
         (0x78000000 | (SCR_REG_OFS(REG(reg))) | (op) | (((data)&0xff)<<8ul))
-
 
 #define      SCR_LOAD   0x00000000
 #define      SCR_SHL    0x01000000
@@ -668,7 +665,6 @@ struct sym_tblsel {
 #define SCR_STORE_REL(reg, n)	SCR_STORE_R(reg, SCR_NO_FLUSH2|SCR_DSA_REL2,n)
 #define SCR_STORE_ABS_F(reg, n)	SCR_STORE_R(reg, 0, n)
 #define SCR_STORE_REL_F(reg, n)	SCR_STORE_R(reg, SCR_DSA_REL2, n)
-
 
 /*-----------------------------------------------------------
  *

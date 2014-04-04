@@ -880,7 +880,6 @@ void iommu_kfree(struct iommu *obj, u32 da)
 }
 EXPORT_SYMBOL_GPL(iommu_kfree);
 
-
 static int __init iovmm_init(void)
 {
 	const unsigned long flags = SLAB_HWCACHE_ALIGN;

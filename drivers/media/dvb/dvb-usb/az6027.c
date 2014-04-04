@@ -253,8 +253,6 @@ static const struct stb0899_s1_reg az6027_stb0899_s1_init_3[] = {
 	{ 0xffff			, 0xff },
 };
 
-
-
 struct stb0899_config az6027_stb0899_config = {
 	.init_dev		= az6027_stb0899_s1_init_1,
 	.init_s2_demod		= stb0899_s2_init_2,
@@ -296,7 +294,6 @@ struct stb6100_config az6027_stb6100_config = {
 	.tuner_address	= 0xc0,
 	.refclock	= 27000000,
 };
-
 
 /* check for mutex FIXME */
 int az6027_usb_in_op(struct dvb_usb_device *d, u8 req, u16 value, u16 index, u8 *b, int blen)
@@ -711,7 +708,6 @@ static int az6027_ci_poll_slot_status(struct dvb_ca_en50221 *ca, int slot, int o
 	return ret;
 }
 
-
 static void az6027_ci_uninit(struct dvb_usb_device *d)
 {
 	struct az6027_device_state *state;
@@ -732,7 +728,6 @@ static void az6027_ci_uninit(struct dvb_usb_device *d)
 
 	memset(&state->ca, 0, sizeof(state->ca));
 }
-
 
 static int az6027_ci_init(struct dvb_usb_adapter *a)
 {
@@ -818,7 +813,6 @@ static int az6027_set_voltage(struct dvb_frontend *fe, fe_sec_voltage_t voltage)
 	}
 	return 0;
 }
-
 
 static int az6027_frontend_poweron(struct dvb_usb_adapter *adap)
 {
@@ -938,7 +932,6 @@ static void az6027_usb_disconnect(struct usb_interface *intf)
 	dvb_usb_device_exit(intf);
 }
 
-
 static int az6027_usb_probe(struct usb_interface *intf,
 			    const struct usb_device_id *id)
 {
@@ -1043,7 +1036,6 @@ static int az6027_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[], int n
 	return i;
 }
 
-
 static u32 az6027_i2c_func(struct i2c_adapter *adapter)
 {
 	return I2C_FUNC_I2C;
@@ -1081,7 +1073,6 @@ int az6027_identify_state(struct usb_device *udev,
 	deb_info("cold: %d\n", *cold);
 	return 0;
 }
-
 
 static struct usb_device_id az6027_usb_table[] = {
 	{ USB_DEVICE(USB_VID_AZUREWAVE, USB_PID_AZUREWAVE_AZ6027) },

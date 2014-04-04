@@ -99,5 +99,3 @@ phys_addr_t rpmsg_local_to_remote_pa(uint32_t core, phys_addr_t pa)
 }
 
 #endif
-
-

@@ -198,7 +198,6 @@ static int stv6110x_set_bandwidth(struct dvb_frontend *fe, u32 bandwidth)
 	else
 		STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL3], CTRL3_CF, ((halfbw / 1000000) - 5)); /* LPF */
 
-
 	STV6110x_SETFIELD(stv6110x->regs[STV6110x_CTRL3], CTRL3_RCCLK_OFF, 0x0); /* cal. clk activated */
 	STV6110x_SETFIELD(stv6110x->regs[STV6110x_STAT1], STAT1_CALRC_STRT, 0x1); /* LPF auto cal */
 
@@ -322,7 +321,6 @@ static int stv6110x_get_status(struct dvb_frontend *fe, u32 *status)
 
 	return 0;
 }
-
 
 static int stv6110x_release(struct dvb_frontend *fe)
 {

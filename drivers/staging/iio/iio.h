@@ -363,7 +363,6 @@ static inline void *iio_dev_get_devdata(struct iio_dev *d)
 	return d->dev_data;
 }
 
-
 /* Can we make this smaller? */
 #define IIO_ALIGN L1_CACHE_BYTES
 /**

@@ -376,7 +376,6 @@ int __devinit init_bttv_i2c(struct bttv *btv)
 	i2c_set_adapdata(&btv->c.i2c_adap, &btv->c.v4l2_dev);
 	btv->i2c_client.adapter = &btv->c.i2c_adap;
 
-
 	if (btv->use_i2c_hw) {
 		btv->i2c_rc = i2c_add_adapter(&btv->c.i2c_adap);
 	} else {

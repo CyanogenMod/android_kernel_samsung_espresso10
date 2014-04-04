@@ -154,7 +154,6 @@ static int wm899x_outpga_put_volsw_vu(struct snd_kcontrol *kcontrol,
 	.get = snd_soc_get_volsw, .put = wm899x_outpga_put_volsw_vu, \
 	.private_value = SOC_SINGLE_VALUE(reg, shift, max, invert) }
 
-
 static const char *wm8990_digital_sidetone[] =
 	{"None", "Left ADC", "Right ADC", "Reserved"};
 
@@ -939,7 +938,6 @@ static void pll_factors(struct _pll_div *pll_div, unsigned int target,
 {
 	u64 Kpart;
 	unsigned int K, Ndiv, Nmod;
-
 
 	Ndiv = target / source;
 	if (Ndiv < 6) {

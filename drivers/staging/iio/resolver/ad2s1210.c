@@ -234,7 +234,6 @@ static inline void soft_reset(struct ad2s1210_state *st)
 	config_write(st, 0x0);
 }
 
-
 /* return the OLD DATA since last spi bus write */
 static ssize_t ad2s1210_show_raw(struct device *dev,
 			struct device_attribute *attr, char *buf)

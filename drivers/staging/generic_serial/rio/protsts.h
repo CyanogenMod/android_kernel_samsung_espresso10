@@ -26,7 +26,6 @@
 
  Version : 0.01
 
-
                             Mods
  ----------------------------------------------------------------------------
   Date     By                Description
@@ -60,7 +59,6 @@
  ******************************************************/
 #define PHB_RX_TGL               ((ushort) 0x2000)
 
-
 /*************************************************
  * This bit is set by the LRT to indicate that
  * an ACK (packet) must be returned.
@@ -74,7 +72,6 @@
  *************************************************/
 #define PHB_TX_ACK_RQRD         ((ushort) 0x01)
 
-
 /*******************************************************
  * The Tx TOGGLE bit.
  * Stuffed into tx_status by RXPKT from the PKT WndW
@@ -82,7 +79,6 @@
  * is going to be sent.
  ******************************************************/
 #define PHB_TX_DATA_WNDW         ((ushort) 0x04)
-
 
 /*******************************************************
  * The Tx TOGGLE bit. Matches the setting in PKT.H
@@ -101,7 +97,6 @@
  * Link
  ******************************************************/
 #define PHB_TX_HANDSHAKE         ((ushort) 0x010)
-
 
 #define RUP_SEND_WNDW		 ((ushort) 0x08) ;
 

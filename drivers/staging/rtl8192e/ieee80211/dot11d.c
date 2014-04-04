@@ -121,7 +121,6 @@ Dot11d_UpdateCountryIe(
 	pDot11dInfo->State = DOT11D_STATE_LEARNED;
 }
 
-
 u8
 DOT11D_GetMaxTxPwrInDbm(
 	struct ieee80211_device *dev,
@@ -143,7 +142,6 @@ DOT11D_GetMaxTxPwrInDbm(
 
 	return MaxTxPwrInDbm;
 }
-
 
 void
 DOT11D_ScanComplete(

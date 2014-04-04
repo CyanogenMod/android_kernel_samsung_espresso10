@@ -683,4 +683,3 @@ typedef struct TAG_TW_Device_Extension {
 } TW_Device_Extension;
 
 #endif /* _3W_9XXX_H */
-

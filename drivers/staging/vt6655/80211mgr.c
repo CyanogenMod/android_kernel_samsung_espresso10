@@ -61,8 +61,6 @@
 
 /*---------------------  Static Definitions -------------------------*/
 
-
-
 /*---------------------  Static Classes  ----------------------------*/
 
 /*---------------------  Static Variables  --------------------------*/
@@ -71,13 +69,9 @@ static int          msglevel                =MSG_LEVEL_INFO;
 //static int          msglevel                =MSG_LEVEL_DEBUG;
 /*---------------------  Static Functions  --------------------------*/
 
-
-
 /*---------------------  Export Variables  --------------------------*/
 
-
 /*---------------------  Export Functions  --------------------------*/
-
 
 /*+
  *
@@ -119,7 +113,6 @@ vMgrEncodeBeacon(
  *    None.
  *
 -*/
-
 
 void
 vMgrDecodeBeacon(
@@ -229,7 +222,6 @@ vMgrDecodeBeacon(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -241,7 +233,6 @@ vMgrDecodeBeacon(
  *
 -*/
 
-
 void
 vMgrEncodeIBSSATIM(
     PWLAN_FR_IBSSATIM   pFrame
@@ -252,7 +243,6 @@ vMgrEncodeIBSSATIM(
 
     return;
 }
-
 
 /*+
  *
@@ -275,7 +265,6 @@ vMgrDecodeIBSSATIM(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -294,7 +283,6 @@ vMgrEncodeDisassociation(
 {
     pFrame->pHdr = (PUWLAN_80211HDR)pFrame->pBuf;
 
-
     // Fixed Fields
     pFrame->pwReason = (unsigned short *)(WLAN_HDR_A3_DATA_PTR(&(pFrame->pHdr->sA3))
                                + WLAN_DISASSOC_OFF_REASON);
@@ -302,7 +290,6 @@ vMgrEncodeDisassociation(
 
     return;
 }
-
 
 /*+
  *
@@ -340,7 +327,6 @@ vMgrDecodeDisassociation(
  *
 -*/
 
-
 void
 vMgrEncodeAssocRequest(
     PWLAN_FR_ASSOCREQ  pFrame
@@ -355,7 +341,6 @@ vMgrEncodeAssocRequest(
     pFrame->len = WLAN_HDR_ADDR3_LEN + WLAN_ASSOCREQ_OFF_LISTEN_INT + sizeof(*(pFrame->pwListenInterval));
     return;
 }
-
 
 /*+
  *
@@ -454,7 +439,6 @@ vMgrEncodeAssocResponse(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -501,7 +485,6 @@ vMgrDecodeAssocResponse(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -532,7 +515,6 @@ vMgrEncodeReassocRequest(
     return;
 }
 
-
 /*+
  *
  * Routine Description: (AP)
@@ -543,7 +525,6 @@ vMgrEncodeReassocRequest(
  *    None.
  *
 -*/
-
 
 void
 vMgrDecodeReassocRequest(
@@ -603,8 +584,6 @@ vMgrDecodeReassocRequest(
     return;
 }
 
-
-
 /*+
  *
  * Routine Description:
@@ -615,7 +594,6 @@ vMgrDecodeReassocRequest(
  *    None.
  *
 -*/
-
 
 void
 vMgrEncodeProbeRequest(
@@ -678,7 +656,6 @@ vMgrDecodeProbeRequest(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -689,7 +666,6 @@ vMgrDecodeProbeRequest(
  *    None.
  *
 -*/
-
 
 void
 vMgrEncodeProbeResponse(
@@ -712,8 +688,6 @@ vMgrEncodeProbeResponse(
     return;
 }
 
-
-
 /*+
  *
  * Routine Description:
@@ -731,7 +705,6 @@ vMgrDecodeProbeResponse(
     )
 {
     PWLAN_IE    pItem;
-
 
     pFrame->pHdr = (PUWLAN_80211HDR)pFrame->pBuf;
 
@@ -827,7 +800,6 @@ vMgrDecodeProbeResponse(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -857,7 +829,6 @@ vMgrEncodeAuthen(
 
     return;
 }
-
 
 /*+
  *
@@ -898,7 +869,6 @@ vMgrDecodeAuthen(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -925,7 +895,6 @@ vMgrEncodeDeauthen(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -950,7 +919,6 @@ vMgrDecodeDeauthen(
 
     return;
 }
-
 
 /*+
  *
@@ -983,7 +951,6 @@ vMgrEncodeReassocResponse(
     return;
 }
 
-
 /*+
  *
  * Routine Description:
@@ -994,7 +961,6 @@ vMgrEncodeReassocResponse(
  *    None.
  *
 -*/
-
 
 void
 vMgrDecodeReassocResponse(

@@ -74,7 +74,6 @@ static inline int range_included(unsigned long start1, unsigned long size1,
 	return start1 >= start2 && start1 + size1 <= start2 + size2;
 }
 
-
 /* Check if there is an overlapping region. */
 static int fbmem_region_reserved(unsigned long start, size_t size)
 {

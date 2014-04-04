@@ -7,14 +7,12 @@ typedef struct rdmbuffer
 	ULONG	Length;
 }__attribute__((packed)) RDM_BUFFER, *PRDM_BUFFER;
 
-
 typedef struct wrmbuffer
 {
 	ULONG	Register;
 	ULONG	Length;
 	UCHAR	Data[4];
 }__attribute__((packed)) WRM_BUFFER, *PWRM_BUFFER;
-
 
 typedef struct ioctlbuffer
 {
@@ -36,7 +34,6 @@ typedef struct stUserThreadReq
 	UINT ThreadState;
 }__attribute__((packed))USER_THREAD_REQ,*PUSER_THREAD_REQ;
 #define LED_THREAD_ACTIVATION_REQ  1
-
 
 ////********** ioctl codes ***********////
 
@@ -185,8 +182,6 @@ typedef struct stUserThreadReq
 #define IOCTL_BCM_GPIO_MULTI_REQUEST		_IOW(BCM_IOCTL, 0x82D, IOCTL_BUFFER)
 #define IOCTL_BCM_GPIO_MODE_REQUEST			_IOW(BCM_IOCTL, 0x82E, IOCTL_BUFFER)
 
-
-
 typedef enum _BCM_INTERFACE_TYPE
 {
         BCM_MII,
@@ -229,7 +224,6 @@ typedef struct bulkwrmbuffer
 	ULONG	Values[1];
 
 }BULKWRM_BUFFER,*PBULKWRM_BUFFER;
-
 
 /***********Structure used for FlashMap2.x *******************************/
 
@@ -294,7 +288,6 @@ typedef struct _FLASH2X_COPY_SECTION
 	B_UINT32 numOfBytes;
 } FLASH2X_COPY_SECTION, *PFLASH2X_COPY_SECTION;
 
-
 typedef enum _SECTION_TYPE
 {
 	ISO = 0,
@@ -355,6 +348,5 @@ typedef struct stGPIOMultiMode
   UINT uiGPIOMode;    /* 1 for OUT mode, 0 for IN mode*/
   UINT uiGPIOMask;    /* GPIO mask to set mode*/
 }__attribute__((packed))GPIO_MULTI_MODE, *PGPIO_MULTI_MODE;
-
 
 #endif

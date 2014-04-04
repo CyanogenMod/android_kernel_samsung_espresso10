@@ -44,7 +44,6 @@
 #include <asm/string.h>
 #include <asm/uaccess.h>
 
-
 #include "linux_compat.h"
 #include "rio_linux.h"
 #include "pkt.h"
@@ -218,7 +217,6 @@ int RIOBootCodeHOST(struct rio_info *p, struct DownLoad *rbp)
 
 	HostP = NULL;		/* Assure the compiler we've initialized it */
 
-
 	/* Walk the hosts */
 	for (host = 0; host < p->RIONumHosts; host++) {
 		rio_dprintk(RIO_DEBUG_BOOT, "Attempt to boot host %d\n", host);
@@ -357,7 +355,6 @@ int RIOBootCodeHOST(struct rio_info *p, struct DownLoad *rbp)
 		 ** The nfix nyble is the 1s complement of the nyble value you
 		 ** want to load - in this case we wanted 'F' so we nfix loaded '0'.
 		 */
-
 
 		/*
 		 ** Dest points to the top 8 bytes of Sram2. The Tp jumps
@@ -586,8 +583,6 @@ int RIOBootCodeHOST(struct rio_info *p, struct DownLoad *rbp)
 	func_exit();
 	return 0;
 }
-
-
 
 /**
  *	RIOBootRup		-	Boot an RTA
@@ -1044,7 +1039,6 @@ static int RIOBootComplete(struct rio_info *p, struct Host *HostP, unsigned int 
 		HostP->ExtraUnits[HostP->NumExtraBooted++] = RtaUniq;
 	return 1;
 }
-
 
 /*
 ** If the RTA or its host appears in the RIOBindTab[] structure then

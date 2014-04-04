@@ -135,7 +135,6 @@ static inline struct CHIPSTATE *to_state(struct v4l2_subdev *sd)
 	return container_of(sd, struct CHIPSTATE, sd);
 }
 
-
 /* ---------------------------------------------------------------------- */
 /* i2c I/O functions                                                      */
 
@@ -436,11 +435,9 @@ static int tda9840_checkit(struct CHIPSTATE *chip)
 /* lower 7 bits control gain from -71dB (0x28) to 16dB (0x7f)
  * in 1dB steps - mute is 0x27 */
 
-
 /* 0x02 - BA in TDA9855 */
 /* lower 5 bits control bass gain from -12dB (0x06) to 16.5dB (0x19)
  * in .5dB steps - 0 is 0x0E */
-
 
 /* 0x03 - TR in TDA9855 */
 /* 4 bits << 1 control treble gain from -12dB (0x3) to 12dB (0xb)
@@ -455,7 +452,6 @@ static int tda9840_checkit(struct CHIPSTATE *chip)
 /* Unique to TDA9850: */
 /* lower 4 bits control stereo noise threshold, over which stereo turns off
  * set to values of 0x00 through 0x0f for Ster1 through Ster16 */
-
 
 /* 0x05 - C5 - Control 1 in TDA9855 , Control 2 in TDA9850*/
 /* Unique to TDA9855: */
@@ -472,7 +468,6 @@ static int tda9840_checkit(struct CHIPSTATE *chip)
 /* Unique to TDA9850:  */
 /* lower 4 bits contol SAP noise threshold, over which SAP turns off
  * set to values of 0x00 through 0x0f for SAP1 through SAP16 */
-
 
 /* 0x06 - C6 - Control 2 in TDA9855, Control 3 in TDA9850 */
 /* Common to TDA9855 and TDA9850: */
@@ -545,7 +540,6 @@ static void tda985x_setmode(struct CHIPSTATE *chip, int mode)
 	if (update)
 		chip_write(chip,TDA985x_C6,c6);
 }
-
 
 /* ---------------------------------------------------------------------- */
 /* audio chip descriptions - defines+functions for tda9873h               */
@@ -625,7 +619,6 @@ static void tda985x_setmode(struct CHIPSTATE *chip, int mode)
  */
 #define TDA9873_IDR_NORM 0
 #define TDA9873_IDR_FAST 1 << 7
-
 
 /* Subaddress 0x02: Port data */
 
@@ -726,7 +719,6 @@ static int tda9873_checkit(struct CHIPSTATE *chip)
 	return (rc & ~0x1f) == 0x80;
 }
 
-
 /* ---------------------------------------------------------------------- */
 /* audio chip description - defines+functions for tda9874h and tda9874a   */
 /* Dariusz Kowalewski <darekk@automex.pl>                                 */
@@ -772,7 +764,6 @@ static int tda9873_checkit(struct CHIPSTATE *chip)
 #define TDA9874A_TR1		253	/* test reg. 1 */
 #define TDA9874A_DIC		254	/* device id. code */
 #define TDA9874A_SIC		255	/* software id. code */
-
 
 static int tda9874a_mode = 1;		/* 0: A2, 1: NICAM */
 static int tda9874a_GCONR = 0xc0;	/* default config. input pin: SIFSEL=0 */
@@ -1122,7 +1113,6 @@ static int tda9875_treble(int val) { return (unsigned char)(val / 2622 - 12); }
 
 /* ----------------------------------------------------------------------- */
 
-
 /* *********************** *
  * i2c interface functions *
  * *********************** */
@@ -1197,7 +1187,6 @@ static int tea6320_initialize(struct CHIPSTATE * chip)
 	return 0;
 }
 
-
 /* ---------------------------------------------------------------------- */
 /* audio chip descriptions - defines+functions for tda8425                */
 
@@ -1221,7 +1210,6 @@ static int tea6320_initialize(struct CHIPSTATE * chip)
 #define TDA8425_S1_ML_SOUND_B 0x04     /* sound b */
 #define TDA8425_S1_ML_STEREO  0x06     /* stereo */
 #define TDA8425_S1_IS      0x01        /* channel selector */
-
 
 static int tda8425_shift10(int val) { return (val >> 10) | 0xc0; }
 static int tda8425_shift12(int val) { return (val >> 12) | 0xf0; }
@@ -1248,7 +1236,6 @@ static void tda8425_setmode(struct CHIPSTATE *chip, int mode)
 	}
 	chip_write(chip,TDA8425_S1,s1);
 }
-
 
 /* ---------------------------------------------------------------------- */
 /* audio chip descriptions - defines+functions for pic16c54 (PV951)       */
@@ -1604,7 +1591,6 @@ static struct CHIPDESC chiplist[] = {
 	{ .name = NULL } /* EOF */
 };
 
-
 /* ---------------------------------------------------------------------- */
 
 static int tvaudio_g_ctrl(struct v4l2_subdev *sd,
@@ -1723,7 +1709,6 @@ static int tvaudio_s_ctrl(struct v4l2_subdev *sd,
 	}
 	return -EINVAL;
 }
-
 
 /* ---------------------------------------------------------------------- */
 /* video4linux interface                                                  */
@@ -1919,7 +1904,6 @@ static const struct v4l2_subdev_ops tvaudio_ops = {
 };
 
 /* ----------------------------------------------------------------------- */
-
 
 /* i2c registration                                                       */
 

@@ -40,7 +40,6 @@
 #include <linux/leds.h>
 #include <asm/dma-mapping.h>
 
-
 #define MSM_FB_C
 #include "msm_fb.h"
 #include "mddihosti.h"
@@ -52,7 +51,6 @@
 #define INIT_IMAGE_FILE "/logo.rle"
 extern int load_565rle_image(char *filename);
 #endif
-
 
 #define pgprot_noncached(prot) \
        __pgprot_modify(prot, L_PTE_MT_MASK, L_PTE_MT_UNCACHED)
@@ -1050,7 +1048,6 @@ static int msm_fb_register(struct msm_fb_data_type *mfd)
 						   (u32 *) &mfd->panel_info.
 						   frame_count);
 
-
 			switch (mfd->dest) {
 			case DISPLAY_LCD:
 				msm_fb_debugfs_file_create(sub_dir,
@@ -1613,7 +1610,6 @@ static void msm_fb_ensure_memory_coherency_before_dma(struct fb_info *info,
 #endif
 }
 
-
 /*
  * Do the write barriers required to guarantee data will be re-read from RAM by
  * the CPU after a DMA operation ends.
@@ -2003,7 +1999,6 @@ static void msmfb_set_color_conv(struct mdp_ccs *p)
 	}
 }
 #endif
-
 
 static int msm_fb_ioctl(struct fb_info *info, unsigned int cmd,
 			unsigned long arg)

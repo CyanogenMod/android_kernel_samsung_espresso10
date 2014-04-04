@@ -290,7 +290,6 @@ static int marxbot_isp1105_init(struct otg_transceiver *otg)
 	return 0;
 }
 
-
 static int marxbot_isp1105_set_vbus(struct otg_transceiver *otg, bool on)
 {
 	if (on)

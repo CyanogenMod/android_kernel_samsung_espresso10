@@ -1190,7 +1190,6 @@ static int check_for_left_cqes(struct ehca_qp *my_qp, struct ehca_shca *shca)
 		if (ret)
 			return ret;
 
-
 		spin_lock_irqsave(&my_qp->recv_cq->spinlock, flags);
 		ret = calc_left_cqes((u64)recv_wqe_p, &my_qp->ipz_rqueue,
 				&my_qp->rq_map);

@@ -234,7 +234,6 @@ static const struct tvp514x_std_info tvp514x_std_list[] = {
 	/* Standard: need to add for additional standard */
 };
 
-
 static inline struct tvp514x_decoder *to_decoder(struct v4l2_subdev *sd)
 {
 	return container_of(sd, struct tvp514x_decoder, sd);
@@ -244,7 +243,6 @@ static inline struct v4l2_subdev *to_sd(struct v4l2_ctrl *ctrl)
 {
 	return &container_of(ctrl->handler, struct tvp514x_decoder, hdl)->sd;
 }
-
 
 /**
  * tvp514x_read_reg() - Read a value from a register in an TVP5146/47.

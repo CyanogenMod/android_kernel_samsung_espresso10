@@ -137,7 +137,6 @@ static inline unsigned long fb_shifted_pixels_mask_long(struct fb_info *p,
 	return mask;
 }
 
-
 static inline u32 fb_compute_bswapmask(struct fb_info *info)
 {
 	u32 bswapmask = 0;

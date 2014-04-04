@@ -1,6 +1,6 @@
 /*
  * Linux ARCnet driver - COM20020 chipset support
- * 
+ *
  * Written 1997 by David Woodhouse.
  * Written 1994-1999 by Avery Pennarun.
  * Written 1999 by Martin Mares <mj@ucw.cz>.
@@ -69,7 +69,6 @@ static void com20020_copy_from_card(struct net_device *dev, int bufnum,
 	TIME("insb", count, insb(_MEMDATA, buf, count));
 }
 
-
 static void com20020_copy_to_card(struct net_device *dev, int bufnum,
 				  int offset, void *buf, int count)
 {
@@ -82,7 +81,6 @@ static void com20020_copy_to_card(struct net_device *dev, int bufnum,
 	/* copy the data */
 	TIME("outsb", count, outsb(_MEMDATA, buf, count));
 }
-
 
 /* Reset the card and check some basic stuff during the detection stage. */
 int com20020_check(struct net_device *dev)
@@ -107,7 +105,7 @@ int com20020_check(struct net_device *dev)
 	{
 		SET_SUBADR(SUB_SETUP2);
 		outb(lp->setup2, _XREG);
-	
+
 		/* must now write the magic "restart operation" command */
 		mdelay(1);
 		outb(0x18, _COMMAND);
@@ -187,7 +185,7 @@ int com20020_found(struct net_device *dev, int shared)
 	{
 		SET_SUBADR(SUB_SETUP2);
 		outb(lp->setup2, _XREG);
-	
+
 		/* must now write the magic "restart operation" command */
 		mdelay(1);
 		outb(0x18, _COMMAND);
@@ -217,7 +215,7 @@ int com20020_found(struct net_device *dev, int shared)
 		BUGMSG(D_NORMAL, "Using extended timeout value of %d.\n", lp->timeout);
 
 	BUGMSG(D_NORMAL, "Using CKP %d - data rate %s.\n",
-	       lp->setup >> 1, 
+	       lp->setup >> 1,
 	       clockrates[3 - ((lp->setup2 & 0xF0) >> 4) + ((lp->setup & 0x0F) >> 1)]);
 
 	if (register_netdev(dev)) {
@@ -227,10 +225,9 @@ int com20020_found(struct net_device *dev, int shared)
 	return 0;
 }
 
-
-/* 
+/*
  * Do a hardware reset on the card, and set up necessary registers.
- * 
+ *
  * This should be called as little as possible, because it disrupts the
  * token on the network (causes a RECON) and requires a significant delay.
  *
@@ -280,7 +277,6 @@ static int com20020_reset(struct net_device *dev, int really_reset)
 	return 0;
 }
 
-
 static void com20020_setmask(struct net_device *dev, int mask)
 {
 	u_int ioaddr = dev->base_addr;
@@ -288,13 +284,11 @@ static void com20020_setmask(struct net_device *dev, int mask)
 	AINTMASK(mask);
 }
 
-
 static void com20020_command(struct net_device *dev, int cmd)
 {
 	u_int ioaddr = dev->base_addr;
 	ACOMMAND(cmd);
 }
-
 
 static int com20020_status(struct net_device *dev)
 {

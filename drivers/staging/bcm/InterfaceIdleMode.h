@@ -11,4 +11,3 @@ INT InterfaceWakeUp(PMINI_ADAPTER Adapter);
 
 VOID InterfaceHandleShutdownModeWakeup(PMINI_ADAPTER Adapter);
 #endif
-

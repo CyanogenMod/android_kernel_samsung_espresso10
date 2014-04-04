@@ -102,4 +102,3 @@ struct omap_vc_channel omap4_vc_core = {
 	.auto_trans = &omap4_vc_auto_trans,
 	.auto_trans_mask = OMAP4430_AUTO_CTRL_VDD_CORE_L_MASK,
 };
-

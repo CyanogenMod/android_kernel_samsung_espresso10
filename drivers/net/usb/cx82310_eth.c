@@ -292,7 +292,6 @@ static struct sk_buff *cx82310_tx_fixup(struct usbnet *dev, struct sk_buff *skb,
 	return skb;
 }
 
-
 static const struct driver_info	cx82310_info = {
 	.description	= "Conexant CX82310 USB ethernet",
 	.flags		= FLAG_ETHER,

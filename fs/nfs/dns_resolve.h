@@ -6,7 +6,6 @@
 
 #define NFS_DNS_HOSTNAME_MAXLEN	(128)
 
-
 #ifdef CONFIG_NFS_USE_KERNEL_DNS
 static inline int nfs_dns_resolver_init(void)
 {

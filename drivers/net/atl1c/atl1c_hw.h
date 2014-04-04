@@ -109,7 +109,6 @@ int atl1c_phy_power_saving(struct atl1c_hw *hw);
 #define TWSI_CTRL_WRITE_FREQ_SEL_MASK   0x3
 #define TWSI_CTRL_WRITE_FREQ_SEL_SHIFT  24
 
-
 #define REG_PCIE_DEV_MISC_CTRL      	0x21C
 #define PCIE_DEV_MISC_EXT_PIPE     	0x2
 #define PCIE_DEV_MISC_RETRY_BUFDIS 	0x1
@@ -739,7 +738,6 @@ int atl1c_phy_power_saving(struct atl1c_hw *hw);
 #define L1D_MPW_PHYID1			0xD01C  /* V7 */
 #define L1D_MPW_PHYID2			0xD01D  /* V1-V6 */
 #define L1D_MPW_PHYID3			0xD01E  /* V8 */
-
 
 /* Autoneg Advertisement Register */
 #define ADVERTISE_DEFAULT_CAP \

@@ -48,8 +48,6 @@
 
 /*---------------------  Export Variables  --------------------------*/
 
-
-
 /*
  * Description:
  *      Scan Rx cache.  Return true if packet is duplicate, else
@@ -123,7 +121,6 @@ unsigned int ii;
     return(pDevice->cbDFCB);
 }
 
-
 /*
  * Description:
  *      Insert received fragment packet in Defragment Database
@@ -158,7 +155,6 @@ unsigned int ii;
     return(pDevice->cbDFCB);
 }
 
-
 /*
  * Description:
  *      Handle received fragment packet
@@ -178,7 +174,6 @@ unsigned int ii;
 bool WCTLbHandleFragment (PSDevice pDevice, PS802_11Header pMACHeader, unsigned int cbFrameLength, bool bWEP, bool bExtIV)
 {
 unsigned int uHeaderSize;
-
 
     if (bWEP == true) {
         uHeaderSize = 28;
@@ -246,5 +241,3 @@ unsigned int uHeaderSize;
         return(false);
     }
 }
-
-

@@ -91,7 +91,6 @@ struct Port {
 #define RIO_CTSFLOW	0x0200		/* RIO's own CTSFLOW flag */
 #define RIO_RTSFLOW	0x0400		/* RIO's own RTSFLOW flag */
 
-
 	struct PHB __iomem *PhbP;	/* pointer to PHB for port */
 	u16 __iomem *TxAdd;		/* Add packets here */
 	u16 __iomem *TxStart;		/* Start of add array */

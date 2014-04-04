@@ -96,7 +96,7 @@ err:
 	return -EIO;
 }
 
-extern struct inode *gfs2_inode_lookup(struct super_block *sb, unsigned type, 
+extern struct inode *gfs2_inode_lookup(struct super_block *sb, unsigned type,
 				       u64 no_addr, u64 no_formal_ino,
 				       int non_block);
 extern struct inode *gfs2_lookup_by_inum(struct gfs2_sbd *sdp, u64 no_addr,
@@ -120,7 +120,7 @@ extern const struct file_operations gfs2_file_fops_nolock;
 extern const struct file_operations gfs2_dir_fops_nolock;
 
 extern void gfs2_set_inode_flags(struct inode *inode);
- 
+
 #ifdef CONFIG_GFS2_FS_LOCKING_DLM
 extern const struct file_operations gfs2_file_fops;
 extern const struct file_operations gfs2_dir_fops;
@@ -140,4 +140,3 @@ static inline int gfs2_localflocks(const struct gfs2_sbd *sdp)
 #endif /* CONFIG_GFS2_FS_LOCKING_DLM */
 
 #endif /* __INODE_DOT_H__ */
-

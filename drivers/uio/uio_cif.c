@@ -25,7 +25,6 @@
 #define CIF_SUBDEVICE_PROFIBUS	0x430
 #define CIF_SUBDEVICE_DEVICENET	0x432
 
-
 static irqreturn_t hilscher_handler(int irq, struct uio_info *dev_info)
 {
 	void __iomem *plx_intscr = dev_info->mem[0].internal_addr

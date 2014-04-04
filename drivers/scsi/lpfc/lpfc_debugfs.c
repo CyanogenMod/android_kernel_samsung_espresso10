@@ -197,7 +197,6 @@ lpfc_debugfs_slow_ring_trc_data(struct lpfc_hba *phba, char *buf, int size)
 	struct lpfc_debugfs_trc *dtp;
 	char buffer[LPFC_DEBUG_TRC_ENTRY_SIZE];
 
-
 	enable = lpfc_debugfs_enable;
 	lpfc_debugfs_enable = 0;
 

@@ -88,7 +88,6 @@ static void sa1111_stop_hc(struct sa1111_dev *dev)
 #endif
 }
 
-
 /*-------------------------------------------------------------------------*/
 
 #if 0
@@ -109,7 +108,6 @@ static void dump_hci_status(struct usb_hcd *hcd, const char *label)
 
 /* configure so an HC device and id are always provided */
 /* always called with process context; sleeping is OK */
-
 
 /**
  * usb_hcd_sa1111_probe - initialize SA-1111-based HCDs
@@ -153,7 +151,6 @@ int usb_hcd_sa1111_probe (const struct hc_driver *driver,
 	usb_put_hcd(hcd);
 	return retval;
 }
-
 
 /* may be called without controller electrically present */
 /* may be called with controller, bus, and devices active */
@@ -267,4 +264,3 @@ static struct sa1111_driver ohci_hcd_sa1111_driver = {
 	.probe		= ohci_hcd_sa1111_drv_probe,
 	.remove		= ohci_hcd_sa1111_drv_remove,
 };
-

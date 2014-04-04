@@ -176,7 +176,6 @@ static int m54xx_wdt_release(struct inode *inode, struct file *file)
 	return 0;
 }
 
-
 static const struct file_operations m54xx_wdt_fops = {
 	.owner		= THIS_MODULE,
 	.llseek		= no_llseek,

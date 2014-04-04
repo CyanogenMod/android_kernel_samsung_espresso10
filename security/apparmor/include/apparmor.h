@@ -54,7 +54,6 @@ void aa_info_message(const char *str);
 void *kvmalloc(size_t size);
 void kvfree(void *buffer);
 
-
 /**
  * aa_strneq - compare null terminated @str to a non null terminated substring
  * @str: a null terminated string

@@ -47,4 +47,3 @@ def trace_end():
 		min, max, avg, count = lock_waits[tid, lock]
 		print "%s[%d] lock %x contended %d times, %d avg ns" % \
 		      (process_names[tid], tid, lock, count, avg)
-

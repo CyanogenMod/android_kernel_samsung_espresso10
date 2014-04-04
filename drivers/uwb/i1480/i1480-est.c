@@ -29,7 +29,6 @@
 #include <linux/uwb.h>
 #include "dfu/i1480-dfu.h"
 
-
 /** Event size table for wEvents 0x00XX */
 static struct uwb_est_entry i1480_est_fd00[] = {
 	/* Anybody expecting this response has to use

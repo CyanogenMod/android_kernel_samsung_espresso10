@@ -239,7 +239,6 @@ void mantis_dma_stop(struct mantis_pci *mantis)
 					    MANTIS_INT_RISCEN), MANTIS_INT_MASK);
 }
 
-
 void mantis_dma_xfer(unsigned long data)
 {
 	struct mantis_pci *mantis = (struct mantis_pci *) data;

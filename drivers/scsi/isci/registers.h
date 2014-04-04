@@ -134,7 +134,6 @@ struct scu_viit_entry {
 
 };
 
-
 /* IIT Status Defines */
 #define SCU_IIT_ENTRY_ID_MASK                (0xC0000000)
 #define SCU_IIT_ENTRY_ID_SHIFT               (30)
@@ -314,7 +313,6 @@ struct scu_iit_entry {
 #define SMU_CQGR_GET_POINTER_SET(value)	\
 	SMU_CQGR_GEN_VAL(POINTER, value)
 
-
 /* ***************************************************************************** */
 #define SMU_COMPLETION_QUEUE_CONTROL_QUEUE_LIMIT_SHIFT  (0)
 #define SMU_COMPLETION_QUEUE_CONTROL_QUEUE_LIMIT_MASK   (0x00003FFF)
@@ -330,7 +328,6 @@ struct scu_iit_entry {
 
 #define SMU_CQC_EVENT_LIMIT_SET(value) \
 	SMU_CQC_GEN_VAL(EVENT_LIMIT, value)
-
 
 /* ***************************************************************************** */
 #define SMU_DEVICE_CONTEXT_CAPACITY_MAX_TC_SHIFT    (0)
@@ -471,8 +468,6 @@ struct scu_iit_entry {
 
 #define SMU_RESET_SCU()  (0xFFFFFFFF)
 
-
-
 /* ***************************************************************************** */
 #define SMU_TASK_CONTEXT_ASSIGNMENT_STARTING_SHIFT              (0)
 #define SMU_TASK_CONTEXT_ASSIGNMENT_STARTING_MASK               (0x00000FFF)
@@ -599,7 +594,6 @@ struct scu_iit_entry {
 #define SCU_SAS_SPDTOV_GEN_VALUE(name, value) \
 	SCU_GEN_VALUE(SCU_LINK_LAYER_SPEED_NEGOTIATION_TIMER_VALUES_ ## name, value)
 
-
 #define SCU_LINK_STATUS_DWORD_SYNC_AQUIRED_SHIFT            (2)
 #define SCU_LINK_STATUS_DWORD_SYNC_AQUIRED_MASK             (0x00000004)
 #define SCU_LINK_STATUS_TRANSMIT_PORT_SELECTION_DONE_SHIFT  (4)
@@ -610,7 +604,6 @@ struct scu_iit_entry {
 
 #define SCU_SAS_LLSTA_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_LINK_STATUS_ ## name)
-
 
 /* TODO: Where is the SATA_PSELTOV register? */
 
@@ -628,7 +621,6 @@ struct scu_iit_entry {
 
 #define SCU_SAS_MAWTTOV_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_SAS_MAX_ARBITRATION_WAIT_TIME_TIMEOUT_ ## name)
-
 
 /*
  * TODO: Where is the SAS_LNKTOV regsiter?
@@ -678,7 +670,6 @@ struct scu_iit_entry {
 
 #define SCU_SAS_TIPID_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_LINK_LAYER_IDENTIFY_FRAME_PHY_IDENTIFIER_ ## name)
-
 
 #define SCU_SAS_PHY_CONFIGURATION_TX_PARITY_CHECK_SHIFT                     (4)
 #define SCU_SAS_PHY_CONFIGURATION_TX_PARITY_CHECK_MASK                      (0x00000010)
@@ -739,7 +730,6 @@ struct scu_iit_entry {
 #define SCU_ENSPINUP_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_LINK_LAYER_ENABLE_SPINUP_CONTROL_ ## name)
 
-
 #define SCU_LINK_LAYER_PHY_CAPABILITIES_TXSSCTYPE_SHIFT     (1)
 #define SCU_LINK_LAYER_PHY_CAPABILITIES_TXSSCTYPE_MASK      (0x00000002)
 #define SCU_LINK_LAYER_PHY_CAPABILITIES_RLLRATE_SHIFT       (4)
@@ -767,7 +757,6 @@ struct scu_iit_entry {
 
 #define SCU_SAS_PHYCAP_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_LINK_LAYER_PHY_CAPABILITIES_ ## name)
-
 
 #define SCU_LINK_LAYER_PHY_SOURCE_ZONE_GROUP_CONTROL_VIRTUAL_EXPANDER_PHY_ZONE_GROUP_SHIFT  (0)
 #define SCU_LINK_LAYER_PHY_SOURCE_ZONE_GROUP_CONTROL_VIRTUAL_EXPANDER_PHY_ZONE_GROUP_MASK   (0x000000FF)
@@ -813,7 +802,6 @@ struct scu_iit_entry {
 #define SCU_PEG_SCUVZECR_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_PROTOCOL_ENGINE_GROUP_VIRTUAL_ZONING_EXPANDER_CONTROL_ ## name)
 
-
 /*
  * *****************************************************************************
  * * Port Task Scheduler registers shift and mask values
@@ -836,7 +824,6 @@ struct scu_iit_entry {
 #define SCU_PTSGCR_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_PTSG_CONTROL_ ## name)
 
-
 /* ***************************************************************************** */
 #define SCU_PTSG_REAL_TIME_CLOCK_SHIFT          (0)
 #define SCU_PTSG_REAL_TIME_CLOCK_MASK           (0x0000FFFF)
@@ -845,14 +832,12 @@ struct scu_iit_entry {
 #define SCU_RTCR_GEN_VAL(name, val) \
 	SCU_GEN_VALUE(SCU_PTSG_ ## name, val)
 
-
 #define SCU_PTSG_REAL_TIME_CLOCK_CONTROL_PRESCALER_VALUE_SHIFT  (0)
 #define SCU_PTSG_REAL_TIME_CLOCK_CONTROL_PRESCALER_VALUE_MASK   (0x00FFFFFF)
 #define SCU_PTSG_REAL_TIME_CLOCK_CONTROL_RESERVED_MASK          (0xFF000000)
 
 #define SCU_RTCCR_GEN_VAL(name, val) \
 	SCU_GEN_VALUE(SCU_PTSG_REAL_TIME_CLOCK_CONTROL_ ## name, val)
-
 
 #define SCU_PTSG_PORT_TASK_SCHEDULER_CONTROL_SUSPEND_SHIFT  (0)
 #define SCU_PTSG_PORT_TASK_SCHEDULER_CONTROL_SUSPEND_MASK   (0x00000001)
@@ -862,7 +847,6 @@ struct scu_iit_entry {
 
 #define SCU_PTSxCR_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_PTSG_PORT_TASK_SCHEDULER_CONTROL_ ## name)
-
 
 #define SCU_PTSG_PORT_TASK_SCHEDULER_STATUS_NEXT_RN_VALID_SHIFT             (0)
 #define SCU_PTSG_PORT_TASK_SCHEDULER_STATUS_NEXT_RN_VALID_MASK              (0x00000001)
@@ -874,7 +858,6 @@ struct scu_iit_entry {
 
 #define SCU_PTSxSR_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_PTSG_PORT_TASK_SCHEDULER_STATUS_ ## name)
-
 
 /*
  * *****************************************************************************
@@ -1197,7 +1180,6 @@ struct scu_sdma_registers {
 #define SCU_TLEECR0_OFFSET      0x000C
 #define SCU_STPTLDARNI_OFFSET   0x0010
 
-
 #define SCU_TLCR_HASH_SAS_CHECKING_ENABLE_SHIFT    (0)
 #define SCU_TLCR_HASH_SAS_CHECKING_ENABLE_MASK     (0x00000001)
 #define SCU_TLCR_CLEAR_TCI_NCQ_MAPPING_TABLE_SHIFT (1)
@@ -1331,7 +1313,6 @@ struct scu_transport_layer_registers {
 
 #define SCU_SAS_LLCTL_GEN_BIT(name) \
 	SCU_GEN_BIT(SCU_SAS_LINK_LAYER_CONTROL_ ## name)
-
 
 /* #define SCU_FRXHECR_DCNT_OFFSET      0x00B0 */
 #define SCU_PSZGCR_OFFSET           0x00E4
@@ -1805,7 +1786,6 @@ struct scu_afe_registers {
 struct scu_protocol_engine_group_registers {
 	u32 table[0xE0];
 };
-
 
 struct scu_viit_iit {
 	u32 table[256];

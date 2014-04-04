@@ -4,7 +4,6 @@
 # CONFIG_FUSION_LOGGING needs to be enabled in Kconfig
 #ccflags-y := -DMPT_DEBUG_VERBOSE
 
-
 #=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-} LSI_LOGIC
 
 obj-$(CONFIG_FUSION_SPI)	+= mptbase.o mptscsih.o mptspi.o

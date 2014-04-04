@@ -22,7 +22,6 @@
 #ifndef __ASM_ARCH_HARDWARE_H
 #define __ASM_ARCH_HARDWARE_H
 
-
 #define CLPS7111_VIRT_BASE	0xff000000
 #define CLPS7111_BASE		CLPS7111_VIRT_BASE
 
@@ -80,7 +79,6 @@
 
 #endif
 
-
 #if defined (CONFIG_ARCH_CDB89712)
 
 #include <asm/hardware/clps7111.h>
@@ -98,14 +96,13 @@
 
 #endif
 
-
 #if defined (CONFIG_ARCH_EDB7211)
 
 /*
- * The extra 8 lines of the keyboard matrix are wired to chip select 3 (nCS3) 
+ * The extra 8 lines of the keyboard matrix are wired to chip select 3 (nCS3)
  * and repeat across it. This is the mapping for it.
  *
- * In jumpered boot mode, nCS3 is mapped to 0x4000000, not 0x3000000. This 
+ * In jumpered boot mode, nCS3 is mapped to 0x4000000, not 0x3000000. This
  * was cause for much consternation and headscratching. This should probably
  * be made a compile/run time kernel option.
  */
@@ -113,19 +110,17 @@
 
 #define EP7211_VIRT_EXTKBD		(0xfd000000)	/* virtual */
 
-
 /*
- * The CS8900A ethernet chip has its I/O registers wired to chip select 2 
+ * The CS8900A ethernet chip has its I/O registers wired to chip select 2
  * (nCS2). This is the mapping for it.
  *
- * In jumpered boot mode, nCS2 is mapped to 0x5000000, not 0x2000000. This 
+ * In jumpered boot mode, nCS2 is mapped to 0x5000000, not 0x2000000. This
  * was cause for much consternation and headscratching. This should probably
  * be made a compile/run time kernel option.
  */
 #define EP7211_PHYS_CS8900A		CS2_PHYS_BASE	/* physical */
 
 #define EP7211_VIRT_CS8900A		(0xfc000000)	/* virtual */
-
 
 /*
  * The two flash banks are wired to chip selects 0 and 1. This is the mapping
@@ -142,7 +137,6 @@
 
 #endif /* CONFIG_ARCH_EDB7211 */
 
-
 /*
  * Relevant bits in port D, which controls power to the various parts of
  * the LCD on the EDB7211.
@@ -151,7 +145,6 @@
 #define EDB_PD2_LCDEN		(1<<2)
 #define EDB_PD3_LCDBL		(1<<3)
 
-
 #if defined (CONFIG_ARCH_CEIVA)
 
 #define  CEIVA_VIRT_BASE	CLPS7111_VIRT_BASE
@@ -159,7 +152,6 @@
 
 #include <asm/hardware/clps7111.h>
 #include <asm/hardware/ep7212.h>
-
 
 /*
  * The two flash banks are wired to chip selects 0 and 1. This is the mapping

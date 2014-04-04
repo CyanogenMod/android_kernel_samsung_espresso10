@@ -82,7 +82,6 @@ static int tps6586x_ldo_list_voltage(struct regulator_dev *rdev,
 	return info->voltages[selector] * 1000;
 }
 
-
 static int __tps6586x_ldo_set_voltage(struct device *parent,
 				      struct tps6586x_regulator *ri,
 				      int min_uV, int max_uV,

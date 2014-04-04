@@ -45,7 +45,6 @@
 #include "accommon.h"
 #include "acnamesp.h"
 
-
 #define _COMPONENT          ACPI_UTILITIES
 ACPI_MODULE_NAME("utcopy")
 

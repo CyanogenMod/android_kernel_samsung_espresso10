@@ -32,7 +32,6 @@
 #include <linux/pci.h>
 #include "shpchp.h"
 
-
 /* A few routines that create sysfs entries for the hot plug controller */
 
 static ssize_t show_ctrl (struct device *dev, struct device_attribute *attr, char *buf)

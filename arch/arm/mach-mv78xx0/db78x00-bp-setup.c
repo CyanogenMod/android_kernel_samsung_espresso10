@@ -44,7 +44,6 @@ static struct i2c_board_info __initdata db78x00_i2c_rtc = {
 	I2C_BOARD_INFO("ds1338", 0x68),
 };
 
-
 static void __init db78x00_init(void)
 {
 	/*

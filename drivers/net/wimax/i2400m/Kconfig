@@ -1,4 +1,3 @@
-
 config WIMAX_I2400M
 	tristate
 	depends on WIMAX

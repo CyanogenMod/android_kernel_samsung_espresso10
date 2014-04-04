@@ -1289,8 +1289,6 @@ static inline int usage_match(struct lock_list *entry, void *bit)
 	return entry->class->usage_mask & (1 << (enum lock_usage_bit)bit);
 }
 
-
-
 /*
  * Find a node in the forwards-direction dependency sub-graph starting
  * at @root->class that matches @bit.

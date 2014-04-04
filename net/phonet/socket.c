@@ -49,7 +49,6 @@ static int pn_socket_release(struct socket *sock)
 #define PN_HASHSIZE	16
 #define PN_HASHMASK	(PN_HASHSIZE-1)
 
-
 static struct  {
 	struct hlist_head hlist[PN_HASHSIZE];
 	struct mutex lock;

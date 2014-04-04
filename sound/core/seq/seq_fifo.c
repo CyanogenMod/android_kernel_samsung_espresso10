@@ -24,7 +24,6 @@
 #include "seq_fifo.h"
 #include "seq_lock.h"
 
-
 /* FIFO */
 
 /* create new fifo */
@@ -57,7 +56,7 @@ struct snd_seq_fifo *snd_seq_fifo_new(int poolsize)
 	f->head = NULL;
 	f->tail = NULL;
 	f->cells = 0;
-	
+
 	return f;
 }
 
@@ -85,7 +84,7 @@ void snd_seq_fifo_delete(struct snd_seq_fifo **fifo)
 		snd_seq_pool_done(f->pool);
 		snd_seq_pool_delete(&f->pool);
 	}
-	
+
 	kfree(f);
 }
 
@@ -109,7 +108,6 @@ void snd_seq_fifo_clear(struct snd_seq_fifo *f)
 	spin_unlock_irqrestore(&f->lock, flags);
 }
 
-
 /* enqueue event to fifo */
 int snd_seq_fifo_event_in(struct snd_seq_fifo *f,
 			  struct snd_seq_event *event)
@@ -129,7 +127,7 @@ int snd_seq_fifo_event_in(struct snd_seq_fifo *f,
 		snd_use_lock_free(&f->use_lock);
 		return err;
 	}
-		
+
 	/* append new cells to fifo */
 	spin_lock_irqsave(&f->lock, flags);
 	if (f->tail != NULL)
@@ -206,7 +204,6 @@ int snd_seq_fifo_cell_out(struct snd_seq_fifo *f,
 	return 0;
 }
 
-
 void snd_seq_fifo_cell_putback(struct snd_seq_fifo *f,
 			       struct snd_seq_event_cell *cell)
 {
@@ -220,7 +217,6 @@ void snd_seq_fifo_cell_putback(struct snd_seq_fifo *f,
 		spin_unlock_irqrestore(&f->lock, flags);
 	}
 }
-
 
 /* polling; return non-zero if queue is available */
 int snd_seq_fifo_poll_wait(struct snd_seq_fifo *f, struct file *file,

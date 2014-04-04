@@ -149,7 +149,6 @@ static void cvm_oct_adjust_link(struct net_device *dev)
 	}
 }
 
-
 /**
  * cvm_oct_phy_setup_device - setup the PHY
  *

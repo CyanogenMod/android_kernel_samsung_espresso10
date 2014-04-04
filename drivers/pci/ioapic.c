@@ -97,7 +97,6 @@ static void ioapic_remove(struct pci_dev *dev)
 	kfree(ioapic);
 }
 
-
 static struct pci_device_id ioapic_devices[] = {
 	{ PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
 	  PCI_CLASS_SYSTEM_PIC_IOAPIC << 8, 0xffff00, },

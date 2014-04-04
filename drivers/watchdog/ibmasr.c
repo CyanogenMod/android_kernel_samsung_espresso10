@@ -21,7 +21,6 @@
 #include <linux/io.h>
 #include <linux/uaccess.h>
 
-
 enum {
 	ASMTYPE_UNKNOWN,
 	ASMTYPE_TOPAZ,
@@ -58,7 +57,6 @@ enum {
 #define SPRUCE_BASE_ADDRESS	0x118e	/* Base address of Spruce ASR */
 #define SPRUCE_ASR_DISABLE_MASK	0x01	/* bit 1: disable = 1 enable = 0 */
 #define SPRUCE_ASR_TOGGLE_MASK	0x02	/* bit 0: 0, then 1, then 0 */
-
 
 static int nowayout = WATCHDOG_NOWAYOUT;
 
@@ -244,7 +242,6 @@ static int __init asr_get_base_address(void)
 	return 0;
 }
 
-
 static ssize_t asr_write(struct file *file, const char __user *buf,
 			 size_t count, loff_t *ppos)
 {
@@ -355,7 +352,6 @@ static struct miscdevice asr_miscdev = {
 	.name =		"watchdog",
 	.fops =		&asr_fops,
 };
-
 
 struct ibmasr_id {
 	const char *desc;

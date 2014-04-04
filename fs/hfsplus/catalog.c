@@ -8,7 +8,6 @@
  * Handling of catalog records
  */
 
-
 #include "hfsplus_fs.h"
 #include "hfsplus_raw.h"
 

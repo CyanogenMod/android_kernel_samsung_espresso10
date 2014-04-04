@@ -28,7 +28,6 @@
 #define UARTLCR         PHYS(0x0c)      /* Control reg */
 #define UARTSR          PHYS(0x14)      /* Status reg */
 
-
 static inline void putc(int c)
 {
 	int j = 0x1000;

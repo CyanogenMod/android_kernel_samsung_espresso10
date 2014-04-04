@@ -223,7 +223,6 @@
 #define IS_ISDN_P_E1(p) ((p == ISDN_P_TE_E1) || (p == ISDN_P_NT_E1))
 #define IS_ISDN_P_UP0(p) ((p == ISDN_P_TE_UP0) || (p == ISDN_P_NT_UP0))
 
-
 #define ISDN_P_LAPD_TE		0x10
 #define	ISDN_P_LAPD_NT		0x11
 
@@ -475,8 +474,6 @@ struct mISDN_sock {
 	u_int			cmask;
 	struct mISDNdevice	*dev;
 };
-
-
 
 struct mISDNdevice {
 	struct mISDNchannel	D;

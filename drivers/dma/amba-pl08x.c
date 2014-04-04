@@ -275,7 +275,6 @@ static void pl08x_resume_phy_chan(struct pl08x_phy_chan *ch)
 	writel(val, ch->base + PL080_CH_CONFIG);
 }
 
-
 /*
  * pl08x_terminate_phy_chan() stops the channel, clears the FIFO and
  * clears any pending interrupt status.  This should not be used for
@@ -626,7 +625,6 @@ static int pl08x_fill_llis_for_desc(struct pl08x_driver_data *pl08x,
 		 "%s source bus is %d bytes wide, dest bus is %d bytes wide\n",
 		 __func__, bd.srcbus.buswidth, bd.dstbus.buswidth);
 
-
 	/*
 	 * Bytes transferred == tsize * MIN(buswidths), not max(buswidths)
 	 */
@@ -783,7 +781,6 @@ static int pl08x_fill_llis_for_desc(struct pl08x_driver_data *pl08x,
 					lli_len, cctl);
 				total_bytes += lli_len;
 			}
-
 
 			if (odd_bytes) {
 				/*

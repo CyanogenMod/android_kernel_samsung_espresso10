@@ -402,7 +402,6 @@ static void sta_set_sinfo(struct sta_info *sta, struct station_info *sinfo)
 	sinfo->bss_param.beacon_interval = sdata->vif.bss_conf.beacon_int;
 }
 
-
 static int ieee80211_dump_station(struct wiphy *wiphy, struct net_device *dev,
 				 int idx, u8 *mac, struct station_info *sinfo)
 {

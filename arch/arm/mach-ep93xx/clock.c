@@ -25,7 +25,6 @@
 
 #include <asm/div64.h>
 
-
 struct clk {
 	struct clk	*parent;
 	unsigned long	rate;
@@ -37,7 +36,6 @@ struct clk {
 	unsigned long	(*get_rate)(struct clk *clk);
 	int		(*set_rate)(struct clk *clk, unsigned long rate);
 };
-
 
 static unsigned long get_uart_rate(struct clk *clk);
 
@@ -432,10 +430,10 @@ static int set_i2s_sclk_rate(struct clk *clk, unsigned long rate)
 	unsigned val = __raw_readl(clk->enable_reg);
 
 	if (rate == clk_i2s_mclk.rate / 2)
-		ep93xx_syscon_swlocked_write(val & ~EP93XX_I2SCLKDIV_SDIV, 
+		ep93xx_syscon_swlocked_write(val & ~EP93XX_I2SCLKDIV_SDIV,
 					     clk->enable_reg);
 	else if (rate == clk_i2s_mclk.rate / 4)
-		ep93xx_syscon_swlocked_write(val | EP93XX_I2SCLKDIV_SDIV, 
+		ep93xx_syscon_swlocked_write(val | EP93XX_I2SCLKDIV_SDIV,
 					     clk->enable_reg);
 	else
 		return -EINVAL;
@@ -446,9 +444,9 @@ static int set_i2s_sclk_rate(struct clk *clk, unsigned long rate)
 
 static int set_i2s_lrclk_rate(struct clk *clk, unsigned long rate)
 {
-	unsigned val = __raw_readl(clk->enable_reg) & 
+	unsigned val = __raw_readl(clk->enable_reg) &
 		~EP93XX_I2SCLKDIV_LRDIV_MASK;
-	
+
 	if (rate == clk_i2s_sclk.rate / 32)
 		ep93xx_syscon_swlocked_write(val | EP93XX_I2SCLKDIV_LRDIV32,
 					     clk->enable_reg);
@@ -473,7 +471,6 @@ int clk_set_rate(struct clk *clk, unsigned long rate)
 	return -EINVAL;
 }
 EXPORT_SYMBOL(clk_set_rate);
-
 
 static char fclk_divisors[] = { 1, 2, 4, 8, 16, 1, 1, 1 };
 static char hclk_divisors[] = { 1, 2, 4, 5, 6, 8, 16, 32 };

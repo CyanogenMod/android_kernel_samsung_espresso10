@@ -50,7 +50,6 @@
  *  input device framework and control via sysfs attributes.
  */
 
-
 #define gp2a_dbgmsg(str, args...) pr_debug("%s: " str, __func__, ##args)
 
 /* ADDSEL is LOW */
@@ -59,6 +58,8 @@
 #define REGS_HYS		0x2 /* Write Only */
 #define REGS_CYCLE		0x3 /* Write Only */
 #define REGS_OPMOD		0x4 /* Write Only */
+#define REGS_AMP		0x5 /* Write Only */
+
 #if defined(CONFIG_GP2A_MODE_B)
 #define REGS_CON	0x6 /* Write Only */
 #endif
@@ -73,19 +74,21 @@
 /* start time delay for light sensor in nano seconds */
 #define LIGHT_SENSOR_START_TIME_DELAY 50000000
 
-static u8 reg_defaults[5] = {
+static u8 reg_defaults[6] = {
 	0x00, /* PROX: read only register */
 	0x08, /* GAIN: large LED drive level */
 	0xC2, /* HYS: receiver sensitivity */
-	0x04, /* CYCLE: */
+	0x00, /* CYCLE: */
 	0x01, /* OPMOD: normal operating mode */
+	0xC0, /* AMP: bandwidth change */
 };
-static u8 reg_b_mode[5] = {
+static u8 reg_b_mode[6] = {
 	0x00, /* PROX: read only register */
 	0x08, /* GAIN: large LED drive level */
 	0x40, /* HYS: receiver sensitivity */
-	0x04, /* CYCLE: */
+	0x00, /* CYCLE: */
 	0x03, /* OPMOD: normal operating mode */
+	0xC0, /* AMP: bandwidth change */
 };
 
 enum {
@@ -117,9 +120,8 @@ struct gp2a_data {
 
 int gp2a_i2c_read(struct gp2a_data *gp2a, u8 reg, u8 *val)
 {
-
 	int err;
-	u8 buf[1];
+	u8 buf[2];
 	struct i2c_msg msg[2];
 	struct i2c_client *client = gp2a->i2c_client;
 	int retry = 2;
@@ -197,7 +199,6 @@ static ssize_t poll_delay_show(struct device *dev,
 	struct gp2a_data *gp2a = dev_get_drvdata(dev);
 	return sprintf(buf, "%lld\n", ktime_to_ns(gp2a->light_poll_delay));
 }
-
 
 static ssize_t poll_delay_store(struct device *dev,
 				struct device_attribute *attr,
@@ -365,7 +366,6 @@ static struct device_attribute dev_attr_light_sensor_vendor =
 	__ATTR(vendor, S_IRUSR | S_IRGRP, gp2a_light_vendor_show, NULL);
 static struct device_attribute dev_attr_proximity_sensor_vendor =
 	__ATTR(vendor, S_IRUSR | S_IRGRP, gp2a_light_vendor_show, NULL);
-
 
 static ssize_t gp2a_light_name_show(struct device *dev,
 					   struct device_attribute *attr,
@@ -659,6 +659,7 @@ static int gp2a_i2c_probe(struct i2c_client *client,
 	gp2a_i2c_write(gp2a, REGS_HYS, &reg_b_mode[2]);
 	gp2a_i2c_write(gp2a, REGS_CYCLE, &reg_b_mode[3]);
 	gp2a_i2c_write(gp2a, REGS_OPMOD, &reg_b_mode[4]);
+	gp2a_i2c_write(gp2a, REGS_AMP, &reg_b_mode[5]);
 #endif
 	gp2a->proximity_input_dev = input_dev;
 	input_set_drvdata(input_dev, gp2a);
@@ -879,7 +880,6 @@ static struct i2c_driver gp2a_i2c_driver = {
 	.shutdown = gp2a_i2c_shutdown,
 	.id_table = gp2a_device_id,
 };
-
 
 static int __init gp2a_init(void)
 {

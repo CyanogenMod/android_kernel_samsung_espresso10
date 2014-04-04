@@ -458,7 +458,6 @@ static void vr41xx_gpio_set(struct gpio_chip *chip, unsigned pin,
 	spin_unlock_irqrestore(&giu_lock, flags);
 }
 
-
 static int vr41xx_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
 {
 	return giu_set_direction(chip, offset, GPIO_INPUT);

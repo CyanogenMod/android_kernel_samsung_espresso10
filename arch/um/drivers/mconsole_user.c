@@ -169,7 +169,6 @@ int mconsole_reply(struct mc_request *req, const char *str, int err, int more)
 	return mconsole_reply_len(req, str, strlen(str), err, more);
 }
 
-
 int mconsole_unlink_socket(void)
 {
 	unlink(mconsole_socket_name);

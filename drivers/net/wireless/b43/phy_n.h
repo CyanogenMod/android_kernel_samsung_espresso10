@@ -3,7 +3,6 @@
 
 #include "phy_common.h"
 
-
 /* N-PHY registers. */
 
 #define B43_NPHY_BBCFG				B43_PHY_N(0x001) /* BB config */
@@ -815,7 +814,6 @@ struct b43_phy_n {
 	bool crsminpwr_adjusted;
 	bool noisevars_adjusted;
 };
-
 
 struct b43_phy_operations;
 extern const struct b43_phy_operations b43_phyops_n;

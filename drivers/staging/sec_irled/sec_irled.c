@@ -292,7 +292,6 @@ static ssize_t remocon_store(struct device *dev, struct device_attribute *attr,
 	data->busy_flag = true;
 	spin_unlock(&data->lock);
 
-
 	if (data->on_off) {
 		data->pdata->ir_wake_en(0);
 		data->pdata->ir_wake_en(1);
@@ -413,7 +412,6 @@ static ssize_t check_ir_show(struct device *dev, struct device_attribute *attr,
 }
 
 static DEVICE_ATTR(check_ir, S_IRUGO, check_ir_show, NULL);
-
 
 static int __devinit sec_irled_probe(struct i2c_client *client,
 		const struct i2c_device_id *id)

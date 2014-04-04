@@ -52,7 +52,6 @@ def get_time(line):
 	#print "time=", time
 	return (time, rest)
 
-
 # average line looks like:
 # [    0.084282] VFS: Mounted root (romfs filesystem) readonly
 # time data is expressed in seconds.useconds,
@@ -126,4 +125,3 @@ def main():
 		print convert_line(line, base_time),
 
 main()
-

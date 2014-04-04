@@ -51,7 +51,6 @@
 #define LMC_CTL_CRC_BYTESIZE_2          2
 #define LMC_CTL_CRC_BYTESIZE_4          4
 
-
 #define LMC_CTL_CABLE_LENGTH_LT_100FT	0	/* DS3 cable < 100 feet */
 #define LMC_CTL_CABLE_LENGTH_GT_100FT	1	/* DS3 cable >= 100 feet */
 
@@ -197,7 +196,6 @@
 
 #define LMC_MII16_T1_CRC                0x1000  /* CRC select - RW */
 #define LMC_MII16_T1_UNUSED2    0xe000
-
 
 /* 8370 framer registers  */
 

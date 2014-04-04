@@ -130,7 +130,6 @@ static int dw210x_op_rw(struct usb_device *dev, u8 request, u16 value,
 	if (!u8buf)
 		return -ENOMEM;
 
-
 	if (flags == DW210X_WRITE_MSG)
 		memcpy(u8buf, data, len);
 	ret = usb_control_msg(dev, pipe, request, request_type | USB_TYPE_VENDOR,

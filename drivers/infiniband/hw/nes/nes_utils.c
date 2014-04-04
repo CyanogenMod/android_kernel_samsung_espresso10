@@ -51,8 +51,6 @@
 
 #include "nes.h"
 
-
-
 static u16 nes_read16_eeprom(void __iomem *addr, u16 offset);
 
 u32 mh_detected;
@@ -364,7 +362,6 @@ no_fw_rev:
 	return 0;
 }
 
-
 /**
  * nes_read16_eeprom
  */
@@ -379,7 +376,6 @@ static u16 nes_read16_eeprom(void __iomem *addr, u16 offset)
 
 	return readw((void __iomem *)addr + NES_EEPROM_DATA);
 }
-
 
 /**
  * nes_write_1G_phy_reg
@@ -404,7 +400,6 @@ void nes_write_1G_phy_reg(struct nes_device *nesdev, u8 phy_reg, u8 phy_addr, u1
 		nes_debug(NES_DBG_PHY, "Phy is not responding. interrupt status = 0x%X.\n",
 				u32temp);
 }
-
 
 /**
  * nes_read_1G_phy_reg
@@ -438,7 +433,6 @@ void nes_read_1G_phy_reg(struct nes_device *nesdev, u8 phy_reg, u8 phy_addr, u16
 		*data = (u16)nes_read_indexed(nesdev, NES_IDX_MAC_MDIO_CONTROL);
 	}
 }
-
 
 /**
  * nes_write_10G_phy_reg
@@ -483,7 +477,6 @@ void nes_write_10G_phy_reg(struct nes_device *nesdev, u16 phy_addr, u8 dev_addr,
 				u32temp);
 }
 
-
 /**
  * nes_read_10G_phy_reg
  * This routine only issues the read, the data must be read
@@ -527,7 +520,6 @@ void nes_read_10G_phy_reg(struct nes_device *nesdev, u8 phy_addr, u8 dev_addr, u
 		nes_debug(NES_DBG_PHY, "Phy is not responding. interrupt status = 0x%X.\n",
 				u32temp);
 }
-
 
 /**
  * nes_get_cqp_request
@@ -645,7 +637,6 @@ void nes_post_cqp_request(struct nes_device *nesdev,
 	return;
 }
 
-
 /**
  * nes_arp_table
  */
@@ -703,7 +694,6 @@ int nes_arp_table(struct nes_device *nesdev, u32 ip_addr, u8 *mac_addr, u32 acti
 
 	return -1;
 }
-
 
 /**
  * nes_mh_fix
@@ -865,7 +855,6 @@ void nes_clc(unsigned long parm)
 	nesadapter->lc_timer.expires = jiffies + 3600 * HZ;  /* 1 hour */
 	add_timer(&nesadapter->lc_timer);
 }
-
 
 /**
  * nes_dump_mem

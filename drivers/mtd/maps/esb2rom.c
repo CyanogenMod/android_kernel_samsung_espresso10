@@ -92,7 +92,6 @@
 
 #define FWH_0_5MiB	(FWH_F8_EN)
 
-
 struct esb2rom_window {
 	void __iomem* virt;
 	unsigned long phys;

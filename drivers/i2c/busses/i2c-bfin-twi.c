@@ -53,7 +53,6 @@ struct bfin_twi_iface {
 	void __iomem		*regs_base;
 };
 
-
 #define DEFINE_TWI_REG(reg, off) \
 static inline u16 read_##reg(struct bfin_twi_iface *iface) \
 	{ return bfin_read16(iface->regs_base + (off)); } \

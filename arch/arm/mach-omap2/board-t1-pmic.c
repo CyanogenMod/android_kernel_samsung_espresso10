@@ -430,7 +430,6 @@ static void t1_twl6030_init(void)
 	if (ret)
 		pr_err("%s:PHOENIX_MSK_TRANSITION write fail!\n", __func__);
 
-
 	/*
 	 * Enable charge backup battery and set charging voltage to 2.6V.
 	 * Set VRTC low power mode in off/sleep and standard power mode in on.

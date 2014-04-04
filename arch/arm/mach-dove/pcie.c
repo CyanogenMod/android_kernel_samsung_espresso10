@@ -33,7 +33,6 @@ struct pcie_port {
 static struct pcie_port pcie_port[2];
 static int num_pcie_ports;
 
-
 static int __init dove_pcie_setup(int nr, struct pci_sys_data *sys)
 {
 	struct pcie_port *pp;

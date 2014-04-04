@@ -1,4 +1,3 @@
-
 /*
  * Linux device driver for PCI based Prism54
  *

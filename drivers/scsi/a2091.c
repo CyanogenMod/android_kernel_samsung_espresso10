@@ -15,7 +15,6 @@
 #include "wd33c93.h"
 #include "a2091.h"
 
-
 struct a2091_hostdata {
 	struct WD33C93_hostdata wh;
 	struct a2091_scsiregs *regs;

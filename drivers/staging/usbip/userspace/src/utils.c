@@ -166,7 +166,6 @@ int readline(int sockfd, char *buff, int bufflen)
 	char c;
 	int index = 0;
 
-
 	while (index < bufflen) {
 		ret = read(sockfd, &c, sizeof(c));
 		if (ret < 0 && errno == EINTR)
@@ -252,4 +251,3 @@ int writeline(int sockfd, char *str, int strlen)
 
 	return index;
 }
-

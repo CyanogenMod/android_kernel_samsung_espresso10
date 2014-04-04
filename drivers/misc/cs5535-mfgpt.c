@@ -337,7 +337,6 @@ static struct platform_driver cs5535_mfgpt_driver = {
 	.probe = cs5535_mfgpt_probe,
 };
 
-
 static int __init cs5535_mfgpt_init(void)
 {
 	return platform_driver_register(&cs5535_mfgpt_driver);

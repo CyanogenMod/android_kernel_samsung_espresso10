@@ -116,7 +116,6 @@ Log: nmclan_cs.c,v
 #define DRV_NAME	"nmclan_cs"
 #define DRV_VERSION	"0.16"
 
-
 /* ----------------------------------------------------------------------------
 Conditional Compilation Options
 ---------------------------------------------------------------------------- */
@@ -372,7 +371,7 @@ typedef struct _mace_private {
 
     char tx_free_frames; /* Number of free transmit frame buffers */
     char tx_irq_disabled; /* MACE TX interrupt disabled */
-    
+
     spinlock_t bank_lock; /* Must be held if you step off bank 0 */
 } mace_private;
 
@@ -398,7 +397,6 @@ MODULE_LICENSE("GPL");
 /* 0=auto, 1=10baseT, 2 = 10base2, default=auto */
 INT_MODULE_PARM(if_port, 0);
 
-
 /* ----------------------------------------------------------------------------
 Function Prototypes
 ---------------------------------------------------------------------------- */
@@ -419,7 +417,6 @@ static int mace_rx(struct net_device *dev, unsigned char RxCnt);
 static void restore_multicast_list(struct net_device *dev);
 static void set_multicast_list(struct net_device *dev);
 static const struct ethtool_ops netdev_ethtool_ops;
-
 
 static void nmclan_detach(struct pcmcia_device *p_dev);
 
@@ -450,7 +447,7 @@ static int nmclan_probe(struct pcmcia_device *link)
     lp = netdev_priv(dev);
     lp->p_dev = link;
     link->priv = dev;
-    
+
     spin_lock_init(&lp->bank_lock);
     link->resource[0]->end = 32;
     link->resource[0]->flags |= IO_DATA_PATH_WIDTH_AUTO;
@@ -715,7 +712,6 @@ static int nmclan_resume(struct pcmcia_device *link)
 
 	return 0;
 }
-
 
 /* ----------------------------------------------------------------------------
 nmclan_reset
@@ -1113,7 +1109,7 @@ static int mace_rx(struct net_device *dev, unsigned char RxCnt)
 	if (pkt_len & 1)
 	    *(skb_tail_pointer(skb) - 1) = inb(ioaddr + AM2150_RCV);
 	skb->protocol = eth_type_trans(skb, dev);
-	
+
 	netif_rx(skb); /* Send the packet to the upper (protocol) layers. */
 
 	lp->linux_stats.rx_packets++;
@@ -1239,7 +1235,7 @@ static void update_stats(unsigned int ioaddr, struct net_device *dev)
      out. */
 
   /* lp->linux_stats.multicast; */
-  lp->linux_stats.collisions = 
+  lp->linux_stats.collisions =
     lp->mace_stats.rcvcco * 256 + lp->mace_stats.rcvcc;
     /* Collision: The MACE may retry sending a packet 15 times
        before giving up.  The retry count is in XMTRC.
@@ -1247,13 +1243,13 @@ static void update_stats(unsigned int ioaddr, struct net_device *dev)
        If so, why doesn't the RCVCC record these collisions? */
 
   /* detailed rx_errors: */
-  lp->linux_stats.rx_length_errors = 
+  lp->linux_stats.rx_length_errors =
     lp->mace_stats.rntpco * 256 + lp->mace_stats.rntpc;
   /* lp->linux_stats.rx_over_errors */
   lp->linux_stats.rx_crc_errors = lp->mace_stats.fcs;
   lp->linux_stats.rx_frame_errors = lp->mace_stats.fram;
   lp->linux_stats.rx_fifo_errors = lp->mace_stats.oflo;
-  lp->linux_stats.rx_missed_errors = 
+  lp->linux_stats.rx_missed_errors =
     lp->mace_stats.mpco * 256 + lp->mace_stats.mpc;
 
   /* detailed tx_errors */

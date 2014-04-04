@@ -107,7 +107,6 @@ static void __exit noop_exit(void)
 module_init(noop_init);
 module_exit(noop_exit);
 
-
 MODULE_AUTHOR("Jens Axboe");
 MODULE_LICENSE("GPL");
 MODULE_DESCRIPTION("No-op IO scheduler");

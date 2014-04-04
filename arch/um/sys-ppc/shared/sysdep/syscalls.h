@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2000 Jeff Dike (jdike@karaya.com)
  * Licensed under the GPL
  */
@@ -40,4 +40,3 @@ int old_mmap(unsigned long addr, unsigned long len,
 	[ __NR_fadvise64 ] = (syscall_handler_t *) sys_fadvise64,
 
 #define LAST_ARCH_SYSCALL __NR_fadvise64
-

@@ -628,7 +628,6 @@ xpc_get_partition_rsvd_page_pa_sn2(void *buf, u64 *cookie, unsigned long *rp_pa,
 	return ret;
 }
 
-
 static int
 xpc_setup_rsvd_page_sn2(struct xpc_rsvd_page *rp)
 {

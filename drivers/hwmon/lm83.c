@@ -124,7 +124,7 @@ static struct lm83_data *lm83_update_device(struct device *dev);
 /*
  * Driver data (common to all clients)
  */
- 
+
 static const struct i2c_device_id lm83_id[] = {
 	{ "lm83", lm83 },
 	{ "lm82", lm82 },

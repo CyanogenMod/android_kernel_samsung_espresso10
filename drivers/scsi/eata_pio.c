@@ -12,7 +12,7 @@
  *                                                          *
  *  (c)1993-96 Michael Neuffer, Alfred Arnold               *
  *             neuffer@goofy.zdv.uni-mainz.de               *
- *             a.arnold@kfa-juelich.de                      * 
+ *             a.arnold@kfa-juelich.de                      *
  *                                                          *
  *  Updated 2002 by Alan Cox <alan@lxorguk.ukuu.org.uk> for *
  *   Linux 2.5.x and the newer locking and error handling   *
@@ -68,7 +68,6 @@
 #include "eata_generic.h"
 #include "eata_pio.h"
 
-
 static unsigned int ISAbases[MAXISA] =	{
 	 0x1F0, 0x170, 0x330, 0x230
 };
@@ -77,9 +76,9 @@ static unsigned int ISAirqs[MAXISA] = {
 	14, 12, 15, 11
 };
 
-static unsigned char EISAbases[] = { 
+static unsigned char EISAbases[] = {
 	1, 1, 1, 1, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1, 1, 1 
+	1, 1, 1, 1, 1, 1, 1, 1
 };
 
 static unsigned int registered_HBAs;
@@ -94,13 +93,13 @@ static struct scsi_host_template driver_template;
 
 /*
  * eata_proc_info
- * inout : decides on the direction of the dataflow and the meaning of the 
+ * inout : decides on the direction of the dataflow and the meaning of the
  *         variables
  * buffer: If inout==FALSE data is being written to it else read from it
  * *start: If inout==FALSE start of the valid data in the buffer
- * offset: If inout==FALSE offset from the beginning of the imaginary file 
+ * offset: If inout==FALSE offset from the beginning of the imaginary file
  *         from which we start writing into the buffer
- * length: If inout==FALSE max number of bytes to be written into the buffer 
+ * length: If inout==FALSE max number of bytes to be written into the buffer
  *         else number of bytes in the buffer
  */
 static int eata_pio_proc_info(struct Scsi_Host *shost, char *buffer, char **start, off_t offset,
@@ -125,16 +124,16 @@ static int eata_pio_proc_info(struct Scsi_Host *shost, char *buffer, char **star
 	len += sprintf(buffer + len, "Host Bus: %s\n",
 		   (SD(shost)->bustype == 'P')?"PCI ":
 		   (SD(shost)->bustype == 'E')?"EISA":"ISA ");
-    
+
 	pos = begin + len;
-    
+
 	if (pos < offset) {
 		len = 0;
 		begin = pos;
 	}
 	if (pos > offset + length)
 		goto stop_output;
-    
+
 stop_output:
 	DBG(DBG_PROC, printk("2pos: %ld offset: %ld len: %d\n", pos, offset, len));
 	*start = buffer + (offset - begin);   /* Start of wanted data */
@@ -142,7 +141,7 @@ stop_output:
 	if (len > length)
 		len = length;               /* Ending slop */
 	DBG(DBG_PROC, printk("3pos: %ld offset: %ld len: %d\n", pos, offset, len));
-    
+
 	return len;
 }
 
@@ -204,7 +203,7 @@ static irqreturn_t eata_pio_int_handler(int irq, void *dev_id)
 	unsigned char stat, odd;
 	irqreturn_t ret = IRQ_NONE;
 
-	for (x = 1, sh = first_HBA; x <= registered_HBAs; x++, sh = SD(sh)->prev) 
+	for (x = 1, sh = first_HBA; x <= registered_HBAs; x++, sh = SD(sh)->prev)
 	{
 		if (sh->irq != irq)
 			continue;
@@ -326,7 +325,7 @@ static inline unsigned int eata_pio_send_command(unsigned long base, unsigned ch
 			return 1;
 
 	/* Enable interrupts for HBA.  It is not the best way to do it at this
-	 * place, but I hope that it doesn't interfere with the IDE driver 
+	 * place, but I hope that it doesn't interfere with the IDE driver
 	 * initialization this way */
 
 	outb(HA_CTRL_8HEADS, base + HA_CTRLREG);
@@ -410,7 +409,7 @@ static int eata_pio_queue_lck(struct scsi_cmnd *cmd,
 		cmd->SCp.ptr = sg_virt(cmd->SCp.buffer);
 		cmd->SCp.this_residual = cmd->SCp.buffer->length;
 	}
-	cmd->SCp.Status = (cmd->SCp.this_residual != 0);	/* TRUE as long as bytes 
+	cmd->SCp.Status = (cmd->SCp.this_residual != 0);	/* TRUE as long as bytes
 								 * are to transfer */
 
 	if (eata_pio_send_command(base, EATA_CMD_PIO_SEND_CP)) {
@@ -913,9 +912,9 @@ static void find_pio_PCI(struct get_conf *buf)
 					continue;	/* we'll find it later      */
 				}
 
-				/* OK. We made it till here, so we can go now  
-				 * and register it. We  only have to check and 
-				 * eventually remove it from the EISA and ISA list 
+				/* OK. We made it till here, so we can go now
+				 * and register it. We  only have to check and
+				 * eventually remove it from the EISA and ISA list
 				 */
 
 				if (!register_pio_HBA(base, buf, dev)) {

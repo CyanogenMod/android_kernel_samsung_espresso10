@@ -145,4 +145,3 @@ MODULE_AUTHOR("Samuel Thibault <samuel.thibault@ens-lyon.org>");
 MODULE_DESCRIPTION("Speakup support for text console");
 MODULE_LICENSE("GPL");
 MODULE_VERSION(DRV_VERSION);
-

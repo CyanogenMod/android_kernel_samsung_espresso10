@@ -297,7 +297,6 @@ __u32 sctp_generate_tsn(const struct sctp_endpoint *);
 /* Extern declarations for major data structures.  */
 extern sctp_timer_event_t *sctp_timer_events[SCTP_NUM_TIMEOUT_TYPES];
 
-
 /* Get the size of a DATA chunk payload. */
 static inline __u16 sctp_data_size(struct sctp_chunk *chunk)
 {

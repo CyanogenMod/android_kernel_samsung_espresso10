@@ -22,7 +22,6 @@
 #include "dvb_frontend.h"
 #include "ttusbdecfe.h"
 
-
 #define LOF_HI			10600000
 #define LOF_LO			9750000
 
@@ -37,7 +36,6 @@ struct ttusbdecfe_state {
 	u8 voltage;
 };
 
-
 static int ttusbdecfe_dvbs_read_status(struct dvb_frontend *fe,
 	fe_status_t *status)
 {
@@ -45,7 +43,6 @@ static int ttusbdecfe_dvbs_read_status(struct dvb_frontend *fe,
 		FE_HAS_SYNC | FE_HAS_CARRIER | FE_HAS_LOCK;
 	return 0;
 }
-
 
 static int ttusbdecfe_dvbt_read_status(struct dvb_frontend *fe,
 	fe_status_t *status)
@@ -163,7 +160,6 @@ static int ttusbdecfe_dvbs_diseqc_send_master_cmd(struct dvb_frontend* fe, struc
 	return 0;
 }
 
-
 static int ttusbdecfe_dvbs_set_tone(struct dvb_frontend* fe, fe_sec_tone_mode_t tone)
 {
 	struct ttusbdecfe_state* state = (struct ttusbdecfe_state*) fe->demodulator_priv;
@@ -172,7 +168,6 @@ static int ttusbdecfe_dvbs_set_tone(struct dvb_frontend* fe, fe_sec_tone_mode_t 
 
 	return 0;
 }
-
 
 static int ttusbdecfe_dvbs_set_voltage(struct dvb_frontend* fe, fe_sec_voltage_t voltage)
 {

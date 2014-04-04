@@ -65,4 +65,3 @@
 #define OMAP44XX_C2C_BASE		0x5c000000
 
 #endif /* __ASM_ARCH_OMAP44XX_H */
-

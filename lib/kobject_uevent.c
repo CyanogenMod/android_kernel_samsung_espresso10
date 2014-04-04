@@ -26,7 +26,6 @@
 #include <net/sock.h>
 #include <net/net_namespace.h>
 
-
 u64 uevent_seqnum;
 char uevent_helper[UEVENT_HELPER_PATH_LEN] = CONFIG_UEVENT_HELPER_PATH;
 #ifdef CONFIG_NET
@@ -418,7 +417,6 @@ static int __init kobject_uevent_init(void)
 	netlink_set_nonroot(NETLINK_KOBJECT_UEVENT, NL_NONROOT_RECV);
 	return register_pernet_subsys(&uevent_net_ops);
 }
-
 
 postcore_initcall(kobject_uevent_init);
 #endif

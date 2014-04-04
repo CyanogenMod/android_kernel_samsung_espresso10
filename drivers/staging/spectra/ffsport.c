@@ -149,7 +149,6 @@ struct spectra_nand_dev {
 	u8 *tmp_buf;
 };
 
-
 static int GLOB_SBD_majornum;
 
 static char *GLOB_version = GLOB_VERSION;
@@ -466,7 +465,6 @@ static int spectra_trans_thread(void *arg)
 
 	return 0;
 }
-
 
 /* Request function that "handles clustering". */
 static void GLOB_SBD_request(struct request_queue *rq)

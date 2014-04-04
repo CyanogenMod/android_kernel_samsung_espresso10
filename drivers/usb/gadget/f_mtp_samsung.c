@@ -93,12 +93,12 @@
 #endif
 /*-------------------------------------------------------------------------*/
 
-#define MTPG_BULK_BUFFER_SIZE	32768
+#define MTPG_BULK_BUFFER_SIZE	16384
 #define MTPG_INTR_BUFFER_SIZE	28
 
 /* number of rx and tx requests to allocate */
-#define MTPG_RX_REQ_MAX		8
-#define MTPG_MTPG_TX_REQ_MAX	8
+#define MTPG_RX_REQ_MAX			4
+#define MTPG_MTPG_TX_REQ_MAX		4
 #define MTPG_INTR_REQ_MAX	5
 
 /* ID for Microsoft MTP OS String */
@@ -176,7 +176,7 @@ struct usb_interface_descriptor mtpg_interface_desc = {
 	.bInterfaceProtocol     = 0,
 };
 
-static struct usb_interface_descriptor ptp_interface_desc = {
+static struct usb_interface_descriptor ptpg_interface_desc = {
 	.bLength                = USB_DT_INTERFACE_SIZE,
 	.bDescriptorType        = USB_DT_INTERFACE,
 	.bInterfaceNumber       = 0,
@@ -255,16 +255,16 @@ static struct usb_descriptor_header *hs_mtpg_desc[] = {
 	NULL
 };
 
-static struct usb_descriptor_header *fs_ptp_descs[] = {
-	(struct usb_descriptor_header *) &ptp_interface_desc,
+static struct usb_descriptor_header *fsg_ptp_descs[] = {
+	(struct usb_descriptor_header *) &ptpg_interface_desc,
 	(struct usb_descriptor_header *) &fs_mtpg_in_desc,
 	(struct usb_descriptor_header *) &fs_mtpg_out_desc,
 	(struct usb_descriptor_header *) &int_fs_notify_desc,
 	NULL,
 };
 
-static struct usb_descriptor_header *hs_ptp_descs[] = {
-	(struct usb_descriptor_header *) &ptp_interface_desc,
+static struct usb_descriptor_header *hsg_ptp_descs[] = {
+	(struct usb_descriptor_header *) &ptpg_interface_desc,
 	(struct usb_descriptor_header *) &hs_mtpg_in_desc,
 	(struct usb_descriptor_header *) &hs_mtpg_out_desc,
 	(struct usb_descriptor_header *) &int_hs_notify_desc,
@@ -645,7 +645,6 @@ static ssize_t mtpg_write(struct file *fp, const char __user *buf,
 	int r = count, xfer;
 	int ret;
 
-
 	DEBUG_MTPW("[%s] \t%d ep bulk_out name = %s\n",
 			__func__, __LINE__ , dev->bulk_out->name);
 
@@ -719,11 +718,6 @@ static ssize_t mtpg_write(struct file *fp, const char __user *buf,
 	return r;
 }
 
-static void interrupt_complete(struct usb_ep *ep, struct usb_request *req)
-{
-	printk(KERN_DEBUG "Finished Writing Interrupt Data\n");
-}
-
 static ssize_t interrupt_write(struct file *fd,
 			const char __user *buf, size_t count)
 {
@@ -752,7 +746,6 @@ static ssize_t interrupt_write(struct file *fd,
 	}
 
 	req->length = count;
-	/*req->complete = interrupt_complete;*/
 
 	ret = usb_ep_queue(dev->int_in, req, GFP_ATOMIC);
 	if (ret) {
@@ -765,12 +758,10 @@ static ssize_t interrupt_write(struct file *fd,
 	return ret;
 }
 
-
 static void read_send_work(struct work_struct *work)
 {
 	struct mtpg_dev	*dev = container_of(work, struct mtpg_dev,
 							read_send_work);
-	struct usb_composite_dev *cdev = dev->cdev;
 	struct usb_request *req = 0;
 	struct usb_container_header *hdr;
 	struct file *file;
@@ -798,7 +789,6 @@ static void read_send_work(struct work_struct *work)
 	if ((count & (dev->bulk_in->maxpacket - 1)) == 0)
 		ZLP_flag = 1;
 
-
 	while (count > 0 || ZLP_flag) {
 		/*Breaking the loop after sending Zero Length Packet*/
 		if (count == 0)
@@ -816,7 +806,7 @@ static void read_send_work(struct work_struct *work)
 		ret = wait_event_interruptible(dev->write_wq,
 				((req = mtpg_req_get(dev, &dev->tx_idle))
 							|| dev->error));
-		if (ret < 0) {
+		if (ret < 0 || !req) {
 			r = ret;
 			printk(KERN_DEBUG "[%s]\t%d ret = %d\n",
 						__func__, __LINE__, r);
@@ -837,7 +827,7 @@ static void read_send_work(struct work_struct *work)
 		}
 		ret = vfs_read(file, req->buf + hdr_length,
 					xfer - hdr_length, &file_pos);
-		if (ret < 0) {
+		if (ret < 0 || !req) {
 			r = ret;
 			break;
 		}
@@ -846,7 +836,7 @@ static void read_send_work(struct work_struct *work)
 
 		req->length = xfer;
 		ret = usb_ep_queue(dev->bulk_in, req, GFP_KERNEL);
-		if (ret < 0) {
+		if (ret < 0 || !req) {
 			dev->error = 1;
 			r = -EIO;
 			printk(KERN_DEBUG "[%s]\t%d ret = %d\n",
@@ -867,7 +857,6 @@ static void read_send_work(struct work_struct *work)
 	dev->read_send_result = r;
 	smp_wmb();
 }
-
 
 static long  mtpg_ioctl(struct file *fd, unsigned int code, unsigned long arg)
 {
@@ -903,7 +892,7 @@ static long  mtpg_ioctl(struct file *fd, unsigned int code, unsigned long arg)
 			printk(KERN_DEBUG "[%s] B4 disconnecting gadget\tline = [%d]\n",
 					__func__, __LINE__);
 			/* usb_composite_force_reset(dev->cdev); */
-			usleep_range(5000, 5500);
+			msleep(20);
 			usb_gadget_connect(cdev->gadget);
 			printk(KERN_DEBUG "[%s] \tline = [%d] calling usb_gadget_connect after msleep of 5\n",
 					__func__, __LINE__);
@@ -929,7 +918,6 @@ static long  mtpg_ioctl(struct file *fd, unsigned int code, unsigned long arg)
 	case MTP_WRITE_INT_DATA:
 		/*printk(KERN_INFO "[%s]\t%d MTP slep1  intrpt_Write\n",
 						__func__, __LINE__);*/
-		msleep(1);
 		ret_value = interrupt_write(fd, (const char *)arg,
 					MTP_MAX_PACKET_LEN_FROM_APP);
 		if (ret_value < 0) {
@@ -937,8 +925,8 @@ static long  mtpg_ioctl(struct file *fd, unsigned int code, unsigned long arg)
 							 __func__, __LINE__);
 			status = -EIO;
 		} else {
-			printk(KERN_DEBUG "[%s]\t%d intruptFD suces\n",
-							 __func__, __LINE__);
+			/*printk(KERN_DEBUG "[%s]\t%d intruptFD suces\n",
+						__func__, __LINE__);*/
 			status = MTP_MAX_PACKET_LEN_FROM_APP;
 		}
 		break;
@@ -1050,7 +1038,6 @@ static long  mtpg_ioctl(struct file *fd, unsigned int code, unsigned long arg)
 			goto exit;
 		}
 
-
 		dev->read_send_file = file;
 		dev->read_send_length = info.Length;
 		smp_wmb();
@@ -1068,7 +1055,13 @@ static long  mtpg_ioctl(struct file *fd, unsigned int code, unsigned long arg)
 		status = dev->read_send_result;
 		break;
 	}
-
+	case MTP_VBUS_DISABLE:
+		printk(KERN_DEBUG "[%s] line=[%d]\n", __func__, __LINE__);
+		if (dev->cdev && dev->cdev->gadget) {
+			usb_gadget_vbus_disconnect(cdev->gadget);
+			printk(KERN_DEBUG "Restricted policy so disconnecting mtp gadget\n");
+		}
+		break;
 	default:
 		status = -ENOTTY;
 	}
@@ -1200,9 +1193,7 @@ mtpg_function_unbind(struct usb_configuration *c, struct usb_function *f)
 	struct mtpg_dev	*dev = mtpg_func_to_dev(f);
 	struct usb_request *req;
 
-	printk(KERN_INFO "[%s]\tline = [%d]\n", __func__, __LINE__);
-	dev->online = 0;
-	dev->error = 1;
+	printk(KERN_DEBUG "[%s]\tline = [%d]\n", __func__, __LINE__);
 
 	while ((req = mtpg_req_get(dev, &dev->rx_idle)))
 		mtpg_request_free(req, dev->bulk_out);
@@ -1397,7 +1388,6 @@ static void mtpg_function_disable(struct usb_function *f)
 	wake_up(&dev->read_wq);
 }
 
-
 /*PIMA15740-2000 spec: Class specific setup request for MTP*/
 static void
 mtp_complete_cancel_io(struct usb_ep *ep, struct usb_request *req)
@@ -1431,7 +1421,7 @@ mtp_complete_cancel_io(struct usb_ep *ep, struct usb_request *req)
 
 }
 
-static int mtp_ctrlrequest(struct usb_composite_dev *cdev,
+static int mtpSsung_ctrlrequest(struct usb_composite_dev *cdev,
 				const struct usb_ctrlrequest *ctrl)
 {
 	struct mtpg_dev	*dev = the_mtpg;
@@ -1542,7 +1532,7 @@ static int mtp_ctrlrequest(struct usb_composite_dev *cdev,
 	return value;
 }
 
-static int mtp_bind_config(struct usb_configuration *c, bool ptp_config)
+static int mtpSsung_bind_config(struct usb_configuration *c, bool ptp_config)
 {
 	struct mtpg_dev	*mtpg = the_mtpg;
 	int		status = 0;
@@ -1563,8 +1553,8 @@ static int mtp_bind_config(struct usb_configuration *c, bool ptp_config)
 
 	/*Test the switch */
 	if (ptp_config) {
-		mtpg->function.descriptors = fs_ptp_descs;
-		mtpg->function.hs_descriptors = hs_ptp_descs;
+		mtpg->function.descriptors = fsg_ptp_descs;
+		mtpg->function.hs_descriptors = hsg_ptp_descs;
 	} else {
 		mtpg->function.descriptors = fs_mtpg_desc;
 		mtpg->function.hs_descriptors = hs_mtpg_desc;
@@ -1581,7 +1571,7 @@ static int mtp_bind_config(struct usb_configuration *c, bool ptp_config)
 	return usb_add_function(c, &mtpg->function);
 }
 
-static int mtp_setup(void)
+static int mtpSsung_setup(void)
 {
 	struct mtpg_dev	*mtpg;
 	int		rc;
@@ -1635,7 +1625,7 @@ err_misc_register:
 	return rc;
 }
 
-static void mtp_cleanup(void)
+static void mtpSsung_cleanup(void)
 {
 	struct mtpg_dev	*mtpg = the_mtpg;
 	printk(KERN_DEBUG "[%s:::%d]\n", __func__, __LINE__);

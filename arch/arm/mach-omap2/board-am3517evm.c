@@ -152,8 +152,6 @@ static void am3517_evm_ethernet_init(struct emac_platform_data *pdata)
 	return ;
 }
 
-
-
 #define LCD_PANEL_PWR		176
 #define LCD_PANEL_BKLIGHT_PWR	182
 #define LCD_PANEL_PWM		181
@@ -420,7 +418,6 @@ static struct omap_board_mux board_mux[] __initdata = {
 	{ .reg_offset = OMAP_MUX_TERMINATOR },
 };
 #endif
-
 
 static struct resource am3517_hecc_resources[] = {
 	{

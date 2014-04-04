@@ -50,7 +50,6 @@
 #define VID_MIN_HEIGHT		0
 #define V4GFX_FRAME_UNLOCK_TIMEOUT 16	/* ms */
 
-
 /*
  * This will enable dumping of the mappings obtain
  */
@@ -232,7 +231,6 @@ static void v4gfx_done_syncframe(struct v4gfx_device *vout,
 	mutex_unlock(&vout->lock);
 }
 #endif /* V4GFX_WAIT_DEQUE */
-
 
 static u32 v4gfx_calc_stride(int bpp, u32 width)
 {
@@ -902,7 +900,6 @@ static int vidioc_reqbufs(struct file *file, void *fh,
 		rv = -EINVAL; goto end;
 	}
 
-
 	mutex_lock(&vout->lock);
 	/* Cannot be requested when streaming is on */
 	if (vout->streaming) {
@@ -1326,4 +1323,3 @@ const struct v4l2_file_operations v4gfx_fops =  {
 	.open		= vidfop_open,
 	.release	= vidfop_release,
 };
-

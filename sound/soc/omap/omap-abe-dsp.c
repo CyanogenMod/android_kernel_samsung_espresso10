@@ -72,7 +72,6 @@ static const char *abe_memory_bank[5] = {
 	"mpu"
 };
 
-
 /*
  * ABE loadable coefficients.
  * The coefficient and their mixer configurations are loaded with the firmware
@@ -643,7 +642,6 @@ static int ul_mux_get_route(struct snd_kcontrol *kcontrol,
 	return 1;
 }
 
-
 static int abe_put_switch(struct snd_kcontrol *kcontrol,
 	struct snd_ctl_elem_value *ucontrol)
 {
@@ -665,7 +663,6 @@ static int abe_put_switch(struct snd_kcontrol *kcontrol,
 
 	return 1;
 }
-
 
 static int volume_put_sdt_mixer(struct snd_kcontrol *kcontrol,
 	struct snd_ctl_elem_value *ucontrol)

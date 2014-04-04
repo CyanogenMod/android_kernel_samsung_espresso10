@@ -27,7 +27,6 @@
 #ifndef __DEBUGFS_H__
 #define __DEBUGFS_H__
 
-
 #ifdef CONFIG_IWMC3200TOP_DEBUGFS
 
 struct iwmct_debugfs {
@@ -55,4 +54,3 @@ iwmct_dbgfs_unregister(struct iwmct_debugfs *dbgfs)
 #endif /* CONFIG_IWMC3200TOP_DEBUGFS */
 
 #endif /* __DEBUGFS_H__ */
-

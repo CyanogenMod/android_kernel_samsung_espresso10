@@ -537,7 +537,6 @@ static int analog_init_masks(struct analog_port *port)
 		return -1;
 	}
 
-
 	i = analog_options[0]; /* FIXME !!! - need to specify options for different ports */
 
 	analog[0].mask = i & 0xfffff;

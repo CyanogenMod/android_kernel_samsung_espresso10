@@ -794,7 +794,7 @@ static int wm8985_set_pll(struct snd_soc_dai *dai, int pll_id,
 	/* disable the PLL before reprogramming it */
 	snd_soc_update_bits(codec, WM8985_POWER_MANAGEMENT_1,
 			    WM8985_PLLEN_MASK, 0);
-	
+
 	if (!freq_in || !freq_out)
 		return 0;
 

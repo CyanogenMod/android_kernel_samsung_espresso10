@@ -29,7 +29,6 @@
 #define WKUP_MOD					0x400
 #define PLL_MOD						0x500
 
-
 /* Chip-specific module offsets */
 #define OMAP24XX_GR_MOD					OCP_MOD
 #define OMAP24XX_DSP_MOD				0x800
@@ -183,7 +182,6 @@
 /* CM_IDLEST_MDM and PM_WKST_MDM shared bits */
 #define OMAP2430_ST_MDM_SHIFT				0
 #define OMAP2430_ST_MDM_MASK				(1 << 0)
-
 
 /* 3430 register bits shared between CM & PRM registers */
 
@@ -397,7 +395,6 @@
 #define OMAP3430_EN_CORE_SHIFT				0
 #define OMAP3430_EN_CORE_MASK				(1 << 0)
 
-
 /*
  * MAX_MODULE_HARDRESET_WAIT: Maximum microseconds to wait for an OMAP
  * submodule to exit hardreset
@@ -411,4 +408,3 @@ extern void __iomem *cm2_base;
 # endif
 
 #endif
-

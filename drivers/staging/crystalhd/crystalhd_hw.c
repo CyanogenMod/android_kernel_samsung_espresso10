@@ -35,7 +35,6 @@ static void crystalhd_enable_uarts(struct crystalhd_adp *adp)
 	bc_dec_reg_wr(adp, UartSelectB, BSVS_UART_DEC_OUTER);
 }
 
-
 static void crystalhd_start_dram(struct crystalhd_adp *adp)
 {
 	bc_dec_reg_wr(adp, SDRAM_PARAM, ((40 / 5 - 1) <<  0) |
@@ -57,7 +56,6 @@ static void crystalhd_start_dram(struct crystalhd_adp *adp)
 	/* setting the refresh rate here */
 	bc_dec_reg_wr(adp, SDRAM_REF_PARAM, ((1 << 12) | 96));
 }
-
 
 static bool crystalhd_bring_out_of_rst(struct crystalhd_adp *adp)
 {
@@ -276,7 +274,6 @@ static bool crystalhd_load_firmware_config(struct crystalhd_adp *adp)
 	return false;
 }
 
-
 static bool crystalhd_start_device(struct crystalhd_adp *adp)
 {
 	uint32_t dbg_options, glb_cntrl = 0, reg_pwrmgmt = 0;
@@ -481,7 +478,6 @@ hw_create_ioq_err:
 
 	return sts;
 }
-
 
 static bool crystalhd_code_in_full(struct crystalhd_adp *adp, uint32_t needed_sz,
 				 bool b_188_byte_pkts,  uint8_t flags)
@@ -1462,7 +1458,6 @@ static bool crystalhd_rx_list1_handler(struct crystalhd_hw *hw, uint32_t int_sts
 	return (tmp_lsts != hw->rx_list_sts[1]);
 }
 
-
 static void crystalhd_rx_isr(struct crystalhd_hw *hw, uint32_t intr_sts)
 {
 	unsigned long flags;
@@ -2095,7 +2090,6 @@ enum BC_STATUS crystalhd_hw_post_tx(struct crystalhd_hw *hw, struct crystalhd_di
 
 	spin_unlock_irqrestore(&hw->lock, flags);
 
-
 	/* Insert in Active Q..*/
 	crystalhd_dioq_add(hw->tx_actq, tx_dma_packet, false,
 			 tx_dma_packet->list_tag);
@@ -2183,7 +2177,6 @@ enum BC_STATUS crystalhd_hw_get_cap_buffer(struct crystalhd_hw *hw,
 	struct crystalhd_rx_dma_pkt *rpkt;
 	uint32_t timeout = BC_PROC_OUTPUT_TIMEOUT / 1000;
 	uint32_t sig_pending = 0;
-
 
 	if (!hw || !ioreq || !pib) {
 		BCMLOG_ERR("Invalid Arguments\n");

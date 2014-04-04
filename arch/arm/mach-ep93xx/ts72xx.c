@@ -27,7 +27,6 @@
 #include <asm/mach/map.h>
 #include <asm/mach/arch.h>
 
-
 static struct map_desc ts72xx_io_desc[] __initdata = {
 	{
 		.virtual	= TS72XX_MODEL_VIRT_BASE,
@@ -62,7 +61,6 @@ static void __init ts72xx_map_io(void)
 	ep93xx_map_io();
 	iotable_init(ts72xx_io_desc, ARRAY_SIZE(ts72xx_io_desc));
 }
-
 
 /*************************************************************************
  * NAND flash
@@ -171,7 +169,6 @@ static struct platform_device ts72xx_nand_flash = {
 	.num_resources		= ARRAY_SIZE(ts72xx_nand_resource),
 };
 
-
 static void __init ts72xx_register_flash(void)
 {
 	/*
@@ -193,7 +190,6 @@ static void __init ts72xx_register_flash(void)
 		platform_device_register(&ts72xx_nand_flash);
 	}
 }
-
 
 static unsigned char ts72xx_rtc_readbyte(unsigned long addr)
 {

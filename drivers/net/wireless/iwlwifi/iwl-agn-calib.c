@@ -344,7 +344,6 @@ static int iwl_sens_energy_cck(struct iwl_priv *priv,
 	return 0;
 }
 
-
 static int iwl_sens_auto_corr_ofdm(struct iwl_priv *priv,
 				       u32 norm_fa,
 				       u32 rx_enable_time)
@@ -836,7 +835,6 @@ static void iwl_find_disconn_antenna(struct iwl_priv *priv, u32* average_sig,
 	IWL_DEBUG_CALIB(priv, "active_chains (bitwise) = 0x%x\n",
 			active_chains);
 }
-
 
 /*
  * Accumulate 16 beacons of signal and noise statistics for each of

@@ -39,7 +39,6 @@ static inline void xor_128(u8 *a, const u8 *b)
 	((u32 *)a)[3] ^= ((u32 *)b)[3];
 }
 
-
 /*
  * Generic encrypt/decrypt wrapper for ciphers, handles operations across
  * multiple page boundaries by using temporary blocks.  In user context,

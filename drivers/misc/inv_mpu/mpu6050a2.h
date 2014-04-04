@@ -180,7 +180,6 @@ enum MPU_MEMORY_BANKS {
 	MPU_MEM_OTP_BANK_0 = 16
 };
 
-
 /*==== MPU6050A2 parameters ====*/
 
 #define NUM_REGS		(NUM_OF_MPU_REGISTERS)
@@ -196,7 +195,6 @@ enum MPU_MEMORY_BANKS {
 #define FIFO_HW_SIZE		(1024)
 
 #define NUM_EXT_SLAVES		(4)
-
 
 /*==== BITS FOR MPU6050A2 ====*/
 
@@ -354,8 +352,6 @@ enum MPU_MEMORY_BANKS {
 #define BIT_MPU_RDY_EN		BIT_PLL_RDY_EN
 /* 'INT_STATUS' register */
 #define BIT_INT_STATUS_FIFO_OVERLOW BIT_FIFO_OVERFLOW_INT
-
-
 
 /*---- MPU6050A2 Silicon Revisions ----*/
 #define MPU_SILICON_REV_A2		1	/* MPU6050A2 Device */

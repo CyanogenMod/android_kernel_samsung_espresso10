@@ -25,7 +25,6 @@
 #define VP1_VBPD_MASK					(0xfff)
 #define VP1_VBPD_SHIFT					(16)
 
-
 #define WPALCON_H					(0x19c)
 #define WPALCON_L					(0x1a0)
 
@@ -80,7 +79,6 @@
 #define VIDW14ALPHAx_B_L_MASK				(0xf << 0)
 #define VIDW14ALPHAx_B_L_SHIFT				(0)
 
-
 /* Per-window blending equation control registers */
 #define BLENDEQx(_win)					(0x244 + ((_win) * 4))
 #define BLENDEQ1					(0x244)
@@ -100,6 +98,4 @@
 #define BLENDCON					(0x260)
 #define BLENDCON_8BIT_ALPHA				(1 << 0)
 
-
 #endif /* __ASM_ARCH_REGS_FB_H */
-

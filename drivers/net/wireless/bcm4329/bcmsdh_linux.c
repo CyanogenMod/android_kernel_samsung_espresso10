@@ -2,13 +2,13 @@
  * SDIO access interface for drivers - linux specific (pci only)
  *
  * Copyright (C) 1999-2010, Broadcom Corporation
- * 
+ *
  *      Unless you and Broadcom execute a separate written software license
  * agreement governing use of this software, this software is licensed to you
  * under the terms of the GNU General Public License version 2 (the "GPL"),
  * available at http://www.broadcom.com/licenses/GPLv2.php, with the
  * following added to such license:
- * 
+ *
  *      As a special exception, the copyright holders of this software give you
  * permission to link this software with independent modules, and to copy and
  * distribute the resulting executable under terms of your choice, provided that
@@ -16,7 +16,7 @@
  * the license of that module.  An independent module is a module which is not
  * derived from this software.  The special exception does not apply to any
  * modifications of the software.
- * 
+ *
  *      Notwithstanding the above, under no circumstances may you combine this
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
@@ -295,7 +295,6 @@ int bcmsdh_remove(struct device *dev)
 		return 0;
 	}
 
-
 	/* release SDIO Host Controller info */
 	osh = sdhc->osh;
 	MFREE(osh, sdhc, sizeof(bcmsdh_hc_t));
@@ -347,7 +346,6 @@ static struct pci_driver bcmsdh_pci_driver = {
 	resume:		NULL,
 };
 
-
 extern uint sd_pci_slot;	/* Force detection to a particular PCI */
 				/* slot only . Allows for having multiple */
 				/* WL devices at once in a PC */
@@ -358,7 +356,6 @@ extern uint sd_pci_slot;	/* Force detection to a particular PCI */
 				/* Default value of 0xFFFFffff turns this */
 				/* off */
 module_param(sd_pci_slot, uint, 0);
-
 
 /**
  * Detect supported SDIO Host Controller and attach if found.
@@ -489,7 +486,6 @@ err:
 		osl_detach(osh);
 	return -ENODEV;
 }
-
 
 /**
  * Detach from target devices and SDIO Host Controller
@@ -691,7 +687,6 @@ module_param(sd_hiok, uint, 0);
 
 extern uint sd_f2_blocksize;
 module_param(sd_f2_blocksize, int, 0);
-
 
 #ifdef BCMSDH_MODULE
 EXPORT_SYMBOL(bcmsdh_attach);

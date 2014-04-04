@@ -61,7 +61,6 @@ static u32 mv_desc_get_src_addr(struct mv_xor_desc_slot *desc,
 	return hw_desc->phy_src_addr[src_idx];
 }
 
-
 static void mv_desc_set_byte_count(struct mv_xor_desc_slot *desc,
 				   u32 byte_count)
 {
@@ -1129,7 +1128,6 @@ static int __devinit mv_xor_probe(struct platform_device *pdev)
 	struct dma_device *dma_dev;
 	struct mv_xor_platform_data *plat_data = pdev->dev.platform_data;
 
-
 	adev = devm_kzalloc(&pdev->dev, sizeof(*adev), GFP_KERNEL);
 	if (!adev)
 		return -ENOMEM;
@@ -1342,7 +1340,6 @@ static struct platform_driver mv_xor_shared_driver = {
 		.name	= MV_XOR_SHARED_NAME,
 	},
 };
-
 
 static int __init mv_xor_init(void)
 {

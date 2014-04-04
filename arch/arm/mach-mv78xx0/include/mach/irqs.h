@@ -90,5 +90,4 @@
 
 #define NR_IRQS			(IRQ_MV78XX0_GPIO_START + NR_GPIO_IRQS)
 
-
 #endif

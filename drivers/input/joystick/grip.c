@@ -274,7 +274,6 @@ static void grip_poll(struct gameport *gameport)
 					input_report_key(dev, grip_btn_dc[j], (data[3] >> (j + 3)) & 1);
 				break;
 
-
 		}
 
 		input_sync(dev);

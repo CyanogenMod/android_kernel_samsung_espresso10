@@ -18,7 +18,6 @@ static char ErrorBuffer[256];
  * Functions for accessing Amiga-FFS structures.
  */
 
-
 /* Insert a header block bh into the directory dir
  * caller must hold AFFS_DIR->i_hash_lock!
  */
@@ -142,7 +141,6 @@ affs_fix_dcache(struct dentry *dentry, u32 entry_ino)
 	spin_unlock(&inode->i_lock);
 }
 
-
 /* Remove header from link chain */
 
 static int
@@ -164,7 +162,7 @@ affs_remove_link(struct dentry *dentry)
 	if (inode->i_ino == link_ino) {
 		/* we can't remove the head of the link, as its blocknr is still used as ino,
 		 * so we remove the block of the first link instead.
-		 */ 
+		 */
 		link_ino = be32_to_cpu(AFFS_TAIL(sb, bh)->link_chain);
 		link_bh = affs_bread(sb, link_ino);
 		if (!link_bh)
@@ -232,7 +230,6 @@ done:
 	return retval;
 }
 
-
 static int
 affs_empty_dir(struct inode *inode)
 {
@@ -255,7 +252,6 @@ not_empty:
 done:
 	return retval;
 }
-
 
 /* Remove a filesystem object. If the object to be removed has
  * links to it, one of the links must be changed to inherit

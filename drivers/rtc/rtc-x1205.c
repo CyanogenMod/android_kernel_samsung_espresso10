@@ -547,7 +547,6 @@ static void x1205_sysfs_unregister(struct device *dev)
 	device_remove_file(dev, &dev_attr_dtrim);
 }
 
-
 static int x1205_probe(struct i2c_client *client,
 			const struct i2c_device_id *id)
 {

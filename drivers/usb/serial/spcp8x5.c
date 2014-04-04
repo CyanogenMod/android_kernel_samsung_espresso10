@@ -28,7 +28,6 @@
 #include <linux/usb.h>
 #include <linux/usb/serial.h>
 
-
 /* Version Information */
 #define DRIVER_VERSION	"v0.10"
 #define DRIVER_DESC 	"SPCP8x5 USB to serial adaptor driver"
@@ -64,7 +63,6 @@ struct spcp8x5_usb_ctrl_arg {
 	u16	index;
 	u16	length;
 };
-
 
 /* spcp8x5 spec register define */
 #define MCR_CONTROL_LINE_RTS		0x02
@@ -158,7 +156,6 @@ static struct usb_driver spcp8x5_driver = {
 	.id_table =		id_table,
 	.no_dynamic_id =	1,
 };
-
 
 struct spcp8x5_private {
 	spinlock_t 	lock;
@@ -346,7 +343,6 @@ static void spcp8x5_set_termios(struct tty_struct *tty,
 	int baud;
 	int i;
 	u8 control;
-
 
 	/* check that they really want us to change something */
 	if (!tty_termios_hw_change(tty->termios, old_termios))

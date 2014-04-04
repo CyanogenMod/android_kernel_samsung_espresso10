@@ -1,6 +1,6 @@
 // ------------------------------------------------------------------
 // Copyright (c) 2004-2010 Atheros Corporation.  All rights reserved.
-// 
+//
 //
 // Permission to use, copy, modify, and/or distribute this software for any
 // purpose with or without fee is hereby granted, provided that the above
@@ -19,6 +19,5 @@
 //===================================================================
 // Author(s): ="Atheros"
 //===================================================================
-
 
 #include "mbox_wlan_host_reg.h"

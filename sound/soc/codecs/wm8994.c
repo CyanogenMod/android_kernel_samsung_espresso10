@@ -1,10 +1,6 @@
 /*
- * wm8994.c  --  WM8994 ALSA SoC Audio driver
- *
  * Copyright 2009 Wolfson Microelectronics plc
- *
  * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
- *
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -152,10 +148,6 @@ static void wm8958_micd_set_rate(struct snd_soc_codec *codec)
 	val = rates[best].start << WM8958_MICD_BIAS_STARTTIME_SHIFT
 		| rates[best].rate << WM8958_MICD_RATE_SHIFT;
 
-	dev_dbg(codec->dev, "MICD rate %d,%d for %dHz %s\n",
-		rates[best].start, rates[best].rate, sysclk,
-		idle ? "idle" : "active");
-
 	snd_soc_update_bits(codec, WM8958_MIC_DETECT_1,
 			    WM8958_MICD_BIAS_STARTTIME_MASK |
 			    WM8958_MICD_RATE_MASK, val);
@@ -163,7 +155,6 @@ static void wm8958_micd_set_rate(struct snd_soc_codec *codec)
 
 static int wm8994_readable(struct snd_soc_codec *codec, unsigned int reg)
 {
-	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 	struct wm8994 *control = codec->control_data;
 
 	switch (reg) {
@@ -302,8 +293,6 @@ static int configure_aif_clock(struct snd_soc_codec *codec, int aif)
 		rate /= 2;
 		reg1 |= WM8994_AIF1CLK_DIV;
 
-		dev_dbg(codec->dev, "Dividing AIF%d clock to %dHz\n",
-			aif + 1, rate);
 	}
 
 	wm8994->aifclk[aif] = rate;
@@ -529,12 +518,6 @@ static void wm8994_set_retune_mobile(struct snd_soc_codec *codec, int block)
 				       - wm8994->dac_rates[iface]);
 		}
 	}
-
-	dev_dbg(codec->dev, "ReTune Mobile %d %s/%dHz for %dHz sample rate\n",
-		block,
-		pdata->retune_mobile_cfgs[best].name,
-		pdata->retune_mobile_cfgs[best].rate,
-		wm8994->dac_rates[iface]);
 
 	/* The EQ will be disabled while reconfiguring it, remember the
 	 * current configuration.
@@ -852,9 +835,6 @@ static void active_reference(struct snd_soc_codec *codec)
 
 	wm8994->active_refcount++;
 
-	dev_dbg(codec->dev, "Active refcount incremented, now %d\n",
-		wm8994->active_refcount);
-
 	/* If we're using jack detection go into audio mode */
 	wm1811_jackdet_set_mode(codec, WM1811_JACKDET_MODE_AUDIO);
 
@@ -869,9 +849,6 @@ static void active_dereference(struct snd_soc_codec *codec)
 	mutex_lock(&wm8994->accdet_lock);
 
 	wm8994->active_refcount--;
-
-	dev_dbg(codec->dev, "Active refcount decremented, now %d\n",
-		wm8994->active_refcount);
 
 	if (wm8994->active_refcount == 0) {
 		/* Go into appropriate detection only mode */
@@ -910,9 +887,6 @@ static void vmid_reference(struct snd_soc_codec *codec)
 	pm_runtime_get_sync(codec->dev);
 
 	wm8994->vmid_refcount++;
-
-	dev_dbg(codec->dev, "Referencing VMID, refcount is now %d\n",
-		wm8994->vmid_refcount);
 
 	if (wm8994->vmid_refcount == 1) {
 		snd_soc_update_bits(codec, WM8994_ANTIPOP_1,
@@ -986,9 +960,6 @@ static void vmid_dereference(struct snd_soc_codec *codec)
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 
 	wm8994->vmid_refcount--;
-
-	dev_dbg(codec->dev, "Dereferencing VMID, refcount is now %d\n",
-		wm8994->vmid_refcount);
 
 	if (wm8994->vmid_refcount == 0) {
 		if (wm8994->hubs.lineout1_se)
@@ -1228,7 +1199,6 @@ static int aif2clk_ev(struct snd_soc_dapm_widget *w,
 		else
 			adc = WM8994_AIF2ADCL_ENA | WM8994_AIF2ADCR_ENA;
 
-
 		val = snd_soc_read(codec, WM8994_AIF2_CONTROL_2);
 		if ((val & WM8994_AIF2DACL_SRC) &&
 		    (val & WM8994_AIF2DACR_SRC))
@@ -1448,10 +1418,6 @@ SOC_DAPM_SINGLE("DAC1 Switch", WM8994_SPEAKER_MIXER, 0, 1, 0),
 static int post_ev(struct snd_soc_dapm_widget *w,
 	    struct snd_kcontrol *kcontrol, int event)
 {
-	struct snd_soc_codec *codec = w->codec;
-	dev_dbg(codec->dev, "SRC status: %x\n",
-		snd_soc_read(codec,
-			     WM8994_RATE_STATUS));
 	return 0;
 }
 
@@ -2089,8 +2055,6 @@ static int wm8994_get_fll_config(struct fll_div *fll,
 	u64 Kpart;
 	unsigned int K, Ndiv, Nmod;
 
-	pr_debug("FLL input=%dHz, output=%dHz\n", freq_in, freq_out);
-
 	/* Scale the input frequency down to <= 13.5MHz */
 	fll->clk_ref_div = 0;
 	while (freq_in > 13500000) {
@@ -2100,8 +2064,6 @@ static int wm8994_get_fll_config(struct fll_div *fll,
 		if (fll->clk_ref_div > 3)
 			return -EINVAL;
 	}
-	pr_debug("CLK_REF_DIV=%d, Fref=%dHz\n", fll->clk_ref_div, freq_in);
-
 	/* Scale the output to give 90MHz<=Fvco<=100MHz */
 	fll->outdiv = 3;
 	while (freq_out * (fll->outdiv + 1) < 90000000) {
@@ -2110,7 +2072,6 @@ static int wm8994_get_fll_config(struct fll_div *fll,
 			return -EINVAL;
 	}
 	freq_out *= fll->outdiv + 1;
-	pr_debug("OUTDIV=%d, Fvco=%dHz\n", fll->outdiv, freq_out);
 
 	if (freq_in > 1000000) {
 		fll->fll_fratio = 0;
@@ -2127,14 +2088,12 @@ static int wm8994_get_fll_config(struct fll_div *fll,
 		fll->fll_fratio = 4;
 		freq_in *= 16;
 	}
-	pr_debug("FLL_FRATIO=%d, Fref=%dHz\n", fll->fll_fratio, freq_in);
 
 	/* Now, calculate N.K */
 	Ndiv = freq_out / freq_in;
 
 	fll->n = Ndiv;
 	Nmod = freq_out % freq_in;
-	pr_debug("Nmod=%d\n", Nmod);
 
 	/* Calculate fractional part - scale up so we can round. */
 	Kpart = FIXED_FLL_SIZE * (long long)Nmod;
@@ -2149,8 +2108,6 @@ static int wm8994_get_fll_config(struct fll_div *fll,
 	/* Move down to proper range now rounding is done */
 	fll->k = K / 10;
 
-	pr_debug("N=%x K=%x\n", fll->n, fll->k);
-
 	return 0;
 }
 
@@ -2164,7 +2121,6 @@ static int _wm8994_set_fll(struct snd_soc_codec *codec, int id, int src,
 	u16 reg, clk1, aif_reg, aif_src;
 	unsigned long timeout;
 	bool was_enabled;
-	dev_info(codec->dev, "%s ++\n", __func__);
 
 	switch (id) {
 	case WM8994_FLL1:
@@ -2232,14 +2188,12 @@ static int _wm8994_set_fll(struct snd_soc_codec *codec, int id, int src,
 		return -EBUSY;
 	}
 
-
 	/* We always need to disable the FLL while reconfiguring */
 	snd_soc_update_bits(codec, WM8994_FLL1_CONTROL_1 + reg_offset,
 			    WM8994_FLL1_ENA, 0);
 
 	if (wm8994->fll_byp && src == WM8994_FLL_SRC_BCLK &&
 	    freq_in == freq_out && freq_out) {
-		dev_dbg(codec->dev, "Bypassing FLL%d\n", id + 1);
 		snd_soc_update_bits(codec, WM8994_FLL1_CONTROL_5 + reg_offset,
 				    WM8958_FLL1_BYP, WM8958_FLL1_BYP);
 		goto out;
@@ -2298,9 +2252,6 @@ static int _wm8994_set_fll(struct snd_soc_codec *codec, int id, int src,
 		if (wm8994->fll_locked_irq) {
 			timeout = wait_for_completion_timeout(&wm8994->fll_locked[id],
 							      msecs_to_jiffies(10));
-			if (timeout == 0)
-				dev_warn(codec->dev,
-					 "Timed out waiting for FLL lock\n");
 		} else {
 			msleep(5);
 		}
@@ -2328,10 +2279,10 @@ out:
 	wm8994->fll[id].src = src;
 
 	configure_clock(codec);
-	dev_info(codec->dev, "%s --\n", __func__);
 	return 0;
 }
 
+#ifdef CONFIG_SND_SOC_WM8994_IRQ
 static irqreturn_t wm8994_fll_locked_irq(int irq, void *data)
 {
 	struct completion *completion = data;
@@ -2340,6 +2291,7 @@ static irqreturn_t wm8994_fll_locked_irq(int irq, void *data)
 
 	return IRQ_HANDLED;
 }
+#endif
 
 static int opclk_divs[] = { 10, 20, 30, 40, 55, 60, 80, 120, 160 };
 
@@ -2370,26 +2322,19 @@ static int wm8994_set_dai_sysclk(struct snd_soc_dai *dai,
 	case WM8994_SYSCLK_MCLK1:
 		wm8994->sysclk[dai->id - 1] = WM8994_SYSCLK_MCLK1;
 		wm8994->mclk[0] = freq;
-		dev_dbg(dai->dev, "AIF%d using MCLK1 at %uHz\n",
-			dai->id, freq);
 		break;
 
 	case WM8994_SYSCLK_MCLK2:
-		/* TODO: Set GPIO AF */
 		wm8994->sysclk[dai->id - 1] = WM8994_SYSCLK_MCLK2;
 		wm8994->mclk[1] = freq;
-		dev_dbg(dai->dev, "AIF%d using MCLK2 at %uHz\n",
-			dai->id, freq);
 		break;
 
 	case WM8994_SYSCLK_FLL1:
 		wm8994->sysclk[dai->id - 1] = WM8994_SYSCLK_FLL1;
-		dev_dbg(dai->dev, "AIF%d using FLL1\n", dai->id);
 		break;
 
 	case WM8994_SYSCLK_FLL2:
 		wm8994->sysclk[dai->id - 1] = WM8994_SYSCLK_FLL2;
-		dev_dbg(dai->dev, "AIF%d using FLL2\n", dai->id);
 		break;
 
 	case WM8994_SYSCLK_OPCLK:
@@ -2753,7 +2698,6 @@ static int wm8994_hw_params(struct snd_pcm_substream *substream,
 			lrclk_reg = WM8994_AIF1DAC_LRCLK;
 		} else {
 			lrclk_reg = WM8994_AIF1ADC_LRCLK;
-			dev_dbg(codec->dev, "AIF1 using split LRCLK\n");
 		}
 		break;
 	case 2:
@@ -2766,7 +2710,6 @@ static int wm8994_hw_params(struct snd_pcm_substream *substream,
 			lrclk_reg = WM8994_AIF2DAC_LRCLK;
 		} else {
 			lrclk_reg = WM8994_AIF2ADC_LRCLK;
-			dev_dbg(codec->dev, "AIF2 using split LRCLK\n");
 		}
 		break;
 	case 3:
@@ -2811,10 +2754,6 @@ static int wm8994_hw_params(struct snd_pcm_substream *substream,
 		return -EINVAL;
 	rate_val |= srs[i].val << WM8994_AIF1_SR_SHIFT;
 
-	dev_dbg(dai->dev, "Sample rate is %dHz\n", srs[i].rate);
-	dev_dbg(dai->dev, "AIF%dCLK is %dHz, target BCLK %dHz\n",
-		dai->id, wm8994->aifclk[id], bclk_rate);
-
 	if (params_channels(params) == 1 &&
 	    (snd_soc_read(codec, aif1_reg) & 0x18) == 0x18)
 		aif2 |= WM8994_AIF1_MONO;
@@ -2836,8 +2775,6 @@ static int wm8994_hw_params(struct snd_pcm_substream *substream,
 		best = i;
 		best_val = cur_val;
 	}
-	dev_dbg(dai->dev, "Selected AIF%dCLK/fs = %d\n",
-		dai->id, fs_ratios[best]);
 	rate_val |= best;
 
 	/* We may not get quite the right frequency if using
@@ -2853,14 +2790,9 @@ static int wm8994_hw_params(struct snd_pcm_substream *substream,
 		best = i;
 	}
 	bclk_rate = wm8994->aifclk[id] * 10 / bclk_divs[best];
-	dev_dbg(dai->dev, "Using BCLK_DIV %d for actual BCLK %dHz\n",
-		bclk_divs[best], bclk_rate);
 	bclk |= best << WM8994_AIF1_BCLK_DIV_SHIFT;
 
 	lrclk = bclk_rate / params_rate(params);
-	dev_dbg(dai->dev, "Using LRCLK rate %d for actual LRCLK %dHz\n",
-		lrclk, bclk_rate / lrclk);
-
 	snd_soc_update_bits(codec, aif1_reg, WM8994_AIF1_WL_MASK, aif1);
 	snd_soc_update_bits(codec, aif2_reg, WM8994_AIF1_MONO, aif2);
 	snd_soc_update_bits(codec, bclk_reg, WM8994_AIF1_BCLK_DIV_MASK, bclk);
@@ -2905,6 +2837,7 @@ static int wm8994_aif3_hw_params(struct snd_pcm_substream *substream,
 		default:
 			return 0;
 		}
+		break;
 	default:
 		return 0;
 	}
@@ -3195,7 +3128,6 @@ static int wm8994_codec_resume(struct snd_soc_codec *codec)
 
 static void wm8994_handle_retune_mobile_pdata(struct wm8994_priv *wm8994)
 {
-	struct snd_soc_codec *codec = wm8994->codec;
 	struct wm8994_pdata *pdata = wm8994->pdata;
 	struct snd_kcontrol_new controls[] = {
 		SOC_ENUM_EXT("AIF1.1 EQ Mode",
@@ -3247,9 +3179,6 @@ static void wm8994_handle_retune_mobile_pdata(struct wm8994_priv *wm8994)
 		wm8994->retune_mobile_texts = t;
 	}
 
-	dev_dbg(codec->dev, "Allocated %d unique ReTune Mobile names\n",
-		wm8994->num_retune_mobile_texts);
-
 	wm8994->retune_mobile_enum.max = wm8994->num_retune_mobile_texts;
 	wm8994->retune_mobile_enum.texts = wm8994->retune_mobile_texts;
 
@@ -3277,8 +3206,6 @@ static void wm8994_handle_pdata(struct wm8994_priv *wm8994)
 				      pdata->jd_thr,
 				      pdata->micbias1_lvl,
 				      pdata->micbias2_lvl);
-
-	dev_dbg(codec->dev, "%d DRC configurations\n", pdata->num_drc_cfgs);
 
 	if (pdata->num_drc_cfgs) {
 		struct snd_kcontrol_new controls[] = {
@@ -3315,9 +3242,6 @@ static void wm8994_handle_pdata(struct wm8994_priv *wm8994)
 		for (i = 0; i < WM8994_NUM_DRC; i++)
 			wm8994_set_drc(codec, i);
 	}
-
-	dev_dbg(codec->dev, "%d ReTune Mobile configurations\n",
-		pdata->num_retune_mobile_cfgs);
 
 	if (pdata->num_retune_mobile_cfgs)
 		wm8994_handle_retune_mobile_pdata(wm8994);
@@ -3372,9 +3296,6 @@ int wm8994_mic_detect(struct snd_soc_codec *codec, struct snd_soc_jack *jack,
 		return -EINVAL;
 	}
 
-	dev_dbg(codec->dev, "Configuring microphone detection on %d: %x %x\n",
-		micbias, det, shrt);
-
 	/* Store the configuration */
 	micdet->jack = jack;
 	micdet->det = det;
@@ -3399,8 +3320,10 @@ static irqreturn_t wm8994_mic_irq(int irq, void *data)
 	int reg;
 	int report;
 
+#if 0
 #ifndef CONFIG_SND_SOC_WM8994_MODULE
 	trace_snd_soc_jack_irq(dev_name(codec->dev));
+#endif
 #endif
 
 	reg = snd_soc_read(codec, WM8994_INTERRUPT_RAW_STATUS_2);
@@ -3409,8 +3332,6 @@ static irqreturn_t wm8994_mic_irq(int irq, void *data)
 			reg);
 		return IRQ_HANDLED;
 	}
-
-	dev_dbg(codec->dev, "Microphone status: %x\n", reg);
 
 	report = 0;
 	if (reg & WM8994_MIC1_DET_STS)
@@ -3444,7 +3365,6 @@ static void wm8958_default_micdet(u16 status, void *data)
 	if (!(status & WM8958_MICD_STS)) {
 		if (!wm8994->jackdet) {
 			/* If nothing present then clear our statuses */
-			dev_dbg(codec->dev, "Detected open circuit\n");
 			wm8994->jack_mic = false;
 			wm8994->mic_detecting = true;
 
@@ -3461,24 +3381,16 @@ static void wm8958_default_micdet(u16 status, void *data)
 	 * microphone.
 	 */
 	if (wm8994->mic_detecting && (status & 0x600)) {
-		dev_dbg(codec->dev, "Detected microphone\n");
-
 		wm8994->mic_detecting = false;
 		wm8994->jack_mic = true;
-
 		wm8958_micd_set_rate(codec);
-
 		snd_soc_jack_report(wm8994->micdet[0].jack, SND_JACK_HEADSET,
 				    SND_JACK_HEADSET);
 	}
 
-
 	if (wm8994->mic_detecting && status & 0x4) {
-		dev_dbg(codec->dev, "Detected headphone\n");
 		wm8994->mic_detecting = false;
-
 		wm8958_micd_set_rate(codec);
-
 		snd_soc_jack_report(wm8994->micdet[0].jack, SND_JACK_HEADPHONE,
 				    SND_JACK_HEADSET);
 
@@ -3546,13 +3458,9 @@ static irqreturn_t wm1811_jackdet_irq(int irq, void *data)
 		return IRQ_NONE;
 	}
 
-	dev_dbg(codec->dev, "JACKDET %x\n", reg);
-
 	present = reg & WM1811_JACKDET_LVL;
 
 	if (present) {
-		dev_dbg(codec->dev, "Jack detected\n");
-
 		wm8958_micd_set_rate(codec);
 
 		snd_soc_update_bits(codec, WM8958_MICBIAS2,
@@ -3572,8 +3480,6 @@ static irqreturn_t wm1811_jackdet_irq(int irq, void *data)
 		snd_soc_update_bits(codec, WM8958_MIC_DETECT_1,
 				    WM8958_MICD_ENA, WM8958_MICD_ENA);
 	} else {
-		dev_dbg(codec->dev, "Jack not detected\n");
-
 		snd_soc_update_bits(codec, WM8958_MICBIAS2,
 				    WM8958_MICB2_DISCH, WM8958_MICB2_DISCH);
 
@@ -3648,7 +3554,6 @@ int wm8958_mic_detect(struct snd_soc_codec *codec, struct snd_soc_jack *jack,
 
 	if (jack) {
 		if (!cb) {
-			dev_dbg(codec->dev, "Using default micdet callback\n");
 			cb = wm8958_default_micdet;
 			cb_data = codec;
 		}
@@ -3737,7 +3642,6 @@ static irqreturn_t wm8958_mic_irq(int irq, void *data)
 		}
 
 		if (!(reg & WM8958_MICD_VALID)) {
-			dev_dbg(codec->dev, "Mic detect data not valid\n");
 			goto out;
 		}
 
@@ -3750,10 +3654,11 @@ static irqreturn_t wm8958_mic_irq(int irq, void *data)
 	if (count == 0)
 		dev_warn(codec->dev, "No impedence range reported for jack\n");
 
+#if 0
 #ifndef CONFIG_SND_SOC_WM8994_MODULE
 	trace_snd_soc_jack_irq(dev_name(codec->dev));
 #endif
-
+#endif
 	if (wm8994->jack_cb)
 		wm8994->jack_cb(reg, wm8994->jack_cb_data);
 	else
@@ -3763,6 +3668,7 @@ out:
 	return IRQ_HANDLED;
 }
 
+#ifdef CONFIG_SND_SOC_WM8994_IRQ
 static irqreturn_t wm8994_fifo_error(int irq, void *data)
 {
 	struct snd_soc_codec *codec = data;
@@ -3789,6 +3695,7 @@ static irqreturn_t wm8994_temp_shut(int irq, void *data)
 
 	return IRQ_HANDLED;
 }
+#endif
 
 static int wm8994_codec_probe(struct snd_soc_codec *codec)
 {
@@ -3990,10 +3897,6 @@ static int wm8994_codec_probe(struct snd_soc_codec *codec)
 						 wm8994);
 			if (ret == 0) {
 				wm8994->jackdet = true;
-			} else {
-				dev_warn(codec->dev,
-					 "Failed to request Jack detect IRQ: %d\n",
-					 ret);
 			}
 		}
 		break;
@@ -4152,7 +4055,6 @@ static int wm8994_codec_probe(struct snd_soc_codec *codec)
 					  ARRAY_SIZE(wm8994_dac_widgets));
 		break;
 	}
-
 
 	wm_hubs_add_analogue_routes(codec, 0, 0);
 	snd_soc_dapm_add_routes(dapm, intercon, ARRAY_SIZE(intercon));
@@ -4358,7 +4260,6 @@ static __exit void wm8994_exit(void)
 	platform_driver_unregister(&wm8994_codec_driver);
 }
 module_exit(wm8994_exit);
-
 
 MODULE_DESCRIPTION("ASoC WM8994 driver");
 MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");

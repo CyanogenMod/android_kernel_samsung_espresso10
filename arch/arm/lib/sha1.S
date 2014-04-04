@@ -17,7 +17,6 @@
 
 	.text
 
-
 /*
  * void sha_transform(__u32 *digest, const char *in, __u32 *W)
  *
@@ -190,7 +189,6 @@ ENDPROC(sha_transform)
 	.align	2
 .L_sha_K:
 	.word	0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6
-
 
 /*
  * void sha_init(__u32 *buf)

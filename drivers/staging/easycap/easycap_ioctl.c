@@ -514,7 +514,6 @@ int adjust_format(struct easycap *peasycap,
 	peasycap->pixelformat   = peasycap_format->v4l2_format.fmt.pix.pixelformat;
 	peasycap->format_offset = peasycap_format - easycap_format;
 
-
 	for (k = 0; k < INPUT_MANY; k++) {
 		if (!peasycap->inputset[k].format_offset_ok) {
 			peasycap->inputset[k].format_offset =
@@ -527,8 +526,6 @@ int adjust_format(struct easycap *peasycap,
 		peasycap->inputset[peasycap->input].format_offset_ok = 1;
 	} else
 		JOM(8, "%i=peasycap->input\n", peasycap->input);
-
-
 
 	peasycap->bytesperpixel = (0x00E0 & peasycap_format->mask) >> 5 ;
 	if (0x0100 & peasycap_format->mask)
@@ -703,7 +700,6 @@ int adjust_contrast(struct easycap *peasycap, int value)
 			    (easycap_control[i1].maximum < value))
 				value = easycap_control[i1].default_value;
 
-
 			if ((easycap_control[i1].minimum <= peasycap->contrast) &&
 			    (easycap_control[i1].maximum >= peasycap->contrast)) {
 				if (peasycap->contrast == value) {
@@ -760,7 +756,6 @@ int adjust_saturation(struct easycap *peasycap, int value)
 			if ((easycap_control[i1].minimum > value) ||
 			    (easycap_control[i1].maximum < value))
 				value = easycap_control[i1].default_value;
-
 
 			if ((easycap_control[i1].minimum <= peasycap->saturation) &&
 			    (easycap_control[i1].maximum >= peasycap->saturation)) {

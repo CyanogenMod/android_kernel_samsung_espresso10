@@ -59,7 +59,6 @@ typedef struct _RT_DOT11D_INFO {
 
 #define IS_DOT11D_STATE_DONE(__pIeeeDev) (GET_DOT11D_INFO(__pIeeeDev)->State == DOT11D_STATE_DONE)
 
-
 void
 Dot11d_Init(
 	struct ieee80211_device *dev

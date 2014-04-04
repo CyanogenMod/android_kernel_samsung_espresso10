@@ -76,7 +76,6 @@ typedef struct cy_as_storage_query_unit_data_dep {
 	cy_as_unit_desc	 desc_p;
 } cy_as_storage_query_unit_data_dep;
 
-
 /************ FUNCTIONS *********************/
 
 EXTERN cy_as_return_status_t
@@ -180,7 +179,6 @@ cy_as_storage_device_control_dep(
 	/* Client data to be passed to the callback */
 	uint32_t			   client
 	);
-
 
 EXTERN cy_as_return_status_t
 cy_as_storage_read_dep(

@@ -99,8 +99,6 @@ MODULE_PARM_DESC(nowayout,
 	"Watchdog cannot be stopped once started (default="
 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
 
-
-
 /* Read from Data Register */
 static inline void __sc1200wdt_read_data(unsigned char index,
 						unsigned char *data)
@@ -131,7 +129,6 @@ static inline void sc1200wdt_write_data(unsigned char index,
 	__sc1200wdt_write_data(index, data);
 	spin_unlock(&sc1200wdt_lock);
 }
-
 
 static void sc1200wdt_start(void)
 {
@@ -180,7 +177,6 @@ static int sc1200wdt_open(struct inode *inode, struct file *file)
 
 	return nonseekable_open(inode, file);
 }
-
 
 static long sc1200wdt_ioctl(struct file *file, unsigned int cmd,
 						unsigned long arg)
@@ -249,7 +245,6 @@ static long sc1200wdt_ioctl(struct file *file, unsigned int cmd,
 	}
 }
 
-
 static int sc1200wdt_release(struct inode *inode, struct file *file)
 {
 	if (expect_close == 42) {
@@ -265,7 +260,6 @@ static int sc1200wdt_release(struct inode *inode, struct file *file)
 
 	return 0;
 }
-
 
 static ssize_t sc1200wdt_write(struct file *file, const char __user *data,
 						size_t len, loff_t *ppos)
@@ -293,7 +287,6 @@ static ssize_t sc1200wdt_write(struct file *file, const char __user *data,
 	return 0;
 }
 
-
 static int sc1200wdt_notify_sys(struct notifier_block *this,
 					unsigned long code, void *unused)
 {
@@ -302,7 +295,6 @@ static int sc1200wdt_notify_sys(struct notifier_block *this,
 
 	return NOTIFY_DONE;
 }
-
 
 static struct notifier_block sc1200wdt_notifier = {
 	.notifier_call =	sc1200wdt_notify_sys,
@@ -323,7 +315,6 @@ static struct miscdevice sc1200wdt_miscdev = {
 	.fops		= &sc1200wdt_fops,
 };
 
-
 static int __init sc1200wdt_probe(void)
 {
 	/* The probe works by reading the PMC3 register's default value of 0x0e
@@ -339,7 +330,6 @@ static int __init sc1200wdt_probe(void)
 	reg &= 0x0f;		/* we don't want the UART busy bits */
 	return (reg == 0x0e) ? 0 : -ENODEV;
 }
-
 
 #if defined CONFIG_PNP
 
@@ -386,7 +376,6 @@ static struct pnp_driver scl200wdt_pnp_driver = {
 };
 
 #endif /* CONFIG_PNP */
-
 
 static int __init sc1200wdt_init(void)
 {
@@ -458,7 +447,6 @@ out_pnp:
 #endif
 	goto out_clean;
 }
-
 
 static void __exit sc1200wdt_exit(void)
 {
