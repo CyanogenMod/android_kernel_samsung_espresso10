@@ -852,6 +852,27 @@ out:
 }
 EXPORT_SYMBOL(twl6030_gpadc_conversion);
 
+#ifdef CONFIG_MACH_OMAP4_ESPRESSO
+int twl6030_get_gpadc_conversion(int channel_no)
+{
+	struct twl6030_gpadc_request req;
+	int temp = 0;
+	int ret;
+
+	req.channels = (1 << channel_no);
+	req.method = TWL6030_GPADC_SW2;
+	req.active = 0;
+	req.func_cb = NULL;
+	ret = twl6030_gpadc_conversion(&req);
+	if (ret < 0)
+		return ret;
+	if (req.rbuf[channel_no] > 0)
+		temp = req.rbuf[channel_no];
+
+	return temp;
+}
+#endif
+
 static ssize_t show_channel(struct device *dev,
 		struct device_attribute *devattr, char *buf)
 {

@@ -148,5 +148,8 @@ struct twl6030_gpadc_user_parms {
 };
 
 int twl6030_gpadc_conversion(struct twl6030_gpadc_request *conv);
+#ifdef CONFIG_MACH_OMAP4_ESPRESSO
+int twl6030_get_gpadc_conversion(int channel_no);
+#endif
 
 #endif
