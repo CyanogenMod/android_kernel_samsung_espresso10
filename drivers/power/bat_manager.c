@@ -422,7 +422,7 @@ static void charger_detect_work(struct work_struct *work)
 static int batman_get_bat_level(struct charger_device_info *di)
 {
 	int soc = 0;
-	int prev_soc = di->bat_info.soc;
+
 	/* check VFcapacity every five minutes */
 	if (!(di->fg_chk_cnt++ % 10)) {
 		di->pdata->check_vf_fullcap_range();
@@ -434,12 +434,6 @@ static int batman_get_bat_level(struct charger_device_info *di)
 			di->pdata->get_fuel_value(READ_FG_SOC);
 		if (!di->is_full_charged && soc > 99 && di->is_cable_attached)
 			soc = 99;
-
-		/* The following condition is a handling in software for current soc to
-		not be less than prev_soc when charging source is detached*/
-		if(prev_soc < soc && prev_soc > 98 && !di->is_cable_attached)
-			soc=prev_soc;
-
 		di->bat_info.soc = soc;
 	}
 
