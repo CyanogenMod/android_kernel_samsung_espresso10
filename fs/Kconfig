@@ -214,7 +214,6 @@ source "fs/ufs/Kconfig"
 source "fs/exofs/Kconfig"
 
 
-
 endif # MISC_FILESYSTEMS
 
 menuconfig NETWORK_FILESYSTEMS

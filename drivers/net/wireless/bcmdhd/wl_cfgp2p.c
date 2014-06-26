@@ -1168,8 +1168,8 @@ wl_cfgp2p_set_management_ie(struct wl_priv *wl, struct net_device *ndev, s32 bss
 				parsed_ie_buf_len += vndrie_info->ie_len;
 			}
 		}
-		CFGP2P_ERR(("### CSP 675188 debug_log %s(%d)\n", __func__, __LINE__));
-		if (mgmt_ie_buf != NULL || mgmt_ie_len != NULL) {
+
+		if (mgmt_ie_buf != NULL) {
 			if (parsed_ie_buf_len && (parsed_ie_buf_len == *mgmt_ie_len) &&
 			     (memcmp(mgmt_ie_buf, curr_ie_buf, parsed_ie_buf_len) == 0)) {
 				CFGP2P_INFO(("Previous mgmt IE is equals to current IE"));
