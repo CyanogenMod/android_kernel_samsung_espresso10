@@ -56,7 +56,6 @@
 #include "sec_debug.h"
 #include "sec_getlog.h"
 #include "sec_muxtbl.h"
-#include "sec_log_buf.h"
 
 #define ESPRESSO_MEM_BANK_0_SIZE	0x20000000
 #define ESPRESSO_MEM_BANK_0_ADDR	0x80000000
@@ -303,8 +302,6 @@ static void __init espresso_reserve(void)
 				    OMAP4_ION_HEAP_SECURE_INPUT_SIZE +
 				    OMAP4_ION_HEAP_SECURE_OUTPUT_WFDHDCP_SIZE);
 	omap_reserve();
-
-	sec_log_buf_reserve();
 }
 
 MACHINE_START(OMAP4_SAMSUNG, "Espresso")

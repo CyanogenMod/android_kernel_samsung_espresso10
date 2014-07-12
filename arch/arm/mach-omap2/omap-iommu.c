@@ -55,11 +55,7 @@ static struct iommu_platform_data omap3_devices_data[] = {
 #ifdef CONFIG_ARCH_OMAP4
 
 #define SET_DSP_CONSTRAINT	10
-#ifdef CONFIG_ENABLE_GPIO_TO_ALLOW_C2_IN_CAMERA
-#define SET_MPU_CORE_CONSTRAINT	400
-#else
 #define SET_MPU_CORE_CONSTRAINT	10
-#endif
 
 static struct iommu_platform_data omap4_devices_data[] = {
 	{

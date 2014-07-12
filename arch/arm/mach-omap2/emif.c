@@ -852,9 +852,7 @@ static irqreturn_t emif_threaded_isr(int irq, void *dev_id)
 		pr_emerg("%s %d: SDRAM temperature exceeds operating"
 			"limit.. Shutdown system...\n", __func__, emif_nr + 1);
 
-		/*
 		kernel_power_off();
-		*/
 	}
 
 	return IRQ_HANDLED;

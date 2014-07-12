@@ -51,7 +51,6 @@
 
 #define CABLE_DETECT_VALUE	1150
 #define HIGH_BLOCK_TEMP         500
-#define HIGH_BLOCK_TEMP_OMAP4460         610
 #define HIGH_RECOVER_TEMP       420
 #define LOW_BLOCK_TEMP          (-50)
 #define LOW_RECOVER_TEMP        0
@@ -404,11 +403,6 @@ void __init omap4_espresso10_charger_init(void)
 		battery_manager_pdata.high_recover_temp = BB_HIGH_RECOVER_TEMP;
 		battery_manager_pdata.low_block_temp = BB_LOW_BLOCK_TEMP;
 		battery_manager_pdata.low_recover_temp = BB_LOW_RECOVER_TEMP;
-	}
-	if (cpu_is_omap446x() && (board_type ==
-				SEC_MACHINE_ESPRESSO10_USA_BBY)) {
-		battery_manager_pdata.high_block_temp =
-			HIGH_BLOCK_TEMP_OMAP4460;
 	}
 
 	battery_manager_pdata.bootmode = sec_bootmode;

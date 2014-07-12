@@ -208,14 +208,12 @@ void sec_logger_update_buffer(const char *log_str, int count)
 		sec_klog_buf[len] = '\0';
 	}
 }
-EXPORT_SYMBOL(sec_logger_update_buffer);
 
 void sec_logger_print_buffer(void)
 {
 	if (sec_klog_buf[0])
 		pr_info("%s\n", sec_klog_buf);
 }
-EXPORT_SYMBOL(sec_logger_print_buffer);
 
 static void __init sec_logger_message_init(void)
 {
