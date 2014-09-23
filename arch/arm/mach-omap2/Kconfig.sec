@@ -46,12 +46,6 @@ config FW_SAMSUNG_ESPRESSO_10_TSP
 	bool
 	default n
 
-config MACH_SAMSUNG_PALAU
-	bool "Samsung Palau (GT-I9270) Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-	select REGULATOR_FIXED_VOLTAGE
-
 config MACH_SAMSUNG_KONA
 	bool "Samsung Kona (GT-N5100) Board"
 	default n
