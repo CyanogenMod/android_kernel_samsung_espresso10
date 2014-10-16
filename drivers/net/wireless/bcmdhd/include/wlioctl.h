@@ -24,7 +24,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: wlioctl.h 357629 2012-09-19 12:51:08Z $
+ * $Id: wlioctl.h 362236 2012-10-11 13:29:56Z $
  */
 
 #ifndef _wlioctl_h_
@@ -1782,9 +1782,6 @@ typedef struct {
 /* BCM4334(Phoenex branch) value changed to 3 */
 #define WL_AUTH_OPEN_SHARED		3	/* try open, then shared if open failed w/rc 13 */
 #endif
-#ifdef USE_WEP_AUTH_SHARED_OPEN
-#define WL_AUTH_SHARED_OPEN		4	/* try shared, then open if shared failed w/rc 13 */
-#endif /* USE_WEP_AUTH_SHARED_OPEN */
 #endif /* LINUX_POSTMOGRIFY_REMOVAL */
 
 /* Bit masks for radio disabled status - returned by WL_GET_RADIO */
@@ -1981,10 +1978,6 @@ typedef struct wl_po {
 
 /* when sgi_tx==WLC_SGI_ALL, bypass rate selection, enable sgi for all mcs */
 #define WLC_SGI_ALL				0x02
-
-#define DHD_SCAN_ACTIVE_TIME		40 /* ms : Embedded default Active setting from DHD */
-#define DHD_SCAN_UNASSOC_ACTIVE_TIME	80 /* ms : def. Unassoc Active setting from DHD */
-#define DHD_SCAN_PASSIVE_TIME		130 /* ms: Embedded default Passive setting from DHD */
 
 #define LISTEN_INTERVAL			10
 /* interference mitigation options */
