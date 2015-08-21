@@ -74,12 +74,6 @@
 #define MASK_SWITCH_UART_AP	0x02
 
 #define SWCAP_TRIM_OFFSET			0x31
-#define SWCAP_TRIM_OFFSET_HOST			(-0x4E)
-#define BGTRIM_TRIM_OFFSET_HOST			(-0x3FA0)
-#define RTERM_RMX_OFFSET_HOST			(0x20)
-#define RTERM_CAL_OFFSET_HOST			(0x0)
-#define HS_CODE_SEL_HOST	(0x1)
-#define SQ_OFF_CODE_DAC3_OFFSET_HOST	(0x3)
 
 static char *device_names[] = {
 	[P30_OTG]			= "otg",
@@ -93,9 +87,6 @@ static char *device_names[] = {
 	[P30_TA]			= "TA",
 };
 
-#ifdef CONFIG_SAMSUNG_Y_CABLE
-extern s16 adc_val;
-#endif
 struct omap4_otg {
 	struct otg_transceiver otg;
 	struct device dev;
@@ -103,12 +94,9 @@ struct omap4_otg {
 	struct regulator *vusb;
 	struct work_struct set_vbus_work;
 	struct mutex lock;
-	struct mutex vbus_drive_lock;
 
 	bool reg_on;
-	bool vbus_on;
 	bool need_vbus_drive;
-	bool usb_phy_suspend_lock;
 	int usb_manual_mode;
 	int uart_manual_mode;
 	int current_device;
@@ -122,19 +110,6 @@ struct omap4_otg {
 };
 
 static struct omap4_otg espresso10_otg_xceiv;
-
-#define USB_PHY_SUSPEND_LOCK()		\
-do {		\
-	espresso10_otg_xceiv.usb_phy_suspend_lock = 1;	\
-} while (0)
-
-#define USB_PHY_SUSPEND_UNLOCK()	\
-do {		\
-	espresso10_otg_xceiv.usb_phy_suspend_lock = 0;	\
-} while (0)
-
-#define IS_USB_PHY_SUSPEND_LOCK()	\
-	(espresso10_otg_xceiv.usb_phy_suspend_lock == 1 ? 1 : 0)
 
 static struct device *sec_switch_dev;
 static int init_switch_sel;
@@ -308,38 +283,27 @@ static void espresso10_set_audio_switch(int state)
 
 static void omap4_vusb_enable(struct omap4_otg *otg, bool enable)
 {
-	pr_info("[%s] enable=%d\n", __func__, enable);
-
-	if (otg->reg_on  != enable) {
-		/* delay getting the regulator until later */
-		if (IS_ERR_OR_NULL(otg->vusb)) {
-			otg->vusb = regulator_get(&otg->dev, "vusb");
-			if (IS_ERR(otg->vusb)) {
-				dev_err(&otg->dev, "cannot get vusb regulator\n");
-				return;
-			}
-		}
-
-		if (IS_USB_PHY_SUSPEND_LOCK() && !enable) {
-			pr_err("%s phy suspend is locked\n", __func__);
+	/* delay getting the regulator until later */
+	if (IS_ERR_OR_NULL(otg->vusb)) {
+		otg->vusb = regulator_get(&otg->dev, "vusb");
+		if (IS_ERR(otg->vusb)) {
+			dev_err(&otg->dev, "cannot get vusb regulator\n");
 			return;
 		}
+	}
 
-		if (enable) {
-			regulator_enable(otg->vusb);
-			otg->reg_on = true;
-		} else if (otg->reg_on) {
-			regulator_disable(otg->vusb);
-			otg->reg_on = false;
-		}
-	} else
-		pr_err("%s error. already set\n", __func__);
+	if (enable) {
+		regulator_enable(otg->vusb);
+		otg->reg_on = true;
+	} else if (otg->reg_on) {
+		regulator_disable(otg->vusb);
+		otg->reg_on = false;
+	}
 }
 
 static void espresso_accessory_power(u32 device, bool enable)
 {
-	struct omap4_otg *otg = &espresso10_otg_xceiv;
-	int gpio_acc_en = 0;
+	int gpio_acc_en = connector_gpios[GPIO_ACCESSORY_EN].gpio;
 	static u32 acc_device;
 
 	/*
@@ -351,9 +315,6 @@ static void espresso_accessory_power(u32 device, bool enable)
 
 	pr_info("accessory_power: acc_device 0x%x, new %d : %s\n",
 			acc_device, device, enable ? "ON" : "OFF");
-
-	mutex_lock(&otg->vbus_drive_lock);
-	gpio_acc_en = connector_gpios[GPIO_ACCESSORY_EN].gpio;
 
 	if (enable) {
 		acc_device |= (1 << device);
@@ -374,7 +335,6 @@ static void espresso_accessory_power(u32 device, bool enable)
 				pr_info("accessory_power: skip\n");
 		}
 	}
-	mutex_unlock(&otg->vbus_drive_lock);
 }
 
 #ifdef USB_TWL6030_5VOUT
@@ -405,12 +365,6 @@ static void espresso10_set_vbus_drive(bool enable)
 static void espresso10_set_vbus_drive(bool enable)
 {
 	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
-	if (enable)
-		host_notify_set_ovc_en
-			(&espresso10_otg->pdata->ndev, NOTIFY_SET_ON);
-	else
-		host_notify_set_ovc_en
-			(&espresso10_otg->pdata->ndev, NOTIFY_SET_OFF);
 	if (espresso10_otg->pdata->usbhostd_wakeup && enable)
 		espresso10_otg->pdata->usbhostd_wakeup();
 	espresso_accessory_power(2, enable);
@@ -419,13 +373,7 @@ static void espresso10_set_vbus_drive(bool enable)
 
 static void espresso10_ap_usb_attach(struct omap4_otg *otg)
 {
-	pr_info("[%s]\n", __func__);
-
-	USB_PHY_SUSPEND_LOCK();
 	omap4_vusb_enable(otg, true);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
-	omap4460_phy_tuning_for_eyediagram(0, 0, 0x1);
-	USB_PHY_SUSPEND_UNLOCK();
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
@@ -438,7 +386,7 @@ static void espresso10_ap_usb_attach(struct omap4_otg *otg)
 
 static void espresso10_ap_usb_detach(struct omap4_otg *otg)
 {
-	pr_info("[%s]\n", __func__);
+	omap4_vusb_enable(otg, false);
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
@@ -456,7 +404,6 @@ static void espresso10_ap_usb_detach(struct omap4_otg *otg)
 	atomic_notifier_call_chain(&otg->otg.notifier,
 				USB_EVENT_CHARGER_NONE,
 				otg->otg.gadget);
-	omap4_vusb_enable(otg, false);
 }
 
 static void espresso10_usb_host_attach(struct omap4_otg *otg)
@@ -472,15 +419,7 @@ static void espresso10_usb_host_attach(struct omap4_otg *otg)
 	}
 #endif
 
-	USB_PHY_SUSPEND_LOCK();
 	omap4_vusb_enable(otg, true);
-	omap4430_phy_init_for_eyediagram
-		(SWCAP_TRIM_OFFSET_HOST, BGTRIM_TRIM_OFFSET_HOST
-			, RTERM_RMX_OFFSET_HOST);
-	omap4460_phy_tuning_for_eyediagram
-		(RTERM_CAL_OFFSET_HOST, SQ_OFF_CODE_DAC3_OFFSET_HOST
-			, HS_CODE_SEL_HOST);
-	USB_PHY_SUSPEND_UNLOCK();
 
 	otg->otg.state = OTG_STATE_A_IDLE;
 	otg->otg.default_a = true;
@@ -493,7 +432,6 @@ static void espresso10_usb_host_attach(struct omap4_otg *otg)
 
 static void espresso10_usb_host_detach(struct omap4_otg *otg)
 {
-	pr_info("[%s]\n", __func__);
 #ifdef CONFIG_USB_HOST_NOTIFY
 	if (otg->pdata && otg->pdata->usbhostd_stop) {
 		otg->pdata->ndev.mode = NOTIFY_NONE_MODE;
@@ -617,18 +555,8 @@ static void espresso10_con_usb_charger_attached(struct omap4_otg *otg)
 	}
 
 	if (!val) { /* connected */
-#ifdef CONFIG_SAMSUNG_Y_CABLE
-	if (adc_val > 2606 && adc_val < 2855) {
-		otg->otg.default_a = true;
-		otg->otg.state = OTG_STATE_A_IDLE;
-	} else {
 		otg->otg.default_a = false;
 		otg->otg.state = OTG_STATE_B_IDLE;
-	}
-#else
-		otg->otg.default_a = false;
-		otg->otg.state = OTG_STATE_B_IDLE;
-#endif
 		otg->otg.last_event = USB_EVENT_VBUS;
 
 		atomic_notifier_call_chain(&otg->otg.notifier,
@@ -1110,7 +1038,6 @@ static int espresso10_otg_set_vbus(struct otg_transceiver *otg, bool enabled)
 
 static int espresso10_otg_phy_init(struct otg_transceiver *otg)
 {
-	dev_info(otg->dev, "%s last_event=%d\n", __func__, otg->last_event);
 	if (otg->last_event == USB_EVENT_ID)
 		omap4430_phy_power(otg->dev, 1, 1);
 	else
@@ -1120,45 +1047,17 @@ static int espresso10_otg_phy_init(struct otg_transceiver *otg)
 
 static void espresso10_otg_phy_shutdown(struct otg_transceiver *otg)
 {
-	dev_info(otg->dev, "%s\n", __func__);
 	omap4430_phy_power(otg->dev, 0, 0);
 }
 
 static int espresso10_otg_set_suspend(struct otg_transceiver *otg, int suspend)
 {
-	int ret = 0;
-	dev_info(otg->dev, "%s = %d\n", __func__, suspend);
-
-	if (IS_USB_PHY_SUSPEND_LOCK() && suspend)
-		dev_info(otg->dev, "phy suspend is locked\n");
-	else
-		ret = omap4430_phy_suspend(otg->dev, suspend);
-
-	return ret;
+	return omap4430_phy_suspend(otg->dev, suspend);
 }
 
 static int espresso10_otg_is_active(struct otg_transceiver *otg)
 {
 	return omap4430_phy_is_active(otg->dev);
-}
-
-static int espresso10_otg_vbus_reset(struct otg_transceiver *otg)
-{
-	struct omap4_otg *espresso10_otg =
-	    container_of(otg, struct omap4_otg, otg);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	host_notify_set_ovc_en(&espresso10_otg->pdata->ndev, NOTIFY_SET_OFF);
-	espresso10_otg->pdata->ndev.booster = NOTIFY_POWER_OFF;
-#endif
-	espresso10_otg_set_vbus(otg, 0);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	if (espresso10_otg->pdata->ndev.mode == NOTIFY_HOST_MODE)
-#endif
-		espresso10_otg_set_vbus(otg, 1);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	host_notify_set_ovc_en(&espresso10_otg->pdata->ndev, NOTIFY_SET_ON);
-#endif
-	return 0;
 }
 
 static irqreturn_t ta_nconnected_irq(int irq, void *_otg)
@@ -1426,7 +1325,6 @@ void __init omap4_espresso10_connector_init(void)
 
 	connector_gpio_init();
 	mutex_init(&espresso10_otg->lock);
-	mutex_init(&espresso10_otg->vbus_drive_lock);
 	INIT_WORK(&espresso10_otg->set_vbus_work, espresso10_otg_work);
 	device_initialize(&espresso10_otg->dev);
 	dev_set_name(&espresso10_otg->dev, "%s", "espresso10_otg");
@@ -1448,8 +1346,6 @@ void __init omap4_espresso10_connector_init(void)
 	espresso10_otg->otg.init		= espresso10_otg_phy_init;
 	espresso10_otg->otg.shutdown		= espresso10_otg_phy_shutdown;
 	espresso10_otg->otg.is_active		= espresso10_otg_is_active;
-/* start_hnp function is used for vbus reset. */
-	espresso10_otg->otg.start_hnp		= espresso10_otg_vbus_reset;
 
 	ATOMIC_INIT_NOTIFIER_HEAD(&espresso10_otg->otg.notifier);
 
@@ -1458,7 +1354,7 @@ void __init omap4_espresso10_connector_init(void)
 		pr_err("espresso10_otg: cannot set transceiver (%d)\n", ret);
 
 	omap4430_phy_init(&espresso10_otg->dev);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
+	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET);
 	espresso10_otg_set_suspend(&espresso10_otg->otg, 0);
 	espresso10_vbus_detect_init(espresso10_otg);
 #ifdef CONFIG_USB_HOST_NOTIFY

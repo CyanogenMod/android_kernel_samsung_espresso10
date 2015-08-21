@@ -101,10 +101,4 @@ void omap4_kona_irled_init(void);
 /** @category vibrator */
 void omap4_kona_vibrator_init(void);
 
-/** @category camera */
-void omap4_kona_camera_init(void);
-
-/* check JIG On Status */
-void check_jig_status(int status);
-
 #endif /* __BOARD_KONA_H__ */

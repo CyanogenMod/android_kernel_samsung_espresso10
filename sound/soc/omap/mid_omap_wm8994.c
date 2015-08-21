@@ -1,5 +1,5 @@
 /*
- *  sound/soc/omap/mid_omap4_wm8994.c
+ *  sound/soc/omap/omap4_wm8994.c
  *
  *  Copyright (c) 2009 Samsung Electronics Co. Ltd
  *
@@ -43,7 +43,7 @@
 
 #include "omap-pcm.h"
 #include "omap-mcbsp.h"
-#include "../codecs/mid_wm8994.h"
+#include "../codecs/wm8994.h"
 
 #include "../../../arch/arm/mach-omap2/mux.h"
 #include "../../../arch/arm/mach-omap2/omap_muxtbl.h"
@@ -52,35 +52,141 @@
 #define WM8994_DAI_AIF2	1
 #define WM8994_DAI_AIF3	2
 
-#define JACK_ADC_BREAKPOINT	100
-
 #define USE_TO_DELAY
 #define REDUCE_DOCK_NOISE
+/* #define CONFIG_WM1811_CODEC_ANALOG_TUNING */
+
+/* not used in the harrsion(su26.lee) */
+#define DISABLE_NEEDLESS_GPIO_PIN
 
 /* PM Constraint feature for the VOIP time stamp */
 static struct pm_qos_request_list pm_qos_handle;
 
-static struct snd_soc_codec *the_codec;
-static int dock_status;
-static int board_mclk;
+struct snd_soc_codec *the_codec;
+int dock_status;
+/* Analog tuning program */
+/* Support function : delay time */
+#ifdef CONFIG_WM1811_CODEC_ANALOG_TUNING
+#include <linux/string.h>
+#include <linux/kernel.h>;
 
-#ifdef CONFIG_MACH_SAMSUNG_HARRISON
-#define CONFIG_SEC_DEV_JACK
+enum {TUNING_VOICE_RECORDING,
+		TUNING_VOICE_RECGNITION,
+		TUNING_VOICE_CAMCORDING};
+enum {TUNING_FAIL = -1, TUNING_OK = 0};
+
+int isLoadSoundConfig = TUNING_OK;
+static int tuing_delay_time;
+
+int ReadSoundConfigFile(char *Filename)
+{
+	struct file *filp;
+	mm_segment_t oldfs;
+	int BytesRead;
+	char *Buffer;
+	char *token;
+	char *last;
+
+	Buffer = kmalloc(256, GFP_KERNEL);
+	if (Buffer == NULL)
+		return TUNING_FAIL;
+
+	filp = filp_open(Filename, 00, O_RDONLY);
+	if (IS_ERR(filp) || (filp == NULL))	{
+		pr_info("%s file isn't exist", Filename);
+
+		/* Or do something else */
+		goto TUNING_FAIL_NO_FILE;
+	}
+
+	if (filp->f_op->read == NULL)	{
+		pr_info("%s file doesn't allow reads");
+
+		/* File(system) doesn't allow reads */
+		goto TUNING_FAIL_NO_DATA;
+	}
+
+	/* Now read 4096 bytes from postion "StartPos" */
+	filp->f_pos = 0;
+	oldfs = get_fs();
+	set_fs(KERNEL_DS);
+	BytesRead = filp->f_op->read(filp, Buffer, 256, &filp->f_pos);
+	set_fs(oldfs);
+
+	last = Buffer;
+	token = strsep(&last, ",");
+	tuing_delay_time = kstrtoull(token, NULL, 10);
+
+	pr_info("TUNING_DELAY_TIME=%d", tuing_delay_time);
+
+	/* Close the file */
+	filp_close(filp, NULL);
+
+	/* release allocate memeory */
+	kfree(Buffer);
+
+	return TUNING_OK;
+
+TUNING_FAIL_NO_FILE:
+	kfree(Buffer);
+	return TUNING_FAIL;
+
+TUNING_FAIL_NO_DATA:
+	filp_close(filp, NULL);
+	kfree(Buffer);
+	return TUNING_FAIL;
+}
+#endif		/* CONFIG_WM1811_CODEC_ANALOG_TUNING */
+
+#ifndef DISABLE_NEEDLESS_GPIO_PIN
+static struct gpio main_mic_bias = {
+	.flags  = GPIOF_OUT_INIT_LOW,
+	.label  = "MICBIAS_EN",
+};
+
+static struct gpio ear_select = {
+	.flags = GPIOF_OUT_INIT_LOW,
+	.label = "EAR_GND_SEL",
+};
 #endif
 
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-/* Detect earjack one more */
-#define USE_EAR_GND_DETECT
-#endif /* CONFIG_MACH_SAMSUNG_GOKEY */
+/*
+ * Harrison Audio MCLK becomes 38.4MHz
+ * since the HW rev 6.
+ */
+#ifdef CONFIG_MACH_SAMSUNG_HARRISON
+#define HW_REVISION_DISTINGUISHER
+#endif
 
-#ifdef USE_EAR_GND_DETECT
-static struct gpio ear_gnd_det = {
-	.label = "EAR_GND_DET",
+/* Determines the mclk of the board. */
+#ifdef CONFIG_MACH_SAMSUNG_GOKEY
+#if (CONFIG_SAMSUNG_REL_HW_REV == 4)
+unsigned int board_mclk = 26000000;
+#else
+unsigned int board_mclk = 38400000;
+#endif
+#else
+unsigned int board_mclk = 38400000;
+#endif
+
+/* Specifying each HW revision GPIO's name. */
+#ifdef HW_REVISION_DISTINGUISHER
+static struct gpio hw_rev_gpio[] = {
+	{	.label = "HW_REV0"	},
+	{	.label = "HW_REV1"	},
+	{	.label = "HW_REV2"	},
+	{	.label = "HW_REV3"	}
 };
 #endif
 
 static struct gpio mute_ic = {
+	.flags = GPIOF_OUT_INIT_LOW,
 	.label = "MUTE_ON",
+};
+
+static int hp_output_mode;
+const char *hp_analogue_text[] = {
+	"VoiceCall Mode", "Playback Mode"
 };
 
 static int aif2_mode;
@@ -93,6 +199,7 @@ const char *mute_ic_mode_text[] = {
 	"OFF", "ON"
 };
 
+/* PM Constraint feature for the VOIP time stamp */
 static int pm_mode;
 const char *pm_mode_text[] = {
 	"Off", "On"
@@ -108,12 +215,14 @@ const char *playback_lp_mode_text[] = {
 	"None", "Ready"
 };
 
-#ifdef USE_TO_DELAY
+#ifdef USE_TO_DELAY	/* Additional delay control */
 static int delay_ms;
 const char *delay_ms_text[] = {"0"};
-#endif /* USE_TO_DELAY */
+#endif
 
-#ifdef REDUCE_DOCK_NOISE
+#ifdef REDUCE_DOCK_NOISE	/* Additional control : Reduce docking noise */
+/* #define DOCK_LOG */
+
 #define DOCK_OUT_HEADPHONE_VOLUME 0x37
 #define DOCK_OUT_SPEAKER_VOLUME 0x3d
 
@@ -128,12 +237,33 @@ static int dock_out_spk_volume_up_down;
 const char *dock_out_spk_volume_up_down_text[] = {
 	"Down", "Up"
 };
-#endif /* REDUCE_DOCK_NOISE */
+#endif
+
+#ifdef CONFIG_MACH_SAMSUNG_HARRISON
+#define CONFIG_SEC_DEV_JACK
+#endif
+
+#ifdef CONFIG_MACH_SAMSUNG_GOKEY
+#if (CONFIG_SAMSUNG_REL_HW_REV == 4)
+#define CONFIG_SEC_DEV_JACK
+#endif
+/* Detect earjack one more */
+#define JACK_DETECT_QUEUE
+#endif
+
 
 #ifndef CONFIG_SEC_DEV_JACK
 /* To support PBA function test */
 static struct class *jack_class;
 static struct device *jack_dev;
+#endif
+
+/* PM Constraint feature for the VOIP time stamp */
+#define OMAP4_AUDIO_PM_CONSTRAINT
+
+
+/* End of CONFIG_MACH_SAMSUNG_HARRISON feature */
+#ifndef CONFIG_SEC_DEV_JACK
 
 #define OMAP4_DEFAULT_MCLK2	32768
 #define OMAP4_DEFAULT_SYNC_CLK	11289600
@@ -152,7 +282,13 @@ struct wm1811_machine_priv {
 	struct snd_soc_codec *codec;
 	struct delayed_work mic_work;
 	struct wake_lock jackdet_wake_lock;
-	struct wake_lock micdet_wake_lock;
+
+#ifdef JACK_DETECT_QUEUE
+	struct workqueue_struct *jack_det_queue;
+	struct delayed_work jack_det_work;
+
+	int jack_det_delayed_work_time;
+#endif
 };
 
 static struct wm8958_micd_rate omap4_det_rates[] = {
@@ -173,8 +309,9 @@ static struct wm8958_micd_rate omap4_jackdet_rates[] = {
 #ifdef CONFIG_SUPPORT_PBA_FUNCTION_TEST
 static struct class *jack_class;
 static struct device *jack_dev;
-#endif /* CONFIG_SUPPORT_PBA_FUNCTION_TEST */
-#endif /* not CONFIG_SEC_DEV_JACK */
+#endif	/* CONFIG_SUPPORT_PBA_FUNCTION_TEST */
+
+#endif	/* CONFIG_SEC_DEV_JACK */
 
 static const struct soc_enum mute_ic_mode_enum[] = {
 	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(mute_ic_mode_text), mute_ic_mode_text),
@@ -192,10 +329,38 @@ static int set_mute_ic_mode(struct snd_kcontrol *kcontrol,
 {
 	mute_ic_mode = ucontrol->value.integer.value[0];
 
+	hp_output_mode = ucontrol->value.integer.value[0];
 	gpio_set_value(mute_ic.gpio, mute_ic_mode);
 
 	pr_info("set mute_ic mode : %s, %d\n",
 		mute_ic_mode_text[mute_ic_mode], gpio_get_value(mute_ic.gpio));
+
+	return 0;
+}
+
+static const struct soc_enum hp_mode_enum[] = {
+	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(hp_analogue_text), hp_analogue_text),
+};
+
+static int get_hp_output_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	ucontrol->value.integer.value[0] = hp_output_mode;
+	return 0;
+}
+
+static int set_hp_output_mode(struct snd_kcontrol *kcontrol,
+	struct snd_ctl_elem_value *ucontrol)
+{
+	if (hp_output_mode == ucontrol->value.integer.value[0])
+		return 0;
+
+	hp_output_mode = ucontrol->value.integer.value[0];
+#ifndef DISABLE_NEEDLESS_GPIO_PIN
+	gpio_set_value(ear_select.gpio, hp_output_mode);
+#endif
+
+	pr_debug("set hp mode : %s\n", hp_analogue_text[hp_output_mode]);
 
 	return 0;
 }
@@ -247,6 +412,7 @@ void set_aif2_mute_enable(bool en)
 }
 EXPORT_SYMBOL_GPL(set_aif2_mute_enable);
 
+
 /*
 * FM Radio mute : control AIF2 to DAC path
 * FM --> AIF2(CODEC) --> DAC
@@ -285,7 +451,16 @@ static int get_delay_ms(struct snd_kcontrol *kcontrol,
 static int set_delay_ms(struct snd_kcontrol *kcontrol,
 	struct snd_ctl_elem_value *ucontrol)
 {
+#ifdef CONFIG_WM1811_CODEC_ANALOG_TUNING	/* Analog tuning program */
+	if (TUNING_OK == isLoadSoundConfig)	{
+		if (TUNING_OK == (ReadSoundConfigFile("/data/delay.txt"))) {
+			isLoadSoundConfig = TUNING_OK;
+			delay_ms = tuing_delay_time;
+		}
+	}
+#else
 	delay_ms = ucontrol->value.integer.value[0];
+#endif		/* CONFIG_WM1811_CODEC_ANALOG_TUNING */
 
 	msleep(delay_ms);
 
@@ -293,7 +468,7 @@ static int set_delay_ms(struct snd_kcontrol *kcontrol,
 
 	return 0;
 }
-#endif /* USE_TO_DELAY */
+#endif
 
 #ifdef REDUCE_DOCK_NOISE
 /* Additional control : To reduce the docking noist */
@@ -319,7 +494,7 @@ static int analog_fade_in_out(struct snd_soc_codec *ptr_codec, int reg,
 #ifdef DOCK_LOG
 	pr_info("shift=%d, target=%x, step=%d, is_stereo=%d, is_Volume_Up=%d\n",
 		shift, target, step, is_stereo, is_Volume_Up);
-#endif /* DOCK_LOG */
+#endif
 
 	if (is_Volume_Up)	{
 		init = 0;
@@ -333,7 +508,7 @@ static int analog_fade_in_out(struct snd_soc_codec *ptr_codec, int reg,
 				snd_soc_read(the_codec, reg),
 				snd_soc_read(the_codec, reg+1)
 				);
-#endif /* DOCK_LOG */
+#endif
 		}
 	} else {
 		init = target;
@@ -348,7 +523,7 @@ static int analog_fade_in_out(struct snd_soc_codec *ptr_codec, int reg,
 				snd_soc_read(the_codec, reg),
 				snd_soc_read(the_codec, reg+1)
 				);
-#endif /* DOCK_LOG */
+#endif
 		}
 	}
 
@@ -369,14 +544,14 @@ static int get_dock_out_hp_volume_up_down_widget(struct snd_kcontrol *kcontrol,
 static int set_dock_out_hp_volume_up_down_widget(struct snd_kcontrol *kcontrol,
 	struct snd_ctl_elem_value *ucontrol)
 {
-#ifdef DOCK_LOG
 	int reg;
 
+	dock_out_hp_volume_up_down = ucontrol->value.integer.value[0];
+
+#ifdef DOCK_LOG
 	reg = snd_soc_read(the_codec, WM8994_LEFT_OPGA_VOLUME);
 	pr_info("WM8994_LEFT_OPGA_VOLUME before fade=%x\n", reg);
-#endif /* DOCK_LOG */
-
-	dock_out_hp_volume_up_down = ucontrol->value.integer.value[0];
+#endif
 
 	/* Target volume : 55(-2dB) */
 	analog_fade_in_out(the_codec, WM8994_LEFT_OPGA_VOLUME,
@@ -386,7 +561,7 @@ static int set_dock_out_hp_volume_up_down_widget(struct snd_kcontrol *kcontrol,
 #ifdef DOCK_LOG
 	reg = snd_soc_read(the_codec, WM8994_LEFT_OPGA_VOLUME);
 	pr_info("WM8994_LEFT_OPGA_VOLUME after fade=%x\n", reg);
-#endif /* DOCK_LOG */
+#endif
 
 	return 0;
 }
@@ -400,14 +575,14 @@ static int get_dock_out_spk_volume_up_down_widget(struct snd_kcontrol *kcontrol,
 static int set_dock_out_spk_volume_up_down_widget(struct snd_kcontrol *kcontrol,
 	struct snd_ctl_elem_value *ucontrol)
 {
-#ifdef DOCK_LOG
 	int reg;
 
+	dock_out_spk_volume_up_down = ucontrol->value.integer.value[0];
+
+#ifdef DOCK_LOG
 	reg = snd_soc_read(the_codec, WM8994_SPEAKER_VOLUME_LEFT);
 	pr_info("WM8994_SPEAKER_VOLUME_LEFT before fade=%x\n", reg);
-#endif /* DOCK_LOG */
-
-	dock_out_spk_volume_up_down = ucontrol->value.integer.value[0];
+#endif
 
 	analog_fade_in_out(the_codec, WM8994_SPEAKER_VOLUME_LEFT,
 	0, WM8994_SPKOUTL_VOL_MASK, DOCK_OUT_SPEAKER_VOLUME, 5,
@@ -416,11 +591,11 @@ static int set_dock_out_spk_volume_up_down_widget(struct snd_kcontrol *kcontrol,
 #ifdef DOCK_LOG
 	reg = snd_soc_read(the_codec, WM8994_SPEAKER_VOLUME_LEFT);
 	pr_info(" after fade=%x\n", reg);
-#endif /* DOCK_LOG */
+#endif
 
 	return 0;
 }
-#endif /* REDUCE_DOCK_NOISE */
+#endif
 
 static int main_mic_bias_event(struct snd_soc_dapm_widget *w,
 			struct snd_kcontrol *kcontrol, int event)
@@ -458,7 +633,7 @@ static int hp_mic_bias_event(struct snd_soc_dapm_widget *w,
 
 	return 0;
 }
-#endif /* CONFIG_MACH_SAMSUNG_GOKEY */
+#endif
 
 /* PM Constraint feature for the VOIP time stamp */
 static const struct soc_enum pm_mode_enum[] = {
@@ -598,86 +773,109 @@ static void omap4_micd_set_rate(struct snd_soc_codec *codec)
 }
 
 /**
- * Detection handler of the jack state
- * consumption for WM1811 jack detection.
+ * Detection handler of the mnic bias state
+ * consumption for WM1811 microphone detection.
  *
+ * @status: Value for MICD status
  * @data: Value for detect data in detail.
  */
-static void omap4_jackdet(void *data)
-{
-	struct wm1811_machine_priv *wm1811 = data;
-	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(wm1811->codec);
-	int earAdc = 0;
-
-	wake_lock_timeout(&wm1811->jackdet_wake_lock, 5 * HZ);
-
-	omap4_micd_set_rate(wm1811->codec);
-
-#ifdef USE_EAR_GND_DETECT
-	if (gpio_get_value(ear_gnd_det.gpio))
-		return;
-#endif
-
-	earAdc = wm8994->pdata->get_earjack_adc();
-	dev_info(wm1811->codec->dev, "!!earAdc : %d\n", earAdc);
-
-	/*
-	 * If the measurement is showing a high impedence we've got a
-	 * microphone.
-	 */
-	if (earAdc > JACK_ADC_BREAKPOINT) {
-		dev_info(wm1811->codec->dev, "Detected microphone\n");
-
-		wm8994->jack_mic = true;
-		wm8994->mic_detecting = true;
-
-		snd_soc_jack_report(wm8994->micdet[0].jack, SND_JACK_HEADSET,
-				    SND_JACK_HEADSET);
-
-		snd_soc_update_bits(wm1811->codec,
-					WM8994_ANTIPOP_2,
-					WM1811_JACKDET_MODE_MASK,
-					WM1811_JACKDET_MODE_AUDIO);
-		snd_soc_update_bits(wm1811->codec, WM8958_MIC_DETECT_1,
-					    WM8958_MICD_ENA, WM8958_MICD_ENA);
-	}
-
-	if (earAdc <= JACK_ADC_BREAKPOINT) {
-		dev_info(wm1811->codec->dev, "Detected headphone\n");
-
-		wm8994->mic_detecting = false;
-		wm8994->jack_mic = false;
-
-		snd_soc_jack_report(wm8994->micdet[0].jack, SND_JACK_HEADPHONE,
-				    SND_JACK_HEADSET);
-	}
-}
-
-static void omap4_micdet(void *data, u16 status)
+static void omap4_micdet(u16 status, void *data)
 {
 	struct wm1811_machine_priv *wm1811 = data;
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(wm1811->codec);
 	int report;
 
-#ifdef USE_EAR_GND_DETECT
-	if (gpio_get_value(ear_gnd_det.gpio))
-		return;
+	wake_lock_timeout(&wm1811->jackdet_wake_lock, 5 * HZ);
+
+	/* Either nothing present or just starting detection */
+	if (!(status & WM8958_MICD_STS)) {
+		if (!wm8994->jackdet) {
+			/* If nothing present then clear our statuses */
+			dev_info(wm1811->codec->dev, "Detected open circuit\n");
+			wm8994->jack_mic = false;
+			wm8994->mic_detecting = true;
+
+			omap4_micd_set_rate(wm1811->codec);
+
+			snd_soc_jack_report(wm8994->micdet[0].jack, 0,
+					    wm8994->btn_mask |
+					     SND_JACK_HEADSET);
+		}
+		/*ToDo*/
+		/*return;*/
+	}
+
+	/*
+	 * If the measurement is showing a high impedence we've got a
+	 * microphone.
+	 * 0x200 -> 0x400
+	 */
+	if (wm8994->mic_detecting && (status & 0x400)) {
+		dev_info(wm1811->codec->dev, "Detected microphone\n");
+
+		wm8994->mic_detecting = false;
+		wm8994->jack_mic = true;
+
+		omap4_micd_set_rate(wm1811->codec);
+
+		snd_soc_jack_report(wm8994->micdet[0].jack, SND_JACK_HEADSET,
+				    SND_JACK_HEADSET);
+	}
+
+	/* Let's think about the impedence later. */
+	if (wm8994->mic_detecting && (status & 0x4)) {
+		dev_info(wm1811->codec->dev, "Detected headphone\n");
+		wm8994->mic_detecting = false;
+
+		omap4_micd_set_rate(wm1811->codec);
+
+		snd_soc_jack_report(wm8994->micdet[0].jack, SND_JACK_HEADPHONE,
+				    SND_JACK_HEADSET);
+
+		/* If we have jackdet that will detect removal */
+		if (wm8994->jackdet) {
+			mutex_lock(&wm8994->accdet_lock);
+
+			snd_soc_update_bits(wm1811->codec, WM8958_MIC_DETECT_1,
+					    WM8958_MICD_ENA, 0);
+
+			if (wm8994->active_refcount) {
+				snd_soc_update_bits(wm1811->codec,
+					WM8994_ANTIPOP_2,
+					WM1811_JACKDET_MODE_MASK,
+					WM1811_JACKDET_MODE_AUDIO);
+			}
+
+			mutex_unlock(&wm8994->accdet_lock);
+
+			if (wm8994->pdata->jd_ext_cap) {
+				mutex_lock(&wm1811->codec->mutex);
+				snd_soc_dapm_disable_pin(&wm1811->codec->dapm,
+							 "MICBIAS2");
+				snd_soc_dapm_sync(&wm1811->codec->dapm);
+				mutex_unlock(&wm1811->codec->mutex);
+			}
+		}
+
+#ifdef JACK_DETECT_QUEUE
+		if (delayed_work_pending(&wm1811->jack_det_work))
+			cancel_delayed_work_sync(&wm1811->jack_det_work);
+		queue_delayed_work(wm1811->jack_det_queue,
+			&wm1811->jack_det_work,
+			msecs_to_jiffies(wm1811->jack_det_delayed_work_time));
 #endif
-
-	wake_lock_timeout(&wm1811->micdet_wake_lock, 5 * HZ);
-
-	omap4_micd_set_rate(wm1811->codec);
+	}
 
 	/* Report short circuit as a button */
 	if (wm8994->jack_mic) {
 		report = 0;
-		if (status & WM1811_JACKDET_BTN0) /* Play & Pause */
+		if (status & WM1811_JACKDET_BTN0)
 			report |= SND_JACK_BTN_0;
 
-		if (status & WM1811_JACKDET_BTN1) /* Volume down */
+		if (status & WM1811_JACKDET_BTN1)
 			report |= SND_JACK_BTN_1;
 
-		if (status & WM1811_JACKDET_BTN2) /* Volume up */
+		if (status & WM1811_JACKDET_BTN2)
 			report |= SND_JACK_BTN_2;
 
 		dev_info(wm1811->codec->dev, "Detected Button: %08x (%08X)\n",
@@ -687,7 +885,65 @@ static void omap4_micdet(void *data, u16 status)
 				    wm8994->btn_mask);
 	}
 }
-#endif	/* not CONFIG_SEC_DEV_JACK */
+#endif	/* CONFIG_SEC_DEV_JACK */
+
+
+#ifdef JACK_DETECT_QUEUE
+/* Check Time : DET_CHECK_TIME_MS */
+#define DET_CHECK_TIME_MS 300 /* 300ms */
+#define DET_SLEEP_TIME_MS 10
+#define DET_4POLE 0x400
+
+void jack_detect_work(struct work_struct *work)
+{
+	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(the_codec);
+
+	int time_left_ms = DET_CHECK_TIME_MS;
+	int status = 0x0;
+	bool is_jack_det = false;
+
+	pr_info("[JACK_DETECT_QUEUE]jack_detect_work\n");
+
+	snd_soc_update_bits(the_codec,
+		WM8958_MIC_DETECT_1,
+		WM8958_MICD_ENA_MASK, WM8958_MICD_ENA);
+
+	while (time_left_ms > 0) {
+		is_jack_det = (snd_soc_read(
+			the_codec, WM1811_JACKDET_CTRL) & WM1811_JACKDET_LVL);
+		status = snd_soc_read(the_codec, WM8958_MIC_DETECT_3);
+		pr_info("is_jack_det=%d, status=%x\n", is_jack_det, status);
+
+		if (is_jack_det) {   /* Jack detected */
+			/* Jack detect : OK, 4pole : OK */
+			if (status & DET_4POLE) {
+				pr_info("[JACK_DETECT_QUEUE]Detected microphone\n");
+
+				wm8994->mic_detecting = false;
+				wm8994->jack_mic = true;
+
+				omap4_micd_set_rate(the_codec);
+
+				snd_soc_jack_report(wm8994->micdet[0].jack,
+					SND_JACK_HEADSET,
+					SND_JACK_HEADSET);
+
+				return;
+			}
+		} else {   /* Jack not detected */
+			pr_info("[JACK_DETECT_QUEUE]Jack not detected\n");
+
+			break;
+		}
+		msleep(DET_SLEEP_TIME_MS);
+		time_left_ms -= DET_SLEEP_TIME_MS;
+	}
+
+	snd_soc_update_bits(the_codec,
+		WM8958_MIC_DETECT_1,
+		WM8958_MICD_ENA_MASK, 0);
+}
+#endif
 
 static void omap4_wm8994_start_fll1(struct snd_soc_dai *aif1_dai)
 {
@@ -710,6 +966,7 @@ static void omap4_wm8994_start_fll1(struct snd_soc_dai *aif1_dai)
 				     SND_SOC_CLOCK_IN);
 	if (ret < 0)
 		dev_err(aif1_dai->dev, "Unable to switch to FLL1: %d\n", ret);
+
 }
 
 static int omap4_hifi_hw_params(struct snd_pcm_substream *substream,
@@ -838,6 +1095,8 @@ static const struct snd_kcontrol_new omap4_controls[] = {
 
 	SOC_DAPM_PIN_SWITCH("Main Mic"),
 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
+	SOC_ENUM_EXT("HP Output Mode", hp_mode_enum[0],
+		get_hp_output_mode, set_hp_output_mode),
 	SOC_ENUM_EXT("AIF2 Mode", aif2_mode_enum[0],
 		get_aif2_mode, set_aif2_mode),
 	SOC_ENUM_EXT("Mute IC", mute_ic_mode_enum[0],
@@ -850,12 +1109,16 @@ static const struct snd_kcontrol_new omap4_controls[] = {
 	SOC_ENUM_EXT("Dock HP Volume", dock_out_hp_volume_up_down_enum[0],
 		get_dock_out_hp_volume_up_down_widget,
 		set_dock_out_hp_volume_up_down_widget),
+
 	SOC_ENUM_EXT("Dock SPK Volume", dock_out_spk_volume_up_down_enum[0],
 		get_dock_out_spk_volume_up_down_widget,
 		set_dock_out_spk_volume_up_down_widget),
-#endif /* REDUCE_DOCK_NOISE */
+#endif
 	SOC_ENUM_EXT("Playback LP Mode", playback_lp_mode_enum[0],
 	get_playback_lp_mode, set_playback_lp_mode),
+	/* additional VU ctrl. */
+	SOC_DOUBLE_R("Headphone VU", WM8994_LEFT_OUTPUT_VOLUME,
+	     WM8994_RIGHT_OUTPUT_VOLUME, 8, 1, 0),
 	/* PM Constraint feature for the VOIP time stamp */
 	SOC_ENUM_EXT("PM Constraints Mode", pm_mode_enum[0],
 		get_pm_mode, set_pm_mode),
@@ -1044,7 +1307,7 @@ static DEVICE_ATTR(key_state, S_IRUGO | S_IWUSR | S_IWGRP,
 
 static DEVICE_ATTR(state, S_IRUGO | S_IWUSR | S_IWGRP,
 		   earjack_state_show, earjack_state_store);
-#endif /* not CONFIG_SEC_DEV_JACK */
+#endif	/* CONFIG_SEC_DEV_JACK */
 
 /*
  * FSA Switch driver notifies
@@ -1072,13 +1335,20 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 {
 	struct snd_soc_codec *codec = rtd->codec;
 	struct snd_soc_dapm_context *dapm = &codec->dapm;
+	/* For Hidden Register */
 	struct wm8994 *control = codec->control_data;
 #ifndef CONFIG_SEC_DEV_JACK
 	struct wm1811_machine_priv *wm1811;
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
-#endif /* not CONFIG_SEC_DEV_JACK */
+#endif
 
 	int ret;
+/* Some variables for the board revision detecting */
+#ifdef HW_REVISION_DISTINGUISHER
+	int distNum = 4;
+	int i;
+	int hwRev = 0;
+#endif
 
 	the_codec = codec;
 
@@ -1161,9 +1431,8 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	if (wm8994->revision > 1) {
 		dev_info(codec->dev, "wm1811: Rev %c support mic detection\n",
 			'A' + wm8994->revision);
-		ret = wm8958_mic_detect(codec, &wm1811->jack,
-							omap4_jackdet, wm1811,
-							omap4_micdet, wm1811);
+		ret = wm8958_mic_detect(codec, &wm1811->jack, omap4_micdet,
+			wm1811);
 
 		if (ret < 0)
 			dev_err(codec->dev, "Failed start detection: %d\n",
@@ -1179,8 +1448,17 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	wake_lock_init(&wm1811->jackdet_wake_lock,
 					WAKE_LOCK_SUSPEND, "omap4_jackdet");
 
-	wake_lock_init(&wm1811->micdet_wake_lock,
-					WAKE_LOCK_SUSPEND, "omap4_micdet");
+#ifdef JACK_DETECT_QUEUE
+	/* Jack detect queue */
+	wm1811->jack_det_queue = alloc_workqueue("wm8994-codec", 0, 0);
+
+	if (!wm1811->jack_det_queue)
+		return -ENOMEM;
+
+	INIT_DELAYED_WORK(&wm1811->jack_det_work, jack_detect_work);
+
+	wm1811->jack_det_delayed_work_time = 2000; /* 2ms */
+#endif
 
 	/* To support PBA function test */
 	jack_class = class_create(THIS_MODULE, "audio");
@@ -1210,16 +1488,18 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	/* Must re-set the hidden registers for ensure the vmid level. */
 	omap4_set_wm1811_hidden_register(control);
 
-#ifdef CONFIG_MACH_SAMSUNG_HARRISON
-	if (system_rev >= 6)
-#elif CONFIG_MACH_SAMSUNG_GOKEY
-	if (system_rev >= 1)
-#else
-	if (system_rev >= 0)
-#endif
+/* Determines the revision of HW by itself when initializing. */
+#ifdef HW_REVISION_DISTINGUISHER
+	for (i = 0; i < distNum; i++)
+		hwRev |= gpio_get_value(
+			omap_muxtbl_get_gpio_by_name(
+				hw_rev_gpio[i].label)) << i;
+
+	if (hwRev >= 6)
 		board_mclk = 38400000;
 	else
 		board_mclk = 26000000;
+#endif
 
 	return snd_soc_dapm_sync(dapm);
 }
@@ -1400,7 +1680,7 @@ static int omap4_card_suspend_pre(struct snd_soc_card *card)
 		WM8994_TSHUT_ENA_MASK,
 		0);
 	}
-#endif /* not CONFIG_SEC_DEV_JACK */
+#endif
 
 	pr_info("omap4_card_suspend_pre");
 
@@ -1441,17 +1721,31 @@ static int __init omap4_audio_init(void)
 
 	gpio_direction_output(mute_ic.gpio, 0);
 
-#ifdef USE_EAR_GND_DETECT
-	ear_gnd_det.gpio = omap_muxtbl_get_gpio_by_name(ear_gnd_det.label);
-	gpio_request(ear_gnd_det.gpio, "ear_gnd_det");
+#ifndef DISABLE_NEEDLESS_GPIO_PIN
+	ear_select.gpio = omap_muxtbl_get_gpio_by_name(ear_select.label);
+	if (ear_select.gpio == -EINVAL)
+		return -EINVAL;
 
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-	if (system_rev < 5)
-		gpio_direction_output(ear_gnd_det.gpio, 0);
-	else
-#endif /* CONFIG_MACH_SAMSUNG_GOKEY */
-		gpio_direction_input(ear_gnd_det.gpio);
-#endif /* USE_EAR_GND_DETECT */
+	ret = gpio_request(ear_select.gpio, "ear_select");
+	if (ret < 0)
+		goto ear_select_err;
+
+	gpio_direction_output(ear_select.gpio, 0);
+
+	main_mic_bias.gpio = omap_muxtbl_get_gpio_by_name(main_mic_bias.label);
+	if (main_mic_bias.gpio == -EINVAL) {
+		pr_err("failed to get gpio name for %s\n", main_mic_bias.label);
+		ret = -EINVAL;
+		goto main_mic_err;
+	}
+
+	ret = gpio_request(main_mic_bias.gpio, "main_mic_bias");
+	if (ret < 0)
+		goto main_mic_err;
+
+	gpio_direction_output(main_mic_bias.gpio, 0);
+#endif
+
 	/* getting pm qos handle */
 	pm_qos_add_request(&pm_qos_handle, PM_QOS_CPU_DMA_LATENCY,
 						PM_QOS_DEFAULT_VALUE);
@@ -1480,12 +1774,18 @@ static int __init omap4_audio_init(void)
 	return ret;
 
 err:
-dai_err:
 	snd_soc_unregister_dai(&omap4_wm8994_snd_device->dev);
-device_err:
+dai_err:
 	platform_device_put(omap4_wm8994_snd_device);
-mute_ic_err:
+device_err:
+#ifndef DISABLE_NEEDLESS_GPIO_PIN
+	gpio_free(main_mic_bias.gpio);
+main_mic_err:
+	gpio_free(ear_select.gpio);
+ear_select_err:
 	gpio_free(mute_ic.gpio);
+#endif
+mute_ic_err:
 	return ret;
 }
 module_init(omap4_audio_init);
@@ -1498,6 +1798,6 @@ static void __exit omap4_audio_exit(void)
 }
 module_exit(omap4_audio_exit);
 
-MODULE_AUTHOR("sejong park <sejong123.park@samsung.com>, seungwook lee <su26.lee@samsung.com>");
-MODULE_DESCRIPTION("ALSA Soc WM1811 omap4");
+MODULE_AUTHOR("Quartz.Jang <quartz.jang@samsung.com");
+MODULE_DESCRIPTION("ALSA Soc WM8994 omap4");
 MODULE_LICENSE("GPL");

@@ -70,18 +70,13 @@ enum cable_type_muic {
 	CABLE_TYPE_DESKDOCK_MUIC,
 	CABLE_TYPE_DESKDOCK_WITH_TA,
 	CABLE_TYPE_CARDOCK_MUIC,
-	CABLE_TYPE_CARDOCK_WITH_TA,
-	CABLE_TYPE_USB_AUDIODOCK_MUIC,
-	CABLE_TYPE_JIG_UART_OFF,
-	CABLE_TYPE_JIG_UART_ON,
-	CABLE_TYPE_JIG_USB_OFF,
-	CABLE_TYPE_JIG_USB_ON,
+	CABLE_TYPE_JIG_UART,
+	CABLE_TYPE_JIG_USB,
 	CABLE_TYPE_MHL_MUIC,
 	CABLE_TYPE_SMARTDOCK_MUIC,
 	CABLE_TYPE_SMARTDOCK_WITH_TA,
 	CABLE_TYPE_UNKNOWN_MUIC,
 	CABLE_TYPE_CHARGER,
-	CABLE_TYPE_CHG_DET_RUNNING, /* Charger Detection State Machine Running*/
 };
 
 enum {
@@ -136,7 +131,6 @@ struct max77693_muic_data {
 
 	int usb_sel;
 	int uart_sel;
-	bool support_cardock;
 };
 
 struct max77693_platform_data {
@@ -154,7 +148,5 @@ struct max77693_platform_data {
 	struct max77693_led_platform_data *led_data;
 	/* charger data */
 	sec_battery_platform_data_t *charger_data;
-	bool man_reset_en;
-	u8 man_reset_timer;
 };
 #endif				/* __LINUX_MFD_MAX77693_H */

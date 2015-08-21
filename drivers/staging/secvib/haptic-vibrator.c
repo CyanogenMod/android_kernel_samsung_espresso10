@@ -489,18 +489,18 @@ static ssize_t secvib_write(struct file *file,
 		goto out;
 	}
 
+	/* copy immediately the input buffer */
+	if (0 != copy_from_user(secvib->write_buf, buf, count)) {
+		/* failed to copy all the data, exit */
+		pr_err("secvib: write failed to copy all the data\n");
+		goto out;
+	}
+
 	/* Check buffer size */
 	if ((count <= SPI_HEADER_SIZE)
 			|| (count > (SPI_BUFFER_SIZE
 					* secvib->pdata->num_actuators))) {
 		pr_err("secvib: invalid write buffer size.\n");
-		goto out;
-	}
-
-	/* copy immediately the input buffer */
-	if (0 != copy_from_user(secvib->write_buf, buf, count)) {
-		/* failed to copy all the data, exit */
-		pr_err("secvib: write failed to copy all the data\n");
 		goto out;
 	}
 
@@ -798,27 +798,9 @@ static int secvib_remove(struct platform_device *pdev)
 	return 0;
 }
 
-static int secvib_suspend(struct platform_device *pdev, pm_message_t state)
-{
-	struct secvib_data *secvib = platform_get_drvdata(pdev);
-	int i;
-
-	for (i = 0; i < secvib->pdata->num_actuators; i++)
-		secvib->pdata->vib_enable(i, 0);
-
-	return 0;
-}
-
-static int secvib_resume(struct platform_device *pdev)
-{
-	return 0;
-}
-
 static struct platform_driver secvib_driver = {
 	.probe		= secvib_probe,
 	.remove		= secvib_remove,
-	.suspend		= secvib_suspend,
-	.resume		= secvib_resume,
 	.driver		= {
 		.name		= VIB_DEVNAME,
 		.owner		= THIS_MODULE,

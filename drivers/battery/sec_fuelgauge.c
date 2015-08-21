@@ -358,7 +358,7 @@ static int __devinit sec_fuelgauge_probe(struct i2c_client *client,
 	}
 
 	fuelgauge->is_fuel_alerted = false;
-	if (fuelgauge->pdata->fuel_alert_soc > 0) {
+	if (fuelgauge->pdata->fuel_alert_soc >= 0) {
 		if (sec_hal_fg_fuelalert_init(fuelgauge->client,
 			fuelgauge->pdata->fuel_alert_soc))
 			wake_lock_init(&fuelgauge->fuel_alert_wake_lock,

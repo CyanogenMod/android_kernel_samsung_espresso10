@@ -124,8 +124,6 @@ EXPORT_SYMBOL_GPL(max77693_bulk_write);
 int max77693_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
 {
 	struct max77693_dev *max77693 = i2c_get_clientdata(i2c);
-	u8 old_val;
-	u8 new_val;
 	int ret;
 
 	mutex_lock(&max77693->iolock);
@@ -133,11 +131,11 @@ int max77693_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
 	if (unlikely(ret < 0)) {
 		dev_err(max77693->dev,
 				"%s failed: reg=0x%x, val=0x%x, mask=0x%x\n",
-				__func__, reg, val, mask);
+				__func__, reg, val);
 		goto err;
 	}
-	old_val = ret & 0xff;
-	new_val = (val & mask) | (old_val & (~mask));
+	u8 old_val = ret & 0xff;
+	u8 new_val = (val & mask) | (old_val & (~mask));
 	ret = i2c_smbus_write_byte_data(i2c, reg, new_val);
 err:
 	mutex_unlock(&max77693->iolock);
@@ -179,23 +177,13 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
 	ret = max77693_read_reg(i2c, MAX77693_PMIC_REG_PMIC_ID2, &reg_data);
 	if (unlikely(ret < 0)) {
 		dev_warn(max77693->dev, "No PMIC Version Information\n");
-		goto err_i2c;
+		goto err_ver;
 	}
 
 	max77693->pmic_rev = PMIC_REV(reg_data);
 	max77693->pmic_ver = PMIC_VER(reg_data);
-
-	reg_data = (pdata->man_reset_timer & MAIN_CTRL1_MRDBTMER_MASK) |
-		(pdata->man_reset_en << MAIN_CTRL1_MREN_SHIFT);
-	ret = max77693_write_reg(i2c, MAX77693_PMIC_REG_MAINCTRL1, reg_data);
-	if (unlikely(ret < 0)) {
-		dev_warn(max77693->dev, "failed to set manctrl1\n");
-		goto err_i2c;
-	}
-
-	dev_info(max77693->dev, "%s: rev.0x%x, ver.0x%x, manctrl1: 0x%x\n",
-			__func__, max77693->pmic_rev, max77693->pmic_ver,
-			reg_data);
+	dev_info(max77693->dev, "device found: rev.0x%x, ver.0x%x\n",
+					max77693->pmic_rev, max77693->pmic_ver);
 
 	max77693->muic = i2c_new_dummy(i2c->adapter, I2C_ADDR_MUIC);
 	i2c_set_clientdata(max77693->muic, max77693);
@@ -226,7 +214,7 @@ err_irq:
 	i2c_unregister_device(max77693->muic);
 	i2c_unregister_device(max77693->fuel);
 	i2c_unregister_device(max77693->haptic);
-err_i2c:
+err_ver:
 	mutex_destroy(&max77693->iolock);
 err_pdata:
 	kfree(max77693);

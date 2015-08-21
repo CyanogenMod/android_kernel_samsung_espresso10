@@ -100,12 +100,11 @@
 #define DEV_AUDIO_2		(1 << 1)
 #define DEV_AUDIO_1		(1 << 0)
 
-#define DEV_USB_MASK		(DEV_USB | DEV_JIG_USB_OFF | \
-				 DEV_JIG_USB_ON | DEV_USB_CHG)
+#define DEV_USB_MASK		(DEV_USB | DEV_JIG_USB_OFF | DEV_JIG_USB_ON)
 #define DEV_UART_MASK		(DEV_UART | DEV_JIG_UART_OFF)
 #define DEV_JIG_MASK		(DEV_JIG_USB_OFF | DEV_JIG_USB_ON | \
 				 DEV_JIG_UART_OFF | DEV_JIG_UART_ON)
-#define DEV_CHARGER_MASK	(DEV_DEDICATED_CHG | DEV_CAR_KIT)
+#define DEV_CHARGER_MASK	(DEV_DEDICATED_CHG | DEV_USB_CHG | DEV_CAR_KIT)
 #define DEV_AUDIO_MASK          (DEV_AUDIO_1 | DEV_AUDIO_2)
 
 /*
@@ -478,7 +477,7 @@ ssize_t usb_id_adc_show(struct device *dev,
 	return sprintf(buf, "%x\n", adc_val);
 }
 
-static DEVICE_ATTR(adc, S_IRUGO, usb_id_adc_show, NULL);
+static DEVICE_ATTR(adc, S_IRUSR | S_IRGRP, usb_id_adc_show, NULL);
 
 /* Function to enable reporting of RAW data
  * status. Make sure that ADC_change is not masked.
@@ -631,13 +630,6 @@ static int fsa9480_detect_callback(struct otg_id_notifier_block *nb)
 
 	dev_type = i2c_smbus_read_word_data(client, FSA9480_REG_DEV_T1);
 	adc_val = i2c_smbus_read_byte_data(client, FSA9480_REG_ADC);
-
-	/* To make use of device type and adc by board connector code
-	 * No need to use this if you have no plan to use them.
-	 */
-	if (usbsw->pdata->save_dev_adc)
-		usbsw->pdata->save_dev_adc(dev_type, adc_val);
-
 	if (dev_type < 0 || adc_val < 0) {
 		dev_err(&client->dev, "error reading adc/dev_type regs\n");
 		goto err;

@@ -27,9 +27,6 @@
  * $Id: dhd_sec_feature.h 309548 2012-01-20 01:13:08Z $
  */
 
-#ifndef _dhd_sec_feature_h_
-#define _dhd_sec_feature_h_
-
 /* PROJECTS */
 
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO)\
@@ -76,37 +73,32 @@
 #endif
 
 /* REGION CODE */
-#ifndef CONFIG_WLAN_REGION_CODE
-#define CONFIG_WLAN_REGION_CODE 100
-#endif /* CONFIG_WLAN_REGION_CODE */
 
-/* REGION CODE */
-
-#if (WLAN_REGION_CODE >= 100) && (WLAN_REGION_CODE < 200) /*EUR*/
-#if (WLAN_REGION_CODE == 101) /*EUR ORG*/
+//#if (WLAN_REGION_CODE >= 100) && (WLAN_REGION_CODE < 200) /*EUR*/
+//#if (WLAN_REGION_CODE == 101) /*EUR ORG*/
 /* GAN LITE NAT KEEPALIVE FILTER */
-#define GAN_LITE_NAT_KEEPALIVE_FILTER
-#endif /* WLAN_REGION_CODE == 101 */
-#endif /* WLAN_REGION_CODE >= 100 && WLAN_REGION_CODE < 200 */
+//#define GAN_LITE_NAT_KEEPALIVE_FILTER
+//#endif
+//#endif
 
 #if (WLAN_REGION_CODE >= 200) && (WLAN_REGION_CODE < 300) /* KOR */
 #undef USE_INITIAL_2G_SCAN_ORG
 #ifndef ROAM_ENABLE
 #define ROAM_ENABLE
-#endif /* ROAM_ENABLE */
+#endif
 #ifndef ROAM_API
 #define ROAM_API
-#endif /* ROAM_API */
+#endif
 #ifndef ROAM_CHANNEL_CACHE
 #define ROAM_CHANNEL_CACHE
-#endif /* ROAM_CHANNEL_CACHE */
+#endif
 #ifndef OKC_SUPPORT
 #define OKC_SUPPORT
-#endif /* OKC_SUPPORT */
+#endif
 
 #ifndef ROAM_AP_ENV_DETECTION
 #define ROAM_AP_ENV_DETECTION
-#endif /* ROAM_AP_ENV_DETECTION */
+#endif
 
 #undef WRITE_MACADDR
 #undef READ_MACADDR
@@ -114,29 +106,26 @@
 #define READ_MACADDR
 #else
 #define RDWR_MACADDR
-#endif /* CONFIG_BCM4334 */
+#endif
 
 #if (WLAN_REGION_CODE == 201) /* SKT */
-#endif /* WLAN_REGION_CODE == 201 */
+#endif
 
 #if (WLAN_REGION_CODE == 202) /* KTT */
 #define VLAN_MODE_OFF
-#define CUSTOM_KEEP_ALIVE_SETTING	30000
+#define KEEP_ALIVE_PACKET_PERIOD_30_SEC
 #define FULL_ROAMING_SCAN_PERIOD_60_SEC
-#endif /* WLAN_REGION_CODE == 202 */
+#endif
 
 #if (WLAN_REGION_CODE == 203) /* LGT */
-#endif /* WLAN_REGION_CODE == 203 */
-#endif /* WLAN_REGION_CODE >= 200 && WLAN_REGION_CODE < 300 */
+#endif
+#endif
 
 #if (WLAN_REGION_CODE >= 300) && (WLAN_REGION_CODE < 400) /* CHN */
 #define BCMWAPI_WPI
 #define BCMWAPI_WAI
-#endif /* WLAN_REGION_CODE >= 300 && WLAN_REGION_CODE < 400 */
+#endif
 
-#if !defined(READ_MACADDR) && !defined(WRITE_MACADDR)\
-	&& !defined(RDWR_KORICS_MACADDR) && !defined(RDWR_MACADDR)
+#if !defined(READ_MACADDR) && !defined(WRITE_MACADDR) && !defined(RDWR_KORICS_MACADDR) && !defined(RDWR_MACADDR)
 #define GET_MAC_FROM_OTP
-#endif /* !READ_MACADDR && !WRITE_MACADDR && !RDWR_KORICS_MACADDR && !RDWR_MACADDR */
-
-#endif /* _dhd_sec_feature_h_ */
+#endif

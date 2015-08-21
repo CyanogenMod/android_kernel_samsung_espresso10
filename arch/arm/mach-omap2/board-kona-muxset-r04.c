@@ -105,7 +105,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     39, "ADC_I2C_SDA_1.8V"),
 	/* [--OUT] gpmc_a16.gpio_40 - 5M_nSTBY */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     GPMC_A16, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
+		     GPMC_A16, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     40, "5M_nSTBY"),
 	/* [--OUT] gpmc_a17.gpio_41 - IRDA_IRQ */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -554,15 +554,11 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     OMAP_MUXTBL_NO_GPIO, "PHEONIX_I2C_SDA"),
 	/* [-----] i2c2_scl.i2c2_scl - CAM_I2C_SCL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     I2C2_SCL,
-		     OMAP_MUX_MODE0 | OMAP_PIN_INPUT |
-		     OMAP_PIN_OFF_INPUT_PULLDOWN,
+		     I2C2_SCL, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLUP,
 		     128, "CAM_I2C_SCL"),
 	/* [-----] i2c2_sda.i2c2_sda - CAM_I2C_SDA */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     I2C2_SDA,
-		     OMAP_MUX_MODE0 | OMAP_PIN_INPUT |
-		     OMAP_PIN_OFF_INPUT_PULLDOWN,
+		     I2C2_SDA, OMAP_MUX_MODE0 | OMAP_PIN_INPUT_PULLUP,
 		     129, "CAM_I2C_SDA"),
 	/* [-----] i2c3_scl.i2c3_scl - TSP_I2C_SCL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -594,7 +590,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     134, "IMA_CMC_EN"),
 	/* [--OUT] mcspi1_somi.gpio_135 - 5M_CAM_nRST */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     MCSPI1_SOMI, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
+		     MCSPI1_SOMI, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     135, "5M_CAM_nRST"),
 	/* [--OUT] mcspi1_simo.gpio_136 - HDMI_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -703,11 +699,11 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     160, "usbb2_ulpitll_nxt.nc"),
 	/* [IN---] usbb2_ulpitll_dat0.gpio_161 - IRDA_I2C_SCL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     USBB2_ULPITLL_DAT0, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		     USBB2_ULPITLL_DAT0, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLUP,
 		     161, "IRDA_I2C_SCL"),
 	/* [IN---] usbb2_ulpitll_dat1.gpio_162 - IRDA_I2C_SDA */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     USBB2_ULPITLL_DAT1, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		     USBB2_ULPITLL_DAT1, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLUP,
 		     162, "IRDA_I2C_SDA"),
 	/* [IN---] usbb2_ulpitll_dat2.gpio_163 - CODEC_CLK_REQ */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -759,7 +755,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     173, "NFC_EN(nc)"),
 	/* [--OUT] kpd_col0.gpio_174 - VT_CAM_nRST */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     KPD_COL0, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
+		     KPD_COL0, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     174, "VT_CAM_nRST"),
 	/* [-N-C-] kpd_col1.safe_mode - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -879,7 +875,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     183, "sys_nirq2.nc"),
 	/* [-----] sys_boot0.safe_mode - SYS_BOOT0 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     SYS_BOOT0, OMAP_MUX_MODE7 | OMAP_PIN_INPUT,
+		     SYS_BOOT0, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
 		     184, "SYS_BOOT0"),
 	/* [-----] sys_boot1.safe_mode - SYS_BOOT1 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -891,7 +887,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     186, "SYS_BOOT2"),
 	/* [-----] sys_boot3.safe_mode - SYS_BOOT3 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     SYS_BOOT3, OMAP_MUX_MODE7 | OMAP_PIN_INPUT,
+		     SYS_BOOT3, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
 		     187, "SYS_BOOT3"),
 	/* [-----] sys_boot4.safe_mode - SYS_BOOT4 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -903,11 +899,11 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     189, "SYS_BOOT5"),
 	/* [IN---] sys_boot6.gpio_wk9 - SYS_BOOT6 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
-		     SYS_BOOT6, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		     SYS_BOOT6, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
 		     9, "SYS_BOOT6"),
 	/* [IN---] sys_boot7.gpio_wk10 - SYS_BOOT7 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
-		     SYS_BOOT7, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		     SYS_BOOT7, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
 		     10, "SYS_BOOT7"),
 	/* [-----] jtag_ntrst.jtag_ntrst - AP_JTAG_nTRST */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
@@ -979,7 +975,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     18, "LCD_EN"),
 	/* [IN---] dpm_emu8.gpio_19 - ACC_INT */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     DPM_EMU8, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     DPM_EMU8, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
 		     19, "ACC_INT"),
 	/* [IN---] dpm_emu9.gpio_20 - IMA_INT */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -1005,7 +1001,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     24, "V_ACCESSORY_OUT_5V"),
 	/* [--OUT] dpm_emu14.gpio_25 - VT_CAM_nSTBY */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     DPM_EMU14, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
+		     DPM_EMU14, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     25, "VT_CAM_nSTBY"),
 	/* [IN---] dpm_emu15.gpio_26 - SIM_DETECT */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -1025,7 +1021,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     190, "MOTOR_PWM"),
 	/* [--OUT] dpm_emu19.gpio_191 - WLAN_WAKE */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     DPM_EMU19, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     DPM_EMU19, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     191, "WLAN_WAKE"),
 	/* [-N-C-] csi22_dx2.safe_mode - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,

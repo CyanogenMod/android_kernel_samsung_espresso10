@@ -192,8 +192,6 @@ void iodev_netif_stop(struct io_device *iod, void *args);
 /* change tx_link of raw devices */
 void rawdevs_set_tx_link(struct modem_shared *msd, enum modem_link link_type);
 
-__be32 ipv4str_to_be32(const char *ipv4str, size_t count);
-
 void mif_add_timer(struct timer_list *timer, unsigned long expire,
 		void (*function)(unsigned long), unsigned long data);
 

@@ -56,8 +56,6 @@ static void fmradio_power(int on)
 		usleep_range(10, 15);
 	} else {
 		gpio_set_value(fm_gpios[GPIO_FM_RST].gpio, 0);
-		omap_mux_set_gpio(OMAP_PIN_INPUT_PULLDOWN | OMAP_MUX_MODE3,
-						fm_gpios[GPIO_FM_INT].gpio);
 	}
 }
 
@@ -86,8 +84,9 @@ static void __init superior_fmradio_gpio_init(void)
 	superior_fmradio_i2c_binfo[0].irq =
 		gpio_to_irq(fm_gpios[GPIO_FM_INT].gpio);
 
-	omap_mux_set_gpio(OMAP_PIN_INPUT_PULLDOWN | OMAP_MUX_MODE3,
+	omap_mux_set_gpio(OMAP_PIN_OUTPUT | OMAP_MUX_MODE3,
 					fm_gpios[GPIO_FM_INT].gpio);
+	gpio_set_value(fm_gpios[GPIO_FM_INT].gpio, 1);
 	gpio_set_value(fm_gpios[GPIO_FM_RST].gpio, 0);
 }
 

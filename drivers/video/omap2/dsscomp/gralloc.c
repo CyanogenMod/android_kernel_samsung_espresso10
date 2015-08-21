@@ -17,8 +17,6 @@ static u32 dev_display_mask;
 #include <linux/ion.h>
 #include <plat/dma.h>
 
-#define NUM_TILER1D_SLOTS 4
-
 extern struct ion_device *omap_ion_device;
 struct workqueue_struct *clone_wq;
 
@@ -46,7 +44,7 @@ static struct tiler1d_slot {
 	u32 phys;
 	u32 size;
 	u32 *page_map;
-} slots[NUM_TILER1D_SLOTS];
+} slots[NUM_ANDROID_TILER1D_SLOTS];
 static struct list_head free_slots;
 static struct dsscomp_dev *cdev;
 static DEFINE_MUTEX(mtx);
@@ -256,7 +254,7 @@ static void dsscomp_gralloc_do_clone(struct work_struct *work)
 	dsscomp_gralloc_transfer_dmabuf(wk->dma_cfg);
 #ifdef CONFIG_DEBUG_FS
 	ms2 = ktime_to_ms(ktime_get());
-	dev_info(DEV(cdev), "DMA latency(msec) = %d\n", ms2-ms1);
+	dev_info(DEV(cdev), "DMA latency(msec) = %lld\n", ms2-ms1);
 #endif
 
 	wk->comp->state = DSSCOMP_STATE_APPLYING;
@@ -265,7 +263,7 @@ static void dsscomp_gralloc_do_clone(struct work_struct *work)
 	kfree(wk);
 }
 
-static bool dsscomp_is_any_device_active(void)
+static bool dsscomp_is_any_device_active()
 {
 	struct omap_dss_device *dssdev;
 	u32 display_ix;
@@ -308,7 +306,7 @@ int dsscomp_gralloc_queue(struct dsscomp_setup_dispc_data *d,
 #ifdef CONFIG_DEBUG_FS
 	u32 ms = ktime_to_ms(ktime_get());
 #endif
-	u32 channels[MAX_MANAGERS], ch;
+	u32 channels[ARRAY_SIZE(d->mgrs)], ch;
 	int skip;
 	struct dsscomp_gralloc_t *gsync;
 	struct dss2_rect_t win = { .w = 0 };
@@ -399,7 +397,7 @@ int dsscomp_gralloc_queue(struct dsscomp_setup_dispc_data *d,
 
 	/* create dsscomp objects for set managers (including active ones) */
 	for (ch = 0; ch < MAX_MANAGERS; ch++) {
-		if (!(mgr_set_mask & (1 << ch)))
+		if (!(mgr_set_mask & (1 << ch)) && !ovl_use_mask[ch])
 			continue;
 
 		mgr = cdev->mgrs[ch];
@@ -410,6 +408,15 @@ int dsscomp_gralloc_queue(struct dsscomp_setup_dispc_data *d,
 			dev_warn(DEV(cdev), "failed to get composition on %s\n",
 								mgr->name);
 			continue;
+		}
+
+		/* set basic manager information for blanked managers */
+		if (!(mgr_set_mask & (1 << ch))) {
+			struct dss2_mgr_info mi = {
+				.alpha_blending = true,
+				.ix = comp[ch]->frm.mgr.ix,
+			};
+			dsscomp_set_mgr(comp[ch], &mi);
 		}
 
 		comp[ch]->must_apply = true;
@@ -429,27 +436,25 @@ int dsscomp_gralloc_queue(struct dsscomp_setup_dispc_data *d,
 	/* NOTE: none of the dsscomp sets should fail as composition is new */
 	for (i = 0; i < d->num_ovls; i++) {
 		struct dss2_ovl_info *oi = d->ovls + i;
+		u32 mgr_ix = oi->cfg.mgr_ix;
 		u32 size;
-		int j;
 
-		 for (j = 0; j < d->num_mgrs; j++)
-			if (d->mgrs[j].ix == oi->cfg.mgr_ix) {
-				/* swap red & blue if requested */
-				if (d->mgrs[j].swap_rb)
-					swap_rb_in_ovl_info(d->ovls + i);
-				break;
-			 }
-		 if (j == d->num_mgrs) {
-			dev_err(DEV(cdev), "invalid manager %d for ovl%d\n",
-						ch, oi->cfg.ix);
-			 continue;
+		/* verify manager index */
+		if (mgr_ix >= d->num_mgrs) {
+			dev_err(DEV(cdev), "invalid manager for ovl%d\n",
+								oi->cfg.ix);
+			continue;
 		}
-
+		ch = channels[mgr_ix];
 
 		/* skip overlays on compositions we could not create */
-		ch = channels[j];
 		if (!comp[ch])
 			continue;
+
+		/* swap red & blue if requested */
+		if (d->mgrs[mgr_ix].swap_rb)
+			swap_rb_in_ovl_info(d->ovls + i);
+
 		/* copy prior overlay to avoid mapping layers twice to 1D */
 		if (oi->addressing == OMAP_DSS_BUFADDR_OVL_IX) {
 			unsigned int j = oi->ba;
@@ -642,20 +647,9 @@ static void dsscomp_early_suspend(struct early_suspend *h)
 	struct dsscomp_setup_dispc_data d = {
 		.num_mgrs = 0,
 	};
-
-	int err, mgr_ix;
+	int err;
 
 	pr_info("DSSCOMP: %s\n", __func__);
-
-	/*dsscomp_gralloc_queue() expects all blanking mgrs set up in comp */
-	for (mgr_ix = 0 ; mgr_ix < cdev->num_mgrs ; mgr_ix++) {
-		struct omap_dss_device *dssdev = cdev->mgrs[mgr_ix]->device;
-		if (dssdev) {
-			d.mgrs[d.num_mgrs].ix = d.num_mgrs;
-			d.mgrs[d.num_mgrs].alpha_blending = true;
-			d.num_mgrs++;
-		}
-	}
 
 	/* use gralloc queue as we need to blank all screens */
 	blank_complete = false;
@@ -764,7 +758,7 @@ void dsscomp_gralloc_init(struct dsscomp_dev *cdev_)
 
 	if (!free_slots.next) {
 		INIT_LIST_HEAD(&free_slots);
-		for (i = 0; i < NUM_TILER1D_SLOTS; i++) {
+		for (i = 0; i < NUM_ANDROID_TILER1D_SLOTS; i++) {
 			u32 phys;
 			tiler_blk_handle slot =
 				tiler_alloc_block_area(TILFMT_PAGE,

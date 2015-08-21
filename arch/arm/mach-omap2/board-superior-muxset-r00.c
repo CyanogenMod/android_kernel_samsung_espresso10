@@ -314,13 +314,11 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     80, "VT_CAM_D0_N"),
 	/* [--OUT] cam_shutter.gpio_81 - CAM_FLASH_SET */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     CAM_SHUTTER,
-		     OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT | OMAP_PULL_ENA,
+		     CAM_SHUTTER, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     81, "CAM_FLASH_SET"),
 	/* [--OUT] cam_strobe.gpio_82 - CAM_FLASH_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     CAM_STROBE,
-		     OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT | OMAP_PULL_ENA,
+		     CAM_STROBE, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     82, "CAM_FLASH_EN"),
 	/* [-----] cam_globalreset.safe_mode - IMA_CMC_EN(nc) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -891,7 +889,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     183, "sys_nirq2.nc"),
 	/* [-----] sys_boot0.safe_mode - SYS_BOOT0 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     SYS_BOOT0, OMAP_MUX_MODE7 | OMAP_PIN_INPUT,
+		     SYS_BOOT0, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
 		     184, "SYS_BOOT0"),
 	/* [-----] sys_boot1.safe_mode - SYS_BOOT1 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -903,7 +901,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     186, "SYS_BOOT2"),
 	/* [-----] sys_boot3.safe_mode - SYS_BOOT3 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     SYS_BOOT3, OMAP_MUX_MODE7 | OMAP_PIN_INPUT,
+		     SYS_BOOT3, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
 		     187, "SYS_BOOT3"),
 	/* [-----] sys_boot4.safe_mode - SYS_BOOT4 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -915,11 +913,11 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     189, "SYS_BOOT5"),
 	/* [IN---] sys_boot6.gpio_wk9 - SYS_BOOT6 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
-		     SYS_BOOT6, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		     SYS_BOOT6, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
 		     9, "SYS_BOOT6"),
 	/* [IN---] sys_boot7.gpio_wk10 - SYS_BOOT7 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
-		     SYS_BOOT7, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		     SYS_BOOT7, OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN,
 		     10, "SYS_BOOT7"),
 	/* [-----] jtag_ntrst.jtag_ntrst - AP_JTAG_nTRST */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
@@ -1035,7 +1033,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     190, "MOTOR_PWM"),
 	/* [--OUT] dpm_emu19.gpio_191 - WLAN_WAKE */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     DPM_EMU19, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     DPM_EMU19, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     191, "WLAN_WAKE"),
 	/* [-N-C-] csi22_dx2.safe_mode - NC */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,

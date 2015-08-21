@@ -382,7 +382,6 @@ static void hdmi_hotplug_detect_worker(struct work_struct *work)
 #ifdef CONFIG_OMAP_HDMI_AUDIO_CH_EVENT
 			hdmi_send_audio_info(1);
 #endif
-			hdmi_disable_video_boot();
 			goto done;
 		} else if (state == HPD_STATE_EDID_TRYLAST) {
 			pr_info("EDID read fail after %d times. Giving up",

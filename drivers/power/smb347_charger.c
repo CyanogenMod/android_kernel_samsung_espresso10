@@ -115,8 +115,6 @@ static int smb347_i2c_write(struct i2c_client *client, u8 reg, u8 data)
 	return ret;
 }
 
-/* commenting this func as we r not using it currently */
-#if 0
 static void smb347_test_read(struct smb347_chg_data *chg)
 {
 	u8 data = 0;
@@ -135,7 +133,6 @@ static void smb347_test_read(struct smb347_chg_data *chg)
 			"smb347 addr : 0x%02x data : 0x%02x\n",	addr, data);
 	}
 }
-#endif
 
 static void smb347_charger_init(struct smb347_chg_data *chg)
 {
@@ -191,7 +188,6 @@ static void smb347_charger_init(struct smb347_chg_data *chg)
 
 	/* STATUS ingerrupt : Clear */
 	smb347_i2c_write(chg->client, SMB347_STATUS_INTERRUPT, 0x00);
-	msleep(50);
 }
 
 static int smb347_read_status(struct smb_charger_callbacks *ptr)

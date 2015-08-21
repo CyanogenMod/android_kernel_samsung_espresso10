@@ -27,6 +27,8 @@ int sprd_boot_done;
 
 static int sprd8803_on(struct modem_ctl *mc)
 {
+	pr_info("[MODEM_IF] sprd8803_on()\n");
+
 	if (!mc->gpio_cp_on || !mc->gpio_pda_active) {
 		pr_err("[MODEM_IF] no gpio data\n");
 		return -ENXIO;
@@ -38,8 +40,9 @@ static int sprd8803_on(struct modem_ctl *mc)
 	gpio_set_value(mc->gpio_cp_ctrl1, 0);
 	gpio_set_value(mc->gpio_cp_ctrl2, 1);
 #endif
+	gpio_set_value(mc->gpio_cp_on, 0);
+	gpio_set_value(mc->gpio_pda_active, 0);
 	msleep(100);
-	pr_info("[MODEM_IF] %s\n", __func__);
 	gpio_set_value(mc->gpio_cp_on, 1);
 	gpio_set_value(mc->gpio_pda_active, 1);
 
@@ -68,42 +71,43 @@ static int sprd8803_reset(struct modem_ctl *mc)
 {
 	pr_info("[MODEM_IF] %s\n", __func__);
 
-	if_spi_thread_restart();
+	if (!mc->gpio_ap_cp_int2)
+		return -ENXIO;
+
+	gpio_set_value(mc->gpio_ap_cp_int2, 0);
+
+	mc->phone_state = STATE_OFFLINE;
+
+	msleep(100);
+
+	gpio_set_value(mc->gpio_ap_cp_int2, 1);
 
 	return 0;
 }
 
 static int sprd8803_boot_on(struct modem_ctl *mc)
 {
-	pr_info("[MODEM_IF] %s %d\n", __func__, mc->phone_state);
-	if (mc->phone_state == STATE_ONLINE) {
+	pr_info("[MODEM_IF] sprd8803_boot_on() %d\n", sprd_boot_done);
+	if (sprd_boot_done) {
 		gpio_set_value(mc->gpio_uart_sel, 0);
 		pr_info("[MODEM_IF] sprd8803 boot complete\n");
 		pr_info("[MODEM_IF] switch uart3 to AP_TXD(RXD)\n");
 	}
 
-	return mc->phone_state;
+	return sprd_boot_done;
 }
 
 static int sprd8803_boot_off(struct modem_ctl *mc)
 {
-	pr_info("[MODEM_IF] %s\n", __func__);
+	pr_info("[MODEM_IF] sprd8803_boot_off()\n");
 	spi_sema_init();
 	return 0;
 }
 
 static int sprd8803_dump_reset(struct modem_ctl *mc)
 {
-	pr_info("[MODEM_IF] %s\n", __func__);
-
-	if (!mc->gpio_ap_cp_int2)
-		return -ENXIO;
-
-	gpio_set_value(mc->gpio_ap_cp_int2, 0);
-	mc->phone_state = STATE_OFFLINE;
-	msleep(100);
-	gpio_set_value(mc->gpio_ap_cp_int2, 1);
-
+	pr_info("[MODEM_IF] sprd8803_dump_reset()\n");
+	if_spi_thread_restart();
 	return 0;
 }
 
@@ -117,11 +121,11 @@ static irqreturn_t phone_active_irq_handler(int irq, void *_mc)
 	if (!mc->gpio_phone_active ||
 			!mc->gpio_cp_dump_int) {
 		pr_err("[MODEM_IF] no gpio data\n");
-		goto exit;
+		return IRQ_HANDLED;
 	}
 
 	if (!sprd_boot_done)
-		goto exit;
+		return IRQ_HANDLED;
 
 	phone_active_value = gpio_get_value(mc->gpio_phone_active);
 	cp_dump_value = gpio_get_value(mc->gpio_cp_dump_int);
@@ -134,7 +138,7 @@ static irqreturn_t phone_active_irq_handler(int irq, void *_mc)
 	else
 		phone_state = STATE_OFFLINE;
 
-	if (phone_active_value && cp_dump_value) {
+	if (cp_dump_value) {
 		gpio_set_value(mc->gpio_uart_sel, 1);
 		phone_state = STATE_CRASH_EXIT;
 	}
@@ -145,7 +149,6 @@ static irqreturn_t phone_active_irq_handler(int irq, void *_mc)
 	if (mc->bootd && mc->bootd->modem_state_changed)
 		mc->bootd->modem_state_changed(mc->bootd, phone_state);
 
-exit:
 	return IRQ_HANDLED;
 }
 
@@ -157,7 +160,6 @@ static void sprd8803_get_ops(struct modem_ctl *mc)
 	mc->ops.modem_boot_on = sprd8803_boot_on;
 	mc->ops.modem_boot_off = sprd8803_boot_off;
 	mc->ops.modem_dump_reset = sprd8803_dump_reset;
-	mc->ops.modem_force_crash_exit = sprd8803_dump_reset;
 }
 
 int sprd8803_init_modemctl_device(struct modem_ctl *mc,
@@ -207,7 +209,7 @@ int sprd8803_init_modemctl_device(struct modem_ctl *mc,
 	}
 
 	ret = request_irq(irq_cp_dump_int, phone_active_irq_handler,
-				IRQF_TRIGGER_RISING,
+				IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
 				"cp_dump_int", mc);
 	if (ret) {
 		pr_err("[MODEM_IF] %s: failed to request_irq:%d\n",

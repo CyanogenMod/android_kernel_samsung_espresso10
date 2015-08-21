@@ -61,7 +61,7 @@ obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_CMCC)	+= board-superior.o \
 					   board-superior-vibrator.o \
 					   board-superior-sensors.o \
 					   board-superior-nfc.o \
-					   board-superior-cmcc-fmradio.o \
+					   board-superior-fmradio.o \
 					   board-superior-camera.o \
 					   board-superior-spiflash.o \
 					   board-superior-spi.o
@@ -70,6 +70,4 @@ obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_CMCC) += board-superior-muxset-r00.o \
 					   board-superior-muxset-r02.o \
 					   board-superior-muxset-r04.o \
 					   board-superior-cmcc-muxset-r01.o \
-					   board-superior-cmcc-muxset-r06.o \
-					   board-superior-cmcc-muxset-r07.o \
 					   board-superior-cmcc-modems.o

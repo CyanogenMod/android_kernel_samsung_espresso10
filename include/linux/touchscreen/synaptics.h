@@ -18,23 +18,16 @@
 
 #include <linux/i2c.h>
 
-#ifdef CONFIG_TOUCHSCREEN_OLD_FW_STD
 struct synaptics_fw_info {
 	char version[5];
 	const char release_date[5];
+	const int hw_id;
 };
-#else
-struct synaptics_fw_info {
-	int version;
-	int hw_id;
-	const char release_date[5];
-};
-#endif
 
-void synaptics_set_i2c_client(struct i2c_client *);
 bool synaptics_fw_update(struct i2c_client *, const u8 *, const int);
 bool F54_SetRawCapData(struct i2c_client *, s16 *);
 bool F54_SetRxToRxData(struct i2c_client *, s16 *);
 bool F54_TxToTest(struct i2c_client *, s16 *, int);
-int synaptics_set_low_temp_bit(const bool);
+void F01_SetTABit(struct i2c_client *, int);
+
 #endif

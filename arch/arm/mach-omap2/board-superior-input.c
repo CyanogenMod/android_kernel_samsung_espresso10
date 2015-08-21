@@ -20,11 +20,11 @@
 #include <linux/gpio_event.h>
 #include <linux/gpio.h>
 #include <linux/i2c.h>
+#include <linux/battery.h>
 #include <linux/regulator/consumer.h>
 #include <linux/input/cypress-touchkey.h>
 #include <linux/touchscreen/melfas.h>
 #include <linux/platform_data/sec_ts.h>
-#include <linux/power_supply.h>	/* required by TA check */
 #include <linux/delay.h>
 #include <asm/mach-types.h>
 #include <plat/omap4-keypad.h>
@@ -41,10 +41,12 @@
 #define TOUCH_DVFS_FREQ	800000
 #define TOUCH_MAX_SLOT		10
 
-static struct touch_dvfs_data {
+struct touch_dvfs_data {
 	struct work_struct dvfs_work;
 	bool enable;
-} dvfs_data;
+};
+
+static struct touch_dvfs_data dvfs_data;
 
 static void touch_dvfs_work(struct work_struct *work)
 {
@@ -80,7 +82,6 @@ static void touch_dvfs_event(struct input_handle *handle,
 			}
 		}
 	}
-
 	if (cnt && !dvfs_data.enable) {
 		dvfs_data.enable = true;
 		schedule_work(&dvfs_data.dvfs_work);
@@ -295,32 +296,85 @@ static struct gpio tk_gpios[] = {
 	},
 };
 
-static void tk_power_on(int enable)
+static void tk_power_on_rev01(int enable)
 {
-	static struct regulator *tk_18v, *tk_28v, *tk_led_30v;
+	struct regulator *tk_led_33v;
 
-	if (unlikely(!tk_18v || !tk_28v || !tk_led_30v)) {
-		tk_18v = regulator_get(NULL, "2TOUCH_1.8V");
-		tk_28v = regulator_get(NULL, "2TOUCH_2.8V");
-		tk_led_30v = regulator_get(NULL, "KEYLED_3.0V");
+	tk_led_33v = regulator_get(NULL, "KEYLED_3.3V");
+
+	if (unlikely(IS_ERR_OR_NULL(tk_led_33v))) {
+		pr_err("cptk: failed to get KEYLED_3.3V regulator.\n");
+		return;
 	}
 
-	if (unlikely(IS_ERR_OR_NULL(tk_18v) || IS_ERR_OR_NULL(tk_28v) ||
-				IS_ERR_OR_NULL(tk_led_30v))) {
+	if (enable) {
+		gpio_set_value(tk_gpios[GPIO_TOUCHKEY_EN].gpio, 1);
+		regulator_enable(tk_led_33v);
+		msleep(50);
+	} else {
+		gpio_set_value(tk_gpios[GPIO_TOUCHKEY_EN].gpio, 0);
+		if (regulator_is_enabled(tk_led_33v))
+			regulator_disable(tk_led_33v);
+	}
+	regulator_put(tk_led_33v);
+
+	return;
+}
+
+static void tk_power_on_rev02(int enable)
+{
+	static struct regulator *tk_33v, *tk_led_33v;
+
+	if (unlikely(!tk_33v || !tk_led_33v)) {
+		tk_33v = regulator_get(NULL, "2TOUCH_3.3V");
+		tk_led_33v = regulator_get(NULL, "KEYLED_3.3V");
+	}
+
+	if (unlikely(IS_ERR_OR_NULL(tk_33v) || IS_ERR_OR_NULL(tk_led_33v))) {
+		pr_err("cptk: failed to get 2TOUCH regulator.\n");
+		return;
+	}
+
+	if (enable) {
+		regulator_enable(tk_33v);
+		regulator_enable(tk_led_33v);
+	} else {
+		if (regulator_is_enabled(tk_33v) &&
+					regulator_is_enabled(tk_led_33v)) {
+			regulator_disable(tk_33v);
+			regulator_disable(tk_led_33v);
+		}
+	}
+
+	return;
+}
+
+static void tk_power_on_rev03(int enable)
+{
+	static struct regulator *tk_18v, *tk_33v, *tk_led_33v;
+
+	if (unlikely(!tk_18v || !tk_led_33v || !tk_led_33v)) {
+		tk_18v = regulator_get(NULL, "2TOUCH_1.8V");
+		tk_33v = regulator_get(NULL, "2TOUCH_3.3V");
+		tk_led_33v = regulator_get(NULL, "KEYLED_3.3V");
+	}
+
+	if (unlikely(IS_ERR_OR_NULL(tk_18v) || IS_ERR_OR_NULL(tk_33v) ||
+				IS_ERR_OR_NULL(tk_led_33v))) {
 		pr_err("cptk: failed to get 2TOUCH regulator.\n");
 		return;
 	}
 
 	if (enable) {
 		regulator_enable(tk_18v);
-		regulator_enable(tk_28v);
-		regulator_enable(tk_led_30v);
+		regulator_enable(tk_33v);
+		regulator_enable(tk_led_33v);
 	} else if (regulator_is_enabled(tk_18v) &&
-					regulator_is_enabled(tk_28v) &&
-					regulator_is_enabled(tk_led_30v)) {
+					regulator_is_enabled(tk_33v) &&
+					regulator_is_enabled(tk_led_33v)) {
 		regulator_disable(tk_18v);
-		regulator_disable(tk_28v);
-		regulator_disable(tk_led_30v);
+		regulator_disable(tk_33v);
+		regulator_disable(tk_led_33v);
 	}
 
 	return;
@@ -329,9 +383,9 @@ static void tk_power_on(int enable)
 static const int tk_keymap[] = { 0, KEY_MENU, KEY_BACK, };
 
 static struct cptk_platform_data superior_tk_data = {
-	.power		= tk_power_on,
-	.mod_ver	= 0x06,
-	.firm_ver	= 0x0B,
+	.power		= tk_power_on_rev03,
+	.mod_ver	= 0x03,
+	.firm_ver	= 0x06,
 	.keymap		= tk_keymap,
 	.keymap_size	= ARRAY_SIZE(tk_keymap),
 	.fw_name	= "cypress/i9260.fw",
@@ -366,6 +420,12 @@ static void __init superior_input_tk_init(void)
 	superior_tk_gpio_init();
 	i2c_register_board_info(8, superior_tk_boardinfo,
 					ARRAY_SIZE(superior_tk_boardinfo));
+	if (unlikely(system_rev == 2)) {
+		superior_tk_data.power = tk_power_on_rev02;
+	} else if (unlikely(system_rev == 1)) {
+		superior_tk_data.power = tk_power_on_rev01;
+		superior_tk_data.firm_ver = 0x00;
+	}
 }
 
 /* touch screen IC setting */
@@ -419,18 +479,17 @@ static void tsp_set_power_regulator(bool on)
 static struct melfas_fw_info superior_tsp_fw_info = {
 	.product_code = "465GS37",
 	.core_version = 0x45,
-	.release_date = "1222",
 };
 
 static struct sec_ts_platform_data superior_ts_pdata = {
 	.model_name	= "I9260",
 	.fw_name	= "melfas/i9260.fw",
-	.fw_info	= &superior_tsp_fw_info,
 	.ext_fw_name	= "/mnt/sdcard/i9260.bin",
-	.tx_channel_no	= 26,		/* x axis line */
-	.rx_channel_no	= 14,		/* y axis line */
+	.rx_channel_no	= 14,
+	.tx_channel_no	= 26,
 	.x_pixel_size	= 719,
 	.y_pixel_size	= 1279,
+	.private_data	= &superior_tsp_fw_info,
 	.set_power	= tsp_set_power_regulator,
 };
 
@@ -464,35 +523,6 @@ static void __init superior_input_tsp_init(void)
 	superior_tsp_gpio_init();
 	i2c_register_board_info(3, superior_i2c3_boardinfo,
 				ARRAY_SIZE(superior_i2c3_boardinfo));
-}
-
-void omap4_superior_tsp_ta_detect(int cable_type)
-{
-	struct regulator *tsp_vdd = regulator_get(NULL, "TSP_AVDD_3.3V");
-	static int old_cable_type;
-
-	if (old_cable_type == cable_type)
-		return;
-
-	switch (cable_type) {
-	case POWER_SUPPLY_TYPE_MAINS:
-	superior_ts_pdata.ta_state = CABLE_TA;
-	break;
-	case POWER_SUPPLY_TYPE_USB:
-	superior_ts_pdata.ta_state = CABLE_USB;
-	break;
-	case POWER_SUPPLY_TYPE_BATTERY:
-	default:
-	superior_ts_pdata.ta_state = CABLE_NONE;
-	}
-
-	/* Conditions to prevent kernel panic */
-	if (superior_ts_pdata.set_ta_mode && regulator_is_enabled(tsp_vdd))
-		superior_ts_pdata.set_ta_mode(&superior_ts_pdata.ta_state);
-
-	old_cable_type = cable_type;
-
-	return;
 }
 
 void touch_i2c_to_gpio(bool to_gpios)

@@ -59,19 +59,6 @@ static void max17050_init_regs(struct i2c_client *client)
 	data[0] &= 0x8f;
 
 	max17050_write_reg(client, MAX17050_REG_FILTERCFG, data);
-
-	data[1] = 0x00;
-	data[0] = 0x00;
-	max17050_write_reg(client, MAX17050_REG_CGAIN, data);
-
-
-	data[1] = 0x00;
-	data[0] = 0x03;
-	max17050_write_reg(client, MAX17050_REG_MISCCFG, data);
-
-	data[1] = 0x00;
-	data[0] = 0x07;
-	max17050_write_reg(client, MAX17050_REG_LEARNCFG, data);
 }
 
 static void max17050_get_version(struct i2c_client *client)
