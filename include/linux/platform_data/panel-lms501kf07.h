@@ -33,12 +33,6 @@ struct lms501kf07_mdnie_data {
 	int size;
 };
 
-struct lms501kf07_inver_data {
-	u8 *one;
-	u8 *two;
-	int size;
-};
-
 struct panel_lms501kf07_data {
 	int reset_gpio;
 	int blctrl_gpio;
@@ -54,14 +48,6 @@ struct panel_lms501kf07_data {
 	int seq_display_off_size;
 
 	const struct lms501kf07_mdnie_data *mdnie_data;
-	void (*set_mdnie_data)(struct lms501kf07_sequence_entry *init_seq,
-				u8 *data);
-
-	const struct lms501kf07_inver_data *inver_data;
-	void (*set_inver_data)(struct lms501kf07_sequence_entry *init_seq,
-			u8 *data);
-
-	int (*get_temp)(void);
 };
 
 #endif

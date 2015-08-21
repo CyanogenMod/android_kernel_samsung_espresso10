@@ -1778,7 +1778,7 @@ static inline void __devinit omap34xx_device_init(struct omap_mcbsp *mcbsp)
 		 */
 		mcbsp->max_tx_thres = max_thres(mcbsp) - 0x10;
 		mcbsp->max_rx_thres = max_thres(mcbsp) - 0x10;
-#ifdef CONFIG_SND_OPEN_SOC_SOURCE
+#ifdef CONFIG_SND_OMAP_SOC_WM8994
 		mcbsp->dma_op_mode = MCBSP_DMA_MODE_THRESHOLD;
 #endif
 		/*

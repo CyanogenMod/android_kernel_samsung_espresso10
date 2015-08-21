@@ -648,19 +648,10 @@ static int __devinit Si47xx_i2c_probe(struct i2c_client *client,
 	mutex_init(&Si47xx_dev->lock);
 
 	ret = Si47xx_dev_init(Si47xx_dev);
-	if (ret < 0) {
+	if (ret < 0)
 		error("Si47xx_dev_init failed");
-		goto dev_init_err;
-	}
 
 	return ret;
-
-dev_init_err:
-	free_irq(client->irq, NULL);
-	mutex_destroy(&Si47xx_dev->lock);
-	kfree(Si47xx_dev);
-	return ret;
-
 }
 
 static int __devexit Si47xx_i2c_remove(struct i2c_client *client)

@@ -352,29 +352,6 @@ void rawdevs_set_tx_link(struct modem_shared *msd, enum modem_link link_type)
 		iodevs_for_each(msd, iodev_set_tx_link, ld);
 }
 
-/**
- * ipv4str_to_be32 - ipv4 string to be32 (big endian 32bits integer)
- * @return: return zero when errors occurred
- */
-__be32 ipv4str_to_be32(const char *ipv4str, size_t count)
-{
-	unsigned char ip[4];
-	char ipstr[16]; /* == strlen("xxx.xxx.xxx.xxx") + 1 */
-	char *next = ipstr;
-	char *p;
-	int i;
-
-	strncpy(ipstr, ipv4str, ARRAY_SIZE(ipstr));
-
-	for (i = 0; i < 4; i++) {
-		p = strsep(&next, ".");
-		if (kstrtou8(p, 10, &ip[i]) < 0)
-			return 0; /* == 0.0.0.0 */
-	}
-
-	return *((__be32 *)ip);
-}
-
 void mif_add_timer(struct timer_list *timer, unsigned long expire,
 		void (*function)(unsigned long), unsigned long data)
 {

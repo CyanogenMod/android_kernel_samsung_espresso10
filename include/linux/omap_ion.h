@@ -61,7 +61,6 @@ int omap_ion_share_fd_to_buffers(int fd, struct ion_buffer **buffers,
 int omap_tiler_vinfo(struct ion_client *client,
 			struct ion_handle *handle, unsigned int *vstride,
 			unsigned int *vsize);
-int omap_ion_preprocess_tiler_alloc(bool enable);
 #endif /* __KERNEL__ */
 
 /* additional heaps used only on omap */
@@ -99,7 +98,6 @@ enum {
 	OMAP_ION_HEAP_NONSECURE_TILER,
 	OMAP_ION_HEAP_TILER_RESERVATION,
 	OMAP_ION_HEAP_SECURE_OUTPUT_WFDHDCP,
-	OMAP_ION_HEAP_TILER_CMA,
 };
 
 #endif /* _LINUX_ION_H */

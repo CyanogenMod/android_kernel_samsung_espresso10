@@ -153,7 +153,7 @@ endif
 TSPFIRMWARE_DIRECTORY_SYNAPTICS = $(srctree)/firmware/synaptics
 ifeq ($(shell test -d $(TSPFIRMWARE_DIRECTORY_SYNAPTICS) && echo yes),yes)
 fw-shipped-$(CONFIG_FW_SAMSUNG_ESPRESSO_10_TSP) += synaptics/p5100.fw
-fw-shipped-$(CONFIG_FW_SAMSUNG_KONA_TSP) += synaptics/N5100_SY_01.fw
+fw-shipped-$(CONFIG_FW_SAMSUNG_KONA_TSP) += synaptics/n5100.fw
 else
 $(warning '$(TSPFIRMWARE_DIRECTORY)' directory dose not exist)
 endif
@@ -161,7 +161,6 @@ endif
 TSKEYFIRMWARE_DIRECTORY_CYPRESS = $(srctree)/firmware/cypress
 ifeq ($(shell test -d $(TSKEYFIRMWARE_DIRECTORY_CYPRESS) && echo yes),yes)
 fw-shipped-$(CONFIG_FW_SAMSUNG_SUPERIOR_TOUCH_KEY) += cypress/i9260.fw
-fw-shipped-$(CONFIG_FW_SAMSUNG_GOKEY_TSP) += cypress/gh1.fw
 else
 $(warning '$(TSPFIRMWARE_DIRECTORY)' directory dose not exist)
 endif

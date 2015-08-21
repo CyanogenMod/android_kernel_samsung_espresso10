@@ -128,27 +128,9 @@ static struct omap_dss_board_info espresso_dss_data = {
 	.default_device	= &espresso_lcd_device,
 };
 
-static struct dsscomp_platform_data dsscomp_config_espresso = {
-	.tiler1d_slotsz = SZ_16M,
-};
-static struct sgx_omaplfb_config omaplfb_config_espresso[] = {
-	{
-		.tiler2d_buffers = 2,
-		.swap_chain_length = 2,
-	},
-	{
-		.vram_buffers = 2,
-		.swap_chain_length = 2,
-	},
-};
-static struct sgx_omaplfb_platform_data omaplfb_plat_data_espresso = {
-	.num_configs = ARRAY_SIZE(omaplfb_config_espresso),
-	.configs = omaplfb_config_espresso,
-};
-
 static struct omapfb_platform_data espresso_fb_pdata = {
 	.mem_desc = {
-		.region_cnt = ARRAY_SIZE(omaplfb_config_espresso),
+		.region_cnt = 1,
 		.region = {
 			[0] = {
 				.size = ESPRESSO_FB_RAM_SIZE,
@@ -191,12 +173,11 @@ static __init int setup_current_panel(char *opt)
 }
 __setup("lcd_panel_id=", setup_current_panel);
 
-
 void __init omap4_espresso_memory_display_init(void)
 {
 	omap_android_display_setup(&espresso_dss_data,
-				   &dsscomp_config_espresso,
-				   &omaplfb_plat_data_espresso,
+				   NULL,
+				   NULL,
 				   &espresso_fb_pdata,
 				   get_omap_ion_platform_data());
 }

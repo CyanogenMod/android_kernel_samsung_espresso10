@@ -41,11 +41,7 @@
 #define MBOX_NR_REGS                   2
 #define OMAP4_MBOX_NR_REGS             3
 
-#ifdef CONFIG_ENABLE_GPIO_TO_ALLOW_C2_IN_CAMERA
-#define SET_MPU_CORE_CONSTRAINT		400
-#else
 #define SET_MPU_CORE_CONSTRAINT		10
-#endif
 
 static void __iomem *mbox_base;
 

@@ -1225,6 +1225,7 @@ static int rproc_loader(struct rproc *rproc)
 	 * allow building remoteproc as built-in kernel code, without
 	 * hanging the boot process
 	 */
+    dev_err(dev, "Requesting firmware: %s", fwfile);
 	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG, fwfile,
 			dev, GFP_KERNEL, rproc, rproc_loader_cont);
 	if (ret < 0) {

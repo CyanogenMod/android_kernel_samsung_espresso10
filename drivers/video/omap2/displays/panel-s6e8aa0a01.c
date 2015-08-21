@@ -39,7 +39,7 @@
 #define PANEL_A1_M3			SM2A1
 #define PANEL_A2_M3			SM2A2
 
-#define LDI_MTP_LENGTH			MTP_PARAM_SIZE
+#define LDI_MTP_LENGTH			24
 #define LDI_MTP_ADDR			0xD3
 
 #define DYNAMIC_ELVSS_MIN_VALUE		0x81
@@ -61,7 +61,7 @@ struct str_elvss {
 #define DEFAULT_GAMMA_LEVEL		GAMMA_160CD
 
 #define LDI_ID_REG			0xD1
-#define LDI_ID_LEN			ID_PARAM_SIZE
+#define LDI_ID_LEN			3
 
 /* DSI Command Virtual channel */
 #define CMD_VC_CHANNEL			1
@@ -465,7 +465,7 @@ static int s6e8aa0a01_init_gamma_table(struct s6e8aa0a01_data *s6)
 					 &s6->gamma_table[i][2], G_21);
 		else
 			calc_gamma_table(&s6->smart, aid_candela_table[i],
-					 &s6->gamma_table[i][2], G_215);
+					 &s6->gamma_table[i][2], G_22);
 	}
 
 	return 0;
@@ -699,7 +699,7 @@ static int s6e8aa0a01_hw_reset(struct omap_dss_device *dssdev)
 static void s6e8aa0a01_read_id_info(struct s6e8aa0a01_data *s6)
 {
 	struct omap_dss_device *dssdev = s6->dssdev;
-	int ret, i;
+	int ret;
 	u8 cmd = 0xD1;
 
 	if (!s6->connected) {
@@ -711,12 +711,34 @@ static void s6e8aa0a01_read_id_info(struct s6e8aa0a01_data *s6)
 		return;
 	}
 
-	for (i = 0; i < LDI_ID_LEN; i++)
-		s6->panel_id[i] = s6->pdata->panel_id[i];
-
+	dsi_vc_set_max_rx_packet_size(dssdev, 1, 3);
+	ret = s6e8aa0a01_read_block(dssdev, cmd, s6->panel_id,
+				    ARRAY_SIZE(s6->panel_id));
+	dsi_vc_set_max_rx_packet_size(dssdev, 1, 1);
+	if (unlikely(ret < 0))
+		pr_err("%s: Failed to read id data\n", __func__);
 }
 
 #ifdef CONFIG_SMART_DIMMING
+static void s6e8aa0a01_read_mtp_info(struct s6e8aa0a01_data *s6, u8 * mtp_data)
+{
+	int ret;
+	struct omap_dss_device *dssdev = s6->dssdev;
+
+	if (!s6->connected) {
+		dev_info(&dssdev->dev,
+			 "*** s6e8aa0a01 panel is not connected!\n");
+		return;
+	}
+
+	dsi_vc_set_max_rx_packet_size(dssdev, 1, LDI_MTP_LENGTH);
+	ret = s6e8aa0a01_read_block(dssdev, LDI_MTP_ADDR,
+				    mtp_data, LDI_MTP_LENGTH);
+	dsi_vc_set_max_rx_packet_size(dssdev, 1, 1);
+	if (unlikely(ret < 0))
+		pr_err("%s: Failed to read mtp data\n", __func__);
+}
+
 static void s6e8aa0a01_check_id(struct s6e8aa0a01_data *s6)
 {
 	unsigned int i;
@@ -787,26 +809,18 @@ err_alloc_elvss_table:
 }
 #endif /* CONFIG_SMART_DIMMING */
 
-static int s6e8aa0a01_gamma_ctl(struct s6e8aa0a01_data *lcd, int force)
+static int s6e8aa0a01_gamma_ctl(struct s6e8aa0a01_data *lcd)
 {
 	struct omap_dss_device *dssdev = lcd->dssdev;
+	const unsigned char seq_gamma_update[] = { 0xF7, 0x03, 0x00 };
 
 	s6e8aa0a01_write_block_nosync(dssdev,
 				      lcd->gamma_table[lcd->bl],
 				      GAMMA_PARAM_SIZE);
-#ifdef CONFIG_AID_DIMMING
-	if (likely(lcd->support_aid)) {
-		if ((lcd->f8[lcd->bl][0x12] !=
-				lcd->f8[lcd->current_bl][0x12]) ||
-		    (lcd->f8[lcd->bl][0x01] !=
-				lcd->f8[lcd->current_bl][0x01]) || (force))
-			s6e8aa0a01_write_block_nosync(dssdev, lcd->f8[lcd->bl],
-				lcd->pdata->seq_panel_condition_set_size);
-	}
-#endif
 
 	/* Gamma Set Update */
-	s6e8aa0a01_write_reg(dssdev, 0xF7, 0x03);
+	s6e8aa0a01_write_block(dssdev, seq_gamma_update,
+			       ARRAY_SIZE(seq_gamma_update));
 
 	return 0;
 }
@@ -819,6 +833,8 @@ static void s6e8aa0a01_set_acl(struct s6e8aa0a01_data *lcd)
 	unsigned int cd;
 	unsigned int max_cd = 0;
 	const struct s6e8aa0a01_acl_parameters *acl;
+	const unsigned char seq_acl_off[] = { 0xC0, 0x00, 0x00 };
+	const unsigned char seq_acl_on[] = { 0xC0, 0x01, 0x00 };
 
 	/* Quietly return if you don't have a table */
 	if (!pdata->acl_table_size)
@@ -842,14 +858,18 @@ static void s6e8aa0a01_set_acl(struct s6e8aa0a01_data *lcd)
 		if (lcd->acl_cur != acl->acl_val) {
 			s6e8aa0a01_write_block_nosync(dssdev, acl->regs,
 						      sizeof(acl->regs));
-			s6e8aa0a01_write_reg(dssdev, 0xC0, 0x01);
+			s6e8aa0a01_write_block(dssdev,
+					     seq_acl_on,
+					     ARRAY_SIZE(seq_acl_on));
 
 			lcd->acl_cur = acl->acl_val;
 		}
 	} else {
 		if (lcd->acl_cur != 0) {
 			lcd->acl_cur = 0;
-			s6e8aa0a01_write_reg(dssdev, 0xC0, 0x00);
+			s6e8aa0a01_write_block(dssdev,
+					     seq_acl_off,
+					     ARRAY_SIZE(seq_acl_off));
 		}
 	}
 	pr_debug("%s : acl_cur=%d, %d\n", __func__, lcd->acl_cur,
@@ -871,8 +891,10 @@ static int s6e8aa0a01_update_brightness(struct omap_dss_device *dssdev,
 
 	if ((force) || ((lcd->enabled) && (lcd->current_bl != lcd->bl))) {
 
-		s6e8aa0a01_gamma_ctl(lcd, force);
-
+		s6e8aa0a01_gamma_ctl(lcd);
+#ifdef CONFIG_AID_DIMMING
+		s6e8aa0a01_aid_parameter_ctl(lcd, force);
+#endif
 		s6e8aa0a01_set_acl(lcd);
 
 		s6e8aa0a01_set_elvss(lcd, force);
@@ -1042,12 +1064,12 @@ static ssize_t s6e8aa0a01_auto_brightness_store(struct device *dev,
 				__func__, lcd->auto_brightness, value);
 			mutex_lock(&lcd->lock);
 			lcd->auto_brightness = value;
+			mutex_unlock(&lcd->lock);
 			if (lcd->enabled && !lcd->auto_brightness) {
 				dsi_bus_lock(dssdev);
 				s6e8aa0a01_update_brightness(lcd->dssdev, 0);
 				dsi_bus_unlock(dssdev);
 			}
-			mutex_unlock(&lcd->lock);
 		}
 	}
 	return size;
@@ -1117,7 +1139,7 @@ static int s6e8aa0a01_probe(struct omap_dss_device *dssdev)
 	s6->dssdev = dssdev;
 	s6->pdata = dssdev->data;
 
-	s6->bl = GAMMA_MAX;
+	s6->bl = s6e8aa0a01_brightness2backlight_level(props.brightness);
 	s6->current_bl = GAMMA_MAX;
 
 	if (!s6->pdata->seq_display_set || !s6->pdata->seq_etc_set) {
@@ -1222,7 +1244,9 @@ static int s6e8aa0a01_probe(struct omap_dss_device *dssdev)
 
 	init_table_info(&s6->smart);
 
-	calc_voltage_table(&s6->smart, s6->pdata->mtp_data);
+	s6e8aa0a01_read_mtp_info(s6, mtp_data);
+
+	calc_voltage_table(&s6->smart, mtp_data);
 
 	if (s6->support_elvss)
 		ret = init_elvss_table(s6);

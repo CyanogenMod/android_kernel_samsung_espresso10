@@ -120,6 +120,40 @@ struct kxtf9_private_data {
     Accelerometer Initialization Functions
 *****************************************/
 
+static int accel_open_calibration(struct kxtf9_private_data *data)
+{
+	struct file *cal_filp;
+	int err;
+	mm_segment_t old_fs;
+
+	old_fs = get_fs();
+	set_fs(KERNEL_DS);
+
+	cal_filp = filp_open("/efs/calibration_data", O_RDONLY, 0666);
+	if (IS_ERR(cal_filp)) {
+		pr_err("%s: Can't open calibration file\n", __func__);
+		set_fs(old_fs);
+		err = PTR_ERR(cal_filp);
+		return err;
+	}
+
+	err = cal_filp->f_op->read(cal_filp,
+				   (char *)&data->cal_data, 3 * sizeof(s16),
+				   &cal_filp->f_pos);
+	if (err != 3 * sizeof(s16)) {
+		pr_err("%s: Can't read the cal data from file\n", __func__);
+		err = -EIO;
+	}
+
+	pr_info("%s: (%u,%u,%u)\n", __func__,
+	       data->cal_data.x, data->cal_data.y, data->cal_data.z);
+
+	filp_close(cal_filp, current->files);
+	set_fs(old_fs);
+
+	return err;
+}
+
 static int kxtf9_set_ths(void *mlsl_handle,
 			struct ext_slave_platform_data *pdata,
 			struct kxtf9_config *config,
@@ -329,14 +363,9 @@ static int kxtf9_suspend(void *mlsl_handle,
 			 struct ext_slave_platform_data *pdata)
 {
 	int result;
-
-	pr_info("%s +\n", __func__);
-
 	result = MLSLSerialWriteSingle(mlsl_handle, pdata->address,
 				KXTF9_CTRL_REG1, 0x0);
 	ERROR_CHECK(result);
-
-	pr_info("%s -\n", __func__);
 
 	return result;
 }
@@ -353,7 +382,10 @@ static int kxtf9_resume(void *mlsl_handle,
 	unsigned char data;
 	struct kxtf9_private_data *private_data = pdata->private_data;
 
-	pr_info("%s +\n", __func__);
+	private_data->cal_data.x = 0;
+	private_data->cal_data.y = 0;
+	private_data->cal_data.z = 0;
+	accel_open_calibration(private_data);
 
 	/* Wake up */
 	result = MLSLSerialWriteSingle(mlsl_handle, pdata->address,
@@ -386,8 +418,6 @@ static int kxtf9_resume(void *mlsl_handle,
 	result = MLSLSerialRead(mlsl_handle, pdata->address,
 				KXTF9_INT_REL, 1, &data);
 	ERROR_CHECK(result);
-
-	pr_info("%s -\n", __func__);
 
 	return ML_SUCCESS;
 }
@@ -603,6 +633,7 @@ static int kxtf9_read(void *mlsl_handle,
 		      unsigned char *data)
 {
 	int result;
+	unsigned char reg;
 
 	result = MLSLSerialRead(mlsl_handle, pdata->address,
 				slave->reg, slave->len, data);

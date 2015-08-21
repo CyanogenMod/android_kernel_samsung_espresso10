@@ -119,7 +119,7 @@ typedef IMG_PVOID       IMG_HANDLE;
 
 typedef void**          IMG_HVOID,	* IMG_PHVOID;
 
-#define IMG_NULL        0
+#define IMG_NULL        0 
 
 /* services/stream ID */
 typedef IMG_UINT32      IMG_SID;

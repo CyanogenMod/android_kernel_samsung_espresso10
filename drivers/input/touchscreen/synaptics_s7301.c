@@ -13,7 +13,7 @@
  *
  */
 
-#define DEBUG_PRINT			0
+#define DEBUG_PRINT			1
 
 #if DEBUG_PRINT
 #define	tsp_debug(fmt, args...) \
@@ -42,7 +42,7 @@
 
 #include "../../../arch/arm/mach-omap2/sec_common.h"
 
-#ifdef CONFIG_SEC_TSP_FACTORY_TEST
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 #define TSP_VENDOR			"SYNAPTICS"
 #define TSP_IC				"S7301"
 
@@ -68,61 +68,34 @@ struct node_data {
 	s16				*tx_to_gnd_data;
 };
 
+#define TSP_CMD(name, func) .cmd_name = name, .cmd_func = func
+#define TOSTRING(x) #x
+
+enum {	/* this is using by cmd_state valiable. */
+	WAITING = 0,
+	RUNNING,
+	OK,
+	FAIL,
+	NOT_APPLICABLE,
+};
+
+struct tsp_cmd {
+	struct list_head		list;
+	const char			*cmd_name;
+	void				(*cmd_func)(void *device_data);
+};
 #endif
-
-#define REG_DEVICE_STATUS		(regs.f01_data_base)
-#define REG_INTERRUPT_STATUS		(regs.f01_data_base + 1)
-#define REG_THRESHOLD			(regs.f11_control_base + 10)
-#define REG_FINGER_STATUS		(regs.f11_data_base)
-#define REG_POINT_DATA			(regs.f11_data_base + 3)
-#define REG_FW_DATA			(regs.f34_control_base)
-
-#define REG_PALM_DATA			(regs.f11_data_base + 53)
-#define REG_SURFACE_DATA		(regs.f51_data_base)
-#define REG_SURFACE_THRESHOLD		(regs.f51_control_base + 17)
-
-static struct syna_base_regs {
-	/* Page 0x00 Registers */
-	u16 f01_query_base;
-	u16 f01_command_base;
-	u16 f01_control_base;
-	u16 f01_data_base;
-
-	u16 f11_query_base;
-	u16 f11_command_base;
-	u16 f11_control_base;
-	u16 f11_data_base;
-
-	u16 f34_query_base;
-	u16 f34_command_base;
-	u16 f34_control_base;
-	u16 f34_data_base;
-
-	/* Page 0x01 Registers */
-	u16 f54_query_base;
-	u16 f54_command_base;
-	u16 f54_control_base;
-	u16 f54_data_base;
-
-	/* Page 0x04 Registers */
-	u16 f51_query_base;
-	u16 f51_command_base;
-	u16 f51_control_base;
-	u16 f51_data_base;
-} regs;
 
 #define MAX_TOUCH_NUM			10
 
 struct ts_data {
-	u32				finger_cnt;
-	bool				finger_state[MAX_TOUCH_NUM];
-	bool				enabled;
 	struct i2c_client		*client;
 	struct input_dev		*input_dev;
 	struct early_suspend		early_suspend;
 	struct sec_ts_platform_data	*platform_data;
-	struct synaptics_fw_info	*fw_info, fw_info_ic;
-#ifdef CONFIG_SEC_TSP_FACTORY_TEST
+	struct synaptics_fw_info	*fw_info;
+	int				finger_state[MAX_TOUCH_NUM];
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	struct factory_data		*factory_data;
 	struct node_data		*node_data;
 #endif
@@ -134,17 +107,17 @@ static int ts_read_reg_data(const struct i2c_client *client, u8 address,
 	int ret = 0;
 
 	if (size > 32) {
-		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.\n",
+		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.",
 								__func__, size);
 		return -1;
 	}
 
 	ret = i2c_smbus_read_i2c_block_data(client, address, size, buf);
 	if (ret < size) {
-		pr_err("tsp: %s: i2c read failed. %d\n", __func__, ret);
+		pr_err("tsp: %s: i2c read failed. %d", __func__, ret);
 		return ret;
 	}
-	return 0;
+	return 1;
 }
 
 static int ts_write_reg_data(const struct i2c_client *client, u8 address,
@@ -153,186 +126,73 @@ static int ts_write_reg_data(const struct i2c_client *client, u8 address,
 	int ret = 0;
 
 	if (size > 32) {
-		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.\n",
+		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.",
 								__func__, size);
 		return -1;
 	}
 
 	ret = i2c_smbus_write_i2c_block_data(client, address, size, buf);
 	if (ret < 0) {
-		pr_err("tsp: %s: i2c write failed. %d\n", __func__, ret);
+		pr_err("tsp: %s: i2c write failed. %d", __func__, ret);
 		return ret;
 	}
-	return 0;
+	return 1;
 }
 
-static int syna_set_page(struct ts_data *ts, u8 page)
-{
-	int ret;
-
-	ret = ts_write_reg_data(ts->client, 0xFF, &page, 1);
-	if (ret < 0)
-		pr_err("tsp: to change to register page table failed.\n");
-
-	return ret;
-}
-
-static int syna_pdt_scan(struct ts_data *ts)
-{
-	u8 address;
-	u8 buffer[6];
-
-	for (address = 0xE9; address > 0xD0; address -= 6) {
-		ts_read_reg_data(ts->client, address, buffer, 6);
-
-		switch (buffer[5]) {
-		case 0x01:
-			regs.f01_query_base   = buffer[0];
-			regs.f01_command_base = buffer[1];
-			regs.f01_control_base = buffer[2];
-			regs.f01_data_base    = buffer[3];
-			break;
-		case 0x11:
-			regs.f11_query_base   = buffer[0];
-			regs.f11_command_base = buffer[1];
-			regs.f11_control_base = buffer[2];
-			regs.f11_data_base    = buffer[3];
-			break;
-		case 0x34:
-			regs.f34_query_base   = buffer[0];
-			regs.f34_command_base = buffer[1];
-			regs.f34_control_base = buffer[2];
-			regs.f34_data_base    = buffer[3];
-			break;
-		case 0x51:
-			regs.f51_query_base   = buffer[0];
-			regs.f51_command_base = buffer[1];
-			regs.f51_control_base = buffer[2];
-			regs.f51_data_base    = buffer[3];
-			break;
-		case 0x54:
-			regs.f54_query_base   = buffer[0];
-			regs.f54_command_base = buffer[1];
-			regs.f54_control_base = buffer[2];
-			regs.f54_data_base    = buffer[3];
-			break;
-		default:
-			break;
-		}
-	}
-	return 0;
-}
-
-static inline int __init syna_get_base_address(struct ts_data *ts)
-{
-	syna_pdt_scan(ts);
-	syna_set_page(ts, 0x01);
-	syna_pdt_scan(ts);
-	syna_set_page(ts, 0x04);
-	syna_pdt_scan(ts);
-	syna_set_page(ts, 0x00);
-
-	return 0;
-}
-
-#define WIDE_THRESHOLD			28
-
-#ifdef CONFIG_TOUCHSCREEN_SUPPORT_SYNA_SURFACE
-static void syna_set_surface_threshold(struct ts_data *ts)
-{
-	u8 surface_wide_threshold = WIDE_THRESHOLD;
-
-	syna_set_page(ts, 0x04);
-	ts_write_reg_data(ts->client, REG_SURFACE_THRESHOLD,
-						&surface_wide_threshold, 1);
-	syna_set_page(ts, 0x00);
-
-	return;
-}
-#endif
-
-static void syna_set_ta_mode(int *ta_state)
+static void set_ta_mode(int *ta_state)
 {
 	struct sec_ts_platform_data *platform_data =
-		container_of(ta_state, struct sec_ts_platform_data, ta_state);
+	container_of(ta_state, struct sec_ts_platform_data, ta_state);
 	struct ts_data *ts = (struct ts_data *) platform_data->driver_data;
-	u8 command;
 
 	if (ts) {
 		switch (*ta_state) {
 		case CABLE_TA:
-			command = 0x20;
-			pr_info("tsp: TA attached\n");
-			break;
+		F01_SetTABit(ts->client, true);
+		pr_info("tsp: TA attached\n");
+		break;
 		case CABLE_USB:
-			command = 0x00;
-			pr_info("tsp: USB attached\n");
-			break;
+		F01_SetTABit(ts->client, false);
+		pr_info("tsp: USB attached\n");
+		break;
 		case CABLE_NONE:
 		default:
-			command = 0x00;
-			pr_info("tsp: No attached cable\n");
+		F01_SetTABit(ts->client, false);
+		pr_info("tsp: No attached cable\n");
+		break;
+		}
+	}
+
+	return;
+}
+
+#define FW_ADDRESS			0x34
+
+static u8 get_reg_address(const struct i2c_client *client, const int reg_name)
+{
+	u8 ret = 0;
+	u8 address;
+	u8 buffer[6];
+
+	for (address = 0xE9; address > 0xD0; address -= 6) {
+		ts_read_reg_data(client, address, buffer, 6);
+
+		if (buffer[5] == 0)
+			break;
+		switch (buffer[5]) {
+		case FW_ADDRESS:
+			ret = buffer[2];
 			break;
 		}
 	}
 
-	ts_write_reg_data(ts->client, regs.f01_control_base, &command, 1);
-
-	return;
-}
-
-
-static void reset_points(struct ts_data *ts)
-{
-	int i;
-
-	for (i = 0; i < MAX_TOUCH_NUM; i++) {
-		input_mt_slot(ts->input_dev, i);
-		input_mt_report_slot_state(ts->input_dev, MT_TOOL_FINGER,
-					false);
-		ts->finger_cnt = 0;
-		ts->finger_state[i] = false;
-	}
-	input_sync(ts->input_dev);
-
-	tsp_debug("reset_all_fingers.");
-	return;
-}
-
-static void init_tsp(struct ts_data *ts)
-{
-	u8 buf;
-
-	reset_points(ts);
-
-	/* To high interrupt pin */
-	if (ts_read_reg_data(ts->client, REG_INTERRUPT_STATUS, &buf, 1) < 0)
-		pr_err("tsp: init_tsp: read reg_data failed.");
-
-	syna_set_ta_mode(&(ts->platform_data->ta_state));
-#ifdef CONFIG_TOUCHSCREEN_SUPPORT_SYNA_SURFACE
-	syna_set_surface_threshold(ts);
-#endif
-	tsp_debug("init_tsp done.");
-	return;
-}
-
-static void reset_tsp(struct ts_data *ts)
-{
-	if (ts->platform_data->set_power) {
-		ts->platform_data->set_power(false);
-		ts->platform_data->set_power(true);
-	}
-	init_tsp(ts);
-
-	return;
+	return ret;
 }
 
 static bool fw_updater(struct ts_data *ts, char *mode)
 {
 	u8 buf[5] = {0, };
 	bool ret = false;
-	bool updated = true;
 	const struct firmware *fw;
 
 	tsp_debug("Enter the fw_updater.");
@@ -340,7 +200,7 @@ static bool fw_updater(struct ts_data *ts, char *mode)
 	/* To check whether touch IC in bootloader mode.
 	 * It means that fw. update failed at previous booting.
 	 */
-	if (ts_read_reg_data(ts->client, REG_INTERRUPT_STATUS, buf, 1) > 0) {
+	if (ts_read_reg_data(ts->client, 0x14, buf, 1) > 0) {
 		if (buf[0] == 0x01)
 			mode = "force";
 	}
@@ -356,16 +216,11 @@ static bool fw_updater(struct ts_data *ts, char *mode)
 		goto out;
 	}
 
-#ifdef CONFIG_TOUCHSCREEN_OLD_FW_STD
 	ts->fw_info->version[0] = fw->data[0xb100];
 	ts->fw_info->version[1] = fw->data[0xb101];
 	ts->fw_info->version[2] = fw->data[0xb102];
 	ts->fw_info->version[3] = fw->data[0xb103];
 	ts->fw_info->version[4] = 0;
-#else
-	ts->fw_info->hw_version = (int)fw->data[0xb102];
-	ts->fw_info->version = (int)fw->data[0xb103];
-#endif
 
 	if (!strcmp("force", mode)) {
 		pr_info("tsp: fw_updater: force upload.\n");
@@ -415,89 +270,31 @@ static bool fw_updater(struct ts_data *ts, char *mode)
 		kfree(fw_data);
 
 	} else if (!strcmp("normal", mode)) {
-		if (ts_read_reg_data(ts->client, REG_FW_DATA, buf, 4) < 0) {
+		if (ts_read_reg_data(ts->client,
+			get_reg_address(ts->client, FW_ADDRESS), buf, 4) < 0) {
 			pr_err("tsp: fw. ver. read failed.");
 			goto out;
 		}
-#ifdef CONFIG_TOUCHSCREEN_OLD_FW_STD
-		strncpy(ts->fw_info_ic.version, buf, 4);
 
 		pr_info("tsp: binary fw. ver: 0x%s, IC fw. ver: 0x%s\n",
-							ts->fw_info->version,
-							ts->fw_info_ic.version);
-		if (strncmp(ts->fw_info->version, ts->fw_info_ic.version, 4)
-									> 0) {
+						(char *)ts->fw_info->version,
+						(char *)buf);
+
+		if (strncmp(ts->fw_info->version, buf, 4) > 0) {
 			pr_info("tsp: fw_updater: FW upgrade enter.\n");
 			ret = synaptics_fw_update(ts->client, fw->data,
 						ts->platform_data->gpio_irq);
 		} else {
 			pr_info("tsp: fw_updater: No need FW update.\n");
 			ret = true;
-			updated = false;
 		}
-#else
-		ts->fw_info_ic.hw_version = (int)buf[2];
-		ts->fw_info_ic.version = (int)buf[3];
-
-		pr_info("tsp: binary fw. ver: 0x%.2x, IC fw. ver: 0x%.2x\n",
-							ts->fw_info->version,
-							ts->fw_info_ic.version);
-		if (ts->fw_info->version > ts->fw_info_ic.version) {
-			pr_info("tsp: fw_updater: FW upgrade enter.\n");
-			ret = synaptics_fw_update(ts->client, fw->data,
-						ts->platform_data->gpio_irq);
-		} else {
-			pr_info("tsp: fw_updater: No need FW update.\n");
-			ret = true;
-			updated = false;
-		}
-#endif
-	}
-
-	if (updated) {
-		if (ts_read_reg_data(ts->client, REG_FW_DATA, buf, 4) < 0) {
-			pr_err("tsp: fw. ver. read failed.");
-			goto out;
-		}
-#ifdef CONFIG_TOUCHSCREEN_OLD_FW_STD
-		strncpy(ts->fw_info_ic.version, buf, 4);
-
-		pr_info("tsp: binary fw. ver: 0x%s, IC fw. ver: 0x%s\n",
-							ts->fw_info->version,
-							ts->fw_info_ic.version);
-#else
-		ts->fw_info_ic.hw_version = (int)buf[2];
-		ts->fw_info_ic.version = (int)buf[3];
-
-		pr_info("tsp: binary fw. ver: 0x%.2x, IC fw. ver: 0x%.2x\n",
-							ts->fw_info->version,
-							ts->fw_info_ic.version);
-#endif
 	}
 out:
 	release_firmware(fw);
 	return ret;
 }
 
-#ifdef CONFIG_SEC_TSP_FACTORY_TEST
-
-#define TSP_CMD(name, func) .cmd_name = name, .cmd_func = func
-#define TOSTRING(x) #x
-
-enum {	/* this is using by cmd_state valiable. */
-	WAITING = 0,
-	RUNNING,
-	OK,
-	FAIL,
-	NOT_APPLICABLE,
-};
-
-struct tsp_cmd {
-	struct list_head		list;
-	const char			*cmd_name;
-	void				(*cmd_func)(void *device_data);
-};
-
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 static void set_default_result(struct factory_data *data)
 {
 	char delim = ':';
@@ -560,12 +357,7 @@ static void get_fw_ver_bin(void *device_data)
 	data->cmd_state = RUNNING;
 
 	set_default_result(data);
-#ifdef CONFIG_TOUCHSCREEN_OLD_FW_STD
 	sprintf(data->cmd_buff, "%s", ts_data->fw_info->version);
-#else
-	sprintf(data->cmd_buff, "SY%.2x%.4x", ts_data->fw_info->hw_id,
-						ts_data->fw_info->version);
-#endif
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
 	data->cmd_state = OK;
@@ -576,16 +368,15 @@ static void get_fw_ver_ic(void *device_data)
 {
 	struct ts_data *ts_data = (struct ts_data *)device_data;
 	struct factory_data *data = ts_data->factory_data;
+	u8 buf[5] = {0, };
 
 	data->cmd_state = RUNNING;
 
+	ts_read_reg_data(ts_data->client,
+			get_reg_address(ts_data->client, FW_ADDRESS), buf, 4);
+
 	set_default_result(data);
-#ifdef CONFIG_TOUCHSCREEN_OLD_FW_STD
-	sprintf(data->cmd_buff, "%s", ts_data->fw_info_ic.version);
-#else
-	sprintf(data->cmd_buff, "SY%.2x%.4x", ts_data->fw_info_ic.hw_id,
-						ts_data->fw_info_ic.version);
-#endif
+	sprintf(data->cmd_buff, "%s", buf);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
 	data->cmd_state = OK;
@@ -610,6 +401,8 @@ static void get_config_ver(void *device_data)
 	return;
 }
 
+#define THRESHOLD_REG			0x60
+
 static void get_threshold(void *device_data)
 {
 	struct ts_data *ts_data = (struct ts_data *)device_data;
@@ -618,7 +411,7 @@ static void get_threshold(void *device_data)
 
 	data->cmd_state = RUNNING;
 
-	ts_read_reg_data(ts_data->client, REG_THRESHOLD, buf, 1);
+	ts_read_reg_data(ts_data->client, THRESHOLD_REG, buf, 1);
 
 	set_default_result(data);
 	sprintf(data->cmd_buff, "%.3d", buf[0]);
@@ -815,7 +608,7 @@ static void run_raw_cap_read(void *device_data)
 			max_value = max(max_value, temp);
 			min_value = min(min_value, temp);
 
-			pr_debug("tsp: %s: %d, %d, data: %d", __func__, x, y,
+			tsp_debug("%d, %d, data: %d", x, y,
 				ts_data->node_data->raw_cap_data[x * rx + y]);
 		}
 	}
@@ -854,7 +647,7 @@ static void run_rx_to_rx_read(void *device_data)
 			max_value = max(max_value, temp);
 			min_value = min(min_value, temp);
 
-			pr_debug("tsp: %s: %d, %d, data: %d", __func__, x, y,
+			tsp_debug("%d, %d, data: %d", x, y,
 				ts_data->node_data->rx_to_rx_data[x * rx + y]);
 		}
 	}
@@ -894,7 +687,7 @@ static void run_tx_to_tx_read(void *device_data)
 		max_value = max(max_value, temp);
 		min_value = min(min_value, temp);
 
-		pr_debug("tsp: %s, %d, data: %d", __func__, x,
+		tsp_debug("%d, data: %d", x,
 					ts_data->node_data->tx_to_tx_data[x]);
 	}
 
@@ -933,7 +726,7 @@ static void run_tx_to_gnd_read(void *device_data)
 		max_value = max(max_value, temp);
 		min_value = min(min_value, temp);
 
-		pr_debug("tsp: %s, %d, data: %d", __func__, x,
+		tsp_debug("%d, data: %d", x,
 					ts_data->node_data->tx_to_gnd_data[x]);
 	}
 
@@ -984,18 +777,13 @@ static ssize_t cmd_store(struct device *dev, struct device_attribute *devattr,
 	bool cmd_found = false;
 	int param_cnt = 0;
 
-	if (!ts_data->enabled) {
-		pr_err("tsp: device is not ready.\n");
-		goto err_out;
-	}
-
 	if (data == NULL) {
-		pr_err("tsp: factory_data is NULL.\n");
+		pr_err("factory_data is NULL.\n");
 		goto err_out;
 	}
 
 	if (data->cmd_is_running == true) {
-		pr_err("tsp: other cmd is running.\n");
+		pr_err("tsp cmd: other cmd is running.\n");
 		goto err_out;
 	}
 
@@ -1132,73 +920,52 @@ static struct attribute *touchscreen_attributes[] = {
 static struct attribute_group touchscreen_attr_group = {
 	.attrs = touchscreen_attributes,
 };
-
-static int __init init_sec_factory_test(struct ts_data *ts)
-{
-	struct device *fac_dev_ts;
-	struct factory_data *factory_data;
-	struct node_data *node_data;
-	u32 rx, tx;
-	int i, ret;
-
-	rx = ts->platform_data->rx_channel_no;
-	tx = ts->platform_data->tx_channel_no;
-
-	node_data = kzalloc(sizeof(struct node_data), GFP_KERNEL);
-	if (unlikely(!node_data)) {
-		ret = -ENOMEM;
-		goto err_alloc_data_failed;
-	}
-
-	node_data->raw_cap_data = kzalloc(sizeof(s16) * rx * tx, GFP_KERNEL);
-	node_data->rx_to_rx_data = kzalloc(sizeof(s16) * rx * tx, GFP_KERNEL);
-	node_data->tx_to_tx_data = kzalloc(sizeof(s16) * rx * tx, GFP_KERNEL);
-	node_data->tx_to_gnd_data = kzalloc(sizeof(s16)  * rx * tx, GFP_KERNEL);
-	if (unlikely(!node_data->raw_cap_data ||
-				!node_data->rx_to_rx_data ||
-				!node_data->tx_to_tx_data ||
-				!node_data->tx_to_gnd_data)) {
-		ret = -ENOMEM;
-		pr_err("tsp: err_alloc_node_data failed.\n");
-		goto err_alloc_data_failed;
-	}
-
-	factory_data = kzalloc(sizeof(struct factory_data), GFP_KERNEL);
-	if (unlikely(!factory_data)) {
-		ret = -ENOMEM;
-		pr_err("tsp: err_alloc_factory_data failed.\n");
-		goto err_alloc_data_failed;
-	}
-
-	INIT_LIST_HEAD(&factory_data->cmd_list_head);
-	for (i = 0; i < ARRAY_SIZE(tsp_cmds); i++)
-		list_add_tail(&tsp_cmds[i].list, &factory_data->cmd_list_head);
-
-	mutex_init(&factory_data->cmd_lock);
-	factory_data->cmd_is_running = false;
-
-	fac_dev_ts = device_create(sec_class, NULL, 0, ts, "tsp");
-	if (!fac_dev_ts)
-		pr_err("tsp factory: Failed to create fac tsp dev.\n");
-
-	if (sysfs_create_group(&fac_dev_ts->kobj, &touchscreen_attr_group))
-		pr_err("tsp factory: Failed to create sysfs (touchscreen_attr_group).\n");
-
-	ts->factory_data = factory_data;
-	ts->node_data = node_data;
-
-	return 0;
-
-err_alloc_data_failed:
-	kfree(ts->node_data->tx_to_gnd_data);
-	kfree(ts->node_data->tx_to_tx_data);
-	kfree(ts->node_data->rx_to_rx_data);
-	kfree(ts->node_data->raw_cap_data);
-	kfree(ts->node_data);
-
-	return ret;
-}
 #endif
+
+static void reset_points(struct ts_data *ts)
+{
+	int i;
+
+	for (i = 0; i < MAX_TOUCH_NUM; i++) {
+		ts->finger_state[i] = 0;
+		input_mt_slot(ts->input_dev, i);
+		input_mt_report_slot_state(ts->input_dev, MT_TOOL_FINGER,
+					false);
+	}
+	input_sync(ts->input_dev);
+
+	tsp_debug("reset_all_fingers.");
+	return;
+}
+
+#define REG_INTERRUPT_STATUS		0x14
+
+static void init_tsp(struct ts_data *ts)
+{
+	u8 buf;
+
+	reset_points(ts);
+
+	/* To high interrupt pin */
+	if (ts_read_reg_data(ts->client, REG_INTERRUPT_STATUS, &buf, 1) < 0)
+		pr_err("tsp: init_tsp: read reg_data failed.");
+
+	set_ta_mode(&(ts->platform_data->ta_state));
+
+	tsp_debug("init_tsp done.");
+	return;
+}
+
+static void reset_tsp(struct ts_data *ts)
+{
+	if (ts->platform_data->set_power) {
+		ts->platform_data->set_power(false);
+		ts->platform_data->set_power(true);
+	}
+	init_tsp(ts);
+
+	return;
+}
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static void ts_early_suspend(struct early_suspend *h)
@@ -1210,7 +977,6 @@ static void ts_early_suspend(struct early_suspend *h)
 	reset_points(ts);
 	if (ts->platform_data->set_power)
 		ts->platform_data->set_power(false);
-	ts->enabled = false;
 
 	return ;
 }
@@ -1223,7 +989,7 @@ static void ts_late_resume(struct early_suspend *h)
 	ts = container_of(h, struct ts_data, early_suspend);
 	if (ts->platform_data->set_power)
 		ts->platform_data->set_power(true);
-	ts->enabled = true;
+
 	init_tsp(ts);
 
 	ts_read_reg_data(ts->client, REG_INTERRUPT_STATUS, buf, 1);
@@ -1235,20 +1001,22 @@ static void ts_late_resume(struct early_suspend *h)
 
 #define TRACKING_COORD			0
 
+#define REG_DEVICE_STATUS		0x13
+#define REG_FINGER_STATUS		0x15
+#define REG_POINT_INFO			0x18
+
 static irqreturn_t ts_irq_handler(int irq, void *handle)
 {
 	struct ts_data *ts = (struct ts_data *)handle;
 
 	int i, j;
 	int cur_state, id;
-	u16 x, y, wx, wy;
+	static u32 cnt;
+	u16 x, y;
 	u8 buf;
 	u8 state[3] = {0, };
 	u8 point[5] = {0, };
-#ifdef CONFIG_TOUCHSCREEN_SUPPORT_SYNA_SURFACE
-	u8 palm;
-	u8 surface_data[4];
-#endif
+
 	if (ts_read_reg_data(ts->client, REG_DEVICE_STATUS, &buf, 1) < 0) {
 		pr_err("tsp: ts_irq_event: i2c failed\n");
 		return IRQ_HANDLED;
@@ -1273,105 +1041,63 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 			/* check the new finger state */
 			cur_state = ((state[i] >> (2*j)) & 0x01);
 
-			if (cur_state == 0 && ts->finger_state[id] == false)
+			if (cur_state == 0 && ts->finger_state[id] == 0)
 				continue;
 
 			if (ts_read_reg_data(ts->client,
-						REG_POINT_DATA + (id * 5),
-						point, 5) < 0) {
-				pr_err("tsp: read_points: read point failed.\n");
+				(REG_POINT_INFO + (id * 5)), point, 5) < 0) {
+				pr_err("tsp: read_points: read point failed\n");
 				return IRQ_HANDLED;
 			}
 
 			x = (point[0] << 4) + (point[2] & 0x0F);
 			y = (point[1] << 4) + ((point[2] & 0xF0) >> 4);
-			wx = point[3] & 0x0F;
-			wy = (point[3] >> 4) & 0x0F;
 
 			if (ts->platform_data->pivot) {
 				swap(x, y);
 				x = ts->platform_data->x_pixel_size - x;
 			}
 
-			if (cur_state == 0 && ts->finger_state[id] == true) {
+			if (cur_state == 0 && ts->finger_state[id] == 1) {
 #if TRACKING_COORD
 				tsp_debug("%d up (%d, %d, %d)\n",
 							id, x, y, point[4]);
 #else
-				tsp_debug("%d up. remain: %d\n",
-							id, --(ts->finger_cnt));
+				tsp_debug("%d up. remain: %d\n", id, --cnt);
 #endif
 				input_mt_slot(ts->input_dev, id);
 				input_mt_report_slot_state(ts->input_dev,
 							MT_TOOL_FINGER, false);
 				input_sync(ts->input_dev);
 
-				ts->finger_state[id] = false;
+				ts->finger_state[id] = 0;
 				continue;
 			}
 
-			input_mt_slot(ts->input_dev, id);
-			input_mt_report_slot_state(ts->input_dev,
-							MT_TOOL_FINGER, true);
-#ifdef CONFIG_TOUCHSCREEN_SUPPORT_SYNA_SURFACE
-			if (ts_read_reg_data(ts->client,
-						REG_PALM_DATA,
-						&palm, 1) < 0) {
-				pr_err("tsp: palm data read failed.\n");
-				return IRQ_HANDLED;
-			}
-			palm = (palm & 0x02) ? 1 : 0;
-
-			syna_set_page(ts, 0x04);
-			if (ts_read_reg_data(ts->client,
-						REG_SURFACE_DATA + (id * 4),
-						surface_data, 4) < 0) {
-				pr_err("tsp: surface data read failed.\n");
-				return IRQ_HANDLED;
-			}
-			syna_set_page(ts, 0x00);
-
-			wx = surface_data[2];
-			wy = surface_data[3];
-
-			input_report_abs(ts->input_dev, ABS_MT_WIDTH_MAJOR,
-							       surface_data[0]);
-			input_report_abs(ts->input_dev, ABS_MT_ANGLE,
-							       surface_data[1]);
-			input_report_abs(ts->input_dev, ABS_MT_PALM, palm);
-#endif
-			input_report_abs(ts->input_dev, ABS_MT_TOUCH_MAJOR,
-							max(wx, wy));
-			input_report_abs(ts->input_dev, ABS_MT_TOUCH_MINOR,
-							min(wx, wy));
-			input_report_abs(ts->input_dev, ABS_MT_PRESSURE,
-							point[4]);
-			input_report_abs(ts->input_dev, ABS_MT_POSITION_X, x);
-			input_report_abs(ts->input_dev, ABS_MT_POSITION_Y, y);
-			input_sync(ts->input_dev);
-
-			if (cur_state == 1 && ts->finger_state[id] == false) {
+			if (cur_state == 1 && ts->finger_state[id] == 0) {
 #if TRACKING_COORD
 				tsp_debug("%d dn (%d, %d, %d)\n",
 							id, x, y, point[4]);
 #else
-#ifdef CONFIG_TOUCHSCREEN_SUPPORT_SYNA_SURFACE
-				tsp_debug("%d dn. remain: %d palm: %d.\n",
-							id,
-							++(ts->finger_cnt),
-							palm);
-#else
-				tsp_debug("%d dn. remain: %d.\n",
-							id, ++(ts->finger_cnt));
+				tsp_debug("%d dn. remain: %d\n", id, ++cnt);
 #endif
-#endif
-				ts->finger_state[id] = true;
-			} else {
+				ts->finger_state[id] = 1;
+			}
+
+			input_mt_slot(ts->input_dev, id);
+			input_mt_report_slot_state(ts->input_dev,
+						MT_TOOL_FINGER, true);
+			input_report_abs(ts->input_dev, ABS_MT_TOUCH_MAJOR,
+						point[3]);
+			input_report_abs(ts->input_dev, ABS_MT_PRESSURE,
+						point[4]);
+			input_report_abs(ts->input_dev, ABS_MT_POSITION_X, x);
+			input_report_abs(ts->input_dev, ABS_MT_POSITION_Y, y);
+			input_sync(ts->input_dev);
 #if TRACKING_COORD
-				tsp_debug("%d drag (%d, %d, %d)\n",
+			tsp_debug("tsp: %d drag (%d, %d, %d)\n",
 							id, x, y, point[4]);
 #endif
-			}
 		}
 	}
 
@@ -1384,11 +1110,23 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 	return IRQ_HANDLED;
 }
 
+#define TS_MAX_Z_TOUCH			255
+#define TS_MAX_W_TOUCH			100
+
 static int __devinit ts_probe(struct i2c_client *client,
 						const struct i2c_device_id *id)
 {
 	struct ts_data *ts;
 	int ret = 0;
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
+	struct device *fac_dev_ts;
+	int i;
+	struct factory_data *factory_data;
+	struct node_data *node_data;
+	u32 rx, tx;
+#endif
+
+	pr_info("tsp: ts_probe\n");
 
 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
 		pr_err("tsp: ts_probe: need I2C_FUNC_I2C\n");
@@ -1406,7 +1144,7 @@ static int __devinit ts_probe(struct i2c_client *client,
 	ts->client = client;
 	i2c_set_clientdata(client, ts);
 	ts->platform_data = client->dev.platform_data;
-	ts->platform_data->set_ta_mode = syna_set_ta_mode;
+	ts->platform_data->set_ta_mode = set_ta_mode;
 	ts->platform_data->driver_data = ts;
 
 	ts->fw_info = (struct synaptics_fw_info *)ts->platform_data->fw_info;
@@ -1424,62 +1162,34 @@ static int __devinit ts_probe(struct i2c_client *client,
 	set_bit(EV_ABS, ts->input_dev->evbit);
 	set_bit(INPUT_PROP_DIRECT, ts->input_dev->propbit);
 
-	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X,
-					0, ts->platform_data->x_pixel_size,
-					0, 0);
-	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y,
-					0, ts->platform_data->y_pixel_size,
-					0, 0);
-	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MAJOR,
-					0, max(ts->platform_data->x_pixel_size,
-					       ts->platform_data->y_pixel_size),
-					0, 0);
-	input_set_abs_params(ts->input_dev, ABS_MT_TOUCH_MINOR,
-					0, max(ts->platform_data->x_pixel_size,
-					       ts->platform_data->y_pixel_size),
-					0, 0);
-	input_set_abs_params(ts->input_dev, ABS_MT_PRESSURE, 0, 255, 0, 0);
-#ifdef CONFIG_TOUCHSCREEN_SUPPORT_SYNA_SURFACE
-	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR,
-					0, ts->platform_data->rx_channel_no *
-					       ts->platform_data->tx_channel_no,
-					0, 0);
-	input_set_abs_params(ts->input_dev, ABS_MT_ANGLE,
-					0, 179, 0, 0);
-	input_set_abs_params(ts->input_dev, ABS_MT_PALM,
-					0, 1, 0, 0);
-#endif
+	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_X, 0,
+					ts->platform_data->x_pixel_size, 0, 0);
+	input_set_abs_params(ts->input_dev, ABS_MT_POSITION_Y, 0,
+					ts->platform_data->y_pixel_size, 0, 0);
+	input_set_abs_params(ts->input_dev, ABS_MT_PRESSURE, 0,
+					TS_MAX_Z_TOUCH, 0, 0);
+	input_set_abs_params(ts->input_dev, ABS_MT_WIDTH_MAJOR, 0,
+					TS_MAX_W_TOUCH, 0, 0);
+
 	if (input_register_device(ts->input_dev) < 0) {
 		pr_err("tsp: ts_probe: Failed to register input device!!\n");
 		ret = -ENOMEM;
 		goto err_input_register_device_failed;
 	}
 
-#ifdef CONFIG_HAS_EARLYSUSPEND
-	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
-	ts->early_suspend.suspend = ts_early_suspend;
-	ts->early_suspend.resume = ts_late_resume;
-	register_early_suspend(&ts->early_suspend);
-#endif
+	tsp_debug("succeed to register input device\n");
+
 	/* Power on touch IC */
-	if (ts->platform_data->set_power) {
+	if (ts->platform_data->set_power)
 		ts->platform_data->set_power(true);
-	}
-	ts->enabled = true;
-
-	/* Scan base register address*/
-	syna_get_base_address(ts);
-
-	/* Initialize settings */
-	init_tsp(ts);
-
-	/* Set i2c client pointer for synaptics functions */
-	synaptics_set_i2c_client(ts->client);
 
 	/* Check the new fw. and update */
 	fw_updater(ts, "normal");
 
 	if (ts->client->irq) {
+		tsp_debug("trying to request irq: %s %d\n", ts->client->name,
+							ts->client->irq);
+
 		ret = request_threaded_irq(ts->client->irq, NULL,
 					 ts_irq_handler,
 					 IRQF_TRIGGER_LOW | IRQF_ONESHOT,
@@ -1492,19 +1202,76 @@ static int __devinit ts_probe(struct i2c_client *client,
 		}
 	}
 
-#ifdef CONFIG_SEC_TSP_FACTORY_TEST
-	if (init_sec_factory_test(ts) < 0) {
-		ret = -1;
-		goto err_init_factory_test;
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
+	rx = ts->platform_data->rx_channel_no;
+	tx = ts->platform_data->tx_channel_no;
+
+	node_data = kmalloc(sizeof(struct node_data), GFP_KERNEL);
+	if (unlikely(node_data == NULL)) {
+		ret = -ENOMEM;
+		goto err_alloc_node_data_failed;
 	}
+
+	node_data->raw_cap_data = kzalloc(sizeof(s16) * tx * rx, GFP_KERNEL);
+	node_data->rx_to_rx_data = kzalloc(sizeof(s16) * rx * rx, GFP_KERNEL);
+	node_data->tx_to_tx_data = kzalloc(sizeof(s16) * tx, GFP_KERNEL);
+	node_data->tx_to_gnd_data = kzalloc(sizeof(s16) * tx, GFP_KERNEL);
+	if (unlikely(node_data->raw_cap_data == NULL ||
+				node_data->rx_to_rx_data == NULL ||
+				node_data->tx_to_tx_data == NULL ||
+				node_data->tx_to_gnd_data == NULL)) {
+		ret = -ENOMEM;
+		goto err_alloc_node_data_failed;
+	}
+
+	factory_data = kzalloc(sizeof(struct factory_data), GFP_KERNEL);
+
+	if (unlikely(factory_data == NULL)) {
+		pr_err("tsp: ts_probe: failed to create a factory_data.\n");
+		ret = -ENOMEM;
+		goto err_alloc_factory_data_failed;
+	}
+
+	INIT_LIST_HEAD(&factory_data->cmd_list_head);
+	for (i = 0; i < ARRAY_SIZE(tsp_cmds); i++)
+		list_add_tail(&tsp_cmds[i].list, &factory_data->cmd_list_head);
+
+	mutex_init(&factory_data->cmd_lock);
+	factory_data->cmd_is_running = false;
+	fac_dev_ts = device_create(sec_class, NULL, 0, ts, "tsp");
+	if (!fac_dev_ts)
+		pr_err("tsp factory: Failed to create fac tsp dev\n");
+
+	if (sysfs_create_group(&fac_dev_ts->kobj, &touchscreen_attr_group))
+		pr_err("tsp factory: Failed to create sysfs (touchscreen_attr_group).\n");
+
+	ts->factory_data = factory_data;
+	ts->node_data = node_data;
 #endif
+
+#ifdef CONFIG_HAS_EARLYSUSPEND
+	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
+	ts->early_suspend.suspend = ts_early_suspend;
+	ts->early_suspend.resume = ts_late_resume;
+	register_early_suspend(&ts->early_suspend);
+#endif
+
 	pr_info("tsp: ts_probe: Start touchscreen. name: %s, irq: %d\n",
 					ts->client->name, ts->client->irq);
 
 	return 0;
 
-#ifdef CONFIG_SEC_TSP_FACTORY_TEST
-err_init_factory_test:
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
+err_alloc_factory_data_failed:
+	pr_err("tsp: ts_probe: err_alloc_factory_data failed.\n");
+
+err_alloc_node_data_failed:
+	pr_err("tsp: ts_probe: err_alloc_node_data failed.\n");
+	kfree(ts->node_data->raw_cap_data);
+	kfree(ts->node_data->rx_to_rx_data);
+	kfree(ts->node_data->tx_to_tx_data);
+	kfree(ts->node_data->tx_to_gnd_data);
+	kfree(ts->node_data);
 #endif
 err_request_irq:
 	pr_err("tsp: ts_probe: err_request_irq failed.\n");
@@ -1536,13 +1303,8 @@ static int ts_remove(struct i2c_client *client)
 	unregister_early_suspend(&ts->early_suspend);
 	free_irq(client->irq, ts);
 	input_unregister_device(ts->input_dev);
-#ifdef CONFIG_SEC_TSP_FACTORY_TEST
+#if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	kfree(ts->factory_data);
-	kfree(ts->node_data->tx_to_gnd_data);
-	kfree(ts->node_data->tx_to_tx_data);
-	kfree(ts->node_data->rx_to_rx_data);
-	kfree(ts->node_data->raw_cap_data);
-	kfree(ts->node_data);
 #endif
 	kfree(ts);
 
@@ -1557,7 +1319,6 @@ static void ts_shutdown(struct i2c_client *client)
 	reset_points(ts);
 	if (ts->platform_data->set_power)
 		ts->platform_data->set_power(false);
-	ts->enabled = false;
 }
 
 static const struct i2c_device_id ts_id[] = {

@@ -692,6 +692,7 @@ request_firmware_nowait(
 	task = kthread_run(request_firmware_work_func, fw_work,
 			    "firmware/%s", name);
 	if (IS_ERR(task)) {
+        pr_err("firmware_class: request_firmware_work_func derped!!!");
 		fw_work->cont(NULL, fw_work->context);
 		module_put(fw_work->module);
 		kfree(fw_work);

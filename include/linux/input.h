@@ -792,7 +792,7 @@ struct input_keymap_entry {
 #ifdef __KERNEL__
 /* Implementation details, userspace should not care about these */
 #define ABS_MT_FIRST		ABS_MT_TOUCH_MAJOR
-#define ABS_MT_LAST		ABS_MT_PALM
+#define ABS_MT_LAST		ABS_MT_DISTANCE
 #endif
 
 #define ABS_MAX			0x3f

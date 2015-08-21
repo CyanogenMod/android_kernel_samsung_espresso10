@@ -588,16 +588,6 @@ config LEDS_AN30259A
           AN30259A has three channel LED driver. By synchronous clock
           function, combined operation is possible.
 
-config OMAP4_DUTY_CYCLE_LEGACY
-	tristate "Control OPP_NITRO usage based on duty cycle strategy (LEGACY)"
-	depends on ARCH_OMAP4
-	default n
-	---help---
-	If you are going to use OPP_NITRO
-	with high level of leakage which.
-	could pontentially sustain a thermal runaway,
-	say Y here.
-
 config MPU_333_ENABLE
 	bool "mpu gyro sensor MPL 4.1.1"
 	depends on I2C
@@ -606,10 +596,10 @@ config MPU_333_ENABLE
 config FACTORY_PBA_JACK_TEST_SUPPORT
 	bool "For samsung factory pba jack test"
 	default n
-
+	
 config JACK_RESELECTOR_SUPPORT
 	bool "For samsung jack reselector control"
-	default n
+	default n	
 
 config TWL6040_VIB
 	bool "TWL6040 Vibrator"

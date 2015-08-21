@@ -47,12 +47,7 @@
 #define DEFAULT_USB_SEL_AP	1
 
 /* 0x4E(default) + 0x22(SWCAP_TRIM_OFFSET) = 0xF0*/
-#define SWCAP_TRIM_OFFSET			(0x06)
-#define SWCAP_TRIM_OFFSET_HOST			(-0x43)
-#define BGTRIM_TRIM_OFFSET_HOST			(-0x3FA0)
-#define RTERM_RMX_OFFSET_HOST			(0x12)
-#define REF_GEN_TEST	0x06
-#define REF_GEN_TEST_HOST	0x00
+#define SWCAP_TRIM_OFFSET			(0x02 - 0x4E)
 
 static const char const *cable_names[] = {
 	[CABLE_TYPE_NONE_MUIC]		= "none",
@@ -60,17 +55,19 @@ static const char const *cable_names[] = {
 	[CABLE_TYPE_OTG_MUIC]		= "otg",
 	[CABLE_TYPE_TA_MUIC]		= "ta",
 	[CABLE_TYPE_DESKDOCK_MUIC]	= "deskdock",
+	[CABLE_TYPE_DESKDOCK_WITH_TA]	= "deskdock-ta",
 	[CABLE_TYPE_CARDOCK_MUIC]	= "cardock",
-	[CABLE_TYPE_USB_AUDIODOCK_MUIC]	= "usb-audiodock",
-	[CABLE_TYPE_JIG_UART_OFF]	= "jig-uart-off",
-	[CABLE_TYPE_JIG_UART_ON]	= "jig-uart-on",
-	[CABLE_TYPE_JIG_USB_OFF]	= "jig-usb-off",
-	[CABLE_TYPE_JIG_USB_ON]		= "jig-usb-on",
+	[CABLE_TYPE_JIG_UART]		= "jig-uart",
+	[CABLE_TYPE_JIG_USB]		= "jig-usb",
 	[CABLE_TYPE_MHL_MUIC]		= "mhl",
 	[CABLE_TYPE_SMARTDOCK_MUIC]	= "smartdock",
+	[CABLE_TYPE_SMARTDOCK_WITH_TA]	= "smartdock-ta",
 	[CABLE_TYPE_UNKNOWN_MUIC]	= "unknown",
 	[CABLE_TYPE_CHARGER]		= "charger",
 };
+
+
+static struct power_supply *sec_battery;
 
 struct  omap4_otg {
 	struct otg_transceiver otg;
@@ -85,21 +82,13 @@ struct  omap4_otg {
 	struct switch_dev dock_switch;
 	struct device *switch_dev;
 
-	int usb_itf_type;
 	bool reg_on;
 	bool vbus_on;
 	bool need_vbus_drive;
-	bool usb_phy_suspend_lock;
 
 #ifdef CONFIG_USB_HOST_NOTIFY
 	struct host_notifier_platform_data *pdata;
 #endif
-};
-
-enum {
-	NORMAL_USB = 0,
-	AUDIO_DOCK,
-	SMART_DOCK,
 };
 
 enum {
@@ -146,19 +135,6 @@ static struct gpio ap_cp_int1_gpios[] = {
 #endif
 
 static struct omap4_otg superior_otg_xceiv;
-
-#define USB_PHY_SUSPEND_LOCK()		\
-do {		\
-	superior_otg_xceiv.usb_phy_suspend_lock = 1;	\
-} while (0)
-
-#define USB_PHY_SUSPEND_UNLOCK()	\
-do {		\
-	superior_otg_xceiv.usb_phy_suspend_lock = 0;	\
-} while (0)
-
-#define IS_USB_PHY_SUSPEND_LOCK()	\
-	(superior_otg_xceiv.usb_phy_suspend_lock == 1 ? 1 : 0)
 
 static ssize_t superior_usb_sel_show(struct device *dev,
 				   struct device_attribute *attr,
@@ -247,8 +223,7 @@ static ssize_t superior_usb_state_show(struct device *dev,
 	/* to be changed */
 
 	if (superior_otg->current_accessory == CABLE_TYPE_USB_MUIC ||
-		superior_otg->current_accessory == CABLE_TYPE_JIG_USB_OFF ||
-		superior_otg->current_accessory == CABLE_TYPE_JIG_USB_ON)
+			superior_otg->current_accessory == CABLE_TYPE_JIG_USB)
 		mode = "USB_STATE_CONFIGURED";
 	else
 		mode = "USB_STATE_NOT_CONFIGURED";
@@ -273,10 +248,8 @@ static ssize_t superior_jig_on_show(struct device *dev,
 	struct omap4_otg *superior_otg = dev_get_drvdata(dev);
 	const char *mode;
 
-	if (superior_otg->current_accessory == CABLE_TYPE_JIG_UART_OFF ||
-		superior_otg->current_accessory == CABLE_TYPE_JIG_UART_ON ||
-		superior_otg->current_accessory == CABLE_TYPE_JIG_USB_OFF ||
-		superior_otg->current_accessory == CABLE_TYPE_JIG_USB_ON)
+	if (superior_otg->current_accessory == CABLE_TYPE_JIG_UART ||
+			superior_otg->current_accessory == CABLE_TYPE_JIG_USB)
 		mode = "1";
 	else
 		mode = "0";
@@ -293,34 +266,6 @@ static ssize_t superior_accessory_show(struct device *dev,
 			cable_names[superior_otg->current_accessory]);
 }
 
-static ssize_t superior_factory_show(struct device *dev,
-			struct device_attribute *attr, char *buf)
-{
-	const char *mode;
-	bool cardock_support;
-
-	cardock_support = max77693_muic_get_cardock_support();
-	if (cardock_support)
-		mode = "NOT_FACTORY_MODE";
-	else
-		mode = "FACTORY_MODE";
-
-	return sprintf(buf, "%s\n", mode);
-}
-
-static ssize_t superior_factory_store(struct device *dev,
-				    struct device_attribute *attr,
-				    const char *buf, size_t size)
-{
-	if (!strncasecmp(buf, "FACTORY_START", 13))
-		max77693_muic_set_cardock_support(false);
-	else
-		max77693_muic_set_cardock_support(true);
-
-	return size;
-}
-
-
 static DEVICE_ATTR(usb_sel, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
 			superior_usb_sel_show, superior_usb_sel_store);
 static DEVICE_ATTR(uart_sel, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
@@ -329,8 +274,6 @@ static DEVICE_ATTR(usb_state, S_IRUGO, superior_usb_state_show, NULL);
 static DEVICE_ATTR(adc, S_IRUSR | S_IRGRP, superior_adc_show, NULL);
 static DEVICE_ATTR(jig_on, S_IRUSR | S_IRGRP, superior_jig_on_show, NULL);
 static DEVICE_ATTR(accessory, S_IRUGO, superior_accessory_show, NULL);
-static DEVICE_ATTR(apo_factory, S_IRUGO|S_IWUSR|S_IWUSR,
-			superior_factory_show, superior_factory_store);
 
 static struct attribute *manual_switch_sel_attributes[] = {
 	&dev_attr_usb_sel.attr,
@@ -339,7 +282,6 @@ static struct attribute *manual_switch_sel_attributes[] = {
 	&dev_attr_adc.attr,
 	&dev_attr_jig_on.attr,
 	&dev_attr_accessory.attr,
-	&dev_attr_apo_factory.attr,
 	NULL,
 };
 
@@ -379,8 +321,6 @@ static int superior_vusb_enable(struct omap4_otg *otg, bool enable)
 		if (unlikely(pwr_en_gpio == -EINVAL))
 			pr_err("%s gpio error. value is %d\n",
 				__func__, pwr_en_gpio);
-		else if (IS_USB_PHY_SUSPEND_LOCK() && !enable)
-			pr_err("%s phy suspend is locked\n", __func__);
 		else {
 			gpio_set_value(pwr_en_gpio, (int)!!enable);
 			otg->reg_on = enable;
@@ -400,15 +340,10 @@ static void superior_set_vbus_drive(struct omap4_otg *otg, bool enable)
 	mutex_lock(&otg->vbus_drive_lock);
 
 	if (otg->vbus_on != enable) {
-		if (enable) {
-			host_notify_set_ovc_en
-				(&otg->pdata->ndev, NOTIFY_SET_ON);
+		if (enable)
 			otg_control(1);
-		} else {
-			host_notify_set_ovc_en
-				(&otg->pdata->ndev, NOTIFY_SET_OFF);
+		else
 			otg_control(0);
-		}
 
 		otg->vbus_on = enable;
 	} else
@@ -432,22 +367,15 @@ static int superior_otg_set_vbus(struct otg_transceiver *otg, bool enabled)
 	    container_of(otg, struct omap4_otg, otg);
 	dev_info(otg->dev, "%s %s\n", __func__, enabled ? "on" : "off");
 
-	if (superior_otg->usb_itf_type == NORMAL_USB) {
-		superior_otg->need_vbus_drive = enabled;
-		schedule_work(&superior_otg->set_vbus_work);
-	} else
-		dev_info(otg->dev, "%s skip. itf type=%d\n", __func__,
-			superior_otg->usb_itf_type);
+	superior_otg->need_vbus_drive = enabled;
+	schedule_work(&superior_otg->set_vbus_work);
 
 	return 0;
 }
 
 static int superior_otg_phy_init(struct otg_transceiver *otg)
 {
-	struct omap4_otg *superior_otg =
-	    container_of(otg, struct omap4_otg, otg);
 	dev_info(otg->dev, "%s last_event=%d\n", __func__, otg->last_event);
-	superior_vusb_enable(superior_otg, true);
 	if (otg->last_event == USB_EVENT_ID)
 		omap4430_phy_power(otg->dev, 1, 1);
 	else
@@ -467,15 +395,8 @@ static void superior_otg_phy_shutdown(struct otg_transceiver *otg)
 
 static int superior_otg_set_suspend(struct otg_transceiver *otg, int suspend)
 {
-	int ret = 0;
 	dev_info(otg->dev, "%s = %d\n", __func__, suspend);
-
-	if (IS_USB_PHY_SUSPEND_LOCK() && suspend)
-		dev_info(otg->dev, "phy suspend is locked\n");
-	else
-		ret = omap4430_phy_suspend(otg->dev, suspend);
-
-	return ret;
+	return omap4430_phy_suspend(otg->dev, suspend);
 }
 
 static int superior_otg_is_active(struct otg_transceiver *otg)
@@ -528,11 +449,7 @@ static void superior_ap_usb_attach(struct omap4_otg *otg)
 {
 	pr_info("[%s]\n", __func__);
 
-	USB_PHY_SUSPEND_LOCK();
 	superior_vusb_enable(otg, true);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
-	omap4430_phy_init_for_eyediagram_ref_gen_test(REF_GEN_TEST);
-	USB_PHY_SUSPEND_UNLOCK();
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
@@ -562,21 +479,12 @@ static void superior_usb_host_attach(struct omap4_otg *otg)
 
 #ifdef CONFIG_USB_HOST_NOTIFY
 	if (otg->pdata && otg->pdata->usbhostd_start) {
-		host_notify_set_ovc_en
-			(&otg->pdata->ndev, NOTIFY_SET_OFF);
 		otg->pdata->ndev.mode = NOTIFY_HOST_MODE;
-		if (otg->usb_itf_type == NORMAL_USB)
-			otg->pdata->usbhostd_start();
+		otg->pdata->usbhostd_start();
 	}
 #endif
 
-	USB_PHY_SUSPEND_LOCK();
 	superior_vusb_enable(otg, true);
-	omap4430_phy_init_for_eyediagram
-		(SWCAP_TRIM_OFFSET_HOST, BGTRIM_TRIM_OFFSET_HOST
-				, RTERM_RMX_OFFSET_HOST);
-	omap4430_phy_init_for_eyediagram_ref_gen_test(REF_GEN_TEST_HOST);
-	USB_PHY_SUSPEND_UNLOCK();
 
 	otg->otg.state = OTG_STATE_A_IDLE;
 	otg->otg.default_a = true;
@@ -594,8 +502,7 @@ static void superior_usb_host_detach(struct omap4_otg *otg)
 #ifdef CONFIG_USB_HOST_NOTIFY
 	if (otg->pdata && otg->pdata->usbhostd_stop) {
 		otg->pdata->ndev.mode = NOTIFY_NONE_MODE;
-		if (otg->usb_itf_type == NORMAL_USB)
-			otg->pdata->usbhostd_stop();
+		otg->pdata->usbhostd_stop();
 	}
 #endif
 
@@ -611,6 +518,7 @@ static void superior_usb_host_detach(struct omap4_otg *otg)
 static void superior_detected_usb(struct omap4_otg *otg, bool attach)
 {
 	union power_supply_propval value;
+	int ret;
 
 	if (attach) {
 		if (otg->otg.last_event == USB_EVENT_NONE)
@@ -622,19 +530,47 @@ static void superior_detected_usb(struct omap4_otg *otg, bool attach)
 			superior_ap_usb_detach(otg);
 		value.intval = POWER_SUPPLY_TYPE_BATTERY;
 	}
+
+	if (!sec_battery)
+		sec_battery = power_supply_get_by_name("battery");
+
+	if (!sec_battery)
+		pr_err("%s: failed to get sec_battery power supply\n",
+				__func__);
+
+	if (sec_battery) {
+		ret = sec_battery->set_property(sec_battery,
+				POWER_SUPPLY_PROP_ONLINE,
+				&value);
+		if (ret)
+			pr_err("%s:failed to set online mode\n",
+					__func__);
+	}
 }
 
 static void superior_detected_otg(struct omap4_otg *otg, bool attach)
 {
-	if (attach) {
-		otg->usb_itf_type = NORMAL_USB;
+	if (attach)
 		superior_usb_host_attach(otg);
-	} else
+	else
 		superior_usb_host_detach(otg);
 }
 
 static void superior_detected_ta(struct omap4_otg *otg, bool attach)
 {
+	union power_supply_propval value;
+	int ret;
+
+	value.intval = attach ? POWER_SUPPLY_TYPE_MAINS :
+		POWER_SUPPLY_TYPE_BATTERY;
+	if (sec_battery) {
+		ret = sec_battery->set_property(sec_battery,
+				POWER_SUPPLY_PROP_ONLINE,
+				&value);
+		if (ret)
+			pr_err("%s:failed to set online mode\n",
+					__func__);
+	}
 }
 
 static void superior_detected_deskdock(struct omap4_otg *otg, bool attach)
@@ -653,24 +589,14 @@ static void superior_detected_cardock(struct omap4_otg *otg, bool attach)
 		switch_set_state(&otg->dock_switch, SUPERIOR_DOCK_NONE);
 }
 
-static void superior_detected_usb_audiodock(struct omap4_otg *otg, bool attach)
-{
-	if (attach) {
-		otg->usb_itf_type = AUDIO_DOCK;
-		superior_usb_host_attach(otg);
-	} else
-		superior_usb_host_detach(otg);
-}
-
 static void superior_detected_jig(struct omap4_otg *otg, bool attach)
 {
-	uart_set_l3_cstr(attach);
-	pr_info("conn: UART PM constraint for DFMS %d\n", attach);
 }
 
 static void superior_detected(int cable, bool attach)
 {
 	struct omap4_otg *otg = &superior_otg_xceiv;
+	int ret;
 
 	pr_info("[%s] cable detected: %s %s, last event=%d\n", __func__,
 			cable_names[cable], (attach) ? "attach" : "detach",
@@ -678,8 +604,7 @@ static void superior_detected(int cable, bool attach)
 
 #if defined(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_CMCC)
 	if (attach) {
-		if (cable == CABLE_TYPE_JIG_UART_ON ||
-				cable == CABLE_TYPE_JIG_UART_OFF)
+		if (cable == CABLE_TYPE_JIG_UART)
 			gpio_set_value(ap_cp_int1_gpios[GPIO_AP_CP_INT1].gpio,
 					1);
 		pr_info("%s : AP_CP_INT1 = HIGH\n", __func__);
@@ -693,8 +618,7 @@ static void superior_detected(int cable, bool attach)
 
 	switch (cable) {
 	case CABLE_TYPE_USB_MUIC:
-	case CABLE_TYPE_JIG_USB_OFF:
-	case CABLE_TYPE_JIG_USB_ON:
+	case CABLE_TYPE_JIG_USB:
 		superior_detected_usb(otg, attach);
 		break;
 	case CABLE_TYPE_OTG_MUIC:
@@ -707,18 +631,20 @@ static void superior_detected(int cable, bool attach)
 	case CABLE_TYPE_DESKDOCK_MUIC:
 		superior_detected_deskdock(otg, attach);
 		break;
+	case CABLE_TYPE_DESKDOCK_WITH_TA:
+		superior_detected_deskdock(otg, attach);
+		superior_detected_ta(otg, attach);
+		break;
 	case CABLE_TYPE_CARDOCK_MUIC:
 		superior_detected_cardock(otg, attach);
-		superior_detected_jig(otg, attach);
 		break;
-	case CABLE_TYPE_USB_AUDIODOCK_MUIC:
-		superior_detected_usb_audiodock(otg, attach);
-		break;
-	case CABLE_TYPE_JIG_UART_OFF:
-	case CABLE_TYPE_JIG_UART_ON:
+	case CABLE_TYPE_JIG_UART:
 		superior_detected_jig(otg, attach);
 		break;
 	case CABLE_TYPE_SMARTDOCK_MUIC:
+		break;
+	case CABLE_TYPE_SMARTDOCK_WITH_TA:
+		superior_detected_ta(otg, attach);
 		break;
 	case CABLE_TYPE_UNKNOWN_MUIC:
 		break;
@@ -739,7 +665,6 @@ struct max77693_muic_data max77693_muic = {
 	.detected		= superior_detected,
 	.usb_sel		= DEFAULT_USB_SEL_AP,
 	.uart_sel		= DEFAULT_UART_SEL_CP,
-	.support_cardock	= false,
 };
 
 static int __init superior_save_init_switch_param(char *str)
@@ -900,8 +825,7 @@ void __init omap4_superior_connector_init(void)
 	}
 
 	omap4430_phy_init(&superior_otg->dev);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
-	omap4430_phy_init_for_eyediagram_ref_gen_test(REF_GEN_TEST);
+	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET);
 	superior_otg_set_suspend(&superior_otg->otg, 0);
 #ifdef CONFIG_USB_HOST_NOTIFY
 	superior_host_notifier_init(superior_otg);

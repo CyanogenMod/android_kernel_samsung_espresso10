@@ -62,13 +62,6 @@ static u8 *FirmwareImage;
 static u8 *ConfigImage;
 static const u8 *SynaFirmwareData;
 
-/* Variables for F51 functionality */
-static unsigned short F51_Query_Base;
-static unsigned short F51_Command_Base;
-static unsigned short F51_Control_Base;
-static unsigned short F51_Data_Base;
-static unsigned short F51_Feature_Ctrl;
-
 /* Variables for F54 functionality */
 static unsigned short F54_Query_Base;
 static unsigned short F54_Command_Base;
@@ -98,11 +91,6 @@ static struct i2c_client *client;
 
 static int gpio_irq;
 
-inline void synaptics_set_i2c_client(struct i2c_client *i2c_client)
-{
-	client = i2c_client;
-}
-
 static int readRMI(u8 address, u8 *buf, int size)
 {
 	if (i2c_master_send(client, &address, 1) < 0)
@@ -111,12 +99,12 @@ static int readRMI(u8 address, u8 *buf, int size)
 	if (i2c_master_recv(client, buf, size) < 0)
 		return -1;
 
-	return 0;
+	return 1;
 }
 
 static int writeRMI(u8 address, u8 *buf, int size)
 {
-	int ret = 0;
+	int ret = 1;
 	u8 *msg_buf;
 
 	msg_buf = kzalloc(size + 1, GFP_KERNEL);
@@ -321,17 +309,16 @@ static void SynaWaitATTN(void)
 {
 	u8 uData;
 	u8 uStatus;
-	int cnt = 0;
+	int cnt = 1;
 
-	while (gpio_get_value(gpio_irq) && cnt++ < 300)
-		usleep_range(500, 1000);
-
+	while (gpio_get_value(gpio_irq) && cnt < 30) {
+		mdelay(20);
+		cnt++;
+	}
 	do {
 		readRMI(SynaF34_FlashControl, &uData, 1);
-		usleep_range(500, 1000);
-	} while ((uData != 0x80) && (cnt++ < 300));
-
-	readRMI((SynaF01DataBase + 1), &uStatus, 1);
+		readRMI((SynaF01DataBase + 1), &uStatus, 1);
+	} while (uData != 0x80);
 }
 
 /* SynaProgramConfiguration writes the configuration section of the image block
@@ -456,8 +443,6 @@ static void SynaProgramFirmware(void)
 	SynaFlashFirmwareWrite();
 }
 
-/* commenting this func as we r not using it currently */
-#if 0
 /* eraseConfigBlock erases the config block */
 static void eraseConfigBlock(void)
 {
@@ -475,7 +460,6 @@ static void eraseConfigBlock(void)
 
 	SynaWaitATTN();
 }
-#endif
 
 bool synaptics_fw_update(struct i2c_client *ts_client, const u8 *fw_data,
 							const int gpio)
@@ -513,9 +497,10 @@ bool synaptics_fw_update(struct i2c_client *ts_client, const u8 *fw_data,
 }
 
 /* SynaSetup scans the Page Description Table (PDT) and sets up the necessary
- * variables for the reflash process.
+ * variables for the reflash process. This function is a "slim" version of the
+ * PDT scan function in PDT.c, since only F54 and F01 are needed for test.
  */
-static void PDTscan(void)
+static void F54_PDTscan(void)
 {
 	unsigned char address;
 	unsigned char buffer[6];
@@ -536,13 +521,6 @@ static void PDTscan(void)
 			F11_Query_Base = buffer[0];
 			F11_MaxNumberOfTx_Addr = F11_Query_Base + 2;
 			F11_MaxNumberOfRx_Addr = F11_Query_Base + 3;
-			break;
-		case 0x51:
-			F51_Query_Base = buffer[0];
-			F51_Command_Base = buffer[1];
-			F51_Control_Base = buffer[2];
-			F51_Data_Base = buffer[3];
-			F51_Feature_Ctrl = F51_Control_Base + 8;
 			break;
 		case 0x54:
 			F54_Query_Base = buffer[0];
@@ -575,10 +553,10 @@ static void RegSetup(void)
 	numberOfTx = 0;
 
 	SetPage(0x01);
-	PDTscan(); /* scan for page 0x01 */
+	F54_PDTscan(); /* scan for page 0x01 */
 
 	SetPage(0x00);
-	PDTscan(); /* scan for page 0x00 */
+	F54_PDTscan(); /* scan for page 0x00 */
 
 	/* Check Used Rx channels */
 	readRMI(F11_MaxNumberOfRx_Addr, &MaxNumberRx, 1);
@@ -863,23 +841,15 @@ bool F54_TxToTest(struct i2c_client *ts_client, s16 *node_data, int mode)
 	return true;
 }
 
-int synaptics_set_low_temp_bit(const bool set)
+void F01_SetTABit(struct i2c_client *ts_client, bool set)
 {
 	u8 command;
+	client = ts_client;
 
-	if (!client) {
-		pr_err("tsp: %s: Can't find i2c client info.\n", __func__);
-		return -1;
-	}
+	F54_PDTscan();
 
-	SetPage(0x04);
-	PDTscan();
+	command = set ? 0x20 : 0x00;
 
-	readRMI(F51_Feature_Ctrl, &command, 1);
-	command |= set ? 0x80 : 0x00;
-	writeRMI(F51_Feature_Ctrl, &command, 1);
-
-	SetPage(0x00);
-
-	return 0;
+	writeRMI(F01_Control_Base, &command, 1);
+	return;
 }
