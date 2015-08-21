@@ -150,32 +150,11 @@ struct lpddr2_device_info lpddr2_samsung_4G_S4_dev = {
  *
  * Same devices installed on EMIF1 and EMIF2
  */
-
 static __initdata struct emif_device_details emif_devices = {
 	.cs0_device = &lpddr2_samsung_4G_S4_dev,
 };
 
-/*
- * 2GB LPDDR2 Configuration Data:
- * The memory organisation is as below :
- *	EMIF1 - CS0 -	4 Gb, CS1-	4Gb
- *	EMIF2 - CS0 -	4 Gb, CS1-	4Gb
- *	-----------------------------------
- *	TOTAL -		16 Gb
- *
- * Same devices installed on EMIF1 and EMIF2
- */
-
-static __initdata struct emif_device_details emif_devices_2GB = {
-	.cs0_device = &lpddr2_samsung_4G_S4_dev,
-	.cs1_device = &lpddr2_samsung_4G_S4_dev,
-};
-
 void __init omap4_kona_emif_init(void)
 {
-	if (system_rev < 7)
-		omap_emif_setup_device_details(&emif_devices, &emif_devices);
-	else
-		omap_emif_setup_device_details(&emif_devices_2GB,
-				&emif_devices_2GB);
+	omap_emif_setup_device_details(&emif_devices, &emif_devices);
 }

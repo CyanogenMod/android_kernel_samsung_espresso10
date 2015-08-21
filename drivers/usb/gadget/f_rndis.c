@@ -396,8 +396,9 @@ static void rndis_command_complete(struct usb_ep *ep, struct usb_request *req)
 //	spin_lock(&dev->lock);
 	status = rndis_msg_parser(rndis->config, (u8 *) req->buf);
 	if (status < 0)
-		ERROR(cdev, "RNDIS command error %d, %d/%d\n",
-			status, req->actual, req->length);
+		if (cdev != NULL )
+			ERROR(cdev, "RNDIS command error %d, %d/%d\n",
+				status, req->actual, req->length);
 //	spin_unlock(&dev->lock);
 }
 

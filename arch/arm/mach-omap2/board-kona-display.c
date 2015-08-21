@@ -19,7 +19,6 @@
 #include <linux/kernel.h>
 #include <linux/omapfb.h>
 #include <linux/regulator/consumer.h>
-#include <linux/delay.h>
 
 #include <video/cmc624.h>
 
@@ -50,19 +49,6 @@
 #define KONA_MAX_PWM_CNT	0x04E2
 #define KONA_DEF_PWM_CNT	0x027B
 #define KONA_MIN_PWM_CNT	0x000C
-
-#define NT71391_TCON_REG_ADD		0xAC
-#define NT71391_TCON_REG_CHECKSUM	0xFF
-#define NT71931_N_16	0x18
-#define NT71931_N_17	0x19
-#define NT71931_N_18	0x1A
-#define NT71931_N_19	0x1B
-#define NT71931_N_20	0x1C
-#define NT71931_N_21	0x1D
-#define NT71931_N_22	0x1E
-#define NT71931_N_23	0x1F
-#define NT71931_N_24	0x10
-#define NT71931_N_25	0x11
 
 #define GET_PWR_LUT(_org, _ratio) \
 	((_org) * (_ratio) / 10000 + (((_org) * (_ratio) % 10000) ? 1 : 0))
@@ -106,117 +92,9 @@ static struct gpio display_gpios[] = {
 static struct clk *dss_ick, *dss_sys_fclk, *dss_dss_fclk;
 #endif
 
-struct kona_display_info {
-	struct i2c_client *ldi_client;	/* NT71391 LDI I2C clinet */
-	bool skip_set_freq;
-};
-static struct kona_display_info *g_info;
-
-static int kona_change_mini_lvds_freq(struct kona_display_info *info)
-{
-	u8 reg;
-	u8 cur_val;
-	u32 tot;
-	u32 checksum;
-	int ret;
-
-	ret = i2c_smbus_read_byte_data(info->ldi_client, NT71391_TCON_REG_ADD);
-	if (unlikely(ret < 0)) {
-		pr_err("%s: failed to get N register value\n", __func__);
-		return ret;
-	}
-	cur_val = (u8) ret;
-
-	if (cur_val == NT71931_N_16) {
-		pr_info("%s: N is 16, skip to change N", __func__);
-		return 0;
-	}
-
-	pr_info("%s: sets N register value from 0x%x to 0x%x\n", __func__,
-							cur_val, NT71931_N_16);
-	msleep(20);
-
-	/* Changes N value to 16 */
-	ret = i2c_smbus_write_byte_data(info->ldi_client,
-					NT71391_TCON_REG_ADD, NT71931_N_16);
-	if (unlikely(ret < 0)) {
-		pr_err("%s: failed to change miniLVDS frequency(%d)\n",
-				__func__, ret);
-		return ret;
-	}
-
-	msleep(20);
-
-	/* calculates and writes checksum */
-	tot = 0;
-	for (reg = 0; reg < 0xFF; reg++) {
-		ret = i2c_smbus_read_byte_data(info->ldi_client, reg);
-		if (unlikely(ret < 0)) {
-			pr_err("%s: failed to read from 0x%x, ret = 0x%x\n",
-					__func__, reg, ret);
-			goto err_checksum;
-		}
-		tot += (u32) ret;
-
-		pr_debug("%s: REG: 0x%x, VAL: 0x%x, TOT: 0x%x\n", __func__,
-								reg, ret, tot);
-	}
-
-	checksum = 0x100 - (tot & 0xFF);
-	pr_info("%s: checksum = 0x%x\n", __func__, checksum);
-
-	msleep(20);
-	ret = i2c_smbus_write_byte_data(info->ldi_client,
-				NT71391_TCON_REG_CHECKSUM, (u8) checksum);
-	if (unlikely(ret < 0)) {
-		pr_err("%s: failed to change checksum(0x%x), ret=0x%x\n",
-				__func__, checksum, ret);
-		goto err_checksum;
-	}
-
-	return 0;
-
-err_checksum:
-	/* If checksum is invalid, TCON doesn't work.
-	 * so restores original N value if failed to change checksum.
-	 */
-	pr_info("%s: restore N value (0x%x)\n", __func__, cur_val);
-	msleep(20);
-	ret = i2c_smbus_write_byte_data(info->ldi_client,
-					NT71391_TCON_REG_ADD, cur_val);
-	if (unlikely(ret < 0))
-		pr_err("%s: failed to restore miniLVDS frequency(%d)\n",
-				__func__, ret);
-	return ret;
-}
-
 static void kona_lcd_set_power(bool enable)
 {
-	struct kona_display_info *info = g_info;
-	int ret;
-
 	gpio_set_value(display_gpios[GPIO_LCD_EN].gpio, enable);
-
-	if (!enable || system_rev < 7)
-		return;
-
-	if (!info->ldi_client) {
-		pr_err("%s: no nt71391 LDI I2C client\n", __func__);
-		return;
-	}
-
-	if (info->skip_set_freq)
-		return;
-
-	msleep(20);
-
-	ret = kona_change_mini_lvds_freq(info);
-	if (ret < 0) {
-		pr_err("%s: fail to change miniLVDS frequency\n", __func__);
-		return;
-	}
-
-	info->skip_set_freq = true;
 }
 
 /* Defined clk_disable for disabling the interface clock
@@ -541,8 +419,7 @@ static struct cabcoff_pwm_cnt_tbl kona_pwm_tbl = {
 static struct cabcon_pwr_lut_tbl kona_pwr_luts;
 
 static struct cmc624_panel_data kona_panel_data_cmc624 = {
-	.skip_ldi_cmd		= true,
-	.lcd_name		= "BOE_BP080WX7",
+	.lcd_name		= "NOVATEK_NT51012",
 	.power_lcd		= kona_lcd_set_power,
 	.init_tune_list		= kona_init_tune_list,
 	.power_vima_1_1V	= kona_power_vima_1_1V,
@@ -559,12 +436,6 @@ static struct i2c_board_info __initdata kona_i2c7_boardinfo[] = {
 	},
 };
 
-/* NT71391 LDI */
-static struct i2c_board_info __initdata kona_i2c12_boardinfo[] = {
-	{
-		I2C_BOARD_INFO("ldi-nt71391", 0xA0 >> 1),
-	},
-};
 
 /* POWERLUT_xx values for CABC mode PWM control */
 static u16 cmc624_pwr_luts[MAX_PWRLUT_LEV][MAX_PWRLUT_MODE][NUM_PWRLUT_REG] = {
@@ -646,8 +517,8 @@ static struct omap_dss_device kona_lcd_device = {
 		},
 		.acbi		= 0,
 		.acb		= 40,
-		.width_in_um	= 172220,
-		.height_in_um	= 107640,
+		.width_in_um	= 153600,
+		.height_in_um	= 90000,
 	},
 	.clocks = {
 		.dispc = {
@@ -886,55 +757,5 @@ void __init omap4_kona_display_init(void)
 	i2c_register_board_info(7, kona_i2c7_boardinfo,
 					ARRAY_SIZE(kona_i2c7_boardinfo));
 
-	i2c_register_board_info(12, kona_i2c12_boardinfo,
-					ARRAY_SIZE(kona_i2c12_boardinfo));
 	pr_info("%s: real board display\n", __func__);
 }
-
-static int nt71391_probe(struct i2c_client *client,
-				const struct i2c_device_id *id)
-{
-	struct kona_display_info *info;
-
-	pr_info("%s: start\n", __func__);
-
-	info = kzalloc(sizeof(struct kona_display_info), GFP_KERNEL);
-	if (!info) {
-		dev_err(&client->dev, "%s: failed to allocate memory\n",
-								__func__);
-		return -ENOMEM;
-	}
-
-	info->ldi_client = client;
-	info->skip_set_freq = false;
-	g_info = info;
-
-	return 0;
-}
-
-static int nt71391_remove(struct i2c_client *client)
-{
-	kfree(g_info);
-
-	return 0;
-}
-
-static const struct i2c_device_id nt71391_i2c_id[] = {
-	{"ldi-nt71391", 0},
-	{},
-};
-
-static struct i2c_driver nt71391_i2c_driver = {
-	.driver		= {
-		.name	= "ldi-nt71391",
-	},
-	.id_table	= nt71391_i2c_id,
-	.probe		= nt71391_probe,
-	.remove		= nt71391_remove,
-};
-
-static int __init nt71391_init(void)
-{
-	return i2c_add_driver(&nt71391_i2c_driver);
-}
-device_initcall(nt71391_init);

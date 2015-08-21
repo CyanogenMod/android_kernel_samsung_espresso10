@@ -804,12 +804,11 @@ static int yas_set_delay(int delay)
 	if (unlikely(!pcb))
 		return YAS_ERROR_NOT_INITIALIZED;
 
-	if (delay < 0)
+
+	if (delay < 0 || delay > YAS_BMA250_MAX_DELAY)
 		return YAS_ERROR_ARG;
 	else if (delay < YAS_BMA250_MIN_DELAY)
 		delay = YAS_BMA250_MIN_DELAY;
-	else if (delay > YAS_BMA250_MAX_DELAY)
-		delay = YAS_BMA250_MAX_DELAY;
 
 	yas_bma250_lock();
 	err = yas_bma250_set_delay(delay);

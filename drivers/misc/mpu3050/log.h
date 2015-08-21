@@ -18,6 +18,22 @@
  */
 
 /*
+ * Copyright (C) 2010 InvenSense Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
  * C/C++ logging functions.  See the logging documentation for API details.
  *
  * We'd like these to be available from C code (in case we import some from
@@ -28,7 +44,6 @@
  * supports O_APPEND.  These calls have mutex-protected data structures
  * and so are NOT reentrant.  Do not use MPL_LOG in a signal handler.
  */
-
 #ifndef _LIBS_CUTILS_MPL_LOG_H
 #define _LIBS_CUTILS_MPL_LOG_H
 

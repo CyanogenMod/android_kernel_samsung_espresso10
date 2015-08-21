@@ -76,8 +76,6 @@ static unsigned int screen_off_max_freq;
 static bool omap_cpufreq_ready;
 static bool omap_cpufreq_suspended;
 
-static int omap_cpufreq_scale(unsigned int target_freq, unsigned int cur_freq);
-
 static unsigned int omap_getspeed(unsigned int cpu);
 static int omap_target(struct cpufreq_policy *policy,
 		       unsigned int target_freq,
@@ -110,10 +108,6 @@ static struct freq_lock_info cpufreq_lock_type[2] = {
 	}
 };
 
-static char *cpufreq_lock_type_str[] = {
-	"MIN",
-	"MAX",
-};
 /* MASK staticdep for MEMIF clock Domain */
 static void mask_mpu_static_dependency_value(void)
 {
@@ -261,13 +255,11 @@ int omap_cpufreq_alloc(unsigned int nId, unsigned long req_freq, int type)
 	/* If current frequency is lower than requested freq,
 	 * it needs to update
 	 */
-
-	mutex_lock(&omap_cpufreq_lock);
 	cur_freq = omap_getspeed(0);
 
-	pr_debug("[CPUFREQ] TYPE=%s nID=%d curr freq=%dKHz cur_lock_freq=%dKHz\n",
-			cpufreq_lock_type_str[type],
-			nId, cur_freq, cpufreq_lock->cur_lock_freq);
+
+	pr_debug("[CPUFREQ] curr freq=%d KHz cur_lock_freq=%d KHz\n",
+				cur_freq, cpufreq_lock->cur_lock_freq);
 
 	if (cpufreq_compare(cpufreq_lock->is_ceil,
 				cpufreq_lock->cur_lock_freq, cur_freq)) {
@@ -277,12 +269,15 @@ int omap_cpufreq_alloc(unsigned int nId, unsigned long req_freq, int type)
 		if (unlikely(!policy))
 			goto out;
 
-		omap_cpufreq_scale(cpufreq_lock->cur_lock_freq, cur_freq);
-		pr_debug("[CPUFREQ] TYPE=%s Need to update current target(%d KHz)\n",
-		cpufreq_lock_type_str[type], cpufreq_lock->cur_lock_freq);
+		omap_target(policy,
+					cpufreq_lock->cur_lock_freq,
+					CPUFREQ_RELATION_H);
+
+		pr_debug("[CPUFREQ] Need to update current target(%d KHz)\n",
+			cpufreq_lock->cur_lock_freq);
 	}
+
 out:
-	mutex_unlock(&omap_cpufreq_lock);
 	mutex_unlock(&omap_cpufreq_alloc_lock);
 
 	return 0;
@@ -311,16 +306,15 @@ void omap_cpufreq_lock_free(unsigned int nId, int type)
 	cpufreq_lock->cur_lock_freq = cpufreq_lock->init_level;
 	if (cpufreq_lock->dev_id) {
 		for (i = 0; i < DVFS_LOCK_ID_END; i++) {
-			if ((cpufreq_lock->dev_id & 1<< i) 
-				&& cpufreq_compare(cpufreq_lock->is_ceil ,
+			if (cpufreq_compare(cpufreq_lock->is_ceil ,
 					cpufreq_lock->value[i] ,
 					cpufreq_lock->cur_lock_freq))
 				cpufreq_lock->cur_lock_freq =
 					cpufreq_lock->value[i];
 		}
 	}
-	pr_debug("[CPUFREQ] TYPE=%s nID=%d CurrLockFreq=%d KHz\n",
-		cpufreq_lock_type_str[type], nId, cpufreq_lock->cur_lock_freq);
+	pr_debug("[CPUFREQ] cur_lock_freq=%d KHz\n",
+				cpufreq_lock->cur_lock_freq);
 	mutex_unlock(&omap_cpufreq_alloc_lock);
 
 
@@ -569,6 +563,7 @@ static void omap_cpu_early_suspend(struct early_suspend *h)
 		if (cur > max_capped)
 			omap_cpufreq_scale(max_capped, cur);
 	}
+	mask_mpu_static_dependency_value();
 	mutex_unlock(&omap_cpufreq_lock);
 }
 
@@ -585,6 +580,7 @@ static void omap_cpu_late_resume(struct early_suspend *h)
 		if (cur != current_target_freq)
 			omap_cpufreq_scale(current_target_freq, cur);
 	}
+	unmask_mpu_static_dependency_value();
 	mutex_unlock(&omap_cpufreq_lock);
 }
 

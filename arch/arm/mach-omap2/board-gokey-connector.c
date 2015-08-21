@@ -38,7 +38,7 @@
 #include "board-gokey.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
-#include "omap_phy_tune.c"
+
 
 #define CHARGERUSB_CTRL1		0x8
 #define CHARGERUSB_CTRL3		0xA
@@ -71,10 +71,6 @@
 
 #define GOKEY_MHL_SWING_LEVEL		0xF4
 
-#define SWCAP_TRIM_OFFSET	(0x01)
-#define REF_GEN_TEST	(0x06)
-#define VBUS_DELAY 0
-
 #if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 static int otg_en;
 #endif
@@ -82,8 +78,6 @@ static int otg_en;
 
 /* type => CABLE_TYPE_NONE(0), _USB(1), or _AC(2) */
 static int g_charging_type = CABLE_TYPE_NONE;
-static bool device_isupdated;
-static bool usb_attached;
 
 static bool uart_l3_cstr_flag;	/* flag to disable PM for uart */
 
@@ -94,7 +88,6 @@ struct omap4_otg {
 	struct regulator *vusb;
 	struct work_struct set_vbus_work;
 	struct mutex lock;
-	struct delayed_work vbus_detection_work;
 
 	bool reg_on;
 	bool need_vbus_drive;
@@ -102,7 +95,6 @@ struct omap4_otg {
 	int uart_manual_mode;
 	int current_device;
 	int gpio_vbus_detect;
-	int irq_vbus_detect;
 
 	struct switch_dev dock_switch;
 	struct switch_dev audio_switch;
@@ -190,6 +182,8 @@ static struct attribute *manual_switch_sel_attributes[] = {
 	NULL,
 };
 
+static bool gokey_twl_chgctrl_init;
+
 static const struct attribute_group manual_switch_sel_group = {
 	.attrs = manual_switch_sel_attributes,
 };
@@ -265,86 +259,30 @@ static void gokey_set_vbus_drive(bool enable)
 }
 #endif
 
-static int gokey_is_vbus_on(void)
-{
-	return gpio_get_value(connector_gpios[GPIO_VBUS_DETECT].gpio);
-}
-
-static void gokey_usb_attach(struct omap4_otg *otg)
+static void gokey_ap_usb_attach(struct omap4_otg *otg)
 {
 	gokey_vusb_enable(otg, true);
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
 	otg->otg.last_event = USB_EVENT_VBUS;
-	usb_attached = true;
 
 	atomic_notifier_call_chain(&otg->otg.notifier,
 				   USB_EVENT_VBUS, otg->otg.gadget);
 }
 
-static void gokey_usb_detach(struct omap4_otg *otg)
+static void gokey_ap_usb_detach(struct omap4_otg *otg)
 {
 	gokey_vusb_enable(otg, false);
 
 	otg->otg.default_a = false;
 	otg->otg.state = OTG_STATE_B_IDLE;
 	otg->otg.last_event = USB_EVENT_NONE;
-	usb_attached = false;
 
 	atomic_notifier_call_chain(&otg->otg.notifier,
 				   USB_EVENT_NONE, otg->otg.gadget);
 }
 
-static void gokey_charger_attach(struct omap4_otg *otg)
-{
-	otg->otg.default_a = false;
-	otg->otg.state = OTG_STATE_B_IDLE;
-	otg->otg.last_event = USB_EVENT_CHARGER;
-
-	atomic_notifier_call_chain(&otg->otg.notifier,
-				   USB_EVENT_CHARGER, otg->otg.gadget);
-}
-
-static void gokey_charger_detach(struct omap4_otg *otg)
-{
-	if (otg->otg.last_event == USB_EVENT_CHARGER) {
-		otg->otg.default_a = false;
-		otg->otg.state = OTG_STATE_B_IDLE;
-		otg->otg.last_event = USB_EVENT_NONE;
-
-		atomic_notifier_call_chain(&otg->otg.notifier,
-					   USB_EVENT_NONE, otg->otg.gadget);
-	}
-}
-
-int gokey_get_charging_type(void)
-{
-	return g_charging_type;
-}
-
-void gokey_set_charging_type(int device)
-{
-	struct omap4_otg *gokey_otg = &gokey_otg_xceiv;
-	switch (device) {
-	case FSA9480_DETECT_USB:
-		g_charging_type = CABLE_TYPE_USB;
-		break;
-	case FSA9480_DETECT_AV_365K:
-		if (gokey_is_vbus_on()) {
-			g_charging_type = CABLE_TYPE_USB; /* chg cur(mA)=USB */
-			gokey_charger_attach(gokey_otg);
-		} else
-			g_charging_type = CABLE_TYPE_NONE;
-		break;
-	case FSA9480_DETECT_CHARGER:
-		g_charging_type = CABLE_TYPE_AC;
-		break;
-	default:
-		g_charging_type = CABLE_TYPE_NONE;
-	}
-	device_isupdated = true;
-}
 static void gokey_ap_uart_actions(void)
 {
 	gpio_set_value(uart_sw_gpios[GPIO_UART_SEL].gpio, IF_UART_SEL_AP);
@@ -365,10 +303,25 @@ static void gokey_otg_mask_vbus_irq(void)
 
 static void gokey_otg_unmask_vbus_irq(void)
 {
-	/* null function : vbus irq of pmic will not be enabled
-	 * to handle vbus event by gokey connector driver
-	 * because unmask will not be done.
-	 */
+	if (!gokey_twl_chgctrl_init) {
+		int r;
+
+		r = twl_i2c_write_u8(TWL_MODULE_MAIN_CHARGE,
+				(u8) ~(TWL_CONTROLLER_RSVD |
+					TWL_CONTROLLER_MVBUS_DET),
+				TWL_REG_CONTROLLER_INT_MASK);
+
+		if (r)
+			pr_err_once("%s:Err writing twlcharge ctrl int mask\n",
+					__func__);
+		else
+			gokey_twl_chgctrl_init = true;
+	}
+
+	twl6030_interrupt_unmask(TWL6030_CHARGER_CTRL_INT_MASK,
+					REG_INT_MSK_LINE_C);
+	twl6030_interrupt_unmask(TWL6030_CHARGER_CTRL_INT_MASK,
+					REG_INT_MSK_STS_C);
 }
 
 static ssize_t gokey_otg_uart_switch_show(struct device *dev,
@@ -469,22 +422,31 @@ static ssize_t gokey_usb_state_show(struct device *dev,
 
 static bool gokey_otg_vbus_present(void)
 {
-	/* This is used to distinguish AV_365K and AV_365K_CHARGER by
-	 * fsa9480 driver. For gokey, no need to distinguish them.
-	 * return 0 makes fsa9480 driver treats both of them as AV_365K.
-	 */
+	int vbus_state = gpio_get_value(connector_gpios[GPIO_VBUS_DETECT].gpio);
 
-	return 0;
+	pr_info("%s: VBUS: %d", __func__, vbus_state);
+
+	return vbus_state;
 }
 
-static u16 fsa9480_devtype;	/* DevType2(Higher 8bit):DevType1(Lower 8bit) */
-static u8 fsa9480_adc;		/* for the future use.. */
-
-/* called by fas9480 driver to save device type(1&2) and adc value */
-void fsa9480_save_dev_adc(u16 dev, u8 adc)
+int gokey_get_charging_type(void)
 {
-	fsa9480_devtype = dev;
-	fsa9480_adc = adc;
+	return g_charging_type;
+}
+
+void gokey_set_charging_type(int device)
+{
+	switch (device) {
+	case FSA9480_DETECT_USB:
+	case FSA9480_DETECT_AV_365K_CHARGER:
+		g_charging_type = CABLE_TYPE_USB;
+		break;
+	case FSA9480_DETECT_CHARGER:
+		g_charging_type = CABLE_TYPE_AC;
+		break;
+	default:
+		g_charging_type = CABLE_TYPE_NONE;
+	}
 }
 
 static void gokey_fsa_usb_detected(int device)
@@ -497,20 +459,38 @@ static void gokey_fsa_usb_detected(int device)
 	old_device = gokey_otg->current_device;
 	gokey_otg->current_device = device;
 
-	pr_info("%s: device detected --> 0x%x\n", __func__, device);
-
-	pr_debug("detected 0x%x\n", device);
+	pr_debug("detected %x\n", device);
 
 	gokey_set_charging_type(device);
 
 	switch (device) {
 	case FSA9480_DETECT_USB:
+		gokey_ap_usb_attach(gokey_otg);
 		break;
 	case FSA9480_DETECT_CHARGER:
+		gokey_mux_usb_to_fsa(true);
+
+		gokey_otg->otg.state = OTG_STATE_B_IDLE;
+		gokey_otg->otg.default_a = false;
+		gokey_otg->otg.last_event = USB_EVENT_CHARGER;
+		atomic_notifier_call_chain(&gokey_otg->otg.notifier,
+					   USB_EVENT_CHARGER,
+					   gokey_otg->otg.gadget);
 		break;
 	case FSA9480_DETECT_AV_365K:
-		/* if TA/USB is attached to AV DOCK */
+		/* Workaround: timing margin for UI event processing */
+		msleep(600);
 		gokey_set_dock_switch(UEVENT_DOCK_DESK);
+		/* Workaround: timing margin for UI event processing */
+		msleep(600);
+		break;
+	case FSA9480_DETECT_AV_365K_CHARGER:
+		/* Workaround: timing margin for UI event processing */
+		msleep(600);
+		gokey_set_dock_switch(UEVENT_DOCK_DESK);
+		gokey_ap_usb_attach(gokey_otg);
+		/* Workaround: timing margin for UI event processing */
+		msleep(600);
 		break;
 	case FSA9480_DETECT_NONE:
 		gokey_mux_usb_to_fsa(true);
@@ -530,21 +510,33 @@ static void gokey_fsa_usb_detected(int device)
 			if (gokey_otg->uart_manual_mode ==
 			    GOKEY_MANUAL_UART_NONE)
 				gokey_ap_uart_actions();
-			break;
-		case FSA9480_DETECT_AV_365K:
-			if (!gokey_is_vbus_on())
-				gokey_set_dock_switch(UEVENT_DOCK_NONE);
+			gokey_set_dock_switch(UEVENT_DOCK_NONE);
 			break;
 		case FSA9480_DETECT_USB:
+			gokey_ap_usb_detach(gokey_otg);
+			break;
+		case FSA9480_DETECT_AV_365K:
+			/* Workaround: timing margin for UI event processing */
+			msleep(800);
+			gokey_set_dock_switch(UEVENT_DOCK_NONE);
+			/* Workaround: timing margin for UI event processing */
+			msleep(800);
+			break;
+		case FSA9480_DETECT_AV_365K_CHARGER:
+			/* Workaround: timing margin for UI event processing */
+			msleep(800);
+			gokey_set_dock_switch(UEVENT_DOCK_NONE);
+			gokey_ap_usb_detach(gokey_otg);
+			/* Workaround: timing margin for UI event processing */
+			msleep(800);
 			break;
 		case FSA9480_DETECT_CHARGER:
-			break;
 		default:
-			gokey_usb_detach(gokey_otg);
+			gokey_ap_usb_detach(gokey_otg);
 			break;
 		};
 		break;
-		/* UART is the same with DETECT_JIG_UART_OFF, JIG_UART_ON */
+		/* UART in the same with DETECT_JIG_UART_OFF, JIG_UART_ON */
 	case FSA9480_DETECT_UART:
 		if (uart_l3_cstr_flag)
 			uart_set_l3_cstr(true);
@@ -571,16 +563,7 @@ static void gokey_fsa_usb_detected(int device)
 			gokey_ap_uart_actions();
 			break;
 		};
-
-		/* Thiis for waking up whole system when JIG UART ON cable
-		 * is connected. Send undocking event immediately to hide
-		 * docking icon at status bar. Btw, (0x1 << 10) is JIG_UART_ON
-		 * for fsa9480 muic.
-		 */
-		if (fsa9480_devtype & (0x1 << 10)) {
-			gokey_set_dock_switch(UEVENT_DOCK_CAR);
-			gokey_set_dock_switch(UEVENT_DOCK_NONE);
-		}
+		gokey_set_dock_switch(UEVENT_DOCK_CAR);
 		break;
 	}
 
@@ -593,9 +576,7 @@ static struct fsa9480_detect_set fsa_detect_sets[] = {
 #if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 	 .mask = FSA9480_DETECT_ALL,
 #else
-	 .mask = FSA9480_DETECT_ALL
-		 & ~(FSA9480_DETECT_USB_HOST)
-		 & ~(FSA9480_DETECT_AV_365K_CHARGER), /* charge by connector */
+	 .mask = FSA9480_DETECT_ALL & ~(FSA9480_DETECT_USB_HOST),
 #endif
 	 },
 	{
@@ -617,7 +598,6 @@ static struct fsa9480_platform_data gokey_fsa9480_pdata = {
 	.mask_vbus_irq          = gokey_otg_mask_vbus_irq,
 	.unmask_vbus_irq        = gokey_otg_unmask_vbus_irq,
 	.vbus_present = gokey_otg_vbus_present,
-	.save_dev_adc = fsa9480_save_dev_adc,
 };
 
 static struct i2c_board_info __initdata gokey_connector_i2c4_boardinfo[] = {
@@ -669,43 +649,6 @@ static void gokey_otg_work(struct work_struct *data)
 	gokey_set_vbus_drive(gokey_otg->need_vbus_drive);
 
 	mutex_unlock(&gokey_otg->lock);
-}
-
-static void vbus_detect_work(struct work_struct *work)
-{
-	struct omap4_otg *gokey_otg = &gokey_otg_xceiv;
-	int count;
-
-	/*it take a time to define cable type*/
-	/*at least 6xx msec*/
-
-	for (count = 0; count < 0xf; count++) {
-		msleep(100);
-		if (device_isupdated) {
-			pr_info("%s: device is updated for %dmsec\n",
-				__func__, count);
-			break;
-		} else
-			pr_info("%s: device is not updated for %dmsec\n",
-				__func__, count);
-	}
-
-	if (!gpio_get_value(gokey_otg->gpio_vbus_detect)) {
-		if (usb_attached)
-			gokey_usb_detach(gokey_otg);
-		else
-			gokey_charger_detach(gokey_otg);
-		pr_info("%s : vbus detach\n", __func__);
-		}
-	else {
-			if (g_charging_type == CABLE_TYPE_USB)
-				gokey_usb_attach(gokey_otg);
-			else
-				gokey_charger_attach(gokey_otg);
-
-			pr_info("%s : vbus attach\n", __func__);
-		}
-	device_isupdated = false;
 }
 
 static int gokey_otg_phy_init(struct otg_transceiver *otg)
@@ -778,22 +721,24 @@ static void gokey_fsa9480_gpio_init(void)
 #endif
 }
 
-/* Basically TA/USB attach and detach is handled by muic handler
- * gokey_fsa_usb_detected(). FSA9480 can detect TA/USB while AV DOCK
- * is already attached, but it CAN NOT detect TA/USB detach event.
- * So external vbus irq is needed. T1 uses internal vbus irq of PMIC
- * but sadly it doesn't work well with GOKEY. As a result one gpio
- * is reserved to detect vbus and used to detect TA/USB detach from DOCK.
- * (NOTE: DOCK treats everything TA since ID+- doesn't exist.)
+/* add VBUS_5V_DETECT IRQ.
+ * if this IRQ is HIGH, VBUS Turns ON, notify "USB_EVENT_VBUS".
+ * if not, VBUS Turns OFF, notify "USB_EVENT_NONE"
  */
 static irqreturn_t vbus_detection_irq(int irq, void *_otg)
 {
 	struct omap4_otg *gokey_otg = _otg;
+	int val = gpio_get_value(gokey_otg->gpio_vbus_detect);
 
-	pr_info("%s : VBUS OFF  vbus_detect : %d\n", __func__,
-		gpio_get_value(gokey_otg->gpio_vbus_detect));
+	pr_info("%s : VBUS %s\n", __func__, val ? "ON" : "OFF");
 
-	schedule_delayed_work(&gokey_otg->vbus_detection_work, VBUS_DELAY);
+	irq_set_irq_type(irq, (val ? IRQF_TRIGGER_LOW : IRQF_TRIGGER_HIGH));
+
+	if (!val)
+		gokey_ap_usb_detach(gokey_otg);
+	else
+		gokey_ap_usb_attach(gokey_otg);
+
 	return IRQ_HANDLED;
 }
 
@@ -801,6 +746,7 @@ static int gokey_vbus_detected_init(struct omap4_otg *otg)
 {
 	int vbus_gpio = omap_muxtbl_get_gpio_by_name("5V_DET");
 	int ret = 0;
+	int irq = 0;
 	int val = 0;
 
 	ret = gpio_request(vbus_gpio, "5V_DET");
@@ -813,27 +759,24 @@ static int gokey_vbus_detected_init(struct omap4_otg *otg)
 
 	if (ret > 0) {
 		dev_err(&otg->dev, "failed to set gpio %d as input\n",
-								vbus_gpio);
+			vbus_gpio);
 		return ret;
 	}
 
 	otg->gpio_vbus_detect = vbus_gpio;
-	otg->irq_vbus_detect = gpio_to_irq(vbus_gpio);
+	irq = gpio_to_irq(vbus_gpio);
 	val = gpio_get_value(vbus_gpio);
 
-	/* detect TA/USB detach only, attach is handled by muic handler */
-	ret = request_threaded_irq(otg->irq_vbus_detect,
-				NULL, vbus_detection_irq,
-				IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
-				"5V_DET", otg);
+	ret = request_threaded_irq(irq, NULL, vbus_detection_irq,
+				      (val ? IRQF_TRIGGER_LOW :
+				       IRQF_TRIGGER_HIGH) | IRQF_ONESHOT |
+				      IRQF_NO_SUSPEND, "5V_DET", otg);
 
 	if (ret > 0) {
 		dev_err(&otg->dev, "%s : request irq %d failed for gpio %d\n",
-		__func__, otg->irq_vbus_detect, vbus_gpio);
+			__func__, irq, vbus_gpio);
 		return ret;
 	}
-
-	ret = enable_irq_wake(otg->irq_vbus_detect);
 
 	return 0;
 }
@@ -875,9 +818,6 @@ void __init omap4_gokey_connector_init(void)
 	 * will be corrupted and AT Command doesn't work correctly.
 	 */
 	uart_l3_cstr_flag = true;
-	device_isupdated = false;
-	usb_attached = false;
-
 
 	gokey_uart_sw_gpio_init();
 	gokey_connector_gpio_init();
@@ -886,7 +826,6 @@ void __init omap4_gokey_connector_init(void)
 	mutex_init(&gokey_otg->lock);
 
 	INIT_WORK(&gokey_otg->set_vbus_work, gokey_otg_work);
-	INIT_DELAYED_WORK(&gokey_otg->vbus_detection_work, vbus_detect_work);
 
 	device_initialize(&gokey_otg->dev);
 	dev_set_name(&gokey_otg->dev, "%s", "gokey_otg");
@@ -916,8 +855,6 @@ void __init omap4_gokey_connector_init(void)
 		pr_err("gokey_otg: cannot set transceiver (%d)\n", ret);
 
 	omap4430_phy_init(&gokey_otg->dev);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
-	omap4430_phy_init_for_eyediagram_ref_gen_test(REF_GEN_TEST);
 	gokey_otg_set_suspend(&gokey_otg->otg, 0);
 	gokey_vbus_detected_init(gokey_otg);
 

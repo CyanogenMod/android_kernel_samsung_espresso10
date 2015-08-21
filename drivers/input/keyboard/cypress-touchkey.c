@@ -87,7 +87,8 @@ struct cptk_data {
 
 static irqreturn_t cptk_irq_thread(int irq, void *data);
 
-static int cptk_i2c_write(struct cptk_data *cptk, u8 cmd, u8 val)
+static int cptk_i2c_write(struct cptk_data *cptk, u8 cmd,
+		u8 val)
 {
 	int ret = 0;
 	u8 data[2];
@@ -95,7 +96,7 @@ static int cptk_i2c_write(struct cptk_data *cptk, u8 cmd, u8 val)
 	int retry = 2;
 
 	if (!cptk->enable) {
-		pr_err("cptk: device is not enable.\n");
+		pr_debug("cptk :key is not enabled.\n");
 		return -ENODEV;
 	}
 
@@ -113,24 +114,25 @@ static int cptk_i2c_write(struct cptk_data *cptk, u8 cmd, u8 val)
 			mutex_unlock(&cptk->i2c_lock);
 			return 0;
 		}
+		pr_debug("cptk :i2c transfer retor for cmd:%d\n",
+		       cmd);
 		msleep(20);
 	}
 
-	pr_err("cptk: %s: i2c transfer failed. cmd: %d. err: %d.\n",
-							__func__, cmd, ret);
 	mutex_unlock(&cptk->i2c_lock);
 
 	return ret;
 }
 
-static int cptk_i2c_read(struct cptk_data *cptk, u8 cmd, u8 *val, int len)
+static int cptk_i2c_read(struct cptk_data *cptk, u8 cmd,
+		u8 *val, int len)
 {
 	int ret = 0;
 	int retry = 10;
 	struct i2c_msg msg[2];
 
 	if (!cptk->enable) {
-		pr_err("cptk: device is not enable.\n");
+		pr_debug("cptk :key is not enabled.\n");
 		return -ENODEV;
 	}
 
@@ -152,11 +154,10 @@ static int cptk_i2c_read(struct cptk_data *cptk, u8 cmd, u8 *val, int len)
 			mutex_unlock(&cptk->i2c_lock);
 			return 0;
 		}
+		pr_debug("cptk :i2c transfer retor for cmd:%d\n",
+		       cmd);
 		msleep(20);
 	}
-
-	pr_err("cptk: %s: i2c transfer failed. cmd: %d. err: %d.\n",
-							__func__, cmd, ret);
 	mutex_unlock(&cptk->i2c_lock);
 
 	return ret;
@@ -192,8 +193,9 @@ static int cptk_early_suspend(struct early_suspend *h)
 {
 	int i;
 
-	struct cptk_data *cptk = container_of(h, struct cptk_data,
-								early_suspend);
+	struct cptk_data *cptk = container_of(h,
+			struct cptk_data,
+			early_suspend);
 
 	disable_irq(cptk->client->irq);
 	mutex_lock(&cptk->lock);
@@ -211,8 +213,9 @@ static int cptk_early_suspend(struct early_suspend *h)
 
 static int cptk_late_resume(struct early_suspend *h)
 {
-	struct cptk_data *cptk = container_of(h, struct cptk_data,
-								early_suspend);
+	struct cptk_data *cptk = container_of(h,
+			struct cptk_data,
+			early_suspend);
 
 	mutex_lock(&cptk->lock);
 	if (cptk && cptk->pdata->power)
@@ -225,15 +228,14 @@ static int cptk_late_resume(struct early_suspend *h)
 
 	if (cptk->led_status == LED_ON_CMD)
 		cptk_i2c_write(cptk, KEYCODE_REG, LED_ON_CMD);
-	msleep(20);	/* To need a minimum 14ms. time at mode changing */
 
 	mutex_unlock(&cptk->lock);
 	enable_irq(cptk->client->irq);
 	return 0;
 }
 #endif
-
-static void cptk_update_firmware_cb(const struct firmware *fw, void *context)
+static void cptk_update_firmware_cb(const struct firmware *fw,
+		void *context)
 {
 
 	int ret;
@@ -245,14 +247,13 @@ static void cptk_update_firmware_cb(const struct firmware *fw, void *context)
 
 	if (fw->size != FW_SIZE) {
 		dev_err(dev, "%s: Firmware file size invalid size:%d\n",
-							__func__, fw->size);
+				__func__, fw->size);
 		return;
 	}
 
 	mutex_lock(&cptk->lock);
 
 	disable_irq(cptk->client->irq);
-
 	/* Lock the i2c bus since the firmware updater accesses it */
 	i2c_lock_adapter(cptk->client->adapter);
 	while (retries--) {
@@ -293,13 +294,9 @@ static int cptk_update_firmware(struct cptk_data *cptk)
 		return -EINVAL;
 	}
 
-	ret = request_firmware_nowait(THIS_MODULE,
-					FW_ACTION_HOTPLUG,
-					cptk->pdata->fw_name,
-					dev,
-					GFP_KERNEL,
-					cptk,
-					cptk_update_firmware_cb);
+	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_HOTPLUG,
+			cptk->pdata->fw_name, dev, GFP_KERNEL, cptk,
+			cptk_update_firmware_cb);
 
 	if (ret) {
 		dev_err(dev, "%s: Can't open firmware file from %s\n", __func__,
@@ -311,8 +308,8 @@ static int cptk_update_firmware(struct cptk_data *cptk)
 }
 
 static ssize_t set_touchkey_firm_update_store(struct device *dev,
-						struct device_attribute *attr,
-						const char *buf, size_t size)
+		struct device_attribute *attr,
+		const char *buf, size_t size)
 {
 	struct cptk_data *cptk = dev_get_drvdata(dev);
 
@@ -331,12 +328,12 @@ static ssize_t set_touchkey_firm_update_store(struct device *dev,
 
 	return size;
 }
-static DEVICE_ATTR(touchkey_firm_update, S_IWUSR | S_IWGRP,
-					NULL, set_touchkey_firm_update_store);
+static DEVICE_ATTR(touchkey_firm_update,
+		S_IWUSR | S_IWGRP,
+		NULL, set_touchkey_firm_update_store);
 
-static ssize_t set_touchkey_firm_status_show(struct device *dev,
-						struct device_attribute *attr,
-						char *buf)
+static ssize_t set_touchkey_firm_status_show
+(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	int count = 0;
 	struct cptk_data *cptk = dev_get_drvdata(dev);
@@ -353,24 +350,22 @@ static ssize_t set_touchkey_firm_status_show(struct device *dev,
 static DEVICE_ATTR(touchkey_firm_update_status, S_IRUGO,
 					set_touchkey_firm_status_show, NULL);
 
-static ssize_t set_touchkey_firm_version_show(struct device *dev,
-						struct device_attribute *attr,
-						char *buf)
+static ssize_t set_touchkey_firm_version_show
+(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	int count;
 
 	struct cptk_data *cptk = dev_get_drvdata(dev);
-	count = sprintf(buf, "0x%.2X\n", cptk->pdata->firm_ver);
-	pr_debug("cptk: touchkey_firm_version 0x%.2X\n", cptk->pdata->firm_ver);
+	count = sprintf(buf, "0x%.2X\n", cptk->cur_firm_ver[1]);
+	pr_debug("cptk: touchkey_firm_version 0x%.2X\n", cptk->cur_firm_ver[1]);
 
 	return count;
 }
 static DEVICE_ATTR(touchkey_firm_version_phone, S_IRUGO,
-					set_touchkey_firm_version_show, NULL);
+set_touchkey_firm_version_show, NULL);
 
-static ssize_t set_touchkey_firm_version_read_show(struct device *dev,
-						struct device_attribute *attr,
-						char *buf)
+static ssize_t set_touchkey_firm_version_read_show
+(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	char data[3] = { 0, };
 	int count, ret;
@@ -379,23 +374,22 @@ static ssize_t set_touchkey_firm_version_read_show(struct device *dev,
 	mutex_lock(&cptk->lock);
 	ret = cptk_i2c_read(cptk, KEYCODE_REG, data, 3);
 	if (ret) {
-		pr_err("cptk: %s: error in cptk_i2c_read\n" , __func__);
+		pr_err("cptk : %s: error in cptk_i2c_read\n" , __func__);
 		mutex_unlock(&cptk->lock);
 		return ret;
 	}
 	mutex_unlock(&cptk->lock);
 	count = sprintf(buf, "0x%.2X\n", data[1]);
-	pr_debug("cptk: touch_version_read 0x%.2X\n", data[1]);
+	pr_debug("cptk :touch_version_read 0x%.2X\n", data[1]);
 
 	return count;
 }
 static DEVICE_ATTR(touchkey_firm_version_panel, S_IRUGO,
-				set_touchkey_firm_version_read_show, NULL);
+set_touchkey_firm_version_read_show, NULL);
 
 static ssize_t touch_led_control(struct device *dev,
-					struct device_attribute *attr,
-					const char *buf,
-					size_t size)
+		struct device_attribute *attr, const char *buf,
+		size_t size)
 {
 	struct cptk_data *cptk = dev_get_drvdata(dev);
 	int data;
@@ -412,27 +406,27 @@ static ssize_t touch_led_control(struct device *dev,
 	data = data<<4;
 	cptk_i2c_write(cptk, KEYCODE_REG, data);
 	cptk->led_status = data;
-	msleep(20);	/* To need a minimum 14ms. time at mode changing */
 	mutex_unlock(&cptk->lock);
 
 	return size;
 }
 static DEVICE_ATTR(brightness, S_IRUGO | S_IWUSR | S_IWGRP,
-						NULL, touch_led_control);
+		NULL, touch_led_control);
 
 static ssize_t touchkey_menu_show(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	struct cptk_data *cptk = dev_get_drvdata(dev);
 	u8 data[2];
-	int menu_sensitivity = 0;
+	int ret;
+	int menu_sensitivity;
 
 	mutex_lock(&cptk->lock);
-	if (cptk_i2c_read(cptk, DIFF_DATA_REG, data, sizeof(data)) >= 0)
-		menu_sensitivity = ((0x00FF&data[0])<<8)|data[1];
+	ret = cptk_i2c_read(cptk, DIFF_DATA_REG,
+			data, sizeof(data));
 
-	pr_debug("cptk: menu_sensitivity = %d\n", menu_sensitivity);
+	menu_sensitivity = ((0x00FF&data[0])<<8)|data[1];
+	pr_debug("cptk : menu_sensitivity = %d\n", menu_sensitivity);
 
 	mutex_unlock(&cptk->lock);
 
@@ -441,19 +435,20 @@ static ssize_t touchkey_menu_show(struct device *dev,
 static DEVICE_ATTR(touchkey_menu, S_IRUGO, touchkey_menu_show, NULL);
 
 static ssize_t touchkey_back_show(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+		struct device_attribute *attr, char *buf)
 {
 
 	u8 data[2];
-	int back_sensitivity = 0;
+	int ret;
+	int back_sensitivity;
 
 	struct cptk_data *cptk = dev_get_drvdata(dev);
 	mutex_lock(&cptk->lock);
-	if (cptk_i2c_read(cptk, DIFF_DATA_REG + 2, data, sizeof(data)) >= 0)
-		back_sensitivity = ((0x00FF&data[0])<<8)|data[1];
+	ret = cptk_i2c_read(cptk, DIFF_DATA_REG + 2,
+			data, sizeof(data));
 
-	pr_debug("cptk: back_sensitivity = %d\n", back_sensitivity);
+	back_sensitivity = ((0x00FF&data[0])<<8)|data[1];
+	pr_debug("cptk : back_sensitivity = %d\n", back_sensitivity);
 
 	mutex_unlock(&cptk->lock);
 
@@ -462,55 +457,53 @@ static ssize_t touchkey_back_show(struct device *dev,
 static DEVICE_ATTR(touchkey_back, S_IRUGO, touchkey_back_show, NULL);
 
 static ssize_t touch_sensitivity_control(struct device *dev,
-						struct device_attribute *attr,
-						const char *buf,
-						size_t size)
+		struct device_attribute *attr, const char *buf,
+		size_t size)
 {
 	struct cptk_data *cptk = dev_get_drvdata(dev);
 
 	mutex_lock(&cptk->lock);
 	cptk_i2c_write(cptk, KEYCODE_REG, SENS_EN_CMD);
-	msleep(20);	/* To need a minimum 14ms. time at mode changing */
 	mutex_unlock(&cptk->lock);
 
 	return size;
 }
-static DEVICE_ATTR(touch_sensitivity, S_IRUGO | S_IWUSR | S_IWGRP,
-					NULL, touch_sensitivity_control);
+static DEVICE_ATTR(touch_sensitivity,
+		S_IRUGO | S_IWUSR | S_IWGRP,
+		NULL, touch_sensitivity_control);
 
 static ssize_t touchkey_raw_data0_show(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
 	u8 data[2];
-	u16 raw_data0 = 0;
+	int ret;
+	u16 raw_data0;
 
-	if (cptk_i2c_read(tkey_i2c, RAW_DATA_REG, data, sizeof(data)) >= 0)
-		raw_data0 = ((0x00FF & data[0]) << 8) | data[1];
+	ret = cptk_i2c_read(tkey_i2c, RAW_DATA_REG, data, sizeof(data));
+	raw_data0 = ((0x00FF & data[0]) << 8) | data[1];
 
 	return sprintf(buf, "%d\n", raw_data0);
 }
 static DEVICE_ATTR(touchkey_raw_data0, S_IRUGO, touchkey_raw_data0_show, NULL);
 
 static ssize_t touchkey_raw_data1_show(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
 	u8 data[2];
-	u16 raw_data1 = 0;
+	int ret;
+	u16 raw_data1;
 
-	if (cptk_i2c_read(tkey_i2c, RAW_DATA_REG + 2, data, sizeof(data)) >= 0)
-		raw_data1 = ((0x00FF & data[0]) << 8) | data[1];
+	ret = cptk_i2c_read(tkey_i2c, RAW_DATA_REG + 2, data, sizeof(data));
+	raw_data1 = ((0x00FF & data[0]) << 8) | data[1];
 
 	return sprintf(buf, "%d\n", raw_data1);
 }
 static DEVICE_ATTR(touchkey_raw_data1, S_IRUGO, touchkey_raw_data1_show, NULL);
 
 static ssize_t touchkey_threshold_show(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
 	u8 data;
@@ -524,8 +517,7 @@ static ssize_t touchkey_threshold_show(struct device *dev,
 static DEVICE_ATTR(touchkey_threshold, S_IRUGO, touchkey_threshold_show, NULL);
 
 static ssize_t touchkey_autocal_status_show(struct device *dev,
-						struct device_attribute *attr,
-						char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
 	u8 data;
@@ -540,8 +532,7 @@ static ssize_t touchkey_autocal_status_show(struct device *dev,
 static DEVICE_ATTR(autocal_stat, S_IRUGO, touchkey_autocal_status_show, NULL);
 
 static ssize_t touchkey_idac0_show(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
 	u8 data;
@@ -551,11 +542,11 @@ static ssize_t touchkey_idac0_show(struct device *dev,
 
 	return sprintf(buf, "%d\n", data);
 }
-static DEVICE_ATTR(touchkey_idac0, S_IRUGO, touchkey_idac0_show, NULL);
+static DEVICE_ATTR(touchkey_idac0, S_IRUGO,
+		touchkey_idac0_show, NULL);
 
 static ssize_t touchkey_idac1_show(struct device *dev,
-					struct device_attribute *attr,
-					char *buf)
+		struct device_attribute *attr, char *buf)
 {
 	struct cptk_data *tkey_i2c = dev_get_drvdata(dev);
 	u8 data;
@@ -565,128 +556,129 @@ static ssize_t touchkey_idac1_show(struct device *dev,
 
 	return sprintf(buf, "%d\n", data);
 }
-static DEVICE_ATTR(touchkey_idac1, S_IRUGO, touchkey_idac1_show, NULL);
+static DEVICE_ATTR(touchkey_idac1, S_IRUGO,
+		touchkey_idac1_show, NULL);
 
 static int cptk_create_sec_touchkey(struct cptk_data *cptk)
 {
 	int ret;
 
-	cptk->sec_touchkey = device_create(sec_class, NULL, 0, NULL,
-								"sec_touchkey");
+	cptk->sec_touchkey = device_create(sec_class, NULL,
+			0, NULL, "sec_touchkey");
 	if (IS_ERR(cptk->sec_touchkey))
 		goto err;
 
 	ret = device_create_file(cptk->sec_touchkey, &dev_attr_brightness);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
+		pr_err("cptk :Failed to create device file %s\n",
 				dev_attr_brightness.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_firm_update);
+		&dev_attr_touchkey_firm_update);
 	if (ret < 0) {
 		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touchkey_firm_update.attr.name);
+			dev_attr_touchkey_firm_update.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_firm_update_status);
+		&dev_attr_touchkey_firm_update_status);
 	if (ret < 0) {
 		pr_err("cptk: Failed to create device file(%s)!\n",
-				dev_attr_touchkey_firm_update_status.attr.name);
+		dev_attr_touchkey_firm_update_status.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_firm_version_phone);
+		&dev_attr_touchkey_firm_version_phone);
 	if (ret < 0) {
 		pr_err("cptk: Failed to create device file(%s)!\n",
-				dev_attr_touchkey_firm_version_phone.attr.name);
+		dev_attr_touchkey_firm_version_phone.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_firm_version_panel);
+		&dev_attr_touchkey_firm_version_panel);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file(%s)!\n",
+		pr_err("cptk :Failed to create device file(%s)!\n",
 		dev_attr_touchkey_firm_version_panel.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_menu);
+			&dev_attr_touchkey_menu);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
+		pr_err("cptk : Failed to create device file %s\n",
 		dev_attr_touchkey_menu.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_back);
+			&dev_attr_touchkey_back);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touchkey_back.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_back.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touch_sensitivity);
+			&dev_attr_touch_sensitivity);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touch_sensitivity.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touch_sensitivity.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_raw_data0);
+			&dev_attr_touchkey_raw_data0);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touchkey_raw_data0.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_raw_data0.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_raw_data1);
+			&dev_attr_touchkey_raw_data1);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touchkey_raw_data1.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_raw_data1.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_threshold);
+			&dev_attr_touchkey_threshold);
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touchkey_threshold.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_threshold.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_autocal_stat);
+			&dev_attr_autocal_stat);
 
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_autocal_stat.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_autocal_stat.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_idac0);
+			&dev_attr_touchkey_idac0);
 
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touchkey_idac0.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_idac0.attr.name);
 		goto err;
 	}
 
 	ret = device_create_file(cptk->sec_touchkey,
-					&dev_attr_touchkey_idac1);
+			&dev_attr_touchkey_idac1);
 
 	if (ret < 0) {
-		pr_err("cptk: Failed to create device file %s\n",
-				dev_attr_touchkey_idac1.attr.name);
+		pr_err("cptk : Failed to create device file %s\n",
+		dev_attr_touchkey_idac1.attr.name);
 		goto err;
 	}
 
@@ -697,7 +689,7 @@ err:
 	return -EINVAL;
 }
 static int __devinit cptk_i2c_probe(struct i2c_client *client,
-						const struct i2c_device_id *id)
+			const struct i2c_device_id *id)
 {
 	struct cptk_data *cptk;
 	int ret;
@@ -771,7 +763,8 @@ static int __devinit cptk_i2c_probe(struct i2c_client *client,
 	}
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-	cptk->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 2;
+	cptk->early_suspend.level =
+		EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 2;
 	cptk->early_suspend.suspend = (void *) cptk_early_suspend;
 	cptk->early_suspend.resume = (void *) cptk_late_resume;
 	register_early_suspend(&cptk->early_suspend);
@@ -780,12 +773,9 @@ static int __devinit cptk_i2c_probe(struct i2c_client *client,
 	cptk_i2c_write(cptk, KEYCODE_REG, AUTO_CAL_MODE_CMD);
 	cptk_i2c_write(cptk, CMD_REG, AUTO_CAL_EN_CMD);
 
-	ret = request_threaded_irq(client->irq,
-					NULL,
-					cptk_irq_thread,
-					IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-					DEVICE_NAME,
-					cptk);
+	ret = request_threaded_irq(client->irq, NULL, cptk_irq_thread,
+				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+				   DEVICE_NAME, cptk);
 	if (ret < 0)
 		goto err_exit2;
 

@@ -51,7 +51,6 @@
 
 #define CABLE_DETECT_VALUE	1150
 #define HIGH_BLOCK_TEMP         500
-#define HIGH_BLOCK_TEMP_OMAP4460         610
 #define HIGH_RECOVER_TEMP       420
 #define LOW_BLOCK_TEMP          (-50)
 #define LOW_RECOVER_TEMP        0
@@ -248,10 +247,6 @@ static int read_fuel_value(enum fuel_property fg_prop)
 	return 0;
 }
 
-#ifdef CONFIG_SAMSUNG_Y_CABLE
-extern s16 adc_val;
-#endif
-
 static int check_charger_type(void)
 {
 	int cable_type;
@@ -267,13 +262,6 @@ static int check_charger_type(void)
 		cable_type == CABLE_TYPE_AC ? "TA" : "USB",
 		adc);
 
-#ifdef CONFIG_SAMSUNG_Y_CABLE
-	if (adc_val > 2606 && adc_val < 2855) {
-		/*practically we found adc for y cable to be 2731*/
-		cable_type = CABLE_TYPE_AC;
-		pr_info("Cable type for Y cable force changed to CABLE_TYPE_AC");
-	}
-#endif
 	return cable_type;
 }
 
@@ -404,11 +392,6 @@ void __init omap4_espresso10_charger_init(void)
 		battery_manager_pdata.high_recover_temp = BB_HIGH_RECOVER_TEMP;
 		battery_manager_pdata.low_block_temp = BB_LOW_BLOCK_TEMP;
 		battery_manager_pdata.low_recover_temp = BB_LOW_RECOVER_TEMP;
-	}
-	if (cpu_is_omap446x() && (board_type ==
-				SEC_MACHINE_ESPRESSO10_USA_BBY)) {
-		battery_manager_pdata.high_block_temp =
-			HIGH_BLOCK_TEMP_OMAP4460;
 	}
 
 	battery_manager_pdata.bootmode = sec_bootmode;

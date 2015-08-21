@@ -37,6 +37,9 @@
 /* GT-I9260 */
 #define SEC_MACHINE_SUPERIOR		0x07
 
+/* GT-I9270 */
+#define SEC_MACHINE_PALAU		0x08
+
 /* GT-N5100 */
 /* Without WACOM */
 #define SEC_MACHINE_KONA		0x09

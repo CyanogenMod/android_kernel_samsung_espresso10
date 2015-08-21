@@ -74,19 +74,19 @@ static int show_schedstat(struct seq_file *seq, void *v)
 static int schedstat_open(struct inode *inode, struct file *file)
 {
 	unsigned int size = PAGE_SIZE * (1 + num_online_cpus() / 32);
+	char *buf = kmalloc(size, GFP_KERNEL);
 	struct seq_file *m;
 	int res;
 
+	if (!buf)
+		return -ENOMEM;
 	res = single_open(file, show_schedstat, NULL);
-	if (res)
-		return res;
-
-
-	m = file->private_data;
-	res = seq_reserve(m, size);
-	if (res)
-		single_release(inode, file);
-
+	if (!res) {
+		m = file->private_data;
+		m->buf = buf;
+		m->size = size;
+	} else
+		kfree(buf);
 	return res;
 }
 

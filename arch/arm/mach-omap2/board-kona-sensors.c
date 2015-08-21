@@ -45,11 +45,6 @@ enum {
 	NUM_ACC_INT,
 };
 
-enum {
-	NUM_GP2A_THRESH_L = 0,
-	NUM_GP2A_THRESH_H,
-};
-
 struct gpio sensors_gpios[] = {
 	[NUM_PS_VOUT] = {
 		.flags = GPIOF_IN,
@@ -293,20 +288,6 @@ void __init omap4_kona_sensors_init(void)
 
 	gp2a_pdata.p_out = sensors_gpios[NUM_PS_VOUT].gpio;
 	gp2a020_data.p_out = sensors_gpios[NUM_PS_ALS_INT].gpio;
-
-	/* for proximity sensor threshold */
-	gp2a020_data.thresh[NUM_GP2A_THRESH_L] = 10;
-	gp2a020_data.thresh[NUM_GP2A_THRESH_H] = 11;
-
-	/* for light sensor lux */
-	gp2a020_data.d0_value[D0_BND] = 91;
-	gp2a020_data.d0_value[D0_COND1] = 40;
-	gp2a020_data.d0_value[D0_COND1_A] = 711;
-	gp2a020_data.d0_value[D0_COND2] = 62;
-	gp2a020_data.d0_value[D0_COND2_A] = 1534;
-	gp2a020_data.d0_value[D0_COND2_B] = 2056;
-	gp2a020_data.d0_value[D0_COND3_A] = 812;
-	gp2a020_data.d0_value[D0_COND3_B] = 893;
 
 	if (system_rev > 4) {
 		kona_i2c4_boardinfo_rev03[ACCEL].irq =

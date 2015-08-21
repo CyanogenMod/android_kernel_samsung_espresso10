@@ -2060,7 +2060,6 @@ static void cfq_dispatch_insert(struct request_queue *q, struct request *rq)
 	cfq_remove_request(rq);
 	cfqq->dispatched++;
 	(RQ_CFQG(rq))->dispatched++;
-	rq->ioprio = IOPRIO_PRIO_VALUE(cfqq->ioprio_class, cfqq->ioprio);
 	elv_dispatch_sort(q, rq);
 
 	cfqd->rq_in_flight[cfq_cfqq_sync(cfqq)]++;
@@ -3654,9 +3653,6 @@ static inline int __cfq_may_queue(struct cfq_queue *cfqq)
 		cfq_mark_cfqq_must_alloc_slice(cfqq);
 		return ELV_MQUEUE_MUST;
 	}
-
-	if (cfq_class_rt(cfqq))
-		return ELV_MQUEUE_MUST;
 
 	return ELV_MQUEUE_MAY;
 }

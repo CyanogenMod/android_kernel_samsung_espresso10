@@ -114,7 +114,7 @@ static struct wm8994_pdata wm1811_pdata = {
 	.jd_ext_cap = 1,
 
 	/* Regulated mode at highest output voltage */
-	.micbias = { 0x2f, 0x27 },
+	.micbias = { 0x2f, 0x29 },
 
 	.micd_lvl_sel = 0xFF,
 

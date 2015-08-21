@@ -87,17 +87,8 @@
 #define MASK_SWITCH_UART_AP		0x02
 
 
-#define T1_MHL_SWING_LEVEL		0xFA
-
-#define SWCAP_TRIM_OFFSET		(0x30)
-#define SWCAP_TRIM_OFFSET_HOST			(0x00)
-#define BGTRIM_TRIM_OFFSET_HOST			(0x00)
-#define RTERM_RMX_OFFSET_HOST			(0x00)
-#define REF_GEN_TEST	0x06
-#define REF_GEN_TEST_HOST	0x00
-#define RTERM_CAL_OFFSET_HOST			(0x00)
-#define HS_CODE_SEL_HOST	(0x7)
-#define SQ_OFF_CODE_DAC3_OFFSET_HOST	(0x3)
+#define T1_MHL_SWING_LEVEL		0xFF
+#define SWCAP_TRIM_OFFSET		0x24
 
 #if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
 static int otg_en;
@@ -111,13 +102,10 @@ struct t1_otg {
 
 	struct regulator	*vusb;
 	struct work_struct	set_vbus_work;
-	struct delayed_work	usb_disconn_w;
 	struct mutex		lock;
 
 	bool			reg_on;
-	bool			vbus_on;
 	bool			need_vbus_drive;
-	bool			usb_phy_suspend_lock;
 	int			usb_manual_mode;
 	int			uart_manual_mode;
 	int			current_device;
@@ -133,19 +121,6 @@ struct t1_otg {
 #endif
 };
 static struct t1_otg t1_otg_xceiv;
-
-#define USB_PHY_SUSPEND_LOCK()		\
-do {		\
-	t1_otg_xceiv.usb_phy_suspend_lock = 1;	\
-} while (0)
-
-#define USB_PHY_SUSPEND_UNLOCK()	\
-do {		\
-	t1_otg_xceiv.usb_phy_suspend_lock = 0;	\
-} while (0)
-
-#define IS_USB_PHY_SUSPEND_LOCK()	\
-	(t1_otg_xceiv.usb_phy_suspend_lock == 1 ? 1 : 0)
 
 enum {
 	T1_DESKDOCK_CHARGER_DEFAULT = 0,
@@ -293,67 +268,38 @@ static void t1_otg_set_dock_switch(int state)
 
 static void t1_vusb_enable(struct t1_otg *t1_otg, bool enable)
 {
-	pr_info("[%s] enable=%d\n", __func__, enable);
-
-	if (t1_otg->reg_on  != enable) {
-		/* delay getting the regulator until later */
-		if (IS_ERR_OR_NULL(t1_otg->vusb)) {
-			t1_otg->vusb = regulator_get(&t1_otg->dev, "vusb");
-			if (IS_ERR(t1_otg->vusb)) {
-				dev_err(&t1_otg->dev, "cannot get vusb regulator\n");
-				return;
-			}
-		}
-
-		if (IS_USB_PHY_SUSPEND_LOCK() && !enable) {
-			pr_err("%s phy suspend is locked\n", __func__);
+	/* delay getting the regulator until later */
+	if (IS_ERR_OR_NULL(t1_otg->vusb)) {
+		t1_otg->vusb = regulator_get(&t1_otg->dev, "vusb");
+		if (IS_ERR(t1_otg->vusb)) {
+			dev_err(&t1_otg->dev, "cannot get vusb regulator\n");
 			return;
 		}
+	}
 
-		if (enable) {
-			regulator_enable(t1_otg->vusb);
-			t1_otg->reg_on = true;
-		} else if (t1_otg->reg_on) {
-			regulator_disable(t1_otg->vusb);
-			t1_otg->reg_on = false;
-		}
-	} else
-		pr_err("%s error. already set\n", __func__);
+	if (enable) {
+		regulator_enable(t1_otg->vusb);
+		t1_otg->reg_on = true;
+	} else if (t1_otg->reg_on) {
+		regulator_disable(t1_otg->vusb);
+		t1_otg->reg_on = false;
+	}
 }
 
 static void t1_set_vbus_drive(bool enable)
 {
 #if !defined(CONFIG_USB_SWITCH_FSA9480_DISABLE_OTG)
-	struct t1_otg *t1_otg = &t1_otg_xceiv;
 	pr_info("otg t1_set_vbus_drive gpio %d : %s\n",
 			otg_en,
 			enable ? "ON" : "OFF");
 
-	if (t1_otg->vbus_on != enable) {
-		if (t1_otg->pdata->usbhostd_wakeup && !!enable)
-			t1_otg->pdata->usbhostd_wakeup();
-		if (enable)
-			host_notify_set_ovc_en
-				(&t1_otg->pdata->ndev, NOTIFY_SET_ON);
-		else
-			host_notify_set_ovc_en
-				(&t1_otg->pdata->ndev, NOTIFY_SET_OFF);
-		gpio_set_value(otg_en, !!enable);
-		t1_otg->vbus_on = enable;
-	} else
-		pr_err("%s error. already set\n", __func__);
+	gpio_set_value(otg_en, !!enable);
 #endif
 }
 
 static void t1_ap_usb_attach(struct t1_otg *t1_otg)
 {
-	pr_info("[%s]\n", __func__);
-	USB_PHY_SUSPEND_LOCK();
-	if (!cancel_delayed_work_sync(&t1_otg->usb_disconn_w))
-		t1_vusb_enable(t1_otg, true);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET, 0, 0);
-	omap4460_phy_tuning_for_eyediagram(0, 0, 0x1);
-	USB_PHY_SUSPEND_UNLOCK();
+	t1_vusb_enable(t1_otg, true);
 
 	t1_mux_usb_to_fsa(true);
 	fsa9480_set_switch(fsa9480_usbsw, "AUTO");
@@ -361,7 +307,7 @@ static void t1_ap_usb_attach(struct t1_otg *t1_otg)
 	t1_otg->otg.state = OTG_STATE_B_IDLE;
 	t1_otg->otg.default_a = false;
 	t1_otg->otg.last_event = USB_EVENT_VBUS;
-
+	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET);
 	atomic_notifier_call_chain(&t1_otg->otg.notifier,
 				   USB_EVENT_VBUS, t1_otg->otg.gadget);
 
@@ -369,7 +315,7 @@ static void t1_ap_usb_attach(struct t1_otg *t1_otg)
 
 static void t1_ap_usb_detach(struct t1_otg *t1_otg)
 {
-	pr_info("[%s]\n", __func__);
+	t1_vusb_enable(t1_otg, false);
 
 	t1_otg->otg.state = OTG_STATE_B_IDLE;
 	t1_otg->otg.default_a = false;
@@ -377,13 +323,7 @@ static void t1_ap_usb_detach(struct t1_otg *t1_otg)
 	omap4430_phy_remove_for_eyediagram();
 	atomic_notifier_call_chain(&t1_otg->otg.notifier,
 				   USB_EVENT_NONE, t1_otg->otg.gadget);
-	/*
-	 * Turning off regulator after usb disconnecting housekeeping
-	 * function completes so scheduling the delayed work fn
-	 * after 1ms
-	 *
-	 */
-	schedule_delayed_work(&t1_otg->usb_disconn_w, usecs_to_jiffies(1000));
+
 }
 
 static void t1_cp_usb_attach(struct t1_otg *t1_otg)
@@ -411,46 +351,30 @@ static void t1_cp_usb_detach(struct t1_otg *t1_otg)
 
 static void t1_usb_host_attach(struct t1_otg *t1_otg)
 {
-	pr_info("[%s]\n", __func__);
 	t1_set_vbus_drive(false);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	if (t1_otg->pdata && t1_otg->pdata->usbhostd_start) {
-		host_notify_set_ovc_en
-			(&t1_otg->pdata->ndev, NOTIFY_SET_OFF);
-		t1_otg->pdata->ndev.mode = NOTIFY_HOST_MODE;
-		t1_otg->pdata->usbhostd_start();
-	}
-#endif
-
-	USB_PHY_SUSPEND_LOCK();
 	t1_vusb_enable(t1_otg, true);
-	omap4430_phy_init_for_eyediagram
-		(SWCAP_TRIM_OFFSET_HOST, BGTRIM_TRIM_OFFSET_HOST
-				, RTERM_RMX_OFFSET_HOST);
-	omap4460_phy_tuning_for_eyediagram
-		(RTERM_CAL_OFFSET_HOST, SQ_OFF_CODE_DAC3_OFFSET_HOST
-				, HS_CODE_SEL_HOST);
-	USB_PHY_SUSPEND_UNLOCK();
-
 	t1_mux_usb_to_fsa(true);
 
 	t1_otg->otg.state = OTG_STATE_A_IDLE;
 	t1_otg->otg.default_a = true;
 	t1_otg->otg.last_event = USB_EVENT_ID;
 
+	omap4430_phy_init_for_eyediagram(0x2a);
+
 	atomic_notifier_call_chain(&t1_otg->otg.notifier,
 				   USB_EVENT_ID, t1_otg->otg.gadget);
+
+#ifdef CONFIG_USB_HOST_NOTIFY
+	if (t1_otg->pdata && t1_otg->pdata->usbhostd_start) {
+		t1_otg->pdata->ndev.mode = NOTIFY_HOST_MODE;
+		t1_otg->pdata->usbhostd_start();
+	}
+#endif
 }
 
 static void t1_usb_host_detach(struct t1_otg *t1_otg)
 {
-	pr_info("[%s]\n", __func__);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	if (t1_otg->pdata && t1_otg->pdata->usbhostd_stop) {
-		t1_otg->pdata->ndev.mode = NOTIFY_NONE_MODE;
-		t1_otg->pdata->usbhostd_stop();
-	}
-#endif
+	t1_vusb_enable(t1_otg, false);
 
 	t1_otg->otg.state = OTG_STATE_B_IDLE;
 	t1_otg->otg.default_a = false;
@@ -459,11 +383,17 @@ static void t1_usb_host_detach(struct t1_otg *t1_otg)
 	omap4430_phy_remove_for_eyediagram();
 
 	atomic_notifier_call_chain(&t1_otg->otg.notifier,
-				   USB_EVENT_HOST_NONE, t1_otg->otg.gadget);
+				   USB_EVENT_NONE, t1_otg->otg.gadget);
+
+#ifdef CONFIG_USB_HOST_NOTIFY
+	if (t1_otg->pdata && t1_otg->pdata->usbhostd_stop) {
+		t1_otg->pdata->ndev.mode = NOTIFY_NONE_MODE;
+		t1_otg->pdata->usbhostd_stop();
+	}
+#endif
 
 	/* Make sure the VBUS drive is turned off */
 	t1_set_vbus_drive(false);
-	t1_vusb_enable(t1_otg, false);
 }
 
 static int __t1_usb_host_shutdown_call(struct notifier_block *this,
@@ -493,12 +423,6 @@ static void __init t1_usb_host_reboot_init(void)
 
 	if (unlikely(acc_out != -EINVAL))
 		register_reboot_notifier(&t1_usb_host_reboot_notifier);
-}
-
-static int t1_usb_host_check_notify_test_mode
-				(struct t1_otg *t1_otg)
-{
-	return (t1_otg->pdata->ndev.mode == NOTIFY_TEST_MODE) ? 1 : 0;
 }
 
 static void t1_ap_uart_actions(struct t1_otg *t1_otg)
@@ -624,8 +548,7 @@ static void t1_fsa_usb_detected(int device)
 		break;
 	case FSA9480_DETECT_UART:
 		t1_otg->jig_uart_connected = true;
-		if ((!gpio_get_value(t1_otg->gpio_ta_nconnected)) &&
-				(!t1_usb_host_check_notify_test_mode(t1_otg))) {
+		if (!gpio_get_value(t1_otg->gpio_ta_nconnected)) {
 			t1_mux_usb_to_fsa(true);
 			t1_otg->otg.state = OTG_STATE_B_IDLE;
 			t1_otg->otg.default_a = false;
@@ -661,7 +584,6 @@ static void t1_fsa_usb_detected(int device)
 			if (t1_otg->car_dock_connected) {
 				if (t1_otg->irq_ta_nconnected)
 					disable_irq(t1_otg->irq_ta_nconnected);
-				fsa9480_set_switch(fsa9480_usbsw, "AUTO");
 				t1_otg_set_dock_switch(T1_DOCK_NONE);
 				t1_otg->car_dock_connected = false;
 			} else if (t1_otg->uart_manual_mode ==
@@ -721,8 +643,7 @@ static void t1_fsa_usb_detected(int device)
 		} else {
 			fsa9480_set_switch(fsa9480_usbsw, "VAUDIO");
 			t1_otg_set_dock_switch(T1_DOCK_CAR);
-			if ((!gpio_get_value(t1_otg->gpio_ta_nconnected)) &&
-				(!t1_usb_host_check_notify_test_mode(t1_otg))) {
+			if (!gpio_get_value(t1_otg->gpio_ta_nconnected)) {
 				t1_mux_usb_to_fsa(true);
 				t1_otg->otg.state = OTG_STATE_B_IDLE;
 				t1_otg->otg.default_a = false;
@@ -801,13 +722,6 @@ static int t1_otg_set_peripheral(struct otg_transceiver *otg,
 	return 0;
 }
 
-static void usb_disconnect_work_fn(struct work_struct *w)
-{
-	struct t1_otg *t1_otg = container_of(w, struct t1_otg,
-					     usb_disconn_w);
-	t1_vusb_enable(t1_otg, false);
-}
-
 static void t1_otg_work(struct work_struct *data)
 {
 	struct t1_otg *t1_otg = container_of(data, struct t1_otg,
@@ -829,7 +743,7 @@ static void t1_otg_work(struct work_struct *data)
 static int t1_otg_set_vbus(struct otg_transceiver *otg, bool enabled)
 {
 	struct t1_otg *t1_otg = container_of(otg, struct t1_otg, otg);
-	dev_info(otg->dev, "vbus %s\n", enabled ? "on" : "off");
+	dev_dbg(otg->dev, "vbus %s\n", enabled ? "on" : "off");
 
 	t1_otg->need_vbus_drive = enabled;
 	schedule_work(&t1_otg->set_vbus_work);
@@ -853,39 +767,12 @@ static void t1_otg_phy_shutdown(struct otg_transceiver *otg)
 
 static int t1_otg_set_suspend(struct otg_transceiver *otg, int suspend)
 {
-	int ret = 0;
-	dev_info(otg->dev, "%s = %d\n", __func__, suspend);
-
-	if (IS_USB_PHY_SUSPEND_LOCK() && suspend)
-		dev_info(otg->dev, "phy suspend is locked\n");
-	else
-		ret = omap4430_phy_suspend(otg->dev, suspend);
-
-	return ret;
+	return omap4430_phy_suspend(otg->dev, suspend);
 }
 
 static int t1_otg_is_active(struct otg_transceiver *otg)
 {
 	return omap4430_phy_is_active(otg->dev);
-}
-
-static int t1_otg_vbus_reset(struct otg_transceiver *otg)
-{
-	struct t1_otg *t1_otg =
-	    container_of(otg, struct t1_otg, otg);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	host_notify_set_ovc_en(&t1_otg->pdata->ndev, NOTIFY_SET_OFF);
-	t1_otg->pdata->ndev.booster = NOTIFY_POWER_OFF;
-#endif
-	t1_otg_set_vbus(otg, 0);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	if (t1_otg->pdata->ndev.mode == NOTIFY_HOST_MODE)
-#endif
-		t1_otg_set_vbus(otg, 1);
-#ifdef CONFIG_USB_HOST_NOTIFY
-	host_notify_set_ovc_en(&t1_otg->pdata->ndev, NOTIFY_SET_ON);
-#endif
-	return 0;
 }
 
 static ssize_t t1_otg_usb_sel_show(struct device *dev,
@@ -1261,8 +1148,7 @@ static irqreturn_t charge_detection_irq(int irq, void *_data)
 	if (!t1_otg->car_dock_connected && !t1_otg->jig_uart_connected)
 		return IRQ_HANDLED;
 	t1_mux_usb_to_fsa(true);
-	if ((!gpio_get_value(t1_otg->gpio_ta_nconnected)) &&
-		(!t1_usb_host_check_notify_test_mode(t1_otg))) {
+	if (!gpio_get_value(t1_otg->gpio_ta_nconnected)) {
 		t1_otg->otg.state = OTG_STATE_B_IDLE;
 		t1_otg->otg.default_a = false;
 		t1_otg->otg.last_event = USB_EVENT_CHARGER;
@@ -1344,7 +1230,6 @@ void __init omap4_t1_connector_init(void)
 
 	mutex_init(&t1_otg->lock);
 	INIT_WORK(&t1_otg->set_vbus_work, t1_otg_work);
-	INIT_DELAYED_WORK(&t1_otg->usb_disconn_w, usb_disconnect_work_fn);
 	device_initialize(&t1_otg->dev);
 	dev_set_name(&t1_otg->dev, "%s", "t1_otg");
 	ret = device_add(&t1_otg->dev);
@@ -1365,8 +1250,6 @@ void __init omap4_t1_connector_init(void)
 	t1_otg->otg.init		= t1_otg_phy_init;
 	t1_otg->otg.shutdown		= t1_otg_phy_shutdown;
 	t1_otg->otg.is_active		= t1_otg_is_active;
-/* start_hnp function is used for vbus reset. */
-	t1_otg->otg.start_hnp		= t1_otg_vbus_reset;
 
 	ATOMIC_INIT_NOTIFIER_HEAD(&t1_otg->otg.notifier);
 

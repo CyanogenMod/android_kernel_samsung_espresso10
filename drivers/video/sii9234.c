@@ -526,8 +526,6 @@ static int tpi_write_reg(struct sii9234_data *sii9234, unsigned int offset,
 			value);
 }
 
-/* commenting this func as we r not using it currently */
-#if 0
 static int tpi_read_reg(struct sii9234_data *sii9234, unsigned int offset,
 		u8 *value)
 {
@@ -548,7 +546,6 @@ static int tpi_read_reg(struct sii9234_data *sii9234, unsigned int offset,
 
 	return 0;
 }
-#endif
 
 static int hdmi_rx_write_reg(struct sii9234_data *sii9234, unsigned int offset,
 		u8 value)
@@ -2362,7 +2359,7 @@ static CLASS_ATTR(test_result, 0664 , sysfs_check_mhl_command, NULL);
 
 static ssize_t sii9234_swing_level_show(struct device *dev,
 					struct device_attribute *attr,
-					char *buf)
+					char *buf, size_t size)
 {
 	struct sii9234_data *sii9234 = dev_get_drvdata(dev);
 
@@ -2511,7 +2508,7 @@ static int __devinit sii9234_mhl_tx_i2c_probe(struct i2c_client *client,
 		goto err_exit3;
 	}
 	dev_set_drvdata(sec_mhl_dev, sii9234);
-	ret = sysfs_create_file(&sec_mhl_dev->kobj, &dev_attr_swing_level.attr);
+	ret = sysfs_create_file(&sec_mhl_dev->kobj, &dev_attr_swing_level);
 	if (ret) {
 		dev_err(&client->dev, "failed to create swing_level attribute file\n");
 		goto err_exit3;

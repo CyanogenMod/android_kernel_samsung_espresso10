@@ -393,11 +393,11 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     USBB1_HSIC_STROBE,
 		     OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
 		     97, "usbb1_hsic_strobe.nc"),
-	/* [IN---] sim_io - gpio_wk0 - EAR_GND_DET */
+	/* [IN---] sim_io - gpio_wk0 - DET_3.5 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
 		     SIM_IO,
-		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
-		     0, "EAR_GND_DET"),
+		     OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     0, "sim_io.nc"),
 	/* [IN---] sim_clk - gpio_wk1 - 5V_DET */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
 		     SIM_CLK,
@@ -418,7 +418,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 	/* [IN---] sim_pwrctrl - gpio_wk4 - EAR_SEND_END */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
 		     SIM_PWRCTRL,
-		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT_PULLDOWN|
+		     OMAP_MUX_MODE3 | OMAP_PIN_INPUT |
 		     OMAP_PIN_OFF_WAKEUPENABLE,
 		     4, "EAR_SEND_END"),
 	/* [IN---] usbc1_icusb_dp - gpio_98 - nc */

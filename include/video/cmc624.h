@@ -219,7 +219,6 @@ struct cmc624_panel_data {
 	int gpio_ima_sleep;
 	int gpio_ima_nrst;
 	int gpio_ima_cmc_en;
-	bool skip_ldi_cmd;
 	u8 *lcd_name;
 
 	int (*init_tune_list)(void);

@@ -212,7 +212,7 @@ static int wacom_i2c_query(struct wacom_i2c *wac_i2c)
 	pr_info("wacom: y_max=0x%X\n", wac_feature->y_max);
 	pr_info("wacom: pressure_max=0x%X\n",
 	       wac_feature->pressure_max);
-	pr_info("wacom: fw_version=%04X (d7:0x%X,d8:0x%X)\n",
+	pr_info("wacom: fw_version=0x%X (d7:0x%X,d8:0x%X)\n",
 	       wac_feature->fw_version, data[7], data[8]);
 	pr_info("wacom: %X, %X, %X, %X, %X, %X, %X, %X, %X\n",
 	       data[0], data[1], data[2], data[3], data[4], data[5], data[6],
@@ -246,8 +246,6 @@ static int wacom_i2c_coord(struct wacom_i2c *wac_i2c)
 	if (data[0] & 0x80) {
 		if (!wac_i2c->pen_prox) {
 			wac_i2c->pen_prox = true;
-			pr_info("wacom: pdct %d(%d)\n",
-					wac_i2c->pen_pdct, wac_i2c->pen_prox);
 
 			if (data[0] & 0x40)
 				wac_i2c->tool = BTN_TOOL_RUBBER;
@@ -310,8 +308,6 @@ static int wacom_i2c_coord(struct wacom_i2c *wac_i2c)
 		}
 	} else {
 			wac_i2c->pen_prox = false;
-			pr_info("wacom: pdct %d(%d)\n",
-					wac_i2c->pen_pdct, wac_i2c->pen_prox);
 
 			if (wac_i2c->pen_pdct)
 				wacom_i2c_report_pdct(wac_i2c, true);
@@ -319,15 +315,18 @@ static int wacom_i2c_coord(struct wacom_i2c *wac_i2c)
 			x = ((u16) data[1] << 8) + (u16) data[2];
 			y = ((u16) data[3] << 8) + (u16) data[4];
 
+			if (data[0] & 0x40)
+				wac_i2c->tool = BTN_TOOL_RUBBER;
+			else
+				wac_i2c->tool = BTN_TOOL_PEN;
+
 			input_report_abs(wac_i2c->input_dev, ABS_X, x);
 			input_report_abs(wac_i2c->input_dev, ABS_Y, y);
 			input_report_abs(wac_i2c->input_dev, ABS_PRESSURE, 0);
 			input_report_key(wac_i2c->input_dev, BTN_STYLUS, false);
 			input_report_key(wac_i2c->input_dev, BTN_TOUCH, false);
 			input_report_key(wac_i2c->input_dev,
-						BTN_TOOL_RUBBER, false);
-			input_report_key(wac_i2c->input_dev,
-						BTN_TOOL_PEN, false);
+						wac_i2c->tool, false);
 			input_sync(wac_i2c->input_dev);
 	}
 	return 0;
@@ -507,7 +506,7 @@ static irqreturn_t wacom_interrupt_pdct(int irq, void *dev_id)
 
 	wac_i2c->pen_pdct = !gpio_get_value(wac_i2c->wac_pdata->gpio_pendct);
 
-	pr_info("wacom: pdct %d(%d)\n",
+	pr_debug("wacom: pdct %d(%d)\n",
 		wac_i2c->pen_pdct, wac_i2c->pen_prox);
 
 	if (wac_i2c->pen_pdct && !wac_i2c->pen_prox)
@@ -522,7 +521,7 @@ static void handle_pen_detect(struct wacom_i2c *wac_i2c)
 {
 	wac_i2c->pen_insert =
 		!gpio_get_value(wac_i2c->wac_pdata->gpio_pen_insert);
-	pr_info("wacom: pen_insert %d\n", wac_i2c->pen_insert);
+	pr_debug("wacom: pen_detect %d\n", wac_i2c->pen_insert);
 
 	input_report_switch(wac_i2c->input_dev,
 		SW_PEN_INSERT, !wac_i2c->pen_insert);
@@ -653,11 +652,11 @@ static ssize_t epen_firm_version_show(struct device *dev,
 				      struct device_attribute *attr, char *buf)
 {
 	struct wacom_i2c *wac_i2c = dev_get_drvdata(dev);
-	pr_debug("wacom: %s: %04X|%04X\n", __func__,
+	pr_debug("wacom: %s: 0x%x|0x%X\n", __func__,
 		wac_i2c->wac_feature->fw_version,
 		wac_i2c->wac_pdata->fw_version);
 
-	return sprintf(buf, "%04X\t%04X\n",
+	return sprintf(buf, "0x%X\t0x%X\n",
 		wac_i2c->wac_feature->fw_version,
 		wac_i2c->wac_pdata->fw_version);
 }
@@ -993,7 +992,7 @@ static int wacom_i2c_probe(struct i2c_client *client,
 	else
 		wac_i2c->epen_reset_result = true;
 
-	pr_info("wacom: IC fw ver : %04X, bin fw ver : %04X\n",
+	pr_info("wacom: IC fw ver : 0x%x, bin fw ver : 0x%x\n",
 		wac_i2c->wac_feature->fw_version,
 		pdata->fw_version);
 

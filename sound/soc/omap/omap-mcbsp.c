@@ -95,7 +95,7 @@ static void omap_mcbsp_set_threshold(struct snd_pcm_substream *substream)
 	else
 		words = 1;
 
-#ifdef CONFIG_SND_OPEN_SOC_SOURCE
+#ifdef CONFIG_SND_OMAP_SOC_WM8994
 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
 		words = 1;
 #endif
@@ -312,7 +312,7 @@ static int omap_mcbsp_dai_hw_params(struct snd_pcm_substream *substream,
 				sync_mode = OMAP_DMA_SYNC_FRAME;
 			}
 
-#ifdef CONFIG_SND_OPEN_SOC_SOURCE
+#ifdef CONFIG_SND_OMAP_SOC_WM8994
 			if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
 				sync_mode = OMAP_DMA_SYNC_ELEMENT;
 #endif
