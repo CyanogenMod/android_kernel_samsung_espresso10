@@ -27,49 +27,49 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD0,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(0)"),
 	/* [-----] gpmc_ad1.sdmmc2_dat1 - NAND_D(1) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD1,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(1)"),
 	/* [-----] gpmc_ad2.sdmmc2_dat2 - NAND_D(2) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD2,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(2)"),
 	/* [-----] gpmc_ad3.sdmmc2_dat3 - NAND_D(3) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD3,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(3)"),
 	/* [-----] gpmc_ad4.sdmmc2_dat4 - NAND_D(4) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD4,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(4)"),
 	/* [-----] gpmc_ad5.sdmmc2_dat5 - NAND_D(5) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD5,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(5)"),
 	/* [-----] gpmc_ad6.sdmmc2_dat6 - NAND_D(6) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD6,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(6)"),
 	/* [-----] gpmc_ad7.sdmmc2_dat7 - NAND_D(7) */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_AD7,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_D(7)"),
 	/* [IN---] gpmc_ad8.gpio_32 - TA_nCONNECTED */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -164,7 +164,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     51, "VT_CAM_nSTBY"),
 	/* [IN---] gpmc_ncs2.gpio_52 - GPS_CNTL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     GPMC_NCS2, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     GPMC_NCS2, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
 		     52, "GPS_CNTL"),
 	/* [IN---] gpmc_ncs3.gpio_53 - eMMC_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -192,7 +192,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
 		     GPMC_NWE,
 		     OMAP_MUX_MODE1 | OMAP_PIN_INPUT_PULLUP |
-		     OMAP_PIN_OFF_NONE,
+		     OMAP_PIN_OFF_INPUT_PULLDOWN,
 		     OMAP_MUXTBL_NO_GPIO, "NAND_CMD"),
 	/* [--OUT] gpmc_nbe0_cle.gpio_59 - IRDA_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -532,7 +532,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     120, "PHONE_ACTIVE"),
 	/* [IN---] abe_dmic_din2.gpio_121 - ACC_INT2 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     ABE_DMIC_DIN2, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     ABE_DMIC_DIN2, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
 		     121, "ACC_INT2"),
 	/* [-----] abe_dmic_din3.abe_dmic_din3 - ACC_INT */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -670,7 +670,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     150, "WLAN_SD_D(3)"),
 	/* [--OUT] mcspi4_clk.gpio_151 - OTG_EN */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
-		     MCSPI4_CLK, OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     MCSPI4_CLK, OMAP_MUX_MODE3 | OMAP_PIN_OUTPUT,
 		     151, "OTG_EN"),
 	/* [--OUT] mcspi4_simo.gpio_152 - IRDA_CONTROL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,
@@ -876,8 +876,7 @@ static struct omap_muxtbl muxtbl[] __initdata = {
 		     OMAP_MUXTBL_NO_GPIO, "SYS_PWR_REQ"),
 	/* [IN---] sys_pwron_reset_out.gpio_wk29 - BAT_REMOVAL */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_WKUP,
-		     SYS_PWRON_RESET_OUT,
-		     OMAP_MUX_MODE7 | OMAP_PIN_INPUT_PULLDOWN,
+		     SYS_PWRON_RESET_OUT, OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
 		     29, "BAT_REMOVAL"),
 	/* [-----] sys_nirq1.sys_nirq1 - SYS_nIRQ1 */
 	OMAP4_MUXTBL(OMAP4_MUXTBL_DOMAIN_CORE,

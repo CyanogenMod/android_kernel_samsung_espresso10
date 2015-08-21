@@ -1117,15 +1117,7 @@ pktsetprio(void *pkt, bool update_vtag)
 	} else if (ntoh16(eh->ether_type) == ETHER_TYPE_IP) {
 		uint8 *ip_body = pktdata + sizeof(struct ether_header);
 		uint8 tos_tc = IP_TOS46(ip_body);
-#ifdef ZEST_QoS_TEST
-		/* csp633158 patch */
-		uint8 dscp;
-		dscp = tos_tc >> 2;
-		if (dscp == 0x14)
-			priority = PRIO_8021D_BE;
-		else
-#endif /* ZEST_QoS_TEST */
-			priority = (int)(tos_tc >> IPV4_TOS_PREC_SHIFT);
+		priority = (int)(tos_tc >> IPV4_TOS_PREC_SHIFT);
 		rc |= PKTPRIO_DSCP;
 	}
 

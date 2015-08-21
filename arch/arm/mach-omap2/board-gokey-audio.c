@@ -89,48 +89,6 @@ static const struct regulator_init_data wm1811_ldo2_initdata = {
 	.consumer_supplies = wm1811_ldo2_supplies,
 };
 
-/* set the retune mobile, when playback */
-static const struct wm8994_retune_mobile_cfg wm1811_retune_mobile_cfgs[] = {
-	[0] = {
-		.name	= "Speaker EQ Mode",
-		.rate = 44100,
-
-		/* AIF1 DAC1 EQ Gains */
-		.regs[0] = 0x6319,
-		.regs[1] = 0x6281,
-
-		/* AIF1 DAC1 EQ Band 1 */
-		.regs[2] = 0x0FCA,
-		.regs[3] = 0x0400,
-		.regs[4] = 0x00D8,
-
-		/* AIF1 DAC1 EQ Band 2 */
-		.regs[5] = 0x01C0,
-		.regs[6] = 0x01C0,
-		.regs[7] = 0x01C0,
-		.regs[8] = 0x01C0,
-
-		/* AIF1 DAC1 EQ Band 3 */
-		.regs[9] = 0x0000,
-		.regs[10] = 0x0000,
-		.regs[11] = 0x0210,
-		.regs[12] = 0x0210,
-
-		/* AIF1 DAC1 EQ Band 4 */
-		.regs[13] = 0x0068,
-		.regs[14] = 0x0198,
-		.regs[15] = 0x0052,
-		.regs[16] = 0x0052,
-
-		/* AIF1 DAC1 EQ Band 5 */
-		.regs[17] = 0x0020,
-		.regs[18] = 0x03DE,
-		.regs[19] = 0x0000,
-
-		.regs[20] = 0x6319,
-	},
-};
-
 /* set the DRC, when builtin mic enable */
 static const struct wm8994_drc_cfg wm1811_drc_cfgs[] = {
 	[0] = {
@@ -162,6 +120,7 @@ static struct wm8994_pdata wm1811_pdata = {
 		[10] = WM8994_CONFIGURE_GPIO | WM8994_GP_FN_PIN_SPECIFIC,
 	},
 
+
 	/* for using wm1811 jack detect				*/
 	/* This line should be remained for next board.	*/
 	.irq_base = TWL6040_CODEC_IRQ_BASE,
@@ -181,17 +140,10 @@ static struct wm8994_pdata wm1811_pdata = {
 	/* Regulated mode at highest output voltage */
 	.micbias = { 0x2f, 0x29 },
 
-	.micdet_delay = 100,
-
 	.ldo_ena_always_driven = true,
 
 	.num_drc_cfgs = 1,
 	.drc_cfgs = wm1811_drc_cfgs,
-
-	.num_retune_mobile_cfgs = 1,
-	.retune_mobile_cfgs = wm1811_retune_mobile_cfgs,
-
-	.get_earjack_adc = omap4_get_adc_earjack,
 };
 
 static struct i2c_board_info gokey_audio_i2c1_board_info[] __initdata = {

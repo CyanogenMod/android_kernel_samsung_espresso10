@@ -93,7 +93,6 @@ struct radio_data {
 #define SI470X_IOC_SKCNT_GET            _IOR(SI470X_IOC_MAGIC, 27, u32)
 #define SI470X_IOC_AFCRL_GET            _IOR(SI470X_IOC_MAGIC, 28, u8)
 #define SI470X_IOC_STATUS_RSSI_GET      _IOR(SI470X_IOC_MAGIC, 29, u32)
-#define SI470X_IOC_SEEK_FULL            _IOR(SI470X_IOC_MAGIC, 40, unsigned int)
 #define SI470X_IOC_RDS_GET		_IOR(SI470X_IOC_MAGIC, 30, \
 							struct radio_data)
 

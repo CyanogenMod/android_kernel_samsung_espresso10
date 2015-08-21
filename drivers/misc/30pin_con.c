@@ -64,8 +64,8 @@ static void connector_detect_change(struct acc_con_info *acc, s16 *adc_res)
 	s16 adc_sum = 0;
 	s16 adc_buff[5];
 	s16 mili_volt;
-	s16 adc_min = 0;
-	s16 adc_max = 0;
+	s16 adc_min;
+	s16 adc_max;
 
 	if (!acc->pdata->get_accessory_adc) {
 		pr_err("30pin_c: no function to get adc.\n");
@@ -277,18 +277,11 @@ static void acc_notified(struct acc_con_info *acc, s16 acc_adc)
 	}
 }
 
-#ifdef CONFIG_SAMSUNG_Y_CABLE
-s16 adc_val;
-EXPORT_SYMBOL(adc_val);
-#endif
-
 static irqreturn_t acc_id_interrupt(int irq, void *ptr)
 {
 	struct acc_con_info *acc = ptr;
 	int acc_id_val;
-#ifndef CONFIG_SAMSUNG_Y_CABLE
 	s16 adc_val;
-#endif
 	int delay = 10;
 	static int post_state = -1;
 
@@ -312,11 +305,6 @@ static irqreturn_t acc_id_interrupt(int irq, void *ptr)
 	if (acc_id_val) {
 		pr_info("Accessory detached");
 		acc_notified(acc, false);
-#ifdef CONFIG_SAMSUNG_Y_CABLE
-		adc_val = 0;
-/*we are using this value for next detection as well,
-		we need it to be updated at all times*/
-#endif
 	} else {
 		wake_lock(&acc->wake_lock);
 		msleep(420); /* workaround for jack */

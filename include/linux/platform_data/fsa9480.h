@@ -70,7 +70,6 @@ struct fsa9480_platform_data {
 	void				(*desk_dock_charger_removal)(u8);
 	int                             external_vbus_irq;
 	unsigned long                   external_vbus_flags;
-	void				(*save_dev_adc)(u16 dev, u8 adc);
 };
 
 extern struct class *sec_class;

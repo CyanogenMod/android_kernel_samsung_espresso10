@@ -103,6 +103,28 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10-muxset-r00.o \
 				board-espresso10-usa-bby-muxset-r07.o \
 					   board-espresso10-muxset-r08.o
 
+obj-$(CONFIG_MACH_SAMSUNG_PALAU)	+= board-palau.o \
+					   board-palau-emif.o \
+					   board-palau-serial.o \
+					   board-palau-pmic.o \
+					   board-palau-sdio.o \
+					   board-palau-connector.o \
+					   board-palau-power.o	\
+					   board-palau-input.o \
+					   board-palau-nfc.o \
+					   board-palau-sensors.o \
+					   board-palau-bluetooth.o \
+					   board-palau-wifi.o \
+					   board-palau-audio.o \
+					   board-palau-modems.o \
+					   board-palau-display.o \
+					   board-palau-fmradio.o \
+					   board-palau-vibrator.o
+
+obj-$(CONFIG_MACH_SAMSUNG_PALAU)	+= board-palau-muxset-r00.o \
+					   board-palau-muxset-r01.o \
+					   board-palau-muxset-r02.o
+
 obj-$(CONFIG_MACH_SAMSUNG_KONA)		+= board-kona.o \
 					   board-kona-emif.o \
 					   board-kona-serial.o \
@@ -119,12 +141,10 @@ obj-$(CONFIG_MACH_SAMSUNG_KONA)		+= board-kona.o \
 					   board-kona-sensors.o \
 					   board-kona-irled.o \
 					   board-kona-vibrator.o \
-					   board-kona-camera.o \
 					   board-kona-temp.o
 
 obj-$(CONFIG_MACH_SAMSUNG_KONA)		+= board-kona-muxset-r04.o \
-					   board-kona-muxset-r05.o \
-					   board-kona-muxset-r07.o
+					   board-kona-muxset-r05.o
 
 obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR)	+= board-superior.o \
 					   board-superior-emif.o \

@@ -13,7 +13,7 @@
  *
  */
 
-#define DEBUG_PRINT			0
+#define DEBUG_PRINT			1
 
 #if DEBUG_PRINT
 #define	tsp_log(fmt, args...) \
@@ -92,14 +92,12 @@ struct ts_data {
 	u16			addr;
 	u32			flags;
 	bool			finger_state[MELFAS_MAX_TOUCH];
-	size_t			finger_cnt;
 	struct semaphore	poll;
 	struct i2c_client	*client;
 	struct input_dev	*input_dev;
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend	early_suspend;
 #endif
-	u32 fw_version_ic;
 	struct sec_ts_platform_data *platform_data;
 #if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 	struct factory_data	*factory_data;
@@ -149,7 +147,6 @@ static void reset_points(struct ts_data *ts)
 									false);
 	}
 	input_sync(ts->input_dev);
-	ts->finger_cnt = 0;
 	if (ts->platform_data->set_dvfs)
 		ts->platform_data->set_dvfs(false);
 	tsp_log("reset_all_fingers");
@@ -207,7 +204,6 @@ static bool fw_updater(struct ts_data *ts, char const *mode)
 	if (ts_read_reg_data(ts, TS_READ_VERSION_ADDR, 4, buf) > 0) {
 		pr_info("tsp: binary fw. ver: 0x%.2x, IC fw. ver: 0x%.2x\n",
 							fw_version, buf[0]);
-		ts->fw_version_ic = (u32)buf[0];
 	} else {
 		pr_err("tsp: fw. ver. read fail!!\n");
 		mode = "force";
@@ -269,11 +265,10 @@ static bool fw_updater(struct ts_data *ts, char const *mode)
 
 	if (updated) {
 		reset_tsp(ts);
-		if (ts_read_reg_data(ts, TS_READ_VERSION_ADDR, 4, buf) > 0) {
+		if (ts_read_reg_data(ts, TS_READ_VERSION_ADDR, 4, buf) > 0)
 			pr_info("tsp: fw. ver. : new.(%.2x), cur.(%.2x)\n",
 							fw_version, buf[0]);
-			ts->fw_version_ic = (u32)buf[0];
-		} else
+		else
 			pr_err("tsp: fw. ver. read fail!!\n");
 	}
 
@@ -508,10 +503,18 @@ static void get_fw_ver_ic(void *device_data)
 	struct ts_data *ts_data = (struct ts_data *)device_data;
 	struct factory_data *data = ts_data->factory_data;
 
+	u8 buf[2];
+
 	data->cmd_state = RUNNING;
 
+	if (ts_read_reg_data(ts_data, TS_READ_VERSION_ADDR, 1, buf) < 0) {
+		pr_err("tsp: i2c read data failed.");
+		data->cmd_state = FAIL;
+		return;
+	}
+
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%.2x", ts_data->fw_version_ic);
+	sprintf(data->cmd_buff, "%.2x", buf[0]);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
 	data->cmd_state = OK;
@@ -1154,6 +1157,7 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 	int ret = 0, i;
 	int event_packet_size, id, x, y;
 	u8 buf[6 * MELFAS_MAX_TOUCH] = {0, };
+	static u32 cnt;
 
 	if (ts_read_reg_data(ts, TS_INPUT_PACKET_SIZE_REG, 1, buf) < 0) {
 		pr_err("tsp: ts_irq_event: Read finger num failed!!\n");
@@ -1195,13 +1199,12 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 			return IRQ_HANDLED;
 		}
 
-		if (ts->finger_state[id] && (buf[i] & 0x80) == 0) {
-			ts->finger_cnt--;
+		if ((buf[i] & 0x80) == 0) {
+			cnt--;
 #if TRACKING_COORD
-			tsp_log("tsp: finger %d up (%d, %d)\n", id, x, y);
+			pr_info("tsp: finger %d up (%d, %d)\n", id, x, y);
 #else
-			tsp_log("tsp: finger %d up remain: %d",	id,
-								ts->finger_cnt);
+			pr_info("tsp: finger %d up remain: %d", id, cnt);
 #endif
 			input_mt_slot(ts->input_dev, id);
 			input_mt_report_slot_state(ts->input_dev,
@@ -1223,22 +1226,21 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 
 		if (ts->finger_state[id] == 0) {
 			ts->finger_state[id] = 1;
-			ts->finger_cnt++;
+			cnt++;
 #if TRACKING_COORD
-			tsp_log("tsp: finger %d down (%d, %d)\n", id, x, y);
+			pr_info("tsp: finger %d down (%d, %d)\n", id, x, y);
 #else
-			tsp_log("tsp: finger %d down remain: %d", id,
-								ts->finger_cnt);
+			pr_info("tsp: finger %d down remain: %d", id, cnt);
 #endif
 		} else {
 #if TRACKING_COORD
-			tsp_log("tsp: finger %d move (%d, %d)\n", id, x, y);
+			pr_info("tsp: finger %d move (%d, %d)\n", id, x, y);
 #endif
 		}
 	}
 
 	if (ts->platform_data->set_dvfs)
-		ts->platform_data->set_dvfs(!!ts->finger_cnt);
+		ts->platform_data->set_dvfs(!!cnt);
 
 	return IRQ_HANDLED;
 }

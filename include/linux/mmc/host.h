@@ -244,9 +244,6 @@ struct mmc_host {
 				 MMC_CAP2_PACKED_WR) /* Allow packed commands */
 #define MMC_CAP2_NO_MULTI_READ	(1 << 5)	/* Multiblock read don't work */
 #define MMC_CAP2_NO_SLEEP_CMD	(1 << 6)	/* Don't allow sleep command */
-/*Disable packed write adaptively*/
-#define MMC_CAP2_ADAPT_PACKED	(1 << 9)
-#define MMC_CAP2_SECURE_ERASE_EN	(1 << 31)
 
 	mmc_pm_flag_t		pm_caps;	/* supported pm features */
 

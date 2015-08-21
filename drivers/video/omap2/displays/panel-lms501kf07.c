@@ -51,7 +51,7 @@
 #define CABC_UI			1
 #define CABC_PICTURE	2
 #define CABC_MOVIE		3
-#define CABC_DEFAULT	(CABC_UI)
+#define CABC_DEFAULT	(CABC_MOVIE)
 
 /* mdnie scenario */
 #define MDNIE_INVALID		(-1)
@@ -111,7 +111,6 @@ struct lms501kf07_data {
 	struct class *mdnie_class;	/* /sys/class/lcd/mdnie/mdnie/XXXXXXX */
 	struct device *mdnie_dev;	/* /sys/class/lcd/mdnie/mdnie/XXXXXXX */
 	struct mdnie mdnie_data;	/* store the setting of mdnie */
-	int inver_data;
 	bool enabled;
 	u8 rotate;
 	bool mirror;
@@ -173,23 +172,23 @@ static struct LCD_BRIGHTNESS bright_tbl_plat = {
 static struct LCD_BRIGHTNESS bright_tbl_normal = {
 	.off = 0,
 	.deflt = 102,
-	.dim = 12,
-	.min = 12,
+	.dim = 13,
+	.min = 13,
 	.min_center = 20,
 	.center = 102,
 	.center_max = 136,
-	.max = 190,
+	.max = 200,
 };
 
 static struct LCD_BRIGHTNESS bright_tbl_cabc = {
 	.off = 0,
 	.deflt = 93,
-	.dim = 13,
-	.min = 13,
+	.dim = 14,
+	.min = 14,
 	.min_center = 21,
 	.center = 93,
 	.center_max = 130,
-	.max = 181,
+	.max = 185,
 };
 
 /*
@@ -506,66 +505,45 @@ static void lms501kf07_config(struct omap_dss_device *dssdev)
 	struct lms501kf07_data *lcd = dev_get_drvdata(&dssdev->dev);
 	struct panel_lms501kf07_data *pdata = lcd->pdata;
 	struct lms501kf07_mdnie_data *mdnie = pdata->mdnie_data;
-	struct lms501kf07_inver_data *inver = pdata->inver_data;
-	int cur_temp = 0;
 
-	if (pdata->get_temp) {
-		cur_temp = pdata->get_temp();
-		if (cur_temp < -30) {
-			dev_info(&dssdev->dev,
-				"%s INVER_MODE recover for 1dot\n", __func__);
-			pdata->set_inver_data(pdata->seq_display_on,
-					inver->one);
-		} else if (cur_temp >= -10) {
-			dev_info(&dssdev->dev,
-				"%s INVER_MODE recover for 2dot\n", __func__);
-			pdata->set_inver_data(pdata->seq_display_on,
-					inver->two);
-		}
-	}
+	lms501kf07_write_sequence(dssdev, pdata->seq_display_on,
+				  pdata->seq_display_on_size);
 
-	/* change mdnie setting in initial sequence according to the previous
-	 * mdnie setting.
-	 */
 	switch (lcd->mdnie_data.scenario) {
 	case MDNIE_UI_MODE:
 		dev_info(&dssdev->dev, "%s :: MDNIE_MODE recover for ui\n",
 			 __func__);
-		pdata->set_mdnie_data(pdata->seq_display_on, mdnie->ui);
+		lms501kf07_write_block(dssdev, mdnie->ui, mdnie->size);
 		break;
 	case MDNIE_GALLERY_MODE:
 		dev_info(&dssdev->dev, "%s :: MDNIE_MODE recover for Gallery\n",
 			 __func__);
-		pdata->set_mdnie_data(pdata->seq_display_on, mdnie->gallery);
+		lms501kf07_write_block(dssdev, mdnie->gallery, mdnie->size);
 		break;
 	case MDNIE_VIDEO_MODE:
 		dev_info(&dssdev->dev, "%s :: MDNIE_MODE recover for Video\n",
 			 __func__);
-		pdata->set_mdnie_data(pdata->seq_display_on, mdnie->video);
+		lms501kf07_write_block(dssdev, mdnie->video, mdnie->size);
 		break;
 	case MDNIE_VIDEO_WARM_MODE:
 		dev_info(&dssdev->dev,
 			 "%s :: MDNIE_MODE recover for Video Warm\n", __func__);
-		pdata->set_mdnie_data(pdata->seq_display_on, mdnie->video_warm);
+		lms501kf07_write_block(dssdev, mdnie->video_warm, mdnie->size);
 		break;
 	case MDNIE_VIDEO_COLD_MODE:
 		dev_info(&dssdev->dev,
 			 "%s :: MDNIE_MODE recover for Video Cold\n", __func__);
-		pdata->set_mdnie_data(pdata->seq_display_on, mdnie->video_cold);
+		lms501kf07_write_block(dssdev, mdnie->video_cold, mdnie->size);
 		break;
 	case MDNIE_CAMERA_MODE:
 		dev_info(&dssdev->dev, "%s :: MDNIE_MODE recover for Camera\n",
 			 __func__);
-		pdata->set_mdnie_data(pdata->seq_display_on, mdnie->camera);
+		lms501kf07_write_block(dssdev, mdnie->camera, mdnie->size);
 		break;
 	default:
 		dev_err(&dssdev->dev, "%s :: MDNIE SCENARIO FAIL!\n", __func__);
-		pdata->set_mdnie_data(pdata->seq_display_on, mdnie->ui);
+		lms501kf07_write_block(dssdev, mdnie->ui, mdnie->size);
 	}
-
-	/* Execute initial boot sequence including mdnie setting */
-	lms501kf07_write_sequence(dssdev, pdata->seq_display_on,
-				  pdata->seq_display_on_size);
 
 	/* turn on cabc if cabc was set before entering sleep mode */
 	if (lcd->mdnie_data.cabc == CABC_ENABLE)
@@ -1249,41 +1227,36 @@ static ssize_t scenario_store(struct device *dev,
 
 	dev_info(dev, "%s :: value=%d\n", __func__, value);
 
-	if (lcd->mdnie_data.scenario == value)
-		return count;
-
 	switch (value) {
 	case MDNIE_UI_MODE:
 		dev_info(dev, "%s :: MDNIE_MODE for ui\n", __func__);
-		ret = set_mdnie(mdnie->ui, mdnie->size);
+		set_mdnie(mdnie->ui, mdnie->size);
 		break;
 	case MDNIE_GALLERY_MODE:
 		dev_info(dev, "%s :: MDNIE_MODE for Gallery\n", __func__);
-		ret = set_mdnie(mdnie->gallery, mdnie->size);
+		set_mdnie(mdnie->gallery, mdnie->size);
 		break;
 	case MDNIE_VIDEO_MODE:
 		dev_info(dev, "%s :: MDNIE_MODE for Video\n", __func__);
-		ret = set_mdnie(mdnie->video, mdnie->size);
+		set_mdnie(mdnie->video, mdnie->size);
 		break;
 	case MDNIE_VIDEO_WARM_MODE:
 		dev_info(dev, "%s :: MDNIE_MODE for Video Warm\n", __func__);
-		ret = set_mdnie(mdnie->video_warm, mdnie->size);
+		set_mdnie(mdnie->video_warm, mdnie->size);
 		break;
 	case MDNIE_VIDEO_COLD_MODE:
 		dev_info(dev, "%s :: MDNIE_MODE for Video Cold\n", __func__);
-		ret = set_mdnie(mdnie->video_cold, mdnie->size);
+		set_mdnie(mdnie->video_cold, mdnie->size);
 		break;
 	case MDNIE_CAMERA_MODE:
 		dev_info(dev, "%s :: MDNIE_MODE for Camera\n", __func__);
-		ret = set_mdnie(mdnie->camera, mdnie->size);
+		set_mdnie(mdnie->camera, mdnie->size);
 		break;
 	default:
 		goto scenario_store_err;
 	}
 
-	/* update mdnie setting only for successful set_mdnie() */
-	if (ret == 0)
-		lcd->mdnie_data.scenario = value;
+	lcd->mdnie_data.scenario = value;
 
 	return count;
 

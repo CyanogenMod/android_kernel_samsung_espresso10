@@ -41,13 +41,6 @@ struct bq2415x_charger_callbacks {
 						int cable_type);
 	void (*set_termination_current)(struct bq2415x_charger_callbacks *ptr,
 						int term_type);
-	void (*get_charger_register)(struct bq2415x_charger_callbacks *ptr);
-
-	bool (*set_charger_voreg)(struct bq2415x_charger_callbacks *ptr);
-
-	void (*set_control_800)(struct bq2415x_charger_callbacks *ptr);
-
-	void (*set_control_limit)(struct bq2415x_charger_callbacks *ptr);
 };
 
 /* BQ24153 / BQ24156 / BQ24158 */
@@ -95,12 +88,10 @@ struct bq2415x_platform_data {
 	int charge_ac_current;
 	int charge_usb_current;
 	int first_term_currentmA;
-	int second_term_currentmA;
-	int third_term_currentmA;
+	/* int second_term_currentmA; */
 	void (*set_charge)(int flag);
 	void (*enable_irq_handler)(void);
 	void (*set_full_charge)(void);
-	void (*set_charge_fault)(void);
 	void (*register_callbacks)(struct bq2415x_charger_callbacks *ptr);
 	int ta_gpio;
 	int ta_irq;

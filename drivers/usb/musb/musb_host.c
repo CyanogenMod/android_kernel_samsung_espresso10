@@ -110,7 +110,7 @@ static void musb_h_tx_flush_fifo(struct musb_hw_ep *ep)
 	void __iomem	*epio = ep->regs;
 	u16		csr;
 	u16		lastcsr = 0;
-	int		retries = 500;
+	int		retries = 1000;
 
 	csr = musb_readw(epio, MUSB_TXCSR);
 	while (csr & MUSB_TXCSR_FIFONOTEMPTY) {
@@ -2327,28 +2327,12 @@ static int musb_bus_resume(struct usb_hcd *hcd)
 	return 0;
 }
 
-static void musb_vbus_reset(struct usb_hcd *hcd, int portnum)
+static int musb_vbus_reset(struct usb_hcd *hcd, int portnum)
 {
 	struct musb     *musb = hcd_to_musb(hcd);
+	int ret = 0;
 
-	musb_platform_vbus_reset(musb);
-}
-
-static int musb_hcd_reset(struct usb_hcd *hcd)
-{
-	int ret = -EINVAL;
-#ifdef CONFIG_USB_SAMSUNG_OMAP_HCD_RESET_SUPPORT
-	struct musb     *musb = hcd_to_musb(hcd);
-
-	musb->vbus_reset_count = -1;
-	if (musb->xceiv->last_event == USB_EVENT_ID)
-		ret = musb_platform_otg_notifications
-			(musb, USB_EVENT_HOST_NONE);
-	musb->otg_enum_delay += 500;
-	if (musb->xceiv->last_event == USB_EVENT_ID)
-		ret = musb_platform_otg_notifications
-			(musb, USB_EVENT_ID);
-#endif
+	ret = musb_platform_vbus_reset(musb);
 
 	return ret;
 }
@@ -2473,7 +2457,6 @@ const struct hc_driver musb_hc_driver = {
 	.bus_resume		= musb_bus_resume,
 /* relinquish_port function is used for vbus reset */
 	.relinquish_port	= musb_vbus_reset,
-	.hcd_reset		= musb_hcd_reset,
 	/* .start_port_reset	= NULL, */
 	/* .hub_irq_enable	= NULL, */
 };

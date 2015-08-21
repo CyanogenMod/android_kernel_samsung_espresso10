@@ -2857,16 +2857,26 @@ static enum bverror parse_source(struct bvbltparams *bltparams,
 		goto exit;
 	}
 
-	/* Source must be 8 pixel aligned. */
-	stridealign = srcinfo->format->bitspp - 1;
-	if ((srcgeom->virtstride & stridealign) != 0) {
-		BVSETBLTERROR((srcinfo->index == 0)
+	/* Format specific stride check */
+	switch (srcgeom->format) {
+	case OCDFMT_NV12:
+	case OCDFMT_UYVY:
+	case OCDFMT_YUY2:
+		/* Source must be 8 pixel aligned. */
+		stridealign = srcinfo->format->bitspp - 1;
+		if ((srcgeom->virtstride & stridealign) != 0) {
+			BVSETBLTERROR((srcinfo->index == 0)
 					? BVERR_SRC1GEOM_STRIDE
 					: BVERR_SRC2GEOM_STRIDE,
 			      "source stride must be 8 pixel aligned.");
-		pr_info("%s:%d source stride must be 8 pixel"
-			"aligned fails\n", __FILE__, __LINE__);
-		goto exit;
+			pr_info("%s:%d source stride must be 8 pixel"
+				"aligned fails\n", __FILE__, __LINE__);
+			goto exit;
+		}
+		break;
+
+	default:
+		break;
 	}
 
 	/* Parse orientation. */

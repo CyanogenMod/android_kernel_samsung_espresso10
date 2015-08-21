@@ -91,7 +91,6 @@ struct gp2ap020_pdata {
 	int version; /* choice chip version 020 or 030 */
 	const char *prox_cal_path;
 	int d0_value[9];
-	u8 thresh[2];
 };
 
 #endif

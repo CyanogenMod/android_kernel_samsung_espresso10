@@ -33,7 +33,6 @@
 #include <linux/battery.h>
 #include <linux/bat_manager.h>
 #include <linux/gpio.h>
-#include <linux/i2c/stc3115_battery.h>
 
 #define FAST_POLL	(1 * 40)
 #define SLOW_POLL	(10 * 60)
@@ -44,7 +43,6 @@
 #define STATUS_BATT_CHARGE_1ST_FULL	0x8
 #define STATUS_BATT_CF_OPEN 0x10
 
-static int charging_off;
 struct charger_device_info {
 	struct device		*dev;
 	struct work_struct	bat_work;
@@ -80,7 +78,6 @@ static char *supply_list[] = {
 	"battery",
 };
 
-
 static enum power_supply_property batman_battery_properties[] = {
 	POWER_SUPPLY_PROP_STATUS,
 	POWER_SUPPLY_PROP_HEALTH,
@@ -95,8 +92,6 @@ static enum power_supply_property batman_battery_properties[] = {
 static enum power_supply_property batman_power_properties[] = {
 	POWER_SUPPLY_PROP_ONLINE,
 };
-
-static bool bat_m_probedone;
 
 static void set_cable(struct battery_manager_callbacks *ptr,
 		enum cable_type_t status)
@@ -137,7 +132,6 @@ static void batman_set_full(struct battery_manager_callbacks *ptr)
 {
 	struct charger_device_info *di = container_of(ptr,
 			struct charger_device_info, callbacks);
-	di->pdata->get_charger_register();
 	di->once_fully_charged = true;
 	di->discharge_status = STATUS_BATT_REAL_FULL;
 	di->pdata->set_term_current(1);
@@ -159,14 +153,10 @@ static int batman_bat_get_property(struct power_supply *bat_ps,
 	case POWER_SUPPLY_PROP_STATUS:
 		if (!gpio_get_value(di->pdata->bat_removal) &&
 			gpio_get_value(di->pdata->jig_on)) {
-				di->bat_info.health
-					= POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
-				di->charge_status
-					= POWER_SUPPLY_STATUS_NOT_CHARGING;
-				di->discharge_status = STATUS_BATT_CF_OPEN;
-			if (charging_off)
-				di->charge_status =
-				POWER_SUPPLY_STATUS_DISCHARGING;
+				di->bat_info.health =
+					POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
+			di->charge_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
+			di->discharge_status = STATUS_BATT_CF_OPEN;
 		}
 		val->intval = di->charge_status;
 		dev_dbg(di->dev, "charge_status : %d\n",
@@ -190,7 +180,7 @@ static int batman_bat_get_property(struct power_supply *bat_ps,
 		val->intval = 1;
 		break;
 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-		val->intval = stc3115_read_data() * 1000;
+		val->intval = di->bat_info.vcell;
 		dev_info(di->dev, "voltage value : %d\n",
 				val->intval);
 		break;
@@ -272,8 +262,6 @@ static int batman_charging_status_check(struct charger_device_info *di)
 		di->bat_info.health = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
 		di->charge_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
 		di->discharge_status = STATUS_BATT_CF_OPEN;
-		if (charging_off)
-			di->charge_status = POWER_SUPPLY_STATUS_DISCHARGING;
 	}
 
 	switch (di->charge_status) {
@@ -328,9 +316,7 @@ static int batman_charging_status_check(struct charger_device_info *di)
 
 	if (!di->discharge_status) {
 
-		di->pdata->set_charger_voreg();
 		di->pdata->set_charger_en(1);
-		di->pdata->get_charger_register();
 
 		if (!di->chg_limit_time) {
 			di->chg_limit_time =
@@ -343,7 +329,6 @@ static int batman_charging_status_check(struct charger_device_info *di)
 
 	} else {
 		di->pdata->set_charger_en(0);
-		di->pdata->get_charger_register();
 		di->chg_limit_time = 0;
 	}
 
@@ -361,19 +346,20 @@ static void charger_detect_work(struct work_struct *work)
 	else
 		di->cable_status = CABLE_TYPE_NONE;
 
+/*
 	if ((di->cable_status == CABLE_TYPE_AC) && (di->pdata->bootmode != 5))
-		di->pdata->set_control_limit();
-
+		bq2415x_config_control_reg_limit();
+*/
 
 	di->pdata->set_charger_state(di->cable_status);
 	di->pdata->set_charger_en(di->is_cable_attached);
-	di->pdata->get_charger_register();
 
+/*
 	if ((di->cable_status == CABLE_TYPE_AC) && (di->pdata->bootmode != 5)) {
 		msleep(500);
-		di->pdata->set_control_800mA();
+		bq2415x_config_control_reg_nolimit();
 	}
-
+*/
 	if (di->cable_status == CABLE_TYPE_NONE) {
 		di->once_fully_charged = false;
 		di->chg_limit_time = 0;
@@ -382,17 +368,12 @@ static void charger_detect_work(struct work_struct *work)
 		di->full_charged_step = 0;
 	}
 
-	di->bat_info.health = POWER_SUPPLY_HEALTH_GOOD;
-
 	if (!gpio_get_value(di->pdata->bat_removal) &&
 			gpio_get_value(di->pdata->jig_on)) {
 		di->bat_info.health = POWER_SUPPLY_HEALTH_UNSPEC_FAILURE;
 		di->charge_status = POWER_SUPPLY_STATUS_NOT_CHARGING;
 		di->discharge_status = STATUS_BATT_CF_OPEN;
-		if (charging_off)
-			di->charge_status = POWER_SUPPLY_STATUS_DISCHARGING;
 	}
-
 	power_supply_changed(&di->psy_ac);
 	power_supply_changed(&di->psy_usb);
 	queue_work(di->monitor_wqueue, &di->bat_work);
@@ -415,7 +396,6 @@ static void battery_manager_work(struct work_struct *work)
 
 	int prev_status = di->charge_status;
 	int prev_soc = di->bat_info.soc;
-	int prev_vcell = di->bat_info.vcell;
 
 	unsigned long flags;
 	struct timespec ts;
@@ -425,22 +405,14 @@ static void battery_manager_work(struct work_struct *work)
 	if (di->pdata->get_fuel_value) {
 		di->bat_info.vcell =
 			di->pdata->get_fuel_value(READ_FG_VCELL);
-
-	if (!gpio_get_value(di->pdata->jig_on) &&
-		!gpio_get_value(di->pdata->bat_removal))
-		if (di->bat_info.vcell < 3700000)
-			di->bat_info.soc = 13;
-		else
-			di->bat_info.soc = 50;
-	else
-		if (di->bat_info.vcell > 3350000)
-			di->bat_info.soc =
-				di->pdata->get_fuel_value(READ_FG_SOC);
-		else
-			di->bat_info.soc = 0;
-
+		di->bat_info.soc =
+			di->pdata->get_fuel_value(READ_FG_SOC);
 		di->bat_info.fg_current =
 			di->pdata->get_fuel_value(READ_FG_CURRENT);
+#if 0
+		di->bat_info.batt_online =
+			di->pdata->get_fuel_value(READ_FG_STATUS);
+#endif
 	}
 	di->bat_info.temp =  di->pdata->get_temp();
 
@@ -454,7 +426,7 @@ static void battery_manager_work(struct work_struct *work)
 	di->last_poll = alarm_get_elapsed_realtime();
 	ts = ktime_to_timespec(di->last_poll);
 
-	pr_info("charge_status : %d, ", di->charge_status);
+	pr_info("%s: charge_status : %d, ", di->charge_status);
 	pr_info("health : %d, ", di->bat_info.health);
 	pr_info("temp : %d, ", di->bat_info.temp);
 	pr_info("vcell : %d, ", di->bat_info.vcell);
@@ -497,19 +469,13 @@ static int otg_handle_notification(struct notifier_block *nb,
 		pr_info("%s: Charger Disconnect\n", __func__);
 		di->charge_status = POWER_SUPPLY_STATUS_DISCHARGING;
 		di->is_cable_attached = false;
-		if (!gpio_get_value(di->pdata->bat_removal)
-			&& gpio_get_value(di->pdata->jig_on)
-			&& (di->pdata->bootmode == 5))
-			charging_off = 1;
 		break;
 	default:
 		return NOTIFY_OK;
 	}
 
-	if (bat_m_probedone) {
-		wake_lock(&di->work_wake_lock);
-		schedule_work(&di->charger_work);
-	}
+	wake_lock(&di->work_wake_lock);
+	schedule_work(&di->charger_work);
 	return NOTIFY_OK;
 }
 
@@ -526,7 +492,6 @@ enum {
 	BATT_TYPE,
 	BATT_CHARGE_MODE,
 	BATT_DMB_CHECK,
-	BATT_READ_RAW_SOC,
 };
 
 static ssize_t battery_manager_show_attrs(struct device *dev,
@@ -553,9 +518,7 @@ static struct device_attribute battery_manager_attrs[] = {
 	SEC_BATTERY_ATTR(batt_temp_check),
 	SEC_BATTERY_ATTR(batt_full_check),
 	SEC_BATTERY_ATTR(batt_type),
-	SEC_BATTERY_ATTR(batt_charge_mode),
-	SEC_BATTERY_ATTR(batt_dmb_check),
-	SEC_BATTERY_ATTR(batt_read_raw_soc),
+	SEC_BATTERY_ATTR(batt_lp_charging),
 };
 
 
@@ -600,11 +563,6 @@ static ssize_t battery_manager_show_attrs(struct device *dev,
 			i += scnprintf(buf + i, PAGE_SIZE - i,
 					"%d\n",  di->pdata->get_charger_type());
 		break;
-	case BATT_READ_RAW_SOC:
-		if (di->pdata->get_fuel_value)
-			i += scnprintf(buf + i, PAGE_SIZE - i, "%d\n",
-				di->pdata->get_fuel_value(READ_FG_SOC)*100);
-		break;
 	default:
 		i = -EINVAL;
 		break;
@@ -641,7 +599,6 @@ static ssize_t battery_manager_store_attrs(struct device *dev,
 			di->discharge_status == 0) {
 				di->pdata->set_charger_en(0);
 				msleep(500);
-				di->pdata->set_charger_voreg();
 				di->pdata->set_charger_en(1);
 		}
 		ret = count;
@@ -733,7 +690,7 @@ static int __devinit batman_probe(struct platform_device *pdev)
 
 	platform_set_drvdata(pdev, di);
 
-	charger_in = gpio_get_value(di->pdata->vbus_gpio);
+	charger_in = gpio_get_value(di->pdata->ta_gpio) ? 0 : 1;
 
 	di->transceiver = otg_get_transceiver();
 	if (di->transceiver) {
@@ -783,8 +740,6 @@ static int __devinit batman_probe(struct platform_device *pdev)
 
 	schedule_work(&di->charger_work);
 	pr_info("%s: Battery manager probe done\n", __func__);
-
-	bat_m_probedone = true;
 
 	return 0;
 
@@ -862,7 +817,6 @@ struct platform_driver battery_manager_pdrv = {
 
 static int __init batman_init(void)
 {
-	bat_m_probedone = false;
 	return platform_driver_register(&battery_manager_pdrv);
 }
 late_initcall(batman_init);

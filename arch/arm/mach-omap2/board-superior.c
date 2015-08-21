@@ -45,7 +45,6 @@
 
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
-#include <linux/mfd/max77693-private.h>
 
 #include "board-superior.h"
 #include "control.h"
@@ -57,7 +56,6 @@
 #include "sec_debug.h"
 #include "sec_getlog.h"
 #include "sec_muxtbl.h"
-#include "sec_log_buf.h"
 
 #define SUPERIOR_MEM_BANK_0_SIZE		0x20000000
 #define SUPERIOR_MEM_BANK_0_ADDR		0x80000000
@@ -141,13 +139,12 @@ static void superior_power_off_charger(void)
 	arm_pm_restart('t', NULL);
 }
 
+static unsigned int gpio_ta_nconnected;
+
 static int superior_reboot_call(struct notifier_block *this,
 				unsigned long code, void *cmd)
 {
-	u8 vbus, adc, chgtyp;
-
-	max77693_muic_charger_detect(&vbus, &adc, &chgtyp);
-	if (code == SYS_POWER_OFF && vbus)
+	if (code == SYS_POWER_OFF && !gpio_get_value(gpio_ta_nconnected))
 		pm_power_off = superior_power_off_charger;
 
 	return 0;
@@ -159,7 +156,10 @@ static struct notifier_block superior_reboot_notifier = {
 
 static void __init omap4_superior_reboot_init(void)
 {
-	register_reboot_notifier(&superior_reboot_notifier);
+	gpio_ta_nconnected = omap_muxtbl_get_gpio_by_name("TA_nCONNECTED");
+
+	if (unlikely(gpio_ta_nconnected != -EINVAL))
+		register_reboot_notifier(&superior_reboot_notifier);
 }
 
 static void __init superior_init_machine(void)
@@ -220,22 +220,19 @@ static void __init superior_map_io(void)
 				  SUPERIOR_MEM_BANK_1_ADDR);
 }
 
-#ifdef CONFIG_ION_CMA
-/* TODO: CMA should be allocated in lowmem area */
-#define OMAP4_ION_CMA_TILER_ADDR	0x88000000
-#endif
-
 static void omap4_superior_init_carveout_sizes(
 		struct omap_ion_platform_data *ion)
 {
-	ion->tiler1d_size = (SZ_1M * 42);
-	ion->secure_output_wfdhdcp_size = (SZ_1M * 4);
+	ion->tiler1d_size = (SZ_1M * 90);
+	/*
+	 * REVIST:
+	 * wfdhdcp_size = SZ_16M; will be adopted once
+	 * ducati side carveout wfd section is up.
+	 */
+	ion->secure_output_wfdhdcp_size = 0;
 	ion->ducati_heap_size = (SZ_1M * 128);
 	ion->nonsecure_tiler2d_size = (SZ_1M * 15);
-	ion->tiler2d_size = (SZ_1M * 88);
-#ifdef CONFIG_ION_CMA
-	ion->tiler2d_secure_base = OMAP4_ION_CMA_TILER_ADDR;
-#endif
+	ion->tiler2d_size = (SZ_1M * 81);
 }
 
 static void __init superior_reserve(void)
@@ -266,8 +263,6 @@ static void __init superior_reserve(void)
 				    OMAP4_ION_HEAP_SECURE_INPUT_SIZE +
 				    OMAP4_ION_HEAP_SECURE_OUTPUT_WFDHDCP_SIZE);
 	omap_reserve();
-
-	sec_log_buf_reserve();
 }
 
 MACHINE_START(OMAP4_SAMSUNG, "Superior")

@@ -643,66 +643,6 @@ static inline void omap4_dpll_restore_reg(struct omap4_dpll_regs *dpll_reg,
 					    dpll_reg->mod_inst, tuple->addr);
 }
 
-
-static void omap4_usb_dpll_restore(struct omap4_dpll_regs *dpll_reg)
-{
-	unsigned int clk_mode = 0;
-	int j = 0;
-
-	/*
-	 * On resume-from-off the default value of CM_CLKMODE_DPLL_USB::DPLL_EN
-	 * is 0x4(MN bypass mode).
-	 * The restore value is 0x1(low-power stop mode).
-	 * Issue observed with restoring the usb_dpll clock_mode value in the
-	 * resume-from-off-mode path.
-	 * When the previous value was restored USB_DPLL clock status was stuck
-	 * in running (CM_L3INIT_CLKSTCTRL::CLKACTIVITY_USB_DPLL_CLK).
-	 * To avoid this the below WA is applied move USB_DPLL to locked state.
-	 * Then Move the DPLL to LowPowerStop state
-	 */
-
-	clk_mode = dpll_reg->clkmode.val;
-	dpll_reg->clkmode.val = DPLL_LOCKED << OMAP4430_DPLL_EN_SHIFT;
-
-	omap4_dpll_restore_reg(dpll_reg, &dpll_reg->clkmode);
-	dpll_reg->clkmode.val = clk_mode;
-
-	while ((omap4_cminst_read_inst_reg(dpll_reg->mod_partition,
-						dpll_reg->mod_inst,
-						dpll_reg->idlest.addr)
-			& OMAP4430_ST_DPLL_CLK_MASK) !=
-					0x1 << OMAP4430_ST_DPLL_CLK_SHIFT
-						&& j < MAX_DPLL_WAIT_TRIES) {
-		j++;
-		udelay(1);
-	}
-
-	/* if we are unable to lock, warn and move on.. */
-	if (j == MAX_DPLL_WAIT_TRIES) {
-		pr_err("%s Failed to lock!\n", __func__);
-		omap4_dpll_dump_regs(dpll_reg);
-	} else {
-		j = 0;
-		/* Now that the DPLL is locked retore
-		 * the previous clock-mode state.
-		 */
-		omap4_dpll_restore_reg(dpll_reg, &dpll_reg->clkmode);
-		while ((omap4_cminst_read_inst_reg(dpll_reg->mod_partition,
-						dpll_reg->mod_inst,
-						dpll_reg->idlest.addr)
-				& OMAP4430_ST_DPLL_CLK_MASK) != 0x0
-					&& j < MAX_DPLL_WAIT_TRIES) {
-			j++;
-			udelay(1);
-		}
-		if (j == MAX_DPLL_WAIT_TRIES) {
-			pr_err("%s Failed to restore previous clock mode!\n",
-				__func__);
-			omap4_dpll_dump_regs(dpll_reg);
-		}
-	}
-}
-
 void omap4_dpll_resume_off(void)
 {
 	u32 i;
@@ -718,19 +658,11 @@ void omap4_dpll_resume_off(void)
 		omap4_dpll_restore_reg(dpll_reg, &dpll_reg->div_m7);
 		omap4_dpll_restore_reg(dpll_reg, &dpll_reg->clkdcoldo);
 
-		/* If it is 'usb' dpll and previous clkmode is not locked,
-		 * do not restore clkmode
-		 */
-		if (!strcmp(dpll_reg->name, "usb"))
-			omap4_usb_dpll_restore(dpll_reg);
-		else {
-			/* Restore clkmode after the above registers
-			 * are restored.
-			 */
-			omap4_dpll_restore_reg(dpll_reg, &dpll_reg->clkmode);
+		/* Restore clkmode after the above registers are restored */
+		omap4_dpll_restore_reg(dpll_reg, &dpll_reg->clkmode);
 
-			omap4_wait_dpll_lock(dpll_reg);
-		}
+		omap4_wait_dpll_lock(dpll_reg);
+
 		/* Restore autoidle settings after the dpll is locked */
 		omap4_dpll_restore_reg(dpll_reg, &dpll_reg->autoidle);
 	}

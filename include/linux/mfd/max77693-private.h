@@ -150,18 +150,6 @@ enum max77693_haptic_reg {
 #define MAX77693_ENABLE_BIT 1
 #define MAX77693_DISABLE_BIT 0
 
-/* MAX77693 PMIC Main control1 */
-#define MAX77693_MRDBTMER_3SEC	0x0
-#define MAX77693_MRDBTMER_4SEC	0x1
-#define MAX77693_MRDBTMER_5SEC	0x2
-#define MAX77693_MRDBTMER_6SEC	0x3
-#define MAX77693_MRDBTMER_7SEC	0x4
-#define MAX77693_MRDBTMER_8SEC	0x5
-#define MAX77693_MRDBTMER_9SEC	0x6
-#define MAX77693_MRDBTMER_10SEC	0x7
-#define MAIN_CTRL1_MRDBTMER_MASK	0x7
-#define MAIN_CTRL1_MREN_SHIFT		3
-
 /* MAX77693 CHG_CNFG_00 register */
 #define CHG_CNFG_00_MODE_SHIFT		0
 #define CHG_CNFG_00_CHG_SHIFT		0
@@ -386,7 +374,5 @@ extern void max77693_muic_set_usb_sel(int usb_sel);
 extern void max77693_muic_set_uart_sel(int uart_sel);
 extern int max77693_muic_get_usb_sel(void);
 extern int max77693_muic_get_uart_sel(void);
-extern u8 max77693_muic_charger_detect(u8 *vbus, u8 *adc, u8 *chgtyp);
-extern void max77693_muic_set_cardock_support(bool support);
-extern bool max77693_muic_get_cardock_support(void);
+extern int max77693_muic_charger_detect(void);
 #endif /*  __LINUX_MFD_MAX77693_PRIV_H */

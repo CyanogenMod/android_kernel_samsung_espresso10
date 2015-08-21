@@ -19,11 +19,6 @@
 #include <linux/types.h>
 #include <linux/module.h>
 
-#ifdef CONFIG_ION_CMA
-#include <linux/ion.h>
-#include <linux/omap_ion.h>
-#endif
-
 #include "tee_client_api.h"
 #include "tf_defs.h"
 
@@ -84,15 +79,6 @@ static TEEC_Result _rproc_drm_invoke_secure_service(bool enable)
 	TEEC_Session teec_session;
 	u32 command;
 
-#ifdef CONFIG_ION_CMA
-	if (enable) {
-		pr_info("smc: start firewall\n");
-		if (omap_ion_preprocess_tiler_alloc(enable) < 0) {
-			result = TEEC_ERROR_GENERIC;
-			goto out;
-		}
-	}
-#endif
 	result = rproc_drm_initialize(&teec_context, &teec_session);
 	if (result != TEEC_SUCCESS)
 		goto out;
@@ -103,13 +89,6 @@ static TEEC_Result _rproc_drm_invoke_secure_service(bool enable)
 				COMMON_DRIVER_EXIT_SECURE_PLAYBACK);
 	result = TEEC_InvokeCommand(&teec_session, command, &operation, NULL);
 	rproc_drm_finalize(&teec_context, &teec_session);
-#ifdef CONFIG_ION_CMA
-	if (!enable) {
-		pr_info("smc: stop firewall\n");
-		omap_ion_preprocess_tiler_alloc(enable);
-	}
-#endif
-
 out:
 	return result;
 }

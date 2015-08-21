@@ -38,7 +38,6 @@
 
 #include "mux.h"
 #include "omap_muxtbl.h"
-#include "board-gokey.h"
 
 static struct rfkill *bt_rfkill;
 static bool bt_enabled;
@@ -102,12 +101,7 @@ static int bcm4334_bt_rfkill_set_power(void *data, bool blocked)
 	}
 
 	bt_enabled = !blocked;
-#ifdef CONFIG_MP3_LP_MODE
-	if (bt_enabled)
-		cpufreq_lpmode.bt_enabled = 1;
-	else
-		cpufreq_lpmode.bt_enabled = 0;
-#endif
+
 	return 0;
 }
 

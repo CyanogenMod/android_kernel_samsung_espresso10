@@ -553,17 +553,12 @@ int dss_resume_all_devices(void)
 	return bus_for_each_dev(bus, NULL, NULL, dss_resume_device);
 }
 
-
 static int dss_disable_device(struct device *dev, void *data)
 {
 	struct omap_dss_device *dssdev = to_dss_device(dev);
 
-	if (dssdev->state != OMAP_DSS_DISPLAY_DISABLED) {
-		if (dssdev->driver->shutdown)
-			dssdev->driver->shutdown(dssdev);
-		else
-			dssdev->driver->disable(dssdev);
-	}
+	if (dssdev->state != OMAP_DSS_DISPLAY_DISABLED)
+		dssdev->driver->disable(dssdev);
 
 	return 0;
 }

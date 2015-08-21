@@ -34,7 +34,6 @@
 #include "omap_muxtbl.h"
 #include <linux/usb/otg.h>
 #include <linux/notifier.h>
-#include "sec_debug.h"
 
 #define TA_CHARGER_CONNECT      1
 #define TA_CHARGER_DISCONNECT   0
@@ -298,13 +297,13 @@ static const u8 *mxt224_config[] = {
 #define MXT224E_BLEN_CHRG			0
 #define MXT224E_BLEN_CHRG_ERR2			0
 
-#define MXT224E_THRESHOLD_BATT			27
-#define MXT224E_THRESHOLD_BATT_ERR		30
+#define MXT224E_THRESHOLD_BATT			35
+#define MXT224E_THRESHOLD_BATT_ERR		40
 #define MXT224E_THRESHOLD_CHRG			40
-#define MXT224E_THRESHOLD_CHRG_ERR1		42
+#define MXT224E_THRESHOLD_CHRG_ERR1		45
 #define MXT224E_THRESHOLD_CHRG_ERR2		45
 
-#define MXT224E_MOVFILTER_BATT			81
+#define MXT224E_MOVFILTER_BATT			46
 #define MXT224E_MOVFILTER_BATT_ERR		81
 #define MXT224E_MOVFILTER_CHRG			47
 #define MXT224E_MOVFILTER_CHRG_ERR1		80
@@ -325,29 +324,26 @@ static const u8 *mxt224_config[] = {
 #define MXT224E_NEXTTCHDI_BATT_ERR		0
 #define MXT224E_NEXTTCHDI_CHRG			0
 
-#define MXT224E_ACTVSYNCSPERX_BATT		28
-#define MXT224E_ACTVSYNCSPERX_CHRG		40
-#define MXT224E_ACTVSYNCSPERX_CHRG_ERR1		45
-#define MXT224E_ACTVSYNCSPERX_CHRG_ERR2		48
+#define MXT224E_ACTVSYNCSPERX			32
 
 #define MXT224E_CALCFG_BATT			114
 #define MXT224E_CALCFG_BATT_ERR			114
 #define MXT224E_CALCFG_CHRG			114
 
-#define MXT224E_BASEPREQ_BATT			24
-#define MXT224E_BASEPREQ_BATT_ERR		24
+#define MXT224E_BASEPREQ_BATT			20
+#define MXT224E_BASEPREQ_BATT_ERR		20
 #define MXT224E_BASEPREQ_CHRG			0
-#define MXT224E_BASEPREQ_CHRG_ERR2		15
+#define MXT224E_BASEPREQ_CHRG_ERR2		10
 
 #define MXT224E_MFFREQ0_BATT			1
 #define MXT224E_MFFREQ0_BATT_ERR		1
 #define MXT224E_MFFREQ0_CHRG			15
-#define MXT224E_MFFREQ0_CHRG_ERR2		1
+#define MXT224E_MFFREQ0_CHRG_ERR2		0
 
 #define MXT224E_MFFREQ1_BATT			2
 #define MXT224E_MFFREQ1_BATT_ERR		2
 #define MXT224E_MFFREQ1_CHRG			15
-#define MXT224E_MFFREQ1_CHRG_ERR2		2
+#define MXT224E_MFFREQ1_CHRG_ERR2		0
 
 #define MXT224E_GCMAXADCSPERX_BATT		48
 #define MXT224E_GCMAXADCSPERX_BATT_ERR		100
@@ -404,13 +400,13 @@ static u8 t40_config_e[] = { PROCI_GRIPSUPPRESSION_T40, 0, 0, 0, 0, 0 };
 static u8 t42_config_e[] = { PROCI_TOUCHSUPPRESSION_T42,
 			     0, 0, 0, 0, 0, 0, 0, 0 };
 static u8 t46_config_e[] = { SPT_CTECONFIG_T46, 0, 3, 16,
-			     MXT224E_ACTVSYNCSPERX_BATT, 0, 0, 1, 0 };
+			     MXT224E_ACTVSYNCSPERX, 0, 0, 1, 0 };
 static u8 t47_config_e[] = { PROCI_STYLUS_T47, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 static u8 t48_config_e[] = { PROCG_NOISESUPPRESSION_T48, 3, 132,
 			     MXT224E_CALCFG_BATT, MXT224E_BASEPREQ_BATT, 0, 0,
 			     0, 0, MXT224E_MFFREQ0_BATT, MXT224E_MFFREQ1_BATT,
-			     0, 0, 0, 24, 16, 0, 0, MXT224E_GCMAXADCSPERX_BATT,
-			     4, MXT224E_GCLIMITMAX_BATT, 10, 0,
+			     0, 0, 0, 6, 6, 0, 0, MXT224E_GCMAXADCSPERX_BATT, 4,
+			     MXT224E_GCLIMITMAX_BATT, 10, 0,
 			     MXT224E_MFINVLDDIFFTHR_BATT, 5, 0,
 			     MXT224E_MFERRORTHR0_BATT, 0, 5, 0, 0, 0, 0, 0, 0,
 			     MXT224E_BLEN_BATT, MXT224E_THRESHOLD_BATT, 2, 15,
@@ -519,10 +515,6 @@ static struct mxt224_platform_data mxt224_data = {
 	.noisethr_charging	= MXT224_NOISE_THRESHOLD_CHRG,
 	.movfilter_batt		= MXT224_MOVFILTER_BATT,
 	.movfilter_charging	= MXT224_MOVFILTER_CHRG,
-	.actvsyncsperx_batt	= MXT224E_ACTVSYNCSPERX_BATT,
-	.actvsyncsperx_chrg	= MXT224E_ACTVSYNCSPERX_CHRG,
-	.actvsyncsperx_chrg_err1	= MXT224E_ACTVSYNCSPERX_CHRG_ERR1,
-	.actvsyncsperx_chrg_err2	= MXT224E_ACTVSYNCSPERX_CHRG_ERR2,
 	.atchfrccalthr_e	= MXT224E_ATCHFRCCALTHR_NORMAL,
 	.atchfrccalratio_e	= MXT224E_ATCHFRCCALRATIO_NORMAL,
 	.t48_config_batt_e	= t48_config_e,
@@ -731,11 +723,6 @@ void __init omap4_t1_input_init(void)
 	}
 
 	t1_create_sec_key_dev();
-
-	if (sec_debug_get_level()) {
-		t1_gpio_keypad_keys_info_high.flags |= GPIOEDF_PRINT_KEYS;
-		t1_gpio_keypad_keys_info_low.flags |= GPIOEDF_PRINT_KEYS;
-	}
 
 	platform_device_register(&t1_gpio_keypad_device);
 }

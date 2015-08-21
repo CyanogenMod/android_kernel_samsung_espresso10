@@ -45,7 +45,6 @@ struct omap_ion_platform_data {
 	u32 nonsecure_tiler2d_size;
 	size_t ducati_heap_size;
 	size_t secure_output_wfdhdcp_size;
-	phys_addr_t tiler2d_secure_base;
 };
 
 struct omap_ion_platform_data *get_omap_ion_platform_data(void);

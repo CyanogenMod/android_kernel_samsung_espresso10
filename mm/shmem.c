@@ -1216,11 +1216,7 @@ static inline struct page *shmem_swapin(swp_entry_t entry, gfp_t gfp,
 static inline struct page *shmem_alloc_page(gfp_t gfp,
 			struct shmem_inode_info *info, unsigned long idx)
 {
-#ifdef CONFIG_CMA
-	return alloc_page(gfp & ~__GFP_MOVABLE);
-#else
 	return alloc_page(gfp);
-#endif
 }
 #endif /* CONFIG_NUMA */
 

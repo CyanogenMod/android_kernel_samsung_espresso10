@@ -1646,6 +1646,9 @@ void omap_hwmod_write(u32 v, struct omap_hwmod *oh, u16 reg_offs)
  */
 int omap_hwmod_softreset(struct omap_hwmod *oh)
 {
+	u32 v;
+	int ret;
+
 	if (!oh || !(oh->_sysc_cache))
 		return -EINVAL;
 

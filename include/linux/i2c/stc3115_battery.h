@@ -11,7 +11,7 @@
 
 #include <linux/battery.h>
 
-#define GG_VERSION "2.00a"
+#define GG_VERSION "1.05a"
 
 
 
@@ -43,7 +43,6 @@ struct stc311x_platform_data {
 	/* for temp = 60, 40, 25, 10,   0, -10 C,-20C */
 	int CapDerating[7];
 	int OCVOffset[16];    /* OCV curve adjustment */
-	int OCVOffset2[16];    /* OCV curve adjustment */
 	/*External temperature fonction, return C*/
 	int (*ExternalTemperature) (void);
 	/* 1=External temperature, 0=STC3115 temperature */
@@ -60,8 +59,6 @@ int STC31xx_AlarmClear(void);
 int STC31xx_AlarmSetVoltageThreshold(int VoltThresh);
 int STC31xx_AlarmSetSOCThreshold(int SOCThresh);
 int STC31xx_RelaxTmrSet(int CurrentThreshold);
-extern int stc3115_read_data(void);
-extern void GasGauge_Reset(void);
 
 /* -------------------------------------- */
 /*            STC311x DEVICE SELECTION              */
@@ -90,7 +87,7 @@ SOC temperature compensation */
 /* -------------------------------------- */
 /*                                        */
 /* min voltage at the end of the charge (mV)      */
-#define BATT_CHG_VOLTAGE   4250
+#define BATT_CHG_VOLTAGE   4350
 /* empty battery detection level (mV)                 */
 #define BATT_MIN_VOLTAGE   3300
 /* 100% in 1/512% units*/
@@ -137,17 +134,9 @@ SOC temperature compensation */
 /* Temperature               */
 #define STC311x_REG_TEMPERATURE    0x0A
 /* CC adjustement     */
-#define STC311x_REG_CC_ADJ_HIGH     0x0B
+#define STC311x_REG_CC_ADJ     0x0B
 /* VM adjustement     */
-#define STC311x_REG_VM_ADJ_HIGH     0x0C
-
-#define STC311x_REG_CC_ADJ_LOW           0x19    /* CC adjustement     */
-#define STC311x_REG_VM_ADJ_LOW           0x1A    /* VM adjustement     */
-#define STC311x_ACC_CC_ADJ_HIGH          0x1B    /* CC accumulator     */
-#define STC311x_ACC_CC_ADJ_LOW           0x1C    /* CC accumulator     */
-#define STC311x_ACC_VM_ADJ_HIGH          0x1D    /* VM accumulator     */
-#define STC311x_ACC_VM_ADJ_LOW           0x1E    /* VM accumulator     */
-
+#define STC311x_REG_VM_ADJ     0x0C
 /* Battery OCV (2 bytes) */
 #define STC311x_REG_OCV      0x0D
 /* CC configuration (2 bytes)    */
@@ -179,14 +168,11 @@ SOC temperature compensation */
 #define STC311x_FORCE_VM	0x40
  /* soft reset     */
 #define STC311x_SOFTPOR	0x11
-#define STC311x_CLR_VM_ADJ   0x02  /* Clear VM ADJ register bit mask */
-#define STC311x_CLR_CC_ADJ   0x04  /* Clear CC ADJ register bit mask */
 
 /* Chip ID (1 byte)       */
 #define STC311x_REG_ID      0x18
 /* STC3115 ID */
 #define STC311x_ID      0x13
-#define STC311x_ID_2                     0x14    /* STC3115 ID */
 
 /* General Purpose RAM Registers */
 #define STC311x_REG_RAM                  0x20

@@ -417,9 +417,9 @@ static void gokey_twl6030_init(void)
 	val |= (1<<3);
 	/*configure in low power mode*/
 	val |= (1<<6 | 1<<5);
-	/*	2.5V 00:3.0, 01:2.5, 10:3.15 11:VSYS */
-	val &= ~(1<<2);
-	val |= (1<<1);
+	/*	3.15V 00:3.0, 01:2.5, 10:3.15 11:VSYS */
+	val |= (1<<2);
+	val &= ~(1<<1);
 	ret |= twl_i2c_write_u8(TWL6030_MODULE_ID0,
 			val, TWL6030_BBSPOR_CFG);
 
