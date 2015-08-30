@@ -13,7 +13,6 @@
  */
 
 #include <linux/i2c.h>
-#include <linux/mpu.h>
 #include <linux/gpio.h>
 #include <linux/delay.h>
 #include "mux.h"
