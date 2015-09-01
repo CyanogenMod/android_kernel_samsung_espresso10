@@ -19,8 +19,6 @@
 #include <linux/miscdevice.h>
 #include <linux/rtc.h>
 
-#include "../../../drivers/staging/android/logger.h"
-
 #include "sec_common.h"
 #include "sec_debug.h"
 
