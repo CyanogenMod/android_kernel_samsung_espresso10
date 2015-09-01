@@ -272,7 +272,3 @@ config SEC_DEBUG_IRQ_EXIT_LOG
 endmenu
 
 endmenu
-
-config SAMSUNG_EXFAT
-	bool "Support exFAT filesystem driver"
-	default y
