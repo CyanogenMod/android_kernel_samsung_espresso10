@@ -138,9 +138,5 @@ source "drivers/omap_hsi/Kconfig"
 
 source "drivers/sensors/Kconfig"
 
-source "drivers/phone_svn/Kconfig"
-
-source "drivers/modemctl/Kconfig"
-
 source "drivers/battery/Kconfig"
 endmenu
