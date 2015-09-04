@@ -128,7 +128,6 @@ obj-$(CONFIG_REMOTE_PROC)	+= remoteproc/
 
 obj-$(CONFIG_DMM_OMAP)		+= media/
 obj-$(CONFIG_TILER_OMAP)	+= media/
-obj-$(CONFIG_SAMSUNG_MODULES) += samsung/
 obj-$(CONFIG_OMAP_HSI)		+= omap_hsi/
 obj-$(CONFIG_INPUT_YAS_SENSORS)		+= sensors/
 obj-$(CONFIG_SAMSUNG_PHONE_SVNET) += modemctl/
