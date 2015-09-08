@@ -672,10 +672,21 @@ static int set_configuration(int inton, int inthact, int cck)
 static int get_measure_interval(int32_t *msec)
 {
 	uint8_t data;
+	int mult = 7;
 
 	if (device_read(YAS_REGADDR_MEASURE_INTERVAL, &data, 1) < 0)
 		return YAS_ERROR_DEVICE_COMMUNICATION;
-	*msec = data * 7;
+	switch (cdriver.dev_id) {
+	case YAS_YAS532_DEVICE_ID:
+		mult = 4;
+		break;
+	case YAS_YAS530_DEVICE_ID:
+	default:
+		mult = 7;
+		break;
+	}
+
+	*msec = data * mult;
 
 	return YAS_NO_ERROR;
 }
@@ -683,12 +694,25 @@ static int get_measure_interval(int32_t *msec)
 static int set_measure_interval(int32_t msec)
 {
 	uint8_t data = 0;
+	int mult = 7;
 
-	if (msec > 7 * 0xff)
+	switch (cdriver.dev_id) {
+	case YAS_YAS532_DEVICE_ID:
+		mult = 4;
+		break;
+	case YAS_YAS530_DEVICE_ID:
+	default:
+		mult = 7;
+		break;
+	}
+
+	if (msec > mult*0xff)
 		data = 0xff;
 	else
-		data = (msec % 7) == 0 ? msec / 7 : (msec / 7) + 1;
-
+		if (msec % mult == 0)
+			data = (uint8_t)(msec / mult);
+		else
+			data = (uint8_t)(msec / mult + 1);
 	if (device_write(YAS_REGADDR_MEASURE_INTERVAL, &data, 1) < 0)
 		return YAS_ERROR_DEVICE_COMMUNICATION;
 
@@ -1097,7 +1121,7 @@ static int yas_cdrv_term(void)
 
 #define YAS_DEFAULT_CALIB_INTERVAL     (50)	/* 50 msecs */
 #define YAS_DEFAULT_DATA_INTERVAL      (200)	/* 200 msecs */
-#define YAS_INITCOIL_INTERVAL          (3000)	/* 3 seconds */
+#define YAS_INITCOIL_INTERVAL          (200)	/* 200 msec */
 #define YAS_INITCOIL_GIVEUP_INTERVAL   (180000)	/* 180 seconds */
 #define YAS_DETECT_OVERFLOW_INTERVAL   (0)	/* 0 second */
 
