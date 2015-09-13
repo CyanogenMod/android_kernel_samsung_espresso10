@@ -21,31 +21,6 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC) += board-espresso-muxset-r03.o \
 						board-espresso-cmcc-muxset-r09.o \
 						board-espresso-cmcc-muxset-r10.o
 
-obj-$(CONFIG_MACH_SAMSUNG_T1_CHN_CMCC)  += board-t1.o \
-                                           board-t1-emif.o \
-                                           board-t1-wifi.o \
-                                           board-t1-display.o \
-                                           board-t1-connector.o \
-                                           board-t1-power.o \
-                                           board-t1-pmic.o \
-                                           board-t1-serial.o \
-                                           board-t1-jack.o \
-                                           board-t1-input.o \
-                                           board-t1-sensors.o\
-                                           board-t1-sdio.o \
-                                           board-t1-bluetooth.o \
-                                           board-t1-vibrator.o \
-                                           board-t1-fmradio.o \
-					   board-t1-spi.o \
-					   board-t1-cmcc-modems.o \
-					   board-t1-camera.o
-
-obj-$(CONFIG_MACH_SAMSUNG_T1_CHN_CMCC)   += board-t1-muxset-r02.o \
-                                           board-t1-muxset-r03.o \
-                                           board-t1-muxset-r04.o \
-                                           board-t1-muxset-r05.o \
-                                           board-t1-cmcc-muxset-r07.o
-
 obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_CMCC)	+= board-superior.o \
 					   board-superior-emif.o \
 					   board-superior-serial.o \

@@ -26,11 +26,6 @@ config MACH_OMAP4_SAMSUNG
 	select REGULATOR_FIXED_VOLTAGE
 	default n
 
-config MACH_SAMSUNG_T1
-	bool "Samsung T1 (GT-I9100G) Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-
 config MACH_SAMSUNG_ESPRESSO
 	bool "Samsung Espresso (GT-P3100) Board"
 	default n
