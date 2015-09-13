@@ -46,22 +46,6 @@ config FW_SAMSUNG_ESPRESSO_10_TSP
 	bool
 	default n
 
-config MACH_SAMSUNG_KONA
-	bool "Samsung Kona (GT-N5100) Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-	select REGULATOR_FIXED_VOLTAGE
-	select FW_SAMSUNG_KONA_TSP
-	select FW_SAMSUNG_KONA_WACOM
-
-config FW_SAMSUNG_KONA_TSP
-	bool
-	default n
-
-config FW_SAMSUNG_KONA_WACOM
-	bool
-	default n
-
 if BT
 config BT_BCM4330
 	bool "Enable BCM4330 driver"
