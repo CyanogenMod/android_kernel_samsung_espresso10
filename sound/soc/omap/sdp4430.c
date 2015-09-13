@@ -48,12 +48,6 @@
 #endif
 #include "../codecs/twl6040.h"
 
-#ifdef CONFIG_MACH_TUNA
-#include "../../../arch/arm/mach-omap2/board-tuna.h"
-
-#define TUNA_MAIN_MIC_GPIO  48
-#define TUNA_SUB_MIC_GPIO   171
-#endif
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
 #undef TI_HS_JACK
 #include "../../../arch/arm/mach-omap2/mux.h"
@@ -67,23 +61,6 @@ static struct snd_soc_codec *twl6040_codec;
 #endif
 struct regulator *twl6040_clk32kreg;
 
-
-#ifdef CONFIG_MACH_TUNA
-
-static int main_mic_bias_event(struct snd_soc_dapm_widget *w,
-			struct snd_kcontrol *kcontrol, int event)
-{
-	gpio_set_value(TUNA_MAIN_MIC_GPIO, SND_SOC_DAPM_EVENT_ON(event));
-	return 0;
-}
-
-static int sub_mic_bias_event(struct snd_soc_dapm_widget *w,
-			struct snd_kcontrol *kcontrol, int event)
-{
-	gpio_set_value(TUNA_SUB_MIC_GPIO, SND_SOC_DAPM_EVENT_ON(event));
-	return 0;
-}
-#endif
 
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
 enum {
@@ -148,36 +125,6 @@ static int sdp4430_modem_mcbsp_configure(struct snd_pcm_substream *substream,
 			modem_substream[substream->stream]->private_data;
 
 		if (!mcbsp_cfg) {
-#ifdef CONFIG_MACH_TUNA
-			if (omap4_tuna_get_type() == TUNA_TYPE_TORO) {
-				/* Set cpu DAI configuration */
-				ret = snd_soc_dai_set_fmt(modem_rtd->cpu_dai,
-						SND_SOC_DAIFMT_I2S |
-						SND_SOC_DAIFMT_NB_NF |
-						SND_SOC_DAIFMT_CBS_CFS);
-				if (unlikely(ret < 0)) {
-					printk(KERN_ERR "can't set Modem cpu DAI format\n");
-					goto exit;
-				}
-
-				/* McBSP2 fclk reparented to ABE_24M_FCLK */
-				ret = snd_soc_dai_set_sysclk(modem_rtd->cpu_dai,
-						OMAP_MCBSP_SYSCLK_CLKS_FCLK,
-						32 * 96 * params_rate(params),
-						SND_SOC_CLOCK_IN);
-				if (unlikely(ret < 0)) {
-					printk(KERN_ERR "can't set Modem cpu DAI sysclk\n");
-					goto exit;
-				}
-
-				/* assuming McBSP2 is S16_LE stereo */
-				ret = snd_soc_dai_set_clkdiv(modem_rtd->cpu_dai, 0, 96);
-				if (unlikely(ret < 0)) {
-					printk(KERN_ERR "can't set Modem cpu DAI clkdiv\n");
-					goto exit;
-				}
-			} else
-#endif
 			{
 				/* Set cpu DAI configuration */
 				ret = snd_soc_dai_set_fmt(modem_rtd->cpu_dai,
@@ -322,7 +269,7 @@ static int sdp4430_mcbsp_hw_params(struct snd_pcm_substream *substream,
         be_id = rtd->dai_link->be_id;
 
 	if (be_id == OMAP_ABE_DAI_BT_VX) {
-		if (machine_is_tuna() || machine_is_omap4_samsung())
+		if (machine_is_omap4_samsung())
 			fmt = SND_SOC_DAIFMT_I2S |
 				SND_SOC_DAIFMT_NB_NF |
 				SND_SOC_DAIFMT_CBM_CFM;
@@ -648,7 +595,7 @@ static int sdp4430_twl6040_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_add_routes(dapm, audio_map, ARRAY_SIZE(audio_map));
 
 	/* SDP4430 connected pins */
-	if (machine_is_tuna() || machine_is_omap4_samsung()) {
+	if (machine_is_omap4_samsung()) {
 		snd_soc_dapm_enable_pin(dapm, "Ext Main Mic");
 		snd_soc_dapm_enable_pin(dapm, "Ext Sub Mic");
 	}
@@ -660,7 +607,7 @@ static int sdp4430_twl6040_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_enable_pin(dapm, "Headset Stereophone");
 
 	/* allow audio paths from the audio modem to run during suspend */
-	if (machine_is_tuna() || machine_is_omap4_samsung()) {
+	if (machine_is_omap4_samsung()) {
 		snd_soc_dapm_ignore_suspend(dapm, "Ext Main Mic");
 		snd_soc_dapm_ignore_suspend(dapm, "Ext Sub Mic");
 	}
@@ -1024,18 +971,6 @@ static struct snd_soc_dai_link sdp4430_dai[] = {
 		.ignore_suspend = 1,
 	},
 #endif
-#ifdef CONFIG_MACH_TUNA
-	{
-		.name = "SPDIF",
-		.stream_name = "SPDIF",
-		.cpu_dai_name = "omap-mcasp-dai",
-		.codec_dai_name = "dit-hifi",	/* dummy s/pdif transciever
-						 * driver */
-		.platform_name = "omap-pcm-audio",
-		.ignore_suspend = 1,
-		.no_codec = 1,
-	},
-#endif
 
 /*
  * Backend DAIs - i.e. dynamically matched interfaces, invisible to userspace.
@@ -1275,26 +1210,12 @@ static int __init sdp4430_soc_init(void)
 	int ret;
 
 	if (!machine_is_omap_4430sdp() && !machine_is_omap4_panda() &&
-			!machine_is_tuna() && !machine_is_omap4_samsung()) {
-		pr_debug("Not SDP4430, PandaBoard or Tuna!\n");
+			!machine_is_omap4_samsung()) {
+		pr_debug("Not SDP4430 or PandaBoard!\n");
 		return -ENODEV;
 	}
 	printk(KERN_INFO "SDP4430 SoC init\n");
 
-#ifdef CONFIG_MACH_TUNA
-	if (machine_is_tuna()) {
-		ret = gpio_request(TUNA_MAIN_MIC_GPIO, "MAIN_MICBIAS_EN");
-		if (ret)
-			goto mainmic_gpio_err;
-
-		gpio_direction_output(TUNA_MAIN_MIC_GPIO, 0);
-
-		ret = gpio_request(TUNA_SUB_MIC_GPIO, "SUB_MICBIAS_EN");
-		if (ret)
-			goto submic_gpio_err;
-		gpio_direction_output(TUNA_SUB_MIC_GPIO, 0);
-	}
-#endif
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
 	if (machine_is_omap4_samsung())
 		sec_omap4_micbias_gpio_init();
@@ -1304,8 +1225,6 @@ static int __init sdp4430_soc_init(void)
 		snd_soc_sdp4430.name = "SDP4430";
 	else if (machine_is_omap4_panda())
 		snd_soc_sdp4430.name = "Panda";
-	else if (machine_is_tuna())
-		snd_soc_sdp4430.name = "Tuna";
 	else if (machine_is_omap4_samsung())
 		snd_soc_sdp4430.name = "SEC_OMAP4";
 
@@ -1365,15 +1284,6 @@ device_err:
 clk32kreg_ena_err:
 	regulator_put(twl6040_clk32kreg);
 
-#ifdef CONFIG_MACH_TUNA
-clk32kreg_err:
-	if (machine_is_tuna())
-		gpio_free(TUNA_SUB_MIC_GPIO);
-submic_gpio_err:
-	if (machine_is_tuna())
-		gpio_free(TUNA_MAIN_MIC_GPIO);
-#endif
-
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
 clk32kreg_err:
 	if (machine_is_omap4_samsung())
@@ -1389,13 +1299,6 @@ module_init(sdp4430_soc_init);
 
 static void __exit sdp4430_soc_exit(void)
 {
-#ifdef CONFIG_MACH_TUNA
-	if (machine_is_tuna()) {
-		gpio_free(TUNA_SUB_MIC_GPIO);
-		gpio_free(TUNA_MAIN_MIC_GPIO);
-	}
-#endif
-
 #ifdef CONFIG_MACH_OMAP4_SAMSUNG
 	if (machine_is_omap4_samsung()) {
 		gpio_free(micbias_gpios[GPIO_SUB_MICBIAS_EN].gpio);
