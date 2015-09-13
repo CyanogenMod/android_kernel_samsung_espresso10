@@ -20,16 +20,6 @@ config TARGET_LOCALE_CHN
 	default n
 	select MACH_OMAP4_SAMSUNG
 
-config MACH_SAMSUNG_T1_CHN_CMCC
-	bool "Samsung T1 CHINA CMCC Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-
-config MACH_SAMSUNG_T1_CHN_OPEN
-	bool "Samsung T1 CHINA OPEN Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-
 config MACH_SAMSUNG_SUPERIOR_CHN_OPEN
 	bool "Samsung Superior CHINA OPEN Board"
 	default n
