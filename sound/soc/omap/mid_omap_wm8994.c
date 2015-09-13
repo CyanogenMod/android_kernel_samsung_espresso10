@@ -159,15 +159,7 @@ static struct gpio ear_select = {
 #endif
 
 /* Determines the mclk of the board. */
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-#if (CONFIG_SAMSUNG_REL_HW_REV == 4)
-unsigned int board_mclk = 26000000;
-#else
 unsigned int board_mclk = 38400000;
-#endif
-#else
-unsigned int board_mclk = 38400000;
-#endif
 
 /* Specifying each HW revision GPIO's name. */
 #ifdef HW_REVISION_DISTINGUISHER
@@ -242,15 +234,6 @@ const char *dock_out_spk_volume_up_down_text[] = {
 #ifdef CONFIG_MACH_SAMSUNG_HARRISON
 #define CONFIG_SEC_DEV_JACK
 #endif
-
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-#if (CONFIG_SAMSUNG_REL_HW_REV == 4)
-#define CONFIG_SEC_DEV_JACK
-#endif
-/* Detect earjack one more */
-#define JACK_DETECT_QUEUE
-#endif
-
 
 #ifndef CONFIG_SEC_DEV_JACK
 /* To support PBA function test */
@@ -610,30 +593,6 @@ static int main_mic_bias_event(struct snd_soc_dapm_widget *w,
 				   WM8994_MICB1_ENA_MASK, val<<4);
 	return 0;
 }
-
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-static int hp_mic_bias_event(struct snd_soc_dapm_widget *w,
-			struct snd_kcontrol *kcontrol, int event)
-{
-	/* Harrison feature (use Codec Mic bias) */
-	struct snd_soc_codec *codec = w->codec;
-	int val = SND_SOC_DAPM_EVENT_ON(event);
-
-	pr_info("hp_mic_bias_event val=%x\n", val);
-
-	/* 5 LEFT SHIFTS : MICB2 ENA setting. */
-	snd_soc_update_bits(codec, WM8994_POWER_MANAGEMENT_1,
-		WM8994_MICB2_ENA_MASK, val<<WM8994_MICB2_ENA_SHIFT);
-
-	/* Ensure the MicBias2 mode to the bypass. */
-	snd_soc_update_bits(codec,
-	WM8958_MICBIAS2,
-	WM8958_MICB2_MODE_MASK,
-	WM8958_MICB2_MODE);
-
-	return 0;
-}
-#endif
 
 /* PM Constraint feature for the VOIP time stamp */
 static const struct soc_enum pm_mode_enum[] = {
@@ -1133,11 +1092,7 @@ const struct snd_soc_dapm_widget omap4_dapm_widgets[] = {
 	SND_SOC_DAPM_SPK("RCV", NULL),
 	SND_SOC_DAPM_LINE("LINEOUT", NULL),
 	SND_SOC_DAPM_MIC("Main Mic", main_mic_bias_event),
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-	SND_SOC_DAPM_MIC("Headset Mic", hp_mic_bias_event),
-#else
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-#endif
 
 	SND_SOC_DAPM_INPUT("VMID_INPUT"),
 	SND_SOC_DAPM_OUTPUT("VMID_OUTPUT"),

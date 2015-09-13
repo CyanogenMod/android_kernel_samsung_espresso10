@@ -318,4 +318,3 @@ obj-$(CONFIG_ARCH_OMAP4)		+= omap_gcxxx.o
 
 include arch/arm/mach-omap2/Makefile.sec
 include arch/arm/mach-omap2/Makefile.chn
-include arch/arm/mach-omap2/Makefile.mid
