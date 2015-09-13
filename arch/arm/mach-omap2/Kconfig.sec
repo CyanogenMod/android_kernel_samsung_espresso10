@@ -62,22 +62,6 @@ config FW_SAMSUNG_KONA_WACOM
 	bool
 	default n
 
-config MACH_SAMSUNG_SUPERIOR
-	bool "Samsung Superior (GT-I9260) Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-	select REGULATOR_FIXED_VOLTAGE
-	select FW_SAMSUNG_SUPERIOR_TSP
-	select FW_SAMSUNG_SUPERIOR_TOUCH_KEY
-
-config FW_SAMSUNG_SUPERIOR_TSP
-	bool
-	default n
-
-config FW_SAMSUNG_SUPERIOR_TOUCH_KEY
-	bool
-	default n
-
 if BT
 config BT_BCM4330
 	bool "Enable BCM4330 driver"

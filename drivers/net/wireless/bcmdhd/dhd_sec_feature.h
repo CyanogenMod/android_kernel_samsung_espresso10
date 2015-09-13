@@ -39,10 +39,7 @@
 
 /* Module */
 
-#if defined(CONFIG_MACH_U1) || defined(CONFIG_MACH_TRATS)\
-	|| defined(CONFIG_MACH_SAMSUNG_SUPERIOR)\
-	|| defined(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_OPEN)\
-	|| defined(CONFIG_MACH_SAMSUNG_SUPERIOR_CHN_CMCC)
+#if defined(CONFIG_MACH_U1) || defined(CONFIG_MACH_TRATS)
 #ifdef CONFIG_MACH_Q1_BD
 #define HW_OOB
 #endif
