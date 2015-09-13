@@ -152,16 +152,8 @@ endif
 TSPFIRMWARE_DIRECTORY_SYNAPTICS = $(srctree)/firmware/synaptics
 ifeq ($(shell test -d $(TSPFIRMWARE_DIRECTORY_SYNAPTICS) && echo yes),yes)
 fw-shipped-$(CONFIG_FW_SAMSUNG_ESPRESSO_10_TSP) += synaptics/p5100.fw
-fw-shipped-$(CONFIG_FW_SAMSUNG_KONA_TSP) += synaptics/n5100.fw
 else
 $(warning '$(TSPFIRMWARE_DIRECTORY)' directory dose not exist)
-endif
-
-WACOM_FIRMWARE_DIRECTORY = $(srctree)/firmware/wacom
-ifeq ($(shell test -d $(WACOM_FIRMWARE_DIRECTORY) && echo yes),yes)
-fw-shipped-$(CONFIG_FW_SAMSUNG_KONA_WACOM) += wacom/n5100.fw
-else
-$(warning '$(WACOM_FIRMWARE_DIRECTORY)' directory dose not exist)
 endif
 
 fw-shipped-all := $(fw-shipped-y) $(fw-shipped-m) $(fw-shipped-)
