@@ -89,42 +89,6 @@ static struct file_system_type proc_fs_type = {
 	.kill_sb	= proc_kill_sb,
 };
 
-#if defined(CONFIG_DEFERRED_INITCALLS)
-extern void do_deferred_initcalls(void);
-
-static int proc_calc_metrics(char *page, char **start, off_t off,
-		int count, int *eof, int len)
-{
-	if (len < off + count)
-		*eof = 1;
-
-	*start = page + off;
-
-	len -= off;
-	if (len > count)
-		len = count;
-	if (len < 0)
-		len = 0;
-
-	return len;
-}
-
-static int deferred_initcalls_read_proc(char *page, char **start, off_t off,
-		int count, int *eof, void *data)
-{
-	static int deferred_initcalls_done;
-	int len;
-
-	len = sprintf(page, "%d\n", deferred_initcalls_done);
-	if (!deferred_initcalls_done) {
-		do_deferred_initcalls();
-		deferred_initcalls_done = 1;
-	}
-
-	return proc_calc_metrics(page, start, off, count, eof, len);
-}
-#endif /* CONFIG_DEFERRED_INITCALLS */
-
 void __init proc_root_init(void)
 {
 	struct vfsmount *mnt;
@@ -139,11 +103,6 @@ void __init proc_root_init(void)
 		unregister_filesystem(&proc_fs_type);
 		return;
 	}
-
-#if defined(CONFIG_DEFERRED_INITCALLS)
-	create_proc_read_entry("deferred_initcalls", 0, NULL,
-			deferred_initcalls_read_proc, NULL);
-#endif
 
 	init_pid_ns.proc_mnt = mnt;
 	proc_symlink("mounts", NULL, "self/mounts");
