@@ -145,11 +145,7 @@ void __init omap4_espresso_display_early_init(void)
 	struct omap_hwmod *gpio_hwmod;
 	char *gpio_no_reset[] = {
 		"gpio3",
-#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
-		"gpio4",
-#else
 		"gpio5",
-#endif
 	};
 	unsigned int i;
 

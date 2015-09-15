@@ -100,8 +100,7 @@ static struct device *jack_dev;
 #endif /* not CONFIG_SAMSUNG_JACK */
 
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 struct snd_soc_codec *the_codec;
 int dock_status;
 #endif /* defined ESPRESSO */
@@ -346,8 +345,7 @@ static int set_pm_mode(struct snd_kcontrol *kcontrol,
 }
 
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 void notify_dock_status(int status)
 {
 	if (!the_codec)
@@ -728,8 +726,7 @@ const struct snd_soc_dapm_route omap4_dapm_routes[] = {
 	{ "RCV", NULL, "HPOUT2P" },
 
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 	{ "LINEOUT", NULL, "LINEOUT1N" },
 	{ "LINEOUT", NULL, "LINEOUT1P" },
 #else /* defined ESPRESSO */
@@ -870,8 +867,7 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	int ret;
 
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 	the_codec = codec;
 #endif	/* defined ESPRESSO */
 
@@ -1085,8 +1081,7 @@ static struct snd_soc_dai_link omap4_dai[] = {
 };
 
 #if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10) \
-	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
+	|| defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 static int wm8994_suspend_pre(struct snd_soc_card *card)
 {
 	struct snd_soc_codec *codec = card->rtd->codec;

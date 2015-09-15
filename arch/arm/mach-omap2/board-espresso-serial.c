@@ -279,10 +279,8 @@ int __init omap4_espresso_serial_late_init(void)
 {
 	unsigned int boardtype = omap4_espresso_get_board_type();
 
-#if !defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
 	if (system_rev > 6 && boardtype == SEC_MACHINE_ESPRESSO)
 		omap_serial_none_pads_cfg_mux();
-#endif
 
 	return 0;
 }

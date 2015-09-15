@@ -31,8 +31,7 @@
 
 /* Battery parameter */
 /* Current range for P2(not dependent on battery type */
-#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) || \
-	defined(CONFIG_MACH_SAMSUNG_ESPRESSO_CHN_CMCC)
+#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO)
 #define CURRENT_RANGE1	0
 #define CURRENT_RANGE2	-100
 #define CURRENT_RANGE3	-750
