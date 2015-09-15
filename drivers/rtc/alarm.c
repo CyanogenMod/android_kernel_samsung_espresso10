@@ -23,9 +23,6 @@
 #include <linux/spinlock.h>
 #include <linux/sysdev.h>
 #include <linux/wakelock.h>
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-#include <linux/i2c/twl.h>
-#endif
 
 #define ANDROID_ALARM_PRINT_ERROR (1U << 0)
 #define ANDROID_ALARM_PRINT_INIT_STATUS (1U << 1)
@@ -149,85 +146,6 @@ static void alarm_enqueue_locked(struct alarm *alarm)
 	rb_link_node(&alarm->node, parent, link);
 	rb_insert_color(&alarm->node, &base->alarms);
 }
-
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-/*
-*	meaning of an character array
-*	which used to communicate
-*	between platform and kernel
-*
-*	 0|1234|56|78|90|12
-*	 1|2010|01|01|00|00
-*	en yyyy mm dd hh mm
-*/
-struct rtc_wkalrm autoboot_alm_exit;
-EXPORT_SYMBOL(autoboot_alm_exit);
-#define BOOTALM_BIT_EN       0
-#define BOOTALM_BIT_YEAR     1
-#define BOOTALM_BIT_MONTH    5
-#define BOOTALM_BIT_DAY      7
-#define BOOTALM_BIT_HOUR     9
-#define BOOTALM_BIT_MIN     11
-#define BOOTALM_BIT_TOTAL   13
-
-void alarm_set_alarmboot(char *alarm_data)
-{
-	int ret;
-	struct rtc_wkalrm alm;
-	char buf_ptr[BOOTALM_BIT_TOTAL+1];
-	u8 data;
-
-	if (!alarm_rtc_dev) {
-		pr_alarm(ERROR,
-			"alarm_set_alarm: no RTC, time will be lost on reboot\n");
-		return;
-	}
-
-	pr_info("BSY STAR : alarm_set_alarm using AlarmManager!\n");
-	strlcpy(buf_ptr, alarm_data, BOOTALM_BIT_TOTAL+1);
-
-	alm.time.tm_sec = 0;
-	alm.time.tm_min  =  (buf_ptr[BOOTALM_BIT_MIN] - '0') * 10
-		+ (buf_ptr[BOOTALM_BIT_MIN+1] - '0');
-	alm.time.tm_hour =  (buf_ptr[BOOTALM_BIT_HOUR] - '0') * 10
-		+ (buf_ptr[BOOTALM_BIT_HOUR+1] - '0');
-	alm.time.tm_mday =  (buf_ptr[BOOTALM_BIT_DAY] - '0') * 10
-		+ (buf_ptr[BOOTALM_BIT_DAY+1] - '0');
-	alm.time.tm_mon  =  (buf_ptr[BOOTALM_BIT_MONTH] - '0') * 10
-		+ (buf_ptr[BOOTALM_BIT_MONTH+1] - '0');
-	alm.time.tm_year =  (buf_ptr[BOOTALM_BIT_YEAR] - '0') * 1000
-		+ (buf_ptr[BOOTALM_BIT_YEAR+1] - '0') * 100
-		+ (buf_ptr[BOOTALM_BIT_YEAR+2] - '0') * 10
-		+ (buf_ptr[BOOTALM_BIT_YEAR+3] - '0');
-	alm.enabled = (*buf_ptr == '1');
-
-	if (alm.enabled) {
-		alm.time.tm_mon -= 1;
-		alm.time.tm_year -= 1900;
-	} else {
-		alm.time.tm_year = 70;
-		alm.time.tm_mon = 0;
-		alm.time.tm_mday = 1;
-		alm.time.tm_hour = 0;
-		alm.time.tm_min = 0;
-		alm.time.tm_sec = 0;
-	}
-
-	autoboot_alm_exit = alm;
-
-	if (alm.enabled)
-		data = 0x01;
-	else
-		data = 0x00;
-
-	ret = twl_i2c_write_u8(TWL_MODULE_RTC, data, 0x17);
-	if (ret < 0)
-		pr_err("twl_rtc: Could not write TWL"
-		       "register 0x17 - error %d\n", ret);
-
-	rtc_set_alarm(alarm_rtc_dev, &alm);
-}
-#endif
 
 /**
  * alarm_init - initialize an alarm
@@ -495,18 +413,6 @@ static int alarm_suspend(struct platform_device *pdev, pm_message_t state)
 			rtc_delta).tv_sec;
 
 		rtc_time_to_tm(rtc_alarm_time, &rtc_alarm.time);
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-		rtc_tm_to_time(&rtc_current_rtc_time, &rtc_current_time);
-		if (rtc_alarm_time - rtc_current_time <= 60) {
-			pr_alarm(SUSPEND,
-				"alarm_suspend : power_on_alarm ON\n");
-		} else {
-			rtc_alarm_time -= 60;
-			rtc_time_to_tm(rtc_alarm_time, &rtc_alarm.time);
-			pr_alarm(SUSPEND,
-				"alarm_suspend : power_on_alarm OFF\n");
-		}
-#endif
 		rtc_alarm.enabled = 1;
 		rtc_set_alarm(alarm_rtc_dev, &rtc_alarm);
 		rtc_read_time(alarm_rtc_dev, &rtc_current_rtc_time);

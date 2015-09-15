@@ -405,57 +405,16 @@ out:
 	return ret;
 }
 
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-struct rtc_time alm_reg_time;
-static void check_alarm_boot()
-{
-	int i, ret;
-	unsigned long time_sec, alarm_sec;
-	u8 t_rtc_time[6];
-	struct rtc_time current_rtc_time;
-
-	for (i = 0x00 ; i < 0x06 ; i++)
-		ret = twl_rtc_read_u8(&t_rtc_time[i], i);
-
-	current_rtc_time.tm_sec = bcd2bin(t_rtc_time[0]);
-	current_rtc_time.tm_min = bcd2bin(t_rtc_time[1]);
-	current_rtc_time.tm_hour = bcd2bin(t_rtc_time[2]);
-	current_rtc_time.tm_mday = bcd2bin(t_rtc_time[3]);
-	current_rtc_time.tm_mon = bcd2bin(t_rtc_time[4]) - 1;
-	current_rtc_time.tm_year = bcd2bin(t_rtc_time[5]) + 100;
-
-	rtc_tm_to_time(&current_rtc_time, &time_sec);
-	rtc_tm_to_time(&alm_reg_time, &alarm_sec);
-
-	if ((time_sec > alarm_sec - 20) && (time_sec < alarm_sec + 20))
-		kernel_restart(NULL);
-}
-#endif
-
 static irqreturn_t twl_rtc_interrupt(int irq, void *rtc)
 {
 	unsigned long events = 0;
 	int ret = IRQ_NONE;
 	int res;
 	u8 rd_reg;
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	u8 check_alm_boot;
-#endif
 
 	res = twl_rtc_read_u8(&rd_reg, REG_RTC_STATUS_REG);
 	if (res)
 		goto out;
-
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	res = twl_rtc_read_u8(&check_alm_boot, 0x17);
-	if (res)
-		goto out;
-
-	if ((sec_bootmode == 5) && check_alm_boot) {
-		if (rd_reg & 0x40)
-			check_alarm_boot();
-	}
-#endif
 
 	/*
 	 * Figure out source of interrupt: ALARM or TIMER in RTC_STATUS_REG.
@@ -517,10 +476,6 @@ static int __devinit twl_rtc_probe(struct platform_device *pdev)
 	int ret = -EINVAL;
 	int irq = platform_get_irq(pdev, 0);
 	u8 rd_reg;
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	int i;
-	u8 t_alarm_time[6];
-#endif
 
 	if (irq <= 0)
 		goto out1;
@@ -638,22 +593,6 @@ static int __devinit twl_rtc_probe(struct platform_device *pdev)
 			dev_err(&pdev->dev, "Fail to Compensate RTC Clock\n");
 	}
 
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	for (i = 0; i < 6; i++)
-		ret = twl_rtc_read_u8(&t_alarm_time[i], i+7);
-	alm_reg_time.tm_sec = bcd2bin(t_alarm_time[0]);
-	alm_reg_time.tm_min = bcd2bin(t_alarm_time[1]);
-	alm_reg_time.tm_hour = bcd2bin(t_alarm_time[2]);
-	alm_reg_time.tm_mday = bcd2bin(t_alarm_time[3]);
-	alm_reg_time.tm_mon = bcd2bin(t_alarm_time[4]) - 1;
-	alm_reg_time.tm_year = bcd2bin(t_alarm_time[5]) + 100;
-
-	ret = twl_i2c_write_u8(TWL_MODULE_RTC, 0x00, 0x17);
-	if (ret < 0)
-		pr_err("twl_rtc: Could not write TWL"
-		       "register 0x17 - error %d\n", ret);
-#endif
-
 	return 0;
 
 out2:
@@ -696,20 +635,8 @@ static void twl_rtc_shutdown(struct platform_device *pdev)
 
 #ifdef CONFIG_ANDROID
 	/* mask alarm interrupts as well so that we don't get powered on
-	 when alarm is triggered on android */
+	   when alarm is triggered on android */
 	mask_rtc_irq_bit(BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
-#endif
-
-#if !defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	mask_rtc_irq_bit(BIT_RTC_INTERRUPTS_REG_IT_ALARM_M);
-#endif
-
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	twl_rtc_set_alarm(&pdev->dev, &autoboot_alm_exit);
-	if (autoboot_alm_exit.enabled)
-		twl_i2c_write_u8(TWL_MODULE_RTC, 0x01, 0x17);
-	else
-		twl_i2c_write_u8(TWL_MODULE_RTC, 0x00, 0x17);
 #endif
 }
 

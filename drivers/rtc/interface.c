@@ -370,10 +370,6 @@ int rtc_set_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm)
 	if (alarm->enabled) {
 		err = rtc_timer_enqueue(rtc, &rtc->aie_timer);
 	}
-#if defined(CONFIG_RTC_CHN_ALARM_BOOT)
-	else
-		err = rtc->ops->set_alarm(rtc->dev.parent, alarm);
-#endif
 	mutex_unlock(&rtc->ops_lock);
 	return err;
 }
