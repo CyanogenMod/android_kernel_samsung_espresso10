@@ -27,9 +27,7 @@
 #include <linux/syscore_ops.h>
 #include <linux/vmalloc.h>
 #include <linux/signal.h>
-#ifdef CONFIG_ANDROID
 #include <linux/device.h>
-#endif
 
 #include "tf_protocol.h"
 #include "tf_defs.h"
@@ -149,9 +147,7 @@ int tf_self_test_blkcipher_use_vmalloc;
 module_param_named(post_vmalloc, tf_self_test_blkcipher_use_vmalloc, int, 0644);
 #endif
 
-#ifdef CONFIG_ANDROID
 static struct class *tf_class;
-#endif
 
 /*----------------------------------------------------------------------------
  * Global Variables
@@ -399,12 +395,10 @@ static int __init tf_device_register(void)
 	}
 #endif
 
-#ifdef CONFIG_ANDROID
 	tf_class = class_create(THIS_MODULE, TF_DEVICE_BASE_NAME);
 	device_create(tf_class, NULL,
 		dev->dev_number,
 		NULL, TF_DEVICE_BASE_NAME);
-#endif
 
 #ifdef CONFIG_TF_ZEBRA
 	/*
@@ -479,19 +473,6 @@ static int tf_device_open(struct inode *inode, struct file *file)
 			file, error);
 		goto error;
 	}
-
-#ifndef CONFIG_ANDROID
-	/*
-	 * Check file flags. We only autthorize the O_RDWR access
-	 */
-	if (file->f_flags != O_RDWR) {
-		dprintk(KERN_ERR "tf_device_open(%p): "
-			"Invalid access mode %u\n",
-			file, file->f_flags);
-		error = -EACCES;
-		goto error;
-	}
-#endif
 
 	/*
 	 * Open a new connection.
