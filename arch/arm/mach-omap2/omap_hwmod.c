@@ -180,8 +180,7 @@ static struct omap_hwmod *mpu_oh;
 static int _update_sysc_cache(struct omap_hwmod *oh)
 {
 	if (!oh->class->sysc) {
-		WARN(1, "omap_hwmod: %s: cannot read OCP_SYSCONFIG\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: cannot read OCP_SYSCONFIG: not defined on hwmod's class\n", oh->name);
 		return -EINVAL;
 	}
 
@@ -205,8 +204,7 @@ static int _update_sysc_cache(struct omap_hwmod *oh)
 static void _write_sysconfig_raw(u32 v, struct omap_hwmod *oh)
 {
 	if (!oh->class->sysc) {
-		WARN(1, "omap_hwmod: %s: cannot write OCP_SYSCONFIG\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: cannot write OCP_SYSCONFIG: not defined on hwmod's class\n", oh->name);
 		return;
 	}
 
@@ -251,8 +249,7 @@ static int _set_master_standbymode(struct omap_hwmod *oh, u8 standbymode,
 		return -EINVAL;
 
 	if (!oh->class->sysc->sysc_fields) {
-		WARN(1, "omap_hwmod: %s: offset struct not provided\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: offset struct for sysconfig not provided in class\n", oh->name);
 		return -EINVAL;
 	}
 
@@ -285,8 +282,7 @@ static int _set_slave_idlemode(struct omap_hwmod *oh, u8 idlemode, u32 *v)
 		return -EINVAL;
 
 	if (!oh->class->sysc->sysc_fields) {
-		WARN(1, "omap_hwmod: %s: offset struct not provided\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: offset struct for sysconfig not provided in class\n", oh->name);
 		return -EINVAL;
 	}
 
@@ -320,8 +316,7 @@ static int _set_clockactivity(struct omap_hwmod *oh, u8 clockact, u32 *v)
 		return -EINVAL;
 
 	if (!oh->class->sysc->sysc_fields) {
-		WARN(1, "omap_hwmod: %s: offset struct not provided\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: offset struct for sysconfig not provided in class\n", oh->name);
 		return -EINVAL;
 	}
 
@@ -351,8 +346,7 @@ static int _set_softreset(struct omap_hwmod *oh, u32 *v)
 		return -EINVAL;
 
 	if (!oh->class->sysc->sysc_fields) {
-		WARN(1, "omap_hwmod: %s: offset struct not provided\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: offset struct for sysconfig not provided in class\n", oh->name);
 		return -EINVAL;
 	}
 
@@ -387,8 +381,7 @@ static int _set_module_autoidle(struct omap_hwmod *oh, u8 autoidle,
 		return -EINVAL;
 
 	if (!oh->class->sysc->sysc_fields) {
-		WARN(1, "omap_hwmod: %s: offset struct not provided\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: offset struct for sysconfig not provided in class\n", oh->name);
 		return -EINVAL;
 	}
 
@@ -419,8 +412,7 @@ static int _enable_wakeup(struct omap_hwmod *oh, u32 *v)
 		return -EINVAL;
 
 	if (!oh->class->sysc->sysc_fields) {
-		WARN(1, "omap_hwmod: %s: offset struct not provided\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: offset struct for sysconfig not provided in class\n", oh->name);
 		return -EINVAL;
 	}
 
@@ -459,8 +451,7 @@ static int _disable_wakeup(struct omap_hwmod *oh, u32 *v)
 		return -EINVAL;
 
 	if (!oh->class->sysc->sysc_fields) {
-		WARN(1, "omap_hwmod: %s: offset struct not provided\n",
-								oh->name);
+		WARN(1, "omap_hwmod: %s: offset struct for sysconfig not provided in class\n", oh->name);
 		return -EINVAL;
 	}
 
