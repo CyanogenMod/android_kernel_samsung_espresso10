@@ -1906,18 +1906,6 @@ static inline void hci_auth_complete_evt(struct hci_dev *hdev, struct sk_buff *s
 		return;
 	}
 
-	/* SS_BLUETOOTH(is80.hwang) 2012.05.18 */
-	/* for pin code request issue */
-#if defined(CONFIG_BT_CSR8811)
-	if (ev->status == 0x06) {
-		BT_ERR("Pin or key missing !!!");
-		hci_remove_link_key(hdev, &conn->dst);
-		hci_dev_unlock(hdev);
-		return ;
-	}
-#endif
-	/* SS_BLUEZ_BT(is80.hwang) End */
-
 	if (!ev->status) {
 		if (!(conn->ssp_mode > 0 && hdev->ssp_mode > 0) &&
 				test_bit(HCI_CONN_REAUTH_PEND,	&conn->flags)) {
