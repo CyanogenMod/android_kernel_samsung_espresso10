@@ -22,7 +22,6 @@
 #include <linux/ion.h>
 #include <linux/memblock.h>
 #include <linux/omap_ion.h>
-#include <linux/ramoops.h>
 #include <linux/reboot.h>
 #include <linux/sysfs.h>
 
@@ -72,9 +71,6 @@
 
 #define ESPRESSO10_RAMCONSOLE_START	(PLAT_PHYS_OFFSET + SZ_512M)
 #define ESPRESSO10_RAMCONSOLE_SIZE	SZ_2M
-#define ESPRESSO10_RAMOOPS_START	(ESPRESSO10_RAMCONSOLE_START + \
-					 ESPRESSO10_RAMCONSOLE_SIZE)
-#define ESPRESSO10_RAMOOPS_SIZE		SZ_1M
 
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
 static struct resource ramconsole_resources[] = {
@@ -94,20 +90,6 @@ static struct platform_device ramconsole_device = {
 };
 #endif /* CONFIG_ANDROID_RAM_CONSOLE */
 
-static struct ramoops_platform_data ramoops_pdata = {
-	.mem_size	= ESPRESSO10_RAMOOPS_SIZE,
-	.mem_address	= ESPRESSO10_RAMOOPS_START,
-	.record_size	= SZ_32K,
-	.dump_oops	= 0,	/* only for panic */
-};
-
-static struct platform_device ramoops_device = {
-	.name		= "ramoops",
-	.dev		= {
-		.platform_data	= &ramoops_pdata,
-	},
-};
-
 static struct platform_device bcm4330_bluetooth_device = {
 	.name		= "bcm4330_bluetooth",
 	.id		= -1,
@@ -117,7 +99,6 @@ static struct platform_device *espresso10_dbg_devices[] __initdata = {
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
 	&ramconsole_device,
 #endif
-	&ramoops_device,
 };
 
 static struct platform_device *espresso10_devices[] __initdata = {
@@ -291,10 +272,6 @@ static void __init espresso10_reserve(void)
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
 		memblock_remove(ESPRESSO10_RAMCONSOLE_START,
 				ESPRESSO10_RAMCONSOLE_SIZE);
-#endif
-#if defined(CONFIG_RAMOOPS)
-		memblock_remove(ESPRESSO10_RAMOOPS_START,
-				ESPRESSO10_RAMOOPS_SIZE);
 #endif
 	}
 
