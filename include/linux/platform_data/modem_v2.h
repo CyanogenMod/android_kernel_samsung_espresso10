@@ -17,14 +17,7 @@
 #define __MODEM_IF_H__
 
 enum modem_t {
-	IMC_XMM6260,
 	IMC_XMM6262,
-	VIA_CBP71,
-	VIA_CBP72,
-	SEC_CMC221,
-	QC_MDM6600,
-	QC_ESC6270,
-	SPRD_SC8803,
 	DUMMY,
 	MAX_MODEM_TYPE
 };
@@ -50,11 +43,6 @@ enum modem_io {
 enum modem_link {
 	LINKDEV_UNDEFINED,
 	LINKDEV_MIPI,
-	LINKDEV_DPRAM,
-	LINKDEV_SPI,
-	LINKDEV_USB,
-	LINKDEV_HSIC,
-	LINKDEV_C2C,
 	LINKDEV_MAX,
 };
 #define LINKTYPE(modem_link) (1u << (modem_link))
