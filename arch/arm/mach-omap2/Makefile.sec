@@ -43,7 +43,6 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO)	+= board-espresso.o \
 					   board-espresso-bluetooth.o \
 					   board-espresso-jack.o \
 					   board-espresso-power.o \
-					   board-espresso-camera.o \
 					   board-espresso-vibrator.o \
 					   board-espresso-irled.o
 
@@ -68,7 +67,6 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10.o \
 					   board-espresso10-modems.o \
 					   board-espresso10-sensor.o \
 					   board-espresso10-input.o \
-					   board-espresso10-camera.o \
 					   board-espresso10-vibrator.o \
 					   board-espresso10-irled.o
 
