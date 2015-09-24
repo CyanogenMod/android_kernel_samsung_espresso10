@@ -217,7 +217,6 @@ static void __init espresso_init(void)
 	omap4_espresso_wifi_init();
 	omap4_espresso_sensors_init();
 	omap4_espresso_jack_init();
-	omap4_espresso_camera_init();
 	omap4_espresso_reboot_init();
 	omap4_espresso_none_modem_init();
 
