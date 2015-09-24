@@ -78,9 +78,6 @@ void bcm_bt_lpm_exit_lpm_locked(struct uart_port *uport);
 /** @category charger */
 void omap4_espresso10_charger_init(void);
 
-/** @category camera */
-void omap4_espresso10_camera_init(void);
-
 /** @category modem*/
 void omap4_espresso10_none_modem_init(void);
 

@@ -221,7 +221,6 @@ static void __init espresso10_init(void)
 	omap4_espresso10_input_init();
 	omap4_espresso10_sensors_init();
 	omap4_espresso10_jack_init();
-	omap4_espresso10_camera_init();
 	omap4_espresso10_reboot_init();
 	omap4_espresso10_none_modem_init();
 
