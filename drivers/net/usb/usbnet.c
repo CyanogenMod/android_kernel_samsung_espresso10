@@ -68,7 +68,6 @@
 			(RX_MAX_QUEUE_MEMORY/(dev)->rx_urb_size) : 4)
 #define	TX_QLEN(dev) (((dev)->udev->speed == USB_SPEED_HIGH) ? \
 			(RX_MAX_QUEUE_MEMORY/(dev)->hard_mtu) : 4)
-#define	DONE_QLEN(dev) (RX_QLEN(dev) + TX_QLEN(dev))
 
 // reawaken network queue this soon after stopping; else watchdog barks
 #define TX_TIMEOUT_JIFFIES	(5*HZ)
@@ -278,17 +277,32 @@ int usbnet_change_mtu (struct net_device *net, int new_mtu)
 }
 EXPORT_SYMBOL_GPL(usbnet_change_mtu);
 
+/* The caller must hold list->lock */
+static void __usbnet_queue_skb(struct sk_buff_head *list,
+			struct sk_buff *newsk, enum skb_state state)
+{
+	struct skb_data *entry = (struct skb_data *) newsk->cb;
+
+	__skb_queue_tail(list, newsk);
+	entry->state = state;
+}
+
 /*-------------------------------------------------------------------------*/
 
 /* some LK 2.4 HCDs oopsed if we freed or resubmitted urbs from
  * completion callbacks.  2.5 should have fixed those bugs...
  */
 
-static void defer_bh(struct usbnet *dev, struct sk_buff *skb, struct sk_buff_head *list)
+static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
+		struct sk_buff_head *list, enum skb_state state)
 {
 	unsigned long		flags;
+	enum skb_state 		old_state;
+	struct skb_data *entry = (struct skb_data *) skb->cb;
 
 	spin_lock_irqsave(&list->lock, flags);
+	old_state = entry->state;
+	entry->state = state;
 	__skb_unlink(skb, list);
 	spin_unlock(&list->lock);
 	spin_lock(&dev->done.lock);
@@ -296,6 +310,7 @@ static void defer_bh(struct usbnet *dev, struct sk_buff *skb, struct sk_buff_hea
 	if (dev->done.qlen == 1)
 		tasklet_schedule(&dev->bh);
 	spin_unlock_irqrestore(&dev->done.lock, flags);
+	return old_state;
 }
 
 /* some work can't be done in tasklets, so we use keventd
@@ -330,13 +345,6 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
 			dev->udev->bus->dma_align)
 		net_ip_align = 0;
 
-	if (dev->rxq.qlen >= RX_QLEN(dev)) {
-		netif_dbg(dev, rx_err, dev->net, "rx queue full\n");
-		usbnet_defer_kevent (dev, EVENT_RX_MEMORY);
-		usb_free_urb (urb);
-		return -ENOMEM;
-	}
-
 	if ((skb = alloc_skb (size + net_ip_align, flags)) == NULL) {
 		netif_dbg(dev, rx_err, dev->net, "no rx skb\n");
 		usbnet_defer_kevent (dev, EVENT_RX_MEMORY);
@@ -349,7 +357,6 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
 	entry = (struct skb_data *) skb->cb;
 	entry->urb = urb;
 	entry->dev = dev;
-	entry->state = rx_start;
 	entry->length = 0;
 
 	usb_fill_bulk_urb (urb, dev->udev, dev->in,
@@ -381,7 +388,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
 			tasklet_schedule (&dev->bh);
 			break;
 		case 0:
-			__skb_queue_tail (&dev->rxq, skb);
+			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
 		}
 	} else {
 		netif_dbg(dev, ifdown, dev->net, "rx: stopped\n");
@@ -400,6 +407,12 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
 
 static inline void rx_process (struct usbnet *dev, struct sk_buff *skb)
 {
+	if ((((unsigned long) skb->data) & 0x3) != NET_IP_ALIGN) {
+		/* we allocated this skb, therefore we have enough tailroom */
+		memmove(skb->data+NET_IP_ALIGN, skb->data, skb->len);
+		skb_reserve(skb, NET_IP_ALIGN);
+	}
+
 	if (dev->driver_info->rx_fixup &&
 	    !dev->driver_info->rx_fixup (dev, skb)) {
 		/* With RX_ASSEMBLE, rx_fixup() must update counters */
@@ -432,16 +445,17 @@ static void rx_complete (struct urb *urb)
 	struct skb_data		*entry = (struct skb_data *) skb->cb;
 	struct usbnet		*dev = entry->dev;
 	int			urb_status = urb->status;
+	enum skb_state		state;
 
 	skb_put (skb, urb->actual_length);
-	entry->state = rx_done;
+	state = rx_done;
 	entry->urb = NULL;
 
 	switch (urb_status) {
 	/* success */
 	case 0:
 		if (skb->len < dev->net->hard_header_len) {
-			entry->state = rx_cleanup;
+			state = rx_cleanup;
 			dev->net->stats.rx_errors++;
 			dev->net->stats.rx_length_errors++;
 			netif_dbg(dev, rx_err, dev->net,
@@ -480,7 +494,7 @@ static void rx_complete (struct urb *urb)
 				  "rx throttle %d\n", urb_status);
 		}
 block:
-		entry->state = rx_cleanup;
+		state = rx_cleanup;
 		entry->urb = urb;
 		urb = NULL;
 		break;
@@ -491,18 +505,18 @@ block:
 		// FALLTHROUGH
 
 	default:
-		entry->state = rx_cleanup;
+		state = rx_cleanup;
 		dev->net->stats.rx_errors++;
 		netif_dbg(dev, rx_err, dev->net, "rx status %d\n", urb_status);
 		break;
 	}
 
-	defer_bh(dev, skb, &dev->rxq);
+	state = defer_bh(dev, skb, &dev->rxq, state);
 
 	if (urb) {
 		if (netif_running (dev->net) &&
-				!test_bit (EVENT_RX_HALT, &dev->flags) &&
-				(dev->done.qlen < DONE_QLEN(dev))) {
+		    !test_bit (EVENT_RX_HALT, &dev->flags) &&
+		    state != unlink_start) {
 			rx_submit (dev, urb, GFP_ATOMIC);
 			return;
 		}
@@ -588,16 +602,23 @@ EXPORT_SYMBOL_GPL(usbnet_purge_paused_rxq);
 static int unlink_urbs (struct usbnet *dev, struct sk_buff_head *q)
 {
 	unsigned long		flags;
-	struct sk_buff		*skb, *skbnext;
+	struct sk_buff		*skb;
 	int			count = 0;
 
 	spin_lock_irqsave (&q->lock, flags);
-	skb_queue_walk_safe(q, skb, skbnext) {
+	while (!skb_queue_empty(q)) {
 		struct skb_data		*entry;
 		struct urb		*urb;
 		int			retval;
 
-		entry = (struct skb_data *) skb->cb;
+		skb_queue_walk(q, skb) {
+			entry = (struct skb_data *) skb->cb;
+			if (entry->state != unlink_start)
+				goto found;
+		}
+		break;
+found:
+		entry->state = unlink_start;
 		urb = entry->urb;
 
 		/*
@@ -1048,8 +1069,7 @@ static void tx_complete (struct urb *urb)
 	}
 
 	usb_autopm_put_interface_async(dev->intf);
-	entry->state = tx_done;
-	defer_bh(dev, skb, &dev->txq);
+	(void) defer_bh(dev, skb, &dev->txq, tx_done);
 }
 
 /*-------------------------------------------------------------------------*/
@@ -1092,6 +1112,28 @@ netdev_tx_t usbnet_start_xmit (struct sk_buff *skb,
 			}
 		}
 	}
+
+	/* data must be 4-byte aligned */
+	length = ((unsigned long)skb->data) & 0x3;
+	if (length) {
+		if (skb_cloned(skb) ||
+		    ((skb_headroom(skb) < length) &&
+		     (skb_tailroom(skb) < (4-length)))) {
+			struct sk_buff *skb2;
+			/* copy skb with proper alignment */
+			skb2 = skb_copy_expand(skb, 0, 4, GFP_ATOMIC);
+			dev_kfree_skb_any(skb);
+			skb = skb2;
+			if (!skb)
+				goto drop;
+		} else {
+			/* move data inside buffer */
+			length = ((skb_headroom(skb) >= length) ? 0 : 4)-length;
+			memmove(skb->data+length, skb->data, skb->len);
+			skb_reserve(skb, length);
+		}
+	}
+
 	length = skb->len;
 
 	if (!(urb = usb_alloc_urb (0, GFP_ATOMIC))) {
@@ -1102,7 +1144,6 @@ netdev_tx_t usbnet_start_xmit (struct sk_buff *skb,
 	entry = (struct skb_data *) skb->cb;
 	entry->urb = urb;
 	entry->dev = dev;
-	entry->state = tx_start;
 	entry->length = length;
 
 	usb_fill_bulk_urb (urb, dev->udev, dev->out,
@@ -1142,6 +1183,7 @@ netdev_tx_t usbnet_start_xmit (struct sk_buff *skb,
 		usb_anchor_urb(urb, &dev->deferred);
 		/* no use to process more packets */
 		netif_stop_queue(net);
+		usb_put_urb(urb);
 		spin_unlock_irqrestore(&dev->txq.lock, flags);
 		netdev_dbg(dev->net, "Delaying transmission for resumption\n");
 		goto deferred;
@@ -1161,7 +1203,7 @@ netdev_tx_t usbnet_start_xmit (struct sk_buff *skb,
 		break;
 	case 0:
 		net->trans_start = jiffies;
-		__skb_queue_tail (&dev->txq, skb);
+		__usbnet_queue_skb(&dev->txq, skb, tx_start);
 		if (dev->txq.qlen >= TX_QLEN (dev))
 			netif_stop_queue (net);
 	}
@@ -1282,6 +1324,8 @@ void usbnet_disconnect (struct usb_interface *intf)
 	unregister_netdev (net);
 
 	cancel_work_sync(&dev->kevent);
+
+	usb_scuttle_anchored_urbs(&dev->deferred);
 
 	if (dev->driver_info->unbind)
 		dev->driver_info->unbind (dev, intf);
