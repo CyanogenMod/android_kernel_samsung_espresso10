@@ -30,6 +30,7 @@
 #include <linux/lcd.h>
 #include <linux/backlight.h>
 #include <linux/serial_core.h>
+#include <linux/platform_data/panel-ltn.h>
 #include <linux/platform_data/panel-ltn070nl01.h>
 #include <linux/platform_device.h>
 #include <plat/hardware.h>
@@ -44,7 +45,7 @@
 struct ltn070nl01 {
 	struct device *dev;
 	struct omap_dss_device *dssdev;
-	struct ltn070nl01_panel_data *pdata;
+	struct ltn_panel_data *pdata;
 	bool enabled;
 	unsigned int current_brightness;
 	unsigned int bl;

@@ -45,7 +45,7 @@
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
 
-#include "board-espresso10.h"
+#include "board-espresso.h"
 #include "control.h"
 #include "mux.h"
 #include "omap4-sar-layout.h"
@@ -64,21 +64,21 @@
  */
 #define GPIO_HW_REV4		41
 
-#define ESPRESSO10_MEM_BANK_0_SIZE	0x20000000
-#define ESPRESSO10_MEM_BANK_0_ADDR	0x80000000
-#define ESPRESSO10_MEM_BANK_1_SIZE	0x20000000
-#define ESPRESSO10_MEM_BANK_1_ADDR	0xA0000000
+#define ESPRESSO_MEM_BANK_0_SIZE	0x20000000
+#define ESPRESSO_MEM_BANK_0_ADDR	0x80000000
+#define ESPRESSO_MEM_BANK_1_SIZE	0x20000000
+#define ESPRESSO_MEM_BANK_1_ADDR	0xA0000000
 
-#define ESPRESSO10_RAMCONSOLE_START	(PLAT_PHYS_OFFSET + SZ_512M)
-#define ESPRESSO10_RAMCONSOLE_SIZE	SZ_2M
+#define ESPRESSO_RAMCONSOLE_START	(PLAT_PHYS_OFFSET + SZ_512M)
+#define ESPRESSO_RAMCONSOLE_SIZE	SZ_2M
 
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
 static struct resource ramconsole_resources[] = {
 	{
 		.flags	= IORESOURCE_MEM,
-		.start	= ESPRESSO10_RAMCONSOLE_START,
-		.end	= ESPRESSO10_RAMCONSOLE_START
-			+ ESPRESSO10_RAMCONSOLE_SIZE - 1,
+		.start	= ESPRESSO_RAMCONSOLE_START,
+		.end	= ESPRESSO_RAMCONSOLE_START
+			+ ESPRESSO_RAMCONSOLE_SIZE - 1,
 	 },
 };
 
@@ -95,22 +95,22 @@ static struct platform_device bcm4330_bluetooth_device = {
 	.id		= -1,
 };
 
-static struct platform_device *espresso10_dbg_devices[] __initdata = {
+static struct platform_device *espresso_dbg_devices[] __initdata = {
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
 	&ramconsole_device,
 #endif
 };
 
-static struct platform_device *espresso10_devices[] __initdata = {
+static struct platform_device *espresso_devices[] __initdata = {
 	&bcm4330_bluetooth_device,
 };
 
-static void __init espresso10_init_early(void)
+static void __init espresso_init_early(void)
 {
 	omap2_init_common_infrastructure();
 	omap2_init_common_devices(NULL, NULL);
 
-	omap4_espresso10_display_early_init();
+	omap4_espresso_display_early_init();
 }
 
 static struct omap_musb_board_data musb_board_data = {
@@ -127,16 +127,16 @@ static struct omap_musb_board_data musb_board_data = {
 
 static unsigned int board_type = SEC_MACHINE_ESPRESSO10;
 
-static int __init espresso10_set_board_type(char *str)
+static int __init espresso_set_board_type(char *str)
 {
 	if (!strncmp(str, CARRIER_WIFI_ONLY, strlen(CARRIER_WIFI_ONLY)))
 		board_type = SEC_MACHINE_ESPRESSO10_WIFI;
 
 	return 0;
 }
-__setup("androidboot.carrier=", espresso10_set_board_type);
+__setup("androidboot.carrier=", espresso_set_board_type);
 
-static void __init omap4_espresso10_update_board_type(void)
+static void __init omap4_espresso_update_board_type(void)
 {
 	const unsigned int gpio_hw_rev4 = GPIO_HW_REV4;
 
@@ -154,12 +154,19 @@ static void __init omap4_espresso10_update_board_type(void)
 		board_type = SEC_MACHINE_ESPRESSO10_USA_BBY;
 }
 
-unsigned int __init omap4_espresso10_get_board_type(void)
+unsigned int __init omap4_espresso_get_board_type(void)
 {
 	return board_type;
 }
 
-static void espresso10_power_off_charger(void)
+bool __init espresso_is_espresso10(void)
+{
+	return (board_type == SEC_MACHINE_ESPRESSO10 ||
+			board_type == SEC_MACHINE_ESPRESSO10_WIFI ||
+			board_type == SEC_MACHINE_ESPRESSO10_USA_BBY);
+}
+
+static void espresso_power_off_charger(void)
 {
 	pr_err("Rebooting into bootloader for charger.\n");
 	arm_pm_restart('t', NULL);
@@ -167,33 +174,33 @@ static void espresso10_power_off_charger(void)
 
 static unsigned int gpio_ta_nconnected;
 
-static int espresso10_reboot_call(struct notifier_block *this,
+static int espresso_reboot_call(struct notifier_block *this,
 				unsigned long code, void *cmd)
 {
 	if (code == SYS_POWER_OFF && !gpio_get_value(gpio_ta_nconnected))
-		pm_power_off = espresso10_power_off_charger;
+		pm_power_off = espresso_power_off_charger;
 
 	return 0;
 }
 
-static struct notifier_block espresso10_reboot_notifier = {
-	.notifier_call = espresso10_reboot_call,
+static struct notifier_block espresso_reboot_notifier = {
+	.notifier_call = espresso_reboot_call,
 };
 
-static void __init omap4_espresso10_reboot_init(void)
+static void __init omap4_espresso_reboot_init(void)
 {
 	gpio_ta_nconnected = omap_muxtbl_get_gpio_by_name("TA_nCONNECTED");
 
 	if (unlikely(gpio_ta_nconnected != -EINVAL))
-		register_reboot_notifier(&espresso10_reboot_notifier);
+		register_reboot_notifier(&espresso_reboot_notifier);
 }
 
-static void __init espresso10_init(void)
+static void __init espresso_init(void)
 {
 	sec_common_init_early();
-	omap4_espresso10_update_board_type();
+	omap4_espresso_update_board_type();
 
-	omap4_espresso10_emif_init();
+	omap4_espresso_emif_init();
 	if (board_type == SEC_MACHINE_ESPRESSO10_USA_BBY &&
 	    system_rev >= 7)
 		sec_muxtbl_init(SEC_MACHINE_ESPRESSO10_USA_BBY, system_rev);
@@ -204,25 +211,24 @@ static void __init espresso10_init(void)
 	sec_debug_init_crash_key(NULL);
 
 	/* initialize each drivers */
-	omap4_espresso10_serial_init();
-	omap4_espresso10_charger_init();
-	omap4_espresso10_pmic_init();
+	omap4_espresso_serial_init();
+	omap4_espresso_charger_init();
+	omap4_espresso_pmic_init();
 #ifdef CONFIG_ION_OMAP
 	omap4_register_ion();
 #endif
-	platform_add_devices(espresso10_devices,
-			     ARRAY_SIZE(espresso10_devices));
+	platform_add_devices(espresso_devices, ARRAY_SIZE(espresso_devices));
 	omap_dmm_init();
-	omap4_espresso10_sdio_init();
+	omap4_espresso_sdio_init();
 	usb_musb_init(&musb_board_data);
-	omap4_espresso10_connector_init();
-	omap4_espresso10_wifi_init();
-	omap4_espresso10_display_init();
-	omap4_espresso10_input_init();
-	omap4_espresso10_sensors_init();
-	omap4_espresso10_jack_init();
-	omap4_espresso10_reboot_init();
-	omap4_espresso10_none_modem_init();
+	omap4_espresso_connector_init();
+	omap4_espresso_wifi_init();
+	omap4_espresso_display_init();
+	omap4_espresso_input_init();
+	omap4_espresso_sensors_init();
+	omap4_espresso_jack_init();
+	omap4_espresso_reboot_init();
+	omap4_espresso_none_modem_init();
 
 #ifdef CONFIG_OMAP_HSI_DEVICE
 	/* Allow HSI omap_device to be registered later */
@@ -230,28 +236,28 @@ static void __init espresso10_init(void)
 #endif
 
 	if (sec_debug_get_level())
-		platform_add_devices(espresso10_dbg_devices,
-				     ARRAY_SIZE(espresso10_dbg_devices));
+		platform_add_devices(espresso_dbg_devices,
+				     ARRAY_SIZE(espresso_dbg_devices));
 
 	sec_common_init_post();
 }
 
-static void __init espresso10_map_io(void)
+static void __init espresso_map_io(void)
 {
 	omap2_set_globals_443x();
 	omap44xx_map_common_io();
 
-	sec_getlog_supply_meminfo(ESPRESSO10_MEM_BANK_0_SIZE,
-				  ESPRESSO10_MEM_BANK_0_ADDR,
-				  ESPRESSO10_MEM_BANK_1_SIZE,
-				  ESPRESSO10_MEM_BANK_1_ADDR);
+	sec_getlog_supply_meminfo(ESPRESSO_MEM_BANK_0_SIZE,
+				  ESPRESSO_MEM_BANK_0_ADDR,
+				  ESPRESSO_MEM_BANK_1_SIZE,
+				  ESPRESSO_MEM_BANK_1_ADDR);
 }
 
-static void omap4_espresso10_init_carveout_sizes(
+static void omap4_espresso_init_carveout_sizes(
 		struct omap_ion_platform_data *ion)
 {
 	ion->tiler1d_size = (SZ_1M * 14);
-	/* WFD is not supported in espresso10 So the size is zero */
+	/* WFD is not supported in espresso So the size is zero */
 	ion->secure_output_wfdhdcp_size = 0;
 	ion->ducati_heap_size = (SZ_1M * 65);
 #ifndef CONFIG_ION_OMAP_TILER_DYNAMIC_ALLOC
@@ -260,19 +266,19 @@ static void omap4_espresso10_init_carveout_sizes(
 #endif
 }
 
-static void __init espresso10_reserve(void)
+static void __init espresso_reserve(void)
 {
 #ifdef CONFIG_ION_OMAP
 	omap_init_ram_size();
-	omap4_espresso10_memory_display_init();
-	omap4_espresso10_init_carveout_sizes(get_omap_ion_platform_data());
+	omap4_espresso_memory_display_init();
+	omap4_espresso_init_carveout_sizes(get_omap_ion_platform_data());
 	omap_ion_init();
 #endif
 	/* do the static reservations first */
 	if (sec_debug_get_level()) {
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
-		memblock_remove(ESPRESSO10_RAMCONSOLE_START,
-				ESPRESSO10_RAMCONSOLE_SIZE);
+		memblock_remove(ESPRESSO_RAMCONSOLE_START,
+				ESPRESSO_RAMCONSOLE_SIZE);
 #endif
 	}
 
@@ -290,10 +296,10 @@ static void __init espresso10_reserve(void)
 MACHINE_START(OMAP4_SAMSUNG, "Espresso10")
 	/* Maintainer: Samsung Electronics Co, Ltd. */
 	.boot_params	= 0x80000100,
-	.reserve	= espresso10_reserve,
-	.map_io		= espresso10_map_io,
-	.init_early	= espresso10_init_early,
+	.reserve	= espresso_reserve,
+	.map_io		= espresso_map_io,
+	.init_early	= espresso_init_early,
 	.init_irq	= gic_init_irq,
-	.init_machine	= espresso10_init,
+	.init_machine	= espresso_init,
 	.timer		= &omap_timer,
 MACHINE_END
