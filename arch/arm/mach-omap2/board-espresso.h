@@ -29,6 +29,7 @@ enum espresso_adc_ch {
 
 /** @category common */
 unsigned int omap4_espresso_get_board_type(void);
+bool __init espresso_is_espresso10(void);
 
 /** @category LCD, HDMI */
 void omap4_espresso_display_init(void);

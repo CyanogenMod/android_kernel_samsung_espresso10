@@ -73,7 +73,7 @@
 #define MASK_SWITCH_USB_AP	0x01
 #define MASK_SWITCH_UART_AP	0x02
 
-#define SWCAP_TRIM_OFFSET			0x22
+#define SWCAP_TRIM_OFFSET	0x22
 
 static char *device_names[] = {
 	[P30_OTG]			= "otg",
@@ -198,15 +198,15 @@ static ssize_t espresso_usb_state_show(struct device *dev,
 				struct device_attribute *attr, char *buf);
 
 static ssize_t espresso_jig_on_show(struct device *dev,
-				   struct device_attribute *attr, char *buf);
+				struct device_attribute *attr, char *buf);
 
 static ssize_t espresso_adc_show(struct device *dev,
 				struct device_attribute *attr, char *buf);
 
 static DEVICE_ATTR(usb_sel, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
-			espresso_usb_sel_show, espresso_usb_sel_store);
+		espresso_usb_sel_show, espresso_usb_sel_store);
 static DEVICE_ATTR(uart_sel, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
-			espresso_uart_sel_show, espresso_uart_sel_store);
+		espresso_uart_sel_show, espresso_uart_sel_store);
 static DEVICE_ATTR(usb_state, S_IRUGO, espresso_usb_state_show, NULL);
 static DEVICE_ATTR(jig_on, S_IRUSR | S_IWUSR, espresso_jig_on_show, NULL);
 static DEVICE_ATTR(adc, S_IRUSR | S_IRGRP, espresso_adc_show, NULL);
@@ -1021,8 +1021,6 @@ static void espresso_dock_keyboard_power(bool on)
 {
 	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
-	printk(KERN_DEBUG "kbd: dock_keyboard_power %d\n", on);
-
 	if (on) {
 		if (espresso_otg->uart_manual_mode ==
 		    ESPRESSO_MANUAL_UART_MODEM) {
@@ -1148,7 +1146,6 @@ static int __init espresso_plugged_usb_cable_init(void)
 {
 	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
-	pr_info("%s, usb cable is plugged", __func__);
 	/* USB connected */
 	if (gpio_get_value(espresso_otg->ta_nconnected) == 0)
 		omap4_vusb_enable(espresso_otg, true);

@@ -25,7 +25,7 @@
 #include <linux/bh1721fvc.h>
 #include <linux/yas.h>
 
-#include "board-espresso10.h"
+#include "board-espresso.h"
 
 
 #define YAS_TA_OFFSET {200, -4600, -1100}
@@ -96,7 +96,7 @@ void omap4_espresso_set_chager_type(int type)
 	prev = type;
 }
 
-static void omap4_espresso10_sensors_regulator_on(bool on)
+static void omap4_espresso_sensors_regulator_on(bool on)
 {
 	struct regulator *reg_v28;
 	struct regulator *reg_v18;
@@ -132,10 +132,10 @@ done:
 
 struct acc_platform_data accelerometer_pdata = {
 	.cal_path = "/efs/calibration_data",
-	.ldo_on = omap4_espresso10_sensors_regulator_on,
+	.ldo_on = omap4_espresso_sensors_regulator_on,
 };
 
-static struct i2c_board_info __initdata espresso10_sensors_i2c4_boardinfo[] = {
+static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("accelerometer", 0x18),
 		.platform_data = &accelerometer_pdata,
@@ -152,7 +152,7 @@ static struct i2c_board_info __initdata espresso10_sensors_i2c4_boardinfo[] = {
 	 },
 };
 
-void __init omap4_espresso10_sensors_init(void)
+void __init omap4_espresso_sensors_init(void)
 {
 	int i;
 	for (i = 0; i < ARRAY_SIZE(sensors_gpios); i++)
@@ -170,8 +170,8 @@ void __init omap4_espresso10_sensors_init(void)
 
 	gpio_direction_output(sensors_gpios[GPIO_MSENSE_IRQ].gpio, 1);
 
-	i2c_register_board_info(4, espresso10_sensors_i2c4_boardinfo,
-				ARRAY_SIZE(espresso10_sensors_i2c4_boardinfo));
+	i2c_register_board_info(4, espresso_sensors_i2c4_boardinfo,
+				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo));
 
 }
 

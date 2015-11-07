@@ -31,6 +31,7 @@ struct smb_charger_data {
 	int enable;
 	int stat;
 	int ta_nconnected;
+	int hw_revision;
 };
 
 #endif
