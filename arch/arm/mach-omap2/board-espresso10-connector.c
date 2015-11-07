@@ -1,8 +1,8 @@
-/* arch/arm/mach-omap2/board-espresso10-connector.c
+/* arch/arm/mach-omap2/board-espresso-connector.c
  *
  * Copyright (C) 2011 Samsung Electronics Co, Ltd.
  *
- * Based on mach-omap2/board-espresso-connector.c
+ * Based on mach-omap2/board-tuna-connector.c
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -41,7 +41,7 @@
 
 #include <plat/usb.h>
 
-#include "board-espresso10.h"
+#include "board-espresso.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
 
@@ -51,13 +51,13 @@
 #define CHARGERUSB_CTRL3		0xA
 #define CHARGERUSB_CINLIMIT		0xE
 
-#define ESPRESSO10_MANUAL_USB_NONE	0
-#define ESPRESSO10_MANUAL_USB_MODEM	1
-#define ESPRESSO10_MANUAL_USB_AP		2
+#define ESPRESSO_MANUAL_USB_NONE	0
+#define ESPRESSO_MANUAL_USB_MODEM	1
+#define ESPRESSO_MANUAL_USB_AP		2
 
-#define ESPRESSO10_MANUAL_UART_NONE	0
-#define ESPRESSO10_MANUAL_UART_MODEM	1
-#define ESPRESSO10_MANUAL_UART_AP		2
+#define ESPRESSO_MANUAL_UART_NONE	0
+#define ESPRESSO_MANUAL_UART_MODEM	1
+#define ESPRESSO_MANUAL_UART_AP		2
 
 #define IF_UART_SEL_CP		0
 #define IF_UART_SEL_AP		1
@@ -67,13 +67,13 @@
 #define ADC_CHANNEL_IN2		6
 #define ADC_CHANNEL_IN3		7
 
-#define MAX_ADC_VAL     4096
-#define MIN_ADC_VAL     0
+#define MAX_ADC_VAL	4096
+#define MIN_ADC_VAL	0
 
 #define MASK_SWITCH_USB_AP	0x01
 #define MASK_SWITCH_UART_AP	0x02
 
-#define SWCAP_TRIM_OFFSET			0x31
+#define SWCAP_TRIM_OFFSET	0x31
 
 static char *device_names[] = {
 	[P30_OTG]			= "otg",
@@ -109,7 +109,7 @@ struct omap4_otg {
 #endif
 };
 
-static struct omap4_otg espresso10_otg_xceiv;
+static struct omap4_otg espresso_otg_xceiv;
 
 static struct device *sec_switch_dev;
 static int init_switch_sel;
@@ -122,8 +122,8 @@ enum {
 };
 
 enum {
-	 UEVENT_EARJACK_DETACHED = 0,
-	 UEVENT_EARJACK_ATTACHED,
+	UEVENT_EARJACK_DETACHED = 0,
+	UEVENT_EARJACK_ATTACHED,
 };
 
 enum {
@@ -170,7 +170,7 @@ static struct gpio uart_sw_gpios[] = {
 	[GPIO_UART_SEL] = {
 		.flags	= GPIOF_OUT_INIT_LOW,
 		.label	= "UART_SEL",
-	}
+	},
 };
 
 enum {
@@ -217,42 +217,42 @@ static int acc_notify(int event)
 }
 
 /* STMPE811 */
-static struct i2c_board_info __initdata espresso10_i2c6_boardinfo[] = {
+static struct i2c_board_info __initdata espresso_i2c6_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("stmpe811", 0x82>>1),
 	},
 };
 
-static ssize_t espresso10_usb_sel_show(struct device *dev,
+static ssize_t espresso_usb_sel_show(struct device *dev,
 				   struct device_attribute *attr,
 				   char *buf);
-static ssize_t espresso10_usb_sel_store(struct device *dev,
+static ssize_t espresso_usb_sel_store(struct device *dev,
 				    struct device_attribute *attr,
 				    const char *buf, size_t size);
 
-static ssize_t espresso10_uart_sel_show(struct device *dev,
+static ssize_t espresso_uart_sel_show(struct device *dev,
 				   struct device_attribute *attr,
 				   char *buf);
-static ssize_t espresso10_uart_sel_store(struct device *dev,
+static ssize_t espresso_uart_sel_store(struct device *dev,
 				    struct device_attribute *attr,
 				    const char *buf, size_t size);
 
-static ssize_t espresso10_usb_state_show(struct device *dev,
+static ssize_t espresso_usb_state_show(struct device *dev,
 				struct device_attribute *attr, char *buf);
 
-static ssize_t espresso10_jig_on_show(struct device *dev,
+static ssize_t espresso_jig_on_show(struct device *dev,
 				struct device_attribute *attr, char *buf);
 
-static ssize_t espresso10_adc_show(struct device *dev,
+static ssize_t espresso_adc_show(struct device *dev,
 				struct device_attribute *attr, char *buf);
 
 static DEVICE_ATTR(usb_sel, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
-		espresso10_usb_sel_show, espresso10_usb_sel_store);
+		espresso_usb_sel_show, espresso_usb_sel_store);
 static DEVICE_ATTR(uart_sel, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP,
-		espresso10_uart_sel_show, espresso10_uart_sel_store);
-static DEVICE_ATTR(usb_state, S_IRUGO, espresso10_usb_state_show, NULL);
-static DEVICE_ATTR(jig_on, S_IRUSR | S_IWUSR, espresso10_jig_on_show, NULL);
-static DEVICE_ATTR(adc, S_IRUSR | S_IRGRP, espresso10_adc_show, NULL);
+		espresso_uart_sel_show, espresso_uart_sel_store);
+static DEVICE_ATTR(usb_state, S_IRUGO, espresso_usb_state_show, NULL);
+static DEVICE_ATTR(jig_on, S_IRUSR | S_IWUSR, espresso_jig_on_show, NULL);
+static DEVICE_ATTR(adc, S_IRUSR | S_IRGRP, espresso_adc_show, NULL);
 
 static struct attribute *manual_switch_sel_attributes[] = {
 	&dev_attr_usb_sel.attr,
@@ -267,18 +267,18 @@ static const struct attribute_group manual_switch_sel_group = {
 	.attrs = manual_switch_sel_attributes,
 };
 
-static void espresso10_set_dock_switch(int state)
+static void espresso_set_dock_switch(int state)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
-	switch_set_state(&espresso10_otg->dock_switch, state);
+	switch_set_state(&espresso_otg->dock_switch, state);
 }
 
-static void espresso10_set_audio_switch(int state)
+static void espresso_set_audio_switch(int state)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
-	switch_set_state(&espresso10_otg->audio_switch, state);
+	switch_set_state(&espresso_otg->audio_switch, state);
 }
 
 static void omap4_vusb_enable(struct omap4_otg *otg, bool enable)
@@ -338,7 +338,7 @@ static void espresso_accessory_power(u32 device, bool enable)
 }
 
 #ifdef USB_TWL6030_5VOUT
-static void espresso10_set_vbus_drive(bool enable)
+static void espresso_set_vbus_drive(bool enable)
 {
 	if (enable) {
 		/* Set the VBUS current limit to 500mA */
@@ -362,16 +362,16 @@ static void espresso10_set_vbus_drive(bool enable)
 	}
 }
 #else
-static void espresso10_set_vbus_drive(bool enable)
+static void espresso_set_vbus_drive(bool enable)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
-	if (espresso10_otg->pdata->usbhostd_wakeup && enable)
-		espresso10_otg->pdata->usbhostd_wakeup();
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
+	if (espresso_otg->pdata->usbhostd_wakeup && enable)
+		espresso_otg->pdata->usbhostd_wakeup();
 	espresso_accessory_power(2, enable);
 }
 #endif
 
-static void espresso10_ap_usb_attach(struct omap4_otg *otg)
+static void espresso_ap_usb_attach(struct omap4_otg *otg)
 {
 	omap4_vusb_enable(otg, true);
 
@@ -384,7 +384,7 @@ static void espresso10_ap_usb_attach(struct omap4_otg *otg)
 			otg->otg.gadget);
 }
 
-static void espresso10_ap_usb_detach(struct omap4_otg *otg)
+static void espresso_ap_usb_detach(struct omap4_otg *otg)
 {
 	omap4_vusb_enable(otg, false);
 
@@ -406,7 +406,7 @@ static void espresso10_ap_usb_detach(struct omap4_otg *otg)
 				otg->otg.gadget);
 }
 
-static void espresso10_usb_host_attach(struct omap4_otg *otg)
+static void espresso_usb_host_attach(struct omap4_otg *otg)
 {
 	pr_info("[%s]\n", __func__);
 	/* Accessory power down needed */
@@ -430,7 +430,7 @@ static void espresso10_usb_host_attach(struct omap4_otg *otg)
 			otg->otg.gadget);
 }
 
-static void espresso10_usb_host_detach(struct omap4_otg *otg)
+static void espresso_usb_host_detach(struct omap4_otg *otg)
 {
 #ifdef CONFIG_USB_HOST_NOTIFY
 	if (otg->pdata && otg->pdata->usbhostd_stop) {
@@ -447,11 +447,11 @@ static void espresso10_usb_host_detach(struct omap4_otg *otg)
 			USB_EVENT_HOST_NONE,
 			otg->otg.gadget);
 
-	espresso10_set_vbus_drive(false);
+	espresso_set_vbus_drive(false);
 	omap4_vusb_enable(otg, false);
 }
 
-static void espresso10_cp_usb_attach(void)
+static void espresso_cp_usb_attach(void)
 {
 	gpio_set_value(uart_sw_gpios[GPIO_USB_SEL1].gpio, 0);
 	gpio_set_value(uart_sw_gpios[GPIO_USB_SEL2].gpio, 0);
@@ -459,7 +459,7 @@ static void espresso10_cp_usb_attach(void)
 	sysfs_notify(&sec_switch_dev->kobj, NULL, "usb_sel");
 }
 
-static void espresso10_cp_usb_detach(void)
+static void espresso_cp_usb_detach(void)
 {
 	gpio_set_value(uart_sw_gpios[GPIO_USB_SEL1].gpio, 1);
 	gpio_set_value(uart_sw_gpios[GPIO_USB_SEL2].gpio, 0);
@@ -467,33 +467,33 @@ static void espresso10_cp_usb_detach(void)
 	sysfs_notify(&sec_switch_dev->kobj, NULL, "usb_sel");
 }
 
-static void espresso10_ap_uart_actions(void)
+static void espresso_ap_uart_actions(void)
 {
 	gpio_set_value(uart_sw_gpios[GPIO_UART_SEL].gpio, IF_UART_SEL_AP);
 }
 
-static void espresso10_cp_uart_actions(void)
+static void espresso_cp_uart_actions(void)
 {
 	gpio_set_value(uart_sw_gpios[GPIO_UART_SEL].gpio, IF_UART_SEL_CP);
 }
 
-static void espresso10_gpio_set_for_adc_check_1(void)
+static void espresso_gpio_set_for_adc_check_1(void)
 {
 	gpio_set_value(uart_sw_gpios[GPIO_USB_SEL1].gpio, 0);
 	gpio_set_value(uart_sw_gpios[GPIO_USB_SEL2].gpio, 1);
 }
 
-static void espresso10_gpio_rel_for_adc_check_1(void)
+static void espresso_gpio_rel_for_adc_check_1(void)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
-	if (espresso10_otg->usb_manual_mode == ESPRESSO10_MANUAL_USB_MODEM)
-		espresso10_cp_usb_attach();
+	if (espresso_otg->usb_manual_mode == ESPRESSO_MANUAL_USB_MODEM)
+		espresso_cp_usb_attach();
 	else
-		espresso10_cp_usb_detach();
+		espresso_cp_usb_detach();
 }
 
-int omap4_espresso10_get_adc(enum espresso10_adc_ch ch)
+int omap4_espresso_get_adc(enum espresso_adc_ch ch)
 {
 	int adc;
 	int i;
@@ -516,11 +516,11 @@ int omap4_espresso10_get_adc(enum espresso10_adc_ch ch)
 		/* HQRL Standard defines that time margin from Vbus5V detection
 		 * to ADC_CHECK_1 voltage up should be more than 400ms.
 		 */
-		msleep(400);	/* delay for slow increase of line voltage */
+		msleep(400);	/* delay for unstable cable connection */
 
-		espresso10_gpio_set_for_adc_check_1();
+		espresso_gpio_set_for_adc_check_1();
 
-		msleep(150);    /* delay for slow increase of line voltage */
+		msleep(150);	/* delay for slow increase of line voltage */
 
 		for (i = 0; i < 5; i++) {
 			usleep_range(5000, 5500);
@@ -533,7 +533,7 @@ int omap4_espresso10_get_adc(enum espresso10_adc_ch ch)
 			if (adc_min > adc_tmp)
 				adc_min = adc_tmp;
 		}
-		espresso10_gpio_rel_for_adc_check_1();
+		espresso_gpio_rel_for_adc_check_1();
 		adc = (adc_sum - adc_max - adc_min) / 3;
 	} else
 		adc = stmpe811_adc_get_value(stmpe811_ch);
@@ -541,7 +541,7 @@ int omap4_espresso10_get_adc(enum espresso10_adc_ch ch)
 	return adc;
 }
 
-static void espresso10_con_usb_charger_attached(struct omap4_otg *otg)
+static void espresso_con_usb_charger_attached(struct omap4_otg *otg)
 {
 	int val;
 
@@ -567,7 +567,7 @@ static void espresso10_con_usb_charger_attached(struct omap4_otg *otg)
 	}
 }
 
-static void espresso10_con_ta_charger_attached(struct omap4_otg *otg)
+static void espresso_con_ta_charger_attached(struct omap4_otg *otg)
 {
 	int val;
 
@@ -594,7 +594,7 @@ static void espresso10_con_ta_charger_attached(struct omap4_otg *otg)
 	}
 }
 
-static void espresso10_con_charger_detached(void)
+static void espresso_con_charger_detached(void)
 {
 }
 
@@ -652,7 +652,7 @@ static struct sii9234_platform_data sii9234_pdata = {
 	.early_read_devcap = NULL,
 };
 
-static void espresso10_deskdock_attached(void)
+static void espresso_deskdock_attached(void)
 {
 	int ret = 0;
 
@@ -668,94 +668,94 @@ static void espresso10_deskdock_attached(void)
 		 */
 		else if (sii9234_pdata.dongle == DONGLE_9290)
 			pr_info("Attaching old MHL dongle_9290??\n");
-		espresso10_set_dock_switch(UEVENT_DOCK_DESK);
+		espresso_set_dock_switch(UEVENT_DOCK_DESK);
 	}
 }
 
-static void espresso10_deskdock_detached(void)
+static void espresso_deskdock_detached(void)
 {
 	int ret = 0;
 
 	ret = acc_notify(DONGLE_DETACHED);
 	if (ret <= 0)
-		espresso10_set_dock_switch(UEVENT_DOCK_NONE);
+		espresso_set_dock_switch(UEVENT_DOCK_NONE);
 }
 
-static void espresso10_30pin_detected(int device, bool connected)
+static void espresso_30pin_detected(int device, bool connected)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
 	if (connected)
-		espresso10_otg->current_device |= BIT(device);
+		espresso_otg->current_device |= BIT(device);
 	else
-		espresso10_otg->current_device &= ~(BIT(device));
+		espresso_otg->current_device &= ~(BIT(device));
 
 	pr_info("cable detect:%s %s, current device = 0x%04x\n",
 			device_names[device], (connected) ? "attach" : "detach",
-			espresso10_otg->current_device);
+			espresso_otg->current_device);
 
 	switch (device) {
 	case P30_OTG:
 		if (connected)
-			espresso10_usb_host_attach(espresso10_otg);
+			espresso_usb_host_attach(espresso_otg);
 		else
-			espresso10_usb_host_detach(espresso10_otg);
+			espresso_usb_host_detach(espresso_otg);
 		break;
 	case P30_KEYBOARDDOCK:
 		if (connected) {
-			espresso10_set_dock_switch(UEVENT_DOCK_KEYBOARD);
+			espresso_set_dock_switch(UEVENT_DOCK_KEYBOARD);
 			notify_dock_status(1);
 		} else {
-			espresso10_set_dock_switch(UEVENT_DOCK_NONE);
+			espresso_set_dock_switch(UEVENT_DOCK_NONE);
 			notify_dock_status(0);
 		}
 		break;
 	case P30_DESKDOCK:
 		if (connected) {
-			espresso10_deskdock_attached();
+			espresso_deskdock_attached();
 			notify_dock_status(1);
 		 } else {
-			espresso10_deskdock_detached();
+			espresso_deskdock_detached();
 			notify_dock_status(0);
 		 }
 		break;
 	case P30_CARDOCK:
 		if (connected) {
-			espresso10_set_dock_switch(UEVENT_DOCK_CAR);
+			espresso_set_dock_switch(UEVENT_DOCK_CAR);
 			notify_dock_status(1);
 		 } else {
-			espresso10_set_dock_switch(UEVENT_DOCK_NONE);
+			espresso_set_dock_switch(UEVENT_DOCK_NONE);
 			notify_dock_status(0);
 		 }
 		break;
 	case P30_JIG:
 		if (connected) {
 			check_jig_status(1);
-			if (espresso10_otg->uart_manual_mode ==
-					ESPRESSO10_MANUAL_UART_MODEM)
-				espresso10_cp_uart_actions();
+			if (espresso_otg->uart_manual_mode ==
+					ESPRESSO_MANUAL_UART_MODEM)
+				espresso_cp_uart_actions();
 			else
-				espresso10_ap_uart_actions();
+				espresso_ap_uart_actions();
 		} else
 			check_jig_status(0);
 		break;
 	case P30_USB:
 		if (connected)
-			espresso10_con_usb_charger_attached(espresso10_otg);
+			espresso_con_usb_charger_attached(espresso_otg);
 		else
-			espresso10_con_charger_detached();
+			espresso_con_charger_detached();
 		break;
 	case P30_TA:
 		if (connected)
-			espresso10_con_ta_charger_attached(espresso10_otg);
+			espresso_con_ta_charger_attached(espresso_otg);
 		else
-			espresso10_con_charger_detached();
+			espresso_con_charger_detached();
 		break;
 	case P30_EARJACK_WITH_DOCK:
 		if (connected)
-			espresso10_set_audio_switch(UEVENT_EARJACK_ATTACHED);
+			espresso_set_audio_switch(UEVENT_EARJACK_ATTACHED);
 		else
-			espresso10_set_audio_switch(UEVENT_EARJACK_DETACHED);
+			espresso_set_audio_switch(UEVENT_EARJACK_DETACHED);
 		break;
 	case P30_ANAL_TV_OUT:
 		pr_warning("This accessory is not supported.\n");
@@ -766,22 +766,22 @@ static void espresso10_30pin_detected(int device, bool connected)
 	}
 }
 
-void omap4_espresso10_usb_detected(int cable_type)
+void omap4_espresso_usb_detected(int cable_type)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
 	switch (cable_type) {
 	case CABLE_TYPE_USB:
-		espresso10_30pin_detected(P30_USB, 1);
+		espresso_30pin_detected(P30_USB, 1);
 		break;
 	case CABLE_TYPE_AC:
-		espresso10_30pin_detected(P30_TA, 1);
+		espresso_30pin_detected(P30_TA, 1);
 		break;
 	case CABLE_TYPE_NONE:
-		if (espresso10_otg->current_device & BIT(P30_USB))
-			espresso10_30pin_detected(P30_USB, 0);
+		if (espresso_otg->current_device & BIT(P30_USB))
+			espresso_30pin_detected(P30_USB, 0);
 		else
-			espresso10_30pin_detected(P30_TA, 0);
+			espresso_30pin_detected(P30_TA, 0);
 		break;
 	default:
 		pr_warning("wrong usb detected information!\n");
@@ -790,38 +790,38 @@ void omap4_espresso10_usb_detected(int cable_type)
 	}
 }
 
-static s16 espresso10_get_accessory_adc(void)
+static s16 espresso_get_accessory_adc(void)
 {
-	return omap4_espresso10_get_adc(ACCESSORY_ID);
+	return omap4_espresso_get_adc(ACCESSORY_ID);
 }
 
 /* 30pin connector */
-struct acc_con_platform_data espresso10_con_pdata = {
-	.detected		= espresso10_30pin_detected,
-	.get_accessory_adc	= espresso10_get_accessory_adc,
+struct acc_con_platform_data espresso_con_pdata = {
+	.detected		= espresso_30pin_detected,
+	.get_accessory_adc	= espresso_get_accessory_adc,
 };
 
-struct platform_device espresso10_device_connector = {
+struct platform_device espresso_device_connector = {
 	.name	= "acc_con",
 	.id	= -1,
 	.dev	= {
-		.platform_data = &espresso10_con_pdata,
+		.platform_data = &espresso_con_pdata,
 	},
 };
 
 /* uart_switch, usb_sel */
-static ssize_t espresso10_uart_sel_show(struct device *dev,
+static ssize_t espresso_uart_sel_show(struct device *dev,
 						struct device_attribute *attr,
 						char *buf)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 	const char *mode;
 
-	switch (espresso10_otg->uart_manual_mode) {
-	case ESPRESSO10_MANUAL_UART_AP:
+	switch (espresso_otg->uart_manual_mode) {
+	case ESPRESSO_MANUAL_UART_AP:
 		mode = "AP";
 		break;
-	case ESPRESSO10_MANUAL_UART_MODEM:
+	case ESPRESSO_MANUAL_UART_MODEM:
 		mode = "CP";
 		break;
 	default:
@@ -831,48 +831,48 @@ static ssize_t espresso10_uart_sel_show(struct device *dev,
 	return sprintf(buf, "%s\n", mode);
 }
 
-static ssize_t espresso10_uart_sel_store(struct device *dev,
+static ssize_t espresso_uart_sel_store(struct device *dev,
 						struct device_attribute *attr,
 						const char *buf, size_t size)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
-	mutex_lock(&espresso10_otg->lock);
+	mutex_lock(&espresso_otg->lock);
 
 	if (!strncasecmp(buf, "AP", 2)) {
-		espresso10_otg->uart_manual_mode = ESPRESSO10_MANUAL_UART_AP;
+		espresso_otg->uart_manual_mode = ESPRESSO_MANUAL_UART_AP;
 
-		if (espresso10_otg->current_device & BIT(P30_JIG))
-			espresso10_ap_uart_actions();
+		if (espresso_otg->current_device & BIT(P30_JIG))
+			espresso_ap_uart_actions();
 	} else if (!strncasecmp(buf, "CP", 2)) {
-		espresso10_otg->uart_manual_mode = ESPRESSO10_MANUAL_UART_MODEM;
+		espresso_otg->uart_manual_mode = ESPRESSO_MANUAL_UART_MODEM;
 
-		if (espresso10_otg->current_device & BIT(P30_JIG))
-			espresso10_cp_uart_actions();
+		if (espresso_otg->current_device & BIT(P30_JIG))
+			espresso_cp_uart_actions();
 	} else if (!strncasecmp(buf, "NONE", 4)) {
-		espresso10_otg->uart_manual_mode = ESPRESSO10_MANUAL_UART_NONE;
+		espresso_otg->uart_manual_mode = ESPRESSO_MANUAL_UART_NONE;
 
-		if (espresso10_otg->current_device & BIT(P30_JIG))
-			espresso10_ap_uart_actions();
+		if (espresso_otg->current_device & BIT(P30_JIG))
+			espresso_ap_uart_actions();
 	}
 
-	mutex_unlock(&espresso10_otg->lock);
+	mutex_unlock(&espresso_otg->lock);
 
 	return size;
 
 }
 
-static ssize_t espresso10_usb_sel_show(struct device *dev,
+static ssize_t espresso_usb_sel_show(struct device *dev,
 				   struct device_attribute *attr, char *buf)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 	const char *mode;
 
-	switch (espresso10_otg->usb_manual_mode) {
-	case ESPRESSO10_MANUAL_USB_AP:
+	switch (espresso_otg->usb_manual_mode) {
+	case ESPRESSO_MANUAL_USB_AP:
 		mode = "PDA";
 		break;
-	case ESPRESSO10_MANUAL_USB_MODEM:
+	case ESPRESSO_MANUAL_USB_MODEM:
 		mode = "MODEM";
 		break;
 	default:
@@ -882,64 +882,64 @@ static ssize_t espresso10_usb_sel_show(struct device *dev,
 	return sprintf(buf, "%s\n", mode);
 }
 
-static ssize_t espresso10_usb_sel_store(struct device *dev,
+static ssize_t espresso_usb_sel_store(struct device *dev,
 				    struct device_attribute *attr,
 				    const char *buf, size_t size)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 	int old_mode;
 
-	mutex_lock(&espresso10_otg->lock);
+	mutex_lock(&espresso_otg->lock);
 
-	old_mode = espresso10_otg->usb_manual_mode;
+	old_mode = espresso_otg->usb_manual_mode;
 
 	if (!strncasecmp(buf, "PDA", 3)) {
-		espresso10_otg->usb_manual_mode = ESPRESSO10_MANUAL_USB_AP;
+		espresso_otg->usb_manual_mode = ESPRESSO_MANUAL_USB_AP;
 
 		/* If we are transitioning from CP USB to AP USB then notify the
 		 * USB stack that is now attached.
 		 */
-		if ((espresso10_otg->current_device == BIT(P30_USB)) &&
-				(old_mode != ESPRESSO10_MANUAL_USB_AP)) {
-			espresso10_cp_usb_detach();
-			espresso10_ap_usb_attach(espresso10_otg);
+		if ((espresso_otg->current_device == BIT(P30_USB)) &&
+				(old_mode != ESPRESSO_MANUAL_USB_AP)) {
+			espresso_cp_usb_detach();
+			espresso_ap_usb_attach(espresso_otg);
 		}
 	} else if (!strncasecmp(buf, "MODEM", 5)) {
-		espresso10_otg->usb_manual_mode = ESPRESSO10_MANUAL_USB_MODEM;
+		espresso_otg->usb_manual_mode = ESPRESSO_MANUAL_USB_MODEM;
 
 		/* If we are transitioning from AP USB to CP USB then notify the
 		 * USB stack that is has been detached.
 		 */
-		if ((espresso10_otg->current_device == BIT(P30_USB)) &&
-				(old_mode != ESPRESSO10_MANUAL_USB_MODEM)) {
-			espresso10_ap_usb_detach(espresso10_otg);
-			espresso10_cp_usb_attach();
+		if ((espresso_otg->current_device == BIT(P30_USB)) &&
+				(old_mode != ESPRESSO_MANUAL_USB_MODEM)) {
+			espresso_ap_usb_detach(espresso_otg);
+			espresso_cp_usb_attach();
 		}
 	} else if (!strncasecmp(buf, "NONE", 5)) {
-		espresso10_otg->usb_manual_mode = ESPRESSO10_MANUAL_USB_NONE;
+		espresso_otg->usb_manual_mode = ESPRESSO_MANUAL_USB_NONE;
 
 		/* If we are transitioning from CP USB to AP USB then notify the
 		 * USB stack that it is now attached.
 		 */
-		if ((espresso10_otg->current_device == BIT(P30_USB)) &&
-				(old_mode != ESPRESSO10_MANUAL_USB_MODEM)) {
-			espresso10_cp_usb_detach();
-			espresso10_ap_usb_attach(espresso10_otg);
+		if ((espresso_otg->current_device == BIT(P30_USB)) &&
+				(old_mode != ESPRESSO_MANUAL_USB_MODEM)) {
+			espresso_cp_usb_detach();
+			espresso_ap_usb_attach(espresso_otg);
 		}
 	}
 
-	mutex_unlock(&espresso10_otg->lock);
+	mutex_unlock(&espresso_otg->lock);
 
 	return size;
 }
 
-static ssize_t espresso10_usb_state_show(struct device *dev,
+static ssize_t espresso_usb_state_show(struct device *dev,
 				   struct device_attribute *attr, char *buf)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 	const char *mode;
 
-	if (espresso10_otg->current_device & BIT(P30_USB))
+	if (espresso_otg->current_device & BIT(P30_USB))
 		mode = "USB_STATE_CONFIGURED";
 	else
 		mode = "USB_STATE_NOT_CONFIGURED";
@@ -947,13 +947,13 @@ static ssize_t espresso10_usb_state_show(struct device *dev,
 	return sprintf(buf, "%s\n", mode);
 }
 
-static ssize_t espresso10_jig_on_show(struct device *dev,
+static ssize_t espresso_jig_on_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 	const char *mode;
 
-	if (espresso10_otg->current_device & BIT(P30_JIG))
+	if (espresso_otg->current_device & BIT(P30_JIG))
 		mode = "1";
 	else
 		mode = "0";
@@ -966,13 +966,13 @@ static ssize_t espresso10_jig_on_show(struct device *dev,
    If key_string_on value is 0, the application disables key-strings.
    This is Samsung standard.
  */
-static ssize_t espresso10_adc_show(struct device *dev,
+static ssize_t espresso_adc_show(struct device *dev,
 				struct device_attribute *attr, char *buf)
 {
 	s16 adc_val;
 	u8 key_string_on;
 
-	adc_val = espresso10_get_accessory_adc();
+	adc_val = espresso_get_accessory_adc();
 	pr_info("accessory_id adc value = %d\n", adc_val);
 
 	if ((3600 < adc_val) && (adc_val < 3800))
@@ -983,7 +983,7 @@ static ssize_t espresso10_adc_show(struct device *dev,
 	return sprintf(buf, "%x\n", key_string_on);
 }
 
-static int espresso10_otg_set_host(struct otg_transceiver *otg,
+static int espresso_otg_set_host(struct otg_transceiver *otg,
 				 struct usb_bus *host)
 {
 	otg->host = host;
@@ -992,7 +992,7 @@ static int espresso10_otg_set_host(struct otg_transceiver *otg,
 	return 0;
 }
 
-static int espresso10_otg_set_peripheral(struct otg_transceiver *otg,
+static int espresso_otg_set_peripheral(struct otg_transceiver *otg,
 				       struct usb_gadget *gadget)
 {
 	otg->gadget = gadget;
@@ -1001,42 +1001,42 @@ static int espresso10_otg_set_peripheral(struct otg_transceiver *otg,
 	return 0;
 }
 
-static void espresso10_otg_work(struct work_struct *data)
+static void espresso_otg_work(struct work_struct *data)
 {
-	struct omap4_otg *espresso10_otg =
+	struct omap4_otg *espresso_otg =
 		container_of(data, struct omap4_otg, set_vbus_work);
 
 	pr_info("otg %s(%d): current device 0x%04x4x4x4x\n",
 			__func__, __LINE__,
-			espresso10_otg->current_device);
+			espresso_otg->current_device);
 
-	mutex_lock(&espresso10_otg->lock);
+	mutex_lock(&espresso_otg->lock);
 
 	/* Only allow VBUS drive when in host mode. */
-	if (!(espresso10_otg->current_device & BIT(P30_OTG))) {
+	if (!(espresso_otg->current_device & BIT(P30_OTG))) {
 		pr_info("otg current device is not USB Host.\n");
-		mutex_unlock(&espresso10_otg->lock);
+		mutex_unlock(&espresso_otg->lock);
 		return;
 	}
 
-	espresso10_set_vbus_drive(espresso10_otg->need_vbus_drive);
+	espresso_set_vbus_drive(espresso_otg->need_vbus_drive);
 
-	mutex_unlock(&espresso10_otg->lock);
+	mutex_unlock(&espresso_otg->lock);
 }
 
-static int espresso10_otg_set_vbus(struct otg_transceiver *otg, bool enabled)
+static int espresso_otg_set_vbus(struct otg_transceiver *otg, bool enabled)
 {
-	struct omap4_otg *espresso10_otg =
+	struct omap4_otg *espresso_otg =
 	    container_of(otg, struct omap4_otg, otg);
 	dev_dbg(otg->dev, "vbus %s\n", enabled ? "on" : "off");
 
-	espresso10_otg->need_vbus_drive = enabled;
-	schedule_work(&espresso10_otg->set_vbus_work);
+	espresso_otg->need_vbus_drive = enabled;
+	schedule_work(&espresso_otg->set_vbus_work);
 
 	return 0;
 }
 
-static int espresso10_otg_phy_init(struct otg_transceiver *otg)
+static int espresso_otg_phy_init(struct otg_transceiver *otg)
 {
 	if (otg->last_event == USB_EVENT_ID)
 		omap4430_phy_power(otg->dev, 1, 1);
@@ -1045,17 +1045,17 @@ static int espresso10_otg_phy_init(struct otg_transceiver *otg)
 	return 0;
 }
 
-static void espresso10_otg_phy_shutdown(struct otg_transceiver *otg)
+static void espresso_otg_phy_shutdown(struct otg_transceiver *otg)
 {
 	omap4430_phy_power(otg->dev, 0, 0);
 }
 
-static int espresso10_otg_set_suspend(struct otg_transceiver *otg, int suspend)
+static int espresso_otg_set_suspend(struct otg_transceiver *otg, int suspend)
 {
 	return omap4430_phy_suspend(otg->dev, suspend);
 }
 
-static int espresso10_otg_is_active(struct otg_transceiver *otg)
+static int espresso_otg_is_active(struct otg_transceiver *otg)
 {
 	return omap4430_phy_is_active(otg->dev);
 }
@@ -1078,19 +1078,19 @@ static irqreturn_t ta_nconnected_irq(int irq, void *_otg)
 
 	if (!val) { /* connected */
 		/* TODO: check ADC here. */
-		espresso10_ap_usb_attach(otg);
+		espresso_ap_usb_attach(otg);
 		acc_notify(DONGLE_POWER_ATTACHED);
 
 	} else { /* disconnected */
 		/* TODO: save current device. */
-		espresso10_ap_usb_detach(otg);
+		espresso_ap_usb_detach(otg);
 		acc_notify(DONGLE_POWER_DETACHED);
 	}
 
 	return IRQ_HANDLED;
 }
 
-static int espresso10_vbus_detect_init(struct omap4_otg *otg)
+static int espresso_vbus_detect_init(struct omap4_otg *otg)
 {
 	int status = 0;
 	int irq = 0;
@@ -1135,80 +1135,79 @@ static int espresso10_vbus_detect_init(struct omap4_otg *otg)
 static struct dock_keyboard_callback {
 	struct input_dev *dev;
 	int (*cb) (struct input_dev *dev, bool connected);
-} espresso10_dock_keyboard_cb;
+} espresso_dock_keyboard_cb;
 
-static int espresso10_dock_keyboard_callback(bool connected)
+static int espresso_dock_keyboard_callback(bool connected)
 {
-	if (espresso10_dock_keyboard_cb.dev && espresso10_dock_keyboard_cb.cb)
-		return espresso10_dock_keyboard_cb.
-		    cb(espresso10_dock_keyboard_cb.dev, connected);
+	if (espresso_dock_keyboard_cb.dev && espresso_dock_keyboard_cb.cb)
+		return espresso_dock_keyboard_cb.cb(espresso_dock_keyboard_cb.
+						    dev, connected);
 	return 0;
 }
 
-static void espresso10_dock_keyboard_power(bool on)
+static void espresso_dock_keyboard_power(bool on)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
 	if (on) {
-		if (espresso10_otg->uart_manual_mode ==
-		    ESPRESSO10_MANUAL_UART_MODEM) {
+		if (espresso_otg->uart_manual_mode ==
+		    ESPRESSO_MANUAL_UART_MODEM) {
 			pr_info("kbd: switch UART IF to AP\n");
-			espresso10_ap_uart_actions();
+			espresso_ap_uart_actions();
 		}
 		espresso_accessory_power(1, 1);
 	} else {
 		espresso_accessory_power(1, 0);
-		if (espresso10_otg->uart_manual_mode ==
-		    ESPRESSO10_MANUAL_UART_MODEM) {
+		if (espresso_otg->uart_manual_mode ==
+		    ESPRESSO_MANUAL_UART_MODEM) {
 			pr_info("kbd: switch UART IF to CP\n");
-			espresso10_cp_uart_actions();
+			espresso_cp_uart_actions();
 		}
 	}
 }
 
-static void espresso10_dock_keyboard_register_cb(struct input_dev *dev,
-						 void *cb)
+static void espresso_dock_keyboard_register_cb(struct input_dev *dev, void *cb)
 {
-	espresso10_dock_keyboard_cb.dev = dev;
-	espresso10_dock_keyboard_cb.cb = cb;
+	espresso_dock_keyboard_cb.dev = dev;
+	espresso_dock_keyboard_cb.cb = cb;
 }
 
-struct dock_keyboard_platform_data espresso10_dock_keyboard_pdata = {
-	.power = espresso10_dock_keyboard_power,
-	.register_cb = espresso10_dock_keyboard_register_cb,
+struct dock_keyboard_platform_data espresso_dock_keyboard_pdata = {
+	.power = espresso_dock_keyboard_power,
+	.register_cb = espresso_dock_keyboard_register_cb,
 };
 
-struct platform_device espresso10_device_dock_keyboard = {
+struct platform_device espresso_device_dock_keyboard = {
 	.name = KBD_DRV_NAME,
 	.id = 0,
 	.dev = {
-		.platform_data = &espresso10_dock_keyboard_pdata,
+		.platform_data = &espresso_dock_keyboard_pdata,
 		},
 };
 
-static void __init espresso10_switch_initial_setup(void)
+static void __init espresso_switch_initial_setup(void)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
 	if (init_switch_sel & MASK_SWITCH_UART_AP) {
-		espresso10_ap_uart_actions();
-		espresso10_otg->uart_manual_mode = ESPRESSO10_MANUAL_UART_AP;
+		espresso_ap_uart_actions();
+		espresso_otg->uart_manual_mode = ESPRESSO_MANUAL_UART_AP;
 	} else {
-		espresso10_cp_uart_actions();
-		espresso10_otg->uart_manual_mode = ESPRESSO10_MANUAL_UART_MODEM;
+		espresso_cp_uart_actions();
+		espresso_otg->uart_manual_mode = ESPRESSO_MANUAL_UART_MODEM;
 	}
 
 	if (init_switch_sel & MASK_SWITCH_USB_AP) {
-		espresso10_cp_usb_detach();
-		espresso10_otg->usb_manual_mode = ESPRESSO10_MANUAL_USB_AP;
+		espresso_cp_usb_detach();
+		espresso_otg->usb_manual_mode = ESPRESSO_MANUAL_USB_AP;
 	} else {
-		espresso10_cp_usb_attach();
-		espresso10_otg->usb_manual_mode = ESPRESSO10_MANUAL_USB_MODEM;
+		espresso_cp_usb_attach();
+		espresso_otg->usb_manual_mode = ESPRESSO_MANUAL_USB_MODEM;
 	}
 
 }
 
-static int __init espresso10_save_init_switch_param(char *str)
+static int __init espresso_save_init_switch_param(char *str)
 {
 	int ret;
 
@@ -1218,18 +1217,18 @@ static int __init espresso10_save_init_switch_param(char *str)
 
 	return 0;
 }
-__setup("switch_sel=", espresso10_save_init_switch_param);
+__setup("switch_sel=", espresso_save_init_switch_param);
 
 
 #ifdef CONFIG_USB_HOST_NOTIFY
-static void espresso10_booster(int enable)
+static void espresso_booster(int enable)
 {
-	espresso10_set_vbus_drive(!!enable);
+	espresso_set_vbus_drive(!!enable);
 }
 
 static struct host_notifier_platform_data host_notifier_pdata = {
 	.ndev.name	= "usb_otg",
-	.booster	= espresso10_booster,
+	.booster	= espresso_booster,
 	.thread_enable = 1,
 };
 
@@ -1238,7 +1237,7 @@ static struct platform_device host_notifier_device = {
 	.dev.platform_data = &host_notifier_pdata,
 };
 
-static void espresso10_host_notifier_init(struct omap4_otg *otg)
+static void espresso_host_notifier_init(struct omap4_otg *otg)
 {
 	int acc_out =
 		omap_muxtbl_get_gpio_by_name("V_ACCESSORY_OUT_5.0V");
@@ -1255,7 +1254,7 @@ static void espresso10_host_notifier_init(struct omap4_otg *otg)
 }
 #endif
 
-static struct i2c_board_info __initdata espresso10_i2c8_boardinfo[] = {
+static struct i2c_board_info __initdata espresso_i2c8_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("sii9234_mhl_tx", 0x72>>1),
 		.platform_data = &sii9234_pdata,
@@ -1278,8 +1277,6 @@ static void connector_gpio_init(void)
 {
 	int i;
 
-	u8 board_type;
-
 	for (i = 0; i < ARRAY_SIZE(connector_gpios); i++)
 		connector_gpios[i].gpio =
 			omap_muxtbl_get_gpio_by_name(connector_gpios[i].label);
@@ -1291,74 +1288,72 @@ static void connector_gpio_init(void)
 	gpio_request_array(connector_gpios, ARRAY_SIZE(connector_gpios));
 	gpio_request_array(uart_sw_gpios, ARRAY_SIZE(uart_sw_gpios));
 
-	board_type = omap4_espresso10_get_board_type();
-	if (board_type == SEC_MACHINE_ESPRESSO10_USA_BBY) {
-
+	if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO10_USA_BBY) {
 		for (i = 0; i < ARRAY_SIZE(mhl_gpios); i++)
 			mhl_gpios[i].gpio =
 			omap_muxtbl_get_gpio_by_name(mhl_gpios[i].label);
 
 		gpio_request_array(mhl_gpios, ARRAY_SIZE(mhl_gpios));
 
-		espresso10_i2c8_boardinfo[0].irq =
+		espresso_i2c8_boardinfo[0].irq =
 			gpio_to_irq(mhl_gpios[GPIO_MHL_INT].gpio);
 	}
 }
 
-static int __init espresso10_plugged_usb_cable_init(void)
+static int __init espresso_plugged_usb_cable_init(void)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 
 	/* USB connected */
-	if (gpio_get_value(espresso10_otg->ta_nconnected) == 0)
-		omap4_vusb_enable(espresso10_otg, true);
+	if (gpio_get_value(espresso_otg->ta_nconnected) == 0)
+		omap4_vusb_enable(espresso_otg, true);
 
 	return 0;
 }
 
-fs_initcall(espresso10_plugged_usb_cable_init);
+fs_initcall(espresso_plugged_usb_cable_init);
 
-void __init omap4_espresso10_connector_init(void)
+void __init omap4_espresso_connector_init(void)
 {
-	struct omap4_otg *espresso10_otg = &espresso10_otg_xceiv;
+	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
 	int ret;
 
 	connector_gpio_init();
-	mutex_init(&espresso10_otg->lock);
-	INIT_WORK(&espresso10_otg->set_vbus_work, espresso10_otg_work);
-	device_initialize(&espresso10_otg->dev);
-	dev_set_name(&espresso10_otg->dev, "%s", "espresso10_otg");
-	ret = device_add(&espresso10_otg->dev);
+	mutex_init(&espresso_otg->lock);
+	INIT_WORK(&espresso_otg->set_vbus_work, espresso_otg_work);
+	device_initialize(&espresso_otg->dev);
+	dev_set_name(&espresso_otg->dev, "%s", "espresso_otg");
+	ret = device_add(&espresso_otg->dev);
 	if (ret) {
 		pr_err("%s: cannot reg device '%s' (%d)\n", __func__,
-		       dev_name(&espresso10_otg->dev), ret);
+		       dev_name(&espresso_otg->dev), ret);
 		return;
 	}
 
-	dev_set_drvdata(&espresso10_otg->dev, espresso10_otg);
+	dev_set_drvdata(&espresso_otg->dev, espresso_otg);
 
-	espresso10_otg->otg.dev			= &espresso10_otg->dev;
-	espresso10_otg->otg.label		= "espresso10_otg_xceiv";
-	espresso10_otg->otg.set_host		= espresso10_otg_set_host;
-	espresso10_otg->otg.set_peripheral	= espresso10_otg_set_peripheral;
-	espresso10_otg->otg.set_suspend		= espresso10_otg_set_suspend;
-	espresso10_otg->otg.set_vbus		= espresso10_otg_set_vbus;
-	espresso10_otg->otg.init		= espresso10_otg_phy_init;
-	espresso10_otg->otg.shutdown		= espresso10_otg_phy_shutdown;
-	espresso10_otg->otg.is_active		= espresso10_otg_is_active;
+	espresso_otg->otg.dev			= &espresso_otg->dev;
+	espresso_otg->otg.label			= "espresso_otg_xceiv";
+	espresso_otg->otg.set_host		= espresso_otg_set_host;
+	espresso_otg->otg.set_peripheral	= espresso_otg_set_peripheral;
+	espresso_otg->otg.set_suspend		= espresso_otg_set_suspend;
+	espresso_otg->otg.set_vbus		= espresso_otg_set_vbus;
+	espresso_otg->otg.init			= espresso_otg_phy_init;
+	espresso_otg->otg.shutdown		= espresso_otg_phy_shutdown;
+	espresso_otg->otg.is_active		= espresso_otg_is_active;
 
-	ATOMIC_INIT_NOTIFIER_HEAD(&espresso10_otg->otg.notifier);
+	ATOMIC_INIT_NOTIFIER_HEAD(&espresso_otg->otg.notifier);
 
-	ret = otg_set_transceiver(&espresso10_otg->otg);
+	ret = otg_set_transceiver(&espresso_otg->otg);
 	if (ret)
-		pr_err("espresso10_otg: cannot set transceiver (%d)\n", ret);
+		pr_err("espresso_otg: cannot set transceiver (%d)\n", ret);
 
-	omap4430_phy_init(&espresso10_otg->dev);
+	omap4430_phy_init(&espresso_otg->dev);
 	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET);
-	espresso10_otg_set_suspend(&espresso10_otg->otg, 0);
-	espresso10_vbus_detect_init(espresso10_otg);
+	espresso_otg_set_suspend(&espresso_otg->otg, 0);
+	espresso_vbus_detect_init(espresso_otg);
 #ifdef CONFIG_USB_HOST_NOTIFY
-	espresso10_host_notifier_init(espresso10_otg);
+	espresso_host_notifier_init(espresso_otg);
 #endif
 
 	sec_switch_dev = device_create(sec_class, NULL, 0, NULL, "switch");
@@ -1375,45 +1370,43 @@ void __init omap4_espresso10_connector_init(void)
 									ret);
 switch_dev_fail:
 
-	espresso10_switch_initial_setup();
+	espresso_switch_initial_setup();
 
 	/* dock keyboard */
-	espresso10_dock_keyboard_pdata.dock_irq_gpio =
+	espresso_dock_keyboard_pdata.dock_irq_gpio =
 	    connector_gpios[GPIO_ACCESSORY_INT].gpio;
 
-	platform_device_register(&espresso10_device_dock_keyboard);
+	platform_device_register(&espresso_device_dock_keyboard);
 
 	/* ADC IC (STMPE811) */
-	i2c_register_board_info(6, espresso10_i2c6_boardinfo,
-					ARRAY_SIZE(espresso10_i2c6_boardinfo));
+	i2c_register_board_info(6, espresso_i2c6_boardinfo,
+					ARRAY_SIZE(espresso_i2c6_boardinfo));
 
 	/* MHL (SII9244) */
-	i2c_register_board_info(8, espresso10_i2c8_boardinfo,
-					ARRAY_SIZE(espresso10_i2c8_boardinfo));
+	i2c_register_board_info(8, espresso_i2c8_boardinfo,
+					ARRAY_SIZE(espresso_i2c8_boardinfo));
 
 	/* 30pin connector */
-	espresso10_con_pdata.accessory_irq_gpio =
+	espresso_con_pdata.accessory_irq_gpio =
 				connector_gpios[GPIO_ACCESSORY_INT].gpio;
-	espresso10_con_pdata.dock_irq_gpio =
-				connector_gpios[GPIO_DOCK_INT].gpio;
-	espresso10_con_pdata.jig_on_gpio = connector_gpios[GPIO_JIG_ON].gpio;
-	espresso10_con_pdata.dock_keyboard_cb =
-	    espresso10_dock_keyboard_callback;
+	espresso_con_pdata.dock_irq_gpio = connector_gpios[GPIO_DOCK_INT].gpio;
+	espresso_con_pdata.jig_on_gpio = connector_gpios[GPIO_JIG_ON].gpio;
+	espresso_con_pdata.dock_keyboard_cb = espresso_dock_keyboard_callback;
 
-	platform_device_register(&espresso10_device_connector);
+	platform_device_register(&espresso_device_connector);
 
-	espresso10_otg->dock_switch.name = "dock";
-	switch_dev_register(&espresso10_otg->dock_switch);
+	espresso_otg->dock_switch.name = "dock";
+	switch_dev_register(&espresso_otg->dock_switch);
 
-	espresso10_otg->audio_switch.name = "usb_audio";
-	switch_dev_register(&espresso10_otg->audio_switch);
+	espresso_otg->audio_switch.name = "usb_audio";
+	switch_dev_register(&espresso_otg->audio_switch);
 
-	espresso10_otg->current_device = 0;
+	espresso_otg->current_device = 0;
 }
 
-int __init omap4_espresso10_connector_late_init(void)
+int __init omap4_espresso_connector_late_init(void)
 {
-	unsigned int board_type = omap4_espresso10_get_board_type();
+	unsigned int board_type = omap4_espresso_get_board_type();
 
 	if (system_rev < 7 || board_type != SEC_MACHINE_ESPRESSO10)
 		if (gpio_get_value(connector_gpios[GPIO_JIG_ON].gpio))
@@ -1422,4 +1415,4 @@ int __init omap4_espresso10_connector_late_init(void)
 	return 0;
 }
 
-late_initcall(omap4_espresso10_connector_late_init);
+late_initcall(omap4_espresso_connector_late_init);

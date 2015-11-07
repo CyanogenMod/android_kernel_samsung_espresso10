@@ -17,7 +17,7 @@
 #include <linux/i2c.h>
 #include <linux/delay.h>
 #include <linux/power_supply.h>
-#include <linux/power/smb136_charger.h>
+#include <linux/power/smb_charger.h>
 #include <linux/gpio.h>
 #include <linux/irq.h>
 #include <linux/interrupt.h>
