@@ -14,7 +14,7 @@
 
 #include <linux/gpio.h>
 
-#include "board-espresso10.h"
+#include "board-espresso.h"
 
 #include "mux.h"
 #include "mux44xx.h"
