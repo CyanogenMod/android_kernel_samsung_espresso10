@@ -56,6 +56,14 @@
 #include "sec_getlog.h"
 #include "sec_muxtbl.h"
 
+/* gpio to distinguish WiFi and USA-BBY (espresso10)
+ *
+ * HW_REV4 | HIGH | LOW
+ * --------+------+------
+ *         |IrDA O|IrDA X
+ */
+#define GPIO_HW_REV4		41
+
 #define ESPRESSO_MEM_BANK_0_SIZE	0x20000000
 #define ESPRESSO_MEM_BANK_0_ADDR	0x80000000
 #define ESPRESSO_MEM_BANK_1_SIZE	0x20000000
@@ -157,6 +165,13 @@ static void __init omap4_espresso_update_board_type(void)
 unsigned int __init omap4_espresso_get_board_type(void)
 {
 	return board_type;
+}
+
+bool __init espresso_is_espresso10(void)
+{
+	return (board_type == SEC_MACHINE_ESPRESSO10 ||
+			board_type == SEC_MACHINE_ESPRESSO10_WIFI ||
+			board_type == SEC_MACHINE_ESPRESSO10_USA_BBY);
 }
 
 static void espresso_power_off_charger(void)
@@ -269,6 +284,7 @@ static void __init espresso_reserve(void)
 				ESPRESSO_RAMCONSOLE_SIZE);
 #endif
 	}
+
 	memblock_remove(PHYS_ADDR_SMC_MEM, PHYS_ADDR_SMC_SIZE);
 	memblock_remove(PHYS_ADDR_DUCATI_MEM, PHYS_ADDR_DUCATI_SIZE);
 

@@ -26,7 +26,7 @@
 #include <asm/mach-types.h>
 #include <plat/omap4-keypad.h>
 
-#include "board-espresso10.h"
+#include "board-espresso.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
 #include "control.h"
@@ -157,7 +157,7 @@ static void tsp_set_power(bool on)
 
 		/* Below register settings need to prevent current leakage. */
 		r = omap4_ctrl_pad_readl(
-				OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_I2C_0);
+			OMAP4_CTRL_MODULE_PAD_CORE_CONTROL_I2C_0);
 		r |= OMAP4_I2C3_SDA_PULLUPRESX_MASK;
 		r |= OMAP4_I2C3_SCL_PULLUPRESX_MASK;
 		omap4_ctrl_pad_writel(r,
@@ -170,13 +170,13 @@ static void tsp_set_power(bool on)
 	return;
 }
 
-static struct synaptics_fw_info espresso10_tsp_fw_info = {
+static struct synaptics_fw_info espresso_tsp_fw_info = {
 	.release_date = "0906",
 };
 
-static struct sec_ts_platform_data espresso10_ts_pdata = {
+static struct sec_ts_platform_data espresso_ts_pdata = {
 	.fw_name	= "synaptics/p5100.fw",
-	.fw_info	= &espresso10_tsp_fw_info,
+	.fw_info	= &espresso_tsp_fw_info,
 	.ext_fw_name	= "/mnt/sdcard/p5100.img",
 	.rx_channel_no	= 42,	/* Y channel line */
 	.tx_channel_no	= 27,	/* X channel line */
@@ -190,7 +190,7 @@ static struct sec_ts_platform_data espresso10_ts_pdata = {
 static struct i2c_board_info __initdata espresso_i2c3_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("synaptics_ts", 0x20),
-		.platform_data	= &espresso10_ts_pdata,
+		.platform_data	= &espresso_ts_pdata,
 	},
 };
 
@@ -239,7 +239,7 @@ static int espresso_create_sec_key_dev(void)
 	return 0;
 }
 
-static void __init espresso10_gpio_keypad_gpio_init(void)
+static void __init espresso_gpio_keypad_gpio_init(void)
 {
 	int i;
 
@@ -269,7 +269,7 @@ static struct gpio ts_panel_gpios[] = {
 
 static char *panel_name[8] = {"iljin", "o-film", "s-mac", };
 
-static void __init espresso10_ts_panel_setup(void)
+static void __init espresso_ts_panel_setup(void)
 {
 	int i, panel_id = 0;
 
@@ -281,10 +281,10 @@ static void __init espresso10_ts_panel_setup(void)
 	for (i = 0; i < ARRAY_SIZE(ts_panel_gpios); i++)
 		panel_id |= gpio_get_value(ts_panel_gpios[i].gpio) << i;
 
-	espresso10_ts_pdata.panel_name = panel_name[panel_id];
+	espresso_ts_pdata.panel_name = panel_name[panel_id];
 }
 
-static void __init espresso10_tsp_gpio_init(void)
+static void __init espresso_tsp_gpio_init(void)
 {
 	int i;
 
@@ -296,48 +296,48 @@ static void __init espresso10_tsp_gpio_init(void)
 	espresso_i2c3_boardinfo[0].irq =
 				gpio_to_irq(tsp_gpios[GPIO_TOUCH_nINT].gpio);
 
-	espresso10_ts_pdata.gpio_en = tsp_gpios[GPIO_TOUCH_EN].gpio;
-	espresso10_ts_pdata.gpio_irq = tsp_gpios[GPIO_TOUCH_nINT].gpio;
-	espresso10_ts_pdata.gpio_scl = tsp_gpios[GPIO_TOUCH_SCL].gpio;
-	espresso10_ts_pdata.gpio_sda = tsp_gpios[GPIO_TOUCH_SDA].gpio;
+	espresso_ts_pdata.gpio_en = tsp_gpios[GPIO_TOUCH_EN].gpio;
+	espresso_ts_pdata.gpio_irq = tsp_gpios[GPIO_TOUCH_nINT].gpio;
+	espresso_ts_pdata.gpio_scl = tsp_gpios[GPIO_TOUCH_SCL].gpio;
+	espresso_ts_pdata.gpio_sda = tsp_gpios[GPIO_TOUCH_SDA].gpio;
 }
 
-void omap4_espresso10_tsp_ta_detect(int cable_type)
+void omap4_espresso_tsp_ta_detect(int cable_type)
 {
 	switch (cable_type) {
 	case CABLE_TYPE_AC:
-	espresso10_ts_pdata.ta_state = CABLE_TA;
+	espresso_ts_pdata.ta_state = CABLE_TA;
 	break;
 	case CABLE_TYPE_USB:
-	espresso10_ts_pdata.ta_state = CABLE_USB;
+	espresso_ts_pdata.ta_state = CABLE_USB;
 	break;
 	case CABLE_TYPE_NONE:
 	default:
-	espresso10_ts_pdata.ta_state = CABLE_NONE;
+	espresso_ts_pdata.ta_state = CABLE_NONE;
 	}
 
 	/* Conditions for prevent kernel panic */
-	if (espresso10_ts_pdata.set_ta_mode &&
+	if (espresso_ts_pdata.set_ta_mode &&
 				gpio_get_value(tsp_gpios[GPIO_TOUCH_EN].gpio))
-		espresso10_ts_pdata.set_ta_mode(&espresso10_ts_pdata.ta_state);
+		espresso_ts_pdata.set_ta_mode(&espresso_ts_pdata.ta_state);
 	return;
 }
 
-void __init omap4_espresso10_input_init(void)
+void __init omap4_espresso_input_init(void)
 {
-	u32 boardtype = omap4_espresso10_get_board_type();
+	u32 boardtype = omap4_espresso_get_board_type();
 
 	if (boardtype == SEC_MACHINE_ESPRESSO10_WIFI)
-		espresso10_ts_pdata.model_name = "P5110";
+		espresso_ts_pdata.model_name = "P5110";
 	else if (boardtype == SEC_MACHINE_ESPRESSO10_USA_BBY)
-		espresso10_ts_pdata.model_name = "P5113";
+		espresso_ts_pdata.model_name = "P5113";
 	else
-		espresso10_ts_pdata.model_name = "P5100";
+		espresso_ts_pdata.model_name = "P5100";
 
 	if (system_rev >= 7)
-		espresso10_ts_panel_setup();
-	espresso10_gpio_keypad_gpio_init();
-	espresso10_tsp_gpio_init();
+		espresso_ts_panel_setup();
+	espresso_gpio_keypad_gpio_init();
+	espresso_tsp_gpio_init();
 
 	i2c_register_board_info(3, espresso_i2c3_boardinfo,
 				ARRAY_SIZE(espresso_i2c3_boardinfo));

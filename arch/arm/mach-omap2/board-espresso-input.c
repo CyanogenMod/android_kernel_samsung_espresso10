@@ -315,7 +315,7 @@ static struct gpio ts_panel_gpios[] = {
 
 static const char *panel_name[8] = {"ILJIN", "DIGITECH", };
 
-static __init void espresso_ts_panel_setup(void)
+static void __init espresso_ts_panel_setup(void)
 {
 	int i, panel_id = 0;
 

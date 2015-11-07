@@ -30,6 +30,7 @@
 #include <linux/lcd.h>
 #include <linux/backlight.h>
 #include <linux/serial_core.h>
+#include <linux/platform_data/panel-ltn.h>
 #include <linux/platform_data/panel-ltn101al03.h>
 #include <linux/platform_device.h>
 #include <plat/hardware.h>
@@ -38,13 +39,6 @@
 #include <mach/omap4-common.h>
 
 #include <plat/dmtimer.h>
-
-#define BRIGHTNESS_OFF			0
-#define BRIGHTNESS_DIM			20
-#define BRIGHTNESS_MIN			30
-#define BRIGHTNESS_25			86
-#define BRIGHTNESS_DEFAULT		140
-#define BRIGHTNESS_MAX			255
 
 #define DUTY_DIM	3
 #define DUTY_MIN	3
@@ -56,7 +50,7 @@
 struct ltn101al03 {
 	struct device *dev;
 	struct omap_dss_device *dssdev;
-	struct ltn101al03_panel_data *pdata;
+	struct ltn_panel_data *pdata;
 	bool enabled;
 	unsigned int current_brightness;
 	unsigned int bl;

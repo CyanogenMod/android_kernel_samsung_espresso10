@@ -1,8 +1,6 @@
-/* arch/arm/mach-omap2/board-espresso10-pmic.c
+/* arch/arm/mach-omap2/board-espresso-pmic.c
  *
  * Copyright (C) 2011 Samsung Electronics Co, Ltd.
- *
- * Based on mach-omap2/board-espresso-pmic.c
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -31,7 +29,7 @@
 #include <plat/omap-pm.h>
 #include "pm.h"
 
-#include "board-espresso10.h"
+#include "board-espresso.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
 #include "common-board-devices.h"
@@ -145,7 +143,7 @@ static struct wm8994_pdata wm1811_pdata = {
 };
 #endif
 
-static struct regulator_init_data espresso10_vaux1 = {
+static struct regulator_init_data espresso_vaux1 = {
 	.constraints = {
 		.min_uV			= 2800000,
 		.max_uV			= 2800000,
@@ -163,7 +161,7 @@ static struct regulator_consumer_supply espresso_vaux2_supplies[] = {
 	REGULATOR_SUPPLY("SENSOR_2.8V", "4-0018"),
 };
 
-static struct regulator_init_data espresso10_vaux2 = {
+static struct regulator_init_data espresso_vaux2 = {
 	.constraints = {
 		.min_uV			= 2800000,
 		.max_uV			= 2800000,
@@ -179,7 +177,7 @@ static struct regulator_init_data espresso10_vaux2 = {
 	.consumer_supplies	= espresso_vaux2_supplies,
 };
 
-static struct regulator_init_data espresso10_vaux3 = {
+static struct regulator_init_data espresso_vaux3 = {
 	.constraints = {
 		.min_uV			= 3000000,
 		.max_uV			= 3000000,
@@ -195,11 +193,11 @@ static struct regulator_init_data espresso10_vaux3 = {
 	},
 };
 
-static struct regulator_consumer_supply espresso10_vmmc_supply[] = {
+static struct regulator_consumer_supply espresso_vmmc_supply[] = {
 	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.0"),
 };
 
-static struct regulator_init_data espresso10_vmmc = {
+static struct regulator_init_data espresso_vmmc = {
 	.constraints = {
 		.min_uV			= 1200000,
 		.max_uV			= 3000000,
@@ -210,28 +208,28 @@ static struct regulator_init_data espresso10_vmmc = {
 					| REGULATOR_CHANGE_MODE
 					| REGULATOR_CHANGE_STATUS,
 	},
-	.num_consumer_supplies	= ARRAY_SIZE(espresso10_vmmc_supply),
-	.consumer_supplies	= espresso10_vmmc_supply,
+	.num_consumer_supplies	= ARRAY_SIZE(espresso_vmmc_supply),
+	.consumer_supplies	= espresso_vmmc_supply,
 };
 
-static struct fixed_voltage_config espresso10_vmmc_config = {
+static struct fixed_voltage_config espresso_vmmc_config = {
 	.supply_name		= "vmmc",
 	.microvolts		= 2800000,
 	.startup_delay		= 0,
 	.enable_high		= 1,
 	.enabled_at_boot	= 0,
-	.init_data		= &espresso10_vmmc,
+	.init_data		= &espresso_vmmc,
 };
 
-static struct platform_device espresso10_vmmc_device = {
+static struct platform_device espresso_vmmc_device = {
 	.name		= "reg-fixed-voltage",
 	.id		= 2,
 	.dev = {
-		.platform_data	= &espresso10_vmmc_config,
+		.platform_data	= &espresso_vmmc_config,
 	},
 };
 
-static struct regulator_init_data espresso10_vpp = {
+static struct regulator_init_data espresso_vpp = {
 	.constraints = {
 		.min_uV			= 1800000,
 		.max_uV			= 2500000,
@@ -247,7 +245,7 @@ static struct regulator_init_data espresso10_vpp = {
 	},
 };
 
-static struct regulator_init_data espresso10_vusim = {
+static struct regulator_init_data espresso_vusim = {
 	.constraints = {
 		.min_uV			= 3300000,
 		.max_uV			= 3300000,
@@ -260,7 +258,7 @@ static struct regulator_init_data espresso10_vusim = {
 	},
 };
 
-static struct regulator_init_data espresso10_vana = {
+static struct regulator_init_data espresso_vana = {
 	.constraints = {
 		.min_uV			= 2100000,
 		.max_uV			= 2100000,
@@ -272,13 +270,13 @@ static struct regulator_init_data espresso10_vana = {
 	},
 };
 
-static struct regulator_consumer_supply espresso10_vcxio_supply[] = {
+static struct regulator_consumer_supply espresso_vcxio_supply[] = {
 	REGULATOR_SUPPLY("VCXIO_1.8V", NULL),
 	REGULATOR_SUPPLY("vdds_dsi", "omapdss_dss"),
 	REGULATOR_SUPPLY("vdds_dsi", "omapdss_dsi1"),
 };
 
-static struct regulator_init_data espresso10_vcxio = {
+static struct regulator_init_data espresso_vcxio = {
 	.constraints = {
 		.min_uV			= 1800000,
 		.max_uV			= 1800000,
@@ -291,17 +289,17 @@ static struct regulator_init_data espresso10_vcxio = {
 			.disabled = true,
 		},
 	},
-	.num_consumer_supplies	= ARRAY_SIZE(espresso10_vcxio_supply),
-	.consumer_supplies	= espresso10_vcxio_supply,
+	.num_consumer_supplies	= ARRAY_SIZE(espresso_vcxio_supply),
+	.consumer_supplies	= espresso_vcxio_supply,
 };
 
-static struct regulator_consumer_supply espresso10_vdac_supply[] = {
+static struct regulator_consumer_supply espresso_vdac_supply[] = {
 	{
 		.supply		= "hdmi_vref",
 	},
 };
 
-static struct regulator_init_data espresso10_vdac = {
+static struct regulator_init_data espresso_vdac = {
 	.constraints = {
 		.min_uV			= 1800000,
 		.max_uV			= 1800000,
@@ -310,16 +308,16 @@ static struct regulator_init_data espresso10_vdac = {
 		.valid_ops_mask		= REGULATOR_CHANGE_MODE
 					| REGULATOR_CHANGE_STATUS,
 	},
-	.num_consumer_supplies	= ARRAY_SIZE(espresso10_vdac_supply),
-	.consumer_supplies	= espresso10_vdac_supply,
+	.num_consumer_supplies	= ARRAY_SIZE(espresso_vdac_supply),
+	.consumer_supplies	= espresso_vdac_supply,
 };
 
-static struct regulator_consumer_supply espresso10_vusb_supply[] = {
+static struct regulator_consumer_supply espresso_vusb_supply[] = {
 	REGULATOR_SUPPLY("VUSB_3.3V", NULL),
 	REGULATOR_SUPPLY("vusb", NULL),
 };
 
-static struct regulator_init_data espresso10_vusb = {
+static struct regulator_init_data espresso_vusb = {
 	.constraints = {
 		.min_uV			= 3300000,
 		.max_uV			= 3300000,
@@ -331,25 +329,25 @@ static struct regulator_init_data espresso10_vusb = {
 			.disabled = true,
 		},
 	},
-	.num_consumer_supplies	= ARRAY_SIZE(espresso10_vusb_supply),
-	.consumer_supplies	= espresso10_vusb_supply,
+	.num_consumer_supplies	= ARRAY_SIZE(espresso_vusb_supply),
+	.consumer_supplies	= espresso_vusb_supply,
 };
 
-static struct regulator_init_data espresso10_clk32kg = {
+static struct regulator_init_data espresso_clk32kg = {
 	.constraints = {
 		.valid_ops_mask	= REGULATOR_CHANGE_STATUS,
 		.always_on	= true,
 	},
 };
 
-static struct regulator_init_data espresso10_clk32kaudio = {
+static struct regulator_init_data espresso_clk32kaudio = {
 	.constraints = {
 		.valid_ops_mask	= REGULATOR_CHANGE_STATUS,
 		.always_on	= true,
 	},
 };
 
-static struct regulator_init_data espresso10_vmem = {
+static struct regulator_init_data espresso_vmem = {
 	.constraints = {
 		.min_uV			= 1225000,
 		.max_uV			= 1225000,
@@ -361,11 +359,11 @@ static struct regulator_init_data espresso10_vmem = {
 	},
 };
 
-static struct regulator_consumer_supply espresso10_v2v1_supply[] = {
+static struct regulator_consumer_supply espresso_v2v1_supply[] = {
 	REGULATOR_SUPPLY("VSEL_2.1V", NULL),
 };
 
-static struct regulator_init_data espresso10_v2v1 = {
+static struct regulator_init_data espresso_v2v1 = {
 	.constraints = {
 		.min_uV			= 2100000,
 		.max_uV			= 2100000,
@@ -378,12 +376,12 @@ static struct regulator_init_data espresso10_v2v1 = {
 			.disabled	= true,
 		},
 	},
-	.num_consumer_supplies	= ARRAY_SIZE(espresso10_v2v1_supply),
-	.consumer_supplies	= espresso10_v2v1_supply,
+	.num_consumer_supplies	= ARRAY_SIZE(espresso_v2v1_supply),
+	.consumer_supplies	= espresso_v2v1_supply,
 };
 
 #ifdef CONFIG_TWL6040_CODEC
-static struct twl4030_codec_audio_data espresso10_audio = {
+static struct twl4030_codec_audio_data espresso_audio = {
 	/* single-step ramp for headset and handsfree */
 	.hs_left_step		= 0x0f,
 	.hs_right_step		= 0x0f,
@@ -392,27 +390,27 @@ static struct twl4030_codec_audio_data espresso10_audio = {
 	.ep_step		= 0x0f,
 };
 
-static struct twl4030_codec_data espresso10_codec = {
-	.audio		= &espresso10_audio,
+static struct twl4030_codec_data espresso_codec = {
+	.audio		= &espresso_audio,
 	.naudint_irq	= OMAP44XX_IRQ_SYS_2N,
 	.irq_base	= TWL6040_CODEC_IRQ_BASE,
 };
 #endif
 
-static struct twl4030_madc_platform_data espresso10_madc = {
+static struct twl4030_madc_platform_data espresso_madc = {
 	.irq_line	= -1,
 	.features	= TWL6030_CLASS | TWL6032_SUBCLASS,
 };
 
-static struct platform_device espresso10_madc_device = {
+static struct platform_device espresso_madc_device = {
 	.name		= "twl6030_madc",
 	.id		= -1,
 	.dev = {
-		.platform_data		= &espresso10_madc,
+		.platform_data		= &espresso_madc,
 	},
 };
 
-static void espresso10_twl6030_init(void)
+static void espresso_twl6030_init(void)
 {
 	int ret;
 	u8 val;
@@ -470,41 +468,41 @@ static void espresso10_twl6030_init(void)
 	return;
 }
 
-static struct twl4030_power_data espresso10_power_data = {
-	.twl4030_board_init	= espresso10_twl6030_init,
+static struct twl4030_power_data espresso_power_data = {
+	.twl4030_board_init	= espresso_twl6030_init,
 };
 
-static struct twl4030_platform_data espresso10_twl6030_pdata = {
+static struct twl4030_platform_data espresso_twl6030_pdata = {
 	.irq_base	= TWL6030_IRQ_BASE,
 	.irq_end	= TWL6030_IRQ_END,
 
 	/* pmic power data*/
-	.power		= &espresso10_power_data,
+	.power		= &espresso_power_data,
 
 	/* Regulators */
-	.vusim		= &espresso10_vusim,
-	.vmmc		= &espresso10_vmmc,
-	.vpp		= &espresso10_vpp,
-	.vana		= &espresso10_vana,
-	.vcxio		= &espresso10_vcxio,
-	.vdac		= &espresso10_vdac,
-	.vusb		= &espresso10_vusb,
-	.vaux1		= &espresso10_vaux1,
-	.vaux2		= &espresso10_vaux2,
-	.vaux3		= &espresso10_vaux3,
-	.clk32kg	= &espresso10_clk32kg,
-	.clk32kaudio	= &espresso10_clk32kaudio,
-	.vmem		= &espresso10_vmem,
-	.v2v1		= &espresso10_v2v1,
+	.vusim		= &espresso_vusim,
+	.vmmc		= &espresso_vmmc,
+	.vpp		= &espresso_vpp,
+	.vana		= &espresso_vana,
+	.vcxio		= &espresso_vcxio,
+	.vdac		= &espresso_vdac,
+	.vusb		= &espresso_vusb,
+	.vaux1		= &espresso_vaux1,
+	.vaux2		= &espresso_vaux2,
+	.vaux3		= &espresso_vaux3,
+	.clk32kg	= &espresso_clk32kg,
+	.clk32kaudio	= &espresso_clk32kaudio,
+	.vmem		= &espresso_vmem,
+	.v2v1		= &espresso_v2v1,
 
 	/* children */
 #ifdef CONFIG_TWL6040_CODEC
-	.codec		= &espresso10_codec,
+	.codec		= &espresso_codec,
 #endif
-	.madc		= &espresso10_madc,
+	.madc		= &espresso_madc,
 };
 
-static struct regulator_init_data espresso10_ldo2_nc = {
+static struct regulator_init_data espresso_ldo2_nc = {
 	.constraints = {
 		.min_uV = 1000000,
 		.max_uV = 3300000,
@@ -525,7 +523,7 @@ static struct regulator_consumer_supply espresso_vdd_io_1V8_supplies[] = {
 	REGULATOR_SUPPLY("SENSOR_1.8V", "4-0018"),
 };
 
-static struct regulator_init_data espresso10_ldo5 = {
+static struct regulator_init_data espresso_ldo5 = {
 	.constraints = {
 		.min_uV = 1800000,
 		.max_uV = 1800000,
@@ -541,7 +539,7 @@ static struct regulator_init_data espresso10_ldo5 = {
 	.consumer_supplies	= espresso_vdd_io_1V8_supplies,
 };
 
-static struct regulator_init_data espresso10_ldo7_nc = {
+static struct regulator_init_data espresso_ldo7_nc = {
 	.constraints = {
 		.min_uV = 1000000,
 		.max_uV = 3300000,
@@ -557,7 +555,7 @@ static struct regulator_init_data espresso10_ldo7_nc = {
 	},
 };
 
-static struct regulator_init_data espresso10_ldoln_nc = {
+static struct regulator_init_data espresso_ldoln_nc = {
 	.constraints = {
 		.min_uV = 1000000,
 		.max_uV = 3300000,
@@ -574,36 +572,36 @@ static struct regulator_init_data espresso10_ldoln_nc = {
 };
 
 /* espresso10 use lod2 for VAP_IO_2.8V and ldo4 is NC in rev0.2 */
-static struct twl4030_platform_data espresso10_twl6032_pdata_rev02 = {
+static struct twl4030_platform_data espresso_twl6032_pdata_rev02 = {
 	.irq_base	= TWL6030_IRQ_BASE,
 	.irq_end	= TWL6030_IRQ_END,
 
 	/* pmic power data*/
-	.power		= &espresso10_power_data,
+	.power		= &espresso_power_data,
 
 	/* TWL6025 LDO regulators */
-	.vana		= &espresso10_vana,
-	.ldo1		= &espresso10_vaux1,
-	.ldo2		= &espresso10_vaux2,
-	.ldo3		= &espresso10_vusim,
-	.ldo4		= &espresso10_vpp,
-	.ldo5		= &espresso10_vmmc,
-	.ldo6		= &espresso10_vcxio,
-	.ldo7		= &espresso10_ldo7_nc,
-	.ldoln		= &espresso10_ldoln_nc,
-	.ldousb		= &espresso10_vusb,
-	.clk32kg	= &espresso10_clk32kg,
-	.clk32kaudio	= &espresso10_clk32kaudio,
+	.vana		= &espresso_vana,
+	.ldo1		= &espresso_vaux1,
+	.ldo2		= &espresso_vaux2,
+	.ldo3		= &espresso_vusim,
+	.ldo4		= &espresso_vpp,
+	.ldo5		= &espresso_vmmc,
+	.ldo6		= &espresso_vcxio,
+	.ldo7		= &espresso_ldo7_nc,
+	.ldoln		= &espresso_ldoln_nc,
+	.ldousb		= &espresso_vusb,
+	.clk32kg	= &espresso_clk32kg,
+	.clk32kaudio	= &espresso_clk32kaudio,
 
 	/* children */
 #ifdef CONFIG_TWL6040_CODEC
-	.codec		= &espresso10_codec,
+	.codec		= &espresso_codec,
 #endif
-	.madc		= &espresso10_madc,
+	.madc		= &espresso_madc,
 };
 
 
-struct twl4030_rtc_data espresso10_rtc = {
+struct twl4030_rtc_data espresso_rtc = {
 	.auto_comp = 1,
 	.comp_value = -3200,
 };
@@ -611,46 +609,46 @@ struct twl4030_rtc_data espresso10_rtc = {
  * Use lod4 for VAP_IO_2.8V and ldo2 is NC from rev0.3
  * use ldo5 for VDD_IO_1.8V and there's ext ldo for mmc slot.
  */
-static struct twl4030_platform_data espresso10_twl6032_pdata_rev03 = {
+static struct twl4030_platform_data espresso_twl6032_pdata_rev03 = {
 	.irq_base	= TWL6030_IRQ_BASE,
 	.irq_end	= TWL6030_IRQ_END,
 
 	/* pmic power data*/
-	.power		= &espresso10_power_data,
+	.power		= &espresso_power_data,
 
 	/* TWL6025 LDO regulators */
-	.vana		= &espresso10_vana,
-	.ldo1		= &espresso10_vaux1,
-	.ldo2		= &espresso10_ldo2_nc,
-	.ldo3		= &espresso10_vusim,
-	.ldo4		= &espresso10_vaux2,
-	.ldo5		= &espresso10_ldo5,
-	.ldo6		= &espresso10_vcxio,
-	.ldo7		= &espresso10_ldo7_nc,
-	.ldoln		= &espresso10_ldoln_nc,
-	.ldousb		= &espresso10_vusb,
-	.clk32kg	= &espresso10_clk32kg,
-	.clk32kaudio	= &espresso10_clk32kaudio,
+	.vana		= &espresso_vana,
+	.ldo1		= &espresso_vaux1,
+	.ldo2		= &espresso_ldo2_nc,
+	.ldo3		= &espresso_vusim,
+	.ldo4		= &espresso_vaux2,
+	.ldo5		= &espresso_ldo5,
+	.ldo6		= &espresso_vcxio,
+	.ldo7		= &espresso_ldo7_nc,
+	.ldoln		= &espresso_ldoln_nc,
+	.ldousb		= &espresso_vusb,
+	.clk32kg	= &espresso_clk32kg,
+	.clk32kaudio	= &espresso_clk32kaudio,
 
 	/* children */
 #ifdef CONFIG_TWL6040_CODEC
-	.codec		= &espresso10_codec,
+	.codec		= &espresso_codec,
 #endif
-	.madc		= &espresso10_madc,
-	.rtc		= &espresso10_rtc,
+	.madc		= &espresso_madc,
+	.rtc		= &espresso_rtc,
 };
 
-static struct platform_device *espresso10_pmic_devices[] __initdata = {
-	&espresso10_madc_device,
+static struct platform_device *espresso_pmic_devices[] __initdata = {
+	&espresso_madc_device,
 };
 
 static struct i2c_board_info
-		espresso10_twl6030_i2c1_board_info[] __initdata = {
+		espresso_twl6030_i2c1_board_info[] __initdata = {
 	{
 		I2C_BOARD_INFO("twl6030", 0x48),
 		.flags		= I2C_CLIENT_WAKE,
 		.irq		= OMAP44XX_IRQ_SYS_1N,
-		.platform_data	= &espresso10_twl6030_pdata,
+		.platform_data	= &espresso_twl6030_pdata,
 	},
 #ifdef CONFIG_SND_SOC_WM8994
 	{
@@ -661,12 +659,12 @@ static struct i2c_board_info
 };
 
 static struct i2c_board_info
-		espresso10_twl6032_i2c1_board_info_rev02[] __initdata = {
+		espresso_twl6032_i2c1_board_info_rev02[] __initdata = {
 	{
 		I2C_BOARD_INFO("twl6025", 0x48),
 		.flags		= I2C_CLIENT_WAKE,
 		.irq		= OMAP44XX_IRQ_SYS_1N,
-		.platform_data	= &espresso10_twl6032_pdata_rev02,
+		.platform_data	= &espresso_twl6032_pdata_rev02,
 	},
 #ifdef CONFIG_SND_SOC_WM8994
 	{
@@ -677,12 +675,12 @@ static struct i2c_board_info
 };
 
 static struct i2c_board_info
-		espresso10_twl6032_i2c1_board_info_rev03[] __initdata = {
+		espresso_twl6032_i2c1_board_info_rev03[] __initdata = {
 	{
 		I2C_BOARD_INFO("twl6032", 0x48),
 		.flags		= I2C_CLIENT_WAKE,
 		.irq		= OMAP44XX_IRQ_SYS_1N,
-		.platform_data	= &espresso10_twl6032_pdata_rev03,
+		.platform_data	= &espresso_twl6032_pdata_rev03,
 	},
 #ifdef CONFIG_SND_SOC_WM8994
 	{
@@ -692,10 +690,10 @@ static struct i2c_board_info
 #endif
 };
 
-static void __init espresso10_audio_init(void)
+static void __init espresso_audio_init(void)
 {
 #ifdef CONFIG_TWL6040_CODEC
-	espresso10_codec.audpwron_gpio =
+	espresso_codec.audpwron_gpio =
 		omap_muxtbl_get_gpio_by_name("AUD_PWRON");
 #endif
 
@@ -707,9 +705,8 @@ static void __init espresso10_audio_init(void)
 #endif
 }
 
-void __init omap4_espresso10_pmic_init(void)
+void __init omap4_espresso_pmic_init(void)
 {
-	unsigned int board_type = omap4_espresso10_get_board_type();
 	unsigned int gpio_sys_drm_msec =
 		omap_muxtbl_get_gpio_by_name("SYS_DRM_MSEC");
 
@@ -722,10 +719,10 @@ void __init omap4_espresso10_pmic_init(void)
 	 */
 	regulator_has_full_constraints();
 
-	espresso10_audio_init();
+	espresso_audio_init();
 
-	platform_add_devices(espresso10_pmic_devices,
-			     ARRAY_SIZE(espresso10_pmic_devices));
+	platform_add_devices(espresso_pmic_devices,
+			     ARRAY_SIZE(espresso_pmic_devices));
 
 	/*
 	 * PMIC is change from twl6030 to twl6032 from rev0.2.
@@ -735,33 +732,33 @@ void __init omap4_espresso10_pmic_init(void)
 	 */
 	if (system_rev >= 6)
 		i2c_register_board_info(1,
-			espresso10_twl6032_i2c1_board_info_rev03,
-			ARRAY_SIZE(espresso10_twl6032_i2c1_board_info_rev03));
+			espresso_twl6032_i2c1_board_info_rev03,
+			ARRAY_SIZE(espresso_twl6032_i2c1_board_info_rev03));
 	else if (system_rev == 5)
 		i2c_register_board_info(1,
-			espresso10_twl6032_i2c1_board_info_rev02,
-			ARRAY_SIZE(espresso10_twl6032_i2c1_board_info_rev02));
+			espresso_twl6032_i2c1_board_info_rev02,
+			ARRAY_SIZE(espresso_twl6032_i2c1_board_info_rev02));
 	else
 		i2c_register_board_info(1,
-			espresso10_twl6030_i2c1_board_info,
-			ARRAY_SIZE(espresso10_twl6030_i2c1_board_info));
+			espresso_twl6030_i2c1_board_info,
+			ARRAY_SIZE(espresso_twl6030_i2c1_board_info));
 
 	/*
 	 * Use external ldo for tflash from rev0.3
 	 * Register fixed regulator to control ldo which is used by tflash.
 	 */
 	if (system_rev >= 6) {
-		espresso10_vmmc_config.gpio =
+		espresso_vmmc_config.gpio =
 		omap_muxtbl_get_gpio_by_name("TF_EN");
-		platform_device_register(&espresso10_vmmc_device);
+		platform_device_register(&espresso_vmmc_device);
 	}
 
 	/*
 	 * only best buy Wi-Fi verstion support MHL from rev0.4
 	 * Set lodln regulator as VDAC regulator which is used by MHL.
 	 */
-	if (board_type == SEC_MACHINE_ESPRESSO10_USA_BBY && system_rev >= 7)
-		espresso10_twl6032_pdata_rev03.ldoln = &espresso10_vdac;
+	if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO10_USA_BBY && system_rev >= 7)
+		espresso_twl6032_pdata_rev03.ldoln = &espresso_vdac;
 
 
 	/*
