@@ -49,10 +49,8 @@
 #include "../../../arch/arm/mach-omap2/mux.h"
 #include "../../../arch/arm/mach-omap2/omap_muxtbl.h"
 
-#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO)
+#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO) || defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 #include "../../../arch/arm/mach-omap2/board-espresso.h"
-#elif defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
-#include "../../../arch/arm/mach-omap2/board-espresso10.h"
 #endif
 
 #define WM8994_DEFAULT_MCLK1	26000000
