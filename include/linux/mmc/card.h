@@ -16,6 +16,7 @@
 struct mmc_cid {
 	unsigned int		manfid;
 	char			prod_name[8];
+	u32			movi_pnm;
 	unsigned int		serial;
 	unsigned short		oemid;
 	unsigned short		year;
