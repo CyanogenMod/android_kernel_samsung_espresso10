@@ -66,7 +66,7 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10.o \
 					   board-espresso-display.o \
 					   board-espresso-modems.o \
 					   board-espresso10-sensor.o \
-					   board-espresso10-input.o \
+					   board-espresso-input.o \
 					   board-espresso-vibrator.o \
 					   board-espresso-irled.o
 
