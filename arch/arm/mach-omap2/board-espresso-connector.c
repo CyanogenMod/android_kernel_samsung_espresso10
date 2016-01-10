@@ -73,7 +73,8 @@
 #define MASK_SWITCH_USB_AP	0x01
 #define MASK_SWITCH_UART_AP	0x02
 
-#define SWCAP_TRIM_OFFSET	0x22
+#define SWCAP_TRIM_OFFSET_ESPRESSO	0x22
+#define SWCAP_TRIM_OFFSET_ESPRESSO10	0x31
 
 static char *device_names[] = {
 	[P30_OTG]			= "otg",
@@ -172,6 +173,49 @@ static struct gpio uart_sw_gpios[] = {
 		.label	= "UART_SEL",
 	},
 };
+
+enum {
+	GPIO_MHL_RST = 0,
+	GPIO_MHL_INT,
+	GPIO_HDMI_EN,
+	GPIO_HDMI_HPD,
+};
+
+static struct gpio mhl_gpios[] = {
+	[GPIO_MHL_RST] = {
+		.flags  = GPIOF_OUT_INIT_LOW,
+		.label  = "MHL_RST",
+	},
+	[GPIO_MHL_INT] = {
+		.flags = GPIOF_IN,
+		.label  = "MHL_INT",
+	},
+	[GPIO_HDMI_EN] = {
+		.flags = GPIOF_OUT_INIT_LOW,
+		.label = "HDMI_EN",
+	},
+	[GPIO_HDMI_HPD] = {
+		.flags = GPIOF_IN,
+		.label  = "HDMI_HPD",
+	},
+};
+
+static BLOCKING_NOTIFIER_HEAD(acc_notifier);
+
+int acc_register_notifier(struct notifier_block *nb)
+{
+	return blocking_notifier_chain_register(&acc_notifier, nb);
+}
+
+int acc_unregister_notifier(struct notifier_block *nb)
+{
+	return blocking_notifier_chain_unregister(&acc_notifier, nb);
+}
+
+static int acc_notify(int event)
+{
+	return blocking_notifier_call_chain(&acc_notifier, event, NULL);
+}
 
 /* STMPE811 */
 static struct i2c_board_info __initdata espresso_i2c6_boardinfo[] = {
@@ -555,6 +599,99 @@ static void espresso_con_charger_detached(void)
 {
 }
 
+static void switch_to_mhl_path(bool enable)
+{
+	/* TODO */
+}
+
+static void sii9234_power(int on)
+{
+	struct omap_mux_partition *p = omap_mux_get("core");
+	u16 mux;
+
+	mux = omap_mux_read(p, OMAP4_CTRL_MODULE_PAD_HDMI_HPD_OFFSET);
+	if (on) {
+		gpio_set_value(mhl_gpios[GPIO_HDMI_EN].gpio, 1);
+		msleep(20);
+		gpio_set_value(mhl_gpios[GPIO_MHL_RST].gpio, 1);
+
+		omap_mux_write(p, mux | OMAP_PULL_UP,
+				OMAP4_CTRL_MODULE_PAD_HDMI_HPD_OFFSET);
+	} else {
+		omap_mux_write(p, mux & ~OMAP_PULL_UP,
+				OMAP4_CTRL_MODULE_PAD_HDMI_HPD_OFFSET);
+
+		gpio_set_value(mhl_gpios[GPIO_HDMI_EN].gpio, 0);
+		gpio_set_value(mhl_gpios[GPIO_MHL_RST].gpio, 0);
+	}
+}
+
+static void sii9234_enable_vbus(bool enable)
+{
+	/*TODO */
+}
+
+static void sii9234_connect(bool on, u8 *devcap)
+{
+	/* TODO */
+}
+
+/* TODO: Need to modify sii9234_platform_data as per Espresso10
+ * H/W requirements.Currently, introducing dummy functions to avoid
+ * kernel panics and build-fail etc
+*/
+static struct sii9234_platform_data sii9234_pdata = {
+	.prio		= 0,
+	.enable		= switch_to_mhl_path,
+	.power		= sii9234_power,
+	.enable_vbus	= sii9234_enable_vbus,
+	.connect	= sii9234_connect,
+	.reg_notifier	= acc_register_notifier,
+	.unreg_notifier	= acc_unregister_notifier,
+	.dongle		= DONGLE_NONE,
+	.swing_level	= DEFAULT_MHL_SWING_LEVEL,
+	.early_read_devcap = NULL,
+};
+
+static void espresso_deskdock_attached(void)
+{
+	int ret = 0;
+
+	if (!espresso_is_espresso10()) {
+		espresso_set_dock_switch(UEVENT_DOCK_DESK);
+		return;
+	}
+
+	ret = acc_notify(DONGLE_ATTACHED);
+	if (ret <= 0) {
+		if (sii9234_pdata.dongle == DONGLE_9292)
+			pr_info("Error attaching MHL dongle_9292\n");
+		/*
+		 * TRICKY: MHL driver always return error value
+		 * in case of old dongles,because MHL driver can not
+		 * tell whether old dongle has successfuly connected
+		 * or not.
+		 */
+		else if (sii9234_pdata.dongle == DONGLE_9290)
+			pr_info("Attaching old MHL dongle_9290??\n");
+		espresso_set_dock_switch(UEVENT_DOCK_DESK);
+	}
+}
+
+static void espresso_deskdock_detached(void)
+{
+	int ret = 0;
+
+	if (!espresso_is_espresso10()) {
+		espresso_set_dock_switch(UEVENT_DOCK_NONE);
+		return;
+	}
+
+	ret = acc_notify(DONGLE_DETACHED);
+	if (ret <= 0)
+		espresso_set_dock_switch(UEVENT_DOCK_NONE);
+}
+
 static void espresso_30pin_detected(int device, bool connected)
 {
 	struct omap4_otg *espresso_otg = &espresso_otg_xceiv;
@@ -586,10 +723,10 @@ static void espresso_30pin_detected(int device, bool connected)
 		break;
 	case P30_DESKDOCK:
 		if (connected) {
-			espresso_set_dock_switch(UEVENT_DOCK_DESK);
+			espresso_deskdock_attached();
 			notify_dock_status(1);
 		} else {
-			espresso_set_dock_switch(UEVENT_DOCK_NONE);
+			espresso_deskdock_detached();
 			notify_dock_status(0);
 		}
 		break;
@@ -953,10 +1090,11 @@ static irqreturn_t ta_nconnected_irq(int irq, void *_otg)
 	if (!val) { /* connected */
 		/* TODO: check ADC here. */
 		espresso_ap_usb_attach(otg);
-
+		if (espresso_is_espresso10()) acc_notify(DONGLE_POWER_ATTACHED);
 	} else { /* disconnected */
 		/* TODO: save current device. */
 		espresso_ap_usb_detach(otg);
+		if (espresso_is_espresso10()) acc_notify(DONGLE_POWER_DETACHED);
 	}
 
 	return IRQ_HANDLED;
@@ -1126,6 +1264,25 @@ static void espresso_host_notifier_init(struct omap4_otg *otg)
 }
 #endif
 
+static struct i2c_board_info __initdata espresso_i2c8_boardinfo[] = {
+	{
+		I2C_BOARD_INFO("sii9234_mhl_tx", 0x72>>1),
+		.platform_data = &sii9234_pdata,
+	},
+	{
+		I2C_BOARD_INFO("sii9234_tpi", 0x7A>>1),
+		.platform_data = &sii9234_pdata,
+	},
+	{
+		I2C_BOARD_INFO("sii9234_hdmi_rx", 0x92>>1),
+		.platform_data = &sii9234_pdata,
+	},
+	{
+		I2C_BOARD_INFO("sii9234_cbus", 0xC8>>1),
+		.platform_data = &sii9234_pdata,
+	},
+};
+
 static void connector_gpio_init(void)
 {
 	int i;
@@ -1140,6 +1297,16 @@ static void connector_gpio_init(void)
 
 	gpio_request_array(connector_gpios, ARRAY_SIZE(connector_gpios));
 	gpio_request_array(uart_sw_gpios, ARRAY_SIZE(uart_sw_gpios));
+
+	if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO10_USA_BBY) {
+		for (i = 0; i < ARRAY_SIZE(mhl_gpios); i++)
+			mhl_gpios[i].gpio = omap_muxtbl_get_gpio_by_name(mhl_gpios[i].label);
+
+		gpio_request_array(mhl_gpios, ARRAY_SIZE(mhl_gpios));
+
+		espresso_i2c8_boardinfo[0].irq =
+			gpio_to_irq(mhl_gpios[GPIO_MHL_INT].gpio);
+	}
 }
 
 static int __init espresso_plugged_usb_cable_init(void)
@@ -1191,7 +1358,12 @@ void __init omap4_espresso_connector_init(void)
 		pr_err("espresso_otg: cannot set transceiver (%d)\n", ret);
 
 	omap4430_phy_init(&espresso_otg->dev);
-	omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET);
+
+	if (espresso_is_espresso10())
+		omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET_ESPRESSO10);
+	else
+		omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET_ESPRESSO);
+
 	espresso_otg_set_suspend(&espresso_otg->otg, 0);
 	espresso_vbus_detect_init(espresso_otg);
 #ifdef CONFIG_USB_HOST_NOTIFY
@@ -1224,6 +1396,12 @@ switch_dev_fail:
 	i2c_register_board_info(6, espresso_i2c6_boardinfo,
 					ARRAY_SIZE(espresso_i2c6_boardinfo));
 
+	if (espresso_is_espresso10()) {
+		/* MHL (SII9244) */
+		i2c_register_board_info(8, espresso_i2c8_boardinfo,
+						ARRAY_SIZE(espresso_i2c8_boardinfo));
+	}
+
 	/* 30pin connector */
 	espresso_con_pdata.accessory_irq_gpio =
 				connector_gpios[GPIO_ACCESSORY_INT].gpio;
@@ -1246,9 +1424,11 @@ int __init omap4_espresso_connector_late_init(void)
 {
 	unsigned int board_type = omap4_espresso_get_board_type();
 
-	if (system_rev < 7 || board_type != SEC_MACHINE_ESPRESSO)
+	if (system_rev < 7 || ((board_type != SEC_MACHINE_ESPRESSO) &&
+					board_type != SEC_MACHINE_ESPRESSO10)) {
 		if (gpio_get_value(connector_gpios[GPIO_JIG_ON].gpio))
 			uart_set_l3_cstr(true);
+	}
 
 	return 0;
 }
