@@ -58,7 +58,7 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10.o \
 					   board-espresso-serial.o \
 					   board-espresso10-pmic.o \
 					   board-espresso-sdio.o \
-					   board-espresso10-connector.o \
+					   board-espresso-connector.o \
 					   board-espresso-bluetooth.o \
 					   board-espresso-jack.o \
 					   board-espresso-power.o \
