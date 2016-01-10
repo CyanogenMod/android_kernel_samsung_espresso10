@@ -159,7 +159,7 @@ unsigned int __init omap4_espresso_get_board_type(void)
 	return board_type;
 }
 
-bool __init espresso_is_espresso10(void)
+bool espresso_is_espresso10(void)
 {
 	return (board_type == SEC_MACHINE_ESPRESSO10 ||
 			board_type == SEC_MACHINE_ESPRESSO10_WIFI ||
