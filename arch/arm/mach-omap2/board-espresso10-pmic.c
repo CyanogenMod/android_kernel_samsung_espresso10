@@ -177,22 +177,6 @@ static struct regulator_init_data espresso_vaux2 = {
 	.consumer_supplies	= espresso_vaux2_supplies,
 };
 
-static struct regulator_init_data espresso_vaux3 = {
-	.constraints = {
-		.min_uV			= 3000000,
-		.max_uV			= 3000000,
-		.apply_uV		= true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
-					| REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-		.state_mem		= {
-			.disabled = true,
-		},
-	},
-};
-
 static struct regulator_consumer_supply espresso_vmmc_supply[] = {
 	REGULATOR_SUPPLY("vmmc", "omap_hsmmc.0"),
 };
@@ -210,39 +194,6 @@ static struct regulator_init_data espresso_vmmc = {
 	},
 	.num_consumer_supplies	= ARRAY_SIZE(espresso_vmmc_supply),
 	.consumer_supplies	= espresso_vmmc_supply,
-};
-
-static struct fixed_voltage_config espresso_vmmc_config = {
-	.supply_name		= "vmmc",
-	.microvolts		= 2800000,
-	.startup_delay		= 0,
-	.enable_high		= 1,
-	.enabled_at_boot	= 0,
-	.init_data		= &espresso_vmmc,
-};
-
-static struct platform_device espresso_vmmc_device = {
-	.name		= "reg-fixed-voltage",
-	.id		= 2,
-	.dev = {
-		.platform_data	= &espresso_vmmc_config,
-	},
-};
-
-static struct regulator_init_data espresso_vpp = {
-	.constraints = {
-		.min_uV			= 1800000,
-		.max_uV			= 2500000,
-		.apply_uV		= true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
-					| REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-		.state_mem		= {
-			.disabled	= true,
-		},
-	},
 };
 
 static struct regulator_init_data espresso_vusim = {
@@ -285,7 +236,7 @@ static struct regulator_init_data espresso_vcxio = {
 		.valid_ops_mask		= REGULATOR_CHANGE_MODE
 					| REGULATOR_CHANGE_STATUS,
 		.always_on		= true,
-		.state_mem		= {
+		.state_mem = {
 			.disabled = true,
 		},
 	},
@@ -325,7 +276,7 @@ static struct regulator_init_data espresso_vusb = {
 					| REGULATOR_MODE_STANDBY,
 		.valid_ops_mask		= REGULATOR_CHANGE_MODE
 					| REGULATOR_CHANGE_STATUS,
-		.state_mem		= {
+		.state_mem = {
 			.disabled = true,
 		},
 	},
@@ -345,39 +296,6 @@ static struct regulator_init_data espresso_clk32kaudio = {
 		.valid_ops_mask	= REGULATOR_CHANGE_STATUS,
 		.always_on	= true,
 	},
-};
-
-static struct regulator_init_data espresso_vmem = {
-	.constraints = {
-		.min_uV			= 1225000,
-		.max_uV			= 1225000,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask		= REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-		.always_on		= true,
-	},
-};
-
-static struct regulator_consumer_supply espresso_v2v1_supply[] = {
-	REGULATOR_SUPPLY("VSEL_2.1V", NULL),
-};
-
-static struct regulator_init_data espresso_v2v1 = {
-	.constraints = {
-		.min_uV			= 2100000,
-		.max_uV			= 2100000,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask		= REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-		.always_on		= true,
-		.state_mem = {
-			.disabled	= true,
-		},
-	},
-	.num_consumer_supplies	= ARRAY_SIZE(espresso_v2v1_supply),
-	.consumer_supplies	= espresso_v2v1_supply,
 };
 
 #ifdef CONFIG_TWL6040_CODEC
@@ -430,10 +348,10 @@ static void espresso_twl6030_init(void)
 	if (ret)
 		pr_err("%s:disable charger interrupt fail!\n", __func__);
 
-	/* espresso10 use only preq1 of twl6032 */
-	val = ~(DEV_GRP_P1) << TWL6030_PHEONIX_MSK_TRANS_SHIFT;
-	ret = twl_i2c_write_u8(TWL6030_MODULE_ID0, val,
-					TWL6030_PHOENIX_MSK_TRANSITION);
+	/* use only preq1 of twl6032 */
+	ret = twl_i2c_write_u8(TWL6030_MODULE_ID0,
+			~(DEV_GRP_P1) << TWL6030_PHEONIX_MSK_TRANS_SHIFT,
+			TWL6030_PHOENIX_MSK_TRANSITION);
 	if (ret)
 		pr_err("%s:PHOENIX_MSK_TRANSITION write fail!\n", __func__);
 
@@ -446,7 +364,7 @@ static void espresso_twl6030_init(void)
 	ret = twl_i2c_write_u8(TWL6030_MODULE_ID0, val,
 					TWL6030_BBSPOR_CFG);
 	if (ret)
-		pr_err("%s: BBSPOR_CFG write fail!\n", __func__);
+		pr_err("%s: TWL6030 BBSPOR_CFG write fail!\n", __func__);
 
 
 	if (system_rev >= 8) {
@@ -472,37 +390,37 @@ static struct twl4030_power_data espresso_power_data = {
 	.twl4030_board_init	= espresso_twl6030_init,
 };
 
-static struct twl4030_platform_data espresso_twl6030_pdata = {
-	.irq_base	= TWL6030_IRQ_BASE,
-	.irq_end	= TWL6030_IRQ_END,
-
-	/* pmic power data*/
-	.power		= &espresso_power_data,
-
-	/* Regulators */
-	.vusim		= &espresso_vusim,
-	.vmmc		= &espresso_vmmc,
-	.vpp		= &espresso_vpp,
-	.vana		= &espresso_vana,
-	.vcxio		= &espresso_vcxio,
-	.vdac		= &espresso_vdac,
-	.vusb		= &espresso_vusb,
-	.vaux1		= &espresso_vaux1,
-	.vaux2		= &espresso_vaux2,
-	.vaux3		= &espresso_vaux3,
-	.clk32kg	= &espresso_clk32kg,
-	.clk32kaudio	= &espresso_clk32kaudio,
-	.vmem		= &espresso_vmem,
-	.v2v1		= &espresso_v2v1,
-
-	/* children */
-#ifdef CONFIG_TWL6040_CODEC
-	.codec		= &espresso_codec,
-#endif
-	.madc		= &espresso_madc,
-};
-
 static struct regulator_init_data espresso_ldo2_nc = {
+	.constraints = {
+		.min_uV = 1000000,
+		.max_uV = 3300000,
+		.apply_uV = true,
+		.valid_modes_mask	= REGULATOR_MODE_NORMAL
+					| REGULATOR_MODE_STANDBY,
+		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
+					| REGULATOR_CHANGE_MODE
+					| REGULATOR_CHANGE_STATUS,
+		.state_mem = {
+			.disabled = true,
+		},
+	},
+};
+static struct regulator_init_data espresso_ldo7_nc = {
+	.constraints = {
+		.min_uV = 1000000,
+		.max_uV = 3300000,
+		.apply_uV = true,
+		.valid_modes_mask	= REGULATOR_MODE_NORMAL
+					| REGULATOR_MODE_STANDBY,
+		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
+					| REGULATOR_CHANGE_MODE
+					| REGULATOR_CHANGE_STATUS,
+		.state_mem = {
+			.disabled = true,
+		},
+	},
+};
+static struct regulator_init_data espresso_ldoln_nc = {
 	.constraints = {
 		.min_uV = 1000000,
 		.max_uV = 3300000,
@@ -517,6 +435,12 @@ static struct regulator_init_data espresso_ldo2_nc = {
 		},
 	},
 };
+
+struct twl4030_rtc_data espresso_rtc = {
+	.auto_comp = 1,
+	.comp_value = -3200,
+};
+
 
 static struct regulator_consumer_supply espresso_vdd_io_1V8_supplies[] = {
 	REGULATOR_SUPPLY("VDD_IO_1.8V", NULL),
@@ -539,77 +463,7 @@ static struct regulator_init_data espresso_ldo5 = {
 	.consumer_supplies	= espresso_vdd_io_1V8_supplies,
 };
 
-static struct regulator_init_data espresso_ldo7_nc = {
-	.constraints = {
-		.min_uV = 1000000,
-		.max_uV = 3300000,
-		.apply_uV = true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
-					| REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-		.state_mem		= {
-			.disabled	= true,
-		},
-	},
-};
-
-static struct regulator_init_data espresso_ldoln_nc = {
-	.constraints = {
-		.min_uV = 1000000,
-		.max_uV = 3300000,
-		.apply_uV = true,
-		.valid_modes_mask	= REGULATOR_MODE_NORMAL
-					| REGULATOR_MODE_STANDBY,
-		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
-					| REGULATOR_CHANGE_MODE
-					| REGULATOR_CHANGE_STATUS,
-		.state_mem		= {
-			.disabled	= true,
-		},
-	},
-};
-
-/* espresso10 use lod2 for VAP_IO_2.8V and ldo4 is NC in rev0.2 */
-static struct twl4030_platform_data espresso_twl6032_pdata_rev02 = {
-	.irq_base	= TWL6030_IRQ_BASE,
-	.irq_end	= TWL6030_IRQ_END,
-
-	/* pmic power data*/
-	.power		= &espresso_power_data,
-
-	/* TWL6025 LDO regulators */
-	.vana		= &espresso_vana,
-	.ldo1		= &espresso_vaux1,
-	.ldo2		= &espresso_vaux2,
-	.ldo3		= &espresso_vusim,
-	.ldo4		= &espresso_vpp,
-	.ldo5		= &espresso_vmmc,
-	.ldo6		= &espresso_vcxio,
-	.ldo7		= &espresso_ldo7_nc,
-	.ldoln		= &espresso_ldoln_nc,
-	.ldousb		= &espresso_vusb,
-	.clk32kg	= &espresso_clk32kg,
-	.clk32kaudio	= &espresso_clk32kaudio,
-
-	/* children */
-#ifdef CONFIG_TWL6040_CODEC
-	.codec		= &espresso_codec,
-#endif
-	.madc		= &espresso_madc,
-};
-
-
-struct twl4030_rtc_data espresso_rtc = {
-	.auto_comp = 1,
-	.comp_value = -3200,
-};
-/*
- * Use lod4 for VAP_IO_2.8V and ldo2 is NC from rev0.3
- * use ldo5 for VDD_IO_1.8V and there's ext ldo for mmc slot.
- */
-static struct twl4030_platform_data espresso_twl6032_pdata_rev03 = {
+static struct twl4030_platform_data espresso_twl6032_pdata = {
 	.irq_base	= TWL6030_IRQ_BASE,
 	.irq_end	= TWL6030_IRQ_END,
 
@@ -642,45 +496,12 @@ static struct platform_device *espresso_pmic_devices[] __initdata = {
 	&espresso_madc_device,
 };
 
-static struct i2c_board_info
-		espresso_twl6030_i2c1_board_info[] __initdata = {
-	{
-		I2C_BOARD_INFO("twl6030", 0x48),
-		.flags		= I2C_CLIENT_WAKE,
-		.irq		= OMAP44XX_IRQ_SYS_1N,
-		.platform_data	= &espresso_twl6030_pdata,
-	},
-#ifdef CONFIG_SND_SOC_WM8994
-	{
-		I2C_BOARD_INFO("wm1811", 0x34>>1),
-		.platform_data = &wm1811_pdata,
-	}
-#endif
-};
-
-static struct i2c_board_info
-		espresso_twl6032_i2c1_board_info_rev02[] __initdata = {
-	{
-		I2C_BOARD_INFO("twl6025", 0x48),
-		.flags		= I2C_CLIENT_WAKE,
-		.irq		= OMAP44XX_IRQ_SYS_1N,
-		.platform_data	= &espresso_twl6032_pdata_rev02,
-	},
-#ifdef CONFIG_SND_SOC_WM8994
-	{
-		I2C_BOARD_INFO("wm1811", 0x34>>1),
-		.platform_data = &wm1811_pdata,
-	}
-#endif
-};
-
-static struct i2c_board_info
-		espresso_twl6032_i2c1_board_info_rev03[] __initdata = {
+static struct i2c_board_info espresso_twl6032_i2c1_board_info[] __initdata = {
 	{
 		I2C_BOARD_INFO("twl6032", 0x48),
 		.flags		= I2C_CLIENT_WAKE,
 		.irq		= OMAP44XX_IRQ_SYS_1N,
-		.platform_data	= &espresso_twl6032_pdata_rev03,
+		.platform_data	= &espresso_twl6032_pdata,
 	},
 #ifdef CONFIG_SND_SOC_WM8994
 	{
@@ -688,6 +509,23 @@ static struct i2c_board_info
 		.platform_data = &wm1811_pdata,
 	}
 #endif
+};
+
+static struct fixed_voltage_config espresso_vmmc_config = {
+	.supply_name		= "vmmc",
+	.microvolts		= 2800000, /* 2.8V */
+	.startup_delay		= 0,
+	.enable_high		= 1,
+	.enabled_at_boot	= 0,
+	.init_data		= &espresso_vmmc,
+};
+
+static struct platform_device espresso_vmmc_device = {
+	.name		= "reg-fixed-voltage",
+	.id		= 2,
+	.dev = {
+		.platform_data	= &espresso_vmmc_config,
+	},
 };
 
 static void __init espresso_audio_init(void)
@@ -722,44 +560,23 @@ void __init omap4_espresso_pmic_init(void)
 	espresso_audio_init();
 
 	platform_add_devices(espresso_pmic_devices,
-			     ARRAY_SIZE(espresso_pmic_devices));
+			ARRAY_SIZE(espresso_pmic_devices));
+
+	i2c_register_board_info(1, espresso_twl6032_i2c1_board_info,
+			ARRAY_SIZE(espresso_twl6032_i2c1_board_info));
 
 	/*
-	 * PMIC is change from twl6030 to twl6032 from rev0.2.
-	 * Espresso10 rev0.2 board have 5 as system_rev.
-	 * ldo4 is used for VAP_IO_2.8V and ldo is nc from rev0.3
-	 * Espresso10 rev0.3 board have 6 as system_rev.
-	 */
-	if (system_rev >= 6)
-		i2c_register_board_info(1,
-			espresso_twl6032_i2c1_board_info_rev03,
-			ARRAY_SIZE(espresso_twl6032_i2c1_board_info_rev03));
-	else if (system_rev == 5)
-		i2c_register_board_info(1,
-			espresso_twl6032_i2c1_board_info_rev02,
-			ARRAY_SIZE(espresso_twl6032_i2c1_board_info_rev02));
-	else
-		i2c_register_board_info(1,
-			espresso_twl6030_i2c1_board_info,
-			ARRAY_SIZE(espresso_twl6030_i2c1_board_info));
-
-	/*
-	 * Use external ldo for tflash from rev0.3
 	 * Register fixed regulator to control ldo which is used by tflash.
 	 */
-	if (system_rev >= 6) {
-		espresso_vmmc_config.gpio =
-		omap_muxtbl_get_gpio_by_name("TF_EN");
-		platform_device_register(&espresso_vmmc_device);
-	}
+	espresso_vmmc_config.gpio = omap_muxtbl_get_gpio_by_name("TF_EN");
+	platform_device_register(&espresso_vmmc_device);
 
 	/*
 	 * only best buy Wi-Fi verstion support MHL from rev0.4
-	 * Set lodln regulator as VDAC regulator which is used by MHL.
+	 * Set ldoln regulator as VDAC regulator which is used by MHL.
 	 */
 	if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO10_USA_BBY && system_rev >= 7)
-		espresso_twl6032_pdata_rev03.ldoln = &espresso_vdac;
-
+		espresso_twl6032_pdata.ldoln = &espresso_vdac;
 
 	/*
 	 * Drive MSECURE high for TWL6030 write access.
