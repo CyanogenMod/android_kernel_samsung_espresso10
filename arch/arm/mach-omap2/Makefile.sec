@@ -14,7 +14,6 @@
 
 obj-$(CONFIG_MACH_OMAP_SAMSUNG)		+= sec_common.o
 
-obj-$(CONFIG_SEC_DEBUG)			+= sec_debug.o
 obj-$(CONFIG_SAMSUNG_USE_SEC_LOG_BUF)	+= sec_log_buf.o
 
 obj-$(CONFIG_MACH_OMAP4_SAMSUNG)	+= hsmmc.o \

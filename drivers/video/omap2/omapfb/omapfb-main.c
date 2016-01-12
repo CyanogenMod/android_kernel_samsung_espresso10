@@ -37,8 +37,6 @@
 
 #include "omapfb.h"
 
-#include <mach/sec_addon.h>
-
 #define MODULE_NAME     "omapfb"
 
 #define OMAPFB_PLANE_XRES_MIN		8

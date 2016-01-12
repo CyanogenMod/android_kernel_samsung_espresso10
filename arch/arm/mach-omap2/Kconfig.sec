@@ -94,11 +94,6 @@ config SAMSUNG_CONSOLE_UART
 	int "used console uart port"
 	default 4
 
-config SAMSUNG_KERNEL_DEBUG
-	bool "Samsung Kernel Debuging Code"
-	select SEC_DEBUG
-	default n
-
 config SAMSUNG_USE_SEC_LOG_BUF
 	bool "Samsung Use SEC_LOG_BUF"
 	default n
@@ -139,57 +134,5 @@ config SAMSUNG_DIABLE_SEC_LOG_WHEN_TTY
 		is used. Disabling sec_log_buf is not a big problem because,
 		developer can whatching a serial log through out the teminal
 		program.
-
-menu "SAMSUNG Common Debugging Features"
-menuconfig SEC_DEBUG
-	bool "Samsung TN Ramdump Feature"
-	default y
-	help
-		Samsung TN
-		Ramdump Feature.
-		Use INFORM3
-		and magic number.
-
-config SEC_DEBUG_SCHED_LOG
-	bool "Samsung Scheduler Logging Feature"
-	depends on SEC_DEBUG
-	default n
-	help
-		Samsung Scheduler
-		Logging Feature
-		for
-		Debug use.
-
-config SEC_DEBUG_SEMAPHORE_LOG
-	bool "Samsung Semaphore Logging Feature"
-	depends on SEC_DEBUG
-	default n
-	help
-		Samsung
-		Semaphore
-		Logging Feature
-		for Debug use.
-
-config SEC_DEBUG_USER
-	bool "Panic on Userspace fault"
-	depends on SEC_DEBUG
-	default y
-	help
-		Panic
-		on
-		Userspace
-		fault.
-
-config SEC_DEBUG_IRQ_EXIT_LOG
-	bool "Temporary Logging for IRQ delay"
-	depends on SEC_DEBUG
-	default n
-	help
-		Verbose
-		Logging
-		for IRQ
-		dealy.
-
-endmenu
 
 endmenu
