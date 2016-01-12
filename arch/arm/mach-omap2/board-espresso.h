@@ -17,8 +17,11 @@
 
 #include <linux/serial_core.h>
 
-#include "sec_board_id.h"
 #include "sec_common.h"
+
+#define SEC_MACHINE_ESPRESSO			0x01
+#define SEC_MACHINE_ESPRESSO10			0x02
+#define SEC_MACHINE_ESPRESSO10_USA_BBY	0x06
 
 enum espresso_adc_ch {
 	REMOTE_SENSE = 0,
@@ -27,9 +30,12 @@ enum espresso_adc_ch {
 	EAR_ADC_35,	/* Earjack detection */
 };
 
+bool espresso_is_espresso10(void);
+bool board_has_modem(void);
+bool board_is_bestbuy_variant(void);
+
 /** @category common */
 unsigned int omap4_espresso_get_board_type(void);
-bool espresso_is_espresso10(void);
 
 /** @category LCD, HDMI */
 void omap4_espresso_display_init(void);
