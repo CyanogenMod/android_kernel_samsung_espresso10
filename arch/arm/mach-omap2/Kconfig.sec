@@ -94,45 +94,4 @@ config SAMSUNG_CONSOLE_UART
 	int "used console uart port"
 	default 4
 
-config SAMSUNG_USE_SEC_LOG_BUF
-	bool "Samsung Use SEC_LOG_BUF"
-	default n
-	help
-		This feature stores
-		all serial log messages
-		into the
-		SEC_LOG_BUF area.
-
-config SAMSUNG_USE_LAST_SEC_LOG_BUF
-	bool "Samsung Use LAST_SEC_LOG_BUF"
-	depends on SAMSUNG_USE_SEC_LOG_BUF
-	default n
-	help
-		This feature creats a node to read contents of sec_log_buf
-		area just before booting into kernel from bootloader.
-		This is very helpful to read sec_log_buf area without reset
-		or entering upload mode.
-
-config SAMSUNG_REPLACE_LAST_KMSG
-	bool "Samsung Replace last_kmsg with SEC_LOG_BUF"
-	depends on SAMSUNG_USE_LAST_SEC_LOG_BUF && !ANDROID_RAM_CONSOLE
-	default n
-	help
-		This feture will replace '/proc/last_kmsg' with SEC_LOG_BUF.
-		SEC_LOG_BUF and ANDROID_RAM_CONSOLE are similar features so,
-		they are sometimes not needed at the same time. As a result,
-		if this feature is enabled, SEC_LOG_BUF can be read through
-		out '/proc/last_kmsg' node.
-
-config SAMSUNG_DIABLE_SEC_LOG_WHEN_TTY
-	bool "Samsung disable SEC_LOG_BUF when tty is used"
-	depends on SAMSUNG_USE_SEC_LOG_BUF && MACH_OMAP4_SAMSUNG
-	default y
-	help
-		Device is hanging when sec_log_buf and ttyOx are enabled at
-		the same time. This feature disables sec_log_buf when ttyOx
-		is used. Disabling sec_log_buf is not a big problem because,
-		developer can whatching a serial log through out the teminal
-		program.
-
 endmenu
