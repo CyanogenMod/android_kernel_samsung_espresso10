@@ -1298,7 +1298,7 @@ static void connector_gpio_init(void)
 	gpio_request_array(connector_gpios, ARRAY_SIZE(connector_gpios));
 	gpio_request_array(uart_sw_gpios, ARRAY_SIZE(uart_sw_gpios));
 
-	if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO10_USA_BBY) {
+	if (board_is_bestbuy_variant()) {
 		for (i = 0; i < ARRAY_SIZE(mhl_gpios); i++)
 			mhl_gpios[i].gpio = omap_muxtbl_get_gpio_by_name(mhl_gpios[i].label);
 
@@ -1422,10 +1422,7 @@ switch_dev_fail:
 
 int __init omap4_espresso_connector_late_init(void)
 {
-	unsigned int board_type = omap4_espresso_get_board_type();
-
-	if (system_rev < 7 || ((board_type != SEC_MACHINE_ESPRESSO) &&
-					board_type != SEC_MACHINE_ESPRESSO10)) {
+	if (!board_has_modem()) {
 		if (gpio_get_value(connector_gpios[GPIO_JIG_ON].gpio))
 			uart_set_l3_cstr(true);
 	}

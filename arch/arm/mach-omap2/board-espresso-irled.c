@@ -64,7 +64,6 @@ static void irled_work(struct work_struct *work)
 	unsigned int off;
 	unsigned int i;
 	unsigned int j;
-	int ret;
 
 	ret =
 	    omap_cpufreq_max_limit(DVFS_LOCK_ID_IR_LED, ir_data.cpu_frequency);
@@ -312,10 +311,8 @@ int __init omap4_espresso_irled_init(void)
 {
 	int ret = 0;
 	int i;
-	unsigned int boardtype = omap4_espresso_get_board_type();
 
-	if (system_rev > 6 && boardtype != SEC_MACHINE_ESPRESSO_USA_BBY &&
-	    boardtype != SEC_MACHINE_ESPRESSO10_USA_BBY) {
+	if (system_rev > 6 && !board_is_bestbuy_variant()) {
 		if (espresso_is_espresso10()) {
 			for (i = 0; i < ARRAY_SIZE(irled_gpios); i++) {
 				irled_gpios[i].gpio =
