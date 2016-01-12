@@ -31,7 +31,6 @@
 
 #include "sec_common.h"
 #include "sec_debug.h"
-#include "sec_getlog.h"
 #include "sec_log_buf.h"
 
 static unsigned s_log_buf_msk;

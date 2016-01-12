@@ -2551,8 +2551,6 @@ static int omapfb_probe(struct platform_device *pdev)
 		}
 	}
 
-	sec_getlog_supply_fbinfo(fbdev->fbs[0]);
-
 	DBG("create sysfs for fbs\n");
 	r = omapfb_create_sysfs(fbdev);
 	if (r) {
