@@ -99,15 +99,6 @@ config SAMSUNG_KERNEL_DEBUG
 	select SEC_DEBUG
 	default n
 
-config SAMSUNG_USE_GETLOG
-	bool "Samsung getLog Debuging Feature"
-	default n
-	help
-		Add a MARK string to the kernel log message indicating
-		starting addresses of 'FrameBuffer / printk Log buffer /
-		Platform log buffer'. This feature is used to extract
-		debuging infomration from RAM-Dump.
-
 config SAMSUNG_ADD_GAFORENSICINFO
 	bool "Samsung GAF Debuging Feature"
 	default n
