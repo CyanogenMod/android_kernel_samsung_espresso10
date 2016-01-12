@@ -218,14 +218,12 @@ static bool fw_updater(struct ts_data *ts, char const *mode)
 		u8 *fw_data;
 		struct file *filp;
 		mm_segment_t oldfs;
-		char file_name[20] = "/sdcard/";
+		char file_name[20] = "/sdcard/mms136.bin";
 
 		tsp_log("force upload from external file.");
 
 		oldfs = get_fs();
 		set_fs(KERNEL_DS);
-
-		sprintf(file_name, "%s.bin", ts->platform_data->model_name);
 
 		filp = filp_open(file_name, O_RDONLY, 0);
 		if (IS_ERR_OR_NULL(filp)) {
@@ -539,8 +537,8 @@ static void get_config_ver(void *device_data)
 	}
 
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%s_%s_%d%d%d%d",
-				ts_data->platform_data->model_name, TSP_VENDOR,
+	sprintf(data->cmd_buff, "%s_%d%d%d%d",
+				TSP_VENDOR,
 				buf[0], buf[1], buf[2], buf[3]);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 

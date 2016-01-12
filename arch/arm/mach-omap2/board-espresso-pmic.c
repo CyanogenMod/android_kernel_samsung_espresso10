@@ -441,7 +441,7 @@ static void espresso_twl6030_init(void)
 	return;
 }
 
-static struct twl4030_resconfig espresso_rconfig[] __initdata = {
+static struct twl4030_resconfig espresso_rconfig[] = {
 	{ .resource = RES_LDO2, .devgroup = 0, },
 	{ .resource = RES_LDO7, .devgroup = 0, },
 	{ .resource = RES_LDOLN, .devgroup = 0, },
@@ -648,7 +648,7 @@ void __init omap4_espresso_pmic_init(void)
 		 * only best buy Wi-Fi verstion support MHL from rev0.4
 		 * Set ldoln regulator as VDAC regulator which is used by MHL.
 		 */
-		if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO10_USA_BBY && system_rev >= 7)
+		if (espresso_is_espresso10() && board_is_bestbuy_variant() && system_rev >= 7)
 			espresso_twl6032_pdata.ldoln = &espresso_vdac;
 	}
 
