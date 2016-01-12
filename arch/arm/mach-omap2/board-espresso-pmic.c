@@ -201,10 +201,6 @@ static struct regulator_init_data espresso_vmmc = {
 		.valid_ops_mask		= REGULATOR_CHANGE_VOLTAGE
 					| REGULATOR_CHANGE_MODE
 					| REGULATOR_CHANGE_STATUS,
-		.state_mem = {
-			.disabled = false,
-			.enabled = false,
-		},
 	},
 	.num_consumer_supplies	= ARRAY_SIZE(espresso_vmmc_supply),
 	.consumer_supplies	= espresso_vmmc_supply,
@@ -274,6 +270,25 @@ static struct regulator_init_data espresso_vcxio = {
 	},
 	.num_consumer_supplies	= ARRAY_SIZE(espresso_vcxio_supply),
 	.consumer_supplies	= espresso_vcxio_supply,
+};
+
+static struct regulator_consumer_supply espresso_vdac_supply[] = {
+	{
+		.supply		= "hdmi_vref",
+	},
+};
+
+static struct regulator_init_data espresso_vdac = {
+	.constraints = {
+		.min_uV			= 1800000,
+		.max_uV			= 1800000,
+		.valid_modes_mask	= REGULATOR_MODE_NORMAL
+					| REGULATOR_MODE_STANDBY,
+		.valid_ops_mask		= REGULATOR_CHANGE_MODE
+					| REGULATOR_CHANGE_STATUS,
+	},
+	.num_consumer_supplies	= ARRAY_SIZE(espresso_vdac_supply),
+	.consumer_supplies	= espresso_vdac_supply,
 };
 
 static struct regulator_consumer_supply espresso_vusb_supply[] = {
@@ -383,14 +398,23 @@ static void espresso_twl6030_init(void)
 		pr_err("%s:PHOENIX_MSK_TRANSITION write fail!\n", __func__);
 
 
-	ret = twl_i2c_read_u8(TWL6030_MODULE_ID0,
+	if (espresso_is_espresso10()) {
+		/*
+		 * Enable charge backup battery and set charging voltage to 2.6V.
+		 * Set VRTC low power mode in off/sleep and standard power mode in on.
+		 */
+		val = TWL_BBSPOR_CFG_VRTC_EN_SLP_STS | TWL_BBSPOR_CFG_VRTC_EN_OFF_STS |
+				TWL_BBSPOR_CFG_VRTC_PWEN;
+	} else {
+		ret = twl_i2c_read_u8(TWL6030_MODULE_ID0,
 			&val, TWL6030_BBSPOR_CFG);
 
-	/*disable backkup battery charge*/
-	val &= ~(1<<3);
+		/* disable backup battery charge */
+		val &= ~(1 << 3);
 
-	/*configure in low power mode*/
-	val |= (1<<6 | 1<<5);
+		/* configure in low power mode */
+		val |= (1 << 6 | 1 << 5);
+	}
 
 	ret = twl_i2c_write_u8(TWL6030_MODULE_ID0, val,
 					TWL6030_BBSPOR_CFG);
@@ -398,7 +422,7 @@ static void espresso_twl6030_init(void)
 		pr_err("%s: TWL6030 BBSPOR_CFG write fail!\n", __func__);
 
 
-	if (system_rev >= 9) {
+	if (system_rev >= 8) {
 		ret = twl_i2c_read_u8(TWL6030_MODULE_ID0,
 				&val, TWL6030_CFG_LDO_PD2);
 
@@ -474,12 +498,16 @@ static struct regulator_init_data espresso_ldoln_nc = {
 	},
 };
 
+struct twl4030_rtc_data espresso_rtc = {
+	.auto_comp = 1,
+	.comp_value = -3200,
+};
+
 static struct regulator_consumer_supply espresso_vdd_io_1V8_supplies[] = {
 	REGULATOR_SUPPLY("VDD_IO_1.8V", NULL),
 	REGULATOR_SUPPLY("SENSOR_1.8V", "4-0018"),
 	REGULATOR_SUPPLY("SENSOR_1.8V", "4-0044"),
 };
-
 
 static struct regulator_init_data espresso_ldo5 = {
 	.constraints = {
@@ -586,6 +614,43 @@ void __init omap4_espresso_pmic_init(void)
 	 * should be set in the board file. Before regulators are registered.
 	 */
 	regulator_has_full_constraints();
+
+	if (espresso_is_espresso10()) {
+		espresso_vana.constraints.state_mem.enabled = false;
+		espresso_vana.num_consumer_supplies = 0;
+		
+		espresso_vaux1.constraints.state_mem.enabled = false;
+		espresso_vaux1.num_consumer_supplies = 0;
+		
+		espresso_vaux2.num_consumer_supplies = 2;
+		espresso_vaux2.constraints.always_on = true;
+
+		espresso_vmmc.num_consumer_supplies = 1;
+
+		espresso_vusim.constraints.state_mem.enabled = false;
+		espresso_vusim.num_consumer_supplies = 0;
+
+		espresso_ldo5.constraints.valid_modes_mask |= REGULATOR_MODE_STANDBY;
+		espresso_ldo5.constraints.valid_ops_mask |= REGULATOR_CHANGE_VOLTAGE;
+		espresso_ldo5.constraints.always_on = true,
+		espresso_ldo5.num_consumer_supplies = 2;
+
+		espresso_clk32kaudio.num_consumer_supplies = 0;
+		espresso_clk32kg.num_consumer_supplies = 0;
+
+		espresso_vusb_supply[1].dev_name = NULL;
+
+		espresso_twl6032_pdata.rtc = &espresso_rtc;
+
+		espresso_power_data.resource_config = NULL;
+
+		/*
+		 * only best buy Wi-Fi verstion support MHL from rev0.4
+		 * Set ldoln regulator as VDAC regulator which is used by MHL.
+		 */
+		if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO10_USA_BBY && system_rev >= 7)
+			espresso_twl6032_pdata.ldoln = &espresso_vdac;
+	}
 
 	espresso_audio_init();
 
