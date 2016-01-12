@@ -29,8 +29,6 @@
 
 #include <asm/ioctls.h>
 
-#include <mach/sec_addon.h>
-
 /*
  * struct logger_log - represents a specific log, such as 'main' or 'radio'
  *
@@ -407,8 +405,6 @@ static ssize_t do_write_log_from_user(struct logger_log *log,
 		if (copy_from_user(log->buffer, buf + len, count - len))
 			return -EFAULT;
 
-	sec_logger_update_buffer(log->buffer + log->w_off, count);
-
 	log->w_off = logger_offset(log->w_off + count);
 
 	return count;
@@ -473,14 +469,10 @@ ssize_t logger_aio_write(struct kiocb *iocb, const struct iovec *iov,
 		ret += nr;
 	}
 
-	sec_logger_add_log_ram_console(log, orig);
-
 	mutex_unlock(&log->mutex);
 
 	/* wake up any blocked readers */
 	wake_up_interruptible(&log->wq);
-
-	sec_logger_print_buffer();
 
 	return ret;
 }
