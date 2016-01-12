@@ -99,15 +99,6 @@ config SAMSUNG_KERNEL_DEBUG
 	select SEC_DEBUG
 	default n
 
-config SAMSUNG_ADD_GAFORENSICINFO
-	bool "Samsung GAF Debuging Feature"
-	default n
-	help
-		Add additional information to the RAM-Dump.
-		This information
-		will be analized in
-		GAF Tool.
-
 config SAMSUNG_USE_SEC_LOG_BUF
 	bool "Samsung Use SEC_LOG_BUF"
 	default n

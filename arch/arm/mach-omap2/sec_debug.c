@@ -33,7 +33,6 @@
 #include <asm/cacheflush.h>
 
 #include "sec_debug.h"
-#include "sec_gaf.h"
 
 enum sec_debug_upload_cause_t {
 	UPLOAD_CAUSE_INIT = 0xCAFEBABE,
@@ -592,9 +591,6 @@ static int sec_debug_panic_handler(struct notifier_block *nb,
 		sec_debug_set_upload_cause(UPLOAD_CAUSE_KERNEL_PANIC);
 
 	pr_err("(%s) checksum_sched_log: %x\n", __func__, checksum_sched_log());
-
-	sec_gaf_dump_all_task_info();
-	sec_gaf_dump_cpu_stat();
 
 	sec_debug_dump_stack();
 	sec_debug_hw_reset();
