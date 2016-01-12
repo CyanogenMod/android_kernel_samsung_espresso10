@@ -54,7 +54,7 @@
 #include "sec_common.h"
 #include "sec_muxtbl.h"
 
-/* gpio to distinguish WiFi and USA-BBY (espresso10)
+/* gpio to distinguish WiFi and USA-BBY (P51xx)
  *
  * HW_REV4 | HIGH | LOW
  * --------+------+------
@@ -121,21 +121,54 @@ static struct omap_musb_board_data musb_board_data = {
 	.power		= 500,
 };
 
-#define CARRIER_WIFI_ONLY	"wifi-only"
+/* Board identification */
 
-static unsigned int board_type = SEC_MACHINE_ESPRESSO;
+static bool _board_has_modem = true;
+static bool _board_is_espresso10 = true;
+static bool _board_is_bestbuy_variant = false;
 
-static int __init espresso_set_board_type(char *str)
+/*
+ * Sets the board type
+ */
+static __init int setup_board_type(char *str)
 {
-	if (!strncmp(str, CARRIER_WIFI_ONLY, strlen(CARRIER_WIFI_ONLY)))
-		board_type = SEC_MACHINE_ESPRESSO_WIFI;
+	int lcd_id;
+	if (kstrtoint(str, 0, &lcd_id)) {
+		pr_err("************************************************\n");
+		pr_err("Cannot parse lcd_panel_id command line parameter\n");
+		pr_err("Failed to detect board type, assuming espresso10\n");
+		pr_err("************************************************\n");
+		return 1;
+	}
+
+	/*
+	 * P51xx bootloaders pass lcd_id=1 and on some older lcd_id=0,
+	 * everything else is P31xx.
+	 */
+	if (lcd_id > 1)
+		_board_is_espresso10 = false;
 
 	return 0;
 }
-__setup("androidboot.carrier=", espresso_set_board_type);
+early_param("lcd_panel_id", setup_board_type);
 
-static unsigned int sec_vendor = SEC_MACHINE_ESPRESSO_WIFI;
+/*
+ * Sets whether the device is a wifi-only variant
+ */
+static int __init espresso_set_subtype(char *str)
+{
+	#define CARRIER_WIFI_ONLY "wifi-only"
 
+	if (!strncmp(str, CARRIER_WIFI_ONLY, strlen(CARRIER_WIFI_ONLY)))
+		_board_has_modem = false;
+
+	return 0;
+}
+__setup("androidboot.carrier=", espresso_set_subtype);
+
+/*
+ * Sets whether the device is a Best Buy wifi-only variant
+ */
 static int __init espresso_set_vendor_type(char *str)
 {
 	unsigned int vendor;
@@ -144,33 +177,25 @@ static int __init espresso_set_vendor_type(char *str)
 		return 0;
 
 	if (vendor == 0)
-		sec_vendor = SEC_MACHINE_ESPRESSO_USA_BBY;
+		_board_is_bestbuy_variant = true;
 
 	return 0;
 }
 __setup("sec_vendor=", espresso_set_vendor_type);
 
-static void __init omap4_espresso_update_board_type(void)
-{
-	if (system_rev < 7)
-		return;
-
-	if (board_type == SEC_MACHINE_ESPRESSO_WIFI &&
-	    sec_vendor == SEC_MACHINE_ESPRESSO_USA_BBY)
-		board_type = SEC_MACHINE_ESPRESSO_USA_BBY;
+bool espresso_is_espresso10(void) {
+	return _board_is_espresso10;
 }
 
-unsigned int __init omap4_espresso_get_board_type(void)
-{
-	return board_type;
+bool board_has_modem(void) {
+	return _board_has_modem;
 }
 
-bool espresso_is_espresso10(void)
-{
-	return (board_type == SEC_MACHINE_ESPRESSO10 ||
-			board_type == SEC_MACHINE_ESPRESSO10_WIFI ||
-			board_type == SEC_MACHINE_ESPRESSO10_USA_BBY);
+bool board_is_bestbuy_variant(void) {
+	return _board_is_bestbuy_variant;
 }
+
+/* Board identification end */
 
 static void espresso_power_off_charger(void)
 {
@@ -201,13 +226,32 @@ static void __init omap4_espresso_reboot_init(void)
 		register_reboot_notifier(&espresso_reboot_notifier);
 }
 
+static void __init espresso10_update_board_type(void)
+{
+	/* because omap4_mux_init is not called when this function is
+	 * called, padconf reg must be configured by low-level function. */
+	omap_writew(OMAP_MUX_MODE3 | OMAP_PIN_INPUT,
+		    OMAP4_CTRL_MODULE_PAD_CORE_MUX_PBASE +
+		    OMAP4_CTRL_MODULE_PAD_GPMC_A17_OFFSET);
+
+	gpio_request(GPIO_HW_REV4, "HW_REV4");
+	if (gpio_get_value(GPIO_HW_REV4))
+		_board_is_bestbuy_variant = true;
+}
+
 static void __init espresso_init(void)
 {
 	sec_common_init_early();
-	omap4_espresso_update_board_type();
 
 	omap4_espresso_emif_init();
-	sec_muxtbl_init(SEC_MACHINE_ESPRESSO, system_rev);
+
+	if (espresso_is_espresso10()) {
+		espresso10_update_board_type();
+		sec_muxtbl_init(SEC_MACHINE_ESPRESSO10, system_rev);
+		if (board_is_bestbuy_variant() && system_rev >= 7)
+			sec_muxtbl_init(SEC_MACHINE_ESPRESSO10_USA_BBY, system_rev);
+	} else
+		sec_muxtbl_init(SEC_MACHINE_ESPRESSO, system_rev);
 
 	/* initialize sec common infrastructures */
 	sec_common_init();
@@ -256,7 +300,10 @@ static void omap4_espresso_init_carveout_sizes(
 	/* WFD is not supported in espresso So the size is zero */
 	ion->secure_output_wfdhdcp_size = 0;
 	ion->ducati_heap_size = (SZ_1M * 65);
-	ion->nonsecure_tiler2d_size = (SZ_1M * 8);
+	if (espresso_is_espresso10())
+		ion->nonsecure_tiler2d_size = (SZ_1M * 19);
+	else
+		ion->nonsecure_tiler2d_size = (SZ_1M * 8);
 	ion->tiler2d_size = (SZ_1M * 81);
 }
 

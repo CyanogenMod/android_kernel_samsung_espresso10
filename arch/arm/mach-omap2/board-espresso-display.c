@@ -154,7 +154,6 @@ void __init omap4_espresso_memory_display_init(void)
 			espresso10_lcd_config.panel;
 	}
 
-
 	omap_android_display_setup(&espresso_dss_data,
 				   NULL,
 				   NULL,
