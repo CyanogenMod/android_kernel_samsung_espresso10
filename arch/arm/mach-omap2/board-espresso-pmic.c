@@ -54,7 +54,7 @@ char *rpmsg_cam_regulator_name[] = {
 };
 
 #ifdef CONFIG_SND_SOC_WM8994
-static const struct regulator_consumer_supply vbatt_supplies[] = {
+static struct regulator_consumer_supply vbatt_supplies[] = {
 	REGULATOR_SUPPLY("LDO1VDD", "1-001a"),
 	REGULATOR_SUPPLY("SPKVDD1", "1-001a"),
 	REGULATOR_SUPPLY("SPKVDD2", "1-001a"),
@@ -65,7 +65,7 @@ static const struct regulator_consumer_supply vbatt_supplies[] = {
 	REGULATOR_SUPPLY("DBVDD3", "1-001a"),
 };
 
-static const struct regulator_init_data vbatt_initdata = {
+static struct regulator_init_data vbatt_initdata = {
 	.constraints = {
 		.always_on = 1,
 	},
@@ -73,7 +73,7 @@ static const struct regulator_init_data vbatt_initdata = {
 	.consumer_supplies = vbatt_supplies,
 };
 
-static const struct fixed_voltage_config vbatt_config = {
+static struct fixed_voltage_config vbatt_config = {
 	.init_data = &vbatt_initdata,
 	.microvolts = 1800000,
 	.supply_name = "VBATT",
@@ -88,11 +88,11 @@ static struct platform_device vbatt_device = {
 	},
 };
 
-static const struct regulator_consumer_supply wm1811_ldo1_supplies[] = {
+static struct regulator_consumer_supply wm1811_ldo1_supplies[] = {
 	REGULATOR_SUPPLY("AVDD1", "1-001a"),
 };
 
-static const struct regulator_init_data wm1811_ldo1_initdata = {
+static struct regulator_init_data wm1811_ldo1_initdata = {
 	.constraints = {
 		.name = "WM1811 LDO1",
 		.valid_ops_mask = REGULATOR_CHANGE_STATUS,
@@ -101,11 +101,11 @@ static const struct regulator_init_data wm1811_ldo1_initdata = {
 	.consumer_supplies = wm1811_ldo1_supplies,
 };
 
-static const struct regulator_consumer_supply wm1811_ldo2_supplies[] = {
+static struct regulator_consumer_supply wm1811_ldo2_supplies[] = {
 	REGULATOR_SUPPLY("DCVDD", "1-001a"),
 };
 
-static const struct regulator_init_data wm1811_ldo2_initdata = {
+static struct regulator_init_data wm1811_ldo2_initdata = {
 	.constraints = {
 		.name = "WM1811 LDO2",
 		.always_on = true,  /* Actually status changed by LDO1 */
