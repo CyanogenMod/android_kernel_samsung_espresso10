@@ -49,7 +49,7 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO)	+= board-espresso-muxset-r03.o \
 					   board-espresso-muxset-r09.o \
 					   board-espresso-muxset-r10.o
 
-obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10.o \
+obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso.o \
 					   board-espresso-emif.o \
 					   board-espresso-serial.o \
 					   board-espresso-pmic.o \

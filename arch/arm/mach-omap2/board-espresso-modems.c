@@ -252,23 +252,13 @@ static struct platform_device umts_modem = {
 
 void __init omap4_espresso_none_modem_init(void)
 {
-	unsigned int board_type = omap4_espresso_get_board_type();
-
-	if (board_type == SEC_MACHINE_ESPRESSO_WIFI ||
-	    board_type == SEC_MACHINE_ESPRESSO_USA_BBY ||
-	    board_type == SEC_MACHINE_ESPRESSO10_WIFI ||
-	    board_type == SEC_MACHINE_ESPRESSO10_USA_BBY)
+	if (!board_has_modem())
 		none_modem_cfg_mux();
 }
 
 static int __init init_modem(void)
 {
-	unsigned int board_type = omap4_espresso_get_board_type();
-
-	if (board_type == SEC_MACHINE_ESPRESSO_WIFI ||
-	    board_type == SEC_MACHINE_ESPRESSO_USA_BBY ||
-	    board_type == SEC_MACHINE_ESPRESSO10_WIFI ||
-	    board_type == SEC_MACHINE_ESPRESSO10_USA_BBY)
+	if (!board_has_modem())
 		return 0;
 
 	umts_modem_cfg_gpio();

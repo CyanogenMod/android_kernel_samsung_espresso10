@@ -34,7 +34,6 @@ struct touch_key {
 
 /**
  * struct sec_ts_platform_data - represent specific touch device
- * @model_name : name of device name
  * @panel_name : name of sensor panel name
  * @fw_name : intenal firmware file name
  * @fw_info : represent device firmware informations
@@ -60,7 +59,6 @@ struct touch_key {
  * @set_dvfs : force control AP frequency
  */
 struct sec_ts_platform_data {
-	const char *model_name;
 	const char *panel_name;
 	const char *fw_name;
 	const void *fw_info;
