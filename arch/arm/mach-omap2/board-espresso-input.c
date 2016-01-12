@@ -32,7 +32,6 @@
 #include "mux.h"
 #include "omap_muxtbl.h"
 #include "control.h"
-#include "sec_debug.h"
 
 enum {
 	GPIO_EXT_WAKEUP = 0,
@@ -431,11 +430,6 @@ void __init omap4_espresso_input_init(void)
 
 
 	espresso_create_sec_key_dev();
-
-	if (sec_debug_get_level()) {
-		espresso_gpio_keypad_keys_info_high.flags |= GPIOEDF_PRINT_KEYS;
-		espresso_gpio_keypad_keys_info_low.flags |= GPIOEDF_PRINT_KEYS;
-	}
 
 	platform_device_register(&espresso_gpio_keypad_device);
 
