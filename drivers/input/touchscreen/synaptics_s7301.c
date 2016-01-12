@@ -391,8 +391,7 @@ static void get_config_ver(void *device_data)
 	data->cmd_state = RUNNING;
 
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%s_%s_%s",
-					ts->platform_data->model_name,
+	sprintf(data->cmd_buff, "%s_%s",
 					TSP_VENDOR,
 					ts->fw_info->release_date);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
