@@ -117,24 +117,6 @@ config SAMSUNG_ADD_GAFORENSICINFO
 		will be analized in
 		GAF Tool.
 
-config SAMSUNG_USE_LOGGER_ADDON
-	bool "Samsung Use add-ons for android's logger"
-	default n
-	help
-		This feature make a log message which is started
-		with !@ is displayed throught printk function.
-		This also adds more platform logges in RAM-CONSOLE.
-
-config SAMSUNG_PRINT_PLATFORM_LOG
-	bool "Samsung Print Platform log into Console"
-	depends on SAMSUNG_USE_LOGGER_ADDON
-	default n
-	help
-		This feature will print some critical(?) platfomr logs on
-		the console device. If ANDROID_RAM_CONSOLE feature is
-		enabled at the same time, platform log will not be displayed
-		except 'ram-1'.
-
 config SAMSUNG_USE_SEC_LOG_BUF
 	bool "Samsung Use SEC_LOG_BUF"
 	default n
