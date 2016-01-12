@@ -84,8 +84,6 @@
 #define CREATE_TRACE_POINTS
 #include <trace/events/sched.h>
 
-#include <mach/sec_addon.h>
-
 /*
  * Convert user-nice values [ -20 ... 0 ... 19 ]
  * to static priority [ MAX_RT_PRIO..MAX_PRIO-1 ],
@@ -4323,8 +4321,6 @@ need_resched:
 		rq = cpu_rq(cpu);
 	} else
 		raw_spin_unlock_irq(&rq->lock);
-
-	sec_debug_task_log(cpu, rq->curr);
 
 	post_schedule(rq);
 
