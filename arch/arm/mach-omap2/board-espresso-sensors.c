@@ -159,17 +159,6 @@ static struct al3201_platform_data al3201_pdata = {
 	.power_on = omap4_espresso_sensors_regulator_on,
 };
 
-static struct i2c_board_info __initdata espresso_sensors_i2c4_boardinfo[] = {
-	{
-		I2C_BOARD_INFO("gp2a", 0x44),
-		.platform_data = &gp2a_pdata,
-	},
-	{
-		I2C_BOARD_INFO("AL3201", 0x1c),
-		.platform_data = &al3201_pdata,
-	},
-};
-
 static struct i2c_board_info __initdata espresso10_sensors_i2c4_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("bh1721fvc", 0x23),
@@ -223,21 +212,13 @@ void __init omap4_espresso_sensors_init(void)
 
 	gp2a_pdata.p_out = sensors_gpios[NUM_PS_VOUT].gpio;
 
-	pr_info("%s: hw rev = %d, board type = %d\n",
-		__func__, system_rev, omap4_espresso_get_board_type());
-
 	if (!espresso_is_espresso10()) {
-		if (system_rev < 7) {
-			i2c_register_board_info(4, espresso_sensors_i2c4_boardinfo,
-				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo));
+		if (board_has_modem()) {
+			i2c_register_board_info(4, espresso_sensors_i2c4_boardinfo_rf,
+				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_rf));
 		} else {
-			if (omap4_espresso_get_board_type() == SEC_MACHINE_ESPRESSO) {
-				i2c_register_board_info(4, espresso_sensors_i2c4_boardinfo_rf,
-					ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_rf));
-			} else {
-				i2c_register_board_info(4, espresso_sensors_i2c4_boardinfo_wf,
-					ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_wf));
-			}
+			i2c_register_board_info(4, espresso_sensors_i2c4_boardinfo_wf,
+				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_wf));
 		}
 	} else {
 		int32_t ta_offset_espresso10[] = YAS_TA_OFFSET_ESPRESSO10;
