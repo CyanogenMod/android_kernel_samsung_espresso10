@@ -30,7 +30,6 @@
 #endif
 
 #include "sec_common.h"
-#include "sec_debug.h"
 #include "sec_log_buf.h"
 
 static unsigned s_log_buf_msk;
@@ -262,9 +261,6 @@ int __init sec_log_buf_init(void)
 	s_log_buf.data = (char *)(start + sec_log_buf_flag_size);
 
 	sec_last_log_buf_setup();
-
-	if (sec_debug_get_level())
-		tmp_console_loglevel = 7;	/* KERN_DEBUG */
 
 	if (console_loglevel < tmp_console_loglevel)
 		console_loglevel = tmp_console_loglevel;

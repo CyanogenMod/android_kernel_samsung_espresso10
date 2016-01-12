@@ -42,8 +42,6 @@
 #include <asm/mach/irq.h>
 #include <asm/mach/time.h>
 
-#include <mach/sec_addon.h>
-
 /*
  * No architecture-specific irq_finish function defined in arm/arch/irqs.h.
  */
@@ -98,7 +96,6 @@ asm_do_IRQ(unsigned int irq, struct pt_regs *regs)
 	irq_finish(irq);
 
 	irq_exit();
-	sec_debug_irq_last_exit_log();
 	set_irq_regs(old_regs);
 }
 

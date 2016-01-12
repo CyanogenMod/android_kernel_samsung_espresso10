@@ -369,12 +369,6 @@ static char __sec_common_convert_reboot_mode(char mode,  const char *cmd)
 		{"cp_crash", 'C'}
 	};
 	size_t i, n;
-#ifdef CONFIG_SAMSUNG_KERNEL_DEBUG
-	if (mode == 'L') {
-		new_mode = mode;
-		goto __return;
-	}
-#endif /* CONFIG_SAMSUNG_KERNEL_DEBUG */
 	if (cmd == NULL)
 		goto __return;
 	n = ARRAY_SIZE(mode_tbl);
@@ -410,11 +404,6 @@ static int sec_common_update_reboot_reason(char mode, const char *cmd)
 	case 'f':		/* reboot mode = fota */
 		reason = REBOOTMODE_FOTA;
 		break;
-#ifdef CONFIG_SAMSUNG_KERNEL_DEBUG
-	case 'L':		/* reboot mode = Lockup */
-		reason = REBOOTMODE_KERNEL_PANIC;
-		break;
-#endif /* CONFIG_SAMSUNG_KERNEL_DEBUG */
 	case 't':		/* reboot mode = shutdown with TA */
 	case 'u':		/* reboot mode = shutdown with USB */
 	case 'j':		/* reboot mode = shutdown with JIG */
