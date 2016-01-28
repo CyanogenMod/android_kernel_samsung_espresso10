@@ -166,8 +166,6 @@ static void __init sec_common_set_panic_string(void)
 
 	snprintf(sec_panic_string, ARRAY_SIZE(sec_panic_string),
 		"%s (%s): %02X, cpu %s ES%d.%d",
-		CONFIG_SAMSUNG_BOARD_NAME,
-		CONFIG_SAMSUNG_MODEL_NAME,
 		system_rev, cpu_type,
 		(GET_OMAP_REVISION() >> 4) & 0xf,
 		GET_OMAP_REVISION() & 0xf);
