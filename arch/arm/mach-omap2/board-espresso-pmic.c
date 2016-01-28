@@ -140,6 +140,8 @@ static struct wm8994_pdata wm1811_pdata = {
 	.micbias = { 0x2f, 0x29 },
 
 	.ldo_ena_always_driven = true,
+
+	.use_submic = true,
 };
 #endif
 
@@ -598,6 +600,9 @@ static void __init espresso_audio_init(void)
 
 	wm1811_pdata.ldo[0].enable =
 		omap_muxtbl_get_gpio_by_name("CODEC_LDO_EN");
+
+	if (espresso_is_espresso10())
+		wm1811_pdata.use_submic = false;
 #endif
 }
 
