@@ -114,12 +114,10 @@ static struct gpio main_mic_bias = {
 	.label  = "MICBIAS_EN",
 };
 
-#ifdef CONFIG_SND_USE_SUB_MIC
 static struct gpio sub_mic_bias = {
 	.flags  = GPIOF_OUT_INIT_LOW,
 	.label  = "SUB_MICBIAS_EN",
 };
-#endif /* CONFIG_SND_USE_SUB_MIC */
 
 #ifdef CONFIG_SND_EAR_GND_SEL
 static struct gpio ear_select = {
@@ -175,14 +173,12 @@ static int main_mic_bias_event(struct snd_soc_dapm_widget *w,
 	return 0;
 }
 
-#ifdef CONFIG_SND_USE_SUB_MIC
 static int sub_mic_bias_event(struct snd_soc_dapm_widget *w,
 			struct snd_kcontrol *kcontrol, int event)
 {
 	gpio_set_value(sub_mic_bias.gpio, SND_SOC_DAPM_EVENT_ON(event));
 	return 0;
 }
-#endif /* CONFIG_SND_USE_SUB_MIC */
 
 #ifdef CONFIG_SND_EAR_GND_SEL
 static const struct soc_enum hp_mode_enum[] = {
@@ -658,10 +654,6 @@ static const struct snd_kcontrol_new omap4_controls[] = {
 
 	SOC_DAPM_PIN_SWITCH("Main Mic"),
 
-#ifdef CONFIG_SND_USE_SUB_MIC
-	SOC_DAPM_PIN_SWITCH("Sub Mic"),
-#endif /* CONFIG_SND_USE_SUB_MIC */
-
 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
 
 #ifdef CONFIG_SND_EAR_GND_SEL
@@ -682,6 +674,10 @@ static const struct snd_kcontrol_new omap4_controls[] = {
 		get_pm_mode, set_pm_mode),
 };
 
+static const struct snd_kcontrol_new omap4_submic_controls[] = {
+	SOC_DAPM_PIN_SWITCH("Sub Mic"),
+};
+
 const struct snd_soc_dapm_widget omap4_dapm_widgets[] = {
 	SND_SOC_DAPM_HP("HP", NULL),
 	SND_SOC_DAPM_SPK("SPK", NULL),
@@ -694,11 +690,11 @@ const struct snd_soc_dapm_widget omap4_dapm_widgets[] = {
 
 	SND_SOC_DAPM_MIC("Main Mic", main_mic_bias_event),
 
-#ifdef CONFIG_SND_USE_SUB_MIC
-	SND_SOC_DAPM_MIC("Sub Mic", sub_mic_bias_event),
-#endif /* CONFIG_SND_USE_SUB_MIC */
-
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
+};
+
+const struct snd_soc_dapm_widget omap4_dapm_submic_widgets[] = {
+	SND_SOC_DAPM_MIC("Sub Mic", sub_mic_bias_event),
 };
 
 const struct snd_soc_dapm_route omap4_dapm_routes[] = {
@@ -724,11 +720,6 @@ const struct snd_soc_dapm_route omap4_dapm_routes[] = {
 	{ "IN1LP", NULL, "Main Mic" },
 	{ "IN1LN", NULL, "Main Mic" },
 
-#ifdef CONFIG_SND_USE_SUB_MIC
-	{ "IN2RP:VXRP", NULL, "Sub Mic" },
-	{ "IN2RN", NULL, "Sub Mic" },
-#endif /* CONFIG_SND_USE_SUB_MIC */
-
 #ifndef CONFIG_SAMSUNG_JACK
 	{ "IN1RP", NULL, "Headset Mic" },
 	{ "IN1RN", NULL, "Headset Mic" },
@@ -737,6 +728,11 @@ const struct snd_soc_dapm_route omap4_dapm_routes[] = {
 	{ "IN1RN", NULL, "MICBIAS2" },
 	{ "MICBIAS2", NULL, "Headset Mic" },
 #endif /* CONFIG_SAMSUNG_JACK */
+};
+
+const struct snd_soc_dapm_route omap4_submic_dapm_routes[] = {
+	{ "IN2RP:VXRP", NULL, "Sub Mic" },
+	{ "IN2RN", NULL, "Sub Mic" },
 };
 
 #ifndef CONFIG_SAMSUNG_JACK
@@ -834,11 +830,11 @@ static DEVICE_ATTR(state, S_IRUGO | S_IWUSR | S_IWGRP,
 int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 {
 	struct snd_soc_codec *codec = rtd->codec;
+	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 #ifndef CONFIG_SAMSUNG_JACK
 	struct wm1811_machine_priv *wm1811
 		= snd_soc_card_get_drvdata(codec->card);
 	struct wm8994 *control = codec->control_data;
-	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 #endif /* not CONFIG_SAMSUNG_JACK */
 	struct snd_soc_dapm_context *dapm = &codec->dapm;
 	struct snd_soc_dai *aif1_dai = rtd->codec_dai;
@@ -853,13 +849,45 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	ret = snd_soc_add_controls(codec, omap4_controls,
 				ARRAY_SIZE(omap4_controls));
 
+	if (wm8994->pdata->use_submic) {
+		sub_mic_bias.gpio = omap_muxtbl_get_gpio_by_name(sub_mic_bias.label);
+		if (sub_mic_bias.gpio == -EINVAL) {
+			pr_err("%s: failed to get gpio name for %s\n", __func__, sub_mic_bias.label);
+			wm8994->pdata->use_submic = false;
+			goto submic_error;
+		}
+		ret = gpio_request(sub_mic_bias.gpio, "sub_mic_bias");
+		if (ret < 0) {
+			pr_err("%s: failed to request gpio %s\n", __func__, sub_mic_bias.label);
+			wm8994->pdata->use_submic = false;
+			goto submic_error;
+		}
+		gpio_direction_output(sub_mic_bias.gpio, 0);
+
+		snd_soc_add_controls(codec, omap4_submic_controls,
+					ARRAY_SIZE(omap4_submic_controls));
+	}
+submic_error:
+
 	ret = snd_soc_dapm_new_controls(dapm, omap4_dapm_widgets,
 					ARRAY_SIZE(omap4_dapm_widgets));
+
+	if (wm8994->pdata->use_submic) {
+		snd_soc_dapm_new_controls(dapm, omap4_dapm_submic_widgets,
+					ARRAY_SIZE(omap4_dapm_submic_widgets));
+	}
+
 	if (ret != 0)
 		dev_err(codec->dev, "Failed to add DAPM widgets: %d\n", ret);
 
 	ret = snd_soc_dapm_add_routes(dapm, omap4_dapm_routes,
 					ARRAY_SIZE(omap4_dapm_routes));
+
+	if (wm8994->pdata->use_submic) {
+		snd_soc_dapm_add_routes(dapm, omap4_submic_dapm_routes,
+						ARRAY_SIZE(omap4_submic_dapm_routes));
+	}
+
 	if (ret != 0)
 		dev_err(codec->dev, "Failed to add DAPM routes: %d\n", ret);
 
@@ -882,9 +910,10 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_ignore_suspend(dapm, "LINEOUT");
 	snd_soc_dapm_ignore_suspend(dapm, "HP");
 	snd_soc_dapm_ignore_suspend(dapm, "Main Mic");
-#ifdef CONFIG_SND_USE_SUB_MIC
-	snd_soc_dapm_ignore_suspend(dapm, "Sub Mic");
-#endif /* CONFIG_SND_USE_SUB_MIC */
+	if (wm8994->pdata->use_submic) {
+		snd_soc_dapm_ignore_suspend(dapm, "Sub Mic");
+	}
+
 	snd_soc_dapm_ignore_suspend(dapm, "Headset Mic");
 	snd_soc_dapm_ignore_suspend(dapm, "AIF1DACDAT");
 	snd_soc_dapm_ignore_suspend(dapm, "AIF2DACDAT");
@@ -1207,19 +1236,6 @@ static int __init omap4_audio_init(void)
 		goto main_mic_err;
 	gpio_direction_output(main_mic_bias.gpio, 0);
 
-#ifdef CONFIG_SND_USE_SUB_MIC
-	sub_mic_bias.gpio = omap_muxtbl_get_gpio_by_name(sub_mic_bias.label);
-	if (sub_mic_bias.gpio == -EINVAL) {
-		pr_err("failed to get gpio name for %s\n", sub_mic_bias.label);
-		ret = -EINVAL;
-		goto sub_mic_err;
-	}
-	ret = gpio_request(sub_mic_bias.gpio, "sub_mic_bias");
-	if (ret < 0)
-		goto sub_mic_err;
-	gpio_direction_output(sub_mic_bias.gpio, 0);
-#endif /* CONFIG_SND_USE_SUB_MIC */
-
 #ifdef CONFIG_SND_EAR_GND_SEL
 	hp_output_mode = 1;
 	ear_select.gpio = omap_muxtbl_get_gpio_by_name(ear_select.label);
@@ -1297,10 +1313,6 @@ lineout_select_err:
 	gpio_free(ear_select.gpio);
 ear_select_err:
 #endif /* CONFIG_SND_EAR_GND_SEL */
-#ifdef CONFIG_SND_USE_SUB_MIC
-	gpio_free(sub_mic_bias.gpio);
-sub_mic_err:
-#endif /* CONFIG_SND_USE_SUB_MIC */
 	gpio_free(main_mic_bias.gpio);
 main_mic_err:
 	gpio_free(mclk.gpio);
