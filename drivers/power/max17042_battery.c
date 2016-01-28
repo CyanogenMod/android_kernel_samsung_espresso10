@@ -708,56 +708,54 @@ static void add_low_batt_comp_cnt(struct max17042_chip *chip,
 	}
 }
 
-static int get_low_batt_threshold(int range, int level, int nCurrent)
+static int get_low_batt_threshold(struct max17042_chip *chip,
+			int range, int level, int nCurrent)
 {
 	int ret = 0;
 
 	switch (range) {
-	/* P4 & P8 needs one more level */
-#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 	case 5:
 		if (level == 1)
-			ret = SDI_Range5_1_Offset +
-			      ((nCurrent * SDI_Range5_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range5_1_offset +
+			      ((nCurrent * chip->pdata->sdi_compensation.range5_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range5_3_Offset +
-			      ((nCurrent * SDI_Range5_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range5_3_offset +
+			      ((nCurrent * chip->pdata->sdi_compensation.range5_3_slope) / 1000);
 		break;
-#endif
 	case 4:
 		if (level == 1)
-			ret = SDI_Range4_1_Offset + \
-			      ((nCurrent * SDI_Range4_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range4_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range4_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range4_3_Offset + \
-			      ((nCurrent * SDI_Range4_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range4_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range4_3_slope) / 1000);
 		break;
 
 	case 3:
 		if (level == 1)
-			ret = SDI_Range3_1_Offset + \
-			      ((nCurrent * SDI_Range3_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range3_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range3_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range3_3_Offset + \
-			      ((nCurrent * SDI_Range3_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range3_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range3_3_slope) / 1000);
 		break;
 
 	case 2:
 		if (level == 1)
-			ret = SDI_Range2_1_Offset + \
-			      ((nCurrent * SDI_Range2_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range2_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range2_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range2_3_Offset + \
-			      ((nCurrent * SDI_Range2_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range2_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range2_3_slope) / 1000);
 		break;
 
 	case 1:
 		if (level == 1)
-			ret = SDI_Range1_1_Offset + \
-			      ((nCurrent * SDI_Range1_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range1_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range1_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range1_3_Offset + \
-			      ((nCurrent * SDI_Range1_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range1_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range1_3_slope) / 1000);
 		break;
 
 	default:
@@ -806,71 +804,66 @@ static int max17042_low_batt_compensation(
 		fg_avg_current = max17042_get_avg_current(chip->client);
 		fg_min_current = min(fg_avg_current, bat_info.fg_current);
 
-		if (fg_min_current < CURRENT_RANGE_MAX) {
+		if (fg_min_current < chip->pdata->current_range.range_max) {
 			if (bat_info.soc >= 2 &&
-				bat_info.vcell < get_low_batt_threshold(
-					CURRENT_RANGE_MAX_NUM,
+				bat_info.vcell < get_low_batt_threshold(chip,
+					chip->pdata->current_range.range_max_num,
 					1, fg_min_current))
 				add_low_batt_comp_cnt(chip,
-					CURRENT_RANGE_MAX_NUM, 1);
+					chip->pdata->current_range.range_max_num, 1);
 			else if (bat_info.soc >= 4 &&
-				bat_info.vcell < get_low_batt_threshold(
-					CURRENT_RANGE_MAX_NUM,
+				bat_info.vcell < get_low_batt_threshold(chip,
+					chip->pdata->current_range.range_max_num,
 					3, fg_min_current))
 				add_low_batt_comp_cnt(chip,
-					CURRENT_RANGE_MAX_NUM, 3);
+					chip->pdata->current_range.range_max_num, 3);
 			else
 				bCntReset = 1;
-		}
-		/* P4 & P8 needs more level */
-#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
-		else if (fg_min_current >= CURRENT_RANGE5 &&
-				fg_min_current < CURRENT_RANGE4) {
+		} else if (fg_min_current >= chip->pdata->current_range.range5 &&
+				fg_min_current < chip->pdata->current_range.range4) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(4, 1,
+				get_low_batt_threshold(chip, 4, 1,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 4, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(4, 3,
+				get_low_batt_threshold(chip, 4, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 4, 3);
 			else
 				bCntReset = 1;
-		}
-#endif
-		else if (fg_min_current >= CURRENT_RANGE4 &&
-				fg_min_current < CURRENT_RANGE3) {
+		} else if (fg_min_current >= chip->pdata->current_range.range4 &&
+				fg_min_current < chip->pdata->current_range.range3) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(3, 1,
+				get_low_batt_threshold(chip, 3, 1,
 					fg_min_current))
 
 				add_low_batt_comp_cnt(chip, 3, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(3, 3,
+				get_low_batt_threshold(chip, 3, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 3, 3);
 			else
 				bCntReset = 1;
-		} else if (fg_min_current >= CURRENT_RANGE3 &&
-				fg_min_current < CURRENT_RANGE2) {
+		} else if (fg_min_current >= chip->pdata->current_range.range3 &&
+				fg_min_current < chip->pdata->current_range.range2) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(2, 1,
+				get_low_batt_threshold(chip, 2, 1,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 2, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(2, 3,
+				get_low_batt_threshold(chip, 2, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 2, 3);
 			else
 				bCntReset = 1;
-		} else if (fg_min_current >= CURRENT_RANGE2 &&
-				fg_min_current < CURRENT_RANGE1) {
+		} else if (fg_min_current >= chip->pdata->current_range.range2 &&
+				fg_min_current < chip->pdata->current_range.range1) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(1, 1,
+				get_low_batt_threshold(chip, 1, 1,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 1, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(1, 3,
+				get_low_batt_threshold(chip, 1, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 1, 3);
 			else
