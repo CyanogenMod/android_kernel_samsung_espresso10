@@ -200,8 +200,15 @@ config SND_OMAP_SOC_IGEP0020
 	help
 	  Say Y if you want to add support for Soc audio on IGEP v2 board.
 
-config SND_USE_SUB_MIC
-	bool "Use SUB_MIC"
+config SND_OMAP_SOC_WM8994
+	tristate "SoC Audio support for WolfSon WM1811 Codec"
+	depends on MACH_OMAP4_SAMSUNG
+	depends on SND_OMAP_SOC
+	select SND_OMAP_SOC_MCBSP
+	select SND_SOC_WM8994
+	select SND_SOC_WM_HUBS
+	help
+	  Say Y if you want to add support for SoC audio on omap4 + wm1811 board
 
 config SND_EAR_GND_SEL
 	bool "Use EAR_GND_SEL"
