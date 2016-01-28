@@ -70,16 +70,6 @@ config OMAP_STMPE_NR
 menu "OMAP Samsung Specific Configurations"
 	depends on MACH_OMAP_SAMSUNG
 
-config SAMSUNG_MODEL_NAME
-	string "Samsung Model Name"
-	depends on MACH_OMAP_SAMSUNG
-	default ""
-
-config SAMSUNG_BOARD_NAME
-	string "Samsung Board Name"
-	depends on MACH_OMAP_SAMSUNG
-	default ""
-
 config SAMSUNG_CONSOLE_UART
 	int "used console uart port"
 	default 4
