@@ -664,10 +664,6 @@ static const struct snd_kcontrol_new omap4_controls[] = {
 
 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
 
-#ifdef CONFIG_FM_RADIO
-	SOC_DAPM_PIN_SWITCH("FM In"),
-#endif /* CONFIG_FM_RADIO */
-
 #ifdef CONFIG_SND_EAR_GND_SEL
 	SOC_ENUM_EXT("HP Output Mode", hp_mode_enum[0],
 		get_hp_output_mode, set_hp_output_mode),
@@ -703,10 +699,6 @@ const struct snd_soc_dapm_widget omap4_dapm_widgets[] = {
 #endif /* CONFIG_SND_USE_SUB_MIC */
 
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-
-#ifdef CONFIG_FM_RADIO
-	SND_SOC_DAPM_LINE("FM In", NULL),
-#endif /* CONFIG_FM_RADIO */
 };
 
 const struct snd_soc_dapm_route omap4_dapm_routes[] = {
@@ -745,15 +737,6 @@ const struct snd_soc_dapm_route omap4_dapm_routes[] = {
 	{ "IN1RN", NULL, "MICBIAS2" },
 	{ "MICBIAS2", NULL, "Headset Mic" },
 #endif /* CONFIG_SAMSUNG_JACK */
-
-#ifdef CONFIG_FM_RADIO
-	{ "IN2LN", NULL, "FM In" },
-#ifdef CONFIG_SND_USE_SUB_MIC
-	{ "IN2LP:VXRN", NULL, "FM In" },
-#else /* CONFIG_SND_USE_SUB_MIC */
-	{ "IN2RN", NULL, "FM In" },
-#endif /* not CONFIG_SND_USE_SUB_MIC */
-#endif /* CONFIG_FM_RADIO */
 };
 
 #ifndef CONFIG_SAMSUNG_JACK
@@ -890,15 +873,8 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 		dev_err(codec->dev, "Failed to enable AIF1CLK: %d\n", ret);
 
 	/* set up NC codec pins */
-#ifdef CONFIG_FM_RADIO
-#ifndef CONFIG_SND_USE_SUB_MIC
-	snd_soc_dapm_nc_pin(dapm, "IN2LP:VXRN");
-	snd_soc_dapm_nc_pin(dapm, "IN2RP:VXRP");
-#endif /* not CONFIG_SND_USE_SUB_MIC */
-#else /* CONFIG_FM_RADIO */
 	snd_soc_dapm_nc_pin(dapm, "IN2LP:VXRN");
 	snd_soc_dapm_nc_pin(dapm, "IN2LN");
-#endif /* not CONFIG_FM_RADIO */
 
 	/* set up ignore pins */
 	snd_soc_dapm_ignore_suspend(dapm, "RCV");
@@ -910,9 +886,6 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 	snd_soc_dapm_ignore_suspend(dapm, "Sub Mic");
 #endif /* CONFIG_SND_USE_SUB_MIC */
 	snd_soc_dapm_ignore_suspend(dapm, "Headset Mic");
-#ifdef CONFIG_FM_RADIO
-	snd_soc_dapm_ignore_suspend(dapm, "FM In");
-#endif /* CONFIG_FM_RADIO */
 	snd_soc_dapm_ignore_suspend(dapm, "AIF1DACDAT");
 	snd_soc_dapm_ignore_suspend(dapm, "AIF2DACDAT");
 	snd_soc_dapm_ignore_suspend(dapm, "AIF3DACDAT");
