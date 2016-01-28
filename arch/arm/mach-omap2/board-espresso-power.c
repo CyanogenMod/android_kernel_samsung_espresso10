@@ -235,6 +235,37 @@ static struct max17042_platform_data max17042_pdata = {
 	.sdi_capacity = 0x1F40,
 	.sdi_vfcapacity = 0x29AB,
 	.sdi_low_bat_comp_start_vol = 3550,
+	.current_range = {
+		.range1 = 0,
+		.range2 = -100,
+		.range3 = -750,
+		.range4 = -1250,
+		.range5 = 0, /* ignored */
+		.range_max = -1250,
+		.range_max_num = 4,
+	},
+	.sdi_compensation = {
+		.range1_1_slope = 0,
+		.range1_1_offset = 3456,
+		.range1_3_slope = 0,
+		.range1_3_offset = 3536,
+		.range2_1_slope = 96,
+		.range2_1_offset = 3461,
+		.range2_3_slope = 134,
+		.range2_3_offset = 3544,
+		.range3_1_slope = 97,
+		.range3_1_offset = 3451,
+		.range3_3_slope = 27,
+		.range3_3_offset = 3454,
+		.range4_1_slope = 0,
+		.range4_1_offset = 3320,
+		.range4_3_slope = 0,
+		.range4_3_offset = 3410,
+		.range5_1_slope = 0,
+		.range5_1_offset = 3318,
+		.range5_3_slope = 0,
+		.range5_3_offset = 3383,
+	},
 };
 
 static const __initdata struct i2c_board_info max17042_i2c[] = {
@@ -424,9 +455,30 @@ void __init omap4_espresso_charger_init(void)
 		max17042_pdata.byd_vfcapacity = 0x48EA;
 		max17042_pdata.sdi_low_bat_comp_start_vol = 3600;
 		max17042_pdata.byd_low_bat_comp_start_vol = 3650;
+		max17042_pdata.current_range.range2 = -200;
+		max17042_pdata.current_range.range3 = -600;
+		max17042_pdata.current_range.range4 = -1500;
+		max17042_pdata.current_range.range5 = -2500;
+		max17042_pdata.current_range.range_max = -2500;
+		max17042_pdata.current_range.range_max_num = 5;
+		max17042_pdata.sdi_compensation.range1_1_offset = 3438;
+		max17042_pdata.sdi_compensation.range1_3_offset = 3591;
+		max17042_pdata.sdi_compensation.range2_1_slope = 45;
+		max17042_pdata.sdi_compensation.range2_1_offset = 3447;
+		max17042_pdata.sdi_compensation.range2_3_slope = 78;
+		max17042_pdata.sdi_compensation.range2_3_offset = 3606;
+		max17042_pdata.sdi_compensation.range3_1_slope = 54;
+		max17042_pdata.sdi_compensation.range3_1_offset = 3453;
+		max17042_pdata.sdi_compensation.range3_3_slope = 92;
+		max17042_pdata.sdi_compensation.range3_3_offset = 3615;
+		max17042_pdata.sdi_compensation.range4_1_slope = 53;
+		max17042_pdata.sdi_compensation.range4_1_offset = 3451;
+		max17042_pdata.sdi_compensation.range4_3_slope = 94;
+		max17042_pdata.sdi_compensation.range4_3_offset = 3618;
 	} else {
 		i2c_register_board_info(5, smb136_i2c, ARRAY_SIZE(smb136_i2c));
 	}
+
 	i2c_register_board_info(7, max17042_i2c, ARRAY_SIZE(max17042_i2c));
 
 	ret = platform_device_register(&battery_manager_device);
