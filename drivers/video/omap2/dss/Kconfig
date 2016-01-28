@@ -18,16 +18,6 @@ config OMAP2_VRAM_SIZE
 	  You can also set this with "vram=<bytes>" kernel argument, or
 	  in the board file.
 
-config OMAP2_FIFO_LOW_THRESHOLD
-	int "FIFO threshold"
-	range 1 10
-	default 1
-	help
-	  FIFO threshold value
-	  for resolution lesser than 1280 * 720 = 1,
-	  for resolution greater than 720P it is 2.
-	  (CSR: OMAPS00260116)
-
 config OMAP2_DSS_DEBUG_SUPPORT
         bool "Debug support"
 	default y
