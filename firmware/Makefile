@@ -151,7 +151,7 @@ endif
 
 TSPFIRMWARE_DIRECTORY_SYNAPTICS = $(srctree)/firmware/synaptics
 ifeq ($(shell test -d $(TSPFIRMWARE_DIRECTORY_SYNAPTICS) && echo yes),yes)
-fw-shipped-$(CONFIG_FW_SAMSUNG_ESPRESSO_10_TSP) += synaptics/p5100.fw
+fw-shipped-$(CONFIG_FW_SAMSUNG_ESPRESSO_TSP) += synaptics/p5100.fw
 else
 $(warning '$(TSPFIRMWARE_DIRECTORY)' directory dose not exist)
 endif
