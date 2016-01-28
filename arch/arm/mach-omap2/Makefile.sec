@@ -45,26 +45,8 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO)	+= board-espresso-muxset-r03.o \
 					   board-espresso-muxset-r06.o \
 					   board-espresso-muxset-r07.o \
 					   board-espresso-muxset-r09.o \
-					   board-espresso-muxset-r10.o
-
-obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso.o \
-					   board-espresso-emif.o \
-					   board-espresso-serial.o \
-					   board-espresso-pmic.o \
-					   board-espresso-sdio.o \
-					   board-espresso-connector.o \
-					   board-espresso-bluetooth.o \
-					   board-espresso-jack.o \
-					   board-espresso-power.o \
-					   board-espresso-wifi.o \
-					   board-espresso-display.o \
-					   board-espresso-modems.o \
-					   board-espresso-sensors.o \
-					   board-espresso-input.o \
-					   board-espresso-vibrator.o \
-					   board-espresso-irled.o
-
-obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10-muxset-r00.o \
+					   board-espresso-muxset-r10.o \
+					   board-espresso10-muxset-r00.o \
 					   board-espresso10-muxset-r05.o \
 					   board-espresso10-muxset-r07.o \
 					   board-espresso10-usa-bby-muxset-r07.o \
