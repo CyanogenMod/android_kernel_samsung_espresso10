@@ -213,6 +213,8 @@ void __init omap4_espresso_sensors_init(void)
 	gp2a_pdata.p_out = sensors_gpios[NUM_PS_VOUT].gpio;
 
 	if (!espresso_is_espresso10()) {
+		magnetic_pdata.orientation = 7;
+		accelerometer_pdata.orientation = 7;
 		if (board_has_modem()) {
 			i2c_register_board_info(4, espresso_sensors_i2c4_boardinfo_rf,
 				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_rf));
@@ -221,6 +223,8 @@ void __init omap4_espresso_sensors_init(void)
 				ARRAY_SIZE(espresso_sensors_i2c4_boardinfo_wf));
 		}
 	} else {
+		magnetic_pdata.orientation = 7;
+		accelerometer_pdata.orientation = 6;
 		int32_t ta_offset_espresso10[] = YAS_TA_OFFSET_ESPRESSO10;
 		int32_t usb_offset_espresso10[] = YAS_USB_OFFSET_ESPRESSO10;
 		magnetic_pdata.ta_offset.v[0] = ta_offset_espresso10[0];
