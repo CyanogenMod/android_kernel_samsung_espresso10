@@ -36,16 +36,6 @@ config FW_SAMSUNG_ESPRESSO_TSP
 	bool
 	default n
 
-config MACH_SAMSUNG_ESPRESSO_10
-	bool "Samsung Espresso 10.1 (GT-P5100) Board"
-	default n
-	select MACH_OMAP4_SAMSUNG
-	select FW_SAMSUNG_ESPRESSO_10_TSP
-
-config FW_SAMSUNG_ESPRESSO_10_TSP
-	bool
-	default n
-
 if BT
 config BT_BCM4330
 	bool "Enable BCM4330 driver"
