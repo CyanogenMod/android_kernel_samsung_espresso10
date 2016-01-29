@@ -70,6 +70,10 @@
 #define ESPRESSO_RAMCONSOLE_START	(PLAT_PHYS_OFFSET + SZ_512M)
 #define ESPRESSO_RAMCONSOLE_SIZE	SZ_2M
 
+#define ESPRESSO_ATTR_RO(_type, _name, _show) \
+	struct kobj_attribute espresso_##_type##_prop_attr_##_name = \
+		__ATTR(_name, S_IRUGO, _show, NULL)
+
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
 static struct resource ramconsole_resources[] = {
 	{
@@ -312,9 +316,18 @@ static ssize_t espresso_board_revision_show(struct kobject *kobj,
 	return sprintf(buf, "0x%02x\n", system_rev);
 }
 
+static ssize_t espresso_board_type_show(struct kobject *kobj,
+	 struct kobj_attribute *attr, char *buf)
+{
+	return sprintf(buf, "espresso%s%s", espresso_is_espresso10() ? "10" : "",
+					board_has_modem() ? "" : "wifi");
+}
+
 static ESPRESSO_ATTR_RO(board, revision, espresso_board_revision_show);
+static ESPRESSO_ATTR_RO(board, type, espresso_board_type_show);
 static struct attribute *espresso_board_prop_attrs[] = {
 	&espresso_board_prop_attr_revision.attr,
+	&espresso_board_prop_attr_type.attr,
 	NULL,
 };
 
