@@ -165,148 +165,12 @@ static void __init sec_common_set_panic_string(void)
 #endif /* CONFIG_ARCH_OMAP* */
 
 	snprintf(sec_panic_string, ARRAY_SIZE(sec_panic_string),
-		"%s (%s): %02X, cpu %s ES%d.%d",
+		"%02X, cpu %s ES%d.%d",
 		system_rev, cpu_type,
 		(GET_OMAP_REVISION() >> 4) & 0xf,
 		GET_OMAP_REVISION() & 0xf);
 
 	mach_panic_string = sec_panic_string;
-}
-
-static const char * const omap_types[] = {
-	[OMAP2_DEVICE_TYPE_TEST]	= "TST",
-	[OMAP2_DEVICE_TYPE_EMU]		= "EMU",
-	[OMAP2_DEVICE_TYPE_SEC]		= "HS",
-	[OMAP2_DEVICE_TYPE_GP]		= "GP",
-	[OMAP2_DEVICE_TYPE_BAD]		= "BAD"
-};
-
-static ssize_t sec_common_soc_family_show(struct kobject *kobj,
-					  struct kobj_attribute *attr,
-					  char *buf)
-{
-	return sprintf(buf, "OMAP%04x\n", GET_OMAP_TYPE);
-}
-
-static ssize_t sec_common_soc_revision_show(struct kobject *kobj,
-					    struct kobj_attribute *attr,
-					    char *buf)
-{
-	return sprintf(buf, "ES%d.%d\n",
-		       (GET_OMAP_REVISION() >> 4) & 0x0F,
-		       (GET_OMAP_REVISION()) & 0xF);
-}
-
-static ssize_t sec_common_soc_die_id_show(struct kobject *kobj,
-					  struct kobj_attribute *attr,
-					  char *buf)
-{
-	struct omap_die_id oid;
-
-	omap_get_die_id(&oid);
-
-	return sprintf(buf, "%08X-%08X-%08X-%08X\n",
-		       oid.id_3, oid.id_2, oid.id_1, oid.id_0);
-}
-
-static ssize_t sec_common_soc_prod_id_show(struct kobject *kobj,
-					   struct kobj_attribute *attr,
-					   char *buf)
-{
-	struct omap_die_id oid;
-
-	omap_get_production_id(&oid);
-
-	return sprintf(buf, "%08X-%08X\n", oid.id_1, oid.id_0);
-}
-
-static ssize_t sec_common_soc_type_show(struct kobject *kobj,
-					struct kobj_attribute *attr,
-					char *buf)
-{
-	return sprintf(buf, "%s\n", omap_types[omap_type()]);
-}
-
-#define SEC_COMMON_ATTR_RO(_type, _name)				\
-	struct kobj_attribute sec_common_##_type##_prop_attr_##_name =	\
-		__ATTR(_name, S_IRUGO,					\
-		       sec_common_##_type##_##_name##_show, NULL)
-
-static SEC_COMMON_ATTR_RO(soc, family);
-static SEC_COMMON_ATTR_RO(soc, revision);
-static SEC_COMMON_ATTR_RO(soc, type);
-static SEC_COMMON_ATTR_RO(soc, die_id);
-static SEC_COMMON_ATTR_RO(soc, prod_id);
-
-static struct attribute *sec_common_soc_prop_attrs[] = {
-	&sec_common_soc_prop_attr_family.attr,
-	&sec_common_soc_prop_attr_revision.attr,
-	&sec_common_soc_prop_attr_type.attr,
-	&sec_common_soc_prop_attr_die_id.attr,
-	&sec_common_soc_prop_attr_prod_id.attr,
-	NULL,
-};
-
-static struct attribute_group sec_common_soc_prop_attr_group = {
-	.attrs = sec_common_soc_prop_attrs,
-};
-
-static ssize_t sec_common_board_revision_show(struct kobject *kobj,
-					      struct kobj_attribute *attr,
-					      char *buf)
-{
-	char *machine_name = *(char **)kallsyms_lookup_name("machine_name");
-
-	return sprintf(buf, "%s Samsung board (0x%02X)\n",
-		       machine_name, system_rev);
-}
-
-static SEC_COMMON_ATTR_RO(board, revision);
-
-static struct attribute *sec_common_board_prop_attrs[] = {
-	&sec_common_board_prop_attr_revision.attr,
-	NULL,
-};
-
-static struct attribute_group sec_common_board_prop_attr_group = {
-	.attrs = sec_common_board_prop_attrs,
-};
-
-static void __init sec_common_create_board_props(void)
-{
-	struct kobject *board_props_kobj;
-	struct kobject *soc_kobj;
-	int ret = 0;
-
-	board_props_kobj = kobject_create_and_add("board_properties", NULL);
-	if (!board_props_kobj)
-		goto err_board_obj;
-
-	soc_kobj = kobject_create_and_add("soc", board_props_kobj);
-	if (!soc_kobj)
-		goto err_soc_obj;
-
-	ret = sysfs_create_group(board_props_kobj,
-				 &sec_common_board_prop_attr_group);
-	if (ret)
-		goto err_board_sysfs_create;
-
-	ret = sysfs_create_group(soc_kobj, &sec_common_soc_prop_attr_group);
-	if (ret)
-		goto err_soc_sysfs_create;
-
-	return;
-
-err_soc_sysfs_create:
-	sysfs_remove_group(board_props_kobj,
-			   &sec_common_board_prop_attr_group);
-err_board_sysfs_create:
-	kobject_put(soc_kobj);
-err_soc_obj:
-	kobject_put(board_props_kobj);
-err_board_obj:
-	if (!board_props_kobj || !soc_kobj || ret)
-		pr_err("failed to create board_properties\n");
 }
 
 int __init sec_common_init_early(void)
@@ -331,8 +195,6 @@ int __init sec_common_init(void)
 	sec_class = class_create(THIS_MODULE, "sec");
 	if (IS_ERR(sec_class))
 		pr_err("Class(sec) Creating Fail!!!\n");
-
-	sec_common_create_board_props();
 
 	for (i = 0; i < ARRAY_SIZE(hwrev_gpio); i++) {
 		gpio_pin = omap_muxtbl_get_gpio_by_name(hwrev_gpio[i]);
