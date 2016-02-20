@@ -314,7 +314,7 @@ int __init omap4_espresso_irled_init(void)
 	int i;
 
 	if (system_rev > 6 && !board_is_bestbuy_variant()) {
-		if (espresso_is_espresso10()) {
+		if (board_is_espresso10()) {
 			for (i = 0; i < ARRAY_SIZE(irled_gpios); i++) {
 				irled_gpios[i].gpio =
 				omap_muxtbl_get_gpio_by_name(irled_gpios[i].label);
