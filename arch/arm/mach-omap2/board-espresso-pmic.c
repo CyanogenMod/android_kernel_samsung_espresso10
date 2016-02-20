@@ -400,7 +400,7 @@ static void espresso_twl6030_init(void)
 		pr_err("%s:PHOENIX_MSK_TRANSITION write fail!\n", __func__);
 
 
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		/*
 		 * Enable charge backup battery and set charging voltage to 2.6V.
 		 * Set VRTC low power mode in off/sleep and standard power mode in on.
@@ -601,7 +601,7 @@ static void __init espresso_audio_init(void)
 	wm1811_pdata.ldo[0].enable =
 		omap_muxtbl_get_gpio_by_name("CODEC_LDO_EN");
 
-	if (espresso_is_espresso10())
+	if (board_is_espresso10())
 		wm1811_pdata.use_submic = false;
 #endif
 }
@@ -620,7 +620,7 @@ void __init omap4_espresso_pmic_init(void)
 	 */
 	regulator_has_full_constraints();
 
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		espresso_vana.constraints.state_mem.enabled = false;
 		espresso_vana.num_consumer_supplies = 0;
 		
@@ -653,7 +653,7 @@ void __init omap4_espresso_pmic_init(void)
 		 * only best buy Wi-Fi verstion support MHL from rev0.4
 		 * Set ldoln regulator as VDAC regulator which is used by MHL.
 		 */
-		if (espresso_is_espresso10() && board_is_bestbuy_variant() && system_rev >= 7)
+		if (board_is_espresso10() && board_is_bestbuy_variant() && system_rev >= 7)
 			espresso_twl6032_pdata.ldoln = &espresso_vdac;
 	}
 

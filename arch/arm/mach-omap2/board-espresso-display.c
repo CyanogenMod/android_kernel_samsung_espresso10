@@ -147,7 +147,7 @@ static struct omapfb_platform_data espresso_fb_pdata = {
 
 void __init omap4_espresso_memory_display_init(void)
 {
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		espresso_dss_data.devices[0]->driver_name =
 			espresso10_lcd_config.driver_name;
 		espresso_dss_data.devices[0]->panel =
@@ -200,7 +200,7 @@ void __init omap4_espresso_display_init(void)
 		BRIGHTNESS_OFF, BRIGHTNESS_DIM, BRIGHTNESS_MIN,
 		BRIGHTNESS_25, BRIGHTNESS_DEFAULT, BRIGHTNESS_MAX};
 	int kernel_brightness[] = {0, 1, 3, 8, 35, 94};
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		kernel_brightness[1] = 3;
 		kernel_brightness[4] = 47;
 		kernel_brightness[5] = 81;
@@ -226,7 +226,7 @@ void __init omap4_espresso_display_init(void)
 	 }
 #endif
 
-	if (!espresso_is_espresso10() && espresso_panel_data.panel_id == PANEL_LCD) {
+	if (!board_is_espresso10() && espresso_panel_data.panel_id == PANEL_LCD) {
 		kernel_brightness[2] = 2;
 		kernel_brightness[3] = 7;
 		kernel_brightness[4] = 30;

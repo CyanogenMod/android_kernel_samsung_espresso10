@@ -162,7 +162,7 @@ void __init omap4_espresso_jack_init(void)
 	sec_jack_pdata.send_end_gpio = jack_gpios[GPIO_EAR_SEND_END].gpio;
 
 	// espresso10 has a slightly different setup
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		sec_jack_pdata.zones[0].adc_high = 700;
 		sec_jack_pdata.zones[1].adc_high = 1019;
 		sec_jack_pdata.zones[2].adc_high = 2000;
