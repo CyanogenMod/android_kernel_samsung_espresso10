@@ -212,7 +212,7 @@ void __init omap4_espresso_sensors_init(void)
 
 	gp2a_pdata.p_out = sensors_gpios[NUM_PS_VOUT].gpio;
 
-	if (!espresso_is_espresso10()) {
+	if (!board_is_espresso10()) {
 		magnetic_pdata.orientation = 7;
 		accelerometer_pdata.orientation = 7;
 		if (board_has_modem()) {

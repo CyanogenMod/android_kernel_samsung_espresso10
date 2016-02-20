@@ -30,7 +30,7 @@ enum espresso_adc_ch {
 	EAR_ADC_35,	/* Earjack detection */
 };
 
-bool espresso_is_espresso10(void);
+bool board_is_espresso10(void);
 bool board_has_modem(void);
 bool board_is_bestbuy_variant(void);
 

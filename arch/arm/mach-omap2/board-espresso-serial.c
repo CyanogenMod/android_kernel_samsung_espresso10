@@ -121,7 +121,7 @@ static void __init espresso_gpio_i2c_init(void)
 		omap_muxtbl_get_gpio_by_name("ADC_I2C_SDA_1.8V");
 	espresso_gpio_i2c6_pdata.scl_pin =
 		omap_muxtbl_get_gpio_by_name("ADC_I2C_SCL_1.8V");
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		/* gpio-i2c 8 */
 		espresso_gpio_i2c8_pdata.sda_pin =
 			omap_muxtbl_get_gpio_by_name("MHL_SDA_1.8V");
@@ -301,7 +301,7 @@ void __init omap4_espresso_serial_init(void)
 
 	platform_add_devices(espresso_serial_devices,
 			     ARRAY_SIZE(espresso_serial_devices));
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		platform_add_devices(espresso10_serial_devices,
 				     ARRAY_SIZE(espresso10_serial_devices));
 	}
