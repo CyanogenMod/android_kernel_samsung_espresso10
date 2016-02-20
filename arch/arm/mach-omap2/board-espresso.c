@@ -187,7 +187,7 @@ static int __init espresso_set_vendor_type(char *str)
 }
 __setup("sec_vendor=", espresso_set_vendor_type);
 
-bool espresso_is_espresso10(void) {
+bool board_is_espresso10(void) {
 	return _board_is_espresso10;
 }
 
@@ -319,7 +319,7 @@ static ssize_t espresso_board_revision_show(struct kobject *kobj,
 static ssize_t espresso_board_type_show(struct kobject *kobj,
 	 struct kobj_attribute *attr, char *buf)
 {
-	return sprintf(buf, "espresso%s%s", espresso_is_espresso10() ? "10" : "",
+	return sprintf(buf, "espresso%s%s", board_is_espresso10() ? "10" : "",
 					board_has_modem() ? "" : "wifi");
 }
 
@@ -376,7 +376,7 @@ static void __init espresso_init(void)
 
 	omap4_espresso_emif_init();
 
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		espresso10_update_board_type();
 		sec_muxtbl_init(SEC_MACHINE_ESPRESSO10, system_rev);
 		if (board_is_bestbuy_variant() && system_rev >= 7)
@@ -434,7 +434,7 @@ static void omap4_espresso_init_carveout_sizes(
 	/* WFD is not supported in espresso So the size is zero */
 	ion->secure_output_wfdhdcp_size = 0;
 	ion->ducati_heap_size = (SZ_1M * 65);
-	if (espresso_is_espresso10())
+	if (board_is_espresso10())
 		ion->nonsecure_tiler2d_size = (SZ_1M * 19);
 	else
 		ion->nonsecure_tiler2d_size = (SZ_1M * 8);

@@ -657,7 +657,7 @@ static void espresso_deskdock_attached(void)
 {
 	int ret = 0;
 
-	if (!espresso_is_espresso10()) {
+	if (!board_is_espresso10()) {
 		espresso_set_dock_switch(UEVENT_DOCK_DESK);
 		return;
 	}
@@ -682,7 +682,7 @@ static void espresso_deskdock_detached(void)
 {
 	int ret = 0;
 
-	if (!espresso_is_espresso10()) {
+	if (!board_is_espresso10()) {
 		espresso_set_dock_switch(UEVENT_DOCK_NONE);
 		return;
 	}
@@ -1090,11 +1090,11 @@ static irqreturn_t ta_nconnected_irq(int irq, void *_otg)
 	if (!val) { /* connected */
 		/* TODO: check ADC here. */
 		espresso_ap_usb_attach(otg);
-		if (espresso_is_espresso10()) acc_notify(DONGLE_POWER_ATTACHED);
+		if (board_is_espresso10()) acc_notify(DONGLE_POWER_ATTACHED);
 	} else { /* disconnected */
 		/* TODO: save current device. */
 		espresso_ap_usb_detach(otg);
-		if (espresso_is_espresso10()) acc_notify(DONGLE_POWER_DETACHED);
+		if (board_is_espresso10()) acc_notify(DONGLE_POWER_DETACHED);
 	}
 
 	return IRQ_HANDLED;
@@ -1298,7 +1298,7 @@ static void connector_gpio_init(void)
 	gpio_request_array(connector_gpios, ARRAY_SIZE(connector_gpios));
 	gpio_request_array(uart_sw_gpios, ARRAY_SIZE(uart_sw_gpios));
 
-	if (espresso_is_espresso10() && board_is_bestbuy_variant()) {
+	if (board_is_espresso10() && board_is_bestbuy_variant()) {
 		for (i = 0; i < ARRAY_SIZE(mhl_gpios); i++)
 			mhl_gpios[i].gpio = omap_muxtbl_get_gpio_by_name(mhl_gpios[i].label);
 
@@ -1359,7 +1359,7 @@ void __init omap4_espresso_connector_init(void)
 
 	omap4430_phy_init(&espresso_otg->dev);
 
-	if (espresso_is_espresso10())
+	if (board_is_espresso10())
 		omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET_ESPRESSO10);
 	else
 		omap4430_phy_init_for_eyediagram(SWCAP_TRIM_OFFSET_ESPRESSO);
@@ -1396,7 +1396,7 @@ switch_dev_fail:
 	i2c_register_board_info(6, espresso_i2c6_boardinfo,
 					ARRAY_SIZE(espresso_i2c6_boardinfo));
 
-	if (espresso_is_espresso10()) {
+	if (board_is_espresso10()) {
 		/* MHL (SII9244) */
 		i2c_register_board_info(8, espresso_i2c8_boardinfo,
 						ARRAY_SIZE(espresso_i2c8_boardinfo));
