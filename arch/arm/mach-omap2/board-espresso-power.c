@@ -422,12 +422,6 @@ void __init omap4_espresso_charger_init(void)
 
 	charger_gpio_init();
 	espresso_gpio_i2c_init();
-	if (board_is_espresso10() && board_is_bestbuy_variant() && sec_bootmode == 5) {
-		battery_manager_pdata.high_block_temp = BB_HIGH_BLOCK_TEMP;
-		battery_manager_pdata.high_recover_temp = BB_HIGH_RECOVER_TEMP;
-		battery_manager_pdata.low_block_temp = BB_LOW_BLOCK_TEMP;
-		battery_manager_pdata.low_recover_temp = BB_LOW_RECOVER_TEMP;
-	}
 
 	battery_manager_pdata.bootmode = sec_bootmode;
 	if (!board_is_espresso10())

@@ -174,31 +174,6 @@ static struct gpio uart_sw_gpios[] = {
 	},
 };
 
-enum {
-	GPIO_MHL_RST = 0,
-	GPIO_MHL_INT,
-	GPIO_HDMI_EN,
-	GPIO_HDMI_HPD,
-};
-
-static struct gpio mhl_gpios[] = {
-	[GPIO_MHL_RST] = {
-		.flags  = GPIOF_OUT_INIT_LOW,
-		.label  = "MHL_RST",
-	},
-	[GPIO_MHL_INT] = {
-		.flags = GPIOF_IN,
-		.label  = "MHL_INT",
-	},
-	[GPIO_HDMI_EN] = {
-		.flags = GPIOF_OUT_INIT_LOW,
-		.label = "HDMI_EN",
-	},
-	[GPIO_HDMI_HPD] = {
-		.flags = GPIOF_IN,
-		.label  = "HDMI_HPD",
-	},
-};
 
 static BLOCKING_NOTIFIER_HEAD(acc_notifier);
 
@@ -599,97 +574,20 @@ static void espresso_con_charger_detached(void)
 {
 }
 
-static void switch_to_mhl_path(bool enable)
-{
-	/* TODO */
-}
-
-static void sii9234_power(int on)
-{
-	struct omap_mux_partition *p = omap_mux_get("core");
-	u16 mux;
-
-	mux = omap_mux_read(p, OMAP4_CTRL_MODULE_PAD_HDMI_HPD_OFFSET);
-	if (on) {
-		gpio_set_value(mhl_gpios[GPIO_HDMI_EN].gpio, 1);
-		msleep(20);
-		gpio_set_value(mhl_gpios[GPIO_MHL_RST].gpio, 1);
-
-		omap_mux_write(p, mux | OMAP_PULL_UP,
-				OMAP4_CTRL_MODULE_PAD_HDMI_HPD_OFFSET);
-	} else {
-		omap_mux_write(p, mux & ~OMAP_PULL_UP,
-				OMAP4_CTRL_MODULE_PAD_HDMI_HPD_OFFSET);
-
-		gpio_set_value(mhl_gpios[GPIO_HDMI_EN].gpio, 0);
-		gpio_set_value(mhl_gpios[GPIO_MHL_RST].gpio, 0);
-	}
-}
-
-static void sii9234_enable_vbus(bool enable)
-{
-	/*TODO */
-}
-
-static void sii9234_connect(bool on, u8 *devcap)
-{
-	/* TODO */
-}
-
-/* TODO: Need to modify sii9234_platform_data as per Espresso10
- * H/W requirements.Currently, introducing dummy functions to avoid
- * kernel panics and build-fail etc
-*/
-static struct sii9234_platform_data sii9234_pdata = {
-	.prio		= 0,
-	.enable		= switch_to_mhl_path,
-	.power		= sii9234_power,
-	.enable_vbus	= sii9234_enable_vbus,
-	.connect	= sii9234_connect,
-	.reg_notifier	= acc_register_notifier,
-	.unreg_notifier	= acc_unregister_notifier,
-	.dongle		= DONGLE_NONE,
-	.swing_level	= DEFAULT_MHL_SWING_LEVEL,
-	.early_read_devcap = NULL,
-};
-
 static void espresso_deskdock_attached(void)
 {
 	int ret = 0;
-
-	if (!board_is_espresso10()) {
-		espresso_set_dock_switch(UEVENT_DOCK_DESK);
-		return;
-	}
-
 	ret = acc_notify(DONGLE_ATTACHED);
-	if (ret <= 0) {
-		if (sii9234_pdata.dongle == DONGLE_9292)
-			pr_info("Error attaching MHL dongle_9292\n");
-		/*
-		 * TRICKY: MHL driver always return error value
-		 * in case of old dongles,because MHL driver can not
-		 * tell whether old dongle has successfuly connected
-		 * or not.
-		 */
-		else if (sii9234_pdata.dongle == DONGLE_9290)
-			pr_info("Attaching old MHL dongle_9290??\n");
-		espresso_set_dock_switch(UEVENT_DOCK_DESK);
-	}
+	espresso_set_dock_switch(UEVENT_DOCK_DESK);
+	return;
 }
 
 static void espresso_deskdock_detached(void)
 {
 	int ret = 0;
-
-	if (!board_is_espresso10()) {
-		espresso_set_dock_switch(UEVENT_DOCK_NONE);
-		return;
-	}
-
 	ret = acc_notify(DONGLE_DETACHED);
-	if (ret <= 0)
-		espresso_set_dock_switch(UEVENT_DOCK_NONE);
+	espresso_set_dock_switch(UEVENT_DOCK_NONE);
+	return;
 }
 
 static void espresso_30pin_detected(int device, bool connected)
@@ -1264,25 +1162,6 @@ static void espresso_host_notifier_init(struct omap4_otg *otg)
 }
 #endif
 
-static struct i2c_board_info __initdata espresso_i2c8_boardinfo[] = {
-	{
-		I2C_BOARD_INFO("sii9234_mhl_tx", 0x72>>1),
-		.platform_data = &sii9234_pdata,
-	},
-	{
-		I2C_BOARD_INFO("sii9234_tpi", 0x7A>>1),
-		.platform_data = &sii9234_pdata,
-	},
-	{
-		I2C_BOARD_INFO("sii9234_hdmi_rx", 0x92>>1),
-		.platform_data = &sii9234_pdata,
-	},
-	{
-		I2C_BOARD_INFO("sii9234_cbus", 0xC8>>1),
-		.platform_data = &sii9234_pdata,
-	},
-};
-
 static void connector_gpio_init(void)
 {
 	int i;
@@ -1385,12 +1264,6 @@ switch_dev_fail:
 	/* ADC IC (STMPE811) */
 	i2c_register_board_info(6, espresso_i2c6_boardinfo,
 					ARRAY_SIZE(espresso_i2c6_boardinfo));
-
-	if (board_is_espresso10()) {
-		/* MHL (SII9244) */
-		i2c_register_board_info(8, espresso_i2c8_boardinfo,
-						ARRAY_SIZE(espresso_i2c8_boardinfo));
-	}
 
 	/* 30pin connector */
 	espresso_con_pdata.accessory_irq_gpio =
