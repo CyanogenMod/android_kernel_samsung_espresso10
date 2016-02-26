@@ -19,12 +19,8 @@
  */
 
 #include <linux/yas.h>
-#ifdef CONFIG_YAS_ACC_MULTI_SUPPORT
-#include <linux/yas_accel.h>
-#else
 #define CHIP_NAME	"BMA254"
 #define VENDOR_NAME	"BOSCH"
-#endif
 #define YAS_BMA250_RESOLUTION	256
 
 /* Axes data range  [um/s^2] */

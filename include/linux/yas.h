@@ -180,13 +180,8 @@ struct yas_mag_driver_callback {
 	int (*unlock) (void);
 	int (*device_open) (void);
 	int (*device_close) (void);
-#if YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS529
-	int (*device_write) (const uint8_t *buf, int len);
-	int (*device_read) (uint8_t *buf, int len);
-#else
 	int (*device_write) (uint8_t addr, const uint8_t *buf, int len);
 	int (*device_read) (uint8_t addr, uint8_t *buf, int len);
-#endif
 	void (*msleep) (int msec);
 	void (*current_time) (int32_t *sec, int32_t *msec);
 };
@@ -214,13 +209,8 @@ struct yas_mag_driver {
 	int (*set_filter_enable) (int enable);
 	int (*get_position) (void);
 	int (*set_position) (int position);
-#if YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS529
-	int (*read_reg) (uint8_t *buf, int len);
-	int (*write_reg) (const uint8_t *buf, int len);
-#else
 	int (*read_reg) (uint8_t addr, uint8_t *buf, int len);
 	int (*write_reg) (uint8_t addr, const uint8_t *buf, int len);
-#endif
 	int (*measure) (struct yas_mag_data *data, int *time_delay_ms);
 	struct yas_mag_driver_callback callback;
 };
