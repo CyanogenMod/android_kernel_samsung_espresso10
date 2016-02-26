@@ -22,18 +22,10 @@
 #define __YAS_ACCEL_H__
 #include <linux/yas_cfg.h>
 
-#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
-		int yas_acc_driver_lis3dh_init(struct yas_acc_driver *f);
-#elif (YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250)
-		int yas_acc_driver_BMA25X_init(struct yas_acc_driver *f);
-#endif
+int yas_acc_driver_BMA25X_init(struct yas_acc_driver *f);
 
 enum {
-#if (YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH)
-	K2DH_ENABLED,
-#elif (YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250)
 	BMA25X_ENABLED,
-#endif
 	MAX_CHIP_NUM,
 };
 

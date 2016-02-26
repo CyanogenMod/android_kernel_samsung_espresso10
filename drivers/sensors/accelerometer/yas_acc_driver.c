@@ -20,36 +20,4 @@
 
 #include <linux/yas.h>
 
-#if YAS_ACC_DRIVER == YAS_ACC_DRIVER_ADXL345
-#include "yas_acc_driver-adxl345.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_ADXL346
-#include "yas_acc_driver-adxl345.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA150
-#include "yas_acc_driver-bma150.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA222
-#include "yas_acc_driver-bma222.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250
 #include "yas_acc_driver-bma250.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXSD9
-#include "yas_acc_driver-kxsd9.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTE9
-#include "yas_acc_driver-kxte9.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTF9
-#include "yas_acc_driver-kxtf9.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXUD9
-#include "yas_acc_driver-kxud9.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DL
-#include "yas_acc_driver-lis331dl.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLH
-#include "yas_acc_driver-lis331dlh.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLM
-#include "yas_acc_driver-lis331dlm.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH
-#include "yas_acc_driver-lis3dh.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_MMA8453Q
-#include "yas_acc_driver-mma8453q.c"
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_MMA8452Q
-#include "yas_acc_driver-mma8452q.c"
-#else
-#include "yas_acc_driver-none.c"
-#endif

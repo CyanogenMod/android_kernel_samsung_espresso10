@@ -17,8 +17,6 @@
  * MA  02110-1301, USA.
  */
 
-#define SENSOR_TYPE (3)
-
 #define __LINUX_KERNEL_DRIVER__
 #include <linux/yas.h>
 #include "yas_general_kernel_driver.c"

@@ -79,251 +79,12 @@ struct geomagnetic_data {
 #endif
 	struct yas_matrix static_matrix;
 	struct yas_matrix dynamic_matrix;
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct list_head devfile_list;
-	struct list_head raw_devfile_list;
-#endif
 	struct device *magnetic_sensor_device;
 	struct mag_platform_data *mag_pdata;
 	uint8_t dev_id;
 };
 
 static struct i2c_client *this_client;
-
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-
-#include <linux/miscdevice.h>
-#define MAX_COUNT (64)
-#define SENSOR_NAME "geomagnetic"
-#define SENSOR_RAW_NAME "geomagnetic_raw"
-
-struct sensor_device {
-	struct list_head list;
-	struct mutex lock;
-	wait_queue_head_t waitq;
-	struct input_event events[MAX_COUNT];
-	int head, num_event;
-};
-
-static void get_time_stamp(struct timeval *tv)
-{
-	struct timespec ts;
-	ktime_get_ts(&ts);
-	tv->tv_sec = ts.tv_sec;
-	tv->tv_usec = ts.tv_nsec / 1000;
-}
-
-static void make_event(struct input_event *ev, int type, int code, int value)
-{
-	struct timeval tv;
-	get_time_stamp(&tv);
-	ev->type = type;
-	ev->code = code;
-	ev->value = value;
-	ev->time = tv;
-}
-
-static void
-make_event_w_time(struct input_event *ev, int type, int code, int value,
-		  struct timeval *tv)
-{
-	ev->type = type;
-	ev->code = code;
-	ev->value = value;
-	ev->time = *tv;
-}
-
-static void sensor_enq(struct sensor_device *kdev, struct input_event *ev)
-{
-	int idx;
-
-	idx = kdev->head + kdev->num_event;
-	if (MAX_COUNT <= idx)
-		idx -= MAX_COUNT;
-	kdev->events[idx] = *ev;
-	kdev->num_event++;
-	if (MAX_COUNT < kdev->num_event) {
-		kdev->num_event = MAX_COUNT;
-		kdev->head++;
-		if (MAX_COUNT <= kdev->head)
-			kdev->head -= MAX_COUNT;
-	}
-}
-
-static int sensor_deq(struct sensor_device *kdev, struct input_event *ev)
-{
-	if (kdev->num_event == 0)
-		return 0;
-
-	*ev = kdev->events[kdev->head];
-	kdev->num_event--;
-	kdev->head++;
-	if (MAX_COUNT <= kdev->head)
-		kdev->head -= MAX_COUNT;
-	return 1;
-}
-
-static void
-sensor_event(struct list_head *devlist, struct input_event *ev, int num)
-{
-	struct sensor_device *kdev;
-	int i;
-
-	list_for_each_entry(kdev, devlist, list) {
-		mutex_lock(&kdev->lock);
-		for (i = 0; i < num; i++)
-			sensor_enq(kdev, &ev[i]);
-		mutex_unlock(&kdev->lock);
-		wake_up_interruptible(&kdev->waitq);
-	}
-}
-
-static ssize_t
-sensor_write(struct file *f, const char __user *buf, size_t count,
-	     loff_t *pos)
-{
-	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
-	struct sensor_device *kdev;
-	struct input_event ev[MAX_COUNT];
-	int num, i;
-
-	if (count < sizeof(struct input_event))
-		return -EINVAL;
-	num = count / sizeof(struct input_event);
-	if (MAX_COUNT < num)
-		num = MAX_COUNT;
-
-	if (copy_from_user(ev, buf, num * sizeof(struct input_event)))
-		return -EFAULT;
-
-	list_for_each_entry(kdev, &data->devfile_list, list) {
-		mutex_lock(&kdev->lock);
-		for (i = 0; i < num; i++)
-			sensor_enq(kdev, &ev[i]);
-		mutex_unlock(&kdev->lock);
-		wake_up_interruptible(&kdev->waitq);
-	}
-
-	return count;
-}
-
-static ssize_t
-sensor_read(struct file *f, char __user *buf, size_t count, loff_t *pos)
-{
-	struct sensor_device *kdev = f->private_data;
-	int rt, num;
-	struct input_event ev[MAX_COUNT];
-
-	if (count < sizeof(struct input_event))
-		return -EINVAL;
-
-	rt = wait_event_interruptible(kdev->waitq, kdev->num_event != 0);
-	if (rt)
-		return rt;
-
-	mutex_lock(&kdev->lock);
-	for (num = 0; num < count / sizeof(struct input_event); num++) {
-		if (!sensor_deq(kdev, &ev[num]))
-			break;
-	}
-	mutex_unlock(&kdev->lock);
-
-	if (copy_to_user(buf, ev, num * sizeof(struct input_event)))
-		return -EFAULT;
-
-	return num * sizeof(struct input_event);
-}
-
-static unsigned int sensor_poll(struct file *f, struct poll_table_struct *wait)
-{
-	struct sensor_device *kdev = f->private_data;
-
-	poll_wait(f, &kdev->waitq, wait);
-	if (kdev->num_event != 0)
-		return POLLIN | POLLRDNORM;
-
-	return 0;
-}
-
-static int sensor_open(struct inode *inode, struct file *f)
-{
-	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
-	struct sensor_device *kdev;
-
-	kdev = kzalloc(sizeof(struct sensor_device), GFP_KERNEL);
-	if (!kdev)
-		return -ENOMEM;
-
-	mutex_init(&kdev->lock);
-	init_waitqueue_head(&kdev->waitq);
-	f->private_data = kdev;
-	kdev->head = 0;
-	kdev->num_event = 0;
-	list_add(&kdev->list, &data->devfile_list);
-
-	return 0;
-}
-
-static int sensor_release(struct inode *inode, struct file *f)
-{
-	struct sensor_device *kdev = f->private_data;
-
-	list_del(&kdev->list);
-	kfree(kdev);
-
-	return 0;
-}
-
-static int sensor_raw_open(struct inode *inode, struct file *f)
-{
-	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
-	struct sensor_device *kdev;
-
-	kdev = kzalloc(sizeof(struct sensor_device), GFP_KERNEL);
-	if (!kdev)
-		return -ENOMEM;
-
-	mutex_init(&kdev->lock);
-	init_waitqueue_head(&kdev->waitq);
-	f->private_data = kdev;
-	kdev->head = 0;
-	kdev->num_event = 0;
-	list_add(&kdev->list, &data->raw_devfile_list);
-
-	return 0;
-}
-
-const struct file_operations sensor_fops = {
-	.owner = THIS_MODULE,
-	.open = sensor_open,
-	.release = sensor_release,
-	.write = sensor_write,
-	.read = sensor_read,
-	.poll = sensor_poll,
-};
-
-static struct miscdevice sensor_devfile = {
-	.name = SENSOR_NAME,
-	.fops = &sensor_fops,
-	.minor = MISC_DYNAMIC_MINOR,
-};
-
-const struct file_operations sensor_raw_fops = {
-	.owner = THIS_MODULE,
-	.open = sensor_raw_open,
-	.release = sensor_release,
-	.write = sensor_write,
-	.read = sensor_read,
-	.poll = sensor_poll,
-};
-
-static struct miscdevice sensor_raw_devfile = {
-	.name = SENSOR_RAW_NAME,
-	.fops = &sensor_raw_fops,
-	.minor = MISC_DYNAMIC_MINOR,
-};
-
-#endif
 
 static int geomagnetic_i2c_open(void)
 {
@@ -334,27 +95,6 @@ static int geomagnetic_i2c_close(void)
 {
 	return 0;
 }
-
-#if YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS529
-static int geomagnetic_i2c_write(const uint8_t *buf, int len)
-{
-	if (i2c_master_send(this_client, buf, len) < 0)
-		return -1;
-#if DEBUG
-	YLOGD(("[W] [%02x]\n", buf[0]));
-#endif
-
-	return 0;
-}
-
-static int geomagnetic_i2c_read(uint8_t *buf, int len)
-{
-	if (i2c_master_recv(this_client, buf, len) < 0)
-		return -1;
-	return 0;
-}
-
-#else
 
 static int geomagnetic_i2c_write(uint8_t addr, const uint8_t *buf, int len)
 {
@@ -399,8 +139,6 @@ static int geomagnetic_i2c_read(uint8_t addr, uint8_t *buf, int len)
 
 	return 0;
 }
-
-#endif
 
 static int geomagnetic_lock(void)
 {
@@ -841,14 +579,9 @@ geomagnetic_wake_store(struct device *dev,
 	struct input_dev *input_data = to_input_dev(dev);
 	struct geomagnetic_data *data = input_get_drvdata(input_data);
 	static int16_t cnt = 1;
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct input_event ev[1];
-	make_event(ev, EV_ABS, ABS_WAKE, cnt++);
-	sensor_event(&data->devfile_list, ev, 1);
-#else
+
 	input_report_abs(data->input_data, ABS_WAKE, cnt++);
 	input_sync(data->input_data);
-#endif
 
 	return count;
 }
@@ -973,16 +706,9 @@ geomagnetic_raw_threshold_store(struct device *dev,
 	geomagnetic_multi_lock();
 
 	if (0 <= value && value <= 2) {
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-		struct input_event ev[1];
-		make_event(ev, EV_ABS, ABS_RAW_THRESHOLD, value);
-		sensor_event(&data->raw_devfile_list, ev, 1);
-#endif
 		data->threshold = value;
-#ifndef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
 		input_report_abs(data->input_raw, ABS_RAW_THRESHOLD, value);
 		input_sync(data->input_raw);
-#endif
 	}
 
 	geomagnetic_multi_unlock();
@@ -1024,17 +750,10 @@ geomagnetic_raw_distortion_store(struct device *dev,
 
 	sscanf(buf, "%d %d %d", &distortion[0], &distortion[1], &distortion[2]);
 	if (distortion[0] > 0 && distortion[1] > 0 && distortion[2] > 0) {
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-		struct input_event ev[1];
-		make_event(ev, EV_ABS, ABS_RAW_DISTORTION, val++);
-		sensor_event(&data->raw_devfile_list, ev, 1);
-#endif
 		for (i = 0; i < 3; i++)
 			data->distortion[i] = distortion[i];
-#ifndef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
 		input_report_abs(data->input_raw, ABS_RAW_DISTORTION, val++);
 		input_sync(data->input_raw);
-#endif
 	}
 
 	geomagnetic_multi_unlock();
@@ -1076,16 +795,9 @@ geomagnetic_raw_shape_store(struct device *dev,
 	geomagnetic_multi_lock();
 
 	if (0 == value || value == 1) {
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-		struct input_event ev[1];
-		make_event(ev, EV_ABS, ABS_RAW_SHAPE, value);
-		sensor_event(&data->raw_devfile_list, ev, 1);
-#endif
 		data->shape = value;
-#ifndef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
 		input_report_abs(data->input_raw, ABS_RAW_SHAPE, value);
 		input_sync(data->input_raw);
-#endif
 	}
 
 	geomagnetic_multi_unlock();
@@ -1309,21 +1021,12 @@ geomagnetic_raw_ellipsoid_mode_store(struct device *dev,
 	if (unlikely(error))
 		return error;
 	value = !(!value);
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct input_event ev[1];
-#endif
 
 	geomagnetic_multi_lock();
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	make_event(ev, EV_ABS, ABS_RAW_MODE, value);
-	sensor_event(&data->raw_devfile_list, ev, 1);
-#endif
 	data->ellipsoid_mode = value;
-#ifndef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
 	input_report_abs(data->input_raw, ABS_RAW_MODE, value);
 	input_sync(data->input_raw);
-#endif
 
 	geomagnetic_multi_unlock();
 
@@ -1452,10 +1155,6 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 	uint32_t time_delay_ms = 100;
 	static int cnt;
 	int rt, i, accuracy;
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct input_event ev[5];
-	struct timeval tv;
-#endif
 
 #ifdef YAS_MAG_MANUAL_OFFSET
 	if (data->mag_pdata) {
@@ -1495,30 +1194,12 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 			code |= (rt & YAS_REPORT_HARD_OFFSET_CHANGED);
 			code |= (rt & YAS_REPORT_CALIB_OFFSET_CHANGED);
 			value = (count++ << 16) | (code);
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-			make_event(ev, EV_ABS, ABS_RAW_REPORT, value);
-			sensor_event(&data->raw_devfile_list, ev, 1);
-#else
 			input_report_abs(data->input_raw, ABS_RAW_REPORT,
 					 value);
 			input_sync(data->input_raw);
-#endif
 		}
 
 		if (rt & YAS_REPORT_DATA) {
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-			get_time_stamp(&tv);
-			make_event_w_time(&ev[0], EV_ABS, ABS_X,
-					  magdata->xyz.v[0], &tv);
-			make_event_w_time(&ev[1], EV_ABS, ABS_Y,
-					  magdata->xyz.v[1], &tv);
-			make_event_w_time(&ev[2], EV_ABS, ABS_Z,
-					  magdata->xyz.v[2], &tv);
-			make_event_w_time(&ev[3], EV_ABS, ABS_STATUS, accuracy,
-					  &tv);
-			make_event_w_time(&ev[4], EV_SYN, 0, 0, &tv);
-			sensor_event(&data->devfile_list, ev, 5);
-#else
 			/* report magnetic data in [nT] */
 			input_report_abs(data->input_data, ABS_X,
 					 magdata->xyz.v[0]);
@@ -1538,7 +1219,6 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 			input_report_abs(data->input_data, ABS_STATUS,
 					 accuracy);
 			input_sync(data->input_data);
-#endif
 
 			for (i = 0; i < 3; i++)
 				atomic_set(&data->last_data[i],
@@ -1546,17 +1226,6 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 		}
 
 		if (rt & YAS_REPORT_CALIB) {
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-			get_time_stamp(&tv);
-			make_event_w_time(&ev[0], EV_ABS, ABS_X,
-					  magdata->raw.v[0], &tv);
-			make_event_w_time(&ev[1], EV_ABS, ABS_Y,
-					  magdata->raw.v[1], &tv);
-			make_event_w_time(&ev[2], EV_ABS, ABS_Z,
-					  magdata->raw.v[2], &tv);
-			make_event_w_time(&ev[3], EV_SYN, 0, 0, &tv);
-			sensor_event(&data->raw_devfile_list, ev, 4);
-#else
 			/* report raw magnetic data */
 			input_report_abs(data->input_raw, ABS_X,
 					 magdata->raw.v[0]);
@@ -1565,7 +1234,6 @@ static int geomagnetic_work(struct yas_mag_data *magdata)
 			input_report_abs(data->input_raw, ABS_Z,
 					 magdata->raw.v[2]);
 			input_sync(data->input_raw);
-#endif
 		}
 	} else {
 		time_delay_ms = 100;
@@ -1809,16 +1477,6 @@ geomagnetic_probe(struct i2c_client *client, const struct i2c_device_id *id)
 		hwdep_driver.get_static_matrix(&data->static_matrix);
 	if (hwdep_driver.get_dynamic_matrix != NULL)
 		hwdep_driver.get_dynamic_matrix(&data->dynamic_matrix);
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	INIT_LIST_HEAD(&data->devfile_list);
-	INIT_LIST_HEAD(&data->raw_devfile_list);
-	if (misc_register(&sensor_devfile) < 0)
-		goto err;
-	if (misc_register(&sensor_raw_devfile) < 0) {
-		misc_deregister(&sensor_devfile);
-		goto err;
-	}
-#endif
 
 	rt =
 		geomagnetic_i2c_read(YAS_REGADDR_DEVICE_ID, &data->dev_id, 1);
@@ -1877,10 +1535,6 @@ static int geomagnetic_remove(struct i2c_client *client)
 {
 	struct geomagnetic_data *data = i2c_get_clientdata(client);
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	misc_deregister(&sensor_devfile);
-	misc_deregister(&sensor_raw_devfile);
-#endif
 	if (data != NULL) {
 		geomagnetic_disable(data);
 		if (hwdep_driver.term != NULL)
@@ -1943,76 +1597,10 @@ static void __exit geomagnetic_term(void)
 	i2c_del_driver(&geomagnetic_i2c_driver);
 }
 
-#ifdef GEOMAGNETIC_PLATFORM_API
-static int geomagnetic_api_enable(int enable)
-{
-	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
-	int rt;
-
-	if (geomagnetic_multi_lock() < 0)
-		return -1;
-	enable = !!enable;
-	rt = hwdep_driver.set_enable(enable);
-	if (rt == 0) {
-		atomic_set(&data->enable, enable);
-		if (enable)
-			rt = hwdep_driver.set_delay(20);
-	}
-
-	geomagnetic_multi_unlock();
-
-	return rt;
-}
-
-int geomagnetic_api_resume(void)
-{
-	return geomagnetic_api_enable(1);
-}
-EXPORT_SYMBOL(geomagnetic_api_resume);
-
-int geomagnetic_api_suspend(void)
-{
-	return geomagnetic_api_enable(0);
-}
-EXPORT_SYMBOL(geomagnetic_api_suspend);
-
-int geomagnetic_api_read(int *xyz, int *raw, int *xy1y2, int *accuracy)
-{
-	struct geomagnetic_data *data = i2c_get_clientdata(this_client);
-	struct yas_mag_data magdata;
-	int i;
-
-	geomagnetic_work(&magdata);
-	if (xyz != NULL) {
-		for (i = 0; i < 3; i++)
-			xyz[i] = magdata.xyz.v[i];
-	}
-	if (raw != NULL) {
-		for (i = 0; i < 3; i++)
-			raw[i] = magdata.raw.v[i];
-	}
-	if (xy1y2 != NULL) {
-		for (i = 0; i < 3; i++)
-			xy1y2[i] = magdata.xy1y2.v[i];
-	}
-	if (accuracy != NULL)
-		*accuracy = atomic_read(&data->last_status);
-
-	return 0;
-}
-EXPORT_SYMBOL(geomagnetic_api_read);
-#endif
-
 module_init(geomagnetic_init);
 module_exit(geomagnetic_term);
 
 MODULE_AUTHOR("Yamaha Corporation");
-#if YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS529
-MODULE_DESCRIPTION("YAS529 Geomagnetic Sensor Driver");
-#elif YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS530
 MODULE_DESCRIPTION("YAS530 Geomagnetic Sensor Driver");
-#elif YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS532
-MODULE_DESCRIPTION("YAS532 Geomagnetic Sensor Driver");
-#endif
 MODULE_LICENSE("GPL");
 MODULE_VERSION("4.4.702a");

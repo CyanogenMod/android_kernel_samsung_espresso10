@@ -37,33 +37,7 @@
 #define __LINUX_KERNEL_DRIVER__
 #include <linux/yas.h>
 
-#if SENSOR_TYPE == 1
-#define SENSOR_NAME "accelerometer"
-#elif SENSOR_TYPE == 2
-#define SENSOR_NAME "geomagnetic"
-#elif SENSOR_TYPE == 3
 #define SENSOR_NAME "orientation"
-#elif SENSOR_TYPE == 4
-#define SENSOR_NAME "gyroscope"
-#elif SENSOR_TYPE == 5
-#define SENSOR_NAME "light"
-#elif SENSOR_TYPE == 6
-#define SENSOR_NAME "pressure"
-#elif SENSOR_TYPE == 7
-#define SENSOR_NAME "temperature"
-#elif SENSOR_TYPE == 8
-#define SENSOR_NAME "proximity"
-#elif SENSOR_TYPE == 9
-#define SENSOR_NAME "gravity"
-#elif SENSOR_TYPE == 10
-#define SENSOR_NAME "linear_acceleration"
-#elif SENSOR_TYPE == 11
-#define SENSOR_NAME "rotation_vector"
-#elif SENSOR_TYPE == 12
-#define SENSOR_NAME "relative_humidity"
-#elif SENSOR_TYPE == 13
-#define SENSOR_NAME "ambient_temperature"
-#endif
 
 #define SENSOR_DEFAULT_DELAY            (200)	/* 200 ms */
 #define SENSOR_MAX_DELAY                (2000)	/* 2000 ms */
@@ -81,213 +55,10 @@ struct sensor_data {
 #if DEBUG
 	int suspend;
 #endif
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct list_head devfile_list;
-#endif
 };
 
 static struct platform_device *sensor_pdev;
 static struct input_dev *this_data;
-
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-#include <linux/miscdevice.h>
-#define MAX_COUNT (64)
-
-struct sensor_device {
-	struct list_head list;
-	struct mutex lock;
-	wait_queue_head_t waitq;
-	struct input_event events[MAX_COUNT];
-	int head, num_event;
-};
-
-static void get_time_stamp(struct timeval *tv)
-{
-	struct timespec ts;
-	ktime_get_ts(&ts);
-	tv->tv_sec = ts.tv_sec;
-	tv->tv_usec = ts.tv_nsec / 1000;
-}
-
-static void make_event(struct input_event *ev, int type, int code, int value)
-{
-	struct timeval tv;
-	get_time_stamp(&tv);
-	ev->type = type;
-	ev->code = code;
-	ev->value = value;
-	ev->time = tv;
-}
-
-static void
-make_event_w_time(struct input_event *ev, int type, int code, int value,
-		  struct timeval *tv)
-{
-	ev->type = type;
-	ev->code = code;
-	ev->value = value;
-	ev->time = *tv;
-}
-
-static void sensor_enq(struct sensor_device *kdev, struct input_event *ev)
-{
-	int idx;
-
-	idx = kdev->head + kdev->num_event;
-	if (MAX_COUNT <= idx)
-		idx -= MAX_COUNT;
-	kdev->events[idx] = *ev;
-	kdev->num_event++;
-	if (MAX_COUNT < kdev->num_event) {
-		kdev->num_event = MAX_COUNT;
-		kdev->head++;
-		if (MAX_COUNT <= kdev->head)
-			kdev->head -= MAX_COUNT;
-	}
-}
-
-static int sensor_deq(struct sensor_device *kdev, struct input_event *ev)
-{
-	if (kdev->num_event == 0)
-		return 0;
-
-	*ev = kdev->events[kdev->head];
-	kdev->num_event--;
-	kdev->head++;
-	if (MAX_COUNT <= kdev->head)
-		kdev->head -= MAX_COUNT;
-	return 1;
-}
-
-static void
-sensor_event(struct list_head *devlist, struct input_event *ev, int num)
-{
-	struct sensor_device *kdev;
-	int i;
-
-	list_for_each_entry(kdev, devlist, list) {
-		mutex_lock(&kdev->lock);
-		for (i = 0; i < num; i++)
-			sensor_enq(kdev, &ev[i]);
-
-		mutex_unlock(&kdev->lock);
-		wake_up_interruptible(&kdev->waitq);
-	}
-}
-
-static ssize_t
-sensor_write(struct file *f, const char __user *buf, size_t count,
-	     loff_t *pos)
-{
-	struct sensor_data *data = input_get_drvdata(this_data);
-	struct sensor_device *kdev;
-	struct input_event ev[MAX_COUNT];
-	int num, i;
-
-	if (count < sizeof(struct input_event))
-		return -EINVAL;
-
-	num = count / sizeof(struct input_event);
-	if (MAX_COUNT < num)
-		num = MAX_COUNT;
-
-	if (copy_from_user(ev, buf, num * sizeof(struct input_event)))
-		return -EFAULT;
-
-	list_for_each_entry(kdev, &data->devfile_list, list) {
-		mutex_lock(&kdev->lock);
-		for (i = 0; i < num; i++)
-			sensor_enq(kdev, &ev[i]);
-		mutex_unlock(&kdev->lock);
-		wake_up_interruptible(&kdev->waitq);
-	}
-
-	return count;
-}
-
-static ssize_t
-sensor_read(struct file *f, char __user *buf, size_t count, loff_t *pos)
-{
-	struct sensor_device *kdev = f->private_data;
-	int rt, num;
-	struct input_event ev[MAX_COUNT];
-
-	if (count < sizeof(struct input_event))
-		return -EINVAL;
-
-	rt = wait_event_interruptible(kdev->waitq, kdev->num_event != 0);
-	if (rt)
-		return rt;
-
-	mutex_lock(&kdev->lock);
-	for (num = 0; num < count / sizeof(struct input_event); num++) {
-		if (!sensor_deq(kdev, &ev[num]))
-			break;
-	}
-	mutex_unlock(&kdev->lock);
-
-	if (copy_to_user(buf, ev, num * sizeof(struct input_event)))
-		return -EFAULT;
-
-	return num * sizeof(struct input_event);
-}
-
-static unsigned int sensor_poll(struct file *f, struct poll_table_struct *wait)
-{
-	struct sensor_device *kdev = f->private_data;
-
-	poll_wait(f, &kdev->waitq, wait);
-	if (kdev->num_event != 0)
-		return POLLIN | POLLRDNORM;
-
-	return 0;
-}
-
-static int sensor_open(struct inode *inode, struct file *f)
-{
-	struct sensor_data *data = input_get_drvdata(this_data);
-	struct sensor_device *kdev;
-
-	kdev = kzalloc(sizeof(struct sensor_device), GFP_KERNEL);
-	if (!kdev)
-		return -ENOMEM;
-
-	mutex_init(&kdev->lock);
-	init_waitqueue_head(&kdev->waitq);
-	f->private_data = kdev;
-	kdev->head = 0;
-	kdev->num_event = 0;
-	list_add(&kdev->list, &data->devfile_list);
-
-	return 0;
-}
-
-static int sensor_release(struct inode *inode, struct file *f)
-{
-	struct sensor_device *kdev = f->private_data;
-
-	list_del(&kdev->list);
-	kfree(kdev);
-
-	return 0;
-}
-
-const struct file_operations sensor_fops = {
-	.owner = THIS_MODULE,
-	.open = sensor_open,
-	.release = sensor_release,
-	.write = sensor_write,
-	.read = sensor_read,
-	.poll = sensor_poll,
-};
-
-static struct miscdevice sensor_devfile = {
-	.name = SENSOR_NAME,
-	.fops = &sensor_fops,
-	.minor = MISC_DYNAMIC_MINOR,
-};
-
-#endif
 
 static int suspend(void)
 {
@@ -335,10 +106,6 @@ sensor_delay_store(struct device *dev,
 	if (unlikely(error))
 		return error;
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct input_event ev[1];
-#endif
-
 	if (value < 0)
 		return count;
 
@@ -347,16 +114,9 @@ sensor_delay_store(struct device *dev,
 
 	mutex_lock(&data->mutex);
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	make_event(ev, EV_ABS, ABS_CONTROL_REPORT,
-		   (data->enabled << 16) | value);
-	sensor_event(&data->devfile_list, ev, 1);
-#endif
 	data->delay = value;
-#ifndef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
 	input_report_abs(input_data, ABS_CONTROL_REPORT,
 			 (data->enabled << 16) | value);
-#endif
 
 	mutex_unlock(&data->mutex);
 
@@ -393,22 +153,13 @@ sensor_enable_store(struct device *dev,
 	if (unlikely(error))
 		return error;
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct input_event ev[1];
-#endif
-
 	value = !(!value);
 
 	mutex_lock(&data->mutex);
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	make_event(ev, EV_ABS, ABS_CONTROL_REPORT, (value << 16) | data->delay);
-	sensor_event(&data->devfile_list, ev, 1);
-#else
 	input_report_abs(input_data, ABS_CONTROL_REPORT,
 			 (value << 16) | data->delay);
 	input_sync(input_data);
-#endif
 
 	if (data->enabled && !value)
 		suspend();
@@ -427,18 +178,9 @@ sensor_wake_store(struct device *dev,
 {
 	struct input_dev *input_data = to_input_dev(dev);
 	static int cnt = 1;
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	struct sensor_data *data = input_get_drvdata(input_data);
-	struct input_event ev[2];
-	struct timeval tv;
-	get_time_stamp(&tv);
-	make_event_w_time(&ev[0], EV_ABS, ABS_WAKE, cnt++, &tv);
-	make_event_w_time(&ev[1], EV_SYN, 0, 0, &tv);
-	sensor_event(&data->devfile_list, ev, 2);
-#else
+
 	input_report_abs(input_data, ABS_WAKE, cnt++);
 	input_sync(input_data);
-#endif
 
 	return count;
 }
@@ -487,24 +229,14 @@ static ssize_t
 sensor_data_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
 	struct input_dev *input_data = to_input_dev(dev);
-#if SENSOR_TYPE <= 4 || (9 <= SENSOR_TYPE && SENSOR_TYPE <= 11)
 	int x, y, z;
-#else
-	int x;
-#endif
 
 
 	x = input_abs_get_val(input_data, ABS_X);
-#if SENSOR_TYPE <= 4 || (9 <= SENSOR_TYPE && SENSOR_TYPE <= 11)
 	y = input_abs_get_val(input_data, ABS_Y);
 	z = input_abs_get_val(input_data, ABS_Z);
-#endif
 
-#if SENSOR_TYPE <= 4 || (9 <= SENSOR_TYPE && SENSOR_TYPE <= 11)
 	return sprintf(buf, "%d %d %d\n", x, y, z);
-#else
-	return sprintf(buf, "%d\n", x);
-#endif
 }
 
 static ssize_t
@@ -555,15 +287,8 @@ static int sensor_suspend(struct platform_device *pdev, pm_message_t state)
 	mutex_lock(&data->mutex);
 
 	if (data->enabled) {
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-		struct input_event ev[1];
-		make_event(ev, EV_ABS, ABS_CONTROL_REPORT,
-			   (0 << 16) | data->delay);
-		sensor_event(&data->devfile_list, ev, 1);
-#else
 		input_report_abs(this_data, ABS_CONTROL_REPORT,
 				 (0 << 16) | data->delay);
-#endif
 		rt = suspend();
 	}
 
@@ -580,17 +305,9 @@ static int sensor_resume(struct platform_device *pdev)
 	mutex_lock(&data->mutex);
 
 	if (data->enabled) {
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-		struct input_event ev[1];
-		make_event(ev, EV_ABS, ABS_CONTROL_REPORT,
-			   (1 << 16) | data->delay);
-		sensor_event(&data->devfile_list, ev, 1);
-#endif
 		rt = resume();
-#ifndef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
 		input_report_abs(this_data, ABS_CONTROL_REPORT,
 				 (1 << 16) | data->delay);
-#endif
 	}
 
 	mutex_unlock(&data->mutex);
@@ -621,11 +338,11 @@ static int sensor_probe(struct platform_device *pdev)
 	}
 
 	set_bit(EV_ABS, input_data->evbit);
+
 	input_set_abs_params(input_data, ABS_X, 0x80000000, 0x7fffffff, 0, 0);
-#if SENSOR_TYPE <= 4 || 9 <= SENSOR_TYPE
 	input_set_abs_params(input_data, ABS_Y, 0x80000000, 0x7fffffff, 0, 0);
 	input_set_abs_params(input_data, ABS_Z, 0x80000000, 0x7fffffff, 0, 0);
-#endif
+
 	input_set_abs_params(input_data, ABS_RUDDER, 0x80000000, 0x7fffffff, 0,
 			     0);
 	input_set_abs_params(input_data, ABS_STATUS, 0, 3, 0, 0);
@@ -653,12 +370,6 @@ static int sensor_probe(struct platform_device *pdev)
 	mutex_init(&data->mutex);
 	this_data = input_data;
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	INIT_LIST_HEAD(&data->devfile_list);
-	if (misc_register(&sensor_devfile) < 0)
-		goto err;
-#endif
-
 	return 0;
 
 err:
@@ -683,9 +394,6 @@ static int sensor_remove(struct platform_device *pdev)
 {
 	struct sensor_data *data;
 
-#ifdef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
-	misc_deregister(&sensor_devfile);
-#endif
 	if (this_data != NULL) {
 		data = input_get_drvdata(this_data);
 		sysfs_remove_group(&this_data->dev.kobj,
