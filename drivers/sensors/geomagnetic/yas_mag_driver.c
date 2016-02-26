@@ -20,12 +20,4 @@
 
 #include <linux/yas.h>
 
-#if YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS529
-#include "yas_mag_driver-yas529.c"
-#elif YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS530
 #include "yas_mag_driver-yas530.c"
-#elif YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS532
-#include "yas_mag_driver-yas530.c"
-#else
-#include "yas_mag_driver-none.c"
-#endif

@@ -93,8 +93,6 @@ static void utimer_lib_init(void (*func) (int *sec, int *msec));
 #define YAS_YAS532_DATA_CENTER         (4096)
 #define YAS_YAS532_DATA_OVERFLOW       (8190)
 
-#undef YAS_YAS530_CAL_SINGLE_READ
-
 struct yas_machdep_func {
 	int (*device_open) (void);
 	int (*device_close) (void);
@@ -544,23 +542,10 @@ static int get_device_id(uint8_t *id)
 static int get_cal_data_yas530(struct yas_cal_data *cal)
 {
 	uint8_t data[16];
-#ifdef YAS_YAS530_CAL_SINGLE_READ
-	int i;
-
-	for (i = 0; i < 16; i++) {	/* dummy read */
-		if (device_read(YAS_REGADDR_CAL + i, &data[i], 1) < 0)
-			return YAS_ERROR_DEVICE_COMMUNICATION;
-	}
-	for (i = 0; i < 16; i++) {
-		if (device_read(YAS_REGADDR_CAL + i, &data[i], 1) < 0)
-			return YAS_ERROR_DEVICE_COMMUNICATION;
-	}
-#else
 	if (device_read(YAS_REGADDR_CAL, data, 16) < 0)
 		return YAS_ERROR_DEVICE_COMMUNICATION;
 	if (device_read(YAS_REGADDR_CAL, data, 16) < 0)
 		return YAS_ERROR_DEVICE_COMMUNICATION;
-#endif
 
 	cal->dx = data[0];
 	cal->dy1 = data[1];
@@ -601,23 +586,10 @@ get_correction_value_yas530(struct yas_cal_data *cal,
 static int get_cal_data_yas532(struct yas_cal_data *cal)
 {
 	uint8_t data[14];
-#ifdef YAS_YAS530_CAL_SINGLE_READ
-	int i;
-
-	for (i = 0; i < 14; i++) {	/* dummy read */
-		if (device_read(YAS_REGADDR_CAL + i, &data[i], 1) < 0)
-			return YAS_ERROR_DEVICE_COMMUNICATION;
-	}
-	for (i = 0; i < 14; i++) {
-		if (device_read(YAS_REGADDR_CAL + i, &data[i], 1) < 0)
-			return YAS_ERROR_DEVICE_COMMUNICATION;
-	}
-#else
 	if (device_read(YAS_REGADDR_CAL, data, 14) < 0)
 		return YAS_ERROR_DEVICE_COMMUNICATION;
 	if (device_read(YAS_REGADDR_CAL, data, 14) < 0)
 		return YAS_ERROR_DEVICE_COMMUNICATION;
-#endif
 
 	cal->dx = data[0];
 	cal->dy1 = data[1];

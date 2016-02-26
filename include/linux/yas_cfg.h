@@ -21,52 +21,6 @@
 #ifndef __YAS_CFG_H__
 #define __YAS_CFG_H__
 
-#define YAS_MAG_DRIVER_NONE                 (-1)
-#define YAS_MAG_DRIVER_YAS529               (1)
-#define YAS_MAG_DRIVER_YAS530               (2)
-#define YAS_MAG_DRIVER_YAS532               (3)
-
-#define YAS_ACC_DRIVER_NONE                 (-1)
-#define YAS_ACC_DRIVER_ADXL345              (0)
-#define YAS_ACC_DRIVER_ADXL346              (1)
-#define YAS_ACC_DRIVER_BMA150               (2)
-#define YAS_ACC_DRIVER_BMA222               (3)
-#define YAS_ACC_DRIVER_BMA250               (4)
-#define YAS_ACC_DRIVER_BMA254				(5)
-#define YAS_ACC_DRIVER_KXSD9				(6)
-#define YAS_ACC_DRIVER_KXTE9				(7)
-#define YAS_ACC_DRIVER_KXTF9				(8)
-#define YAS_ACC_DRIVER_KXUD9				(9)
-#define YAS_ACC_DRIVER_LIS331DL				(10)
-#define YAS_ACC_DRIVER_LIS331DLH			(11)
-#define YAS_ACC_DRIVER_LIS331DLM			(12)
-#define YAS_ACC_DRIVER_LIS3DH				(13)
-#define YAS_ACC_DRIVER_MMA8452Q				(14)
-#define YAS_ACC_DRIVER_MMA8453Q				(15)
-
-#define YAS_GYRO_DRIVER_NONE                (-1)
-#define YAS_GYRO_DRIVER_ITG3200             (0)
-#define YAS_GYRO_DRIVER_L3G4200D            (1)
-#define YAS_GYRO_DRIVER_EWTZMU              (2)
-
-/*----------------------------------------------------------------------------*/
-/*                               Configuration                                */
-/*----------------------------------------------------------------------------*/
-
-
-#ifdef CONFIG_ACC_DRIVER_LIS3DH
-#define YAS_ACC_DRIVER                      (YAS_ACC_DRIVER_LIS3DH)
-#else
-#define YAS_ACC_DRIVER                      (YAS_ACC_DRIVER_BMA250)
-#endif
-
-#ifdef CONFIG_MAG_DRIVER_YAS532
-#define YAS_MAG_DRIVER                      (YAS_MAG_DRIVER_YAS532)
-#else
-#define YAS_MAG_DRIVER                      (YAS_MAG_DRIVER_YAS530)
-#endif
-#define YAS_GYRO_DRIVER                     (YAS_GYRO_DRIVER_NONE)
-
 /*----------------------------------------------------------------------------*/
 /*                   Acceleration Calibration Configuration                   */
 /*----------------------------------------------------------------------------*/
@@ -74,81 +28,14 @@
 
 #define YAS_DEFAULT_ACCCALIB_LENGTH         (20)
 
-#if YAS_ACC_DRIVER == YAS_ACC_DRIVER_ADXL345
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (8000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_ADXL346
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (4000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA150
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (4000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA222
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (25000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250
 #define YAS_DEFAULT_ACCCALIB_DISTORTION     (20000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA254
-#define YAS_DEFAULT_ACCCALIB_DISTORTION		(4000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXSD9
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (80000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTE9
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (400000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTF9
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (2000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXUD9
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (20000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DL
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (17000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLH
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (6000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLM
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (28000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (18000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_MMA8452Q
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (1000)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_MMA8453Q
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (1000)
-#else
-#define YAS_DEFAULT_ACCCALIB_DISTORTION     (0)
-#endif
+
 
 /*----------------------------------------------------------------------------*/
 /*                     Accelerometer Filter Configuration                     */
 /*----------------------------------------------------------------------------*/
 
-#if YAS_ACC_DRIVER == YAS_ACC_DRIVER_ADXL345
 #define YAS_ACC_DEFAULT_FILTER_THRESH       (76612)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_ADXL346
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (76612)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA150
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (76612)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA222
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (153227)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA250
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (76612)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_BMA254
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (19152)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXSD9
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (239460)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTE9
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (612909)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXTF9
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (19152)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_KXUD9
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (215514)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DL
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (176518)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLH
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (95760)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS331DLM
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (306454)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_LIS3DH
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (76608)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_MMA8452Q
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (19152)
-#elif YAS_ACC_DRIVER == YAS_ACC_DRIVER_MMA8453Q
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (38306)
-#else
-#define YAS_ACC_DEFAULT_FILTER_THRESH       (0)
-#endif
 
 /*----------------------------------------------------------------------------*/
 /*                    Geomagnetic Calibration Configuration                   */
@@ -170,15 +57,7 @@
 #define YAS_MAG_DEFAULT_FILTER_NOISE_Z      (144)	/* sd: 1200 nT */
 #define YAS_MAG_DEFAULT_FILTER_LEN          (20)
 
-#if YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS529
-#define YAS_MAG_DEFAULT_FILTER_THRESH       (300)
-#elif YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS530
 #define YAS_MAG_DEFAULT_FILTER_THRESH       (100)
-#elif YAS_MAG_DRIVER == YAS_MAG_DRIVER_YAS532
-#define YAS_MAG_DEFAULT_FILTER_THRESH       (300)
-#else
-#define YAS_MAG_DEFAULT_FILTER_THRESH       (0)
-#endif
 
 /*----------------------------------------------------------------------------*/
 /*                   Gyroscope Calibration Configuration                      */
@@ -186,60 +65,25 @@
 
 #define YAS_DEFAULT_GYROCALIB_LENGTH        (20)
 
-#if YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_ITG3200
 #define YAS_DEFAULT_GYROCALIB_DISTORTION    (0)
-#elif YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_L3G4200D
-#define YAS_DEFAULT_GYROCALIB_DISTORTION    (2500000)
-#elif YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_EWTZMU
-#define YAS_DEFAULT_GYROCALIB_DISTORTION    (400000)
-#else
-#define YAS_DEFAULT_GYROCALIB_DISTORTION    (0)
-#endif
 
 /*----------------------------------------------------------------------------*/
 /*                     Gyroscope Filter Configuration                         */
 /*----------------------------------------------------------------------------*/
-#if YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_ITG3200
+
 #define YAS_GYRO_DEFAULT_FILTER_THRESH      (0)
-#elif YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_L3G4200D
-#define YAS_GYRO_DEFAULT_FILTER_THRESH      (280)	/* 70mdps x 4 */
-#elif YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_EWTZMU
-#define YAS_GYRO_DEFAULT_FILTER_THRESH      (320)	/* 80mdps x 4 */
-#else
-#define YAS_GYRO_DEFAULT_FILTER_THRESH      (0)
-#endif
 
 /*----------------------------------------------------------------------------*/
 /*                          Gyroscope  Configuration                          */
 /*----------------------------------------------------------------------------*/
 
-#if YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_ITG3200
 #define YAS_GYRO_FIFO_MAX                    (1)
-#elif YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_L3G4200D
-#define YAS_GYRO_FIFO_MAX                   (32)
-#elif YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_EWTZMU
-#define YAS_GYRO_FIFO_MAX                   (32)
-#else
-#define YAS_GYRO_FIFO_MAX                    (1)
-#endif
 
 /*----------------------------------------------------------------------------*/
 /*                            Other Configuration                             */
 /*----------------------------------------------------------------------------*/
-#undef YAS_SENSOR_KERNEL_DEVFILE_INTERFACE
+
 #define YAS_SUPPORT_FUSION_DRIVER           (0)
 #define YAS_SUPPORT_SOFTWARE_GYROSCOPE      (0)
-
-#if YAS_ACC_DRIVER == YAS_ACC_DRIVER_NONE \
-	|| YAS_MAG_DRIVER == YAS_MAG_DRIVER_NONE \
-	|| YAS_GYRO_DRIVER == YAS_GYRO_DRIVER_NONE
-#undef YAS_SUPPORT_FUSION_DRIVER
-#define YAS_SUPPORT_FUSION_DRIVER           (0)
-#endif
-
-#if YAS_SUPPORT_SOFTWARE_GYROSCOPE && YAS_GYRO_DRIVER != YAS_GYRO_DRIVER_NONE
-#undef YAS_SUPPORT_SOFTWARE_GYROSCOPE
-#define YAS_SUPPORT_SOFTWARE_GYROSCOPE      (0)
-#endif
 
 #endif
