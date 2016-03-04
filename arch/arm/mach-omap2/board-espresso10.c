@@ -255,8 +255,10 @@ static void omap4_espresso10_init_carveout_sizes(
 	/* WFD is not supported in espresso10 So the size is zero */
 	ion->secure_output_wfdhdcp_size = 0;
 	ion->ducati_heap_size = (SZ_1M * 65);
+#ifndef CONFIG_ION_OMAP_TILER_DYNAMIC_ALLOC
 	ion->nonsecure_tiler2d_size = (SZ_1M * 19);
 	ion->tiler2d_size = (SZ_1M * 81);
+#endif
 }
 
 static void __init espresso10_reserve(void)
