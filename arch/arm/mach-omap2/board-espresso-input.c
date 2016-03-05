@@ -184,7 +184,7 @@ static struct sec_ts_platform_data espresso_ts_pdata = {
 	.tx_channel_no	= 22, /* Tx ch. */
 	.x_pixel_size	= 1023,
 	.y_pixel_size	= 599,
-	.pivot		= false,
+	.pivot		= true,
 	.ta_state	= CABLE_TYPE_NONE,
 	.set_power	= tsp_set_power,
 };
