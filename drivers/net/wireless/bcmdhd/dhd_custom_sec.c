@@ -49,9 +49,6 @@ struct cntry_locales_custom {
 
 /* Locale table for sec */
 const struct cntry_locales_custom translate_custom_table[] = {
-#ifdef BCM4334_CHIP
-	{"",   "XZ", 11},  /* Universal if Country code is unknown or empty */
-#endif
 	{"AE", "AE", 1},
 	{"AR", "AR", 1},
 	{"AT", "AT", 1},
@@ -107,19 +104,10 @@ const struct cntry_locales_custom translate_custom_table[] = {
 	{"TL", "XZ", 11},	/* Universal if Country code is TIMOR-LESTE (EAST TIMOR) */
 	{"MH", "XZ", 11},	/* Universal if Country code is MARSHALL ISLANDS */
 	{"PK", "XZ", 11},	/* Universal if Country code is PAKISTAN */
-#ifdef BCM4334_CHIP
-	{"RU", "RU", 13},
-	{"SG", "SG", 4},
-	{"UA", "UA", 8},
-	{"US", "US", 46}
-#endif
-#ifdef BCM4330_CHIP
 	{"RU", "RU", 13},
 	{"UA", "UY", 0},
 	{"AD", "AL", 0},
 	{"US", "US", 5}
-
-#endif
 };
 
 /* Customized Locale convertor
@@ -677,22 +665,12 @@ static void dhd_dump_cis(const unsigned char *buf, int size)
 }
 #endif /* DUMP_CIS */
 
-#ifdef BCM4334_CHIP
-#define CIS_CID_OFFSET 43
-#else
 #define CIS_CID_OFFSET 31
-#endif /* BCM4334_CHIP */
 
 int dhd_check_module_cid(dhd_pub_t *dhd)
 {
 	int ret = -1;
-#ifdef BCM4334_CHIP
-	unsigned char cis_buf[250] = {0};
-	const char *revfilepath = REVINFO;
-	int flag_b3 = 0;
-#else
 	unsigned char cis_buf[128] = {0};
-#endif
 	const char *cidfilepath = CIDINFO;
 
 	/* Try reading out from CIS */
@@ -710,64 +688,6 @@ int dhd_check_module_cid(dhd_pub_t *dhd)
 			__FUNCTION__, ret));
 		return ret;
 	} else {
-#ifdef BCM4334_CHIP
-		unsigned char semco_id[4] = {0x00, 0x00, 0x33, 0x33};
-
-		/* for SHARP FEM(new) */
-		unsigned char semco_id_sh[4] = {0x00, 0x00, 0xFB, 0x50};
-		DHD_ERROR(("%s: CIS reading success, ret=%d\n",
-			__FUNCTION__, ret));
-#ifdef DUMP_CIS
-		dump_cis(cis_buf, 48);
-#endif
-		if (memcmp(&cis_buf[CIS_CID_OFFSET], semco_id, 4) == 0) {
-			DHD_ERROR(("CID MATCH FOUND : Semco, "
-				"0x%02X 0x%02X 0x%02X 0x%02X\n",
-				cis_buf[CIS_CID_OFFSET],
-				cis_buf[CIS_CID_OFFSET+1], cis_buf[CIS_CID_OFFSET+2],
-				cis_buf[CIS_CID_OFFSET+3]));
-			dhd_write_cid_file(cidfilepath, "semco", 5);
-		} else if (memcmp(&cis_buf[CIS_CID_OFFSET], semco_id_sh, 4) == 0) {
-			DHD_ERROR(("CIS MATCH FOUND : Semco_sh, "
-				"0x%02X 0x%02X 0x%02X 0x%02X\n",
-				cis_buf[CIS_CID_OFFSET],
-				cis_buf[CIS_CID_OFFSET+1], cis_buf[CIS_CID_OFFSET+2],
-				cis_buf[CIS_CID_OFFSET+3]));
-			dhd_write_cid_file(cidfilepath, "semcosh", 7);
-		} else {
-			DHD_ERROR(("CID MATCH FOUND : Murata, "
-				"0x%02X 0x%02X 0x%02X 0x%02X\n", cis_buf[CIS_CID_OFFSET],
-				cis_buf[CIS_CID_OFFSET+1], cis_buf[CIS_CID_OFFSET+2],
-				cis_buf[CIS_CID_OFFSET+3]));
-			dhd_write_cid_file(cidfilepath, "murata", 6);
-		}
-
-		/* Try reading out from OTP to distinguish B2 or B3 */
-		memset(cis_buf, 0, sizeof(cis_buf));
-		cish = (cis_rw_t *)&cis_buf[8];
-
-		cish->source = 0;
-		cish->byteoff = 0;
-		cish->nbytes = sizeof(cis_buf);
-
-		strcpy(cis_buf, "otpdump");
-		ret = dhd_wl_ioctl_cmd(dhd, WLC_GET_VAR, cis_buf,
-			sizeof(cis_buf), 0, 0);
-		if (ret < 0) {
-			DHD_ERROR(("%s: OTP reading failed, err=%d\n",
-				__FUNCTION__, ret));
-			return ret;
-		}
-
-		/* otp 33th character is identifier for 4334B3 */
-		cis_buf[34] = '\0';
-		flag_b3 = bcm_atoi(&cis_buf[33]);
-		if (flag_b3 & 0x1) {
-			DHD_ERROR(("REV MATCH FOUND : 4334B3, %c\n", cis_buf[33]));
-			dhd_write_cid_file(revfilepath, "4334B3", 6);
-		}
-
-#else /* BCM4330_CHIP */
 		unsigned char murata_id[4] = {0x80, 0x06, 0x81, 0x00};
 		unsigned char semco_ve[4] = {0x80, 0x02, 0x81, 0x99};
 #ifdef DUMP_CIS
@@ -789,7 +709,6 @@ int dhd_check_module_cid(dhd_pub_t *dhd)
 				cis_buf[CIS_CID_OFFSET + 3]));
 			dhd_write_cid_file(cidfilepath, "samsung", 7);
 		}
-#endif /* BCM4334_CHIP */
 		DHD_ERROR(("%s: CIS write success, err=%d\n",
 			__FUNCTION__, ret));
 	}

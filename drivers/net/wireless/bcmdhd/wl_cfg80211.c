@@ -1888,11 +1888,6 @@ wl_run_escan(struct wl_priv *wl, struct net_device *ndev,
 					n_valid_chan = dtoh32(list->count);
 					for (i = 0; i < n_valid_chan && request->n_channels > j;
 						i++) {
-#if defined(BCM4334_CHIP)
-						request->channels[i]->flags |=
-							IEEE80211_CHAN_NO_HT40;
-#endif
-
 						WL_SCAN(("list->element[%d]=%d\n",
 							i, list->element[i]));
 						if (list->element[i] > CH_MAX_2G_CHANNEL)
@@ -2960,11 +2955,6 @@ wl_cfg80211_connect(struct wiphy *wiphy, struct net_device *dev,
 	/*
 	 * Cancel ongoing scan to sync up with sme state machine of cfg80211.
 	 */
-#if (defined(BCM4334_CHIP) || !defined(ESCAN_RESULT_PATCH))
-	if (wl->scan_request) {
-		wl_notify_escan_complete(wl, dev, true, true);
-	}
-#endif
 #ifdef WL_CFG80211_GON_COLLISION
 	/* init block gon req count  */
 	wl->block_gon_req_tx_count = 0;
@@ -3244,12 +3234,6 @@ wl_cfg80211_disconnect(struct wiphy *wiphy, struct net_device *dev,
 		/*
 		* Cancel ongoing scan to sync up with sme state machine of cfg80211.
 		*/
-#if (defined(BCM4334_CHIP) || !defined(ESCAN_RESULT_PATCH))
-		/* Let scan aborted by F/W */
-		if (wl->scan_request) {
-			wl_notify_escan_complete(wl, dev, true, true);
-		}
-#endif /* ESCAN_RESULT_PATCH */
 		wl_set_drv_status(wl, DISCONNECTING, dev);
 		scbval.val = reason_code;
 		memcpy(&scbval.ea, curbssid, ETHER_ADDR_LEN);
@@ -6960,12 +6944,6 @@ wl_bss_connect_done(struct wl_priv *wl, struct net_device *ndev,
 		WL_DBG(("copy bssid\n"));
 		memcpy(curbssid, connect_req_bssid, ETHER_ADDR_LEN);
 	}
-
-#if defined(BCM4334_CHIP)
-	if (wl->scan_request) {
-		wl_notify_escan_complete(wl, ndev, true, true);
-	}
-#endif
 #else
 	if (wl->scan_request) {
 		wl_notify_escan_complete(wl, ndev, true, true);
