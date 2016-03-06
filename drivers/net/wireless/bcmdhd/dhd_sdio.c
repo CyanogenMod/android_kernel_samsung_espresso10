@@ -766,9 +766,6 @@ dhdsdio_sr_init(dhd_bus_t *bus)
 	uint8 val;
 	int err = 0;
 
-	if ((bus->sih->chip == BCM4334_CHIP_ID) && (bus->sih->chiprev == 2))
-		dhdsdio_srwar_init(bus);
-
 	val = bcmsdh_cfg_read(bus->sdh, SDIO_FUNC_1, SBSDIO_FUNC1_WAKEUPCTRL, NULL);
 	val |= 1 << SBSDIO_FUNC1_WCTRL_HTWAIT_SHIFT;
 	bcmsdh_cfg_write(bus->sdh, SDIO_FUNC_1, SBSDIO_FUNC1_WAKEUPCTRL,
@@ -992,15 +989,6 @@ dhdsdio_clk_devsleep_iovar(dhd_bus_t *bus, bool on)
 		if (bus->clkstate == CLK_NONE) {
 			DHD_TRACE(("%s: Request SD clk\n", __FUNCTION__));
 			dhdsdio_clkctl(bus, CLK_SDONLY, FALSE);
-		}
-
-		if ((bus->sih->chip == BCM4334_CHIP_ID) && (bus->sih->chiprev == 2)) {
-			SPINWAIT((bcmsdh_gpioin(bus->sdh, GPIO_DEV_SRSTATE) != TRUE),
-				GPIO_DEV_SRSTATE_TIMEOUT);
-
-			if (bcmsdh_gpioin(bus->sdh, GPIO_DEV_SRSTATE) == FALSE) {
-				DHD_ERROR(("ERROR: GPIO_DEV_SRSTATE still low!\n"));
-			}
 		}
 #ifdef USE_CMD14
 		err = bcmsdh_sleep(bus->sdh, FALSE);
@@ -3142,19 +3130,6 @@ dhd_serialconsole(dhd_bus_t *bus, bool set, bool enable, int *bcmerror)
 	if (bus->sih->chip == BCM4330_CHIP_ID) {
 		uart_enab = CC_PLL_CHIPCTRL_SERIAL_ENAB;
 	}
-	else if (bus->sih->chip == BCM4334_CHIP_ID ||
-		bus->sih->chip == BCM43341_CHIP_ID) {
-		if (enable) {
-			/* Moved to PMU chipcontrol 1 from 4330 */
-			int_val &= ~gpio_sel;
-			int_val |= jtag_sel;
-		} else {
-			int_val |= gpio_sel;
-			int_val &= ~jtag_sel;
-		}
-		uart_enab = CC_PLL_CHIPCTRL_SERIAL_ENAB_4334;
-	}
-
 	if (!set)
 		return (int_val & uart_enab);
 	if (enable)
@@ -8083,9 +8058,6 @@ concate_revision(dhd_bus_t *bus, char *path, int path_len)
 	if (!bus || !bus->sih) {
 		DHD_ERROR(("%s:Bus is Invalid\n", __FUNCTION__));
 		return -1;
-	}
-	if (bus->sih->chip == BCM4334_CHIP_ID) {
-		return concate_revision_bcm4334(bus, path, path_len);
 	}
 	DHD_ERROR(("REVISION SPECIFIC feature is not required\n"));
 	return -1;
