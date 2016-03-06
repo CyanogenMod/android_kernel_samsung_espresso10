@@ -1235,10 +1235,12 @@ int omap4_sar_save(void)
 		return -EBUSY;
 	}
 
+#ifdef CONFIG_MFD_OMAP_USB_HOST
 	if (cpu_is_omap443x() && !omap4430_usbhs_update_sar()) {
 		pr_debug("%s: NOT saving USB SAR context!\n", __func__);
 		uhh_save = 0;
 	}
+#endif
 
 	/*
 	 * SAR bits and clocks needs to be enabled
