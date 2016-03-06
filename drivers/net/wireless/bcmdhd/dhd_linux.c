@@ -2802,13 +2802,6 @@ dhd_open(struct net_device *net)
 			firmware_path[strlen(firmware_path)-1] = '\0';
 		strncpy(fw_path, firmware_path, sizeof(fw_path)-1);
 		fw_path[sizeof(fw_path)-1] = '\0';
-#if defined(SUPPORT_MULTIPLE_REVISION)
-		ret = concate_revision(dhd->pub.bus, fw_path, MOD_PARAM_PATHLEN);
-		if (ret != 0) {
-			DHD_ERROR(("%s: fail to concatnate revison \n", __FUNCTION__));
-			goto exit;
-		}
-#endif
 		firmware_path[0] = '\0';
 	}
 
@@ -3093,13 +3086,6 @@ dhd_attach(osl_t *osh, struct dhd_bus *bus, uint bus_hdrlen)
 		strncpy(nv_path, nvram_path, sizeof(nv_path) -1);
 		nv_path[sizeof(nv_path) -1] = '\0';
 	}
-#if defined(SUPPORT_MULTIPLE_REVISION)
-	if (strlen(fw_path) != 0 &&
-		concate_revision(bus, fw_path, MOD_PARAM_PATHLEN) != 0) {
-		DHD_ERROR(("%s: fail to concatnate revison \n", __FUNCTION__));
-		goto fail;
-	}
-#endif
 
 	/* Allocate etherdev, including space for private structure */
 	if (!(net = alloc_etherdev(sizeof(dhd)))) {

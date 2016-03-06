@@ -927,7 +927,4 @@ void dhd_arp_offload_add_ip(dhd_pub_t *dhd, uint32 ipaddr, int idx);
 extern int
 dhd_write_rdwr_korics_macaddr(struct dhd_info *dhd, struct ether_addr *mac);
 #endif
-#if defined(SUPPORT_MULTIPLE_REVISION)
-extern int concate_revision(struct dhd_bus *bus, char *path, int path_len);
-#endif /* SUPPORT_MULTIPLE_REVISION */
 #endif /* _dhd_h_ */
