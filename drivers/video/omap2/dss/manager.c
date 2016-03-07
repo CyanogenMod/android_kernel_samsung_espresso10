@@ -2406,7 +2406,7 @@ static void omap_dss_add_overlay_manager(struct omap_overlay_manager *manager)
 
 int dss_init_overlay_managers(struct platform_device *pdev)
 {
-	int i, r;
+	int i, j, r;
 
 	spin_lock_init(&dss_cache.lock);
 
@@ -2460,8 +2460,15 @@ int dss_init_overlay_managers(struct platform_device *pdev)
 
 		omap_dss_add_overlay_manager(mgr);
 
+		if (i == 0)
+			j = 2;
+		else if (i == 2)
+			j = 0;
+		else
+			j = i;
+
 		r = kobject_init_and_add(&mgr->kobj, &manager_ktype,
-				&pdev->dev.kobj, "manager%d", i);
+				&pdev->dev.kobj, "manager%d", j);
 
 		if (r) {
 			DSSERR("failed to create sysfs file\n");
