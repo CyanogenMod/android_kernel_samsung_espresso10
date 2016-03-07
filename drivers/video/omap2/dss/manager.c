@@ -2426,16 +2426,16 @@ int dss_init_overlay_managers(struct platform_device *pdev)
 
 		switch (i) {
 		case 0:
-			mgr->name = "lcd";
-			mgr->id = OMAP_DSS_CHANNEL_LCD;
+			mgr->name = "lcd2";
+			mgr->id = OMAP_DSS_CHANNEL_LCD2;
 			break;
 		case 1:
 			mgr->name = "tv";
 			mgr->id = OMAP_DSS_CHANNEL_DIGIT;
 			break;
 		case 2:
-			mgr->name = "lcd2";
-			mgr->id = OMAP_DSS_CHANNEL_LCD2;
+			mgr->name = "lcd";
+			mgr->id = OMAP_DSS_CHANNEL_LCD;
 			break;
 		}
 
