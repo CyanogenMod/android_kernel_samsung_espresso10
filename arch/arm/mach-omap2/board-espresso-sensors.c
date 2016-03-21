@@ -124,7 +124,8 @@ static void omap4_espresso_sensors_regulator_on(bool on)
 	}
 	regulator_put(reg_v28);
 	regulator_put(reg_v18);
-	msleep(20);
+	if (!board_is_espresso10())
+		msleep(20);
 done:
 	return;
 }
@@ -147,6 +148,13 @@ struct mag_platform_data magnetic_pdata = {
 
 void omap4_espresso_set_chager_type(int type)
 {
+	if (board_is_espresso10()) {
+		static int prev = CABLE_TYPE_NONE;
+		magnetic_pdata.chg_status = type;
+		if (prev != type)
+			magnetic_pdata.offset_enable = 1;
+		prev = type;
+        } else
 	magnetic_pdata.chg_status = type;
 }
 

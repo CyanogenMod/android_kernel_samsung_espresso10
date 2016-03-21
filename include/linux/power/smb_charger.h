@@ -1,5 +1,5 @@
 /*
- *  smb347_charger.c
+ *  smb_charger.c
  *
  *  Copyright (C) 2011 Samsung Electronics
  *  SangYoung Son <hello.son@samsung.com>
@@ -15,8 +15,8 @@
  *
  */
 
-#ifndef __SMB347_CHARGER_H_
-#define __SMB347_CHARGER_H_
+#ifndef __SMB_CHARGER_H_
+#define __SMB_CHARGER_H_
 
 struct smb_charger_callbacks {
 	void (*set_charging_state) (struct smb_charger_callbacks *ptr,

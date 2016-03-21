@@ -28,7 +28,7 @@
 #elif defined(CONFIG_CHARGER_SMB328)
 #include <linux/battery/charger/smb328_charger.h>
 #elif defined(CONFIG_CHARGER_SMB347)
-#include <linux/battery/charger/smb347_charger.h>
+#include <linux/battery/charger/smb_charger.h>
 #elif defined(CONFIG_CHARGER_BQ24157)
 #include <linux/battery/charger/bq24157_charger.h>
 #elif defined(CONFIG_CHARGER_BQ24190) || \
