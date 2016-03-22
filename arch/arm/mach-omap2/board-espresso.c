@@ -378,9 +378,9 @@ static void __init espresso_init(void)
 
 	if (board_is_espresso10()) {
 		espresso10_update_board_type();
-		sec_muxtbl_init(SEC_MACHINE_ESPRESSO10, system_rev);
 		if (board_is_bestbuy_variant() && system_rev >= 7)
 			sec_muxtbl_init(SEC_MACHINE_ESPRESSO10_USA_BBY, system_rev);
+		sec_muxtbl_init(SEC_MACHINE_ESPRESSO10, system_rev);
 	} else
 		sec_muxtbl_init(SEC_MACHINE_ESPRESSO, system_rev);
 
