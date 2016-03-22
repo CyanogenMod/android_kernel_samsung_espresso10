@@ -1297,6 +1297,16 @@ static void connector_gpio_init(void)
 
 	gpio_request_array(connector_gpios, ARRAY_SIZE(connector_gpios));
 	gpio_request_array(uart_sw_gpios, ARRAY_SIZE(uart_sw_gpios));
+
+	if (board_is_espresso10() && board_is_bestbuy_variant()) {
+		for (i = 0; i < ARRAY_SIZE(mhl_gpios); i++)
+			mhl_gpios[i].gpio = omap_muxtbl_get_gpio_by_name(mhl_gpios[i].label);
+
+		gpio_request_array(mhl_gpios, ARRAY_SIZE(mhl_gpios));
+
+		espresso_i2c8_boardinfo[0].irq =
+			gpio_to_irq(mhl_gpios[GPIO_MHL_INT].gpio);
+	}
 }
 
 static int __init espresso_plugged_usb_cable_init(void)
