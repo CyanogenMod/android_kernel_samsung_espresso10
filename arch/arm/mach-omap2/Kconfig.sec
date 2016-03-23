@@ -27,7 +27,7 @@ config MACH_OMAP4_SAMSUNG
 	default n
 
 config MACH_SAMSUNG_ESPRESSO
-	bool "Samsung Espresso (GT-P3100) Board"
+	bool "Samsung Espresso (Galaxy Tab2) Board"
 	default n
 	select MACH_OMAP4_SAMSUNG
 	select FW_SAMSUNG_ESPRESSO_TSP
