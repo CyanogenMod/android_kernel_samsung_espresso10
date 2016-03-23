@@ -447,8 +447,14 @@ void __init omap4_espresso_charger_init(void)
 	if (ret < 0)
 		pr_err("%s: gpio_i2c7 device register fail\n", __func__);
 
-	if (board_is_espresso10()) {
+	if (board_is_espresso10())
 		i2c_register_board_info(5, smb347_i2c, ARRAY_SIZE(smb347_i2c));
+
+	else
+		i2c_register_board_info(5, smb136_i2c, ARRAY_SIZE(smb136_i2c));
+
+	i2c_register_board_info(7, max17042_i2c, ARRAY_SIZE(max17042_i2c));
+	if (board_is_espresso10()) {
 		max17042_pdata.sdi_capacity = 0x3730;
 		max17042_pdata.sdi_vfcapacity = 0x4996;
 		max17042_pdata.byd_capacity = 0x36B0;
@@ -475,11 +481,7 @@ void __init omap4_espresso_charger_init(void)
 		max17042_pdata.sdi_compensation.range4_1_offset = 3451;
 		max17042_pdata.sdi_compensation.range4_3_slope = 94;
 		max17042_pdata.sdi_compensation.range4_3_offset = 3618;
-	} else {
-		i2c_register_board_info(5, smb136_i2c, ARRAY_SIZE(smb136_i2c));
-	}
-
-	i2c_register_board_info(7, max17042_i2c, ARRAY_SIZE(max17042_i2c));
+        }
 
 	ret = platform_device_register(&battery_manager_device);
 	if (ret < 0)
