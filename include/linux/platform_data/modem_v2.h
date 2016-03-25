@@ -98,7 +98,7 @@ struct modem_data {
 	bool use_handover;
 };
 
-#define LOG_TAG "mif: "
+#define LOG_TAG "modem_if: "
 
 #define mif_err(fmt, ...) \
 	pr_err(LOG_TAG "%s: " pr_fmt(fmt), __func__, ##__VA_ARGS__)
