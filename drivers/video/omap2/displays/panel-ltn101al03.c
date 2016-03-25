@@ -220,8 +220,10 @@ static int ltn101al03_power_off(struct omap_dss_device *dssdev)
 
 	gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 0);
 
-	backlight_gptimer_stop(dssdev);
-	msleep(250);
+	if (lcd->bl != BRIGHTNESS_OFF) {
+		backlight_gptimer_stop(dssdev);
+		msleep(250);
+	}
 
 	gpio_set_value(lcd->pdata->lvds_nshdn_gpio, 0);
 
