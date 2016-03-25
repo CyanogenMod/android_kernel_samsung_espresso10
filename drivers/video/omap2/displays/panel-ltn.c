@@ -1,5 +1,5 @@
 /*
- * ltn070nl01 LCD panel driver.
+ * Samsung LTN070NL01/LTN101AL03 LCD panel driver.
  *
  * Author: Donghwa Lee  <dh09.lee@samsung.com>
  *
@@ -39,9 +39,7 @@
 
 #include <plat/dmtimer.h>
 
-#define PWM_DUTY_MAX			1200 /* 32kHz */
-
-struct ltn070nl01 {
+struct ltn {
 	struct device *dev;
 	struct omap_dss_device *dssdev;
 	struct ltn_panel_data *pdata;
@@ -53,17 +51,17 @@ struct ltn070nl01 {
 	struct omap_dm_timer *gptimer;	/*For OMAP4430 "gptimer" */
 };
 
-static struct brightness_data ltn070nl01_brightness_data;
+static struct brightness_data ltn_brightness_data;
 
 static void backlight_gptimer_update(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 
 	dev_dbg(&dssdev->dev, "%s\n", __func__);
 
-	omap_dm_timer_set_load(lcd->gptimer, 1, -PWM_DUTY_MAX);
+	omap_dm_timer_set_load(lcd->gptimer, 1, -lcd->pdata->pwm_duty_max);
 	omap_dm_timer_set_match(lcd->gptimer, 1,	/* 0~25 */
-				-PWM_DUTY_MAX + lcd->current_brightness);
+				-lcd->pdata->pwm_duty_max + lcd->current_brightness);
 	omap_dm_timer_set_pwm(lcd->gptimer, 0, 1,
 			      OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
 	omap_dm_timer_enable(lcd->gptimer);
@@ -75,7 +73,7 @@ static void backlight_gptimer_update(struct omap_dss_device *dssdev)
 
 static void backlight_gptimer_stop(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 
 	dev_dbg(&dssdev->dev, "%s\n", __func__);
@@ -87,7 +85,7 @@ static void backlight_gptimer_stop(struct omap_dss_device *dssdev)
 
 static int backlight_gptimer_init(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 
 	dev_dbg(&dssdev->dev, "%s\n", __func__);
@@ -117,9 +115,9 @@ err_dm_timer_request:
 	return ret;
 }
 
-static int ltn070nl01_hw_reset(struct omap_dss_device *dssdev)
+static int ltn_hw_reset(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 
 	dev_dbg(&dssdev->dev, "hw_reset\n");
 
@@ -136,27 +134,28 @@ static int ltn070nl01_hw_reset(struct omap_dss_device *dssdev)
 	return 0;
 }
 
-static int get_gamma_value_from_bl(int bl)
+static int get_gamma_value_from_bl(struct omap_dss_device *dssdev, int bl)
 {
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int gamma_value = 0;
 	int i;
 
-	if (bl == ltn070nl01_brightness_data.platform_value[0])
-		gamma_value = ltn070nl01_brightness_data.kernel_value[0];
+	if (bl == ltn_brightness_data.platform_value[0])
+		gamma_value = ltn_brightness_data.kernel_value[0];
 	for (i = 1 ; i < NUM_BRIGHTNESS_LEVEL ; i++) {
-		if (bl > ltn070nl01_brightness_data.platform_value[i])
+		if (bl > ltn_brightness_data.platform_value[i])
 			continue;
 		else {
 			gamma_value =
-			 (bl - ltn070nl01_brightness_data.platform_value[i-1])
-			 * ((PWM_DUTY_MAX
-			 * ltn070nl01_brightness_data.kernel_value[i])
-			 - (PWM_DUTY_MAX
-			 * ltn070nl01_brightness_data.kernel_value[i-1]))
-			 / (ltn070nl01_brightness_data.platform_value[i]
-			 - ltn070nl01_brightness_data.platform_value[i-1])
-			 + (PWM_DUTY_MAX
-			 * ltn070nl01_brightness_data.kernel_value[i-1]);
+			 (bl - ltn_brightness_data.platform_value[i-1])
+			 * ((lcd->pdata->pwm_duty_max
+			 * ltn_brightness_data.kernel_value[i])
+			 - (lcd->pdata->pwm_duty_max
+			 * ltn_brightness_data.kernel_value[i-1]))
+			 / (ltn_brightness_data.platform_value[i]
+			 - ltn_brightness_data.platform_value[i-1])
+			 + (lcd->pdata->pwm_duty_max
+			 * ltn_brightness_data.kernel_value[i-1]);
 			break;
 		}
 	}
@@ -166,7 +165,7 @@ static int get_gamma_value_from_bl(int bl)
 
 static void update_brightness(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 
 	lcd->current_brightness = lcd->bl;
 
@@ -176,9 +175,9 @@ static void update_brightness(struct omap_dss_device *dssdev)
 		backlight_gptimer_update(dssdev);
 }
 
-static int ltn070nl01_power_on(struct omap_dss_device *dssdev)
+static int ltn_power_on(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret = 0;
 
 	dev_dbg(&dssdev->dev, "%s\n", __func__);
@@ -186,7 +185,6 @@ static int ltn070nl01_power_on(struct omap_dss_device *dssdev)
 	if (lcd->enabled != 1) {
 		if (lcd->pdata->set_power)
 			lcd->pdata->set_power(true);
-		mdelay(10);
 
 		ret = omapdss_dpi_display_enable(dssdev);
 		if (ret) {
@@ -194,9 +192,9 @@ static int ltn070nl01_power_on(struct omap_dss_device *dssdev)
 			goto err;
 		}
 
-		/* reset ltn070nl01 bridge */
+		/* reset ltn bridge */
 		if (!dssdev->skip_init) {
-			ltn070nl01_hw_reset(dssdev);
+			ltn_hw_reset(dssdev);
 
 			msleep(100);
 			omap_dm_timer_start(lcd->gptimer);
@@ -214,9 +212,9 @@ err:
 	return ret;
 }
 
-static int ltn070nl01_power_off(struct omap_dss_device *dssdev)
+static int ltn_power_off(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 
 	dev_dbg(&dssdev->dev, "power_off\n");
 
@@ -224,11 +222,10 @@ static int ltn070nl01_power_off(struct omap_dss_device *dssdev)
 
 	if (lcd->bl != BRIGHTNESS_OFF) {
 		backlight_gptimer_stop(dssdev);
-		msleep(220);
+		msleep(200);
 	}
 
 	gpio_set_value(lcd->pdata->lvds_nshdn_gpio, 0);
-	msleep(20);
 
 	omapdss_dpi_display_disable(dssdev);
 
@@ -237,20 +234,20 @@ static int ltn070nl01_power_off(struct omap_dss_device *dssdev)
 	if (lcd->pdata->set_power)
 		lcd->pdata->set_power(false);
 
-	msleep(330);
+	msleep(300);
 
 	return 0;
 }
 
-static int ltn070nl01_get_brightness(struct backlight_device *bd)
+static int ltn_get_brightness(struct backlight_device *bd)
 {
 	return bd->props.brightness;
 }
 
-static int ltn070nl01_set_brightness(struct backlight_device *bd)
+static int ltn_set_brightness(struct backlight_device *bd)
 {
 	struct omap_dss_device *dssdev = dev_get_drvdata(&bd->dev);
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int bl = bd->props.brightness;
 	int ret = 0;
 
@@ -259,7 +256,7 @@ static int ltn070nl01_set_brightness(struct backlight_device *bd)
 	else if (bl > BRIGHTNESS_MAX)
 		bl = BRIGHTNESS_MAX;
 
-	lcd->bl = get_gamma_value_from_bl(bl);
+	lcd->bl = get_gamma_value_from_bl(dssdev, bl);
 
 	mutex_lock(&lcd->lock);
 	if ((dssdev->state == OMAP_DSS_DISPLAY_ACTIVE) &&
@@ -273,18 +270,18 @@ static int ltn070nl01_set_brightness(struct backlight_device *bd)
 	return ret;
 }
 
-static const struct backlight_ops ltn070nl01_backlight_ops = {
-	.get_brightness = ltn070nl01_get_brightness,
-	.update_status = ltn070nl01_set_brightness,
+static const struct backlight_ops ltn_backlight_ops = {
+	.get_brightness = ltn_get_brightness,
+	.update_status = ltn_set_brightness,
 };
 
-static int ltn070nl01_start(struct omap_dss_device *dssdev);
-static void ltn070nl01_stop(struct omap_dss_device *dssdev);
+static int ltn_start(struct omap_dss_device *dssdev);
+static void ltn_stop(struct omap_dss_device *dssdev);
 
-static int ltn070nl01_panel_probe(struct omap_dss_device *dssdev)
+static int ltn_panel_probe(struct omap_dss_device *dssdev)
 {
 	int ret = 0;
-	struct ltn070nl01 *lcd = NULL;
+	struct ltn *lcd = NULL;
 
 	struct backlight_properties props = {
 		.brightness = BRIGHTNESS_DEFAULT,
@@ -316,9 +313,7 @@ static int ltn070nl01_panel_probe(struct omap_dss_device *dssdev)
 	lcd->dssdev = dssdev;
 	lcd->pdata = dssdev->data;
 
-	ltn070nl01_brightness_data = lcd->pdata->brightness_table;
-
-	lcd->bl = get_gamma_value_from_bl(props.brightness);
+	ltn_brightness_data = lcd->pdata->brightness_table;
 
 	ret = gpio_request(lcd->pdata->lvds_nshdn_gpio, "lvds_nshdn");
 	if (ret < 0) {
@@ -341,9 +336,11 @@ static int ltn070nl01_panel_probe(struct omap_dss_device *dssdev)
 
 	dev_set_drvdata(&dssdev->dev, lcd);
 
+	lcd->bl = get_gamma_value_from_bl(dssdev, props.brightness);
+
 	/* Register DSI backlight  control */
 	lcd->bd = backlight_device_register("panel", &dssdev->dev, dssdev,
-					    &ltn070nl01_backlight_ops, &props);
+					    &ltn_backlight_ops, &props);
 	if (IS_ERR(lcd->bd)) {
 		ret = PTR_ERR(lcd->bd);
 		goto err_backlight_device_register;
@@ -381,9 +378,9 @@ err_no_platform_data:
 	return ret;
 }
 
-static void ltn070nl01_panel_remove(struct omap_dss_device *dssdev)
+static void ltn_panel_remove(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	backlight_device_unregister(lcd->bd);
 	mutex_destroy(&lcd->lock);
 	gpio_free(lcd->pdata->led_backlight_reset_gpio);
@@ -391,13 +388,13 @@ static void ltn070nl01_panel_remove(struct omap_dss_device *dssdev)
 	kfree(lcd);
 }
 
-static int ltn070nl01_start(struct omap_dss_device *dssdev)
+static int ltn_start(struct omap_dss_device *dssdev)
 {
 	int r = 0;
 
 	dev_dbg(&dssdev->dev, "start\n");
 
-	r = ltn070nl01_power_on(dssdev);
+	r = ltn_power_on(dssdev);
 
 	if (r) {
 		dev_dbg(&dssdev->dev, "enable failed\n");
@@ -410,18 +407,18 @@ static int ltn070nl01_start(struct omap_dss_device *dssdev)
 	return r;
 }
 
-static void ltn070nl01_stop(struct omap_dss_device *dssdev)
+static void ltn_stop(struct omap_dss_device *dssdev)
 {
 	dev_dbg(&dssdev->dev, "stop\n");
 
 	dssdev->manager->disable(dssdev->manager);
 
-	ltn070nl01_power_off(dssdev);
+	ltn_power_off(dssdev);
 }
 
-static int ltn070nl01_panel_enable(struct omap_dss_device *dssdev)
+static int ltn_panel_enable(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 
 	dev_dbg(&dssdev->dev, "enable\n");
@@ -432,29 +429,29 @@ static int ltn070nl01_panel_enable(struct omap_dss_device *dssdev)
 		goto out;
 	}
 
-	ret = ltn070nl01_start(dssdev);
+	ret = ltn_start(dssdev);
 out:
 	mutex_unlock(&lcd->lock);
 	return ret;
 }
 
-static void ltn070nl01_panel_disable(struct omap_dss_device *dssdev)
+static void ltn_panel_disable(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 
 	dev_dbg(&dssdev->dev, "disable\n");
 
 	mutex_lock(&lcd->lock);
 	if (dssdev->state == OMAP_DSS_DISPLAY_ACTIVE)
-		ltn070nl01_stop(dssdev);
+		ltn_stop(dssdev);
 
 	dssdev->state = OMAP_DSS_DISPLAY_DISABLED;
 	mutex_unlock(&lcd->lock);
 }
 
-static int ltn070nl01_panel_suspend(struct omap_dss_device *dssdev)
+static int ltn_panel_suspend(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret = 0;
 
 	dev_dbg(&dssdev->dev, "suspend\n");
@@ -465,16 +462,16 @@ static int ltn070nl01_panel_suspend(struct omap_dss_device *dssdev)
 		goto out;
 	}
 
-	ltn070nl01_stop(dssdev);
+	ltn_stop(dssdev);
 	dssdev->state = OMAP_DSS_DISPLAY_SUSPENDED;
 out:
 	mutex_unlock(&lcd->lock);
 	return ret;
 }
 
-static int ltn070nl01_panel_resume(struct omap_dss_device *dssdev)
+static int ltn_panel_resume(struct omap_dss_device *dssdev)
 {
-	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 
 	dev_dbg(&dssdev->dev, "resume\n");
@@ -485,13 +482,13 @@ static int ltn070nl01_panel_resume(struct omap_dss_device *dssdev)
 		goto out;
 	}
 
-	ret = ltn070nl01_start(dssdev);
+	ret = ltn_start(dssdev);
 out:
 	mutex_unlock(&lcd->lock);
 	return ret;
 }
 
-static void ltn070nl01_panel_get_resolution(struct omap_dss_device *dssdev,
+static void ltn_panel_get_resolution(struct omap_dss_device *dssdev,
 					    u16 *xres, u16 *yres)
 {
 
@@ -499,59 +496,59 @@ static void ltn070nl01_panel_get_resolution(struct omap_dss_device *dssdev,
 	*yres = dssdev->panel.timings.y_res;
 }
 
-static void ltn070nl01_panel_set_timings(struct omap_dss_device *dssdev,
+static void ltn_panel_set_timings(struct omap_dss_device *dssdev,
 					 struct omap_video_timings *timings)
 {
 	dpi_set_timings(dssdev, timings);
 }
 
-static void ltn070nl01_panel_get_timings(struct omap_dss_device *dssdev,
+static void ltn_panel_get_timings(struct omap_dss_device *dssdev,
 					 struct omap_video_timings *timings)
 {
 	*timings = dssdev->panel.timings;
 }
 
-static int ltn070nl01_panel_check_timings(struct omap_dss_device *dssdev,
+static int ltn_panel_check_timings(struct omap_dss_device *dssdev,
 					  struct omap_video_timings *timings)
 {
 	return dpi_check_timings(dssdev, timings);
 }
 
-static struct omap_dss_driver ltn070nl01_omap_dss_driver = {
-	.probe		= ltn070nl01_panel_probe,
-	.remove		= ltn070nl01_panel_remove,
+static struct omap_dss_driver ltn_omap_dss_driver = {
+	.probe		= ltn_panel_probe,
+	.remove		= ltn_panel_remove,
 
-	.enable		= ltn070nl01_panel_enable,
-	.disable	= ltn070nl01_panel_disable,
-	.get_resolution	= ltn070nl01_panel_get_resolution,
-	.suspend	= ltn070nl01_panel_suspend,
-	.resume		= ltn070nl01_panel_resume,
+	.enable		= ltn_panel_enable,
+	.disable	= ltn_panel_disable,
+	.get_resolution	= ltn_panel_get_resolution,
+	.suspend	= ltn_panel_suspend,
+	.resume		= ltn_panel_resume,
 
-	.set_timings	= ltn070nl01_panel_set_timings,
-	.get_timings	= ltn070nl01_panel_get_timings,
-	.check_timings	= ltn070nl01_panel_check_timings,
+	.set_timings	= ltn_panel_set_timings,
+	.get_timings	= ltn_panel_get_timings,
+	.check_timings	= ltn_panel_check_timings,
 
 	.driver = {
-		.name	= "ltn070nl01_panel",
+		.name	= "ltn_panel",
 		.owner	= THIS_MODULE,
 	},
 };
 
-static int __init ltn070nl01_init(void)
+static int __init ltn_init(void)
 {
-	omap_dss_register_driver(&ltn070nl01_omap_dss_driver);
+	omap_dss_register_driver(&ltn_omap_dss_driver);
 
 	return 0;
 }
 
-static void __exit ltn070nl01_exit(void)
+static void __exit ltn_exit(void)
 {
-	omap_dss_unregister_driver(&ltn070nl01_omap_dss_driver);
+	omap_dss_unregister_driver(&ltn_omap_dss_driver);
 }
 
-module_init(ltn070nl01_init);
-module_exit(ltn070nl01_exit);
+module_init(ltn_init);
+module_exit(ltn_exit);
 
 MODULE_AUTHOR("Donghwa Lee <dh09.lee@samsung.com>");
-MODULE_DESCRIPTION("ltn070nl01 LCD Driver");
+MODULE_DESCRIPTION("Samsung LTN070NL01/LTN101AL03 LCD Driver");
 MODULE_LICENSE("GPL");

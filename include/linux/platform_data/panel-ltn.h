@@ -34,7 +34,5 @@ struct ltn_panel_data {
 	void (*set_power) (bool enable);
 	void (*set_gptimer_idle) (void);
 	struct brightness_data brightness_table;
+	int pwm_duty_max;
 };
-
-enum { PANEL_BOE_7, PANEL_SEC };
-enum { PANEL_AUO, PANEL_HYDIS, PANEL_BOE_10, PANEL_LCD };

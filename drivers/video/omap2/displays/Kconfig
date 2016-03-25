@@ -62,18 +62,11 @@ config TC358765_DEBUG
 	help
 	  Support of TC358765 DSI-2-LVDS chip register access via debugfs
 
-config PANEL_LTN070NL01
-	tristate "LTN070NL01 Panel"
+config PANEL_LTN
+	tristate "Samsung LTN070NL01/LTN101AL03 Panel"
 	depends on OMAP2_DSS_DPI
 	default n
 	help
-		This enables support for Samsung LTN070NL01 LCD panel
-
-config PANEL_LTN101AL03
-	tristate "LTN101AL03 Panel"
-	depends on OMAP2_DSS_DPI
-	default n
-	help
-		This enables support for Samsung LTN101AL03 LCD panel
+	  This enables support for Samsung LTN070NL01/LTN101AL03 LCD panel
 
 endmenu

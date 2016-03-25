@@ -75,7 +75,7 @@ static void dss_clks_disable(void)
 
 static struct omap_dss_device espresso_lcd_device = {
 	.name			= "lcd",
-	.driver_name		= "ltn070nl01_panel",
+	.driver_name		= "ltn_panel",
 	.type			= OMAP_DISPLAY_TYPE_DPI,
 	.phy.dpi.data_lines	= 24,
 	.data			= &espresso_panel_data,
@@ -104,7 +104,6 @@ static struct omap_dss_device espresso_lcd_device = {
 };
 
 static struct omap_dss_device espresso10_lcd_config = {
-	.driver_name		= "ltn101al03_panel",
 	.panel = {
 		.timings	= {
 			.x_res		= 1280,
@@ -146,8 +145,6 @@ static struct omapfb_platform_data espresso_fb_pdata = {
 void __init omap4_espresso_memory_display_init(void)
 {
 	if (board_is_espresso10()) {
-		espresso_dss_data.devices[0]->driver_name =
-			espresso10_lcd_config.driver_name;
 		espresso_dss_data.devices[0]->panel =
 			espresso10_lcd_config.panel;
 	}
@@ -202,6 +199,9 @@ void __init omap4_espresso_display_init(void)
 		kernel_brightness[1] = 3;
 		kernel_brightness[4] = 47;
 		kernel_brightness[5] = 81;
+		espresso_panel_data.pwm_duty_max = 1600; /* 25kHz */
+	} else {
+		espresso_panel_data.pwm_duty_max = 1200; /* 32kHz */
 	}
 
 #ifdef CONFIG_FB_OMAP_BOOTLOADER_INIT
@@ -224,7 +224,7 @@ void __init omap4_espresso_display_init(void)
 	 }
 #endif
 
-	if (!board_is_espresso10() && espresso_panel_data.panel_id == PANEL_LCD) {
+	if (!board_is_espresso10() && espresso_panel_data.panel_id == 3) {
 		kernel_brightness[2] = 2;
 		kernel_brightness[3] = 7;
 		kernel_brightness[4] = 30;
