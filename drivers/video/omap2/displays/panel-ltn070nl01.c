@@ -59,6 +59,8 @@ static void backlight_gptimer_update(struct omap_dss_device *dssdev)
 {
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
 
+	dev_dbg(&dssdev->dev, "%s\n", __func__);
+
 	omap_dm_timer_set_load(lcd->gptimer, 1, -PWM_DUTY_MAX);
 	omap_dm_timer_set_match(lcd->gptimer, 1,	/* 0~25 */
 				-PWM_DUTY_MAX + lcd->current_brightness);
@@ -75,9 +77,12 @@ static void backlight_gptimer_stop(struct omap_dss_device *dssdev)
 {
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
+
+	dev_dbg(&dssdev->dev, "%s\n", __func__);
+
 	ret = omap_dm_timer_stop(lcd->gptimer);
 	if (ret)
-		pr_err("failed to stop pwm timer. ret=%d\n", ret);
+		dev_err(&dssdev->dev, "failed to stop pwm timer. ret=%d\n", ret);
 }
 
 static int backlight_gptimer_init(struct omap_dss_device *dssdev)
@@ -85,16 +90,16 @@ static int backlight_gptimer_init(struct omap_dss_device *dssdev)
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
+	dev_dbg(&dssdev->dev, "%s\n", __func__);
 
 	if (lcd->pdata->set_gptimer_idle)
-			lcd->pdata->set_gptimer_idle();
+		lcd->pdata->set_gptimer_idle();
 
 	lcd->gptimer =
 	    omap_dm_timer_request_specific(lcd->pdata->backlight_gptimer_num);
 
 	if (lcd->gptimer == NULL) {
-		pr_err("failed to request pwm timer\n");
+		dev_err(&dssdev->dev, "failed to request pwm timer\n");
 		ret = -ENODEV;
 		goto err_dm_timer_request;
 	}
@@ -115,7 +120,8 @@ err_dm_timer_request:
 static int ltn070nl01_hw_reset(struct omap_dss_device *dssdev)
 {
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
+
+	dev_dbg(&dssdev->dev, "hw_reset\n");
 
 	gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 0);
 	mdelay(1);
@@ -175,7 +181,7 @@ static int ltn070nl01_power_on(struct omap_dss_device *dssdev)
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret = 0;
 
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
+	dev_dbg(&dssdev->dev, "%s\n", __func__);
 
 	if (lcd->enabled != 1) {
 		if (lcd->pdata->set_power)
@@ -211,6 +217,8 @@ err:
 static int ltn070nl01_power_off(struct omap_dss_device *dssdev)
 {
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
+
+	dev_dbg(&dssdev->dev, "power_off\n");
 
 	lcd->enabled = 0;
 
@@ -256,7 +264,7 @@ static int ltn070nl01_set_brightness(struct backlight_device *bd)
 		(lcd->enabled) &&
 		(lcd->current_brightness != lcd->bl)) {
 		update_brightness(dssdev);
-		dev_info(&bd->dev, "[%d] brightness=%d, bl=%d\n",
+		dev_dbg(&bd->dev, "[%d] brightness=%d, bl=%d\n",
 			 lcd->pdata->panel_id, bd->props.brightness, lcd->bl);
 	}
 	mutex_unlock(&lcd->lock);
@@ -281,8 +289,8 @@ static int ltn070nl01_panel_probe(struct omap_dss_device *dssdev)
 		.max_brightness = 255,
 		.type = BACKLIGHT_RAW,
 	};
-	pr_info("(%s): called (@%d)\n", __func__, __LINE__);
-	dev_dbg(&dssdev->dev, "ltn070nl01_probe\n");
+
+	dev_dbg(&dssdev->dev, "probing\n");
 
 	lcd = kzalloc(sizeof(*lcd), GFP_KERNEL);
 	if (!lcd)
@@ -355,7 +363,7 @@ static int ltn070nl01_panel_probe(struct omap_dss_device *dssdev)
 
 	update_brightness(dssdev);
 
-	dev_dbg(&dssdev->dev, "%s\n", __func__);
+	dev_dbg(&dssdev->dev, "probed\n");
 	return ret;
 
 err_gptimer_init:
@@ -385,6 +393,8 @@ static int ltn070nl01_start(struct omap_dss_device *dssdev)
 {
 	int r = 0;
 
+	dev_dbg(&dssdev->dev, "start\n");
+
 	r = ltn070nl01_power_on(dssdev);
 
 	if (r) {
@@ -400,6 +410,8 @@ static int ltn070nl01_start(struct omap_dss_device *dssdev)
 
 static void ltn070nl01_stop(struct omap_dss_device *dssdev)
 {
+	dev_dbg(&dssdev->dev, "stop\n");
+
 	dssdev->manager->disable(dssdev->manager);
 
 	ltn070nl01_power_off(dssdev);
@@ -443,7 +455,7 @@ static int ltn070nl01_panel_suspend(struct omap_dss_device *dssdev)
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret = 0;
 
-	pr_info("Enter ltn070nl01_panel_suspend\n");
+	dev_dbg(&dssdev->dev, "suspend\n");
 
 	mutex_lock(&lcd->lock);
 	if (dssdev->state != OMAP_DSS_DISPLAY_ACTIVE) {
@@ -463,7 +475,7 @@ static int ltn070nl01_panel_resume(struct omap_dss_device *dssdev)
 	struct ltn070nl01 *lcd = dev_get_drvdata(&dssdev->dev);
 	int ret;
 
-	pr_info("Enter ltn070nl01_panel_resume\n");
+	dev_dbg(&dssdev->dev, "resume\n");
 
 	mutex_lock(&lcd->lock);
 	if (dssdev->state != OMAP_DSS_DISPLAY_SUSPENDED) {
