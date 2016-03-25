@@ -21,9 +21,7 @@
    COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS, RELATING TO USE OF THIS
    SOFTWARE IS DISCLAIMED.
 */
-#ifdef CONFIG_BT_MGMT
-#include "hci_mgmt.h"
-#else
+
 #ifndef __HCI_H
 #define __HCI_H
 
@@ -53,7 +51,6 @@
 #define HCI_RS232	4
 #define HCI_PCI		5
 #define HCI_SDIO	6
-#define HCI_SMD		7
 
 /* HCI controller types */
 #define HCI_BREDR	0x00
@@ -1309,5 +1306,3 @@ struct hci_inquiry_req {
 #define IREQ_CACHE_FLUSH 0x0001
 
 #endif /* __HCI_H */
-
-#endif /* BT_MGMT */

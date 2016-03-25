@@ -21,9 +21,7 @@
    COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS, RELATING TO USE OF THIS 
    SOFTWARE IS DISCLAIMED.
 */
-#ifdef CONFIG_BT_MGMT
-#include "bluetooth_mgmt.h"
-#else
+
 #ifndef __BLUETOOTH_H
 #define __BLUETOOTH_H
 
@@ -249,5 +247,3 @@ static inline void sco_exit(void)
 #endif
 
 #endif /* __BLUETOOTH_H */
-
-#endif /*BT_MGMT*/
