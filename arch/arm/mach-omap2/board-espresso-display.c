@@ -20,8 +20,6 @@
 #include <linux/omapfb.h>
 #include <linux/regulator/consumer.h>
 #include <linux/platform_data/panel-ltn.h>
-#include <linux/platform_data/panel-ltn070nl01.h>
-#include <linux/platform_data/panel-ltn101al03.h>
 
 #include <plat/vram.h>
 #include <plat/omap_hwmod.h>

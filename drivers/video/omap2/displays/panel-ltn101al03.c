@@ -31,7 +31,6 @@
 #include <linux/backlight.h>
 #include <linux/serial_core.h>
 #include <linux/platform_data/panel-ltn.h>
-#include <linux/platform_data/panel-ltn101al03.h>
 #include <linux/platform_device.h>
 #include <plat/hardware.h>
 #include <video/omapdss.h>
@@ -40,11 +39,6 @@
 
 #include <plat/dmtimer.h>
 
-#define DUTY_DIM	3
-#define DUTY_MIN	3
-#define DUTY_25		8
-#define DUTY_DEFAULT	47
-#define DUTY_MAX	81
 #define PWM_DUTY_MAX			1600 /* 25kHz */
 
 struct ltn101al03 {
@@ -57,7 +51,6 @@ struct ltn101al03 {
 	struct mutex lock;
 	struct backlight_device *bd;
 	struct omap_dm_timer *gptimer;	/*For OMAP4430 "gptimer" */
-	struct class *lcd_class;
 };
 
 static struct brightness_data ltn101al03_brightness_data;
@@ -170,7 +163,6 @@ static void update_brightness(struct omap_dss_device *dssdev)
 		backlight_gptimer_stop(dssdev);
 	else
 		backlight_gptimer_update(dssdev);
-
 }
 
 static int ltn101al03_power_on(struct omap_dss_device *dssdev)
@@ -199,7 +191,6 @@ static int ltn101al03_power_on(struct omap_dss_device *dssdev)
 			gpio_set_value(lcd->pdata->led_backlight_reset_gpio, 1);
 			mdelay(10);
 			omap_dm_timer_start(lcd->gptimer);
-
 			usleep_range(2000, 2100);
 			update_brightness(dssdev);
 		}
@@ -276,59 +267,6 @@ static const struct backlight_ops ltn101al03_backlight_ops = {
 static int ltn101al03_start(struct omap_dss_device *dssdev);
 static void ltn101al03_stop(struct omap_dss_device *dssdev);
 
-static ssize_t lcd_type_show(struct device *dev,
-			    struct device_attribute *attr, char *buf)
-{
-
-	char temp[15];
-	sprintf(temp, "SMD_LTN101AL03\n");
-	strcat(buf, temp);
-	return strlen(buf);
-}
-
-static DEVICE_ATTR(lcd_type, S_IRUGO, lcd_type_show, NULL);
-
-static ssize_t ltn101al03_sysfs_store_lcd_power(struct device *dev,
-						struct device_attribute *attr,
-						const char *buf, size_t len)
-{
-	struct omap_dss_device *dssdev = to_dss_device(dev_get_drvdata(dev));
-	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
-	int ret;
-	int rc;
-	int lcd_enable;
-
-	rc = kstrtoint(buf, 0, &lcd_enable);
-	if (rc < 0)
-		return rc;
-
-	dev_info(dev, "ltn101al03_sysfs_store_lcd_power - %d\n", lcd_enable);
-
-	mutex_lock(&lcd->lock);
-	if (lcd_enable) {
-		if (dssdev->state != OMAP_DSS_DISPLAY_SUSPENDED) {
-			ret = -EINVAL;
-			goto out;
-		}
-		ret = ltn101al03_start(dssdev);
-		dssdev->state = OMAP_DSS_DISPLAY_ACTIVE;
-	} else {
-		if (dssdev->state != OMAP_DSS_DISPLAY_ACTIVE) {
-			ret = -EINVAL;
-			goto out;
-		}
-		ltn101al03_stop(dssdev);
-		dssdev->state = OMAP_DSS_DISPLAY_SUSPENDED;
-	}
-
-out:
-	mutex_unlock(&lcd->lock);
-	return len;
-}
-
-static DEVICE_ATTR(lcd_power, S_IRUGO | S_IWUSR | S_IWGRP
-	, NULL, ltn101al03_sysfs_store_lcd_power);
-
 static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 {
 	int ret = 0;
@@ -397,33 +335,6 @@ static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 		goto err_backlight_device_register;
 	}
 
-	lcd->lcd_class = class_create(THIS_MODULE, "lcd");
-	if (IS_ERR(lcd->lcd_class)) {
-		pr_err("Failed to create lcd_class!");
-		goto err_class_create;
-	}
-
-	lcd->dev = device_create(lcd->lcd_class, NULL, 0, NULL, "panel");
-	if (IS_ERR(lcd->dev)) {
-		pr_err("Failed to create device(panel)!\n");
-		goto err_device_create;
-	}
-
-	dev_set_drvdata(lcd->dev, &dssdev->dev);
-
-	ret = device_create_file(lcd->dev, &dev_attr_lcd_type);
-	if (ret < 0) {
-		dev_err(&dssdev->dev,
-			"failed to add 'lcd_type' sysfs entries\n");
-		goto err_lcd_device;
-	}
-	ret = device_create_file(lcd->dev, &dev_attr_lcd_power);
-	if (ret < 0) {
-		dev_err(&dssdev->dev,
-			"failed to add 'lcd_power' sysfs entries\n");
-		goto err_lcd_type;
-	}
-
 	ret = backlight_gptimer_init(dssdev);
 	if (ret < 0) {
 		dev_err(&dssdev->dev,
@@ -444,14 +355,6 @@ static int ltn101al03_panel_probe(struct omap_dss_device *dssdev)
 	return ret;
 
 err_gptimer_init:
-	device_remove_file(&(lcd->bd->dev), &dev_attr_lcd_power);
-err_lcd_type:
-	device_remove_file(&(lcd->bd->dev), &dev_attr_lcd_type);
-err_lcd_device:
-	device_destroy(lcd->lcd_class, 0);
-err_device_create:
-	class_destroy(lcd->lcd_class);
-err_class_create:
 	backlight_device_unregister(lcd->bd);
 err_backlight_device_register:
 	mutex_destroy(&lcd->lock);
@@ -467,10 +370,6 @@ err_no_platform_data:
 static void ltn101al03_panel_remove(struct omap_dss_device *dssdev)
 {
 	struct ltn101al03 *lcd = dev_get_drvdata(&dssdev->dev);
-	device_remove_file(&(lcd->bd->dev), &dev_attr_lcd_power);
-	device_remove_file(&(lcd->bd->dev), &dev_attr_lcd_type);
-	device_destroy(lcd->lcd_class, 0);
-	class_destroy(lcd->lcd_class);
 	backlight_device_unregister(lcd->bd);
 	mutex_destroy(&lcd->lock);
 	gpio_free(lcd->pdata->led_backlight_reset_gpio);
