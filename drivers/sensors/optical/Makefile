@@ -1,0 +1,2 @@
+obj-$(CONFIG_OPTICAL_BH1721) += bh1721.o
+obj-$(CONFIG_OPTICAL_AL3201)	+= al3201.o

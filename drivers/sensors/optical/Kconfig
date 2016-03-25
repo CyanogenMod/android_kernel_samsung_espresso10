@@ -1,0 +1,7 @@
+config OPTICAL_BH1721
+         tristate "Rohm bh1721 Optical Sensor"
+         depends on I2C
+
+config OPTICAL_AL3201
+         tristate "Rohm bh1721 Optical Sensor"
+         depends on I2C
