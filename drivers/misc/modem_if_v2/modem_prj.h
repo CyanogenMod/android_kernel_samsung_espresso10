@@ -181,7 +181,6 @@ struct io_device {
 	enum modem_link link_types;
 	enum dev_format format;
 	enum modem_io io_typ;
-	enum modem_network net_typ;
 
 	bool use_handover;	/* handover 2+ link devices */
 
@@ -332,7 +331,6 @@ struct modem_ctl {
 	struct sim_state sim_state;
 
 	unsigned gpio_cp_on;
-	unsigned gpio_cp_off;
 	unsigned gpio_reset_req_n;
 	unsigned gpio_cp_reset;
 	unsigned gpio_pda_active;
@@ -340,13 +338,6 @@ struct modem_ctl {
 	unsigned gpio_cp_dump_int;
 	unsigned gpio_ap_dump_int;
 	unsigned gpio_sim_detect;
-	unsigned gpio_dynamic_switching;
-
-#ifdef CONFIG_TDSCDMA_MODEM_SPRD8803
-	unsigned gpio_ap_cp_int1;
-	unsigned gpio_ap_cp_int2;
-	unsigned gpio_uart_sel;
-#endif
 
 	int irq_phone_active;
 	int irq_sim_detect;
@@ -358,11 +349,5 @@ struct modem_ctl {
 };
 
 int sipc4_init_io_device(struct io_device *iod);
-int sipc5_init_io_device(struct io_device *iod);
 
-#if defined(CONFIG_TDSCDMA_MODEM_SPRD8803) && defined(CONFIG_LINK_DEVICE_SPI)
-extern int spi_sema_init(void);
-extern int sprd_boot_done;
-extern void if_spi_thread_restart(void);
-#endif
 #endif

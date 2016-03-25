@@ -150,10 +150,6 @@ int pr_buffer(const char *tag, const char *data, size_t data_len,
 	pr_buffer(tag, (char *)((urb)->transfer_buffer), \
 			(size_t)((urb)->actual_length), (size_t)16)
 
-/* flow control CMD from CP, it use in serial devices */
-int link_rx_flowctl_cmd(struct link_device *ld, const char *data, size_t len);
-
-
 /* get iod from tree functions */
 
 struct io_device *get_iod_with_format(struct modem_shared *msd,
@@ -188,90 +184,5 @@ void iodevs_for_each(struct modem_shared *msd, action_fn action, void *args);
 /* netif wake/stop queue of iod */
 void iodev_netif_wake(struct io_device *iod, void *args);
 void iodev_netif_stop(struct io_device *iod, void *args);
-
-/* change tx_link of raw devices */
-void rawdevs_set_tx_link(struct modem_shared *msd, enum modem_link link_type);
-
-void mif_add_timer(struct timer_list *timer, unsigned long expire,
-		void (*function)(unsigned long), unsigned long data);
-
-/* debug helper functions for sipc4, sipc5 */
-void mif_print_data(char *buf, int len);
-
-/*---------------------------------------------------------------------------
-
-				IPv4 Header Format
-
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|Version|  IHL  |Type of Service|          Total Length         |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|         Identification        |C|D|M|     Fragment Offset     |
-	|                               |E|F|F|                         |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|  Time to Live |    Protocol   |         Header Checksum       |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                       Source Address                          |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                    Destination Address                        |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                    Options                    |    Padding    |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-	IHL - Header Length
-	Flags - Consist of 3 bits
-		The 1st bit is "Congestion" bit.
-		The 2nd bit is "Dont Fragment" bit.
-		The 3rd bit is "More Fragments" bit.
-
----------------------------------------------------------------------------*/
-#define IPV4_HDR_SIZE	20
-
-/*-------------------------------------------------------------------------
-
-				TCP Header Format
-
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|          Source Port          |       Destination Port        |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                        Sequence Number                        |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                    Acknowledgment Number                      |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|  Data |       |C|E|U|A|P|R|S|F|                               |
-	| Offset| Rsvd  |W|C|R|C|S|S|Y|I|            Window             |
-	|       |       |R|E|G|K|H|T|N|N|                               |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|           Checksum            |         Urgent Pointer        |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                    Options                    |    Padding    |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                             data                              |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
--------------------------------------------------------------------------*/
-#define TCP_HDR_SIZE	20
-
-/*-------------------------------------------------------------------------
-
-				UDP Header Format
-
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|          Source Port          |       Destination Port        |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|            Length             |           Checksum            |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-	|                             data                              |
-	+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
--------------------------------------------------------------------------*/
-#define UDP_HDR_SIZE	8
-
-void print_ip4_packet(u8 *ip_pkt);
-bool is_dns_packet(u8 *ip_pkt);
-bool is_syn_packet(u8 *ip_pkt);
 
 #endif/*__MODEM_UTILS_H__*/
