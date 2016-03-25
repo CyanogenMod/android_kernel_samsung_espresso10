@@ -3,9 +3,6 @@ menuconfig SEC_MODEM_V2
 	default n
 	---help---
 	  Samsung Modem Interface Driver V2.
-	  This modem interface driver based on Proxima lte(toro).
-	  modem_if_v2 will support ipcv5 and ipcv4 as well,
-	  and this optimized for internel/externel dpram and usb link driver.
 
 config UMTS_MODEM_XMM6262
 	bool "modem chip : IMC XMM6262"

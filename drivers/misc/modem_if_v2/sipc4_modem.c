@@ -112,7 +112,6 @@ static struct io_device *create_io_device(struct modem_io_t *io_t,
 	iod->format = io_t->format;
 	iod->io_typ = io_t->io_type;
 	iod->link_types = io_t->links;
-	iod->net_typ = pdata->modem_net;
 	iod->use_handover = pdata->use_handover;
 	atomic_set(&iod->opened, 0);
 

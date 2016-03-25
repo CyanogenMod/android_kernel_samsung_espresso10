@@ -187,10 +187,7 @@ static struct modem_data umts_modem_data = {
 
 	.modem_type = IMC_XMM6262,
 	.link_types = LINKTYPE(LINKDEV_MIPI),
-	.modem_net = UMTS_NETWORK,
 	.use_handover = false,
-	.ipc_version = SIPC_VER_40,
-
 	.num_iodevs = ARRAY_SIZE(umts_io_devices),
 	.iodevs = umts_io_devices,
 };
