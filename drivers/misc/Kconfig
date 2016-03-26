@@ -561,5 +561,6 @@ source "drivers/misc/gcx/gccore/Kconfig"
 source "drivers/misc/gcx/gcioctl/Kconfig"
 source "drivers/misc/gcx/gcbv/Kconfig"
 source "drivers/misc/cache-2dmanager/Kconfig"
+source "drivers/misc/modem_if_v2/Kconfig"
 
 endif # MISC_DEVICES
