@@ -123,6 +123,14 @@ static bool _board_is_bestbuy_variant = false;
 static __init int setup_board_type(char *str)
 {
 	int lcd_id;
+
+	/* We reset the console loglevel here back to verbose, as our
+	 * bootloaders pass loglevel=0 to the kernel cmdline.
+	 * This is the most convinient place to do so, as this method
+	 * gets executed right after parsing the loglevel param.
+	 */
+	console_loglevel = 15;
+
 	if (kstrtoint(str, 0, &lcd_id)) {
 		pr_err("************************************************\n");
 		pr_err("Cannot parse lcd_panel_id command line parameter\n");
