@@ -51,7 +51,6 @@
 #include "omap4-sar-layout.h"
 #include "omap_muxtbl.h"
 
-#include "sec_common.h"
 #include "sec_muxtbl.h"
 
 /* gpio to distinguish WiFi and USA-BBY (P51xx)
@@ -81,6 +80,9 @@
 #define ESPRESSO_ATTR_RO(_type, _name, _show) \
 	struct kobj_attribute espresso_##_type##_prop_attr_##_name = \
 		__ATTR(_name, S_IRUGO, _show, NULL)
+
+struct class *sec_class;
+EXPORT_SYMBOL(sec_class);
 
 #if defined(CONFIG_ANDROID_RAM_CONSOLE)
 static struct resource ramconsole_resources[] = {
@@ -385,10 +387,15 @@ err_board_obj:
 		pr_err("failed to create board_properties\n");
 }
 
+static void __init sec_common_init(void)
+{
+	sec_class = class_create(THIS_MODULE, "sec");
+	if (IS_ERR(sec_class))
+		pr_err("Failed to create class (sec)!\n");
+}
+
 static void __init espresso_init(void)
 {
-	sec_common_init_early();
-
 	omap4_espresso_emif_init();
 
 	if (board_is_espresso10()) {

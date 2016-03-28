@@ -17,7 +17,7 @@
 
 #include <linux/serial_core.h>
 
-#include "sec_common.h"
+extern struct class *sec_class;
 
 #define SEC_MACHINE_ESPRESSO			0x01
 #define SEC_MACHINE_ESPRESSO10			0x02
