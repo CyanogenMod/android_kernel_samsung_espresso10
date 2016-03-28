@@ -48,6 +48,7 @@
 #include "board-espresso.h"
 #include "control.h"
 #include "mux.h"
+#include "omap_ram_console.h"
 #include "omap4-sar-layout.h"
 #include "omap_muxtbl.h"
 
@@ -74,8 +75,7 @@
 #define REBOOT_FLAG_POWER_OFF	(1 << 4)
 #define REBOOT_FLAG_DOWNLOAD	(1 << 5)
 
-#define ESPRESSO_RAMCONSOLE_START	(PLAT_PHYS_OFFSET + SZ_512M)
-#define ESPRESSO_RAMCONSOLE_SIZE	SZ_2M
+#define ESPRESSO_RAM_CONSOLE_START	(PLAT_PHYS_OFFSET + SZ_512M)
 
 #define ESPRESSO_ATTR_RO(_type, _name, _show) \
 	struct kobj_attribute espresso_##_type##_prop_attr_##_name = \
@@ -84,33 +84,9 @@
 struct class *sec_class;
 EXPORT_SYMBOL(sec_class);
 
-#if defined(CONFIG_ANDROID_RAM_CONSOLE)
-static struct resource ramconsole_resources[] = {
-	{
-		.flags	= IORESOURCE_MEM,
-		.start	= ESPRESSO_RAMCONSOLE_START,
-		.end	= ESPRESSO_RAMCONSOLE_START
-			+ ESPRESSO_RAMCONSOLE_SIZE - 1,
-	 },
-};
-
-static struct platform_device ramconsole_device = {
-	.name		= "ram_console",
-	.id		= -1,
-	.num_resources	= ARRAY_SIZE(ramconsole_resources),
-	.resource	= ramconsole_resources,
-};
-#endif /* CONFIG_ANDROID_RAM_CONSOLE */
-
 static struct platform_device bcm4330_bluetooth_device = {
 	.name		= "bcm4330_bluetooth",
 	.id		= -1,
-};
-
-static struct platform_device *espresso_dbg_devices[] __initdata = {
-#if defined(CONFIG_ANDROID_RAM_CONSOLE)
-	&ramconsole_device,
-#endif
 };
 
 static struct platform_device *espresso_devices[] __initdata = {
@@ -437,9 +413,6 @@ static void __init espresso_init(void)
 	/* Allow HSI omap_device to be registered later */
 	omap_hsi_allow_registration();
 #endif
-
-	platform_add_devices(espresso_dbg_devices,
-		ARRAY_SIZE(espresso_dbg_devices));
 }
 
 static void __init espresso_map_io(void)
@@ -473,9 +446,9 @@ static void __init espresso_reserve(void)
 	omap_ion_init();
 #endif
 	/* do the static reservations first */
-#if defined(CONFIG_ANDROID_RAM_CONSOLE)
-	memblock_remove(ESPRESSO_RAMCONSOLE_START,
-			ESPRESSO_RAMCONSOLE_SIZE);
+#ifdef CONFIG_OMAP_RAM_CONSOLE
+	omap_ram_console_init(ESPRESSO_RAM_CONSOLE_START,
+				OMAP_RAM_CONSOLE_SIZE_DEFAULT);
 #endif
 	memblock_remove(PHYS_ADDR_SMC_MEM, PHYS_ADDR_SMC_SIZE);
 	memblock_remove(PHYS_ADDR_DUCATI_MEM, PHYS_ADDR_DUCATI_SIZE);
