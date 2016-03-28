@@ -62,21 +62,6 @@ static __init int setup_androidboot_mode(char *opt)
 
 __setup("androidboot.mode=", setup_androidboot_mode);
 
-u32 sec_bootmode;
-EXPORT_SYMBOL(sec_bootmode);
-
-static __init int setup_boot_mode(char *opt)
-{
-	unsigned int bootmode;
-
-	if (!kstrtouint(opt, 0, &bootmode))
-		sec_bootmode = bootmode;
-
-	return 0;
-}
-
-__setup("bootmode=", setup_boot_mode);
-
 struct sec_reboot_code {
 	char *cmd;
 	int mode;

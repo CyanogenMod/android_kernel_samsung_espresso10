@@ -34,7 +34,6 @@
 #include "board-espresso.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
-#include "sec_common.h"
 
 #define TA_CHG_ING_N	0
 #define TA_ENABLE	1
@@ -60,6 +59,7 @@
 #define BB_LOW_BLOCK_TEMP          (-40)
 #define BB_LOW_RECOVER_TEMP        0
 
+u32 bootmode;
 struct max17042_fuelgauge_callbacks *fuelgauge_callback;
 struct smb_charger_callbacks *espresso_charger_callbacks;
 struct battery_manager_callbacks *batman_callback;
@@ -416,20 +416,31 @@ void check_jig_status(int status)
 	battery_manager_pdata.jig_on = status;
 }
 
+static __init int setup_boot_mode(char *str)
+{
+	unsigned int _bootmode;
+
+	if (!kstrtouint(str, 0, &_bootmode))
+		bootmode = _bootmode;
+
+	return 0;
+}
+__setup("bootmode=", setup_boot_mode);
+
 void __init omap4_espresso_charger_init(void)
 {
 	int ret;
 
 	charger_gpio_init();
 	espresso_gpio_i2c_init();
-	if (board_is_espresso10() && board_is_bestbuy_variant() && sec_bootmode == 5) {
+	if (board_is_espresso10() && board_is_bestbuy_variant() && bootmode == 5) {
 		battery_manager_pdata.high_block_temp = BB_HIGH_BLOCK_TEMP;
 		battery_manager_pdata.high_recover_temp = BB_HIGH_RECOVER_TEMP;
 		battery_manager_pdata.low_block_temp = BB_LOW_BLOCK_TEMP;
 		battery_manager_pdata.low_recover_temp = BB_LOW_RECOVER_TEMP;
 	}
 
-	battery_manager_pdata.bootmode = sec_bootmode;
+	battery_manager_pdata.bootmode = bootmode;
 	if (!board_is_espresso10())
 		smb_pdata.hw_revision = system_rev;
 
