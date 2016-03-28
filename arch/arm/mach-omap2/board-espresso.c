@@ -62,10 +62,18 @@
  */
 #define GPIO_HW_REV4		41
 
+#define GPIO_TA_NCONNECTED	32
+
 #define ESPRESSO_MEM_BANK_0_SIZE	0x20000000
 #define ESPRESSO_MEM_BANK_0_ADDR	0x80000000
 #define ESPRESSO_MEM_BANK_1_SIZE	0x20000000
 #define ESPRESSO_MEM_BANK_1_ADDR	0xA0000000
+
+#define OMAP_SW_BOOT_CFG_ADDR	0x4A326FF8
+#define REBOOT_FLAG_NORMAL	(1 << 0)
+#define REBOOT_FLAG_RECOVERY	(1 << 1)
+#define REBOOT_FLAG_POWER_OFF	(1 << 4)
+#define REBOOT_FLAG_DOWNLOAD	(1 << 5)
 
 #define ESPRESSO_RAMCONSOLE_START	(PLAT_PHYS_OFFSET + SZ_512M)
 #define ESPRESSO_RAMCONSOLE_SIZE	SZ_2M
@@ -207,28 +215,35 @@ static void espresso_power_off_charger(void)
 	arm_pm_restart('t', NULL);
 }
 
-static unsigned int gpio_ta_nconnected;
-
 static int espresso_reboot_call(struct notifier_block *this,
 				unsigned long code, void *cmd)
 {
-	if (code == SYS_POWER_OFF && !gpio_get_value(gpio_ta_nconnected))
-		pm_power_off = espresso_power_off_charger;
+	u32 flag = REBOOT_FLAG_NORMAL;
+	char *blcmd = "RESET";
 
-	return 0;
+	if (code == SYS_POWER_OFF) {
+		flag = REBOOT_FLAG_POWER_OFF;
+		blcmd = "POFF";
+		if (!gpio_get_value(GPIO_TA_NCONNECTED))
+			pm_power_off = espresso_power_off_charger;
+	} else if (code == SYS_RESTART) {
+		if (cmd) {
+			if (!strcmp(cmd, "recovery"))
+				flag = REBOOT_FLAG_RECOVERY;
+			else if (!strcmp(cmd, "download"))
+				flag = REBOOT_FLAG_DOWNLOAD;
+		}
+	}
+
+	omap_writel(flag, OMAP_SW_BOOT_CFG_ADDR);
+	omap_writel(*(u32 *) blcmd, OMAP_SW_BOOT_CFG_ADDR - 0x04);
+
+	return NOTIFY_DONE;
 }
 
 static struct notifier_block espresso_reboot_notifier = {
 	.notifier_call = espresso_reboot_call,
 };
-
-static void __init omap4_espresso_reboot_init(void)
-{
-	gpio_ta_nconnected = omap_muxtbl_get_gpio_by_name("TA_nCONNECTED");
-
-	if (unlikely(gpio_ta_nconnected != -EINVAL))
-		register_reboot_notifier(&espresso_reboot_notifier);
-}
 
 static void __init espresso10_update_board_type(void)
 {
@@ -384,6 +399,8 @@ static void __init espresso_init(void)
 	} else
 		sec_muxtbl_init(SEC_MACHINE_ESPRESSO, system_rev);
 
+	register_reboot_notifier(&espresso_reboot_notifier);
+
 	/* initialize sec common infrastructures */
 	sec_common_init();
 
@@ -407,7 +424,6 @@ static void __init espresso_init(void)
 	omap4_espresso_wifi_init();
 	omap4_espresso_sensors_init();
 	omap4_espresso_jack_init();
-	omap4_espresso_reboot_init();
 	omap4_espresso_none_modem_init();
 
 #ifdef CONFIG_OMAP_HSI_DEVICE
@@ -417,8 +433,6 @@ static void __init espresso_init(void)
 
 	platform_add_devices(espresso_dbg_devices,
 		ARRAY_SIZE(espresso_dbg_devices));
-
-	sec_common_init_post();
 }
 
 static void __init espresso_map_io(void)
