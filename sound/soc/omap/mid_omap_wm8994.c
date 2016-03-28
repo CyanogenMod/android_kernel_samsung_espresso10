@@ -150,26 +150,8 @@ static struct gpio ear_select = {
 };
 #endif
 
-/*
- * Harrison Audio MCLK becomes 38.4MHz
- * since the HW rev 6.
- */
-#ifdef CONFIG_MACH_SAMSUNG_HARRISON
-#define HW_REVISION_DISTINGUISHER
-#endif
-
 /* Determines the mclk of the board. */
 unsigned int board_mclk = 38400000;
-
-/* Specifying each HW revision GPIO's name. */
-#ifdef HW_REVISION_DISTINGUISHER
-static struct gpio hw_rev_gpio[] = {
-	{	.label = "HW_REV0"	},
-	{	.label = "HW_REV1"	},
-	{	.label = "HW_REV2"	},
-	{	.label = "HW_REV3"	}
-};
-#endif
 
 static struct gpio mute_ic = {
 	.flags = GPIOF_OUT_INIT_LOW,
@@ -1298,12 +1280,6 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 #endif
 
 	int ret;
-/* Some variables for the board revision detecting */
-#ifdef HW_REVISION_DISTINGUISHER
-	int distNum = 4;
-	int i;
-	int hwRev = 0;
-#endif
 
 	the_codec = codec;
 
@@ -1442,19 +1418,6 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 
 	/* Must re-set the hidden registers for ensure the vmid level. */
 	omap4_set_wm1811_hidden_register(control);
-
-/* Determines the revision of HW by itself when initializing. */
-#ifdef HW_REVISION_DISTINGUISHER
-	for (i = 0; i < distNum; i++)
-		hwRev |= gpio_get_value(
-			omap_muxtbl_get_gpio_by_name(
-				hw_rev_gpio[i].label)) << i;
-
-	if (hwRev >= 6)
-		board_mclk = 38400000;
-	else
-		board_mclk = 26000000;
-#endif
 
 	return snd_soc_dapm_sync(dapm);
 }
