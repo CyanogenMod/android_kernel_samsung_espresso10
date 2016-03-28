@@ -12,15 +12,9 @@
 # GNU General Public License for more details.
 #
 
-config MACH_OMAP_SAMSUNG
-	bool "OMAP based Samsung Board Type"
-	depends on ARCH_OMAP2 || ARCH_OMAP3 || ARCH_OMAP4
-	default n
-
 config MACH_OMAP4_SAMSUNG
 	bool "OMAP4 based Samsung Board"
 	depends on ARCH_OMAP4
-	select MACH_OMAP_SAMSUNG
 	select OMAP_PACKAGE_CBL
 	select OMAP_PACKAGE_CBS
 	select REGULATOR_FIXED_VOLTAGE
@@ -68,7 +62,6 @@ config OMAP_STMPE_NR
 		are also used if number of GPIOs are not enough on OMAP.
 
 menu "OMAP Samsung Specific Configurations"
-	depends on MACH_OMAP_SAMSUNG
 
 config SAMSUNG_CONSOLE_UART
 	int "used console uart port"

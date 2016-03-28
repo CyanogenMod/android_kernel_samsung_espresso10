@@ -40,7 +40,7 @@
 #include <linux/uaccess.h>
 #include <linux/syscalls.h>
 
-#include "../../../arch/arm/mach-omap2/sec_common.h"
+#include "../../../arch/arm/mach-omap2/board-espresso.h"
 
 #if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 #define TSP_VENDOR			"SYNAPTICS"

@@ -40,7 +40,7 @@
 #include <linux/touchscreen/melfas.h>
 #include <linux/platform_data/sec_ts.h>
 
-#include "../../../arch/arm/mach-omap2/sec_common.h"
+#include "../../../arch/arm/mach-omap2/board-espresso.h"
 
 #if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 #define TSP_VENDOR			"MELFAS"
