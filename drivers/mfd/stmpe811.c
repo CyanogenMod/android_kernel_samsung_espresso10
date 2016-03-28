@@ -175,34 +175,6 @@ adc_get_fail:
 }
 EXPORT_SYMBOL(stmpe811_adc_get_value);
 
-static ssize_t adc_test_show(struct device *dev, struct device_attribute *attr,
-								char *buf)
-{
-	return sprintf(buf, "%s\n", "adc_test_show");
-}
-
-static ssize_t adc_test_store(struct device *dev, struct device_attribute *attr,
-						const char *buf, size_t count)
-{
-	int mode;
-	int val;
-
-	sscanf(buf, "%d", &mode);
-
-	if (mode < 0 || mode > 3) {
-		pr_err("invalid channel: %d", mode);
-		return -EINVAL;
-	}
-
-	val = stmpe811_adc_get_value((u8)mode);
-	pr_info("value from ch%d: %d", mode, val);
-
-	return count;
-}
-
-static DEVICE_ATTR(adc_test, S_IRUGO | S_IWUSR | S_IWGRP,
-		adc_test_show, adc_test_store);
-
 static int __init stmpe811_adc_init(void)
 {
 	int ret = 0;
@@ -216,20 +188,6 @@ static int __init stmpe811_adc_init(void)
 		return ret;
 	}
 
-	/* set sysfs for adc test mode*/
-	sec_adc_dev = device_create(sec_class, NULL, 0, NULL, "sec_adc");
-	if (IS_ERR(sec_adc_dev)) {
-		pr_err("failed to create device!\n");
-		goto  err_dev;
-	}
-
-	ret = device_create_file(sec_adc_dev, &dev_attr_adc_test);
-	if (ret < 0) {
-		pr_err("failed to create device file(%s)!\n",
-						dev_attr_adc_test.attr.name);
-		goto err_attr;
-	}
-
 	if (i2c_add_driver(&stmpe811_adc_i2c_driver)) {
 		pr_err("%s: Can't add fg i2c drv\n", __func__);
 		goto err_i2c;
@@ -238,10 +196,6 @@ static int __init stmpe811_adc_init(void)
 	return 0;
 
 err_i2c:
-	device_remove_file(sec_adc_dev, &dev_attr_adc_test);
-err_attr:
-	device_destroy(sec_class, sec_adc_dev->devt);
-err_dev:
 	misc_deregister(&stmpe811_adc_device);
 
 	return ret;
@@ -252,9 +206,6 @@ static void __init stmpe811_adc_exit(void)
 	pr_info("exit!");
 
 	i2c_del_driver(&stmpe811_adc_i2c_driver);
-
-	device_remove_file(sec_adc_dev, &dev_attr_adc_test);
-	device_destroy(sec_class, 0);
 
 	misc_deregister(&stmpe811_adc_device);
 }

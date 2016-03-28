@@ -16,8 +16,6 @@
 #ifndef __LINUX_MFD_STMPE811_H
 #define __LINUX_MFD_STMPE811_H
 
-extern struct class *sec_class;
-
 extern int stmpe811_adc_get_value(u8 channel);
 
 #endif
