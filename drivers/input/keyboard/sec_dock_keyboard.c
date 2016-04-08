@@ -402,6 +402,7 @@ static int dock_keyboard_cb(struct input_dev *dev, bool connected)
 	struct dock_keyboard_data *data = input_get_drvdata(dev);
 	int try_cnt = 0;
 	int max_cnt = 10;
+	int ret;
 
 	if (!connected)
 		data->dockconnected = false;
@@ -443,9 +444,13 @@ static int dock_keyboard_cb(struct input_dev *dev, bool connected)
 		}
 	}
 
-	if (data->dockconnected)
+	if (data->dockconnected) {
+		ret = input_register_device(data->input_dev);
+		if (unlikely(ret))
+			pr_err("kbd: failed to register input device.\n");
 		return 1;
-	else {
+	} else {
+		input_unregister_device(data->input_dev);
 		cancel_delayed_work_sync(&data->dwork_off);
 		schedule_delayed_work(&data->dwork_off, HZ * 2 / 3);
 		return 0;
@@ -534,12 +539,6 @@ static int __devinit dock_keyboard_probe(struct platform_device *pdev)
 	input_set_capability(input, EV_KEY, KEY_NEXTSONG);
 	input_set_capability(input, EV_KEY, KEY_PREVIOUSSONG);
 
-	ret = input_register_device(data->input_dev);
-	if (unlikely(ret)) {
-		pr_err("kbd: failed to register input device.\n");
-		goto err_reg_input_dev;
-	}
-
 	data->dock_irq_gpio = pdata->dock_irq_gpio;
 	data->power = pdata->power;
 
@@ -572,8 +571,6 @@ err_reg_serio_drv:
 #endif
 	if (pdata->register_cb)
 		pdata->register_cb(NULL, NULL);
-	input_unregister_device(input);
-err_reg_input_dev:
 	input_free_device(input);
 	input_set_drvdata(input, NULL);
 err_alloc_input_dev:
