@@ -56,7 +56,6 @@ struct touch_key {
  * @gpio_sda : physical gpio using to i2c communication
  * @set_ta_mode : callback function when TA, USB connected or disconnected
  * @set_power : control touch screen IC power gpio pin
- * @set_dvfs : force control AP frequency
  */
 struct sec_ts_platform_data {
 	const char *panel_name;
@@ -79,6 +78,5 @@ struct sec_ts_platform_data {
 	u32 gpio_sda;
 	void (*set_ta_mode)(int *);
 	void (*set_power)(bool);
-	void (*set_dvfs)(bool);
 };
 #endif

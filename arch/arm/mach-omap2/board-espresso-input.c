@@ -26,8 +26,6 @@
 #include <asm/mach-types.h>
 #include <plat/omap4-keypad.h>
 
-#include <mach/cpufreq_limits.h>
-
 #include "board-espresso.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
@@ -390,23 +388,6 @@ void omap4_espresso_tsp_ta_detect(int cable_type)
 	return;
 }
 
-static void espresso_set_dvfs(bool on)
-{
-#ifdef CONFIG_TOUCH_DVFS
-	if (!board_is_espresso10()) {
-		static bool is_on;
-
-		if (on && !is_on) {
-			omap_cpufreq_min_limit(DVFS_LOCK_ID_TSP, CONFIG_TOUCH_DVFS);
-			is_on = true;
-		} else if (!on && is_on) {
-			omap_cpufreq_min_limit_free(DVFS_LOCK_ID_TSP);
-			is_on = false;
-		}
-	}
-#endif
-}
-
 void __init omap4_espresso_input_init(void)
 {
 	espresso_gpio_keypad_gpio_init();
@@ -425,8 +406,4 @@ void __init omap4_espresso_input_init(void)
 	espresso_create_sec_key_dev();
 
 	platform_device_register(&espresso_gpio_keypad_device);
-
-	if (!board_is_espresso10()) {
-		espresso_ts_pdata.set_dvfs = espresso_set_dvfs;
-	}
 }

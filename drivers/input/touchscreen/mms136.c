@@ -147,8 +147,6 @@ static void reset_points(struct ts_data *ts)
 									false);
 	}
 	input_sync(ts->input_dev);
-	if (ts->platform_data->set_dvfs)
-		ts->platform_data->set_dvfs(false);
 	tsp_log("reset_all_fingers");
 	return;
 }
@@ -1236,10 +1234,6 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 #endif
 		}
 	}
-
-	if (ts->platform_data->set_dvfs)
-		ts->platform_data->set_dvfs(!!cnt);
-
 	return IRQ_HANDLED;
 }
 
