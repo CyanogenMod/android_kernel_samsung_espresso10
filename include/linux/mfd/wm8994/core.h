@@ -102,6 +102,8 @@ static inline int wm8994_request_irq(struct wm8994 *wm8994, int irq,
 				     irq_handler_t handler, const char *name,
 				     void *data)
 {
+	if (!wm8994)
+		return -EINVAL;
 	if (!wm8994->irq_base)
 		return -EINVAL;
 	return request_threaded_irq(wm8994->irq_base + irq, NULL, handler,

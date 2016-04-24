@@ -115,7 +115,8 @@ static void wm8958_micd_set_rate(struct snd_soc_codec *codec)
 	const struct wm8958_micd_rate *rates;
 	int num_rates;
 
-	if (wm8994->jack_cb != wm8958_default_micdet)
+	if (!(wm8994->pdata && wm8994->pdata->micd_rates) &&
+	    wm8994->jack_cb != wm8958_default_micdet)
 		return;
 
 	idle = !wm8994->jack_mic;
@@ -151,6 +152,10 @@ static void wm8958_micd_set_rate(struct snd_soc_codec *codec)
 	val = rates[best].start << WM8958_MICD_BIAS_STARTTIME_SHIFT
 		| rates[best].rate << WM8958_MICD_RATE_SHIFT;
 
+	dev_dbg(codec->dev, "MICD rate %d,%d for %dHz %s\n",
+		rates[best].start, rates[best].rate, sysclk,
+		idle ? "idle" : "active");
+
 	snd_soc_update_bits(codec, WM8958_MIC_DETECT_1,
 			    WM8958_MICD_BIAS_STARTTIME_MASK |
 			    WM8958_MICD_RATE_MASK, val);
@@ -175,6 +180,8 @@ static int wm8994_readable(struct snd_soc_codec *codec, unsigned int reg)
 	case WM8994_GPIO_11:
 	case WM8994_INTERRUPT_STATUS_1:
 	case WM8994_INTERRUPT_STATUS_2:
+	case WM8994_INTERRUPT_STATUS_1_MASK:
+	case WM8994_INTERRUPT_STATUS_2_MASK:
 	case WM8994_INTERRUPT_RAW_STATUS_2:
 		return 1;
 
@@ -311,7 +318,7 @@ static int configure_aif_clock(struct snd_soc_codec *codec, int aif)
 static int configure_clock(struct snd_soc_codec *codec)
 {
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
-	int change, new;
+	int new, change;
 
 	/* Bring up the AIF clocks first */
 	configure_aif_clock(codec, 0);
@@ -2156,6 +2163,7 @@ static int _wm8994_set_fll(struct snd_soc_codec *codec, int id, int src,
 	u16 reg, clk1, aif_reg, aif_src;
 	unsigned long timeout;
 	bool was_enabled;
+	dev_dbg(codec->dev, "%s ++\n", __func__);
 
 	switch (id) {
 	case WM8994_FLL1:
@@ -2228,7 +2236,7 @@ static int _wm8994_set_fll(struct snd_soc_codec *codec, int id, int src,
 			    WM8994_FLL1_ENA, 0);
 
 	if (wm8994->fll_byp && src == WM8994_FLL_SRC_BCLK &&
-	    freq_in == freq_out) {
+	    freq_in == freq_out && freq_out) {
 		dev_dbg(codec->dev, "Bypassing FLL%d\n", id + 1);
 		snd_soc_update_bits(codec, WM8994_FLL1_CONTROL_5 + reg_offset,
 				    WM8958_FLL1_BYP, WM8958_FLL1_BYP);
@@ -2318,7 +2326,7 @@ out:
 	wm8994->fll[id].src = src;
 
 	configure_clock(codec);
-
+	dev_dbg(codec->dev, "%s --\n", __func__);
 	return 0;
 }
 
@@ -2473,8 +2481,9 @@ static int wm8994_set_bias_level(struct snd_soc_codec *codec,
 				break;
 
 			case WM1811:
-				if (wm8994->revision < 2) {
+				if (wm8994->revision < 4) {
 					snd_soc_write(codec, 0x102, 0x3);
+					snd_soc_write(codec, 0x56, 0x7);
 					snd_soc_write(codec, 0x5d, 0x7e);
 					snd_soc_write(codec, 0x5e, 0x0);
 					snd_soc_write(codec, 0x102, 0x0);
@@ -2715,6 +2724,7 @@ static int wm8994_hw_params(struct snd_pcm_substream *substream,
 			    struct snd_soc_dai *dai)
 {
 	struct snd_soc_codec *codec = dai->codec;
+	struct wm8994 *control = codec->control_data;
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 	int aif1_reg;
 	int aif2_reg;
@@ -2757,6 +2767,15 @@ static int wm8994_hw_params(struct snd_pcm_substream *substream,
 			dev_dbg(codec->dev, "AIF2 using split LRCLK\n");
 		}
 		break;
+	case 3:
+		switch (control->type) {
+		case WM1811:
+		case WM8958:
+			aif1_reg = WM8958_AIF3_CONTROL_1;
+			break;
+		default:
+			return 0;
+		}
 	default:
 		return -EINVAL;
 	}
@@ -2924,6 +2943,9 @@ static int wm8994_aif_mute(struct snd_soc_dai *codec_dai, int mute)
 		break;
 	case 2:
 		mute_reg = WM8994_AIF2_DAC_FILTERS_1;
+		if (snd_soc_read(codec, WM8994_POWER_MANAGEMENT_6)
+			& WM8994_AIF2_DACDAT_SRC)
+			mute = 0;
 		break;
 	default:
 		return -EINVAL;
@@ -3069,7 +3091,7 @@ static struct snd_soc_dai_driver wm8994_dai[] = {
 };
 
 #ifdef CONFIG_PM
-static int wm8994_codec_suspend(struct snd_soc_codec *codec)
+static int wm8994_codec_suspend(struct snd_soc_codec *codec, pm_message_t state)
 {
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 	struct wm8994 *control = codec->control_data;
@@ -3420,8 +3442,6 @@ static void wm8958_default_micdet(u16 status, void *data)
 	struct snd_soc_codec *codec = data;
 	struct wm8994_priv *wm8994 = snd_soc_codec_get_drvdata(codec);
 	int report;
-
-	dev_dbg(codec->dev, "MICDET %x\n", status);
 
 	/* Either nothing present or just starting detection */
 	if (!(status & WM8958_MICD_STS)) {
@@ -3891,6 +3911,7 @@ static int wm8994_codec_probe(struct snd_soc_codec *codec)
 		break;
 	}
 
+#ifdef CONFIG_SND_SOC_WM8994_IRQ
 	wm8994_request_irq(codec->control_data, WM8994_IRQ_FIFOS_ERR,
 			   wm8994_fifo_error, "FIFO error", codec);
 	wm8994_request_irq(codec->control_data, WM8994_IRQ_TEMP_WARN,
@@ -3903,6 +3924,7 @@ static int wm8994_codec_probe(struct snd_soc_codec *codec)
 				 &wm8994->hubs);
 	if (ret == 0)
 		wm8994->hubs.dcs_done_irq = true;
+#endif
 
 	switch (control->type) {
 	case WM8994:
@@ -3954,28 +3976,35 @@ static int wm8994_codec_probe(struct snd_soc_codec *codec)
 						   IRQF_TRIGGER_RISING,
 						   "Mic detect",
 						   wm8994);
-			if (ret != 0)
+			if (ret != 0) {
 				dev_warn(codec->dev,
 					 "Failed to request Mic detect IRQ: %d\n",
 					 ret);
+			}
 		}
 	}
 
 	switch (control->type) {
 	case WM1811:
 		if (wm8994->revision > 1) {
-			ret = wm8994_request_irq(wm8994->wm8994,
+			ret = wm8994_request_irq(codec->control_data,
 						 WM8994_IRQ_GPIO(6),
 						 wm1811_jackdet_irq, "JACKDET",
 						 wm8994);
-			if (ret == 0)
+			if (ret == 0) {
 				wm8994->jackdet = true;
+			} else {
+				dev_warn(codec->dev,
+					 "Failed to request Jack detect IRQ: %d\n",
+					 ret);
+			}
 		}
 		break;
 	default:
 		break;
 	}
 
+#ifdef CONFIG_SND_SOC_WM8994_IRQ
 	wm8994->fll_locked_irq = true;
 	for (i = 0; i < ARRAY_SIZE(wm8994->fll_locked); i++) {
 		ret = wm8994_request_irq(codec->control_data,
@@ -3985,6 +4014,7 @@ static int wm8994_codec_probe(struct snd_soc_codec *codec)
 		if (ret != 0)
 			wm8994->fll_locked_irq = false;
 	}
+#endif
 
 	/* Remember if AIFnLRCLK is configured as a GPIO.  This should be
 	 * configured on init - if a system wants to do this dynamically
@@ -4213,7 +4243,8 @@ static int  wm8994_codec_remove(struct snd_soc_codec *codec)
 	wm8994_free_irq(codec->control_data, WM8994_IRQ_TEMP_WARN, codec);
 
 	if (wm8994->jackdet)
-		wm8994_free_irq(wm8994->wm8994, WM8994_IRQ_GPIO(6), wm8994);
+		wm8994_free_irq(wm8994->control_data, WM8994_IRQ_GPIO(6),
+				wm8994);
 
 	switch (control->type) {
 	case WM8994:
@@ -4282,9 +4313,9 @@ static int wm8994_suspend(struct device *dev)
 
 	/* Drop down to power saving mode when system is suspended */
 	if (wm8994->jackdet && !wm8994->active_refcount)
-		regmap_update_bits(wm8994->wm8994->regmap, WM8994_ANTIPOP_2,
-				   WM1811_JACKDET_MODE_MASK,
-				   wm8994->jackdet_mode);
+		snd_soc_update_bits(wm8994->codec, WM8994_ANTIPOP_2,
+				    WM1811_JACKDET_MODE_MASK,
+				    wm8994->jackdet_mode);
 
 	return 0;
 }
@@ -4293,16 +4324,18 @@ static int wm8994_resume(struct device *dev)
 {
 	struct wm8994_priv *wm8994 = dev_get_drvdata(dev);
 
-	if (wm8994->jackdet && wm8994->jack_cb)
-		regmap_update_bits(wm8994->wm8994->regmap, WM8994_ANTIPOP_2,
-				   WM1811_JACKDET_MODE_MASK,
-				   WM1811_JACKDET_MODE_AUDIO);
+	if (wm8994->jackdet && wm8994->jack_cb) {
+		snd_soc_update_bits(wm8994->codec, WM8994_ANTIPOP_2,
+				    WM1811_JACKDET_MODE_MASK,
+				    WM1811_JACKDET_MODE_AUDIO);
+		msleep(2);
+	}
 
 	return 0;
 }
 #endif
 
-static const struct dev_pm_ops wm8994_pm_ops = {
+static struct dev_pm_ops wm8994_pm_ops = {
 	SET_SYSTEM_SLEEP_PM_OPS(wm8994_suspend, wm8994_resume)
 };
 

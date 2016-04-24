@@ -142,6 +142,7 @@ struct wm8994_pdata {
 	struct wm8994_ldo_pdata ldo[WM8994_NUM_LDO];
 
 	int irq_base;  /** Base IRQ number for WM8994, required for IRQs */
+	unsigned long irq_flags; /** user irq flags */
 
         int num_drc_cfgs;
         struct wm8994_drc_cfg *drc_cfgs;
@@ -163,6 +164,8 @@ struct wm8994_pdata {
 
 	int num_micd_rates;
 	struct wm8958_micd_rate *micd_rates;
+
+	bool use_submic;
 
         /* LINEOUT can be differential or single ended */
         unsigned int lineout1_diff:1;
@@ -200,6 +203,11 @@ struct wm8994_pdata {
 	 * consumption will rise.
 	 */
 	bool ldo_ena_always_driven;
+
+	/*
+	 * LDO enable delay time
+	 */
+	int ldo_ena_delay;
 
 	/*
 	 * SPKMODE must be pulled internally by the device on this

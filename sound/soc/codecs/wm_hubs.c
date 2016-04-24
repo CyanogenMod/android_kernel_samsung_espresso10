@@ -937,14 +937,14 @@ static const struct snd_soc_dapm_route analogue_routes[] = {
 	{ "MIXINL", "IN2L Switch", "IN2L PGA" },
 	{ "MIXINL", NULL, "Direct Voice" },
 	{ "MIXINL", NULL, "IN1LP" },
-	{ "MIXINL", NULL, "Left Output Mixer" },
+/*	{ "MIXINL", NULL, "Left Output Mixer" }, */
 	{ "MIXINL", NULL, "VMID" },
 
 	{ "MIXINR", "IN1R Switch", "IN1R PGA" },
 	{ "MIXINR", "IN2R Switch", "IN2R PGA" },
 	{ "MIXINR", NULL, "Direct Voice" },
 	{ "MIXINR", NULL, "IN1RP" },
-	{ "MIXINR", NULL, "Right Output Mixer" },
+/*	{ "MIXINR", NULL, "Right Output Mixer" }, */
 	{ "MIXINR", NULL, "VMID" },
 
 	{ "ADCL", NULL, "MIXINL" },

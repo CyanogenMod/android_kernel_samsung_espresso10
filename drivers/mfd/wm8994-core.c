@@ -26,6 +26,9 @@
 #include <linux/mfd/wm8994/pdata.h>
 #include <linux/mfd/wm8994/registers.h>
 
+#include <linux/gpio.h>
+#include <linux/input.h>
+
 static int wm8994_read(struct wm8994 *wm8994, unsigned short reg,
 		       int bytes, void *dest)
 {
@@ -369,6 +372,14 @@ static int wm8994_device_suspend(struct device *dev)
 	 */
 	wm8994_reg_write(wm8994, WM8994_SOFTWARE_RESET, 0x8994);
 
+	/* Restore GPIO registers to prevent problems with mismatched
+	 * pin configurations.
+	 */
+	ret = wm8994_write(wm8994, WM8994_GPIO_1, WM8994_NUM_GPIO_REGS * 2,
+			   &wm8994->gpio_regs);
+	if (ret < 0)
+		dev_err(dev, "Failed to restore GPIO registers: %d\n", ret);
+
 	wm8994->suspended = true;
 
 	ret = regulator_bulk_disable(wm8994->num_supplies,
@@ -533,7 +544,9 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
 	if (ret < 0) {
 		dev_err(wm8994->dev, "Failed to read ID register\n");
 		goto err_enable;
-	}
+	} else
+		dev_info(wm8994->dev, "Succeeded to read ID register\n");
+
 	switch (ret) {
 	case 0x1811:
 		devname = "WM1811";
@@ -541,6 +554,18 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
 			dev_warn(wm8994->dev, "Device registered as type %d\n",
 				 wm8994->type);
 		wm8994->type = WM1811;
+
+		/* Samsung-specific customization of MICBIAS levels */
+		wm8994_reg_write(wm8994, 0x102, 0x3);
+		wm8994_reg_write(wm8994, 0xcb, 0x5151);
+		wm8994_reg_write(wm8994, 0xd3, 0x3f3f);
+		wm8994_reg_write(wm8994, 0xd4, 0x3f3f);
+		wm8994_reg_write(wm8994, 0xd5, 0x3f3f);
+		wm8994_reg_write(wm8994, 0xd6, 0x3226);
+		wm8994_reg_write(wm8994, 0x102, 0x0);
+		wm8994_reg_write(wm8994, 0xd1, 0x87);
+		wm8994_reg_write(wm8994, 0x3b, 0x9);
+		wm8994_reg_write(wm8994, 0x3c, 0x2);
 		break;
 	case 0x8994:
 		devname = "WM8994";
@@ -663,7 +688,6 @@ err_supplies:
 	kfree(wm8994->supplies);
 err:
 	mfd_remove_devices(wm8994->dev);
-	kfree(wm8994);
 	return ret;
 }
 
@@ -700,12 +724,23 @@ static int wm8994_i2c_read_device(struct wm8994 *wm8994, unsigned short reg,
 	return 0;
 }
 
-static int wm8994_i2c_write_device(struct wm8994 *wm8994, unsigned short reg,
+static int wm8994_i2c_gather_write_device(struct wm8994 *wm8994, unsigned short reg,
 				   int bytes, const void *src)
 {
 	struct i2c_client *i2c = wm8994->control_data;
 	struct i2c_msg xfer[2];
 	int ret;
+
+	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_PROTOCOL_MANGLING)) {
+		dev_vdbg(wm8994->dev,
+			 "%s: I2C Controller does _NOT_ support block/gather\n",
+			 __func__);
+                return -ENOTSUPP;
+	}
+
+	dev_vdbg(wm8994->dev,
+		 "%s:  gather write - Reg = 0x%04x, bytes = 0x%x\n",
+		 __func__, reg, bytes);
 
 	reg = cpu_to_be16(reg);
 
@@ -728,6 +763,66 @@ static int wm8994_i2c_write_device(struct wm8994 *wm8994, unsigned short reg,
 	return 0;
 }
 
+static int wm8994_i2c_write_device(struct wm8994 *wm8994, unsigned short reg,
+				   int bytes, const void *src)
+{
+	struct i2c_client *i2c = wm8994->control_data;
+	int ret;
+
+	unsigned char msg[2 + 2];
+	void *buf;
+
+	/* If we're doing a single register write we can probably just
+	 * send the work_buf directly, otherwise try to do a gather
+	 * write.
+	 */
+	if (bytes == 2) {
+		dev_vdbg(wm8994->dev,
+			 "%s: Single register write - Reg = 0x%04x, bytes = 0x%x\n",
+			 __func__, reg, bytes);
+
+		reg = cpu_to_be16(reg);
+		memcpy(&msg[0], &reg, 2);
+		memcpy(&msg[2], src, bytes);
+
+		ret = i2c_master_send(i2c, msg, bytes + 2);
+		if (ret < 0)
+			return ret;
+		if (ret < bytes + 2)
+			return -EIO;
+
+		return 0;
+	} else {
+		ret = wm8994_i2c_gather_write_device(wm8994, reg, bytes, src);
+	}
+
+	if (ret == -ENOTSUPP) {
+		dev_vdbg(wm8994->dev,
+			 "%s: Manual group write - Reg = 0x%04x, bytes = 0x%x\n",
+			 __func__, reg, bytes);
+
+		buf = kmalloc(2 + bytes, GFP_KERNEL);
+		if (!buf)
+			return -ENOMEM;
+
+		reg = cpu_to_be16(reg);
+		memcpy(buf, &reg, 2);
+		memcpy(buf + 2, src, bytes);
+
+		ret = i2c_master_send(i2c, buf, bytes + 2);
+
+		kfree(buf);
+
+		if (ret < 0)
+			return ret;
+		if (ret < bytes + 2)
+			return -EIO;
+
+		return 0;
+	}
+	return ret;
+}
+
 static int wm8994_i2c_probe(struct i2c_client *i2c,
 			    const struct i2c_device_id *id)
 {
@@ -745,7 +840,12 @@ static int wm8994_i2c_probe(struct i2c_client *i2c,
 	wm8994->irq = i2c->irq;
 	wm8994->type = id->driver_data;
 
-	return wm8994_device_init(wm8994, i2c->irq);
+	if (wm8994_device_init(wm8994, i2c->irq) < 0) {
+		kfree(wm8994);
+		return -ENODEV;
+	}
+
+	return 0;
 }
 
 static int wm8994_i2c_remove(struct i2c_client *i2c)
