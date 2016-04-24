@@ -278,7 +278,7 @@ static const char *wm8958_main_supplies[] = {
 };
 
 #ifdef CONFIG_PM
-static int wm8994_suspend(struct device *dev)
+static int wm8994_device_suspend(struct device *dev)
 {
 	struct wm8994 *wm8994 = dev_get_drvdata(dev);
 	int ret;
@@ -381,7 +381,7 @@ static int wm8994_suspend(struct device *dev)
 	return 0;
 }
 
-static int wm8994_resume(struct device *dev)
+static int wm8994_device_resume(struct device *dev)
 {
 	struct wm8994 *wm8994 = dev_get_drvdata(dev);
 	int ret, i;
@@ -757,6 +757,21 @@ static int wm8994_i2c_remove(struct i2c_client *i2c)
 	return 0;
 }
 
+#ifdef CONFIG_PM
+static int wm8994_i2c_suspend(struct i2c_client *i2c, pm_message_t state)
+{
+	return wm8994_device_suspend(&i2c->dev);
+}
+
+static int wm8994_i2c_resume(struct i2c_client *i2c)
+{
+	return wm8994_device_resume(&i2c->dev);
+}
+#else
+#define wm8994_i2c_suspend NULL
+#define wm8994_i2c_resume NULL
+#endif
+
 static const struct i2c_device_id wm8994_i2c_id[] = {
 	{ "wm1811", WM1811 },
 	{ "wm8994", WM8994 },
@@ -765,16 +780,15 @@ static const struct i2c_device_id wm8994_i2c_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, wm8994_i2c_id);
 
-UNIVERSAL_DEV_PM_OPS(wm8994_pm_ops, wm8994_suspend, wm8994_resume, NULL);
-
 static struct i2c_driver wm8994_i2c_driver = {
 	.driver = {
 		.name = "wm8994",
 		.owner = THIS_MODULE,
-		.pm = &wm8994_pm_ops,
 	},
 	.probe = wm8994_i2c_probe,
 	.remove = wm8994_i2c_remove,
+	.suspend = wm8994_i2c_suspend,
+	.resume = wm8994_i2c_resume,
 	.id_table = wm8994_i2c_id,
 };
 
