@@ -409,6 +409,9 @@ static int ltn_start(struct omap_dss_device *dssdev)
 
 static void ltn_stop(struct omap_dss_device *dssdev)
 {
+	if (dssdev->state != OMAP_DSS_DISPLAY_ACTIVE)
+		return;
+
 	dev_dbg(&dssdev->dev, "stop\n");
 
 	dssdev->manager->disable(dssdev->manager);
@@ -452,21 +455,16 @@ static void ltn_panel_disable(struct omap_dss_device *dssdev)
 static int ltn_panel_suspend(struct omap_dss_device *dssdev)
 {
 	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
-	int ret = 0;
 
 	dev_dbg(&dssdev->dev, "suspend\n");
 
 	mutex_lock(&lcd->lock);
-	if (dssdev->state != OMAP_DSS_DISPLAY_ACTIVE) {
-		ret = -EINVAL;
-		goto out;
-	}
 
 	ltn_stop(dssdev);
 	dssdev->state = OMAP_DSS_DISPLAY_SUSPENDED;
-out:
+
 	mutex_unlock(&lcd->lock);
-	return ret;
+	return 0;
 }
 
 static int ltn_panel_resume(struct omap_dss_device *dssdev)
