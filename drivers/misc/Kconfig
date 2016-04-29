@@ -544,6 +544,15 @@ config CDC_TCXO
 	help
 	  Enable support for Texas Instruments CDC TCXO CDC3S04
 
+config SAMSUNG_JACK
+	bool "3.5MM ear jack driver for Samsung devices"
+	depends on INPUT
+	default n
+	---help---
+	 This is 3.5MM ear jack driver for Samsung devices.
+
+	 If unsure, say N.
+
 config SEC_30PIN_CON
 	bool "Samsung 30-pin connector support for tablet devices"
 	help

@@ -60,3 +60,4 @@ obj-$(CONFIG_CACHE2DMANAGER)	+= cache-2dmanager/
 obj-$(CONFIG_UID_CPUTIME)	+= uid_cputime.o
 obj-$(CONFIG_SEC_30PIN_CON)	+= 30pin_con.o
 obj-$(CONFIG_SEC_MODEM_V2)	+= modem_if_v2/
+obj-$(CONFIG_SAMSUNG_JACK)	+= sec_jack.o
