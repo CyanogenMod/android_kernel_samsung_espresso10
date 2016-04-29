@@ -544,6 +544,15 @@ config CDC_TCXO
 	help
 	  Enable support for Texas Instruments CDC TCXO CDC3S04
 
+config SEC_30PIN_CON
+	bool "Samsung 30-pin connector support for tablet devices"
+	help
+	  This feature add an infratructure to control and detecting 30-pin
+	  connector for Samsung Tablet devices. Many optional devices can be
+	  connected throu out this connector for example TA/USB/DOCK etc. to
+	  support accessary devices for Samsunt Tablet device this feature
+	  must be enabled.
+
 config UID_CPUTIME
 	tristate "Per-UID cpu time statistics"
 	depends on PROFILING
