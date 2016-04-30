@@ -350,6 +350,9 @@ void __init twl6030_power_init(struct twl4030_power_data *power_data, \
 	if (power_data && power_data->sys_config)
 		twl6030_update_system_map(power_data->sys_config);
 
+	if (power_data && power_data->twl4030_board_init)
+		power_data->twl4030_board_init();
+
 	twl6030_process_system_config();
 
 	twl6030_program_map(features);

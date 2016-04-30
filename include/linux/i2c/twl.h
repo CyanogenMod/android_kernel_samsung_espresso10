@@ -748,6 +748,7 @@ struct twl4030_power_data {
 	unsigned num;				/* used in TWL4030 only */
 	struct twl4030_resconfig *resource_config;
 	struct twl4030_system_config *sys_config; /*system resources*/
+	void (*twl4030_board_init)(void); /* pmic init function */
 #define TWL4030_RESCONFIG_UNDEF	((u8)-1)
 };
 
