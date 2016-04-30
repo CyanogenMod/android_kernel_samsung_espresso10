@@ -315,8 +315,13 @@ static struct omap_voltdm_pmic omap443x_446x_iva_pmic = {
 	.max_volt		= 1418000,
 	.vp_timeout_us		= OMAP4_VP_VLIMITTO_TIMEOUT_US,
 	.i2c_slave_addr		= TWL6030_SRI2C_SLAVE_ADDR,
+#ifdef CONFIG_MACH_OMAP4_ESPRESSO
+	.volt_reg_addr		= TWL6032_SMPS5_SR_VOLT_REG,
+	.cmd_reg_addr		= TWL6032_SMPS5_SR_CMD_REG,
+#else
 	.volt_reg_addr		= TWL6030_VCORE2_SR_VOLT_REG,
 	.cmd_reg_addr		= TWL6030_VCORE2_SR_CMD_REG,
+#endif
 	.i2c_high_speed		= true,
 	.i2c_scll_low		= 0x28,
 	.i2c_scll_high		= 0x2C,
@@ -369,8 +374,13 @@ static struct omap_voltdm_pmic omap443x_core_pmic = {
 	.max_volt		= 1418000,
 	.vp_timeout_us		= OMAP4_VP_VLIMITTO_TIMEOUT_US,
 	.i2c_slave_addr		= TWL6030_SRI2C_SLAVE_ADDR,
+#ifdef CONFIG_MACH_OMAP4_ESPRESSO
+	.volt_reg_addr		= TWL6032_SMPS2_SR_VOLT_REG,
+	.cmd_reg_addr		= TWL6032_SMPS2_SR_CMD_REG,
+#else
 	.volt_reg_addr		= TWL6030_VCORE3_SR_VOLT_REG,
 	.cmd_reg_addr		= TWL6030_VCORE3_SR_CMD_REG,
+#endif
 	.i2c_high_speed		= true,
 	.i2c_scll_low		= 0x28,
 	.i2c_scll_high		= 0x2C,
