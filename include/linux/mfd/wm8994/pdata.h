@@ -166,6 +166,11 @@ struct wm8994_pdata {
 	struct wm8958_micd_rate *micd_rates;
 
 	bool use_submic;
+	int submic_gpio;
+
+	int ear_select_gpio;
+	int main_mic_bias_gpio;
+	int mclk_gpio;
 
         /* LINEOUT can be differential or single ended */
         unsigned int lineout1_diff:1;
