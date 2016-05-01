@@ -738,7 +738,7 @@ add_children(struct twl4030_platform_data *pdata, unsigned long features,
 		 */
 		sub_chip_id = twl_map[TWL_MODULE_RTC].sid;
 		child = add_child(sub_chip_id, "twl_rtc",
-				NULL, 0,
+				pdata->rtc, sizeof(*pdata->rtc),
 				true, pdata->irq_base + RTC_INTR_OFFSET, 0);
 		if (IS_ERR(child))
 			return PTR_ERR(child);

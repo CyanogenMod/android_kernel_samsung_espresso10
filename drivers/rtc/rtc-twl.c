@@ -453,9 +453,11 @@ static struct rtc_class_ops twl_rtc_ops = {
 static int __devinit twl_rtc_probe(struct platform_device *pdev)
 {
 	struct rtc_device *rtc;
+	struct twl4030_rtc_data *rtc_platform_data = pdev->dev.platform_data;
 	int ret = -EINVAL;
 	int irq = platform_get_irq(pdev, 0);
-	u8 rd_reg;
+	u8 rd_reg, lsb_value, msb_value, control;
+	s16 comp_value;
 
 	if (irq <= 0)
 		goto out1;
@@ -527,6 +529,33 @@ static int __devinit twl_rtc_probe(struct platform_device *pdev)
 		dev_warn(&pdev->dev, "Cannot enable wakeup for IRQ %d\n", irq);
 
 	platform_set_drvdata(pdev, rtc);
+
+	if (rtc_platform_data && rtc_platform_data->auto_comp) {
+		comp_value = ~(rtc_platform_data->comp_value) + 1;
+		dev_dbg(&pdev->dev, "Auto Comp=0x%x,  2's-Complement=0x%x\n",
+				rtc_platform_data->comp_value, comp_value);
+
+		lsb_value = comp_value & 0xFF;
+		msb_value = ((comp_value >> 15) << 7) |
+					((comp_value & 0xFF00) >> 8);
+
+		ret |= twl_rtc_write_u8(msb_value, REG_RTC_COMP_MSB_REG);
+		ret |= twl_rtc_write_u8(lsb_value, REG_RTC_COMP_LSB_REG);
+
+		ret |= twl_rtc_read_u8(&control, REG_RTC_CTRL_REG);
+		control |= BIT_RTC_CTRL_REG_AUTO_COMP_M;
+		ret |= twl_rtc_write_u8(control, REG_RTC_CTRL_REG);
+
+
+		ret |= twl_rtc_read_u8(&msb_value, REG_RTC_COMP_MSB_REG);
+		ret |= twl_rtc_read_u8(&lsb_value, REG_RTC_COMP_LSB_REG);
+		dev_dbg(&pdev->dev, "COMP_MSB=0x%x  COMP_LSB=0x%x\n",
+				msb_value, lsb_value);
+
+		if (ret < 0)
+			dev_err(&pdev->dev, "failed to compensate RTC clock\n");
+	}
+
 	return 0;
 
 out2:

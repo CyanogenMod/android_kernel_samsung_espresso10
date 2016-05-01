@@ -27,6 +27,7 @@
 
 #include <linux/types.h>
 #include <linux/input/matrix_keypad.h>
+#include <linux/rtc.h>
 
 /*
  * Using the twl4030 core we address registers using a pair
@@ -814,6 +815,11 @@ struct twl4030_codec_data {
 	int (*set_ext_clk32k)(bool on);
 };
 
+struct twl4030_rtc_data {
+	unsigned int	auto_comp;
+	s16		comp_value;
+};
+
 struct twl4030_platform_data {
 	unsigned				irq_base, irq_end;
 	struct twl4030_clock_init_data		*clock;
@@ -823,6 +829,7 @@ struct twl4030_platform_data {
 	struct twl4030_keypad_data		*keypad;
 	struct twl4030_usb_data			*usb;
 	struct twl4030_power_data		*power;
+	struct twl4030_rtc_data			*rtc;
 	struct twl4030_codec_data		*codec;
 
 	/* Common LDO regulators for TWL4030/TWL6030 */
