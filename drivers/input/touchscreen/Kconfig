@@ -761,4 +761,24 @@ config TOUCHSCREEN_CYPRESS_TTSP
 
 	  If unsure, say N.
 
+config TOUCHSCREEN_MELFAS_MMS136
+	tristate "MELFAS MMS136 Touchscreen Interface"
+	depends on I2C
+	help
+		Say Y here if you want support for MELFAS
+		(with legacy  MELFAS) touchscreen controllers.
+
+		To compile this driver as a module, choose M here: the
+		module will be called melfas_ts.
+
+config TOUCHSCREEN_SYNAPTICS_S7301
+	tristate "SYNAPTICS S7301 Touchscreen Interface"
+	depends on I2C
+	help
+		Say Y here if you want support for SYNAPTICS S7301
+		touchscreen controllers.
+
+		To compile this driver as a module, choose M here: the
+		module will be called synaptics_ts.
+
 endif
