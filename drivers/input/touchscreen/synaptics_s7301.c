@@ -451,7 +451,7 @@ static int __devinit ts_probe(struct i2c_client *client,
 	}
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
-	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_BLANK_SCREEN + 1;
+	ts->early_suspend.level = EARLY_SUSPEND_LEVEL_DISABLE_FB + 2;
 	ts->early_suspend.suspend = ts_early_suspend;
 	ts->early_suspend.resume = ts_late_resume;
 	register_early_suspend(&ts->early_suspend);
