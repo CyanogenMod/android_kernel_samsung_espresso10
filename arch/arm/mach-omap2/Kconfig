@@ -372,6 +372,15 @@ config MACH_OMAP4_PANDA
 	select OMAP_REBOOT_REASON
 	select OMAP_RAM_CONSOLE
 
+config MACH_OMAP4_ESPRESSO
+	bool "Samsung Espresso / Espresso10 (Galaxy Tab 2) Board"
+	depends on ARCH_OMAP4
+	default n
+	select OMAP_PACKAGE_CBS
+	select OMAP_RAM_CONSOLE
+	select REGULATOR_FIXED_VOLTAGE
+	select TWL6030_GPADC
+
 config OMAP3_EMU
 	bool "OMAP3 debugging peripherals"
 	depends on ARCH_OMAP3

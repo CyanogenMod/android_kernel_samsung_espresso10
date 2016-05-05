@@ -304,6 +304,26 @@ obj-$(CONFIG_MACH_CRANEBOARD)		+= board-am3517crane.o
 obj-$(CONFIG_MACH_SBC3530)		+= board-omap3stalker.o \
 					   hsmmc.o
 obj-$(CONFIG_MACH_TI8168EVM)		+= board-ti8168evm.o
+
+obj-$(CONFIG_MACH_OMAP4_ESPRESSO)	+= hsmmc.o \
+					   omap_phy_internal.o \
+					   board-espresso.o \
+					   board-espresso-emif.o \
+					   board-espresso-serial.o \
+					   board-espresso-pmic.o \
+					   board-espresso-sdio.o \
+					   board-espresso-connector.o \
+					   board-espresso-display.o \
+					   board-espresso-input.o \
+					   board-espresso-wifi.o \
+					   board-espresso-modems.o \
+					   board-espresso-sensors.o \
+					   board-espresso-bluetooth.o \
+					   board-espresso-jack.o \
+					   board-espresso-power.o \
+					   board-espresso-vibrator.o \
+					   board-espresso-irled.o
+
 # Platform specific device init code
 usbfs-$(CONFIG_ARCH_OMAP_OTG)		:= usb-fs.o
 obj-y					+= $(usbfs-m) $(usbfs-y)
