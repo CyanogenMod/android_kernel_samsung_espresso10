@@ -266,6 +266,24 @@ config CHARGER_GPIO
 	  This driver can be build as a module. If so, the module will be
 	  called gpio-charger.
 
+config CHARGER_SMB136
+	tristate "SMB136 Charger IC"
+	depends on I2C
+	help
+	  Say Y to enable support for the SMB136 charger and sysfs.
+	  The driver supports controlling charger-enable and current-limit
+	  pins based on the status of charger connections with interrupt
+	  handlers.
+
+config CHARGER_SMB347
+	tristate "SMB347 Charger IC"
+	depends on I2C
+	help
+	  Say Y to enable support for the SMB347 charger and sysfs.
+	  The driver supports controlling charger-enable and current-limit
+	  pins based on the status of charger connections with interrupt
+	  handlers.
+
 config BATTERY_MANAGER
 	tristate "Battery Manager"
 	help
