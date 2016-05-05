@@ -189,6 +189,15 @@ config BATTERY_MAX17042
 	  multi-function devices that include fuel gauages that are compatible
 	  with MAX17042.
 
+config BATTERY_MAX17042_MANAGER
+	tristate "Maxim MAX17042 Fuel Gauge"
+	depends on I2C
+	depends on BATTERY_MANAGER
+	help
+	  MAX17042 is fuel-gauge systems for lithium-ion (Li+) batteries
+	  in handheld and portable equipment. The MAX17042 is configured
+	  to operate with a single lithium cell.
+
 config BATTERY_Z2
 	tristate "Z2 battery driver"
 	depends on I2C && MACH_ZIPIT2
@@ -256,5 +265,13 @@ config CHARGER_GPIO
 
 	  This driver can be build as a module. If so, the module will be
 	  called gpio-charger.
+
+config BATTERY_MANAGER
+	tristate "Battery Manager"
+	help
+	  Say Y to enable support SEC Battery manager.
+	  This driver include battery concept.
+	  Charging (Discharging) by temperature, limit timer
+	  and fully charged.
 
 endif # POWER_SUPPLY
