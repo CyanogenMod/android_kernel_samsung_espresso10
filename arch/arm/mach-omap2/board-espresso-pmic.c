@@ -187,7 +187,7 @@ static struct regulator_init_data espresso_vaux2 = {
 					| REGULATOR_CHANGE_MODE
 					| REGULATOR_CHANGE_STATUS,
 		.state_mem = {
-			.disabled = true,
+			.enabled = true,
 		},
 	},
 	.num_consumer_supplies	= ARRAY_SIZE(espresso_vaux2_supplies),
