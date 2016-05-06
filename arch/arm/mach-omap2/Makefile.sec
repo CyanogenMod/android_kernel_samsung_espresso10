@@ -12,14 +12,6 @@
 # GNU General Public License for more details.
 #
 
-obj-$(CONFIG_MACH_OMAP_SAMSUNG)		+= sec_common.o
-
-obj-$(CONFIG_SEC_DEBUG)			+= sec_debug.o
-obj-$(CONFIG_SAMSUNG_USE_SEC_LOG_BUF)	+= sec_log_buf.o
-obj-$(CONFIG_SAMSUNG_ADD_GAFORENSICINFO)+= sec_gaf.o
-obj-$(CONFIG_SAMSUNG_USE_GETLOG)	+= sec_getlog.o
-obj-$(CONFIG_SAMSUNG_USE_LOGGER_ADDON)	+= sec_logger.o
-
 obj-$(CONFIG_MACH_OMAP4_SAMSUNG)	+= hsmmc.o \
 					   omap_phy_internal.o \
 					   omap_muxtbl.o \
@@ -28,31 +20,6 @@ obj-$(CONFIG_MACH_OMAP4_SAMSUNG)	+= hsmmc.o \
 
 ldflags-$(CONFIG_MACH_OMAP4_SAMSUNG)	+= \
 				-T $(srctree)/arch/arm/mach-omap2/sec_omap.lds
-
-obj-$(CONFIG_MACH_SAMSUNG_T1)		+= board-t1.o \
-					   board-t1-emif.o \
-					   board-t1-wifi.o \
-					   board-t1-display.o \
-					   board-t1-connector.o \
-					   board-t1-power.o \
-					   board-t1-pmic.o \
-					   board-t1-serial.o \
-					   board-t1-jack.o \
-					   board-t1-input.o \
-					   board-t1-sensors.o\
-					   board-t1-modems.o\
-					   board-t1-sdio.o \
-					   board-t1-bluetooth.o \
-					   board-t1-vibrator.o \
-					   board-t1-fmradio.o \
-					   board-t1-camera.o
-
-
-obj-$(CONFIG_MACH_SAMSUNG_T1)		+= board-t1-muxset-r02.o \
-					   board-t1-muxset-r03.o \
-					   board-t1-muxset-r04.o \
-					   board-t1-muxset-r05.o \
-					   board-t1-muxset-r07.o
 
 obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO)	+= board-espresso.o \
 					   board-espresso-emif.o \
@@ -68,7 +35,6 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO)	+= board-espresso.o \
 					   board-espresso-bluetooth.o \
 					   board-espresso-jack.o \
 					   board-espresso-power.o \
-					   board-espresso-camera.o \
 					   board-espresso-vibrator.o \
 					   board-espresso-irled.o
 
@@ -77,97 +43,9 @@ obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO)	+= board-espresso-muxset-r03.o \
 					   board-espresso-muxset-r06.o \
 					   board-espresso-muxset-r07.o \
 					   board-espresso-muxset-r09.o \
-					   board-espresso-muxset-r10.o
-
-obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10.o \
-					   board-espresso10-emif.o \
-					   board-espresso10-serial.o \
-					   board-espresso10-pmic.o \
-					   board-espresso10-sdio.o \
-					   board-espresso10-connector.o \
-					   board-espresso10-bluetooth.o \
-					   board-espresso10-jack.o \
-					   board-espresso10-power.o \
-					   board-espresso10-wifi.o \
-					   board-espresso10-display.o \
-					   board-espresso10-modems.o \
-					   board-espresso10-sensor.o \
-					   board-espresso10-input.o \
-					   board-espresso10-camera.o \
-					   board-espresso10-vibrator.o \
-					   board-espresso10-irled.o
-
-obj-$(CONFIG_MACH_SAMSUNG_ESPRESSO_10)	+= board-espresso10-muxset-r00.o \
+					   board-espresso-muxset-r10.o \
+					   board-espresso10-muxset-r00.o \
 					   board-espresso10-muxset-r05.o \
 					   board-espresso10-muxset-r07.o \
-				board-espresso10-usa-bby-muxset-r07.o \
+					   board-espresso10-usa-bby-muxset-r07.o \
 					   board-espresso10-muxset-r08.o
-
-obj-$(CONFIG_MACH_SAMSUNG_PALAU)	+= board-palau.o \
-					   board-palau-emif.o \
-					   board-palau-serial.o \
-					   board-palau-pmic.o \
-					   board-palau-sdio.o \
-					   board-palau-connector.o \
-					   board-palau-power.o	\
-					   board-palau-input.o \
-					   board-palau-nfc.o \
-					   board-palau-sensors.o \
-					   board-palau-bluetooth.o \
-					   board-palau-wifi.o \
-					   board-palau-audio.o \
-					   board-palau-modems.o \
-					   board-palau-display.o \
-					   board-palau-fmradio.o \
-					   board-palau-vibrator.o
-
-obj-$(CONFIG_MACH_SAMSUNG_PALAU)	+= board-palau-muxset-r00.o \
-					   board-palau-muxset-r01.o \
-					   board-palau-muxset-r02.o
-
-obj-$(CONFIG_MACH_SAMSUNG_KONA)		+= board-kona.o \
-					   board-kona-emif.o \
-					   board-kona-serial.o \
-					   board-kona-pmic.o \
-					   board-kona-sdio.o \
-					   board-kona-input.o \
-					   board-kona-display.o \
-					   board-kona-audio.o \
-					   board-kona-connector.o \
-					   board-kona-power.o	\
-					   board-kona-modems.o \
-					   board-kona-bluetooth.o \
-					   board-kona-wifi.o \
-					   board-kona-sensors.o \
-					   board-kona-irled.o \
-					   board-kona-vibrator.o \
-					   board-kona-temp.o
-
-obj-$(CONFIG_MACH_SAMSUNG_KONA)		+= board-kona-muxset-r04.o \
-					   board-kona-muxset-r05.o
-
-obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR)	+= board-superior.o \
-					   board-superior-emif.o \
-					   board-superior-serial.o \
-					   board-superior-pmic.o \
-					   board-superior-sdio.o \
-					   board-superior-input.o \
-					   board-superior-audio.o \
-					   board-superior-connector.o \
-					   board-superior-modems.o \
-					   board-superior-display.o \
-					   board-superior-bluetooth.o \
-					   board-superior-wifi.o \
-					   board-superior-power.o \
-					   board-superior-vibrator.o \
-					   board-superior-sensors.o \
-					   board-superior-nfc.o \
-					   board-superior-fmradio.o \
-					   board-superior-camera.o \
-					   board-superior-spiflash.o \
-					   board-superior-temp.o
-
-obj-$(CONFIG_MACH_SAMSUNG_SUPERIOR)	+= board-superior-muxset-r00.o \
-					   board-superior-muxset-r01.o \
-					   board-superior-muxset-r02.o \
-					   board-superior-muxset-r04.o

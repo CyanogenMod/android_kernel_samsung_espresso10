@@ -17,16 +17,8 @@
 #define __MODEM_IF_H__
 
 enum modem_t {
-	IMC_XMM6260,
 	IMC_XMM6262,
-	VIA_CBP71,
-	VIA_CBP72,
-	SEC_CMC221,
-	QC_MDM6600,
-	QC_ESC6270,
-	SPRD_SC8803,
 	DUMMY,
-	MAX_MODEM_TYPE
 };
 
 enum dev_format {
@@ -38,7 +30,6 @@ enum dev_format {
 	IPC_BOOT_2,
 	IPC_MULTI_RAW,
 	IPC_RAMDUMP,
-	MAX_DEV_FORMAT,
 };
 
 enum modem_io {
@@ -50,37 +41,9 @@ enum modem_io {
 enum modem_link {
 	LINKDEV_UNDEFINED,
 	LINKDEV_MIPI,
-	LINKDEV_DPRAM,
-	LINKDEV_SPI,
-	LINKDEV_USB,
-	LINKDEV_HSIC,
-	LINKDEV_C2C,
 	LINKDEV_MAX,
 };
 #define LINKTYPE(modem_link) (1u << (modem_link))
-
-enum modem_network {
-	UMTS_NETWORK,
-	CDMA_NETWORK,
-	LTE_NETWORK,
-	TDSCDMA_NETWORK,
-};
-
-enum sipc_ver {
-	NO_SIPC_VER = 0,
-	SIPC_VER_40 = 40,
-	SIPC_VER_41 = 41,
-	SIPC_VER_42 = 42,
-	SIPC_VER_50 = 50,
-	MAX_SIPC_VER,
-};
-
-enum sipc_dev_type {
-	IPC_FMT_DEV = 0,
-	IPC_RAW_DEV,
-	IPC_RFS_DEV,
-	MAX_IPC_DEV,
-};
 
 /**
  * struct modem_io_t - declaration for io_device
@@ -114,7 +77,6 @@ struct modem_data {
 	char *name;
 
 	unsigned gpio_cp_on;
-	unsigned gpio_cp_off;
 	unsigned gpio_reset_req_n;
 	unsigned gpio_cp_reset;
 	unsigned gpio_pda_active;
@@ -123,28 +85,10 @@ struct modem_data {
 	unsigned gpio_ap_dump_int;
 	unsigned gpio_sim_detect;
 
-#ifdef CONFIG_TDSCDMA_MODEM_SPRD8803
-	unsigned gpio_ap_cp_int1;
-	unsigned gpio_ap_cp_int2;
-	unsigned gpio_uart_sel;
-
-	unsigned gpio_ipc_mrdy;
-	unsigned gpio_ipc_srdy;
-	unsigned gpio_ipc_sub_mrdy;
-	unsigned gpio_ipc_sub_srdy;
-#endif
-
-	/* Switch with 2 links in a modem */
-	unsigned gpio_dynamic_switching;
-
 	/* modem component */
-	enum modem_network  modem_net;
 	enum modem_t modem_type;
 	enum modem_link link_types;
 	char *link_name;
-
-	/* SIPC version */
-	enum sipc_ver ipc_version;
 
 	/* Information of IO devices */
 	unsigned num_iodevs;
@@ -154,7 +98,7 @@ struct modem_data {
 	bool use_handover;
 };
 
-#define LOG_TAG "mif: "
+#define LOG_TAG "modem_if: "
 
 #define mif_err(fmt, ...) \
 	pr_err(LOG_TAG "%s: " pr_fmt(fmt), __func__, ##__VA_ARGS__)
@@ -162,8 +106,5 @@ struct modem_data {
 	pr_debug(LOG_TAG "%s: " pr_fmt(fmt), __func__, ##__VA_ARGS__)
 #define mif_info(fmt, ...) \
 	pr_info(LOG_TAG "%s: " pr_fmt(fmt), __func__, ##__VA_ARGS__)
-#define mif_trace(fmt, ...) \
-	printk(KERN_DEBUG "mif: %s: %d: called(%pF): " fmt, \
-		__func__, __LINE__, __builtin_return_address(0), ##__VA_ARGS__)
 
 #endif

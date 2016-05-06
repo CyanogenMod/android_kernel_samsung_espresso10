@@ -593,14 +593,6 @@ config MPU_333_ENABLE
 	depends on I2C
 	default n
 
-config FACTORY_PBA_JACK_TEST_SUPPORT
-	bool "For samsung factory pba jack test"
-	default n
-	
-config JACK_RESELECTOR_SUPPORT
-	bool "For samsung jack reselector control"
-	default n	
-
 config TWL6040_VIB
 	bool "TWL6040 Vibrator"
 	depends on TWL6040_CODEC && ANDROID_TIMED_OUTPUT
@@ -616,12 +608,10 @@ config CDC_TCXO
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
-source "drivers/misc/inv_mpu/Kconfig"
 source "drivers/misc/iwmc3200top/Kconfig"
 source "drivers/misc/ti-st/Kconfig"
 source "drivers/misc/lis3lv02d/Kconfig"
 source "drivers/misc/carma/Kconfig"
-source "drivers/misc/modem_if/Kconfig"
 source "drivers/misc/modem_if_v2/Kconfig"
 source "drivers/misc/mpu3050/Kconfig"
 source "drivers/misc/gcx/gccore/Kconfig"

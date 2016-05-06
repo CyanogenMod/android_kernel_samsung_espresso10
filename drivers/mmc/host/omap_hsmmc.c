@@ -960,9 +960,6 @@ omap_hsmmc_start_command(struct omap_hsmmc_host *host, struct mmc_command *cmd,
 		mmc_hostname(host->mmc), cmd->opcode, cmd->arg);
 	host->cmd = cmd;
 
-#ifdef CONFIG_MMC_SOFTWARE_TIMEOUT
-	host->dpm_state_curr = host->dpm_state;
-#endif
 	omap_hsmmc_enable_irq(host, cmd);
 
 	host->response_busy = 0;
@@ -1263,19 +1260,6 @@ static void omap_hsmmc_do_irq(struct omap_hsmmc_host *host, int status)
 
 	data = host->data;
 	dev_dbg(mmc_dev(host->mmc), "IRQ Status is %x\n", status);
-#ifdef CONFIG_MMC_SOFTWARE_TIMEOUT
-	if ((status & ERR) || (status & CC) || (status & TC)) {
-		if (host->data) {
-			if ((status & TC) || (status & ERR)) {
-				if (timer_pending(&host->sw_timer))
-					del_timer(&host->sw_timer);
-			}
-		} else {
-			if (timer_pending(&host->sw_timer))
-				del_timer(&host->sw_timer);
-		}
-	}
-#endif
 
 	if (status & ERR) {
 
@@ -1527,10 +1511,6 @@ static void omap_hsmmc_detect(struct work_struct *work)
 								0, 0);
 			host->power_mode = MMC_POWER_OFF;
 		}
-#ifdef CONFIG_MMC_SOFTWARE_TIMEOUT
-		if (timer_pending(&host->sw_timer))
-			del_timer(&host->sw_timer);
-#endif
 		mmc_release_host(host->mmc);
 		mmc_detect_change(host->mmc, 0) ;
 	}
@@ -1884,9 +1864,6 @@ static void omap_hsmmc_request(struct mmc_host *mmc, struct mmc_request *req)
 		mmc_request_done(mmc, req);
 		return;
 	}
-#ifdef CONFIG_MMC_SOFTWARE_TIMEOUT
-	mod_timer(&host->sw_timer, jiffies + msecs_to_jiffies(3000));
-#endif
 	omap_hsmmc_start_command(host, req->cmd, req->data, 0);
 }
 
@@ -2346,60 +2323,6 @@ static int omap_hsmmc_disable_simple(struct mmc_host *mmc, int lazy)
 	return 0;
 }
 
-#ifdef CONFIG_MMC_SOFTWARE_TIMEOUT
-
-static void omap_hsmmc_timeout_irq(unsigned long data)
-{
-	struct omap_hsmmc_host *host = (struct omap_hsmmc_host *)data;
-	int status = 0;
-	struct mmc_data *data_t = host->data;
-
-	del_timer(&host->sw_timer);
-
-	pr_err("%s SOFTWARE TIMEOUT\n", mmc_hostname(host->mmc));
-
-	if (host->dpm_state != ENABLED) {
-		pr_err("DPM State during CMD=%d , curr = %d\n",
-			host->dpm_state_curr, host->dpm_state);
-		omap_hsmmc_enable(host->mmc);
-	}
-
-	dev_warn(mmc_dev(host->mmc), " cmd =%d\n",
-			(OMAP_HSMMC_READ(host->base, CMD) & 0x3F000000)>>24);
-	dev_warn(mmc_dev(host->mmc), " MMCHS_SYSCONFIG=%x\n",
-			OMAP_HSMMC_READ(host->base, SYSCONFIG));
-	dev_warn(mmc_dev(host->mmc), " MMCHS_BLK=%x\n",
-			OMAP_HSMMC_READ(host->base, BLK));
-	dev_warn(mmc_dev(host->mmc), " MMCHS_CMD=%x\n",
-			OMAP_HSMMC_READ(host->base, CMD));
-	dev_warn(mmc_dev(host->mmc), " MMCHS_STAT=%x\n",
-			OMAP_HSMMC_READ(host->base, STAT));
-	dev_warn(mmc_dev(host->mmc), " MMCHS_SYSCTL=%x\n",
-			OMAP_HSMMC_READ(host->base, SYSCTL));
-	dev_warn(mmc_dev(host->mmc), " MMCHS_IE =%x\n",
-			OMAP_HSMMC_READ(host->base, IE));
-
-	status = OMAP_HSMMC_READ(host->base, STAT);
-	OMAP_HSMMC_WRITE(host->base, STAT, status);
-
-	if (host->cmd) {
-		host->cmd->error = -ETIMEDOUT;
-		omap_hsmmc_reset_controller_fsm(host, SRC);
-		host->response_busy = 0;
-		omap_hsmmc_cmd_done(host, host->cmd);
-		dev_warn(mmc_dev(host->mmc), "Resetting CMD line ..\n");
-	} else if (host->data) {
-		host->data->error = -ETIMEDOUT;
-		omap_hsmmc_dma_cleanup(host, -ETIMEDOUT);
-		host->response_busy = 0;
-		dev_warn(mmc_dev(host->mmc), "Resetting DATA lines ...\n");
-		omap_hsmmc_reset_controller_fsm(host, SRD);
-		omap_hsmmc_xfer_done(host, data_t);
-	}
-	return;
-}
-#endif
-
 static const struct mmc_host_ops omap_hsmmc_ops = {
 	.enable = omap_hsmmc_enable_simple,
 	.disable = omap_hsmmc_disable_simple,
@@ -2579,12 +2502,6 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
 
 	spin_lock_init(&host->irq_lock);
 
-#ifdef CONFIG_MMC_SOFTWARE_TIMEOUT
-	init_timer(&host->sw_timer);
-	host->sw_timer.function = omap_hsmmc_timeout_irq;
-	host->sw_timer.data = (unsigned long) host;
-#endif
-
 	host->iclk = clk_get(&pdev->dev, "ick");
 	if (IS_ERR(host->iclk)) {
 		ret = PTR_ERR(host->iclk);
@@ -2682,7 +2599,11 @@ static int __init omap_hsmmc_probe(struct platform_device *pdev)
 	mmc->max_seg_size = mmc->max_req_size;
 
 	mmc->caps |= MMC_CAP_MMC_HIGHSPEED | MMC_CAP_SD_HIGHSPEED |
+#ifdef CONFIG_MACH_SAMSUNG_ESPRESSO
+		     MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_CMD23;
+#else
 		     MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_ERASE | MMC_CAP_CMD23;
+#endif
 
 	mmc->caps |= mmc_slot(host).caps;
 	if (mmc->caps & MMC_CAP_8_BIT_DATA)

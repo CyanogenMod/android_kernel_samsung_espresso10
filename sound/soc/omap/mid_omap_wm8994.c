@@ -150,34 +150,8 @@ static struct gpio ear_select = {
 };
 #endif
 
-/*
- * Harrison Audio MCLK becomes 38.4MHz
- * since the HW rev 6.
- */
-#ifdef CONFIG_MACH_SAMSUNG_HARRISON
-#define HW_REVISION_DISTINGUISHER
-#endif
-
 /* Determines the mclk of the board. */
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-#if (CONFIG_SAMSUNG_REL_HW_REV == 4)
-unsigned int board_mclk = 26000000;
-#else
 unsigned int board_mclk = 38400000;
-#endif
-#else
-unsigned int board_mclk = 38400000;
-#endif
-
-/* Specifying each HW revision GPIO's name. */
-#ifdef HW_REVISION_DISTINGUISHER
-static struct gpio hw_rev_gpio[] = {
-	{	.label = "HW_REV0"	},
-	{	.label = "HW_REV1"	},
-	{	.label = "HW_REV2"	},
-	{	.label = "HW_REV3"	}
-};
-#endif
 
 static struct gpio mute_ic = {
 	.flags = GPIOF_OUT_INIT_LOW,
@@ -242,15 +216,6 @@ const char *dock_out_spk_volume_up_down_text[] = {
 #ifdef CONFIG_MACH_SAMSUNG_HARRISON
 #define CONFIG_SEC_DEV_JACK
 #endif
-
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-#if (CONFIG_SAMSUNG_REL_HW_REV == 4)
-#define CONFIG_SEC_DEV_JACK
-#endif
-/* Detect earjack one more */
-#define JACK_DETECT_QUEUE
-#endif
-
 
 #ifndef CONFIG_SEC_DEV_JACK
 /* To support PBA function test */
@@ -610,30 +575,6 @@ static int main_mic_bias_event(struct snd_soc_dapm_widget *w,
 				   WM8994_MICB1_ENA_MASK, val<<4);
 	return 0;
 }
-
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-static int hp_mic_bias_event(struct snd_soc_dapm_widget *w,
-			struct snd_kcontrol *kcontrol, int event)
-{
-	/* Harrison feature (use Codec Mic bias) */
-	struct snd_soc_codec *codec = w->codec;
-	int val = SND_SOC_DAPM_EVENT_ON(event);
-
-	pr_info("hp_mic_bias_event val=%x\n", val);
-
-	/* 5 LEFT SHIFTS : MICB2 ENA setting. */
-	snd_soc_update_bits(codec, WM8994_POWER_MANAGEMENT_1,
-		WM8994_MICB2_ENA_MASK, val<<WM8994_MICB2_ENA_SHIFT);
-
-	/* Ensure the MicBias2 mode to the bypass. */
-	snd_soc_update_bits(codec,
-	WM8958_MICBIAS2,
-	WM8958_MICB2_MODE_MASK,
-	WM8958_MICB2_MODE);
-
-	return 0;
-}
-#endif
 
 /* PM Constraint feature for the VOIP time stamp */
 static const struct soc_enum pm_mode_enum[] = {
@@ -1133,11 +1074,7 @@ const struct snd_soc_dapm_widget omap4_dapm_widgets[] = {
 	SND_SOC_DAPM_SPK("RCV", NULL),
 	SND_SOC_DAPM_LINE("LINEOUT", NULL),
 	SND_SOC_DAPM_MIC("Main Mic", main_mic_bias_event),
-#ifdef CONFIG_MACH_SAMSUNG_GOKEY
-	SND_SOC_DAPM_MIC("Headset Mic", hp_mic_bias_event),
-#else
 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-#endif
 
 	SND_SOC_DAPM_INPUT("VMID_INPUT"),
 	SND_SOC_DAPM_OUTPUT("VMID_OUTPUT"),
@@ -1343,12 +1280,6 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 #endif
 
 	int ret;
-/* Some variables for the board revision detecting */
-#ifdef HW_REVISION_DISTINGUISHER
-	int distNum = 4;
-	int i;
-	int hwRev = 0;
-#endif
 
 	the_codec = codec;
 
@@ -1487,19 +1418,6 @@ int omap4_wm8994_init(struct snd_soc_pcm_runtime *rtd)
 
 	/* Must re-set the hidden registers for ensure the vmid level. */
 	omap4_set_wm1811_hidden_register(control);
-
-/* Determines the revision of HW by itself when initializing. */
-#ifdef HW_REVISION_DISTINGUISHER
-	for (i = 0; i < distNum; i++)
-		hwRev |= gpio_get_value(
-			omap_muxtbl_get_gpio_by_name(
-				hw_rev_gpio[i].label)) << i;
-
-	if (hwRev >= 6)
-		board_mclk = 38400000;
-	else
-		board_mclk = 26000000;
-#endif
 
 	return snd_soc_dapm_sync(dapm);
 }

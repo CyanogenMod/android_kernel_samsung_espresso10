@@ -157,10 +157,8 @@ err_to_dev_reg:
 int __init omap4_espresso_vibrator_init(void)
 {
 	int ret = 0, i;
-	unsigned int boardtype = omap4_espresso_get_board_type();
 
-	if (boardtype == SEC_MACHINE_ESPRESSO_WIFI ||
-	    boardtype == SEC_MACHINE_ESPRESSO_USA_BBY) {
+	if (!board_has_modem()) {
 		omap_vibrator_none_pads_cfg_mux();
 		return 0;
 	}
@@ -170,8 +168,7 @@ int __init omap4_espresso_vibrator_init(void)
 		    omap_muxtbl_get_gpio_by_name(vibrator_gpio[i].label);
 	gpio_request_array(vibrator_gpio, ARRAY_SIZE(vibrator_gpio));
 
-	if (system_rev >= 6)
-		ret = vibrator_init();
+	ret = vibrator_init();
 	if (ret < 0) {
 		pr_err("vib: vibrator_init fail.");
 		gpio_free(vibrator_gpio[GPIO_MOTOR_EN].gpio);

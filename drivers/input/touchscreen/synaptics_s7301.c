@@ -40,7 +40,7 @@
 #include <linux/uaccess.h>
 #include <linux/syscalls.h>
 
-#include "../../../arch/arm/mach-omap2/sec_common.h"
+#include "../../../arch/arm/mach-omap2/board-espresso.h"
 
 #if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 #define TSP_VENDOR			"SYNAPTICS"
@@ -115,25 +115,6 @@ static int ts_read_reg_data(const struct i2c_client *client, u8 address,
 	ret = i2c_smbus_read_i2c_block_data(client, address, size, buf);
 	if (ret < size) {
 		pr_err("tsp: %s: i2c read failed. %d", __func__, ret);
-		return ret;
-	}
-	return 1;
-}
-
-static int ts_write_reg_data(const struct i2c_client *client, u8 address,
-			u8 *buf, u8 size)
-{
-	int ret = 0;
-
-	if (size > 32) {
-		pr_err("tsp: %s: data size: %d, SMBus allows at most 32 bytes.",
-								__func__, size);
-		return -1;
-	}
-
-	ret = i2c_smbus_write_i2c_block_data(client, address, size, buf);
-	if (ret < 0) {
-		pr_err("tsp: %s: i2c write failed. %d", __func__, ret);
 		return ret;
 	}
 	return 1;
@@ -391,8 +372,7 @@ static void get_config_ver(void *device_data)
 	data->cmd_state = RUNNING;
 
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%s_%s_%s",
-					ts->platform_data->model_name,
+	sprintf(data->cmd_buff, "%s_%s",
 					TSP_VENDOR,
 					ts->fw_info->release_date);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
@@ -739,7 +719,7 @@ static void run_tx_to_gnd_read(void *device_data)
 	return;
 }
 
-struct tsp_cmd tsp_cmds[] = {
+struct tsp_cmd tsp_cmds_synaptics[] = {
 	{TSP_CMD("fw_update", fw_update),},
 	{TSP_CMD("get_fw_ver_bin", get_fw_ver_bin),},
 	{TSP_CMD("get_fw_ver_ic", get_fw_ver_ic),},
@@ -1233,8 +1213,8 @@ static int __devinit ts_probe(struct i2c_client *client,
 	}
 
 	INIT_LIST_HEAD(&factory_data->cmd_list_head);
-	for (i = 0; i < ARRAY_SIZE(tsp_cmds); i++)
-		list_add_tail(&tsp_cmds[i].list, &factory_data->cmd_list_head);
+	for (i = 0; i < ARRAY_SIZE(tsp_cmds_synaptics); i++)
+		list_add_tail(&tsp_cmds_synaptics[i].list, &factory_data->cmd_list_head);
 
 	mutex_init(&factory_data->cmd_lock);
 	factory_data->cmd_is_running = false;

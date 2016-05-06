@@ -53,7 +53,6 @@ obj-$(CONFIG_WL127X_RFKILL)	+= wl127x-rfkill.o
 obj-$(CONFIG_APANIC)		+= apanic.o
 obj-$(CONFIG_SENSORS_AK8975)	+= akm8975.o
 obj-$(CONFIG_MPU_333_ENABLE)				+= mpu3050/
-obj-$(CONFIG_SEC_MODEM)		+= modem_if/
 obj-$(CONFIG_SEC_MODEM_V2)		+= modem_if_v2/
 obj-$(CONFIG_MFD_MAX77693)	+= max77693-muic.o
 obj-$(CONFIG_USB_SWITCH_FSA9480)	+= fsa9480.o

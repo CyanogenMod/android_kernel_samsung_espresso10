@@ -538,10 +538,6 @@ struct tf_device *tf_get_device(void);
  * Kernel Differences
  */
 
-#ifdef CONFIG_ANDROID
 #define GROUP_INFO		get_current_groups()
-#else
-#define GROUP_INFO		(current->group_info)
-#endif
 
 #endif  /* !defined(__TF_DEFS_H__) */

@@ -1226,11 +1226,6 @@ static u8 mmc_blk_prep_packed_list(struct mmc_queue *mq, struct request *req)
 	if (max_packed_rw == 0)
 		goto no_packed;
 
-#ifdef CONFIG_MMC_SELECTIVE_PACKED_CMD_POLICY
-	if (rq_data_dir(cur) == READ)
-		goto no_packed;
-#endif
-
 	if (mmc_req_rel_wr(cur) &&
 			(md->flags & MMC_BLK_REL_WR) &&
 			!en_rel_wr) {
@@ -1263,15 +1258,7 @@ static u8 mmc_blk_prep_packed_list(struct mmc_queue *mq, struct request *req)
 			put_back = 1;
 			break;
 		}
-#ifdef CONFIG_MMC_SELECTIVE_PACKED_CMD_POLICY
-		if ((blk_rq_pos(cur) + blk_rq_sectors(cur)) != \
-			blk_rq_pos(next)) {
-			/* if next request dose not start at end block of
-			   previous request */
-			put_back = 1;
-			break;
-		}
-#endif
+
 		if (rq_data_dir(cur) != rq_data_dir(next)) {
 			put_back = 1;
 			break;

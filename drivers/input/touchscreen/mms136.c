@@ -40,7 +40,7 @@
 #include <linux/touchscreen/melfas.h>
 #include <linux/platform_data/sec_ts.h>
 
-#include "../../../arch/arm/mach-omap2/sec_common.h"
+#include "../../../arch/arm/mach-omap2/board-espresso.h"
 
 #if defined(CONFIG_SEC_TSP_FACTORY_TEST)
 #define TSP_VENDOR			"MELFAS"
@@ -147,8 +147,6 @@ static void reset_points(struct ts_data *ts)
 									false);
 	}
 	input_sync(ts->input_dev);
-	if (ts->platform_data->set_dvfs)
-		ts->platform_data->set_dvfs(false);
 	tsp_log("reset_all_fingers");
 	return;
 }
@@ -218,14 +216,12 @@ static bool fw_updater(struct ts_data *ts, char const *mode)
 		u8 *fw_data;
 		struct file *filp;
 		mm_segment_t oldfs;
-		char file_name[20] = "/sdcard/";
+		char file_name[20] = "/sdcard/mms136.bin";
 
 		tsp_log("force upload from external file.");
 
 		oldfs = get_fs();
 		set_fs(KERNEL_DS);
-
-		sprintf(file_name, "%s.bin", ts->platform_data->model_name);
 
 		filp = filp_open(file_name, O_RDONLY, 0);
 		if (IS_ERR_OR_NULL(filp)) {
@@ -539,8 +535,8 @@ static void get_config_ver(void *device_data)
 	}
 
 	set_default_result(data);
-	sprintf(data->cmd_buff, "%s_%s_%d%d%d%d",
-				ts_data->platform_data->model_name, TSP_VENDOR,
+	sprintf(data->cmd_buff, "%s_%d%d%d%d",
+				TSP_VENDOR,
 				buf[0], buf[1], buf[2], buf[3]);
 	set_cmd_result(data, data->cmd_buff, strlen(data->cmd_buff));
 
@@ -915,7 +911,7 @@ static void run_intensity_read(void *device_data)
 	return;
 }
 
-struct tsp_cmd tsp_cmds[] = {
+struct tsp_cmd tsp_cmds_mms[] = {
 	{TSP_CMD("fw_update", fw_update),},
 	{TSP_CMD("get_fw_ver_bin", get_fw_ver_bin),},
 	{TSP_CMD("get_fw_ver_ic", get_fw_ver_ic),},
@@ -1238,10 +1234,6 @@ static irqreturn_t ts_irq_handler(int irq, void *handle)
 #endif
 		}
 	}
-
-	if (ts->platform_data->set_dvfs)
-		ts->platform_data->set_dvfs(!!cnt);
-
 	return IRQ_HANDLED;
 }
 
@@ -1402,8 +1394,8 @@ static int __devinit ts_probe(struct i2c_client *client,
 	}
 
 	INIT_LIST_HEAD(&factory_data->cmd_list_head);
-	for (i = 0; i < ARRAY_SIZE(tsp_cmds); i++)
-		list_add_tail(&tsp_cmds[i].list, &factory_data->cmd_list_head);
+	for (i = 0; i < ARRAY_SIZE(tsp_cmds_mms); i++)
+		list_add_tail(&tsp_cmds_mms[i].list, &factory_data->cmd_list_head);
 
 	mutex_init(&factory_data->cmd_lock);
 	factory_data->cmd_is_running = false;

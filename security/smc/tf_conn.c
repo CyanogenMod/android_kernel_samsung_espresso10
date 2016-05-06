@@ -694,13 +694,8 @@ int tf_open_client_session(
 		 */
 		*(u32 *) &command->open_client_session.login_data =
 			current_euid();
-#ifndef CONFIG_ANDROID
-		command->open_client_session.login_type =
-			(u32) TF_LOGIN_USER_LINUX_EUID;
-#else
 		command->open_client_session.login_type =
 			(u32) TF_LOGIN_USER_ANDROID_EUID;
-#endif
 
 		/* Added one word */
 		command->open_client_session.message_size += 1;
@@ -720,43 +715,13 @@ int tf_open_client_session(
 			error = -EACCES;
 			goto error;
 		}
-#ifndef CONFIG_ANDROID
-		command->open_client_session.login_type =
-			TF_LOGIN_GROUP_LINUX_GID;
-#else
 		command->open_client_session.login_type =
 			TF_LOGIN_GROUP_ANDROID_GID;
-#endif
 
 		command->open_client_session.message_size += 1; /* GID */
 		break;
 	}
 
-#ifndef CONFIG_ANDROID
-	case TF_LOGIN_APPLICATION: {
-		/*
-		 * Compute SHA-1 hash of the application fully-qualified path
-		 * name.  Truncate the hash to 16 bytes and send it as login
-		 * data.  Update message size.
-		 */
-		u8 pSHA1Hash[SHA1_DIGEST_SIZE];
-
-		error = tf_hash_application_path_and_data(pSHA1Hash,
-			NULL, 0);
-		if (error != 0) {
-			dprintk(KERN_ERR "tf_open_client_session: "
-				"error in tf_hash_application_path_and_data\n");
-			goto error;
-		}
-		memcpy(&command->open_client_session.login_data,
-			pSHA1Hash, 16);
-		command->open_client_session.login_type =
-			TF_LOGIN_APPLICATION_LINUX_PATH_SHA1_HASH;
-		/* 16 bytes */
-		command->open_client_session.message_size += 4;
-		break;
-	}
-#else
 	case TF_LOGIN_APPLICATION:
 		/*
 		 * Send the real UID of the calling application in the login
@@ -771,36 +736,7 @@ int tf_open_client_session(
 		/* Added one word */
 		command->open_client_session.message_size += 1;
 		break;
-#endif
 
-#ifndef CONFIG_ANDROID
-	case TF_LOGIN_APPLICATION_USER: {
-		/*
-		 * Compute SHA-1 hash of the concatenation of the application
-		 * fully-qualified path name and the EUID of the calling
-		 * application.  Truncate the hash to 16 bytes and send it as
-		 * login data.  Update message size.
-		 */
-		u8 pSHA1Hash[SHA1_DIGEST_SIZE];
-
-		error = tf_hash_application_path_and_data(pSHA1Hash,
-			(u8 *) &(current_euid()), sizeof(current_euid()));
-		if (error != 0) {
-			dprintk(KERN_ERR "tf_open_client_session: "
-				"error in tf_hash_application_path_and_data\n");
-			goto error;
-		}
-		memcpy(&command->open_client_session.login_data,
-			pSHA1Hash, 16);
-		command->open_client_session.login_type =
-			TF_LOGIN_APPLICATION_USER_LINUX_PATH_EUID_SHA1_HASH;
-
-		/* 16 bytes */
-		command->open_client_session.message_size += 4;
-
-		break;
-	}
-#else
 	case TF_LOGIN_APPLICATION_USER:
 		/*
 		 * Send the real UID and the EUID of the calling application in
@@ -817,49 +753,7 @@ int tf_open_client_session(
 		/* Added two words */
 		command->open_client_session.message_size += 2;
 		break;
-#endif
 
-#ifndef CONFIG_ANDROID
-	case TF_LOGIN_APPLICATION_GROUP: {
-		/*
-		 * Check requested GID.  Compute SHA-1 hash of the concatenation
-		 * of the application fully-qualified path name and the
-		 * requested GID.  Update message size
-		 */
-		gid_t  requested_gid;
-		u8     pSHA1Hash[SHA1_DIGEST_SIZE];
-
-		requested_gid =	*(u32 *) &command->open_client_session.
-			login_data;
-
-		if (!tf_check_gid(requested_gid)) {
-			dprintk(KERN_ERR "tf_open_client_session(%p) "
-			"TF_LOGIN_APPLICATION_GROUP: requested GID (0x%x) "
-			"does not match real eGID (0x%x)"
-			"or any of the supplementary GIDs\n",
-			connection, requested_gid, current_egid());
-			error = -EACCES;
-			goto error;
-		}
-
-		error = tf_hash_application_path_and_data(pSHA1Hash,
-			&requested_gid, sizeof(u32));
-		if (error != 0) {
-			dprintk(KERN_ERR "tf_open_client_session: "
-				"error in tf_hash_application_path_and_data\n");
-			goto error;
-		}
-
-		memcpy(&command->open_client_session.login_data,
-			pSHA1Hash, 16);
-		command->open_client_session.login_type =
-			TF_LOGIN_APPLICATION_GROUP_LINUX_PATH_GID_SHA1_HASH;
-
-		/* 16 bytes */
-		command->open_client_session.message_size += 4;
-		break;
-	}
-#else
 	case TF_LOGIN_APPLICATION_GROUP: {
 		/*
 		 * Check requested GID. Send the real UID and the requested GID
@@ -893,7 +787,6 @@ int tf_open_client_session(
 
 		break;
 	}
-#endif
 
 	case TF_LOGIN_PRIVILEGED:
 		/* A privileged login may be performed only on behalf of the

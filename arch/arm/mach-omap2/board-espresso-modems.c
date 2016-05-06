@@ -187,10 +187,7 @@ static struct modem_data umts_modem_data = {
 
 	.modem_type = IMC_XMM6262,
 	.link_types = LINKTYPE(LINKDEV_MIPI),
-	.modem_net = UMTS_NETWORK,
 	.use_handover = false,
-	.ipc_version = SIPC_VER_40,
-
 	.num_iodevs = ARRAY_SIZE(umts_io_devices),
 	.iodevs = umts_io_devices,
 };
@@ -209,7 +206,9 @@ static void __init umts_modem_cfg_gpio(void)
 	umts_modem_data.gpio_pda_active = modem_gpios[GPIO_PDA_ACTIVE].gpio;
 	umts_modem_data.gpio_phone_active = modem_gpios[GPIO_PHONE_ACTIVE].gpio;
 	umts_modem_data.gpio_cp_dump_int = modem_gpios[GPIO_CP_DUMP_INT].gpio;
-	umts_modem_data.gpio_sim_detect = modem_gpios[GPIO_SIM_DETECT].gpio;
+	if (!board_is_espresso10()) {
+		umts_modem_data.gpio_sim_detect = modem_gpios[GPIO_SIM_DETECT].gpio;
+	}
 
 	pr_debug("umts_modem_cfg_gpio done\n");
 }
@@ -250,19 +249,13 @@ static struct platform_device umts_modem = {
 
 void __init omap4_espresso_none_modem_init(void)
 {
-	unsigned int board_type = omap4_espresso_get_board_type();
-
-	if (board_type == SEC_MACHINE_ESPRESSO_WIFI ||
-	    board_type == SEC_MACHINE_ESPRESSO_USA_BBY)
+	if (!board_has_modem())
 		none_modem_cfg_mux();
 }
 
 static int __init init_modem(void)
 {
-	unsigned int board_type = omap4_espresso_get_board_type();
-
-	if (board_type == SEC_MACHINE_ESPRESSO_WIFI ||
-	    board_type == SEC_MACHINE_ESPRESSO_USA_BBY)
+	if (!board_has_modem())
 		return 0;
 
 	umts_modem_cfg_gpio();

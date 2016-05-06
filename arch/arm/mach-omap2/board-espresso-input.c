@@ -1,4 +1,5 @@
-/* Copyright (C) 2012 Samsung Electronics, Inc.
+/*
+ * Copyright (C) 2012 Samsung Electronics, Inc.
  *
  * This software is licensed under the terms of the GNU General Public
  * License version 2, as published by the Free Software Foundation, and
@@ -19,17 +20,16 @@
 #include <linux/gpio.h>
 #include <linux/i2c.h>
 #include <linux/battery.h>
+#include <linux/delay.h>
 #include <linux/platform_data/sec_ts.h>
+#include <linux/touchscreen/synaptics.h>
 #include <asm/mach-types.h>
 #include <plat/omap4-keypad.h>
-
-#include <mach/cpufreq_limits.h>
 
 #include "board-espresso.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
 #include "control.h"
-#include "sec_debug.h"
 
 enum {
 	GPIO_EXT_WAKEUP = 0,
@@ -149,7 +149,7 @@ static void tsp_set_power(bool on)
 
 		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE3,
 			tsp_gpios[GPIO_TOUCH_nINT].gpio);
-
+		if (board_is_espresso10()) msleep(300);
 	} else {
 		pr_debug("tsp: power off.\n");
 		gpio_set_value(tsp_gpios[GPIO_TOUCH_EN].gpio, 0);
@@ -164,11 +164,16 @@ static void tsp_set_power(bool on)
 
 		omap_mux_set_gpio(OMAP_PIN_INPUT | OMAP_MUX_MODE3,
 			tsp_gpios[GPIO_TOUCH_nINT].gpio);
+		if (board_is_espresso10()) msleep(50);
 	}
 	return;
 }
 
 const u32 espresso_tsp_fw_info = 0x17;
+
+static struct synaptics_fw_info espresso10_tsp_fw_info = {
+	.release_date = "0906",
+};
 
 static struct sec_ts_platform_data espresso_ts_pdata = {
 	.fw_name	= "melfas/p3100.fw",
@@ -177,7 +182,7 @@ static struct sec_ts_platform_data espresso_ts_pdata = {
 	.tx_channel_no	= 22, /* Tx ch. */
 	.x_pixel_size	= 1023,
 	.y_pixel_size	= 599,
-	.pivot		= true,
+	.pivot		= false,
 	.ta_state	= CABLE_TYPE_NONE,
 	.set_power	= tsp_set_power,
 };
@@ -185,6 +190,13 @@ static struct sec_ts_platform_data espresso_ts_pdata = {
 static struct i2c_board_info __initdata espresso_i2c3_boardinfo[] = {
 	{
 		I2C_BOARD_INFO("melfas_ts", 0x48),
+		.platform_data	= &espresso_ts_pdata,
+	},
+};
+
+static struct i2c_board_info __initdata espresso10_i2c3_boardinfo[] = {
+	{
+		I2C_BOARD_INFO("synaptics_ts", 0x20),
 		.platform_data	= &espresso_ts_pdata,
 	},
 };
@@ -288,11 +300,20 @@ static void __init espresso_tsp_gpio_init(void)
 	for (i = 0; i < ARRAY_SIZE(tsp_gpios); i++)
 		tsp_gpios[i].gpio =
 			omap_muxtbl_get_gpio_by_name(tsp_gpios[i].label);
+
+	if (board_is_espresso10())
+		tsp_gpios[GPIO_TOUCH_EN].flags = GPIOF_DIR_OUT;
+
 	gpio_request_array(tsp_gpios, ARRAY_SIZE(tsp_gpios));
 
 	espresso_i2c3_boardinfo[0].irq =
 				gpio_to_irq(tsp_gpios[GPIO_TOUCH_nINT].gpio);
 
+	if (board_is_espresso10()) {
+		espresso_ts_pdata.gpio_en = tsp_gpios[GPIO_TOUCH_EN].gpio;
+		espresso10_i2c3_boardinfo[0].irq =
+				gpio_to_irq(tsp_gpios[GPIO_TOUCH_nINT].gpio);
+	}
 	espresso_ts_pdata.gpio_irq = tsp_gpios[GPIO_TOUCH_nINT].gpio;
 	espresso_ts_pdata.gpio_scl = tsp_gpios[GPIO_TOUCH_SCL].gpio;
 	espresso_ts_pdata.gpio_sda = tsp_gpios[GPIO_TOUCH_SDA].gpio;
@@ -313,9 +334,9 @@ static struct gpio ts_panel_gpios[] = {
 	},
 };
 
-static const char *panel_name[8] = {"ILJIN", "DIGITECH", };
+static const char *panel_name[8] = {"ILJIN", "DIGITECH", "iljin", "o-film", "s-mac", };
 
-static __init void espresso_ts_panel_setup(void)
+static void __init espresso_ts_panel_setup(void)
 {
 	int i, panel_id = 0;
 
@@ -327,12 +348,38 @@ static __init void espresso_ts_panel_setup(void)
 	for (i = 0; i < ARRAY_SIZE(ts_panel_gpios); i++)
 		panel_id |= gpio_get_value(ts_panel_gpios[i].gpio) << i;
 
+	if (board_is_espresso10()) {
+		espresso_ts_pdata.fw_name = "synaptics/p5100.fw";
+		espresso_ts_pdata.fw_info = &espresso10_tsp_fw_info,
+		espresso_ts_pdata.rx_channel_no	= 42,
+		espresso_ts_pdata.tx_channel_no	= 27,
+		espresso_ts_pdata.x_pixel_size	= 1279,
+		espresso_ts_pdata.y_pixel_size	= 799,
+		espresso_ts_pdata.pivot		= false,
+		espresso_ts_pdata.ta_state	= CABLE_NONE,
+		panel_id += 2;
+	}
 	espresso_ts_pdata.panel_name = panel_name[clamp(panel_id, 0, 7)];
 }
 
 void omap4_espresso_tsp_ta_detect(int cable_type)
 {
-	espresso_ts_pdata.ta_state = cable_type;
+	if (board_is_espresso10()) {
+		switch (cable_type) {
+		case CABLE_TYPE_AC:
+			espresso_ts_pdata.ta_state = CABLE_TA;
+			break;
+		case CABLE_TYPE_USB:
+			espresso_ts_pdata.ta_state = CABLE_USB;
+			break;
+		case CABLE_TYPE_NONE:
+		default:
+			espresso_ts_pdata.ta_state = CABLE_NONE;
+		}
+	} else {
+		espresso_ts_pdata.ta_state = cable_type;
+	}
+
 
 	/* Conditions for prevent kernel panic */
 	if (espresso_ts_pdata.set_ta_mode &&
@@ -341,47 +388,22 @@ void omap4_espresso_tsp_ta_detect(int cable_type)
 	return;
 }
 
-static void espresso_set_dvfs(bool on)
-{
-#ifdef CONFIG_TOUCH_DVFS
-	static bool is_on;
-
-	if (on && !is_on) {
-		omap_cpufreq_min_limit(DVFS_LOCK_ID_TSP, CONFIG_TOUCH_DVFS);
-		is_on = true;
-	} else if (!on && is_on) {
-		omap_cpufreq_min_limit_free(DVFS_LOCK_ID_TSP);
-		is_on = false;
-	}
-#endif
-}
-
 void __init omap4_espresso_input_init(void)
 {
-	u32 boardtype = omap4_espresso_get_board_type();
-
-	if (boardtype == SEC_MACHINE_ESPRESSO_WIFI)
-		espresso_ts_pdata.model_name = "P3110";
-	else if (boardtype == SEC_MACHINE_ESPRESSO_USA_BBY)
-		espresso_ts_pdata.model_name = "P3113";
-	else
-		espresso_ts_pdata.model_name = "P3100";
-
 	espresso_gpio_keypad_gpio_init();
 	espresso_tsp_gpio_init();
 	espresso_ts_panel_setup();
 
-	i2c_register_board_info(3, espresso_i2c3_boardinfo,
+	if (!board_is_espresso10()) {
+		i2c_register_board_info(3, espresso_i2c3_boardinfo,
 				ARRAY_SIZE(espresso_i2c3_boardinfo));
+	} else {
+		i2c_register_board_info(3, espresso10_i2c3_boardinfo,
+				ARRAY_SIZE(espresso10_i2c3_boardinfo));
+	}
+
 
 	espresso_create_sec_key_dev();
 
-	if (sec_debug_get_level()) {
-		espresso_gpio_keypad_keys_info_high.flags |= GPIOEDF_PRINT_KEYS;
-		espresso_gpio_keypad_keys_info_low.flags |= GPIOEDF_PRINT_KEYS;
-	}
-
 	platform_device_register(&espresso_gpio_keypad_device);
-
-	espresso_ts_pdata.set_dvfs = espresso_set_dvfs;
 }

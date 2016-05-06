@@ -25,7 +25,7 @@
 #include <linux/i2c.h>
 #include <linux/i2c-gpio.h>
 #include <linux/i2c/twl.h>
-#include <linux/power/smb136_charger.h>
+#include <linux/power/smb_charger.h>
 #include <linux/power/max17042_battery.h>
 #include <linux/bat_manager.h>
 #include <linux/battery.h>
@@ -34,7 +34,6 @@
 #include "board-espresso.h"
 #include "mux.h"
 #include "omap_muxtbl.h"
-#include "sec_common.h"
 
 #define TA_CHG_ING_N	0
 #define TA_ENABLE	1
@@ -51,12 +50,18 @@
 
 #define CABLE_DETECT_VALUE	1150
 #define HIGH_BLOCK_TEMP         500
-#define HIGH_RECOVER_TEMP       440
+#define HIGH_RECOVER_TEMP       420
 #define LOW_BLOCK_TEMP          (-50)
 #define LOW_RECOVER_TEMP        0
 
+#define BB_HIGH_BLOCK_TEMP         480
+#define BB_HIGH_RECOVER_TEMP       440
+#define BB_LOW_BLOCK_TEMP          (-40)
+#define BB_LOW_RECOVER_TEMP        0
+
+u32 bootmode;
 struct max17042_fuelgauge_callbacks *fuelgauge_callback;
-struct smb_charger_callbacks *charger_callback;
+struct smb_charger_callbacks *espresso_charger_callbacks;
 struct battery_manager_callbacks *batman_callback;
 
 static struct gpio charger_gpios[] = {
@@ -76,9 +81,9 @@ static irqreturn_t charger_state_isr(int irq, void *_data)
 		IRQF_TRIGGER_LOW : IRQF_TRIGGER_HIGH);
 
 	if (val) {
-		if (charger_callback && charger_callback->get_status_reg)
-			res = charger_callback->
-				get_status_reg(charger_callback);
+		if (espresso_charger_callbacks && espresso_charger_callbacks->get_status_reg)
+			res = espresso_charger_callbacks->
+				get_status_reg(espresso_charger_callbacks);
 
 		if (res == CHARGER_STATUS_FULL &&
 			batman_callback &&
@@ -182,33 +187,41 @@ static void __init espresso_gpio_i2c_init(void)
 		omap_muxtbl_get_gpio_by_name("FUEL_SCL_1.8V");
 }
 
-static void smb136_charger_register_callbacks(
+static void smb_charger_register_callbacks(
 		struct smb_charger_callbacks *ptr)
 {
-	charger_callback = ptr;
+	espresso_charger_callbacks = ptr;
 }
 
 static void set_chg_state(int cable_type)
 {
-	if (charger_callback && charger_callback->set_charging_state)
-		charger_callback->set_charging_state(charger_callback,
+	if (espresso_charger_callbacks && espresso_charger_callbacks->set_charging_state)
+		espresso_charger_callbacks->set_charging_state(espresso_charger_callbacks,
 				cable_type);
 
 	omap4_espresso_usb_detected(cable_type);
 	omap4_espresso_tsp_ta_detect(cable_type);
 }
 
-static struct smb_charger_data smb136_pdata = {
+static struct smb_charger_data smb_pdata = {
 	.set_charge = charger_enble_set,
-	.register_callbacks = smb136_charger_register_callbacks,
+	.register_callbacks = smb_charger_register_callbacks,
 };
 
 static const __initdata struct i2c_board_info smb136_i2c[] = {
 	{
 		I2C_BOARD_INFO("smb136-charger", 0x4D), /* 9A >> 1 */
-		.platform_data = &smb136_pdata,
+		.platform_data = &smb_pdata,
 	},
 };
+
+static const __initdata struct i2c_board_info smb347_i2c[] = {
+	{
+		I2C_BOARD_INFO("smb347-charger", 0x0C >> 1),
+		.platform_data = &smb_pdata,
+	},
+};
+
 
 static void max17042_fuelgauge_register_callbacks(
 		struct max17042_fuelgauge_callbacks *ptr)
@@ -222,6 +235,37 @@ static struct max17042_platform_data max17042_pdata = {
 	.sdi_capacity = 0x1F40,
 	.sdi_vfcapacity = 0x29AB,
 	.sdi_low_bat_comp_start_vol = 3550,
+	.current_range = {
+		.range1 = 0,
+		.range2 = -100,
+		.range3 = -750,
+		.range4 = -1250,
+		.range5 = 0, /* ignored */
+		.range_max = -1250,
+		.range_max_num = 4,
+	},
+	.sdi_compensation = {
+		.range1_1_slope = 0,
+		.range1_1_offset = 3456,
+		.range1_3_slope = 0,
+		.range1_3_offset = 3536,
+		.range2_1_slope = 96,
+		.range2_1_offset = 3461,
+		.range2_3_slope = 134,
+		.range2_3_offset = 3544,
+		.range3_1_slope = 97,
+		.range3_1_offset = 3451,
+		.range3_3_slope = 27,
+		.range3_3_offset = 3454,
+		.range4_1_slope = 0,
+		.range4_1_offset = 3320,
+		.range4_3_slope = 0,
+		.range4_3_offset = 3410,
+		.range5_1_slope = 0,
+		.range5_1_offset = 3318,
+		.range5_3_slope = 0,
+		.range5_3_offset = 3383,
+	},
 };
 
 static const __initdata struct i2c_board_info max17042_i2c[] = {
@@ -249,7 +293,7 @@ static int check_charger_type(void)
 			CABLE_TYPE_AC :
 			CABLE_TYPE_USB;
 
-	pr_info("%s : Charger type is [%s], adc=%d\n",
+	pr_info("%s : Charger type is [%s], adc = %d\n",
 		__func__,
 		cable_type == CABLE_TYPE_AC ? "TA" : "USB",
 		adc);
@@ -372,17 +416,33 @@ void check_jig_status(int status)
 	battery_manager_pdata.jig_on = status;
 }
 
+static __init int setup_boot_mode(char *str)
+{
+	unsigned int _bootmode;
+
+	if (!kstrtouint(str, 0, &_bootmode))
+		bootmode = _bootmode;
+
+	return 0;
+}
+__setup("bootmode=", setup_boot_mode);
+
 void __init omap4_espresso_charger_init(void)
 {
 	int ret;
 
 	charger_gpio_init();
 	espresso_gpio_i2c_init();
+	if (board_is_espresso10() && board_is_bestbuy_variant() && bootmode == 5) {
+		battery_manager_pdata.high_block_temp = BB_HIGH_BLOCK_TEMP;
+		battery_manager_pdata.high_recover_temp = BB_HIGH_RECOVER_TEMP;
+		battery_manager_pdata.low_block_temp = BB_LOW_BLOCK_TEMP;
+		battery_manager_pdata.low_recover_temp = BB_LOW_RECOVER_TEMP;
+	}
 
-	battery_manager_pdata.bootmode = sec_bootmode;
-	smb136_pdata.hw_revision = system_rev;
-	pr_info("%s: HW REVISION : %x\n",
-		__func__, smb136_pdata.hw_revision);
+	battery_manager_pdata.bootmode = bootmode;
+	if (!board_is_espresso10())
+		smb_pdata.hw_revision = system_rev;
 
 	battery_manager_pdata.ta_gpio =
 			omap_muxtbl_get_gpio_by_name("TA_nCONNECTED");
@@ -398,7 +458,38 @@ void __init omap4_espresso_charger_init(void)
 	if (ret < 0)
 		pr_err("%s: gpio_i2c7 device register fail\n", __func__);
 
-	i2c_register_board_info(5, smb136_i2c, ARRAY_SIZE(smb136_i2c));
+	if (board_is_espresso10()) {
+		i2c_register_board_info(5, smb347_i2c, ARRAY_SIZE(smb347_i2c));
+		max17042_pdata.sdi_capacity = 0x3730;
+		max17042_pdata.sdi_vfcapacity = 0x4996;
+		max17042_pdata.byd_capacity = 0x36B0;
+		max17042_pdata.byd_vfcapacity = 0x48EA;
+		max17042_pdata.sdi_low_bat_comp_start_vol = 3600;
+		max17042_pdata.byd_low_bat_comp_start_vol = 3650;
+		max17042_pdata.current_range.range2 = -200;
+		max17042_pdata.current_range.range3 = -600;
+		max17042_pdata.current_range.range4 = -1500;
+		max17042_pdata.current_range.range5 = -2500;
+		max17042_pdata.current_range.range_max = -2500;
+		max17042_pdata.current_range.range_max_num = 5;
+		max17042_pdata.sdi_compensation.range1_1_offset = 3438;
+		max17042_pdata.sdi_compensation.range1_3_offset = 3591;
+		max17042_pdata.sdi_compensation.range2_1_slope = 45;
+		max17042_pdata.sdi_compensation.range2_1_offset = 3447;
+		max17042_pdata.sdi_compensation.range2_3_slope = 78;
+		max17042_pdata.sdi_compensation.range2_3_offset = 3606;
+		max17042_pdata.sdi_compensation.range3_1_slope = 54;
+		max17042_pdata.sdi_compensation.range3_1_offset = 3453;
+		max17042_pdata.sdi_compensation.range3_3_slope = 92;
+		max17042_pdata.sdi_compensation.range3_3_offset = 3615;
+		max17042_pdata.sdi_compensation.range4_1_slope = 53;
+		max17042_pdata.sdi_compensation.range4_1_offset = 3451;
+		max17042_pdata.sdi_compensation.range4_3_slope = 94;
+		max17042_pdata.sdi_compensation.range4_3_offset = 3618;
+	} else {
+		i2c_register_board_info(5, smb136_i2c, ARRAY_SIZE(smb136_i2c));
+	}
+
 	i2c_register_board_info(7, max17042_i2c, ARRAY_SIZE(max17042_i2c));
 
 	ret = platform_device_register(&battery_manager_device);

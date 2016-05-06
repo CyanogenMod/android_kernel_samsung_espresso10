@@ -293,6 +293,11 @@ config OMAP_PM
 	bool "OMAP PM layer implementation"
 endchoice
 
+config ION_OMAP_TILER_DYNAMIC_ALLOC
+	bool "Force dynamic allocation of tiler memory."
+	depends on ION_OMAP
+	default n
+
 endmenu
 
 endif

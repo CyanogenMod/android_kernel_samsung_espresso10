@@ -800,15 +800,6 @@ config SEC_TSP_FACTORY_TEST
 		Say Y here if you want to support for Samsung Factory Test
 		mode for TSP.
 
-config TOUCH_DVFS
-	int "DVFS control at touch input"
-	depends on TOUCHSCREEN_MELFAS_MMS144 || TOUCHSCREEN_MELFAS_MMS136 || \
-		TOUCHSCREEN_CYTTSP4
-	help
-		Define minimum fixed frequency of AP here if you want to support
-		for DVFS control at touch inputed.
-		It reduces more battery power.
-
 config TOUCH_SCREEN_BOOST_MODE
 	bool "Touch Boost Mode"
 	depends on TOUCHSCREEN_MELFAS_MMS136 || TOUCHSCREEN_MELFAS_MMS144

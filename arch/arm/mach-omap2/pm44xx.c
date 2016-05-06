@@ -1292,8 +1292,7 @@ static irqreturn_t prcm_interrupt_handler (int irq, void *dev_id)
 #endif
 
 		omap_uart_resume_idle();
-		if (!machine_is_tuna())
-			usbhs_wakeup();
+		usbhs_wakeup();
 		omap_debug_uart_resume_idle();
 		omap4_trigger_ioctrl();
 	}

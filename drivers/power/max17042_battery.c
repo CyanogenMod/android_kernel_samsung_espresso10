@@ -189,7 +189,7 @@ static int max17042_get_vcell(struct i2c_client *client)
 
 	vcell = (data & 0xFFF) * 78125 / 1000000;
 	vcell += ((((data & 0xF000) >> 4) * 78125) / 1000000) << 4;
-	dev_info(&client->dev, "VCELL : %d, data : 0x%x\n",
+	dev_dbg(&client->dev, "VCELL : %d, data : 0x%x\n",
 			vcell, data);
 
 	return vcell * 1000;
@@ -202,7 +202,7 @@ static int max17042_get_soc(struct i2c_client *client)
 
 	data = max17042_read_reg(client, MAX17042_RepSOC);
 	soc = clamp((data/256), 0, 100);
-	dev_info(&client->dev, "SOC : %d, data : 0x%x\n",
+	dev_dbg(&client->dev, "SOC : %d, data : 0x%x\n",
 			soc, data);
 
 	return soc;
@@ -257,7 +257,7 @@ static int max17042_get_temperature(struct i2c_client *client)
 			temper = ((7 * temper) / 10 + 7) + 20;
 	}
 
-	dev_info(&client->dev, "TEMPERATURE : %d, data :0x%x\n",
+	dev_dbg(&client->dev, "TEMPERATURE : %d, data :0x%x\n",
 		temper, data);
 
 	return temper;
@@ -274,7 +274,7 @@ static int max17042_get_avg_current(struct i2c_client *client)
 		((((~data & 0xFFFF) + 1) * 15625) / 100000) * (-1) :
 		(data * 15625) / 100000;
 
-	dev_info(&client->dev, "AVG Current : %d, data :0x%x\n",
+	dev_dbg(&client->dev, "AVG Current : %d, data :0x%x\n",
 		avg_current, data);
 	return avg_current;
 }
@@ -289,7 +289,7 @@ static int max17042_get_current(struct i2c_client *client)
 	fg_current = (data & (0x1 << 15)) ?
 		((((~data & 0xFFFF) + 1) * 15625) / 100000) * (-1) :
 		(data * 15625) / 100000;
-	dev_info(&client->dev, "Current : %d, data :0x%x\n",
+	dev_dbg(&client->dev, "Current : %d, data :0x%x\n",
 		fg_current, data);
 
 	return fg_current;
@@ -416,7 +416,7 @@ static void max17042_set_battery_type(struct max17042_chip *chip)
 		chip->info.battery_type = SDI_BATTERY_TYPE;
 	}
 
-	pr_info("%s : DesignCAP(0x%04x), Battery type(%s)\n",
+	pr_debug("%s : DesignCAP(0x%04x), Battery type(%s)\n",
 			__func__, data,
 			chip->info.battery_type == SDI_BATTERY_TYPE ?
 			"SDI_TYPE_BATTERY" : "BYD_TYPE_BATTERY");
@@ -708,56 +708,54 @@ static void add_low_batt_comp_cnt(struct max17042_chip *chip,
 	}
 }
 
-static int get_low_batt_threshold(int range, int level, int nCurrent)
+static int get_low_batt_threshold(struct max17042_chip *chip,
+			int range, int level, int nCurrent)
 {
 	int ret = 0;
 
 	switch (range) {
-	/* P4 & P8 needs one more level */
-#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
 	case 5:
 		if (level == 1)
-			ret = SDI_Range5_1_Offset +
-			      ((nCurrent * SDI_Range5_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range5_1_offset +
+			      ((nCurrent * chip->pdata->sdi_compensation.range5_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range5_3_Offset +
-			      ((nCurrent * SDI_Range5_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range5_3_offset +
+			      ((nCurrent * chip->pdata->sdi_compensation.range5_3_slope) / 1000);
 		break;
-#endif
 	case 4:
 		if (level == 1)
-			ret = SDI_Range4_1_Offset + \
-			      ((nCurrent * SDI_Range4_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range4_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range4_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range4_3_Offset + \
-			      ((nCurrent * SDI_Range4_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range4_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range4_3_slope) / 1000);
 		break;
 
 	case 3:
 		if (level == 1)
-			ret = SDI_Range3_1_Offset + \
-			      ((nCurrent * SDI_Range3_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range3_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range3_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range3_3_Offset + \
-			      ((nCurrent * SDI_Range3_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range3_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range3_3_slope) / 1000);
 		break;
 
 	case 2:
 		if (level == 1)
-			ret = SDI_Range2_1_Offset + \
-			      ((nCurrent * SDI_Range2_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range2_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range2_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range2_3_Offset + \
-			      ((nCurrent * SDI_Range2_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range2_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range2_3_slope) / 1000);
 		break;
 
 	case 1:
 		if (level == 1)
-			ret = SDI_Range1_1_Offset + \
-			      ((nCurrent * SDI_Range1_1_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range1_1_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range1_1_slope) / 1000);
 		else if (level == 3)
-			ret = SDI_Range1_3_Offset + \
-			      ((nCurrent * SDI_Range1_3_Slope) / 1000);
+			ret = chip->pdata->sdi_compensation.range1_3_offset + \
+			      ((nCurrent * chip->pdata->sdi_compensation.range1_3_slope) / 1000);
 		break;
 
 	default:
@@ -806,71 +804,66 @@ static int max17042_low_batt_compensation(
 		fg_avg_current = max17042_get_avg_current(chip->client);
 		fg_min_current = min(fg_avg_current, bat_info.fg_current);
 
-		if (fg_min_current < CURRENT_RANGE_MAX) {
+		if (fg_min_current < chip->pdata->current_range.range_max) {
 			if (bat_info.soc >= 2 &&
-				bat_info.vcell < get_low_batt_threshold(
-					CURRENT_RANGE_MAX_NUM,
+				bat_info.vcell < get_low_batt_threshold(chip,
+					chip->pdata->current_range.range_max_num,
 					1, fg_min_current))
 				add_low_batt_comp_cnt(chip,
-					CURRENT_RANGE_MAX_NUM, 1);
+					chip->pdata->current_range.range_max_num, 1);
 			else if (bat_info.soc >= 4 &&
-				bat_info.vcell < get_low_batt_threshold(
-					CURRENT_RANGE_MAX_NUM,
+				bat_info.vcell < get_low_batt_threshold(chip,
+					chip->pdata->current_range.range_max_num,
 					3, fg_min_current))
 				add_low_batt_comp_cnt(chip,
-					CURRENT_RANGE_MAX_NUM, 3);
+					chip->pdata->current_range.range_max_num, 3);
 			else
 				bCntReset = 1;
-		}
-		/* P4 & P8 needs more level */
-#if defined(CONFIG_MACH_SAMSUNG_ESPRESSO_10)
-		else if (fg_min_current >= CURRENT_RANGE5 &&
-				fg_min_current < CURRENT_RANGE4) {
+		} else if (fg_min_current >= chip->pdata->current_range.range5 &&
+				fg_min_current < chip->pdata->current_range.range4) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(4, 1,
+				get_low_batt_threshold(chip, 4, 1,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 4, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(4, 3,
+				get_low_batt_threshold(chip, 4, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 4, 3);
 			else
 				bCntReset = 1;
-		}
-#endif
-		else if (fg_min_current >= CURRENT_RANGE4 &&
-				fg_min_current < CURRENT_RANGE3) {
+		} else if (fg_min_current >= chip->pdata->current_range.range4 &&
+				fg_min_current < chip->pdata->current_range.range3) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(3, 1,
+				get_low_batt_threshold(chip, 3, 1,
 					fg_min_current))
 
 				add_low_batt_comp_cnt(chip, 3, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(3, 3,
+				get_low_batt_threshold(chip, 3, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 3, 3);
 			else
 				bCntReset = 1;
-		} else if (fg_min_current >= CURRENT_RANGE3 &&
-				fg_min_current < CURRENT_RANGE2) {
+		} else if (fg_min_current >= chip->pdata->current_range.range3 &&
+				fg_min_current < chip->pdata->current_range.range2) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(2, 1,
+				get_low_batt_threshold(chip, 2, 1,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 2, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(2, 3,
+				get_low_batt_threshold(chip, 2, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 2, 3);
 			else
 				bCntReset = 1;
-		} else if (fg_min_current >= CURRENT_RANGE2 &&
-				fg_min_current < CURRENT_RANGE1) {
+		} else if (fg_min_current >= chip->pdata->current_range.range2 &&
+				fg_min_current < chip->pdata->current_range.range1) {
 			if (bat_info.soc >= 2 && bat_info.vcell <
-				get_low_batt_threshold(1, 1,
+				get_low_batt_threshold(chip, 1, 1,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 1, 1);
 			else if (bat_info.soc >= 4 && bat_info.vcell <
-				get_low_batt_threshold(1, 3,
+				get_low_batt_threshold(chip, 1, 3,
 					fg_min_current))
 				add_low_batt_comp_cnt(chip, 1, 3);
 			else
@@ -991,7 +984,7 @@ static int max17042_check_status_reg(struct i2c_client *client)
 
 	/* 1. Check Smn was generatedread */
 	status_data = max17042_read_reg(client, MAX17042_STATUS);
-	dev_info(&client->dev, "%s - addr(0x00), data(0x%04x)\n",
+	dev_dbg(&client->dev, "%s - addr(0x00), data(0x%04x)\n",
 			__func__, status_data);
 
 	if (status_data & (0x1 << 10))
@@ -1016,7 +1009,7 @@ static void max17042_fullcharged_compensation(
 	struct max17042_chip *chip =
 		container_of(ptr, struct max17042_chip, callbacks);
 
-	dev_info(&chip->client->dev,
+	dev_dbg(&chip->client->dev,
 			"%s: is_recharging(%d), pre_update(%d)\n",
 			__func__, is_recharging, pre_update);
 
@@ -1026,7 +1019,7 @@ static void max17042_fullcharged_compensation(
 		new_fullcap = chip->info.capacity;
 
 	if (new_fullcap > (chip->info.capacity * 110 / 100)) {
-		dev_info(&chip->client->dev,
+		dev_dbg(&chip->client->dev,
 			"%s: [Case 1] previous_fullcap = 0x%04x,"
 			" NewFullCap = 0x%04x\n",
 			__func__, chip->info.previous_fullcap, new_fullcap);
@@ -1037,7 +1030,7 @@ static void max17042_fullcharged_compensation(
 		max17042_write_reg(chip->client,
 			MAX17402_FullCAP, (u16)(new_fullcap));
 	} else if (new_fullcap < (chip->info.capacity * 50 / 100)) {
-		dev_info(&chip->client->dev,
+		dev_dbg(&chip->client->dev,
 			"%s : [Case 5] previous_fullcap = 0x%04x,"
 			" NewFullCap = 0x%04x\n",
 			__func__, chip->info.previous_fullcap, new_fullcap);
@@ -1049,7 +1042,7 @@ static void max17042_fullcharged_compensation(
 			MAX17402_FullCAP, (u16)(new_fullcap));
 	} else {
 		if (new_fullcap > (chip->info.previous_fullcap * 110 / 100)) {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 				"%s : [Case 2] previous_fullcap = 0x%04x,"
 				" NewFullCap = 0x%04x\n", __func__,
 				chip->info.previous_fullcap, new_fullcap);
@@ -1060,7 +1053,7 @@ static void max17042_fullcharged_compensation(
 			max17042_write_reg(chip->client,
 				MAX17402_FullCAP, (u16)(new_fullcap));
 		} else if (new_fullcap < (chip->info.previous_fullcap*90/100)) {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 				"%s : [Case 3] previous_fullcap = 0x%04x,"
 				" NewFullCap = 0x%04x\n", __func__,
 				chip->info.previous_fullcap, new_fullcap);
@@ -1071,7 +1064,7 @@ static void max17042_fullcharged_compensation(
 			max17042_write_reg(chip->client,
 				MAX17402_FullCAP, (u16)(new_fullcap));
 		} else {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 				"%s : [Case 4] previous_fullcap = 0x%04x,"
 				" NewFullCap = 0x%04x\n", __func__,
 				chip->info.previous_fullcap, new_fullcap);
@@ -1095,7 +1088,7 @@ static void max17042_fullcharged_compensation(
 		chip->info.previous_fullcap =
 			max17042_read_reg(chip->client, MAX17402_FullCAP);
 
-	dev_info(&chip->client->dev, "%s : (A) FullCap = 0x%04x, RemCap = 0x%04x\n",
+	dev_dbg(&chip->client->dev, "%s : (A) FullCap = 0x%04x, RemCap = 0x%04x\n",
 		 __func__,
 		max17042_read_reg(chip->client, MAX17402_FullCAP),
 		max17042_read_reg(chip->client, MAX17042_RepCap));
@@ -1117,7 +1110,7 @@ static void max17042_check_vf_fullcap_range(
 		new_vffullcap = chip->info.vfcapacity;
 
 	if (new_vffullcap > (chip->info.vfcapacity * 110 / 100)) {
-		dev_info(&chip->client->dev,
+		dev_dbg(&chip->client->dev,
 			"%s : [Case 1] previous_vffullcap = 0x%04x,"
 			" NewVfFullCap = 0x%04x\n", __func__,
 			chip->info.previous_vffullcap, new_vffullcap);
@@ -1128,7 +1121,7 @@ static void max17042_check_vf_fullcap_range(
 			(u16)(new_vffullcap / 4));
 		max17042_write_reg(chip->client, MAX17042_DPACC, (u16)0x3200);
 	} else if (new_vffullcap < (chip->info.vfcapacity * 50 / 100)) {
-		dev_info(&chip->client->dev,
+		dev_dbg(&chip->client->dev,
 			"%s : [Case 5] previous_vffullcap = 0x%04x,"
 			" NewVfFullCap = 0x%04x\n", __func__,
 			chip->info.previous_vffullcap, new_vffullcap);
@@ -1140,7 +1133,7 @@ static void max17042_check_vf_fullcap_range(
 		max17042_write_reg(chip->client, MAX17042_DPACC, (u16)0x3200);
 	} else {
 		if (new_vffullcap > (chip->info.previous_vffullcap*110 / 100)) {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 				"%s : [Case 2] previous_vffullcap = 0x%04x,"
 				" NewVfFullCap = 0x%04x\n", __func__,
 				chip->info.previous_vffullcap, new_vffullcap);
@@ -1153,7 +1146,7 @@ static void max17042_check_vf_fullcap_range(
 				MAX17042_DPACC, (u16)0x3200);
 		} else if (new_vffullcap <
 				(chip->info.previous_vffullcap * 90 / 100)) {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 				"%s : [Case 3] previous_vffullcap = 0x%04x,"
 				" NewVfFullCap = 0x%04x\n", __func__,
 				chip->info.previous_vffullcap, new_vffullcap);
@@ -1165,7 +1158,7 @@ static void max17042_check_vf_fullcap_range(
 			max17042_write_reg(chip->client,
 				MAX17042_DPACC, (u16)0x3200);
 		} else {
-			dev_info(&chip->client->dev,
+			dev_dbg(&chip->client->dev,
 				"%s : [Case 4] previous_vffullcap = 0x%04x,"
 				" NewVfFullCap = 0x%04x\n", __func__,
 				chip->info.previous_vffullcap,
@@ -1182,7 +1175,7 @@ static void max17042_check_vf_fullcap_range(
 			max17042_read_reg(chip->client, MAX17042_FullCAP_Nom);
 
 	if (print_flag)
-		dev_info(&chip->client->dev,
+		dev_dbg(&chip->client->dev,
 			"%s:VfFullCap(0x%04x), dQacc(0x%04x), dPacc(0x%04x)\n",
 			__func__,
 			max17042_read_reg(chip->client, MAX17042_FullCAP_Nom),
@@ -1330,7 +1323,8 @@ static int __devinit max17042_probe(struct i2c_client *client,
 	max17042_periodic_read(client);
 
 	max17042_alert_init(client);
-	dev_info(&client->dev, "%s: probe done\n", __func__);
+
+	dev_info(&client->dev, "probed\n");
 
 	return 0;
 
