@@ -23,6 +23,8 @@ extern struct class *sec_class;
 #define SEC_MACHINE_ESPRESSO10			0x02
 #define SEC_MACHINE_ESPRESSO10_USA_BBY		0x06
 
+#define CABLE_DETECT_VALUE	1150
+
 enum espresso_adc_ch {
 	REMOTE_SENSE = 0,
 	ADC_CHECK_1,	/* TA detection */
@@ -53,6 +55,7 @@ void omap4_espresso_jack_init(void);
 
 /** @category Charger, Battery */
 void omap4_espresso_power_init(void);
+int check_charger_type(void);
 
 /** @category Motion Sensor */
 void omap4_espresso_sensors_init(void);

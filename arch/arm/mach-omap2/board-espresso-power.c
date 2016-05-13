@@ -45,7 +45,6 @@
 
 #define CHARGER_STATUS_FULL	0x1
 
-#define CABLE_DETECT_VALUE	1150
 #define HIGH_BLOCK_TEMP	500
 #define HIGH_RECOVER_TEMP	420
 #define LOW_BLOCK_TEMP		(-50)
@@ -263,7 +262,7 @@ static int read_fuel_value(enum fuel_property fg_prop)
 	return 0;
 }
 
-static int check_charger_type(void)
+int check_charger_type(void)
 {
 	int cable_type;
 	short adc;
