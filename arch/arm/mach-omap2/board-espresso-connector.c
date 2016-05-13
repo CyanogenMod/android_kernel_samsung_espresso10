@@ -1171,7 +1171,7 @@ switch_dev_fail:
 	espresso_otg->dock_switch.name = "dock";
 	switch_dev_register(&espresso_otg->dock_switch);
 
-	espresso_otg->audio_switch.name = "usb_audio";
+	espresso_otg->audio_switch.name = "dock_audio";
 	switch_dev_register(&espresso_otg->audio_switch);
 
 	espresso_otg->current_device = 0;
