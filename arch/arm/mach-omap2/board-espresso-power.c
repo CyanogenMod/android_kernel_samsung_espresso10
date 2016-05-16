@@ -40,6 +40,8 @@
 
 #define GPIO_CHG_SDA		98
 #define GPIO_CHG_SCL		99
+#define GPIO_CHG_SDA_BBY	113
+#define GPIO_CHG_SCL_BBY	110
 #define GPIO_FUEL_SDA		62
 #define GPIO_FUEL_SCL		61
 
@@ -415,6 +417,10 @@ void __init omap4_espresso_charger_init(void)
 	if (!gpio_is_valid(GPIO_TA_NCONNECTED))
 		gpio_request(GPIO_TA_NCONNECTED, "TA_nCONNECTED");
 
+	if (board_is_espresso10() && board_is_bestbuy_variant()) {
+		espresso_gpio_i2c5_pdata.sda_pin = GPIO_CHG_SDA_BBY;
+		espresso_gpio_i2c5_pdata.scl_pin = GPIO_CHG_SCL_BBY;
+	}
 	ret = platform_device_register(&espresso_gpio_i2c5_device);
 	if (ret < 0)
 		pr_err("%s: gpio_i2c5 device register fail\n", __func__);
