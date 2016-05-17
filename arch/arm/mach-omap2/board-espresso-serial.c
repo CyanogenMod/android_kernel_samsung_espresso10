@@ -126,7 +126,7 @@ static void __init espresso_gpio_i2c_init(void)
 {
 	if (board_is_espresso10() && board_is_bestbuy_variant()) {
 		espresso_gpio_i2c6_pdata.sda_pin = GPIO_ADC_I2C_SDA_BBY;
-		espresso_gpio_i2c6_pdata.sda_pin = GPIO_ADC_I2C_SCL_BBY;
+		espresso_gpio_i2c6_pdata.scl_pin = GPIO_ADC_I2C_SCL_BBY;
 	}
 }
 
