@@ -492,9 +492,14 @@ static int hsi_init_handshake(struct mipi_link_device *mipi_ld, int mode)
 				mipi_ld->hsi_channles[i].opened = 0;
 		}
 
-		if (!mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].opened)
-			if_hsi_open_channel(
+		if (!mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].opened) {
+			ret = if_hsi_open_channel(
 				&mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL]);
+			if (ret) {
+				mipi_err("%s: error opening channel\n", __func__);
+				return ret;
+			}
+		}
 		mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].send_step
 					= STEP_IDLE;
 		mipi_ld->hsi_channles[HSI_FLASHLESS_CHANNEL].recv_step
