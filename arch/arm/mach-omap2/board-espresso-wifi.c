@@ -31,8 +31,7 @@
 #include <linux/regulator/fixed.h>
 #include <plat/mmc.h>
 
-#include <linux/random.h>
-#include <linux/jiffies.h>
+#include <mach/id.h>
 
 #include "board-espresso.h"
 #include "hsmmc.h"
@@ -187,17 +186,16 @@ __setup("androidboot.macaddr=", espresso_mac_addr_setup);
 
 static int espresso_wifi_get_mac_addr(unsigned char *buf)
 {
-	uint rand_mac;
+	struct omap_die_id opi;
 
 	if (!buf)
 		return -EFAULT;
 
 	if ((espresso_mac_addr[4] == 0) && (espresso_mac_addr[5] == 0)) {
-		srandom32((uint)jiffies);
-		rand_mac = random32();
-		espresso_mac_addr[3] = (unsigned char)rand_mac;
-		espresso_mac_addr[4] = (unsigned char)(rand_mac >> 8);
-		espresso_mac_addr[5] = (unsigned char)(rand_mac >> 16);
+		omap_get_die_id(&opi);
+		espresso_mac_addr[3] = (opi.id_3 >> 24) & 0xFF;
+		espresso_mac_addr[4] = opi.id_1 & 0xFF;
+		espresso_mac_addr[5] = opi.id_0 & 0xFF;
 	}
 	memcpy(buf, espresso_mac_addr, IFHWADDRLEN);
 
