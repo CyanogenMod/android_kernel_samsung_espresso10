@@ -195,17 +195,12 @@ static int ltn_power_on(struct omap_dss_device *dssdev)
 		}
 
 		/* reset ltn bridge */
-		if (!dssdev->skip_init) {
-			ltn_hw_reset(dssdev);
-			msleep(100);
-			update_brightness(dssdev);
-		}
+		ltn_hw_reset(dssdev);
+		msleep(100);
+		update_brightness(dssdev);
 
 		lcd->enabled = 1;
 	}
-
-	if (dssdev->skip_init)
-		dssdev->skip_init = false;
 
 err:
 	return ret;
@@ -353,13 +348,6 @@ static int ltn_panel_probe(struct omap_dss_device *dssdev)
 			"backlight_gptimer_init failed!\n");
 		goto err_gptimer_init;
 	}
-
-	/*
-	 * if lcd panel was on from bootloader like u-boot then
-	 * do not lcd on.
-	 */
-	if (dssdev->skip_init)
-		lcd->enabled = 1;
 
 	update_brightness(dssdev);
 
