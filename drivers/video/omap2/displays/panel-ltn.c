@@ -53,6 +53,18 @@ struct ltn {
 
 static struct brightness_data ltn_brightness_data;
 
+static void backlight_gptimer_start(struct omap_dss_device *dssdev)
+{
+	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
+	int ret;
+
+	dev_dbg(&dssdev->dev, "%s\n", __func__);
+
+	ret = omap_dm_timer_start(lcd->gptimer);
+	if (ret)
+		dev_err(&dssdev->dev, "failed to start pwm timer (%d)\n", ret);
+}
+
 static void backlight_gptimer_update(struct omap_dss_device *dssdev)
 {
 	struct ltn *lcd = dev_get_drvdata(&dssdev->dev);
@@ -171,10 +183,15 @@ static void update_brightness(struct omap_dss_device *dssdev)
 	lcd->current_brightness = lcd->bl;
 
 	if (lcd->current_brightness == BRIGHTNESS_OFF &&
-		prev_brightness != BRIGHTNESS_OFF)
+		prev_brightness != BRIGHTNESS_OFF) {
 		backlight_gptimer_stop(dssdev);
-	else if (lcd->current_brightness != BRIGHTNESS_OFF)
+	} else if (lcd->current_brightness != BRIGHTNESS_OFF) {
+		if (prev_brightness == BRIGHTNESS_OFF) {
+			backlight_gptimer_start(dssdev);
+			usleep_range(2000, 2100);
+		}
 		backlight_gptimer_update(dssdev);
+	}
 }
 
 static int ltn_power_on(struct omap_dss_device *dssdev)
