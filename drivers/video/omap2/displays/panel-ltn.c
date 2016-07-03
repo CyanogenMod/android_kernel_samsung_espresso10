@@ -102,9 +102,6 @@ static int backlight_gptimer_init(struct omap_dss_device *dssdev)
 
 	dev_dbg(&dssdev->dev, "%s\n", __func__);
 
-	if (lcd->pdata->set_gptimer_idle)
-		lcd->pdata->set_gptimer_idle();
-
 	lcd->gptimer =
 	    omap_dm_timer_request_specific(lcd->pdata->backlight_gptimer_num);
 

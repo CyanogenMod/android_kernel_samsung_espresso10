@@ -30,7 +30,6 @@ struct ltn_panel_data {
 	int led_backlight_reset_gpio;
 	int backlight_gptimer_num;
 	void (*set_power) (bool enable);
-	void (*set_gptimer_idle) (void);
 	struct brightness_data brightness_table;
 	int pwm_duty_max;
 };
