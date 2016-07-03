@@ -96,8 +96,6 @@ static void __init espresso_init_early(void)
 {
 	omap2_init_common_infrastructure();
 	omap2_init_common_devices(NULL, NULL);
-
-	omap4_espresso_display_early_init();
 }
 
 static struct omap_musb_board_data musb_board_data = {

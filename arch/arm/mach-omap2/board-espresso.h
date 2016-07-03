@@ -43,9 +43,6 @@ unsigned int omap4_espresso_get_board_type(void);
 void omap4_espresso_display_init(void);
 void omap4_espresso_memory_display_init(void);
 
-/** @category LCD */
-void __init omap4_espresso_display_early_init(void);
-
 /** @category Key, TSP, Touch-Key */
 void omap4_espresso_input_init(void);
 void omap4_espresso_tsp_ta_detect(int);
