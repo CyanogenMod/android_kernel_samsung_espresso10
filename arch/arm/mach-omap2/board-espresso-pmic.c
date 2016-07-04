@@ -590,7 +590,7 @@ void __init omap4_espresso_pmic_init(void)
 		espresso_vusim.constraints.state_mem.enabled = false;
 
 		espresso_ldo5.constraints.valid_modes_mask |= REGULATOR_MODE_STANDBY;
-		espresso_ldo5.constraints.always_on = true,
+		espresso_ldo5.constraints.always_on = true;
 
 		espresso_twl6032_pdata.rtc = &espresso_rtc;
 	}
