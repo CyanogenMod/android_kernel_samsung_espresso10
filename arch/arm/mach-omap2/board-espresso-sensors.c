@@ -69,6 +69,11 @@ static int gp2a_light_adc_value(void)
 		return twl6030_get_gpadc_conversion(GP2A_LIGHT_ADC_CHANNEL);
 }
 
+static void gp2a_power(bool on)
+{
+
+}
+
 static void omap4_espresso_sensors_regulator_on(bool on)
 {
 	struct regulator *reg_v28;
@@ -103,6 +108,7 @@ static void omap4_espresso_sensors_regulator_on(bool on)
 }
 
 static struct gp2a_platform_data gp2a_pdata = {
+	.power = gp2a_power,
 	.p_out = GPIO_PS_VOUT,
 	.light_adc_value = gp2a_light_adc_value,
 	.ldo_on = omap4_espresso_sensors_regulator_on,
