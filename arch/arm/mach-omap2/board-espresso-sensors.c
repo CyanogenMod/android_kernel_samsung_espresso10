@@ -63,10 +63,7 @@ static struct bh1721fvc_platform_data bh1721fvc_pdata = {
 
 static int gp2a_light_adc_value(void)
 {
-	if (system_rev >= 6)
-		return twl6030_get_gpadc_conversion(GP2A_LIGHT_ADC_CHANNEL) / 4;
-	else
-		return twl6030_get_gpadc_conversion(GP2A_LIGHT_ADC_CHANNEL);
+	return twl6030_get_gpadc_conversion(GP2A_LIGHT_ADC_CHANNEL);
 }
 
 static void gp2a_power(bool on)
