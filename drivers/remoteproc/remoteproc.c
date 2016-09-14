@@ -885,6 +885,10 @@ static int rproc_handle_resources(struct rproc *rproc, struct fw_resource *rsc,
 			}
 			break;
 		case RSC_CARVEOUT:
+#ifdef CONFIG_ION_OMAP_TILER_DYNAMIC_ALLOC
+			if (!strncmp("IPU_MEM_IOBUFS", rsc->name, 14))
+				break;
+#endif
 			if (!pa) {
 				ret = rproc_alloc_poolmem(rproc, rsc->len, &pa);
 				if (ret) {
