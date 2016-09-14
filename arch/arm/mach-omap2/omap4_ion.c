@@ -18,6 +18,8 @@
 
 #include <mach/omap4_ion.h>
 
+#define ESPRESSO_DUCATI_HEAP_ADDR 0xbae00000
+
 /*
  * Carveouts from higher end of RAM
  *   - SMC
@@ -140,8 +142,12 @@ void __init omap_ion_init(void)
 	omap4_ion_heap_secure_output_wfdhdcp_addr =
 				omap4_ion_heap_secure_input_addr -
 				omap4_ion_heap_secure_output_wfdhdcp_size;
+#ifdef CONFIG_MACH_OMAP4_ESPRESSO
+	omap4_ducati_heap_addr = ESPRESSO_DUCATI_HEAP_ADDR;
+#else
 	omap4_ducati_heap_addr = omap4_ion_heap_secure_output_wfdhdcp_addr -
 				omap4_ducati_heap_size;
+#endif
 	omap4_ion_heap_tiler_mem_addr = omap4_ducati_heap_addr -
 				omap4_ion_heap_tiler_mem_size;
 	omap4_ion_heap_nonsec_tiler_mem_addr = omap4_ion_heap_tiler_mem_addr -

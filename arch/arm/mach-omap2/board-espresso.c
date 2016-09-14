@@ -431,11 +431,11 @@ static void __init espresso_map_io(void)
 static void omap4_espresso_init_carveout_sizes(
 		struct omap_ion_platform_data *ion)
 {
-	ion->tiler1d_size = (SZ_1M * 14);
 	/* WFD is not supported in espresso So the size is zero */
 	ion->secure_output_wfdhdcp_size = 0;
 	ion->ducati_heap_size = (SZ_1M * 65);
 #ifndef CONFIG_ION_OMAP_TILER_DYNAMIC_ALLOC
+	ion->tiler1d_size = (SZ_1M * 14);
 	if (board_is_espresso10())
 		ion->nonsecure_tiler2d_size = (SZ_1M * 19);
 	else
