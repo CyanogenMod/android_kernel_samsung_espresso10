@@ -750,7 +750,7 @@ static noinline int slow_avc_audit(u32 ssid, u32 tsid, u16 tclass,
 	struct common_audit_data stack_data;
 	struct selinux_audit_data sad = {0,};
 
-	if (!a) {
+	if (!a || unlikely(!a->selinux_audit_data)) {
 		a = &stack_data;
 		COMMON_AUDIT_DATA_INIT(a, NONE);
 		a->selinux_audit_data = &sad;
@@ -840,7 +840,7 @@ inline int avc_audit(u32 ssid, u32 tsid,
 		 * permission was READ and the auditdeny checks were for
 		 * ACCESS
 		 */
-		if (a &&
+		if (a && a->selinux_audit_data &&
 		    a->selinux_audit_data->auditdeny &&
 		    !(a->selinux_audit_data->auditdeny & avd->auditdeny))
 			audited = 0;
